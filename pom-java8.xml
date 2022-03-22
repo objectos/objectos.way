@@ -82,6 +82,10 @@
 
 	<inceptionYear>2022</inceptionYear>
 
+	<modules>
+		<module>logging/pom-java8.xml</module>
+	</modules>
+
 	<properties>
 		<jdk>internal</jdk>
 
