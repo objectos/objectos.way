@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2021-2022 Objectos Software LTDA.
+    Copyright (C) 2022 Objectos Software LTDA.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -22,7 +21,7 @@
 
 	<parent>
 		<groupId>br.com.objectos</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>objectos</artifactId>
 
 
 
@@ -33,33 +32,39 @@
 
 
 
-		<version>0.1.0-jdk8-SNAPSHOT</version>
+
+
+
+		<version>0.1.0-jdk7-SNAPSHOT</version>
 
 
 
 
-
-
-
-		<relativePath>../parent/pom-java8.xml</relativePath>
+		<relativePath>../pom-java7.xml</relativePath>
 	</parent>
 
-	<artifactId>logging</artifactId>
-
+	<artifactId>bom</artifactId>
 	<name>${project.groupId}:${project.artifactId}</name>
+	<packaging>pom</packaging>
 
 	<description>
-	The logging API for Objectos based Java applications.  
+	The Objectos Bill of Materials POM.  
 	</description>
 
-	<inceptionYear>2021</inceptionYear>
+	<inceptionYear>2022</inceptionYear>
+	
+	<properties>
+		<objectos.license.copyrightYears>2022</objectos.license.copyrightYears>
+	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>logging</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>

@@ -22,7 +22,7 @@
 
 	<parent>
 		<groupId>br.com.objectos</groupId>
-		<artifactId>objectos</artifactId>
+		<artifactId>parent</artifactId>
 
 
 
@@ -41,9 +41,9 @@
 
 		<version>0.1.0-jdk6-SNAPSHOT</version>
 
+		<relativePath>../parent/pom-java6.xml</relativePath>
 	</parent>
 
-	<groupId>br.com.objectos</groupId>
 	<artifactId>logging</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>

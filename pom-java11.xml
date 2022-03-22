@@ -83,6 +83,7 @@
 	<inceptionYear>2022</inceptionYear>
 
 	<modules>
+		<module>bom/pom-java11.xml</module>
 		<module>logging/pom-java11.xml</module>
 	</modules>
 

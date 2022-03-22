@@ -22,7 +22,7 @@
 
 	<parent>
 		<groupId>br.com.objectos</groupId>
-		<artifactId>objectos</artifactId>
+		<artifactId>parent</artifactId>
 
 
 
@@ -41,9 +41,9 @@
 
 
 
+		<relativePath>../parent/pom-java11.xml</relativePath>
 	</parent>
 
-	<groupId>br.com.objectos</groupId>
 	<artifactId>logging</artifactId>
 
 	<name>${project.groupId}:${project.artifactId}</name>
