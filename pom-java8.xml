@@ -84,6 +84,7 @@
 
 	<modules>
 		<module>bom/pom-java8.xml</module>
+		<module>docs/pom-java8.xml</module>
 		<module>logging/pom-java8.xml</module>
 	</modules>
 
