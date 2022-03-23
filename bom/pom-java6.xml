@@ -56,6 +56,7 @@
 	
 	<properties>
 		<objectos.license.copyrightYears>2022</objectos.license.copyrightYears>
+		<objectos.ssg.version>0.1.0-${jdk}-SNAPSHOT</objectos.ssg.version>
 	</properties>
 
 	<dependencyManagement>
@@ -64,6 +65,12 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>logging</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>ssg</artifactId>
+				<version>${objectos.ssg.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

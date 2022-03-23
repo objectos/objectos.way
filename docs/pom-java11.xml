@@ -51,6 +51,64 @@
 	The Objectos documentation. Built with Objectos SSG.  
 	</description>
 
+	<properties>
+		<objectos.ssg.version>0.1.0-${jdk}-SNAPSHOT</objectos.ssg.version>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>br.com.objectos</groupId>
+					<artifactId>ssg-maven-plugin</artifactId>
+					<version>${objectos.ssg.version}</version>
+					<executions>
+						<execution>
+							<id>site</id>
+							<goals>
+								<goal>site</goal>
+							</goals>
+							<phase>process-classes</phase>
+							<configuration>
+								<siteOutputDirectory>${project.build.outputDirectory}/site</siteOutputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<annotationProcessorPath>
+							<groupId>br.com.objectos</groupId>
+							<artifactId>ssg-processor</artifactId>
+							<version>${objectos.ssg.version}</version>
+						</annotationProcessorPath>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>br.com.objectos</groupId>
+				<artifactId>ssg-maven-plugin</artifactId>
+				<configuration>
+					<siteClass>br.com.objectos.docs.DocsSite</siteClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -62,5 +120,18 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>br.com.objectos</groupId>
+			<artifactId>ssg</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>
