@@ -82,6 +82,12 @@
 			<!-- incubator projects -->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>concurrent</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>core-array</artifactId>
 				<version>${project.version}</version>
 			</dependency>
