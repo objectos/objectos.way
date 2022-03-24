@@ -116,15 +116,11 @@ limitations under the License.
 		</objectos.license.headerMain>
 		<objectos.license.projectName>${project.name}</objectos.license.projectName>
 
-		<org.testng.version>7.5</org.testng.version>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<profiles>
-
-
 
 
 
@@ -681,7 +677,6 @@ limitations under the License.
 
 
 
-
 		<profile>
 			<id>java6</id>
 			<activation>
@@ -694,7 +689,6 @@ limitations under the License.
 				<maven.surefire.version>2.22.2</maven.surefire.version>
 				<maven.toolchains.jdk-vendor>icedtea</maven.toolchains.jdk-vendor>
 				<maven.toolchains.jdk-version>1.6</maven.toolchains.jdk-version>
-				<org.testng.version>6.8.21</org.testng.version>
 				<project.classifier>java6</project.classifier>
 			</properties>
 			<build>
@@ -831,22 +825,6 @@ limitations under the License.
 			</properties>
 		</profile>
 	</profiles>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.testng</groupId>
-				<artifactId>testng</artifactId>
-				<version>${org.testng.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>junit</groupId>
-						<artifactId>junit</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<pluginManagement>

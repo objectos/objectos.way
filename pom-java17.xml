@@ -116,15 +116,11 @@ limitations under the License.
 		</objectos.license.headerMain>
 		<objectos.license.projectName>${project.name}</objectos.license.projectName>
 
-		<org.testng.version>7.5</org.testng.version>
-
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<profiles>
-
-
 
 
 
@@ -739,8 +735,6 @@ limitations under the License.
 
 
 
-
-
 		<profile>
 			<id>release</id>
 			<distributionManagement>
@@ -831,22 +825,6 @@ limitations under the License.
 			</properties>
 		</profile>
 	</profiles>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.testng</groupId>
-				<artifactId>testng</artifactId>
-				<version>${org.testng.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>junit</groupId>
-						<artifactId>junit</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<pluginManagement>
