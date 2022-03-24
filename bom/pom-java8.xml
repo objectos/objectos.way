@@ -82,6 +82,41 @@
 			<!-- incubator projects -->
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>code</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code-annotations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code-processor</artifactId>
+				<version>${project.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code-testing</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code-testng</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code-tools</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>concurrent</artifactId>
 				<version>${project.version}</version>
 			</dependency>
