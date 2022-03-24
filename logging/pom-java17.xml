@@ -23,24 +23,7 @@
 	<parent>
 		<groupId>br.com.objectos</groupId>
 		<artifactId>objectos</artifactId>
-
-
-
-
 		<version>0.1.0-jdk17-SNAPSHOT</version>
-
-
-
-
-
-
-
-
-
-
-
-
-
 	</parent>
 
 	<artifactId>logging</artifactId>

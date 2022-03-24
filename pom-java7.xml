@@ -22,24 +22,7 @@
 
 	<groupId>br.com.objectos</groupId>
 	<artifactId>objectos</artifactId>
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<version>0.1.0-jdk7-SNAPSHOT</version>
-
-
-
-
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
