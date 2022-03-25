@@ -67,7 +67,6 @@
 
 	<modules>
 		<module>bom/pom-java6.xml</module>
-		<module>docs/pom-java6.xml</module>
 		<module>logging/pom-java6.xml</module>
 	</modules>
 
