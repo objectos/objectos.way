@@ -39,7 +39,6 @@
 
 	<properties>
 		<objectos.license.copyrightYears>2022</objectos.license.copyrightYears>
-		<objectos.ssg.version>0.1.0-${jdk}-SNAPSHOT</objectos.ssg.version>
 		<org.testng.version>7.5</org.testng.version>
 	</properties>
 
@@ -332,7 +331,7 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>ssg</artifactId>
-				<version>${objectos.ssg.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
