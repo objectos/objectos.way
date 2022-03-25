@@ -92,6 +92,12 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>code-boot</artifactId>
+				<version>${project.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>code-processor</artifactId>
 				<version>${project.version}</version>
 				<optional>true</optional>
@@ -197,6 +203,45 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>core-throwable</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>css</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>css-boot</artifactId>
+				<version>${project.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>css-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>css-formal</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>css-framework</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>css-processor</artifactId>
+				<version>${project.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>css-specgen</artifactId>
+				<version>${project.version}</version>
+				<scope>runtime</scope>
 			</dependency>
 			
 			<dependency>
