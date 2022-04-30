@@ -74,7 +74,7 @@
 		<m2e.apt.activation>disabled</m2e.apt.activation>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		<maven.surefire.version>3.0.0-M5</maven.surefire.version>
+		<maven.surefire.version>3.0.0-M6</maven.surefire.version>
 		<maven.toolchains.jdk-vendor>openjdk</maven.toolchains.jdk-vendor>
 		<maven.toolchains.jdk-version>17</maven.toolchains.jdk-version>
 
