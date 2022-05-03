@@ -20,14 +20,14 @@ package objectos.logging;
  * is the {@link Logger#replace(Logger)} operation that actually returns the
  * supplied value.
  */
-public class NoopLogger implements Logger {
+public class NoOpLogger implements Logger {
 
-  static final NoopLogger INSTANCE = new NoopLogger();
+  static final NoOpLogger INSTANCE = new NoOpLogger();
 
   /**
    * The sole {@code public} constructor.
    */
-  public NoopLogger() {}
+  public NoOpLogger() {}
 
   /**
    * Returns the {@code static} instance. This is method is provided as a
@@ -35,7 +35,7 @@ public class NoopLogger implements Logger {
    *
    * @return the {@code static} instance
    */
-  public static NoopLogger getInstance() {
+  public static NoOpLogger getInstance() {
     return INSTANCE;
   }
 
