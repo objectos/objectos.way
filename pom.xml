@@ -66,8 +66,8 @@
 	<inceptionYear>2022</inceptionYear>
 
 	<modules>
-		<module>bom/pom-java6.xml</module>
-		<module>logging/pom-java6.xml</module>
+		<module>bom</module>
+		<module>logging</module>
 	</modules>
 
 	<properties>
