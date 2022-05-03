@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
 /**
  * Provides convenience {@code static} methods for creating {@link Event}

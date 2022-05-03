@@ -13,24 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
-/**
- * Minimal version of Checks. Just so this project has zero deps.
- */
-final class Checks {
+import static org.testng.Assert.assertEquals;
 
-  private Checks() {}
+import org.testng.annotations.Test;
 
-  public static <T> T checkNotNull(T object, Object message) {
-    if (object == null) {
-      String formatted;
-      formatted = String.valueOf(message);
+public class LevelTest {
 
-      throw new NullPointerException(formatted);
-    }
+  @Test
+  public void orderingTest() {
+    Level[] values;
+    values = Level.values();
 
-    return object;
+    assertEquals(values.length, 5);
+
+    assertEquals(values[0], Level.TRACE);
+
+    assertEquals(values[1], Level.DEBUG);
+
+    assertEquals(values[2], Level.INFO);
+
+    assertEquals(values[3], Level.WARN);
+
+    assertEquals(values[4], Level.ERROR);
   }
 
 }

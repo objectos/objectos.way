@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
-import static org.testng.Assert.assertEquals;
+final class Duo<T1, T2> {
 
-import org.testng.annotations.Test;
+  final T1 value1;
 
-public class LevelTest {
+  final T2 value2;
 
-  @Test
-  public void orderingTest() {
-    Level[] values;
-    values = Level.values();
+  Duo(T1 value1, T2 value2) {
+    this.value1 = value1;
+    this.value2 = value2;
+  }
 
-    assertEquals(values.length, 5);
-
-    assertEquals(values[0], Level.TRACE);
-
-    assertEquals(values[1], Level.DEBUG);
-
-    assertEquals(values[2], Level.INFO);
-
-    assertEquals(values[3], Level.WARN);
-
-    assertEquals(values[4], Level.ERROR);
+  @Override
+  public final String toString() {
+    return "value1=" + value1 + ":value2=" + value2;
   }
 
 }

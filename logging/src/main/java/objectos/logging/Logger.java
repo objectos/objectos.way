@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
 /**
  * An object responsible for logging the events of a program.

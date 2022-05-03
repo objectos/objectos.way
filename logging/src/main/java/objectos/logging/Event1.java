@@ -13,27 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
-public final class TypeHint<T> {
+/**
+ * A log event that takes one argument.
+ *
+ * @param <T1> the type of the log argument
+ */
+public final class Event1<T1> extends Event {
 
-  static final TypeHint<Object> OBJECT = new TypeHint<Object>();
-
-  private TypeHint() {}
-
-  @SuppressWarnings("unchecked")
-  public static <T> TypeHint<T> get() {
-    return (TypeHint<T>) TypeHint.OBJECT;
-  }
-
-  public static <T> TypeHint<T> of(Class<T> typeHint) {
-    Checks.checkNotNull(typeHint, "typeHint == null");
-
-    return get();
-  }
-
-  static <T> TypeHint<T> of0(Class<T> typeHint) {
-    return get();
+  /**
+   * Creates a new event instance.
+   *
+   * @param source
+   *        the class this event is bound to
+   * @param key
+   *        a key that uniquely identifies this event within the given
+   *        {@code source} class
+   * @param level
+   *        the logging level of this event
+   */
+  public Event1(Class<?> source, String key, Level level) {
+    super(source, key, level);
   }
 
 }

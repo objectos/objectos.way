@@ -13,7 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides the classes and interfaces of the Objectos Core Logging API.
- */
-package br.com.objectos.logging;
+package objectos.logging;
+
+final class Arg2 {
+
+  final int value;
+
+  Arg2(int value) {
+    this.value = value;
+  }
+
+  @Override
+  public final String toString() {
+    return Integer.toString(value);
+  }
+
+}

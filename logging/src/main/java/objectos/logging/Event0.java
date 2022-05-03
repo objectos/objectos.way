@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
 /**
- * A log event that takes two arguments.
- *
- * @param <T1> the type of the first log argument
- * @param <T2> the type of the second log argument
+ * A log event that takes no arguments.
  */
-public final class Event2<T1, T2> extends Event {
+public final class Event0 extends Event {
 
   /**
    * Creates a new event instance.
@@ -34,7 +31,7 @@ public final class Event2<T1, T2> extends Event {
    * @param level
    *        the logging level of this event
    */
-  public Event2(Class<?> source, String key, Level level) {
+  public Event0(Class<?> source, String key, Level level) {
     super(source, key, level);
   }
 

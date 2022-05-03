@@ -16,6 +16,6 @@
 /**
  * Defines the Objectos Logging API.
  */
-module br.com.objectos.logging {
-  exports br.com.objectos.logging;
+module objectos.logging {
+  exports objectos.logging;
 }

@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
-final class Arg2 {
+/**
+ * Minimal version of Checks. Just so this project has zero deps.
+ */
+final class Checks {
 
-  final int value;
+  private Checks() {}
 
-  Arg2(int value) {
-    this.value = value;
-  }
+  public static <T> T checkNotNull(T object, Object message) {
+    if (object == null) {
+      String formatted;
+      formatted = String.valueOf(message);
 
-  @Override
-  public final String toString() {
-    return Integer.toString(value);
+      throw new NullPointerException(formatted);
+    }
+
+    return object;
   }
 
 }

@@ -13,19 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.logging;
+package objectos.logging;
 
-final class Arg1 {
+public final class TypeHint<T> {
 
-  final int value;
+  static final TypeHint<Object> OBJECT = new TypeHint<Object>();
 
-  Arg1(int value) {
-    this.value = value;
+  private TypeHint() {}
+
+  @SuppressWarnings("unchecked")
+  public static <T> TypeHint<T> get() {
+    return (TypeHint<T>) TypeHint.OBJECT;
   }
 
-  @Override
-  public final String toString() {
-    return Integer.toString(value);
+  public static <T> TypeHint<T> of(Class<T> typeHint) {
+    Checks.checkNotNull(typeHint, "typeHint == null");
+
+    return get();
+  }
+
+  static <T> TypeHint<T> of0(Class<T> typeHint) {
+    return get();
   }
 
 }
