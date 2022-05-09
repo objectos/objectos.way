@@ -54,8 +54,9 @@ package objectos.logging;
  * Therefore, an {@code Event} instance indicates:
  *
  * <ul>
- * <li>the {@code source} of a log message. The {@code source} is the class
- * from which a log message originated;</li>
+ * <li>the {@code source} of a log message. The {@code source} is a name
+ * indicating the location a log message originated. It is typically the
+ * canonical name of the class where the event is declared;</li>
  * <li>the {@code level} of a log message;</li>
  * <li>the {@code key} of the event. The event key is a name that uniquely
  * identifies the event within a {@code source}. It also serves as a description
@@ -70,9 +71,17 @@ public abstract class Event {
 
   private final Level level;
 
-  private final Class<?> source;
+  private final String source;
 
   Event(Class<?> source, String key, Level level) {
+    this.key = Checks.checkNotNull(key, "key == null");
+
+    this.level = Checks.checkNotNull(level, "level == null");
+
+    this.source = Checks.checkNotNull(source, "source == null").getCanonicalName();
+  }
+
+  Event(String key, Level level, String source) {
     this.key = Checks.checkNotNull(key, "key == null");
 
     this.level = Checks.checkNotNull(level, "level == null");
@@ -134,15 +143,6 @@ public abstract class Event {
   }
 
   /**
-   * Returns the source class of this event.
-   *
-   * @return the source class of this event
-   */
-  public final Class<?> getSource() {
-    return source;
-  }
-
-  /**
    * Returns the hash code value of this event.
    *
    * @return the hash code value of this event
@@ -174,13 +174,25 @@ public abstract class Event {
   }
 
   /**
+   * Returns the source of this event. The source is a name indicating from
+   * where a log message originated. The source is typically the canonical name
+   * of the class where the event is declared.
+   *
+   * @return the source of this event
+   */
+  public final String source() {
+    return source;
+  }
+
+  /**
    * Returns a string representation of this event.
    *
    * @return a string representation of this event
    */
   @Override
   public final String toString() {
-    StringBuilder sb = new StringBuilder();
+    StringBuilder sb;
+    sb = new StringBuilder();
 
     Class<? extends Event> type;
     type = getClass();
@@ -189,7 +201,7 @@ public abstract class Event {
 
     sb.append('[');
 
-    sb.append(source.getCanonicalName());
+    sb.append(source);
 
     sb.append(',');
 
