@@ -190,7 +190,7 @@ public class LoggingTest {
   private void test0(ThisLogger logger, Event0 event) {
     logger.log(event);
 
-    assertEquals(logger.level, event.getLevel());
+    assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
     assertNull(logger.value1);
     assertNull(logger.value2);
@@ -200,7 +200,7 @@ public class LoggingTest {
   private <T1> void test1(ThisLogger logger, Event1<T1> event, T1 arg) {
     logger.log(event, arg);
 
-    assertEquals(logger.level, event.getLevel());
+    assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
     assertSame(logger.value1, arg);
     assertNull(logger.value2);
@@ -210,7 +210,7 @@ public class LoggingTest {
   private <T1, T2> void test2(ThisLogger logger, Event2<T1, T2> event, T1 arg1, T2 arg2) {
     logger.log(event, arg1, arg2);
 
-    assertEquals(logger.level, event.getLevel());
+    assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
     assertSame(logger.value1, arg1);
     assertSame(logger.value2, arg2);
@@ -221,7 +221,7 @@ public class LoggingTest {
       ThisLogger logger, Event3<T1, T2, T3> event, T1 arg1, T2 arg2, T3 arg3) {
     logger.log(event, arg1, arg2, arg3);
 
-    assertEquals(logger.level, event.getLevel());
+    assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
     assertSame(logger.value1, arg1);
     assertSame(logger.value2, arg2);
@@ -285,7 +285,7 @@ public class LoggingTest {
     private void set(Event event) {
       this.event = event;
 
-      this.level = event.getLevel();
+      this.level = event.level();
 
       value1 = null;
 

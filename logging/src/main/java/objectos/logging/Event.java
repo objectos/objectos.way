@@ -119,7 +119,7 @@ public abstract class Event {
    *
    * @return the logging level of this event
    */
-  public final Level getLevel() {
+  public final Level level() {
     return level;
   }
 
