@@ -58,7 +58,7 @@ package objectos.logging;
  * indicating the location a log message originated. It is typically the
  * canonical name of the class where the event is declared;</li>
  * <li>the {@code level} of a log message;</li>
- * <li>the {@code key} of the event. The event key is a name that uniquely
+ * <li>the {@code key} of the event. The event key is an object that uniquely
  * identifies the event within a {@code source}. It also serves as a description
  * of the event itself; and</li>
  * <li>the number and the types of the arguments that should be supplied to a
@@ -67,26 +67,26 @@ package objectos.logging;
  */
 public abstract class Event {
 
-  private final String key;
+  private final String source;
+
+  private final Object key;
 
   private final Level level;
 
-  private final String source;
-
   Event(Class<?> source, String key, Level level) {
+    this.source = Checks.checkNotNull(source, "source == null").getCanonicalName();
+
     this.key = Checks.checkNotNull(key, "key == null");
 
     this.level = Checks.checkNotNull(level, "level == null");
-
-    this.source = Checks.checkNotNull(source, "source == null").getCanonicalName();
   }
 
-  Event(String key, Level level, String source) {
+  Event(String source, String key, Level level) {
+    this.source = Checks.checkNotNull(source, "source == null");
+
     this.key = Checks.checkNotNull(key, "key == null");
 
     this.level = Checks.checkNotNull(level, "level == null");
-
-    this.source = Checks.checkNotNull(source, "source == null");
   }
 
   /**
@@ -108,29 +108,10 @@ public abstract class Event {
    */
   @Override
   public final boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
-    }
-
-    if (!(obj instanceof Event)) {
-      return false;
-    }
-
-    Event that;
-    that = (Event) obj;
-
-    return getClass().equals(that.getClass())
-        && key.equals(that.key)
-        && source.equals(that.source);
-  }
-
-  /**
-   * Returns the key of this event.
-   *
-   * @return the key of this event
-   */
-  public final String getKey() {
-    return key;
+    return obj instanceof Event that
+        && getClass().equals(that.getClass())
+        && source.equals(that.source)
+        && key.equals(that.key);
   }
 
   /**
@@ -174,9 +155,19 @@ public abstract class Event {
   }
 
   /**
-   * Returns the source of this event. The source is a name indicating from
-   * where a log message originated. The source is typically the canonical name
-   * of the class where the event is declared.
+   * Returns the key of this event. The key of an event is an object that
+   * uniquely identifies an event within a given source.
+   *
+   * @return the key of this event
+   */
+  public final Object key() {
+    return key;
+  }
+
+  /**
+   * Returns the source of this event. The source of an event is a name
+   * that indicates the origin of a log message. The source is typically
+   * the canonical name of the class where the event is declared.
    *
    * @return the source of this event
    */
