@@ -81,12 +81,33 @@ public abstract class Event {
     this.level = Checks.checkNotNull(level, "level == null");
   }
 
-  Event(String source, String key, Level level) {
+  Event(String source, Object key, Level level) {
     this.source = Checks.checkNotNull(source, "source == null");
 
     this.key = Checks.checkNotNull(key, "key == null");
 
     this.level = Checks.checkNotNull(level, "level == null");
+  }
+
+  static <E extends Event> E create(Level l, Constructor<E> c) {
+    StackWalker w;
+    w = StackWalker.getInstance();
+
+    return w.walk(s -> {
+      var skip = s.skip(2);
+
+      var maybe = skip.findFirst();
+
+      var f = maybe.orElseThrow();
+
+      var source = f.getClassName();
+
+      var key = f.getFileName();
+
+      key = key + ":" + f.getLineNumber();
+
+      return c.create(source, key, l);
+    });
   }
 
   /**
@@ -112,15 +133,6 @@ public abstract class Event {
         && getClass().equals(that.getClass())
         && source.equals(that.source)
         && key.equals(that.key);
-  }
-
-  /**
-   * Returns the logging level of this event.
-   *
-   * @return the logging level of this event
-   */
-  public final Level level() {
-    return level;
   }
 
   /**
@@ -165,6 +177,15 @@ public abstract class Event {
   }
 
   /**
+   * Returns the logging level of this event.
+   *
+   * @return the logging level of this event
+   */
+  public final Level level() {
+    return level;
+  }
+
+  /**
    * Returns the source of this event. The source of an event is a name
    * that indicates the origin of a log message. The source is typically
    * the canonical name of the class where the event is declared.
@@ -205,6 +226,13 @@ public abstract class Event {
     sb.append(']');
 
     return sb.toString();
+  }
+
+  @FunctionalInterface
+  interface Constructor<E extends Event> {
+
+    E create(String source, String key, Level level);
+
   }
 
 }
