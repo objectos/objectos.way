@@ -15,7 +15,7 @@
  */
 package objectos.logging;
 
-public final class Logging {
+final class Logging {
 
   /*
   @startuml
@@ -95,7 +95,7 @@ public final class Logging {
 
   private Logging() {}
 
-  public static void abbreviate(StringBuilder out, String source, int length) {
+  static void abbreviate(StringBuilder out, String source, int length) {
     String result;
     result = source;
 
@@ -119,7 +119,7 @@ public final class Logging {
     }
   }
 
-  public static String format(Object o) {
+  static String format(Object o) {
     if (o != null) {
       return o.toString();
     } else {
@@ -127,7 +127,7 @@ public final class Logging {
     }
   }
 
-  public static void pad(StringBuilder out, String source, int length) {
+  static void pad(StringBuilder out, String source, int length) {
     String result;
     result = source;
 

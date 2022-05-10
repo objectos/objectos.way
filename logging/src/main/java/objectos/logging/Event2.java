@@ -18,7 +18,7 @@ package objectos.logging;
 /**
  * A log event that takes two arguments.
  *
- * @param <T1, T2> the type of the first log argument
+ * @param <T1> the type of the first log argument
  * @param <T2> the type of the second log argument
  */
 public final class Event2<T1, T2> extends Event {
