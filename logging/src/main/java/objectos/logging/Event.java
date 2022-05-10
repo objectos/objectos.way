@@ -73,14 +73,6 @@ public abstract class Event {
 
   private final Level level;
 
-  Event(Class<?> source, String key, Level level) {
-    this.source = Checks.checkNotNull(source, "source == null").getCanonicalName();
-
-    this.key = Checks.checkNotNull(key, "key == null");
-
-    this.level = Checks.checkNotNull(level, "level == null");
-  }
-
   Event(String source, Object key, Level level) {
     this.source = Checks.checkNotNull(source, "source == null");
 

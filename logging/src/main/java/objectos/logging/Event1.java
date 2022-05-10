@@ -26,21 +26,6 @@ public final class Event1<T1> extends Event {
    * Creates a new event instance.
    *
    * @param source
-   *        the class this event is bound to
-   * @param key
-   *        a key that uniquely identifies this event within the given
-   *        {@code source} class
-   * @param level
-   *        the logging level of this event
-   */
-  public Event1(Class<?> source, String key, Level level) {
-    super(source, key, level);
-  }
-
-  /**
-   * Creates a new event instance.
-   *
-   * @param source
    *        a name to identify the source class this event is bound to
    * @param key
    *        a key that uniquely identifies this event within the given

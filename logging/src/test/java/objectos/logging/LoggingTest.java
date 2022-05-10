@@ -25,99 +25,45 @@ import org.testng.annotations.Test;
 
 public class LoggingTest {
 
-  static final Event0 DEBUG0;
+  static final Event0 DEBUG0 = Event0.debug();
 
-  static final Event1<Arg1> DEBUG1;
+  static final Event1<Arg1> DEBUG1 = Event1.debug();
 
-  static final Event2<Arg1, Arg2> DEBUG2;
+  static final Event2<Arg1, Arg2> DEBUG2 = Event2.debug();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> DEBUG3;
+  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> DEBUG3 = Event3.debug();
 
-  static final Event0 ERROR0;
+  static final Event0 ERROR0 = Event0.error();
 
-  static final Event1<Arg1> ERROR1;
+  static final Event1<Arg1> ERROR1 = Event1.error();
 
-  static final Event2<Arg1, Arg2> ERROR2;
+  static final Event2<Arg1, Arg2> ERROR2 = Event2.error();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> ERROR3;
+  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> ERROR3 = Event3.error();
 
-  static final Event0 INFO0;
+  static final Event0 INFO0 = Event0.info();
 
-  static final Event1<Arg1> INFO1;
+  static final Event1<Arg1> INFO1 = Event1.info();
 
-  static final Event2<Arg1, Arg2> INFO2;
+  static final Event2<Arg1, Arg2> INFO2 = Event2.info();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> INFO3;
+  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> INFO3 = Event3.info();
 
-  static final Event0 TRACE0;
+  static final Event0 TRACE0 = Event0.trace();
 
-  static final Event1<Arg1> TRACE1;
+  static final Event1<Arg1> TRACE1 = Event1.trace();
 
-  static final Event2<Arg1, Arg2> TRACE2;
+  static final Event2<Arg1, Arg2> TRACE2 = Event2.trace();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> TRACE3;
+  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> TRACE3 = Event3.trace();
 
-  static final Event0 WARN0;
+  static final Event0 WARN0 = Event0.warn();
 
-  static final Event1<Arg1> WARN1;
+  static final Event1<Arg1> WARN1 = Event1.warn();
 
-  static final Event2<Arg1, Arg2> WARN2;
+  static final Event2<Arg1, Arg2> WARN2 = Event2.warn();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> WARN3;
-
-  static {
-    Class<?> s;
-    s = LoggingTest.class;
-
-    TypeHint<Arg1> arg1;
-    arg1 = TypeHint.get();
-
-    TypeHint<Arg2> arg2;
-    arg2 = TypeHint.get();
-
-    TypeHint<Duo<Arg1, Arg2>> duo;
-    duo = TypeHint.get();
-
-    DEBUG0 = Events.debug(s, "DEBUG0");
-
-    DEBUG1 = Events.debug(s, "DEBUG1", Arg1.class);
-
-    DEBUG2 = Events.debug(s, "DEBUG2", Arg1.class, Arg2.class);
-
-    DEBUG3 = Events.debug(s, "DEBUG3", arg1, arg2, duo);
-
-    ERROR0 = Events.error(s, "ERROR0");
-
-    ERROR1 = Events.error(s, "ERROR1", Arg1.class);
-
-    ERROR2 = Events.error(s, "ERROR2", Arg1.class, Arg2.class);
-
-    ERROR3 = Events.error(s, "ERROR3", arg1, arg2, duo);
-
-    INFO0 = Events.info(s, "INFO0");
-
-    INFO1 = Events.info(s, "INFO1", Arg1.class);
-
-    INFO2 = Events.info(s, "INFO2", Arg1.class, Arg2.class);
-
-    INFO3 = Events.info(s, "INFO3", arg1, arg2, duo);
-
-    TRACE0 = Events.trace(s, "TRACE0");
-
-    TRACE1 = Events.trace(s, "TRACE1", Arg1.class);
-
-    TRACE2 = Events.trace(s, "TRACE2", Arg1.class, Arg2.class);
-
-    TRACE3 = Events.trace(s, "TRACE3", arg1, arg2, duo);
-
-    WARN0 = Events.warn(s, "WARN0");
-
-    WARN1 = Events.warn(s, "WARN1", Arg1.class);
-
-    WARN2 = Events.warn(s, "WARN2", Arg1.class, Arg2.class);
-
-    WARN3 = Events.warn(s, "ERROR3", arg1, arg2, duo);
-  }
+  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> WARN3 = Event3.warn();
 
   @Test
   public void isEnabled() {
