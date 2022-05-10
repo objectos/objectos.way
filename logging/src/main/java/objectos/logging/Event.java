@@ -40,9 +40,7 @@ package objectos.logging;
  * be the event specification
  *
  * <pre>
- * {@code Event3<InetAddress, String, Integer> GET_OK = Events.info(
- *     HttpServer.class, "HTTP_GET_OK", InetAddress.class, String.class, Integer.class
- * );}</pre>
+ * {@code Event3<InetAddress, String, Integer> GET_OK = Event3.info();}</pre>
  *
  * <p>
  * While the invocation of this event, i.e., the actual log message would be
@@ -110,8 +108,8 @@ public abstract class Event {
    * <ul>
    * <li>the specified object is also a {@code Event};</li>
    * <li>the specified object is of the same subclass of {@code Event};</li>
-   * <li>both events have keys that are equal to each other; and</li>
-   * <li>both events have source classes that are equal to each other.</li>
+   * <li>both events have source classes that are equal to each other; and</li>
+   * <li>both events have keys that are equal to each other.</li>
    * </ul>
    *
    * @param obj

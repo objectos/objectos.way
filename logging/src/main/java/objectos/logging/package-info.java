@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Provides the classes and interfaces of the Objectos Core Logging API.
+ * Provides the classes and interfaces of the Objectos Logging API.
  */
 package objectos.logging;
