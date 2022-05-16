@@ -291,7 +291,7 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.3.1</version>
+					<version>3.4.0</version>
 					<configuration>
 						<debug>true</debug>
 						<minmemory>1g</minmemory>
