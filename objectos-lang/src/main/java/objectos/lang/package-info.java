@@ -26,6 +26,12 @@
  * This package provides a utility class for {@code String} instances, a
  * class to generate random string values and an API for converting strings.
  *
+ * <p>
+ * Provides utility classes for working with {@link Throwable} objects.
+ *
+ * <p>
+ * Unless otherwise specified, methods in this package will throw a
+ * {@link NullPointerException} if given a {@code null} argument.
  *
  * @since 0.2
  */
