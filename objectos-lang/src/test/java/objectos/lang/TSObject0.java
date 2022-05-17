@@ -13,32 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
-class TSObject2 extends TSObject1 {
+class TSObject0 extends AbstractToStringObject {
 
-  final String name2;
+  final Object typeName;
 
-  final Object value2;
-
-  TSObject2(Object typeName, String name1, Object value1, String name2, Object value2) {
-    super(typeName, name1, value1);
-    this.name2 = name2;
-    this.value2 = value2;
+  TSObject0() {
+    this.typeName = this;
   }
 
-  TSObject2(String name1, Object value1, String name2, Object value2) {
-    super(name1, value1);
-    this.name2 = name2;
-    this.value2 = value2;
+  TSObject0(Object typeName) {
+    this.typeName = typeName;
   }
 
   @Override
-  public void formatToString(StringBuilder sb, int depth) {
+  public void formatToString(StringBuilder toString, int level) {
     ToString.formatToString(
-        sb, depth, typeName,
-        name1, value1,
-        name2, value2
+        toString, level, typeName
     );
   }
 

@@ -13,9 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
-abstract class AbstractToStringObject implements ToStringObject {
+import java.util.Arrays;
+
+final class SimpleToStringList implements ToStringObject {
+
+  private final int size;
+
+  SimpleToStringList(int size) {
+    this.size = size;
+  }
+
+  @Override
+  public final void formatToString(StringBuilder sb, int depth) {
+    ToString.formatStart(sb, this);
+
+    if (size > 0) {
+      ToString.formatFirstPair(sb, depth, "0", "x");
+
+      for (int i = 1; i < size; i++) {
+        char[] c;
+        c = new char[i + 1];
+
+        Arrays.fill(c, 'x');
+
+        ToString.formatNextPair(
+            sb, depth,
+            Integer.toString(i), new String(c)
+        );
+      }
+    }
+
+    ToString.formatEnd(sb, depth);
+  }
 
   @Override
   public final String toString() {

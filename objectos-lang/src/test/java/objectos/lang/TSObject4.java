@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
 class TSObject4 extends TSObject3 {
 

@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
 import java.util.Iterator;
 
 /**
  * Provides {@code static} convenience methods for implementing
  * {@link Object#equals(Object)} methods.
+ *
+ * @since 0.2
  */
 public final class Equals {
 

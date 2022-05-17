@@ -13,28 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
-class Subject {
+final class ComponentString {
 
-  private final ComponentInt a;
+  private final String value;
 
-  private final ComponentString b;
-
-  Subject(ComponentInt a, ComponentString b) {
-    this.a = a;
-    this.b = b;
+  ComponentString(String value) {
+    this.value = value;
   }
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof Subject && equals0((Subject) obj);
+    return obj == this || obj instanceof ComponentString && equals0((ComponentString) obj);
   }
 
-  private boolean equals0(Subject obj) {
+  private boolean equals0(ComponentString that) {
     return Equals.objects(
-        a, obj.a,
-        b, obj.b
+        value, that.value
     );
   }
 

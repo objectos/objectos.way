@@ -19,5 +19,5 @@
  * @since 0.2
  */
 module objectos.lang {
-  exports br.com.objectos.core.object;
+  exports objectos.lang;
 }

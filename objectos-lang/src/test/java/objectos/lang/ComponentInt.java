@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides utility classes for implementing
- * {@link java.lang.Object#equals(Object)}, {@link java.lang.Object#hashCode()}
- * and {@link java.lang.Object#toString()} methods. Also provides a class that
- * helps constructors and methods check if they were invoked correctly or not.
- */
-package br.com.objectos.core.object;
+package objectos.lang;
+
+final class ComponentInt {
+
+  private final int value;
+
+  ComponentInt(int value) {
+    this.value = value;
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof ComponentInt && equals0((ComponentInt) obj);
+  }
+
+  private boolean equals0(ComponentInt that) {
+    return value == that.value;
+  }
+
+}

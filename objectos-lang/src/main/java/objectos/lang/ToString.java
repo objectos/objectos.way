@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
 import java.util.Arrays;
 
 /**
  * Provides {@code static} methods to format and generate a standardized
  * {@link Object#toString()} method output.
+ *
+ * @since 0.2
  */
 public final class ToString {
 
   private static final char[][] INDENTATION = new char[][] {
-      "  ".toCharArray(),
-      "    ".toCharArray(),
-      "      ".toCharArray(),
-      "        ".toCharArray()
+                                                            "  ".toCharArray(),
+                                                            "    ".toCharArray(),
+                                                            "      ".toCharArray(),
+                                                            "        ".toCharArray()
   };
 
   private ToString() {}
@@ -43,8 +45,6 @@ public final class ToString {
    *
    * @throws IllegalArgumentException
    *         if {@code level} is negative
-   *
-   * @since 3
    */
   public static void appendIndentation(StringBuilder toString, int level) {
     char[] indentation;
@@ -717,7 +717,7 @@ public final class ToString {
     toString = new StringBuilder();
 
     formatToString(
-        toString, 0, typeName
+      toString, 0, typeName
     );
 
     return toString.toString();
@@ -763,8 +763,8 @@ public final class ToString {
     toString = new StringBuilder();
 
     formatToString(
-        toString, 0, typeName,
-        name, value
+      toString, 0, typeName,
+      name, value
     );
 
     return toString.toString();
@@ -817,9 +817,9 @@ public final class ToString {
     toString = new StringBuilder();
 
     formatToString(
-        toString, 0, typeName,
-        name1, value1,
-        name2, value2
+      toString, 0, typeName,
+      name1, value1,
+      name2, value2
     );
 
     return toString.toString();
@@ -878,10 +878,10 @@ public final class ToString {
     toString = new StringBuilder();
 
     formatToString(
-        toString, 0, typeName,
-        name1, value1,
-        name2, value2,
-        name3, value3
+      toString, 0, typeName,
+      name1, value1,
+      name2, value2,
+      name3, value3
     );
 
     return toString.toString();
@@ -946,11 +946,11 @@ public final class ToString {
     toString = new StringBuilder();
 
     formatToString(
-        toString, 0, typeName,
-        name1, value1,
-        name2, value2,
-        name3, value3,
-        name4, value4
+      toString, 0, typeName,
+      name1, value1,
+      name2, value2,
+      name3, value3,
+      name4, value4
     );
 
     return toString.toString();
@@ -1021,12 +1021,12 @@ public final class ToString {
     toString = new StringBuilder();
 
     formatToString(
-        toString, 0, typeName,
-        name1, value1,
-        name2, value2,
-        name3, value3,
-        name4, value4,
-        name5, value5
+      toString, 0, typeName,
+      name1, value1,
+      name2, value2,
+      name3, value3,
+      name4, value4,
+      name5, value5
     );
 
     return toString.toString();
@@ -1104,13 +1104,13 @@ public final class ToString {
     toString = new StringBuilder();
 
     formatToString(
-        toString, 0, typeName,
-        name1, value1,
-        name2, value2,
-        name3, value3,
-        name4, value4,
-        name5, value5,
-        name6, value6
+      toString, 0, typeName,
+      name1, value1,
+      name2, value2,
+      name3, value3,
+      name4, value4,
+      name5, value5,
+      name6, value6
     );
 
     return toString.toString();

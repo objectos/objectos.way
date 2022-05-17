@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
 /**
  * Provides {@code static} convenience methods for computing the hash
@@ -57,6 +57,8 @@ package br.com.objectos.core.object;
  * <p>
  * This class uses the algorithm described in Item 9 from the book
  * Effective Java (Second Edition) by Joshua Bloch.
+ *
+ * @since 0.2
  */
 public final class HashCode {
 
@@ -324,8 +326,8 @@ public final class HashCode {
    */
   public static int hashCode(Object o1, Object o2) {
     return hashCode(
-        hashCode(o1),
-        hashCode(o2)
+      hashCode(o1),
+      hashCode(o2)
     );
   }
 
@@ -343,9 +345,9 @@ public final class HashCode {
    */
   public static int hashCode(Object o1, Object o2, Object o3) {
     return hashCode(
-        hashCode(o1),
-        hashCode(o2),
-        hashCode(o3)
+      hashCode(o1),
+      hashCode(o2),
+      hashCode(o3)
     );
   }
 
@@ -365,10 +367,10 @@ public final class HashCode {
    */
   public static int hashCode(Object o1, Object o2, Object o3, Object o4) {
     return hashCode(
-        hashCode(o1),
-        hashCode(o2),
-        hashCode(o3),
-        hashCode(o4)
+      hashCode(o1),
+      hashCode(o2),
+      hashCode(o3),
+      hashCode(o4)
     );
   }
 
@@ -390,11 +392,11 @@ public final class HashCode {
    */
   public static int hashCode(Object o1, Object o2, Object o3, Object o4, Object o5) {
     return hashCode(
-        hashCode(o1),
-        hashCode(o2),
-        hashCode(o3),
-        hashCode(o4),
-        hashCode(o5)
+      hashCode(o1),
+      hashCode(o2),
+      hashCode(o3),
+      hashCode(o4),
+      hashCode(o5)
     );
   }
 

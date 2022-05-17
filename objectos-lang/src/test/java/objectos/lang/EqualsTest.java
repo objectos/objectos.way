@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;

@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
-final class SimpleToStringObject implements ToStringObject {
+/**
+ * An object that can correctly participate in nested {@code toString}
+ * implementations.
+ *
+ * @since 0.2
+ */
+public interface ToStringObject {
 
-  private final Object value;
-
-  SimpleToStringObject(Object value) {
-    this.value = value;
-  }
-
-  @Override
-  public final void formatToString(StringBuilder sb, int depth) {
-    ToString.formatToString(
-        sb, depth, this,
-        "value", value
-    );
-  }
-
-  @Override
-  public final String toString() {
-    return ToString.toString(this);
-  }
+  /**
+   * Formats and appends this object's string representation to the
+   * {@code toString} builder at the specified indentation level.
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level
+   */
+  void formatToString(StringBuilder toString, int level);
 
 }

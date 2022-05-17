@@ -13,30 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
-class TSObject1 extends TSObject0 {
+class TSObject3 extends TSObject2 {
 
-  final String name1;
+  final String name3;
 
-  final Object value1;
+  final Object value3;
 
-  TSObject1(Object typeName, String name1, Object value1) {
-    super(typeName);
-    this.name1 = name1;
-    this.value1 = value1;
+  TSObject3(Object typeName,
+            String name1,
+            Object value1,
+            String name2,
+            Object value2,
+            String name3,
+            Object value3) {
+    super(typeName, name1, value1, name2, value2);
+    this.name3 = name3;
+    this.value3 = value3;
   }
 
-  TSObject1(String name1, Object value1) {
-    this.name1 = name1;
-    this.value1 = value1;
+  TSObject3(String name1, Object value1, String name2, Object value2, String name3, Object value3) {
+    super(name1, value1, name2, value2);
+    this.name3 = name3;
+    this.value3 = value3;
   }
 
   @Override
   public void formatToString(StringBuilder sb, int depth) {
     ToString.formatToString(
         sb, depth, typeName,
-        name1, value1
+        name1, value1,
+        name2, value2,
+        name3, value3
     );
   }
 

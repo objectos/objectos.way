@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.core.object;
+package objectos.lang;
 
 /**
  * <p>
@@ -33,6 +33,8 @@ package br.com.objectos.core.object;
  * If any of the methods receive a {@code null} value for a message parameter or
  * as message part parameter then it will act as if it received the string
  * {@code "null"} instead.
+ *
+ * @since 0.2
  */
 public final class Checks {
 
