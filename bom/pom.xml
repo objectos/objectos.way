@@ -45,6 +45,11 @@
 		<dependencies>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-lang</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>logging</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -131,11 +136,6 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>core-net</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>core-object</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
