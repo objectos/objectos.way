@@ -22,6 +22,11 @@
  * and {@link java.lang.Object#toString()} methods. Also provides a class that
  * helps constructors and methods check if they were invoked correctly or not.
  *
+ * <p>
+ * This package provides a utility class for {@code String} instances, a
+ * class to generate random string values and an API for converting strings.
+ *
+ *
  * @since 0.2
  */
 package objectos.lang;
