@@ -36,6 +36,20 @@
 
 	<inceptionYear>2022</inceptionYear>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<objectos.core.system.OperatingSystem.family>LINUX</objectos.core.system.OperatingSystem.family>
+						<objectos.systemproperties.get>SUCCESS</objectos.systemproperties.get>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

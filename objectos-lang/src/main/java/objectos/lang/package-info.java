@@ -34,6 +34,9 @@
  * running operations in a {@link Runtime} shutdown hook.
  *
  * <p>
+ * Provides utilities for the {@link System} class.
+ *
+ * <p>
  * Unless otherwise specified, methods in this package will throw a
  * {@link NullPointerException} if given a {@code null} argument.
  *
