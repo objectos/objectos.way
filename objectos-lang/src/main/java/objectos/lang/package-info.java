@@ -30,6 +30,10 @@
  * Provides utility classes for working with {@link Throwable} objects.
  *
  * <p>
+ * Provides utilities for the {@link Runtime} class, includes a facility for
+ * running operations in a {@link Runtime} shutdown hook.
+ *
+ * <p>
  * Unless otherwise specified, methods in this package will throw a
  * {@link NullPointerException} if given a {@code null} argument.
  *
