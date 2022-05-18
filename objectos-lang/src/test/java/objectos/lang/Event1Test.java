@@ -51,11 +51,11 @@ public class Event1Test {
 
   @Test
   public void source() {
-    assertEquals(TRACE.source(), "objectos.logging.Event1Test");
-    assertEquals(DEBUG.source(), "objectos.logging.Event1Test");
-    assertEquals(INFO.source(), "objectos.logging.Event1Test");
-    assertEquals(WARN.source(), "objectos.logging.Event1Test");
-    assertEquals(ERROR.source(), "objectos.logging.Event1Test");
+    assertEquals(TRACE.source(), "objectos.lang.Event1Test");
+    assertEquals(DEBUG.source(), "objectos.lang.Event1Test");
+    assertEquals(INFO.source(), "objectos.lang.Event1Test");
+    assertEquals(WARN.source(), "objectos.lang.Event1Test");
+    assertEquals(ERROR.source(), "objectos.lang.Event1Test");
   }
 
 }
