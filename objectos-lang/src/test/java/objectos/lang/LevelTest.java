@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Objectos Software LTDA.
+ * Copyright (C) 2022-2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Logging API.
- */
-module objectos.logging {
-  exports objectos.logging;
+package objectos.lang;
+
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
+public class LevelTest {
+
+  @Test
+  public void orderingTest() {
+    Level[] values;
+    values = Level.values();
+
+    assertEquals(values.length, 5);
+
+    assertEquals(values[0], Level.TRACE);
+
+    assertEquals(values[1], Level.DEBUG);
+
+    assertEquals(values[2], Level.INFO);
+
+    assertEquals(values[3], Level.WARN);
+
+    assertEquals(values[4], Level.ERROR);
+  }
+
 }

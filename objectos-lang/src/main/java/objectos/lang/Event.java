@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Objectos Software LTDA.
+ * Copyright (C) 2022-2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.logging;
+package objectos.lang;
 
 /**
  * Represents an event of a program execution that can be logged. Examples of
@@ -120,9 +120,11 @@ public abstract class Event {
   @Override
   public final boolean equals(Object obj) {
     return obj instanceof Event that
-        && getClass().equals(that.getClass())
-        && source.equals(that.source)
-        && key.equals(that.key);
+        && Equals.objects(
+          getClass(), that.getClass(),
+          source, that.source,
+          key, that.key
+        );
   }
 
   /**
@@ -132,14 +134,7 @@ public abstract class Event {
    */
   @Override
   public final int hashCode() {
-    int result;
-    result = 17;
-
-    result = 31 * result + key.hashCode();
-
-    result = 31 * result + source.hashCode();
-
-    return result;
+    return HashCode.hashCode(key, source);
   }
 
   /**

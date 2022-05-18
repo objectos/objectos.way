@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Objectos Software LTDA.
+ * Copyright (C) 2022-2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.logging;
+package objectos.lang;
 
 /**
- * A log event that takes no arguments.
+ * A log event that takes one argument.
+ *
+ * @param <T1> the type of the log argument
  */
-public final class Event0 extends Event {
+public final class Event1<T1> extends Event {
 
   /**
    * Creates a new event instance.
@@ -31,7 +33,7 @@ public final class Event0 extends Event {
    * @param level
    *        the logging level of this event
    */
-  public Event0(String source, Object key, Level level) {
+  public Event1(String source, Object key, Level level) {
     super(source, key, level);
   }
 
@@ -50,10 +52,12 @@ public final class Event0 extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
+   * @param <T1> the type of the log argument
+   *
    * @return a new DEBUG log event
    */
-  public static Event0 debug() {
-    return create(Level.DEBUG, Event0::new);
+  public static <T1> Event1<T1> debug() {
+    return create(Level.DEBUG, Event1::new);
   }
 
   /**
@@ -71,10 +75,12 @@ public final class Event0 extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
+   * @param <T1> the type of the log argument
+   *
    * @return a new ERROR log event
    */
-  public static Event0 error() {
-    return create(Level.ERROR, Event0::new);
+  public static <T1> Event1<T1> error() {
+    return create(Level.ERROR, Event1::new);
   }
 
   /**
@@ -92,10 +98,12 @@ public final class Event0 extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
+   * @param <T1> the type of the log argument
+   *
    * @return a new INFO log event
    */
-  public static Event0 info() {
-    return create(Level.INFO, Event0::new);
+  public static <T1> Event1<T1> info() {
+    return create(Level.INFO, Event1::new);
   }
 
   /**
@@ -113,10 +121,12 @@ public final class Event0 extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
+   * @param <T1> the type of the log argument
+   *
    * @return a new TRACE log event
    */
-  public static Event0 trace() {
-    return create(Level.TRACE, Event0::new);
+  public static <T1> Event1<T1> trace() {
+    return create(Level.TRACE, Event1::new);
   }
 
   /**
@@ -134,10 +144,12 @@ public final class Event0 extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
+   * @param <T1> the type of the log argument
+   *
    * @return a new WARN log event
    */
-  public static Event0 warn() {
-    return create(Level.WARN, Event0::new);
+  public static <T1> Event1<T1> warn() {
+    return create(Level.WARN, Event1::new);
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Objectos Software LTDA.
+ * Copyright (C) 2022-2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides the classes and interfaces of the Objectos Logging API.
- */
-package objectos.logging;
+package objectos.lang;
+
+final class Duo<T1, T2> {
+
+  final T1 value1;
+
+  final T2 value2;
+
+  Duo(T1 value1, T2 value2) {
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  @Override
+  public final String toString() {
+    return "value1=" + value1 + ":value2=" + value2;
+  }
+
+}

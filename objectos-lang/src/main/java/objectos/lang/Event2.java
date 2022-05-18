@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Objectos Software LTDA.
+ * Copyright (C) 2022-2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.logging;
+package objectos.lang;
 
 /**
- * A log event that takes one argument.
+ * A log event that takes two arguments.
  *
- * @param <T1> the type of the log argument
+ * @param <T1> the type of the first log argument
+ * @param <T2> the type of the second log argument
  */
-public final class Event1<T1> extends Event {
+public final class Event2<T1, T2> extends Event {
 
   /**
    * Creates a new event instance.
@@ -33,7 +34,7 @@ public final class Event1<T1> extends Event {
    * @param level
    *        the logging level of this event
    */
-  public Event1(String source, Object key, Level level) {
+  public Event2(String source, Object key, Level level) {
     super(source, key, level);
   }
 
@@ -53,11 +54,12 @@ public final class Event1<T1> extends Event {
    * name, a colon ':' and the line number where this method has been invoked.
    *
    * @param <T1> the type of the log argument
+   * @param <T2> the type of the second log argument
    *
    * @return a new DEBUG log event
    */
-  public static <T1> Event1<T1> debug() {
-    return create(Level.DEBUG, Event1::new);
+  public static <T1, T2> Event2<T1, T2> debug() {
+    return create(Level.DEBUG, Event2::new);
   }
 
   /**
@@ -76,11 +78,12 @@ public final class Event1<T1> extends Event {
    * name, a colon ':' and the line number where this method has been invoked.
    *
    * @param <T1> the type of the log argument
+   * @param <T2> the type of the second log argument
    *
    * @return a new ERROR log event
    */
-  public static <T1> Event1<T1> error() {
-    return create(Level.ERROR, Event1::new);
+  public static <T1, T2> Event2<T1, T2> error() {
+    return create(Level.ERROR, Event2::new);
   }
 
   /**
@@ -99,11 +102,12 @@ public final class Event1<T1> extends Event {
    * name, a colon ':' and the line number where this method has been invoked.
    *
    * @param <T1> the type of the log argument
+   * @param <T2> the type of the second log argument
    *
    * @return a new INFO log event
    */
-  public static <T1> Event1<T1> info() {
-    return create(Level.INFO, Event1::new);
+  public static <T1, T2> Event2<T1, T2> info() {
+    return create(Level.INFO, Event2::new);
   }
 
   /**
@@ -122,11 +126,12 @@ public final class Event1<T1> extends Event {
    * name, a colon ':' and the line number where this method has been invoked.
    *
    * @param <T1> the type of the log argument
+   * @param <T2> the type of the second log argument
    *
    * @return a new TRACE log event
    */
-  public static <T1> Event1<T1> trace() {
-    return create(Level.TRACE, Event1::new);
+  public static <T1, T2> Event2<T1, T2> trace() {
+    return create(Level.TRACE, Event2::new);
   }
 
   /**
@@ -145,11 +150,12 @@ public final class Event1<T1> extends Event {
    * name, a colon ':' and the line number where this method has been invoked.
    *
    * @param <T1> the type of the log argument
+   * @param <T2> the type of the second log argument
    *
    * @return a new WARN log event
    */
-  public static <T1> Event1<T1> warn() {
-    return create(Level.WARN, Event1::new);
+  public static <T1, T2> Event2<T1, T2> warn() {
+    return create(Level.WARN, Event2::new);
   }
 
 }
