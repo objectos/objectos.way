@@ -30,7 +30,7 @@ public class OperatingSystemTest implements OperatingSystemVisitor<String, Void>
     family = os.acceptOperatingSystemVisitor(this, null);
 
     String expectedFamily;
-    expectedFamily = SystemProperty.get("objectos.core.system.OperatingSystem.family");
+    expectedFamily = System.getProperty("objectos.core.system.OperatingSystem.family", "EMPTY!!!");
 
     assertEquals(family, expectedFamily);
   }

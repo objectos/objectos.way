@@ -16,6 +16,30 @@
 /**
  * Provides utilities for classes in the {@code java.lang} package.
  *
+ * <h2>Index by {@code java.lang} type:</h2>
+ *
+ * <ul>
+ * <li>{@code java.lang.Object}
+ * <ul>
+ * <li>{@link objectos.lang.Checks}</li>
+ * <li>{@link objectos.lang.Equals}</li>
+ * <li>{@link objectos.lang.HashCode}</li>
+ * </ul>
+ * </li>
+ * <li>{@code java.lang.String}
+ * <ul>
+ * <li>{@link objectos.lang.StringConversion}</li>
+ * <li>{@link objectos.lang.StringConverter}</li>
+ * <li>{@link objectos.lang.Strings}</li>
+ * </ul>
+ * </li>
+ * <li>{@code java.lang.System}
+ * <ul>
+ * <li>{@link objectos.lang.SystemProperty}</li>
+ * </ul>
+ * </li>
+ * </ul>
+ *
  * <p>
  * Provides utility classes for implementing
  * {@link java.lang.Object#equals(Object)}, {@link java.lang.Object#hashCode()}
