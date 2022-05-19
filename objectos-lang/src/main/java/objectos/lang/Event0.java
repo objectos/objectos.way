@@ -17,6 +17,8 @@ package objectos.lang;
 
 /**
  * A log event that takes no arguments.
+ *
+ * @since 0.2
  */
 public final class Event0 extends Event {
 

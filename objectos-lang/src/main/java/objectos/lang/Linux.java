@@ -18,7 +18,7 @@ package objectos.lang;
 /**
  * Represents a Linux operating system.
  *
- * @since 2
+ * @since 0.2
  */
 public final class Linux extends OperatingSystem {
 

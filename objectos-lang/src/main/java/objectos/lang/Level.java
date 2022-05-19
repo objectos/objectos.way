@@ -19,6 +19,8 @@ package objectos.lang;
  * Represents a logging level. Levels typically represent the severity of an
  * event. They may be used by loggers to limit which message are actually
  * logged.
+ *
+ * @since 0.2
  */
 public enum Level {
 

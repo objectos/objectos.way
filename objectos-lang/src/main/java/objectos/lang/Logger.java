@@ -19,6 +19,8 @@ package objectos.lang;
  * An object responsible for logging the events of a program.
  *
  * @see Event
+ *
+ * @since 0.2
  */
 public interface Logger {
 

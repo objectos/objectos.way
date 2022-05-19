@@ -18,11 +18,11 @@ package objectos.lang;
 /**
  * The value of the {@code line.separator} system property.
  *
- * @since 2
+ * @since 0.2
  */
 public final class LineSeparator {
 
-  static final String VALUE = System.getProperty("line.separator");
+  static final String VALUE = System.lineSeparator();
 
   private LineSeparator() {}
 

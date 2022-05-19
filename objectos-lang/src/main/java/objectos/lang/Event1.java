@@ -19,6 +19,8 @@ package objectos.lang;
  * A log event that takes one argument.
  *
  * @param <T1> the type of the log argument
+ *
+ * @since 0.2
  */
 public final class Event1<T1> extends Event {
 

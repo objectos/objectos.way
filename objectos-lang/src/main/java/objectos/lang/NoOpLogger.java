@@ -19,6 +19,8 @@ package objectos.lang;
  * A no-op {@code Logger} implementation (for the most part). The one exception
  * is the {@link Logger#replace(Logger)} operation that actually returns the
  * supplied value.
+ *
+ * @since 0.2
  */
 public class NoOpLogger implements Logger {
 

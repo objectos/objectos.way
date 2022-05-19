@@ -62,6 +62,8 @@ package objectos.lang;
  * <li>the number and the types of the arguments that should be supplied to a
  * {@link Logger} instance when invoking this event.</li>
  * </ul>
+ *
+ * @since 0.2
  */
 public abstract class Event {
 

@@ -15,9 +15,9 @@
  */
 package objectos.lang;
 
-final class RemoveRange extends Conversion {
+final class RemoveRange extends StringConversion {
 
-  static final Conversion COMBINING_DIACRITICAL_MARKS
+  static final StringConversion COMBINING_DIACRITICAL_MARKS
       = new RemoveRange('\u0300', '\u036F');
 
   private static final Object STATE = null;

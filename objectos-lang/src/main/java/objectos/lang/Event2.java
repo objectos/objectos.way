@@ -20,6 +20,8 @@ package objectos.lang;
  *
  * @param <T1> the type of the first log argument
  * @param <T2> the type of the second log argument
+ *
+ * @since 0.2
  */
 public final class Event2<T1, T2> extends Event {
 

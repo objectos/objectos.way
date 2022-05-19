@@ -15,11 +15,11 @@
  */
 package objectos.lang;
 
-final class ToJavaCamelCase extends Conversion {
+final class ToJavaCamelCase extends StringConversion {
 
-  static final Conversion LOWER = new ToJavaCamelCase(State.LOWER_START);
+  static final StringConversion LOWER = new ToJavaCamelCase(State.LOWER_START);
 
-  static final Conversion UPPER = new ToJavaCamelCase(State.UPPER_START);
+  static final StringConversion UPPER = new ToJavaCamelCase(State.UPPER_START);
 
   private final State startingState;
 

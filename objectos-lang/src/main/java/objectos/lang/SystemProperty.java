@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 /**
  * Provides {@code static} utility methods for accessing system property values.
  *
- * @since 2
+ * @since 0.2
  */
 public final class SystemProperty {
 

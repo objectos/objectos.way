@@ -23,7 +23,7 @@ package objectos.lang;
  * <p>
  * Currently only the Linux operating system is supported by this facility.
  *
- * @since 2
+ * @since 0.2
  */
 public abstract class OperatingSystem {
 

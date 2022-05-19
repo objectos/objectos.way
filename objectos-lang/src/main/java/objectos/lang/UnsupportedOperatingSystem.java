@@ -21,7 +21,7 @@ package objectos.lang;
  * <p>
  * See {@link OperatingSystem} for a list of the supported OS families.
  *
- * @since 2
+ * @since 0.2
  */
 public final class UnsupportedOperatingSystem extends OperatingSystem {
 

@@ -21,12 +21,12 @@ package objectos.lang;
  *
  * @since 0.2
  */
-public abstract class Conversion {
+public abstract class StringConversion {
 
   /**
    * Sole constructor.
    */
-  protected Conversion() {}
+  protected StringConversion() {}
 
   /**
    * Returns a new conversion that appends all code points to the output
@@ -58,7 +58,7 @@ public abstract class Conversion {
    *         if {@code from >= to} or if any of {@code from}, or {@code to}
    *         fails the test {@link Character#isValidCodePoint(int)}
    */
-  public static Conversion removeRange(int from, int to) {
+  public static StringConversion removeRange(int from, int to) {
     Checks.checkArgument(from < to, "from must be smaller than to");
 
     if (!Character.isValidCodePoint(from)) {
@@ -95,7 +95,7 @@ public abstract class Conversion {
    * @return a new conversion that appends only code points that can form a
    *         valid Java identifier
    */
-  public static Conversion toJavaIdentifier() {
+  public static StringConversion toJavaIdentifier() {
     return ToJavaIdentifier.INSTANCE;
   }
 
@@ -127,7 +127,7 @@ public abstract class Conversion {
    * @return a new conversion that appends only code points that can form a
    *         valid Java identifier and formats to the lower camel case style
    */
-  public static Conversion toJavaLowerCamelCase() {
+  public static StringConversion toJavaLowerCamelCase() {
     return ToJavaCamelCase.LOWER;
   }
 
@@ -159,7 +159,7 @@ public abstract class Conversion {
    * @return a new conversion that appends only code points that can form a
    *         valid Java identifier and formats to the upper camel case style
    */
-  public static Conversion toJavaUpperCamelCase() {
+  public static StringConversion toJavaUpperCamelCase() {
     return ToJavaCamelCase.UPPER;
   }
 
@@ -169,11 +169,11 @@ public abstract class Conversion {
    *
    * @return a conversion that behaves like the {@link String#trim()} method
    */
-  public static Conversion trim() {
+  public static StringConversion trim() {
     return Trim.INSTANCE;
   }
 
-  static Conversion removeCombiningDiacriticalMarks() {
+  static StringConversion removeCombiningDiacriticalMarks() {
     return RemoveRange.COMBINING_DIACRITICAL_MARKS;
   }
 

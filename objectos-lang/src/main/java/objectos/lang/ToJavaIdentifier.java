@@ -15,9 +15,9 @@
  */
 package objectos.lang;
 
-final class ToJavaIdentifier extends Conversion {
+final class ToJavaIdentifier extends StringConversion {
 
-  static final Conversion INSTANCE = new ToJavaIdentifier();
+  static final StringConversion INSTANCE = new ToJavaIdentifier();
 
   @Override
   protected final Object executeOne(Object state, StringBuilder builder, int c) {

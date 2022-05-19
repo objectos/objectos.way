@@ -24,7 +24,7 @@ package objectos.lang;
  * @param <P>
  *        the type of the additional value
  *
- * @since 2
+ * @since 0.2
  */
 public interface OperatingSystemVisitor<R, P> {
 

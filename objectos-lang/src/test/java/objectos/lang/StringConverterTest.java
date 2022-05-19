@@ -25,8 +25,8 @@ public class StringConverterTest {
   public void multiple() {
     StringConverter c;
     c = StringConverter.create(
-        Conversion.trim(),
-        Conversion.removeRange('1', '7')
+        StringConversion.trim(),
+        StringConversion.removeRange('1', '7')
     );
 
     test(c, "", "");
@@ -38,7 +38,7 @@ public class StringConverterTest {
   public void removeRange() {
     StringConverter c;
     c = StringConverter.create(
-        Conversion.removeRange('1', '7')
+        StringConversion.removeRange('1', '7')
     );
 
     test(c, "", "");
@@ -50,7 +50,7 @@ public class StringConverterTest {
   public void toJavaIdentifier() {
     StringConverter c;
     c = StringConverter.create(
-        Conversion.toJavaIdentifier()
+        StringConversion.toJavaIdentifier()
     );
 
     test(c, "", "");
@@ -66,7 +66,7 @@ public class StringConverterTest {
   public void toJavaLowerCamelCase() {
     StringConverter c;
     c = StringConverter.create(
-        Conversion.toJavaLowerCamelCase()
+        StringConversion.toJavaLowerCamelCase()
     );
 
     test(c, "", "");
@@ -82,7 +82,7 @@ public class StringConverterTest {
   public void toJavaUpperCamelCase() {
     StringConverter c;
     c = StringConverter.create(
-        Conversion.toJavaUpperCamelCase()
+        StringConversion.toJavaUpperCamelCase()
     );
 
     test(c, "", "");
@@ -98,7 +98,7 @@ public class StringConverterTest {
   public void trim() {
     StringConverter c;
     c = StringConverter.create(
-        Conversion.trim()
+        StringConversion.trim()
     );
 
     test(c, "", "");

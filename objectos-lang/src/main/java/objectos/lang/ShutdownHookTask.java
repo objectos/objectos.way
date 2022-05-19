@@ -19,7 +19,7 @@ package objectos.lang;
  * Represents an arbitrary task to be executed in the {@link ShutdownHook}
  * facility.
  *
- * @since 2
+ * @since 0.2
  */
 public interface ShutdownHookTask {
 

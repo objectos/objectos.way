@@ -15,9 +15,9 @@
  */
 package objectos.lang;
 
-final class Trim extends Conversion {
+final class Trim extends StringConversion {
 
-  static final Conversion INSTANCE = new Trim();
+  static final StringConversion INSTANCE = new Trim();
 
   private static final char SPACE = ' ';
 

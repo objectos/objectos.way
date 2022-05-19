@@ -23,9 +23,9 @@ package objectos.lang;
  */
 public final class StringConverter {
 
-  private final Conversion[] conversions;
+  private final StringConversion[] conversions;
 
-  StringConverter(Conversion[] conversions) {
+  StringConverter(StringConversion[] conversions) {
     this.conversions = conversions;
   }
 
@@ -40,11 +40,11 @@ public final class StringConverter {
    * @throws NullPointerException
    *         if {@code conversion} is null
    */
-  public static StringConverter create(Conversion conversion) {
+  public static StringConverter create(StringConversion conversion) {
     Checks.checkNotNull(conversion, "conversion == null");
 
     return new StringConverter(
-      new Conversion[] {conversion}
+      new StringConversion[] {conversion}
     );
   }
 
@@ -64,24 +64,20 @@ public final class StringConverter {
    *         if {@code first} or {@code rest} is null or if any of the elements
    *         on {@code rest} are null
    */
-  public static StringConverter create(Conversion first, Conversion... rest) {
+  public static StringConverter create(StringConversion first, StringConversion... rest) {
     Checks.checkNotNull(first, "first == null");
     Checks.checkNotNull(rest, "rest == null");
 
-    Conversion[] conversions;
-    conversions = new Conversion[rest.length + 1];
+    StringConversion[] conversions;
+    conversions = new StringConversion[rest.length + 1];
 
     conversions[0] = first;
 
     for (int i = 0; i < rest.length; i++) {
-      Conversion r;
+      StringConversion r;
       r = rest[i];
 
-      if (r == null) {
-        throw new NullPointerException("rest[" + i + "] == null");
-      }
-
-      conversions[i + 1] = r;
+      conversions[i + 1] = Checks.checkNotNull(r, "rest[", i, "] == null");
     }
 
     return new StringConverter(conversions);
@@ -117,7 +113,7 @@ public final class StringConverter {
    * This is repeated until all of the code points have been processed
    * processed. The {@code Conversion} instances are then allowed to do a last
    * round of processing. In their declared order, for each {@code Conversion}
-   * instance, the {@link Conversion#executeLastRound(Object, StringBuilder)}
+   * instance, the {@link StringConversion#executeLastRound(Object, StringBuilder)}
    * method is invoked.
    *
    * @param s
@@ -138,7 +134,7 @@ public final class StringConverter {
     states = new Object[conversions.length];
 
     for (int i = 0; i < conversions.length; i++) {
-      Conversion conversion;
+      StringConversion conversion;
       conversion = conversions[i];
 
       states[i] = conversion.startingState();
@@ -158,7 +154,7 @@ public final class StringConverter {
         Object state;
         state = states[conversionIndex];
 
-        Conversion conversion;
+        StringConversion conversion;
         conversion = conversions[conversionIndex];
 
         state = conversion.executeOne(state, builder, codePoint);
@@ -206,7 +202,7 @@ public final class StringConverter {
       Object state;
       state = states[i];
 
-      Conversion conversion;
+      StringConversion conversion;
       conversion = conversions[i];
 
       conversion.executeLastRound(state, builder);
