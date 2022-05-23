@@ -25,7 +25,7 @@ package objectos.lang;
  *
  * @since 0.2
  */
-public abstract class OperatingSystem {
+public sealed abstract class OperatingSystem permits Linux, UnsupportedOperatingSystem {
 
   private static final OperatingSystem INSTANCE = create();
 

@@ -14,51 +14,8 @@
  * limitations under the License.
  */
 /**
- * Provides utilities for classes in the {@code java.lang} package.
- *
- * <h2>Index by {@code java.lang} type:</h2>
- *
- * <ul>
- * <li>{@code java.lang.Object}
- * <ul>
- * <li>{@link objectos.lang.Checks}</li>
- * <li>{@link objectos.lang.Equals}</li>
- * <li>{@link objectos.lang.HashCode}</li>
- * </ul>
- * </li>
- * <li>{@code java.lang.String}
- * <ul>
- * <li>{@link objectos.lang.StringConversion}</li>
- * <li>{@link objectos.lang.StringConverter}</li>
- * <li>{@link objectos.lang.Strings}</li>
- * </ul>
- * </li>
- * <li>{@code java.lang.System}
- * <ul>
- * <li>{@link objectos.lang.SystemProperty}</li>
- * </ul>
- * </li>
- * </ul>
- *
- * <p>
- * Provides utility classes for implementing
- * {@link java.lang.Object#equals(Object)}, {@link java.lang.Object#hashCode()}
- * and {@link java.lang.Object#toString()} methods. Also provides a class that
- * helps constructors and methods check if they were invoked correctly or not.
- *
- * <p>
- * This package provides a utility class for {@code String} instances, a
- * class to generate random string values and an API for converting strings.
- *
- * <p>
- * Provides utility classes for working with {@link Throwable} objects.
- *
- * <p>
- * Provides utilities for the {@link Runtime} class, includes a facility for
- * running operations in a {@link Runtime} shutdown hook.
- *
- * <p>
- * Provides utilities for the {@link System} class.
+ * Provides utilities for working with instances whose type is of the
+ * {@code java.lang} package; also provides a type-safe logging API.
  *
  * <p>
  * Unless otherwise specified, methods in this package will throw a

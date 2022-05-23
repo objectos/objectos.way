@@ -18,6 +18,11 @@ package objectos.lang;
 /**
  * An object responsible for logging the events of a program.
  *
+ * <p>
+ * <em>Note on {@code null} handling:</em> unlike other methods in this package,
+ * the parameterized arguments of the various {@code log} methods of this
+ * interface can be {@code null}.
+ *
  * @see Event
  *
  * @since 0.2
@@ -50,7 +55,7 @@ public interface Logger {
    * @param event
    *        an event instance
    * @param v1
-   *        argument of the logged event
+   *        argument of the logged event (can be null)
    */
   <T1> void log(Event1<T1> event, T1 v1);
 
@@ -62,9 +67,9 @@ public interface Logger {
    * @param event
    *        an event instance
    * @param v1
-   *        first argument of the logged event
+   *        first argument of the logged event (can be null)
    * @param v2
-   *        second argument of the logged event
+   *        second argument of the logged event (can be null)
    */
   <T1, T2> void log(Event2<T1, T2> event, T1 v1, T2 v2);
 
@@ -77,11 +82,11 @@ public interface Logger {
    * @param event
    *        an event instance
    * @param v1
-   *        first argument of the logged event
+   *        first argument of the logged event (can be null)
    * @param v2
-   *        second argument of the logged event
+   *        second argument of the logged event (can be null)
    * @param v3
-   *        third argument of the logged event
+   *        third argument of the logged event (can be null)
    */
   <T1, T2, T3> void log(Event3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3);
 
