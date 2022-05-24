@@ -74,4 +74,58 @@ public final class Throwables {
     return output.toString();
   }
 
+  /**
+   * Throws the specified {@code throwable} as the specified {@code type} if it
+   * is possible to do so. More formally:
+   *
+   * <p>
+   * If {@code throwable} is {@code null} then no action is taken.
+   *
+   * <p>
+   * If {@code throwable} is an instance of {@code type}, i.e., if the
+   * expression {@code type.isInstance(rethrow)} evaluates to {@code true}, then
+   * {@code throwable} is cast to {@code type} and thrown as it is.
+   *
+   * <p>
+   * In all other cases, a new {@link RethrowException} is thrown having the
+   * specified {@code throwable} as its cause.
+   *
+   * @param <X> will be thrown as this {@code Throwable} type
+   * @param throwable
+   *        a possibly null {@code Throwable} instance to be rethrown if
+   *        possible
+   * @param type
+   *        the type which to throw the {@code throwable} as
+   *
+   * @throws X
+   *         if {@code throwable} is an instance of {@code type} and is
+   *         non-null
+   * @throws RethrowException
+   *         if {@code throwable} is not an instance of {@code type} and is
+   *         non-null
+   */
+  public static <X extends Throwable> void rethrowIfPossible(
+      Throwable throwable, Class<X> type)
+      throws X {
+    Checks.checkNotNull(type, "type == null");
+
+    if (throwable == null) {
+      return;
+    }
+
+    if (type.isInstance(throwable)) {
+      throw type.cast(throwable);
+    }
+
+    if (throwable instanceof RuntimeException) {
+      throw (RuntimeException) throwable;
+    }
+
+    if (throwable instanceof Error) {
+      throw (Error) throwable;
+    }
+
+    throw new RethrowException("Not of type " + type, throwable);
+  }
+
 }
