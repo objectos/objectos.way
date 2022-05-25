@@ -15,7 +15,65 @@
  */
 /**
  * Provides utilities for working with instances whose type is of the
- * {@code java.lang} package; also provides a type-safe logging API.
+ * {@code java.lang} package; also provides a type-safe note sink API.
+ *
+ * <h2>{@code java.lang} utilities</h2>
+ *
+ * <p>
+ * The utilities are listed below grouped by the {@code java.lang} type
+ * it relates to
+ *
+ * <h3>{@code Object}</h3>
+ *
+ * <ul>
+ * <li>{@link objectos.lang.Checks}
+ * <li>{@link objectos.lang.Equals}
+ * <li>{@link objectos.lang.HashCode}
+ * <li>{@link objectos.lang.ToString}
+ * <li>{@link objectos.lang.ToStringObject}
+ * </ul>
+ *
+ * <h3>{@code Runtime}</h3>
+ *
+ * <ul>
+ * <li>{@link objectos.lang.ShutdownHook}
+ * <li>{@link objectos.lang.ShutdownHookTask}
+ * </ul>
+ *
+ * <h3>{@code String}</h3>
+ *
+ * <ul>
+ * <li>{@link objectos.lang.RandomString}
+ * <li>{@link objectos.lang.StringConversion}
+ * <li>{@link objectos.lang.StringConverter}
+ * <li>{@link objectos.lang.Strings}
+ * </ul>
+ *
+ * <h3>{@code System}</h3>
+ *
+ * <ul>
+ * <li>{@link objectos.lang.OperatingSystem}
+ * <li>{@link objectos.lang.OperatingSystemVisitor}
+ * </ul>
+ *
+ * <h3>{@code Throwable}</h3>
+ *
+ * <ul>
+ * <li>{@link objectos.lang.Throwables}
+ * </ul>
+ *
+ * <h2>Note sink API</h2>
+ *
+ * <p>
+ * Additionally, this package provides a type-safe note sink API. The main
+ * reference can be found in classes listed below:
+ *
+ * <ul>
+ * <li>{@link objectos.lang.Note}
+ * <li>{@link objectos.lang.NoteSink}
+ * </ul>
+ *
+ * <h2>Handling of {@code null} arguments</h2>
  *
  * <p>
  * Unless otherwise specified, methods in this package will throw a
