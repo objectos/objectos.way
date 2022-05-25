@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 Objectos Software LTDA.
+ * Copyright (C) 2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,33 @@
 package objectos.lang;
 
 /**
- * A log event that takes three arguments.
+ * A note that takes three arguments.
  *
- * @param <T1> the type of the first log argument
- * @param <T2> the type of the second log argument
- * @param <T3> the type of the third log argument
+ * @param <T1> the type of the first note argument
+ * @param <T2> the type of the second note argument
+ * @param <T3> the type of the third note argument
  *
  * @since 0.2
  */
-public final class Event3<T1, T2, T3> extends Event {
+public final class Note3<T1, T2, T3> extends Note {
 
   /**
-   * Creates a new event instance.
+   * Creates a new note instance.
    *
    * @param source
-   *        a name to identify the source class this event is bound to
+   *        a name to identify the source class this note is bound to
    * @param key
-   *        a key that uniquely identifies this event within the given
+   *        a key that uniquely identifies this note within the given
    *        {@code source}
    * @param level
-   *        the logging level of this event
+   *        the noteging level of this note
    */
-  public Event3(String source, Object key, Level level) {
+  public Note3(String source, Object key, Level level) {
     super(source, key, level);
   }
 
   /**
-   * Creates a new DEBUG log event.
+   * Creates a new DEBUG note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -56,18 +56,18 @@ public final class Event3<T1, T2, T3> extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
-   * @param <T1> the type of the log argument
-   * @param <T2> the type of the second log argument
-   * @param <T3> the type of the third log argument
+   * @param <T1> the type of the note argument
+   * @param <T2> the type of the second note argument
+   * @param <T3> the type of the third note argument
    *
-   * @return a new DEBUG log event
+   * @return a new DEBUG note
    */
-  public static <T1, T2, T3> Event3<T1, T2, T3> debug() {
-    return create(Level.DEBUG, Event3::new);
+  public static <T1, T2, T3> Note3<T1, T2, T3> debug() {
+    return create(Level.DEBUG, Note3::new);
   }
 
   /**
-   * Creates a new ERROR log event.
+   * Creates a new ERROR note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -81,18 +81,18 @@ public final class Event3<T1, T2, T3> extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
-   * @param <T1> the type of the log argument
-   * @param <T2> the type of the second log argument
-   * @param <T3> the type of the third log argument
+   * @param <T1> the type of the note argument
+   * @param <T2> the type of the second note argument
+   * @param <T3> the type of the third note argument
    *
-   * @return a new ERROR log event
+   * @return a new ERROR note
    */
-  public static <T1, T2, T3> Event3<T1, T2, T3> error() {
-    return create(Level.ERROR, Event3::new);
+  public static <T1, T2, T3> Note3<T1, T2, T3> error() {
+    return create(Level.ERROR, Note3::new);
   }
 
   /**
-   * Creates a new INFO log event.
+   * Creates a new INFO note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -106,18 +106,18 @@ public final class Event3<T1, T2, T3> extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
-   * @param <T1> the type of the log argument
-   * @param <T2> the type of the second log argument
-   * @param <T3> the type of the third log argument
+   * @param <T1> the type of the note argument
+   * @param <T2> the type of the second note argument
+   * @param <T3> the type of the third note argument
    *
-   * @return a new INFO log event
+   * @return a new INFO note
    */
-  public static <T1, T2, T3> Event3<T1, T2, T3> info() {
-    return create(Level.INFO, Event3::new);
+  public static <T1, T2, T3> Note3<T1, T2, T3> info() {
+    return create(Level.INFO, Note3::new);
   }
 
   /**
-   * Creates a new TRACE log event.
+   * Creates a new TRACE note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -131,18 +131,18 @@ public final class Event3<T1, T2, T3> extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
-   * @param <T1> the type of the log argument
-   * @param <T2> the type of the second log argument
-   * @param <T3> the type of the third log argument
+   * @param <T1> the type of the note argument
+   * @param <T2> the type of the second note argument
+   * @param <T3> the type of the third note argument
    *
-   * @return a new TRACE log event
+   * @return a new TRACE note
    */
-  public static <T1, T2, T3> Event3<T1, T2, T3> trace() {
-    return create(Level.TRACE, Event3::new);
+  public static <T1, T2, T3> Note3<T1, T2, T3> trace() {
+    return create(Level.TRACE, Note3::new);
   }
 
   /**
-   * Creates a new WARN log event.
+   * Creates a new WARN note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -156,14 +156,14 @@ public final class Event3<T1, T2, T3> extends Event {
    * The <strong>{@code key}</strong> value is a string containing the file
    * name, a colon ':' and the line number where this method has been invoked.
    *
-   * @param <T1> the type of the log argument
-   * @param <T2> the type of the second log argument
-   * @param <T3> the type of the third log argument
+   * @param <T1> the type of the note argument
+   * @param <T2> the type of the second note argument
+   * @param <T3> the type of the third note argument
    *
-   * @return a new WARN log event
+   * @return a new WARN note
    */
-  public static <T1, T2, T3> Event3<T1, T2, T3> warn() {
-    return create(Level.WARN, Event3::new);
+  public static <T1, T2, T3> Note3<T1, T2, T3> warn() {
+    return create(Level.WARN, Note3::new);
   }
 
 }

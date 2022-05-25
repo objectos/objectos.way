@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 Objectos Software LTDA.
+ * Copyright (C) 2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,21 @@
 package objectos.lang;
 
 /**
- * A no-op {@code Logger} implementation (for the most part). The one exception
- * is the {@link Logger#replace(Logger)} operation that actually returns the
+ * A no-op {@code NoteSink} implementation (for the most part). The one
+ * exception
+ * is the {@link NoteSink#replace(NoteSink)} operation that actually returns the
  * supplied value.
  *
  * @since 0.2
  */
-public class NoOpLogger implements Logger {
+public class NoOpNoteSink implements NoteSink {
 
-  static final NoOpLogger INSTANCE = new NoOpLogger();
+  static final NoOpNoteSink INSTANCE = new NoOpNoteSink();
 
   /**
    * The sole {@code public} constructor.
    */
-  public NoOpLogger() {}
+  public NoOpNoteSink() {}
 
   /**
    * Returns the {@code static} instance. This is method is provided as a
@@ -37,7 +38,7 @@ public class NoOpLogger implements Logger {
    *
    * @return the {@code static} instance
    */
-  public static NoOpLogger getInstance() {
+  public static NoOpNoteSink getInstance() {
     return INSTANCE;
   }
 
@@ -50,23 +51,23 @@ public class NoOpLogger implements Logger {
    * @return {@code false}
    */
   @Override
-  public boolean isEnabled(Event event) {
+  public boolean isEnabled(Note event) {
     return false;
   }
 
   /**
-   * Does nothing, this is a no-op logger.
+   * Does nothing, this is a no-op sink.
    *
    * @param event
    *        an event instance (ignored)
    */
   @Override
-  public void log(Event0 event) {
+  public void log(Note0 event) {
     // noop
   }
 
   /**
-   * Does nothing, this is a no-op logger.
+   * Does nothing, this is a no-op sink.
    *
    * @param event
    *        an event instance (ignored)
@@ -74,12 +75,12 @@ public class NoOpLogger implements Logger {
    *        a value (ignored)
    */
   @Override
-  public <T1> void log(Event1<T1> event, T1 v1) {
+  public <T1> void log(Note1<T1> event, T1 v1) {
     // noop
   }
 
   /**
-   * Does nothing, this is a no-op logger.
+   * Does nothing, this is a no-op sink.
    *
    * @param event
    *        an event instance (ignored)
@@ -89,12 +90,12 @@ public class NoOpLogger implements Logger {
    *        a second value (ignored)
    */
   @Override
-  public <T1, T2> void log(Event2<T1, T2> event, T1 v1, T2 v2) {
+  public <T1, T2> void log(Note2<T1, T2> event, T1 v1, T2 v2) {
     // noop
   }
 
   /**
-   * Does nothing, this is a no-op logger.
+   * Does nothing, this is a no-op sink.
    *
    * @param event
    *        an event instance (ignored)
@@ -106,23 +107,23 @@ public class NoOpLogger implements Logger {
    *        a third value (ignored)
    */
   @Override
-  public <T1, T2, T3> void log(Event3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
+  public <T1, T2, T3> void log(Note3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
     // noop
   }
 
   /**
-   * Returns the given {@code logger} value.
+   * Returns the given {@code sink} value.
    *
-   * @param logger
-   *        a {@code Logger} instance
+   * @param sink
+   *        a {@code NoteSink} instance
    *
-   * @return the given {@code logger} value
+   * @return the given {@code sink} value
    */
   @Override
-  public final Logger replace(Logger logger) {
-    Checks.checkNotNull(logger, "logger == null");
+  public final NoteSink replace(NoteSink sink) {
+    Checks.checkNotNull(sink, "sink == null");
 
-    return logger;
+    return sink;
   }
 
 }

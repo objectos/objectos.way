@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 Objectos Software LTDA.
+ * Copyright (C) 2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +34,15 @@ import java.util.List;
  */
 public final class ShutdownHook {
 
-  private static final Event1<Throwable> CAUGHT_EXCEPTION = Event1.warn();
+  private static final Note1<Throwable> CAUGHT_EXCEPTION = Note1.warn();
 
-  private static final Event1<Long> FINISHED = Event1.info();
+  private static final Note1<Long> FINISHED = Note1.info();
 
-  private static final Event0 STARTED = Event0.info();
+  private static final Note0 STARTED = Note0.info();
 
   private Job job;
 
-  private Logger logger = NoOpLogger.getInstance();
+  private NoteSink logger = NoOpNoteSink.getInstance();
 
   private List<ShutdownHookTask> tasks;
 
@@ -93,7 +93,7 @@ public final class ShutdownHook {
    * @param logger
    *        the logger instance to be used by the shutdown hook
    */
-  public static void setLogger(Logger logger) {
+  public static void setLogger(NoteSink logger) {
     ShutdownHook hook;
     hook = getHook();
 
@@ -149,7 +149,7 @@ public final class ShutdownHook {
     runtime.addShutdownHook(job);
   }
 
-  final void setLoggerImpl(Logger logger) {
+  final void setLoggerImpl(NoteSink logger) {
     Checks.checkNotNull(logger, "logger == null");
 
     synchronized (this) {

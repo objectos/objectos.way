@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 Objectos Software LTDA.
+ * Copyright (C) 2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,45 +25,45 @@ import org.testng.annotations.Test;
 
 public class LoggingTest {
 
-  static final Event0 DEBUG0 = Event0.debug();
+  static final Note0 DEBUG0 = Note0.debug();
 
-  static final Event1<Arg1> DEBUG1 = Event1.debug();
+  static final Note1<Arg1> DEBUG1 = Note1.debug();
 
-  static final Event2<Arg1, Arg2> DEBUG2 = Event2.debug();
+  static final Note2<Arg1, Arg2> DEBUG2 = Note2.debug();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> DEBUG3 = Event3.debug();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> DEBUG3 = Note3.debug();
 
-  static final Event0 ERROR0 = Event0.error();
+  static final Note0 ERROR0 = Note0.error();
 
-  static final Event1<Arg1> ERROR1 = Event1.error();
+  static final Note1<Arg1> ERROR1 = Note1.error();
 
-  static final Event2<Arg1, Arg2> ERROR2 = Event2.error();
+  static final Note2<Arg1, Arg2> ERROR2 = Note2.error();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> ERROR3 = Event3.error();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> ERROR3 = Note3.error();
 
-  static final Event0 INFO0 = Event0.info();
+  static final Note0 INFO0 = Note0.info();
 
-  static final Event1<Arg1> INFO1 = Event1.info();
+  static final Note1<Arg1> INFO1 = Note1.info();
 
-  static final Event2<Arg1, Arg2> INFO2 = Event2.info();
+  static final Note2<Arg1, Arg2> INFO2 = Note2.info();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> INFO3 = Event3.info();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> INFO3 = Note3.info();
 
-  static final Event0 TRACE0 = Event0.trace();
+  static final Note0 TRACE0 = Note0.trace();
 
-  static final Event1<Arg1> TRACE1 = Event1.trace();
+  static final Note1<Arg1> TRACE1 = Note1.trace();
 
-  static final Event2<Arg1, Arg2> TRACE2 = Event2.trace();
+  static final Note2<Arg1, Arg2> TRACE2 = Note2.trace();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> TRACE3 = Event3.trace();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> TRACE3 = Note3.trace();
 
-  static final Event0 WARN0 = Event0.warn();
+  static final Note0 WARN0 = Note0.warn();
 
-  static final Event1<Arg1> WARN1 = Event1.warn();
+  static final Note1<Arg1> WARN1 = Note1.warn();
 
-  static final Event2<Arg1, Arg2> WARN2 = Event2.warn();
+  static final Note2<Arg1, Arg2> WARN2 = Note2.warn();
 
-  static final Event3<Arg1, Arg2, Duo<Arg1, Arg2>> WARN3 = Event3.warn();
+  static final Note3<Arg1, Arg2, Duo<Arg1, Arg2>> WARN3 = Note3.warn();
 
   @Test
   public void isEnabled() {
@@ -133,7 +133,7 @@ public class LoggingTest {
     test3(logger, WARN3, arg1, arg2, arg3);
   }
 
-  private void test0(ThisLogger logger, Event0 event) {
+  private void test0(ThisLogger logger, Note0 event) {
     logger.log(event);
 
     assertEquals(logger.level, event.level());
@@ -143,7 +143,7 @@ public class LoggingTest {
     assertNull(logger.value3);
   }
 
-  private <T1> void test1(ThisLogger logger, Event1<T1> event, T1 arg) {
+  private <T1> void test1(ThisLogger logger, Note1<T1> event, T1 arg) {
     logger.log(event, arg);
 
     assertEquals(logger.level, event.level());
@@ -153,7 +153,7 @@ public class LoggingTest {
     assertNull(logger.value3);
   }
 
-  private <T1, T2> void test2(ThisLogger logger, Event2<T1, T2> event, T1 arg1, T2 arg2) {
+  private <T1, T2> void test2(ThisLogger logger, Note2<T1, T2> event, T1 arg1, T2 arg2) {
     logger.log(event, arg1, arg2);
 
     assertEquals(logger.level, event.level());
@@ -164,7 +164,7 @@ public class LoggingTest {
   }
 
   private <T1, T2, T3> void test3(
-      ThisLogger logger, Event3<T1, T2, T3> event, T1 arg1, T2 arg2, T3 arg3) {
+      ThisLogger logger, Note3<T1, T2, T3> event, T1 arg1, T2 arg2, T3 arg3) {
     logger.log(event, arg1, arg2, arg3);
 
     assertEquals(logger.level, event.level());
@@ -174,9 +174,9 @@ public class LoggingTest {
     assertSame(logger.value3, arg3);
   }
 
-  private static class ThisLogger implements Logger {
+  private static class ThisLogger implements NoteSink {
 
-    Event event;
+    Note event;
 
     Level level;
 
@@ -187,24 +187,24 @@ public class LoggingTest {
     Object value3;
 
     @Override
-    public final boolean isEnabled(Event event) {
+    public final boolean isEnabled(Note event) {
       return true;
     }
 
     @Override
-    public final void log(Event0 event) {
+    public final void log(Note0 event) {
       set(event);
     }
 
     @Override
-    public final <T1> void log(Event1<T1> event, T1 v1) {
+    public final <T1> void log(Note1<T1> event, T1 v1) {
       set(event);
 
       value1 = v1;
     }
 
     @Override
-    public final <T1, T2> void log(Event2<T1, T2> event, T1 v1, T2 v2) {
+    public final <T1, T2> void log(Note2<T1, T2> event, T1 v1, T2 v2) {
       set(event);
 
       value1 = v1;
@@ -213,7 +213,7 @@ public class LoggingTest {
     }
 
     @Override
-    public final <T1, T2, T3> void log(Event3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
+    public final <T1, T2, T3> void log(Note3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
       set(event);
 
       value1 = v1;
@@ -224,11 +224,11 @@ public class LoggingTest {
     }
 
     @Override
-    public final Logger replace(Logger logger) {
+    public final NoteSink replace(NoteSink logger) {
       return this;
     }
 
-    private void set(Event event) {
+    private void set(Note event) {
       this.event = event;
 
       this.level = event.level();

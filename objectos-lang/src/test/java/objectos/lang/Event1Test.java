@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 Objectos Software LTDA.
+ * Copyright (C) 2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@ import org.testng.annotations.Test;
 
 public class Event1Test {
 
-  final Event1<Void> TRACE = Event1.trace();
+  final Note1<Void> TRACE = Note1.trace();
 
-  final Event1<Void> DEBUG = Event1.debug();
+  final Note1<Void> DEBUG = Note1.debug();
 
-  final Event1<Void> INFO = Event1.info();
+  final Note1<Void> INFO = Note1.info();
 
-  final Event1<Void> WARN = Event1.warn();
+  final Note1<Void> WARN = Note1.warn();
 
-  final Event1<Void> ERROR = Event1.error();
+  final Note1<Void> ERROR = Note1.error();
 
   @Test
   public void key() {

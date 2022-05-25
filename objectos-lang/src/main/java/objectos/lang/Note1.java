@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 Objectos Software LTDA.
+ * Copyright (C) 2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,31 @@
 package objectos.lang;
 
 /**
- * A log event that takes one argument.
+ * A note that takes one argument.
  *
- * @param <T1> the type of the log argument
+ * @param <T1> the type of the note argument
  *
  * @since 0.2
  */
-public final class Event1<T1> extends Event {
+public final class Note1<T1> extends Note {
 
   /**
-   * Creates a new event instance.
+   * Creates a new note instance.
    *
    * @param source
-   *        a name to identify the source class this event is bound to
+   *        a name to identify the source class this note is bound to
    * @param key
-   *        a key that uniquely identifies this event within the given
+   *        a key that uniquely identifies this note within the given
    *        {@code source}
    * @param level
-   *        the logging level of this event
+   *        the logging level of this note
    */
-  public Event1(String source, Object key, Level level) {
+  public Note1(String source, Object key, Level level) {
     super(source, key, level);
   }
 
   /**
-   * Creates a new DEBUG log event.
+   * Creates a new DEBUG note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -56,14 +56,14 @@ public final class Event1<T1> extends Event {
    *
    * @param <T1> the type of the log argument
    *
-   * @return a new DEBUG log event
+   * @return a new DEBUG note
    */
-  public static <T1> Event1<T1> debug() {
-    return create(Level.DEBUG, Event1::new);
+  public static <T1> Note1<T1> debug() {
+    return create(Level.DEBUG, Note1::new);
   }
 
   /**
-   * Creates a new ERROR log event.
+   * Creates a new ERROR note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -79,14 +79,14 @@ public final class Event1<T1> extends Event {
    *
    * @param <T1> the type of the log argument
    *
-   * @return a new ERROR log event
+   * @return a new ERROR note
    */
-  public static <T1> Event1<T1> error() {
-    return create(Level.ERROR, Event1::new);
+  public static <T1> Note1<T1> error() {
+    return create(Level.ERROR, Note1::new);
   }
 
   /**
-   * Creates a new INFO log event.
+   * Creates a new INFO note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -102,14 +102,14 @@ public final class Event1<T1> extends Event {
    *
    * @param <T1> the type of the log argument
    *
-   * @return a new INFO log event
+   * @return a new INFO note
    */
-  public static <T1> Event1<T1> info() {
-    return create(Level.INFO, Event1::new);
+  public static <T1> Note1<T1> info() {
+    return create(Level.INFO, Note1::new);
   }
 
   /**
-   * Creates a new TRACE log event.
+   * Creates a new TRACE note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -125,14 +125,14 @@ public final class Event1<T1> extends Event {
    *
    * @param <T1> the type of the log argument
    *
-   * @return a new TRACE log event
+   * @return a new TRACE note
    */
-  public static <T1> Event1<T1> trace() {
-    return create(Level.TRACE, Event1::new);
+  public static <T1> Note1<T1> trace() {
+    return create(Level.TRACE, Note1::new);
   }
 
   /**
-   * Creates a new WARN log event.
+   * Creates a new WARN note.
    *
    * <p>
    * The {@code source} and the {@code key} values are inferred from the method
@@ -148,10 +148,10 @@ public final class Event1<T1> extends Event {
    *
    * @param <T1> the type of the log argument
    *
-   * @return a new WARN log event
+   * @return a new WARN note
    */
-  public static <T1> Event1<T1> warn() {
-    return create(Level.WARN, Event1::new);
+  public static <T1> Note1<T1> warn() {
+    return create(Level.WARN, Note1::new);
   }
 
 }

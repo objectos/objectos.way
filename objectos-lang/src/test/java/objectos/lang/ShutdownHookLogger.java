@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 Objectos Software LTDA.
+ * Copyright (C) 2022 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ package objectos.lang;
 import java.util.ArrayList;
 import java.util.List;
 
-class ShutdownHookLogger extends NoOpLogger {
+class ShutdownHookLogger extends NoOpNoteSink {
 
   final List<Exception> exceptions = new ArrayList<Exception>();
 
   @Override
-  public final <T> void log(Event1<T> event, T value) {
+  public final <T> void log(Note1<T> event, T value) {
     if (value instanceof Exception) {
       Exception e;
       e = (Exception) value;
