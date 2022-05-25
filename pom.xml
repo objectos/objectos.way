@@ -66,7 +66,7 @@
 	<inceptionYear>2022</inceptionYear>
 
 	<modules>
-		<module>bom</module>
+		<module>objectos-bom</module>
 		<module>objectos-lang</module>
 	</modules>
 

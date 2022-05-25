@@ -27,7 +27,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>bom</artifactId>
+	<artifactId>objectos-bom</artifactId>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<packaging>pom</packaging>
 
