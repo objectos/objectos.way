@@ -49,7 +49,7 @@ public final class Check {
    * A typical usage is:
    *
    * <pre>
-   * Checks.checkArgument(length &gt; 0, "Length must be greater than zero");</pre>
+   * Check.argument(length &gt; 0, "Length must be greater than zero");</pre>
    *
    * @param condition
    *        the boolean condition to check
@@ -81,7 +81,7 @@ public final class Check {
    * {@code msg1} and {@code msg2}. For example, if invoked like this:
    *
    * <pre>
-   * Checks.checkArgument(false, "This is an ", "example");</pre>
+   * Check.argument(false, "This is an ", "example");</pre>
    *
    * <p>
    * It will throw an exception with a message equal to the following string
@@ -93,7 +93,7 @@ public final class Check {
    * A typical usage is:
    *
    * <pre>
-   * Checks.checkArgument(param.isCorrect(), param, " is not correct");</pre>
+   * Check.argument(param.isCorrect(), param, " is not correct");</pre>
    *
    * @param condition
    *        the boolean condition to check
@@ -127,7 +127,7 @@ public final class Check {
    * A typical usage is:
    *
    * <pre>
-   * Checks.checkNotNull(value, "value == null");</pre>
+   * Check.notNull(value, "value == null");</pre>
    *
    * @param <T> the type of the reference
    * @param object
@@ -162,7 +162,7 @@ public final class Check {
    * A typical usage is:
    *
    * <pre>
-   * array[i] = Checks.checkNotNull(values[i], "values[", i, "] == null");</pre>
+   * array[i] = Check.notNull(values[i], "values[", i, "] == null");</pre>
    *
    * @param <T> the type of the reference
    * @param object
@@ -201,7 +201,7 @@ public final class Check {
    * A typical usage is:
    *
    * <pre>
-   * Checks.checkNotNull(value, "foo ", " == null");</pre>
+   * Check.notNull(value, "foo ", " == null");</pre>
    *
    * @param <T> the type of the reference
    * @param object
@@ -241,7 +241,7 @@ public final class Check {
    * A typical usage is:
    *
    * <pre>
-   * Checks.checkState(state == State.NEW, "Cannot call start(): already started!");</pre>
+   * Check.state(state == State.NEW, "Cannot call start(): already started!");</pre>
    *
    * @param condition
    *        the boolean condition to check
@@ -274,7 +274,7 @@ public final class Check {
    * {@code msg1} and {@code msg2}. For example, if invoked like this:
    *
    * <pre>
-   * Checks.checkArgument(false, "This is an ", "example");</pre>
+   * Check.state(false, "This is an ", "example");</pre>
    *
    * <p>
    * It will throw an exception with a message equal to the following string
@@ -286,7 +286,7 @@ public final class Check {
    * A typical usage is:
    *
    * <pre>
-   * Checks.checkState(state != State.NEW, "Cannot call start(): state not ", State.NEW);</pre>
+   * Check.state(state != State.NEW, "Cannot call start(): state not ", State.NEW);</pre>
    *
    * @param condition
    *        the boolean condition to check
