@@ -259,7 +259,7 @@ public final class HashCode {
    * @return the computed hash code
    */
   public static int hashCode(int hc1, int hc2, int hc3, int hc4, int hc5, int... rest) {
-    Checks.checkNotNull(rest, "rest == null");
+    Check.notNull(rest, "rest == null");
 
     int result;
     result = HASH_CODE_START;
@@ -420,7 +420,7 @@ public final class HashCode {
    */
   public static int hashCode(
       Object o1, Object o2, Object o3, Object o4, Object o5, Object... rest) {
-    Checks.checkNotNull(rest, "rest == null");
+    Check.notNull(rest, "rest == null");
 
     int result;
     result = HASH_CODE_START;

@@ -20,18 +20,18 @@ import static org.testng.Assert.assertEquals;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class ChecksTest {
+public class CheckTest {
 
   @Test
-  public void checkArgument() {
+  public void argument() {
     try {
-      Checks.checkArgument(true, "should not happen");
+      Check.argument(true, "should not happen");
     } catch (IllegalArgumentException e) {
       Assert.fail();
     }
 
     try {
-      Checks.checkArgument(false, "failed");
+      Check.argument(false, "failed");
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -39,7 +39,7 @@ public class ChecksTest {
     }
 
     try {
-      Checks.checkArgument(false, "number 1 ", "letter A");
+      Check.argument(false, "number 1 ", "letter A");
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
@@ -48,18 +48,18 @@ public class ChecksTest {
   }
 
   @Test
-  public void checkNotNull() {
+  public void notNull() {
     Object notNull;
     notNull = Boolean.TRUE;
 
     try {
-      Checks.checkNotNull(notNull, "Should not happen");
+      Check.notNull(notNull, "Should not happen");
     } catch (NullPointerException e) {
       Assert.fail();
     }
 
     try {
-      Checks.checkNotNull(null, "foo is null");
+      Check.notNull(null, "foo is null");
 
       Assert.fail();
     } catch (NullPointerException expected) {
@@ -67,7 +67,7 @@ public class ChecksTest {
     }
 
     try {
-      Checks.checkNotNull(null, "foo ", "is null");
+      Check.notNull(null, "foo ", "is null");
 
       Assert.fail();
     } catch (NullPointerException expected) {
@@ -75,7 +75,7 @@ public class ChecksTest {
     }
 
     try {
-      Checks.checkNotNull(null, "elements[", 10, "] == null");
+      Check.notNull(null, "elements[", 10, "] == null");
 
       Assert.fail();
     } catch (NullPointerException expected) {
@@ -84,15 +84,15 @@ public class ChecksTest {
   }
 
   @Test
-  public void checkState() {
+  public void state() {
     try {
-      Checks.checkState(true, "Should not happen");
+      Check.state(true, "Should not happen");
     } catch (IllegalStateException e) {
       Assert.fail();
     }
 
     try {
-      Checks.checkState(false, "state not valid");
+      Check.state(false, "state not valid");
 
       Assert.fail();
     } catch (IllegalStateException expected) {
@@ -100,7 +100,7 @@ public class ChecksTest {
     }
 
     try {
-      Checks.checkState(false, "number 1 ", "letter A");
+      Check.state(false, "number 1 ", "letter A");
 
       Assert.fail();
     } catch (IllegalStateException expected) {

@@ -121,7 +121,7 @@ public class NoOpNoteSink implements NoteSink {
    */
   @Override
   public final NoteSink replace(NoteSink sink) {
-    Checks.checkNotNull(sink, "sink == null");
+    Check.notNull(sink, "sink == null");
 
     return sink;
   }

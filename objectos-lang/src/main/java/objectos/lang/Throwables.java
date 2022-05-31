@@ -42,7 +42,7 @@ public final class Throwables {
    * @return {@code exception} if it not null, {@code suppressed} otherwise
    */
   public static Throwable addSuppressed(Throwable exception, Throwable suppressed) {
-    Checks.checkNotNull(suppressed, "suppressed == null");
+    Check.notNull(suppressed, "suppressed == null");
 
     if (exception != null) {
       exception.addSuppressed(suppressed);
@@ -107,7 +107,7 @@ public final class Throwables {
   public static <X extends Throwable> void rethrowIfPossible(
       Throwable throwable, Class<X> type)
       throws X {
-    Checks.checkNotNull(type, "type == null");
+    Check.notNull(type, "type == null");
 
     if (throwable == null) {
       return;

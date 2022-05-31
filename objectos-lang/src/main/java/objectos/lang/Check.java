@@ -36,9 +36,9 @@ package objectos.lang;
  *
  * @since 0.2
  */
-public final class Checks {
+public final class Check {
 
-  private Checks() {}
+  private Check() {}
 
   /**
    * <p>
@@ -61,7 +61,7 @@ public final class Checks {
    * @throws IllegalArgumentException
    *         if {@code condition} is false
    */
-  public static void checkArgument(boolean condition, Object message) {
+  public static void argument(boolean condition, Object message) {
     if (!condition) {
       String formatted;
       formatted = format(message);
@@ -109,7 +109,7 @@ public final class Checks {
    * @throws IllegalArgumentException
    *         if {@code condition} is false
    */
-  public static void checkArgument(boolean condition, Object msg1, Object msg2) {
+  public static void argument(boolean condition, Object msg1, Object msg2) {
     if (!condition) {
       String formatted;
       formatted = format(msg1, msg2);
@@ -142,7 +142,7 @@ public final class Checks {
    * @throws NullPointerException
    *         if {@code object} is null
    */
-  public static <T> T checkNotNull(T object, Object message) {
+  public static <T> T notNull(T object, Object message) {
     if (object == null) {
       String formatted;
       formatted = format(message);
@@ -181,7 +181,7 @@ public final class Checks {
    * @throws NullPointerException
    *         if {@code object} is null
    */
-  public static <T> T checkNotNull(T object, Object msg1, int msg2, Object msg3) {
+  public static <T> T notNull(T object, Object msg1, int msg2, Object msg3) {
     if (object == null) {
       String formatted;
       formatted = format(msg1, msg2, msg3);
@@ -220,7 +220,7 @@ public final class Checks {
    * @throws NullPointerException
    *         if {@code object} is null
    */
-  public static <T> T checkNotNull(T object, Object msg1, Object msg2) {
+  public static <T> T notNull(T object, Object msg1, Object msg2) {
     if (object == null) {
       String formatted;
       formatted = format(msg1, msg2);
@@ -253,7 +253,7 @@ public final class Checks {
    * @throws IllegalStateException
    *         if {@code condition} is false
    */
-  public static void checkState(boolean condition, Object message) {
+  public static void state(boolean condition, Object message) {
     if (!condition) {
       String formatted;
       formatted = format(message);
@@ -302,7 +302,7 @@ public final class Checks {
    * @throws IllegalStateException
    *         if {@code condition} is false
    */
-  public static void checkState(boolean condition, Object msg1, Object msg2) {
+  public static void state(boolean condition, Object msg1, Object msg2) {
     if (!condition) {
       String formatted;
       formatted = format(msg1, msg2);

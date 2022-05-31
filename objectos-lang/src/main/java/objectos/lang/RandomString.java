@@ -64,7 +64,7 @@ public final class RandomString {
    *         if {@code random} is null
    */
   public RandomString(Random random) {
-    this.random = Checks.checkNotNull(random, "random == null");
+    this.random = Check.notNull(random, "random == null");
 
     this.dictionary = DEFAULT_DICTIONARY.toCharArray();
   }
@@ -84,12 +84,12 @@ public final class RandomString {
    *         if {@code random} or {@code dictionary} is null
    */
   public RandomString(Random random, String dictionary) {
-    Checks.checkNotNull(dictionary, "dictionary == null");
-    Checks.checkArgument(dictionary.length() > 1, "dictionary.length() > 1");
+    Check.notNull(dictionary, "dictionary == null");
+    Check.argument(dictionary.length() > 1, "dictionary.length() > 1");
 
     this.dictionary = dictionary.toCharArray();
 
-    this.random = Checks.checkNotNull(random, "random == null");
+    this.random = Check.notNull(random, "random == null");
   }
 
   /**
@@ -106,7 +106,7 @@ public final class RandomString {
    *         if {@code length <= 0}
    */
   public final String nextString(int length) {
-    Checks.checkArgument(length > 0, "length has to be > 0");
+    Check.argument(length > 0, "length has to be > 0");
 
     return randomString0(length);
   }

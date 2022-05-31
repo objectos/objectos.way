@@ -72,7 +72,7 @@ public final class ToString {
    *         if {@code toString} is null
    */
   public static void formatEnd(StringBuilder toString, int level) {
-    Checks.checkNotNull(toString, "toString == null");
+    Check.notNull(toString, "toString == null");
 
     char[] indentation;
     indentation = i(level);
@@ -104,8 +104,8 @@ public final class ToString {
    *         null
    */
   public static void formatFirstPair(StringBuilder toString, int level, String name, Object value) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(name, "name == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(name, "name == null");
 
     char[] indentation;
     indentation = i(level);
@@ -137,8 +137,8 @@ public final class ToString {
    *         null
    */
   public static void formatNextPair(StringBuilder toString, int level, String name, Object value) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(name, "name == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(name, "name == null");
 
     char[] indentation;
     indentation = i(level);
@@ -166,8 +166,8 @@ public final class ToString {
    *         if any of the {@code toString} or {@code typeName} is null
    */
   public static void formatStart(StringBuilder toString, Object typeName) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
 
     formatStart0(toString, typeName);
   }
@@ -202,8 +202,8 @@ public final class ToString {
    */
   public static void formatToString(
       StringBuilder toString, int level, Object typeName) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
 
     formatStart0(toString, typeName);
 
@@ -251,9 +251,9 @@ public final class ToString {
   public static void formatToString(
       StringBuilder toString, int level, Object typeName,
       String name, Object value) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
-    Checks.checkNotNull(name, "name == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name, "name == null");
 
     formatStart0(toString, typeName);
 
@@ -312,10 +312,10 @@ public final class ToString {
       StringBuilder toString, int level, Object typeName,
       String name1, Object value1,
       String name2, Object value2) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
-    Checks.checkNotNull(name1, "name1 == null");
-    Checks.checkNotNull(name2, "name2 == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
 
     formatStart0(toString, typeName);
 
@@ -382,11 +382,11 @@ public final class ToString {
       String name1, Object value1,
       String name2, Object value2,
       String name3, Object value3) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
-    Checks.checkNotNull(name1, "name1 == null");
-    Checks.checkNotNull(name2, "name2 == null");
-    Checks.checkNotNull(name3, "name3 == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
 
     formatStart0(toString, typeName);
 
@@ -461,12 +461,12 @@ public final class ToString {
       String name2, Object value2,
       String name3, Object value3,
       String name4, Object value4) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
-    Checks.checkNotNull(name1, "name1 == null");
-    Checks.checkNotNull(name2, "name2 == null");
-    Checks.checkNotNull(name3, "name3 == null");
-    Checks.checkNotNull(name4, "name4 == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
+    Check.notNull(name4, "name4 == null");
 
     formatStart0(toString, typeName);
 
@@ -549,13 +549,13 @@ public final class ToString {
       String name3, Object value3,
       String name4, Object value4,
       String name5, Object value5) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
-    Checks.checkNotNull(name1, "name1 == null");
-    Checks.checkNotNull(name2, "name2 == null");
-    Checks.checkNotNull(name3, "name3 == null");
-    Checks.checkNotNull(name4, "name4 == null");
-    Checks.checkNotNull(name5, "name5 == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
+    Check.notNull(name4, "name4 == null");
+    Check.notNull(name5, "name5 == null");
 
     formatStart0(toString, typeName);
 
@@ -646,14 +646,14 @@ public final class ToString {
       String name4, Object value4,
       String name5, Object value5,
       String name6, Object value6) {
-    Checks.checkNotNull(toString, "toString == null");
-    Checks.checkNotNull(typeName, "typeName == null");
-    Checks.checkNotNull(name1, "name1 == null");
-    Checks.checkNotNull(name2, "name2 == null");
-    Checks.checkNotNull(name3, "name3 == null");
-    Checks.checkNotNull(name4, "name4 == null");
-    Checks.checkNotNull(name5, "name5 == null");
-    Checks.checkNotNull(name6, "name6 == null");
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
+    Check.notNull(name4, "name4 == null");
+    Check.notNull(name5, "name5 == null");
+    Check.notNull(name6, "name6 == null");
 
     formatStart0(toString, typeName);
 
@@ -1127,7 +1127,7 @@ public final class ToString {
    *         implementation
    */
   public static String toString(ToStringObject object) {
-    Checks.checkNotNull(object, "object == null");
+    Check.notNull(object, "object == null");
 
     StringBuilder out;
     out = new StringBuilder();

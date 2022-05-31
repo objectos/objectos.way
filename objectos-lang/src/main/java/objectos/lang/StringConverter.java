@@ -41,7 +41,7 @@ public final class StringConverter {
    *         if {@code conversion} is null
    */
   public static StringConverter create(StringConversion conversion) {
-    Checks.checkNotNull(conversion, "conversion == null");
+    Check.notNull(conversion, "conversion == null");
 
     return new StringConverter(
       new StringConversion[] {conversion}
@@ -65,8 +65,8 @@ public final class StringConverter {
    *         on {@code rest} are null
    */
   public static StringConverter create(StringConversion first, StringConversion... rest) {
-    Checks.checkNotNull(first, "first == null");
-    Checks.checkNotNull(rest, "rest == null");
+    Check.notNull(first, "first == null");
+    Check.notNull(rest, "rest == null");
 
     StringConversion[] conversions;
     conversions = new StringConversion[rest.length + 1];
@@ -77,7 +77,7 @@ public final class StringConverter {
       StringConversion r;
       r = rest[i];
 
-      conversions[i + 1] = Checks.checkNotNull(r, "rest[", i, "] == null");
+      conversions[i + 1] = Check.notNull(r, "rest[", i, "] == null");
     }
 
     return new StringConverter(conversions);
@@ -123,8 +123,8 @@ public final class StringConverter {
    *        appended to
    */
   public final void apply(String s, StringBuilder builder) {
-    Checks.checkNotNull(s, "s == null");
-    Checks.checkNotNull(builder, "builder == null");
+    Check.notNull(s, "s == null");
+    Check.notNull(builder, "builder == null");
 
     if (s.isEmpty()) {
       return;

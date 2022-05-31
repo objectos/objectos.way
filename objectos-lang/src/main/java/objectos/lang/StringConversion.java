@@ -59,7 +59,7 @@ public abstract class StringConversion {
    *         fails the test {@link Character#isValidCodePoint(int)}
    */
   public static StringConversion removeRange(int from, int to) {
-    Checks.checkArgument(from < to, "from must be smaller than to");
+    Check.argument(from < to, "from must be smaller than to");
 
     if (!Character.isValidCodePoint(from)) {
       throw new IllegalArgumentException(from + " is not a valid code point");

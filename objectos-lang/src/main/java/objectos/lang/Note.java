@@ -88,11 +88,11 @@ public abstract class Note {
   private final Level level;
 
   Note(String source, Object key, Level level) {
-    this.source = Checks.checkNotNull(source, "source == null");
+    this.source = Check.notNull(source, "source == null");
 
-    this.key = Checks.checkNotNull(key, "key == null");
+    this.key = Check.notNull(key, "key == null");
 
-    this.level = Checks.checkNotNull(level, "level == null");
+    this.level = Check.notNull(level, "level == null");
   }
 
   static <E extends Note> E create(Level l, Constructor<E> c) {

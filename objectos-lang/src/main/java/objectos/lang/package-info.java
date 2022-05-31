@@ -26,7 +26,7 @@
  * <h3>{@code Object}</h3>
  *
  * <ul>
- * <li>{@link objectos.lang.Checks}
+ * <li>{@link objectos.lang.Check}
  * <li>{@link objectos.lang.Equals}
  * <li>{@link objectos.lang.HashCode}
  * <li>{@link objectos.lang.ToString}

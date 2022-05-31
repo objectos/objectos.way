@@ -105,7 +105,7 @@ public final class ShutdownHook {
   }
 
   final void addAutoCloseable(AutoCloseable closeable) {
-    Checks.checkNotNull(closeable, "closeable == null");
+    Check.notNull(closeable, "closeable == null");
 
     if (closeables == null) {
       synchronized (this) {
@@ -121,7 +121,7 @@ public final class ShutdownHook {
   }
 
   final void addShutdownHookTask(ShutdownHookTask task) {
-    Checks.checkNotNull(task, "task == null");
+    Check.notNull(task, "task == null");
 
     if (tasks == null) {
       synchronized (this) {
@@ -150,7 +150,7 @@ public final class ShutdownHook {
   }
 
   final void setLoggerImpl(NoteSink logger) {
-    Checks.checkNotNull(logger, "logger == null");
+    Check.notNull(logger, "logger == null");
 
     synchronized (this) {
       State state;
