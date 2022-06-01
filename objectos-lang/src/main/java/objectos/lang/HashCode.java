@@ -32,7 +32,7 @@ package objectos.lang;
  * <pre>
  * &#64;Override
  * public final int hashCode() {
- *   return HashCode.hashCode(a, b, c);
+ *   return HashCode.of(a, b, c);
  * }</pre>
  *
  * <p>
@@ -46,10 +46,10 @@ package objectos.lang;
  * <pre>
  * &#64;Override
  * public final int hashCode() {
- *   return HashCode.hashCode(
- *       HashCode.hashCode(a),
- *       HashCode.hashCode(b),
- *       HashCode.hashCode(c)
+ *   return HashCode.of(
+ *       HashCode.of(a),
+ *       HashCode.of(b),
+ *       HashCode.of(c)
  *   );
  * }</pre>
  *
