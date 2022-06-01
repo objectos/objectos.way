@@ -22,6 +22,10 @@ package objectos.lang;
  * field.
  *
  * <p>
+ * Please note that this class makes no claims about the performance of
+ * its hash code computation.
+ *
+ * <p>
  * For {@code hashCode()} method implementations that uses only object
  * references, i.e., it does not use any primitive values, usage is like so
  *
@@ -62,9 +66,9 @@ package objectos.lang;
  */
 public final class HashCode {
 
-  static final int HASH_CODE_MULTIPLIER = 31;
+  static final int MULTIPLIER = 31;
 
-  static final int HASH_CODE_START = 17;
+  static final int START = 17;
 
   private HashCode() {}
 
@@ -76,7 +80,7 @@ public final class HashCode {
    *
    * @return the hash code
    */
-  public static int hashCode(boolean b) {
+  public static int of(boolean b) {
     return b ? 1 : 0;
   }
 
@@ -88,7 +92,7 @@ public final class HashCode {
    *
    * @return the hash code
    */
-  public static int hashCode(byte b) {
+  public static int of(byte b) {
     return b;
   }
 
@@ -100,11 +104,10 @@ public final class HashCode {
    *
    * @return the hash code
    */
-  public static int hashCode(double d) {
-    long l;
-    l = Double.doubleToLongBits(d);
+  public static int of(double d) {
+    var l = Double.doubleToLongBits(d);
 
-    return hashCode(l);
+    return of(l);
   }
 
   /**
@@ -115,7 +118,7 @@ public final class HashCode {
    *
    * @return the hash code
    */
-  public static int hashCode(float f) {
+  public static int of(float f) {
     return Float.floatToIntBits(f);
   }
 
@@ -127,7 +130,7 @@ public final class HashCode {
    *
    * @return the hash code
    */
-  public static int hashCode(int i) {
+  public static int of(int i) {
     return i;
   }
 
@@ -141,13 +144,12 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(int hc1, int hc2) {
-    int result;
-    result = HASH_CODE_START;
+  public static int of(int hc1, int hc2) {
+    var result = START;
 
-    result = hashCodeUpdate(result, hc1);
+    result = update(result, hc1);
 
-    result = hashCodeUpdate(result, hc2);
+    result = update(result, hc2);
 
     return result;
   }
@@ -164,15 +166,14 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(int hc1, int hc2, int hc3) {
-    int result;
-    result = HASH_CODE_START;
+  public static int of(int hc1, int hc2, int hc3) {
+    var result = START;
 
-    result = hashCodeUpdate(result, hc1);
+    result = update(result, hc1);
 
-    result = hashCodeUpdate(result, hc2);
+    result = update(result, hc2);
 
-    result = hashCodeUpdate(result, hc3);
+    result = update(result, hc3);
 
     return result;
   }
@@ -191,17 +192,16 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(int hc1, int hc2, int hc3, int hc4) {
-    int result;
-    result = HASH_CODE_START;
+  public static int of(int hc1, int hc2, int hc3, int hc4) {
+    var result = START;
 
-    result = hashCodeUpdate(result, hc1);
+    result = update(result, hc1);
 
-    result = hashCodeUpdate(result, hc2);
+    result = update(result, hc2);
 
-    result = hashCodeUpdate(result, hc3);
+    result = update(result, hc3);
 
-    result = hashCodeUpdate(result, hc4);
+    result = update(result, hc4);
 
     return result;
   }
@@ -222,19 +222,18 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(int hc1, int hc2, int hc3, int hc4, int hc5) {
-    int result;
-    result = HASH_CODE_START;
+  public static int of(int hc1, int hc2, int hc3, int hc4, int hc5) {
+    var result = START;
 
-    result = hashCodeUpdate(result, hc1);
+    result = update(result, hc1);
 
-    result = hashCodeUpdate(result, hc2);
+    result = update(result, hc2);
 
-    result = hashCodeUpdate(result, hc3);
+    result = update(result, hc3);
 
-    result = hashCodeUpdate(result, hc4);
+    result = update(result, hc4);
 
-    result = hashCodeUpdate(result, hc5);
+    result = update(result, hc5);
 
     return result;
   }
@@ -258,24 +257,23 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(int hc1, int hc2, int hc3, int hc4, int hc5, int... rest) {
+  public static int of(int hc1, int hc2, int hc3, int hc4, int hc5, int... rest) {
     Check.notNull(rest, "rest == null");
 
-    int result;
-    result = HASH_CODE_START;
+    var result = START;
 
-    result = hashCodeUpdate(result, hc1);
+    result = update(result, hc1);
 
-    result = hashCodeUpdate(result, hc2);
+    result = update(result, hc2);
 
-    result = hashCodeUpdate(result, hc3);
+    result = update(result, hc3);
 
-    result = hashCodeUpdate(result, hc4);
+    result = update(result, hc4);
 
-    result = hashCodeUpdate(result, hc5);
+    result = update(result, hc5);
 
     for (int hc : rest) {
-      result = hashCodeUpdate(result, hc);
+      result = update(result, hc);
     }
 
     return result;
@@ -289,7 +287,7 @@ public final class HashCode {
    *
    * @return the hash code
    */
-  public static int hashCode(long l) {
+  public static int of(long l) {
     return (int) (l ^ (l >>> 32));
   }
 
@@ -306,7 +304,7 @@ public final class HashCode {
    *
    * @return {@code 0} if {@code o} is null, the computed hash code otherwise
    */
-  public static int hashCode(Object o) {
+  public static int of(Object o) {
     if (o == null) {
       return 0;
     }
@@ -324,10 +322,10 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(Object o1, Object o2) {
-    return hashCode(
-      hashCode(o1),
-      hashCode(o2)
+  public static int of(Object o1, Object o2) {
+    return of(
+      of(o1),
+      of(o2)
     );
   }
 
@@ -343,11 +341,11 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(Object o1, Object o2, Object o3) {
-    return hashCode(
-      hashCode(o1),
-      hashCode(o2),
-      hashCode(o3)
+  public static int of(Object o1, Object o2, Object o3) {
+    return of(
+      of(o1),
+      of(o2),
+      of(o3)
     );
   }
 
@@ -365,12 +363,12 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(Object o1, Object o2, Object o3, Object o4) {
-    return hashCode(
-      hashCode(o1),
-      hashCode(o2),
-      hashCode(o3),
-      hashCode(o4)
+  public static int of(Object o1, Object o2, Object o3, Object o4) {
+    return of(
+      of(o1),
+      of(o2),
+      of(o3),
+      of(o4)
     );
   }
 
@@ -390,13 +388,13 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(Object o1, Object o2, Object o3, Object o4, Object o5) {
-    return hashCode(
-      hashCode(o1),
-      hashCode(o2),
-      hashCode(o3),
-      hashCode(o4),
-      hashCode(o5)
+  public static int of(Object o1, Object o2, Object o3, Object o4, Object o5) {
+    return of(
+      of(o1),
+      of(o2),
+      of(o3),
+      of(o4),
+      of(o5)
     );
   }
 
@@ -418,25 +416,24 @@ public final class HashCode {
    *
    * @return the computed hash code
    */
-  public static int hashCode(
+  public static int of(
       Object o1, Object o2, Object o3, Object o4, Object o5, Object... rest) {
     Check.notNull(rest, "rest == null");
 
-    int result;
-    result = HASH_CODE_START;
+    var result = START;
 
-    result = hashCodeUpdate(result, hashCode(o1));
+    result = update(result, of(o1));
 
-    result = hashCodeUpdate(result, hashCode(o2));
+    result = update(result, of(o2));
 
-    result = hashCodeUpdate(result, hashCode(o3));
+    result = update(result, of(o3));
 
-    result = hashCodeUpdate(result, hashCode(o4));
+    result = update(result, of(o4));
 
-    result = hashCodeUpdate(result, hashCode(o5));
+    result = update(result, of(o5));
 
     for (Object o : rest) {
-      result = hashCodeUpdate(result, hashCode(o));
+      result = update(result, of(o));
     }
 
     return result;
@@ -450,7 +447,7 @@ public final class HashCode {
    *
    * @return the hash code
    */
-  public static int hashCode(short s) {
+  public static int of(short s) {
     return s;
   }
 
@@ -459,8 +456,8 @@ public final class HashCode {
    *
    * @return the initial value of hash code computation
    */
-  public static int hashCodeStart() {
-    return HASH_CODE_START;
+  public static int start() {
+    return START;
   }
 
   /**
@@ -473,8 +470,8 @@ public final class HashCode {
    *
    * @return the updated hash code value
    */
-  public static int hashCodeUpdate(int partial, int hashCode) {
-    return HASH_CODE_MULTIPLIER * partial + hashCode;
+  public static int update(int partial, int hashCode) {
+    return MULTIPLIER * partial + hashCode;
   }
 
   /**
@@ -488,8 +485,8 @@ public final class HashCode {
    *
    * @return the updated hash code value
    */
-  public static int hashCodeUpdate(int partial, Object o) {
-    return hashCodeUpdate(partial, hashCode(o));
+  public static int update(int partial, Object o) {
+    return update(partial, of(o));
   }
 
 }

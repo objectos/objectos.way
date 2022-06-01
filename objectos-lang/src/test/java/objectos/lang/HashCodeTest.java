@@ -34,32 +34,32 @@ public class HashCodeTest {
     Object o7 = "seven";
 
     assertEquals(
-        HashCode.hashCode(o1, o2),
+        HashCode.of(o1, o2),
         hc0(
             hc0(
-                HashCode.HASH_CODE_START, hc(o1)
+                HashCode.START, hc(o1)
             ), hc(o2)
         )
     );
 
     assertEquals(
-        HashCode.hashCode(o1, o2, o3),
+        HashCode.of(o1, o2, o3),
         hc0(
             hc0(
                 hc0(
-                    HashCode.HASH_CODE_START, hc(o1)
+                    HashCode.START, hc(o1)
                 ), hc(o2)),
             hc(o3)
         )
     );
 
     assertEquals(
-        HashCode.hashCode(o1, o2, o3, o4),
+        HashCode.of(o1, o2, o3, o4),
         hc0(
             hc0(
                 hc0(
                     hc0(
-                        HashCode.HASH_CODE_START, hc(o1)
+                        HashCode.START, hc(o1)
                     ), hc(o2)
                 ), hc(o3)
             ), hc(o4)
@@ -67,13 +67,13 @@ public class HashCodeTest {
     );
 
     assertEquals(
-        HashCode.hashCode(o1, o2, o3, o4, o5),
+        HashCode.of(o1, o2, o3, o4, o5),
         hc0(
             hc0(
                 hc0(
                     hc0(
                         hc0(
-                            HashCode.HASH_CODE_START, hc(o1)
+                            HashCode.START, hc(o1)
                         ), hc(o2)
                     ), hc(o3)
                 ), hc(o4)
@@ -82,14 +82,14 @@ public class HashCodeTest {
     );
 
     assertEquals(
-        HashCode.hashCode(o1, o2, o3, o4, o5, o6),
+        HashCode.of(o1, o2, o3, o4, o5, o6),
         hc0(
             hc0(
                 hc0(
                     hc0(
                         hc0(
                             hc0(
-                                HashCode.HASH_CODE_START, hc(o1)
+                                HashCode.START, hc(o1)
                             ), hc(o2)
                         ), hc(o3)
                     ), hc(o4)
@@ -99,7 +99,7 @@ public class HashCodeTest {
     );
 
     assertEquals(
-        HashCode.hashCode(o1, o2, o3, o4, o5, o6, o7),
+        HashCode.of(o1, o2, o3, o4, o5, o6, o7),
         hc0(
             hc0(
                 hc0(
@@ -107,7 +107,7 @@ public class HashCodeTest {
                         hc0(
                             hc0(
                                 hc0(
-                                    HashCode.HASH_CODE_START, hc(o1)
+                                    HashCode.START, hc(o1)
                                 ), hc(o2)
                             ), hc(o3)
                         ), hc(o4)
@@ -119,11 +119,11 @@ public class HashCodeTest {
   }
 
   private int hc(Object o) {
-    return HashCode.hashCode(o);
+    return HashCode.of(o);
   }
 
   private int hc0(int partial, int hashCode) {
-    return HashCode.hashCodeUpdate(partial, hashCode);
+    return HashCode.update(partial, hashCode);
   }
 
 }

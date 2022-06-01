@@ -150,7 +150,7 @@ public abstract class Note {
    */
   @Override
   public final int hashCode() {
-    return HashCode.hashCode(key, source);
+    return HashCode.of(key, source);
   }
 
   /**
