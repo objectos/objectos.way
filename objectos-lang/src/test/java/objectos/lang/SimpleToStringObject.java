@@ -25,7 +25,7 @@ final class SimpleToStringObject implements ToStringObject {
 
   @Override
   public final void formatToString(StringBuilder sb, int depth) {
-    ToString.formatToString(
+    ToString.format(
         sb, depth, this,
         "value", value
     );
@@ -33,7 +33,7 @@ final class SimpleToStringObject implements ToStringObject {
 
   @Override
   public final String toString() {
-    return ToString.toString(this);
+    return ToString.of(this);
   }
 
 }

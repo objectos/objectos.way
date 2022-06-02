@@ -34,7 +34,7 @@ class TSObject1 extends TSObject0 {
 
   @Override
   public void formatToString(StringBuilder sb, int depth) {
-    ToString.formatToString(
+    ToString.format(
         sb, depth, typeName,
         name1, value1
     );

@@ -47,10 +47,506 @@ public final class ToString {
    *         if {@code level} is negative
    */
   public static void appendIndentation(StringBuilder toString, int level) {
-    char[] indentation;
-    indentation = i(level);
+    var indentation = i(level);
 
     toString.append(indentation);
+  }
+
+  /**
+   * Formats and appends to the {@code toString} builder at the specified
+   * indentation {@code level} the object representation formed by its
+   * {@code typeName} only.
+   *
+   * <p>
+   * This method is meant to be used by implementors of the
+   * {@link ToStringObject} interface. Like so
+   *
+   * <pre>
+   * &#64;Override
+   * public final void formatToString(StringBuilder sb, int level) {
+   *   ToString.format(sb, level, this);
+   * }</pre>
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level.
+   * @param typeName
+   *        the value to use as type name for the {@code toString}
+   *        representation. If this is an instance of {@link java.lang.String},
+   *        it is cast and used directly. If not, the simple name of this
+   *        object's class is used instead
+   *
+   * @throws NullPointerException
+   *         if any of {@code toString} or {@code typeName} is null
+   */
+  public static void format(
+      StringBuilder toString, int level, Object typeName) {
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+
+    formatStart0(toString, typeName);
+
+    toString.append(']');
+  }
+
+  /**
+   * Formats and appends to the {@code toString} builder at the specified
+   * indentation {@code level} the object representation formed by its
+   * {@code typeName} and a single name/value pair.
+   *
+   * <p>
+   * This method is meant to be used by implementors of the
+   * {@link ToStringObject} interface. Like so
+   *
+   * <pre>
+   * &#64;Override
+   * public final void formatToString(StringBuilder sb, int level) {
+   *   ToString.format(
+   *       sb, level, this,
+   *       "a", a
+   *   );
+   * }</pre>
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level.
+   * @param typeName
+   *        the value to use as type name for the {@code toString}
+   *        representation. If this is an instance of {@link java.lang.String},
+   *        it is cast and used directly. If not, the simple name of this
+   *        object's class is used instead
+   * @param name
+   *        the name of the pair
+   * @param value
+   *        the value of the pair
+   *
+   * @throws IllegalArgumentException
+   *         if {@code level} is negative
+   * @throws NullPointerException
+   *         if any of the {@code toString}, {@code typeName} or {@code name} is
+   *         null
+   */
+  public static void format(
+      StringBuilder toString, int level, Object typeName,
+      String name, Object value) {
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name, "name == null");
+
+    formatStart0(toString, typeName);
+
+    var indentation = i(level);
+
+    formatFirstPair0(toString, level, indentation, name, value);
+
+    formatEnd0(toString, indentation);
+  }
+
+  /**
+   * Formats and appends to the {@code toString} builder at the specified
+   * indentation {@code level} the object representation formed by its
+   * {@code typeName} and two name/value pairs.
+   *
+   * <p>
+   * This method is meant to be used by implementors of the
+   * {@link ToStringObject} interface. Like so
+   *
+   * <pre>
+   * &#64;Override
+   * public final void formatToString(StringBuilder sb, int level) {
+   *   ToString.format(
+   *       sb, level, this,
+   *       "a", a,
+   *       "b", b
+   *   );
+   * }</pre>
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level.
+   * @param typeName
+   *        the value to use as type name for the {@code toString}
+   *        representation. If this is an instance of {@link java.lang.String},
+   *        it is cast and used directly. If not, the simple name of this
+   *        object's class is used instead
+   * @param name1
+   *        the name of the first pair
+   * @param value1
+   *        the value of the first pair
+   * @param name2
+   *        the name of the second pair
+   * @param value2
+   *        the value of the second pair
+   *
+   * @throws IllegalArgumentException
+   *         if {@code level} is negative
+   * @throws NullPointerException
+   *         if any of the {@code toString}, {@code typeName}, {@code name1} or
+   *         {@code name2} is null
+   */
+  public static void format(
+      StringBuilder toString, int level, Object typeName,
+      String name1, Object value1,
+      String name2, Object value2) {
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+
+    formatStart0(toString, typeName);
+
+    var indentation = i(level);
+
+    formatFirstPair0(toString, level, indentation, name1, value1);
+
+    formatNextPair0(toString, level, indentation, name2, value2);
+
+    formatEnd0(toString, indentation);
+  }
+
+  /**
+   * Formats and appends to the {@code toString} builder at the specified
+   * indentation {@code level} the object representation formed by its
+   * {@code typeName} and three name/value pairs.
+   *
+   * <p>
+   * This method is meant to be used by implementors of the
+   * {@link ToStringObject} interface. Like so
+   *
+   * <pre>
+   * &#64;Override
+   * public final void formatToString(StringBuilder sb, int level) {
+   *   ToString.format(
+   *       sb, level, this,
+   *       "a", a,
+   *       "b", b,
+   *       "c", c
+   *   );
+   * }</pre>
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level.
+   * @param typeName
+   *        the value to use as type name for the {@code toString}
+   *        representation. If this is an instance of {@link java.lang.String},
+   *        it is cast and used directly. If not, the simple name of this
+   *        object's class is used instead
+   * @param name1
+   *        the name of the first pair
+   * @param value1
+   *        the value of the first pair
+   * @param name2
+   *        the name of the second pair
+   * @param value2
+   *        the value of the second pair
+   * @param name3
+   *        the name of the third pair
+   * @param value3
+   *        the value of the third pair
+   *
+   * @throws IllegalArgumentException
+   *         if {@code level} is negative
+   * @throws NullPointerException
+   *         if any of the {@code toString}, {@code typeName}, {@code name1},
+   *         {@code name2} or {@code name3} is null
+   */
+  public static void format(
+      StringBuilder toString, int level, Object typeName,
+      String name1, Object value1,
+      String name2, Object value2,
+      String name3, Object value3) {
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
+
+    formatStart0(toString, typeName);
+
+    var indentation = i(level);
+
+    formatFirstPair0(toString, level, indentation, name1, value1);
+
+    formatNextPair0(toString, level, indentation, name2, value2);
+
+    formatNextPair0(toString, level, indentation, name3, value3);
+
+    formatEnd0(toString, indentation);
+  }
+
+  /**
+   * Formats and appends to the {@code toString} builder at the specified
+   * indentation {@code level} the object representation formed by its
+   * {@code typeName} and four name/value pairs.
+   *
+   * <p>
+   * This method is meant to be used by implementors of the
+   * {@link ToStringObject} interface. Like so
+   *
+   * <pre>
+   * &#64;Override
+   * public final void formatToString(StringBuilder sb, int level) {
+   *   ToString.format(
+   *       sb, level, this,
+   *       "a", a,
+   *       "b", b,
+   *       "c", c,
+   *       "d", d
+   *   );
+   * }</pre>
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level.
+   * @param typeName
+   *        the value to use as type name for the {@code toString}
+   *        representation. If this is an instance of {@link java.lang.String},
+   *        it is cast and used directly. If not, the simple name of this
+   *        object's class is used instead
+   * @param name1
+   *        the name of the first pair
+   * @param value1
+   *        the value of the first pair
+   * @param name2
+   *        the name of the second pair
+   * @param value2
+   *        the value of the second pair
+   * @param name3
+   *        the name of the third pair
+   * @param value3
+   *        the value of the third pair
+   * @param name4
+   *        the name of the fourth pair
+   * @param value4
+   *        the value of the fourth pair
+   *
+   * @throws IllegalArgumentException
+   *         if {@code level} is negative
+   * @throws NullPointerException
+   *         if any of the {@code toString}, {@code typeName}, {@code name1},
+   *         {@code name2}, {@code name3} or {@code name4} is null
+   */
+  public static void format(
+      StringBuilder toString, int level, Object typeName,
+      String name1, Object value1,
+      String name2, Object value2,
+      String name3, Object value3,
+      String name4, Object value4) {
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
+    Check.notNull(name4, "name4 == null");
+
+    formatStart0(toString, typeName);
+
+    var indentation = i(level);
+
+    formatFirstPair0(toString, level, indentation, name1, value1);
+
+    formatNextPair0(toString, level, indentation, name2, value2);
+
+    formatNextPair0(toString, level, indentation, name3, value3);
+
+    formatNextPair0(toString, level, indentation, name4, value4);
+
+    formatEnd0(toString, indentation);
+  }
+
+  /**
+   * Formats and appends to the {@code toString} builder at the specified
+   * indentation {@code level} the object representation formed by its
+   * {@code typeName} and five name/value pairs.
+   *
+   * <p>
+   * This method is meant to be used by implementors of the
+   * {@link ToStringObject} interface. Like so
+   *
+   * <pre>
+   * &#64;Override
+   * public final void formatToString(StringBuilder sb, int level) {
+   *   ToString.format(
+   *       sb, level, this,
+   *       "a", a,
+   *       "b", b,
+   *       "c", c,
+   *       "d", d,
+   *       "e", e
+   *   );
+   * }</pre>
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level.
+   * @param typeName
+   *        the value to use as type name for the {@code toString}
+   *        representation. If this is an instance of {@link java.lang.String},
+   *        it is cast and used directly. If not, the simple name of this
+   *        object's class is used instead
+   * @param name1
+   *        the name of the first pair
+   * @param value1
+   *        the value of the first pair
+   * @param name2
+   *        the name of the second pair
+   * @param value2
+   *        the value of the second pair
+   * @param name3
+   *        the name of the third pair
+   * @param value3
+   *        the value of the third pair
+   * @param name4
+   *        the name of the fourth pair
+   * @param value4
+   *        the value of the fourth pair
+   * @param name5
+   *        the name of the fifth pair
+   * @param value5
+   *        the value of the fifth pair
+   *
+   * @throws IllegalArgumentException
+   *         if {@code level} is negative
+   * @throws NullPointerException
+   *         if any of the {@code toString}, {@code typeName}, {@code name1},
+   *         {@code name2}, {@code name3} or {@code name4} is null
+   */
+  public static void format(
+      StringBuilder toString, int level, Object typeName,
+      String name1, Object value1,
+      String name2, Object value2,
+      String name3, Object value3,
+      String name4, Object value4,
+      String name5, Object value5) {
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
+    Check.notNull(name4, "name4 == null");
+    Check.notNull(name5, "name5 == null");
+
+    formatStart0(toString, typeName);
+
+    var indentation = i(level);
+
+    formatFirstPair0(toString, level, indentation, name1, value1);
+
+    formatNextPair0(toString, level, indentation, name2, value2);
+
+    formatNextPair0(toString, level, indentation, name3, value3);
+
+    formatNextPair0(toString, level, indentation, name4, value4);
+
+    formatNextPair0(toString, level, indentation, name5, value5);
+
+    formatEnd0(toString, indentation);
+  }
+
+  /**
+   * Formats and appends to the {@code toString} builder at the specified
+   * indentation {@code level} the object representation formed by its
+   * {@code typeName} and six name/value pairs.
+   *
+   * <p>
+   * This method is meant to be used by implementors of the
+   * {@link ToStringObject} interface. Like so
+   *
+   * <pre>
+   * &#64;Override
+   * public final void formatToString(StringBuilder sb, int level) {
+   *   ToString.format(
+   *       sb, level, this,
+   *       "a", a,
+   *       "b", b,
+   *       "c", c,
+   *       "d", d,
+   *       "e", e,
+   *       "f", f
+   *   );
+   * }</pre>
+   *
+   * @param toString
+   *        the builder of a {@code toString} method
+   * @param level
+   *        the indentation level.
+   * @param typeName
+   *        the value to use as type name for the {@code toString}
+   *        representation. If this is an instance of {@link java.lang.String},
+   *        it is cast and used directly. If not, the simple name of this
+   *        object's class is used instead
+   * @param name1
+   *        the name of the first pair
+   * @param value1
+   *        the value of the first pair
+   * @param name2
+   *        the name of the second pair
+   * @param value2
+   *        the value of the second pair
+   * @param name3
+   *        the name of the third pair
+   * @param value3
+   *        the value of the third pair
+   * @param name4
+   *        the name of the fourth pair
+   * @param value4
+   *        the value of the fourth pair
+   * @param name5
+   *        the name of the fifth pair
+   * @param value5
+   *        the value of the fifth pair
+   * @param name6
+   *        the name of the sixth pair
+   * @param value6
+   *        the value of the sixth pair
+   *
+   * @throws IllegalArgumentException
+   *         if {@code level} is negative
+   * @throws NullPointerException
+   *         if any of the {@code toString}, {@code typeName}, {@code name1},
+   *         {@code name2}, {@code name3} or {@code name4} is null
+   */
+  public static void format(
+      StringBuilder toString, int level, Object typeName,
+      String name1, Object value1,
+      String name2, Object value2,
+      String name3, Object value3,
+      String name4, Object value4,
+      String name5, Object value5,
+      String name6, Object value6) {
+    Check.notNull(toString, "toString == null");
+    Check.notNull(typeName, "typeName == null");
+    Check.notNull(name1, "name1 == null");
+    Check.notNull(name2, "name2 == null");
+    Check.notNull(name3, "name3 == null");
+    Check.notNull(name4, "name4 == null");
+    Check.notNull(name5, "name5 == null");
+    Check.notNull(name6, "name6 == null");
+
+    formatStart0(toString, typeName);
+
+    var indentation = i(level);
+
+    formatFirstPair0(toString, level, indentation, name1, value1);
+
+    formatNextPair0(toString, level, indentation, name2, value2);
+
+    formatNextPair0(toString, level, indentation, name3, value3);
+
+    formatNextPair0(toString, level, indentation, name4, value4);
+
+    formatNextPair0(toString, level, indentation, name5, value5);
+
+    formatNextPair0(toString, level, indentation, name6, value6);
+
+    formatEnd0(toString, indentation);
   }
 
   /**
@@ -107,8 +603,7 @@ public final class ToString {
     Check.notNull(toString, "toString == null");
     Check.notNull(name, "name == null");
 
-    char[] indentation;
-    indentation = i(level);
+    var indentation = i(level);
 
     formatFirstPair0(toString, level, indentation, name, value);
   }
@@ -140,8 +635,7 @@ public final class ToString {
     Check.notNull(toString, "toString == null");
     Check.notNull(name, "name == null");
 
-    char[] indentation;
-    indentation = i(level);
+    var indentation = i(level);
 
     formatNextPair0(toString, level, indentation, name, value);
   }
@@ -173,506 +667,23 @@ public final class ToString {
   }
 
   /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} the object representation formed by its
-   * {@code typeName} only.
+   * Returns a string representation for an {@link ToStringObject} instance.
    *
-   * <p>
-   * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * @param object
+   *        an {@code ToStringObject} instance
    *
-   * <pre>
-   * &#64;Override
-   * public final void formatToString(StringBuilder sb, int level) {
-   *   ToString.formatToString(sb, level, this);
-   * }</pre>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   * @param typeName
-   *        the value to use as type name for the {@code toString}
-   *        representation. If this is an instance of {@link java.lang.String},
-   *        it is cast and used directly. If not, the simple name of this
-   *        object's class is used instead
-   *
-   * @throws NullPointerException
-   *         if any of {@code toString} or {@code typeName} is null
+   * @return the string representation as defined by the object's
+   *         {@link ToStringObject#formatToString(StringBuilder, int)}
+   *         implementation
    */
-  public static void formatToString(
-      StringBuilder toString, int level, Object typeName) {
-    Check.notNull(toString, "toString == null");
-    Check.notNull(typeName, "typeName == null");
+  public static String of(ToStringObject object) {
+    Check.notNull(object, "object == null");
 
-    formatStart0(toString, typeName);
+    var out = new StringBuilder();
 
-    toString.append(']');
-  }
+    object.formatToString(out, 0);
 
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} the object representation formed by its
-   * {@code typeName} and a single name/value pair.
-   *
-   * <p>
-   * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
-   *
-   * <pre>
-   * &#64;Override
-   * public final void formatToString(StringBuilder sb, int level) {
-   *   ToString.formatToString(
-   *       sb, level, this,
-   *       "a", a
-   *   );
-   * }</pre>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   * @param typeName
-   *        the value to use as type name for the {@code toString}
-   *        representation. If this is an instance of {@link java.lang.String},
-   *        it is cast and used directly. If not, the simple name of this
-   *        object's class is used instead
-   * @param name
-   *        the name of the pair
-   * @param value
-   *        the value of the pair
-   *
-   * @throws IllegalArgumentException
-   *         if {@code level} is negative
-   * @throws NullPointerException
-   *         if any of the {@code toString}, {@code typeName} or {@code name} is
-   *         null
-   */
-  public static void formatToString(
-      StringBuilder toString, int level, Object typeName,
-      String name, Object value) {
-    Check.notNull(toString, "toString == null");
-    Check.notNull(typeName, "typeName == null");
-    Check.notNull(name, "name == null");
-
-    formatStart0(toString, typeName);
-
-    char[] indentation;
-    indentation = i(level);
-
-    formatFirstPair0(toString, level, indentation, name, value);
-
-    formatEnd0(toString, indentation);
-  }
-
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} the object representation formed by its
-   * {@code typeName} and two name/value pairs.
-   *
-   * <p>
-   * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
-   *
-   * <pre>
-   * &#64;Override
-   * public final void formatToString(StringBuilder sb, int level) {
-   *   ToString.formatToString(
-   *       sb, level, this,
-   *       "a", a,
-   *       "b", b
-   *   );
-   * }</pre>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   * @param typeName
-   *        the value to use as type name for the {@code toString}
-   *        representation. If this is an instance of {@link java.lang.String},
-   *        it is cast and used directly. If not, the simple name of this
-   *        object's class is used instead
-   * @param name1
-   *        the name of the first pair
-   * @param value1
-   *        the value of the first pair
-   * @param name2
-   *        the name of the second pair
-   * @param value2
-   *        the value of the second pair
-   *
-   * @throws IllegalArgumentException
-   *         if {@code level} is negative
-   * @throws NullPointerException
-   *         if any of the {@code toString}, {@code typeName}, {@code name1} or
-   *         {@code name2} is null
-   */
-  public static void formatToString(
-      StringBuilder toString, int level, Object typeName,
-      String name1, Object value1,
-      String name2, Object value2) {
-    Check.notNull(toString, "toString == null");
-    Check.notNull(typeName, "typeName == null");
-    Check.notNull(name1, "name1 == null");
-    Check.notNull(name2, "name2 == null");
-
-    formatStart0(toString, typeName);
-
-    char[] indentation;
-    indentation = i(level);
-
-    formatFirstPair0(toString, level, indentation, name1, value1);
-
-    formatNextPair0(toString, level, indentation, name2, value2);
-
-    formatEnd0(toString, indentation);
-  }
-
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} the object representation formed by its
-   * {@code typeName} and three name/value pairs.
-   *
-   * <p>
-   * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
-   *
-   * <pre>
-   * &#64;Override
-   * public final void formatToString(StringBuilder sb, int level) {
-   *   ToString.formatToString(
-   *       sb, level, this,
-   *       "a", a,
-   *       "b", b,
-   *       "c", c
-   *   );
-   * }</pre>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   * @param typeName
-   *        the value to use as type name for the {@code toString}
-   *        representation. If this is an instance of {@link java.lang.String},
-   *        it is cast and used directly. If not, the simple name of this
-   *        object's class is used instead
-   * @param name1
-   *        the name of the first pair
-   * @param value1
-   *        the value of the first pair
-   * @param name2
-   *        the name of the second pair
-   * @param value2
-   *        the value of the second pair
-   * @param name3
-   *        the name of the third pair
-   * @param value3
-   *        the value of the third pair
-   *
-   * @throws IllegalArgumentException
-   *         if {@code level} is negative
-   * @throws NullPointerException
-   *         if any of the {@code toString}, {@code typeName}, {@code name1},
-   *         {@code name2} or {@code name3} is null
-   */
-  public static void formatToString(
-      StringBuilder toString, int level, Object typeName,
-      String name1, Object value1,
-      String name2, Object value2,
-      String name3, Object value3) {
-    Check.notNull(toString, "toString == null");
-    Check.notNull(typeName, "typeName == null");
-    Check.notNull(name1, "name1 == null");
-    Check.notNull(name2, "name2 == null");
-    Check.notNull(name3, "name3 == null");
-
-    formatStart0(toString, typeName);
-
-    char[] indentation;
-    indentation = i(level);
-
-    formatFirstPair0(toString, level, indentation, name1, value1);
-
-    formatNextPair0(toString, level, indentation, name2, value2);
-
-    formatNextPair0(toString, level, indentation, name3, value3);
-
-    formatEnd0(toString, indentation);
-  }
-
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} the object representation formed by its
-   * {@code typeName} and four name/value pairs.
-   *
-   * <p>
-   * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
-   *
-   * <pre>
-   * &#64;Override
-   * public final void formatToString(StringBuilder sb, int level) {
-   *   ToString.formatToString(
-   *       sb, level, this,
-   *       "a", a,
-   *       "b", b,
-   *       "c", c,
-   *       "d", d
-   *   );
-   * }</pre>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   * @param typeName
-   *        the value to use as type name for the {@code toString}
-   *        representation. If this is an instance of {@link java.lang.String},
-   *        it is cast and used directly. If not, the simple name of this
-   *        object's class is used instead
-   * @param name1
-   *        the name of the first pair
-   * @param value1
-   *        the value of the first pair
-   * @param name2
-   *        the name of the second pair
-   * @param value2
-   *        the value of the second pair
-   * @param name3
-   *        the name of the third pair
-   * @param value3
-   *        the value of the third pair
-   * @param name4
-   *        the name of the fourth pair
-   * @param value4
-   *        the value of the fourth pair
-   *
-   * @throws IllegalArgumentException
-   *         if {@code level} is negative
-   * @throws NullPointerException
-   *         if any of the {@code toString}, {@code typeName}, {@code name1},
-   *         {@code name2}, {@code name3} or {@code name4} is null
-   */
-  public static void formatToString(
-      StringBuilder toString, int level, Object typeName,
-      String name1, Object value1,
-      String name2, Object value2,
-      String name3, Object value3,
-      String name4, Object value4) {
-    Check.notNull(toString, "toString == null");
-    Check.notNull(typeName, "typeName == null");
-    Check.notNull(name1, "name1 == null");
-    Check.notNull(name2, "name2 == null");
-    Check.notNull(name3, "name3 == null");
-    Check.notNull(name4, "name4 == null");
-
-    formatStart0(toString, typeName);
-
-    char[] indentation;
-    indentation = i(level);
-
-    formatFirstPair0(toString, level, indentation, name1, value1);
-
-    formatNextPair0(toString, level, indentation, name2, value2);
-
-    formatNextPair0(toString, level, indentation, name3, value3);
-
-    formatNextPair0(toString, level, indentation, name4, value4);
-
-    formatEnd0(toString, indentation);
-  }
-
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} the object representation formed by its
-   * {@code typeName} and five name/value pairs.
-   *
-   * <p>
-   * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
-   *
-   * <pre>
-   * &#64;Override
-   * public final void formatToString(StringBuilder sb, int level) {
-   *   ToString.formatToString(
-   *       sb, level, this,
-   *       "a", a,
-   *       "b", b,
-   *       "c", c,
-   *       "d", d,
-   *       "e", e
-   *   );
-   * }</pre>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   * @param typeName
-   *        the value to use as type name for the {@code toString}
-   *        representation. If this is an instance of {@link java.lang.String},
-   *        it is cast and used directly. If not, the simple name of this
-   *        object's class is used instead
-   * @param name1
-   *        the name of the first pair
-   * @param value1
-   *        the value of the first pair
-   * @param name2
-   *        the name of the second pair
-   * @param value2
-   *        the value of the second pair
-   * @param name3
-   *        the name of the third pair
-   * @param value3
-   *        the value of the third pair
-   * @param name4
-   *        the name of the fourth pair
-   * @param value4
-   *        the value of the fourth pair
-   * @param name5
-   *        the name of the fifth pair
-   * @param value5
-   *        the value of the fifth pair
-   *
-   * @throws IllegalArgumentException
-   *         if {@code level} is negative
-   * @throws NullPointerException
-   *         if any of the {@code toString}, {@code typeName}, {@code name1},
-   *         {@code name2}, {@code name3} or {@code name4} is null
-   */
-  public static void formatToString(
-      StringBuilder toString, int level, Object typeName,
-      String name1, Object value1,
-      String name2, Object value2,
-      String name3, Object value3,
-      String name4, Object value4,
-      String name5, Object value5) {
-    Check.notNull(toString, "toString == null");
-    Check.notNull(typeName, "typeName == null");
-    Check.notNull(name1, "name1 == null");
-    Check.notNull(name2, "name2 == null");
-    Check.notNull(name3, "name3 == null");
-    Check.notNull(name4, "name4 == null");
-    Check.notNull(name5, "name5 == null");
-
-    formatStart0(toString, typeName);
-
-    char[] indentation;
-    indentation = i(level);
-
-    formatFirstPair0(toString, level, indentation, name1, value1);
-
-    formatNextPair0(toString, level, indentation, name2, value2);
-
-    formatNextPair0(toString, level, indentation, name3, value3);
-
-    formatNextPair0(toString, level, indentation, name4, value4);
-
-    formatNextPair0(toString, level, indentation, name5, value5);
-
-    formatEnd0(toString, indentation);
-  }
-
-  /**
-   * Formats and appends to the {@code toString} builder at the specified
-   * indentation {@code level} the object representation formed by its
-   * {@code typeName} and six name/value pairs.
-   *
-   * <p>
-   * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
-   *
-   * <pre>
-   * &#64;Override
-   * public final void formatToString(StringBuilder sb, int level) {
-   *   ToString.formatToString(
-   *       sb, level, this,
-   *       "a", a,
-   *       "b", b,
-   *       "c", c,
-   *       "d", d,
-   *       "e", e,
-   *       "f", f
-   *   );
-   * }</pre>
-   *
-   * @param toString
-   *        the builder of a {@code toString} method
-   * @param level
-   *        the indentation level.
-   * @param typeName
-   *        the value to use as type name for the {@code toString}
-   *        representation. If this is an instance of {@link java.lang.String},
-   *        it is cast and used directly. If not, the simple name of this
-   *        object's class is used instead
-   * @param name1
-   *        the name of the first pair
-   * @param value1
-   *        the value of the first pair
-   * @param name2
-   *        the name of the second pair
-   * @param value2
-   *        the value of the second pair
-   * @param name3
-   *        the name of the third pair
-   * @param value3
-   *        the value of the third pair
-   * @param name4
-   *        the name of the fourth pair
-   * @param value4
-   *        the value of the fourth pair
-   * @param name5
-   *        the name of the fifth pair
-   * @param value5
-   *        the value of the fifth pair
-   * @param name6
-   *        the name of the sixth pair
-   * @param value6
-   *        the value of the sixth pair
-   *
-   * @throws IllegalArgumentException
-   *         if {@code level} is negative
-   * @throws NullPointerException
-   *         if any of the {@code toString}, {@code typeName}, {@code name1},
-   *         {@code name2}, {@code name3} or {@code name4} is null
-   */
-  public static void formatToString(
-      StringBuilder toString, int level, Object typeName,
-      String name1, Object value1,
-      String name2, Object value2,
-      String name3, Object value3,
-      String name4, Object value4,
-      String name5, Object value5,
-      String name6, Object value6) {
-    Check.notNull(toString, "toString == null");
-    Check.notNull(typeName, "typeName == null");
-    Check.notNull(name1, "name1 == null");
-    Check.notNull(name2, "name2 == null");
-    Check.notNull(name3, "name3 == null");
-    Check.notNull(name4, "name4 == null");
-    Check.notNull(name5, "name5 == null");
-    Check.notNull(name6, "name6 == null");
-
-    formatStart0(toString, typeName);
-
-    char[] indentation;
-    indentation = i(level);
-
-    formatFirstPair0(toString, level, indentation, name1, value1);
-
-    formatNextPair0(toString, level, indentation, name2, value2);
-
-    formatNextPair0(toString, level, indentation, name3, value3);
-
-    formatNextPair0(toString, level, indentation, name4, value4);
-
-    formatNextPair0(toString, level, indentation, name5, value5);
-
-    formatNextPair0(toString, level, indentation, name6, value6);
-
-    formatEnd0(toString, indentation);
+    return out.toString();
   }
 
   /**
@@ -690,7 +701,7 @@ public final class ToString {
   /**
    * Returns a string representation for an object represented by its
    * {@code typeName} only. The returned string is formatted by invoking the
-   * {@link #formatToString(StringBuilder, int, Object)} method with a zero
+   * {@link #format(StringBuilder, int, Object)} method with a zero
    * identation {@code level}.
    *
    * <p>
@@ -709,14 +720,14 @@ public final class ToString {
    *
    * @return a string representation containing only the specified class name
    *
-   * @see #formatToString(StringBuilder, int, Object)
+   * @see #format(StringBuilder, int, Object)
    */
   public static String toString(
       Object typeName) {
     StringBuilder toString;
     toString = new StringBuilder();
 
-    formatToString(
+    format(
       toString, 0, typeName
     );
 
@@ -727,7 +738,7 @@ public final class ToString {
    * Returns a string representation for an object represented by its
    * {@code typeName} a single name/value pair. The returned string is formatted
    * by invoking the
-   * {@link #formatToString(StringBuilder, int, Object, String, Object)}
+   * {@link #format(StringBuilder, int, Object, String, Object)}
    * method with a zero identation {@code level}.
    *
    * <p>
@@ -754,7 +765,7 @@ public final class ToString {
    * @return a string representation containing the specified class name and
    *         the name/value pair
    *
-   * @see #formatToString(StringBuilder, int, Object, String, Object)
+   * @see #format(StringBuilder, int, Object, String, Object)
    */
   public static String toString(
       Object typeName,
@@ -762,7 +773,7 @@ public final class ToString {
     StringBuilder toString;
     toString = new StringBuilder();
 
-    formatToString(
+    format(
       toString, 0, typeName,
       name, value
     );
@@ -774,7 +785,7 @@ public final class ToString {
    * Returns a string representation for an object represented by its
    * {@code typeName} a two name/value pairs. The returned string is formatted
    * by invoking the
-   * {@link #formatToString(StringBuilder, int, Object, String, Object, String, Object)}
+   * {@link #format(StringBuilder, int, Object, String, Object, String, Object)}
    * method with a zero identation {@code level}.
    *
    * <p>
@@ -806,7 +817,7 @@ public final class ToString {
    * @return a string representation containing the specified class name and
    *         the name/value pairs
    *
-   * @see #formatToString(StringBuilder, int, Object, String, Object, String,
+   * @see #format(StringBuilder, int, Object, String, Object, String,
    *      Object)
    */
   public static String toString(
@@ -816,7 +827,7 @@ public final class ToString {
     StringBuilder toString;
     toString = new StringBuilder();
 
-    formatToString(
+    format(
       toString, 0, typeName,
       name1, value1,
       name2, value2
@@ -829,7 +840,7 @@ public final class ToString {
    * Returns a string representation for an object represented by its
    * {@code typeName} a three name/value pairs. The returned string is formatted
    * by invoking the
-   * {@link #formatToString(StringBuilder, int, Object, String, Object, String, Object, String, Object)}
+   * {@link #format(StringBuilder, int, Object, String, Object, String, Object, String, Object)}
    * method with a zero identation {@code level}.
    *
    * <p>
@@ -866,7 +877,7 @@ public final class ToString {
    * @return a string representation containing the specified class name and
    *         the name/value pairs
    *
-   * @see #formatToString(StringBuilder, int, Object, String, Object, String,
+   * @see #format(StringBuilder, int, Object, String, Object, String,
    *      Object, String, Object)
    */
   public static String toString(
@@ -877,7 +888,7 @@ public final class ToString {
     StringBuilder toString;
     toString = new StringBuilder();
 
-    formatToString(
+    format(
       toString, 0, typeName,
       name1, value1,
       name2, value2,
@@ -891,7 +902,7 @@ public final class ToString {
    * Returns a string representation for an object represented by its
    * {@code typeName} a four name/value pairs. The returned string is formatted
    * by invoking the
-   * {@link #formatToString(StringBuilder, int, Object, String, Object, String, Object, String, Object, String, Object)}
+   * {@link #format(StringBuilder, int, Object, String, Object, String, Object, String, Object, String, Object)}
    * method with a zero identation {@code level}.
    *
    * <p>
@@ -933,7 +944,7 @@ public final class ToString {
    * @return a string representation containing the specified class name and
    *         the name/value pairs
    *
-   * @see #formatToString(StringBuilder, int, Object, String, Object, String,
+   * @see #format(StringBuilder, int, Object, String, Object, String,
    *      Object, String, Object, String, Object)
    */
   public static String toString(
@@ -945,7 +956,7 @@ public final class ToString {
     StringBuilder toString;
     toString = new StringBuilder();
 
-    formatToString(
+    format(
       toString, 0, typeName,
       name1, value1,
       name2, value2,
@@ -960,7 +971,7 @@ public final class ToString {
    * Returns a string representation for an object represented by its
    * {@code typeName} a five name/value pairs. The returned string is formatted
    * by invoking the
-   * {@link #formatToString(StringBuilder, int, Object, String, Object, String, Object, String, Object, String, Object, String, Object)}
+   * {@link #format(StringBuilder, int, Object, String, Object, String, Object, String, Object, String, Object, String, Object)}
    * method with a zero identation {@code level}.
    *
    * <p>
@@ -1007,7 +1018,7 @@ public final class ToString {
    * @return a string representation containing the specified class name and
    *         the name/value pairs
    *
-   * @see #formatToString(StringBuilder, int, Object, String, Object, String,
+   * @see #format(StringBuilder, int, Object, String, Object, String,
    *      Object, String, Object, String, Object, String, Object)
    */
   public static String toString(
@@ -1020,7 +1031,7 @@ public final class ToString {
     StringBuilder toString;
     toString = new StringBuilder();
 
-    formatToString(
+    format(
       toString, 0, typeName,
       name1, value1,
       name2, value2,
@@ -1036,7 +1047,7 @@ public final class ToString {
    * Returns a string representation for an object represented by its
    * {@code typeName} a five name/value pairs. The returned string is formatted
    * by invoking the
-   * {@link #formatToString(StringBuilder, int, Object, String, Object, String, Object, String, Object, String, Object, String, Object, String, Object)}
+   * {@link #format(StringBuilder, int, Object, String, Object, String, Object, String, Object, String, Object, String, Object, String, Object)}
    * method with a zero identation {@code level}.
    *
    * <p>
@@ -1088,7 +1099,7 @@ public final class ToString {
    * @return a string representation containing the specified class name and
    *         the name/value pairs
    *
-   * @see #formatToString(StringBuilder, int, Object, String, Object, String,
+   * @see #format(StringBuilder, int, Object, String, Object, String,
    *      Object, String, Object, String, Object, String, Object, String,
    *      Object)
    */
@@ -1103,7 +1114,7 @@ public final class ToString {
     StringBuilder toString;
     toString = new StringBuilder();
 
-    formatToString(
+    format(
       toString, 0, typeName,
       name1, value1,
       name2, value2,
@@ -1114,27 +1125,6 @@ public final class ToString {
     );
 
     return toString.toString();
-  }
-
-  /**
-   * Returns a string representation for an {@link ToStringObject} instance.
-   *
-   * @param object
-   *        an {@code ToStringObject} instance
-   *
-   * @return the string representation as defined by the object's
-   *         {@link ToStringObject#formatToString(StringBuilder, int)}
-   *         implementation
-   */
-  public static String toString(ToStringObject object) {
-    Check.notNull(object, "object == null");
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    object.formatToString(out, 0);
-
-    return out.toString();
   }
 
   private static void formatEnd0(StringBuilder sb, char[] indentation) {
@@ -1156,10 +1146,7 @@ public final class ToString {
 
     // key
 
-    if (key instanceof String) {
-      String s;
-      s = (String) key;
-
+    if (key instanceof String s) {
       if (!s.isEmpty()) {
         sb.append(s);
 
@@ -1167,10 +1154,7 @@ public final class ToString {
       }
     }
 
-    else if (key instanceof ToStringObject) {
-      ToStringObject o;
-      o = (ToStringObject) key;
-
+    else if (key instanceof ToStringObject o) {
       o.formatToString(sb, level + 1);
 
       sb.append('=');
@@ -1182,23 +1166,16 @@ public final class ToString {
       sb.append("null");
     }
 
-    else if (value instanceof String) {
-      String s;
-      s = (String) value;
-
+    else if (value instanceof String s) {
       sb.append(s);
     }
 
-    else if (value instanceof ToStringObject) {
-      ToStringObject o;
-      o = (ToStringObject) value;
-
+    else if (value instanceof ToStringObject o) {
       o.formatToString(sb, level + 1);
     }
 
     else {
-      String s;
-      s = value.toString();
+      var s = value.toString();
 
       sb.append(s);
     }
@@ -1207,16 +1184,12 @@ public final class ToString {
   }
 
   private static void formatStart0(StringBuilder sb, Object typeName) {
-    if (typeName instanceof String) {
-      String s;
-      s = (String) typeName;
-
+    if (typeName instanceof String s) {
       sb.append(s);
     }
 
     else {
-      Class<? extends Object> type;
-      type = typeName.getClass();
+      var type = typeName.getClass();
 
       sb.append(type.getSimpleName());
     }
@@ -1233,8 +1206,7 @@ public final class ToString {
       return INDENTATION[level];
     }
 
-    char[] r;
-    r = new char[2 * level + 2];
+    var r = new char[2 * level + 2];
 
     Arrays.fill(r, ' ');
 

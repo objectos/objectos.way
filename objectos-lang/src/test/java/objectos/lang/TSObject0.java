@@ -29,7 +29,7 @@ class TSObject0 extends AbstractToStringObject {
 
   @Override
   public void formatToString(StringBuilder toString, int level) {
-    ToString.formatToString(
+    ToString.format(
         toString, level, typeName
     );
   }

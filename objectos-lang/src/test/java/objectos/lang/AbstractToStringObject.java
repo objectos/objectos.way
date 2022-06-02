@@ -19,7 +19,7 @@ abstract class AbstractToStringObject implements ToStringObject {
 
   @Override
   public final String toString() {
-    return ToString.toString(this);
+    return ToString.of(this);
   }
 
 }
