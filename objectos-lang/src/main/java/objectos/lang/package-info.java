@@ -33,13 +33,6 @@
  * <li>{@link objectos.lang.ToStringObject}
  * </ul>
  *
- * <h3>{@code Runtime}</h3>
- *
- * <ul>
- * <li>{@link objectos.lang.ShutdownHook}
- * <li>{@link objectos.lang.ShutdownHookTask}
- * </ul>
- *
  * <h3>{@code String}</h3>
  *
  * <ul>
