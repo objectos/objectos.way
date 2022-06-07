@@ -17,7 +17,7 @@ package objectos.lang;
 
 import java.util.Arrays;
 
-final class SimpleToStringList implements ToStringObject {
+final class SimpleToStringList implements ToString.Formattable {
 
   private final int size;
 

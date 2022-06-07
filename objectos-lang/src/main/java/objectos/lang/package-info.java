@@ -30,7 +30,7 @@
  * <li>{@link objectos.lang.Equals}
  * <li>{@link objectos.lang.HashCode}
  * <li>{@link objectos.lang.ToString}
- * <li>{@link objectos.lang.ToStringObject}
+ * <li>{@link objectos.lang.ToString.Formattable}
  * </ul>
  *
  * <h3>{@code String}</h3>

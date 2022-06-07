@@ -15,7 +15,7 @@
  */
 package objectos.lang;
 
-abstract class AbstractToStringObject implements ToStringObject {
+abstract class AbstractToStringObject implements ToString.Formattable {
 
   @Override
   public final String toString() {

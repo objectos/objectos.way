@@ -27,180 +27,180 @@ public class ToStringTest {
   public void testCase01() {
     // 0
     test(
-        new TSObject0(),
-        "TSObject0[]"
+      new TSObject0(),
+      "TSObject0[]"
     );
     test(
-        new TSObject0("X"),
-        "X[]"
+      new TSObject0("X"),
+      "X[]"
     );
 
     // 1
     test(
-        new TSObject1(
-            "A", "1"
-        ),
-        "TSObject1[",
-        "  A=1",
-        "]"
+      new TSObject1(
+        "A", "1"
+      ),
+      "TSObject1[",
+      "  A=1",
+      "]"
     );
     test(
-        new TSObject1("X",
-            "A", "1"
-        ),
-        "X[",
-        "  A=1",
-        "]"
+      new TSObject1("X",
+        "A", "1"
+      ),
+      "X[",
+      "  A=1",
+      "]"
     );
 
     // 2
     test(
-        new TSObject2(
-            "A", "1",
-            "B", "2"
-        ),
-        "TSObject2[",
-        "  A=1",
-        "  B=2",
-        "]"
+      new TSObject2(
+        "A", "1",
+        "B", "2"
+      ),
+      "TSObject2[",
+      "  A=1",
+      "  B=2",
+      "]"
     );
     test(
-        new TSObject2("X",
-            "A", "1",
-            "B", "2"
-        ),
-        "X[",
-        "  A=1",
-        "  B=2",
-        "]"
+      new TSObject2("X",
+        "A", "1",
+        "B", "2"
+      ),
+      "X[",
+      "  A=1",
+      "  B=2",
+      "]"
     );
 
     // 3
     test(
-        new TSObject3(
-            "A", "1",
-            "B", "2",
-            "C", "3"
-        ),
-        "TSObject3[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "]"
+      new TSObject3(
+        "A", "1",
+        "B", "2",
+        "C", "3"
+      ),
+      "TSObject3[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "]"
     );
     test(
-        new TSObject3("X",
-            "A", "1",
-            "B", "2",
-            "C", "3"
-        ),
-        "X[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "]"
+      new TSObject3("X",
+        "A", "1",
+        "B", "2",
+        "C", "3"
+      ),
+      "X[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "]"
     );
 
     // 4
     test(
-        new TSObject4(
-            "A", "1",
-            "B", "2",
-            "C", "3",
-            "D", "4"
-        ),
-        "TSObject4[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "  D=4",
-        "]"
+      new TSObject4(
+        "A", "1",
+        "B", "2",
+        "C", "3",
+        "D", "4"
+      ),
+      "TSObject4[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "  D=4",
+      "]"
     );
     test(
-        new TSObject4("X",
-            "A", "1",
-            "B", "2",
-            "C", "3",
-            "D", "4"
-        ),
-        "X[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "  D=4",
-        "]"
+      new TSObject4("X",
+        "A", "1",
+        "B", "2",
+        "C", "3",
+        "D", "4"
+      ),
+      "X[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "  D=4",
+      "]"
     );
 
     // 5
     test(
-        new TSObject5(
-            "A", "1",
-            "B", "2",
-            "C", "3",
-            "D", "4",
-            "E", "5"
-        ),
-        "TSObject5[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "  D=4",
-        "  E=5",
-        "]"
+      new TSObject5(
+        "A", "1",
+        "B", "2",
+        "C", "3",
+        "D", "4",
+        "E", "5"
+      ),
+      "TSObject5[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "  D=4",
+      "  E=5",
+      "]"
     );
     test(
-        new TSObject5("X",
-            "A", "1",
-            "B", "2",
-            "C", "3",
-            "D", "4",
-            "E", "5"
-        ),
-        "X[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "  D=4",
-        "  E=5",
-        "]"
+      new TSObject5("X",
+        "A", "1",
+        "B", "2",
+        "C", "3",
+        "D", "4",
+        "E", "5"
+      ),
+      "X[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "  D=4",
+      "  E=5",
+      "]"
     );
 
     // 6
     test(
-        new TSObject6(
-            "A", "1",
-            "B", "2",
-            "C", "3",
-            "D", "4",
-            "E", "5",
-            "F", "6"
-        ),
-        "TSObject6[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "  D=4",
-        "  E=5",
-        "  F=6",
-        "]"
+      new TSObject6(
+        "A", "1",
+        "B", "2",
+        "C", "3",
+        "D", "4",
+        "E", "5",
+        "F", "6"
+      ),
+      "TSObject6[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "  D=4",
+      "  E=5",
+      "  F=6",
+      "]"
     );
     test(
-        new TSObject6("X",
-            "A", "1",
-            "B", "2",
-            "C", "3",
-            "D", "4",
-            "E", "5",
-            "F", "6"
-        ),
-        "X[",
-        "  A=1",
-        "  B=2",
-        "  C=3",
-        "  D=4",
-        "  E=5",
-        "  F=6",
-        "]"
+      new TSObject6("X",
+        "A", "1",
+        "B", "2",
+        "C", "3",
+        "D", "4",
+        "E", "5",
+        "F", "6"
+      ),
+      "X[",
+      "  A=1",
+      "  B=2",
+      "  C=3",
+      "  D=4",
+      "  E=5",
+      "  F=6",
+      "]"
     );
   }
 
@@ -213,89 +213,89 @@ public class ToStringTest {
 
     TSObject1 ts1;
     ts1 = new TSObject1(
-        "ts0", ts0
+      "ts0", ts0
     );
 
     test(
-        ts1,
-        "TSObject1[",
-        "  ts0=TSObject0[]",
-        "]"
+      ts1,
+      "TSObject1[",
+      "  ts0=TSObject0[]",
+      "]"
     );
 
     TSObject2 ts2;
     ts2 = new TSObject2(
-        "ts0", ts0,
-        "ts1", ts1
+      "ts0", ts0,
+      "ts1", ts1
     );
 
     test(
-        ts2,
-        "TSObject2[",
-        "  ts0=TSObject0[]",
-        "  ts1=TSObject1[",
-        "    ts0=TSObject0[]",
-        "  ]",
-        "]"
+      ts2,
+      "TSObject2[",
+      "  ts0=TSObject0[]",
+      "  ts1=TSObject1[",
+      "    ts0=TSObject0[]",
+      "  ]",
+      "]"
     );
 
     TSObject3 ts3;
     ts3 = new TSObject3(
-        "ts0", ts0,
-        "ts1", ts1,
-        "ts2", ts2
+      "ts0", ts0,
+      "ts1", ts1,
+      "ts2", ts2
     );
 
     test(
-        ts3,
-        "TSObject3[",
-        "  ts0=TSObject0[]",
-        "  ts1=TSObject1[",
-        "    ts0=TSObject0[]",
-        "  ]",
-        "  ts2=TSObject2[",
-        "    ts0=TSObject0[]",
-        "    ts1=TSObject1[",
-        "      ts0=TSObject0[]",
-        "    ]",
-        "  ]",
-        "]"
+      ts3,
+      "TSObject3[",
+      "  ts0=TSObject0[]",
+      "  ts1=TSObject1[",
+      "    ts0=TSObject0[]",
+      "  ]",
+      "  ts2=TSObject2[",
+      "    ts0=TSObject0[]",
+      "    ts1=TSObject1[",
+      "      ts0=TSObject0[]",
+      "    ]",
+      "  ]",
+      "]"
     );
 
     TSObject4 ts4;
     ts4 = new TSObject4(
-        "ts0", ts0,
-        "ts1", ts1,
-        "ts2", ts2,
-        "ts3", ts3
+      "ts0", ts0,
+      "ts1", ts1,
+      "ts2", ts2,
+      "ts3", ts3
     );
 
     test(
-        ts4,
-        "TSObject4[",
-        "  ts0=TSObject0[]",
-        "  ts1=TSObject1[",
-        "    ts0=TSObject0[]",
-        "  ]",
-        "  ts2=TSObject2[",
-        "    ts0=TSObject0[]",
-        "    ts1=TSObject1[",
-        "      ts0=TSObject0[]",
-        "    ]",
-        "  ]",
-        "  ts3=TSObject3[",
-        "    ts0=TSObject0[]",
-        "    ts1=TSObject1[",
-        "      ts0=TSObject0[]",
-        "    ]",
-        "    ts2=TSObject2[",
-        "      ts0=TSObject0[]",
-        "      ts1=TSObject1[",
-        "        ts0=TSObject0[]",
-        "      ]",
-        "    ]",
-        "  ]",
-        "]"
+      ts4,
+      "TSObject4[",
+      "  ts0=TSObject0[]",
+      "  ts1=TSObject1[",
+      "    ts0=TSObject0[]",
+      "  ]",
+      "  ts2=TSObject2[",
+      "    ts0=TSObject0[]",
+      "    ts1=TSObject1[",
+      "      ts0=TSObject0[]",
+      "    ]",
+      "  ]",
+      "  ts3=TSObject3[",
+      "    ts0=TSObject0[]",
+      "    ts1=TSObject1[",
+      "      ts0=TSObject0[]",
+      "    ]",
+      "    ts2=TSObject2[",
+      "      ts0=TSObject0[]",
+      "      ts1=TSObject1[",
+      "        ts0=TSObject0[]",
+      "      ]",
+      "    ]",
+      "  ]",
+      "]"
     );
   }
 
@@ -308,315 +308,315 @@ public class ToStringTest {
     final int e = 5;
 
     assertEquals(
-        ToString.toString(this),
-        "ToStringTest[]"
+      ToString.toString(this),
+      "ToStringTest[]"
     );
 
     assertEquals(
-        ToString.toString(
-            this,
-            "A", ToString.toString(a)
-        ),
-        lines(
-            "ToStringTest[",
-            "  A=1",
-            "]"
+      ToString.toString(
+        this,
+        "A", ToString.toString(a)
+      ),
+      lines(
+        "ToStringTest[",
+        "  A=1",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "A", ToString.toString(a),
+        "B", ToString.toString(b)
+      ),
+      lines(
+        "ToStringTest[",
+        "  A=1",
+        "  B=2",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "A", ToString.toString(a),
+        "B", ToString.toString(b),
+        "C", ToString.toString(c)
+      ),
+      lines(
+        "ToStringTest[",
+        "  A=1",
+        "  B=2",
+        "  C=3",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "A", ToString.toString(a),
+        "B", ToString.toString(b),
+        "C", ToString.toString(c),
+        "D", ToString.toString(d)
+      ),
+      lines(
+        "ToStringTest[",
+        "  A=1",
+        "  B=2",
+        "  C=3",
+        "  D=4",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "A", ToString.toString(a),
+        "B", ToString.toString(b),
+        "C", ToString.toString(c),
+        "D", ToString.toString(d),
+        "E", ToString.toString(e)
+      ),
+      lines(
+        "ToStringTest[",
+        "  A=1",
+        "  B=2",
+        "  C=3",
+        "  D=4",
+        "  E=5",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "A", null,
+        "B", null,
+        "C", null,
+        "D", null,
+        "E", ToString.toString(e)
+      ),
+      lines(
+        "ToStringTest[",
+        "  A=null",
+        "  B=null",
+        "  C=null",
+        "  D=null",
+        "  E=5",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString("Foo"),
+      "Foo[]"
+    );
+
+    assertEquals(
+      ToString.toString(
+        "Foo",
+        "A", ToString.toString(a)
+      ),
+      lines(
+        "Foo[",
+        "  A=1",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        "Foo",
+        "A", ToString.toString(a),
+        "B", ToString.toString(b)
+      ),
+      lines(
+        "Foo[",
+        "  A=1",
+        "  B=2",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        "Foo",
+        "A", ToString.toString(a),
+        "B", ToString.toString(b),
+        "C", ToString.toString(c)
+      ),
+      lines(
+        "Foo[",
+        "  A=1",
+        "  B=2",
+        "  C=3",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        "Foo",
+        "A", ToString.toString(a),
+        "B", ToString.toString(b),
+        "C", ToString.toString(c),
+        "D", ToString.toString(d)
+      ),
+      lines(
+        "Foo[",
+        "  A=1",
+        "  B=2",
+        "  C=3",
+        "  D=4",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        "Foo",
+        "A", ToString.toString(a),
+        "B", ToString.toString(b),
+        "C", ToString.toString(c),
+        "D", ToString.toString(d),
+        "E", ToString.toString(e)
+      ),
+      lines(
+        "Foo[",
+        "  A=1",
+        "  B=2",
+        "  C=3",
+        "  D=4",
+        "  E=5",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "", ToString.toString(a),
+        "", ToString.toString(b),
+        "", ToString.toString(c),
+        "", ToString.toString(d),
+        "", ToString.toString(e)
+      ),
+      lines(
+        "ToStringTest[",
+        "  1",
+        "  2",
+        "  3",
+        "  4",
+        "  5",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "object", new SimpleToStringObject(123)
+      ),
+      lines(
+        "ToStringTest[",
+        "  object=SimpleToString.Formattable[",
+        "    value=123",
+        "  ]",
+        "]"
+      )
+    );
+
+    assertEquals(
+      ToString.toString(
+        this,
+        "depth1", new SimpleToStringObject(
+          new SimpleToStringObject("XPTO")
         )
+      ),
+      lines(
+        "ToStringTest[",
+        "  depth1=SimpleToString.Formattable[",
+        "    value=SimpleToString.Formattable[",
+        "      value=XPTO",
+        "    ]",
+        "  ]",
+        "]"
+      )
     );
 
     assertEquals(
-        ToString.toString(
-            this,
-            "A", ToString.toString(a),
-            "B", ToString.toString(b)
-        ),
-        lines(
-            "ToStringTest[",
-            "  A=1",
-            "  B=2",
-            "]"
-        )
+      new SimpleToStringList(0).toString(),
+      "SimpleToStringList[]"
     );
 
     assertEquals(
-        ToString.toString(
-            this,
-            "A", ToString.toString(a),
-            "B", ToString.toString(b),
-            "C", ToString.toString(c)
-        ),
-        lines(
-            "ToStringTest[",
-            "  A=1",
-            "  B=2",
-            "  C=3",
-            "]"
-        )
+      new SimpleToStringList(1).toString(),
+      lines(
+        "SimpleToStringList[",
+        "  0=x",
+        "]"
+      )
     );
 
     assertEquals(
-        ToString.toString(
-            this,
-            "A", ToString.toString(a),
-            "B", ToString.toString(b),
-            "C", ToString.toString(c),
-            "D", ToString.toString(d)
-        ),
-        lines(
-            "ToStringTest[",
-            "  A=1",
-            "  B=2",
-            "  C=3",
-            "  D=4",
-            "]"
-        )
+      new SimpleToStringList(2).toString(),
+      lines(
+        "SimpleToStringList[",
+        "  0=x",
+        "  1=xx",
+        "]"
+      )
     );
 
     assertEquals(
-        ToString.toString(
-            this,
-            "A", ToString.toString(a),
-            "B", ToString.toString(b),
-            "C", ToString.toString(c),
-            "D", ToString.toString(d),
-            "E", ToString.toString(e)
-        ),
-        lines(
-            "ToStringTest[",
-            "  A=1",
-            "  B=2",
-            "  C=3",
-            "  D=4",
-            "  E=5",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            this,
-            "A", null,
-            "B", null,
-            "C", null,
-            "D", null,
-            "E", ToString.toString(e)
-        ),
-        lines(
-            "ToStringTest[",
-            "  A=null",
-            "  B=null",
-            "  C=null",
-            "  D=null",
-            "  E=5",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString("Foo"),
-        "Foo[]"
-    );
-
-    assertEquals(
-        ToString.toString(
-            "Foo",
-            "A", ToString.toString(a)
-        ),
-        lines(
-            "Foo[",
-            "  A=1",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            "Foo",
-            "A", ToString.toString(a),
-            "B", ToString.toString(b)
-        ),
-        lines(
-            "Foo[",
-            "  A=1",
-            "  B=2",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            "Foo",
-            "A", ToString.toString(a),
-            "B", ToString.toString(b),
-            "C", ToString.toString(c)
-        ),
-        lines(
-            "Foo[",
-            "  A=1",
-            "  B=2",
-            "  C=3",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            "Foo",
-            "A", ToString.toString(a),
-            "B", ToString.toString(b),
-            "C", ToString.toString(c),
-            "D", ToString.toString(d)
-        ),
-        lines(
-            "Foo[",
-            "  A=1",
-            "  B=2",
-            "  C=3",
-            "  D=4",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            "Foo",
-            "A", ToString.toString(a),
-            "B", ToString.toString(b),
-            "C", ToString.toString(c),
-            "D", ToString.toString(d),
-            "E", ToString.toString(e)
-        ),
-        lines(
-            "Foo[",
-            "  A=1",
-            "  B=2",
-            "  C=3",
-            "  D=4",
-            "  E=5",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            this,
-            "", ToString.toString(a),
-            "", ToString.toString(b),
-            "", ToString.toString(c),
-            "", ToString.toString(d),
-            "", ToString.toString(e)
-        ),
-        lines(
-            "ToStringTest[",
-            "  1",
-            "  2",
-            "  3",
-            "  4",
-            "  5",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            this,
-            "object", new SimpleToStringObject(123)
-        ),
-        lines(
-            "ToStringTest[",
-            "  object=SimpleToStringObject[",
-            "    value=123",
-            "  ]",
-            "]"
-        )
-    );
-
-    assertEquals(
-        ToString.toString(
-            this,
-            "depth1", new SimpleToStringObject(
-                new SimpleToStringObject("XPTO")
-            )
-        ),
-        lines(
-            "ToStringTest[",
-            "  depth1=SimpleToStringObject[",
-            "    value=SimpleToStringObject[",
-            "      value=XPTO",
-            "    ]",
-            "  ]",
-            "]"
-        )
-    );
-
-    assertEquals(
-        new SimpleToStringList(0).toString(),
-        "SimpleToStringList[]"
-    );
-
-    assertEquals(
-        new SimpleToStringList(1).toString(),
-        lines(
-            "SimpleToStringList[",
-            "  0=x",
-            "]"
-        )
-    );
-
-    assertEquals(
-        new SimpleToStringList(2).toString(),
-        lines(
-            "SimpleToStringList[",
-            "  0=x",
-            "  1=xx",
-            "]"
-        )
-    );
-
-    assertEquals(
-        new SimpleToStringList(7).toString(),
-        lines(
-            "SimpleToStringList[",
-            "  0=x",
-            "  1=xx",
-            "  2=xxx",
-            "  3=xxxx",
-            "  4=xxxxx",
-            "  5=xxxxxx",
-            "  6=xxxxxxx",
-            "]"
-        )
+      new SimpleToStringList(7).toString(),
+      lines(
+        "SimpleToStringList[",
+        "  0=x",
+        "  1=xx",
+        "  2=xxx",
+        "  3=xxxx",
+        "  4=xxxxx",
+        "  5=xxxxxx",
+        "  6=xxxxxxx",
+        "]"
+      )
     );
 
     SimpleToStringMap isMap;
     isMap = new SimpleToStringMap();
 
     assertEquals(
-        isMap.toString(),
-        "SimpleToStringMap[]"
+      isMap.toString(),
+      "SimpleToStringMap[]"
     );
 
     isMap.put("first", Integer.valueOf(1));
 
     assertEquals(
-        isMap.toString(),
-        lines(
-            "SimpleToStringMap[",
-            "  first=1",
-            "]"
-        )
+      isMap.toString(),
+      lines(
+        "SimpleToStringMap[",
+        "  first=1",
+        "]"
+      )
     );
 
     isMap.put("second", Integer.valueOf(2));
 
     assertEquals(
-        isMap.toString(),
-        lines(
-            "SimpleToStringMap[",
-            "  first=1",
-            "  second=2",
-            "]"
-        )
+      isMap.toString(),
+      lines(
+        "SimpleToStringMap[",
+        "  first=1",
+        "  second=2",
+        "]"
+      )
     );
   }
 

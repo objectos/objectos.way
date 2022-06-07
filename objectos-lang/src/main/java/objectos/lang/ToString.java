@@ -59,7 +59,7 @@ public final class ToString {
    *
    * <p>
    * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * {@link ToString.Formattable} interface. Like so
    *
    * <pre>
    * &#64;Override
@@ -97,7 +97,7 @@ public final class ToString {
    *
    * <p>
    * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * {@link ToString.Formattable} interface. Like so
    *
    * <pre>
    * &#64;Override
@@ -151,7 +151,7 @@ public final class ToString {
    *
    * <p>
    * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * {@link ToString.Formattable} interface. Like so
    *
    * <pre>
    * &#64;Override
@@ -214,7 +214,7 @@ public final class ToString {
    *
    * <p>
    * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * {@link ToString.Formattable} interface. Like so
    *
    * <pre>
    * &#64;Override
@@ -286,7 +286,7 @@ public final class ToString {
    *
    * <p>
    * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * {@link ToString.Formattable} interface. Like so
    *
    * <pre>
    * &#64;Override
@@ -367,7 +367,7 @@ public final class ToString {
    *
    * <p>
    * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * {@link ToString.Formattable} interface. Like so
    *
    * <pre>
    * &#64;Override
@@ -457,7 +457,7 @@ public final class ToString {
    *
    * <p>
    * This method is meant to be used by implementors of the
-   * {@link ToStringObject} interface. Like so
+   * {@link ToString.Formattable} interface. Like so
    *
    * <pre>
    * &#64;Override
@@ -555,7 +555,7 @@ public final class ToString {
    *
    * <p>
    * This is a low-level method meant to be used by implementors of the
-   * {@link ToStringObject} interfaces.
+   * {@link ToString.Formattable} interfaces.
    *
    * @param toString
    *        the builder of a {@code toString} method
@@ -582,7 +582,7 @@ public final class ToString {
    *
    * <p>
    * This is a low-level method meant to be used by implementors of the
-   * {@link ToStringObject} interfaces.
+   * {@link ToString.Formattable} interfaces.
    *
    * @param toString
    *        the builder of a {@code toString} method
@@ -614,7 +614,7 @@ public final class ToString {
    *
    * <p>
    * This is a low-level method meant to be used by implementors of the
-   * {@link ToStringObject} interfaces.
+   * {@link ToString.Formattable} interfaces.
    *
    * @param toString
    *        the builder of a {@code toString} method
@@ -646,7 +646,7 @@ public final class ToString {
    *
    * <p>
    * This is a low-level method meant to be used by implementors of the
-   * {@link ToStringObject} interfaces.
+   * {@link ToString.Formattable} interfaces.
    *
    * @param toString
    *        the builder of a {@code toString} method
@@ -667,16 +667,17 @@ public final class ToString {
   }
 
   /**
-   * Returns a string representation for an {@link ToStringObject} instance.
+   * Returns a string representation for an {@link ToString.Formattable}
+   * instance.
    *
    * @param object
-   *        an {@code ToStringObject} instance
+   *        an {@code ToString.Formattable} instance
    *
    * @return the string representation as defined by the object's
-   *         {@link ToStringObject#formatToString(StringBuilder, int)}
+   *         {@link ToString.Formattable#formatToString(StringBuilder, int)}
    *         implementation
    */
-  public static String of(ToStringObject object) {
+  public static String of(ToString.Formattable object) {
     Check.notNull(object, "object == null");
 
     var out = new StringBuilder();
@@ -1154,7 +1155,7 @@ public final class ToString {
       }
     }
 
-    else if (key instanceof ToStringObject o) {
+    else if (key instanceof ToString.Formattable o) {
       o.formatToString(sb, level + 1);
 
       sb.append('=');
@@ -1170,7 +1171,7 @@ public final class ToString {
       sb.append(s);
     }
 
-    else if (value instanceof ToStringObject o) {
+    else if (value instanceof ToString.Formattable o) {
       o.formatToString(sb, level + 1);
     }
 
@@ -1211,6 +1212,27 @@ public final class ToString {
     Arrays.fill(r, ' ');
 
     return r;
+  }
+
+  /**
+   * An object that can correctly participate in nested {@code toString}
+   * implementations.
+   *
+   * @since 0.2
+   */
+  public interface Formattable {
+
+    /**
+     * Formats and appends this object's string representation to the
+     * {@code toString} builder at the specified indentation level.
+     *
+     * @param toString
+     *        the builder of a {@code toString} method
+     * @param level
+     *        the indentation level
+     */
+    void formatToString(StringBuilder toString, int level);
+
   }
 
 }

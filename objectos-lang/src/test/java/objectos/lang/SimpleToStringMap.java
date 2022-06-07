@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-final class SimpleToStringMap implements ToStringObject {
+final class SimpleToStringMap implements ToString.Formattable {
 
   private final Map<String, Object> map = new LinkedHashMap<String, Object>();
 

@@ -15,7 +15,7 @@
  */
 package objectos.lang;
 
-final class SimpleToStringObject implements ToStringObject {
+final class SimpleToStringObject implements ToString.Formattable {
 
   private final Object value;
 
@@ -26,8 +26,8 @@ final class SimpleToStringObject implements ToStringObject {
   @Override
   public final void formatToString(StringBuilder sb, int depth) {
     ToString.format(
-        sb, depth, this,
-        "value", value
+      sb, depth, this,
+      "value", value
     );
   }
 
