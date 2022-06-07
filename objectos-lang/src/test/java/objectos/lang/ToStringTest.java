@@ -524,7 +524,7 @@ public class ToStringTest {
       ),
       lines(
         "ToStringTest[",
-        "  object=SimpleToString.Formattable[",
+        "  object=SimpleToStringObject[",
         "    value=123",
         "  ]",
         "]"
@@ -540,8 +540,8 @@ public class ToStringTest {
       ),
       lines(
         "ToStringTest[",
-        "  depth1=SimpleToString.Formattable[",
-        "    value=SimpleToString.Formattable[",
+        "  depth1=SimpleToStringObject[",
+        "    value=SimpleToStringObject[",
         "      value=XPTO",
         "    ]",
         "  ]",
