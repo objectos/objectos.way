@@ -42,8 +42,8 @@
  * <h3>{@code System}</h3>
  *
  * <ul>
- * <li>{@link objectos.lang.OperatingSystem}
- * <li>{@link objectos.lang.OperatingSystemVisitor}
+ * <li>{@link br.com.objectos.fs.OperatingSystem}
+ * <li>{@link br.com.objectos.fs.OperatingSystemVisitor}
  * </ul>
  *
  * <h3>{@code Throwable}</h3>
