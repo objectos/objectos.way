@@ -37,8 +37,6 @@
  *
  * <ul>
  * <li>{@link objectos.lang.RandomString}
- * <li>{@link objectos.lang.StringConversion}
- * <li>{@link objectos.lang.StringConverter}
  * </ul>
  *
  * <h3>{@code System}</h3>
