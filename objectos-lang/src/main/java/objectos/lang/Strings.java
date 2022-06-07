@@ -32,24 +32,6 @@ public final class Strings {
   private Strings() {}
 
   /**
-   * Returns the empty string if the supplied string is {@code null}. Returns
-   * the string itself otherwise.
-   *
-   * @param s
-   *        a string
-   *
-   * @return the empty string {@code ""} if the string {@code s} is null. The
-   *         string itself otherwise.
-   */
-  public static String nullToEmpty(String s) {
-    if (s == null) {
-      return "";
-    }
-
-    return s;
-  }
-
-  /**
    * Returns a new {@code int} array containing all the Unicode code points, in
    * order, of the supplied string. The returned array has a length that is
    * equal to the quantity of code points in the string.

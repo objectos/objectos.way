@@ -22,13 +22,6 @@ import org.testng.annotations.Test;
 public class StringsTest {
 
   @Test
-  public void nullToEmpty() {
-    assertEquals(Strings.nullToEmpty(null), "");
-    assertEquals(Strings.nullToEmpty(""), "");
-    assertEquals(Strings.nullToEmpty("abc"), "abc");
-  }
-
-  @Test
   public void toCodePoints() {
     toCodePointsTest("");
     toCodePointsTest("A");
