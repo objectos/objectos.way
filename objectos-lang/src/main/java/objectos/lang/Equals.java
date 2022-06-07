@@ -15,8 +15,6 @@
  */
 package objectos.lang;
 
-import java.util.Iterator;
-
 /**
  * Provides {@code static} convenience methods for implementing
  * {@link Object#equals(Object)} methods.
@@ -26,88 +24,6 @@ import java.util.Iterator;
 public final class Equals {
 
   private Equals() {}
-
-  /**
-   * Checks if two iterables are equal to each other in a null-safe manner.
-   *
-   * <p>
-   * Returns:
-   *
-   * <ul>
-   * <li>{@code true} if both {@code a} and {@code b} are null;</li>
-   * <li>{@code true} if both {@code a} and {@code b} are non-null and the
-   * expresssion {@code Equals.iterators(a.iterator(), b.iterator())} evaluates
-   * to {@code true}; and</li>
-   * <li>{@code false} otherwise</li>
-   * </ul>
-   *
-   * @param a
-   *        the first iterable to check for equality
-   * @param b
-   *        the second iterable to check for equality
-   *
-   * @return {@code true} if the arguments are equal to each other and
-   *         {@code false} otherwise
-   */
-  public static boolean iterables(Iterable<?> a, Iterable<?> b) {
-    if (a == null && b == null) {
-      return true;
-    }
-
-    if (a != null && b != null) {
-      return iterators(a.iterator(), b.iterator());
-    }
-
-    return false;
-  }
-
-  /**
-   * Checks if two iterators are equal to each other in a null-safe manner.
-   *
-   * <p>
-   * Two iterators are considered equal if they both return the same number of
-   * elements and each returned element from {@code a} is equal to the
-   * corresponding returned element from {@code b}.
-   *
-   * <p>
-   * If both iterators {@code a} and {@code b} are null this method returns
-   * {@code true}.
-   *
-   * @param a
-   *        the first iterator to check for equality
-   * @param b
-   *        the second iterator to check for equality
-   *
-   * @return {@code true} if the arguments are equal to each other and
-   *         {@code false} otherwise
-   */
-  public static boolean iterators(Iterator<?> a, Iterator<?> b) {
-    if (a == null && b == null) {
-      return true;
-    }
-
-    Object an, bn;
-
-    if (a != null && b != null) {
-      while (a.hasNext()) {
-        if (!b.hasNext()) {
-          return false;
-        }
-
-        an = a.next();
-
-        bn = b.next();
-
-        if (!Equals.objects(an, bn)) {
-          return false;
-        }
-      }
-
-      return !b.hasNext();
-    }
-
-    return false;
-  }
 
   /**
    * Checks if two objects are equal to each other in a null-safe manner.
