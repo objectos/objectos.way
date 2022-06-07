@@ -39,13 +39,6 @@
  * <li>{@link objectos.lang.RandomString}
  * </ul>
  *
- * <h3>{@code System}</h3>
- *
- * <ul>
- * <li>{@link br.com.objectos.fs.OperatingSystem}
- * <li>{@link br.com.objectos.fs.OperatingSystemVisitor}
- * </ul>
- *
  * <h3>{@code Throwable}</h3>
  *
  * <ul>
