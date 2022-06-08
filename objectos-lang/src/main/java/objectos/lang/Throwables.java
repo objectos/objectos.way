@@ -30,30 +30,6 @@ public final class Throwables {
   private Throwables() {}
 
   /**
-   * Adds to the first exception the second one as a suppressed
-   * exception and returns the first exception. If the first exception is
-   * {@code null} then the second exception is returned unchanged.
-   *
-   * @param exception
-   *        the (maybe null) exception
-   * @param suppressed
-   *        the suppresed exception
-   *
-   * @return {@code exception} if it not null, {@code suppressed} otherwise
-   */
-  public static Throwable addSuppressed(Throwable exception, Throwable suppressed) {
-    Check.notNull(suppressed, "suppressed == null");
-
-    if (exception != null) {
-      exception.addSuppressed(suppressed);
-
-      return exception;
-    } else {
-      return suppressed;
-    }
-  }
-
-  /**
    * Returns a new string whose contents is what would be sent to the standard
    * error stream as a result of invoking {@link Throwable#printStackTrace()}.
    *

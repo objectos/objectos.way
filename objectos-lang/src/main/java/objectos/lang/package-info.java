@@ -42,6 +42,7 @@
  * <h3>{@code Throwable}</h3>
  *
  * <ul>
+ * <li>{@link objectos.lang.Suppressed}
  * <li>{@link objectos.lang.Throwables}
  * </ul>
  *
