@@ -43,7 +43,6 @@
  *
  * <ul>
  * <li>{@link objectos.lang.Suppressed}
- * <li>{@link objectos.lang.Throwables}
  * </ul>
  *
  * <h2>Note sink API</h2>
