@@ -33,18 +33,6 @@
  * <li>{@link objectos.lang.ToString.Formattable}
  * </ul>
  *
- * <h3>{@code String}</h3>
- *
- * <ul>
- * <li>{@link objectos.lang.RandomString}
- * </ul>
- *
- * <h3>{@code Throwable}</h3>
- *
- * <ul>
- * <li>{@link objectos.lang.Suppressed}
- * </ul>
- *
  * <h2>Note sink API</h2>
  *
  * <p>
