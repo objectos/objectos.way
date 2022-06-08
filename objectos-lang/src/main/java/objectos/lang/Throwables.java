@@ -15,9 +15,6 @@
  */
 package objectos.lang;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 /**
  * Provides {@code static} utility methods for working with {@link Throwable}
  * instances. In particular, provides a single API for working with
@@ -28,27 +25,6 @@ import java.io.StringWriter;
 public final class Throwables {
 
   private Throwables() {}
-
-  /**
-   * Returns a new string whose contents is what would be sent to the standard
-   * error stream as a result of invoking {@link Throwable#printStackTrace()}.
-   *
-   * @param throwable
-   *        a throwable instance to analyze
-   *
-   * @return a string containing the throwable and its backtrace
-   */
-  public static String printStackTraceToString(Throwable throwable) {
-    StringWriter output;
-    output = new StringWriter();
-
-    PrintWriter printWriter;
-    printWriter = new PrintWriter(output);
-
-    throwable.printStackTrace(printWriter);
-
-    return output.toString();
-  }
 
   /**
    * Throws the specified {@code throwable} as the specified {@code type} if it

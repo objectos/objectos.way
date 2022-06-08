@@ -32,7 +32,7 @@ package objectos.lang;
  * rethrow = Suppressed.addIfPossible(rethrow, new NullPointerException());
  *
  * // NPE is a suppressed throwable of IOException
- * </pre>
+ * }</pre>
  *
  * @since 0.2
  */
