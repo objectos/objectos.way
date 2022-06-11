@@ -134,7 +134,7 @@ public class LoggingTest {
   }
 
   private void test0(ThisLogger logger, Note0 event) {
-    logger.log(event);
+    logger.send(event);
 
     assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
@@ -144,7 +144,7 @@ public class LoggingTest {
   }
 
   private <T1> void test1(ThisLogger logger, Note1<T1> event, T1 arg) {
-    logger.log(event, arg);
+    logger.send(event, arg);
 
     assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
@@ -154,7 +154,7 @@ public class LoggingTest {
   }
 
   private <T1, T2> void test2(ThisLogger logger, Note2<T1, T2> event, T1 arg1, T2 arg2) {
-    logger.log(event, arg1, arg2);
+    logger.send(event, arg1, arg2);
 
     assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
@@ -165,7 +165,7 @@ public class LoggingTest {
 
   private <T1, T2, T3> void test3(
       ThisLogger logger, Note3<T1, T2, T3> event, T1 arg1, T2 arg2, T3 arg3) {
-    logger.log(event, arg1, arg2, arg3);
+    logger.send(event, arg1, arg2, arg3);
 
     assertEquals(logger.level, event.level());
     assertEquals(logger.event, event);
@@ -192,19 +192,19 @@ public class LoggingTest {
     }
 
     @Override
-    public final void log(Note0 event) {
+    public final void send(Note0 event) {
       set(event);
     }
 
     @Override
-    public final <T1> void log(Note1<T1> event, T1 v1) {
+    public final <T1> void send(Note1<T1> event, T1 v1) {
       set(event);
 
       value1 = v1;
     }
 
     @Override
-    public final <T1, T2> void log(Note2<T1, T2> event, T1 v1, T2 v2) {
+    public final <T1, T2> void send(Note2<T1, T2> event, T1 v1, T2 v2) {
       set(event);
 
       value1 = v1;
@@ -213,7 +213,7 @@ public class LoggingTest {
     }
 
     @Override
-    public final <T1, T2, T3> void log(Note3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
+    public final <T1, T2, T3> void send(Note3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
       set(event);
 
       value1 = v1;

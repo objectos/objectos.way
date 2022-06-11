@@ -16,12 +16,12 @@
 package objectos.lang;
 
 /**
- * An object responsible for consuming the notes of a program; it behaves as an
+ * An object responsible for sending the notes of a program; it behaves as an
  * event listener.
  *
  * <p>
  * <em>Note on {@code null} handling:</em> unlike other methods in this package,
- * the parameterized arguments of the various {@code log} methods of this
+ * the parameterized arguments of the various {@code note} methods of this
  * interface can be {@code null}.
  *
  * @see Note
@@ -42,56 +42,6 @@ public interface NoteSink {
   boolean isEnabled(Note note);
 
   /**
-   * Logs the given note that takes no argument.
-   *
-   * @param note
-   *        an note instance
-   */
-  void log(Note0 note);
-
-  /**
-   * Logs the given note that takes one argument.
-   *
-   * @param <T1> type of the log argument
-   * @param note
-   *        an note instance
-   * @param v1
-   *        argument of the consumed note (can be null)
-   */
-  <T1> void log(Note1<T1> note, T1 v1);
-
-  /**
-   * Logs the given note that takes two arguments.
-   *
-   * @param <T1> type of the first log argument
-   * @param <T2> type of the second log argument
-   * @param note
-   *        an note instance
-   * @param v1
-   *        first argument of the consumed note (can be null)
-   * @param v2
-   *        second argument of the consumed note (can be null)
-   */
-  <T1, T2> void log(Note2<T1, T2> note, T1 v1, T2 v2);
-
-  /**
-   * Logs the given note that takes three arguments.
-   *
-   * @param <T1> type of the first log argument
-   * @param <T2> type of the second log argument
-   * @param <T3> type of the third log argument
-   * @param note
-   *        an note instance
-   * @param v1
-   *        first argument of the consumed note (can be null)
-   * @param v2
-   *        second argument of the consumed note (can be null)
-   * @param v3
-   *        third argument of the consumed note (can be null)
-   */
-  <T1, T2, T3> void log(Note3<T1, T2, T3> note, T1 v1, T2 v2, T3 v3);
-
-  /**
    * Replaces this instance with the given {@code sink} instance if it is
    * possible to do so.
    *
@@ -101,5 +51,55 @@ public interface NoteSink {
    * @return the given {@code sink} instance or this instance
    */
   NoteSink replace(NoteSink sink);
+
+  /**
+   * Sends the given note that takes no argument.
+   *
+   * @param note
+   *        an note instance
+   */
+  void send(Note0 note);
+
+  /**
+   * Sends the given note that takes one argument.
+   *
+   * @param <T1> type of the note argument
+   * @param note
+   *        an note instance
+   * @param v1
+   *        argument of the consumed note (can be null)
+   */
+  <T1> void send(Note1<T1> note, T1 v1);
+
+  /**
+   * Sends the given note that takes two arguments.
+   *
+   * @param <T1> type of the first note argument
+   * @param <T2> type of the second note argument
+   * @param note
+   *        an note instance
+   * @param v1
+   *        first argument of the consumed note (can be null)
+   * @param v2
+   *        second argument of the consumed note (can be null)
+   */
+  <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2);
+
+  /**
+   * Sends the given note that takes three arguments.
+   *
+   * @param <T1> type of the first note argument
+   * @param <T2> type of the second note argument
+   * @param <T3> type of the third note argument
+   * @param note
+   *        an note instance
+   * @param v1
+   *        first argument of the consumed note (can be null)
+   * @param v2
+   *        second argument of the consumed note (can be null)
+   * @param v3
+   *        third argument of the consumed note (can be null)
+   */
+  <T1, T2, T3> void send(Note3<T1, T2, T3> note, T1 v1, T2 v2, T3 v3);
 
 }

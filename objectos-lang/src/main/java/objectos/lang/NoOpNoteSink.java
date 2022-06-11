@@ -62,7 +62,7 @@ public class NoOpNoteSink implements NoteSink {
    *        an event instance (ignored)
    */
   @Override
-  public void log(Note0 event) {
+  public void send(Note0 event) {
     // noop
   }
 
@@ -75,7 +75,7 @@ public class NoOpNoteSink implements NoteSink {
    *        a value (ignored)
    */
   @Override
-  public <T1> void log(Note1<T1> event, T1 v1) {
+  public <T1> void send(Note1<T1> event, T1 v1) {
     // noop
   }
 
@@ -90,7 +90,7 @@ public class NoOpNoteSink implements NoteSink {
    *        a second value (ignored)
    */
   @Override
-  public <T1, T2> void log(Note2<T1, T2> event, T1 v1, T2 v2) {
+  public <T1, T2> void send(Note2<T1, T2> event, T1 v1, T2 v2) {
     // noop
   }
 
@@ -107,7 +107,7 @@ public class NoOpNoteSink implements NoteSink {
    *        a third value (ignored)
    */
   @Override
-  public <T1, T2, T3> void log(Note3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
+  public <T1, T2, T3> void send(Note3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
     // noop
   }
 

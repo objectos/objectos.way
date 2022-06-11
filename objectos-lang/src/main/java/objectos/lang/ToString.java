@@ -797,12 +797,12 @@ public final class ToString {
      * Formats and appends this object's string representation to the
      * {@code toString} builder at the specified indentation level.
      *
-     * @param toString
+     * @param sb
      *        the builder of a {@code toString} method
      * @param level
      *        the indentation level
      */
-    void formatToString(StringBuilder toString, int level);
+    void formatToString(StringBuilder sb, int level);
 
   }
 
