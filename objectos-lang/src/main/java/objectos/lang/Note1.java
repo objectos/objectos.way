@@ -33,7 +33,7 @@ public final class Note1<T1> extends Note {
    *        a key that uniquely identifies this note within the given
    *        {@code source}
    * @param level
-   *        the logging level of this note
+   *        the severity of this note
    */
   public Note1(String source, Object key, Level level) {
     super(source, key, level);

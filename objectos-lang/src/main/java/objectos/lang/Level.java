@@ -16,9 +16,8 @@
 package objectos.lang;
 
 /**
- * Represents a logging level. Levels typically represent the severity of an
- * event. They may be used by loggers to limit which message are actually
- * logged.
+ * Represents the severity of a `Note`. They may be used by `NoteSink` instances
+ * to limit which notes are actually sent.
  *
  * @since 0.2
  */

@@ -28,11 +28,11 @@ public class ToStringTest {
     // 0
     test(
       new TSObject0(),
-      "TSObject0[]"
+      "TSObject0 []"
     );
     test(
       new TSObject0("X"),
-      "X[]"
+      "X []"
     );
 
     // 1
@@ -40,16 +40,16 @@ public class ToStringTest {
       new TSObject1(
         "A", "1"
       ),
-      "TSObject1[",
-      "  A=1",
+      "TSObject1 [",
+      "  A = 1",
       "]"
     );
     test(
       new TSObject1("X",
         "A", "1"
       ),
-      "X[",
-      "  A=1",
+      "X [",
+      "  A = 1",
       "]"
     );
 
@@ -59,9 +59,9 @@ public class ToStringTest {
         "A", "1",
         "B", "2"
       ),
-      "TSObject2[",
-      "  A=1",
-      "  B=2",
+      "TSObject2 [",
+      "  A = 1",
+      "  B = 2",
       "]"
     );
     test(
@@ -69,9 +69,9 @@ public class ToStringTest {
         "A", "1",
         "B", "2"
       ),
-      "X[",
-      "  A=1",
-      "  B=2",
+      "X [",
+      "  A = 1",
+      "  B = 2",
       "]"
     );
 
@@ -82,10 +82,10 @@ public class ToStringTest {
         "B", "2",
         "C", "3"
       ),
-      "TSObject3[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
+      "TSObject3 [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
       "]"
     );
     test(
@@ -94,10 +94,10 @@ public class ToStringTest {
         "B", "2",
         "C", "3"
       ),
-      "X[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
+      "X [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
       "]"
     );
 
@@ -109,11 +109,11 @@ public class ToStringTest {
         "C", "3",
         "D", "4"
       ),
-      "TSObject4[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
-      "  D=4",
+      "TSObject4 [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
+      "  D = 4",
       "]"
     );
     test(
@@ -123,11 +123,11 @@ public class ToStringTest {
         "C", "3",
         "D", "4"
       ),
-      "X[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
-      "  D=4",
+      "X [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
+      "  D = 4",
       "]"
     );
 
@@ -140,12 +140,12 @@ public class ToStringTest {
         "D", "4",
         "E", "5"
       ),
-      "TSObject5[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
-      "  D=4",
-      "  E=5",
+      "TSObject5 [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
+      "  D = 4",
+      "  E = 5",
       "]"
     );
     test(
@@ -156,12 +156,12 @@ public class ToStringTest {
         "D", "4",
         "E", "5"
       ),
-      "X[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
-      "  D=4",
-      "  E=5",
+      "X [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
+      "  D = 4",
+      "  E = 5",
       "]"
     );
 
@@ -175,13 +175,13 @@ public class ToStringTest {
         "E", "5",
         "F", "6"
       ),
-      "TSObject6[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
-      "  D=4",
-      "  E=5",
-      "  F=6",
+      "TSObject6 [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
+      "  D = 4",
+      "  E = 5",
+      "  F = 6",
       "]"
     );
     test(
@@ -193,13 +193,13 @@ public class ToStringTest {
         "E", "5",
         "F", "6"
       ),
-      "X[",
-      "  A=1",
-      "  B=2",
-      "  C=3",
-      "  D=4",
-      "  E=5",
-      "  F=6",
+      "X [",
+      "  A = 1",
+      "  B = 2",
+      "  C = 3",
+      "  D = 4",
+      "  E = 5",
+      "  F = 6",
       "]"
     );
   }
@@ -218,8 +218,8 @@ public class ToStringTest {
 
     test(
       ts1,
-      "TSObject1[",
-      "  ts0=TSObject0[]",
+      "TSObject1 [",
+      "  ts0 = TSObject0 []",
       "]"
     );
 
@@ -231,10 +231,10 @@ public class ToStringTest {
 
     test(
       ts2,
-      "TSObject2[",
-      "  ts0=TSObject0[]",
-      "  ts1=TSObject1[",
-      "    ts0=TSObject0[]",
+      "TSObject2 [",
+      "  ts0 = TSObject0 []",
+      "  ts1 = TSObject1 [",
+      "    ts0 = TSObject0 []",
       "  ]",
       "]"
     );
@@ -248,15 +248,15 @@ public class ToStringTest {
 
     test(
       ts3,
-      "TSObject3[",
-      "  ts0=TSObject0[]",
-      "  ts1=TSObject1[",
-      "    ts0=TSObject0[]",
+      "TSObject3 [",
+      "  ts0 = TSObject0 []",
+      "  ts1 = TSObject1 [",
+      "    ts0 = TSObject0 []",
       "  ]",
-      "  ts2=TSObject2[",
-      "    ts0=TSObject0[]",
-      "    ts1=TSObject1[",
-      "      ts0=TSObject0[]",
+      "  ts2 = TSObject2 [",
+      "    ts0 = TSObject0 []",
+      "    ts1 = TSObject1 [",
+      "      ts0 = TSObject0 []",
       "    ]",
       "  ]",
       "]"
@@ -272,26 +272,26 @@ public class ToStringTest {
 
     test(
       ts4,
-      "TSObject4[",
-      "  ts0=TSObject0[]",
-      "  ts1=TSObject1[",
-      "    ts0=TSObject0[]",
+      "TSObject4 [",
+      "  ts0 = TSObject0 []",
+      "  ts1 = TSObject1 [",
+      "    ts0 = TSObject0 []",
       "  ]",
-      "  ts2=TSObject2[",
-      "    ts0=TSObject0[]",
-      "    ts1=TSObject1[",
-      "      ts0=TSObject0[]",
+      "  ts2 = TSObject2 [",
+      "    ts0 = TSObject0 []",
+      "    ts1 = TSObject1 [",
+      "      ts0 = TSObject0 []",
       "    ]",
       "  ]",
-      "  ts3=TSObject3[",
-      "    ts0=TSObject0[]",
-      "    ts1=TSObject1[",
-      "      ts0=TSObject0[]",
+      "  ts3 = TSObject3 [",
+      "    ts0 = TSObject0 []",
+      "    ts1 = TSObject1 [",
+      "      ts0 = TSObject0 []",
       "    ]",
-      "    ts2=TSObject2[",
-      "      ts0=TSObject0[]",
-      "      ts1=TSObject1[",
-      "        ts0=TSObject0[]",
+      "    ts2 = TSObject2 [",
+      "      ts0 = TSObject0 []",
+      "      ts1 = TSObject1 [",
+      "        ts0 = TSObject0 []",
       "      ]",
       "    ]",
       "  ]",
@@ -303,14 +303,14 @@ public class ToStringTest {
   public void toStringTest() {
     assertEquals(
       new SimpleToStringList(0).toString(),
-      "SimpleToStringList[]"
+      "SimpleToStringList []"
     );
 
     assertEquals(
       new SimpleToStringList(1).toString(),
       lines(
-        "SimpleToStringList[",
-        "  0=x",
+        "SimpleToStringList [",
+        "  0 = x",
         "]"
       )
     );
@@ -318,9 +318,9 @@ public class ToStringTest {
     assertEquals(
       new SimpleToStringList(2).toString(),
       lines(
-        "SimpleToStringList[",
-        "  0=x",
-        "  1=xx",
+        "SimpleToStringList [",
+        "  0 = x",
+        "  1 = xx",
         "]"
       )
     );
@@ -328,14 +328,14 @@ public class ToStringTest {
     assertEquals(
       new SimpleToStringList(7).toString(),
       lines(
-        "SimpleToStringList[",
-        "  0=x",
-        "  1=xx",
-        "  2=xxx",
-        "  3=xxxx",
-        "  4=xxxxx",
-        "  5=xxxxxx",
-        "  6=xxxxxxx",
+        "SimpleToStringList [",
+        "  0 = x",
+        "  1 = xx",
+        "  2 = xxx",
+        "  3 = xxxx",
+        "  4 = xxxxx",
+        "  5 = xxxxxx",
+        "  6 = xxxxxxx",
         "]"
       )
     );
@@ -345,7 +345,7 @@ public class ToStringTest {
 
     assertEquals(
       isMap.toString(),
-      "SimpleToStringMap[]"
+      "SimpleToStringMap []"
     );
 
     isMap.put("first", Integer.valueOf(1));
@@ -353,8 +353,8 @@ public class ToStringTest {
     assertEquals(
       isMap.toString(),
       lines(
-        "SimpleToStringMap[",
-        "  first=1",
+        "SimpleToStringMap [",
+        "  first = 1",
         "]"
       )
     );
@@ -364,9 +364,9 @@ public class ToStringTest {
     assertEquals(
       isMap.toString(),
       lines(
-        "SimpleToStringMap[",
-        "  first=1",
-        "  second=2",
+        "SimpleToStringMap [",
+        "  first = 1",
+        "  second = 2",
         "]"
       )
     );

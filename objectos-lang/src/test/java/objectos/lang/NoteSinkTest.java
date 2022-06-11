@@ -23,7 +23,7 @@ import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
-public class LoggingTest {
+public class NoteSinkTest {
 
   static final Note0 DEBUG0 = Note0.debug();
 
@@ -192,6 +192,11 @@ public class LoggingTest {
     }
 
     @Override
+    public final NoteSink replace(NoteSink logger) {
+      return this;
+    }
+
+    @Override
     public final void send(Note0 event) {
       set(event);
     }
@@ -221,11 +226,6 @@ public class LoggingTest {
       value2 = v2;
 
       value3 = v3;
-    }
-
-    @Override
-    public final NoteSink replace(NoteSink logger) {
-      return this;
     }
 
     private void set(Note event) {

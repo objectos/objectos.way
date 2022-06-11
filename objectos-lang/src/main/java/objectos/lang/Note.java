@@ -71,7 +71,7 @@ package objectos.lang;
  * {@link NoteSink} instance when invoking this note.</li>
  * </ul>
  *
- * <h2>Note on the name of this class</h2>
+ * <h2>About the name of this class</h2>
  *
  * This class represents an event in an event listener context. However it is
  * not named {@code Event} as the name is an overloaded term in programming. In
@@ -154,13 +154,13 @@ public abstract class Note {
   }
 
   /**
-   * Returns {@code true} if this note would be logged at the specified
+   * Returns {@code true} if this note would be sent at the specified
    * {@code level}.
    *
    * @param level
    *        the level to check against
    *
-   * @return {@code true} if this note would be logged at the specified
+   * @return {@code true} if this note would be sent at the specified
    *         {@code level}
    */
   public final boolean isEnabled(Level level) {
@@ -178,9 +178,9 @@ public abstract class Note {
   }
 
   /**
-   * Returns the logging level of this note.
+   * Returns the severity level of this note.
    *
-   * @return the logging level of this note
+   * @return the severity level of this note
    */
   public final Level level() {
     return level;
@@ -188,8 +188,8 @@ public abstract class Note {
 
   /**
    * Returns the source of this note. The source of an note is a name
-   * that indicates the origin of a log message. The source is typically
-   * the canonical name of the class where the note is declared.
+   * that indicates the origin of a note. The source is typically
+   * the fully qualified name of the class where the note is declared.
    *
    * @return the source of this note
    */

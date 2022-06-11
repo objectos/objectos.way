@@ -19,7 +19,8 @@ import java.util.Arrays;
 
 /**
  * Provides {@code static} methods to format and generate a standardized
- * {@link Object#toString()} method output.
+ * {@link Object#toString()} value meant to be human-readable (as opposed to
+ * machine-readable).
  *
  * @since 0.2
  */
@@ -722,14 +723,14 @@ public final class ToString {
       if (!s.isEmpty()) {
         sb.append(s);
 
-        sb.append('=');
+        sb.append(" = ");
       }
     }
 
     else if (key instanceof ToString.Formattable o) {
       o.formatToString(sb, level + 1);
 
-      sb.append('=');
+      sb.append(" = ");
     }
 
     // value
@@ -766,7 +767,7 @@ public final class ToString {
       sb.append(type.getSimpleName());
     }
 
-    sb.append('[');
+    sb.append(" [");
   }
 
   private static char[] i(int level) {

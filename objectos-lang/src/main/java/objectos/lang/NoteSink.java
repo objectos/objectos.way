@@ -31,13 +31,13 @@ package objectos.lang;
 public interface NoteSink {
 
   /**
-   * Returns {@code true} if the given {@code note} would be consumed by this
+   * Returns {@code true} if the given {@code note} would be sent by this
    * {@code NoteSink} instance.
    *
    * @param note
    *        the note to test
    *
-   * @return {@code true} if the given {@code note} would be consumed
+   * @return {@code true} if the given {@code note} would be sent
    */
   boolean isEnabled(Note note);
 

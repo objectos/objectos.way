@@ -17,9 +17,8 @@ package objectos.lang;
 
 /**
  * A no-op {@code NoteSink} implementation (for the most part). The one
- * exception
- * is the {@link NoteSink#replace(NoteSink)} operation that actually returns the
- * supplied value.
+ * exception is the {@link NoteSink#replace(NoteSink)} operation that actually
+ * returns the supplied value.
  *
  * @since 0.2
  */
@@ -45,70 +44,14 @@ public class NoOpNoteSink implements NoteSink {
   /**
    * Returns {@code false}.
    *
-   * @param event
-   *        an event instance (ignored)
+   * @param note
+   *        an note instance (ignored)
    *
    * @return {@code false}
    */
   @Override
-  public boolean isEnabled(Note event) {
+  public boolean isEnabled(Note note) {
     return false;
-  }
-
-  /**
-   * Does nothing, this is a no-op sink.
-   *
-   * @param event
-   *        an event instance (ignored)
-   */
-  @Override
-  public void send(Note0 event) {
-    // noop
-  }
-
-  /**
-   * Does nothing, this is a no-op sink.
-   *
-   * @param event
-   *        an event instance (ignored)
-   * @param v1
-   *        a value (ignored)
-   */
-  @Override
-  public <T1> void send(Note1<T1> event, T1 v1) {
-    // noop
-  }
-
-  /**
-   * Does nothing, this is a no-op sink.
-   *
-   * @param event
-   *        an event instance (ignored)
-   * @param v1
-   *        a first value (ignored)
-   * @param v2
-   *        a second value (ignored)
-   */
-  @Override
-  public <T1, T2> void send(Note2<T1, T2> event, T1 v1, T2 v2) {
-    // noop
-  }
-
-  /**
-   * Does nothing, this is a no-op sink.
-   *
-   * @param event
-   *        an event instance (ignored)
-   * @param v1
-   *        a first value (ignored)
-   * @param v2
-   *        a second value (ignored)
-   * @param v3
-   *        a third value (ignored)
-   */
-  @Override
-  public <T1, T2, T3> void send(Note3<T1, T2, T3> event, T1 v1, T2 v2, T3 v3) {
-    // noop
   }
 
   /**
@@ -124,6 +67,62 @@ public class NoOpNoteSink implements NoteSink {
     Check.notNull(sink, "sink == null");
 
     return sink;
+  }
+
+  /**
+   * Does nothing, this is a no-op sink.
+   *
+   * @param note
+   *        an note instance (ignored)
+   */
+  @Override
+  public void send(Note0 note) {
+    // noop
+  }
+
+  /**
+   * Does nothing, this is a no-op sink.
+   *
+   * @param note
+   *        an note instance (ignored)
+   * @param v1
+   *        a value (ignored)
+   */
+  @Override
+  public <T1> void send(Note1<T1> note, T1 v1) {
+    // noop
+  }
+
+  /**
+   * Does nothing, this is a no-op sink.
+   *
+   * @param note
+   *        an note instance (ignored)
+   * @param v1
+   *        a first value (ignored)
+   * @param v2
+   *        a second value (ignored)
+   */
+  @Override
+  public <T1, T2> void send(Note2<T1, T2> note, T1 v1, T2 v2) {
+    // noop
+  }
+
+  /**
+   * Does nothing, this is a no-op sink.
+   *
+   * @param note
+   *        an note instance (ignored)
+   * @param v1
+   *        a first value (ignored)
+   * @param v2
+   *        a second value (ignored)
+   * @param v3
+   *        a third value (ignored)
+   */
+  @Override
+  public <T1, T2, T3> void send(Note3<T1, T2, T3> note, T1 v1, T2 v2, T3 v3) {
+    // noop
   }
 
 }
