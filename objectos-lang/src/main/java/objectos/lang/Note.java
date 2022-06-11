@@ -136,7 +136,7 @@ public abstract class Note {
   @Override
   public final boolean equals(Object obj) {
     return obj instanceof Note that
-        && Equals.objects(
+        && Equals.of(
           getClass(), that.getClass(),
           source, that.source,
           key, that.key

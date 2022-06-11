@@ -29,7 +29,7 @@ final class ComponentString {
   }
 
   private boolean equals0(ComponentString that) {
-    return Equals.objects(
+    return Equals.of(
         value, that.value
     );
   }

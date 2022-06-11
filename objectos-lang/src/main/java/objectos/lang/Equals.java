@@ -46,7 +46,7 @@ public final class Equals {
    * @return {@code true} if the arguments are equal to each other and
    *         {@code false} otherwise
    */
-  public static boolean objects(Object a, Object b) {
+  public static boolean of(Object a, Object b) {
     if (a == b) {
       return true;
     }
@@ -65,12 +65,12 @@ public final class Equals {
    * <p>
    * An invocation of this method of the form
    *
-   * <pre>{@code Equals.objects(a, b, c, d)}</pre>
+   * <pre>{@code Equals.of(a, b, c, d)}</pre>
    *
    * <p>
    * behaves in exactly the same way as the expression
    *
-   * <pre>{@code Equals.objects(a, b) && Equals.objects(c, d)}</pre>
+   * <pre>{@code Equals.of(a, b) && Equals.of(c, d)}</pre>
    *
    * <p>
    * meaning that if the equality test fails for the first pair, the second pair
@@ -86,13 +86,13 @@ public final class Equals {
    *        the second reference of the second pair to check for equality
    *
    * @return {@code true} if
-   *         {@code Equals.objects(a, b) && Equals.objects(c, d)}
+   *         {@code Equals.of(a, b) && Equals.of(c, d)}
    */
-  public static boolean objects(
+  public static boolean of(
       Object a, Object b,
       Object c, Object d) {
-    return objects(a, b)
-        && objects(c, d);
+    return of(a, b)
+        && of(c, d);
   }
 
   /**
@@ -102,12 +102,12 @@ public final class Equals {
    * <p>
    * An invocation of this method of the form
    *
-   * <pre>{@code Equals.objects(a, b, c, d, e, f)}</pre>
+   * <pre>{@code Equals.of(a, b, c, d, e, f)}</pre>
    *
    * <p>
    * behaves in exactly the same way as the expression
    *
-   * <pre>{@code Equals.objects(a, b) && Equals.objects(c, d) &&  Equals.objects(e, f)}</pre>
+   * <pre>{@code Equals.of(a, b) && Equals.of(c, d) &&  Equals.of(e, f)}</pre>
    *
    * <p>
    * meaning that if the equality test fails for the first pair, the second pair
@@ -127,15 +127,15 @@ public final class Equals {
    *        the second reference of the third pair to check for equality
    *
    * @return {@code true} if
-   *         {@code Equals.objects(a, b) && Equals.objects(c, d) && Equals.objects(e, f)}
+   *         {@code Equals.of(a, b) && Equals.of(c, d) && Equals.of(e, f)}
    */
-  public static boolean objects(
+  public static boolean of(
       Object a, Object b,
       Object c, Object d,
       Object e, Object f) {
-    return objects(a, b)
-        && objects(c, d)
-        && objects(e, f);
+    return of(a, b)
+        && of(c, d)
+        && of(e, f);
   }
 
 }

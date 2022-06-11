@@ -98,88 +98,88 @@ public class EqualsTest {
   @Test
   public void objects() {
     assertTrue(
-      Equals.objects(
+      Equals.of(
         null, null
       )
     );
 
     assertTrue(
-      Equals.objects(
+      Equals.of(
         a, a
       )
     );
     assertTrue(
-      Equals.objects(
+      Equals.of(
         a, b
       )
     );
     assertTrue(
-      Equals.objects(
+      Equals.of(
         b, a
       )
     );
 
     assertTrue(
-      Equals.objects(
+      Equals.of(
         null, null,
         null, null
       )
     );
 
     assertTrue(
-      Equals.objects(
+      Equals.of(
         a, a,
         a, a
       )
     );
     assertTrue(
-      Equals.objects(
+      Equals.of(
         a, a,
         b, b
       )
     );
     assertTrue(
-      Equals.objects(
+      Equals.of(
         b, b,
         c, c
       )
     );
     assertTrue(
-      Equals.objects(
+      Equals.of(
         a, b,
         c, d
       )
     );
     assertTrue(
-      Equals.objects(
+      Equals.of(
         b, a,
         d, c
       )
     );
 
     assertFalse(
-      Equals.objects(
+      Equals.of(
         a, null
       )
     );
     assertFalse(
-      Equals.objects(
+      Equals.of(
         null, a
       )
     );
     assertFalse(
-      Equals.objects(
+      Equals.of(
         a, c
       )
     );
     assertFalse(
-      Equals.objects(
+      Equals.of(
         a, c,
         b, d
       )
     );
     assertFalse(
-      Equals.objects(
+      Equals.of(
         a, b,
         c, null
       )

@@ -32,7 +32,7 @@ class Subject {
   }
 
   private boolean equals0(Subject obj) {
-    return Equals.objects(
+    return Equals.of(
         a, obj.a,
         b, obj.b
     );
