@@ -68,6 +68,7 @@
 	<modules>
 		<module>objectos-bom</module>
 		<module>objectos-lang</module>
+		<module>objectos-util</module>
 	</modules>
 
 	<properties>
