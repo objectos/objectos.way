@@ -20,6 +20,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -185,7 +186,7 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
   }
 
   <K, V> Map<K, V> createExpectedMap() {
-    return Maps.newHashMap();
+    return new HashMap<>();
   }
 
   <K, V> MutableMap<K, V> createGrowableMap() {

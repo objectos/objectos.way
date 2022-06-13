@@ -17,13 +17,9 @@ package objectos.util;
 
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import objectos.lang.Check;
 
 /**
@@ -35,119 +31,9 @@ import objectos.lang.Check;
  * codebases. In particular codebases that must support versions prior to Java
  * 7 and, therefore, cannot use the diamond operator.
  */
-public final class Maps {
+final class Maps {
 
   private Maps() {}
-
-  /**
-   * Returns a new {@link ConcurrentHashMap} instance by invoking the
-   * constructor that takes no arguments.
-   *
-   * @param <K> type of the keys of the new map
-   * @param <V> type of the values of the new map
-   *
-   * @return a new {@link ConcurrentHashMap} instance
-   *
-   * @see ConcurrentHashMap#ConcurrentHashMap()
-   */
-  public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap() {
-    return new ConcurrentHashMap<K, V>();
-  }
-
-  /**
-   * Returns a new {@link ConcurrentHashMap} instance with the specified
-   * capacity.
-   *
-   * @param <K> type of the keys of the new map
-   * @param <V> type of the values of the new map
-   * @param initialCapacity
-   *        the value for the capacity of the returned map
-   *
-   * @return a new {@link ConcurrentHashMap} instance
-   *
-   * @see ConcurrentHashMap#ConcurrentHashMap(int)
-   */
-  public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMapWithCapacity(
-      int initialCapacity) {
-    return new ConcurrentHashMap<K, V>(initialCapacity);
-  }
-
-  /**
-   * Returns a new {@link HashMap} instance by invoking the constructor that
-   * takes no arguments.
-   *
-   * @param <K> type of the keys of the new map
-   * @param <V> type of the values of the new map
-   *
-   * @return a new {@link HashMap} instance
-   *
-   * @see HashMap#HashMap()
-   */
-  public static <K, V> HashMap<K, V> newHashMap() {
-    return new HashMap<K, V>();
-  }
-
-  /**
-   * Returns a new {@link HashMap} instance with the specified capacity.
-   *
-   * @param <K> type of the keys of the new map
-   * @param <V> type of the values of the new map
-   * @param initialCapacity
-   *        the value for the capacity of the returned map
-   *
-   * @return a new {@link HashMap} instance
-   *
-   * @see HashMap#HashMap(int)
-   */
-  public static <K, V> HashMap<K, V> newHashMapWithCapacity(int initialCapacity) {
-    return new HashMap<K, V>(initialCapacity);
-  }
-
-  /**
-   * Returns a new {@link LinkedHashMap} instance by invoking the constructor
-   * that takes no arguments.
-   *
-   * @param <K> type of the keys of the new map
-   * @param <V> type of the values of the new map
-   *
-   * @return a new {@link LinkedHashMap} instance
-   *
-   * @see LinkedHashMap#LinkedHashMap()
-   */
-  public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
-    return new LinkedHashMap<K, V>();
-  }
-
-  /**
-   * Returns a new {@link LinkedHashMap} instance with the specified capacity.
-   *
-   * @param <K> type of the keys of the new map
-   * @param <V> type of the values of the new map
-   * @param initialCapacity
-   *        the value for the capacity of the returned map
-   *
-   * @return a new {@link LinkedHashMap} instance
-   *
-   * @see LinkedHashMap#LinkedHashMap(int)
-   */
-  public static <K, V> LinkedHashMap<K, V> newLinkedHashMapWithCapacity(int initialCapacity) {
-    return new LinkedHashMap<K, V>(initialCapacity);
-  }
-
-  /**
-   * Returns a new {@link TreeMap} instance by invoking the constructor
-   * that takes no arguments.
-   *
-   * @param <K> type of the keys of the new map
-   * @param <V> type of the values of the new map
-   *
-   * @return a new {@link TreeMap} instance
-   *
-   * @see TreeMap#TreeMap()
-   */
-  public static <K, V> TreeMap<K, V> newTreeMap() {
-    return new TreeMap<K, V>();
-  }
 
   /**
    * Returns from the specified map the value associated with the specified key

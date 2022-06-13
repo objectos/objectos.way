@@ -22,6 +22,7 @@ import static org.testng.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +55,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
     result = set.toImmutableSet();
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     assertSet(result, expected);
 
@@ -120,7 +121,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
     result = set.toImmutableSet();
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     assertSet(result, expected);
 
@@ -155,7 +156,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
     result = set.toImmutableSet();
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     assertSet(result, expected);
 
@@ -282,7 +283,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
   @Test
   public void equalsTest() {
     Set<Thing> hashSet;
-    hashSet = Sets.newHashSet();
+    hashSet = new HashSet<>();
 
     assertTrue(set.equals(set));
 
@@ -344,7 +345,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
     assertTrue(set.isEmpty());
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     assertIterator(set.iterator(), expected);
 

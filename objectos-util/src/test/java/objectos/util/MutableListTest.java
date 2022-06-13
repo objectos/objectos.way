@@ -438,7 +438,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     result = list.toImmutableList();
 
     List<Thing> expected;
-    expected = Lists.newArrayList();
+    expected = new ArrayList<>();
 
     assertContents(result, expected);
 
@@ -504,7 +504,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     result = list.toImmutableList();
 
     List<Thing> expected;
-    expected = Lists.newArrayList();
+    expected = new ArrayList<>();
 
     assertContents(result, expected);
 
@@ -541,7 +541,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     result = list.toImmutableList();
 
     List<Thing> expected;
-    expected = Lists.newArrayList();
+    expected = new ArrayList<>();
 
     assertContents(result, expected);
 

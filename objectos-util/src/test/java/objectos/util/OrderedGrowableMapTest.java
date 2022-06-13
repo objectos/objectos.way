@@ -15,6 +15,7 @@
  */
 package objectos.util;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.testng.annotations.Test;
 
@@ -30,7 +31,7 @@ public class OrderedGrowableMapTest extends MutableMapTest {
 
   @Override
   final <K, V> Map<K, V> createExpectedMap() {
-    return Maps.newLinkedHashMap();
+    return new LinkedHashMap<>();
   }
 
   @Override

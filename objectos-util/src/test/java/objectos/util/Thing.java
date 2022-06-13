@@ -56,7 +56,7 @@ final class Thing implements ToString.Formattable {
 
   public static ArrayList<Thing> randomArrayList(int size) {
     ArrayList<Thing> list;
-    list = Lists.newArrayList();
+    list = new ArrayList<>();
 
     Thing[] array;
     array = randomArray(size);

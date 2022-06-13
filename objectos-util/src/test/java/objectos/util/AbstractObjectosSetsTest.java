@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -99,7 +100,7 @@ public abstract class AbstractObjectosSetsTest {
 
   final <E> void assertIterator(UnmodifiableIterator<E> it, Set<E> expected) {
     Set<E> set;
-    set = Sets.newHashSet();
+    set = new HashSet<>();
 
     while (it.hasNext()) {
       set.add(it.next());

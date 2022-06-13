@@ -21,6 +21,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     result = ImmutableSet.copyOf(thingArray);
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     for (Thing t : thingArray) {
       expected.add(t);
@@ -87,7 +88,7 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     result = ImmutableSet.copyOf(randomMutableSet);
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     expected.addAll(randomMutableSet);
 
@@ -126,7 +127,7 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     result = ImmutableSet.copyOf(iterator);
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     expected.add(t1);
 
@@ -172,7 +173,7 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     assertTrue(emptySet.isEmpty());
 
     Set<Thing> expected;
-    expected = Sets.newHashSet();
+    expected = new HashSet<>();
 
     assertIterator(emptySet.iterator(), expected);
 
