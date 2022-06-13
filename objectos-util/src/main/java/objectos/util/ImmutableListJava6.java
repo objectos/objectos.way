@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides classes for operating on both primitive and Object arrays.
- *
- * <p>
- * It extends the functionality provided by the {@link java.util.Arrays} class.
- *
- * <p>
- * Provides base interfaces and implementations common to all Objectos
- * java.util.Collection modules.
- *
- * <p>
- * Provides the Objectos Collections {@link java.util.List} implementations.
- */
 package objectos.util;
+
+abstract class ImmutableListJava6<E> extends AbstractImmutableList<E> {
+
+  ImmutableListJava6() {}
+
+  ImmutableListJava6(Object[] array) {
+    super(array);
+  }
+
+}

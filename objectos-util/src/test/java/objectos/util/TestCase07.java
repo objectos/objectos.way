@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides classes for operating on both primitive and Object arrays.
- *
- * <p>
- * It extends the functionality provided by the {@link java.util.Arrays} class.
- *
- * <p>
- * Provides base interfaces and implementations common to all Objectos
- * java.util.Collection modules.
- *
- * <p>
- * Provides the Objectos Collections {@link java.util.List} implementations.
- */
 package objectos.util;
+
+import java.util.Comparator;
+
+/**
+ * Create MutableList.toImmutableSortedList(Comparator<? super E> c) that
+ * returns an immutable copy of the mutable list having all elements sorted by
+ * the specified comparator. As required (sort of...) by objectos-git WriteTree
+ * use-case.
+ */
+final class TestCase07 {
+
+  static final String DESCRIPTION = "Verify MutableList.toImmutableSortedList(Comparator)";
+
+  static final Comparator<Integer> ORDER = Lists.naturalOrder();
+
+}

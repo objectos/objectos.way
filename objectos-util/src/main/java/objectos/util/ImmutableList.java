@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides classes for operating on both primitive and Object arrays.
- *
- * <p>
- * It extends the functionality provided by the {@link java.util.Arrays} class.
- *
- * <p>
- * Provides base interfaces and implementations common to all Objectos
- * java.util.Collection modules.
- *
- * <p>
- * Provides the Objectos Collections {@link java.util.List} implementations.
- */
 package objectos.util;
+
+/**
+ * An array-based {@link br.com.objectos.core.collection.ImmutableCollection}
+ * and {@link java.util.List} implementation.
+ *
+ * @param <E>
+ *        type of the elements in this list
+ */
+public final class ImmutableList<E> extends ImmutableListJava8<E> {
+
+  ImmutableList() {
+    super();
+  }
+
+  ImmutableList(java.lang.Object[] array) {
+    super(array);
+  }
+
+}

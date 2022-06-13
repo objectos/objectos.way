@@ -13,17 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides classes for operating on both primitive and Object arrays.
- *
- * <p>
- * It extends the functionality provided by the {@link java.util.Arrays} class.
- *
- * <p>
- * Provides base interfaces and implementations common to all Objectos
- * java.util.Collection modules.
- *
- * <p>
- * Provides the Objectos Collections {@link java.util.List} implementations.
- */
 package objectos.util;
+
+final class ArrayBackedIterator<E> extends AbstractIterator<E> {
+
+  private int index;
+
+  private final E[] values;
+
+  ArrayBackedIterator(E[] values) {
+    this.values = values;
+  }
+
+  @Override
+  public final boolean hasNext() {
+    return index < values.length;
+  }
+
+  @Override
+  public final E next() {
+    return values[index++];
+  }
+
+  public final void reset() {
+    index = 0;
+  }
+
+}
