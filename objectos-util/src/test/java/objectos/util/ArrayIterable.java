@@ -15,21 +15,19 @@
  */
 package objectos.util;
 
-/**
- * An array-based {@link ImmutableCollection} and {@link java.util.List}
- * implementation.
- *
- * @param <E>
- *        type of the elements in this list
- */
-public final class ImmutableList<E> extends ImmutableListJava8<E> {
+import java.util.Iterator;
 
-  ImmutableList() {
-    super();
+final class ArrayIterable<E> implements Iterable<E> {
+
+  private final E[] array;
+
+  ArrayIterable(E[] array) {
+    this.array = array;
   }
 
-  ImmutableList(java.lang.Object[] array) {
-    super(array);
+  @Override
+  public final Iterator<E> iterator() {
+    return new ArrayIterator<E>(array);
   }
 
 }

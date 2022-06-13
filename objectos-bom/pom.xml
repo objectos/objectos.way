@@ -48,6 +48,11 @@
 				<artifactId>objectos-lang</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<!-- incubator projects -->
 			<dependency>

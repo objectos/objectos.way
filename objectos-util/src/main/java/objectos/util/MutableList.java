@@ -16,7 +16,7 @@
 package objectos.util;
 
 /**
- * An array-based {@link br.com.objectos.core.collection.MutableCollection} and
+ * An array-based {@link MutableCollection} and
  * {@link java.util.List} implementation. The main goal of this class is to
  * provide a single mutable list API for Java Multi-Release codebases.
  *
@@ -40,8 +40,8 @@ package objectos.util;
  *
  * @param <E> type of the elements in this list
  *
- * @see br.com.objectos.core.collection.BaseCollection
- * @see br.com.objectos.core.collection.MutableCollection
+ * @see BaseCollection
+ * @see MutableCollection
  * @see java.util.List
  */
 public final class MutableList<E> extends MutableListJava8<E> {

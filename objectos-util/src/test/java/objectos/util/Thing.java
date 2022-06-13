@@ -82,11 +82,32 @@ final class Thing implements ToString.Formattable {
     return set;
   }
 
+  public static ImmutableSet<Thing> randomImmutableSet(int size) {
+    Thing[] array;
+    array = randomArray(size);
+
+    return ImmutableSet.copyOf(array);
+  }
+
   public static Iterable<Thing> randomIterable(int size) {
     Thing[] array;
     array = randomArray(size);
 
     return new ArrayBackedIterable<Thing>(array);
+  }
+
+  public static MutableSet<Thing> randomMutableSet(int size) {
+    MutableSet<Thing> set;
+    set = MutableSet.create();
+
+    Thing[] array;
+    array = randomArray(size);
+
+    for (Thing thing : array) {
+      set.add(thing);
+    }
+
+    return set;
   }
 
   public static Thing randomThing() {

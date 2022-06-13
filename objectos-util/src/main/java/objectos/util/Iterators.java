@@ -17,7 +17,7 @@ package objectos.util;
 
 import java.util.Iterator;
 
-public final class Iterators {
+final class Iterators {
 
   private Iterators() {}
 

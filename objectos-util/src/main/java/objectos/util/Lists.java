@@ -31,6 +31,11 @@ public final class Lists {
    * Returns the only element of the specified list or throws an exception if
    * the list is empty or if the list contains more than one element.
    *
+   * @param <T>
+   *        the class of the objects in the list
+   * @param list
+   *        the list whose only element is to be returned
+   *
    * @return the only element of this list
    *
    * @throws IllegalStateException

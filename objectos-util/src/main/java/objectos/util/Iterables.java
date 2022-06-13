@@ -15,7 +15,7 @@
  */
 package objectos.util;
 
-public final class Iterables {
+final class Iterables {
 
   private Iterables() {}
 

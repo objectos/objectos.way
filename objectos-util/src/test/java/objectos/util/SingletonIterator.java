@@ -15,21 +15,40 @@
  */
 package objectos.util;
 
-/**
- * An array-based {@link ImmutableCollection} and {@link java.util.List}
- * implementation.
- *
- * @param <E>
- *        type of the elements in this list
- */
-public final class ImmutableList<E> extends ImmutableListJava8<E> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-  ImmutableList() {
-    super();
+final class SingletonIterator<E> implements Iterator<E> {
+
+  private boolean consumed;
+
+  private final E element;
+
+  SingletonIterator(E element) {
+    this.element = element;
   }
 
-  ImmutableList(java.lang.Object[] array) {
-    super(array);
+  @Override
+  public final boolean hasNext() {
+    return !consumed;
+  }
+
+  @Override
+  public final E next() {
+    if (consumed) {
+      throw new NoSuchElementException();
+    }
+
+    else {
+      consumed = true;
+
+      return element;
+    }
+  }
+
+  @Override
+  public final void remove() {
+    throw new UnsupportedOperationException();
   }
 
 }
