@@ -7,8 +7,8 @@ It does not provide an implementation yet.
 
 Documentation for the current release:
 
-- [Programmer's guide](https://www.objectos.com.br/docs/0.1/)
-- [Javadocs](https://www.objectos.com.br/docs/0.1/api/) 
+- [Programmer's guide](https://www.objectos.com.br/docs/0.2/)
+- [Javadocs](https://www.objectos.com.br/docs/0.2/api/) 
 
 ## License
 
