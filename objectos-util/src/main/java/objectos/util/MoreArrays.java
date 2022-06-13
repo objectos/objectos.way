@@ -13,14 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides classes for operating on both primitive and Object arrays.
- *
- * <p>
- * It extends the functionality provided by the {@link java.util.Arrays} class.
- *
- * <p>
- * Provides base interfaces and implementations common to all Objectos
- * java.util.Collection modules.
- */
 package objectos.util;
+
+final class MoreArrays {
+
+  private MoreArrays() {}
+
+  static int growArrayLength(int currentLength, int requiredIndex) {
+    int newLength;
+    newLength = currentLength + (currentLength >> 1);
+
+    if (requiredIndex < newLength) {
+      return newLength;
+    }
+
+    int requiredLength;
+    requiredLength = requiredIndex + 1;
+
+    newLength = Integer.highestOneBit(requiredLength) << 1;
+
+    if (newLength > 0) {
+      return newLength;
+    }
+
+    return Integer.MAX_VALUE;
+  }
+
+}
