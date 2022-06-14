@@ -15,6 +15,10 @@
  */
 package objectos.util;
 
+import java.util.Collection;
+import java.util.function.Predicate;
+import objectos.lang.ToString;
+
 /**
  * The base {@link java.util.Collection} interface for the Objectos Collections
  * API.
@@ -25,8 +29,7 @@ package objectos.util;
  *
  * @param <E> type of the elements in this collection
  */
-public interface BaseCollection<E>
-    extends java.util.Collection<E>, Joinable, objectos.lang.ToString.Formattable {
+public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.Formattable {
 
   /**
    * Adds the specified element to this collection.
@@ -57,7 +60,7 @@ public interface BaseCollection<E>
    *         element is null
    */
   @Override
-  boolean addAll(java.util.Collection<? extends E> c);
+  boolean addAll(Collection<? extends E> c);
 
   /**
    * Returns {@code true} if this collection contains all the given values. More
@@ -77,7 +80,7 @@ public interface BaseCollection<E>
    *
    * @return {@code true} if this collection contains any of the given values
    */
-  boolean contains(java.lang.Object first, java.lang.Object... more);
+  boolean contains(Object first, Object... more);
 
   /**
    * Returns the only element of this collection or throws an exception if the
@@ -89,7 +92,7 @@ public interface BaseCollection<E>
    *         if the collection is empty or if the collection contains more than
    *         one element
    */
-  E getOnly() throws java.lang.IllegalStateException;
+  E getOnly() throws IllegalStateException;
 
   /**
    * Returns an unmodifiable iterator over the elements in this collection.
@@ -115,7 +118,7 @@ public interface BaseCollection<E>
    *         always
    */
   @Override
-  boolean remove(java.lang.Object o);
+  boolean remove(Object o);
 
   /**
    * This operation is not supported.
@@ -133,7 +136,7 @@ public interface BaseCollection<E>
    *         always
    */
   @Override
-  boolean removeAll(java.util.Collection<?> c);
+  boolean removeAll(Collection<?> c);
 
   /**
    * This operation is not supported.
@@ -151,7 +154,7 @@ public interface BaseCollection<E>
    *         always
    */
   @Override
-  boolean removeIf(java.util.function.Predicate<? super E> filter);
+  boolean removeIf(Predicate<? super E> filter);
 
   /**
    * This operation is not supported.
@@ -169,6 +172,6 @@ public interface BaseCollection<E>
    *         always
    */
   @Override
-  boolean retainAll(java.util.Collection<?> c);
+  boolean retainAll(Collection<?> c);
 
 }

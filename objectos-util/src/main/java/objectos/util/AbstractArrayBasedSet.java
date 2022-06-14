@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import objectos.lang.HashCode;
 
-abstract class AbstractArrayBaseSet<E>
+abstract class AbstractArrayBasedSet<E>
     extends AbstractBaseCollection<E>
     implements Set<E> {
 

@@ -29,7 +29,7 @@ import objectos.lang.Check;
  * @param <E> type of the elements in this set
  */
 public final class MutableSet<E>
-    extends AbstractArrayBaseSet<E>
+    extends AbstractArrayBasedSet<E>
     implements
     MutableCollection<E> {
 

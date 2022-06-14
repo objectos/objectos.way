@@ -34,7 +34,7 @@ import objectos.lang.Check;
  * @param <E> type of the elements in this set
  */
 public final class ImmutableSet<E>
-    extends AbstractArrayBaseSet<E>
+    extends AbstractArrayBasedSet<E>
     implements
     ImmutableCollection<E> {
 

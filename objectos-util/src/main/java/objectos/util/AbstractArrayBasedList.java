@@ -24,7 +24,7 @@ import objectos.lang.Check;
 import objectos.lang.HashCode;
 import objectos.lang.ToString;
 
-abstract class AbstractArrayBaseList<E>
+abstract class AbstractArrayBasedList<E>
     extends AbstractBaseCollection<E>
     implements
     List<E>,
@@ -34,7 +34,7 @@ abstract class AbstractArrayBaseList<E>
 
   int size = 0;
 
-  AbstractArrayBaseList() {}
+  AbstractArrayBasedList() {}
 
   /**
    * Returns {@code true} if this list contains the specified element. More
