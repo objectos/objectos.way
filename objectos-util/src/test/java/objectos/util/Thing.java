@@ -98,7 +98,7 @@ final class Thing implements ToString.Formattable {
 
   public static MutableSet<Thing> randomMutableSet(int size) {
     MutableSet<Thing> set;
-    set = MutableSet.create();
+    set = new MutableSet<>();
 
     Thing[] array;
     array = randomArray(size);

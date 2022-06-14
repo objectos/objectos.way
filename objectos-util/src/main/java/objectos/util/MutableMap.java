@@ -43,23 +43,6 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
   public MutableMap() {}
 
   /**
-   * Creates and returns a new {@code MutableMap} instance.
-   *
-   * <p>
-   * This method is mainly provided as a convenience for Java Multi-Release
-   * codebases. In particular codebases that must support versions prior to Java
-   * 7 and, therefore, cannot use the diamond operator.
-   *
-   * @param <K> type of the keys in this map
-   * @param <V> type of the values in this map
-   *
-   * @return a new {@code MutableMap} instance
-   */
-  public static <K, V> MutableMap<K, V> create() {
-    return new MutableMap<K, V>();
-  }
-
-  /**
    * Removes all of the mappings in this map.
    */
   @Override

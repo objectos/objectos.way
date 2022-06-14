@@ -122,7 +122,7 @@ public abstract class AbstractObjectosListsTest {
     Integer box;
 
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     for (int i = 0; i < size; i++) {
       int randomInt;

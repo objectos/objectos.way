@@ -71,23 +71,6 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
   }
 
   /**
-   * Creates and returns a new {@code MutableList} instance.
-   *
-   * <p>
-   * This method is mainly provided as a convenience for Java Multi-Release
-   * codebases. In particular codebases that must support versions prior to Java
-   * 7 and, therefore, cannot use the diamond operator.
-   *
-   * @param <E>
-   *        type of the elements in this list
-   *
-   * @return a new {@code MutableList} instance
-   */
-  public static <E> MutableList<E> create() {
-    return new MutableList<E>();
-  }
-
-  /**
    * Appends the specified element to this list or throws an exception if the
    * element is {@code null}.
    *

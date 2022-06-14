@@ -49,23 +49,6 @@ public final class MutableSet<E>
   public MutableSet() {}
 
   /**
-   * Creates and returns a new {@code MutableSet} instance.
-   *
-   * <p>
-   * This method is mainly provided as a convenience for Java Multi-Release
-   * codebases. In particular codebases that must support versions prior to Java
-   * 7 and, therefore, cannot use the diamond operator.
-   *
-   * @param <E>
-   *        type of the elements in this set
-   *
-   * @return a new {@code MutableSet} instance
-   */
-  public static <E> MutableSet<E> create() {
-    return new MutableSet<E>();
-  }
-
-  /**
    * Adds the specified element to this set if it is not already present.
    *
    * @param e

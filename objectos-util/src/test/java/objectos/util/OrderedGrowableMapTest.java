@@ -36,7 +36,7 @@ public class OrderedGrowableMapTest extends MutableMapTest {
 
   @Override
   final <K, V> MutableMap<K, V> createGrowableMap() {
-    return MutableOrderedMap.create();
+    return new MutableOrderedMap<>();
   }
 
 }

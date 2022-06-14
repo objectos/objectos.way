@@ -40,7 +40,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @BeforeClass
   public void _beforeClass() {
-    list = MutableList.create();
+    list = new MutableList<>();
   }
 
   @BeforeMethod
@@ -53,7 +53,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     Integer box;
 
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertTrue(it.isEmpty());
 
@@ -90,7 +90,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     size = 2000;
 
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -123,7 +123,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     size = 2000;
 
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -153,7 +153,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void clear() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -179,7 +179,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void contains() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertFalse(it.contains(1));
 
@@ -208,10 +208,10 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void equals() {
     MutableList<Integer> a;
-    a = MutableList.create();
+    a = new MutableList<>();
 
     MutableList<Integer> b;
-    b = MutableList.create();
+    b = new MutableList<>();
 
     assertTrue(a.equals(b));
 
@@ -242,7 +242,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   public void get() {
     class Tester {
 
-      private final MutableList<Integer> it = MutableList.create();
+      private final MutableList<Integer> it = new MutableList<>();
 
       public final void add(Integer e) {
         it.add(e);
@@ -292,7 +292,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void getOnly() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     try {
       it.getOnly();
@@ -321,7 +321,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void indexOf() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     Integer target;
     target = Next.intValue();
@@ -360,7 +360,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void isEmpty() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertTrue(it.isEmpty());
 
@@ -376,7 +376,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void lastIndexOf() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     Integer target;
     target = Next.intValue();
@@ -415,7 +415,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void size() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -614,7 +614,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void toArray() {
     MutableList<Object> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     Integer[] emptyArray;
     emptyArray = new Integer[0];
@@ -672,7 +672,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void toImmutableList() {
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     ImmutableList<Integer> result;
     result = it.toImmutableList();
@@ -765,7 +765,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     c = TestCase07.ORDER;
 
     MutableList<Integer> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     ImmutableList<Integer> result;
     result = it.toImmutableSortedList(c);
@@ -813,7 +813,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void toStringTest() {
     MutableList<String> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     assertEquals(
       it.toString(),
@@ -841,7 +841,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   @Test
   public void truncate() {
     MutableList<String> it;
-    it = MutableList.create();
+    it = new MutableList<>();
 
     it.add("A");
 

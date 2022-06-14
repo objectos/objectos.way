@@ -37,7 +37,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
 
   @BeforeClass
   public void _beforeClass() {
-    set = MutableSet.create();
+    set = new MutableSet<>();
   }
 
   @BeforeMethod

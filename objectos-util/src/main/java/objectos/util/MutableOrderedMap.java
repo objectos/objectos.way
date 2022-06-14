@@ -32,23 +32,6 @@ public final class MutableOrderedMap<K, V> extends MutableMap<K, V> {
   }
 
   /**
-   * Creates and returns a new {@code MutableOrderedMap} instance.
-   *
-   * <p>
-   * This method is mainly provided as a convenience for Java Multi-Release
-   * codebases. In particular codebases that must support versions prior to Java
-   * 7 and, therefore, cannot use the diamond operator.
-   *
-   * @param <K> type of the keys in this map
-   * @param <V> type of the values in this map
-   *
-   * @return a new {@code MutableOrderedMap} instance
-   */
-  public static <K, V> MutableOrderedMap<K, V> create() {
-    return new MutableOrderedMap<K, V>();
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override

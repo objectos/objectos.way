@@ -190,7 +190,7 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
   }
 
   <K, V> MutableMap<K, V> createGrowableMap() {
-    return MutableMap.create();
+    return new MutableMap<>();
   }
 
   private String putDec(Map<Thing, String> map, Thing key) {

@@ -79,7 +79,7 @@ public final class ImmutableSet<E>
     Check.notNull(array, "array == null");
 
     MutableSet<E> set;
-    set = MutableSet.create();
+    set = new MutableSet<>();
 
     E element;
 
@@ -132,7 +132,7 @@ public final class ImmutableSet<E>
     }
 
     MutableSet<E> set;
-    set = MutableSet.create();
+    set = new MutableSet<>();
 
     set.addAllIterable(elements);
 
@@ -167,7 +167,7 @@ public final class ImmutableSet<E>
     }
 
     MutableSet<E> set;
-    set = MutableSet.create();
+    set = new MutableSet<>();
 
     int i;
     i = 0;
@@ -228,7 +228,7 @@ public final class ImmutableSet<E>
     Check.notNull(element, "element == null");
 
     MutableSet<E> set;
-    set = MutableSet.create();
+    set = new MutableSet<>();
 
     set.add(element);
 
@@ -262,7 +262,7 @@ public final class ImmutableSet<E>
     Check.notNull(more, "more == null");
 
     MutableSet<E> set;
-    set = MutableSet.create();
+    set = new MutableSet<>();
 
     set.add(first);
 
