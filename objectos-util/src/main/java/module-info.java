@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Provides the Objectos Util API.
+ * Defines the Objectos Util API.
  *
  * @since 0.3
  */

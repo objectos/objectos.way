@@ -550,17 +550,6 @@ abstract class AbstractArrayBasedList<E>
     return a;
   }
 
-  /**
-   * Returns the only element in this list.
-   *
-   * @return the only element in this list
-   */
-  @Override
-  @SuppressWarnings("unchecked")
-  protected final E getOnlyImpl() {
-    return (E) array[0];
-  }
-
   final boolean containsAllIterable0(Iterable<?> iterable) {
     outer: //
     for (Object test : iterable) {
@@ -577,6 +566,17 @@ abstract class AbstractArrayBasedList<E>
     }
 
     return true;
+  }
+
+  /**
+   * Returns the only element in this list.
+   *
+   * @return the only element in this list
+   */
+  @Override
+  @SuppressWarnings("unchecked")
+  final E getOnlyImpl() {
+    return (E) array[0];
   }
 
   private boolean equals0(List<?> that) {

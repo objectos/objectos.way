@@ -33,7 +33,7 @@ public abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
   /**
    * Sole constructor
    */
-  protected AbstractBaseCollection() {}
+  AbstractBaseCollection() {}
 
   /**
    * Returns {@code true} if this collection contains all of the specified
@@ -457,7 +457,7 @@ public abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    *
    * @return the only element in this collection
    */
-  protected E getOnlyImpl() {
+  E getOnlyImpl() {
     UnmodifiableIterator<E> it;
     it = iterator();
 
@@ -488,7 +488,7 @@ public abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    *
    * @return a name for the specified index having the specified length
    */
-  protected final String indexName(int index, int length) {
+  final String indexName(int index, int length) {
     StringBuilder sb;
     sb = new StringBuilder();
 
@@ -519,7 +519,7 @@ public abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    *
    * @return the number of digits this collection's size has
    */
-  protected final int sizeDigits() {
+  final int sizeDigits() {
     int size;
     size = size();
 

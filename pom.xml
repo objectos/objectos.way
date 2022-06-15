@@ -146,6 +146,20 @@ limitations under the License.
 			</build>
 		</profile>
 		<profile>
+			<id>javadoc-aggregate</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<destDir>api</destDir>
+							<doctitle>The Objectos ${project.version} API</doctitle>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>release</id>
 			<distributionManagement>
 				<repository>
@@ -221,18 +235,6 @@ limitations under the License.
 					</plugin>
 				</plugins>
 			</build>
-		</profile>
-		<profile>
-			<id>icedtea</id>
-			<properties>
-				<maven.toolchains.jdk-vendor>icedtea</maven.toolchains.jdk-vendor>
-			</properties>
-		</profile>
-		<profile>
-			<id>openjdk</id>
-			<properties>
-				<maven.toolchains.jdk-vendor>openjdk</maven.toolchains.jdk-vendor>
-			</properties>
 		</profile>
 	</profiles>
 

@@ -145,7 +145,7 @@ abstract class AbstractArrayBasedSet<E>
    */
   @SuppressWarnings("unchecked")
   @Override
-  protected final E getOnlyImpl() {
+  final E getOnlyImpl() {
     for (int i = 0; i < array.length; i++) {
       Object candidate;
       candidate = array[i];
