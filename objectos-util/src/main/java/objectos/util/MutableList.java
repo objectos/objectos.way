@@ -21,21 +21,24 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
+import java.util.Spliterator;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 import objectos.lang.Check;
 
 /**
  * An array-based {@link MutableCollection} and
  * {@link java.util.List} implementation. The main goal of this class is to
- * provide a single mutable list API for Java Multi-Release codebases.
+ * provide a single mutable list API to be used <em>internally</em> by the
+ * Objectos libraries themselves.
  *
  * <p>
  * Please note that this is not a general-purpose {@link java.util.List}
  * implementation. First, this implementation does not permit {@code null}
- * values. Second, only selected "mutator" operations, specified by either
+ * values. Second, only selected "mutator" operations, specified either by
  * {@link java.util.List} or by {@link java.util.Collection}, are supported.
  * Third, iterators produced by this class will have undefined behaviour if the
- * underlying set is modified during iteration, i.e., the iterators are not
+ * underlying list is modified during iteration, i.e., the iterators are not
  * <i>fail-fast</i> as defined by
  * {@link java.util.ConcurrentModificationException}.
  *
@@ -309,6 +312,20 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
   }
 
   /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @return this method does not return as it always throws an exception
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final Stream<E> parallelStream() {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  /**
    * This operation is not supported.
    *
    * <p>
@@ -338,6 +355,34 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
   @Override
   public final void sort(Comparator<? super E> c) {
     sortImpl(c);
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @return this method does not return as it always throws an exception
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final Spliterator<E> spliterator() {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @return this method does not return as it always throws an exception
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final Stream<E> stream() {
+    throw new UnsupportedOperationException("Not yet implemented");
   }
 
   /**

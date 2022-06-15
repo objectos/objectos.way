@@ -22,8 +22,6 @@ import objectos.lang.Check;
  * <p>
  * This class provides {@code static} methods for operating on
  * {@link java.lang.Object} arrays.
- *
- * @since 2
  */
 public final class ObjectArrays {
 

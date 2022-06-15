@@ -28,7 +28,7 @@ import objectos.lang.ToString;
  *
  * @param <E> type of the elements in this collection
  */
-public abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
+abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
 
   /**
    * Sole constructor

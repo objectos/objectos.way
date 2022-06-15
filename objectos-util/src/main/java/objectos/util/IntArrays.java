@@ -21,8 +21,6 @@ import objectos.lang.Check;
  * <p>
  * This class provides {@code static} methods for operating on {@code int}
  * arrays.
- *
- * @since 2
  */
 public final class IntArrays {
 
