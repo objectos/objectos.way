@@ -22,7 +22,7 @@ import java.util.function.UnaryOperator;
 import objectos.lang.Check;
 
 /**
- * An array-based {@link ImmutableCollection} and {@link java.util.List}
+ * An array-based {@link UnmodifiableCollection} and {@link java.util.List}
  * implementation.
  *
  * @param <E>
@@ -30,7 +30,7 @@ import objectos.lang.Check;
  */
 public final class ImmutableList<E> extends AbstractArrayBasedList<E>
     implements
-    ImmutableCollection<E> {
+    UnmodifiableCollection<E> {
 
   static final ImmutableList<Object> EMPTY = new ImmutableList<Object>();
 
@@ -201,9 +201,7 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
     Check.notNull(element, "element == null");
 
     return new ImmutableList<E>(
-      new Object[] {
-                    element
-      }
+      new Object[] {element}
     );
   }
 

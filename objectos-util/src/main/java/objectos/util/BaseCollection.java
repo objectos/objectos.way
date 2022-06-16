@@ -20,8 +20,7 @@ import java.util.function.Predicate;
 import objectos.lang.ToString;
 
 /**
- * The base {@link java.util.Collection} interface for the Objectos Collections
- * API.
+ * The base {@link Collection} interface for the Objectos Collections API.
  *
  * <p>
  * Implementations of this interface are required to reject {@code null}
@@ -29,7 +28,7 @@ import objectos.lang.ToString;
  *
  * @param <E> type of the elements in this collection
  */
-public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.Formattable {
+interface BaseCollection<E> extends Collection<E>, Joinable, ToString.Formattable {
 
   /**
    * Adds the specified element to this collection.
@@ -118,7 +117,9 @@ public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.For
    *         always
    */
   @Override
-  boolean remove(Object o);
+  default boolean remove(Object o) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * This operation is not supported.
@@ -136,7 +137,9 @@ public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.For
    *         always
    */
   @Override
-  boolean removeAll(Collection<?> c);
+  default boolean removeAll(Collection<?> c) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * This operation is not supported.
@@ -154,7 +157,9 @@ public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.For
    *         always
    */
   @Override
-  boolean removeIf(Predicate<? super E> filter);
+  default boolean removeIf(Predicate<? super E> filter) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * This operation is not supported.
@@ -172,6 +177,8 @@ public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.For
    *         always
    */
   @Override
-  boolean retainAll(Collection<?> c);
+  default boolean retainAll(Collection<?> c) {
+    throw new UnsupportedOperationException();
+  }
 
 }

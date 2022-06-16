@@ -22,7 +22,7 @@ import objectos.lang.Check;
 
 /**
  * A hash-based implementation of the {@link Set} and
- * {@link ImmutableCollection} interfaces.
+ * {@link UnmodifiableCollection} interfaces.
  *
  * <p>
  * After creation, instances of this class do not permit adding nor removing of
@@ -36,7 +36,7 @@ import objectos.lang.Check;
 public final class ImmutableSet<E>
     extends AbstractArrayBasedSet<E>
     implements
-    ImmutableCollection<E> {
+    UnmodifiableCollection<E> {
 
   private static final ImmutableSet<Object> EMPTY = new ImmutableSet<Object>(
     ObjectArrays.empty(), 0

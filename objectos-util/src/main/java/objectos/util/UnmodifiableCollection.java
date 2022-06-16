@@ -18,7 +18,7 @@ package objectos.util;
 import java.util.Collection;
 
 /**
- * An immutable {@link BaseCollection}.
+ * A {@link Collection} that does not allow adding nor removing elements.
  *
  * <p>
  * Implementations of this interface are required to disallow adding or
@@ -26,10 +26,8 @@ import java.util.Collection;
  * {@link UnsupportedOperationException} when called.
  *
  * @param <E> type of the elements in this collection
- *
- * @see BaseCollection
  */
-public interface ImmutableCollection<E> extends BaseCollection<E> {
+interface UnmodifiableCollection<E> extends BaseCollection<E> {
 
   /**
    * This operation is not supported.
@@ -47,7 +45,9 @@ public interface ImmutableCollection<E> extends BaseCollection<E> {
    *         always
    */
   @Override
-  boolean add(E e);
+  default boolean add(E e) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * This operation is not supported.
@@ -65,7 +65,9 @@ public interface ImmutableCollection<E> extends BaseCollection<E> {
    *         always
    */
   @Override
-  boolean addAll(Collection<? extends E> c);
+  default boolean addAll(Collection<? extends E> c) {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * This operation is not supported.
@@ -78,6 +80,8 @@ public interface ImmutableCollection<E> extends BaseCollection<E> {
    *         always
    */
   @Override
-  void clear();
+  default void clear() {
+    throw new UnsupportedOperationException();
+  }
 
 }

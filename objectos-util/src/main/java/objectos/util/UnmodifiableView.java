@@ -30,7 +30,7 @@ import java.util.Set;
 public abstract class UnmodifiableView<E>
     extends AbstractBaseCollection<E>
     implements
-    ImmutableCollection<E>,
+    UnmodifiableCollection<E>,
     Set<E> {
 
   UnmodifiableView() {}
