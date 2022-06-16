@@ -22,10 +22,6 @@ import java.util.Set;
  * An unmodifiable view of a map's keys, values or entries. All of the mutator
  * methods throw an {@link UnsupportedOperationException} when invoked.
  *
- * <p>
- * Please note that this is a view: it changes whenever the underlying map
- * changes.
- *
  * @param <E> the type of the elements in this view
  */
 public abstract class UnmodifiableView<E> extends AbstractBaseCollection<E> implements Set<E> {
