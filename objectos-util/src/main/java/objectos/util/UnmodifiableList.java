@@ -22,30 +22,28 @@ import java.util.function.UnaryOperator;
 import objectos.lang.Check;
 
 /**
- * An array-based {@link UnmodifiableCollection} and {@link java.util.List}
- * implementation.
+ * An array-based unmodifiable {@link java.util.List} implementation.
  *
  * @param <E>
  *        type of the elements in this list
  */
-public final class ImmutableList<E> extends AbstractArrayBasedList<E>
-    implements
-    UnmodifiableCollection<E> {
+public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
 
-  static final ImmutableList<Object> EMPTY = new ImmutableList<Object>();
+  static final UnmodifiableList<Object> EMPTY = new UnmodifiableList<Object>();
 
-  ImmutableList() {
+  UnmodifiableList() {
     super();
   }
 
-  ImmutableList(java.lang.Object[] array) {
+  UnmodifiableList(java.lang.Object[] array) {
     this.array = array;
 
     size = array.length;
   }
 
   /**
-   * Returns a new {@code ImmutableList} instance containing all of the elements
+   * Returns a new {@code UnmodifiableList} instance containing all of the
+   * elements
    * in the specified array in order or throws a {@link NullPointerException} if
    * any element in the array is {@code null}.
    *
@@ -59,19 +57,20 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
    * @param array
    *        an array for which an immutable list copy will be created
    *
-   * @return a new {@code ImmutableList} instance containing all of the elements
+   * @return a new {@code UnmodifiableList} instance containing all of the
+   *         elements
    *         in the specified array in order
    *
    * @throws NullPointerException
    *         if the array is {@code null} or any element in the array is
    *         {@code null}
    */
-  public static <E> ImmutableList<E> copyOf(E[] array) {
+  public static <E> UnmodifiableList<E> copyOf(E[] array) {
     Check.notNull(array, "array == null");
 
     switch (array.length) {
       case 0:
-        return ImmutableList.of();
+        return UnmodifiableList.of();
       default:
         Object[] copy;
         copy = new Object[array.length];
@@ -83,13 +82,14 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
           copy[i] = Check.notNull(e, "array[", i, "] == null");
         }
 
-        return new ImmutableList<E>(copy);
+        return new UnmodifiableList<E>(copy);
     }
   }
 
   /**
-   * Returns the specified iterable if it is an {@code ImmutableList}; returns
-   * a new {@code ImmutableList} instance containing all of the elements
+   * Returns the specified iterable if it is an {@code UnmodifiableList};
+   * returns
+   * a new {@code UnmodifiableList} instance containing all of the elements
    * produced by the specified iterable's iterator in the order that they are
    * returned or throws a {@link NullPointerException} if any element
    * returned by the iterator is {@code null}.
@@ -104,8 +104,9 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
    * @param elements
    *        an {@link Iterable} for which an immutable list copy will be created
    *
-   * @return the specified iterable if it is an {@code ImmutableList} or a new
-   *         {@code ImmutableList} instance containing all of the elements
+   * @return the specified iterable if it is an {@code UnmodifiableList} or a
+   *         new
+   *         {@code UnmodifiableList} instance containing all of the elements
    *         produced by the specified iterable's iterator in order
    *
    * @throws NullPointerException
@@ -113,22 +114,18 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
    *         iterable's iterator is {@code null}
    */
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableList<E> copyOf(Iterable<? extends E> elements) {
+  public static <E> UnmodifiableList<E> copyOf(Iterable<? extends E> elements) {
     Check.notNull(elements, "elements == null");
 
-    if (elements instanceof ImmutableList) {
-      return (ImmutableList<E>) elements;
+    if (elements instanceof UnmodifiableList) {
+      return (UnmodifiableList<E>) elements;
     }
 
-    if (elements instanceof MutableList) {
-      MutableList<? extends E> list;
-      list = (MutableList<? extends E>) elements;
-
-      return (ImmutableList<E>) list.toImmutableList();
+    if (elements instanceof MutableList<? extends E> list) {
+      return (UnmodifiableList<E>) list.toUnmodifiableList();
     }
 
-    MutableList<E> list;
-    list = new MutableList<E>();
+    var list = new MutableList<E>();
 
     int index;
     index = 0;
@@ -141,11 +138,12 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
       index++;
     }
 
-    return list.toImmutableList();
+    return list.toUnmodifiableList();
   }
 
   /**
-   * Returns a new {@code ImmutableList} instance containing all of the elements
+   * Returns a new {@code UnmodifiableList} instance containing all of the
+   * elements
    * returned by the specified iterator or throws a {@link NullPointerException}
    * if any element is {@code null}.
    *
@@ -154,37 +152,37 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
    * @param iterator
    *        an {@link Iterator} for which an immutable list copy will be created
    *
-   * @return a new {@code ImmutableList} instance containing all of the elements
+   * @return a new {@code UnmodifiableList} instance containing all of the
+   *         elements
    *         produced by the specified iterator in order
    *
    * @throws NullPointerException
    *         if the iterator is {@code null} or any element produced by the
    *         iterator is {@code null}
    */
-  public static <E> ImmutableList<E> copyOf(Iterator<? extends E> iterator) {
-    MutableList<E> list;
-    list = new MutableList<E>();
+  public static <E> UnmodifiableList<E> copyOf(Iterator<? extends E> iterator) {
+    var list = new MutableList<E>();
 
     list.addAll(iterator);
 
-    return list.toImmutableList();
+    return list.toUnmodifiableList();
   }
 
   /**
-   * Returns the empty {@code ImmutableList}.
+   * Returns the empty {@code UnmodifiableList}.
    *
    * @param <E>
    *        type of the elements in this list
    *
-   * @return the empty {@code ImmutableList}
+   * @return the empty {@code UnmodifiableList}
    */
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableList<E> of() {
-    return (ImmutableList<E>) EMPTY;
+  public static <E> UnmodifiableList<E> of() {
+    return (UnmodifiableList<E>) EMPTY;
   }
 
   /**
-   * Returns a new {@code ImmutableList} containing one element or throws a
+   * Returns a new {@code UnmodifiableList} containing one element or throws a
    * {@link NullPointerException} if the element is {@code null}.
    *
    * @param <E>
@@ -192,21 +190,21 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
    * @param element
    *        the single element
    *
-   * @return a new {@code ImmutableList} containing one element
+   * @return a new {@code UnmodifiableList} containing one element
    *
    * @throws NullPointerException
    *         if the specified element is {@code null}
    */
-  public static <E> ImmutableList<E> of(E element) {
+  public static <E> UnmodifiableList<E> of(E element) {
     Check.notNull(element, "element == null");
 
-    return new ImmutableList<E>(
+    return new UnmodifiableList<>(
       new Object[] {element}
     );
   }
 
   /**
-   * Returns a new {@code ImmutableList} containing the all of the especified
+   * Returns a new {@code UnmodifiableList} containing the all of the especified
    * elements in order or throws a {@link NullPointerException} if any of the
    * elements is {@code null}.
    *
@@ -217,29 +215,27 @@ public final class ImmutableList<E> extends AbstractArrayBasedList<E>
    * @param more
    *        the additional elements
    *
-   * @return a new {@code ImmutableList} containing all of the specified
+   * @return a new {@code UnmodifiableList} containing all of the specified
    *         elements
    *
    * @throws NullPointerException
    *         if the specified element is {@code null}
    */
-  public static <E> ImmutableList<E> of(E first, @SuppressWarnings("unchecked") E... more) {
+  public static <E> UnmodifiableList<E> of(E first, @SuppressWarnings("unchecked") E... more) {
     Check.notNull(first, "first == null");
     Check.notNull(more, "more == null");
 
-    Object[] elements;
-    elements = new Object[more.length + 1];
+    var elements = new Object[more.length + 1];
 
     elements[0] = first;
 
     for (int i = 0; i < more.length; i++) {
-      E e;
-      e = more[i];
+      var e = more[i];
 
       elements[i + 1] = Check.notNull(e, "more[" + i + "] == null");
     }
 
-    return new ImmutableList<E>(elements);
+    return new UnmodifiableList<E>(elements);
   }
 
   /**

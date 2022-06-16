@@ -435,7 +435,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     assertTrue(list.isEmpty());
 
     List<Thing> result;
-    result = list.toImmutableList();
+    result = list.toUnmodifiableList();
 
     List<Thing> expected;
     expected = new ArrayList<>();
@@ -447,7 +447,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     assertEquals(list.size(), 1);
     assertFalse(list.isEmpty());
 
-    result = list.toImmutableList();
+    result = list.toUnmodifiableList();
 
     expected.clear();
     expected.add(t1);
@@ -459,7 +459,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     assertEquals(list.size(), 2);
     assertFalse(list.isEmpty());
 
-    result = list.toImmutableList();
+    result = list.toUnmodifiableList();
 
     expected.clear();
     expected.add(t1);
@@ -480,7 +480,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
       assertFalse(list.isEmpty());
     }
 
-    result = list.toImmutableList();
+    result = list.toUnmodifiableList();
 
     expected.clear();
     expected.add(t1);
@@ -501,7 +501,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     assertFalse(list.addAllIterable(emptyThingList));
 
     List<Thing> result;
-    result = list.toImmutableList();
+    result = list.toUnmodifiableList();
 
     List<Thing> expected;
     expected = new ArrayList<>();
@@ -517,7 +517,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     assertEquals(list.size(), thingSize + thingSize);
 
-    result = list.toImmutableList();
+    result = list.toUnmodifiableList();
 
     expected.clear();
 
@@ -537,8 +537,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     assertFalse(list.addAll(Collections.<Thing> emptySet()));
 
-    ImmutableList<Thing> result;
-    result = list.toImmutableList();
+    UnmodifiableList<Thing> result;
+    result = list.toUnmodifiableList();
 
     List<Thing> expected;
     expected = new ArrayList<>();
@@ -554,7 +554,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     assertEquals(list.size(), thingSize + thingSize);
 
-    result = list.toImmutableList();
+    result = list.toUnmodifiableList();
 
     expected.clear();
 
@@ -670,12 +670,12 @@ public class MutableListTest extends AbstractObjectosListsTest {
   }
 
   @Test
-  public void toImmutableList() {
+  public void toUnmodifiableList() {
     MutableList<Integer> it;
     it = new MutableList<>();
 
-    ImmutableList<Integer> result;
-    result = it.toImmutableList();
+    UnmodifiableList<Integer> result;
+    result = it.toUnmodifiableList();
 
     assertTrue(result.isEmpty());
 
@@ -683,7 +683,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     assertTrue(result.isEmpty());
 
-    result = it.toImmutableList();
+    result = it.toUnmodifiableList();
 
     assertEquals(result.size(), 1);
 
@@ -691,7 +691,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     it.add(2);
 
-    result = it.toImmutableList();
+    result = it.toUnmodifiableList();
 
     assertEquals(result.size(), 2);
     assertEquals(result.get(0), Integer.valueOf(1));
@@ -699,7 +699,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     it.add(3);
 
-    result = it.toImmutableList();
+    result = it.toUnmodifiableList();
 
     assertEquals(result.size(), 3);
     assertEquals(result.get(0), Integer.valueOf(1));
@@ -708,7 +708,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     it.add(4);
 
-    result = it.toImmutableList();
+    result = it.toUnmodifiableList();
 
     assertEquals(result.size(), 4);
     assertEquals(result.get(0), Integer.valueOf(1));
@@ -718,7 +718,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     it.add(5);
 
-    result = it.toImmutableList();
+    result = it.toUnmodifiableList();
 
     assertEquals(result.size(), 5);
     assertEquals(result.get(0), Integer.valueOf(1));
@@ -729,7 +729,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     it.add(6);
 
-    result = it.toImmutableList();
+    result = it.toUnmodifiableList();
 
     assertEquals(result.size(), 6);
     assertEquals(result.get(0), Integer.valueOf(1));
@@ -744,7 +744,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     it = new MutableList<Integer>(random);
 
-    result = it.toImmutableList();
+    result = it.toUnmodifiableList();
 
     assertEquals(result.size(), random.length);
 
@@ -767,7 +767,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     MutableList<Integer> it;
     it = new MutableList<>();
 
-    ImmutableList<Integer> result;
+    UnmodifiableList<Integer> result;
     result = it.toImmutableSortedList(c);
 
     assertTrue(result.isEmpty());
@@ -776,21 +776,21 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     result = it.toImmutableSortedList(c);
 
-    assertEquals(result, ImmutableList.of(3));
+    assertEquals(result, UnmodifiableList.of(3));
 
     it.add(1);
 
     result = it.toImmutableSortedList(c);
 
-    assertEquals(result, ImmutableList.of(1, 3));
-    assertEquals(it, ImmutableList.of(3, 1));
+    assertEquals(result, UnmodifiableList.of(1, 3));
+    assertEquals(it, UnmodifiableList.of(3, 1));
 
     it.add(2);
 
     result = it.toImmutableSortedList(c);
 
-    assertEquals(result, ImmutableList.of(1, 2, 3));
-    assertEquals(it, ImmutableList.of(3, 1, 2));
+    assertEquals(result, UnmodifiableList.of(1, 2, 3));
+    assertEquals(it, UnmodifiableList.of(3, 1, 2));
 
     Integer[] random;
     random = randomIntegerArray(2345);

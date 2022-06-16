@@ -56,8 +56,7 @@ abstract class AbstractArrayBasedList<E>
     }
 
     for (int i = 0; i < size; i++) {
-      Object thisElem;
-      thisElem = array[i];
+      var thisElem = array[i];
 
       if (thisElem.equals(o)) {
         return true;
@@ -89,7 +88,7 @@ abstract class AbstractArrayBasedList<E>
   @Override
   public final boolean equals(Object obj) {
     return obj == this
-        || obj instanceof List && equals0((List<?>) obj);
+        || obj instanceof List<?> that && equals0(that);
   }
 
   /**
@@ -159,12 +158,10 @@ abstract class AbstractArrayBasedList<E>
    */
   @Override
   public final int hashCode() {
-    int result;
-    result = HashCode.start();
+    var result = HashCode.start();
 
     for (int i = 0; i < size; i++) {
-      Object object;
-      object = array[i];
+      var object = array[i];
 
       result = HashCode.update(result, object);
     }
@@ -187,16 +184,14 @@ abstract class AbstractArrayBasedList<E>
    */
   @Override
   public final int indexOf(Object o) {
-    int result;
-    result = -1;
+    var result = -1;
 
     if (o == null) {
       return result;
     }
 
     for (int i = 0; i < size; i++) {
-      Object element;
-      element = array[i];
+      var element = array[i];
 
       if (element.equals(o)) {
         result = i;
@@ -235,14 +230,12 @@ abstract class AbstractArrayBasedList<E>
     }
 
     if (size == 1) {
-      Object o;
-      o = array[0];
+      var o = array[0];
 
       return o.toString();
     }
 
-    StringBuilder sb;
-    sb = new StringBuilder();
+    var sb = new StringBuilder();
 
     for (int i = 0; i < size; i++) {
       sb.append(array[i]);
@@ -281,8 +274,7 @@ abstract class AbstractArrayBasedList<E>
       return o.toString();
     }
 
-    StringBuilder sb;
-    sb = new StringBuilder();
+    var sb = new StringBuilder();
 
     o = array[0];
 
@@ -331,8 +323,7 @@ abstract class AbstractArrayBasedList<E>
       return prefix + o.toString() + suffix;
     }
 
-    StringBuilder sb;
-    sb = new StringBuilder();
+    var sb = new StringBuilder();
 
     sb.append(prefix);
 
@@ -368,12 +359,10 @@ abstract class AbstractArrayBasedList<E>
    */
   @Override
   public final int lastIndexOf(Object o) {
-    int result;
-    result = -1;
+    var result = -1;
 
     for (int i = size - 1; i >= 0; i--) {
-      Object element;
-      element = array[i];
+      var element = array[i];
 
       if (element.equals(o)) {
         result = i;
@@ -580,19 +569,16 @@ abstract class AbstractArrayBasedList<E>
   }
 
   private boolean equals0(List<?> that) {
-    int size;
-    size = size();
+    var size = size();
 
     if (size != that.size()) {
       return false;
     }
 
     for (int i = 0; i < size; i++) {
-      E e;
-      e = get(i);
+      var e = get(i);
 
-      Object o;
-      o = that.get(i);
+      var o = that.get(i);
 
       // e is guaranteed to be not null
       if (!e.equals(o)) {
@@ -620,8 +606,7 @@ abstract class AbstractArrayBasedList<E>
       }
 
       else {
-        Object result;
-        result = array[index];
+        var result = array[index];
 
         index++;
 

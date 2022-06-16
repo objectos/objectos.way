@@ -16,7 +16,6 @@
 package objectos.util;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.function.Predicate;
@@ -28,7 +27,7 @@ import objectos.lang.ToString;
  *
  * @param <E> type of the elements in this collection
  */
-abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
+abstract class AbstractBaseCollection<E> implements Collection<E>, Joinable, ToString.Formattable {
 
   /**
    * Sole constructor
@@ -49,7 +48,6 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    *
    * @see Collection#contains(Object)
    */
-  @Override
   public final boolean contains(Object first, Object... more) {
     Check.notNull(more, "more == null");
 
@@ -89,13 +87,9 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
   public final boolean containsAll(Collection<?> c) {
     Check.notNull(c, "c == null");
 
-    if (c instanceof RandomAccess && c instanceof List) {
-      List<?> list;
-      list = (List<?>) c;
-
+    if (c instanceof RandomAccess && c instanceof List<?> list) {
       for (int i = 0; i < list.size(); i++) {
-        Object test;
-        test = list.get(i);
+        var test = list.get(i);
 
         if (!contains(test)) {
           return false;
@@ -138,21 +132,16 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
   public void formatToString(StringBuilder toString, int level) {
     ToString.formatStart(toString, this);
 
-    Iterator<E> iterator;
-    iterator = iterator();
+    var iterator = iterator();
 
-    int index;
-    index = 0;
+    var index = 0;
 
     if (iterator.hasNext()) {
-      int length;
-      length = sizeDigits();
+      var length = sizeDigits();
 
-      String name;
-      name = indexName(index, length);
+      var name = indexName(index, length);
 
-      E value;
-      value = iterator.next();
+      var value = iterator.next();
 
       ToString.formatFirstPair(toString, level, name, value);
 
@@ -180,7 +169,6 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    *         if the collection is empty or if the collection contains more than
    *         one element
    */
-  @Override
   public final E getOnly() {
     switch (size()) {
       case 0:
@@ -203,6 +191,14 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
   }
 
   /**
+   * Returns an unmodifiable iterator over the elements in this collection.
+   *
+   * @return an unmodifiable iterator over the elements in this collection
+   */
+  @Override
+  public abstract UnmodifiableIterator<E> iterator();
+
+  /**
    * Returns a new string by joining together, in iteration order, the
    * string representation of each element in this collection.
    *
@@ -218,15 +214,12 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
       return "";
     }
 
-    StringBuilder sb;
-    sb = new StringBuilder();
+    var sb = new StringBuilder();
 
-    UnmodifiableIterator<E> it;
-    it = iterator();
+    var it = iterator();
 
     while (it.hasNext()) {
-      Object element;
-      element = it.next();
+      var element = it.next();
 
       sb.append(element);
     }
@@ -256,14 +249,11 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
       return "";
     }
 
-    StringBuilder sb;
-    sb = new StringBuilder();
+    var sb = new StringBuilder();
 
-    UnmodifiableIterator<E> it;
-    it = iterator();
+    var it = iterator();
 
-    Object element;
-    element = it.next();
+    var element = it.next();
 
     sb.append(element);
 
@@ -303,16 +293,13 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
       return prefix + suffix;
     }
 
-    StringBuilder sb;
-    sb = new StringBuilder();
+    var sb = new StringBuilder();
 
     sb.append(prefix);
 
-    UnmodifiableIterator<E> it;
-    it = iterator();
+    var it = iterator();
 
-    Object element;
-    element = it.next();
+    var element = it.next();
 
     sb.append(element);
 
@@ -458,8 +445,7 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    * @return the only element in this collection
    */
   E getOnlyImpl() {
-    UnmodifiableIterator<E> it;
-    it = iterator();
+    var it = iterator();
 
     return it.next();
   }
@@ -489,17 +475,13 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    * @return a name for the specified index having the specified length
    */
   final String indexName(int index, int length) {
-    StringBuilder sb;
-    sb = new StringBuilder();
+    var sb = new StringBuilder();
 
-    String s;
-    s = Integer.toString(index);
+    var s = Integer.toString(index);
 
-    int indexLength;
-    indexLength = s.length();
+    var indexLength = s.length();
 
-    int diff;
-    diff = length - indexLength;
+    var diff = length - indexLength;
 
     for (int i = 0; i < diff; i++) {
       sb.append(' ');
@@ -520,8 +502,7 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
    * @return the number of digits this collection's size has
    */
   final int sizeDigits() {
-    int size;
-    size = size();
+    int size = size();
 
     if (size < 10) {
       return 1;
@@ -532,11 +513,9 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
     }
 
     else {
-      double l;
-      l = Math.log10(size);
+      double l = Math.log10(size);
 
-      double f;
-      f = Math.floor(l);
+      double f = Math.floor(l);
 
       return (int) f;
     }

@@ -28,15 +28,15 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class ImmutableListTest extends AbstractObjectosListsTest {
+public class UnmodifiableListTest extends AbstractObjectosListsTest {
 
-  private ImmutableList<Integer> il0;
+  private UnmodifiableList<Integer> il0;
 
-  private ImmutableList<Integer> il1;
+  private UnmodifiableList<Integer> il1;
 
-  private ImmutableList<Integer> il2;
+  private UnmodifiableList<Integer> il2;
 
-  private ImmutableList<Integer> ilN;
+  private UnmodifiableList<Integer> ilN;
 
   private Integer[] intArray;
 
@@ -46,19 +46,19 @@ public class ImmutableListTest extends AbstractObjectosListsTest {
 
   @BeforeClass
   public void _beforeClass() {
-    il0 = ImmutableList.of();
+    il0 = UnmodifiableList.of();
 
     singleton = Next.intValue();
 
     randomInt = Next.intValue();
 
-    il1 = ImmutableList.of(singleton);
+    il1 = UnmodifiableList.of(singleton);
 
-    il2 = ImmutableList.of(singleton, randomInt);
+    il2 = UnmodifiableList.of(singleton, randomInt);
 
     intArray = randomIntegerArray(2345);
 
-    ilN = ImmutableList.copyOf(intArray);
+    ilN = UnmodifiableList.copyOf(intArray);
   }
 
   @Test
@@ -92,22 +92,22 @@ public class ImmutableListTest extends AbstractObjectosListsTest {
     MutableList<Integer> growable;
     growable = randomIntMutableList(1234);
 
-    ImmutableList<Integer> immutable;
-    immutable = growable.toImmutableList();
+    UnmodifiableList<Integer> immutable;
+    immutable = growable.toUnmodifiableList();
 
-    ImmutableList<Integer> result;
-    result = ImmutableList.copyOf(growable);
+    UnmodifiableList<Integer> result;
+    result = UnmodifiableList.copyOf(growable);
 
     assertEquals(result, immutable);
 
-    result = ImmutableList.copyOf(immutable);
+    result = UnmodifiableList.copyOf(immutable);
 
     assertSame(result, immutable);
 
     ArrayBackedIterable<Integer> iterable;
     iterable = randomIntArrayBackedIterable(1234);
 
-    result = ImmutableList.copyOf(iterable);
+    result = UnmodifiableList.copyOf(iterable);
 
     Iterator<Integer> iterator;
     iterator = iterable.iterator();
@@ -122,7 +122,7 @@ public class ImmutableListTest extends AbstractObjectosListsTest {
 
     iterator = iterable.iterator();
 
-    result = ImmutableList.copyOf(iterator);
+    result = UnmodifiableList.copyOf(iterator);
 
     iterator = iterable.iterator();
 
@@ -137,22 +137,22 @@ public class ImmutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void equals() {
-    assertTrue(il0.equals(ImmutableList.of()));
-    assertTrue(il0.equals(new ImmutableList<Integer>(ObjectArrays.empty())));
+    assertTrue(il0.equals(UnmodifiableList.of()));
+    assertTrue(il0.equals(new UnmodifiableList<Integer>(ObjectArrays.empty())));
     assertFalse(il0.equals(null));
     assertTrue(il0.equals(il0));
     assertFalse(il0.equals(il1));
     assertFalse(il0.equals(il2));
     assertFalse(il0.equals(ilN));
 
-    assertTrue(il1.equals(ImmutableList.of(singleton)));
+    assertTrue(il1.equals(UnmodifiableList.of(singleton)));
     assertFalse(il1.equals(null));
     assertFalse(il1.equals(il0));
     assertTrue(il1.equals(il1));
     assertFalse(il1.equals(il2));
     assertFalse(il1.equals(ilN));
 
-    assertTrue(ilN.equals(ImmutableList.copyOf(intArray)));
+    assertTrue(ilN.equals(UnmodifiableList.copyOf(intArray)));
     assertFalse(ilN.equals(null));
     assertFalse(ilN.equals(il0));
     assertFalse(ilN.equals(il1));
@@ -163,7 +163,7 @@ public class ImmutableListTest extends AbstractObjectosListsTest {
   @Test
   public void get() {
     class Tester {
-      ImmutableList<Integer> it;
+      UnmodifiableList<Integer> it;
 
       public final void get(int index, Integer expected) {
         Integer value;
@@ -309,12 +309,12 @@ public class ImmutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(il0.toString(), "ImmutableList []");
+    assertEquals(il0.toString(), "UnmodifiableList []");
 
     assertEquals(
       il1.toString(),
       lines(
-        "ImmutableList [",
+        "UnmodifiableList [",
         "  0 = " + singleton,
         "]"
       )
@@ -323,7 +323,7 @@ public class ImmutableListTest extends AbstractObjectosListsTest {
     assertEquals(
       il2.toString(),
       lines(
-        "ImmutableList [",
+        "UnmodifiableList [",
         "  0 = " + singleton,
         "  1 = " + randomInt,
         "]"

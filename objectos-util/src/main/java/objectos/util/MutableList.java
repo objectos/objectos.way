@@ -386,10 +386,10 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
   }
 
   /**
-   * Returns an {@link ImmutableList} copy of this list.
+   * Returns an {@link UnmodifiableList} copy of this list.
    *
    * <p>
-   * The returned {@code ImmutableList} will contain all of the elements from
+   * The returned {@code UnmodifiableList} will contain all of the elements from
    * this list in order. Therefore, the returned list {@code copy} and this list
    * {@code source} will be such that {@code source.equals(copy)} is
    * {@code true}.
@@ -403,45 +403,45 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
    * Note, however, that the behaviour of this method is undefined if this list
    * is modified while the copy is being made.
    *
-   * @return an {@link ImmutableList} copy of this list
+   * @return an {@link UnmodifiableList} copy of this list
    */
-  public final ImmutableList<E> toImmutableList() {
+  public final UnmodifiableList<E> toUnmodifiableList() {
     switch (size) {
       case 0:
-        return ImmutableList.of();
+        return UnmodifiableList.of();
       default:
         Object[] copy;
         copy = new Object[size];
 
         System.arraycopy(array, 0, copy, 0, size);
 
-        return new ImmutableList<E>(copy);
+        return new UnmodifiableList<E>(copy);
     }
   }
 
   /**
-   * Returns a sorted {@link ImmutableList} copy of this list while keeping the
+   * Returns a sorted {@link UnmodifiableList} copy of this list while keeping the
    * latter unchanged. This is equivalent to, for this {@code list}:
    *
    * <pre> {@code
    * list.sort(c);
-   * return list.toImmutableList();}</pre>
+   * return list.toUnmodifiableList();}</pre>
    *
    * except that this list remains unchanged.
    *
    * @param c
    *        the comparator defining the order for the returned list
    *
-   * @return a sorted {@link ImmutableList} copy of this list
+   * @return a sorted {@link UnmodifiableList} copy of this list
    */
   @SuppressWarnings("unchecked")
-  public final ImmutableList<E> toImmutableSortedList(Comparator<? super E> c) {
+  public final UnmodifiableList<E> toImmutableSortedList(Comparator<? super E> c) {
     Check.notNull(c, "c == null");
 
     switch (size) {
       case 0:
       case 1:
-        return toImmutableList();
+        return toUnmodifiableList();
       default:
         Object[] copy;
         copy = new Object[size];
@@ -450,7 +450,7 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
 
         Arrays.sort((E[]) copy, 0, size, c);
 
-        return new ImmutableList<E>(copy);
+        return new UnmodifiableList<E>(copy);
     }
   }
 
