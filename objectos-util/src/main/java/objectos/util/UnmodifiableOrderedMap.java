@@ -16,12 +16,12 @@
 package objectos.util;
 
 /**
- * A {@link ImmutableMap} variant with a predictable iteration order.
+ * A {@link UnmodifiableMap} variant with a predictable iteration order.
  */
-public final class ImmutableOrderedMap<K, V> extends ImmutableMap<K, V> {
+public final class UnmodifiableOrderedMap<K, V> extends UnmodifiableMap<K, V> {
 
-  private static final ImmutableOrderedMap<Object, Object> EMPTY
-      = new ImmutableOrderedMap<Object, Object>(
+  private static final UnmodifiableOrderedMap<Object, Object> EMPTY
+      = new UnmodifiableOrderedMap<Object, Object>(
         ObjectArrays.empty(),
 
         0,
@@ -31,15 +31,15 @@ public final class ImmutableOrderedMap<K, V> extends ImmutableMap<K, V> {
 
   private final Object[] iteratorArray;
 
-  ImmutableOrderedMap(Object[] array, int size, Object[] iteratorArray) {
+  UnmodifiableOrderedMap(Object[] array, int size, Object[] iteratorArray) {
     super(array, size);
 
     this.iteratorArray = iteratorArray;
   }
 
   @SuppressWarnings("unchecked")
-  static <K, V> ImmutableOrderedMap<K, V> orderedEmpty() {
-    return (ImmutableOrderedMap<K, V>) EMPTY;
+  static <K, V> UnmodifiableOrderedMap<K, V> orderedEmpty() {
+    return (UnmodifiableOrderedMap<K, V>) EMPTY;
   }
 
   @Override

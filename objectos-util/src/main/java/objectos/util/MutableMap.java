@@ -96,10 +96,10 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
   }
 
   /**
-   * Returns an {@link ImmutableMap} copy of this map.
+   * Returns an {@link UnmodifiableMap} copy of this map.
    *
    * <p>
-   * The returned {@code ImmutableMap} will contain all of the entries from this
+   * The returned {@code UnmodifiableMap} will contain all of the entries from this
    * map.
    *
    * <p>
@@ -111,17 +111,17 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
    * Note, however, that the behaviour of this method is undefined if this map
    * is modified while the copy is being made.
    *
-   * @return an {@link ImmutableMap} copy of this set
+   * @return an {@link UnmodifiableMap} copy of this set
    */
-  public ImmutableMap<K, V> toImmutableMap() {
+  public UnmodifiableMap<K, V> toUnmodifiableMap() {
     switch (size) {
       case 0:
-        return ImmutableMap.empty();
+        return UnmodifiableMap.empty();
       default:
         Object[] copy;
         copy = Arrays.copyOf(array, array.length);
 
-        return new ImmutableMap<K, V>(copy, size);
+        return new UnmodifiableMap<K, V>(copy, size);
     }
   }
 

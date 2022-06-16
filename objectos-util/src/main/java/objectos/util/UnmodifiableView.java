@@ -19,19 +19,16 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * An unmodifiable view of a map's keys, values or entries.
+ * An unmodifiable view of a map's keys, values or entries. All of the mutator
+ * methods throw an {@link UnsupportedOperationException} when invoked.
  *
  * <p>
- * All mutator methods throw an {@link UnsupportedOperationException} when
- * invoked.
+ * Please note that this is a view: it changes whenever the underlying map
+ * changes.
  *
  * @param <E> the type of the elements in this view
  */
-public abstract class UnmodifiableView<E>
-    extends AbstractBaseCollection<E>
-    implements
-    UnmodifiableCollection<E>,
-    Set<E> {
+public abstract class UnmodifiableView<E> extends AbstractBaseCollection<E> implements Set<E> {
 
   UnmodifiableView() {}
 

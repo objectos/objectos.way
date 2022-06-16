@@ -42,7 +42,7 @@ public final class MutableOrderedMap<K, V> extends MutableMap<K, V> {
   }
 
   /**
-   * Returns an {@link ImmutableOrderedMap} copy of this map.
+   * Returns an {@link UnmodifiableOrderedMap} copy of this map.
    *
    * <p>
    * The returned {@code ImmutableOrderedMap} will contain all of the entries
@@ -57,15 +57,15 @@ public final class MutableOrderedMap<K, V> extends MutableMap<K, V> {
    * Note, however, that the behaviour of this method is undefined if this map
    * is modified while the copy is being made.
    *
-   * @return an {@link ImmutableOrderedMap} copy of this set
+   * @return an {@link UnmodifiableOrderedMap} copy of this set
    */
   @Override
-  public final ImmutableOrderedMap<K, V> toImmutableMap() {
+  public final UnmodifiableOrderedMap<K, V> toUnmodifiableMap() {
     switch (size) {
       case 0:
-        return ImmutableOrderedMap.orderedEmpty();
+        return UnmodifiableOrderedMap.orderedEmpty();
       default:
-        return new ImmutableOrderedMap<K, V>(
+        return new UnmodifiableOrderedMap<K, V>(
           Arrays.copyOf(array, array.length),
 
           size,

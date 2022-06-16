@@ -20,9 +20,7 @@ import java.util.function.BiFunction;
 import objectos.lang.HashCode;
 import objectos.lang.ToString;
 
-abstract class AbstractArrayBasedMap<K, V> implements
-    Map<K, V>,
-    ToString.Formattable {
+abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattable {
 
   static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
@@ -174,18 +172,14 @@ abstract class AbstractArrayBasedMap<K, V> implements
   public final void formatToString(StringBuilder toString, int level) {
     ToString.formatStart(toString, this);
 
-    UnmodifiableIterator<Entry<K, V>> iterator;
-    iterator = entryIterator();
+    var iterator = entryIterator();
 
     if (iterator.hasNext()) {
-      Entry<K, V> entry;
-      entry = iterator.next();
+      var entry = iterator.next();
 
-      K key;
-      key = entry.getKey();
+      var key = entry.getKey();
 
-      String name;
-      name = key.toString();
+      var name = key.toString();
 
       V value = entry.getValue();
 
@@ -235,8 +229,7 @@ abstract class AbstractArrayBasedMap<K, V> implements
       }
 
       else if (existing.equals(key)) {
-        Object existingValue;
-        existingValue = array[index + 1];
+        var existingValue = array[index + 1];
 
         return (V) existingValue;
       }
@@ -256,8 +249,7 @@ abstract class AbstractArrayBasedMap<K, V> implements
       }
 
       else if (existing.equals(key)) {
-        Object existingValue;
-        existingValue = array[index + 1];
+        var existingValue = array[index + 1];
 
         return (V) existingValue;
       }
@@ -292,6 +284,31 @@ abstract class AbstractArrayBasedMap<K, V> implements
   @Override
   public final UnmodifiableView<K> keySet() {
     return new KeySet();
+  }
+
+  /**
+   * This operation is not supported.
+   *
+   * <p>
+   * This method performs no operation other than throw an
+   * {@link UnsupportedOperationException}.
+   *
+   * @param key
+   *        ignored (the operation is not supported)
+   * @param value
+   *        ignored (the operation is not supported)
+   * @param remappingFunction
+   *        ignored (the operation is not supported)
+   *
+   * @return this method does not return as it always throw an exception
+   *
+   * @throws UnsupportedOperationException
+   *         always
+   */
+  @Override
+  public final V merge(K key, V value,
+      BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
+    throw new UnsupportedOperationException();
   }
 
   /**

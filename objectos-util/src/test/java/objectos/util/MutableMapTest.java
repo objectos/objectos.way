@@ -46,8 +46,8 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
     assertEquals(map.size(), 0);
     assertTrue(map.isEmpty());
 
-    ImmutableMap<Thing, String> result;
-    result = map.toImmutableMap();
+    UnmodifiableMap<Thing, String> result;
+    result = map.toUnmodifiableMap();
 
     Map<Thing, String> expected;
     expected = createExpectedMap();
@@ -63,7 +63,7 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
     assertFalse(map.containsKey(t2));
     assertFalse(map.containsKey(t3));
 
-    result = map.toImmutableMap();
+    result = map.toUnmodifiableMap();
 
     expected.clear();
 
@@ -80,7 +80,7 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
     assertTrue(map.containsKey(t2));
     assertFalse(map.containsKey(t3));
 
-    result = map.toImmutableMap();
+    result = map.toUnmodifiableMap();
 
     expected.clear();
 
@@ -104,7 +104,7 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
       assertTrue(map.containsKey(thing));
     }
 
-    result = map.toImmutableMap();
+    result = map.toUnmodifiableMap();
 
     expected.clear();
 
@@ -130,8 +130,8 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
     assertFalse(map.containsKey(t2));
     assertFalse(map.containsKey(t3));
 
-    ImmutableMap<Thing, String> result;
-    result = map.toImmutableMap();
+    UnmodifiableMap<Thing, String> result;
+    result = map.toUnmodifiableMap();
 
     Map<Thing, String> expected;
     expected = createExpectedMap();
@@ -150,7 +150,7 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
     assertTrue(map.containsKey(t2));
     assertFalse(map.containsKey(t3));
 
-    result = map.toImmutableMap();
+    result = map.toUnmodifiableMap();
 
     expected.clear();
 
@@ -167,7 +167,7 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
 
     assertEquals(map.size(), 2 + thingArray.length);
 
-    result = map.toImmutableMap();
+    result = map.toUnmodifiableMap();
 
     expected.clear();
 
