@@ -15,7 +15,6 @@
  */
 package objectos.util;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import objectos.lang.HashCode;
@@ -113,7 +112,7 @@ abstract class AbstractArrayBasedSet<E>
   @Override
   public final boolean equals(Object obj) {
     return obj == this
-        || obj instanceof Set && equals0((Set<?>) obj);
+        || obj instanceof Set<?> that && equals0(that);
   }
 
   /**
@@ -147,8 +146,7 @@ abstract class AbstractArrayBasedSet<E>
   @Override
   final E getOnlyImpl() {
     for (int i = 0; i < array.length; i++) {
-      Object candidate;
-      candidate = array[i];
+      var candidate = array[i];
 
       if (candidate != null) {
         return (E) candidate;
@@ -173,12 +171,10 @@ abstract class AbstractArrayBasedSet<E>
       return false;
     }
 
-    Iterator<?> iter;
-    iter = iterator();
+    var iter = iterator();
 
     while (iter.hasNext()) {
-      Object o;
-      o = iter.next();
+      var o = iter.next();
 
       if (!that.contains(o)) {
         return false;
@@ -209,8 +205,7 @@ abstract class AbstractArrayBasedSet<E>
       if (!hasNext()) {
         throw new NoSuchElementException();
       } else {
-        Object result;
-        result = next;
+        var result = next;
 
         computed = false;
 

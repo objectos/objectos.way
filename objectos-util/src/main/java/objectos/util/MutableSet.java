@@ -237,10 +237,10 @@ public final class MutableSet<E>
   }
 
   /**
-   * Returns an {@link ImmutableSet} copy of this set.
+   * Returns an {@link UnmodifiableSet} copy of this set.
    *
    * <p>
-   * The returned {@code ImmutableSet} will contain all of the elements from
+   * The returned {@code UnmodifiableSet} will contain all of the elements from
    * this set.
    *
    * <p>
@@ -252,17 +252,17 @@ public final class MutableSet<E>
    * Note, however, that the behaviour of this method is undefined if this set
    * is modified while the copy is being made.
    *
-   * @return an {@link ImmutableSet} copy of this set
+   * @return an {@link UnmodifiableSet} copy of this set
    */
-  public final ImmutableSet<E> toImmutableSet() {
+  public final UnmodifiableSet<E> toUnmodifiableSet() {
     switch (size) {
       case 0:
-        return ImmutableSet.of();
+        return UnmodifiableSet.of();
       default:
         Object[] copy;
         copy = Arrays.copyOf(array, array.length);
 
-        return new ImmutableSet<E>(copy, size);
+        return new UnmodifiableSet<E>(copy, size);
     }
   }
 

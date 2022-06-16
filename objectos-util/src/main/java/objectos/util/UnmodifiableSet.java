@@ -21,8 +21,7 @@ import java.util.Set;
 import objectos.lang.Check;
 
 /**
- * A hash-based implementation of the {@link Set} and
- * {@link UnmodifiableCollection} interfaces.
+ * A hash-based unmodifiable implementation of the {@link Set} interface.
  *
  * <p>
  * After creation, instances of this class do not permit adding nor removing of
@@ -33,16 +32,13 @@ import objectos.lang.Check;
  *
  * @param <E> type of the elements in this set
  */
-public final class ImmutableSet<E>
-    extends AbstractArrayBasedSet<E>
-    implements
-    UnmodifiableCollection<E> {
+public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
 
-  private static final ImmutableSet<Object> EMPTY = new ImmutableSet<Object>(
+  private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSet<Object>(
     ObjectArrays.empty(), 0
   );
 
-  ImmutableSet(Object[] array, int size) {
+  UnmodifiableSet(Object[] array, int size) {
     this.array = array;
 
     this.size = size;
@@ -51,7 +47,8 @@ public final class ImmutableSet<E>
   }
 
   /**
-   * Returns a new {@code ImmutableSet} containing all of the distinct elements
+   * Returns a new {@code UnmodifiableSet} containing all of the distinct
+   * elements
    * in the specified array.
    *
    * <p>
@@ -68,14 +65,14 @@ public final class ImmutableSet<E>
    * @param array
    *        an array for which an immutable set copy will be created
    *
-   * @return a new {@code ImmutableSet} containing all of the distinct
+   * @return a new {@code UnmodifiableSet} containing all of the distinct
    *         elements in the specified array
    *
    * @throws NullPointerException
    *         if the array is {@code null} or any element in the array is
    *         {@code null}
    */
-  public static <E> ImmutableSet<E> copyOf(E[] array) {
+  public static <E> UnmodifiableSet<E> copyOf(E[] array) {
     Check.notNull(array, "array == null");
 
     MutableSet<E> set;
@@ -91,12 +88,13 @@ public final class ImmutableSet<E>
       );
     }
 
-    return set.toImmutableSet();
+    return set.toUnmodifiableSet();
   }
 
   /**
-   * Returns the specified iterable if it is an {@code ImmutableSet}; returns
-   * a new {@code ImmutableSet} containing all of the distinct elements returned
+   * Returns the specified iterable if it is an {@code UnmodifiableSet}; returns
+   * a new {@code UnmodifiableSet} containing all of the distinct elements
+   * returned
    * by the specified iterable's iterator.
    *
    * <p>
@@ -108,8 +106,9 @@ public final class ImmutableSet<E>
    * @param elements
    *        an {@link Iterable} for which an immutable set copy will be created
    *
-   * @return the specified iterable if it is an {@code ImmutableSet} or a new
-   *         {@code ImmutableSet} containing all of the elements returned by the
+   * @return the specified iterable if it is an {@code UnmodifiableSet} or a new
+   *         {@code UnmodifiableSet} containing all of the elements returned by
+   *         the
    *         specified iterable's iterator
    *
    * @throws NullPointerException
@@ -117,18 +116,15 @@ public final class ImmutableSet<E>
    *         iterable's iterator is {@code null}
    */
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableSet<E> copyOf(Iterable<? extends E> elements) {
+  public static <E> UnmodifiableSet<E> copyOf(Iterable<? extends E> elements) {
     Check.notNull(elements, "elements == null");
 
-    if (elements instanceof ImmutableSet) {
-      return (ImmutableSet<E>) elements;
+    if (elements instanceof UnmodifiableSet) {
+      return (UnmodifiableSet<E>) elements;
     }
 
-    if (elements instanceof MutableSet) {
-      MutableSet<? extends E> set;
-      set = (MutableSet<? extends E>) elements;
-
-      return (ImmutableSet<E>) set.toImmutableSet();
+    if (elements instanceof MutableSet<? extends E> set) {
+      return (UnmodifiableSet<E>) set.toUnmodifiableSet();
     }
 
     MutableSet<E> set;
@@ -136,11 +132,12 @@ public final class ImmutableSet<E>
 
     set.addAllIterable(elements);
 
-    return set.toImmutableSet();
+    return set.toUnmodifiableSet();
   }
 
   /**
-   * Returns a new {@code ImmutableSet} instance containing all of the distinct
+   * Returns a new {@code UnmodifiableSet} instance containing all of the
+   * distinct
    * elements returned by the specified iterator.
    *
    * <p>
@@ -152,28 +149,27 @@ public final class ImmutableSet<E>
    * @param iterator
    *        an {@link Iterator} for which an immutable set copy will be created
    *
-   * @return a new {@code ImmutableSet} instance containing all of the distinct
+   * @return a new {@code UnmodifiableSet} instance containing all of the
+   *         distinct
    *         elements produced by the specified iterator
    *
    * @throws NullPointerException
    *         if the iterator is {@code null} or any element produced by the
    *         iterator is {@code null}
    */
-  public static <E> ImmutableSet<E> copyOf(Iterator<? extends E> iterator) {
+  public static <E> UnmodifiableSet<E> copyOf(Iterator<? extends E> iterator) {
     Check.notNull(iterator, "iterator == null");
 
     if (!iterator.hasNext()) {
-      return ImmutableSet.of();
+      return UnmodifiableSet.of();
     }
 
     MutableSet<E> set;
     set = new MutableSet<>();
 
-    int i;
-    i = 0;
+    int i = 0;
 
-    E element;
-    element = iterator.next();
+    var element = iterator.next();
 
     if (element == null) {
       throw new NullPointerException("iterator[" + i + "] == null");
@@ -195,36 +191,36 @@ public final class ImmutableSet<E>
       set.addUnchecked(element);
     }
 
-    return set.toImmutableSet();
+    return set.toUnmodifiableSet();
   }
 
   /**
-   * Returns the empty {@code ImmutableSet}.
+   * Returns the empty {@code UnmodifiableSet}.
    *
    * @param <E>
    *        type of the elements in this set
    *
-   * @return the empty {@code ImmutableSet}
+   * @return the empty {@code UnmodifiableSet}
    */
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableSet<E> of() {
-    return (ImmutableSet<E>) EMPTY;
+  public static <E> UnmodifiableSet<E> of() {
+    return (UnmodifiableSet<E>) EMPTY;
   }
 
   /**
-   * Returns a new {@code ImmutableSet} containing one element.
+   * Returns a new {@code UnmodifiableSet} containing one element.
    *
    * @param <E>
    *        type of the elements in this set
    * @param element
    *        the single element
    *
-   * @return a new {@code ImmutableSet} containing one element
+   * @return a new {@code UnmodifiableSet} containing one element
    *
    * @throws NullPointerException
    *         if the specified element is {@code null}
    */
-  public static <E> ImmutableSet<E> of(E element) {
+  public static <E> UnmodifiableSet<E> of(E element) {
     Check.notNull(element, "element == null");
 
     MutableSet<E> set;
@@ -232,11 +228,11 @@ public final class ImmutableSet<E>
 
     set.add(element);
 
-    return set.toImmutableSet();
+    return set.toUnmodifiableSet();
   }
 
   /**
-   * Returns a new {@code ImmutableSet} containing all of the distinct
+   * Returns a new {@code UnmodifiableSet} containing all of the distinct
    * specified elements.
    *
    * <p>
@@ -250,14 +246,15 @@ public final class ImmutableSet<E>
    * @param more
    *        the additional elements
    *
-   * @return a new {@code ImmutableSet} containing all of the distinct specified
+   * @return a new {@code UnmodifiableSet} containing all of the distinct
+   *         specified
    *         elements
    *
    * @throws NullPointerException
    *         if any of the specified elements is {@code null}
    */
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableSet<E> of(E first, E... more) {
+  public static <E> UnmodifiableSet<E> of(E first, E... more) {
     Check.notNull(first, "first == null");
     Check.notNull(more, "more == null");
 
@@ -267,13 +264,12 @@ public final class ImmutableSet<E>
     set.add(first);
 
     for (int i = 0; i < more.length; i++) {
-      E e;
-      e = more[i];
+      var e = more[i];
 
       set.addWithNullMessage(e, "more[", i, "] == null");
     }
 
-    return set.toImmutableSet();
+    return set.toUnmodifiableSet();
   }
 
   /**

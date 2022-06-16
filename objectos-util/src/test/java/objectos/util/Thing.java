@@ -82,11 +82,11 @@ final class Thing implements ToString.Formattable {
     return set;
   }
 
-  public static ImmutableSet<Thing> randomImmutableSet(int size) {
+  public static UnmodifiableSet<Thing> randomUnmodifiableSet(int size) {
     Thing[] array;
     array = randomArray(size);
 
-    return ImmutableSet.copyOf(array);
+    return UnmodifiableSet.copyOf(array);
   }
 
   public static Iterable<Thing> randomIterable(int size) {

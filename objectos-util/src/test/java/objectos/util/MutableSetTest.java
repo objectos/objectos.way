@@ -52,7 +52,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
     assertTrue(set.isEmpty());
 
     Set<Thing> result;
-    result = set.toImmutableSet();
+    result = set.toUnmodifiableSet();
 
     Set<Thing> expected;
     expected = new HashSet<>();
@@ -64,7 +64,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
     assertEquals(set.size(), 1);
     assertFalse(set.isEmpty());
 
-    result = set.toImmutableSet();
+    result = set.toUnmodifiableSet();
 
     expected.clear();
     expected.add(t1);
@@ -76,7 +76,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
     assertEquals(set.size(), 2);
     assertFalse(set.isEmpty());
 
-    result = set.toImmutableSet();
+    result = set.toUnmodifiableSet();
 
     expected.clear();
     expected.add(t1);
@@ -97,7 +97,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
       assertFalse(set.isEmpty());
     }
 
-    result = set.toImmutableSet();
+    result = set.toUnmodifiableSet();
 
     expected.clear();
     expected.add(t1);
@@ -117,8 +117,8 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
 
     assertFalse(set.addAll(Collections.<Thing> emptySet()));
 
-    ImmutableSet<Thing> result;
-    result = set.toImmutableSet();
+    UnmodifiableSet<Thing> result;
+    result = set.toUnmodifiableSet();
 
     Set<Thing> expected;
     expected = new HashSet<>();
@@ -134,7 +134,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
 
     assertEquals(set.size(), thingSize + thingSize);
 
-    result = set.toImmutableSet();
+    result = set.toUnmodifiableSet();
 
     expected.clear();
 
@@ -152,8 +152,8 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
 
     assertFalse(set.addAllIterable(emptyThingList));
 
-    ImmutableSet<Thing> result;
-    result = set.toImmutableSet();
+    UnmodifiableSet<Thing> result;
+    result = set.toUnmodifiableSet();
 
     Set<Thing> expected;
     expected = new HashSet<>();
@@ -169,7 +169,7 @@ public class MutableSetTest extends AbstractObjectosSetsTest {
 
     assertEquals(set.size(), thingSize + thingSize);
 
-    result = set.toImmutableSet();
+    result = set.toUnmodifiableSet();
 
     expected.clear();
 

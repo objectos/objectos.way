@@ -29,35 +29,35 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class ImmutableSetTest extends AbstractObjectosSetsTest {
+public class UnmodifiableSetTest extends AbstractObjectosSetsTest {
 
-  private ImmutableSet<Thing> emptySet;
+  private UnmodifiableSet<Thing> emptySet;
 
   private MutableSet<Thing> randomMutableSet;
 
-  private ImmutableSet<Thing> t1AndT2Set;
+  private UnmodifiableSet<Thing> t1AndT2Set;
 
-  private ImmutableSet<Thing> t1Set;
+  private UnmodifiableSet<Thing> t1Set;
 
   @BeforeClass
   public void _beforeClass() {
-    emptySet = ImmutableSet.of();
+    emptySet = UnmodifiableSet.of();
 
-    t1Set = ImmutableSet.of(t1);
+    t1Set = UnmodifiableSet.of(t1);
 
-    t1AndT2Set = ImmutableSet.of(t1, t2);
+    t1AndT2Set = UnmodifiableSet.of(t1, t2);
 
     randomMutableSet = Thing.randomMutableSet(thingSize);
   }
 
-  @Test(description = "ImmutableSet.copyOf(E[])")
+  @Test(description = "UnmodifiableSet.copyOf(E[])")
   public void copyOf0() {
-    ImmutableSet<Thing> result;
-    result = ImmutableSet.copyOf(new Thing[] {});
+    UnmodifiableSet<Thing> result;
+    result = UnmodifiableSet.copyOf(new Thing[] {});
 
-    assertSame(result, ImmutableSet.of());
+    assertSame(result, UnmodifiableSet.of());
 
-    result = ImmutableSet.copyOf(thingArray);
+    result = UnmodifiableSet.copyOf(thingArray);
 
     Set<Thing> expected;
     expected = new HashSet<>();
@@ -69,23 +69,23 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     assertSet(result, expected);
   }
 
-  @Test(description = "ImmutableSet.copyOf(Iterable)")
+  @Test(description = "UnmodifiableSet.copyOf(Iterable)")
   public void copyOf1() {
-    // ImmutableSet
-    ImmutableSet<Thing> result;
-    result = ImmutableSet.copyOf(ImmutableSet.<Thing> of());
+    // UnmodifiableSet
+    UnmodifiableSet<Thing> result;
+    result = UnmodifiableSet.copyOf(UnmodifiableSet.<Thing> of());
 
-    assertSame(result, ImmutableSet.of());
+    assertSame(result, UnmodifiableSet.of());
 
-    ImmutableSet<Thing> randomImmutableSet;
-    randomImmutableSet = Thing.randomImmutableSet(thingSize);
+    UnmodifiableSet<Thing> randomUnmodifiableSet;
+    randomUnmodifiableSet = Thing.randomUnmodifiableSet(thingSize);
 
-    result = ImmutableSet.copyOf(randomImmutableSet);
+    result = UnmodifiableSet.copyOf(randomUnmodifiableSet);
 
-    assertSame(result, randomImmutableSet);
+    assertSame(result, randomUnmodifiableSet);
 
     // MutableSet
-    result = ImmutableSet.copyOf(randomMutableSet);
+    result = UnmodifiableSet.copyOf(randomMutableSet);
 
     Set<Thing> expected;
     expected = new HashSet<>();
@@ -95,11 +95,11 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     assertSet(result, expected);
 
     // Iterable
-    result = ImmutableSet.copyOf(Collections.<Thing> emptySet());
+    result = UnmodifiableSet.copyOf(Collections.<Thing> emptySet());
 
-    assertSame(result, ImmutableSet.of());
+    assertSame(result, UnmodifiableSet.of());
 
-    result = ImmutableSet.copyOf(thingIterable);
+    result = UnmodifiableSet.copyOf(thingIterable);
 
     expected.clear();
 
@@ -110,21 +110,21 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     assertSet(result, expected);
   }
 
-  @Test(description = "ImmutableSet.copyOf(Iterator)")
+  @Test(description = "UnmodifiableSet.copyOf(Iterator)")
   public void copyOf2() {
     // empty
     Iterator<Thing> iterator;
     iterator = Collections.<Thing> emptySet().iterator();
 
-    ImmutableSet<Thing> result;
-    result = ImmutableSet.copyOf(iterator);
+    UnmodifiableSet<Thing> result;
+    result = UnmodifiableSet.copyOf(iterator);
 
-    assertSame(result, ImmutableSet.of());
+    assertSame(result, UnmodifiableSet.of());
 
     // singleton
     iterator = new SingletonIterator<Thing>(t1);
 
-    result = ImmutableSet.copyOf(iterator);
+    result = UnmodifiableSet.copyOf(iterator);
 
     Set<Thing> expected;
     expected = new HashSet<>();
@@ -136,7 +136,7 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
     // many
     iterator = new ArrayIterator<Thing>(thingArray, thingArray.length);
 
-    result = ImmutableSet.copyOf(iterator);
+    result = UnmodifiableSet.copyOf(iterator);
 
     expected.clear();
 
@@ -199,8 +199,8 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
 
   @Test
   public void removeAll() {
-    ImmutableSet<Thing> set;
-    set = ImmutableSet.copyOf(thingList);
+    UnmodifiableSet<Thing> set;
+    set = UnmodifiableSet.copyOf(thingList);
 
     try {
       set.removeAll(thingList);
@@ -213,8 +213,8 @@ public class ImmutableSetTest extends AbstractObjectosSetsTest {
 
   @Test
   public void retainAll() {
-    ImmutableSet<Thing> set;
-    set = ImmutableSet.copyOf(thingList);
+    UnmodifiableSet<Thing> set;
+    set = UnmodifiableSet.copyOf(thingList);
 
     List<Thing> retain;
     retain = new ArrayList<Thing>();
