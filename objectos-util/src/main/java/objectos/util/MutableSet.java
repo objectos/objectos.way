@@ -23,7 +23,7 @@ import java.util.Set;
 import objectos.lang.Check;
 
 /**
- * A hash-based implementation of the {@link Set} and {@link MutableCollection}
+ * A hash-based implementation of the {@link Set} and {@link GrowableCollection}
  * interfaces.
  *
  * @param <E> type of the elements in this set
@@ -31,7 +31,7 @@ import objectos.lang.Check;
 public final class MutableSet<E>
     extends AbstractArrayBasedSet<E>
     implements
-    MutableCollection<E> {
+    GrowableCollection<E> {
 
   private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 

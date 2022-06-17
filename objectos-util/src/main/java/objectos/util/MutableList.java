@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import objectos.lang.Check;
 
 /**
- * An array-based {@link MutableCollection} and
+ * An array-based {@link GrowableCollection} and
  * {@link java.util.List} implementation. The main goal of this class is to
  * provide a single mutable list API to be used <em>internally</em> by the
  * Objectos libraries themselves.
@@ -53,12 +53,12 @@ import objectos.lang.Check;
  * @param <E> type of the elements in this list
  *
  * @see BaseCollection
- * @see MutableCollection
+ * @see GrowableCollection
  * @see java.util.List
  */
 public final class MutableList<E> extends AbstractArrayBasedList<E>
     implements
-    MutableCollection<E> {
+    GrowableCollection<E> {
 
   /**
    * Creates a new {@code MutableList} instance.

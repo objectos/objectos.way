@@ -15,18 +15,19 @@
  */
 package objectos.util;
 
+import java.util.Collection;
+
 /**
- * A mutable {@link BaseCollection}.
+ * A {@link Collection} that can be modified by adding elements; it does not
+ * support removal of elements
  *
  * <p>
  * This interface extends the {@code BaseCollection} interface by providing
  * additional methods for adding elements to the collection.
  *
  * @param <E> type of the elements in this collection
- *
- * @see BaseCollection
  */
-public interface MutableCollection<E> extends BaseCollection<E> {
+public interface GrowableCollection<E> extends BaseCollection<E> {
 
   /**
    * Adds all elements of the given {@link Iterable} to this collection.
