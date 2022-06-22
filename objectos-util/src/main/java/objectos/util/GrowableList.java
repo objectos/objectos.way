@@ -56,9 +56,9 @@ import objectos.lang.Check;
  * @see GrowableCollection
  * @see java.util.List
  */
-public class GrowableList<E> extends AbstractArrayBasedList<E>
-    implements
-    GrowableCollection<E> {
+public class GrowableList<E>
+    extends AbstractArrayBasedList<E>
+    implements GrowableCollection<E> {
 
   /**
    * Creates a new {@code GrowableList} instance.

@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.testng.annotations.Test;
 
-public class OrderedGrowableMapTest extends MutableMapTest {
+public class GrowableOrderedMapTest extends GrowableMapTest {
 
   @Test(enabled = false)
   public void _enableEclipseCodeMining() {}
@@ -35,8 +35,8 @@ public class OrderedGrowableMapTest extends MutableMapTest {
   }
 
   @Override
-  final <K, V> MutableMap<K, V> createGrowableMap() {
-    return new MutableOrderedMap<>();
+  final <K, V> GrowableMap<K, V> createGrowableMap() {
+    return new GrowableOrderedMap<>();
   }
 
 }

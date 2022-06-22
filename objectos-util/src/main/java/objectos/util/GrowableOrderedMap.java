@@ -18,16 +18,16 @@ package objectos.util;
 import java.util.Arrays;
 
 /**
- * A {@link MutableMap} variant with a predictable iteration order.
+ * A {@link GrowableMap} variant with a predictable iteration order.
  */
-public final class MutableOrderedMap<K, V> extends MutableMap<K, V> {
+public final class GrowableOrderedMap<K, V> extends GrowableMap<K, V> {
 
   private Object[] iteratorArray;
 
   /**
    * Creates a new {@code MutableOrderedMap} instance.
    */
-  public MutableOrderedMap() {
+  public GrowableOrderedMap() {
     iteratorArray = ObjectArrays.empty();
   }
 
@@ -82,11 +82,9 @@ public final class MutableOrderedMap<K, V> extends MutableMap<K, V> {
 
   @Override
   final void insert(int index, Object key, Object value) {
-    int keyIndex;
-    keyIndex = size << 1;
+    var keyIndex = size << 1;
 
-    int valueIndex;
-    valueIndex = keyIndex + 1;
+    var valueIndex = keyIndex + 1;
 
     iteratorArray = ObjectArrays.copyIfNecessary(iteratorArray, valueIndex);
 
@@ -105,8 +103,7 @@ public final class MutableOrderedMap<K, V> extends MutableMap<K, V> {
   @Override
   final V replace(int keyIndex, Object key, Object value) {
     for (int i = 0, iteratorSize = size << 1; i < iteratorSize; i = i + 2) {
-      Object maybeKey;
-      maybeKey = iteratorArray[i];
+      var maybeKey = iteratorArray[i];
 
       if (maybeKey.equals(key)) {
         iteratorArray[i + 1] = value;

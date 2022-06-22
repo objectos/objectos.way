@@ -25,7 +25,7 @@ import objectos.lang.Check;
  * @param <K> type of the keys in this map
  * @param <V> type of the values in this map
  */
-public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
+public class GrowableMap<K, V> extends AbstractArrayBasedMap<K, V> {
 
   private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 
@@ -38,9 +38,9 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
   private int rehashSize;
 
   /**
-   * Creates a new {@code MutableMap} instance.
+   * Creates a new {@code GrowableMap} instance.
    */
-  public MutableMap() {}
+  public GrowableMap() {}
 
   /**
    * Removes all of the mappings in this map.
@@ -99,7 +99,8 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
    * Returns an {@link UnmodifiableMap} copy of this map.
    *
    * <p>
-   * The returned {@code UnmodifiableMap} will contain all of the entries from this
+   * The returned {@code UnmodifiableMap} will contain all of the entries from
+   * this
    * map.
    *
    * <p>
@@ -118,8 +119,7 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
       case 0:
         return UnmodifiableMap.empty();
       default:
-        Object[] copy;
-        copy = Arrays.copyOf(array, array.length);
+        var copy = Arrays.copyOf(array, array.length);
 
         return new UnmodifiableMap<K, V>(copy, size);
     }
@@ -139,8 +139,7 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
     int index, marker;
     index = marker = hashIndex(key);
 
-    Object existing;
-    existing = array[index];
+    var existing = array[index];
 
     if (existing == null) {
       insert(index, key, value);
@@ -202,8 +201,7 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
     int valueIndex;
     valueIndex = keyIndex + 1;
 
-    Object existingValue;
-    existingValue = array[valueIndex];
+    var existingValue = array[valueIndex];
 
     array[valueIndex] = value;
 
@@ -225,11 +223,9 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
       throw new OutOfMemoryError("backing array already at max allowed length");
     }
 
-    Object[] previous;
-    previous = array;
+    var previous = array;
 
-    int newLength;
-    newLength = array.length << 1;
+    var newLength = array.length << 1;
 
     if (newLength < 0) {
       newLength = MAX_ARRAY_LENGTH;
@@ -238,15 +234,13 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
     resizeTo(newLength);
 
     for (int i = 0, length = previous.length; i < length; i = i + 2) {
-      Object key;
-      key = previous[i];
+      var key = previous[i];
 
       if (key == null) {
         continue;
       }
 
-      Object value;
-      value = previous[i + 1];
+      var value = previous[i + 1];
 
       rehashPut(key, value);
     }
@@ -256,8 +250,7 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
     int index, marker;
     index = marker = hashIndex(key);
 
-    Object existing;
-    existing = array[index];
+    var existing = array[index];
 
     if (existing == null) {
       set(index, key, value);
@@ -305,8 +298,7 @@ public class MutableMap<K, V> extends AbstractArrayBasedMap<K, V> {
   private void resizeTo(int size) {
     array = new Object[size];
 
-    int hashLength;
-    hashLength = size >> 1;
+    var hashLength = size >> 1;
 
     hashMask = hashLength - 1;
 

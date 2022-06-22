@@ -26,9 +26,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class MutableMapTest extends AbstractObjectosMapsTest {
+public class GrowableMapTest extends AbstractObjectosMapsTest {
 
-  private MutableMap<Thing, String> map;
+  private GrowableMap<Thing, String> map;
 
   @BeforeClass
   public void _beforeClass() {
@@ -189,8 +189,8 @@ public class MutableMapTest extends AbstractObjectosMapsTest {
     return new HashMap<>();
   }
 
-  <K, V> MutableMap<K, V> createGrowableMap() {
-    return new MutableMap<>();
+  <K, V> GrowableMap<K, V> createGrowableMap() {
+    return new GrowableMap<>();
   }
 
   private String putDec(Map<Thing, String> map, Thing key) {

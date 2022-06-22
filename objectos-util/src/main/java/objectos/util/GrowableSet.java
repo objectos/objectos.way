@@ -28,10 +28,9 @@ import objectos.lang.Check;
  *
  * @param <E> type of the elements in this set
  */
-public final class GrowableSet<E>
+public class GrowableSet<E>
     extends AbstractArrayBasedSet<E>
-    implements
-    GrowableCollection<E> {
+    implements GrowableCollection<E> {
 
   private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 
@@ -117,16 +116,11 @@ public final class GrowableSet<E>
   public final boolean addAllIterable(Iterable<? extends E> iterable) {
     Check.notNull(iterable, "iterable == null");
 
-    boolean result;
-    result = false;
+    var result = false;
 
-    if (iterable instanceof RandomAccess && iterable instanceof List) {
-      List<? extends E> list;
-      list = (List<? extends E>) iterable;
-
+    if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
       for (int i = 0, size = list.size(); i < size; i++) {
-        E element;
-        element = list.get(i);
+        var element = list.get(i);
 
         Check.notNull(element, "iterable[", i, "] == null");
 
@@ -259,8 +253,7 @@ public final class GrowableSet<E>
       case 0:
         return UnmodifiableSet.of();
       default:
-        Object[] copy;
-        copy = Arrays.copyOf(array, array.length);
+        var copy = Arrays.copyOf(array, array.length);
 
         return new UnmodifiableSet<E>(copy, size);
     }
@@ -338,11 +331,9 @@ public final class GrowableSet<E>
       throw new OutOfMemoryError("backing array already at max allowed length");
     }
 
-    Object[] previous;
-    previous = array;
+    var previous = array;
 
-    int newLength;
-    newLength = array.length << 1;
+    var newLength = array.length << 1;
 
     if (newLength < 0) {
       newLength = MAX_ARRAY_LENGTH;
