@@ -96,9 +96,9 @@ final class Thing implements ToString.Formattable {
     return new ArrayBackedIterable<Thing>(array);
   }
 
-  public static MutableSet<Thing> randomMutableSet(int size) {
-    MutableSet<Thing> set;
-    set = new MutableSet<>();
+  public static GrowableSet<Thing> randomGrowableSet(int size) {
+    GrowableSet<Thing> set;
+    set = new GrowableSet<>();
 
     Thing[] array;
     array = randomArray(size);

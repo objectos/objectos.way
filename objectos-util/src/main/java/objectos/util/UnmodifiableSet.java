@@ -75,8 +75,8 @@ public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
   public static <E> UnmodifiableSet<E> copyOf(E[] array) {
     Check.notNull(array, "array == null");
 
-    MutableSet<E> set;
-    set = new MutableSet<>();
+    GrowableSet<E> set;
+    set = new GrowableSet<>();
 
     E element;
 
@@ -123,12 +123,12 @@ public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
       return (UnmodifiableSet<E>) elements;
     }
 
-    if (elements instanceof MutableSet<? extends E> set) {
+    if (elements instanceof GrowableSet<? extends E> set) {
       return (UnmodifiableSet<E>) set.toUnmodifiableSet();
     }
 
-    MutableSet<E> set;
-    set = new MutableSet<>();
+    GrowableSet<E> set;
+    set = new GrowableSet<>();
 
     set.addAllIterable(elements);
 
@@ -164,8 +164,8 @@ public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
       return UnmodifiableSet.of();
     }
 
-    MutableSet<E> set;
-    set = new MutableSet<>();
+    GrowableSet<E> set;
+    set = new GrowableSet<>();
 
     int i = 0;
 
@@ -223,8 +223,8 @@ public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
   public static <E> UnmodifiableSet<E> of(E element) {
     Check.notNull(element, "element == null");
 
-    MutableSet<E> set;
-    set = new MutableSet<>();
+    GrowableSet<E> set;
+    set = new GrowableSet<>();
 
     set.add(element);
 
@@ -258,8 +258,8 @@ public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
     Check.notNull(first, "first == null");
     Check.notNull(more, "more == null");
 
-    MutableSet<E> set;
-    set = new MutableSet<>();
+    GrowableSet<E> set;
+    set = new GrowableSet<>();
 
     set.add(first);
 

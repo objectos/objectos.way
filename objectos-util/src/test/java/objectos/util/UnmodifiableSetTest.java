@@ -33,7 +33,7 @@ public class UnmodifiableSetTest extends AbstractObjectosSetsTest {
 
   private UnmodifiableSet<Thing> emptySet;
 
-  private MutableSet<Thing> randomMutableSet;
+  private GrowableSet<Thing> randomGrowableSet;
 
   private UnmodifiableSet<Thing> t1AndT2Set;
 
@@ -47,7 +47,7 @@ public class UnmodifiableSetTest extends AbstractObjectosSetsTest {
 
     t1AndT2Set = UnmodifiableSet.of(t1, t2);
 
-    randomMutableSet = Thing.randomMutableSet(thingSize);
+    randomGrowableSet = Thing.randomGrowableSet(thingSize);
   }
 
   @Test(description = "UnmodifiableSet.copyOf(E[])")
@@ -84,13 +84,13 @@ public class UnmodifiableSetTest extends AbstractObjectosSetsTest {
 
     assertSame(result, randomUnmodifiableSet);
 
-    // MutableSet
-    result = UnmodifiableSet.copyOf(randomMutableSet);
+    // GrowableSet
+    result = UnmodifiableSet.copyOf(randomGrowableSet);
 
     Set<Thing> expected;
     expected = new HashSet<>();
 
-    expected.addAll(randomMutableSet);
+    expected.addAll(randomGrowableSet);
 
     assertSet(result, expected);
 

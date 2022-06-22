@@ -31,13 +31,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class MutableSetTest extends AbstractObjectosSetsTest {
+public class GrowableSetTest extends AbstractObjectosSetsTest {
 
-  private MutableSet<Thing> set;
+  private GrowableSet<Thing> set;
 
   @BeforeClass
   public void _beforeClass() {
-    set = new MutableSet<>();
+    set = new GrowableSet<>();
   }
 
   @BeforeMethod

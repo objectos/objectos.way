@@ -28,7 +28,7 @@ import objectos.lang.Check;
  *
  * @param <E> type of the elements in this set
  */
-public final class MutableSet<E>
+public final class GrowableSet<E>
     extends AbstractArrayBasedSet<E>
     implements
     GrowableCollection<E> {
@@ -44,9 +44,9 @@ public final class MutableSet<E>
   private int rehashSize;
 
   /**
-   * Creates a new {@code MutableSet} instance.
+   * Creates a new {@code GrowableSet} instance.
    */
-  public MutableSet() {}
+  public GrowableSet() {}
 
   /**
    * Adds the specified element to this set if it is not already present.
