@@ -34,13 +34,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class MutableListTest extends AbstractObjectosListsTest {
+public class GrowableListTest extends AbstractObjectosListsTest {
 
-  private MutableList<Thing> list;
+  private GrowableList<Thing> list;
 
   @BeforeClass
   public void _beforeClass() {
-    list = new MutableList<>();
+    list = new GrowableList<>();
   }
 
   @BeforeMethod
@@ -52,8 +52,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
   public final void add() {
     Integer box;
 
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     assertTrue(it.isEmpty());
 
@@ -89,8 +89,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
     int size;
     size = 2000;
 
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -107,8 +107,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
     assertTrue(it.containsAll(arrayList));
 
-    MutableList<Integer> growableList;
-    growableList = randomIntMutableList(size);
+    GrowableList<Integer> growableList;
+    growableList = randomIntGrowableList(size);
 
     it.addAll(growableList);
 
@@ -122,8 +122,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
     int size;
     size = 2000;
 
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -152,8 +152,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void clear() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -178,8 +178,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void contains() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     assertFalse(it.contains(1));
 
@@ -188,7 +188,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     Integer[] random;
     random = randomIntegerArray(1000);
 
-    it = new MutableList<Integer>(random);
+    it = new GrowableList<Integer>(random);
 
     for (Integer e : random) {
       assertTrue(it.contains(e));
@@ -207,11 +207,11 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void equals() {
-    MutableList<Integer> a;
-    a = new MutableList<>();
+    GrowableList<Integer> a;
+    a = new GrowableList<>();
 
-    MutableList<Integer> b;
-    b = new MutableList<>();
+    GrowableList<Integer> b;
+    b = new GrowableList<>();
 
     assertTrue(a.equals(b));
 
@@ -222,18 +222,18 @@ public class MutableListTest extends AbstractObjectosListsTest {
     Integer[] randomA;
     randomA = randomIntegerArray(1000);
 
-    a = new MutableList<Integer>(randomA);
+    a = new GrowableList<Integer>(randomA);
 
     Integer[] randomB;
     randomB = randomIntegerArray(1000);
 
-    b = new MutableList<Integer>(randomB);
+    b = new GrowableList<Integer>(randomB);
 
     assertFalse(a.equals(b));
 
     randomB = Arrays.copyOf(randomA, randomA.length);
 
-    b = new MutableList<Integer>(randomB);
+    b = new GrowableList<Integer>(randomB);
 
     assertTrue(a.equals(b));
   }
@@ -242,7 +242,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
   public void get() {
     class Tester {
 
-      private final MutableList<Integer> it = new MutableList<>();
+      private final GrowableList<Integer> it = new GrowableList<>();
 
       public final void add(Integer e) {
         it.add(e);
@@ -291,8 +291,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void getOnly() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     try {
       it.getOnly();
@@ -320,8 +320,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void indexOf() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     Integer target;
     target = Next.intValue();
@@ -359,8 +359,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void isEmpty() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     assertTrue(it.isEmpty());
 
@@ -375,8 +375,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void lastIndexOf() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     Integer target;
     target = Next.intValue();
@@ -414,8 +414,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void size() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     assertEquals(it.size(), 0);
 
@@ -613,8 +613,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void toArray() {
-    MutableList<Object> it;
-    it = new MutableList<>();
+    GrowableList<Object> it;
+    it = new GrowableList<>();
 
     Integer[] emptyArray;
     emptyArray = new Integer[0];
@@ -671,8 +671,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void toUnmodifiableList() {
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     UnmodifiableList<Integer> result;
     result = it.toUnmodifiableList();
@@ -742,7 +742,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     Integer[] random;
     random = randomIntegerArray(2345);
 
-    it = new MutableList<Integer>(random);
+    it = new GrowableList<Integer>(random);
 
     result = it.toUnmodifiableList();
 
@@ -764,8 +764,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
     Comparator<Integer> c;
     c = TestCase07.ORDER;
 
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     UnmodifiableList<Integer> result;
     result = it.toImmutableSortedList(c);
@@ -795,7 +795,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
     Integer[] random;
     random = randomIntegerArray(2345);
 
-    it = new MutableList<Integer>(random);
+    it = new GrowableList<Integer>(random);
 
     result = it.toImmutableSortedList(c);
 
@@ -812,13 +812,13 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void toStringTest() {
-    MutableList<String> it;
-    it = new MutableList<>();
+    GrowableList<String> it;
+    it = new GrowableList<>();
 
     assertEquals(
       it.toString(),
 
-      "MutableList []"
+      "GrowableList []"
     );
 
     it.add("A");
@@ -829,7 +829,7 @@ public class MutableListTest extends AbstractObjectosListsTest {
       it.toString(),
 
       lines(
-        "MutableList [",
+        "GrowableList [",
         "  0 = A",
         "  1 = B",
         "  2 = C",
@@ -840,8 +840,8 @@ public class MutableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void truncate() {
-    MutableList<String> it;
-    it = new MutableList<>();
+    GrowableList<String> it;
+    it = new GrowableList<>();
 
     it.add("A");
 

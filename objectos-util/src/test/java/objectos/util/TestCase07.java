@@ -18,14 +18,14 @@ package objectos.util;
 import java.util.Comparator;
 
 /**
- * Create MutableList.toImmutableSortedList(Comparator<? super E> c) that
+ * Create GrowableList.toImmutableSortedList(Comparator<? super E> c) that
  * returns an immutable copy of the mutable list having all elements sorted by
  * the specified comparator. As required (sort of...) by objectos-git WriteTree
  * use-case.
  */
 final class TestCase07 {
 
-  static final String DESCRIPTION = "Verify MutableList.toImmutableSortedList(Comparator)";
+  static final String DESCRIPTION = "Verify GrowableList.toImmutableSortedList(Comparator)";
 
   static final Comparator<Integer> ORDER = Lists.naturalOrder();
 

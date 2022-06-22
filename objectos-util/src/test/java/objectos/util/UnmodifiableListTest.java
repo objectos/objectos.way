@@ -89,8 +89,8 @@ public class UnmodifiableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void copyOf() {
-    MutableList<Integer> growable;
-    growable = randomIntMutableList(1234);
+    GrowableList<Integer> growable;
+    growable = randomIntGrowableList(1234);
 
     UnmodifiableList<Integer> immutable;
     immutable = growable.toUnmodifiableList();

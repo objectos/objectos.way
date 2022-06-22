@@ -56,18 +56,18 @@ import objectos.lang.Check;
  * @see GrowableCollection
  * @see java.util.List
  */
-public final class MutableList<E> extends AbstractArrayBasedList<E>
+public class GrowableList<E> extends AbstractArrayBasedList<E>
     implements
     GrowableCollection<E> {
 
   /**
-   * Creates a new {@code MutableList} instance.
+   * Creates a new {@code GrowableList} instance.
    */
-  public MutableList() {
+  public GrowableList() {
     super();
   }
 
-  MutableList(Object[] elements) {
+  GrowableList(Object[] elements) {
     array = elements;
 
     size = elements.length;
@@ -131,18 +131,13 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
       return false;
     }
 
-    if (c instanceof RandomAccess && c instanceof List) {
-      List<? extends E> list;
-      list = (List<? extends E>) c;
-
-      int listSize;
-      listSize = list.size();
+    if (c instanceof RandomAccess && c instanceof List<? extends E> list) {
+      var listSize = list.size();
 
       growIfNecessary(listSize);
 
       for (int i = 0; i < listSize; i++) {
-        E element;
-        element = list.get(i);
+        var element = list.get(i);
 
         if (element == null) {
           throw new NullPointerException("collection[" + i + "] == null");
@@ -155,8 +150,7 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
     }
 
     else {
-      Iterator<? extends E> iterator;
-      iterator = c.iterator();
+      var iterator = c.iterator();
 
       return addAllFromIterator(iterator);
     }
@@ -204,12 +198,8 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
   public final boolean addAllIterable(Iterable<? extends E> iterable) {
     Check.notNull(iterable, "iterable == null");
 
-    if (iterable instanceof RandomAccess && iterable instanceof List) {
-      List<? extends E> list;
-      list = (List<? extends E>) iterable;
-
-      int listSize;
-      listSize = list.size();
+    if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
+      var listSize = list.size();
 
       if (listSize == 0) {
         return false;
@@ -218,8 +208,7 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
       growIfNecessary(listSize);
 
       for (int i = 0; i < listSize; i++) {
-        E element;
-        element = list.get(i);
+        var element = list.get(i);
 
         if (element == null) {
           throw new NullPointerException("iterable[" + i + "] == null");
@@ -232,8 +221,7 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
     }
 
     else {
-      Iterator<? extends E> iterator;
-      iterator = iterable.iterator();
+      var iterator = iterable.iterator();
 
       return addAllFromIterator(iterator);
     }
@@ -386,41 +374,8 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
   }
 
   /**
-   * Returns an {@link UnmodifiableList} copy of this list.
-   *
-   * <p>
-   * The returned {@code UnmodifiableList} will contain all of the elements from
-   * this list in order. Therefore, the returned list {@code copy} and this list
-   * {@code source} will be such that {@code source.equals(copy)} is
-   * {@code true}.
-   *
-   * <p>
-   * The returned list will be a copy in the sense that, after this method
-   * returns, modifying this list will have no effect on the returned (copied)
-   * one.
-   *
-   * <p>
-   * Note, however, that the behaviour of this method is undefined if this list
-   * is modified while the copy is being made.
-   *
-   * @return an {@link UnmodifiableList} copy of this list
-   */
-  public final UnmodifiableList<E> toUnmodifiableList() {
-    switch (size) {
-      case 0:
-        return UnmodifiableList.of();
-      default:
-        Object[] copy;
-        copy = new Object[size];
-
-        System.arraycopy(array, 0, copy, 0, size);
-
-        return new UnmodifiableList<E>(copy);
-    }
-  }
-
-  /**
-   * Returns a sorted {@link UnmodifiableList} copy of this list while keeping the
+   * Returns a sorted {@link UnmodifiableList} copy of this list while keeping
+   * the
    * latter unchanged. This is equivalent to, for this {@code list}:
    *
    * <pre> {@code
@@ -443,14 +398,46 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
       case 1:
         return toUnmodifiableList();
       default:
-        Object[] copy;
-        copy = new Object[size];
+        var copy = new Object[size];
 
         System.arraycopy(array, 0, copy, 0, size);
 
         Arrays.sort((E[]) copy, 0, size, c);
 
         return new UnmodifiableList<E>(copy);
+    }
+  }
+
+  /**
+   * Returns an {@link UnmodifiableList} copy of this list.
+   *
+   * <p>
+   * The returned {@code UnmodifiableList} will contain all of the elements from
+   * this list in order. Therefore, the returned list {@code copy} and this list
+   * {@code source} will be such that {@code source.equals(copy)} is
+   * {@code true}.
+   *
+   * <p>
+   * The returned list will be a copy in the sense that, after this method
+   * returns, modifying this list will have no effect on the returned (copied)
+   * one.
+   *
+   * <p>
+   * Note, however, that the behavior of this method is undefined if this list
+   * is modified while the copy is being made.
+   *
+   * @return an {@link UnmodifiableList} copy of this list
+   */
+  public final UnmodifiableList<E> toUnmodifiableList() {
+    switch (size) {
+      case 0:
+        return UnmodifiableList.of();
+      default:
+        var copy = new Object[size];
+
+        System.arraycopy(array, 0, copy, 0, size);
+
+        return new UnmodifiableList<>(copy);
     }
   }
 
@@ -501,12 +488,10 @@ public final class MutableList<E> extends AbstractArrayBasedList<E>
     boolean ret;
     ret = false;
 
-    int index;
-    index = 0;
+    var index = 0;
 
     while (iterator.hasNext()) {
-      E element;
-      element = iterator.next();
+      var element = iterator.next();
 
       if (element == null) {
         throw new NullPointerException("iterator[" + index + "] == null");

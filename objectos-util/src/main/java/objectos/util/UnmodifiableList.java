@@ -121,11 +121,11 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
       return (UnmodifiableList<E>) elements;
     }
 
-    if (elements instanceof MutableList<? extends E> list) {
+    if (elements instanceof GrowableList<? extends E> list) {
       return (UnmodifiableList<E>) list.toUnmodifiableList();
     }
 
-    var list = new MutableList<E>();
+    var list = new GrowableList<E>();
 
     int index;
     index = 0;
@@ -161,7 +161,7 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
    *         iterator is {@code null}
    */
   public static <E> UnmodifiableList<E> copyOf(Iterator<? extends E> iterator) {
-    var list = new MutableList<E>();
+    var list = new GrowableList<E>();
 
     list.addAll(iterator);
 

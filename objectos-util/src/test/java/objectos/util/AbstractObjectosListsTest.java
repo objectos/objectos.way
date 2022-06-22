@@ -118,11 +118,11 @@ public abstract class AbstractObjectosListsTest {
     return it;
   }
 
-  static MutableList<Integer> randomIntMutableList(int size) {
+  static GrowableList<Integer> randomIntGrowableList(int size) {
     Integer box;
 
-    MutableList<Integer> it;
-    it = new MutableList<>();
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
 
     for (int i = 0; i < size; i++) {
       int randomInt;
