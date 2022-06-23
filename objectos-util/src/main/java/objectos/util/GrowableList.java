@@ -60,6 +60,8 @@ public class GrowableList<E>
     extends AbstractArrayBasedList<E>
     implements GrowableCollection<E> {
 
+  static final int DEFAULT_CAPACITY = 10;
+
   /**
    * Creates a new {@code GrowableList} instance.
    */
@@ -68,9 +70,46 @@ public class GrowableList<E>
   }
 
   GrowableList(Object[] elements) {
-    array = elements;
+    data = elements;
 
     size = elements.length;
+  }
+
+  static int growBy(int length, int ammount) {
+    int half = length >> 1;
+
+    int delta = Math.max(ammount, half);
+
+    int newLength = length + delta;
+
+    return grow0(length, newLength);
+  }
+
+  static int growByOne(int length) {
+    int half = length >> 1;
+
+    int newLength = length + half;
+
+    return grow0(length, newLength);
+  }
+
+  private static int grow0(int length, int newLength) throws OutOfMemoryError {
+    if (newLength > 0 && newLength <= MoreArrays.JVM_SOFT_LIMIT) {
+      return newLength;
+    }
+
+    if (length != MoreArrays.JVM_SOFT_LIMIT) {
+      return MoreArrays.JVM_SOFT_LIMIT;
+    }
+
+    throw new OutOfMemoryError(
+      """
+      Cannot allocate array: exceeds JVM soft limit.
+
+      length = %,14d
+      limit  = %,14d
+      """.formatted(length + 1, MoreArrays.JVM_SOFT_LIMIT)
+    );
   }
 
   /**
@@ -84,7 +123,9 @@ public class GrowableList<E>
    */
   @Override
   public final boolean add(E e) {
-    return addWithNullMessage(e, "e == null");
+    Check.notNull(e, "e == null");
+
+    return add0(e);
   }
 
   /**
@@ -132,21 +173,7 @@ public class GrowableList<E>
     }
 
     if (c instanceof RandomAccess && c instanceof List<? extends E> list) {
-      var listSize = list.size();
-
-      growIfNecessary(listSize);
-
-      for (int i = 0; i < listSize; i++) {
-        var element = list.get(i);
-
-        if (element == null) {
-          throw new NullPointerException("collection[" + i + "] == null");
-        }
-
-        dataAppend(element);
-      }
-
-      return true;
+      return addAllFromList(list, "collection[");
     }
 
     else {
@@ -199,25 +226,7 @@ public class GrowableList<E>
     Check.notNull(iterable, "iterable == null");
 
     if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
-      var listSize = list.size();
-
-      if (listSize == 0) {
-        return false;
-      }
-
-      growIfNecessary(listSize);
-
-      for (int i = 0; i < listSize; i++) {
-        var element = list.get(i);
-
-        if (element == null) {
-          throw new NullPointerException("iterable[" + i + "] == null");
-        }
-
-        dataAppend(element);
-      }
-
-      return true;
+      return addAllFromList(list, "iterable[");
     }
 
     else {
@@ -252,7 +261,7 @@ public class GrowableList<E>
   public final boolean addWithNullMessage(E e, Object nullMessage) {
     Check.notNull(e, nullMessage);
 
-    return resizeIfNecessaryAndDataAppend(e);
+    return add0(e);
   }
 
   /**
@@ -286,7 +295,7 @@ public class GrowableList<E>
       E e, Object nullMessageStart, int index, Object nullMessageEnd) {
     Check.notNull(e, nullMessageStart, index, nullMessageEnd);
 
-    return resizeIfNecessaryAndDataAppend(e);
+    return add0(e);
   }
 
   /**
@@ -294,7 +303,7 @@ public class GrowableList<E>
    */
   @Override
   public final void clear() {
-    Arrays.fill(array, null);
+    Arrays.fill(data, null);
 
     size = 0;
   }
@@ -400,7 +409,7 @@ public class GrowableList<E>
       default:
         var copy = new Object[size];
 
-        System.arraycopy(array, 0, copy, 0, size);
+        System.arraycopy(data, 0, copy, 0, size);
 
         Arrays.sort((E[]) copy, 0, size, c);
 
@@ -435,7 +444,7 @@ public class GrowableList<E>
       default:
         var copy = new Object[size];
 
-        System.arraycopy(array, 0, copy, 0, size);
+        System.arraycopy(data, 0, copy, 0, size);
 
         return new UnmodifiableList<>(copy);
     }
@@ -462,9 +471,25 @@ public class GrowableList<E>
       return;
     }
 
-    Arrays.fill(array, newSize, size, null);
+    Arrays.fill(data, newSize, size, null);
 
     size = newSize;
+  }
+
+  final boolean add0(E e) {
+    if (size < data.length) {
+      return append0(e);
+    }
+
+    if (data == ObjectArrays.EMPTY) {
+      data = new Object[DEFAULT_CAPACITY];
+    } else {
+      var newLength = growByOne(data.length);
+
+      copyData(newLength);
+    }
+
+    return append0(e);
   }
 
   final boolean addAll(Iterator<? extends E> iterator) {
@@ -473,15 +498,9 @@ public class GrowableList<E>
     return addAllFromIterator(iterator);
   }
 
-  final boolean resizeIfNecessaryAndDataAppend(E e) {
-    growIfNecessary(1);
-
-    return dataAppend(e);
-  }
-
   @SuppressWarnings("unchecked")
   final void sortImpl(Comparator<? super E> c) {
-    Arrays.sort((E[]) array, 0, size, c);
+    Arrays.sort((E[]) data, 0, size, c);
   }
 
   private boolean addAllFromIterator(Iterator<? extends E> iterator) {
@@ -497,7 +516,7 @@ public class GrowableList<E>
         throw new NullPointerException("iterator[" + index + "] == null");
       }
 
-      ret = resizeIfNecessaryAndDataAppend(element);
+      ret = add0(element);
 
       index++;
     }
@@ -505,14 +524,50 @@ public class GrowableList<E>
     return ret;
   }
 
-  private boolean dataAppend(E e) {
-    array[size++] = e;
+  private boolean addAllFromList(List<? extends E> list, String nullMessageStart) {
+    int otherSize = list.size();
+
+    if (otherSize == 0) {
+      return false;
+    }
+
+    int requiredIndex = size + otherSize;
+
+    if (requiredIndex >= data.length) {
+      int newLength;
+
+      if (data == ObjectArrays.EMPTY && requiredIndex < DEFAULT_CAPACITY) {
+        newLength = DEFAULT_CAPACITY;
+      } else {
+        newLength = growBy(data.length, otherSize);
+      }
+
+      copyData(newLength);
+    }
+
+    for (int i = 0; i < otherSize; i++) {
+      var element = list.get(i);
+
+      append0(
+        Check.notNull(element, nullMessageStart, i, "] == null")
+      );
+    }
 
     return true;
   }
 
-  private void growIfNecessary(int delta) {
-    array = ObjectArrays.copyIfNecessary(array, size + delta);
+  private boolean append0(E e) {
+    data[size++] = e;
+
+    return true;
+  }
+
+  private void copyData(int newLength) {
+    var copy = new Object[newLength];
+
+    System.arraycopy(data, 0, copy, 0, data.length);
+
+    data = copy;
   }
 
 }

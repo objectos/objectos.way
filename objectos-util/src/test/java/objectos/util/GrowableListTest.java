@@ -318,6 +318,78 @@ public class GrowableListTest extends AbstractObjectosListsTest {
     }
   }
 
+  @Test(description = //
+  """
+  growBy (test case 0)
+  ------------------------------
+
+  - start with default capacity
+  - simulate add(Collection.size = 1)
+  """)
+  public void growBy() {
+    var length = GrowableList.DEFAULT_CAPACITY;
+
+    length = GrowableList.growBy(length, 1);
+
+    assertEquals(length, 15);
+
+    length = GrowableList.growBy(length, 1);
+
+    assertEquals(length, 22);
+
+    length = GrowableList.growBy(1_197_571_635, 1);
+
+    assertEquals(length, 1_796_357_452);
+
+    length = GrowableList.growBy(length, 1);
+
+    assertEquals(length, MoreArrays.JVM_SOFT_LIMIT);
+
+    try {
+      GrowableList.growByOne(MoreArrays.JVM_SOFT_LIMIT);
+
+      Assert.fail();
+    } catch (OutOfMemoryError expected) {
+
+    }
+  }
+
+  @Test(description = //
+  """
+  growByOne (test case 0)
+  ------------------------------
+
+  - start with default capacity
+  - simulate add(E e)
+  """)
+  public void growByOne() {
+    var length = GrowableList.DEFAULT_CAPACITY;
+
+    length = GrowableList.growByOne(length);
+
+    assertEquals(length, 15);
+
+    length = GrowableList.growByOne(length);
+
+    assertEquals(length, 22);
+
+    length = GrowableList.growByOne(1_197_571_635);
+
+    assertEquals(length, 1_796_357_452);
+
+    length = GrowableList.growByOne(length);
+
+    assertEquals(length, MoreArrays.JVM_SOFT_LIMIT);
+
+    try {
+      GrowableList.growByOne(MoreArrays.JVM_SOFT_LIMIT);
+
+      Assert.fail();
+    } catch (OutOfMemoryError expected) {
+
+    }
+  }
+
   @Test
   public void indexOf() {
     GrowableList<Integer> it;
@@ -669,6 +741,85 @@ public class GrowableListTest extends AbstractObjectosListsTest {
     assertNull(result[i]);
   }
 
+  @Test(description = TestCase07.DESCRIPTION)
+  public void toImmutableSortedList() {
+    Comparator<Integer> c;
+    c = TestCase07.ORDER;
+
+    GrowableList<Integer> it;
+    it = new GrowableList<>();
+
+    UnmodifiableList<Integer> result;
+    result = it.toImmutableSortedList(c);
+
+    assertTrue(result.isEmpty());
+
+    it.add(3);
+
+    result = it.toImmutableSortedList(c);
+
+    assertEquals(result, UnmodifiableList.of(3));
+
+    it.add(1);
+
+    result = it.toImmutableSortedList(c);
+
+    assertEquals(result, UnmodifiableList.of(1, 3));
+    assertEquals(it, UnmodifiableList.of(3, 1));
+
+    it.add(2);
+
+    result = it.toImmutableSortedList(c);
+
+    assertEquals(result, UnmodifiableList.of(1, 2, 3));
+    assertEquals(it, UnmodifiableList.of(3, 1, 2));
+
+    Integer[] random;
+    random = randomIntegerArray(2345);
+
+    it = new GrowableList<Integer>(random);
+
+    result = it.toImmutableSortedList(c);
+
+    assertEquals(result.size(), random.length);
+    assertNotEquals(result, it);
+
+    ArrayList<Integer> sorted;
+    sorted = new ArrayList<Integer>(it);
+
+    Collections.sort(sorted);
+
+    assertEquals(result, sorted);
+  }
+
+  @Test
+  public void toStringTest() {
+    GrowableList<String> it;
+    it = new GrowableList<>();
+
+    assertEquals(
+      it.toString(),
+
+      "GrowableList []"
+    );
+
+    it.add("A");
+    it.add("B");
+    it.add("C");
+
+    assertEquals(
+      it.toString(),
+
+      lines(
+        "GrowableList [",
+        "  0 = A",
+        "  1 = B",
+        "  2 = C",
+        "]"
+      )
+    );
+  }
+
   @Test
   public void toUnmodifiableList() {
     GrowableList<Integer> it;
@@ -757,85 +908,6 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
       assertEquals(integer, expected);
     }
-  }
-
-  @Test(description = TestCase07.DESCRIPTION)
-  public void toImmutableSortedList() {
-    Comparator<Integer> c;
-    c = TestCase07.ORDER;
-
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
-
-    UnmodifiableList<Integer> result;
-    result = it.toImmutableSortedList(c);
-
-    assertTrue(result.isEmpty());
-
-    it.add(3);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result, UnmodifiableList.of(3));
-
-    it.add(1);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result, UnmodifiableList.of(1, 3));
-    assertEquals(it, UnmodifiableList.of(3, 1));
-
-    it.add(2);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result, UnmodifiableList.of(1, 2, 3));
-    assertEquals(it, UnmodifiableList.of(3, 1, 2));
-
-    Integer[] random;
-    random = randomIntegerArray(2345);
-
-    it = new GrowableList<Integer>(random);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result.size(), random.length);
-    assertNotEquals(result, it);
-
-    ArrayList<Integer> sorted;
-    sorted = new ArrayList<Integer>(it);
-
-    Collections.sort(sorted);
-
-    assertEquals(result, sorted);
-  }
-
-  @Test
-  public void toStringTest() {
-    GrowableList<String> it;
-    it = new GrowableList<>();
-
-    assertEquals(
-      it.toString(),
-
-      "GrowableList []"
-    );
-
-    it.add("A");
-    it.add("B");
-    it.add("C");
-
-    assertEquals(
-      it.toString(),
-
-      lines(
-        "GrowableList [",
-        "  0 = A",
-        "  1 = B",
-        "  2 = C",
-        "]"
-      )
-    );
   }
 
   @Test

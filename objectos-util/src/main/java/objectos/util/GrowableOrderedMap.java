@@ -28,7 +28,7 @@ public final class GrowableOrderedMap<K, V> extends GrowableMap<K, V> {
    * Creates a new {@code MutableOrderedMap} instance.
    */
   public GrowableOrderedMap() {
-    iteratorArray = ObjectArrays.empty();
+    iteratorArray = ObjectArrays.EMPTY;
   }
 
   /**
@@ -86,13 +86,15 @@ public final class GrowableOrderedMap<K, V> extends GrowableMap<K, V> {
 
     var valueIndex = keyIndex + 1;
 
-    iteratorArray = ObjectArrays.copyIfNecessary(iteratorArray, valueIndex);
+    super.insert(index, key, value);
+
+    if (iteratorArray.length != array.length) {
+      iteratorArray = Arrays.copyOf(iteratorArray, array.length);
+    }
 
     iteratorArray[keyIndex] = key;
 
     iteratorArray[valueIndex] = value;
-
-    super.insert(index, key, value);
   }
 
   @Override

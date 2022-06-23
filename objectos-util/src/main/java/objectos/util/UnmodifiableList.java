@@ -36,7 +36,7 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
   }
 
   UnmodifiableList(java.lang.Object[] array) {
-    this.array = array;
+    this.data = array;
 
     size = array.length;
   }
@@ -133,7 +133,7 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
     for (E e : elements) {
       Check.notNull(e, "elements[", index, "] == null");
 
-      list.resizeIfNecessaryAndDataAppend(e);
+      list.add0(e);
 
       index++;
     }

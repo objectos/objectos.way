@@ -17,6 +17,11 @@ package objectos.util;
 
 final class MoreArrays {
 
+  /**
+   * From ArraysSupport.SOFT_MAX_ARRAY_LENGTH
+   */
+  static final int JVM_SOFT_LIMIT = Integer.MAX_VALUE - 8;
+
   private MoreArrays() {}
 
   static int growArrayLength(int currentLength, int requiredIndex) {

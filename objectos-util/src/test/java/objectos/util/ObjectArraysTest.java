@@ -16,47 +16,10 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
 public class ObjectArraysTest {
-
-  @Test
-  public void copyIfNecessary() {
-    // Object
-    Object[] objectsInitial;
-    objectsInitial = ObjectArrays.empty();
-
-    Object[] objectsResult;
-    objectsResult = ObjectArrays.copyIfNecessary(objectsInitial, 0);
-
-    assertTrue(objectsResult.length > objectsInitial.length);
-    assertEquals(objectsResult.length, 2);
-
-    objectsInitial = objectsResult;
-
-    objectsResult = ObjectArrays.copyIfNecessary(objectsInitial, 1);
-
-    assertSame(objectsResult, objectsInitial);
-
-    // E[]
-    String[] stringsInitial;
-    stringsInitial = new String[0];
-
-    String[] stringsResult;
-    stringsResult = ObjectArrays.copyIfNecessary(stringsInitial, 0);
-
-    assertTrue(stringsResult.length > stringsInitial.length);
-    assertEquals(stringsResult.length, 2);
-
-    stringsInitial = stringsResult;
-
-    stringsResult = ObjectArrays.copyIfNecessary(stringsInitial, 1);
-
-    assertSame(stringsResult, stringsInitial);
-  }
 
   @Test
   public void empty() {

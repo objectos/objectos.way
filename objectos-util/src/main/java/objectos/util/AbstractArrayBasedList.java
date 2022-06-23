@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.RandomAccess;
 import objectos.lang.Check;
 import objectos.lang.HashCode;
@@ -30,7 +31,7 @@ abstract class AbstractArrayBasedList<E>
     List<E>,
     RandomAccess {
 
-  Object[] array = ObjectArrays.empty();
+  Object[] data = ObjectArrays.EMPTY;
 
   int size = 0;
 
@@ -56,7 +57,7 @@ abstract class AbstractArrayBasedList<E>
     }
 
     for (int i = 0; i < size; i++) {
-      var thisElem = array[i];
+      var thisElem = data[i];
 
       if (thisElem.equals(o)) {
         return true;
@@ -117,13 +118,13 @@ abstract class AbstractArrayBasedList<E>
 
       ToString.formatFirstPair(
         toString, level,
-        indexName(0, length), array[0]
+        indexName(0, length), data[0]
       );
 
       for (int i = 1; i < size; i++) {
         ToString.formatNextPair(
           toString, level,
-          indexName(i, length), array[i]
+          indexName(i, length), data[i]
         );
       }
     }
@@ -144,11 +145,9 @@ abstract class AbstractArrayBasedList<E>
   @SuppressWarnings("unchecked")
   @Override
   public final E get(int index) {
-    if (index < 0 || index >= size) {
-      throw new IndexOutOfBoundsException("Index=" + index + "; Size=" + size);
-    }
+    Objects.checkIndex(index, size);
 
-    return (E) array[index];
+    return (E) data[index];
   }
 
   /**
@@ -161,7 +160,7 @@ abstract class AbstractArrayBasedList<E>
     var result = HashCode.start();
 
     for (int i = 0; i < size; i++) {
-      var object = array[i];
+      var object = data[i];
 
       result = HashCode.update(result, object);
     }
@@ -191,7 +190,7 @@ abstract class AbstractArrayBasedList<E>
     }
 
     for (int i = 0; i < size; i++) {
-      var element = array[i];
+      var element = data[i];
 
       if (element.equals(o)) {
         result = i;
@@ -230,7 +229,7 @@ abstract class AbstractArrayBasedList<E>
     }
 
     if (size == 1) {
-      var o = array[0];
+      var o = data[0];
 
       return o.toString();
     }
@@ -238,7 +237,7 @@ abstract class AbstractArrayBasedList<E>
     var sb = new StringBuilder();
 
     for (int i = 0; i < size; i++) {
-      sb.append(array[i]);
+      sb.append(data[i]);
     }
 
     return sb.toString();
@@ -269,21 +268,21 @@ abstract class AbstractArrayBasedList<E>
     Object o;
 
     if (size == 1) {
-      o = array[0];
+      o = data[0];
 
       return o.toString();
     }
 
     var sb = new StringBuilder();
 
-    o = array[0];
+    o = data[0];
 
     sb.append(o.toString());
 
     for (int i = 1; i < size; i++) {
       sb.append(delimiter);
 
-      o = array[i];
+      o = data[i];
 
       sb.append(o.toString());
     }
@@ -318,7 +317,7 @@ abstract class AbstractArrayBasedList<E>
     Object o;
 
     if (size == 1) {
-      o = array[0];
+      o = data[0];
 
       return prefix + o.toString() + suffix;
     }
@@ -327,14 +326,14 @@ abstract class AbstractArrayBasedList<E>
 
     sb.append(prefix);
 
-    o = array[0];
+    o = data[0];
 
     sb.append(o.toString());
 
     for (int i = 1; i < size; i++) {
       sb.append(delimiter);
 
-      o = array[i];
+      o = data[i];
 
       sb.append(o.toString());
     }
@@ -362,7 +361,7 @@ abstract class AbstractArrayBasedList<E>
     var result = -1;
 
     for (int i = size - 1; i >= 0; i--) {
-      var element = array[i];
+      var element = data[i];
 
       if (element.equals(o)) {
         result = i;
@@ -488,7 +487,7 @@ abstract class AbstractArrayBasedList<E>
    */
   @Override
   public final Object[] toArray() {
-    return Arrays.copyOf(array, size);
+    return Arrays.copyOf(data, size);
   }
 
   /**
@@ -525,12 +524,12 @@ abstract class AbstractArrayBasedList<E>
       newType = a.getClass();
 
       Object[] copy;
-      copy = Arrays.copyOf(array, size, newType);
+      copy = Arrays.copyOf(data, size, newType);
 
       return (T[]) copy;
     }
 
-    System.arraycopy(array, 0, a, 0, size);
+    System.arraycopy(data, 0, a, 0, size);
 
     if (a.length > size) {
       a[size] = null;
@@ -544,7 +543,7 @@ abstract class AbstractArrayBasedList<E>
     for (Object test : iterable) {
       for (int i = 0; i < size; i++) {
         Object element;
-        element = array[i];
+        element = data[i];
 
         if (element.equals(test)) {
           continue outer;
@@ -565,7 +564,7 @@ abstract class AbstractArrayBasedList<E>
   @Override
   @SuppressWarnings("unchecked")
   final E getOnlyImpl() {
-    return (E) array[0];
+    return (E) data[0];
   }
 
   private boolean equals0(List<?> that) {
@@ -606,7 +605,7 @@ abstract class AbstractArrayBasedList<E>
       }
 
       else {
-        var result = array[index];
+        var result = data[index];
 
         index++;
 
