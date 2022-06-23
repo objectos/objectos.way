@@ -86,20 +86,17 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void addAll() {
-    int size;
-    size = 2000;
+    var size = 2000;
 
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
+    var it = new GrowableList<Thing>();
 
     assertEquals(it.size(), 0);
 
-    it.addAll(Collections.<Integer> emptySet());
+    it.addAll(Collections.<Thing> emptySet());
 
     assertEquals(it.size(), 0);
 
-    ArrayList<Integer> arrayList;
-    arrayList = randomIntArrayList(size);
+    var arrayList = Thing.randomArrayList(size);
 
     it.addAll(arrayList);
 
@@ -107,14 +104,22 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
     assertTrue(it.containsAll(arrayList));
 
-    GrowableList<Integer> growableList;
-    growableList = randomIntGrowableList(size);
+    var growableList = Thing.randomGrowableList(size);
 
     it.addAll(growableList);
 
     assertEquals(it.size(), size + size);
     assertTrue(it.containsAll(arrayList));
     assertTrue(it.containsAll(growableList));
+
+    var hashSet = Thing.randomHashSet(size);
+
+    it.addAll(hashSet);
+
+    assertEquals(it.size(), size + size + size);
+    assertTrue(it.containsAll(arrayList));
+    assertTrue(it.containsAll(growableList));
+    assertTrue(it.containsAll(hashSet));
   }
 
   @Test

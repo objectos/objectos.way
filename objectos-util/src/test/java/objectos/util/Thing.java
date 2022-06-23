@@ -55,11 +55,9 @@ final class Thing implements ToString.Formattable {
   }
 
   public static ArrayList<Thing> randomArrayList(int size) {
-    ArrayList<Thing> list;
-    list = new ArrayList<>();
+    var list = new ArrayList<Thing>();
 
-    Thing[] array;
-    array = randomArray(size);
+    var array = randomArray(size);
 
     for (Thing thing : array) {
       list.add(thing);
@@ -68,32 +66,16 @@ final class Thing implements ToString.Formattable {
     return list;
   }
 
-  public static HashSet<Thing> randomHashSet(int size) {
-    HashSet<Thing> set;
-    set = new HashSet<Thing>(size);
+  public static GrowableList<Thing> randomGrowableList(int size) {
+    var list = new GrowableList<Thing>();
 
-    Thing[] array;
-    array = randomArray(size);
+    var array = randomArray(size);
 
     for (Thing thing : array) {
-      set.add(thing);
+      list.add(thing);
     }
 
-    return set;
-  }
-
-  public static UnmodifiableSet<Thing> randomUnmodifiableSet(int size) {
-    Thing[] array;
-    array = randomArray(size);
-
-    return UnmodifiableSet.copyOf(array);
-  }
-
-  public static Iterable<Thing> randomIterable(int size) {
-    Thing[] array;
-    array = randomArray(size);
-
-    return new ArrayBackedIterable<Thing>(array);
+    return list;
   }
 
   public static GrowableSet<Thing> randomGrowableSet(int size) {
@@ -110,11 +92,39 @@ final class Thing implements ToString.Formattable {
     return set;
   }
 
+  public static HashSet<Thing> randomHashSet(int size) {
+    HashSet<Thing> set;
+    set = new HashSet<Thing>(size);
+
+    Thing[] array;
+    array = randomArray(size);
+
+    for (Thing thing : array) {
+      set.add(thing);
+    }
+
+    return set;
+  }
+
+  public static Iterable<Thing> randomIterable(int size) {
+    Thing[] array;
+    array = randomArray(size);
+
+    return new ArrayBackedIterable<Thing>(array);
+  }
+
   public static Thing randomThing() {
     byte[] value;
     value = Next.bytes(16);
 
     return new Thing(value);
+  }
+
+  public static UnmodifiableSet<Thing> randomUnmodifiableSet(int size) {
+    Thing[] array;
+    array = randomArray(size);
+
+    return UnmodifiableSet.copyOf(array);
   }
 
   @Override

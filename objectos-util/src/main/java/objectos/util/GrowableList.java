@@ -75,6 +75,7 @@ public class GrowableList<E>
     size = elements.length;
   }
 
+  // static so easier to test
   static int growBy(int length, int ammount) {
     int half = length >> 1;
 
@@ -85,6 +86,7 @@ public class GrowableList<E>
     return grow0(length, newLength);
   }
 
+  // static so easier to test
   static int growByOne(int length) {
     int half = length >> 1;
 
@@ -93,7 +95,7 @@ public class GrowableList<E>
     return grow0(length, newLength);
   }
 
-  private static int grow0(int length, int newLength) throws OutOfMemoryError {
+  private static int grow0(int length, int newLength) {
     if (newLength > 0 && newLength <= MoreArrays.JVM_SOFT_LIMIT) {
       return newLength;
     }
@@ -173,13 +175,9 @@ public class GrowableList<E>
     }
 
     if (c instanceof RandomAccess && c instanceof List<? extends E> list) {
-      return addAllFromList(list, "collection[");
-    }
-
-    else {
-      var iterator = c.iterator();
-
-      return addAllFromIterator(iterator);
+      return addAll0List(list, "collection[");
+    } else {
+      return addAll0Collection(c);
     }
   }
 
@@ -226,13 +224,13 @@ public class GrowableList<E>
     Check.notNull(iterable, "iterable == null");
 
     if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
-      return addAllFromList(list, "iterable[");
+      return addAll0List(list, "iterable[");
     }
 
     else {
       var iterator = iterable.iterator();
 
-      return addAllFromIterator(iterator);
+      return addAll0Iterator(iterator);
     }
   }
 
@@ -495,7 +493,7 @@ public class GrowableList<E>
   final boolean addAll(Iterator<? extends E> iterator) {
     Check.notNull(iterator, "iterator == null");
 
-    return addAllFromIterator(iterator);
+    return addAll0Iterator(iterator);
   }
 
   @SuppressWarnings("unchecked")
@@ -503,20 +501,39 @@ public class GrowableList<E>
     Arrays.sort((E[]) data, 0, size, c);
   }
 
-  private boolean addAllFromIterator(Iterator<? extends E> iterator) {
-    boolean ret;
-    ret = false;
+  private boolean addAll0Collection(Collection<? extends E> c) {
+    int collSize = c.size();
+
+    if (collSize == 0) {
+      return false;
+    }
+
+    addAll1Grow(collSize);
+
+    Object[] array = c.toArray();
+
+    for (int i = 0; i < collSize; i++) {
+      var element = array[i];
+
+      append0(
+        Check.notNull(element, "collection[", i, "] == null")
+      );
+    }
+
+    return true;
+  }
+
+  private boolean addAll0Iterator(Iterator<? extends E> iterator) {
+    var ret = false;
 
     var index = 0;
 
     while (iterator.hasNext()) {
       var element = iterator.next();
 
-      if (element == null) {
-        throw new NullPointerException("iterator[" + index + "] == null");
-      }
-
-      ret = add0(element);
+      ret = add0(
+        Check.notNull(element, "iterator[", index, "] == null")
+      );
 
       index++;
     }
@@ -524,13 +541,27 @@ public class GrowableList<E>
     return ret;
   }
 
-  private boolean addAllFromList(List<? extends E> list, String nullMessageStart) {
-    int otherSize = list.size();
+  private boolean addAll0List(List<? extends E> list, String nullMessageStart) {
+    int listSize = list.size();
 
-    if (otherSize == 0) {
+    if (listSize == 0) {
       return false;
     }
 
+    addAll1Grow(listSize);
+
+    for (int i = 0; i < listSize; i++) {
+      var element = list.get(i);
+
+      append0(
+        Check.notNull(element, nullMessageStart, i, "] == null")
+      );
+    }
+
+    return true;
+  }
+
+  private void addAll1Grow(int otherSize) {
     int requiredIndex = size + otherSize;
 
     if (requiredIndex >= data.length) {
@@ -544,19 +575,9 @@ public class GrowableList<E>
 
       copyData(newLength);
     }
-
-    for (int i = 0; i < otherSize; i++) {
-      var element = list.get(i);
-
-      append0(
-        Check.notNull(element, nullMessageStart, i, "] == null")
-      );
-    }
-
-    return true;
   }
 
-  private boolean append0(E e) {
+  private boolean append0(Object e) {
     data[size++] = e;
 
     return true;

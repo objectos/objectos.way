@@ -72,12 +72,10 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
       case 0:
         return UnmodifiableList.of();
       default:
-        Object[] copy;
-        copy = new Object[array.length];
+        var copy = new Object[array.length];
 
         for (int i = 0; i < array.length; i++) {
-          E e;
-          e = array[i];
+          var e = array[i];
 
           copy[i] = Check.notNull(e, "array[", i, "] == null");
         }
