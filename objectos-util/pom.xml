@@ -40,6 +40,39 @@
 		<objectos.license.copyrightYears>2022</objectos.license.copyrightYears>
 	</properties>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>This*Tester</exclude>
+					</excludes>
+					<parallel>classes</parallel>
+					<properties>
+						<property>
+							<name>junit</name>
+							<value>false</value>
+						</property>
+					</properties>
+					<threadCount>1</threadCount>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>${maven.surefire.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-testng</artifactId>
+						<version>${maven.surefire.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -57,10 +90,17 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>objectos-lang</artifactId>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava-testlib</artifactId>
+			<version>31.1-jre</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

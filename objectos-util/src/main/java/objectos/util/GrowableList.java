@@ -21,7 +21,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
-import java.util.Spliterator;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import objectos.lang.Check;
@@ -350,34 +349,6 @@ public class GrowableList<E>
   @Override
   public final void sort(Comparator<? super E> c) {
     sortImpl(c);
-  }
-
-  /**
-   * Not implemented in this release. It might be implemented in a future
-   * release.
-   *
-   * @return this method does not return as it always throws an exception
-   *
-   * @throws UnsupportedOperationException
-   *         this method may be implemented in a future release
-   */
-  @Override
-  public final Spliterator<E> spliterator() {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
-  /**
-   * Not implemented in this release. It might be implemented in a future
-   * release.
-   *
-   * @return this method does not return as it always throws an exception
-   *
-   * @throws UnsupportedOperationException
-   *         this method may be implemented in a future release
-   */
-  @Override
-  public final Stream<E> stream() {
-    throw new UnsupportedOperationException("Not yet implemented");
   }
 
   /**
