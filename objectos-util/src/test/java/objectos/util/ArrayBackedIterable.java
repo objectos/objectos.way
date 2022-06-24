@@ -15,6 +15,7 @@
  */
 package objectos.util;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 final class ArrayBackedIterable<E> implements Iterable<E> {
@@ -23,6 +24,13 @@ final class ArrayBackedIterable<E> implements Iterable<E> {
 
   ArrayBackedIterable(E[] array) {
     this.array = array;
+  }
+
+  @SafeVarargs
+  public static <E> ArrayBackedIterable<E> of(E... elements) {
+    E[] copy = Arrays.copyOf(elements, elements.length);
+
+    return new ArrayBackedIterable<>(copy);
   }
 
   @Override

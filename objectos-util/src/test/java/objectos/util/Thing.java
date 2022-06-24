@@ -16,6 +16,7 @@
 package objectos.util;
 
 import java.math.BigInteger;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -54,13 +55,21 @@ final class Thing implements ToString.Formattable {
     return array;
   }
 
+  public static ArrayDeque<Thing> randomArrayDeque(int size) {
+    var deque = new ArrayDeque<Thing>();
+
+    for (int i = 0; i < size; i++) {
+      deque.add(randomThing());
+    }
+
+    return deque;
+  }
+
   public static ArrayList<Thing> randomArrayList(int size) {
     var list = new ArrayList<Thing>();
 
-    var array = randomArray(size);
-
-    for (Thing thing : array) {
-      list.add(thing);
+    for (int i = 0; i < size; i++) {
+      list.add(randomThing());
     }
 
     return list;
@@ -107,10 +116,9 @@ final class Thing implements ToString.Formattable {
   }
 
   public static Iterable<Thing> randomIterable(int size) {
-    Thing[] array;
-    array = randomArray(size);
+    var array = randomArray(size);
 
-    return new ArrayBackedIterable<Thing>(array);
+    return new ArrayBackedIterable<>(array);
   }
 
   public static Thing randomThing() {
@@ -129,18 +137,8 @@ final class Thing implements ToString.Formattable {
 
   @Override
   public final boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
-    }
-
-    if (!(obj instanceof Thing)) {
-      return false;
-    }
-
-    Thing that;
-    that = (Thing) obj;
-
-    return Arrays.equals(value, that.value);
+    return obj == this || obj instanceof Thing that
+        && Arrays.equals(value, that.value);
   }
 
   @Override

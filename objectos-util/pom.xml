@@ -45,62 +45,13 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<excludes>
-						<exclude>This*Tester</exclude>
-					</excludes>
-					<parallel>classes</parallel>
 					<properties>
 						<property>
 							<name>junit</name>
 							<value>false</value>
 						</property>
 					</properties>
-					<threadCount>1</threadCount>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>surefire-junit47</artifactId>
-						<version>${maven.surefire.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>surefire-testng</artifactId>
-						<version>${maven.surefire.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>com.mycila</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-main</id>
-						<phase>none</phase>
-					</execution>
-					<execution>
-						<id>override-main</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>format</goal>
-						</goals>
-						<configuration>
-							<licenseSets>
-								<licenseSet>
-									<excludes>
-										<exclude>src/test/**/This*Tester.java</exclude>
-									</excludes>
-									<includes>
-										<include>pom.xml</include>
-										<include>src/main/**/*.java</include>
-										<include>src/test/**/*.java</include>
-									</includes>
-									<inlineHeader>${objectos.license.headerMain}</inlineHeader>
-								</licenseSet>
-							</licenseSets>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

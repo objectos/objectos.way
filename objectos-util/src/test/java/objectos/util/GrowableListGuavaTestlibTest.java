@@ -41,6 +41,8 @@ import com.google.common.collect.testing.testers.ListReplaceAllTester;
 import com.google.common.collect.testing.testers.ListRetainAllTester;
 import com.google.common.collect.testing.testers.ListSetTester;
 import com.google.common.collect.testing.testers.ListToArrayTester;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,10 +56,88 @@ public class GrowableListGuavaTestlibTest extends TestCase {
   public static Test suite() {
     var suite = new TestSuite();
 
+    add(
+      suite, "GrowableList, add method",
+      new TestStringListGenerator() {
+        @Override
+        protected List<String> create(String[] elements) {
+          var list = new GrowableList<String>();
+
+          for (String e : elements) {
+            list.add(e);
+          }
+
+          return list;
+        }
+      }
+    );
+
+    add(
+      suite, "GrowableList, addAll a Collection that is not a List",
+      new TestStringListGenerator() {
+        @Override
+        protected List<String> create(String[] elements) {
+          // not RandomAccess
+          var coll = new LinkedList<String>();
+
+          for (String e : elements) {
+            coll.add(e);
+          }
+
+          var list = new GrowableList<String>();
+
+          list.addAll(coll);
+
+          return list;
+        }
+      }
+    );
+
+    add(
+      suite, "GrowableList, addAll a Collection that is a List",
+      new TestStringListGenerator() {
+        @Override
+        protected List<String> create(String[] elements) {
+          // not RandomAccess
+          var coll = new ArrayList<String>(elements.length);
+
+          for (String e : elements) {
+            coll.add(e);
+          }
+
+          var list = new GrowableList<String>();
+
+          list.addAll(coll);
+
+          return list;
+        }
+      }
+    );
+
+    add(
+      suite, "GrowableList, addAllIterable method",
+      new TestStringListGenerator() {
+        @Override
+        protected List<String> create(String[] elements) {
+          var iterable = new ArrayBackedIterable<>(elements);
+
+          var list = new GrowableList<String>();
+
+          list.addAllIterable(iterable);
+
+          return list;
+        }
+      }
+    );
+
+    return suite;
+  }
+
+  private static void add(TestSuite suite, String name, TestStringListGenerator gen) {
     suite.addTest(
       ThisListTestSuiteBuilder
-          .using(new GrowableListGenerator())
-          .named("GrowableList")
+          .using(gen)
+          .named(name)
           .withFeatures(
             CollectionSize.ANY,
 
@@ -67,21 +147,6 @@ public class GrowableListGuavaTestlibTest extends TestCase {
           )
           .createTestSuite()
     );
-
-    return suite;
-  }
-
-  public static class GrowableListGenerator extends TestStringListGenerator {
-    @Override
-    protected List<String> create(String[] elements) {
-      var list = new GrowableList<String>();
-
-      for (String e : elements) {
-        list.add(e);
-      }
-
-      return list;
-    }
   }
 
   private static class ThisListTestSuiteBuilder<E>

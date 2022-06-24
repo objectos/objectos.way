@@ -28,7 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class UnmodifiableListTest extends AbstractObjectosListsTest {
+public class UnmodifiableListTest extends AbstractObjectosUtilTest {
 
   private UnmodifiableList<Integer> il0;
 

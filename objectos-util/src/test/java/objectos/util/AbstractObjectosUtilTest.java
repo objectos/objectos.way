@@ -15,13 +15,14 @@
  */
 package objectos.util;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.testng.annotations.BeforeClass;
 
-public abstract class AbstractObjectosListsTest {
+public abstract class AbstractObjectosUtilTest {
 
   static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -33,15 +34,17 @@ public abstract class AbstractObjectosListsTest {
 
   Thing t2;
 
-  Thing[] thingArray;
+  Thing[] arrayT;
 
   Iterable<Thing> thingIterable;
 
-  List<Thing> thingList;
+  List<Thing> arrayList;
 
-  Set<Thing> thingSet;
+  Set<Thing> hashSet;
 
   int thingSize;
+
+  ArrayDeque<Thing> arrayDeque;
 
   static String lines(String... lines) {
     switch (lines.length) {
@@ -154,13 +157,27 @@ public abstract class AbstractObjectosListsTest {
 
     thingSize = 5678;
 
-    thingArray = Thing.randomArray(thingSize);
+    arrayT = Thing.randomArray(thingSize);
 
     thingIterable = Thing.randomIterable(thingSize);
 
-    thingList = Thing.randomArrayList(thingSize);
+    arrayList = Thing.randomArrayList(thingSize);
 
-    thingSet = Thing.randomHashSet(thingSize);
+    arrayDeque = Thing.randomArrayDeque(thingSize);
+
+    hashSet = Thing.randomHashSet(thingSize);
+  }
+
+  @SafeVarargs
+  // ordered collection that is not List
+  final <E> ArrayDeque<E> arrayDequeOf(E... elements) {
+    var deque = new ArrayDeque<E>(elements.length);
+
+    for (E e : elements) {
+      deque.add(e);
+    }
+
+    return deque;
   }
 
 }

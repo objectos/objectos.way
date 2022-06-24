@@ -169,15 +169,7 @@ public class GrowableList<E>
   public final boolean addAll(Collection<? extends E> c) {
     Check.notNull(c, "c == null");
 
-    if (c.isEmpty()) {
-      return false;
-    }
-
-    if (c instanceof RandomAccess && c instanceof List<? extends E> list) {
-      return addAll0List(list, "collection[");
-    } else {
-      return addAll0Collection(c);
-    }
+    return addAll0(c, "collection[");
   }
 
   /**
@@ -222,14 +214,14 @@ public class GrowableList<E>
   public final boolean addAllIterable(Iterable<? extends E> iterable) {
     Check.notNull(iterable, "iterable == null");
 
-    if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
-      return addAll0List(list, "iterable[");
+    if (iterable instanceof Collection<? extends E> coll) {
+      return addAll0(coll, "iterable[");
     }
 
     else {
       var iterator = iterable.iterator();
 
-      return addAll0Iterator(iterator);
+      return addAll0Iterator(iterator, "iterable[");
     }
   }
 
@@ -464,12 +456,24 @@ public class GrowableList<E>
   final boolean addAll(Iterator<? extends E> iterator) {
     Check.notNull(iterator, "iterator == null");
 
-    return addAll0Iterator(iterator);
+    return addAll0Iterator(iterator, "iterator[");
   }
 
   @SuppressWarnings("unchecked")
   final void sortImpl(Comparator<? super E> c) {
     Arrays.sort((E[]) data, 0, size, c);
+  }
+
+  private boolean addAll0(Collection<? extends E> c, String nullMessageStart) {
+    if (c.isEmpty()) {
+      return false;
+    }
+
+    if (c instanceof RandomAccess && c instanceof List<? extends E> list) {
+      return addAll0List(list, nullMessageStart);
+    } else {
+      return addAll0Collection(c);
+    }
   }
 
   private boolean addAll0Collection(Collection<? extends E> c) {
@@ -494,7 +498,7 @@ public class GrowableList<E>
     return true;
   }
 
-  private boolean addAll0Iterator(Iterator<? extends E> iterator) {
+  private boolean addAll0Iterator(Iterator<? extends E> iterator, String nullMessageStart) {
     var ret = false;
 
     var index = 0;
@@ -503,7 +507,7 @@ public class GrowableList<E>
       var element = iterator.next();
 
       ret = add0(
-        Check.notNull(element, "iterator[", index, "] == null")
+        Check.notNull(element, nullMessageStart, index, "] == null")
       );
 
       index++;

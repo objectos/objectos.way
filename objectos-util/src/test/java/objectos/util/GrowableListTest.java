@@ -28,57 +28,49 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GrowableListTest extends AbstractObjectosListsTest {
+public class GrowableListTest extends AbstractObjectosUtilTest {
 
-  private GrowableList<Thing> list;
-
-  @BeforeClass
-  public void _beforeClass() {
-    list = new GrowableList<>();
-  }
+  private GrowableList<Thing> it;
 
   @BeforeMethod
   public void _beforeMethod() {
-    list.clear();
+    it = new GrowableList<>();
   }
 
   @Test
-  public final void add() {
-    Integer box;
+  public void add() {
+    // empty
+    assertEquals(it.size(), 0);
 
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
+    // one
+    assertTrue(it.add(t1));
+    assertContents(t1);
 
-    assertTrue(it.isEmpty());
+    // two
+    assertTrue(it.add(t2));
+    assertContents(t1, t2);
 
-    int iters;
-    iters = 10 * 1000;
+    // many
+    for (int i = 0; i < arrayT.length; i++) {
+      var t = arrayT[i];
 
-    for (int i = 0; i < iters; i++) {
-      int randomInt;
-      randomInt = Next.intValue();
-
-      box = Integer.valueOf(randomInt);
-
-      assertEquals(it.add(box), true);
-
-      assertEquals(it.size(), i + 1);
-
-      assertTrue(it.contains(box));
+      assertTrue(it.add(t));
     }
+    assertContents(t1, t2, arrayT);
 
+    // must reject null
     try {
-      box = null;
+      Thing t = null;
 
-      it.add(box);
+      it.add(t);
 
-      Assert.fail();
+      Assert.fail("Must throw NullPointerException");
     } catch (NullPointerException expected) {
       assertEquals(expected.getMessage(), "e == null");
     }
@@ -86,167 +78,209 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void addAll() {
-    var size = 2000;
+    // empty
+    assertEquals(it.size(), 0);
 
-    var it = new GrowableList<Thing>();
+    assertFalse(it.addAll(emptyThingList));
 
     assertEquals(it.size(), 0);
 
-    it.addAll(Collections.<Thing> emptySet());
+    // one
+    it.addAll(List.of(t1));
+    assertContents(t1);
 
-    assertEquals(it.size(), 0);
+    // two
+    it.addAll(arrayDequeOf(t2));
+    assertContents(t1, t2);
 
-    var arrayList = Thing.randomArrayList(size);
-
+    // many
     it.addAll(arrayList);
+    assertContents(t1, t2, arrayList);
 
-    assertEquals(it.size(), size);
+    it.addAll(arrayDeque);
+    assertContents(t1, t2, arrayList, arrayDeque);
 
-    assertTrue(it.containsAll(arrayList));
+    // must reject null
+    var listWithNull = Thing.randomArrayList(thingSize);
 
-    var growableList = Thing.randomGrowableList(size);
+    listWithNull.set(thingSize / 2, null);
 
-    it.addAll(growableList);
+    try {
+      it.addAll(listWithNull);
 
-    assertEquals(it.size(), size + size);
-    assertTrue(it.containsAll(arrayList));
-    assertTrue(it.containsAll(growableList));
+      Assert.fail("Must throw NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "collection[2839] == null");
+    }
 
-    var hashSet = Thing.randomHashSet(size);
+    var sub = listWithNull.subList(0, 2839);
 
-    it.addAll(hashSet);
+    assertContents(t1, t2, arrayList, arrayDeque, sub);
 
-    assertEquals(it.size(), size + size + size);
-    assertTrue(it.containsAll(arrayList));
-    assertTrue(it.containsAll(growableList));
-    assertTrue(it.containsAll(hashSet));
+    try {
+      var notRandomAccessWithNull = new LinkedList<Thing>();
+
+      notRandomAccessWithNull.addAll(listWithNull);
+
+      it.addAll(notRandomAccessWithNull);
+
+      Assert.fail("Must throw NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "collection[2839] == null");
+    }
+
+    assertContents(t1, t2, arrayList, arrayDeque, sub, sub);
   }
 
   @Test
   public void addAllIterable() {
-    int size;
-    size = 2000;
-
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
-
+    // empty
     assertEquals(it.size(), 0);
 
-    it.addAllIterable(Collections.<Integer> emptySet());
+    assertFalse(it.addAllIterable(emptyThingIterable));
+    assertContents();
 
-    assertEquals(it.size(), 0);
+    assertFalse(it.addAllIterable(emptyThingList));
+    assertContents();
 
-    ArrayList<Integer> arrayList;
-    arrayList = randomIntArrayList(size);
+    // one
+    it.addAllIterable(ArrayBackedIterable.of(t1));
+    assertContents(t1);
+
+    // two
+    it.addAllIterable(List.of(t2));
+    assertContents(t1, t2);
+
+    // many
+    it.addAllIterable(thingIterable);
+    assertContents(t1, t2, thingIterable);
 
     it.addAllIterable(arrayList);
+    assertContents(t1, t2, thingIterable, arrayList);
 
-    assertEquals(it.size(), size);
+    // must reject null
+    var randomArray = Thing.randomArray(thingSize);
 
-    assertTrue(it.containsAll(arrayList));
+    randomArray[thingSize / 2] = null;
 
-    Iterable<Integer> iterable;
-    iterable = randomIntArrayBackedIterable(size);
+    var iterWithNull = new ArrayBackedIterable<>(randomArray);
 
-    it.addAllIterable(iterable);
+    try {
+      it.addAllIterable(iterWithNull);
 
-    assertEquals(it.size(), size + size);
-    assertTrue(it.containsAll(arrayList));
-    assertTrue(it.containsAllIterable0(iterable));
+      Assert.fail("Must throw NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "iterable[2839] == null");
+    }
+
+    var copy = Arrays.copyOf(randomArray, thingSize / 2);
+
+    var sub = List.of(copy);
+
+    assertContents(t1, t2, thingIterable, arrayList, sub);
   }
 
   @Test
   public void clear() {
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
-
     assertEquals(it.size(), 0);
-
-    ArrayList<Integer> arrayList;
-    arrayList = randomIntArrayList(100);
-
-    it.addAll(arrayList);
-
-    assertEquals(it.size(), 100);
 
     it.clear();
+    assertContents();
 
-    assertEquals(it.size(), 0);
-
-    for (int i = 0; i < arrayList.size(); i++) {
-      Integer element;
-      element = arrayList.get(i);
-
-      assertFalse(it.contains(element));
-    }
+    it.addAll(arrayList);
+    it.clear();
+    assertContents();
   }
 
   @Test
   public void contains() {
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
+    assertEquals(it.size(), 0);
 
-    assertFalse(it.contains(1));
+    assertFalse(it.contains(t1));
 
-    assertFalse(it.contains(1, 2));
+    assertFalse(it.contains(t1, t2));
 
-    Integer[] random;
-    random = randomIntegerArray(1000);
+    it.add(t1);
 
-    it = new GrowableList<Integer>(random);
-
-    for (Integer e : random) {
-      assertTrue(it.contains(e));
+    for (var t : arrayT) {
+      it.add(t);
     }
 
-    Object[] objectIntArray;
-    objectIntArray = Arrays.copyOf(random, random.length, Object[].class);
+    it.add(t2);
 
-    assertTrue(it.contains(objectIntArray[0], objectIntArray));
+    assertTrue(it.contains(t1));
+
+    assertTrue(it.contains(t1, (Object[]) arrayT));
+
+    assertTrue(it.contains(t2));
+
+    it.clear();
+
+    assertFalse(it.contains(t1));
+
+    assertFalse(it.contains(t1, (Object[]) arrayT));
+
+    assertFalse(it.contains(t2));
   }
 
   @Test
   public void containsAll() {
-    addAll();
+    assertEquals(it.size(), 0);
+
+    assertFalse(it.containsAll(arrayList));
+
+    it.addAll(arrayList);
+
+    assertTrue(it.containsAll(arrayList));
+
+    var list = new ArrayList<Thing>(arrayList.size() + 1);
+
+    list.add(t1);
+
+    list.addAll(arrayList);
+
+    assertFalse(it.containsAll(list));
+
+    var listWithNull = new ArrayList<Thing>(arrayList.size());
+
+    listWithNull.addAll(arrayList);
+
+    listWithNull.set(thingSize / 2, null);
+
+    assertFalse(it.containsAll(listWithNull));
   }
 
   @Test
   public void equals() {
-    GrowableList<Integer> a;
-    a = new GrowableList<>();
+    var a = new GrowableList<Thing>();
 
-    GrowableList<Integer> b;
-    b = new GrowableList<>();
+    var b = new GrowableList<Thing>();
 
     assertTrue(a.equals(b));
+    assertTrue(b.equals(a));
 
     assertFalse(a.equals(null));
 
     assertTrue(a.equals(Collections.emptyList()));
 
-    Integer[] randomA;
-    randomA = randomIntegerArray(1000);
+    a.addAll(arrayList);
 
-    a = new GrowableList<Integer>(randomA);
-
-    Integer[] randomB;
-    randomB = randomIntegerArray(1000);
-
-    b = new GrowableList<Integer>(randomB);
+    b.addAll(arrayList);
+    b.add(t2);
 
     assertFalse(a.equals(b));
 
-    randomB = Arrays.copyOf(randomA, randomA.length);
+    var c = new GrowableList<Thing>();
 
-    b = new GrowableList<Integer>(randomB);
+    c.addAll(arrayList);
 
-    assertTrue(a.equals(b));
+    assertTrue(a.equals(c));
+    assertTrue(c.equals(a));
   }
 
   @Test
   public void get() {
     class Tester {
-
       private final GrowableList<Integer> it = new GrowableList<>();
 
       public final void add(Integer e) {
@@ -296,9 +330,6 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void getOnly() {
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
-
     try {
       it.getOnly();
 
@@ -307,11 +338,11 @@ public class GrowableListTest extends AbstractObjectosListsTest {
       assertEquals(expected.getMessage(), "Could not getOnly: empty.");
     }
 
-    it.add(1);
+    it.add(t1);
 
-    assertEquals(it.getOnly(), Integer.valueOf(1));
+    assertEquals(it.getOnly(), t1);
 
-    it.add(2);
+    it.add(t2);
 
     // standard
     try {
@@ -397,51 +428,38 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void indexOf() {
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
+    assertEquals(it.indexOf(t1), -1);
 
-    Integer target;
-    target = Next.intValue();
+    it.add(t1);
 
-    assertEquals(it.indexOf(target), -1);
-
-    it.add(target);
-
-    assertEquals(it.indexOf(target), 0);
+    assertEquals(it.indexOf(t1), 0);
 
     it.clear();
 
-    Integer[] random;
-    random = randomIntegerArray(1000);
+    it.addAll(arrayList);
 
-    for (Integer r : random) {
-      if (r.equals(target)) {
-        continue;
-      }
+    for (int i = 0, size = arrayList.size(); i < size; i++) {
+      var t = arrayList.get(i);
 
-      it.add(r);
+      assertEquals(it.indexOf(t), i);
     }
 
-    int index;
-    index = it.size();
+    var index = it.size();
 
-    it.add(target);
+    it.add(t1);
 
-    assertEquals(it.indexOf(target), index);
+    assertEquals(it.indexOf(t1), index);
 
-    it.add(target);
+    it.add(t2);
 
-    assertEquals(it.indexOf(target), index);
+    assertEquals(it.indexOf(t1), index);
   }
 
   @Test
   public void isEmpty() {
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
-
     assertTrue(it.isEmpty());
 
-    it.add(1);
+    it.add(t1);
 
     assertFalse(it.isEmpty());
 
@@ -452,51 +470,36 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
   @Test
   public void lastIndexOf() {
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
+    assertEquals(it.lastIndexOf(t1), -1);
 
-    Integer target;
-    target = Next.intValue();
+    it.add(t1);
 
-    assertEquals(it.lastIndexOf(target), -1);
-
-    it.add(target);
-
-    assertEquals(it.lastIndexOf(target), 0);
+    assertEquals(it.lastIndexOf(t1), 0);
 
     it.clear();
 
-    Integer[] random;
-    random = randomIntegerArray(1000);
+    it.addAll(arrayList);
 
-    for (Integer r : random) {
-      if (r.equals(target)) {
-        continue;
-      }
+    var index = it.size();
 
-      it.add(r);
-    }
+    it.add(t1);
 
-    int index;
-    index = it.size();
+    assertEquals(it.lastIndexOf(t1), index);
 
-    it.add(target);
+    it.add(t2);
 
-    assertEquals(it.lastIndexOf(target), index);
+    assertEquals(it.lastIndexOf(t1), index);
 
-    it.add(target);
+    it.add(t1);
 
-    assertEquals(it.lastIndexOf(target), index + 1);
+    assertEquals(it.lastIndexOf(t1), index + 2);
   }
 
   @Test
   public void size() {
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
-
     assertEquals(it.size(), 0);
 
-    it.add(1);
+    it.add(t1);
 
     assertEquals(it.size(), 1);
 
@@ -508,11 +511,11 @@ public class GrowableListTest extends AbstractObjectosListsTest {
   @Test
   public void testCase01() {
     // empty
-    assertEquals(list.size(), 0);
-    assertTrue(list.isEmpty());
+    assertEquals(it.size(), 0);
+    assertTrue(it.isEmpty());
 
     List<Thing> result;
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     List<Thing> expected;
     expected = new ArrayList<>();
@@ -520,11 +523,11 @@ public class GrowableListTest extends AbstractObjectosListsTest {
     assertContents(result, expected);
 
     // one
-    assertTrue(list.add(t1));
-    assertEquals(list.size(), 1);
-    assertFalse(list.isEmpty());
+    assertTrue(it.add(t1));
+    assertEquals(it.size(), 1);
+    assertFalse(it.isEmpty());
 
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     expected.clear();
     expected.add(t1);
@@ -532,38 +535,38 @@ public class GrowableListTest extends AbstractObjectosListsTest {
     assertContents(result, expected);
 
     // two
-    assertTrue(list.add(t2));
-    assertEquals(list.size(), 2);
-    assertFalse(list.isEmpty());
+    assertTrue(it.add(t1));
+    assertEquals(it.size(), 2);
+    assertFalse(it.isEmpty());
 
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     expected.clear();
     expected.add(t1);
-    expected.add(t2);
+    expected.add(t1);
 
     assertContents(result, expected);
 
     // N
     int size;
-    size = list.size();
+    size = it.size();
 
-    for (Thing thing : thingArray) {
-      assertTrue(list.add(thing));
+    for (Thing thing : arrayT) {
+      assertTrue(it.add(thing));
 
       size++;
 
-      assertEquals(list.size(), size);
-      assertFalse(list.isEmpty());
+      assertEquals(it.size(), size);
+      assertFalse(it.isEmpty());
     }
 
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     expected.clear();
     expected.add(t1);
-    expected.add(t2);
+    expected.add(t1);
 
-    for (Thing thing : thingArray) {
+    for (Thing thing : arrayT) {
       expected.add(thing);
     }
 
@@ -573,12 +576,12 @@ public class GrowableListTest extends AbstractObjectosListsTest {
   @Test
   public void testCase02() {
     // empty
-    assertFalse(list.addAllIterable(emptyThingIterable));
+    assertFalse(it.addAllIterable(emptyThingIterable));
 
-    assertFalse(list.addAllIterable(emptyThingList));
+    assertFalse(it.addAllIterable(emptyThingList));
 
     List<Thing> result;
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     List<Thing> expected;
     expected = new ArrayList<>();
@@ -586,15 +589,15 @@ public class GrowableListTest extends AbstractObjectosListsTest {
     assertContents(result, expected);
 
     // non empty
-    assertTrue(list.addAllIterable(thingIterable));
+    assertTrue(it.addAllIterable(thingIterable));
 
-    assertEquals(list.size(), thingSize);
+    assertEquals(it.size(), thingSize);
 
-    assertTrue(list.addAllIterable(thingList));
+    assertTrue(it.addAllIterable(arrayList));
 
-    assertEquals(list.size(), thingSize + thingSize);
+    assertEquals(it.size(), thingSize + thingSize);
 
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     expected.clear();
 
@@ -602,7 +605,7 @@ public class GrowableListTest extends AbstractObjectosListsTest {
       expected.add(thing);
     }
 
-    expected.addAll(thingList);
+    expected.addAll(arrayList);
 
     assertContents(result, expected);
   }
@@ -610,12 +613,12 @@ public class GrowableListTest extends AbstractObjectosListsTest {
   @Test
   public final void testCase05() {
     // empty
-    assertFalse(list.addAll(Collections.<Thing> emptyList()));
+    assertFalse(it.addAll(Collections.<Thing> emptyList()));
 
-    assertFalse(list.addAll(Collections.<Thing> emptySet()));
+    assertFalse(it.addAll(Collections.<Thing> emptySet()));
 
     UnmodifiableList<Thing> result;
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     List<Thing> expected;
     expected = new ArrayList<>();
@@ -623,21 +626,21 @@ public class GrowableListTest extends AbstractObjectosListsTest {
     assertContents(result, expected);
 
     // non empty
-    assertTrue(list.addAll(thingList));
+    assertTrue(it.addAll(arrayList));
 
-    assertEquals(list.size(), thingSize);
+    assertEquals(it.size(), thingSize);
 
-    assertTrue(list.addAll(thingSet));
+    assertTrue(it.addAll(hashSet));
 
-    assertEquals(list.size(), thingSize + thingSize);
+    assertEquals(it.size(), thingSize + thingSize);
 
-    result = list.toUnmodifiableList();
+    result = it.toUnmodifiableList();
 
     expected.clear();
 
-    expected.addAll(thingList);
+    expected.addAll(arrayList);
 
-    expected.addAll(thingSet);
+    expected.addAll(hashSet);
 
     assertContents(result, expected);
   }
@@ -645,46 +648,46 @@ public class GrowableListTest extends AbstractObjectosListsTest {
   @Test
   public final void testCase06() {
     assertEquals(
-      list.join(),
+      it.join(),
       ""
     );
     assertEquals(
-      list.join("|"),
+      it.join("|"),
       ""
     );
     assertEquals(
-      list.join("|", "{", "}"),
+      it.join("|", "{", "}"),
       "{}"
     );
 
-    list.add(t1);
+    it.add(t1);
 
     assertEquals(
-      list.join(),
+      it.join(),
       t1.toString()
     );
     assertEquals(
-      list.join("|"),
+      it.join("|"),
       t1.toString()
     );
     assertEquals(
-      list.join("|", "{", "}"),
+      it.join("|", "{", "}"),
       "{" + t1.toString() + "}"
     );
 
-    list.add(t2);
+    it.add(t1);
 
     assertEquals(
-      list.join(),
-      t1.toString() + t2.toString()
+      it.join(),
+      t1.toString() + t1.toString()
     );
     assertEquals(
-      list.join("|"),
-      t1.toString() + "|" + t2.toString()
+      it.join("|"),
+      t1.toString() + "|" + t1.toString()
     );
     assertEquals(
-      list.join("|", "{", "}"),
-      "{" + t1.toString() + "|" + t2.toString() + "}"
+      it.join("|", "{", "}"),
+      "{" + t1.toString() + "|" + t1.toString() + "}"
     );
   }
 
@@ -993,6 +996,28 @@ public class GrowableListTest extends AbstractObjectosListsTest {
 
     assertFalse(resultIter.hasNext());
 
+  }
+
+  private void assertContents(Object... expected) {
+    int i = 0;
+
+    for (Object o : expected) {
+      if (o instanceof Thing t) {
+        assertEquals(it.get(i++), t);
+      } else if (o instanceof Thing[] arr) {
+        for (var t : arr) {
+          assertEquals(it.get(i++), t);
+        }
+      } else if (o instanceof Iterable<?> iter) {
+        for (var t : iter) {
+          assertEquals(it.get(i++), t);
+        }
+      } else {
+        throw new UnsupportedOperationException("Implement me: " + o.getClass());
+      }
+    }
+
+    assertEquals(it.size(), i);
   }
 
 }
