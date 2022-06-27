@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.HexFormat;
 import objectos.lang.ToString;
 
 final class Thing implements ToString.Formattable {
@@ -42,6 +43,14 @@ final class Thing implements ToString.Formattable {
 
   private Thing(byte[] value) {
     this.value = value;
+  }
+
+  public static Thing parse(String s) {
+    HexFormat format = HexFormat.of();
+
+    var bytes = format.parseHex(s);
+
+    return new Thing(bytes);
   }
 
   public static Thing[] randomArray(int size) {
