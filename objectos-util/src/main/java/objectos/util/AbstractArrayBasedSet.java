@@ -137,6 +137,23 @@ abstract class AbstractArrayBasedSet<E>
     return size;
   }
 
+  @Override
+  public final Object[] toArray() {
+    var a = new Object[size];
+
+    var index = 0;
+
+    for (int i = 0, len = array.length; i < len; i++) {
+      var maybe = array[i];
+
+      if (maybe != null) {
+        a[index++] = maybe;
+      }
+    }
+
+    return a;
+  }
+
   /**
    * Returns the only element in this set.
    *
