@@ -41,22 +41,22 @@ public abstract class AbstractObjectosMapsTest {
 
   @BeforeClass
   public final void _beforeClassValues() {
-    t1 = Thing.randomThing();
+    t1 = Thing.next();
 
-    t2 = Thing.randomThing();
+    t2 = Thing.next();
 
     while (t2.equals(t1)) {
       System.out.println("t2 equals t1");
 
-      t2 = Thing.randomThing();
+      t2 = Thing.next();
     }
 
-    t3 = Thing.randomThing();
+    t3 = Thing.next();
 
     while (t3.equals(t1) || t3.equals(t2)) {
       System.out.println("t3 equals t2 || t1");
 
-      t3 = Thing.randomThing();
+      t3 = Thing.next();
     }
 
     thingSize = 5678;

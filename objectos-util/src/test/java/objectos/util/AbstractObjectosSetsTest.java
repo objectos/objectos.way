@@ -77,14 +77,14 @@ public abstract class AbstractObjectosSetsTest {
 
     emptyThingList = Collections.emptyList();
 
-    t1 = Thing.randomThing();
+    t1 = Thing.next();
 
-    t2 = Thing.randomThing();
+    t2 = Thing.next();
 
     while (t2.equals(t1)) {
       System.out.println("t2 equals t1");
 
-      t2 = Thing.randomThing();
+      t2 = Thing.next();
     }
 
     thingSize = 5678;

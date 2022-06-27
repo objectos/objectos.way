@@ -19,9 +19,11 @@ import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.HexFormat;
+import java.util.List;
 import objectos.lang.ToString;
 
 final class Thing implements ToString.Formattable {
@@ -39,6 +41,12 @@ final class Thing implements ToString.Formattable {
     }
   };
 
+  static final Thing[] EMPTY_ARRAY = new Thing[0];
+
+  static final Iterable<Thing> EMPTY_ITERABLE = new ArrayBackedIterable<>(EMPTY_ARRAY);
+
+  static final List<Thing> EMPTY_LIST = Collections.emptyList();
+
   private final byte[] value;
 
   private Thing(byte[] value) {
@@ -54,11 +62,10 @@ final class Thing implements ToString.Formattable {
   }
 
   public static Thing[] randomArray(int size) {
-    Thing[] array;
-    array = new Thing[size];
+    var array = new Thing[size];
 
     for (int i = 0; i < array.length; i++) {
-      array[i] = randomThing();
+      array[i] = next();
     }
 
     return array;
@@ -68,7 +75,7 @@ final class Thing implements ToString.Formattable {
     var deque = new ArrayDeque<Thing>();
 
     for (int i = 0; i < size; i++) {
-      deque.add(randomThing());
+      deque.add(next());
     }
 
     return deque;
@@ -78,7 +85,7 @@ final class Thing implements ToString.Formattable {
     var list = new ArrayList<Thing>();
 
     for (int i = 0; i < size; i++) {
-      list.add(randomThing());
+      list.add(next());
     }
 
     return list;
@@ -130,7 +137,7 @@ final class Thing implements ToString.Formattable {
     return new ArrayBackedIterable<>(array);
   }
 
-  public static Thing randomThing() {
+  public static Thing next() {
     byte[] value;
     value = Next.bytes(16);
 
@@ -171,7 +178,9 @@ final class Thing implements ToString.Formattable {
   }
 
   public final String toHexString() {
-    return ByteArrays.toHexString(value);
+    var format = HexFormat.of();
+
+    return format.formatHex(value);
   }
 
   @Override
