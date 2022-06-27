@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -41,62 +40,6 @@ public class GrowableListTest2 extends AbstractObjectosUtilTest {
   @BeforeMethod
   public void _beforeMethod() {
     it = new GrowableList<>();
-  }
-
-  @Test
-  public void addAll() {
-    // empty
-    assertEquals(it.size(), 0);
-
-    assertFalse(it.addAll(emptyThingList));
-
-    assertEquals(it.size(), 0);
-
-    // one
-    it.addAll(List.of(t1));
-    assertContents(t1);
-
-    // two
-    it.addAll(arrayDequeOf(t2));
-    assertContents(t1, t2);
-
-    // many
-    it.addAll(arrayList);
-    assertContents(t1, t2, arrayList);
-
-    it.addAll(arrayDeque);
-    assertContents(t1, t2, arrayList, arrayDeque);
-
-    // must reject null
-    var listWithNull = Thing.randomArrayList(thingSize);
-
-    listWithNull.set(thingSize / 2, null);
-
-    try {
-      it.addAll(listWithNull);
-
-      Assert.fail("Must throw NullPointerException");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "collection[2839] == null");
-    }
-
-    var sub = listWithNull.subList(0, 2839);
-
-    assertContents(t1, t2, arrayList, arrayDeque, sub);
-
-    try {
-      var notRandomAccessWithNull = new LinkedList<Thing>();
-
-      notRandomAccessWithNull.addAll(listWithNull);
-
-      it.addAll(notRandomAccessWithNull);
-
-      Assert.fail("Must throw NullPointerException");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "collection[2839] == null");
-    }
-
-    assertContents(t1, t2, arrayList, arrayDeque, sub, sub);
   }
 
   @Test

@@ -16,13 +16,21 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.util.ArrayDeque;
+import java.util.LinkedList;
+import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class GrowableListTest {
+
+  private static final int MANY = 100;
+
+  private static final int HALF = MANY / 2;
 
   private GrowableList<Thing> it;
 
@@ -49,7 +57,7 @@ public class GrowableListTest {
     assertContents(t1, t2);
 
     // many
-    var array = Thing.randomArray(100);
+    var array = Thing.randomArray(MANY);
 
     for (int i = 0; i < array.length; i++) {
       var t = array[i];
@@ -69,6 +77,73 @@ public class GrowableListTest {
     } catch (NullPointerException expected) {
       assertEquals(expected.getMessage(), "e == null");
     }
+  }
+
+  @Test
+  public void addAll() {
+    // empty
+    assertEquals(it.size(), 0);
+
+    assertFalse(it.addAll(Thing.EMPTY_LIST));
+
+    assertEquals(it.size(), 0);
+
+    // one
+    var t1 = Thing.next();
+
+    it.addAll(List.of(t1));
+    assertContents(t1);
+
+    // two
+    var t2 = Thing.next();
+
+    var t2Deque = new ArrayDeque<Thing>();
+    t2Deque.add(t2);
+
+    it.addAll(t2Deque);
+    assertContents(t1, t2);
+
+    // many
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+    assertContents(t1, t2, arrayList);
+
+    var arrayDeque = Thing.randomArrayDeque(MANY);
+
+    it.addAll(arrayDeque);
+    assertContents(t1, t2, arrayList, arrayDeque);
+
+    // must reject null
+    var listWithNull = Thing.randomArrayList(MANY);
+
+    listWithNull.set(HALF, null);
+
+    try {
+      it.addAll(listWithNull);
+
+      Assert.fail("Must throw NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "collection[50] == null");
+    }
+
+    var sub = listWithNull.subList(0, 50);
+
+    assertContents(t1, t2, arrayList, arrayDeque, sub);
+
+    try {
+      var notRandomAccessWithNull = new LinkedList<Thing>();
+
+      notRandomAccessWithNull.addAll(listWithNull);
+
+      it.addAll(notRandomAccessWithNull);
+
+      Assert.fail("Must throw NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "collection[50] == null");
+    }
+
+    assertContents(t1, t2, arrayList, arrayDeque, sub, sub);
   }
 
   private void assertContents(Object... expected) {
