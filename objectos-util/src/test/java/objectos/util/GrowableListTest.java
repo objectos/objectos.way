@@ -18,10 +18,12 @@ package objectos.util;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.testng.Assert;
@@ -283,6 +285,192 @@ public class GrowableListTest {
     listWithNull.set(HALF, null);
 
     assertFalse(it.containsAll(listWithNull));
+  }
+
+  @Test
+  public void equals() {
+    var a = new GrowableList<Thing>();
+
+    var b = new GrowableList<Thing>();
+
+    assertTrue(a.equals(b));
+    assertTrue(b.equals(a));
+
+    assertFalse(a.equals(null));
+
+    assertTrue(a.equals(Collections.emptyList()));
+
+    var arrayList = Thing.randomArrayList(MANY);
+
+    a.addAll(arrayList);
+
+    var t2 = Thing.next();
+
+    b.addAll(arrayList);
+    b.add(t2);
+
+    assertFalse(a.equals(b));
+
+    var c = new GrowableList<Thing>();
+
+    c.addAll(arrayList);
+
+    assertTrue(a.equals(c));
+    assertTrue(c.equals(a));
+  }
+
+  @Test
+  public void get() {
+    class Tester {
+      public final void add(Thing e) {
+        it.add(e);
+      }
+
+      public final void get(int index, Thing expected) {
+        var value = it.get(index);
+
+        assertEquals(value, expected);
+      }
+
+      public final void getOutOfBounds(int index) {
+        try {
+          it.get(index);
+
+          fail();
+        } catch (IndexOutOfBoundsException expected) {
+
+        }
+      }
+    }
+
+    var tester = new Tester();
+
+    tester.getOutOfBounds(-1);
+    tester.getOutOfBounds(0);
+    tester.getOutOfBounds(1);
+
+    var t1 = Thing.next();
+
+    tester.add(t1);
+
+    tester.getOutOfBounds(-1);
+    tester.get(0, t1);
+    tester.getOutOfBounds(1);
+
+    var t2 = Thing.next();
+
+    var t3 = Thing.next();
+
+    tester.add(t2);
+    tester.add(t3);
+
+    tester.getOutOfBounds(-1);
+    tester.get(0, t1);
+    tester.get(1, t2);
+    tester.get(2, t3);
+    tester.getOutOfBounds(3);
+  }
+
+  @Test
+  public void getOnly() {
+    try {
+      it.getOnly();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
+    }
+
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertEquals(it.getOnly(), t1);
+
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    // standard
+    try {
+      it.getOnly();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
+    }
+  }
+
+  @Test(description = //
+  """
+  growBy (test case 0)
+  ------------------------------
+
+  - start with default capacity
+  - simulate add(Collection.size = 1)
+  """)
+  public void growBy() {
+    var length = GrowableList.DEFAULT_CAPACITY;
+
+    length = GrowableList.growBy(length, 1);
+
+    assertEquals(length, 15);
+
+    length = GrowableList.growBy(length, 1);
+
+    assertEquals(length, 22);
+
+    length = GrowableList.growBy(1_197_571_635, 1);
+
+    assertEquals(length, 1_796_357_452);
+
+    length = GrowableList.growBy(length, 1);
+
+    assertEquals(length, MoreArrays.JVM_SOFT_LIMIT);
+
+    try {
+      GrowableList.growByOne(MoreArrays.JVM_SOFT_LIMIT);
+
+      Assert.fail();
+    } catch (OutOfMemoryError expected) {
+
+    }
+  }
+
+  @Test(description = //
+  """
+  growByOne (test case 0)
+  ------------------------------
+
+  - start with default capacity
+  - simulate add(E e)
+  """)
+  public void growByOne() {
+    var length = GrowableList.DEFAULT_CAPACITY;
+
+    length = GrowableList.growByOne(length);
+
+    assertEquals(length, 15);
+
+    length = GrowableList.growByOne(length);
+
+    assertEquals(length, 22);
+
+    length = GrowableList.growByOne(1_197_571_635);
+
+    assertEquals(length, 1_796_357_452);
+
+    length = GrowableList.growByOne(length);
+
+    assertEquals(length, MoreArrays.JVM_SOFT_LIMIT);
+
+    try {
+      GrowableList.growByOne(MoreArrays.JVM_SOFT_LIMIT);
+
+      Assert.fail();
+    } catch (OutOfMemoryError expected) {
+
+    }
   }
 
   private void assertContents(Object... expected) {
