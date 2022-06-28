@@ -21,8 +21,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
-import java.util.function.UnaryOperator;
-import java.util.stream.Stream;
 import objectos.lang.Check;
 
 /**
@@ -295,38 +293,6 @@ public class GrowableList<E>
     Arrays.fill(data, null);
 
     size = 0;
-  }
-
-  /**
-   * Not implemented in this release. It might be implemented in a future
-   * release.
-   *
-   * @return this method does not return as it always throws an exception
-   *
-   * @throws UnsupportedOperationException
-   *         this method may be implemented in a future release
-   */
-  @Override
-  public final Stream<E> parallelStream() {
-    throw new UnsupportedOperationException("Not yet implemented");
-  }
-
-  /**
-   * This operation is not supported.
-   *
-   * <p>
-   * This method performs no operation other than throw an
-   * {@link UnsupportedOperationException}.
-   *
-   * @param operator
-   *        ignored (the operation is not supported)
-   *
-   * @throws UnsupportedOperationException
-   *         always
-   */
-  @Override
-  public final void replaceAll(UnaryOperator<E> operator) {
-    throw new UnsupportedOperationException();
   }
 
   /**

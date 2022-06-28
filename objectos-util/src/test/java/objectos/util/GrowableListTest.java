@@ -528,6 +528,47 @@ public class GrowableListTest {
   }
 
   @Test
+  public void iterator() {
+    var tester = new UnmodifiableIteratorTester<>(it);
+
+    // empty
+    assertTrue(it.isEmpty());
+
+    tester.set();
+    tester.testNoMoreElements();
+
+    // one
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    tester.set();
+    tester.testNext(t1);
+    tester.testNoMoreElements();
+
+    // two
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    tester.set();
+    tester.testNext(t1);
+    tester.testNext(t2);
+    tester.testNoMoreElements();
+
+    // many
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+
+    tester.set();
+    tester.testNext(t1);
+    tester.testNext(t2);
+    tester.testMany(arrayList);
+    tester.testNoMoreElements();
+  }
+
+  @Test
   public void join() {
     assertEquals(
       it.join(),

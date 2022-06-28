@@ -21,6 +21,7 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.RandomAccess;
+import java.util.function.UnaryOperator;
 import objectos.lang.Check;
 import objectos.lang.HashCode;
 import objectos.lang.ToString;
@@ -421,6 +422,24 @@ abstract class AbstractArrayBasedList<E>
    */
   @Override
   public final E remove(int index) {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * This operation is not supported.
+   *
+   * <p>
+   * This method performs no operation other than throw an
+   * {@link UnsupportedOperationException}.
+   *
+   * @param operator
+   *        ignored (the operation is not supported)
+   *
+   * @throws UnsupportedOperationException
+   *         always
+   */
+  @Override
+  public final void replaceAll(UnaryOperator<E> operator) {
     throw new UnsupportedOperationException();
   }
 

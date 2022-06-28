@@ -18,7 +18,6 @@ package objectos.util;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.function.UnaryOperator;
 import objectos.lang.Check;
 
 /**
@@ -330,24 +329,6 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
    */
   @Override
   public final void clear() {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * This operation is not supported.
-   *
-   * <p>
-   * This method performs no operation other than throw an
-   * {@link UnsupportedOperationException}.
-   *
-   * @param operator
-   *        ignored (the operation is not supported)
-   *
-   * @throws UnsupportedOperationException
-   *         always
-   */
-  @Override
-  public final void replaceAll(UnaryOperator<E> operator) {
     throw new UnsupportedOperationException();
   }
 
