@@ -20,6 +20,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -201,6 +202,87 @@ public class GrowableListTest {
     var sub = List.of(copy);
 
     assertContents(t1, t2, iterable, arrayList, sub);
+  }
+
+  @Test
+  public void clear() {
+    assertEquals(it.size(), 0);
+
+    it.clear();
+    assertContents();
+
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+    it.clear();
+    assertContents();
+  }
+
+  @Test
+  public void contains() {
+    var t1 = Thing.next();
+    var t2 = Thing.next();
+
+    assertEquals(it.size(), 0);
+
+    assertFalse(it.contains(t1));
+
+    assertFalse(it.contains(t1, t2));
+
+    it.add(t1);
+
+    var array = Thing.randomArray(MANY);
+
+    for (var t : array) {
+      it.add(t);
+    }
+
+    it.add(t2);
+
+    assertTrue(it.contains(t1));
+
+    assertTrue(it.contains(t1, (Object[]) array));
+
+    assertTrue(it.contains(t2));
+
+    it.clear();
+
+    assertFalse(it.contains(t1));
+
+    assertFalse(it.contains(t1, (Object[]) array));
+
+    assertFalse(it.contains(t2));
+  }
+
+  @Test
+  public void containsAll() {
+    var arrayList = Thing.randomArrayList(MANY);
+
+    assertEquals(it.size(), 0);
+
+    assertFalse(it.containsAll(arrayList));
+
+    it.addAll(arrayList);
+
+    assertTrue(it.containsAll(arrayList));
+
+    var list = new ArrayList<Thing>(arrayList.size() + 1);
+
+    var t1 = Thing.next();
+
+    list.add(t1);
+
+    list.addAll(arrayList);
+
+    assertFalse(it.containsAll(list));
+
+    var listWithNull = new ArrayList<Thing>(arrayList.size());
+
+    listWithNull.addAll(arrayList);
+
+    listWithNull.set(HALF, null);
+
+    assertFalse(it.containsAll(listWithNull));
   }
 
   private void assertContents(Object... expected) {

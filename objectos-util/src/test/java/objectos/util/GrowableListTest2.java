@@ -42,76 +42,6 @@ public class GrowableListTest2 extends AbstractObjectosUtilTest {
   }
 
   @Test
-  public void clear() {
-    assertEquals(it.size(), 0);
-
-    it.clear();
-    assertContents();
-
-    it.addAll(arrayList);
-    it.clear();
-    assertContents();
-  }
-
-  @Test
-  public void contains() {
-    assertEquals(it.size(), 0);
-
-    assertFalse(it.contains(t1));
-
-    assertFalse(it.contains(t1, t2));
-
-    it.add(t1);
-
-    for (var t : arrayT) {
-      it.add(t);
-    }
-
-    it.add(t2);
-
-    assertTrue(it.contains(t1));
-
-    assertTrue(it.contains(t1, (Object[]) arrayT));
-
-    assertTrue(it.contains(t2));
-
-    it.clear();
-
-    assertFalse(it.contains(t1));
-
-    assertFalse(it.contains(t1, (Object[]) arrayT));
-
-    assertFalse(it.contains(t2));
-  }
-
-  @Test
-  public void containsAll() {
-    assertEquals(it.size(), 0);
-
-    assertFalse(it.containsAll(arrayList));
-
-    it.addAll(arrayList);
-
-    assertTrue(it.containsAll(arrayList));
-
-    var list = new ArrayList<Thing>(arrayList.size() + 1);
-
-    list.add(t1);
-
-    list.addAll(arrayList);
-
-    assertFalse(it.containsAll(list));
-
-    var listWithNull = new ArrayList<Thing>(arrayList.size());
-
-    listWithNull.addAll(arrayList);
-
-    listWithNull.set(thingSize / 2, null);
-
-    assertFalse(it.containsAll(listWithNull));
-  }
-
-  @Test
   public void equals() {
     var a = new GrowableList<Thing>();
 
@@ -837,28 +767,6 @@ public class GrowableListTest2 extends AbstractObjectosUtilTest {
 
     assertFalse(resultIter.hasNext());
 
-  }
-
-  private void assertContents(Object... expected) {
-    int i = 0;
-
-    for (Object o : expected) {
-      if (o instanceof Thing t) {
-        assertEquals(it.get(i++), t);
-      } else if (o instanceof Thing[] arr) {
-        for (var t : arr) {
-          assertEquals(it.get(i++), t);
-        }
-      } else if (o instanceof Iterable<?> iter) {
-        for (var t : iter) {
-          assertEquals(it.get(i++), t);
-        }
-      } else {
-        throw new UnsupportedOperationException("Implement me: " + o.getClass());
-      }
-    }
-
-    assertEquals(it.size(), i);
   }
 
 }
