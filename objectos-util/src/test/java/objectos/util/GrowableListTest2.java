@@ -24,7 +24,6 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -40,54 +39,6 @@ public class GrowableListTest2 extends AbstractObjectosUtilTest {
   @BeforeMethod
   public void _beforeMethod() {
     it = new GrowableList<>();
-  }
-
-  @Test
-  public void addAllIterable() {
-    // empty
-    assertEquals(it.size(), 0);
-
-    assertFalse(it.addAllIterable(emptyThingIterable));
-    assertContents();
-
-    assertFalse(it.addAllIterable(emptyThingList));
-    assertContents();
-
-    // one
-    it.addAllIterable(ArrayBackedIterable.of(t1));
-    assertContents(t1);
-
-    // two
-    it.addAllIterable(List.of(t2));
-    assertContents(t1, t2);
-
-    // many
-    it.addAllIterable(thingIterable);
-    assertContents(t1, t2, thingIterable);
-
-    it.addAllIterable(arrayList);
-    assertContents(t1, t2, thingIterable, arrayList);
-
-    // must reject null
-    var randomArray = Thing.randomArray(thingSize);
-
-    randomArray[thingSize / 2] = null;
-
-    var iterWithNull = new ArrayBackedIterable<>(randomArray);
-
-    try {
-      it.addAllIterable(iterWithNull);
-
-      Assert.fail("Must throw NullPointerException");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "iterable[2839] == null");
-    }
-
-    var copy = Arrays.copyOf(randomArray, thingSize / 2);
-
-    var sub = List.of(copy);
-
-    assertContents(t1, t2, thingIterable, arrayList, sub);
   }
 
   @Test

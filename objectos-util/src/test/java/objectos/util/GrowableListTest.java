@@ -20,6 +20,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.testng.Assert;
@@ -144,6 +145,62 @@ public class GrowableListTest {
     }
 
     assertContents(t1, t2, arrayList, arrayDeque, sub, sub);
+  }
+
+  @Test
+  public void addAllIterable() {
+    // empty
+    assertEquals(it.size(), 0);
+
+    assertFalse(it.addAllIterable(Thing.EMPTY_ITERABLE));
+    assertContents();
+
+    assertFalse(it.addAllIterable(Thing.EMPTY_LIST));
+    assertContents();
+
+    // one
+    var t1 = Thing.next();
+
+    it.addAllIterable(ArrayBackedIterable.of(t1));
+    assertContents(t1);
+
+    // two
+    var t2 = Thing.next();
+
+    it.addAllIterable(List.of(t2));
+    assertContents(t1, t2);
+
+    // many
+    var iterable = Thing.randomIterable(MANY);
+
+    it.addAllIterable(iterable);
+    assertContents(t1, t2, iterable);
+
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAllIterable(arrayList);
+    assertContents(t1, t2, iterable, arrayList);
+
+    // must reject null
+    var arrayWithNull = Thing.randomArray(MANY);
+
+    arrayWithNull[HALF] = null;
+
+    var iterWithNull = new ArrayBackedIterable<>(arrayWithNull);
+
+    try {
+      it.addAllIterable(iterWithNull);
+
+      Assert.fail("Must throw NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "iterable[50] == null");
+    }
+
+    var copy = Arrays.copyOf(arrayWithNull, HALF);
+
+    var sub = List.of(copy);
+
+    assertContents(t1, t2, iterable, arrayList, sub);
   }
 
   private void assertContents(Object... expected) {
