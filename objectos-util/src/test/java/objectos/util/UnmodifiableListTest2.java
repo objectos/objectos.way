@@ -62,32 +62,6 @@ public class UnmodifiableListTest2 extends AbstractObjectosUtilTest {
   }
 
   @Test
-  public void contains() {
-    Object[] objectIntArray;
-    objectIntArray = Arrays.copyOf(intArray, intArray.length, Object[].class);
-
-    assertFalse(il0.contains(singleton));
-    assertFalse(il0.contains(randomInt));
-    assertFalse(il0.contains(singleton, randomInt));
-    assertFalse(il0.contains(randomInt, objectIntArray));
-
-    assertTrue(il1.contains(singleton));
-    assertFalse(il1.contains(randomInt));
-    assertFalse(il1.contains(singleton, randomInt));
-    assertFalse(il0.contains(randomInt, objectIntArray));
-
-    for (int i = 0; i < intArray.length; i++) {
-      Integer e;
-      e = intArray[i];
-
-      assertTrue(ilN.contains(e));
-    }
-
-    assertTrue(ilN.contains(intArray[0], objectIntArray));
-    assertFalse(ilN.contains(randomInt, objectIntArray));
-  }
-
-  @Test
   public void copyOf() {
     GrowableList<Integer> growable;
     growable = randomIntGrowableList(1234);

@@ -16,6 +16,8 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -152,6 +154,57 @@ public class UnmodifiableListTest {
         assertEquals(it, els);
       }
     });
+  }
+
+  @Test
+  public void contains() {
+    var t1 = jdk1.get(0);
+
+    assertFalse(ul0.contains(t1));
+    assertTrue(ul1.contains(t1));
+    assertTrue(ul2.contains(t1));
+    assertTrue(ul3.contains(t1));
+    assertFalse(ulX.contains(t1));
+
+    var t2 = jdk2.get(1);
+
+    assertFalse(ul0.contains(t2));
+    assertFalse(ul0.contains(t1, t2));
+
+    assertFalse(ul1.contains(t2));
+    assertFalse(ul1.contains(t1, t2));
+
+    assertTrue(ul2.contains(t2));
+    assertTrue(ul2.contains(t1, t2));
+
+    assertTrue(ul3.contains(t2));
+    assertTrue(ul3.contains(t1, t2));
+
+    assertFalse(ulX.contains(t2));
+
+    var t3 = jdk3.get(2);
+
+    assertFalse(ul0.contains(t3));
+    assertFalse(ul0.contains(t1, t2, t3));
+
+    assertFalse(ul1.contains(t3));
+    assertFalse(ul1.contains(t1, t2, t3));
+
+    assertFalse(ul2.contains(t3));
+    assertFalse(ul2.contains(t1, t2, t3));
+
+    assertTrue(ul3.contains(t3));
+    assertTrue(ul3.contains(t1, t2, t3));
+
+    assertFalse(ulX.contains(t3));
+
+    for (var e : jdkX) {
+      assertFalse(ul0.contains(e));
+      assertFalse(ul1.contains(e));
+      assertFalse(ul2.contains(e));
+      assertFalse(ul3.contains(e));
+      assertTrue(ulX.contains(e));
+    }
   }
 
   private void testAll(BiConsumer<UnmodifiableList<Thing>, List<Thing>> tester) {
