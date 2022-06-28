@@ -15,7 +15,10 @@
  */
 package objectos.util;
 
-import java.util.function.Consumer;
+import static org.testng.Assert.assertEquals;
+
+import java.util.List;
+import java.util.function.BiConsumer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -30,103 +33,133 @@ public class UnmodifiableListTest {
 
   private UnmodifiableList<Thing> ul2;
 
+  private UnmodifiableList<Thing> ul3;
+
   private UnmodifiableList<Thing> ulX;
+
+  private List<Thing> jdk0;
+
+  private List<Thing> jdk1;
+
+  private List<Thing> jdk2;
+
+  private List<Thing> jdk3;
+
+  private List<Thing> jdkX;
 
   @BeforeClass
   public void _beforeClass() {
     ul0 = UnmodifiableList.of();
+    jdk0 = List.of();
 
     var t1 = Thing.next();
 
     ul1 = UnmodifiableList.of(t1);
+    jdk1 = List.of(t1);
 
     var t2 = Thing.next();
 
     ul2 = UnmodifiableList.of(t1, t2);
+    jdk2 = List.of(t1, t2);
+
+    var t3 = Thing.next();
+
+    ul3 = UnmodifiableList.of(t1, t2, t3);
+    jdk3 = List.of(t1, t2, t3);
 
     Thing[] many = Thing.randomArray(MANY);
 
     ulX = UnmodifiableList.copyOf(many);
+    jdkX = List.of(many);
   }
 
   @Test
   public void add() {
-    Consumer<UnmodifiableList<Thing>> tester = l -> {
-      try {
-        var t = Thing.next();
+    testAll(
+      (it, els) -> {
+        try {
+          var t = Thing.next();
 
-        l.add(t);
+          it.add(t);
 
-        Assert.fail("Expected an UnsupportedOperationException");
-      } catch (UnsupportedOperationException expected) {
-
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
       }
-    };
-
-    tester.accept(ul0);
-    tester.accept(ul1);
-    tester.accept(ul2);
-    tester.accept(ulX);
+    );
   }
 
   @Test
   public void add_withIndex() {
-    Consumer<UnmodifiableList<Thing>> tester = l -> {
-      try {
-        var t = Thing.next();
+    testAll(
+      (it, els) -> {
+        try {
+          var t = Thing.next();
 
-        l.add(0, t);
+          it.add(0, t);
 
-        Assert.fail("Expected an UnsupportedOperationException");
-      } catch (UnsupportedOperationException expected) {
-
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
       }
-    };
-
-    tester.accept(ul0);
-    tester.accept(ul1);
-    tester.accept(ul2);
-    tester.accept(ulX);
+    );
   }
 
   @Test
   public void addAll() {
     final var arrayList = Thing.randomArrayList(MANY);
 
-    Consumer<UnmodifiableList<Thing>> tester = l -> {
-      try {
-        l.addAll(arrayList);
+    testAll(
+      (it, els) -> {
+        try {
+          it.addAll(arrayList);
 
-        Assert.fail("Expected an UnsupportedOperationException");
-      } catch (UnsupportedOperationException expected) {
-
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
       }
-    };
-
-    tester.accept(ul0);
-    tester.accept(ul1);
-    tester.accept(ul2);
-    tester.accept(ulX);
+    );
   }
 
   @Test
   public void addAll_withIndex() {
     final var arrayList = Thing.randomArrayList(MANY);
 
-    Consumer<UnmodifiableList<Thing>> tester = l -> {
+    testAll(
+      (it, els) -> {
+        try {
+          it.addAll(0, arrayList);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
+  public void clear() {
+    testAll((it, els) -> {
       try {
-        l.addAll(0, arrayList);
+        it.clear();
 
         Assert.fail("Expected an UnsupportedOperationException");
       } catch (UnsupportedOperationException expected) {
-
+        assertEquals(it, els);
       }
-    };
+    });
+  }
 
-    tester.accept(ul0);
-    tester.accept(ul1);
-    tester.accept(ul2);
-    tester.accept(ulX);
+  private void testAll(BiConsumer<UnmodifiableList<Thing>, List<Thing>> tester) {
+    tester.accept(ul0, jdk0);
+    tester.accept(ul1, jdk1);
+    tester.accept(ul2, jdk2);
+    tester.accept(ul3, jdk3);
+    tester.accept(ulX, jdkX);
   }
 
 }
