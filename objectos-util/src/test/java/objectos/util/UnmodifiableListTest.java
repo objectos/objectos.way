@@ -362,6 +362,249 @@ public class UnmodifiableListTest {
     }
   }
 
+  @Test
+  public void hashCodeTest() {
+    assertEquals(ul0.hashCode(), jdk0.hashCode());
+    assertEquals(ul1.hashCode(), jdk1.hashCode());
+    assertEquals(ul2.hashCode(), jdk2.hashCode());
+    assertEquals(ul3.hashCode(), jdk3.hashCode());
+    assertEquals(ulX.hashCode(), jdkX.hashCode());
+  }
+
+  @Test
+  public void indexOf() {
+    var t1 = jdk1.get(0);
+
+    assertEquals(ul0.indexOf(t1), -1);
+    assertEquals(ul1.indexOf(t1), 0);
+    assertEquals(ul2.indexOf(t1), 0);
+    assertEquals(ul3.indexOf(t1), 0);
+
+    var t2 = jdk2.get(1);
+
+    assertEquals(ul0.indexOf(t2), -1);
+    assertEquals(ul1.indexOf(t2), -1);
+    assertEquals(ul2.indexOf(t2), 1);
+    assertEquals(ul3.indexOf(t2), 1);
+
+    var t3 = jdk3.get(2);
+
+    assertEquals(ul0.indexOf(t3), -1);
+    assertEquals(ul1.indexOf(t3), -1);
+    assertEquals(ul2.indexOf(t3), -1);
+    assertEquals(ul3.indexOf(t3), 2);
+
+    for (int i = 0, size = jdkX.size(); i < size; i++) {
+      var t = jdkX.get(i);
+
+      assertEquals(ulX.indexOf(t), i);
+    }
+  }
+
+  @Test
+  public void isEmpty() {
+    assertTrue(ul0.isEmpty());
+    assertFalse(ul1.isEmpty());
+    assertFalse(ul2.isEmpty());
+    assertFalse(ul3.isEmpty());
+    assertFalse(ulX.isEmpty());
+  }
+
+  @Test
+  public void iterator() {
+    // empty
+    var tester = new UnmodifiableIteratorTester<>(ul0);
+    tester.set();
+    tester.testNoMoreElements();
+
+    // one
+    tester = new UnmodifiableIteratorTester<>(ul1);
+    tester.set();
+    tester.testNext(jdk1.get(0));
+    tester.testNoMoreElements();
+
+    // two
+    tester = new UnmodifiableIteratorTester<>(ul2);
+    tester.set();
+    tester.testNext(jdk2.get(0));
+    tester.testNext(jdk2.get(1));
+    tester.testNoMoreElements();
+
+    // many
+    tester = new UnmodifiableIteratorTester<>(ulX);
+    tester.set();
+    tester.testMany(jdkX);
+    tester.testNoMoreElements();
+  }
+
+  @Test
+  public void join() {
+    assertEquals(ul0.join(), "");
+    assertEquals(ul0.join("|"), "");
+    assertEquals(ul0.join("|", "{", "}"), "{}");
+
+    var t1 = jdk1.get(0);
+
+    assertEquals(ul1.join(), t1.toString());
+    assertEquals(ul1.join("|"), t1.toString());
+    assertEquals(ul1.join("|", "{", "}"), "{" + t1 + "}");
+
+    var t2 = jdk2.get(1);
+
+    assertEquals(ul2.join(), t1.toString() + t2.toString());
+    assertEquals(ul2.join("|"), t1 + "|" + t2);
+    assertEquals(ul2.join("|", "{", "}"), "{" + t1 + "|" + t2 + "}");
+  }
+
+  @Test
+  public void lastIndexOf() {
+    var t1 = jdk1.get(0);
+
+    assertEquals(ul0.lastIndexOf(t1), -1);
+    assertEquals(ul1.lastIndexOf(t1), 0);
+    assertEquals(ul2.lastIndexOf(t1), 0);
+    assertEquals(ul3.lastIndexOf(t1), 0);
+    assertEquals(ulX.lastIndexOf(t1), -1);
+
+    var t2 = jdk2.get(1);
+
+    assertEquals(ul0.lastIndexOf(t2), -1);
+    assertEquals(ul1.lastIndexOf(t2), -1);
+    assertEquals(ul2.lastIndexOf(t2), 1);
+    assertEquals(ul3.lastIndexOf(t2), 1);
+    assertEquals(ulX.lastIndexOf(t2), -1);
+
+    var t3 = jdk3.get(2);
+
+    assertEquals(ul0.lastIndexOf(t3), -1);
+    assertEquals(ul1.lastIndexOf(t3), -1);
+    assertEquals(ul2.lastIndexOf(t3), -1);
+    assertEquals(ul3.lastIndexOf(t3), 2);
+    assertEquals(ulX.lastIndexOf(t3), -1);
+
+    var arrayList = new ArrayList<>(jdkX);
+
+    var half = arrayList.get(HALF);
+
+    arrayList.set(MANY - 1, half);
+
+    var it = UnmodifiableList.copyOf(arrayList);
+
+    assertEquals(it.lastIndexOf(half), MANY - 1);
+  }
+
+  @Test
+  public void listIterator() {
+    testAll(
+      (it, els) -> {
+        try {
+          it.listIterator();
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+
+        try {
+          it.listIterator(0);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
+  public void remove() {
+    var t1 = jdk1.get(0);
+
+    testAll(
+      (it, els) -> {
+        try {
+          it.remove(t1);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+
+        try {
+          it.remove(0);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
+  public void removeIf() {
+    var t1 = jdk1.get(0);
+
+    testAll(
+      (it, els) -> {
+        try {
+          it.removeIf(e -> e.equals(t1));
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
+  public void replaceAll() {
+    testAll(
+      (it, els) -> {
+        try {
+          it.replaceAll(t -> Thing.next());
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
+  public void retainAll() {
+    testAll(
+      (it, els) -> {
+        try {
+          it.retainAll(els);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
+  public void set() {
+    var t1 = Thing.next();
+
+    testAll(
+      (it, els) -> {
+        try {
+          it.set(0, t1);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          assertEquals(it, els);
+        }
+      }
+    );
+  }
+
   private void testAll(BiConsumer<UnmodifiableList<Thing>, List<Thing>> tester) {
     tester.accept(ul0, jdk0);
     tester.accept(ul1, jdk1);

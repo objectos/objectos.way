@@ -108,28 +108,6 @@ public class UnmodifiableListTest2 extends AbstractObjectosUtilTest {
   }
 
   @Test
-  public void isEmpty() {
-    assertTrue(il0.isEmpty());
-    assertFalse(il1.isEmpty());
-    assertFalse(ilN.isEmpty());
-  }
-
-  @Test
-  public void join() {
-    assertEquals(il0.join(), "");
-    assertEquals(il0.join("|"), "");
-    assertEquals(il0.join("|", "{", "}"), "{}");
-
-    assertEquals(il1.join(), singleton.toString());
-    assertEquals(il1.join("|"), singleton.toString());
-    assertEquals(il1.join("|", "{", "}"), "{" + singleton + "}");
-
-    assertEquals(il2.join(), singleton.toString() + randomInt.toString());
-    assertEquals(il2.join("|"), singleton + "|" + randomInt);
-    assertEquals(il2.join("|", "{", "}"), "{" + singleton + "|" + randomInt + "}");
-  }
-
-  @Test
   public void size() {
     assertEquals(il0.size(), 0);
     assertEquals(il1.size(), 1);
