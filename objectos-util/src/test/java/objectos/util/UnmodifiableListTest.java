@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import org.testng.Assert;
@@ -28,6 +29,8 @@ import org.testng.annotations.Test;
 public class UnmodifiableListTest {
 
   private static final int MANY = 100;
+
+  private static final int HALF = MANY / 2;
 
   private UnmodifiableList<Thing> ul0;
 
@@ -205,6 +208,76 @@ public class UnmodifiableListTest {
       assertFalse(ul3.contains(e));
       assertTrue(ulX.contains(e));
     }
+  }
+
+  @Test
+  public void containsAll() {
+    assertFalse(ul0.containsAll(jdkX));
+    assertFalse(ul1.containsAll(jdkX));
+    assertFalse(ul2.containsAll(jdkX));
+    assertFalse(ul3.containsAll(jdkX));
+    assertTrue(ulX.containsAll(jdkX));
+
+    var list = new ArrayList<Thing>(jdkX.size() + 1);
+
+    var t1 = Thing.next();
+
+    list.add(t1);
+
+    list.addAll(jdkX);
+
+    assertFalse(ulX.containsAll(list));
+
+    var listWithNull = new ArrayList<Thing>(jdkX.size());
+
+    listWithNull.addAll(jdkX);
+
+    listWithNull.set(HALF, null);
+
+    assertFalse(ulX.containsAll(listWithNull));
+  }
+
+  @Test
+  public void equals() {
+    // empty
+    assertTrue(ul0.equals(jdk0));
+    assertTrue(jdk0.equals(ul0));
+    assertFalse(ul0.equals(null));
+    assertTrue(ul0.equals(ul0));
+    assertFalse(ul0.equals(ul1));
+    assertFalse(ul0.equals(ul2));
+    assertFalse(ul0.equals(ul3));
+    assertFalse(ul0.equals(ulX));
+
+    // one
+    assertTrue(ul1.equals(jdk1));
+    assertTrue(jdk1.equals(ul1));
+    assertFalse(ul1.equals(null));
+    assertFalse(ul1.equals(ul0));
+    assertTrue(ul1.equals(ul1));
+    assertFalse(ul1.equals(ul2));
+    assertFalse(ul1.equals(ul3));
+    assertFalse(ul1.equals(ulX));
+
+    // two
+    assertTrue(ul2.equals(jdk2));
+    assertTrue(jdk2.equals(ul2));
+    assertFalse(ul2.equals(null));
+    assertFalse(ul2.equals(ul0));
+    assertFalse(ul2.equals(ul1));
+    assertTrue(ul2.equals(ul2));
+    assertFalse(ul2.equals(ul3));
+    assertFalse(ul2.equals(ulX));
+
+    // many
+    assertTrue(ulX.equals(jdkX));
+    assertTrue(jdkX.equals(ulX));
+    assertFalse(ulX.equals(null));
+    assertFalse(ulX.equals(ul0));
+    assertFalse(ulX.equals(ul1));
+    assertFalse(ulX.equals(ul2));
+    assertFalse(ulX.equals(ul3));
+    assertTrue(ulX.equals(ulX));
   }
 
   private void testAll(BiConsumer<UnmodifiableList<Thing>, List<Thing>> tester) {

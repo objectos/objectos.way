@@ -110,31 +110,6 @@ public class UnmodifiableListTest2 extends AbstractObjectosUtilTest {
   }
 
   @Test
-  public void equals() {
-    assertTrue(il0.equals(UnmodifiableList.of()));
-    assertTrue(il0.equals(new UnmodifiableList<Integer>(ObjectArrays.empty())));
-    assertFalse(il0.equals(null));
-    assertTrue(il0.equals(il0));
-    assertFalse(il0.equals(il1));
-    assertFalse(il0.equals(il2));
-    assertFalse(il0.equals(ilN));
-
-    assertTrue(il1.equals(UnmodifiableList.of(singleton)));
-    assertFalse(il1.equals(null));
-    assertFalse(il1.equals(il0));
-    assertTrue(il1.equals(il1));
-    assertFalse(il1.equals(il2));
-    assertFalse(il1.equals(ilN));
-
-    assertTrue(ilN.equals(UnmodifiableList.copyOf(intArray)));
-    assertFalse(ilN.equals(null));
-    assertFalse(ilN.equals(il0));
-    assertFalse(ilN.equals(il1));
-    assertFalse(ilN.equals(il2));
-    assertTrue(ilN.equals(ilN));
-  }
-
-  @Test
   public void get() {
     class Tester {
       UnmodifiableList<Integer> it;
