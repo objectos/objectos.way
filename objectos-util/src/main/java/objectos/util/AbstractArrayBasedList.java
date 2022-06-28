@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.RandomAccess;
 import java.util.function.UnaryOperator;
 import objectos.lang.Check;
-import objectos.lang.HashCode;
 import objectos.lang.ToString;
 
 abstract class AbstractArrayBasedList<E>
@@ -158,15 +157,16 @@ abstract class AbstractArrayBasedList<E>
    */
   @Override
   public final int hashCode() {
-    var result = HashCode.start();
+    var hashCode = 1;
 
     for (int i = 0; i < size; i++) {
-      var object = data[i];
+      var e = data[i];
 
-      result = HashCode.update(result, object);
+      // e is guaranteed to be not null
+      hashCode = 31 * hashCode + e.hashCode();
     }
 
-    return result;
+    return hashCode;
   }
 
   /**

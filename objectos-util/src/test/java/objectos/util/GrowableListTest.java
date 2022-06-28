@@ -88,6 +88,19 @@ public class GrowableListTest {
   }
 
   @Test
+  public void add_withIndex() {
+    var t1 = Thing.next();
+
+    try {
+      it.add(0, t1);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+  }
+
+  @Test
   public void addAll() {
     // empty
     assertEquals(it.size(), 0);
@@ -155,6 +168,19 @@ public class GrowableListTest {
   }
 
   @Test
+  public void addAll_withIndex() {
+    var arrayList = Thing.randomArrayList(MANY);
+
+    try {
+      it.addAll(0, arrayList);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+  }
+
+  @Test
   public void addAllIterable() {
     // empty
     assertEquals(it.size(), 0);
@@ -208,6 +234,41 @@ public class GrowableListTest {
     var sub = List.of(copy);
 
     assertContents(t1, t2, iterable, arrayList, sub);
+  }
+
+  @Test
+  public void addWithNullMessage() {
+    try {
+      it.addWithNullMessage(null, "my message");
+
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "my message");
+    }
+
+    try {
+      it.addWithNullMessage(null, null);
+
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "null");
+    }
+
+    try {
+      it.addWithNullMessage(null, "[", 123, "]");
+
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "[123]");
+    }
+
+    try {
+      it.addWithNullMessage(null, null, 123, null);
+
+      Assert.fail("NPE was expected");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "null123null");
+    }
   }
 
   @Test
@@ -478,6 +539,41 @@ public class GrowableListTest {
   }
 
   @Test
+  public void hashCodeTest() {
+    // empty
+    assertEquals(it.hashCode(), 1);
+
+    // one
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    var hashCode = (31 + t1.hashCode());
+
+    assertEquals(it.hashCode(), hashCode);
+
+    // two
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    hashCode = 31 * hashCode + t2.hashCode();
+
+    assertEquals(it.hashCode(), hashCode);
+
+    // many
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+
+    for (var e : arrayList) {
+      hashCode = 31 * hashCode + e.hashCode();
+    }
+
+    assertEquals(it.hashCode(), hashCode);
+  }
+
+  @Test
   public void indexOf() {
     var t1 = Thing.next();
 
@@ -647,6 +743,117 @@ public class GrowableListTest {
     it.add(t1);
 
     assertEquals(it.lastIndexOf(t1), index + 2);
+  }
+
+  @Test
+  public void listIterator() {
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+
+    try {
+      it.listIterator();
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+
+    try {
+      it.listIterator(0);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+  }
+
+  @Test
+  public void remove() {
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    try {
+      it.remove(t1);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+
+    try {
+      it.remove(0);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+  }
+
+  @Test
+  public void removeIf() {
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    try {
+      it.removeIf(e -> e.equals(t1));
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+  }
+
+  @Test
+  public void replaceAll() {
+    var t1 = Thing.next();
+    var t2 = Thing.next();
+
+    it.add(t1);
+    it.add(t2);
+
+    try {
+      it.replaceAll(t -> Thing.next());
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+  }
+
+  @Test
+  public void retainAll() {
+    var t1 = Thing.next();
+    var t2 = Thing.next();
+
+    it.add(t1);
+    it.add(t2);
+
+    try {
+      it.retainAll(List.of(t1));
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
+  }
+
+  @Test
+  public void set() {
+    var t1 = Thing.next();
+    var t2 = Thing.next();
+
+    it.add(t1);
+
+    try {
+      it.set(0, t2);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+
+    }
   }
 
   @Test
