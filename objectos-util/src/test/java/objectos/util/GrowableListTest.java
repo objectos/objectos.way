@@ -27,6 +27,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import org.testng.Assert;
@@ -790,9 +791,17 @@ public class GrowableListTest {
     assertEquals(result, arrayList);
   }
 
-  @Test(description = TestCase07.DESCRIPTION)
+  @Test(description = //
+  """
+  Create GrowableList.toUnmodifiableList(Comparator<? super E> c) that
+  returns an immutable copy of the mutable list having all elements sorted by
+  the specified comparator.
+
+  As required (sort of...) by objectos-git WriteTree use-case.
+  """
+  )
   public void toUnmodifiableList_withComparator() {
-    var c = TestCase07.ORDER;
+    var c = Comparator.<Integer> naturalOrder();
 
     var it = new GrowableList<Integer>();
 

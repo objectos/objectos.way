@@ -15,7 +15,6 @@
  */
 package objectos.util;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -49,22 +48,6 @@ public final class Lists {
       default:
         throw new IllegalStateException("Could not getOnly: more than one element.");
     }
-  }
-
-  /**
-   * Returns a comparator that compares {@link Comparable} objects in natural
-   * order.
-   *
-   * @param <E>
-   *        the {@link Comparable} type of element to be compared
-   *
-   * @return a comparator that imposes the <i>natural ordering</i> on {@code
-   *         Comparable} objects.
-   *
-   * @see Comparable
-   */
-  public static <E> Comparator<E> naturalOrder() {
-    return Comparators.naturalOrder();
   }
 
 }
