@@ -18,6 +18,7 @@ package objectos.util;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -278,6 +279,87 @@ public class UnmodifiableListTest {
     assertFalse(ulX.equals(ul2));
     assertFalse(ulX.equals(ul3));
     assertTrue(ulX.equals(ulX));
+  }
+
+  @Test
+  public void get() {
+    class Tester {
+      UnmodifiableList<Thing> it;
+
+      public final void get(int index, Thing expected) {
+        var value = it.get(index);
+
+        assertEquals(value, expected);
+      }
+
+      public final void getOutOfBounds(int index) {
+        try {
+          it.get(index);
+
+          fail();
+        } catch (IndexOutOfBoundsException expected) {
+
+        }
+      }
+    }
+
+    var tester = new Tester();
+
+    tester.it = ul0;
+
+    tester.getOutOfBounds(-1);
+    tester.getOutOfBounds(0);
+    tester.getOutOfBounds(1);
+
+    tester.it = ul1;
+
+    tester.getOutOfBounds(-1);
+    tester.get(0, jdk1.get(0));
+    tester.getOutOfBounds(1);
+
+    tester.it = ul2;
+
+    tester.getOutOfBounds(-1);
+    tester.get(0, jdk2.get(0));
+    tester.get(1, jdk2.get(1));
+    tester.getOutOfBounds(2);
+
+    tester.it = ul3;
+
+    tester.getOutOfBounds(-1);
+    tester.get(0, jdk3.get(0));
+    tester.get(1, jdk3.get(1));
+    tester.get(2, jdk3.get(2));
+    tester.getOutOfBounds(3);
+
+    tester.it = ulX;
+
+    tester.getOutOfBounds(-1);
+    for (int i = 0, size = jdkX.size(); i < size; i++) {
+      tester.get(i, jdkX.get(i));
+    }
+    tester.getOutOfBounds(jdkX.size());
+  }
+
+  @Test
+  public void getOnly() {
+    try {
+      ul0.getOnly();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
+    }
+
+    assertEquals(ul1.getOnly(), jdk1.get(0));
+
+    try {
+      ul2.getOnly();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
+    }
   }
 
   private void testAll(BiConsumer<UnmodifiableList<Thing>, List<Thing>> tester) {

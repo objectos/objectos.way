@@ -20,11 +20,9 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -107,74 +105,6 @@ public class UnmodifiableListTest2 extends AbstractObjectosUtilTest {
     }
 
     assertFalse(iterator.hasNext());
-  }
-
-  @Test
-  public void get() {
-    class Tester {
-      UnmodifiableList<Integer> it;
-
-      public final void get(int index, Integer expected) {
-        Integer value;
-        value = it.get(index);
-
-        assertEquals(value, expected);
-      }
-
-      public final void getOutOfBounds(int index) {
-        try {
-          it.get(index);
-
-          fail();
-        } catch (IndexOutOfBoundsException expected) {
-
-        }
-      }
-    }
-
-    Tester tester;
-    tester = new Tester();
-
-    tester.it = il0;
-
-    tester.getOutOfBounds(-1);
-    tester.getOutOfBounds(0);
-    tester.getOutOfBounds(1);
-
-    tester.it = il1;
-
-    tester.getOutOfBounds(-1);
-    tester.get(0, singleton);
-    tester.getOutOfBounds(1);
-
-    tester.it = ilN;
-
-    tester.getOutOfBounds(-1);
-    tester.get(0, intArray[0]);
-    tester.get(1, intArray[1]);
-    tester.get(2, intArray[2]);
-    tester.getOutOfBounds(intArray.length);
-  }
-
-  @Test
-  public void getOnly() {
-    try {
-      il0.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
-    }
-
-    assertEquals(il1.getOnly(), singleton);
-
-    try {
-      ilN.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
-    }
   }
 
   @Test
