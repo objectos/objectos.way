@@ -17,6 +17,7 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
@@ -787,6 +788,56 @@ public class GrowableListTest {
     result = it.toUnmodifiableList();
 
     assertEquals(result, arrayList);
+  }
+
+  @Test(description = TestCase07.DESCRIPTION)
+  public void toUnmodifiableList_withComparator() {
+    var c = TestCase07.ORDER;
+
+    var it = new GrowableList<Integer>();
+
+    var result = it.toUnmodifiableList(c);
+
+    assertTrue(result.isEmpty());
+
+    it.add(3);
+
+    result = it.toUnmodifiableList(c);
+
+    assertEquals(result, UnmodifiableList.of(3));
+
+    it.add(1);
+
+    result = it.toUnmodifiableList(c);
+
+    assertEquals(result, UnmodifiableList.of(1, 3));
+    assertEquals(it, UnmodifiableList.of(3, 1));
+
+    it.add(2);
+
+    result = it.toUnmodifiableList(c);
+
+    assertEquals(result, UnmodifiableList.of(1, 2, 3));
+    assertEquals(it, UnmodifiableList.of(3, 1, 2));
+
+    it = new GrowableList<Integer>();
+
+    for (int i = 0; i < MANY; i++) {
+      var next = Next.intValue();
+
+      it.add(next);
+    }
+
+    result = it.toUnmodifiableList(c);
+
+    assertEquals(result.size(), MANY);
+    assertNotEquals(result, it);
+
+    var sorted = new ArrayList<Integer>(it);
+
+    Collections.sort(sorted);
+
+    assertEquals(result, sorted);
   }
 
   @Test

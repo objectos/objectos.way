@@ -17,12 +17,10 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import org.testng.annotations.BeforeMethod;
@@ -172,57 +170,6 @@ public class GrowableListTest2 extends AbstractObjectosUtilTest {
     expected.addAll(hashSet);
 
     assertContents(result, expected);
-  }
-
-  @Test(description = TestCase07.DESCRIPTION)
-  public void toImmutableSortedList() {
-    Comparator<Integer> c;
-    c = TestCase07.ORDER;
-
-    GrowableList<Integer> it;
-    it = new GrowableList<>();
-
-    UnmodifiableList<Integer> result;
-    result = it.toImmutableSortedList(c);
-
-    assertTrue(result.isEmpty());
-
-    it.add(3);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result, UnmodifiableList.of(3));
-
-    it.add(1);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result, UnmodifiableList.of(1, 3));
-    assertEquals(it, UnmodifiableList.of(3, 1));
-
-    it.add(2);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result, UnmodifiableList.of(1, 2, 3));
-    assertEquals(it, UnmodifiableList.of(3, 1, 2));
-
-    Integer[] random;
-    random = randomIntegerArray(2345);
-
-    it = new GrowableList<Integer>(random);
-
-    result = it.toImmutableSortedList(c);
-
-    assertEquals(result.size(), random.length);
-    assertNotEquals(result, it);
-
-    ArrayList<Integer> sorted;
-    sorted = new ArrayList<Integer>(it);
-
-    Collections.sort(sorted);
-
-    assertEquals(result, sorted);
   }
 
   private <E> void assertContents(List<E> result, List<E> expected) {

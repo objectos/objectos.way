@@ -344,41 +344,6 @@ public class GrowableList<E>
   }
 
   /**
-   * Returns a sorted {@link UnmodifiableList} copy of this list while keeping
-   * the
-   * latter unchanged. This is equivalent to, for this {@code list}:
-   *
-   * <pre> {@code
-   * list.sort(c);
-   * return list.toUnmodifiableList();}</pre>
-   *
-   * except that this list remains unchanged.
-   *
-   * @param c
-   *        the comparator defining the order for the returned list
-   *
-   * @return a sorted {@link UnmodifiableList} copy of this list
-   */
-  @SuppressWarnings("unchecked")
-  public final UnmodifiableList<E> toImmutableSortedList(Comparator<? super E> c) {
-    Check.notNull(c, "c == null");
-
-    switch (size) {
-      case 0:
-      case 1:
-        return toUnmodifiableList();
-      default:
-        var copy = new Object[size];
-
-        System.arraycopy(data, 0, copy, 0, size);
-
-        Arrays.sort((E[]) copy, 0, size, c);
-
-        return new UnmodifiableList<E>(copy);
-    }
-  }
-
-  /**
    * Returns an {@link UnmodifiableList} copy of this list.
    *
    * <p>
@@ -408,6 +373,41 @@ public class GrowableList<E>
         System.arraycopy(data, 0, copy, 0, size);
 
         return new UnmodifiableList<>(copy);
+    }
+  }
+
+  /**
+   * Returns a sorted {@link UnmodifiableList} copy of this list while keeping
+   * the
+   * latter unchanged. This is equivalent to, for this {@code list}:
+   *
+   * <pre> {@code
+   * list.sort(c);
+   * return list.toUnmodifiableList();}</pre>
+   *
+   * except that this list remains unchanged.
+   *
+   * @param c
+   *        the comparator defining the order for the returned list
+   *
+   * @return a sorted {@link UnmodifiableList} copy of this list
+   */
+  @SuppressWarnings("unchecked")
+  public final UnmodifiableList<E> toUnmodifiableList(Comparator<? super E> c) {
+    Check.notNull(c, "c == null");
+
+    switch (size) {
+      case 0:
+      case 1:
+        return toUnmodifiableList();
+      default:
+        var copy = new Object[size];
+
+        System.arraycopy(data, 0, copy, 0, size);
+
+        Arrays.sort((E[]) copy, 0, size, c);
+
+        return new UnmodifiableList<E>(copy);
     }
   }
 
