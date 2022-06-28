@@ -17,6 +17,8 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -469,6 +471,370 @@ public class GrowableListTest {
 
       Assert.fail();
     } catch (OutOfMemoryError expected) {
+
+    }
+  }
+
+  @Test
+  public void indexOf() {
+    var t1 = Thing.next();
+
+    assertEquals(it.indexOf(t1), -1);
+
+    it.add(t1);
+
+    assertEquals(it.indexOf(t1), 0);
+
+    it.clear();
+
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+
+    for (int i = 0, size = arrayList.size(); i < size; i++) {
+      var t = arrayList.get(i);
+
+      assertEquals(it.indexOf(t), i);
+    }
+
+    var index = it.size();
+
+    it.add(t1);
+
+    assertEquals(it.indexOf(t1), index);
+
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    assertEquals(it.indexOf(t1), index);
+  }
+
+  @Test
+  public void isEmpty() {
+    assertTrue(it.isEmpty());
+
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertFalse(it.isEmpty());
+
+    it.clear();
+
+    assertTrue(it.isEmpty());
+  }
+
+  @Test
+  public void join() {
+    assertEquals(
+      it.join(),
+      ""
+    );
+    assertEquals(
+      it.join("|"),
+      ""
+    );
+    assertEquals(
+      it.join("|", "{", "}"),
+      "{}"
+    );
+
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertEquals(
+      it.join(),
+      t1.toString()
+    );
+    assertEquals(
+      it.join("|"),
+      t1.toString()
+    );
+    assertEquals(
+      it.join("|", "{", "}"),
+      "{" + t1.toString() + "}"
+    );
+
+    it.add(t1);
+
+    assertEquals(
+      it.join(),
+      t1.toString() + t1.toString()
+    );
+    assertEquals(
+      it.join("|"),
+      t1.toString() + "|" + t1.toString()
+    );
+    assertEquals(
+      it.join("|", "{", "}"),
+      "{" + t1.toString() + "|" + t1.toString() + "}"
+    );
+  }
+
+  @Test
+  public void lastIndexOf() {
+    var t1 = Thing.next();
+
+    assertEquals(it.lastIndexOf(t1), -1);
+
+    it.add(t1);
+
+    assertEquals(it.lastIndexOf(t1), 0);
+
+    it.clear();
+
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+
+    var index = it.size();
+
+    it.add(t1);
+
+    assertEquals(it.lastIndexOf(t1), index);
+
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    assertEquals(it.lastIndexOf(t1), index);
+
+    it.add(t1);
+
+    assertEquals(it.lastIndexOf(t1), index + 2);
+  }
+
+  @Test
+  public void size() {
+    assertEquals(it.size(), 0);
+
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertEquals(it.size(), 1);
+
+    it.clear();
+
+    assertEquals(it.size(), 0);
+  }
+
+  @Test
+  public void toArray() {
+    var emptyArray = Thing.EMPTY_ARRAY;
+
+    assertEquals(it.toArray(), new Object[] {});
+    assertSame(it.toArray(emptyArray), emptyArray);
+
+    var arrayList = Thing.randomArrayList(MANY);
+
+    var lastNull = new Thing[arrayList.size() + 2];
+
+    var result = it.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    assertNull(result[0]);
+    assertNull(result[1]);
+
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertEquals(it.toArray(), new Object[] {t1});
+    assertEquals(it.toArray(emptyArray), new Thing[] {t1});
+
+    result = it.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    assertEquals(result[0], t1);
+    assertNull(result[1]);
+
+    it.clear();
+
+    it.addAll(arrayList);
+
+    assertEquals(it.toArray(), arrayList.toArray());
+    assertEquals(it.toArray(emptyArray), arrayList.toArray(emptyArray));
+
+    result = it.toArray(lastNull);
+
+    assertSame(result, lastNull);
+
+    int i = 0;
+
+    for (; i < arrayList.size(); i++) {
+      assertEquals(result[i], arrayList.get(i));
+    }
+
+    assertNull(result[i]);
+  }
+
+  @Test
+  public void toStringTest() {
+    assertEquals(
+      it.toString(),
+
+      "GrowableList []"
+    );
+
+    var t1 = Thing.parse("7d58452fb817ae98b6d587fe747b87ae");
+    var t2 = Thing.parse("402175c4de2f4f4da528112f2121861c");
+
+    it.add(t1);
+    it.add(t2);
+
+    assertEquals(
+      it.toString(),
+
+      """
+      GrowableList [
+        0 = Thing [
+          value = 7d58452fb817ae98b6d587fe747b87ae
+        ]
+        1 = Thing [
+          value = 402175c4de2f4f4da528112f2121861c
+        ]
+      ]"""
+    );
+  }
+
+  @Test
+  public void toUnmodifiableList() {
+    var result = it.toUnmodifiableList();
+
+    assertTrue(result.isEmpty());
+
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertTrue(result.isEmpty());
+
+    result = it.toUnmodifiableList();
+
+    assertEquals(result.size(), 1);
+
+    assertEquals(result.get(0), t1);
+
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    result = it.toUnmodifiableList();
+
+    assertEquals(result.size(), 2);
+    assertEquals(result.get(0), t1);
+    assertEquals(result.get(1), t2);
+
+    var t3 = Thing.next();
+
+    it.add(t3);
+
+    result = it.toUnmodifiableList();
+
+    assertEquals(result.size(), 3);
+    assertEquals(result.get(0), t1);
+    assertEquals(result.get(1), t2);
+    assertEquals(result.get(2), t3);
+
+    var t4 = Thing.next();
+
+    it.add(t4);
+
+    result = it.toUnmodifiableList();
+
+    assertEquals(result.size(), 4);
+    assertEquals(result.get(0), t1);
+    assertEquals(result.get(1), t2);
+    assertEquals(result.get(2), t3);
+    assertEquals(result.get(3), t4);
+
+    var t5 = Thing.next();
+
+    it.add(t5);
+
+    result = it.toUnmodifiableList();
+
+    assertEquals(result.size(), 5);
+    assertEquals(result.get(0), t1);
+    assertEquals(result.get(1), t2);
+    assertEquals(result.get(2), t3);
+    assertEquals(result.get(3), t4);
+    assertEquals(result.get(4), t5);
+
+    var t6 = Thing.next();
+
+    it.add(t6);
+
+    result = it.toUnmodifiableList();
+
+    assertEquals(result.size(), 6);
+    assertEquals(result.get(0), t1);
+    assertEquals(result.get(1), t2);
+    assertEquals(result.get(2), t3);
+    assertEquals(result.get(3), t4);
+    assertEquals(result.get(4), t5);
+    assertEquals(result.get(5), t6);
+
+    it.clear();
+
+    var arrayList = Thing.randomArrayList(MANY);
+
+    it.addAll(arrayList);
+
+    result = it.toUnmodifiableList();
+
+    assertEquals(result, arrayList);
+  }
+
+  @Test
+  public void truncate() {
+    var t1 = Thing.next();
+    var t2 = Thing.next();
+    var t3 = Thing.next();
+
+    it.add(t1);
+    it.add(t2);
+    it.add(t3);
+
+    assertEquals(it.size(), 3);
+
+    it.truncate(4);
+
+    assertEquals(it.size(), 3);
+    assertEquals(it.get(0), t1);
+    assertEquals(it.get(1), t2);
+    assertEquals(it.get(2), t3);
+
+    it.truncate(3);
+
+    assertEquals(it.size(), 3);
+    assertEquals(it.get(0), t1);
+    assertEquals(it.get(1), t2);
+    assertEquals(it.get(2), t3);
+
+    it.truncate(2);
+
+    assertEquals(it.size(), 2);
+    assertEquals(it.get(0), t1);
+    assertEquals(it.get(1), t2);
+
+    it.truncate(1);
+
+    assertEquals(it.size(), 1);
+    assertEquals(it.get(0), t1);
+
+    it.truncate(0);
+
+    assertEquals(it.size(), 0);
+
+    try {
+      it.truncate(-1);
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
 
     }
   }
