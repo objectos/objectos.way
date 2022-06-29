@@ -17,6 +17,8 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -602,6 +604,103 @@ public class UnmodifiableListTest {
           assertEquals(it, els);
         }
       }
+    );
+  }
+
+  @Test
+  public void size() {
+    assertEquals(ul0.size(), 0);
+    assertEquals(ul1.size(), 1);
+    assertEquals(ul2.size(), 2);
+    assertEquals(ul3.size(), 3);
+    assertEquals(ulX.size(), MANY);
+  }
+
+  @Test
+  public void toArray() {
+    var emptyArray = Thing.EMPTY_ARRAY;
+
+    assertEquals(ul0.toArray(), jdk0.toArray());
+    assertSame(ul0.toArray(emptyArray), jdk0.toArray(emptyArray));
+
+    var lastNull = new Thing[jdkX.size() + 2];
+
+    var result = ul0.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    assertNull(result[0]);
+    assertNull(result[1]);
+
+    var t1 = jdk1.get(0);
+
+    assertEquals(ul1.toArray(), jdk1.toArray());
+    assertEquals(ul1.toArray(emptyArray), jdk1.toArray(emptyArray));
+
+    result = ul1.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    assertEquals(result[0], t1);
+    assertNull(result[1]);
+
+    var t2 = jdk2.get(1);
+
+    assertEquals(ul2.toArray(), jdk2.toArray());
+    assertEquals(ul2.toArray(emptyArray), jdk2.toArray(emptyArray));
+
+    result = ul2.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    assertEquals(result[0], t1);
+    assertEquals(result[1], t2);
+    assertNull(result[2]);
+
+    assertEquals(ulX.toArray(), jdkX.toArray());
+    assertEquals(ulX.toArray(emptyArray), jdkX.toArray(emptyArray));
+
+    result = ulX.toArray(lastNull);
+
+    assertSame(result, lastNull);
+
+    int i = 0;
+
+    for (; i < MANY; i++) {
+      assertEquals(result[i], jdkX.get(i));
+    }
+
+    assertNull(result[i]);
+  }
+
+  @Test
+  public void toStringTest() {
+    assertEquals(ul0.toString(), "UnmodifiableList []");
+
+    var t1 = jdk1.get(0);
+
+    assertEquals(
+      ul1.toString(),
+
+      """
+      UnmodifiableList [
+        0 = Thing [
+          value = %s
+        ]
+      ]""".formatted(t1.toHexString())
+    );
+
+    var t2 = jdk2.get(1);
+
+    assertEquals(
+      ul2.toString(),
+
+      """
+      UnmodifiableList [
+        0 = Thing [
+          value = %s
+        ]
+        1 = Thing [
+          value = %s
+        ]
+      ]""".formatted(t1.toHexString(), t2.toHexString())
     );
   }
 
