@@ -145,7 +145,7 @@ public class GrowableListTest {
 
       Assert.fail("Must throw NullPointerException");
     } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "collection[50] == null");
+      assertEquals(expected.getMessage(), "c[50] == null");
     }
 
     var sub = listWithNull.subList(0, 50);
@@ -161,7 +161,7 @@ public class GrowableListTest {
 
       Assert.fail("Must throw NullPointerException");
     } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "collection[50] == null");
+      assertEquals(expected.getMessage(), "c[50] == null");
     }
 
     assertContents(t1, t2, arrayList, arrayDeque, sub, sub);

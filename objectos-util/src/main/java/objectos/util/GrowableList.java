@@ -167,7 +167,7 @@ public class GrowableList<E>
   public final boolean addAll(Collection<? extends E> c) {
     Check.notNull(c, "c == null");
 
-    return addAll0(c, "collection[");
+    return addAll0(c, "c[");
   }
 
   /**
@@ -457,7 +457,7 @@ public class GrowableList<E>
       var element = array[i];
 
       append0(
-        Check.notNull(element, "collection[", i, "] == null")
+        Check.notNull(element, "c[", i, "] == null")
       );
     }
 

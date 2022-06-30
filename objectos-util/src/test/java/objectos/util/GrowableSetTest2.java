@@ -21,7 +21,6 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -43,106 +42,6 @@ public class GrowableSetTest2 extends AbstractObjectosSetsTest {
   @BeforeMethod
   public void _beforeMethod() {
     set.clear();
-  }
-
-  @Test(description = "add(E e)")
-  public void add() {
-    // empty
-    assertEquals(set.size(), 0);
-    assertTrue(set.isEmpty());
-
-    Set<Thing> result;
-    result = set.toUnmodifiableSet();
-
-    Set<Thing> expected;
-    expected = new HashSet<>();
-
-    assertSet(result, expected);
-
-    // one
-    assertTrue(set.add(t1));
-    assertEquals(set.size(), 1);
-    assertFalse(set.isEmpty());
-
-    result = set.toUnmodifiableSet();
-
-    expected.clear();
-    expected.add(t1);
-
-    assertSet(result, expected);
-
-    // two
-    assertTrue(set.add(t2));
-    assertEquals(set.size(), 2);
-    assertFalse(set.isEmpty());
-
-    result = set.toUnmodifiableSet();
-
-    expected.clear();
-    expected.add(t1);
-    expected.add(t2);
-
-    assertSet(result, expected);
-
-    // N
-    int size;
-    size = set.size();
-
-    for (Thing thing : thingArray) {
-      assertTrue(set.add(thing));
-
-      size++;
-
-      assertEquals(set.size(), size);
-      assertFalse(set.isEmpty());
-    }
-
-    result = set.toUnmodifiableSet();
-
-    expected.clear();
-    expected.add(t1);
-    expected.add(t2);
-
-    for (Thing thing : thingArray) {
-      expected.add(thing);
-    }
-
-    assertSet(result, expected);
-  }
-
-  @Test(description = "addAll(Collection)")
-  public void addAll() {
-    // empty
-    assertFalse(set.addAll(java.util.Collections.<Thing> emptyList()));
-
-    assertFalse(set.addAll(Collections.<Thing> emptySet()));
-
-    UnmodifiableSet<Thing> result;
-    result = set.toUnmodifiableSet();
-
-    Set<Thing> expected;
-    expected = new HashSet<>();
-
-    assertSet(result, expected);
-
-    // non empty
-    assertTrue(set.addAll(thingList));
-
-    assertEquals(set.size(), thingSize);
-
-    assertTrue(set.addAll(thingSet));
-
-    assertEquals(set.size(), thingSize + thingSize);
-
-    result = set.toUnmodifiableSet();
-
-    expected.clear();
-
-    expected.addAll(thingList);
-
-    expected.addAll(thingSet);
-
-    assertSet(result, expected);
   }
 
   @Test

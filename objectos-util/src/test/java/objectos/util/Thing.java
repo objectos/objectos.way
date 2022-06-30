@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Set;
 import objectos.lang.ToString;
 
 final class Thing implements ToString.Formattable {
@@ -47,10 +48,19 @@ final class Thing implements ToString.Formattable {
 
   static final List<Thing> EMPTY_LIST = Collections.emptyList();
 
+  static final Set<Thing> EMPTY_SET = Collections.emptySet();
+
   private final byte[] value;
 
   private Thing(byte[] value) {
     this.value = value;
+  }
+
+  public static Thing next() {
+    byte[] value;
+    value = Next.bytes(16);
+
+    return new Thing(value);
   }
 
   public static Thing parse(String s) {
@@ -135,13 +145,6 @@ final class Thing implements ToString.Formattable {
     var array = randomArray(size);
 
     return new ArrayBackedIterable<>(array);
-  }
-
-  public static Thing next() {
-    byte[] value;
-    value = Next.bytes(16);
-
-    return new Thing(value);
   }
 
   public static UnmodifiableSet<Thing> randomUnmodifiableSet(int size) {

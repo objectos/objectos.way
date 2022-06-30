@@ -88,7 +88,9 @@ public class GrowableSet<E>
    */
   @Override
   public final boolean addAll(Collection<? extends E> c) {
-    return addAllIterable(c);
+    Check.notNull(c, "c == null");
+
+    return addAll0(c, "c[");
   }
 
   /**
@@ -116,35 +118,7 @@ public class GrowableSet<E>
   public final boolean addAllIterable(Iterable<? extends E> iterable) {
     Check.notNull(iterable, "iterable == null");
 
-    var result = false;
-
-    if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
-      for (int i = 0, size = list.size(); i < size; i++) {
-        var element = list.get(i);
-
-        Check.notNull(element, "iterable[", i, "] == null");
-
-        if (addUnchecked(element)) {
-          result = true;
-        }
-      }
-    }
-
-    else {
-      int i = 0;
-
-      for (E element : iterable) {
-        Check.notNull(element, "elements[", i, "] == null");
-
-        if (addUnchecked(element)) {
-          result = true;
-        }
-
-        i++;
-      }
-    }
-
-    return result;
+    return addAll0(iterable, "iterable[");
   }
 
   /**
@@ -306,6 +280,38 @@ public class GrowableSet<E>
     }
 
     throw new UnsupportedOperationException("Implement me");
+  }
+
+  private boolean addAll0(Iterable<? extends E> iterable, String nullMessageStart) {
+    var result = false;
+
+    if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
+      for (int i = 0, size = list.size(); i < size; i++) {
+        var element = list.get(i);
+
+        Check.notNull(element, nullMessageStart, i, "] == null");
+
+        if (addUnchecked(element)) {
+          result = true;
+        }
+      }
+    }
+
+    else {
+      int i = 0;
+
+      for (E element : iterable) {
+        Check.notNull(element, nullMessageStart, i, "] == null");
+
+        if (addUnchecked(element)) {
+          result = true;
+        }
+
+        i++;
+      }
+    }
+
+    return result;
   }
 
   private void firstResizeIfNecessary() {
