@@ -602,7 +602,7 @@ public class GrowableListTest {
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {
-
+      assertTrue(it.contains(t1));
     }
 
     try {
@@ -610,23 +610,22 @@ public class GrowableListTest {
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {
-
+      assertTrue(it.contains(t1));
     }
   }
 
   @Test
+  public void removeAll() {
+    var test = new GrowableCollectionRemoveAllTest(it);
+
+    test.execute();
+  }
+
+  @Test
   public void removeIf() {
-    var t1 = Thing.next();
+    var test = new GrowableCollectionRemoveIfTest(it);
 
-    it.add(t1);
-
-    try {
-      it.removeIf(e -> e.equals(t1));
-
-      Assert.fail("Expected an UnsupportedOperationException");
-    } catch (UnsupportedOperationException expected) {
-
-    }
+    test.execute();
   }
 
   @Test
@@ -648,19 +647,9 @@ public class GrowableListTest {
 
   @Test
   public void retainAll() {
-    var t1 = Thing.next();
-    var t2 = Thing.next();
+    var test = new GrowableCollectionRetainAllTest(it);
 
-    it.add(t1);
-    it.add(t2);
-
-    try {
-      it.retainAll(List.of(t1));
-
-      Assert.fail("Expected an UnsupportedOperationException");
-    } catch (UnsupportedOperationException expected) {
-
-    }
+    test.execute();
   }
 
   @Test

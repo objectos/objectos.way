@@ -351,6 +351,42 @@ public class GrowableSetTest {
     );
   }
 
+  @Test
+  public void remove() {
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    try {
+      it.remove(t1);
+
+      Assert.fail("Expected an UnsupportedOperationException");
+    } catch (UnsupportedOperationException expected) {
+      assertTrue(it.contains(t1));
+    }
+  }
+
+  @Test
+  public void removeAll() {
+    var test = new GrowableCollectionRemoveAllTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void removeIf() {
+    var test = new GrowableCollectionRemoveIfTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void retainAll() {
+    var test = new GrowableCollectionRetainAllTest(it);
+
+    test.execute();
+  }
+
   private void assertContents(Object... expected) {
     var jdk = new HashSet<>();
 
