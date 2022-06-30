@@ -175,32 +175,24 @@ public class UnmodifiableListTest {
     var t2 = jdk2.get(1);
 
     assertFalse(ul0.contains(t2));
-    assertFalse(ul0.contains(t1, t2));
 
     assertFalse(ul1.contains(t2));
-    assertFalse(ul1.contains(t1, t2));
 
     assertTrue(ul2.contains(t2));
-    assertTrue(ul2.contains(t1, t2));
 
     assertTrue(ul3.contains(t2));
-    assertTrue(ul3.contains(t1, t2));
 
     assertFalse(ulX.contains(t2));
 
     var t3 = jdk3.get(2);
 
     assertFalse(ul0.contains(t3));
-    assertFalse(ul0.contains(t1, t2, t3));
 
     assertFalse(ul1.contains(t3));
-    assertFalse(ul1.contains(t1, t2, t3));
 
     assertFalse(ul2.contains(t3));
-    assertFalse(ul2.contains(t1, t2, t3));
 
     assertTrue(ul3.contains(t3));
-    assertTrue(ul3.contains(t1, t2, t3));
 
     assertFalse(ulX.contains(t3));
 

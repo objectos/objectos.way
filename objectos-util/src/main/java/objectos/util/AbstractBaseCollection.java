@@ -35,40 +35,6 @@ abstract class AbstractBaseCollection<E> implements Collection<E>, Joinable, ToS
   AbstractBaseCollection() {}
 
   /**
-   * Returns {@code true} if this collection contains all of the specified
-   * elements.
-   *
-   * @param first
-   *        the first element to check for presence in this set
-   * @param more
-   *        the additional elements to check for presence in this set
-   *
-   * @return {@code true} if this collection contains all of the specified
-   *         elements
-   *
-   * @see Collection#contains(Object)
-   */
-  public final boolean contains(Object first, Object... more) {
-    Check.notNull(more, "more == null");
-
-    if (isEmpty()) {
-      return false;
-    }
-
-    if (!contains(first)) {
-      return false;
-    }
-
-    for (Object e : more) {
-      if (!contains(e)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  /**
    * Returns {@code true} if this collection contains all of the elements in the
    * specified collection.
    *

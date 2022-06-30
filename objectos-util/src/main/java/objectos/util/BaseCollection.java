@@ -62,26 +62,6 @@ interface BaseCollection<E> extends Collection<E>, Joinable, ToString.Formattabl
   boolean addAll(Collection<? extends E> c);
 
   /**
-   * Returns {@code true} if this collection contains all the given values. More
-   * formally, and using the <i>contains</i> definition given by
-   * {@link java.util.Collection#contains(Object)}, returns {@code true} if and
-   * only if this collection contains the {@code first} specified element or if
-   * contains any element of {@code rest} array.
-   *
-   * <p>
-   * This method does not throw a {@code ClassCastException} if any of the
-   * supplied values if of a type that is incompatible with this collection.
-   *
-   * @param first
-   *        the first element to check for presence in the collection
-   * @param more
-   *        the additional elements to check for presence in the collection
-   *
-   * @return {@code true} if this collection contains any of the given values
-   */
-  boolean contains(Object first, Object... more);
-
-  /**
    * Returns the only element of this collection or throws an exception if the
    * collection is empty or if the collection contains more than one element.
    *

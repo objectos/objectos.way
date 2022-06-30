@@ -196,38 +196,9 @@ public class GrowableListTest {
 
   @Test
   public void contains() {
-    var t1 = Thing.next();
-    var t2 = Thing.next();
+    var test = new GrowableCollectionContainsTest(it);
 
-    assertEquals(it.size(), 0);
-
-    assertFalse(it.contains(t1));
-
-    assertFalse(it.contains(t1, t2));
-
-    it.add(t1);
-
-    var array = Thing.nextArray();
-
-    for (var t : array) {
-      it.add(t);
-    }
-
-    it.add(t2);
-
-    assertTrue(it.contains(t1));
-
-    assertTrue(it.contains(t1, (Object[]) array));
-
-    assertTrue(it.contains(t2));
-
-    it.clear();
-
-    assertFalse(it.contains(t1));
-
-    assertFalse(it.contains(t1, (Object[]) array));
-
-    assertFalse(it.contains(t2));
+    test.execute();
   }
 
   @Test

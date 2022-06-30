@@ -20,7 +20,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -42,42 +41,6 @@ public class GrowableSetTest2 extends AbstractObjectosSetsTest {
   @BeforeMethod
   public void _beforeMethod() {
     set.clear();
-  }
-
-  @Test
-  public void contains() {
-    assertFalse(set.contains(t1));
-
-    set.add(t1);
-
-    assertTrue(set.contains(t1));
-
-    set.clear();
-
-    assertFalse(set.contains(t1));
-
-    set.addAll(thingList);
-
-    assertFalse(set.contains(t1));
-
-    for (Thing thing : thingList) {
-      assertTrue(set.contains(thing));
-    }
-
-    for (Thing thing : thingSet) {
-      assertFalse(set.contains(thing));
-    }
-
-    set.clear();
-
-    for (Thing thing : thingArray) {
-      set.add(thing);
-    }
-
-    Object[] tail;
-    tail = Arrays.copyOfRange(thingArray, 1, thingArray.length);
-
-    assertTrue(set.contains(thingArray[0], tail));
   }
 
   @Test
