@@ -22,18 +22,16 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class UnmodifiableListTest {
-
-  private static final int MANY = 100;
-
-  private static final int HALF = MANY / 2;
 
   private UnmodifiableList<Thing> ul0;
 
@@ -75,7 +73,7 @@ public class UnmodifiableListTest {
     ul3 = UnmodifiableList.of(t1, t2, t3);
     jdk3 = List.of(t1, t2, t3);
 
-    Thing[] many = Thing.randomArray(MANY);
+    Thing[] many = Thing.nextArray();
 
     ulX = UnmodifiableList.copyOf(many);
     jdkX = List.of(many);
@@ -117,7 +115,7 @@ public class UnmodifiableListTest {
 
   @Test
   public void addAll() {
-    final var arrayList = Thing.randomArrayList(MANY);
+    final var arrayList = Thing.nextArrayList();
 
     testAll(
       (it, els) -> {
@@ -134,7 +132,7 @@ public class UnmodifiableListTest {
 
   @Test
   public void addAll_withIndex() {
-    final var arrayList = Thing.randomArrayList(MANY);
+    final var arrayList = Thing.nextArrayList();
 
     testAll(
       (it, els) -> {
@@ -227,9 +225,79 @@ public class UnmodifiableListTest {
 
     listWithNull.addAll(jdkX);
 
-    listWithNull.set(HALF, null);
+    listWithNull.set(Thing.HALF, null);
 
     assertFalse(ulX.containsAll(listWithNull));
+  }
+
+  @Test
+  public void copyOf() {
+    final var array = Thing.nextArray();
+
+    Consumer<UnmodifiableList<Thing>> tester = l -> {
+      assertEquals(l.size(), array.length);
+
+      for (int i = 0; i < array.length; i++) {
+        assertEquals(l.get(i), array[i]);
+      }
+    };
+
+    // must reject null
+    try {
+      Iterable<?> nullIterable = null;
+
+      UnmodifiableList.copyOf(nullIterable);
+
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "elements == null");
+    }
+
+    // iterable
+    var iterable = new ArrayBackedIterable<>(array);
+
+    var ulIterable = UnmodifiableList.copyOf(iterable);
+
+    tester.accept(ulIterable);
+
+    // UnmodifiableList
+    assertSame(UnmodifiableList.copyOf(ulIterable), ulIterable);
+
+    // GrowableList
+    var growableList = new GrowableList<Thing>(array);
+
+    tester.accept(UnmodifiableList.copyOf(growableList));
+
+    // Collection
+    var arrayDeque = new ArrayDeque<Thing>(Thing.MANY);
+
+    for (var t : array) {
+      arrayDeque.add(t);
+    }
+
+    tester.accept(UnmodifiableList.copyOf(arrayDeque));
+
+    // List & RandomAccess
+    var arrayList = new ArrayList<Thing>(Thing.MANY);
+
+    for (var t : array) {
+      arrayList.add(t);
+    }
+
+    tester.accept(UnmodifiableList.copyOf(arrayList));
+
+    // with null
+    var withNull = new ArrayList<>(arrayList);
+
+    withNull.set(Thing.HALF, null);
+
+    try {
+      UnmodifiableList.copyOf(withNull);
+
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "elements[50] == null");
+    }
   }
 
   @Test
@@ -478,13 +546,13 @@ public class UnmodifiableListTest {
 
     var arrayList = new ArrayList<>(jdkX);
 
-    var half = arrayList.get(HALF);
+    var half = arrayList.get(Thing.HALF);
 
-    arrayList.set(MANY - 1, half);
+    arrayList.set(Thing.MANY - 1, half);
 
     var it = UnmodifiableList.copyOf(arrayList);
 
-    assertEquals(it.lastIndexOf(half), MANY - 1);
+    assertEquals(it.lastIndexOf(half), Thing.MANY - 1);
   }
 
   @Test
@@ -605,7 +673,7 @@ public class UnmodifiableListTest {
     assertEquals(ul1.size(), 1);
     assertEquals(ul2.size(), 2);
     assertEquals(ul3.size(), 3);
-    assertEquals(ulX.size(), MANY);
+    assertEquals(ulX.size(), Thing.MANY);
   }
 
   @Test
@@ -655,7 +723,7 @@ public class UnmodifiableListTest {
 
     int i = 0;
 
-    for (; i < MANY; i++) {
+    for (; i < Thing.MANY; i++) {
       assertEquals(result[i], jdkX.get(i));
     }
 

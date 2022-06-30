@@ -18,6 +18,8 @@ package objectos.util;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
+import java.util.RandomAccess;
 import objectos.lang.Check;
 
 /**
@@ -122,20 +124,39 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
       return (UnmodifiableList<E>) list.toUnmodifiableList();
     }
 
-    var list = new GrowableList<E>();
+    if (elements instanceof RandomAccess && elements instanceof List<? extends E> list) {
+      var size = list.size();
 
-    int index;
-    index = 0;
+      var data = new Object[size];
 
-    for (E e : elements) {
-      Check.notNull(e, "elements[", index, "] == null");
+      for (int i = 0; i < size; i++) {
+        var e = list.get(i);
 
-      list.add0(e);
+        data[i] = Check.notNull(e, "elements[", i, "] == null");
+      }
 
-      index++;
+      return new UnmodifiableList<>(data);
     }
 
-    return list.toUnmodifiableList();
+    if (elements instanceof Collection<? extends E> coll) {
+      var size = coll.size();
+
+      var data = new Object[size];
+
+      int index = 0;
+
+      for (var e : coll) {
+        Check.notNull(e, "elements[", index, "] == null");
+
+        data[index++] = e;
+      }
+
+      return new UnmodifiableList<>(data);
+    }
+
+    var iterator = elements.iterator();
+
+    return copyOf0(iterator);
   }
 
   /**
@@ -158,11 +179,9 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
    *         iterator is {@code null}
    */
   public static <E> UnmodifiableList<E> copyOf(Iterator<? extends E> iterator) {
-    var list = new GrowableList<E>();
+    Check.notNull(iterator, "iterator == null");
 
-    list.addAll(iterator);
-
-    return list.toUnmodifiableList();
+    return copyOf0(iterator);
   }
 
   /**
@@ -233,6 +252,14 @@ public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
     }
 
     return new UnmodifiableList<E>(elements);
+  }
+
+  private static <E> UnmodifiableList<E> copyOf0(Iterator<? extends E> iterator) {
+    var list = new GrowableList<E>();
+
+    list.addAll(iterator);
+
+    return list.toUnmodifiableList();
   }
 
   /**

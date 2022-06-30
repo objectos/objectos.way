@@ -420,8 +420,6 @@ public class GrowableList<E>
   }
 
   final boolean addAll(Iterator<? extends E> iterator) {
-    Check.notNull(iterator, "iterator == null");
-
     return addAll0Iterator(iterator, "iterator[");
   }
 
