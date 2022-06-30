@@ -127,10 +127,9 @@ public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
       return (UnmodifiableSet<E>) set.toUnmodifiableSet();
     }
 
-    GrowableSet<E> set;
-    set = new GrowableSet<>();
+    var set = new GrowableSet<E>();
 
-    set.addAllIterable(elements);
+    set.addAll0(elements, "elements[");
 
     return set.toUnmodifiableSet();
   }
@@ -164,8 +163,7 @@ public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
       return UnmodifiableSet.of();
     }
 
-    GrowableSet<E> set;
-    set = new GrowableSet<>();
+    var set = new GrowableSet<E>();
 
     int i = 0;
 

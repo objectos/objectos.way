@@ -24,6 +24,7 @@ import static org.testng.Assert.fail;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -268,15 +269,6 @@ public class UnmodifiableListTest {
 
     tester.accept(UnmodifiableList.copyOf(growableList));
 
-    // Collection
-    var arrayDeque = new ArrayDeque<Thing>(Thing.MANY);
-
-    for (var t : array) {
-      arrayDeque.add(t);
-    }
-
-    tester.accept(UnmodifiableList.copyOf(arrayDeque));
-
     // List & RandomAccess
     var arrayList = new ArrayList<Thing>(Thing.MANY);
 
@@ -286,13 +278,33 @@ public class UnmodifiableListTest {
 
     tester.accept(UnmodifiableList.copyOf(arrayList));
 
-    // with null
-    var withNull = new ArrayList<>(arrayList);
+    // List & RandomAccess with null
+    var arrayListWithNull = new ArrayList<>(arrayList);
 
-    withNull.set(Thing.HALF, null);
+    arrayListWithNull.set(Thing.HALF, null);
 
     try {
-      UnmodifiableList.copyOf(withNull);
+      UnmodifiableList.copyOf(arrayListWithNull);
+
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "elements[50] == null");
+    }
+
+    // Collection
+    var collection = new ArrayDeque<Thing>(Thing.MANY);
+
+    for (var t : array) {
+      collection.add(t);
+    }
+
+    tester.accept(UnmodifiableList.copyOf(collection));
+
+    // Collection with null
+    var collectionWithNull = new LinkedHashSet<>(arrayListWithNull);
+
+    try {
+      UnmodifiableList.copyOf(collectionWithNull);
 
       Assert.fail("Expected a NullPointerException");
     } catch (NullPointerException expected) {

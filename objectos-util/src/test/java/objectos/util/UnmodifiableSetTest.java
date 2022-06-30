@@ -17,218 +17,92 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.function.Consumer;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class UnmodifiableSetTest extends AbstractObjectosSetsTest {
+public class UnmodifiableSetTest {
 
-  private UnmodifiableSet<Thing> emptySet;
+  @Test
+  public void copyOf() {
+    final var array = Thing.nextArray();
 
-  private GrowableSet<Thing> randomGrowableSet;
+    Consumer<UnmodifiableSet<Thing>> tester = l -> {
+      Object a = array;
 
-  private UnmodifiableSet<Thing> t1AndT2Set;
+      SetAssert.iterator(l, a);
+    };
 
-  private UnmodifiableSet<Thing> t1Set;
+    // must reject null
+    try {
+      Iterable<?> nullIterable = null;
 
-  @BeforeClass
-  public void _beforeClass() {
-    emptySet = UnmodifiableSet.of();
+      UnmodifiableSet.copyOf(nullIterable);
 
-    t1Set = UnmodifiableSet.of(t1);
-
-    t1AndT2Set = UnmodifiableSet.of(t1, t2);
-
-    randomGrowableSet = Thing.randomGrowableSet(thingSize);
-  }
-
-  @Test(description = "UnmodifiableSet.copyOf(E[])")
-  public void copyOf0() {
-    UnmodifiableSet<Thing> result;
-    result = UnmodifiableSet.copyOf(new Thing[] {});
-
-    assertSame(result, UnmodifiableSet.of());
-
-    result = UnmodifiableSet.copyOf(thingArray);
-
-    Set<Thing> expected;
-    expected = new HashSet<>();
-
-    for (Thing t : thingArray) {
-      expected.add(t);
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "elements == null");
     }
 
-    assertSet(result, expected);
-  }
+    // iterable
+    var iterable = new ArrayBackedIterable<>(array);
 
-  @Test(description = "UnmodifiableSet.copyOf(Iterable)")
-  public void copyOf1() {
+    var ulIterable = UnmodifiableSet.copyOf(iterable);
+
+    tester.accept(ulIterable);
+
     // UnmodifiableSet
-    UnmodifiableSet<Thing> result;
-    result = UnmodifiableSet.copyOf(UnmodifiableSet.<Thing> of());
+    assertSame(UnmodifiableSet.copyOf(ulIterable), ulIterable);
 
-    assertSame(result, UnmodifiableSet.of());
+    // GrowableList
+    var growableList = new GrowableList<Thing>(array);
 
-    UnmodifiableSet<Thing> randomUnmodifiableSet;
-    randomUnmodifiableSet = Thing.randomUnmodifiableSet(thingSize);
+    tester.accept(UnmodifiableSet.copyOf(growableList));
 
-    result = UnmodifiableSet.copyOf(randomUnmodifiableSet);
+    // List & RandomAccess
+    var arrayList = new ArrayList<Thing>(Thing.MANY);
 
-    assertSame(result, randomUnmodifiableSet);
-
-    // GrowableSet
-    result = UnmodifiableSet.copyOf(randomGrowableSet);
-
-    Set<Thing> expected;
-    expected = new HashSet<>();
-
-    expected.addAll(randomGrowableSet);
-
-    assertSet(result, expected);
-
-    // Iterable
-    result = UnmodifiableSet.copyOf(Collections.<Thing> emptySet());
-
-    assertSame(result, UnmodifiableSet.of());
-
-    result = UnmodifiableSet.copyOf(thingIterable);
-
-    expected.clear();
-
-    for (Thing t : thingIterable) {
-      expected.add(t);
+    for (var t : array) {
+      arrayList.add(t);
     }
 
-    assertSet(result, expected);
-  }
+    tester.accept(UnmodifiableSet.copyOf(arrayList));
 
-  @Test(description = "UnmodifiableSet.copyOf(Iterator)")
-  public void copyOf2() {
-    // empty
-    Iterator<Thing> iterator;
-    iterator = Collections.<Thing> emptySet().iterator();
+    // List & RandomAccess with null
+    var arrayListWithNull = new ArrayList<>(arrayList);
 
-    UnmodifiableSet<Thing> result;
-    result = UnmodifiableSet.copyOf(iterator);
-
-    assertSame(result, UnmodifiableSet.of());
-
-    // singleton
-    iterator = new SingletonIterator<Thing>(t1);
-
-    result = UnmodifiableSet.copyOf(iterator);
-
-    Set<Thing> expected;
-    expected = new HashSet<>();
-
-    expected.add(t1);
-
-    assertSet(result, expected);
-
-    // many
-    iterator = new ArrayIterator<Thing>(thingArray, thingArray.length);
-
-    result = UnmodifiableSet.copyOf(iterator);
-
-    expected.clear();
-
-    for (Thing thing : thingArray) {
-      expected.add(thing);
-    }
-
-    assertSet(result, expected);
-  }
-
-  @Test
-  public void getOnly() {
-    try {
-      emptySet.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
-    }
-
-    assertEquals(t1Set.getOnly(), t1);
+    arrayListWithNull.set(Thing.HALF, null);
 
     try {
-      t1AndT2Set.getOnly();
+      UnmodifiableSet.copyOf(arrayListWithNull);
 
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "elements[50] == null");
     }
-  }
 
-  @Test
-  public void iterator() {
-    assertTrue(emptySet.isEmpty());
+    // Collection
+    var collection = new ArrayDeque<Thing>(Thing.MANY);
 
-    Set<Thing> expected;
-    expected = new HashSet<>();
-
-    assertIterator(emptySet.iterator(), expected);
-
-    expected.add(t1);
-
-    assertIterator(t1Set.iterator(), expected);
-
-    expected.add(t2);
-
-    assertIterator(t1AndT2Set.iterator(), expected);
-  }
-
-  @Test
-  public void remove() {
-    try {
-      t1Set.remove(t1);
-
-      Assert.fail();
-    } catch (UnsupportedOperationException expected) {
-      assertTrue(t1Set.contains(t1));
+    for (var t : array) {
+      collection.add(t);
     }
-  }
 
-  @Test
-  public void removeAll() {
-    UnmodifiableSet<Thing> set;
-    set = UnmodifiableSet.copyOf(thingList);
+    tester.accept(UnmodifiableSet.copyOf(collection));
+
+    // Collection with null
+    var collectionWithNull = new LinkedHashSet<>(arrayListWithNull);
 
     try {
-      set.removeAll(thingList);
+      UnmodifiableSet.copyOf(collectionWithNull);
 
-      Assert.fail();
-    } catch (UnsupportedOperationException expected) {
-      assertTrue(set.containsAll(thingList));
-    }
-  }
-
-  @Test
-  public void retainAll() {
-    UnmodifiableSet<Thing> set;
-    set = UnmodifiableSet.copyOf(thingList);
-
-    List<Thing> retain;
-    retain = new ArrayList<Thing>();
-
-    retain.add(thingList.get(0));
-
-    retain.add(thingList.get(1));
-
-    try {
-      set.retainAll(retain);
-
-      Assert.fail();
-    } catch (UnsupportedOperationException expected) {
-      assertTrue(set.containsAll(thingList));
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "elements[50] == null");
     }
   }
 

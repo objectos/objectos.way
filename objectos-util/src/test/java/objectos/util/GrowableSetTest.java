@@ -416,25 +416,7 @@ public class GrowableSetTest {
   }
 
   private void assertIterator(Object... expected) {
-    var jdk = new HashSet<>();
-
-    for (var o : expected) {
-      if (o instanceof Thing t) {
-        jdk.add(t);
-      } else if (o instanceof Iterable<?> iter) {
-        for (var t : iter) {
-          jdk.add(t);
-        }
-      } else {
-        throw new UnsupportedOperationException("Implement me: " + o.getClass());
-      }
-    }
-
-    for (Object e : it) {
-      assertTrue(jdk.remove(e));
-    }
-
-    assertTrue(jdk.isEmpty());
+    SetAssert.iterator(it, expected);
   }
 
 }

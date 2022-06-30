@@ -233,6 +233,38 @@ public class GrowableSet<E>
     }
   }
 
+  final boolean addAll0(Iterable<? extends E> iterable, String nullMessageStart) {
+    var mod = false;
+
+    if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
+      for (int i = 0, size = list.size(); i < size; i++) {
+        var element = list.get(i);
+
+        Check.notNull(element, nullMessageStart, i, "] == null");
+
+        if (addUnchecked(element)) {
+          mod = true;
+        }
+      }
+    }
+
+    else {
+      int i = 0;
+
+      for (E element : iterable) {
+        Check.notNull(element, nullMessageStart, i, "] == null");
+
+        if (addUnchecked(element)) {
+          mod = true;
+        }
+
+        i++;
+      }
+    }
+
+    return mod;
+  }
+
   final boolean addUnchecked(E e) {
     firstResizeIfNecessary();
 
@@ -280,38 +312,6 @@ public class GrowableSet<E>
     }
 
     throw new UnsupportedOperationException("Implement me");
-  }
-
-  private boolean addAll0(Iterable<? extends E> iterable, String nullMessageStart) {
-    var mod = false;
-
-    if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
-      for (int i = 0, size = list.size(); i < size; i++) {
-        var element = list.get(i);
-
-        Check.notNull(element, nullMessageStart, i, "] == null");
-
-        if (addUnchecked(element)) {
-          mod = true;
-        }
-      }
-    }
-
-    else {
-      int i = 0;
-
-      for (E element : iterable) {
-        Check.notNull(element, nullMessageStart, i, "] == null");
-
-        if (addUnchecked(element)) {
-          mod = true;
-        }
-
-        i++;
-      }
-    }
-
-    return mod;
   }
 
   private void firstResizeIfNecessary() {
