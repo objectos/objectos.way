@@ -53,11 +53,9 @@ public class GrowableListTest {
     assertTrue(it.add(t1));
     assertContents(t1);
 
-    // two
-    var t2 = Thing.next();
-
-    assertTrue(it.add(t2));
-    assertContents(t1, t2);
+    // two (must allow duplicate elements)
+    assertTrue(it.add(t1));
+    assertContents(t1, t1);
 
     // many
     var array = Thing.nextArray();
@@ -68,7 +66,7 @@ public class GrowableListTest {
       assertTrue(it.add(t));
     }
 
-    assertContents(t1, t2, array);
+    assertContents(t1, t1, array);
 
     // must reject null
     try {
@@ -191,16 +189,9 @@ public class GrowableListTest {
 
   @Test
   public void clear() {
-    assertEquals(it.size(), 0);
+    var test = new GrowableCollectionClearTest(it, this::assertContents);
 
-    it.clear();
-    assertContents();
-
-    var arrayList = Thing.nextArrayList();
-
-    it.addAll(arrayList);
-    it.clear();
-    assertContents();
+    test.execute();
   }
 
   @Test

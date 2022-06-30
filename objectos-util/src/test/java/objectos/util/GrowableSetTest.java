@@ -162,6 +162,13 @@ public class GrowableSetTest {
     test.execute();
   }
 
+  @Test
+  public void clear() {
+    var test = new GrowableCollectionClearTest(it, this::assertContents);
+
+    test.execute();
+  }
+
   private void assertContents(Object... expected) {
     var jdk = new HashSet<>();
 

@@ -89,9 +89,4 @@ final class GrowableCollectionAddAllIterableTest {
     assertContents.execute(t1, t2, iterable, arrayList, sub);
   }
 
-  @FunctionalInterface
-  public interface AssertContents {
-    void execute(Object... expected);
-  }
-
 }
