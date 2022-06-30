@@ -20,6 +20,8 @@ import static org.testng.Assert.assertSame;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 import org.testng.Assert;
@@ -28,7 +30,7 @@ import org.testng.annotations.Test;
 public class UnmodifiableSetTest {
 
   @Test
-  public void copyOf() {
+  public void copyOf_iterable() {
     final var array = Thing.nextArray();
 
     Consumer<UnmodifiableSet<Thing>> tester = l -> {
@@ -103,6 +105,39 @@ public class UnmodifiableSetTest {
       Assert.fail("Expected a NullPointerException");
     } catch (NullPointerException expected) {
       assertEquals(expected.getMessage(), "elements[50] == null");
+    }
+  }
+
+  @Test
+  public void copyOf_iterator() {
+    // empty
+    var it = UnmodifiableSet.<Thing> copyOf(Collections.emptyIterator());
+
+    assertSame(it, UnmodifiableSet.of());
+
+    // one
+    var t1 = Thing.next();
+
+    it = UnmodifiableSet.copyOf(new SingletonIterator<>(t1));
+
+    SetAssert.iterator(it, t1);
+
+    // many
+    var many = Thing.nextArray();
+
+    it = UnmodifiableSet.copyOf(new ArrayIterator<>(many, many.length));
+
+    SetAssert.iterator(it, (Object) many);
+
+    // must reject null
+    try {
+      Iterator<?> nullIterator = null;
+
+      UnmodifiableSet.copyOf(nullIterator);
+
+      Assert.fail("Expected a NullPointerException");
+    } catch (NullPointerException expected) {
+      assertEquals(expected.getMessage(), "iterator == null");
     }
   }
 
