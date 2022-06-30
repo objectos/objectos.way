@@ -203,33 +203,9 @@ public class GrowableListTest {
 
   @Test
   public void containsAll() {
-    var arrayList = Thing.nextArrayList();
+    var test = new GrowableCollectionContainsAllTest(it);
 
-    assertEquals(it.size(), 0);
-
-    assertFalse(it.containsAll(arrayList));
-
-    it.addAll(arrayList);
-
-    assertTrue(it.containsAll(arrayList));
-
-    var list = new ArrayList<Thing>(arrayList.size() + 1);
-
-    var t1 = Thing.next();
-
-    list.add(t1);
-
-    list.addAll(arrayList);
-
-    assertFalse(it.containsAll(list));
-
-    var listWithNull = new ArrayList<Thing>(arrayList.size());
-
-    listWithNull.addAll(arrayList);
-
-    listWithNull.set(Thing.HALF, null);
-
-    assertFalse(it.containsAll(listWithNull));
+    test.execute();
   }
 
   @Test

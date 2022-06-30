@@ -176,6 +176,13 @@ public class GrowableSetTest {
     test.execute();
   }
 
+  @Test
+  public void containsAll() {
+    var test = new GrowableCollectionContainsAllTest(it);
+
+    test.execute();
+  }
+
   private void assertContents(Object... expected) {
     var jdk = new HashSet<>();
 

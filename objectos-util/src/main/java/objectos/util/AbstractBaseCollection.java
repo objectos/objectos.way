@@ -55,25 +55,21 @@ abstract class AbstractBaseCollection<E> implements Collection<E>, Joinable, ToS
 
     if (c instanceof RandomAccess && c instanceof List<?> list) {
       for (int i = 0; i < list.size(); i++) {
-        var test = list.get(i);
+        var e = list.get(i);
 
-        if (!contains(test)) {
+        if (!contains(e)) {
           return false;
         }
       }
-
-      return true;
-    }
-
-    else {
+    } else {
       for (Object e : c) {
         if (!contains(e)) {
           return false;
         }
       }
-
-      return true;
     }
+
+    return true;
   }
 
   /**
