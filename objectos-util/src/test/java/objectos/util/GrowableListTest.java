@@ -25,7 +25,6 @@ import static org.testng.Assert.fail;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -35,10 +34,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class GrowableListTest {
-
-  private static final int MANY = 100;
-
-  private static final int HALF = MANY / 2;
 
   private GrowableList<Thing> it;
 
@@ -65,7 +60,7 @@ public class GrowableListTest {
     assertContents(t1, t2);
 
     // many
-    var array = Thing.randomArray(MANY);
+    var array = Thing.nextArray();
 
     for (int i = 0; i < array.length; i++) {
       var t = array[i];
@@ -125,20 +120,20 @@ public class GrowableListTest {
     assertContents(t1, t2);
 
     // many
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
     assertContents(t1, t2, arrayList);
 
-    var arrayDeque = Thing.randomArrayDeque(MANY);
+    var arrayDeque = Thing.nextArrayDeque();
 
     it.addAll(arrayDeque);
     assertContents(t1, t2, arrayList, arrayDeque);
 
     // must reject null
-    var listWithNull = Thing.randomArrayList(MANY);
+    var listWithNull = Thing.nextArrayList();
 
-    listWithNull.set(HALF, null);
+    listWithNull.set(Thing.HALF, null);
 
     try {
       it.addAll(listWithNull);
@@ -169,7 +164,7 @@ public class GrowableListTest {
 
   @Test
   public void addAll_withIndex() {
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     try {
       it.addAll(0, arrayList);
@@ -182,93 +177,16 @@ public class GrowableListTest {
 
   @Test
   public void addAllIterable() {
-    // empty
-    assertEquals(it.size(), 0);
+    var test = new GrowableCollectionAddAllIterableTest(it, this::assertContents);
 
-    assertFalse(it.addAllIterable(Thing.EMPTY_ITERABLE));
-    assertContents();
-
-    assertFalse(it.addAllIterable(Thing.EMPTY_LIST));
-    assertContents();
-
-    // one
-    var t1 = Thing.next();
-
-    it.addAllIterable(ArrayBackedIterable.of(t1));
-    assertContents(t1);
-
-    // two
-    var t2 = Thing.next();
-
-    it.addAllIterable(List.of(t2));
-    assertContents(t1, t2);
-
-    // many
-    var iterable = Thing.randomIterable(MANY);
-
-    it.addAllIterable(iterable);
-    assertContents(t1, t2, iterable);
-
-    var arrayList = Thing.randomArrayList(MANY);
-
-    it.addAllIterable(arrayList);
-    assertContents(t1, t2, iterable, arrayList);
-
-    // must reject null
-    var arrayWithNull = Thing.randomArray(MANY);
-
-    arrayWithNull[HALF] = null;
-
-    var iterWithNull = new ArrayBackedIterable<>(arrayWithNull);
-
-    try {
-      it.addAllIterable(iterWithNull);
-
-      Assert.fail("Must throw NullPointerException");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "iterable[50] == null");
-    }
-
-    var copy = Arrays.copyOf(arrayWithNull, HALF);
-
-    var sub = List.of(copy);
-
-    assertContents(t1, t2, iterable, arrayList, sub);
+    test.execute();
   }
 
   @Test
   public void addWithNullMessage() {
-    try {
-      it.addWithNullMessage(null, "my message");
+    var test = new GrowableCollectionAddWithNullMessageTest(it);
 
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "my message");
-    }
-
-    try {
-      it.addWithNullMessage(null, null);
-
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "null");
-    }
-
-    try {
-      it.addWithNullMessage(null, "[", 123, "]");
-
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "[123]");
-    }
-
-    try {
-      it.addWithNullMessage(null, null, 123, null);
-
-      Assert.fail("NPE was expected");
-    } catch (NullPointerException expected) {
-      assertEquals(expected.getMessage(), "null123null");
-    }
+    test.execute();
   }
 
   @Test
@@ -278,7 +196,7 @@ public class GrowableListTest {
     it.clear();
     assertContents();
 
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
     it.clear();
@@ -298,7 +216,7 @@ public class GrowableListTest {
 
     it.add(t1);
 
-    var array = Thing.randomArray(MANY);
+    var array = Thing.nextArray();
 
     for (var t : array) {
       it.add(t);
@@ -323,7 +241,7 @@ public class GrowableListTest {
 
   @Test
   public void containsAll() {
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     assertEquals(it.size(), 0);
 
@@ -347,7 +265,7 @@ public class GrowableListTest {
 
     listWithNull.addAll(arrayList);
 
-    listWithNull.set(HALF, null);
+    listWithNull.set(Thing.HALF, null);
 
     assertFalse(it.containsAll(listWithNull));
   }
@@ -365,7 +283,7 @@ public class GrowableListTest {
 
     assertTrue(a.equals(Collections.emptyList()));
 
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     a.addAll(arrayList);
 
@@ -562,7 +480,7 @@ public class GrowableListTest {
     assertEquals(it.hashCode(), hashCode);
 
     // many
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
 
@@ -585,7 +503,7 @@ public class GrowableListTest {
 
     it.clear();
 
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
 
@@ -653,7 +571,7 @@ public class GrowableListTest {
     tester.testNoMoreElements();
 
     // many
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
 
@@ -724,7 +642,7 @@ public class GrowableListTest {
 
     it.clear();
 
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
 
@@ -747,7 +665,7 @@ public class GrowableListTest {
 
   @Test
   public void listIterator() {
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
 
@@ -878,7 +796,7 @@ public class GrowableListTest {
     assertEquals(it.toArray(), new Object[] {});
     assertSame(it.toArray(emptyArray), emptyArray);
 
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     var lastNull = new Thing[arrayList.size() + 2];
 
@@ -1030,7 +948,7 @@ public class GrowableListTest {
 
     it.clear();
 
-    var arrayList = Thing.randomArrayList(MANY);
+    var arrayList = Thing.nextArrayList();
 
     it.addAll(arrayList);
 
@@ -1079,7 +997,7 @@ public class GrowableListTest {
 
     it = new GrowableList<Integer>();
 
-    for (int i = 0; i < MANY; i++) {
+    for (int i = 0; i < Thing.MANY; i++) {
       var next = Next.intValue();
 
       it.add(next);
@@ -1087,7 +1005,7 @@ public class GrowableListTest {
 
     result = it.toUnmodifiableList(c);
 
-    assertEquals(result.size(), MANY);
+    assertEquals(result.size(), Thing.MANY);
     assertNotEquals(result, it);
 
     var sorted = new ArrayList<Integer>(it);

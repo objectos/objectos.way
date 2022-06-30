@@ -65,7 +65,7 @@ public class GrowableSetTest {
     assertContents(t1, t2);
 
     // many
-    var many = Thing.randomArray(MANY);
+    var many = Thing.nextArray();
 
     for (var t : many) {
       assertTrue(it.add(t));
@@ -146,6 +146,20 @@ public class GrowableSetTest {
 
     nullTester.accept(listWithNull);
     nullTester.accept(setWithNull);
+  }
+
+  @Test
+  public void addAllIterable() {
+    var test = new GrowableCollectionAddAllIterableTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
+  public void addWithNullMessage() {
+    var test = new GrowableCollectionAddWithNullMessageTest(it);
+
+    test.execute();
   }
 
   private void assertContents(Object... expected) {

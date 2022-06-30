@@ -283,7 +283,7 @@ public class GrowableSet<E>
   }
 
   private boolean addAll0(Iterable<? extends E> iterable, String nullMessageStart) {
-    var result = false;
+    var mod = false;
 
     if (iterable instanceof RandomAccess && iterable instanceof List<? extends E> list) {
       for (int i = 0, size = list.size(); i < size; i++) {
@@ -292,7 +292,7 @@ public class GrowableSet<E>
         Check.notNull(element, nullMessageStart, i, "] == null");
 
         if (addUnchecked(element)) {
-          result = true;
+          mod = true;
         }
       }
     }
@@ -304,14 +304,14 @@ public class GrowableSet<E>
         Check.notNull(element, nullMessageStart, i, "] == null");
 
         if (addUnchecked(element)) {
-          result = true;
+          mod = true;
         }
 
         i++;
       }
     }
 
-    return result;
+    return mod;
   }
 
   private void firstResizeIfNecessary() {

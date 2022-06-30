@@ -50,6 +50,10 @@ final class Thing implements ToString.Formattable {
 
   static final Set<Thing> EMPTY_SET = Collections.emptySet();
 
+  static final int MANY = 100;
+
+  static final int HALF = MANY / 2;
+
   private final byte[] value;
 
   private Thing(byte[] value) {
@@ -57,21 +61,56 @@ final class Thing implements ToString.Formattable {
   }
 
   public static Thing next() {
-    byte[] value;
-    value = Next.bytes(16);
+    var value = Next.bytes(16);
 
     return new Thing(value);
   }
 
+  public static Thing[] nextArray() {
+    var array = new Thing[MANY];
+
+    for (int i = 0; i < array.length; i++) {
+      array[i] = next();
+    }
+
+    return array;
+  }
+
+  public static ArrayDeque<Thing> nextArrayDeque() {
+    var deque = new ArrayDeque<Thing>(MANY);
+
+    for (int i = 0; i < MANY; i++) {
+      deque.add(next());
+    }
+
+    return deque;
+  }
+
+  public static ArrayList<Thing> nextArrayList() {
+    var list = new ArrayList<Thing>(MANY);
+
+    for (int i = 0; i < MANY; i++) {
+      list.add(next());
+    }
+
+    return list;
+  }
+
+  public static Iterable<Thing> nextIterable() {
+    var array = nextArray();
+
+    return new ArrayBackedIterable<>(array);
+  }
+
   public static Thing parse(String s) {
-    HexFormat format = HexFormat.of();
+    var format = HexFormat.of();
 
     var bytes = format.parseHex(s);
 
     return new Thing(bytes);
   }
 
-  public static Thing[] randomArray(int size) {
+  static Thing[] randomArray(int size) {
     var array = new Thing[size];
 
     for (int i = 0; i < array.length; i++) {
@@ -81,7 +120,7 @@ final class Thing implements ToString.Formattable {
     return array;
   }
 
-  public static ArrayDeque<Thing> randomArrayDeque(int size) {
+  static ArrayDeque<Thing> randomArrayDeque(int size) {
     var deque = new ArrayDeque<Thing>();
 
     for (int i = 0; i < size; i++) {
@@ -91,7 +130,7 @@ final class Thing implements ToString.Formattable {
     return deque;
   }
 
-  public static ArrayList<Thing> randomArrayList(int size) {
+  static ArrayList<Thing> randomArrayList(int size) {
     var list = new ArrayList<Thing>();
 
     for (int i = 0; i < size; i++) {
@@ -101,7 +140,7 @@ final class Thing implements ToString.Formattable {
     return list;
   }
 
-  public static GrowableList<Thing> randomGrowableList(int size) {
+  static GrowableList<Thing> randomGrowableList(int size) {
     var list = new GrowableList<Thing>();
 
     var array = randomArray(size);
@@ -113,7 +152,7 @@ final class Thing implements ToString.Formattable {
     return list;
   }
 
-  public static GrowableSet<Thing> randomGrowableSet(int size) {
+  static GrowableSet<Thing> randomGrowableSet(int size) {
     GrowableSet<Thing> set;
     set = new GrowableSet<>();
 
@@ -127,7 +166,7 @@ final class Thing implements ToString.Formattable {
     return set;
   }
 
-  public static HashSet<Thing> randomHashSet(int size) {
+  static HashSet<Thing> randomHashSet(int size) {
     HashSet<Thing> set;
     set = new HashSet<Thing>(size);
 
@@ -141,13 +180,13 @@ final class Thing implements ToString.Formattable {
     return set;
   }
 
-  public static Iterable<Thing> randomIterable(int size) {
+  static Iterable<Thing> randomIterable(int size) {
     var array = randomArray(size);
 
     return new ArrayBackedIterable<>(array);
   }
 
-  public static UnmodifiableSet<Thing> randomUnmodifiableSet(int size) {
+  static UnmodifiableSet<Thing> randomUnmodifiableSet(int size) {
     Thing[] array;
     array = randomArray(size);
 
