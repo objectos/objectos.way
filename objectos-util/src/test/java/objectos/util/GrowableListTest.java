@@ -294,32 +294,9 @@ public class GrowableListTest {
 
   @Test
   public void getOnly() {
-    try {
-      it.getOnly();
+    var test = new GrowableCollectionGetOnlyTest(it);
 
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
-    }
-
-    var t1 = Thing.next();
-
-    it.add(t1);
-
-    assertEquals(it.getOnly(), t1);
-
-    var t2 = Thing.next();
-
-    it.add(t2);
-
-    // standard
-    try {
-      it.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
-    }
+    test.execute();
   }
 
   @Test(description = //

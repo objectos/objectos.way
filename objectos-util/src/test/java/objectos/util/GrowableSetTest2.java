@@ -16,7 +16,6 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -41,92 +40,6 @@ public class GrowableSetTest2 extends AbstractObjectosSetsTest {
   @BeforeMethod
   public void _beforeMethod() {
     set.clear();
-  }
-
-  @Test
-  public void containsAll() {
-    assertTrue(thingSet.containsAll(emptyThingList));
-
-    assertTrue(set.containsAll(emptyThingList));
-
-    set.addAll(thingList);
-
-    assertTrue(set.containsAll(thingList));
-
-    List<Thing> withMore;
-    withMore = new ArrayList<Thing>(thingList);
-
-    withMore.add(t1);
-
-    assertFalse(set.containsAll(withMore));
-
-    List<Thing> withLess;
-    withLess = new ArrayList<Thing>(thingList);
-
-    withLess.remove(withLess.size() - 1);
-
-    assertTrue(set.containsAll(withLess));
-  }
-
-  @SuppressWarnings("unlikely-arg-type")
-  @Test
-  public void equalsTest() {
-    Set<Thing> hashSet;
-    hashSet = new HashSet<>();
-
-    assertTrue(set.equals(set));
-
-    assertTrue(set.equals(hashSet));
-
-    assertTrue(hashSet.equals(set));
-
-    hashSet.addAll(thingSet);
-
-    set.addAll(thingSet);
-
-    assertTrue(set.equals(set));
-
-    assertTrue(set.equals(hashSet));
-
-    assertTrue(hashSet.equals(set));
-
-    set.clear();
-
-    assertFalse(set.equals(hashSet));
-
-    assertFalse(set.equals(null));
-
-    set.addAll(thingList);
-
-    assertFalse(set.equals(thingList));
-  }
-
-  @Test
-  public void getOnly() {
-    // empty
-    try {
-      set.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
-    }
-
-    // one
-    set.add(t1);
-
-    assertEquals(set.getOnly(), t1);
-
-    set.add(t2);
-
-    // standard
-    try {
-      set.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
-    }
   }
 
   @Test

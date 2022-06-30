@@ -21,6 +21,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -179,6 +180,45 @@ public class GrowableSetTest {
   @Test
   public void containsAll() {
     var test = new GrowableCollectionContainsAllTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void equals() {
+    var a = new GrowableSet<Thing>();
+
+    var b = new GrowableSet<Thing>();
+
+    assertTrue(a.equals(b));
+    assertTrue(b.equals(a));
+
+    assertFalse(a.equals(null));
+
+    assertTrue(a.equals(Collections.emptySet()));
+
+    var arrayList = Thing.nextArrayList();
+
+    a.addAll(arrayList);
+
+    var t2 = Thing.next();
+
+    b.addAll(arrayList);
+    b.add(t2);
+
+    assertFalse(a.equals(b));
+
+    var c = new GrowableSet<Thing>();
+
+    c.addAll(arrayList);
+
+    assertTrue(a.equals(c));
+    assertTrue(c.equals(a));
+  }
+
+  @Test
+  public void getOnly() {
+    var test = new GrowableCollectionGetOnlyTest(it);
 
     test.execute();
   }
