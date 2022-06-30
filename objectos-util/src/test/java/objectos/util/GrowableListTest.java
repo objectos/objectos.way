@@ -453,8 +453,6 @@ public class GrowableListTest {
     var tester = new UnmodifiableIteratorTester<>(it);
 
     // empty
-    assertTrue(it.isEmpty());
-
     tester.set();
     tester.testNoMoreElements();
 

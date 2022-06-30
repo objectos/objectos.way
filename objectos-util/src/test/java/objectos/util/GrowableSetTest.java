@@ -265,6 +265,92 @@ public class GrowableSetTest {
     test.execute();
   }
 
+  @Test
+  public void iterator() {
+    // empty
+    assertIterator();
+
+    // one
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertIterator(t1);
+
+    // two
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    assertIterator(t1, t2);
+
+    // many
+    var arrayList = Thing.nextArrayList();
+
+    it.addAll(arrayList);
+
+    assertIterator(t1, t2, arrayList);
+  }
+
+  @Test
+  public void join() {
+    // empty
+    assertEquals(
+      it.join(),
+      ""
+    );
+    assertEquals(
+      it.join("|"),
+      ""
+    );
+    assertEquals(
+      it.join("|", "{", "}"),
+      "{}"
+    );
+
+    // one
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertEquals(
+      it.join(),
+      t1.toString()
+    );
+    assertEquals(
+      it.join("|"),
+      t1.toString()
+    );
+    assertEquals(
+      it.join("|", "{", "}"),
+      "{" + t1.toString() + "}"
+    );
+
+    // two
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    var iterator = it.iterator();
+
+    var o1 = iterator.next();
+
+    var o2 = iterator.next();
+
+    assertEquals(
+      it.join(),
+      o1.toString() + o2.toString()
+    );
+    assertEquals(
+      it.join("|"),
+      o1.toString() + "|" + o2.toString()
+    );
+    assertEquals(
+      it.join("|", "{", "}"),
+      "{" + o1.toString() + "|" + o2.toString() + "}"
+    );
+  }
+
   private void assertContents(Object... expected) {
     var jdk = new HashSet<>();
 
@@ -287,6 +373,28 @@ public class GrowableSetTest {
     Object[] elements = it.toArray();
 
     for (Object e : elements) {
+      assertTrue(jdk.remove(e));
+    }
+
+    assertTrue(jdk.isEmpty());
+  }
+
+  private void assertIterator(Object... expected) {
+    var jdk = new HashSet<>();
+
+    for (var o : expected) {
+      if (o instanceof Thing t) {
+        jdk.add(t);
+      } else if (o instanceof Iterable<?> iter) {
+        for (var t : iter) {
+          jdk.add(t);
+        }
+      } else {
+        throw new UnsupportedOperationException("Implement me: " + o.getClass());
+      }
+    }
+
+    for (Object e : it) {
       assertTrue(jdk.remove(e));
     }
 
