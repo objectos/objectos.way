@@ -443,17 +443,9 @@ public class GrowableListTest {
 
   @Test
   public void isEmpty() {
-    assertTrue(it.isEmpty());
+    var test = new GrowableCollectionIsEmptyTest(it);
 
-    var t1 = Thing.next();
-
-    it.add(t1);
-
-    assertFalse(it.isEmpty());
-
-    it.clear();
-
-    assertTrue(it.isEmpty());
+    test.execute();
   }
 
   @Test

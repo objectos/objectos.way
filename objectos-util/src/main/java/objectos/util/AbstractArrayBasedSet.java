@@ -116,6 +116,26 @@ abstract class AbstractArrayBasedSet<E>
   }
 
   /**
+   * Returns the hash code value of this set.
+   *
+   * @return the hash code value of this set
+   */
+  @Override
+  public final int hashCode() {
+    var hashCode = 0;
+
+    for (int i = 0; i < array.length; i++) {
+      var e = array[i];
+
+      if (e != null) {
+        hashCode += +e.hashCode();
+      }
+    }
+
+    return hashCode;
+  }
+
+  /**
    * Returns an iterator over the elements in this set. The elements
    * are returned in no particular order.
    *

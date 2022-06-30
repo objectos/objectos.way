@@ -223,6 +223,48 @@ public class GrowableSetTest {
     test.execute();
   }
 
+  @Test
+  public void hashCodeTest() {
+    // empty
+    assertEquals(it.hashCode(), 0);
+
+    // one
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    var hashCode = t1.hashCode();
+
+    assertEquals(it.hashCode(), hashCode);
+
+    // two
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    hashCode = hashCode + t2.hashCode();
+
+    assertEquals(it.hashCode(), hashCode);
+
+    // many
+    var arrayList = Thing.nextArrayList();
+
+    it.addAll(arrayList);
+
+    for (var e : arrayList) {
+      hashCode = hashCode + e.hashCode();
+    }
+
+    assertEquals(it.hashCode(), hashCode);
+  }
+
+  @Test
+  public void isEmpty() {
+    var test = new GrowableCollectionIsEmptyTest(it);
+
+    test.execute();
+  }
+
   private void assertContents(Object... expected) {
     var jdk = new HashSet<>();
 
