@@ -395,6 +395,62 @@ public class UnmodifiableSetTest {
     SetAssert.iterator(usX, jdkX);
   }
 
+  @Test
+  public void remove() {
+    testAll((it, els) -> {
+      try {
+        it.remove(t1);
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        SetAssert.iterator(it, els);
+      }
+    });
+  }
+
+  @Test
+  public void removeAll() {
+    testAll((it, els) -> {
+      try {
+        var all = SetAssert.all(els);
+
+        it.removeAll(all);
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        SetAssert.iterator(it, els);
+      }
+    });
+  }
+
+  @Test
+  public void removeIf() {
+    testAll((it, els) -> {
+      try {
+        it.removeIf(e -> e.equals(t1));
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        SetAssert.iterator(it, els);
+      }
+    });
+  }
+
+  @Test
+  public void retainAll() {
+    testAll((it, els) -> {
+      try {
+        var all = SetAssert.all(els);
+
+        it.retainAll(all);
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        SetAssert.iterator(it, els);
+      }
+    });
+  }
+
   private void testAll(Tester tester) {
     // empty
     tester.execute(UnmodifiableSet.of());

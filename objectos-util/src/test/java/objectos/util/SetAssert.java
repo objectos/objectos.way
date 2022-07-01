@@ -24,7 +24,7 @@ final class SetAssert {
 
   private SetAssert() {}
 
-  public static void iterator(Set<?> it, Object... expected) {
+  public static Set<Object> all(Object... expected) {
     var jdk = new HashSet<>();
 
     for (var o : expected) {
@@ -42,6 +42,11 @@ final class SetAssert {
         throw new UnsupportedOperationException("Implement me: " + o.getClass());
       }
     }
+    return jdk;
+  }
+
+  public static void iterator(Set<?> it, Object... expected) {
+    var jdk = all(expected);
 
     for (Object e : it) {
       assertTrue(jdk.remove(e));

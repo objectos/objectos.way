@@ -559,114 +559,117 @@ public class UnmodifiableListTest {
 
   @Test
   public void listIterator() {
-    testAll(
-      (it, els) -> {
-        try {
-          it.listIterator();
+    testAll((it, els) -> {
+      try {
+        it.listIterator();
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
-
-        try {
-          it.listIterator(0);
-
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+
+      try {
+        it.listIterator(0);
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
+      }
+    });
   }
 
   @Test
   public void remove() {
     var t1 = jdk1.get(0);
 
-    testAll(
-      (it, els) -> {
-        try {
-          it.remove(t1);
+    testAll((it, els) -> {
+      try {
+        it.remove(t1);
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
-
-        try {
-          it.remove(0);
-
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+
+      try {
+        it.remove(0);
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
+      }
+    });
+  }
+
+  @Test
+  public void removeAll() {
+    testAll((it, els) -> {
+      try {
+        var all = SetAssert.all(els);
+
+        it.removeAll(all);
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
+      }
+    });
   }
 
   @Test
   public void removeIf() {
     var t1 = jdk1.get(0);
 
-    testAll(
-      (it, els) -> {
-        try {
-          it.removeIf(e -> e.equals(t1));
+    testAll((it, els) -> {
+      try {
+        it.removeIf(e -> e.equals(t1));
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
   public void replaceAll() {
-    testAll(
-      (it, els) -> {
-        try {
-          it.replaceAll(t -> Thing.next());
+    testAll((it, els) -> {
+      try {
+        it.replaceAll(t -> Thing.next());
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
   public void retainAll() {
-    testAll(
-      (it, els) -> {
-        try {
-          it.retainAll(els);
+    testAll((it, els) -> {
+      try {
+        it.retainAll(els);
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
   public void set() {
     var t1 = Thing.next();
 
-    testAll(
-      (it, els) -> {
-        try {
-          it.set(0, t1);
+    testAll((it, els) -> {
+      try {
+        it.set(0, t1);
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
