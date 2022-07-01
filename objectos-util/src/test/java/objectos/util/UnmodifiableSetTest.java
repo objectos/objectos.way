@@ -28,9 +28,64 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class UnmodifiableSetTest {
+
+  private UnmodifiableSet<Thing> us0;
+
+  private UnmodifiableSet<Thing> us1;
+
+  private UnmodifiableSet<Thing> us2;
+
+  private UnmodifiableSet<Thing> us3;
+
+  private UnmodifiableSet<Thing> usX;
+
+  private Set<Thing> jdk0;
+
+  private Set<Thing> jdk1;
+
+  private Set<Thing> jdk2;
+
+  private Set<Thing> jdk3;
+
+  private Set<Thing> jdkX;
+
+  private Thing t1;
+
+  private Thing t2;
+
+  private Thing t3;
+
+  private Thing[] many;
+
+  @BeforeClass
+  public void _beforeClass() {
+    us0 = UnmodifiableSet.of();
+    jdk0 = Set.of();
+
+    t1 = Thing.next();
+
+    us1 = UnmodifiableSet.of(t1);
+    jdk1 = Set.of(t1);
+
+    t2 = Thing.next();
+
+    us2 = UnmodifiableSet.of(t1, t2);
+    jdk2 = Set.of(t1, t2);
+
+    t3 = Thing.next();
+
+    us3 = UnmodifiableSet.of(t1, t2, t3);
+    jdk3 = Set.of(t1, t2, t3);
+
+    many = Thing.nextArray();
+
+    usX = UnmodifiableSet.copyOf(many);
+    jdkX = Set.of(many);
+  }
 
   @Test
   public void add() {
@@ -77,20 +132,6 @@ public class UnmodifiableSetTest {
 
   @Test
   public void contains() {
-    var us0 = UnmodifiableSet.<Thing> of();
-
-    var t1 = Thing.next();
-    var us1 = UnmodifiableSet.of(t1);
-
-    var t2 = Thing.next();
-    var us2 = UnmodifiableSet.of(t1, t2);
-
-    var t3 = Thing.next();
-    var us3 = UnmodifiableSet.of(t1, t2, t3);
-
-    var many = Thing.nextArray();
-    var usX = UnmodifiableSet.copyOf(many);
-
     assertFalse(us0.contains(null));
     assertFalse(us1.contains(null));
     assertFalse(us2.contains(null));
@@ -126,21 +167,6 @@ public class UnmodifiableSetTest {
 
   @Test
   public void containsAll() {
-    var us0 = UnmodifiableSet.<Thing> of();
-
-    var t1 = Thing.next();
-    var us1 = UnmodifiableSet.of(t1);
-
-    var t2 = Thing.next();
-    var us2 = UnmodifiableSet.of(t1, t2);
-
-    var t3 = Thing.next();
-    var us3 = UnmodifiableSet.of(t1, t2, t3);
-
-    var many = Thing.nextArray();
-    var usX = UnmodifiableSet.copyOf(many);
-    var jdkX = Set.of(many);
-
     assertFalse(us0.containsAll(jdkX));
     assertFalse(us1.containsAll(jdkX));
     assertFalse(us2.containsAll(jdkX));
@@ -276,6 +302,79 @@ public class UnmodifiableSetTest {
     } catch (NullPointerException expected) {
       assertEquals(expected.getMessage(), "iterator == null");
     }
+  }
+
+  @Test
+  public void equals() {
+    // empty
+    assertTrue(us0.equals(jdk0));
+    assertTrue(jdk0.equals(us0));
+    assertFalse(us0.equals(null));
+    assertTrue(us0.equals(us0));
+    assertFalse(us0.equals(us1));
+    assertFalse(us0.equals(us2));
+    assertFalse(us0.equals(us3));
+    assertFalse(us0.equals(usX));
+
+    // one
+    assertTrue(us1.equals(jdk1));
+    assertTrue(jdk1.equals(us1));
+    assertFalse(us1.equals(null));
+    assertFalse(us1.equals(us0));
+    assertTrue(us1.equals(us1));
+    assertFalse(us1.equals(us2));
+    assertFalse(us1.equals(us3));
+    assertFalse(us1.equals(usX));
+
+    // two
+    assertTrue(us2.equals(jdk2));
+    assertTrue(jdk2.equals(us2));
+    assertFalse(us2.equals(null));
+    assertFalse(us2.equals(us0));
+    assertFalse(us2.equals(us1));
+    assertTrue(us2.equals(us2));
+    assertFalse(us2.equals(us3));
+    assertFalse(us2.equals(usX));
+
+    // many
+    assertTrue(usX.equals(jdkX));
+    assertTrue(jdkX.equals(usX));
+    assertFalse(usX.equals(null));
+    assertFalse(usX.equals(us0));
+    assertFalse(usX.equals(us1));
+    assertFalse(usX.equals(us2));
+    assertFalse(usX.equals(us3));
+    assertTrue(usX.equals(usX));
+  }
+
+  @Test
+  public void getOnly() {
+    try {
+      us0.getOnly();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
+    }
+
+    assertEquals(us1.getOnly(), jdk1.iterator().next());
+
+    try {
+      us2.getOnly();
+
+      Assert.fail();
+    } catch (IllegalStateException expected) {
+      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
+    }
+  }
+
+  @Test
+  public void hashCodeTest() {
+    assertEquals(us0.hashCode(), jdk0.hashCode());
+    assertEquals(us1.hashCode(), jdk1.hashCode());
+    assertEquals(us2.hashCode(), jdk2.hashCode());
+    assertEquals(us3.hashCode(), jdk3.hashCode());
+    assertEquals(usX.hashCode(), jdkX.hashCode());
   }
 
   private void testAll(Tester tester) {
