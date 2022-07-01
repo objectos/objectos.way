@@ -82,70 +82,62 @@ public class UnmodifiableListTest {
 
   @Test
   public void add() {
-    testAll(
-      (it, els) -> {
-        try {
-          var t = Thing.next();
+    testAll((it, els) -> {
+      try {
+        var t = Thing.next();
 
-          it.add(t);
+        it.add(t);
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
   public void add_withIndex() {
-    testAll(
-      (it, els) -> {
-        try {
-          var t = Thing.next();
+    testAll((it, els) -> {
+      try {
+        var t = Thing.next();
 
-          it.add(0, t);
+        it.add(0, t);
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
   public void addAll() {
     final var arrayList = Thing.nextArrayList();
 
-    testAll(
-      (it, els) -> {
-        try {
-          it.addAll(arrayList);
+    testAll((it, els) -> {
+      try {
+        it.addAll(arrayList);
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
   public void addAll_withIndex() {
     final var arrayList = Thing.nextArrayList();
 
-    testAll(
-      (it, els) -> {
-        try {
-          it.addAll(0, arrayList);
+    testAll((it, els) -> {
+      try {
+        it.addAll(0, arrayList);
 
-          Assert.fail("Expected an UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-          assertEquals(it, els);
-        }
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertEquals(it, els);
       }
-    );
+    });
   }
 
   @Test
@@ -163,6 +155,12 @@ public class UnmodifiableListTest {
 
   @Test
   public void contains() {
+    assertFalse(ul0.contains(null));
+    assertFalse(ul1.contains(null));
+    assertFalse(ul2.contains(null));
+    assertFalse(ul3.contains(null));
+    assertFalse(ulX.contains(null));
+
     var t1 = jdk1.get(0);
 
     assertFalse(ul0.contains(t1));
@@ -174,25 +172,17 @@ public class UnmodifiableListTest {
     var t2 = jdk2.get(1);
 
     assertFalse(ul0.contains(t2));
-
     assertFalse(ul1.contains(t2));
-
     assertTrue(ul2.contains(t2));
-
     assertTrue(ul3.contains(t2));
-
     assertFalse(ulX.contains(t2));
 
     var t3 = jdk3.get(2);
 
     assertFalse(ul0.contains(t3));
-
     assertFalse(ul1.contains(t3));
-
     assertFalse(ul2.contains(t3));
-
     assertTrue(ul3.contains(t3));
-
     assertFalse(ulX.contains(t3));
 
     for (var e : jdkX) {
