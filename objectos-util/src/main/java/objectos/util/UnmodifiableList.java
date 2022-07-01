@@ -28,7 +28,9 @@ import objectos.lang.Check;
  * @param <E>
  *        type of the elements in this list
  */
-public final class UnmodifiableList<E> extends AbstractArrayBasedList<E> {
+public final class UnmodifiableList<E>
+    extends AbstractArrayBasedList<E>
+    implements UnmodifiableCollection<E> {
 
   static final UnmodifiableList<Object> EMPTY = new UnmodifiableList<Object>();
 

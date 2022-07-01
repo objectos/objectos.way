@@ -32,7 +32,9 @@ import objectos.lang.Check;
  *
  * @param <E> type of the elements in this set
  */
-public final class UnmodifiableSet<E> extends AbstractArrayBasedSet<E> {
+public final class UnmodifiableSet<E>
+    extends AbstractArrayBasedSet<E>
+    implements UnmodifiableCollection<E> {
 
   private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSet<Object>(
     ObjectArrays.empty(), 0

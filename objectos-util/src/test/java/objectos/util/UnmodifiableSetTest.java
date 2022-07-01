@@ -30,6 +30,40 @@ import org.testng.annotations.Test;
 public class UnmodifiableSetTest {
 
   @Test
+  public void add() {
+    testAll(
+      (it, els) -> {
+        try {
+          var t = Thing.next();
+
+          it.add(t);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          SetAssert.iterator(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
+  public void addAll() {
+    final var arrayList = Thing.nextArrayList();
+
+    testAll(
+      (it, els) -> {
+        try {
+          it.addAll(arrayList);
+
+          Assert.fail("Expected an UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {
+          SetAssert.iterator(it, els);
+        }
+      }
+    );
+  }
+
+  @Test
   public void copyOf_iterable() {
     final var array = Thing.nextArray();
 
@@ -139,6 +173,28 @@ public class UnmodifiableSetTest {
     } catch (NullPointerException expected) {
       assertEquals(expected.getMessage(), "iterator == null");
     }
+  }
+
+  private void testAll(Tester tester) {
+    // empty
+    tester.execute(UnmodifiableSet.of());
+
+    // one
+    var t1 = Thing.next();
+    tester.execute(UnmodifiableSet.of(t1), t1);
+
+    // two
+    var t2 = Thing.next();
+    tester.execute(UnmodifiableSet.of(t1, t2), t1, t2);
+
+    //many
+    var many = Thing.nextArray();
+    tester.execute(UnmodifiableSet.copyOf(many), (Object) many);
+  }
+
+  @FunctionalInterface
+  interface Tester {
+    void execute(UnmodifiableSet<Thing> it, Object... els);
   }
 
 }
