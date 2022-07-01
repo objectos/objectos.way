@@ -17,12 +17,14 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -451,6 +453,46 @@ public class UnmodifiableSetTest {
     });
   }
 
+  @Test
+  public void toArray() {
+    var emptyArray = Thing.EMPTY_ARRAY;
+
+    assertEquals(us0.toArray(), jdk0.toArray());
+    assertSame(us0.toArray(emptyArray), jdk0.toArray(emptyArray));
+
+    var lastNull = new Thing[jdkX.size() + 2];
+
+    var result = us0.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    assertNull(result[0]);
+    assertNull(result[1]);
+
+    assertEquals(us1.toArray(), jdk1.toArray());
+    assertEquals(us1.toArray(emptyArray), jdk1.toArray(emptyArray));
+
+    result = us1.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    testToArray(result, t1);
+
+    testToArray(us2.toArray(), jdk2.toArray());
+    testToArray(us2.toArray(emptyArray), (Object[]) jdk2.toArray(emptyArray));
+
+    result = us2.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    testToArray(result, t1, t2);
+
+    testToArray(usX.toArray(), jdkX.toArray());
+    testToArray(usX.toArray(emptyArray), (Object[]) jdkX.toArray(emptyArray));
+
+    result = usX.toArray(lastNull);
+
+    assertSame(result, lastNull);
+    testToArray(result, (Object[]) many);
+  }
+
   private void testAll(Tester tester) {
     // empty
     tester.execute(UnmodifiableSet.of());
@@ -466,6 +508,22 @@ public class UnmodifiableSetTest {
     //many
     var many = Thing.nextArray();
     tester.execute(UnmodifiableSet.copyOf(many), (Object) many);
+  }
+
+  private void testToArray(Object[] result, Object... expected) {
+    var jdk = new HashSet<>(expected.length);
+
+    for (var t : expected) {
+      jdk.add(t);
+    }
+
+    for (int i = 0; i < expected.length; i++) {
+      assertTrue(jdk.remove(result[i]));
+    }
+
+    if (result.length > expected.length) {
+      assertNull(result[expected.length]);
+    }
   }
 
   @FunctionalInterface

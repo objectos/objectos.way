@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Set;
@@ -108,89 +107,6 @@ final class Thing implements ToString.Formattable {
     var bytes = format.parseHex(s);
 
     return new Thing(bytes);
-  }
-
-  static Thing[] randomArray(int size) {
-    var array = new Thing[size];
-
-    for (int i = 0; i < array.length; i++) {
-      array[i] = next();
-    }
-
-    return array;
-  }
-
-  static ArrayDeque<Thing> randomArrayDeque(int size) {
-    var deque = new ArrayDeque<Thing>();
-
-    for (int i = 0; i < size; i++) {
-      deque.add(next());
-    }
-
-    return deque;
-  }
-
-  static ArrayList<Thing> randomArrayList(int size) {
-    var list = new ArrayList<Thing>();
-
-    for (int i = 0; i < size; i++) {
-      list.add(next());
-    }
-
-    return list;
-  }
-
-  static GrowableList<Thing> randomGrowableList(int size) {
-    var list = new GrowableList<Thing>();
-
-    var array = randomArray(size);
-
-    for (Thing thing : array) {
-      list.add(thing);
-    }
-
-    return list;
-  }
-
-  static GrowableSet<Thing> randomGrowableSet(int size) {
-    GrowableSet<Thing> set;
-    set = new GrowableSet<>();
-
-    Thing[] array;
-    array = randomArray(size);
-
-    for (Thing thing : array) {
-      set.add(thing);
-    }
-
-    return set;
-  }
-
-  static HashSet<Thing> randomHashSet(int size) {
-    HashSet<Thing> set;
-    set = new HashSet<Thing>(size);
-
-    Thing[] array;
-    array = randomArray(size);
-
-    for (Thing thing : array) {
-      set.add(thing);
-    }
-
-    return set;
-  }
-
-  static Iterable<Thing> randomIterable(int size) {
-    var array = randomArray(size);
-
-    return new ArrayBackedIterable<>(array);
-  }
-
-  static UnmodifiableSet<Thing> randomUnmodifiableSet(int size) {
-    Thing[] array;
-    array = randomArray(size);
-
-    return UnmodifiableSet.copyOf(array);
   }
 
   @Override

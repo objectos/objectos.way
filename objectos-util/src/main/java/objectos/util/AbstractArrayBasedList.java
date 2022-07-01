@@ -515,7 +515,7 @@ abstract class AbstractArrayBasedList<E>
    *
    * <p>
    * The specified array is used as the return value if it is large enough to
-   * hold all of the elements in this list. Additionally, iff the specified
+   * hold all of the elements in this list. Additionally, if the specified
    * array is such that {@code a.length > size()} then the position after the
    * last element is set to {@code null}.
    *

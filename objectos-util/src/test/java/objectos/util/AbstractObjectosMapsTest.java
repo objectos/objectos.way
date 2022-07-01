@@ -59,9 +59,9 @@ public abstract class AbstractObjectosMapsTest {
       t3 = Thing.next();
     }
 
-    thingSize = 5678;
+    thingArray = Thing.nextArray();
 
-    thingArray = Thing.randomArray(thingSize);
+    thingSize = thingArray.length;
   }
 
   final <K, V> void assertMap(Map<K, V> result, Map<K, V> expected) {

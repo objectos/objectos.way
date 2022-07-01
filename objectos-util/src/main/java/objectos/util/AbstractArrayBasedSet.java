@@ -15,8 +15,10 @@
  */
 package objectos.util;
 
+import java.lang.reflect.Array;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import objectos.lang.Check;
 import objectos.lang.HashCode;
 
 abstract class AbstractArrayBasedSet<E>
@@ -157,21 +159,65 @@ abstract class AbstractArrayBasedSet<E>
     return size;
   }
 
+  /**
+   * Returns a new array instance containing all of the elements in this set.
+   * The returned array length is equal to the size of this set.
+   *
+   * @return a new array instance containing all of the elements in this set
+   */
   @Override
   public final Object[] toArray() {
     var a = new Object[size];
 
-    var index = 0;
-
-    for (int i = 0, len = array.length; i < len; i++) {
-      var maybe = array[i];
-
-      if (maybe != null) {
-        a[index++] = maybe;
-      }
-    }
+    fillToArray(a);
 
     return a;
+  }
+
+  /**
+   * Returns an array, either the specified array or a new array instance,
+   * containing all of the elements in this set.
+   *
+   * <p>
+   * The specified array is used as the return value if it is large enough to
+   * hold all of the elements in this set. Additionally, if the specified
+   * array is such that {@code a.length > size()} then the position after the
+   * last element is set to {@code null}.
+   *
+   * <p>
+   * If the specified array is not large enough, then a new array is created,
+   * with the same runtime type of the specified array, and used as the return
+   * value.
+   *
+   * @param a
+   *        the array into which the elements of the set are to be stored, if
+   *        it is big enough; otherwise, a new array of the same runtime type is
+   *        allocated for this purpose.
+   *
+   * @return an array containing the elements of the set
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public final <T> T[] toArray(T[] a) {
+    Check.notNull(a, "a == null");
+
+    Object[] target = a;
+
+    if (a.length < size) {
+      var arrayType = a.getClass();
+
+      var componentType = arrayType.getComponentType();
+
+      target = (Object[]) Array.newInstance(componentType, size);
+    }
+
+    fillToArray(target);
+
+    if (a.length > size) {
+      a[size] = null;
+    }
+
+    return (T[]) target;
   }
 
   /**
@@ -219,6 +265,18 @@ abstract class AbstractArrayBasedSet<E>
     }
 
     return true;
+  }
+
+  private void fillToArray(Object[] a) {
+    var index = 0;
+
+    for (int i = 0, len = array.length; i < len; i++) {
+      var maybe = array[i];
+
+      if (maybe != null) {
+        a[index++] = maybe;
+      }
+    }
   }
 
   private class ThisIterator extends UnmodifiableIterator<E> {

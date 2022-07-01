@@ -32,10 +32,6 @@ import org.testng.annotations.Test;
 
 public class GrowableSetTest {
 
-  private static final int MANY = 100;
-
-  private static final int HALF = MANY / 2;
-
   private GrowableSet<Thing> it;
 
   @BeforeMethod
@@ -115,7 +111,7 @@ public class GrowableSetTest {
     tester.accept(Set.of(t1, t2));
 
     // many
-    var many = Thing.randomArray(MANY);
+    var many = Thing.nextArray();
 
     tester.accept(List.of(many));
     tester.accept(Set.of(many));
@@ -135,10 +131,10 @@ public class GrowableSetTest {
       _beforeMethod();
     };
 
-    many[HALF] = null;
+    many[Thing.HALF] = null;
 
-    var listWithNull = new ArrayList<Thing>(MANY);
-    var setWithNull = new HashSet<Thing>(MANY);
+    var listWithNull = new ArrayList<Thing>(Thing.MANY);
+    var setWithNull = new HashSet<Thing>(Thing.MANY);
 
     for (var t : many) {
       listWithNull.add(t);
