@@ -15,7 +15,6 @@
  */
 package objectos.util;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
@@ -29,19 +28,11 @@ import org.testng.annotations.Test;
 
 public class UnmodifiableSetTest2 extends AbstractObjectosSetsTest {
 
-  private UnmodifiableSet<Thing> emptySet;
-
-  private UnmodifiableSet<Thing> t1AndT2Set;
-
   private UnmodifiableSet<Thing> t1Set;
 
   @BeforeClass
   public void _beforeClass() {
-    emptySet = UnmodifiableSet.of();
-
     t1Set = UnmodifiableSet.of(t1);
-
-    t1AndT2Set = UnmodifiableSet.of(t1, t2);
   }
 
   @Test(description = "UnmodifiableSet.copyOf(E[])")
@@ -61,45 +52,6 @@ public class UnmodifiableSetTest2 extends AbstractObjectosSetsTest {
     }
 
     assertSet(result, expected);
-  }
-
-  @Test
-  public void getOnly() {
-    try {
-      emptySet.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: empty.");
-    }
-
-    assertEquals(t1Set.getOnly(), t1);
-
-    try {
-      t1AndT2Set.getOnly();
-
-      Assert.fail();
-    } catch (IllegalStateException expected) {
-      assertEquals(expected.getMessage(), "Could not getOnly: more than one element.");
-    }
-  }
-
-  @Test
-  public void iterator() {
-    assertTrue(emptySet.isEmpty());
-
-    Set<Thing> expected;
-    expected = new HashSet<>();
-
-    assertIterator(emptySet.iterator(), expected);
-
-    expected.add(t1);
-
-    assertIterator(t1Set.iterator(), expected);
-
-    expected.add(t2);
-
-    assertIterator(t1AndT2Set.iterator(), expected);
   }
 
   @Test

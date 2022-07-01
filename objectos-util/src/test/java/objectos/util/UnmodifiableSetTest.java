@@ -377,6 +377,24 @@ public class UnmodifiableSetTest {
     assertEquals(usX.hashCode(), jdkX.hashCode());
   }
 
+  @Test
+  public void isEmpty() {
+    assertTrue(us0.isEmpty());
+    assertFalse(us1.isEmpty());
+    assertFalse(us2.isEmpty());
+    assertFalse(us3.isEmpty());
+    assertFalse(usX.isEmpty());
+  }
+
+  @Test
+  public void iterator() {
+    SetAssert.iterator(us0, jdk0);
+    SetAssert.iterator(us1, jdk1);
+    SetAssert.iterator(us2, jdk2);
+    SetAssert.iterator(us3, jdk3);
+    SetAssert.iterator(usX, jdkX);
+  }
+
   private void testAll(Tester tester) {
     // empty
     tester.execute(UnmodifiableSet.of());
