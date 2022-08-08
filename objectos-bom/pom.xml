@@ -279,6 +279,12 @@
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-asciidoc</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>office</artifactId>
 				<version>${project.version}</version>
 			</dependency>
