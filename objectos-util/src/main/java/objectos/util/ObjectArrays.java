@@ -15,6 +15,9 @@
  */
 package objectos.util;
 
+import java.util.Arrays;
+import objectos.lang.Check;
+
 /**
  * <p>
  * This class provides {@code static} methods for operating on
@@ -27,6 +30,65 @@ public final class ObjectArrays {
   static final Object[] EMPTY = new Object[0];
 
   private ObjectArrays() {}
+
+  /**
+   * Copies the values of the array into a larger one (if necessary) so that a
+   * value can be inserted at the required index. More formally:
+   *
+   * <p>
+   * If the {@code requiredIndex} is smaller than {@code 0} then an
+   * {@link java.lang.IllegalArgumentException} is thrown.
+   *
+   * <p>
+   * If the {@code requiredIndex} is smaller than {@code array.length} then the
+   * array is not copied and is returned unchanged.
+   *
+   * <p>
+   * If the {@code requiredIndex} is equal to or is greater than
+   * {@code array.length} then:
+   *
+   * <ol>
+   * <li>a new array instance is created. The resulting array is of exactly the
+   * same class as the original array. The length of the new
+   * array is guaranteed to be greater than {@code requiredIndex};</li>
+   * <li>all values from the original array are copied into the new array so
+   * that, for all valid indices in the original array, the new array contains
+   * an identical value for the same index; and</li>
+   * <li>the new array instance is returned.</li>
+   * </ol>
+   *
+   * <p>
+   * A typical usage is:
+   *
+   * <pre>
+   * Foo foo = computeFoo();
+   * array = ObjectArrays.copyIfNecessary(array, currentIndex);
+   * array[currentIndex++] = foo;</pre>
+   *
+   * @param array
+   *        the array instance to be copied if necessary
+   * @param requiredIndex
+   *        the index where a value is to be inserted
+   *
+   * @return the {@code array} instance itself or a larger copy of the
+   *         original
+   *
+   * @throws IllegalArgumentException
+   *         if {@code requiredIndex < 0}
+   */
+  public static <T> T[] copyIfNecessary(T[] array, int requiredIndex) {
+    Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
+
+    var length = array.length;
+
+    if (requiredIndex < length) {
+      return array;
+    }
+
+    var newLength = MoreArrays.growArrayLength(length, requiredIndex);
+
+    return Arrays.copyOf(array, newLength);
+  }
 
   /**
    * Returns the empty zero-length {@link Object} array instance. Since it is a

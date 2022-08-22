@@ -16,10 +16,32 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.Test;
 
 public class ObjectArraysTest {
+
+  @Test
+  public void copyIfNecessary() {
+    // String
+    var array = new String[3];
+
+    var noGrowthRequired = ObjectArrays.copyIfNecessary(array, 2);
+
+    assertSame(noGrowthRequired, array);
+    assertEquals(noGrowthRequired.length, 3);
+
+    var growthRequired = ObjectArrays.copyIfNecessary(array, 3);
+
+    var c = growthRequired.getClass();
+
+    assertEquals(c.getComponentType(), String.class);
+    assertNotSame(growthRequired, array);
+    assertTrue(growthRequired.length > array.length);
+  }
 
   @Test
   public void empty() {
