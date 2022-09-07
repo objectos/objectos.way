@@ -60,6 +60,13 @@ public class GrowableOrderedMapTest {
   }
 
   @Test
+  public void entrySet() {
+    var test = new GrowableMapEntrySetTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
   public void put() {
     var test = new GrowableMapPutTest(it, this::assertContents);
 
