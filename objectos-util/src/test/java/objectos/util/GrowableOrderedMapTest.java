@@ -81,6 +81,13 @@ public class GrowableOrderedMapTest {
   }
 
   @Test
+  public void keySet() {
+    var test = new GrowableMapKeySetTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
   public void put() {
     var test = new GrowableMapPutTest(it, this::assertContents);
 
