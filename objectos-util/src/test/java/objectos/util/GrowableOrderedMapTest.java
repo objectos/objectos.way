@@ -53,6 +53,13 @@ public class GrowableOrderedMapTest {
   }
 
   @Test
+  public void containsValue() {
+    var test = new GrowableMapContainsValueTest(it);
+
+    test.execute();
+  }
+
+  @Test
   public void put() {
     var test = new GrowableMapPutTest(it, this::assertContents);
 
