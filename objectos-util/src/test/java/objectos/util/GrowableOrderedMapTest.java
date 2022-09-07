@@ -51,6 +51,13 @@ public class GrowableOrderedMapTest {
     test.execute();
   }
 
+  @Test
+  public void putAll() {
+    var test = new GrowableMapPutAllTest(it, this::assertContents);
+
+    test.execute();
+  }
+
   private void assertContents(Object... expected) {
     var jdk = new LinkedHashMap<Thing, String>();
 

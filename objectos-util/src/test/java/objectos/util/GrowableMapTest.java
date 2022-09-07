@@ -51,6 +51,13 @@ public class GrowableMapTest {
     test.execute();
   }
 
+  @Test
+  public void putAll() {
+    var test = new GrowableMapPutAllTest(it, this::assertContents);
+
+    test.execute();
+  }
+
   private void assertContents(Object... expected) {
     var jdk = new HashMap<Thing, String>();
 
