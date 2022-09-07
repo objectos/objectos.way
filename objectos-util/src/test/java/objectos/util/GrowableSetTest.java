@@ -402,9 +402,9 @@ public class GrowableSetTest {
       }
     }
 
-    Object[] elements = it.toArray();
+    var elements = it.toArray();
 
-    for (Object e : elements) {
+    for (var e : elements) {
       assertTrue(jdk.remove(e));
     }
 

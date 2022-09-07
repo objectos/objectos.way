@@ -15,28 +15,63 @@
  */
 package objectos.util;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
 import java.util.LinkedHashMap;
-import java.util.Map;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GrowableOrderedMapTest extends GrowableMapTest {
+public class GrowableOrderedMapTest {
 
-  @Test(enabled = false)
-  public void _enableEclipseCodeMining() {}
+  private GrowableOrderedMap<Thing, String> it;
 
-  @Override
-  final <K, V> void assertContents(Map<Thing, String> result, Map<Thing, String> expected) {
-    assertOrderedMap(result, expected);
+  @BeforeClass
+  public void _beforeClass() {
+    it = new GrowableOrderedMap<>();
   }
 
-  @Override
-  final <K, V> Map<K, V> createExpectedMap() {
-    return new LinkedHashMap<>();
+  @BeforeMethod
+  public void _beforeMethod() {
+    it.clear();
   }
 
-  @Override
-  final <K, V> GrowableMap<K, V> createGrowableMap() {
-    return new GrowableOrderedMap<>();
+  @Test
+  public void put() {
+    var test = new GrowableMapPutTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  private void assertContents(Object... expected) {
+    var jdk = new LinkedHashMap<Thing, String>();
+
+    for (var o : expected) {
+      if (o instanceof Thing t) {
+        t.putDec(jdk);
+      } else if (o instanceof Thing[] a) {
+        for (var t : a) {
+          t.putDec(jdk);
+        }
+      } else if (o instanceof Hex hex) {
+        var t = hex.value();
+
+        t.putHex(jdk);
+      } else {
+        throw new UnsupportedOperationException("Implement me: " + o.getClass());
+      }
+    }
+
+    for (var entry : it.entrySet()) {
+      var key = entry.getKey();
+
+      var value = entry.getValue();
+
+      assertEquals(jdk.remove(key), value);
+    }
+
+    assertTrue(jdk.isEmpty());
   }
 
 }

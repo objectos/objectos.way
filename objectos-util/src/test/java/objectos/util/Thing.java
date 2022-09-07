@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import objectos.lang.ToString;
 
@@ -144,6 +145,14 @@ final class Thing implements ToString.Formattable {
   @Override
   public final String toString() {
     return ToString.of(this);
+  }
+
+  final String putDec(Map<Thing, String> map) {
+    return map.put(this, toDecimalString());
+  }
+
+  final String putHex(Map<Thing, String> map) {
+    return map.put(this, toHexString());
   }
 
 }

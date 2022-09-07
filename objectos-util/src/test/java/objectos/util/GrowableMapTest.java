@@ -16,195 +16,62 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.HashMap;
-import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GrowableMapTest extends AbstractObjectosMapsTest {
+public class GrowableMapTest {
 
-  private GrowableMap<Thing, String> map;
+  private GrowableMap<Thing, String> it;
 
   @BeforeClass
   public void _beforeClass() {
-    map = createGrowableMap();
+    it = new GrowableMap<>();
   }
 
   @BeforeMethod
   public void _beforeMethod() {
-    map.clear();
+    it.clear();
   }
 
   @Test
-  public void testCase08() {
-    // empty
-    assertEquals(map.size(), 0);
-    assertTrue(map.isEmpty());
+  public void put() {
+    var test = new GrowableMapPutTest(it, this::assertContents);
 
-    UnmodifiableMap<Thing, String> result;
-    result = map.toUnmodifiableMap();
+    test.execute();
+  }
 
-    Map<Thing, String> expected;
-    expected = createExpectedMap();
+  private void assertContents(Object... expected) {
+    var jdk = new HashMap<Thing, String>();
 
-    assertContents(result, expected);
+    for (var o : expected) {
+      if (o instanceof Thing t) {
+        t.putDec(jdk);
+      } else if (o instanceof Thing[] a) {
+        for (var t : a) {
+          t.putDec(jdk);
+        }
+      } else if (o instanceof Hex hex) {
+        var t = hex.value();
 
-    // one
-    assertNull(putHex(map, t1));
-
-    assertEquals(map.size(), 1);
-    assertFalse(map.isEmpty());
-    assertTrue(map.containsKey(t1));
-    assertFalse(map.containsKey(t2));
-    assertFalse(map.containsKey(t3));
-
-    result = map.toUnmodifiableMap();
-
-    expected.clear();
-
-    assertNull(putHex(expected, t1));
-
-    assertContents(result, expected);
-
-    // two
-    assertNull(putHex(map, t2));
-
-    assertEquals(map.size(), 2);
-    assertFalse(map.isEmpty());
-    assertTrue(map.containsKey(t1));
-    assertTrue(map.containsKey(t2));
-    assertFalse(map.containsKey(t3));
-
-    result = map.toUnmodifiableMap();
-
-    expected.clear();
-
-    assertNull(putHex(expected, t1));
-    assertNull(putHex(expected, t2));
-
-    assertContents(result, expected);
-
-    // many
-    for (Thing thing : thingArray) {
-      assertNull(putHex(map, thing));
+        t.putHex(jdk);
+      } else {
+        throw new UnsupportedOperationException("Implement me: " + o.getClass());
+      }
     }
 
-    assertEquals(map.size(), 2 + thingArray.length);
-    assertFalse(map.isEmpty());
-    assertTrue(map.containsKey(t1));
-    assertTrue(map.containsKey(t2));
-    assertFalse(map.containsKey(t3));
+    for (var entry : it.entrySet()) {
+      var key = entry.getKey();
 
-    for (Thing thing : thingArray) {
-      assertTrue(map.containsKey(thing));
+      var value = entry.getValue();
+
+      assertEquals(jdk.remove(key), value);
     }
 
-    result = map.toUnmodifiableMap();
-
-    expected.clear();
-
-    assertNull(putHex(expected, t1));
-    assertNull(putHex(expected, t2));
-
-    for (Thing thing : thingArray) {
-      assertNull(putHex(expected, thing));
-    }
-
-    assertContents(result, expected);
-  }
-
-  @Test
-  public void testCase09() {
-    // one
-    assertNull(putHex(map, t1));
-    assertEquals(putDec(map, t1), t1.toHexString());
-
-    assertEquals(map.size(), 1);
-    assertFalse(map.isEmpty());
-    assertTrue(map.containsKey(t1));
-    assertFalse(map.containsKey(t2));
-    assertFalse(map.containsKey(t3));
-
-    UnmodifiableMap<Thing, String> result;
-    result = map.toUnmodifiableMap();
-
-    Map<Thing, String> expected;
-    expected = createExpectedMap();
-
-    assertNull(putDec(expected, t1));
-
-    assertContents(result, expected);
-
-    // two
-    assertNull(putHex(map, t2));
-    assertEquals(putDec(map, t2), t2.toHexString());
-
-    assertEquals(map.size(), 2);
-    assertFalse(map.isEmpty());
-    assertTrue(map.containsKey(t1));
-    assertTrue(map.containsKey(t2));
-    assertFalse(map.containsKey(t3));
-
-    result = map.toUnmodifiableMap();
-
-    expected.clear();
-
-    assertNull(putDec(expected, t1));
-    assertNull(putDec(expected, t2));
-
-    assertContents(result, expected);
-
-    // many
-    for (Thing thing : thingArray) {
-      assertNull(putHex(map, thing));
-      assertEquals(putDec(map, thing), thing.toHexString());
-    }
-
-    assertEquals(map.size(), 2 + thingArray.length);
-
-    result = map.toUnmodifiableMap();
-
-    expected.clear();
-
-    assertNull(putDec(expected, t1));
-    assertNull(putDec(expected, t2));
-
-    for (Thing thing : thingArray) {
-      assertNull(putDec(expected, thing));
-    }
-
-    assertContents(result, expected);
-  }
-
-  <K, V> void assertContents(Map<Thing, String> result, Map<Thing, String> expected) {
-    assertMap(result, expected);
-  }
-
-  <K, V> Map<K, V> createExpectedMap() {
-    return new HashMap<>();
-  }
-
-  <K, V> GrowableMap<K, V> createGrowableMap() {
-    return new GrowableMap<>();
-  }
-
-  private String putDec(Map<Thing, String> map, Thing key) {
-    String value;
-    value = key.toDecimalString();
-
-    return map.put(key, value);
-  }
-
-  private String putHex(Map<Thing, String> map, Thing key) {
-    String value;
-    value = key.toHexString();
-
-    return map.put(key, value);
+    assertTrue(jdk.isEmpty());
   }
 
 }

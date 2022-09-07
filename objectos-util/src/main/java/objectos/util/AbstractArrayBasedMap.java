@@ -22,6 +22,69 @@ import objectos.lang.ToString;
 
 abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Formattable {
 
+  private abstract class AbstractSet<E> extends UnmodifiableView<E> {
+
+    final AbstractArrayBasedMap<K, V> outer = AbstractArrayBasedMap.this;
+
+    @Override
+    public final int size() {
+      return size;
+    }
+
+  }
+
+  private class EntrySet extends AbstractSet<Entry<K, V>> {
+
+    @Override
+    public final boolean contains(Object o) {
+      if (o instanceof Entry<?, ?> entry) {
+        var key = entry.getKey();
+
+        var value = outer.get(key);
+
+        if (value != null && value.equals(entry.getValue())) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    @Override
+    public final UnmodifiableIterator<Entry<K, V>> iterator() {
+      return outer.entryIterator();
+    }
+
+  }
+
+  private class KeySet extends AbstractSet<K> {
+
+    @Override
+    public final boolean contains(Object o) {
+      return outer.containsKey(o);
+    }
+
+    @Override
+    public final UnmodifiableIterator<K> iterator() {
+      return outer.keyIterator();
+    }
+
+  }
+
+  private class Values extends AbstractSet<V> {
+
+    @Override
+    public final boolean contains(Object o) {
+      return outer.containsValue(o);
+    }
+
+    @Override
+    public final UnmodifiableIterator<V> iterator() {
+      return outer.valueIterator();
+    }
+
+  }
+
   static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
   Object[] array = ObjectArrays.empty();
@@ -53,8 +116,7 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
     int index, marker;
     index = marker = hashIndex(key);
 
-    Object existing;
-    existing = array[index];
+    var existing = array[index];
 
     if (existing == null) {
       return false;
@@ -122,8 +184,7 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
     }
 
     for (int i = 1, length = array.length; i < length; i = i + 2) {
-      Object o;
-      o = array[i];
+      var o = array[i];
 
       if (o == null) {
         continue;
@@ -181,7 +242,7 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
 
       var name = key.toString();
 
-      V value = entry.getValue();
+      var value = entry.getValue();
 
       ToString.formatFirstPair(toString, level, name, value);
 
@@ -460,11 +521,9 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
   }
 
   final int hashIndex(Object o) {
-    int hashCode;
-    hashCode = HashCode.of(o);
+    var hashCode = HashCode.of(o);
 
-    int half;
-    half = hashCode & hashMask;
+    var half = hashCode & hashMask;
 
     return half << 1;
   }
@@ -475,74 +534,6 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
 
   UnmodifiableIterator<V> valueIterator() {
     return Maps.sparseValueIterator(array);
-  }
-
-  private abstract class AbstractSet<E> extends UnmodifiableView<E> {
-
-    final AbstractArrayBasedMap<K, V> outer = AbstractArrayBasedMap.this;
-
-    @Override
-    public final int size() {
-      return size;
-    }
-
-  }
-
-  private class EntrySet extends AbstractSet<Entry<K, V>> {
-
-    @Override
-    public final boolean contains(Object o) {
-      if (o instanceof Entry) {
-        Entry<?, ?> entry;
-        entry = (Entry<?, ?>) o;
-
-        Object key;
-        key = entry.getKey();
-
-        Object value;
-        value = outer.get(key);
-
-        if (value != null && value.equals(entry.getValue())) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    @Override
-    public final UnmodifiableIterator<Entry<K, V>> iterator() {
-      return outer.entryIterator();
-    }
-
-  }
-
-  private class KeySet extends AbstractSet<K> {
-
-    @Override
-    public final boolean contains(Object o) {
-      return outer.containsKey(o);
-    }
-
-    @Override
-    public final UnmodifiableIterator<K> iterator() {
-      return outer.keyIterator();
-    }
-
-  }
-
-  private class Values extends AbstractSet<V> {
-
-    @Override
-    public final boolean contains(Object o) {
-      return outer.containsValue(o);
-    }
-
-    @Override
-    public final UnmodifiableIterator<V> iterator() {
-      return outer.valueIterator();
-    }
-
   }
 
 }
