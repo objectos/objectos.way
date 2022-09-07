@@ -35,6 +35,11 @@ import org.testng.annotations.Test;
 
 public class UnmodifiableSetTest {
 
+  @FunctionalInterface
+  interface Tester {
+    void execute(UnmodifiableSet<Thing> it, Object... els);
+  }
+
   private UnmodifiableSet<Thing> us0;
 
   private UnmodifiableSet<Thing> us1;
@@ -398,6 +403,36 @@ public class UnmodifiableSetTest {
   }
 
   @Test
+  public void join() {
+    assertEquals(us0.join(), "");
+    assertEquals(us0.join("|"), "");
+    assertEquals(us0.join("|", "{", "}"), "{}");
+
+    assertEquals(us1.join(), t1.toString());
+    assertEquals(us1.join("|"), t1.toString());
+    assertEquals(us1.join("|", "{", "}"), "{" + t1 + "}");
+
+    var iterator = us2.iterator();
+
+    var o1 = iterator.next();
+
+    var o2 = iterator.next();
+
+    assertEquals(
+      us2.join(),
+      o1.toString() + o2.toString()
+    );
+    assertEquals(
+      us2.join("|"),
+      o1.toString() + "|" + o2.toString()
+    );
+    assertEquals(
+      us2.join("|", "{", "}"),
+      "{" + o1.toString() + "|" + o2.toString() + "}"
+    );
+  }
+
+  @Test
   public void remove() {
     testAll((it, els) -> {
       try {
@@ -454,6 +489,15 @@ public class UnmodifiableSetTest {
   }
 
   @Test
+  public void size() {
+    assertEquals(us0.size(), 0);
+    assertEquals(us1.size(), 1);
+    assertEquals(us2.size(), 2);
+    assertEquals(us3.size(), 3);
+    assertEquals(usX.size(), Thing.MANY);
+  }
+
+  @Test
   public void toArray() {
     var emptyArray = Thing.EMPTY_ARRAY;
 
@@ -493,6 +537,42 @@ public class UnmodifiableSetTest {
     testToArray(result, (Object[]) many);
   }
 
+  @Test
+  public void toStringTest() {
+    assertEquals(us0.toString(), "UnmodifiableSet []");
+
+    assertEquals(
+      us1.toString(),
+
+      """
+      UnmodifiableSet [
+        0 = Thing [
+          value = %s
+        ]
+      ]""".formatted(t1.toHexString())
+    );
+
+    var iterator = us2.iterator();
+
+    var o1 = iterator.next();
+
+    var o2 = iterator.next();
+
+    assertEquals(
+      us2.toString(),
+
+      """
+      UnmodifiableSet [
+        0 = Thing [
+          value = %s
+        ]
+        1 = Thing [
+          value = %s
+        ]
+      ]""".formatted(o1.toHexString(), o2.toHexString())
+    );
+  }
+
   private void testAll(Tester tester) {
     // empty
     tester.execute(UnmodifiableSet.of());
@@ -524,11 +604,6 @@ public class UnmodifiableSetTest {
     if (result.length > expected.length) {
       assertNull(result[expected.length]);
     }
-  }
-
-  @FunctionalInterface
-  interface Tester {
-    void execute(UnmodifiableSet<Thing> it, Object... els);
   }
 
 }

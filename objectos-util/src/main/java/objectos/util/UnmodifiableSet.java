@@ -77,8 +77,7 @@ public final class UnmodifiableSet<E>
   public static <E> UnmodifiableSet<E> copyOf(E[] array) {
     Check.notNull(array, "array == null");
 
-    GrowableSet<E> set;
-    set = new GrowableSet<>();
+    var set = new GrowableSet<E>();
 
     E element;
 
@@ -223,8 +222,7 @@ public final class UnmodifiableSet<E>
   public static <E> UnmodifiableSet<E> of(E element) {
     Check.notNull(element, "element == null");
 
-    GrowableSet<E> set;
-    set = new GrowableSet<>();
+    var set = new GrowableSet<E>();
 
     set.add(element);
 
@@ -258,8 +256,7 @@ public final class UnmodifiableSet<E>
     Check.notNull(first, "first == null");
     Check.notNull(more, "more == null");
 
-    GrowableSet<E> set;
-    set = new GrowableSet<>();
+    var set = new GrowableSet<E>();
 
     set.add(first);
 

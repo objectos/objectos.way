@@ -25,6 +25,55 @@ abstract class AbstractArrayBasedSet<E>
     extends AbstractBaseCollection<E>
     implements Set<E> {
 
+  private class ThisIterator extends UnmodifiableIterator<E> {
+
+    private boolean computed;
+
+    private int index;
+
+    private Object next;
+
+    @Override
+    public final boolean hasNext() {
+      computeIfNecessary();
+
+      return next != null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public final E next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      } else {
+        var result = next;
+
+        computed = false;
+
+        next = null;
+
+        return (E) result;
+      }
+    }
+
+    private void computeIfNecessary() {
+      if (!computed) {
+        while (index < array.length) {
+          next = array[index];
+
+          index++;
+
+          if (next != null) {
+            break;
+          }
+        }
+
+        computed = true;
+      }
+    }
+
+  }
+
   static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
   Object[] array = ObjectArrays.empty();
@@ -240,15 +289,13 @@ abstract class AbstractArrayBasedSet<E>
   }
 
   final int hashIndex(Object o) {
-    int hashCode;
-    hashCode = HashCode.of(o);
+    var hashCode = HashCode.of(o);
 
     return hashCode & hashMask;
   }
 
   private boolean equals0(Set<?> that) {
-    int size;
-    size = size();
+    var size = size();
 
     if (size != that.size()) {
       return false;
@@ -277,55 +324,6 @@ abstract class AbstractArrayBasedSet<E>
         a[index++] = maybe;
       }
     }
-  }
-
-  private class ThisIterator extends UnmodifiableIterator<E> {
-
-    private boolean computed;
-
-    private int index;
-
-    private Object next;
-
-    @Override
-    public final boolean hasNext() {
-      computeIfNecessary();
-
-      return next != null;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final E next() {
-      if (!hasNext()) {
-        throw new NoSuchElementException();
-      } else {
-        var result = next;
-
-        computed = false;
-
-        next = null;
-
-        return (E) result;
-      }
-    }
-
-    private void computeIfNecessary() {
-      if (!computed) {
-        while (index < array.length) {
-          next = array[index];
-
-          index++;
-
-          if (next != null) {
-            break;
-          }
-        }
-
-        computed = true;
-      }
-    }
-
   }
 
 }
