@@ -74,6 +74,13 @@ public class GrowableOrderedMapTest {
   }
 
   @Test
+  public void isEmpty() {
+    var test = new GrowableMapIsEmptyTest(it);
+
+    test.execute();
+  }
+
+  @Test
   public void put() {
     var test = new GrowableMapPutTest(it, this::assertContents);
 
