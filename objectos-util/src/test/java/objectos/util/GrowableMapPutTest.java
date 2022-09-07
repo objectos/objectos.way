@@ -24,9 +24,9 @@ final class GrowableMapPutTest {
 
   private final GrowableMap<Thing, String> it;
 
-  private final AssertContents assertContents;
+  private final MapAssertContents assertContents;
 
-  public GrowableMapPutTest(GrowableMap<Thing, String> it, AssertContents assertContents) {
+  public GrowableMapPutTest(GrowableMap<Thing, String> it, MapAssertContents assertContents) {
     this.it = it;
     this.assertContents = assertContents;
   }
@@ -39,11 +39,11 @@ final class GrowableMapPutTest {
     var t1 = Thing.next();
 
     assertNull(t1.putHex(it));
-    assertContents.execute(new Hex(t1));
+    assertContents.execute(it, new Hex(t1));
 
     // two (must allow duplicate elements)
     assertEquals(t1.putDec(it), t1.toHexString());
-    assertContents.execute(t1);
+    assertContents.execute(it, t1);
 
     // many
     var array = Thing.nextArray();
@@ -54,7 +54,7 @@ final class GrowableMapPutTest {
       assertNull(t.putDec(it));
     }
 
-    assertContents.execute(t1, array);
+    assertContents.execute(it, t1, array);
 
     // must reject null keys
     try {

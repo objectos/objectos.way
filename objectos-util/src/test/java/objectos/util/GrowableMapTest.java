@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.HashMap;
+import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -58,7 +59,14 @@ public class GrowableMapTest {
     test.execute();
   }
 
-  private void assertContents(Object... expected) {
+  @Test
+  public void toUnmodifiableMap() {
+    var test = new GrowableMapToUnmodifiableMapTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  private void assertContents(Map<?, ?> map, Object... expected) {
     var jdk = new HashMap<Thing, String>();
 
     for (var o : expected) {
@@ -77,7 +85,7 @@ public class GrowableMapTest {
       }
     }
 
-    for (var entry : it.entrySet()) {
+    for (var entry : map.entrySet()) {
       var key = entry.getKey();
 
       var value = entry.getValue();

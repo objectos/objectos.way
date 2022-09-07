@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -58,7 +59,14 @@ public class GrowableOrderedMapTest {
     test.execute();
   }
 
-  private void assertContents(Object... expected) {
+  @Test
+  public void toUnmodifiableMap() {
+    var test = new GrowableMapToUnmodifiableMapTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  private void assertContents(Map<?, ?> map, Object... expected) {
     var jdk = new LinkedHashMap<Thing, String>();
 
     for (var o : expected) {
@@ -77,12 +85,16 @@ public class GrowableOrderedMapTest {
       }
     }
 
-    for (var entry : it.entrySet()) {
-      var key = entry.getKey();
+    var jdkEntries = jdk.entrySet().iterator();
 
-      var value = entry.getValue();
+    for (var entry : map.entrySet()) {
+      var jdkEntry = jdkEntries.next();
 
-      assertEquals(jdk.remove(key), value);
+      assertEquals(entry.getKey(), jdkEntry.getKey());
+
+      assertEquals(entry.getValue(), jdkEntry.getValue());
+
+      jdkEntries.remove();
     }
 
     assertTrue(jdk.isEmpty());

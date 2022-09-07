@@ -24,16 +24,16 @@ final class GrowableMapPutAllTest {
 
   private final GrowableMap<Thing, String> it;
 
-  private final AssertContents assertContents;
+  private final MapAssertContents assertContents;
 
-  public GrowableMapPutAllTest(GrowableMap<Thing, String> it, AssertContents assertContents) {
+  public GrowableMapPutAllTest(GrowableMap<Thing, String> it, MapAssertContents assertContents) {
     this.it = it;
     this.assertContents = assertContents;
   }
 
   public final void execute() {
     assertEquals(it.size(), 0);
-    assertContents.execute();
+    assertContents.execute(it);
 
     try {
       var map = Map.of(
@@ -45,7 +45,7 @@ final class GrowableMapPutAllTest {
 
       Assert.fail("Expected an UnsupportedOperationException");
     } catch (UnsupportedOperationException expected) {
-      assertContents.execute();
+      assertContents.execute(it);
     }
   }
 

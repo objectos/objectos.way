@@ -22,9 +22,9 @@ final class GrowableMapClearTest {
 
   private final GrowableMap<Thing, String> it;
 
-  private final AssertContents assertContents;
+  private final MapAssertContents assertContents;
 
-  public GrowableMapClearTest(GrowableMap<Thing, String> it, AssertContents assertContents) {
+  public GrowableMapClearTest(GrowableMap<Thing, String> it, MapAssertContents assertContents) {
     this.it = it;
     this.assertContents = assertContents;
   }
@@ -34,7 +34,7 @@ final class GrowableMapClearTest {
     assertEquals(it.size(), 0);
 
     it.clear();
-    assertContents.execute();
+    assertContents.execute(it);
 
     // many
     var array = Thing.nextArray();
@@ -46,7 +46,7 @@ final class GrowableMapClearTest {
     }
 
     it.clear();
-    assertContents.execute();
+    assertContents.execute(it);
   }
 
 }
