@@ -16,9 +16,7 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 final class GrowableMapToUnmodifiableMapTest {
 
@@ -33,48 +31,34 @@ final class GrowableMapToUnmodifiableMapTest {
   }
 
   public final void execute() {
-    var result = it.toUnmodifiableMap();
+    var um0 = it.toUnmodifiableMap();
 
-    assertTrue(result.isEmpty());
-
-    assertContents.execute(result);
-
-    // one
     var t1 = Thing.next();
-
     assertNull(t1.putDec(it));
 
-    result = it.toUnmodifiableMap();
+    var um1 = it.toUnmodifiableMap();
 
-    assertFalse(result.isEmpty());
-    assertEquals(result.size(), 1);
-
-    assertContents.execute(result, t1);
-
-    // two
     var t2 = Thing.next();
-
     assertNull(t2.putDec(it));
 
-    result = it.toUnmodifiableMap();
+    var um2 = it.toUnmodifiableMap();
 
-    assertFalse(result.isEmpty());
-    assertEquals(result.size(), 2);
-
-    assertContents.execute(result, t1, t2);
-
-    // three
     var t3 = Thing.next();
-
     assertNull(t3.putDec(it));
 
-    result = it.toUnmodifiableMap();
+    var um3 = it.toUnmodifiableMap();
 
-    assertFalse(result.isEmpty());
-    assertEquals(result.size(), 3);
+    assertEquals(um0.size(), 0);
+    assertContents.execute(um0);
 
-    assertContents.execute(result, t1, t2, t3);
+    assertEquals(um1.size(), 1);
+    assertContents.execute(um1, t1);
 
+    assertEquals(um2.size(), 2);
+    assertContents.execute(um2, t1, t2);
+
+    assertEquals(um3.size(), 3);
+    assertContents.execute(um3, t1, t2, t3);
     it.clear();
 
     var array = Thing.nextArray();
@@ -83,9 +67,10 @@ final class GrowableMapToUnmodifiableMapTest {
       thing.putDec(it);
     }
 
-    result = it.toUnmodifiableMap();
+    var umX = it.toUnmodifiableMap();
 
-    assertContents.execute(result, (Object) array);
+    assertEquals(umX.size(), array.length);
+    assertContents.execute(umX, (Object) array);
   }
 
 }
