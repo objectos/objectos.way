@@ -38,6 +38,13 @@ public class GrowableMapTest {
   }
 
   @Test
+  public void clear() {
+    var test = new GrowableMapClearTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
   public void put() {
     var test = new GrowableMapPutTest(it, this::assertContents);
 
