@@ -20,6 +20,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -156,6 +157,13 @@ public class GrowableOrderedMapTest {
     test.execute();
   }
 
+  @Test
+  public void values() {
+    var test = new GrowableMapValuesTest(it, this::assertValues);
+
+    test.execute();
+  }
+
   private void assertContents(Map<?, ?> map, Object... expected) {
     var jdk = new LinkedHashMap<Thing, String>();
 
@@ -188,6 +196,16 @@ public class GrowableOrderedMapTest {
     }
 
     assertTrue(jdk.isEmpty());
+  }
+
+  private void assertValues(Set<String> set, Thing... expected) {
+    assertEquals(set.size(), expected.length);
+
+    var index = 0;
+
+    for (var value : expected) {
+      assertEquals(value, expected[index++]);
+    }
   }
 
 }

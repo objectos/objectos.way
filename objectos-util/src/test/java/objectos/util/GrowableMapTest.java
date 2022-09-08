@@ -19,7 +19,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -146,6 +148,13 @@ public class GrowableMapTest {
     test.execute();
   }
 
+  @Test
+  public void values() {
+    var test = new GrowableMapValuesTest(it, this::assertValues);
+
+    test.execute();
+  }
+
   private void assertContents(Map<?, ?> map, Object... expected) {
     var jdk = new HashMap<Thing, String>();
 
@@ -171,6 +180,20 @@ public class GrowableMapTest {
       var value = entry.getValue();
 
       assertEquals(jdk.remove(key), value);
+    }
+
+    assertTrue(jdk.isEmpty());
+  }
+
+  private void assertValues(Set<String> set, Thing... expected) {
+    var jdk = new HashSet<String>();
+
+    for (var o : expected) {
+      jdk.add(o.toDecimalString());
+    }
+
+    for (var value : set) {
+      assertTrue(jdk.remove(value));
     }
 
     assertTrue(jdk.isEmpty());
