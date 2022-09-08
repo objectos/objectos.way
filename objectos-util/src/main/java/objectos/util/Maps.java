@@ -17,10 +17,8 @@ package objectos.util;
 
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import objectos.lang.Check;
 
 /**
  * This class provides {@code static} factory methods for the JDK
@@ -32,76 +30,6 @@ import objectos.lang.Check;
  * 7 and, therefore, cannot use the diamond operator.
  */
 final class Maps {
-
-  private Maps() {}
-
-  /**
-   * Returns from the specified map the value associated with the specified key
-   * or throws an exception if the key has no mapping.
-   */
-  static <V> V getIfPresent(Map<?, V> map, Object key) throws NoSuchElementException {
-    Check.notNull(map, "map == null");
-
-    V value;
-    value = map.get(key);
-
-    if (value == null) {
-      String message;
-      message = key.toString();
-
-      throw new NoSuchElementException(message);
-    }
-
-    return value;
-  }
-
-  static <K, V> V getOrDefault(Map<K, V> map, K key, V defaultValue) {
-    Check.notNull(key, "key == null");
-
-    V result;
-    result = map.get(key);
-
-    if (result == null) {
-      result = defaultValue;
-    }
-
-    return result;
-  }
-
-  static <K, V> UnmodifiableIterator<Entry<K, V>> orderedEntryIterator(Object[] array, int size) {
-    return new OrderedEntryIterator<K, V>(array, size);
-  }
-
-  static <K> UnmodifiableIterator<K> orderedKeyIterator(Object[] array, int size) {
-    return new OrderedKeyOrValueIterator<K>(array, size, 0);
-  }
-
-  static <V> UnmodifiableIterator<V> orderedValueIterator(Object[] array, int size) {
-    return new OrderedKeyOrValueIterator<V>(array, size, 1);
-  }
-
-  static <K, V> UnmodifiableIterator<Entry<K, V>> sparseEntryIterator(Object[] array) {
-    return new SparseEntryIterator<K, V>(array);
-  }
-
-  static <K> UnmodifiableIterator<K> sparseKeyIterator(Object[] array) {
-    return new SparseKeyOrValueIterator<K>(array, 0);
-  }
-
-  static <V> UnmodifiableIterator<V> sparseValueIterator(Object[] array) {
-    return new SparseKeyOrValueIterator<V>(array, 1);
-  }
-
-  @SuppressWarnings("unchecked")
-  private static <K, V> SimpleEntry<K, V> newEntry(Object key, Object value) {
-    K castKey;
-    castKey = (K) key;
-
-    V castValue;
-    castValue = (V) value;
-
-    return new AbstractMap.SimpleEntry<K, V>(castKey, castValue);
-  }
 
   private static class OrderedEntryIterator<K, V> extends UnmodifiableIterator<Entry<K, V>> {
 
@@ -300,6 +228,43 @@ final class Maps {
       }
     }
 
+  }
+
+  private Maps() {}
+
+  static <K, V> UnmodifiableIterator<Entry<K, V>> orderedEntryIterator(Object[] array, int size) {
+    return new OrderedEntryIterator<K, V>(array, size);
+  }
+
+  static <K> UnmodifiableIterator<K> orderedKeyIterator(Object[] array, int size) {
+    return new OrderedKeyOrValueIterator<K>(array, size, 0);
+  }
+
+  static <V> UnmodifiableIterator<V> orderedValueIterator(Object[] array, int size) {
+    return new OrderedKeyOrValueIterator<V>(array, size, 1);
+  }
+
+  static <K, V> UnmodifiableIterator<Entry<K, V>> sparseEntryIterator(Object[] array) {
+    return new SparseEntryIterator<K, V>(array);
+  }
+
+  static <K> UnmodifiableIterator<K> sparseKeyIterator(Object[] array) {
+    return new SparseKeyOrValueIterator<K>(array, 0);
+  }
+
+  static <V> UnmodifiableIterator<V> sparseValueIterator(Object[] array) {
+    return new SparseKeyOrValueIterator<V>(array, 1);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <K, V> SimpleEntry<K, V> newEntry(Object key, Object value) {
+    K castKey;
+    castKey = (K) key;
+
+    V castValue;
+    castValue = (V) value;
+
+    return new AbstractMap.SimpleEntry<K, V>(castKey, castValue);
   }
 
 }

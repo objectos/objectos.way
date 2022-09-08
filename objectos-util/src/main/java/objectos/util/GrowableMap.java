@@ -117,7 +117,7 @@ public class GrowableMap<K, V> extends AbstractArrayBasedMap<K, V> {
   public UnmodifiableMap<K, V> toUnmodifiableMap() {
     switch (size) {
       case 0:
-        return UnmodifiableMap.empty();
+        return UnmodifiableMap.of();
       default:
         var copy = Arrays.copyOf(array, array.length);
 

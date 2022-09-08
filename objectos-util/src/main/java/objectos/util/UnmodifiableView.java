@@ -84,12 +84,12 @@ public abstract class UnmodifiableView<E> extends AbstractBaseCollection<E> impl
   }
 
   @Override
-  public final Object[] toArray() {
+  public Object[] toArray() {
     throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
-  public final <T> T[] toArray(T[] a) {
+  public <T> T[] toArray(T[] a) {
     throw new UnsupportedOperationException("Implement me");
   }
 

@@ -15,8 +15,10 @@
  */
 package objectos.util;
 
+import java.lang.reflect.Array;
 import java.util.Map;
 import java.util.function.BiFunction;
+import objectos.lang.Check;
 import objectos.lang.HashCode;
 import objectos.lang.ToString;
 
@@ -29,6 +31,34 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
     @Override
     public final int size() {
       return size;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public final <T> T[] toArray(T[] a) {
+      Check.notNull(a, "a == null");
+
+      Object[] target = a;
+
+      if (a.length < size) {
+        var arrayType = a.getClass();
+
+        var componentType = arrayType.getComponentType();
+
+        target = (Object[]) Array.newInstance(componentType, size);
+      }
+
+      var iterator = iterator();
+
+      for (int i = 0; i < size; i++) {
+        target[i] = iterator.next();
+      }
+
+      if (a.length > size) {
+        a[size] = null;
+      }
+
+      return (T[]) target;
     }
 
   }
@@ -210,6 +240,29 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
   @Override
   public final UnmodifiableView<Entry<K, V>> entrySet() {
     return new EntrySet();
+  }
+
+  /**
+   * <p>
+   * Compares the specified object with this map for equality. Returns
+   * {@code true} if and only if
+   *
+   * <ul>
+   * <li>the specified object is also a {@link Map};</li>
+   * <li>both maps have same size; and</li>
+   * <li>each key-value pair in this map is also present in the specified
+   * map.</li>
+   * </ul>
+   *
+   * @param obj
+   *        the object to be compared for equality with this map
+   *
+   * @return {@code true} if the specified object is equal to this map
+   */
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this
+        || obj instanceof Map<?, ?> that && equals0(that);
   }
 
   /**
@@ -536,6 +589,29 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
 
   UnmodifiableIterator<V> valueIterator() {
     return Maps.sparseValueIterator(array);
+  }
+
+  private boolean equals0(Map<?, ?> that) {
+    var size = size();
+
+    if (size != that.size()) {
+      return false;
+    }
+
+    for (var entry : entrySet()) {
+      K key = entry.getKey();
+
+      V value = entry.getValue();
+
+      Object thatValue = that.get(key);
+
+      // value is guaranteed to be non-null
+      if (!value.equals(thatValue)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
 }

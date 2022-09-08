@@ -18,6 +18,7 @@ package objectos.util;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import objectos.lang.Check;
 
 /**
  * A hash-based unmodifiable implementation of the {@link Map} interface.
@@ -48,8 +49,50 @@ public class UnmodifiableMap<K, V> extends AbstractArrayBasedMap<K, V> {
   private UnmodifiableMap() {}
 
   @SuppressWarnings("unchecked")
-  static <K, V> UnmodifiableMap<K, V> empty() {
+  public static <K, V> UnmodifiableMap<K, V> of() {
     return (UnmodifiableMap<K, V>) EMPTY;
+  }
+
+  static <K, V> UnmodifiableMap<K, V> of(K key, V value) {
+    Check.notNull(key, "key == null");
+    Check.notNull(value, "value == null");
+
+    var map = new GrowableMap<K, V>();
+
+    map.put(key, value);
+
+    return map.toUnmodifiableMap();
+  }
+
+  static <K, V> UnmodifiableMap<K, V> of(K k1, V v1, K k2, V v2) {
+    Check.notNull(k1, "k1 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(k2, "k2 == null");
+    Check.notNull(v2, "v2 == null");
+
+    var map = new GrowableMap<K, V>();
+
+    map.put(k1, v1);
+    map.put(k2, v2);
+
+    return map.toUnmodifiableMap();
+  }
+
+  static <K, V> UnmodifiableMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
+    Check.notNull(k1, "k1 == null");
+    Check.notNull(v1, "v1 == null");
+    Check.notNull(k2, "k2 == null");
+    Check.notNull(v2, "v2 == null");
+    Check.notNull(k3, "k3 == null");
+    Check.notNull(v3, "v3 == null");
+
+    var map = new GrowableMap<K, V>();
+
+    map.put(k1, v1);
+    map.put(k2, v2);
+    map.put(k3, v3);
+
+    return map.toUnmodifiableMap();
   }
 
   /**
