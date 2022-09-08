@@ -383,7 +383,104 @@ public class GrowableSetTest {
     test.execute();
   }
 
+  @Test
+  public void toStringTest() {
+    assertEquals(it.toString(), "GrowableSet []");
+
+    var t1 = Thing.next();
+
+    it.add(t1);
+
+    assertEquals(
+      it.toString(),
+
+      """
+      GrowableSet [
+        0 = Thing [
+          value = %s
+        ]
+      ]""".formatted(t1.toHexString())
+    );
+
+    var t2 = Thing.next();
+
+    it.add(t2);
+
+    var iterator = it.iterator();
+
+    var o1 = iterator.next();
+
+    var o2 = iterator.next();
+
+    assertEquals(
+      it.toString(),
+
+      """
+      GrowableSet [
+        0 = Thing [
+          value = %s
+        ]
+        1 = Thing [
+          value = %s
+        ]
+      ]""".formatted(o1.toHexString(), o2.toHexString())
+    );
+  }
+
+  @Test
+  public void toUnmodifiableSet() {
+    var us0 = it.toUnmodifiableSet();
+
+    var t1 = Thing.next();
+    assertTrue(it.add(t1));
+    var us1 = it.toUnmodifiableSet();
+
+    var t2 = Thing.next();
+    assertTrue(it.add(t2));
+    var us2 = it.toUnmodifiableSet();
+
+    var t3 = Thing.next();
+    assertTrue(it.add(t3));
+    var us3 = it.toUnmodifiableSet();
+
+    var t4 = Thing.next();
+    assertTrue(it.add(t4));
+    var us4 = it.toUnmodifiableSet();
+
+    assertEquals(us0.size(), 0);
+    assertContents(us0);
+
+    assertEquals(us1.size(), 1);
+    assertContents(us1, t1);
+
+    assertEquals(us2.size(), 2);
+    assertContents(us2, t1, t2);
+
+    assertEquals(us3.size(), 3);
+    assertContents(us3, t1, t2, t3);
+
+    assertEquals(us4.size(), 4);
+    assertContents(us4, t1, t2, t3, t4);
+
+    it.clear();
+
+    var array = Thing.nextArray();
+
+    for (var thing : array) {
+      assertTrue(it.add(thing));
+    }
+
+    var usX = it.toUnmodifiableSet();
+
+    assertEquals(usX.size(), array.length);
+    assertContents(usX, (Object) array);
+  }
+
   private void assertContents(Object... expected) {
+    assertContents(it, expected);
+  }
+
+  private void assertContents(Set<Thing> set, Object... expected) {
     var jdk = new HashSet<>();
 
     for (var o : expected) {
@@ -402,7 +499,7 @@ public class GrowableSetTest {
       }
     }
 
-    var elements = it.toArray();
+    var elements = set.toArray();
 
     for (var e : elements) {
       assertTrue(jdk.remove(e));
