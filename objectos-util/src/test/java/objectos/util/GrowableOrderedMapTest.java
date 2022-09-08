@@ -102,6 +102,54 @@ public class GrowableOrderedMapTest {
   }
 
   @Test
+  public void toStringTest() {
+    assertEquals(it.toString(), "GrowableOrderedMap []");
+
+    var t1 = Thing.next();
+
+    t1.putHex(it);
+
+    assertEquals(
+      it.toString(),
+
+      """
+      GrowableOrderedMap [
+        %s = %s
+      ]""".formatted(t1, t1.toHexString())
+    );
+
+    var t2 = Thing.next();
+
+    t2.putHex(it);
+
+    assertEquals(
+      it.toString(),
+
+      """
+      GrowableOrderedMap [
+        %s = %s
+        %s = %s
+      ]""".formatted(t1, t1.toHexString(), t2, t2.toHexString())
+    );
+
+    var t3 = Thing.next();
+
+    t3.putHex(it);
+
+    assertEquals(
+      it.toString(),
+
+      """
+      GrowableOrderedMap [
+        %s = %s
+        %s = %s
+        %s = %s
+      ]""".formatted(
+        t1, t1.toHexString(), t2, t2.toHexString(), t3, t3.toHexString())
+    );
+  }
+
+  @Test
   public void toUnmodifiableMap() {
     var test = new GrowableMapToUnmodifiableMapTest(it, this::assertContents);
 

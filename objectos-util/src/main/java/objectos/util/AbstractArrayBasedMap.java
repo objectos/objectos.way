@@ -247,6 +247,8 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
       ToString.formatFirstPair(toString, level, name, value);
 
       while (iterator.hasNext()) {
+        entry = iterator.next();
+
         key = entry.getKey();
 
         name = key.toString();
