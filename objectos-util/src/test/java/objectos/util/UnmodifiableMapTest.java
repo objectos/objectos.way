@@ -20,10 +20,16 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Map;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class UnmodifiableMapTest {
+
+  @FunctionalInterface
+  interface Tester {
+    void execute(UnmodifiableMap<Thing, String> it, Thing... els);
+  }
 
   private UnmodifiableMap<Thing, String> um0;
 
@@ -93,6 +99,64 @@ public class UnmodifiableMapTest {
 
     umX = manyMap.toUnmodifiableMap();
     jdkX = Map.copyOf(manyMap);
+  }
+
+  @Test
+  public void clear() {
+    testAll((it, els) -> {
+      try {
+        it.clear();
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertContents(it, els);
+      }
+    });
+  }
+
+  @Test
+  public void compute() {
+    testAll((it, els) -> {
+      try {
+        var t = Thing.next();
+
+        it.compute(t, (k, v) -> t.toHexString());
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertContents(it, els);
+      }
+    });
+  }
+
+  @Test
+  public void computeIfAbsent() {
+    testAll((it, els) -> {
+      try {
+        var t = Thing.next();
+
+        it.computeIfAbsent(t, k -> k.toHexString());
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertContents(it, els);
+      }
+    });
+  }
+
+  @Test
+  public void computeIfPresent() {
+    testAll((it, els) -> {
+      try {
+        var t = Thing.next();
+
+        it.computeIfPresent(t, (k, v) -> k.toHexString());
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        assertContents(it, els);
+      }
+    });
   }
 
   @Test
@@ -173,6 +237,26 @@ public class UnmodifiableMapTest {
     for (var thing : many) {
       assertEquals(umX.get(thing), thing.toDecimalString());
     }
+  }
+
+  private void assertContents(UnmodifiableMap<Thing, String> it, Thing[] els) {
+    assertEquals(it.size, els.length);
+
+    for (var thing : els) {
+      assertEquals(it.get(thing), thing.toDecimalString());
+    }
+  }
+
+  private void testAll(Tester tester) {
+    tester.execute(um0);
+
+    tester.execute(um1, t1);
+
+    tester.execute(um2, t1, t2);
+
+    tester.execute(um3, t1, t2, t3);
+
+    tester.execute(umX, many);
   }
 
 }
