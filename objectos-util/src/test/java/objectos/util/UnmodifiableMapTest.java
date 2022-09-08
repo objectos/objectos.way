@@ -19,12 +19,13 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class UnmodifiableMapTest {
+public class UnmodifiableMapTest extends UnmodifiableMapFactory {
 
   @FunctionalInterface
   interface Tester {
@@ -103,15 +104,9 @@ public class UnmodifiableMapTest {
 
   @Test
   public void clear() {
-    testAll((it, els) -> {
-      try {
-        it.clear();
+    var test = new UnmodifiableMapClearTest(this, this::assertContents);
 
-        Assert.fail("Expected an UnsupportedOperationException");
-      } catch (UnsupportedOperationException expected) {
-        assertContents(it, els);
-      }
-    });
+    test.execute();
   }
 
   @Test
@@ -157,6 +152,93 @@ public class UnmodifiableMapTest {
         assertContents(it, els);
       }
     });
+  }
+
+  @Test
+  public void containsKey() {
+    assertFalse(um0.containsKey(null));
+    assertFalse(um1.containsKey(null));
+    assertFalse(um2.containsKey(null));
+    assertFalse(um3.containsKey(null));
+    assertFalse(umX.containsKey(null));
+
+    assertFalse(um0.containsKey(t1));
+    assertTrue(um1.containsKey(t1));
+    assertTrue(um2.containsKey(t1));
+    assertTrue(um3.containsKey(t1));
+    assertFalse(umX.containsKey(t1));
+
+    assertFalse(um0.containsKey(t2));
+    assertFalse(um1.containsKey(t2));
+    assertTrue(um2.containsKey(t2));
+    assertTrue(um3.containsKey(t2));
+    assertFalse(umX.containsKey(t2));
+
+    assertFalse(um0.containsKey(t3));
+    assertFalse(um1.containsKey(t3));
+    assertFalse(um2.containsKey(t3));
+    assertTrue(um3.containsKey(t3));
+    assertFalse(umX.containsKey(t3));
+
+    for (var t : many) {
+      assertFalse(um0.containsKey(t));
+      assertFalse(um1.containsKey(t));
+      assertFalse(um2.containsKey(t));
+      assertFalse(um3.containsKey(t));
+      assertTrue(umX.containsKey(t));
+    }
+  }
+
+  @Test
+  public void containsValue() {
+    assertFalse(um0.containsValue(null));
+    assertFalse(um1.containsValue(null));
+    assertFalse(um2.containsValue(null));
+    assertFalse(um3.containsValue(null));
+    assertFalse(umX.containsValue(null));
+
+    var v1 = t1.toDecimalString();
+
+    assertFalse(um0.containsValue(v1));
+    assertTrue(um1.containsValue(v1));
+    assertTrue(um2.containsValue(v1));
+    assertTrue(um3.containsValue(v1));
+    assertFalse(umX.containsValue(v1));
+
+    var v2 = t2.toDecimalString();
+
+    assertFalse(um0.containsValue(v2));
+    assertFalse(um1.containsValue(v2));
+    assertTrue(um2.containsValue(v2));
+    assertTrue(um3.containsValue(v2));
+    assertFalse(umX.containsValue(v2));
+
+    var v3 = t3.toDecimalString();
+
+    assertFalse(um0.containsValue(v3));
+    assertFalse(um1.containsValue(v3));
+    assertFalse(um2.containsValue(v3));
+    assertTrue(um3.containsValue(v3));
+    assertFalse(umX.containsValue(v3));
+
+    for (var t : many) {
+      var v = t.toDecimalString();
+
+      assertFalse(um0.containsValue(v));
+      assertFalse(um1.containsValue(v));
+      assertFalse(um2.containsValue(v));
+      assertFalse(um3.containsValue(v));
+      assertTrue(umX.containsValue(v));
+    }
+  }
+
+  @Test
+  public void entrySet() {
+    assertEquals(um0.entrySet(), jdk0.entrySet());
+    assertEquals(um1.entrySet(), jdk1.entrySet());
+    assertEquals(um2.entrySet(), jdk2.entrySet());
+    assertEquals(um3.entrySet(), jdk3.entrySet());
+    assertEquals(umX.entrySet(), jdkX.entrySet());
   }
 
   @Test
@@ -213,6 +295,11 @@ public class UnmodifiableMapTest {
   }
 
   @Test
+  public void forEach() {
+
+  }
+
+  @Test
   public void get() {
     assertEquals(um0.get(null), null);
     assertEquals(um0.get(t1), null);
@@ -237,6 +324,73 @@ public class UnmodifiableMapTest {
     for (var thing : many) {
       assertEquals(umX.get(thing), thing.toDecimalString());
     }
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> mapOf() {
+    return UnmodifiableMap.of();
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> mapOf(Thing t1) {
+    return UnmodifiableMap.of(
+      t1, t1.toDecimalString());
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> mapOf(Thing... many) {
+    var manyMap = new GrowableMap<Thing, String>();
+
+    for (var thing : many) {
+      thing.putDec(manyMap);
+    }
+
+    return manyMap.toUnmodifiableMap();
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2) {
+    return UnmodifiableMap.of(
+      t1, t1.toDecimalString(),
+      t2, t2.toDecimalString());
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2, Thing t3) {
+    return UnmodifiableMap.of(
+      t1, t1.toDecimalString(),
+      t2, t2.toDecimalString(),
+      t3, t3.toDecimalString());
+  }
+
+  private void assertContents(Map<?, ?> map, Object... expected) {
+    var jdk = new HashMap<Thing, String>();
+
+    for (var o : expected) {
+      if (o instanceof Thing t) {
+        t.putDec(jdk);
+      } else if (o instanceof Thing[] a) {
+        for (var t : a) {
+          t.putDec(jdk);
+        }
+      } else if (o instanceof Hex hex) {
+        var t = hex.value();
+
+        t.putHex(jdk);
+      } else {
+        throw new UnsupportedOperationException("Implement me: " + o.getClass());
+      }
+    }
+
+    for (var entry : map.entrySet()) {
+      var key = entry.getKey();
+
+      var value = entry.getValue();
+
+      assertEquals(jdk.remove(key), value);
+    }
+
+    assertTrue(jdk.isEmpty());
   }
 
   private void assertContents(UnmodifiableMap<Thing, String> it, Thing[] els) {

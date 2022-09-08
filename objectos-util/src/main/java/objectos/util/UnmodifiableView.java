@@ -83,6 +83,29 @@ public abstract class UnmodifiableView<E> extends AbstractBaseCollection<E> impl
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * <p>
+   * Compares the specified object with this view for equality. Returns
+   * {@code true} if and only if
+   *
+   * <ul>
+   * <li>the specified object is also a {@link Collection};</li>
+   * <li>both collections have same size; and</li>
+   * <li>each element in this view is also present in the specified
+   * collection.</li>
+   * </ul>
+   *
+   * @param obj
+   *        the object to be compared for equality with this view
+   *
+   * @return {@code true} if the specified object is equal to this view
+   */
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this
+        || obj instanceof Collection<?> that && equals0(that);
+  }
+
   @Override
   public Object[] toArray() {
     throw new UnsupportedOperationException("Implement me");
@@ -91,6 +114,26 @@ public abstract class UnmodifiableView<E> extends AbstractBaseCollection<E> impl
   @Override
   public <T> T[] toArray(T[] a) {
     throw new UnsupportedOperationException("Implement me");
+  }
+
+  private boolean equals0(Collection<?> that) {
+    var size = size();
+
+    if (size != that.size()) {
+      return false;
+    }
+
+    var iter = iterator();
+
+    while (iter.hasNext()) {
+      var o = iter.next();
+
+      if (!that.contains(o)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
 }
