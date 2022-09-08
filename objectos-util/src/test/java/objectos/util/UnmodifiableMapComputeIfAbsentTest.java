@@ -15,16 +15,28 @@
  */
 package objectos.util;
 
-abstract class UnmodifiableMapFactory {
+import org.testng.Assert;
 
-  abstract UnmodifiableMap<Thing, String> mapOf();
+final class UnmodifiableMapComputeIfAbsentTest {
 
-  abstract UnmodifiableMap<Thing, String> mapOf(Thing t1);
+  private final UnmodifiableMapTestAdapter adapter;
 
-  abstract UnmodifiableMap<Thing, String> mapOf(Thing... many);
+  public UnmodifiableMapComputeIfAbsentTest(UnmodifiableMapTestAdapter adapter) {
+    this.adapter = adapter;
+  }
 
-  abstract UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2);
+  public void execute() {
+    adapter.testAll((map, els) -> {
+      try {
+        var t = Thing.next();
 
-  abstract UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2, Thing t3);
+        map.computeIfAbsent(t, k -> k.toHexString());
+
+        Assert.fail("Expected an UnsupportedOperationException");
+      } catch (UnsupportedOperationException expected) {
+        adapter.assertContents(map, els);
+      }
+    });
+  }
 
 }

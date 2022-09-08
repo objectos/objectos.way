@@ -16,33 +16,77 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import org.testng.annotations.Test;
 
-public class UnmodifiableOrderedMapTest extends UnmodifiableMapFactory {
+public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
 
   @Test
   public void clear() {
-    var test = new UnmodifiableMapClearTest(this, this::assertContents);
+    var test = new UnmodifiableMapClearTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void compute() {
+    var test = new UnmodifiableMapComputeTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void computeIfAbsent() {
+    var test = new UnmodifiableMapComputeIfAbsentTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void computeIfPresent() {
+    var test = new UnmodifiableMapComputeIfPresentTest(this);
 
     test.execute();
   }
 
   @Override
-  final UnmodifiableMap<Thing, String> mapOf() {
+  final void assertContents(Map<Thing, String> map, Thing[] els) {
+    assertEquals(map.size(), els.length);
+
+    var index = 0;
+
+    for (var entry : map.entrySet()) {
+      var thing = els[index++];
+
+      assertEquals(entry.getKey(), thing);
+
+      assertEquals(entry.getValue(), thing.toDecimalString());
+    }
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> map0() {
     return UnmodifiableOrderedMap.orderedEmpty();
   }
 
   @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing t1) {
-    return mapOf(new Thing[] {t1});
+  final UnmodifiableMap<Thing, String> map1(Thing t1) {
+    return mapX(new Thing[] {t1});
   }
 
   @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing... many) {
+  final UnmodifiableMap<Thing, String> map2(Thing t1, Thing t2) {
+    return mapX(new Thing[] {t1, t2});
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> map3(Thing t1, Thing t2, Thing t3) {
+    return mapX(new Thing[] {t1, t2, t3});
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> mapX(Thing[] many) {
     var manyMap = new GrowableOrderedMap<Thing, String>();
 
     for (var thing : many) {
@@ -50,50 +94,6 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapFactory {
     }
 
     return manyMap.toUnmodifiableMap();
-  }
-
-  @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2) {
-    return mapOf(new Thing[] {t1, t2});
-  }
-
-  @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2, Thing t3) {
-    return mapOf(new Thing[] {t1, t2, t3});
-  }
-
-  private void assertContents(Map<?, ?> map, Object... expected) {
-    var jdk = new LinkedHashMap<Thing, String>();
-
-    for (var o : expected) {
-      if (o instanceof Thing t) {
-        t.putDec(jdk);
-      } else if (o instanceof Thing[] a) {
-        for (var t : a) {
-          t.putDec(jdk);
-        }
-      } else if (o instanceof Hex hex) {
-        var t = hex.value();
-
-        t.putHex(jdk);
-      } else {
-        throw new UnsupportedOperationException("Implement me: " + o.getClass());
-      }
-    }
-
-    var jdkEntries = jdk.entrySet().iterator();
-
-    for (var entry : map.entrySet()) {
-      var jdkEntry = jdkEntries.next();
-
-      assertEquals(entry.getKey(), jdkEntry.getKey());
-
-      assertEquals(entry.getValue(), jdkEntry.getValue());
-
-      jdkEntries.remove();
-    }
-
-    assertTrue(jdk.isEmpty());
   }
 
 }

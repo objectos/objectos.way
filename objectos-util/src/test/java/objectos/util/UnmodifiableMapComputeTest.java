@@ -17,18 +17,20 @@ package objectos.util;
 
 import org.testng.Assert;
 
-final class UnmodifiableMapClearTest {
+final class UnmodifiableMapComputeTest {
 
   private final UnmodifiableMapTestAdapter adapter;
 
-  public UnmodifiableMapClearTest(UnmodifiableMapTestAdapter adapter) {
+  public UnmodifiableMapComputeTest(UnmodifiableMapTestAdapter adapter) {
     this.adapter = adapter;
   }
 
   public void execute() {
     adapter.testAll((map, els) -> {
       try {
-        map.clear();
+        var t = Thing.next();
+
+        map.compute(t, (k, v) -> t.toHexString());
 
         Assert.fail("Expected an UnsupportedOperationException");
       } catch (UnsupportedOperationException expected) {

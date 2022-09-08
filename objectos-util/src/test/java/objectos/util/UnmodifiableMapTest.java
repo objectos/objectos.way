@@ -19,18 +19,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import java.util.HashMap;
 import java.util.Map;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class UnmodifiableMapTest extends UnmodifiableMapFactory {
-
-  @FunctionalInterface
-  interface Tester {
-    void execute(UnmodifiableMap<Thing, String> it, Thing... els);
-  }
+public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
 
   private UnmodifiableMap<Thing, String> um0;
 
@@ -104,54 +97,30 @@ public class UnmodifiableMapTest extends UnmodifiableMapFactory {
 
   @Test
   public void clear() {
-    var test = new UnmodifiableMapClearTest(this, this::assertContents);
+    var test = new UnmodifiableMapClearTest(this);
 
     test.execute();
   }
 
   @Test
   public void compute() {
-    testAll((it, els) -> {
-      try {
-        var t = Thing.next();
+    var test = new UnmodifiableMapComputeTest(this);
 
-        it.compute(t, (k, v) -> t.toHexString());
-
-        Assert.fail("Expected an UnsupportedOperationException");
-      } catch (UnsupportedOperationException expected) {
-        assertContents(it, els);
-      }
-    });
+    test.execute();
   }
 
   @Test
   public void computeIfAbsent() {
-    testAll((it, els) -> {
-      try {
-        var t = Thing.next();
+    var test = new UnmodifiableMapComputeIfAbsentTest(this);
 
-        it.computeIfAbsent(t, k -> k.toHexString());
-
-        Assert.fail("Expected an UnsupportedOperationException");
-      } catch (UnsupportedOperationException expected) {
-        assertContents(it, els);
-      }
-    });
+    test.execute();
   }
 
   @Test
   public void computeIfPresent() {
-    testAll((it, els) -> {
-      try {
-        var t = Thing.next();
+    var test = new UnmodifiableMapComputeIfPresentTest(this);
 
-        it.computeIfPresent(t, (k, v) -> k.toHexString());
-
-        Assert.fail("Expected an UnsupportedOperationException");
-      } catch (UnsupportedOperationException expected) {
-        assertContents(it, els);
-      }
-    });
+    test.execute();
   }
 
   @Test
@@ -327,18 +296,42 @@ public class UnmodifiableMapTest extends UnmodifiableMapFactory {
   }
 
   @Override
-  final UnmodifiableMap<Thing, String> mapOf() {
+  final void assertContents(Map<Thing, String> it, Thing[] els) {
+    assertEquals(it.size(), els.length);
+
+    for (var thing : els) {
+      assertEquals(it.get(thing), thing.toDecimalString());
+    }
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> map0() {
     return UnmodifiableMap.of();
   }
 
   @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing t1) {
+  final UnmodifiableMap<Thing, String> map1(Thing t1) {
     return UnmodifiableMap.of(
       t1, t1.toDecimalString());
   }
 
   @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing... many) {
+  final UnmodifiableMap<Thing, String> map2(Thing t1, Thing t2) {
+    return UnmodifiableMap.of(
+      t1, t1.toDecimalString(),
+      t2, t2.toDecimalString());
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> map3(Thing t1, Thing t2, Thing t3) {
+    return UnmodifiableMap.of(
+      t1, t1.toDecimalString(),
+      t2, t2.toDecimalString(),
+      t3, t3.toDecimalString());
+  }
+
+  @Override
+  final UnmodifiableMap<Thing, String> mapX(Thing[] many) {
     var manyMap = new GrowableMap<Thing, String>();
 
     for (var thing : many) {
@@ -346,71 +339,6 @@ public class UnmodifiableMapTest extends UnmodifiableMapFactory {
     }
 
     return manyMap.toUnmodifiableMap();
-  }
-
-  @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2) {
-    return UnmodifiableMap.of(
-      t1, t1.toDecimalString(),
-      t2, t2.toDecimalString());
-  }
-
-  @Override
-  final UnmodifiableMap<Thing, String> mapOf(Thing t1, Thing t2, Thing t3) {
-    return UnmodifiableMap.of(
-      t1, t1.toDecimalString(),
-      t2, t2.toDecimalString(),
-      t3, t3.toDecimalString());
-  }
-
-  private void assertContents(Map<?, ?> map, Object... expected) {
-    var jdk = new HashMap<Thing, String>();
-
-    for (var o : expected) {
-      if (o instanceof Thing t) {
-        t.putDec(jdk);
-      } else if (o instanceof Thing[] a) {
-        for (var t : a) {
-          t.putDec(jdk);
-        }
-      } else if (o instanceof Hex hex) {
-        var t = hex.value();
-
-        t.putHex(jdk);
-      } else {
-        throw new UnsupportedOperationException("Implement me: " + o.getClass());
-      }
-    }
-
-    for (var entry : map.entrySet()) {
-      var key = entry.getKey();
-
-      var value = entry.getValue();
-
-      assertEquals(jdk.remove(key), value);
-    }
-
-    assertTrue(jdk.isEmpty());
-  }
-
-  private void assertContents(UnmodifiableMap<Thing, String> it, Thing[] els) {
-    assertEquals(it.size, els.length);
-
-    for (var thing : els) {
-      assertEquals(it.get(thing), thing.toDecimalString());
-    }
-  }
-
-  private void testAll(Tester tester) {
-    tester.execute(um0);
-
-    tester.execute(um1, t1);
-
-    tester.execute(um2, t1, t2);
-
-    tester.execute(um3, t1, t2, t3);
-
-    tester.execute(umX, many);
   }
 
 }
