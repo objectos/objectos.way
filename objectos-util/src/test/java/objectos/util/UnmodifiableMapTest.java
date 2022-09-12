@@ -19,60 +19,9 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
-
-  private UnmodifiableMap<Thing, String> um0;
-
-  private UnmodifiableMap<Thing, String> um1;
-
-  private UnmodifiableMap<Thing, String> um2;
-
-  private UnmodifiableMap<Thing, String> um3;
-
-  private UnmodifiableMap<Thing, String> umX;
-
-  private Thing t1;
-
-  private Thing t2;
-
-  private Thing t3;
-
-  private Thing[] many;
-
-  @BeforeClass
-  public void _beforeClass() {
-    um0 = UnmodifiableMap.of();
-
-    t1 = Thing.next();
-
-    um1 = UnmodifiableMap.of(t1, t1.toDecimalString());
-
-    t2 = Thing.next();
-
-    um2 = UnmodifiableMap.of(
-      t1, t1.toDecimalString(),
-      t2, t2.toDecimalString());
-
-    t3 = Thing.next();
-
-    um3 = UnmodifiableMap.of(
-      t1, t1.toDecimalString(),
-      t2, t2.toDecimalString(),
-      t3, t3.toDecimalString());
-
-    many = Thing.nextArray();
-
-    var manyMap = new GrowableMap<Thing, String>();
-
-    for (var thing : many) {
-      thing.putDec(manyMap);
-    }
-
-    umX = manyMap.toUnmodifiableMap();
-  }
 
   @Test
   public void clear() {
@@ -132,34 +81,16 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
 
   @Test
   public void forEach() {
+    var test = new UnmodifiableMapForEachTest(this);
 
+    test.execute();
   }
 
   @Test
   public void get() {
-    assertEquals(um0.get(null), null);
-    assertEquals(um0.get(t1), null);
-    assertEquals(um0.get(t2), null);
-    assertEquals(um0.get(t3), null);
+    var test = new UnmodifiableMapGetTest(this);
 
-    assertEquals(um1.get(null), null);
-    assertEquals(um1.get(t1), t1.toDecimalString());
-    assertEquals(um1.get(t2), null);
-    assertEquals(um1.get(t3), null);
-
-    assertEquals(um2.get(null), null);
-    assertEquals(um2.get(t1), t1.toDecimalString());
-    assertEquals(um2.get(t2), t2.toDecimalString());
-    assertEquals(um2.get(t3), null);
-
-    assertEquals(um3.get(null), null);
-    assertEquals(um3.get(t1), t1.toDecimalString());
-    assertEquals(um3.get(t2), t2.toDecimalString());
-    assertEquals(um3.get(t3), t3.toDecimalString());
-
-    for (var thing : many) {
-      assertEquals(umX.get(thing), thing.toDecimalString());
-    }
+    test.execute();
   }
 
   @Override
