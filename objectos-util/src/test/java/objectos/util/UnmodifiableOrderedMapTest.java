@@ -149,6 +149,27 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
     test.execute();
   }
 
+  @Test
+  public void remove() {
+    var test = new UnmodifiableMapRemoveTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void replace() {
+    var test = new UnmodifiableMapReplaceTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void replaceAll() {
+    var test = new UnmodifiableMapReplaceAllTest(this);
+
+    test.execute();
+  }
+
   @Override
   final void assertContents(Map<Thing, String> map, Thing[] els) {
     assertEquals(map.size(), els.length);
