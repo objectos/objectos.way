@@ -50,6 +50,20 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
     test.execute();
   }
 
+  @Test
+  public void containsKey() {
+    var test = new UnmodifiableMapContainsKeyTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void containsValue() {
+    var test = new UnmodifiableMapContainsValueTest(this);
+
+    test.execute();
+  }
+
   @Override
   final void assertContents(Map<Thing, String> map, Thing[] els) {
     assertEquals(map.size(), els.length);

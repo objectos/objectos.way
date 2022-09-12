@@ -125,80 +125,16 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
 
   @Test
   public void containsKey() {
-    assertFalse(um0.containsKey(null));
-    assertFalse(um1.containsKey(null));
-    assertFalse(um2.containsKey(null));
-    assertFalse(um3.containsKey(null));
-    assertFalse(umX.containsKey(null));
+    var test = new UnmodifiableMapContainsKeyTest(this);
 
-    assertFalse(um0.containsKey(t1));
-    assertTrue(um1.containsKey(t1));
-    assertTrue(um2.containsKey(t1));
-    assertTrue(um3.containsKey(t1));
-    assertFalse(umX.containsKey(t1));
-
-    assertFalse(um0.containsKey(t2));
-    assertFalse(um1.containsKey(t2));
-    assertTrue(um2.containsKey(t2));
-    assertTrue(um3.containsKey(t2));
-    assertFalse(umX.containsKey(t2));
-
-    assertFalse(um0.containsKey(t3));
-    assertFalse(um1.containsKey(t3));
-    assertFalse(um2.containsKey(t3));
-    assertTrue(um3.containsKey(t3));
-    assertFalse(umX.containsKey(t3));
-
-    for (var t : many) {
-      assertFalse(um0.containsKey(t));
-      assertFalse(um1.containsKey(t));
-      assertFalse(um2.containsKey(t));
-      assertFalse(um3.containsKey(t));
-      assertTrue(umX.containsKey(t));
-    }
+    test.execute();
   }
 
   @Test
   public void containsValue() {
-    assertFalse(um0.containsValue(null));
-    assertFalse(um1.containsValue(null));
-    assertFalse(um2.containsValue(null));
-    assertFalse(um3.containsValue(null));
-    assertFalse(umX.containsValue(null));
+    var test = new UnmodifiableMapContainsValueTest(this);
 
-    var v1 = t1.toDecimalString();
-
-    assertFalse(um0.containsValue(v1));
-    assertTrue(um1.containsValue(v1));
-    assertTrue(um2.containsValue(v1));
-    assertTrue(um3.containsValue(v1));
-    assertFalse(umX.containsValue(v1));
-
-    var v2 = t2.toDecimalString();
-
-    assertFalse(um0.containsValue(v2));
-    assertFalse(um1.containsValue(v2));
-    assertTrue(um2.containsValue(v2));
-    assertTrue(um3.containsValue(v2));
-    assertFalse(umX.containsValue(v2));
-
-    var v3 = t3.toDecimalString();
-
-    assertFalse(um0.containsValue(v3));
-    assertFalse(um1.containsValue(v3));
-    assertFalse(um2.containsValue(v3));
-    assertTrue(um3.containsValue(v3));
-    assertFalse(umX.containsValue(v3));
-
-    for (var t : many) {
-      var v = t.toDecimalString();
-
-      assertFalse(um0.containsValue(v));
-      assertFalse(um1.containsValue(v));
-      assertFalse(um2.containsValue(v));
-      assertFalse(um3.containsValue(v));
-      assertTrue(umX.containsValue(v));
-    }
+    test.execute();
   }
 
   @Test
