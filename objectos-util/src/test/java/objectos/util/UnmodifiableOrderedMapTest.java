@@ -180,6 +180,60 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
   }
 
   @Test
+  public void toStringTest() {
+    var map0 = map0();
+
+    assertEquals(map0.toString(), "UnmodifiableOrderedMap []");
+
+    var t1 = Thing.next();
+
+    var map1 = map1(t1);
+
+    assertEquals(
+      map1.toString(),
+
+      """
+      UnmodifiableOrderedMap [
+        %s = %s
+      ]""".formatted(t1, t1.toDecimalString())
+    );
+
+    var t2 = Thing.next();
+
+    var map2 = map2(t1, t2);
+
+    assertEquals(
+      map2.toString(),
+
+      """
+      UnmodifiableOrderedMap [
+        %s = %s
+        %s = %s
+      ]""".formatted(
+        t1, t1.toDecimalString(),
+        t2, t2.toDecimalString())
+    );
+
+    var t3 = Thing.next();
+
+    var map3 = map3(t1, t2, t3);
+
+    assertEquals(
+      map3.toString(),
+
+      """
+      UnmodifiableOrderedMap [
+        %s = %s
+        %s = %s
+        %s = %s
+      ]""".formatted(
+        t1, t1.toDecimalString(),
+        t2, t2.toDecimalString(),
+        t3, t3.toDecimalString())
+    );
+  }
+
+  @Test
   public void values() {
     var test = new UnmodifiableMapValuesTest(this);
 

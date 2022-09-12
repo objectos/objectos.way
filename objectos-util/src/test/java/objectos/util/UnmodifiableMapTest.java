@@ -181,6 +181,74 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
   }
 
   @Test
+  public void toStringTest() {
+    var map0 = map0();
+
+    assertEquals(map0.toString(), "UnmodifiableMap []");
+
+    var t1 = Thing.next();
+
+    var map1 = map1(t1);
+
+    assertEquals(
+      map1.toString(),
+
+      """
+      UnmodifiableMap [
+        %s = %s
+      ]""".formatted(t1, t1.toDecimalString())
+    );
+
+    var t2 = Thing.next();
+
+    var map2 = map2(t1, t2);
+
+    var iterator = map2.keyIterator();
+
+    var e1 = iterator.next();
+
+    var e2 = iterator.next();
+
+    assertEquals(
+      map2.toString(),
+
+      """
+      UnmodifiableMap [
+        %s = %s
+        %s = %s
+      ]""".formatted(
+        e1, e1.toDecimalString(),
+        e2, e2.toDecimalString())
+    );
+
+    var t3 = Thing.next();
+
+    var map3 = map3(t1, t2, t3);
+
+    iterator = map3.keyIterator();
+
+    e1 = iterator.next();
+
+    e2 = iterator.next();
+
+    var e3 = iterator.next();
+
+    assertEquals(
+      map3.toString(),
+
+      """
+      UnmodifiableMap [
+        %s = %s
+        %s = %s
+        %s = %s
+      ]""".formatted(
+        e1, e1.toDecimalString(),
+        e2, e2.toDecimalString(),
+        e3, e3.toDecimalString())
+    );
+  }
+
+  @Test
   public void values() {
     var test = new UnmodifiableMapValuesTest(this);
 
