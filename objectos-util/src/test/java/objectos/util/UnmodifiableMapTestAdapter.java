@@ -26,6 +26,8 @@ abstract class UnmodifiableMapTestAdapter {
 
   abstract void assertContents(Map<Thing, String> map, Thing[] els);
 
+  abstract Map<Thing, String> jdk(Thing... many);
+
   abstract UnmodifiableMap<Thing, String> map0();
 
   abstract UnmodifiableMap<Thing, String> map1(Thing t1);

@@ -17,6 +17,7 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.testng.annotations.Test;
 
@@ -64,6 +65,13 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
     test.execute();
   }
 
+  @Test
+  public void entrySet() {
+    var test = new UnmodifiableMapEntrySetTest(this);
+
+    test.execute();
+  }
+
   @Override
   final void assertContents(Map<Thing, String> map, Thing[] els) {
     assertEquals(map.size(), els.length);
@@ -77,6 +85,17 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
 
       assertEquals(entry.getValue(), thing.toDecimalString());
     }
+  }
+
+  @Override
+  final Map<Thing, String> jdk(Thing... many) {
+    var jdk = new LinkedHashMap<Thing, String>();
+
+    for (var thing : many) {
+      thing.putDec(jdk);
+    }
+
+    return jdk;
   }
 
   @Override

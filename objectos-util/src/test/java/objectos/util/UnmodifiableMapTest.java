@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -139,11 +140,9 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
 
   @Test
   public void entrySet() {
-    assertEquals(um0.entrySet(), jdk0.entrySet());
-    assertEquals(um1.entrySet(), jdk1.entrySet());
-    assertEquals(um2.entrySet(), jdk2.entrySet());
-    assertEquals(um3.entrySet(), jdk3.entrySet());
-    assertEquals(umX.entrySet(), jdkX.entrySet());
+    var test = new UnmodifiableMapEntrySetTest(this);
+
+    test.execute();
   }
 
   @Test
@@ -238,6 +237,17 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
     for (var thing : els) {
       assertEquals(it.get(thing), thing.toDecimalString());
     }
+  }
+
+  @Override
+  final Map<Thing, String> jdk(Thing... many) {
+    var jdk = new HashMap<Thing, String>();
+
+    for (var thing : many) {
+      thing.putDec(jdk);
+    }
+
+    return jdk;
   }
 
   @Override
