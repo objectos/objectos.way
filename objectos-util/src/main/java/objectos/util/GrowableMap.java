@@ -17,6 +17,8 @@ package objectos.util;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import objectos.lang.Check;
 
 /**
@@ -50,6 +52,64 @@ public class GrowableMap<K, V> extends AbstractArrayBasedMap<K, V> {
     Arrays.fill(array, null);
 
     size = 0;
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @param key
+   *        ignored (the operation is not implemented)
+   * @param remappingFunction
+   *        ignored (the operation is not implemented)
+   *
+   * @return this method does not return as it always throw an exception
+   *
+   * @throws UnsupportedOperationException
+   *         always
+   */
+  @Override
+  public final V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @param key
+   *        ignored (the operation is not implemented)
+   * @param mappingFunction
+   *        ignored (the operation is not implemented)
+   *
+   * @return this method does not return as it always throws an exception
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+    throw new UnsupportedOperationException("Not yet implemented");
+  }
+
+  /**
+   * Not implemented in this release. It might be implemented in a future
+   * release.
+   *
+   * @param key
+   *        ignored (the operation is not implemented)
+   * @param remappingFunction
+   *        ignored (the operation is not implemented)
+   *
+   * @return this method does not return as it always throws an exception
+   *
+   * @throws UnsupportedOperationException
+   *         this method may be implemented in a future release
+   */
+  @Override
+  public final V computeIfPresent(
+      K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+    throw new UnsupportedOperationException("Not yet implemented");
   }
 
   /**

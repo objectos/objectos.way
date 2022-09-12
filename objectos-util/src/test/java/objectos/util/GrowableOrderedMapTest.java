@@ -47,6 +47,27 @@ public class GrowableOrderedMapTest {
   }
 
   @Test
+  public void compute() {
+    var test = new GrowableMapComputeTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void computeIfAbsent() {
+    var test = new GrowableMapComputeIfAbsentTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void computeIfPresent() {
+    var test = new GrowableMapComputeIfPresentTest(it);
+
+    test.execute();
+  }
+
+  @Test
   public void containsKey() {
     var test = new GrowableMapContainsKeyTest(it);
 
