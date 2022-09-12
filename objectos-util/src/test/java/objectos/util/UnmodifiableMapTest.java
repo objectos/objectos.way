@@ -16,8 +16,6 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,16 +34,6 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
 
   private UnmodifiableMap<Thing, String> umX;
 
-  private Map<Thing, String> jdk0;
-
-  private Map<Thing, String> jdk1;
-
-  private Map<Thing, String> jdk2;
-
-  private Map<Thing, String> jdk3;
-
-  private Map<Thing, String> jdkX;
-
   private Thing t1;
 
   private Thing t2;
@@ -57,29 +45,20 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
   @BeforeClass
   public void _beforeClass() {
     um0 = UnmodifiableMap.of();
-    jdk0 = Map.of();
 
     t1 = Thing.next();
 
     um1 = UnmodifiableMap.of(t1, t1.toDecimalString());
-    jdk1 = Map.of(t1, t1.toDecimalString());
 
     t2 = Thing.next();
 
     um2 = UnmodifiableMap.of(
       t1, t1.toDecimalString(),
       t2, t2.toDecimalString());
-    jdk2 = Map.of(
-      t1, t1.toDecimalString(),
-      t2, t2.toDecimalString());
 
     t3 = Thing.next();
 
     um3 = UnmodifiableMap.of(
-      t1, t1.toDecimalString(),
-      t2, t2.toDecimalString(),
-      t3, t3.toDecimalString());
-    jdk3 = Map.of(
       t1, t1.toDecimalString(),
       t2, t2.toDecimalString(),
       t3, t3.toDecimalString());
@@ -93,7 +72,6 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
     }
 
     umX = manyMap.toUnmodifiableMap();
-    jdkX = Map.copyOf(manyMap);
   }
 
   @Test
@@ -147,55 +125,9 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
 
   @Test
   public void equals() {
-    // empty
-    assertTrue(um0.equals(jdk0));
-    assertTrue(jdk0.equals(um0));
-    assertFalse(um0.equals(null));
-    assertTrue(um0.equals(um0));
-    assertFalse(um0.equals(um1));
-    assertFalse(um0.equals(um2));
-    assertFalse(um0.equals(um3));
-    assertFalse(um0.equals(umX));
+    var test = new UnmodifiableMapEqualsTest(this);
 
-    // one
-    assertTrue(um1.equals(jdk1));
-    assertTrue(jdk1.equals(um1));
-    assertFalse(um1.equals(null));
-    assertFalse(um1.equals(um0));
-    assertTrue(um1.equals(um1));
-    assertFalse(um1.equals(um2));
-    assertFalse(um1.equals(um3));
-    assertFalse(um1.equals(umX));
-
-    // two
-    assertTrue(um2.equals(jdk2));
-    assertTrue(jdk2.equals(um2));
-    assertFalse(um2.equals(null));
-    assertFalse(um2.equals(um0));
-    assertFalse(um2.equals(um1));
-    assertTrue(um2.equals(um2));
-    assertFalse(um2.equals(um3));
-    assertFalse(um2.equals(umX));
-
-    // three
-    assertTrue(um3.equals(jdk3));
-    assertTrue(jdk3.equals(um3));
-    assertFalse(um3.equals(null));
-    assertFalse(um3.equals(um0));
-    assertFalse(um3.equals(um1));
-    assertFalse(um3.equals(um2));
-    assertTrue(um3.equals(um3));
-    assertFalse(um3.equals(umX));
-
-    // many
-    assertTrue(umX.equals(jdkX));
-    assertTrue(jdkX.equals(umX));
-    assertFalse(umX.equals(null));
-    assertFalse(umX.equals(um0));
-    assertFalse(umX.equals(um1));
-    assertFalse(umX.equals(um2));
-    assertFalse(umX.equals(um3));
-    assertTrue(umX.equals(umX));
+    test.execute();
   }
 
   @Test
