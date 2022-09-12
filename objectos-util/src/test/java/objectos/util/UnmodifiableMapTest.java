@@ -16,9 +16,12 @@
 package objectos.util;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import org.testng.annotations.Test;
 
 public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
@@ -170,12 +173,37 @@ public class UnmodifiableMapTest extends UnmodifiableMapTestAdapter {
     test.execute();
   }
 
+  @Test
+  public void size() {
+    var test = new UnmodifiableMapSizeTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void values() {
+    var test = new UnmodifiableMapValuesTest(this);
+
+    test.execute();
+  }
+
   @Override
   final void assertContents(Map<Thing, String> it, Thing[] els) {
     assertEquals(it.size(), els.length);
 
     for (var thing : els) {
       assertEquals(it.get(thing), thing.toDecimalString());
+    }
+  }
+
+  @Override
+  final <E> void assertSet(Set<E> set, Thing[] els, Function<Thing, E> function) {
+    assertEquals(set.size(), els.length);
+
+    for (var thing : els) {
+      E value = function.apply(thing);
+
+      assertTrue(set.contains(value));
     }
   }
 

@@ -15,24 +15,19 @@
  */
 package objectos.util;
 
-import java.util.AbstractMap;
-
-final class UnmodifiableMapEntrySetTest {
+final class UnmodifiableMapValuesTest {
 
   private final UnmodifiableMapTestAdapter adapter;
 
-  public UnmodifiableMapEntrySetTest(UnmodifiableMapTestAdapter adapter) {
+  public UnmodifiableMapValuesTest(UnmodifiableMapTestAdapter adapter) {
     this.adapter = adapter;
   }
 
   public final void execute() {
     adapter.testAll((map, els) -> {
-      var set = map.entrySet();
+      var values = map.values();
 
-      adapter.assertSet(
-        set, els,
-        t -> new AbstractMap.SimpleEntry<Thing, String>(t, t.toDecimalString())
-      );
+      adapter.assertSet(values, els, t -> t.toDecimalString());
     });
   }
 

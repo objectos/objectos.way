@@ -15,25 +15,33 @@
  */
 package objectos.util;
 
-import java.util.AbstractMap;
+import static org.testng.Assert.assertEquals;
 
-final class UnmodifiableMapEntrySetTest {
+final class UnmodifiableMapSizeTest {
 
   private final UnmodifiableMapTestAdapter adapter;
 
-  public UnmodifiableMapEntrySetTest(UnmodifiableMapTestAdapter adapter) {
+  public UnmodifiableMapSizeTest(UnmodifiableMapTestAdapter adapter) {
     this.adapter = adapter;
   }
 
   public final void execute() {
-    adapter.testAll((map, els) -> {
-      var set = map.entrySet();
+    var t1 = Thing.next();
+    var t2 = Thing.next();
+    var t3 = Thing.next();
+    var many = Thing.nextArray();
 
-      adapter.assertSet(
-        set, els,
-        t -> new AbstractMap.SimpleEntry<Thing, String>(t, t.toDecimalString())
-      );
-    });
+    var map0 = adapter.map0();
+    var map1 = adapter.map1(t1);
+    var map2 = adapter.map2(t1, t2);
+    var map3 = adapter.map3(t1, t2, t3);
+    var mapX = adapter.mapX(many);
+
+    assertEquals(map0.size(), 0);
+    assertEquals(map1.size(), 1);
+    assertEquals(map2.size(), 2);
+    assertEquals(map3.size(), 3);
+    assertEquals(mapX.size(), many.length);
   }
 
 }

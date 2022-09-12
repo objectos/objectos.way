@@ -193,13 +193,12 @@ final class Maps {
     public final boolean hasNext() {
       if (!computed) {
         while (index < array.length) {
-          Object key;
-          key = array[index];
+          var value = array[index];
 
           index = index + 2;
 
-          if (key != null) {
-            next = key;
+          if (value != null) {
+            next = value;
 
             break;
           }
@@ -217,8 +216,7 @@ final class Maps {
       if (!hasNext()) {
         throw new NoSuchElementException();
       } else {
-        Object result;
-        result = next;
+        var result = next;
 
         computed = false;
 

@@ -15,7 +15,7 @@
  */
 package objectos.util;
 
-import static org.testng.Assert.assertEquals;
+import java.util.function.Function;
 
 final class UnmodifiableMapKeySetTest {
 
@@ -26,28 +26,11 @@ final class UnmodifiableMapKeySetTest {
   }
 
   public final void execute() {
-    var t1 = Thing.next();
-    var t2 = Thing.next();
-    var t3 = Thing.next();
-    var many = Thing.nextArray();
+    adapter.testAll((map, els) -> {
+      var set = map.keySet();
 
-    var map0 = adapter.map0();
-    var map1 = adapter.map1(t1);
-    var map2 = adapter.map2(t1, t2);
-    var map3 = adapter.map3(t1, t2, t3);
-    var mapX = adapter.mapX(many);
-
-    var jdk0 = adapter.jdk();
-    var jdk1 = adapter.jdk(t1);
-    var jdk2 = adapter.jdk(t1, t2);
-    var jdk3 = adapter.jdk(t1, t2, t3);
-    var jdkX = adapter.jdk(many);
-
-    assertEquals(map0.keySet(), jdk0.keySet());
-    assertEquals(map1.keySet(), jdk1.keySet());
-    assertEquals(map2.keySet(), jdk2.keySet());
-    assertEquals(map3.keySet(), jdk3.keySet());
-    assertEquals(mapX.keySet(), jdkX.keySet());
+      adapter.assertSet(set, els, Function.identity());
+    });
   }
 
 }
