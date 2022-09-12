@@ -153,6 +153,41 @@ public class GrowableMapTest {
   }
 
   @Test
+  public void putIfAbsent() {
+    var test = new GrowableMapPutIfAbsentTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void remove() {
+    var test = new GrowableMapRemoveTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
+  public void replace() {
+    var test = new GrowableMapReplaceTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
+  public void replaceAll() {
+    var test = new GrowableMapReplaceAllTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
+  public void size() {
+    var test = new GrowableMapSizeTest(it);
+
+    test.execute();
+  }
+
+  @Test
   public void toStringTest() {
     assertEquals(it.toString(), "GrowableMap []");
 
