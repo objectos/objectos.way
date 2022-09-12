@@ -90,8 +90,29 @@ public class GrowableMapTest {
   }
 
   @Test
+  public void forEach() {
+    var test = new GrowableMapForEachTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
   public void get() {
     var test = new GrowableMapGetTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void getOrDefault() {
+    var test = new GrowableMapGetOrDefaultTest(it);
+
+    test.execute();
+  }
+
+  @Test
+  public void hashCodeTest() {
+    var test = new GrowableMapHashCodeTest(it);
 
     test.execute();
   }
@@ -106,6 +127,13 @@ public class GrowableMapTest {
   @Test
   public void keySet() {
     var test = new GrowableMapKeySetTest(it, this::assertContents);
+
+    test.execute();
+  }
+
+  @Test
+  public void merge() {
+    var test = new GrowableMapMergeTest(it);
 
     test.execute();
   }
