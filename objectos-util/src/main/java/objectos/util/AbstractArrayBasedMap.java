@@ -379,6 +379,22 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
   }
 
   /**
+   * Returns the hash code value of this map.
+   *
+   * @return the hash code value of this map
+   */
+  @Override
+  public final int hashCode() {
+    int h = 0;
+
+    for (Entry<K, V> entry : entrySet()) {
+      h += entry.hashCode();
+    }
+
+    return h;
+  }
+
+  /**
    * Returns {@code true} if this map contains no key/value mappings.
    *
    * @return {@code true} if this map contains no key/value mappings

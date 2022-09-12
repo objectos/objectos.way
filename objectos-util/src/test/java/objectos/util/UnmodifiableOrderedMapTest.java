@@ -93,6 +93,20 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
     test.execute();
   }
 
+  @Test
+  public void getOrDefault() {
+    var test = new UnmodifiableMapGetOrDefaultTest(this);
+
+    test.execute();
+  }
+
+  @Test
+  public void hashCodeTest() {
+    var test = new UnmodifiableMapHashCodeTest(this);
+
+    test.execute();
+  }
+
   @Override
   final void assertContents(Map<Thing, String> map, Thing[] els) {
     assertEquals(map.size(), els.length);
