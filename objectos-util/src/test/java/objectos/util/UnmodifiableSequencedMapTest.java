@@ -183,7 +183,7 @@ public class UnmodifiableSequencedMapTest extends UnmodifiableMapTestAdapter {
   public void toStringTest() {
     var map0 = map0();
 
-    assertEquals(map0.toString(), "UnmodifiableOrderedMap []");
+    assertEquals(map0.toString(), "UnmodifiableSequencedMap []");
 
     var t1 = Thing.next();
 
@@ -193,7 +193,7 @@ public class UnmodifiableSequencedMapTest extends UnmodifiableMapTestAdapter {
       map1.toString(),
 
       """
-      UnmodifiableOrderedMap [
+      UnmodifiableSequencedMap [
         %s = %s
       ]""".formatted(t1, t1.toDecimalString())
     );
@@ -206,7 +206,7 @@ public class UnmodifiableSequencedMapTest extends UnmodifiableMapTestAdapter {
       map2.toString(),
 
       """
-      UnmodifiableOrderedMap [
+      UnmodifiableSequencedMap [
         %s = %s
         %s = %s
       ]""".formatted(
@@ -222,7 +222,7 @@ public class UnmodifiableSequencedMapTest extends UnmodifiableMapTestAdapter {
       map3.toString(),
 
       """
-      UnmodifiableOrderedMap [
+      UnmodifiableSequencedMap [
         %s = %s
         %s = %s
         %s = %s

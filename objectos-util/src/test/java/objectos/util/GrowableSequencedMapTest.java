@@ -188,7 +188,7 @@ public class GrowableSequencedMapTest {
 
   @Test
   public void toStringTest() {
-    assertEquals(it.toString(), "GrowableOrderedMap []");
+    assertEquals(it.toString(), "GrowableSequencedMap []");
 
     var t1 = Thing.next();
 
@@ -198,7 +198,7 @@ public class GrowableSequencedMapTest {
       it.toString(),
 
       """
-      GrowableOrderedMap [
+      GrowableSequencedMap [
         %s = %s
       ]""".formatted(t1, t1.toHexString())
     );
@@ -211,7 +211,7 @@ public class GrowableSequencedMapTest {
       it.toString(),
 
       """
-      GrowableOrderedMap [
+      GrowableSequencedMap [
         %s = %s
         %s = %s
       ]""".formatted(t1, t1.toHexString(), t2, t2.toHexString())
@@ -225,7 +225,7 @@ public class GrowableSequencedMapTest {
       it.toString(),
 
       """
-      GrowableOrderedMap [
+      GrowableSequencedMap [
         %s = %s
         %s = %s
         %s = %s
