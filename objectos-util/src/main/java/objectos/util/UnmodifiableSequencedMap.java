@@ -18,10 +18,10 @@ package objectos.util;
 /**
  * A {@link UnmodifiableMap} variant with a predictable iteration order.
  */
-public final class UnmodifiableOrderedMap<K, V> extends UnmodifiableMap<K, V> {
+public final class UnmodifiableSequencedMap<K, V> extends UnmodifiableMap<K, V> {
 
-  private static final UnmodifiableOrderedMap<Object, Object> EMPTY
-      = new UnmodifiableOrderedMap<Object, Object>(
+  private static final UnmodifiableSequencedMap<Object, Object> EMPTY
+      = new UnmodifiableSequencedMap<Object, Object>(
         ObjectArrays.empty(),
 
         0,
@@ -31,15 +31,15 @@ public final class UnmodifiableOrderedMap<K, V> extends UnmodifiableMap<K, V> {
 
   private final Object[] iteratorArray;
 
-  UnmodifiableOrderedMap(Object[] array, int size, Object[] iteratorArray) {
+  UnmodifiableSequencedMap(Object[] array, int size, Object[] iteratorArray) {
     super(array, size);
 
     this.iteratorArray = iteratorArray;
   }
 
   @SuppressWarnings("unchecked")
-  static <K, V> UnmodifiableOrderedMap<K, V> orderedEmpty() {
-    return (UnmodifiableOrderedMap<K, V>) EMPTY;
+  static <K, V> UnmodifiableSequencedMap<K, V> orderedEmpty() {
+    return (UnmodifiableSequencedMap<K, V>) EMPTY;
   }
 
   @Override

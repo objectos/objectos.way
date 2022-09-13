@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.function.Function;
 import org.testng.annotations.Test;
 
-public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
+public class UnmodifiableSequencedMapTest extends UnmodifiableMapTestAdapter {
 
   @Test
   public void clear() {
@@ -281,7 +281,7 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
 
   @Override
   final UnmodifiableMap<Thing, String> map0() {
-    return UnmodifiableOrderedMap.orderedEmpty();
+    return UnmodifiableSequencedMap.orderedEmpty();
   }
 
   @Override
@@ -301,7 +301,7 @@ public class UnmodifiableOrderedMapTest extends UnmodifiableMapTestAdapter {
 
   @Override
   final UnmodifiableMap<Thing, String> mapX(Thing[] many) {
-    var manyMap = new GrowableOrderedMap<Thing, String>();
+    var manyMap = new GrowableSequencedMap<Thing, String>();
 
     for (var thing : many) {
       thing.putDec(manyMap);

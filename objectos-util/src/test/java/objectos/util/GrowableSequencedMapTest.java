@@ -25,13 +25,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class GrowableOrderedMapTest {
+public class GrowableSequencedMapTest {
 
-  private GrowableOrderedMap<Thing, String> it;
+  private GrowableSequencedMap<Thing, String> it;
 
   @BeforeClass
   public void _beforeClass() {
-    it = new GrowableOrderedMap<>();
+    it = new GrowableSequencedMap<>();
   }
 
   @BeforeMethod

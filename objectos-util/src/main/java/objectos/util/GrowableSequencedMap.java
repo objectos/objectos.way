@@ -20,14 +20,14 @@ import java.util.Arrays;
 /**
  * A {@link GrowableMap} variant with a predictable iteration order.
  */
-public final class GrowableOrderedMap<K, V> extends GrowableMap<K, V> {
+public final class GrowableSequencedMap<K, V> extends GrowableMap<K, V> {
 
   private Object[] iteratorArray;
 
   /**
    * Creates a new {@code MutableOrderedMap} instance.
    */
-  public GrowableOrderedMap() {
+  public GrowableSequencedMap() {
     iteratorArray = ObjectArrays.EMPTY;
   }
 
@@ -42,7 +42,7 @@ public final class GrowableOrderedMap<K, V> extends GrowableMap<K, V> {
   }
 
   /**
-   * Returns an {@link UnmodifiableOrderedMap} copy of this map.
+   * Returns an {@link UnmodifiableSequencedMap} copy of this map.
    *
    * <p>
    * The returned {@code ImmutableOrderedMap} will contain all of the entries
@@ -57,15 +57,15 @@ public final class GrowableOrderedMap<K, V> extends GrowableMap<K, V> {
    * Note, however, that the behaviour of this method is undefined if this map
    * is modified while the copy is being made.
    *
-   * @return an {@link UnmodifiableOrderedMap} copy of this set
+   * @return an {@link UnmodifiableSequencedMap} copy of this set
    */
   @Override
-  public final UnmodifiableOrderedMap<K, V> toUnmodifiableMap() {
+  public final UnmodifiableSequencedMap<K, V> toUnmodifiableMap() {
     switch (size) {
       case 0:
-        return UnmodifiableOrderedMap.orderedEmpty();
+        return UnmodifiableSequencedMap.orderedEmpty();
       default:
-        return new UnmodifiableOrderedMap<K, V>(
+        return new UnmodifiableSequencedMap<K, V>(
           Arrays.copyOf(array, array.length),
 
           size,
