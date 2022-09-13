@@ -49,7 +49,7 @@ public class UnmodifiableMap<K, V> extends AbstractArrayBasedMap<K, V> {
   private UnmodifiableMap() {}
 
   @SuppressWarnings("unchecked")
-  public static <K, V> UnmodifiableMap<K, V> of() {
+  static <K, V> UnmodifiableMap<K, V> of() {
     return (UnmodifiableMap<K, V>) EMPTY;
   }
 

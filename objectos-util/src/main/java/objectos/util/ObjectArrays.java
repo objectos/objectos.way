@@ -65,6 +65,8 @@ public final class ObjectArrays {
    * array = ObjectArrays.copyIfNecessary(array, currentIndex);
    * array[currentIndex++] = foo;</pre>
    *
+   * @param <T>
+   *        the type of the objects in the array
    * @param array
    *        the array instance to be copied if necessary
    * @param requiredIndex
