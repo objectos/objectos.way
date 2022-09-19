@@ -27,7 +27,7 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
-interface GrowableCollection<E> extends BaseCollection<E> {
+public interface GrowableCollection<E> extends BaseCollection<E> {
 
   /**
    * Adds all elements of the given {@link Iterable} to this collection.

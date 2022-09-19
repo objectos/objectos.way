@@ -28,7 +28,7 @@ import objectos.lang.ToString;
  *
  * @param <E> type of the elements in this collection
  */
-interface BaseCollection<E> extends Collection<E>, Joinable, ToString.Formattable {
+public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.Formattable {
 
   /**
    * Adds the specified element to this collection.

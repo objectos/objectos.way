@@ -27,7 +27,7 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
-interface UnmodifiableCollection<E> extends BaseCollection<E> {
+public interface UnmodifiableCollection<E> extends BaseCollection<E> {
 
   /**
    * This operation is not supported.
