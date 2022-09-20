@@ -28,7 +28,7 @@ import objectos.lang.ToString;
  *
  * @param <E> type of the elements in this collection
  */
-public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.Formattable {
+public interface BaseCollection<E> extends Collection<E>, ToString.Formattable {
 
   /**
    * Adds the specified element to this collection.
@@ -80,6 +80,44 @@ public interface BaseCollection<E> extends Collection<E>, Joinable, ToString.For
    */
   @Override
   UnmodifiableIterator<E> iterator();
+
+  /**
+   * Returns a new string by joining together the string representation of
+   * each of its elements.
+   *
+   * @return a new string resulting from joining together the elements
+   */
+  String join();
+
+  /**
+   * Returns a new string by joining together the string representation of
+   * each of its elements separated by the specified {@code delimiter}.
+   *
+   * @param delimiter
+   *        the separator to use between each element's string representation
+   *
+   * @return a new string resulting from joining together the elements separated
+   *         by the specified {@code delimiter}
+   */
+  String join(String delimiter);
+
+  /**
+   * Returns a new string by joining together the string representations of
+   * each of its elements separated by the specified {@code delimiter} and with
+   * the specified {@code prefix} and {@code suffix}.
+   *
+   * @param delimiter
+   *        the separator to use between each element's string representation
+   * @param prefix
+   *        the value to be used as the first part of the result string
+   * @param suffix
+   *        the value to be used as the last part of the result string
+   *
+   * @return a new string resulting from joining together the elements separated
+   *         by the specified {@code delimiter} and with the specified
+   *         {@code prefix} and {@code suffix}.
+   */
+  String join(String delimiter, String prefix, String suffix);
 
   /**
    * This operation is not supported.

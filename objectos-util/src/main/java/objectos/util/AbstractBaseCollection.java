@@ -27,7 +27,7 @@ import objectos.lang.ToString;
  *
  * @param <E> type of the elements in this collection
  */
-abstract class AbstractBaseCollection<E> implements Collection<E>, Joinable, ToString.Formattable {
+abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
 
   /**
    * Sole constructor
@@ -131,6 +131,7 @@ abstract class AbstractBaseCollection<E> implements Collection<E>, Joinable, ToS
    *         if the collection is empty or if the collection contains more than
    *         one element
    */
+  @Override
   public final E getOnly() {
     switch (size()) {
       case 0:
