@@ -377,32 +377,6 @@ public class GrowableList<E>
     }
   }
 
-  /**
-   * Truncates this list to the specified size.
-   *
-   * <p>
-   * More formally, removes all of the elements from list having indices
-   * {@code i} such that {@code i >= newSize}. If specified size is equal to or
-   * greater than the current size then the list is left unmodified.
-   *
-   * @param newSize
-   *        the new size to set for this list
-   *
-   * @throws IllegalArgumentException
-   *         if {@code newSize < 0}
-   */
-  public final void truncate(int newSize) {
-    Check.argument(newSize >= 0, "newSize must not be negative");
-
-    if (newSize >= size) {
-      return;
-    }
-
-    Arrays.fill(data, newSize, size, null);
-
-    size = newSize;
-  }
-
   final boolean add0(E e) {
     if (size < data.length) {
       return append0(e);
@@ -426,6 +400,32 @@ public class GrowableList<E>
   @SuppressWarnings("unchecked")
   final void sortImpl(Comparator<? super E> c) {
     Arrays.sort((E[]) data, 0, size, c);
+  }
+
+  /**
+   * Truncates this list to the specified size.
+   *
+   * <p>
+   * More formally, removes all of the elements from list having indices
+   * {@code i} such that {@code i >= newSize}. If specified size is equal to or
+   * greater than the current size then the list is left unmodified.
+   *
+   * @param newSize
+   *        the new size to set for this list
+   *
+   * @throws IllegalArgumentException
+   *         if {@code newSize < 0}
+   */
+  final void truncate(int newSize) {
+    Check.argument(newSize >= 0, "newSize must not be negative");
+
+    if (newSize >= size) {
+      return;
+    }
+
+    Arrays.fill(data, newSize, size, null);
+
+    size = newSize;
   }
 
   private boolean addAll0(Collection<? extends E> c, String nullMessageStart) {

@@ -21,7 +21,7 @@ import java.util.List;
  * This class provides {@code static} utility methods for {@link java.util.List}
  * classes and objects.
  */
-public final class Lists {
+final class Lists {
 
   private Lists() {}
 

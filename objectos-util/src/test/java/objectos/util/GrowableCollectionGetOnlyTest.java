@@ -21,9 +21,9 @@ import org.testng.Assert;
 
 final class GrowableCollectionGetOnlyTest {
 
-  private final GrowableCollection<Thing> it;
+  private final AbstractBaseCollection<Thing> it;
 
-  public GrowableCollectionGetOnlyTest(GrowableCollection<Thing> it) {
+  public GrowableCollectionGetOnlyTest(AbstractBaseCollection<Thing> it) {
     this.it = it;
   }
 

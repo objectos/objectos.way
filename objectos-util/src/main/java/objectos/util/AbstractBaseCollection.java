@@ -122,28 +122,6 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
   }
 
   /**
-   * Returns the only element in this collection or throws an exception if the
-   * collection is empty or if the collection contains more than one element.
-   *
-   * @return the only element of this collection
-   *
-   * @throws IllegalStateException
-   *         if the collection is empty or if the collection contains more than
-   *         one element
-   */
-  @Override
-  public final E getOnly() {
-    switch (size()) {
-      case 0:
-        throw new IllegalStateException("Could not getOnly: empty.");
-      case 1:
-        return getOnlyImpl();
-      default:
-        throw new IllegalStateException("Could not getOnly: more than one element.");
-    }
-  }
-
-  /**
    * Returns {@code true} if this collection contains no elements.
    *
    * @return {@code true} if this collection contains no elements
@@ -399,6 +377,27 @@ abstract class AbstractBaseCollection<E> implements BaseCollection<E> {
   @Override
   public final String toString() {
     return ToString.of(this);
+  }
+
+  /**
+   * Returns the only element in this collection or throws an exception if the
+   * collection is empty or if the collection contains more than one element.
+   *
+   * @return the only element of this collection
+   *
+   * @throws IllegalStateException
+   *         if the collection is empty or if the collection contains more than
+   *         one element
+   */
+  final E getOnly() {
+    switch (size()) {
+      case 0:
+        throw new IllegalStateException("Could not getOnly: empty.");
+      case 1:
+        return getOnlyImpl();
+      default:
+        throw new IllegalStateException("Could not getOnly: more than one element.");
+    }
   }
 
   /**

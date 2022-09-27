@@ -62,18 +62,6 @@ public interface BaseCollection<E> extends Collection<E>, ToString.Formattable {
   boolean addAll(Collection<? extends E> c);
 
   /**
-   * Returns the only element of this collection or throws an exception if the
-   * collection is empty or if the collection contains more than one element.
-   *
-   * @return the only element of this collection
-   *
-   * @throws IllegalStateException
-   *         if the collection is empty or if the collection contains more than
-   *         one element
-   */
-  E getOnly() throws IllegalStateException;
-
-  /**
    * Returns an unmodifiable iterator over the elements in this collection.
    *
    * @return an unmodifiable iterator over the elements in this collection
