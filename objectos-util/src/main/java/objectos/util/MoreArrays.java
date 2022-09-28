@@ -24,19 +24,39 @@ final class MoreArrays {
 
   private MoreArrays() {}
 
-  static int growArrayLength(int currentLength, int requiredIndex) {
-    var newLength = currentLength + (currentLength >> 1);
+  static int growArrayLength(int length, int requiredIndex) {
+    var halfLength = length >> 1;
+
+    var newLength = length + halfLength;
 
     if (requiredIndex < newLength) {
       return newLength;
+    } else {
+      return growArrayLength0(requiredIndex);
+    }
+  }
+
+  private static int growArrayLength0(int requiredIndex) {
+    var minLength = requiredIndex + 1;
+
+    var halfLength = minLength >> 1;
+
+    var newLength = minLength + halfLength;
+
+    if (0 < newLength && newLength <= JVM_SOFT_LIMIT) {
+      return newLength;
+    } else {
+      return growArrayLength1(minLength);
+    }
+  }
+
+  private static int growArrayLength1(int minLength) {
+    if (minLength < 0) {
+      throw new OutOfMemoryError("Array size already at maximum");
     }
 
-    var requiredLength = requiredIndex + 1;
-
-    newLength = Integer.highestOneBit(requiredLength) << 1;
-
-    if (newLength > 0) {
-      return newLength;
+    if (minLength <= JVM_SOFT_LIMIT) {
+      return JVM_SOFT_LIMIT;
     }
 
     return Integer.MAX_VALUE;

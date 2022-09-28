@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 import objectos.lang.ToString;
 
 /**
- * The base {@link Collection} interface for the Objectos Collections API.
+ * The base {@link Collection} interface for the Objectos Util collections API.
  *
  * <p>
  * Implementations of this interface are required to reject {@code null}

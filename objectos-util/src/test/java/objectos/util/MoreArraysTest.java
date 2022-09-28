@@ -49,13 +49,13 @@ public class MoreArraysTest {
       }
 
       if (iterations > 60) {
-        Assert.fail("iterations > 60");
+        Assert.fail(iterations + " > 60");
       }
 
       iterations++;
     }
 
-    assertEquals(iterations, 50);
+    assertEquals(iterations, 51);
 
     assertEquals(length, Integer.MAX_VALUE);
   }

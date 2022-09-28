@@ -21,17 +21,15 @@
  * to general-purpose) collections API for the Objectos libraries themselves.
  *
  * <p>
- * A corollary of the former is that it is a non-goal to provide <em>better</em>
- * or <em>"smarter"</em> implementations over the ones from the Java Collections
- * Framework.
+ * It is a non-goal to provide <em>better</em> or <em>"smarter"</em>
+ * implementations over the ones from the Java Collections Framework.
  *
  * <p>
  * A secondary goal is to provide a small and concise collections API while, at
  * the same time, it should not get in the way of the Objectos programmer.
  *
  * <p>
- * A corollary of the former is that it is a non-goal to satisfy every possible
- * use-case that should arise.
+ * It is a non-goal to satisfy every possible use-case that should arise.
  *
  * <h2>Limitations</h2>
  *
@@ -52,7 +50,8 @@
  * {@link java.util.ConcurrentModificationException}; and</li>
  * <li>classes do not implement hash-collision attack mitigations as
  * {@link java.util.HashSet} as {@link java.util.HashMap} have been
- * implementing since Java 8.</li>
+ * implementing since Java 8 (see <a href="https://openjdk.org/jeps/180">JEP
+ * 180</a>).</li>
  * </ul>
  *
  * <h2>Null Pointers</h2>
