@@ -75,7 +75,7 @@
 		<m2e.apt.activation>disabled</m2e.apt.activation>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		<maven.surefire.version>3.0.0-M6</maven.surefire.version>
+		<maven.surefire.version>3.0.0-M7</maven.surefire.version>
 		<maven.toolchains.jdk-vendor>openjdk</maven.toolchains.jdk-vendor>
 		<maven.toolchains.jdk-version>17</maven.toolchains.jdk-version>
 
@@ -244,11 +244,11 @@ limitations under the License.
 			<plugins>
 				<plugin>
 					<artifactId>maven-antrun-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.2</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
@@ -263,11 +263,11 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-deploy-plugin</artifactId>
-					<version>3.0.0-M1</version>
+					<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
@@ -275,15 +275,15 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>3.0.0-M1</version>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-invoker-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.2.2</version>
+					<version>3.3.0</version>
 					<configuration>
 						<archive>
 							<manifest>
@@ -295,7 +295,7 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.4.0</version>
+					<version>3.4.1</version>
 					<configuration>
 						<debug>true</debug>
 						<minmemory>1g</minmemory>
@@ -304,7 +304,7 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<artifactId>maven-plugin-plugin</artifactId>
-					<version>3.6.1</version>
+					<version>3.6.4</version>
 					<dependencies>
 						<dependency>
 							<groupId>org.ow2.asm</groupId>
@@ -315,15 +315,15 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>3.0.0-M1</version>
+					<version>3.0.0-M6</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
@@ -340,7 +340,7 @@ limitations under the License.
 				</plugin>
 				<plugin>
 					<artifactId>maven-toolchains-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version>
 					<executions>
 						<execution>
 							<id>toolchains-jdk</id>
@@ -362,7 +362,7 @@ limitations under the License.
 				<plugin>
 					<groupId>com.mycila</groupId>
 					<artifactId>license-maven-plugin</artifactId>
-					<version>4.2.rc2</version>
+					<version>4.2.rc3</version>
 					<configuration>
 						<mapping>
 							<plantuml>APOSTROPHE_STYLE</plantuml>
