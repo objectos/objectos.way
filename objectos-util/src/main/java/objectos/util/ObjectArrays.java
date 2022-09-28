@@ -62,7 +62,7 @@ public final class ObjectArrays {
    *
    * <pre>
    * Foo foo = computeFoo();
-   * array = ObjectArrays.copyIfNecessary(array, currentIndex);
+   * array = ObjectArrays.growIfNecessary(array, currentIndex);
    * array[currentIndex++] = foo;</pre>
    *
    * @param <T>
@@ -78,7 +78,7 @@ public final class ObjectArrays {
    * @throws IllegalArgumentException
    *         if {@code requiredIndex < 0}
    */
-  public static <T> T[] copyIfNecessary(T[] array, int requiredIndex) {
+  public static <T> T[] growIfNecessary(T[] array, int requiredIndex) {
     Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
 
     var length = array.length;

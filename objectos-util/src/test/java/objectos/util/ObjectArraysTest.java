@@ -25,27 +25,27 @@ import org.testng.annotations.Test;
 public class ObjectArraysTest {
 
   @Test
-  public void copyIfNecessary() {
+  public void empty() {
+    assertEquals(ObjectArrays.empty().length, 0);
+  }
+
+  @Test
+  public void growIfNecessary() {
     // String
     var array = new String[3];
 
-    var noGrowthRequired = ObjectArrays.copyIfNecessary(array, 2);
+    var noGrowthRequired = ObjectArrays.growIfNecessary(array, 2);
 
     assertSame(noGrowthRequired, array);
     assertEquals(noGrowthRequired.length, 3);
 
-    var growthRequired = ObjectArrays.copyIfNecessary(array, 3);
+    var growthRequired = ObjectArrays.growIfNecessary(array, 3);
 
     var c = growthRequired.getClass();
 
     assertEquals(c.getComponentType(), String.class);
     assertNotSame(growthRequired, array);
     assertTrue(growthRequired.length > array.length);
-  }
-
-  @Test
-  public void empty() {
-    assertEquals(ObjectArrays.empty().length, 0);
   }
 
 }

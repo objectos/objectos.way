@@ -56,23 +56,21 @@ public class CharArraysTest {
   }
 
   @Test
-  public void copyIfNecessary() {
-    char[] chars;
-    chars = new char[3];
+  public void growIfNecessary() {
+    var chars = new char[3];
 
-    char[] charsNoGrowthRequired;
-    charsNoGrowthRequired = CharArrays.copyIfNecessary(chars, 2);
+    var charsNoGrowthRequired = CharArrays.growIfNecessary(chars, 2);
 
     assertSame(charsNoGrowthRequired, chars);
     assertEquals(charsNoGrowthRequired.length, 3);
 
-    char[] charsGrowthRequired = CharArrays.copyIfNecessary(chars, 3);
+    var charsGrowthRequired = CharArrays.growIfNecessary(chars, 3);
 
     assertNotSame(charsGrowthRequired, chars);
     assertTrue(charsGrowthRequired.length > chars.length);
 
     try {
-      CharArrays.copyIfNecessary(chars, -1);
+      CharArrays.growIfNecessary(chars, -1);
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {

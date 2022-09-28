@@ -29,6 +29,16 @@ public final class IntArrays {
   private IntArrays() {}
 
   /**
+   * Returns the empty zero-length {@code int} array instance. Since it is a
+   * zero-length instance, values cannot be inserted nor removed from it.
+   *
+   * @return an empty {@code int} array
+   */
+  public static int[] empty() {
+    return EMPTY;
+  }
+
+  /**
    * Copies the values of the array into a larger one (if necessary) so that a
    * value can be inserted at the required index. More formally:
    *
@@ -58,7 +68,7 @@ public final class IntArrays {
    *
    * <pre>
    * int i = computeInt();
-   * array = IntArrays.copyIfNecessary(array, currentIndex);
+   * array = IntArrays.growIfNecessary(array, currentIndex);
    * array[currentIndex++] = i;</pre>
    *
    * @param array
@@ -72,21 +82,18 @@ public final class IntArrays {
    * @throws IllegalArgumentException
    *         if {@code requiredIndex < 0}
    */
-  public static int[] copyIfNecessary(int[] array, int requiredIndex) {
+  public static int[] growIfNecessary(int[] array, int requiredIndex) {
     Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
 
-    int length;
-    length = array.length;
+    var length = array.length;
 
     if (requiredIndex < length) {
       return array;
     }
 
-    int newLength;
-    newLength = MoreArrays.growArrayLength(length, requiredIndex);
+    var newLength = MoreArrays.growArrayLength(length, requiredIndex);
 
-    int[] result;
-    result = new int[newLength];
+    var result = new int[newLength];
 
     System.arraycopy(array, 0, result, 0, length);
 
@@ -136,35 +143,22 @@ public final class IntArrays {
    * @throws IllegalArgumentException
    *         if {@code requiredIndex < 0}
    */
-  public static int[][] copyIfNecessary(int[][] array, int requiredIndex) {
+  public static int[][] growIfNecessary(int[][] array, int requiredIndex) {
     Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
 
-    int length;
-    length = array.length;
+    var length = array.length;
 
     if (requiredIndex < length) {
       return array;
     }
 
-    int newLength;
-    newLength = MoreArrays.growArrayLength(length, requiredIndex);
+    var newLength = MoreArrays.growArrayLength(length, requiredIndex);
 
-    int[][] result;
-    result = new int[newLength][];
+    var result = new int[newLength][];
 
     System.arraycopy(array, 0, result, 0, length);
 
     return result;
-  }
-
-  /**
-   * Returns the empty zero-length {@code int} array instance. Since it is a
-   * zero-length instance, values cannot be inserted nor removed from it.
-   *
-   * @return an empty {@code int} array
-   */
-  public static int[] empty() {
-    return EMPTY;
   }
 
 }

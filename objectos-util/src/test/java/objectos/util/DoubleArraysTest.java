@@ -25,25 +25,23 @@ import org.testng.annotations.Test;
 public class DoubleArraysTest {
 
   @Test
-  public void copyIfNecessary() {
-    double[] doubles;
-    doubles = new double[3];
+  public void empty() {
+    assertEquals(DoubleArrays.empty().length, 0);
+  }
 
-    double[] doublesNoGrowthRequired;
-    doublesNoGrowthRequired = DoubleArrays.copyIfNecessary(doubles, 2);
+  @Test
+  public void growIfNecessary() {
+    var doubles = new double[3];
+
+    var doublesNoGrowthRequired = DoubleArrays.growIfNecessary(doubles, 2);
 
     assertSame(doublesNoGrowthRequired, doubles);
     assertEquals(doublesNoGrowthRequired.length, 3);
 
-    double[] doublesGrowthRequired = DoubleArrays.copyIfNecessary(doubles, 3);
+    var doublesGrowthRequired = DoubleArrays.growIfNecessary(doubles, 3);
 
     assertNotSame(doublesGrowthRequired, doubles);
     assertTrue(doublesGrowthRequired.length > doubles.length);
-  }
-
-  @Test
-  public void empty() {
-    assertEquals(DoubleArrays.empty().length, 0);
   }
 
 }

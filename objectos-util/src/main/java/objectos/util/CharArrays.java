@@ -70,18 +70,15 @@ public final class CharArrays {
   public static char[] append(char[] array, int offset, CharSequence s) {
     Check.argument(offset >= 0, "offset cannot be negative");
 
-    int length;
-    length = s.length();
+    var length = s.length();
 
     if (length == 0) {
       return array;
     }
 
-    int requiredIndex;
-    requiredIndex = offset + length - 1;
+    var requiredIndex = offset + length - 1;
 
-    char[] result;
-    result = copyIfNecessary(array, requiredIndex);
+    var result = growIfNecessary(array, requiredIndex);
 
     for (int i = 0; i < length; i++) {
       result[offset + i] = s.charAt(i);
@@ -120,7 +117,7 @@ public final class CharArrays {
    *
    * <pre>
    * char c = readChar();
-   * array = CharArrays.copyIfNecessary(array, currentIndex);
+   * array = CharArrays.growIfNecessary(array, currentIndex);
    * array[currentIndex++] = c;</pre>
    *
    * @param array
@@ -134,21 +131,18 @@ public final class CharArrays {
    * @throws IllegalArgumentException
    *         if {@code requiredIndex < 0}
    */
-  public static char[] copyIfNecessary(char[] array, int requiredIndex) {
+  public static char[] growIfNecessary(char[] array, int requiredIndex) {
     Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
 
-    int length;
-    length = array.length;
+    var length = array.length;
 
     if (requiredIndex < length) {
       return array;
     }
 
-    int newLength;
-    newLength = MoreArrays.growArrayLength(length, requiredIndex);
+    var newLength = MoreArrays.growArrayLength(length, requiredIndex);
 
-    char[] result;
-    result = new char[newLength];
+    var result = new char[newLength];
 
     System.arraycopy(array, 0, result, 0, length);
 

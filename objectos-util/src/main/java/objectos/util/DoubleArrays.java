@@ -29,6 +29,16 @@ public final class DoubleArrays {
   private DoubleArrays() {}
 
   /**
+   * Returns the empty zero-length {@code double} array instance. Since it is a
+   * zero-length instance, values cannot be inserted nor removed from it.
+   *
+   * @return an empty {@code double} array
+   */
+  public static double[] empty() {
+    return EMPTY;
+  }
+
+  /**
    * Copies the values of the array into a larger one (if necessary) so that a
    * value can be inserted at the required index. More formally:
    *
@@ -72,35 +82,22 @@ public final class DoubleArrays {
    * @throws IllegalArgumentException
    *         if {@code requiredIndex < 0}
    */
-  public static double[] copyIfNecessary(double[] array, int requiredIndex) {
+  public static double[] growIfNecessary(double[] array, int requiredIndex) {
     Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
 
-    int length;
-    length = array.length;
+    var length = array.length;
 
     if (requiredIndex < length) {
       return array;
     }
 
-    int newLength;
-    newLength = MoreArrays.growArrayLength(length, requiredIndex);
+    var newLength = MoreArrays.growArrayLength(length, requiredIndex);
 
-    double[] result;
-    result = new double[newLength];
+    var result = new double[newLength];
 
     System.arraycopy(array, 0, result, 0, length);
 
     return result;
-  }
-
-  /**
-   * Returns the empty zero-length {@code double} array instance. Since it is a
-   * zero-length instance, values cannot be inserted nor removed from it.
-   *
-   * @return an empty {@code double} array
-   */
-  public static double[] empty() {
-    return EMPTY;
   }
 
 }

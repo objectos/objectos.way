@@ -35,6 +35,16 @@ public final class ByteArrays {
   private ByteArrays() {}
 
   /**
+   * Returns the empty zero-length {@code byte} array instance. Since it is a
+   * zero-length instance, values cannot be inserted nor removed from it.
+   *
+   * @return an empty {@code byte} array
+   */
+  public static byte[] empty() {
+    return EMPTY;
+  }
+
+  /**
    * Copies the values of the array into a larger one (if necessary) so that a
    * value can be inserted at the required index. More formally:
    *
@@ -64,7 +74,7 @@ public final class ByteArrays {
    *
    * <pre>
    * byte b = readByte();
-   * array = ByteArrays.copyIfNecessary(array, currentIndex);
+   * array = ByteArrays.growIfNecessary(array, currentIndex);
    * array[currentIndex++] = b;</pre>
    *
    * @param array
@@ -78,35 +88,22 @@ public final class ByteArrays {
    * @throws IllegalArgumentException
    *         if {@code requiredIndex < 0}
    */
-  public static byte[] copyIfNecessary(byte[] array, int requiredIndex) {
+  public static byte[] growIfNecessary(byte[] array, int requiredIndex) {
     Check.argument(requiredIndex >= 0, "requiredIndex cannot be negative");
 
-    int length;
-    length = array.length;
+    var length = array.length;
 
     if (requiredIndex < length) {
       return array;
     }
 
-    int newLength;
-    newLength = MoreArrays.growArrayLength(length, requiredIndex);
+    var newLength = MoreArrays.growArrayLength(length, requiredIndex);
 
-    byte[] result;
-    result = new byte[newLength];
+    var result = new byte[newLength];
 
     System.arraycopy(array, 0, result, 0, length);
 
     return result;
-  }
-
-  /**
-   * Returns the empty zero-length {@code byte} array instance. Since it is a
-   * zero-length instance, values cannot be inserted nor removed from it.
-   *
-   * @return an empty {@code byte} array
-   */
-  public static byte[] empty() {
-    return EMPTY;
   }
 
   /**
@@ -133,8 +130,7 @@ public final class ByteArrays {
   public static String toHexString(byte[] array) {
     Check.notNull(array, "array == null");
 
-    int length;
-    length = array.length;
+    var length = array.length;
 
     switch (length) {
       case 0:
@@ -164,12 +160,10 @@ public final class ByteArrays {
   }
 
   private static String toHexStringNonEmpty(byte[] array, int offset, int length) {
-    char[] result;
-    result = new char[length * 2];
+    var result = new char[length * 2];
 
     for (int i = 0, j = 0; i < length; i++) {
-      int b;
-      b = array[offset + i] & BYTE_MASK;
+      var b = array[offset + i] & BYTE_MASK;
 
       result[j++] = HEX_CHARS[b >>> 4];
 

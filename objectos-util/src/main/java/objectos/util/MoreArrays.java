@@ -25,15 +25,13 @@ final class MoreArrays {
   private MoreArrays() {}
 
   static int growArrayLength(int currentLength, int requiredIndex) {
-    int newLength;
-    newLength = currentLength + (currentLength >> 1);
+    var newLength = currentLength + (currentLength >> 1);
 
     if (requiredIndex < newLength) {
       return newLength;
     }
 
-    int requiredLength;
-    requiredLength = requiredIndex + 1;
+    var requiredLength = requiredIndex + 1;
 
     newLength = Integer.highestOneBit(requiredLength) << 1;
 

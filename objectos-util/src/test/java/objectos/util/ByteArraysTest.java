@@ -28,36 +28,33 @@ import org.testng.annotations.Test;
 public class ByteArraysTest {
 
   @Test
-  public void copyIfNecessary() {
-    byte[] bytes;
-    bytes = new byte[3];
+  public void emptyByteArray() {
+    assertEquals(ByteArrays.empty().length, 0);
+  }
 
-    byte[] bytesNoGrowthRequired;
-    bytesNoGrowthRequired = ByteArrays.copyIfNecessary(bytes, 2);
+  @Test
+  public void growIfNecessary() {
+    var bytes = new byte[3];
+
+    var bytesNoGrowthRequired = ByteArrays.growIfNecessary(bytes, 2);
 
     assertSame(bytesNoGrowthRequired, bytes);
 
     assertEquals(bytesNoGrowthRequired.length, 3);
 
-    byte[] bytesGrowthRequired;
-    bytesGrowthRequired = ByteArrays.copyIfNecessary(bytes, 3);
+    var bytesGrowthRequired = ByteArrays.growIfNecessary(bytes, 3);
 
     assertNotSame(bytesGrowthRequired, bytes);
 
     assertTrue(bytesGrowthRequired.length > bytes.length);
 
     try {
-      ByteArrays.copyIfNecessary(bytes, -1);
+      ByteArrays.growIfNecessary(bytes, -1);
 
       Assert.fail();
     } catch (IllegalArgumentException expected) {
 
     }
-  }
-
-  @Test
-  public void emptyByteArray() {
-    assertEquals(ByteArrays.empty().length, 0);
   }
 
   @Test
