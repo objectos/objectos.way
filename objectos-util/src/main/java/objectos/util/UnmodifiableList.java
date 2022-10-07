@@ -422,7 +422,7 @@ public final class UnmodifiableList<E>
    */
   @Override
   public final UnmodifiableIterator<E> iterator() {
-    return new Lists.SimpleIterator<E>(data, data.length);
+    return new Lists.SimpleIterator<>(data, data.length);
   }
 
   /**

@@ -292,13 +292,6 @@ public class GrowableListTest {
     tester.getOutOfBounds(3);
   }
 
-  @Test
-  public void getOnly() {
-    var test = new GrowableCollectionGetOnlyTest(it);
-
-    test.execute();
-  }
-
   @Test(description = //
   """
   growBy (test case 0)
