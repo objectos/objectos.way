@@ -55,7 +55,7 @@ import objectos.lang.Check;
  * @see GrowableCollection
  * @see java.util.List
  */
-public class GrowableList<E>
+public final class GrowableList<E>
     extends GrowableCollection<E>
     implements List<E>, RandomAccess {
 

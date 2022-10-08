@@ -28,7 +28,8 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
-public abstract class GrowableCollection<E> extends BaseCollection2<E> {
+public abstract sealed class GrowableCollection<E>
+    extends BaseCollection2<E>permits GrowableList<E>, GrowableSet<E> {
 
   /**
    * Sole constructor

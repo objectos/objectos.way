@@ -27,7 +27,13 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
-public abstract class UnmodifiableCollection<E> extends BaseCollection2<E> {
+public abstract sealed class UnmodifiableCollection<E>
+    extends BaseCollection2<E>permits UnmodifiableList<E>, UnmodifiableSet<E> {
+
+  /**
+   * Sole constructor.
+   */
+  UnmodifiableCollection() {}
 
   /**
    * This operation is not supported.
