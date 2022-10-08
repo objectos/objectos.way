@@ -213,13 +213,6 @@ public class GrowableSetTest {
   }
 
   @Test
-  public void getOnly() {
-    var test = new GrowableCollectionGetOnlyTest(it);
-
-    test.execute();
-  }
-
-  @Test
   public void hashCodeTest() {
     // empty
     assertEquals(it.hashCode(), 0);

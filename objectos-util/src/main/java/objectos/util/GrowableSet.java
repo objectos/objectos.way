@@ -23,14 +23,13 @@ import java.util.Set;
 import objectos.lang.Check;
 
 /**
- * A hash-based implementation of the {@link Set} and {@link GrowableCollection}
- * interfaces.
+ * A hash-based {@link Set} and {@link GrowableCollection} implementation.
  *
  * @param <E> type of the elements in this set
  */
-public class GrowableSet<E>
-    extends AbstractArrayBasedSet<E>
-    implements GrowableCollection<E> {
+public class GrowableSet<E> extends GrowableCollection2<E> implements Set<E> {
+
+  private static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
   private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 
@@ -38,9 +37,13 @@ public class GrowableSet<E>
 
   private static final int MAX_ARRAY_LENGTH = MAX_POSITIVE_POWER_OF_TWO;
 
+  private Object[] array = ObjectArrays.empty();
+
   private final float loadFactor = DEFAULT_LOAD_FACTOR;
 
   private int rehashSize;
+
+  private int size = 0;
 
   /**
    * Creates a new {@code GrowableSet} instance.
@@ -205,6 +208,112 @@ public class GrowableSet<E>
   }
 
   /**
+   * Returns {@code true} if this set contains the specified element. More
+   * formally, returns {@code true} if and only if this set contains at least
+   * one element {@code e} such that {@code e.equals(o)}.
+   *
+   * @param o
+   *        an element to check for presence in this set
+   *
+   * @return {@code true} if this set contains the specified value
+   */
+  @Override
+  public final boolean contains(Object o) {
+    return Sets.containsImpl(array, size, o);
+  }
+
+  /**
+   * <p>
+   * Compares the specified object with this set for equality. Returns
+   * {@code true} if and only if
+   *
+   * <ul>
+   * <li>the specified object is also a {@link Set};</li>
+   * <li>both sets have same size; and</li>
+   * <li>each element in this set is also present in the specified set.</li>
+   * </ul>
+   *
+   * @param obj
+   *        the object to be compared for equality with this set
+   *
+   * @return {@code true} if the specified object is equal to this set
+   */
+  @Override
+  public final boolean equals(Object obj) {
+    return Sets.equalsImpl(this, obj);
+  }
+
+  /**
+   * Returns the hash code value of this set.
+   *
+   * @return the hash code value of this set
+   */
+  @Override
+  public final int hashCode() {
+    return Sets.hashCodeImpl(array);
+  }
+
+  /**
+   * Returns an iterator over the elements in this set. The elements
+   * are returned in no particular order.
+   *
+   * @return an iterator over the elements in this set
+   */
+  @Override
+  public final UnmodifiableIterator<E> iterator() {
+    return new Sets.SetIterator<>(array);
+  }
+
+  /**
+   * Returns the size of this set. The size of a set is equal to the number of
+   * elements it contains.
+   *
+   * @return the size of this set
+   */
+  @Override
+  public final int size() {
+    return size;
+  }
+
+  /**
+   * Returns a new array instance containing all of the elements in this set.
+   * The returned array length is equal to the size of this set.
+   *
+   * @return a new array instance containing all of the elements in this set
+   */
+  @Override
+  public final Object[] toArray() {
+    return Sets.toArrayImpl(array, size);
+  }
+
+  /**
+   * Returns an array, either the specified array or a new array instance,
+   * containing all of the elements in this set.
+   *
+   * <p>
+   * The specified array is used as the return value if it is large enough to
+   * hold all of the elements in this set. Additionally, if the specified
+   * array is such that {@code a.length > size()} then the position after the
+   * last element is set to {@code null}.
+   *
+   * <p>
+   * If the specified array is not large enough, then a new array is created,
+   * with the same runtime type of the specified array, and used as the return
+   * value.
+   *
+   * @param a
+   *        the array into which the elements of the set are to be stored, if
+   *        it is big enough; otherwise, a new array of the same runtime type is
+   *        allocated for this purpose.
+   *
+   * @return an array containing the elements of the set
+   */
+  @Override
+  public final <T> T[] toArray(T[] a) {
+    return Sets.toArrayImpl(array, size, a);
+  }
+
+  /**
    * Returns an {@link UnmodifiableSet} copy of this set.
    *
    * <p>
@@ -320,6 +429,14 @@ public class GrowableSet<E>
     }
   }
 
+  private int hashIndex(Object e) {
+    int hc = e.hashCode();
+
+    int mask = array.length - 1;
+
+    return hc & mask;
+  }
+
   private void insert(int index, E e) {
     array[index] = e;
 
@@ -394,8 +511,6 @@ public class GrowableSet<E>
 
   private void resizeTo(int newSize) {
     array = new Object[newSize];
-
-    hashMask = newSize - 1;
 
     rehashSize = (int) (array.length * loadFactor);
   }
