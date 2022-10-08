@@ -27,7 +27,9 @@ import objectos.lang.Check;
  * @param <K> type of the keys in this map
  * @param <V> type of the values in this map
  */
-public class GrowableMap<K, V> extends AbstractArrayBasedMap<K, V> {
+@SuppressWarnings("rawtypes")
+public sealed class GrowableMap<K, V>
+    extends AbstractArrayBasedMap<K, V>permits GrowableSequencedMap {
 
   private static final float DEFAULT_LOAD_FACTOR = 0.75F;
 

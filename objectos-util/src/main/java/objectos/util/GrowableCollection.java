@@ -28,8 +28,9 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
+@SuppressWarnings("rawtypes")
 public abstract sealed class GrowableCollection<E>
-    extends BaseCollection2<E>permits GrowableList<E>, GrowableSet<E> {
+    extends BaseCollection2<E>permits GrowableList, GrowableSet {
 
   /**
    * Sole constructor

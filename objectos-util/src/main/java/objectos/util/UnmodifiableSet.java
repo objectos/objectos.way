@@ -31,9 +31,10 @@ import objectos.lang.Check;
  *
  * @param <E> type of the elements in this set
  */
+@SuppressWarnings("rawtypes")
 public abstract sealed class UnmodifiableSet<E>
     extends UnmodifiableCollection<E>
-    implements Set<E>permits objectos.util.UnmodifiableSetN<E> {
+    implements Set<E>permits objectos.util.UnmodifiableSetN {
 
   private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSetN<Object>(
     ObjectArrays.empty(), 0

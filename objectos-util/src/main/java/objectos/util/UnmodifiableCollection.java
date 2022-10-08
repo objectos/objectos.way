@@ -27,8 +27,9 @@ import java.util.Collection;
  *
  * @param <E> type of the elements in this collection
  */
+@SuppressWarnings("rawtypes")
 public abstract sealed class UnmodifiableCollection<E>
-    extends BaseCollection2<E>permits UnmodifiableList<E>, UnmodifiableSet<E> {
+    extends BaseCollection2<E>permits UnmodifiableList, UnmodifiableSet {
 
   /**
    * Sole constructor.
