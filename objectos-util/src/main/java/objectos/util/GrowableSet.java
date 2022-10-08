@@ -338,7 +338,7 @@ public class GrowableSet<E> extends GrowableCollection<E> implements Set<E> {
       default:
         var copy = Arrays.copyOf(array, array.length);
 
-        return new UnmodifiableSet<E>(copy, size);
+        return new UnmodifiableSetN<E>(copy, size);
     }
   }
 

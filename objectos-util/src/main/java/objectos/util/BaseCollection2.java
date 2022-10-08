@@ -97,7 +97,7 @@ public abstract class BaseCollection2<E> implements Collection<E>, ToString.Form
    */
   @Override
   public void formatToString(StringBuilder toString, int level) {
-    ToString.formatStart(toString, this);
+    ToString.formatStart(toString, toStringTypeName());
 
     var iterator = iterator();
 
@@ -452,6 +452,10 @@ public abstract class BaseCollection2<E> implements Collection<E>, ToString.Form
 
       return (int) f;
     }
+  }
+
+  Object toStringTypeName() {
+    return this;
   }
 
 }

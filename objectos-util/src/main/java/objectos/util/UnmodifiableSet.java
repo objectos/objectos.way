@@ -15,13 +15,12 @@
  */
 package objectos.util;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import objectos.lang.Check;
 
 /**
- * A hash-based unmodifiable implementation of the {@link Set} interface.
+ * An unmodifiable implementation of the {@link Set} interface.
  *
  * <p>
  * After creation, instances of this class do not permit adding nor removing of
@@ -32,21 +31,18 @@ import objectos.lang.Check;
  *
  * @param <E> type of the elements in this set
  */
-public final class UnmodifiableSet<E>
-    extends AbstractArrayBasedSet<E>
-    implements UnmodifiableCollection<E> {
+public abstract sealed class UnmodifiableSet<E>
+    extends UnmodifiableCollection2<E>
+    implements Set<E>permits UnmodifiableSetN<E> {
 
-  private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSet<Object>(
+  private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSetN<Object>(
     ObjectArrays.empty(), 0
   );
 
-  UnmodifiableSet(Object[] array, int size) {
-    this.array = array;
-
-    this.size = size;
-
-    hashMask = array.length - 1;
-  }
+  /**
+   * Sole constructor.
+   */
+  UnmodifiableSet() {}
 
   /**
    * Returns a new {@code UnmodifiableSet} containing all of the distinct
@@ -270,58 +266,98 @@ public final class UnmodifiableSet<E>
   }
 
   /**
-   * This operation is not supported.
+   * Returns {@code true} if this set contains the specified element. More
+   * formally, returns {@code true} if and only if this set contains at least
+   * one element {@code e} such that {@code e.equals(o)}.
    *
-   * <p>
-   * This method performs no operation other than throw an
-   * {@link UnsupportedOperationException}.
+   * @param o
+   *        an element to check for presence in this set
    *
-   * @param e
-   *        ignored (the operation is not supported)
-   *
-   * @return this method does not return as it always throw an exception
-   *
-   * @throws UnsupportedOperationException
-   *         always
+   * @return {@code true} if this set contains the specified value
    */
   @Override
-  public final boolean add(E e) {
-    throw new UnsupportedOperationException();
-  }
+  public abstract boolean contains(Object o);
 
   /**
-   * This operation is not supported.
-   *
    * <p>
-   * This method performs no operation other than throw an
-   * {@link UnsupportedOperationException}.
+   * Compares the specified object with this set for equality. Returns
+   * {@code true} if and only if
    *
-   * @param c
-   *        ignored (the operation is not supported)
+   * <ul>
+   * <li>the specified object is also a {@link Set};</li>
+   * <li>both sets have same size; and</li>
+   * <li>each element in this set is also present in the specified set.</li>
+   * </ul>
    *
-   * @return this method does not return as it always throw an exception
+   * @param obj
+   *        the object to be compared for equality with this set
    *
-   * @throws UnsupportedOperationException
-   *         always
+   * @return {@code true} if the specified object is equal to this set
    */
   @Override
-  public final boolean addAll(Collection<? extends E> c) {
-    throw new UnsupportedOperationException();
-  }
+  public abstract boolean equals(Object obj);
 
   /**
-   * This operation is not supported.
+   * Returns the hash code value of this set.
    *
-   * <p>
-   * This method performs no operation other than throw an
-   * {@link UnsupportedOperationException}.
-   *
-   * @throws UnsupportedOperationException
-   *         always
+   * @return the hash code value of this set
    */
   @Override
-  public final void clear() {
-    throw new UnsupportedOperationException();
-  }
+  public abstract int hashCode();
+
+  /**
+   * Returns an iterator over the elements in this set. The elements
+   * are returned in no particular order.
+   *
+   * @return an iterator over the elements in this set
+   */
+  @Override
+  public abstract UnmodifiableIterator<E> iterator();
+
+  /**
+   * Returns the size of this set. The size of a set is equal to the number of
+   * elements it contains.
+   *
+   * @return the size of this set
+   */
+  @Override
+  public abstract int size();
+
+  /**
+   * Returns a new array instance containing all of the elements in this set.
+   * The returned array length is equal to the size of this set.
+   *
+   * @return a new array instance containing all of the elements in this set
+   */
+  @Override
+  public abstract Object[] toArray();
+
+  /**
+   * Returns an array, either the specified array or a new array instance,
+   * containing all of the elements in this set.
+   *
+   * <p>
+   * The specified array is used as the return value if it is large enough to
+   * hold all of the elements in this set. Additionally, if the specified
+   * array is such that {@code a.length > size()} then the position after the
+   * last element is set to {@code null}.
+   *
+   * <p>
+   * If the specified array is not large enough, then a new array is created,
+   * with the same runtime type of the specified array, and used as the return
+   * value.
+   *
+   * @param a
+   *        the array into which the elements of the set are to be stored, if
+   *        it is big enough; otherwise, a new array of the same runtime type is
+   *        allocated for this purpose.
+   *
+   * @return an array containing the elements of the set
+   */
+  @Override
+  public abstract <T> T[] toArray(T[] a);
+
+  @Override
+  final Object toStringTypeName() { return "UnmodifiableSet"; }
 
 }
