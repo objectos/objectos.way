@@ -32,7 +32,7 @@ import objectos.lang.Check;
  *        type of the elements in this list
  */
 public final class UnmodifiableList<E>
-    extends UnmodifiableCollection2<E>
+    extends UnmodifiableCollection<E>
     implements List<E>, RandomAccess {
 
   static final UnmodifiableList<Object> EMPTY = new UnmodifiableList<Object>(

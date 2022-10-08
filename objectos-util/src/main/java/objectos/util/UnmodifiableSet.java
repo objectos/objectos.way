@@ -32,7 +32,7 @@ import objectos.lang.Check;
  * @param <E> type of the elements in this set
  */
 public abstract sealed class UnmodifiableSet<E>
-    extends UnmodifiableCollection2<E>
+    extends UnmodifiableCollection<E>
     implements Set<E>permits UnmodifiableSetN<E> {
 
   private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSetN<Object>(

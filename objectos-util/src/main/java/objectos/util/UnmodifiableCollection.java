@@ -21,13 +21,13 @@ import java.util.Collection;
  * A {@link Collection} that does not allow adding nor removing elements.
  *
  * <p>
- * Implementations of this interface are required to disallow adding or
+ * Concrete implementations of this class are required to disallow adding or
  * removing of elements. Any mutator method must throw an
- * {@link UnsupportedOperationException} when called.
+ * {@link UnsupportedOperationException} when invoked.
  *
  * @param <E> type of the elements in this collection
  */
-public interface UnmodifiableCollection<E> extends BaseCollection<E> {
+public abstract class UnmodifiableCollection<E> extends BaseCollection2<E> {
 
   /**
    * This operation is not supported.
@@ -45,7 +45,7 @@ public interface UnmodifiableCollection<E> extends BaseCollection<E> {
    *         always
    */
   @Override
-  default boolean add(E e) {
+  public final boolean add(E e) {
     throw new UnsupportedOperationException();
   }
 
@@ -65,7 +65,7 @@ public interface UnmodifiableCollection<E> extends BaseCollection<E> {
    *         always
    */
   @Override
-  default boolean addAll(Collection<? extends E> c) {
+  public final boolean addAll(Collection<? extends E> c) {
     throw new UnsupportedOperationException();
   }
 
@@ -80,7 +80,7 @@ public interface UnmodifiableCollection<E> extends BaseCollection<E> {
    *         always
    */
   @Override
-  default void clear() {
+  public final void clear() {
     throw new UnsupportedOperationException();
   }
 
