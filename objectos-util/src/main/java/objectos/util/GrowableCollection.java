@@ -18,16 +18,22 @@ package objectos.util;
 import java.util.Collection;
 
 /**
- * A {@link Collection} that can be modified by adding elements; it does not
- * support removal of elements
+ * A {@link Collection} that can be modified by adding elements.
+ * Except for the {@link #clear()} method, it does not support most of the
+ * methods that remove elements.
  *
  * <p>
- * This interface extends the {@code BaseCollection} interface by providing
+ * This class extends the {@code BaseCollection} class by providing
  * additional methods for adding elements to the collection.
  *
  * @param <E> type of the elements in this collection
  */
-public interface GrowableCollection<E> extends BaseCollection<E> {
+public abstract class GrowableCollection<E> extends BaseCollection2<E> {
+
+  /**
+   * Sole constructor
+   */
+  protected GrowableCollection() {}
 
   /**
    * Adds all elements of the given {@link Iterable} to this collection.
@@ -43,7 +49,7 @@ public interface GrowableCollection<E> extends BaseCollection<E> {
    * @return {@code true} if this collection changed as a result of this
    *         operation
    */
-  boolean addAllIterable(Iterable<? extends E> elements);
+  public abstract boolean addAllIterable(Iterable<? extends E> elements);
 
   /**
    * Adds the specified element {@code e} to this collection or throws a
@@ -67,7 +73,7 @@ public interface GrowableCollection<E> extends BaseCollection<E> {
    * @return {@code true} if this collection changed as a result of this
    *         operation
    */
-  boolean addWithNullMessage(E e, Object nullMessage);
+  public abstract boolean addWithNullMessage(E e, Object nullMessage);
 
   /**
    * Adds the specified element {@code e} to this collection or throws a
@@ -96,6 +102,7 @@ public interface GrowableCollection<E> extends BaseCollection<E> {
    * @return {@code true} if this collection changed as a result of this
    *         operation
    */
-  boolean addWithNullMessage(E e, Object nullMessageStart, int index, Object nullMessageEnd);
+  public abstract boolean addWithNullMessage(
+      E e, Object nullMessageStart, int index, Object nullMessageEnd);
 
 }

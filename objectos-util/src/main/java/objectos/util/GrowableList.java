@@ -56,7 +56,7 @@ import objectos.lang.Check;
  * @see java.util.List
  */
 public class GrowableList<E>
-    extends GrowableCollection2<E>
+    extends GrowableCollection<E>
     implements List<E>, RandomAccess {
 
   static final int DEFAULT_CAPACITY = 10;

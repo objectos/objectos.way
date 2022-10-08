@@ -27,7 +27,7 @@ import objectos.lang.Check;
  *
  * @param <E> type of the elements in this set
  */
-public class GrowableSet<E> extends GrowableCollection2<E> implements Set<E> {
+public class GrowableSet<E> extends GrowableCollection<E> implements Set<E> {
 
   private static final int MAX_POSITIVE_POWER_OF_TWO = 1 << 30;
 
