@@ -15,9 +15,9 @@
  */
 package objectos.util;
 
-import java.util.Set;
+import java.util.Collection;
 
 @FunctionalInterface
 interface MapAssertValues {
-  void execute(Set<String> set, Thing... expected);
+  void execute(Collection<String> set, Thing... expected);
 }

@@ -18,10 +18,10 @@ package objectos.util;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -269,7 +269,7 @@ public class GrowableMapTest {
     assertTrue(jdk.isEmpty());
   }
 
-  private void assertValues(Set<String> set, Thing... expected) {
+  private void assertValues(Collection<String> set, Thing... expected) {
     var jdk = new HashSet<String>();
 
     for (var o : expected) {

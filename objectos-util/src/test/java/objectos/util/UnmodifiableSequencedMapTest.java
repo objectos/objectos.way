@@ -17,9 +17,9 @@ package objectos.util;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import org.testng.annotations.Test;
 
@@ -256,7 +256,7 @@ public class UnmodifiableSequencedMapTest extends UnmodifiableMapTestAdapter {
   }
 
   @Override
-  final <E> void assertSet(Set<E> set, Thing[] els, Function<Thing, E> function) {
+  final <E> void assertSet(Collection<E> set, Thing[] els, Function<Thing, E> function) {
     assertEquals(set.size(), els.length);
 
     var it = set.iterator();

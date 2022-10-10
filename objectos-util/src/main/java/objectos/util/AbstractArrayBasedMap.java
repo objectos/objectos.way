@@ -16,6 +16,7 @@
 package objectos.util;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiFunction;
 import objectos.lang.Check;
@@ -583,7 +584,7 @@ abstract class AbstractArrayBasedMap<K, V> implements Map<K, V>, ToString.Format
    *         this map
    */
   @Override
-  public final UnmodifiableView<V> values() {
+  public final Collection<V> values() {
     return new Values();
   }
 

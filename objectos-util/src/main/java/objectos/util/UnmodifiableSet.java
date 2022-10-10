@@ -34,7 +34,7 @@ import objectos.lang.Check;
 @SuppressWarnings("rawtypes")
 public abstract sealed class UnmodifiableSet<E>
     extends UnmodifiableCollection<E>
-    implements Set<E>permits objectos.util.UnmodifiableSetN {
+    implements Set<E>permits UnmodifiableSetN {
 
   private static final UnmodifiableSet<Object> EMPTY = new UnmodifiableSetN<Object>(
     ObjectArrays.empty(), 0

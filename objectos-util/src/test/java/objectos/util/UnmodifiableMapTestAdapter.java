@@ -15,8 +15,8 @@
  */
 package objectos.util;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 abstract class UnmodifiableMapTestAdapter {
@@ -28,7 +28,7 @@ abstract class UnmodifiableMapTestAdapter {
 
   abstract void assertContents(Map<Thing, String> map, Thing[] els);
 
-  abstract <E> void assertSet(Set<E> set, Thing[] els, Function<Thing, E> function);
+  abstract <E> void assertSet(Collection<E> set, Thing[] els, Function<Thing, E> function);
 
   abstract Map<Thing, String> jdk(Thing... many);
 
