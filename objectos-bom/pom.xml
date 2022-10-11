@@ -45,6 +45,11 @@
 		<dependencies>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-code-annotations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>objectos-code-tools</artifactId>
 				<version>${project.version}</version>
 				<scope>test</scope>
@@ -64,11 +69,6 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>code</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>code-annotations</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
