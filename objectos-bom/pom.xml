@@ -45,6 +45,11 @@
 		<dependencies>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-code</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>objectos-code-annotations</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -66,11 +71,6 @@
 			</dependency>
 
 			<!-- incubator projects -->
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>code</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>code-boot</artifactId>
