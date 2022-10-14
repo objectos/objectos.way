@@ -6,14 +6,12 @@
 package objectos.code;
 
 import static objectos.code.Pass0.JMP;
-import static org.testng.Assert.assertEquals;
 
-import java.util.Arrays;
 import org.testng.annotations.Test;
 
-public class JavaTemplateTest {
+final class CompilationUnitTest extends AbstractObjectosCodeTest {
 
-  private final JavaGeneratorImpl gen = new JavaGeneratorImpl();
+  CompilationUnitTest(ObjectosCodeTest outer) { super(outer); }
 
   @Test(description = """
   class Foo {}
@@ -39,32 +37,6 @@ public class JavaTemplateTest {
       class Foo {}
       """
     );
-  }
-
-  final void testArrays(int[] result, int[] expected, String header) {
-    var msg = """
-
-    %s
-    actual  =%s
-    expected=%s
-
-    """.formatted(header, Arrays.toString(result), Arrays.toString(expected));
-
-    assertEquals(result, expected, msg);
-  }
-
-  private int[] pass0(int... values) {
-    return values;
-  }
-
-  private void test(JavaTemplate tmpl, int[] codes, String expected) {
-    gen.templateStart();
-
-    tmpl.acceptJavaGenerator(gen);
-
-    gen.templateEnd();
-
-    testArrays(gen.codes(), codes, "Codes");
   }
 
 }

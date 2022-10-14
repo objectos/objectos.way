@@ -19,7 +19,7 @@ import objectos.lang.Check;
 
 public abstract class JavaTemplate extends AbstractJavaTemplate {
 
-  private JavaGeneratorImpl generator;
+  private Pass0 pass0;
 
   /**
    * Sole constructor.
@@ -27,21 +27,22 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
   protected JavaTemplate() {}
 
   public final void acceptJavaGenerator(JavaGeneratorImpl generator) {
-    Check.state(this.generator == null, """
+    Check.state(this.pass0 == null, """
     Another code generation is already is progress.
     """);
+    Check.notNull(generator, "generator == null");
 
-    this.generator = Check.notNull(generator, "generator == null");
+    pass0 = generator.pass0;
 
     try {
       definition();
     } finally {
-      this.generator = null;
+      this.pass0 = null;
     }
   }
 
   protected final ClassRef _class(ClassElement... elements) {
-    generator._class(elements.length);
+    pass0._class(elements.length);
 
     return Ref.INSTANCE;
   }
@@ -49,9 +50,15 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
   protected abstract void definition();
 
   protected final IdentifierRef id(String name) {
-    generator.id(name);
+    pass0.id(name);
 
     return Ref.INSTANCE;
+  }
+
+  final void pass0(Pass0 pass0) {
+    this.pass0 = pass0;
+
+    definition();
   }
 
 }
