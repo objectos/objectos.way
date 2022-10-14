@@ -36,8 +36,12 @@ public final class JavaGeneratorImpl {
 
   JavaGeneratorImpl() {}
 
+  public final void templateStart() {
+    code(Pass0.JMP, Integer.MIN_VALUE);
+  }
+
   final void _class(int length) {
-    element(Code.CLASS, length);
+    element(Pass0.CLASS, length);
   }
 
   final int[] codes() { return Arrays.copyOf(code, codeIndex); }
@@ -48,25 +52,23 @@ public final class JavaGeneratorImpl {
       name, " is not a valid identifier"
     );
 
-    markElement();
+    markElement(codeIndex);
 
-    code(Code.IDENTIFIER, string(name), Code.JMP, Integer.MIN_VALUE);
+    code(Pass0.IDENTIFIER, string(name), Pass0.JMP, Integer.MIN_VALUE);
   }
 
   final void templateEnd() {
-    element(Code.COMPILATION_UNIT, elementIndex);
-  }
+    element(Pass0.COMPILATION_UNIT, elementIndex);
 
-  private void child(int el, int ret) {
-    int c = code[el];
+    if (elementIndex != 1) {
+      throw new UnsupportedOperationException("Implement me");
+    }
 
-    int offset = switch (c) {
-      case Code.IDENTIFIER -> 3;
+    code[1] = element[0];
 
-      default -> throw new UnsupportedOperationException("Implement me :: code=" + c);
-    };
+    code[codeIndex - 1] = codeIndex;
 
-    code[el + offset] = ret;
+    code(Pass0.EOF);
   }
 
   private void code(int c0) {
@@ -91,28 +93,54 @@ public final class JavaGeneratorImpl {
     code[codeIndex++] = c3;
   }
 
-  private void element(int code, int length) {
-    var ret = codeIndex;
-
-    code(code);
-
+  private void element(int type, int length) {
     var start = elementIndex - length;
 
-    for (int i = start; i < elementIndex; i++) {
-      int el = element[i];
+    var mark = codeIndex;
 
-      child(el, ret);
+    code(type, length);
+
+    for (int i = start; i < elementIndex; i++) {
+      int currentElementIndex = element[i];
+
+      code(Pass0.JMP, currentElementIndex);
+
+      var ret = codeIndex;
+
+      int c = code[currentElementIndex];
+
+      int offset = switch (c) {
+        case Pass0.CLASS -> {
+          int children = code[currentElementIndex + 1];
+
+          int skip = 1; // length;
+
+          skip += children * 2;
+
+          skip += 2; // JMP
+
+          yield skip;
+        }
+
+        case Pass0.IDENTIFIER -> 3;
+
+        default -> throw new UnsupportedOperationException("Implement me :: code=" + c);
+      };
+
+      code[currentElementIndex + offset] = ret;
     }
 
-    code(Code.JMP, Integer.MIN_VALUE);
+    code(Pass0.JMP, Integer.MIN_VALUE);
 
     elementIndex = start;
+
+    markElement(mark);
   }
 
-  private void markElement() {
+  private void markElement(int value) {
     element = IntArrays.growIfNecessary(element, elementIndex);
 
-    element[elementIndex++] = codeIndex;
+    element[elementIndex++] = value;
   }
 
   private int string(String value) {

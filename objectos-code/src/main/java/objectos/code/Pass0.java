@@ -15,15 +15,16 @@
  */
 package objectos.code;
 
-final class Code {
+final class Pass0 {
 
-  static final int JMP = -1;
+  static final int EOF = -1;
+  static final int JMP = -2;
 
-  static final int COMPILATION_UNIT = -2;
-  static final int CLASS = -3;
+  static final int COMPILATION_UNIT = -3;
+  static final int CLASS = -4;
 
-  static final int IDENTIFIER = -4;
+  static final int IDENTIFIER = -5;
 
-  private Code() {}
+  private Pass0() {}
 
 }

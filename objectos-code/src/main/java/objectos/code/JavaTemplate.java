@@ -35,8 +35,6 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
 
     try {
       definition();
-
-      this.generator.templateEnd();
     } finally {
       this.generator = null;
     }
