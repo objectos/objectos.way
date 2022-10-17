@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@br.com.objectos.code.util.Marker1
-@br.com.objectos.code.util.PackageAnnotation
-package br.com.objectos.code.processing.type;
+package objectos.code;
+
+public enum Keyword {
+
+  CLASS;
+
+}

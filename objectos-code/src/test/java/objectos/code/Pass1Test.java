@@ -15,39 +15,47 @@
  */
 package objectos.code;
 
-import static org.testng.Assert.assertEquals;
-
-import java.util.Arrays;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 
-public class ObjectosCodeTest {
+public class Pass1Test extends ObjectosCodeTest {
+
+  private Pass1 pass1;
 
   @BeforeClass
+  @Override
   public void _beforeClass() {
+    if (pass1 == null) {
+      pass1 = new Pass1();
+    }
   }
 
-  @Factory
-  public Object[] _factory() {
-    return new Object[] {
-        new CompilationUnitTest(this)
+  @Test(enabled = false)
+  public void _enableCodeMinings() {
+  }
+
+  @Override
+  final void test(
+      JavaTemplate template,
+      int[] p0,
+      int[] p1,
+      String expectedSource) {
+    if (p1 == null) {
+      return;
+    }
+
+    var source = new Pass1.Source() {
+      @Override
+      public final int codeAt(int index) {
+        return p0[index];
+      }
     };
-  }
 
-  void test(JavaTemplate template, int[] pass0, int[] pass1, String expectedSource) {
-    // noop for now...
-  }
+    pass1.execute(source);
 
-  final void testArrays(int[] result, int[] expected, String header) {
-    var msg = """
+    int[] result = pass1.toArray();
 
-    %s
-    actual  =%s
-    expected=%s
-
-    """.formatted(header, Arrays.toString(result), Arrays.toString(expected));
-
-    assertEquals(result, expected, msg);
+    testArrays(result, p1, "Pass (1) assertion failed");
   }
 
 }
