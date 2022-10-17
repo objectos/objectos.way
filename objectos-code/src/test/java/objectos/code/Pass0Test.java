@@ -38,6 +38,7 @@ public class Pass0Test extends ObjectosCodeTest {
   final void test(
       JavaTemplate template,
       int[] p0,
+      Object[] objs,
       int[] p1,
       String expectedSource) {
     if (p0 == null) {
@@ -50,9 +51,13 @@ public class Pass0Test extends ObjectosCodeTest {
 
     pass0.templateEnd();
 
-    int[] result = pass0.toCodes();
+    testArrays(
+      pass0.toCodes(), p0, "Process (0) assertion failed"
+    );
 
-    testArrays(result, p0, "Process (0) assertion failed");
+    testArrays(
+      pass0.toObjects(), objs, "Process (0) assertion failed"
+    );
   }
 
 }

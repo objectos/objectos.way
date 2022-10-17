@@ -43,6 +43,8 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
         /*18*/Pass0.EOF
       ),
 
+      objs("Foo"),
+
       pass1(
         Pass1.KEYWORD, Keyword.CLASS.ordinal(),
         Pass1.IDENTIFIER, 0,

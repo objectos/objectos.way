@@ -47,6 +47,8 @@ public abstract class AbstractObjectosCodeTest {
     return map;
   }
 
+  final Object[] objs(Object... values) { return values; }
+
   final int[] pass0(int... values) { return values; }
 
   final int[] pass1(int... values) { return values; }
@@ -60,9 +62,10 @@ public abstract class AbstractObjectosCodeTest {
   final void test(
       JavaTemplate template,
       int[] pass0,
+      Object[] objs,
       int[] pass1,
       String expectedSource) {
-    outer.test(template, pass0, pass1, expectedSource);
+    outer.test(template, pass0, objs, pass1, expectedSource);
   }
 
 }

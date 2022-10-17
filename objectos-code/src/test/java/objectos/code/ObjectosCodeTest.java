@@ -34,11 +34,23 @@ public class ObjectosCodeTest {
     };
   }
 
-  void test(JavaTemplate template, int[] pass0, int[] pass1, String expectedSource) {
+  void test(JavaTemplate template, int[] p0, Object[] objs, int[] p1, String expectedSource) {
     // noop for now...
   }
 
   final void testArrays(int[] result, int[] expected, String header) {
+    var msg = """
+
+    %s
+    actual  =%s
+    expected=%s
+
+    """.formatted(header, Arrays.toString(result), Arrays.toString(expected));
+
+    assertEquals(result, expected, msg);
+  }
+
+  final void testArrays(Object[] result, Object[] expected, String header) {
     var msg = """
 
     %s

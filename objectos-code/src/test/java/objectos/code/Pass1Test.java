@@ -38,20 +38,14 @@ public class Pass1Test extends ObjectosCodeTest {
   final void test(
       JavaTemplate template,
       int[] p0,
+      Object[] objs,
       int[] p1,
       String expectedSource) {
     if (p1 == null) {
       return;
     }
 
-    var source = new Pass1.Source() {
-      @Override
-      public final int codeAt(int index) {
-        return p0[index];
-      }
-    };
-
-    pass1.execute(source);
+    pass1.execute(p0);
 
     int[] result = pass1.toArray();
 

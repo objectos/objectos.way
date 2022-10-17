@@ -85,6 +85,10 @@ final class Pass0 {
 
   final int[] toCodes() { return Arrays.copyOf(code, codeIndex); }
 
+  final Object[] toObjects() {
+    return strings.toArray();
+  }
+
   private void code(int c0) {
     code = IntArrays.growIfNecessary(code, codeIndex);
 

@@ -20,12 +20,6 @@ import objectos.util.IntArrays;
 
 final class Pass1 {
 
-  interface Source {
-
-    int codeAt(int index);
-
-  }
-
   private static final int _COMPILATION_UNIT = 1;
 
   private static final int _CLASS_DECL = 2;
@@ -44,7 +38,7 @@ final class Pass1 {
 
   private int codeIndex;
 
-  private Source source;
+  private int[] source;
 
   private int sourceIndex;
 
@@ -52,7 +46,7 @@ final class Pass1 {
 
   private int stackIndex;
 
-  public final void execute(Source source) {
+  public final void execute(int[] source) {
     this.source = source;
 
     codeIndex = 0;
@@ -95,17 +89,17 @@ final class Pass1 {
 
   private void execute0() {
     while (true) {
-      var code = source.codeAt(sourceIndex++);
+      var code = source[sourceIndex++];
 
       switch (code) {
         case Pass0.JMP -> {
-          sourceIndex = source.codeAt(sourceIndex);
+          sourceIndex = source[sourceIndex];
         }
 
         case Pass0.CLASS -> {
           contextDec();
 
-          var len = source.codeAt(sourceIndex++);
+          var len = source[sourceIndex++];
 
           push(_CLASS_DECL, len);
         }
@@ -113,7 +107,7 @@ final class Pass1 {
         case Pass0.COMPILATION_UNIT -> {
           assert stackIndex == -1;
 
-          var len = source.codeAt(sourceIndex++);
+          var len = source[sourceIndex++];
 
           push(_COMPILATION_UNIT, len);
         }
@@ -129,7 +123,7 @@ final class Pass1 {
             default -> throw new UnsupportedOperationException("Implement me :: ctx=" + ctx);
           }
 
-          var idx = source.codeAt(sourceIndex++);
+          var idx = source[sourceIndex++];
 
           add(Pass1.IDENTIFIER, idx);
         }
