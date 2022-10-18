@@ -35,7 +35,7 @@ public class ObjectosCodeTest {
   }
 
   void test(JavaTemplate template, int[] p0, Object[] objs, int[] p1, String expectedSource) {
-    // noop for now...
+
   }
 
   final void testArrays(int[] result, int[] expected, String header) {

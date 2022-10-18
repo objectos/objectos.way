@@ -20,19 +20,23 @@ import objectos.util.IntArrays;
 
 final class Pass1 {
 
-  private static final int _COMPILATION_UNIT = 1;
+  private interface Class {
+    int NAME = 3;
+    int NEXT = 9;
+  }
 
-  private static final int _CLASS_DECL = 2;
+  private interface CompilationUnit {
+    int CLASS_INTERFACE = 3;
+    int MODULE = 4;
+  }
 
-  static final int KEYWORD = -1;
+  private static final int NULL = Integer.MAX_VALUE;
 
-  static final int IDENTIFIER = -2;
+  static final int COMPILATION_UNIT = -1;
 
-  static final int BLOCK_START = -3;
+  static final int CLASS = -2;
 
-  static final int BLOCK_END = -4;
-
-  static final int EOF = -5;
+  static final int EOF = -3;
 
   private int[] code = new int[32];
 
@@ -62,29 +66,29 @@ final class Pass1 {
     return Arrays.copyOf(code, codeIndex);
   }
 
-  private void add(int c0) {
-    code = IntArrays.growIfNecessary(code, codeIndex);
+  private void add(int v0, int v1, int v2, int v3, int v4) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 4);
 
-    code[codeIndex++] = c0;
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+    code[codeIndex++] = v4;
   }
 
-  private void add(int c0, int c1) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 1);
+  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 9);
 
-    code[codeIndex++] = c0;
-    code[codeIndex++] = c1;
-  }
-
-  private void contextDec() {
-    assert stackIndex > 0;
-
-    stack[stackIndex]--;
-  }
-
-  private int contextPeek() {
-    assert stackIndex > 1;
-
-    return stack[stackIndex - 1];
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+    code[codeIndex++] = v4;
+    code[codeIndex++] = v5;
+    code[codeIndex++] = v6;
+    code[codeIndex++] = v7;
+    code[codeIndex++] = v8;
+    code[codeIndex++] = v9;
   }
 
   private void execute0() {
@@ -92,60 +96,16 @@ final class Pass1 {
       var code = source[sourceIndex++];
 
       switch (code) {
-        case Pass0.JMP -> {
-          sourceIndex = source[sourceIndex];
-        }
+        case Pass0.JMP -> sourceIndex = source[sourceIndex];
 
-        case Pass0.CLASS -> {
-          contextDec();
+        case Pass0.CLASS -> executeClass();
 
-          var len = source[sourceIndex++];
+        case Pass0.COMPILATION_UNIT -> executeCompilationUnit();
 
-          push(_CLASS_DECL, len);
-        }
-
-        case Pass0.COMPILATION_UNIT -> {
-          assert stackIndex == -1;
-
-          var len = source[sourceIndex++];
-
-          push(_COMPILATION_UNIT, len);
-        }
-
-        case Pass0.IDENTIFIER -> {
-          contextDec();
-
-          var ctx = contextPeek();
-
-          switch (ctx) {
-            case _CLASS_DECL -> add(Pass1.KEYWORD, Keyword.CLASS.ordinal());
-
-            default -> throw new UnsupportedOperationException("Implement me :: ctx=" + ctx);
-          }
-
-          var idx = source[sourceIndex++];
-
-          add(Pass1.IDENTIFIER, idx);
-        }
+        case Pass0.IDENTIFIER -> executeIdentifier();
 
         case Pass0.EOF -> {
-          var idx = stackIndex;
-
-          while (idx > 0) {
-            var len = stack[idx--];
-
-            assert len == 0;
-
-            var ctx = stack[idx--];
-
-            switch (ctx) {
-              case _CLASS_DECL -> add(Pass1.BLOCK_START, Pass1.BLOCK_END);
-
-              case _COMPILATION_UNIT -> add(Pass1.EOF);
-
-              default -> throw new UnsupportedOperationException("Implement me :: ctx=" + ctx);
-            }
-          }
+          executeEof();
 
           return;
         }
@@ -155,11 +115,208 @@ final class Pass1 {
     }
   }
 
-  private void push(int c0, int c1) {
+  private void executeClass() {
+    // parent update
+
+    parentDecrement();
+
+    var parentIndex = stack[stackIndex - 1];
+
+    var parent = code[parentIndex];
+
+    switch (parent) {
+      case COMPILATION_UNIT -> {
+        var moduleIndex = parentIndex + CompilationUnit.MODULE;
+
+        var module = code[moduleIndex];
+
+        if (module != NULL) {
+          throw new UnsupportedOperationException(
+            "Implement me :: invalid class decl in module");
+        }
+
+        var classIfaceIndex = parentIndex + CompilationUnit.CLASS_INTERFACE;
+
+        var classIface = code[classIfaceIndex];
+
+        if (classIface != NULL) {
+          throw new UnsupportedOperationException(
+            "Implement me :: sibling class?");
+        }
+
+        code[classIfaceIndex] = codeIndex;
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: parent=" + parent);
+    }
+
+    // class
+
+    var len = source[sourceIndex++];
+
+    push(codeIndex, len);
+
+    add(
+      CLASS,
+      NULL, // annotations
+      NULL, // mods
+      NULL, // name
+      NULL, // type args
+      NULL, // super
+      NULL, // implements
+      NULL, // permits
+      NULL, // body
+      NULL // NEXT
+    );
+  }
+
+  private void executeClassEnd(int count, int selfIndex) {
+    if (count > 0) {
+      return;
+    }
+
+    pop();
+
+    // self update
+
+    for (int i = 1; i < 9; i++) {
+      var idx = selfIndex + i;
+
+      if (code[idx] == NULL) {
+        code[idx] = 0;
+      }
+    }
+  }
+
+  private void executeCompilationUnit() {
+    var len = source[sourceIndex++];
+
+    push(codeIndex, len);
+
+    add(
+      COMPILATION_UNIT,
+      NULL, // package
+      NULL, // import
+      NULL, // class/interface
+      NULL /// module
+    );
+  }
+
+  private void executeEof() {
+    assert stackIndex == 1;
+    assert stack[stackIndex] == 0;
+
+    var index = stack[stackIndex - 1];
+
+    if (index != 0) {
+      throw new UnsupportedOperationException("Implement me :: expecting compilation unit");
+    }
+
+    index++;
+
+    // package
+    if (code[index] == NULL) {
+      code[index] = 0;
+    }
+
+    index++;
+
+    // imports
+    if (code[index] == NULL) {
+      code[index] = 0;
+    }
+
+    index++;
+
+    var classIface = code[index];
+
+    if (classIface == NULL) {
+      code[index] = 0;
+    } else {
+      executeEofClassIface(classIface);
+    }
+
+    index++;
+
+    var mod = code[index];
+
+    if (mod == NULL) {
+      code[index] = 0;
+    } else {
+      throw new UnsupportedOperationException("module-info.java not supported yet");
+    }
+  }
+
+  private void executeEofClassIface(int startIndex) {
+    var index = startIndex;
+
+    while (true) {
+      var type = code[index];
+
+      switch (type) {
+        case CLASS -> {
+          var next = code[index + Class.NEXT];
+
+          if (next == NULL) {
+            code[index + Class.NEXT] = EOF;
+
+            return;
+          } else {
+            index = next;
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: type=" + type);
+      }
+    }
+  }
+
+  private void executeIdentifier() {
+    var objectIndex = source[sourceIndex++];
+
+    int count = parentDecrement();
+
+    var parentIndex = stack[stackIndex - 1];
+
+    var parent = code[parentIndex];
+
+    switch (code[parentIndex]) {
+      case CLASS -> {
+        var index = parentIndex + Class.NAME;
+
+        var current = code[index];
+
+        if (current != NULL) {
+          throw new UnsupportedOperationException(
+            "Implement me :: replace name?");
+        }
+
+        code[index] = objectIndex;
+
+        executeClassEnd(count, parentIndex);
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: parent=" + parent);
+    }
+  }
+
+  private int parentDecrement() {
+    assert stackIndex >= 1;
+
+    return --stack[stackIndex];
+  }
+
+  private void pop() {
+    stackIndex -= 2;
+  }
+
+  private void push(int v0, int v1) {
     stack = IntArrays.growIfNecessary(stack, stackIndex + 2);
 
-    stack[++stackIndex] = c0;
-    stack[++stackIndex] = c1;
+    stack[++stackIndex] = v0;
+    stack[++stackIndex] = v1;
   }
 
 }

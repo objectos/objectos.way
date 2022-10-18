@@ -46,11 +46,22 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
       objs("Foo"),
 
       pass1(
-        Pass1.KEYWORD, Keyword.CLASS.ordinal(),
-        Pass1.IDENTIFIER, 0,
-        Pass1.BLOCK_START, Pass1.BLOCK_END,
+        Pass1.COMPILATION_UNIT,
+        0, // package
+        0, // imports
+        5, // class/interface
+        0, // module
 
-        Pass1.EOF
+        Pass1.CLASS,
+        0, // annotations
+        0, // mods
+        0, // name
+        0, // type args
+        0, // super
+        0, // implements
+        0, // permits
+        0, // body
+        Pass1.EOF // NEXT
       ),
 
       """

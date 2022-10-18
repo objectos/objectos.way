@@ -15,26 +15,34 @@
  */
 package objectos.code;
 
-public final class JavaGeneratorImpl {
+import objectos.code.JavaTemplate.Renderer;
 
-  Pass0 pass0 = new Pass0();
+final class Pass2 {
 
-  JavaGeneratorImpl() {}
+  @SuppressWarnings("unused")
+  private int[] source;
 
-  final void _class(int length) {
-    pass0._class(length);
+  @SuppressWarnings("unused")
+  private int sourceIndex;
+
+  @SuppressWarnings("unused")
+  private Object[] objects;
+
+  @SuppressWarnings("unused")
+  private Renderer processor;
+
+  public final void execute(int[] source, Object[] objects, JavaTemplate.Renderer processor) {
+    this.source = source;
+    this.objects = objects;
+    this.processor = processor;
+
+    sourceIndex = 0;
+
+    execute0();
   }
 
-  final void id(String name) {
-    pass0.id(name);
-  }
+  private void execute0() {
 
-  final void templateEnd() {
-    pass0.templateEnd();
-  }
-
-  final void templateStart() {
-    pass0.templateStart();
   }
 
 }

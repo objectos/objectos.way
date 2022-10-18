@@ -19,6 +19,16 @@ import objectos.lang.Check;
 
 public abstract class JavaTemplate extends AbstractJavaTemplate {
 
+  public interface Renderer {
+
+    void compilationUnitEnd();
+
+    void compilationUnitStart();
+
+    void keyword(Keyword keyword);
+
+  }
+
   private Pass0 pass0;
 
   /**
@@ -26,7 +36,7 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
    */
   protected JavaTemplate() {}
 
-  public final void acceptJavaGenerator(JavaGeneratorImpl generator) {
+  public final void acceptJavaGenerator(JavaGenerator generator) {
     Check.state(this.pass0 == null, """
     Another code generation is already is progress.
     """);
