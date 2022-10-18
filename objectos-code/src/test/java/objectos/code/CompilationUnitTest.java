@@ -47,21 +47,22 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
 
       pass1(
         Pass1.COMPILATION_UNIT,
-        0, // package
-        0, // imports
-        5, // class/interface
-        0, // module
+        Pass1.NOP, // package
+        Pass1.NOP, // imports
+        6, // class/interface
+        Pass1.NOP, // module
+        Pass1.EOF,
 
         Pass1.CLASS,
-        0, // annotations
-        0, // mods
+        Pass1.NOP, // annotations
+        Pass1.NOP, // mods
         0, // name
-        0, // type args
-        0, // super
-        0, // implements
-        0, // permits
-        0, // body
-        Pass1.EOF // NEXT
+        Pass1.NOP, // type args
+        Pass1.NOP, // super
+        Pass1.NOP, // implements
+        Pass1.NOP, // permits
+        Pass1.NOP, // body
+        5 // NEXT
       ),
 
       """

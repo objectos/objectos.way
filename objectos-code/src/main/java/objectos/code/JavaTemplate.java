@@ -21,9 +21,19 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
 
   public interface Renderer {
 
+    void blockEnd();
+
+    void blockStart();
+
+    void classEnd();
+
+    void classStart();
+
     void compilationUnitEnd();
 
     void compilationUnitStart();
+
+    void identifier(String name);
 
     void keyword(Keyword keyword);
 

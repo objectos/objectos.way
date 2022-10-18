@@ -15,8 +15,15 @@
  */
 package objectos.code;
 
+import java.util.Locale;
+
 public enum Keyword {
 
   CLASS;
+
+  private final String toString = name().toLowerCase(Locale.US);
+
+  @Override
+  public final String toString() { return toString; }
 
 }

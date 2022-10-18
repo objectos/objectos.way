@@ -19,16 +19,10 @@ import objectos.code.JavaTemplate.Renderer;
 
 final class Pass2 {
 
-  @SuppressWarnings("unused")
   private int[] source;
 
-  @SuppressWarnings("unused")
-  private int sourceIndex;
-
-  @SuppressWarnings("unused")
   private Object[] objects;
 
-  @SuppressWarnings("unused")
   private Renderer processor;
 
   public final void execute(int[] source, Object[] objects, JavaTemplate.Renderer processor) {
@@ -36,13 +30,115 @@ final class Pass2 {
     this.objects = objects;
     this.processor = processor;
 
-    sourceIndex = 0;
-
     execute0();
   }
 
   private void execute0() {
+    executeCompilationUnit();
+  }
 
+  private void executeClass(int index) {
+    processor.classStart();
+
+    var annotations = source[index++];
+
+    if (annotations != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var modifiers = source[index++];
+
+    if (modifiers != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.keyword(Keyword.CLASS);
+
+    var nameIdx = source[index++];
+
+    var name = (String) objects[nameIdx];
+
+    processor.identifier(name);
+
+    var _extends = source[index++];
+
+    if (_extends != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var _implements = source[index++];
+
+    if (_implements != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var _permits = source[index++];
+
+    if (_permits != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.blockStart();
+
+    var body = source[index++];
+
+    if (body != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.blockEnd();
+
+    processor.classEnd();
+  }
+
+  private void executeClassIface(int index) {
+    var code = source[index++];
+
+    switch (code) {
+      case Pass1.CLASS -> executeClass(index);
+
+      default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+    }
+  }
+
+  private void executeCompilationUnit() {
+    var index = 0;
+
+    var code = source[index++];
+
+    assert code == Pass1.COMPILATION_UNIT;
+
+    processor.compilationUnitStart();
+
+    var pkg = source[index++];
+
+    if (pkg != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var imports = source[index++];
+
+    if (imports != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var classIface = source[index++];
+
+    if (classIface != Pass1.NOP) {
+      executeClassIface(classIface);
+    }
+
+    var module = source[index++];
+
+    if (module != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var eof = source[index++];
+
+    assert eof == Pass1.EOF;
+
+    processor.compilationUnitEnd();
   }
 
 }

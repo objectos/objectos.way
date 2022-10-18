@@ -19,29 +19,68 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   private final StringBuilder out = new StringBuilder();
 
-  private boolean startOfLine;
+  private int lineStart;
 
   @Override
-  public void compilationUnitEnd() {}
+  public void blockEnd() {
+    write('}');
+  }
 
   @Override
-  public void compilationUnitStart() {}
+  public void blockStart() {
+    write(' ');
+    write('{');
+  }
+
+  @Override
+  public void classEnd() {}
+
+  @Override
+  public void classStart() {}
+
+  @Override
+  public void compilationUnitEnd() {
+    nl();
+  }
+
+  @Override
+  public void compilationUnitStart() {
+    out.setLength(0);
+
+    lineStart = 0;
+  }
+
+  @Override
+  public void identifier(String name) {
+    word(name);
+  }
 
   @Override
   public final void keyword(Keyword keyword) {
-    if (!startOfLine) {
-      write(' ');
+    word(keyword.toString());
+  }
+
+  @Override
+  public final String toString() { return out.toString(); }
+
+  private void nl() {
+    out.append(System.lineSeparator());
+
+    lineStart = out.length();
+  }
+
+  private void word(String s) {
+    int length = out.length();
+
+    if (length != lineStart) {
+      out.append(' ');
     }
 
-    write(keyword.toString());
+    out.append(s);
   }
 
   private void write(char c) {
     out.append(c);
-  }
-
-  private void write(String s) {
-    out.append(s);
   }
 
 }

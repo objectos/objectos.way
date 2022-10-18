@@ -32,11 +32,13 @@ final class Pass1 {
 
   private static final int NULL = Integer.MAX_VALUE;
 
-  static final int COMPILATION_UNIT = -1;
+  static final int NOP = -1;
 
-  static final int CLASS = -2;
+  static final int COMPILATION_UNIT = -2;
 
-  static final int EOF = -3;
+  static final int CLASS = -3;
+
+  static final int EOF = -4;
 
   private int[] code = new int[32];
 
@@ -66,14 +68,15 @@ final class Pass1 {
     return Arrays.copyOf(code, codeIndex);
   }
 
-  private void add(int v0, int v1, int v2, int v3, int v4) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 4);
+  private void add(int v0, int v1, int v2, int v3, int v4, int v5) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 5);
 
     code[codeIndex++] = v0;
     code[codeIndex++] = v1;
     code[codeIndex++] = v2;
     code[codeIndex++] = v3;
     code[codeIndex++] = v4;
+    code[codeIndex++] = v5;
   }
 
   private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
@@ -184,7 +187,7 @@ final class Pass1 {
       var idx = selfIndex + i;
 
       if (code[idx] == NULL) {
-        code[idx] = 0;
+        code[idx] = NOP;
       }
     }
   }
@@ -199,7 +202,8 @@ final class Pass1 {
       NULL, // package
       NULL, // import
       NULL, // class/interface
-      NULL /// module
+      NULL, // module
+      NULL // EOF
     );
   }
 
@@ -217,14 +221,14 @@ final class Pass1 {
 
     // package
     if (code[index] == NULL) {
-      code[index] = 0;
+      code[index] = NOP;
     }
 
     index++;
 
     // imports
     if (code[index] == NULL) {
-      code[index] = 0;
+      code[index] = NOP;
     }
 
     index++;
@@ -232,9 +236,9 @@ final class Pass1 {
     var classIface = code[index];
 
     if (classIface == NULL) {
-      code[index] = 0;
+      code[index] = NOP;
     } else {
-      executeEofClassIface(classIface);
+      executeEofClassIface(classIface, 5);
     }
 
     index++;
@@ -242,13 +246,17 @@ final class Pass1 {
     var mod = code[index];
 
     if (mod == NULL) {
-      code[index] = 0;
+      code[index] = NOP;
     } else {
       throw new UnsupportedOperationException("module-info.java not supported yet");
     }
+
+    index++;
+
+    code[index] = EOF;
   }
 
-  private void executeEofClassIface(int startIndex) {
+  private void executeEofClassIface(int startIndex, int value) {
     var index = startIndex;
 
     while (true) {
@@ -259,7 +267,7 @@ final class Pass1 {
           var next = code[index + Class.NEXT];
 
           if (next == NULL) {
-            code[index + Class.NEXT] = EOF;
+            code[index + Class.NEXT] = value;
 
             return;
           } else {
