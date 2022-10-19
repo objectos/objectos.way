@@ -37,6 +37,14 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
 
     void keyword(Keyword keyword);
 
+    void name(String name);
+
+    void packageEnd();
+
+    void packageStart();
+
+    void separator(Separator separator);
+
   }
 
   private Pass0 pass0;
@@ -65,6 +73,10 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
     pass0._class(elements.length);
 
     return Ref.INSTANCE;
+  }
+
+  protected final void _package(String packageName) {
+    pass0._package(packageName);
   }
 
   protected abstract void definition();

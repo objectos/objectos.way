@@ -26,8 +26,13 @@ final class Pass1 {
   }
 
   private interface CompilationUnit {
+    int PACKAGE = 1;
     int CLASS_INTERFACE = 3;
     int MODULE = 4;
+  }
+
+  private interface Package {
+    int NAME = 2;
   }
 
   private static final int NULL = Integer.MAX_VALUE;
@@ -36,9 +41,11 @@ final class Pass1 {
 
   static final int COMPILATION_UNIT = -2;
 
-  static final int CLASS = -3;
+  static final int PACKAGE = -3;
 
-  static final int EOF = -4;
+  static final int CLASS = -4;
+
+  static final int EOF = -5;
 
   private int[] code = new int[32];
 
@@ -66,6 +73,14 @@ final class Pass1 {
 
   final int[] toArray() {
     return Arrays.copyOf(code, codeIndex);
+  }
+
+  private void add(int v0, int v1, int v2) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 2);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
   }
 
   private void add(int v0, int v1, int v2, int v3, int v4, int v5) {
@@ -101,11 +116,15 @@ final class Pass1 {
       switch (code) {
         case Pass0.JMP -> sourceIndex = source[sourceIndex];
 
+        case Pass0.PACKAGE -> executePackage();
+
         case Pass0.CLASS -> executeClass();
 
         case Pass0.COMPILATION_UNIT -> executeCompilationUnit();
 
         case Pass0.IDENTIFIER -> executeIdentifier();
+
+        case Pass0.NAME -> executeName();
 
         case Pass0.EOF -> {
           executeEof();
@@ -307,6 +326,95 @@ final class Pass1 {
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: parent=" + parent);
+    }
+  }
+
+  private void executeName() {
+    var objectIndex = source[sourceIndex++];
+
+    int count = parentDecrement();
+
+    var parentIndex = stack[stackIndex - 1];
+
+    var parent = code[parentIndex];
+
+    switch (code[parentIndex]) {
+      case PACKAGE -> {
+        var index = parentIndex + Package.NAME;
+
+        var current = code[index];
+
+        if (current != NULL) {
+          throw new UnsupportedOperationException(
+            "Implement me :: replace name?");
+        }
+
+        code[index] = objectIndex;
+
+        executePackageEnd(count, parentIndex);
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: parent=" + parent);
+    }
+
+  }
+
+  private void executePackage() {
+    // parent update
+
+    parentDecrement();
+
+    var parentIndex = stack[stackIndex - 1];
+
+    var parent = code[parentIndex];
+
+    switch (parent) {
+      case COMPILATION_UNIT -> {
+        var index = parentIndex + CompilationUnit.PACKAGE;
+
+        var pkg = code[index];
+
+        if (pkg != NULL) {
+          throw new UnsupportedOperationException(
+            "Implement me :: multiple package declarations");
+        }
+
+        code[index] = codeIndex;
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: parent=" + parent);
+    }
+
+    // class
+
+    var len = source[sourceIndex++];
+
+    push(codeIndex, len);
+
+    add(
+      PACKAGE,
+      NULL, // annotations
+      NULL // name
+    );
+  }
+
+  private void executePackageEnd(int count, int selfIndex) {
+    if (count > 0) {
+      return;
+    }
+
+    pop();
+
+    // self update
+
+    for (int i = 1; i < 3; i++) {
+      var idx = selfIndex + i;
+
+      if (code[idx] == NULL) {
+        code[idx] = NOP;
+      }
     }
   }
 

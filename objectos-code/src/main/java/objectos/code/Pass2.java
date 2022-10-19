@@ -113,7 +113,7 @@ final class Pass2 {
     var pkg = source[index++];
 
     if (pkg != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+      executePackage(pkg);
     }
 
     var imports = source[index++];
@@ -139,6 +139,30 @@ final class Pass2 {
     assert eof == Pass1.EOF;
 
     processor.compilationUnitEnd();
+  }
+
+  private void executePackage(int index) {
+    processor.packageStart();
+
+    index++;
+
+    var annotations = source[index++];
+
+    if (annotations != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.keyword(Keyword.PACKAGE);
+
+    var nameIdx = source[index++];
+
+    var name = (String) objects[nameIdx];
+
+    processor.name(name);
+
+    processor.separator(Separator.SEMICOLON);
+
+    processor.packageEnd();
   }
 
 }

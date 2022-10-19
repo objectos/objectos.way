@@ -36,7 +36,11 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void classEnd() {}
 
   @Override
-  public void classStart() {}
+  public void classStart() {
+    if (!out.isEmpty()) {
+      nl();
+    }
+  }
 
   @Override
   public void compilationUnitEnd() {
@@ -58,6 +62,30 @@ public class JavaWriter implements JavaTemplate.Renderer {
   @Override
   public final void keyword(Keyword keyword) {
     word(keyword.toString());
+  }
+
+  @Override
+  public void name(String name) {
+    word(name);
+  }
+
+  @Override
+  public void packageEnd() {}
+
+  @Override
+  public void packageStart() {}
+
+  @Override
+  public void separator(Separator separator) {
+    switch (separator) {
+      case SEMICOLON -> {
+        out.append(';');
+
+        nl();
+      }
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    }
   }
 
   @Override

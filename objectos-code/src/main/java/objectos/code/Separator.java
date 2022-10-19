@@ -15,17 +15,8 @@
  */
 package objectos.code;
 
-import java.util.Locale;
+public enum Separator {
 
-public enum Keyword {
-
-  CLASS,
-
-  PACKAGE;
-
-  private final String toString = name().toLowerCase(Locale.US);
-
-  @Override
-  public final String toString() { return toString; }
+  SEMICOLON;
 
 }

@@ -15,8 +15,6 @@
  */
 package objectos.code;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.testng.annotations.BeforeClass;
 
 public abstract class AbstractObjectosCodeTest {
@@ -32,32 +30,11 @@ public abstract class AbstractObjectosCodeTest {
     outer._beforeClass();
   }
 
-  final Map<String, String> docAttr(String... pairs) {
-    var map = new LinkedHashMap<String, String>(pairs.length);
-
-    var index = 0;
-
-    while (index < pairs.length) {
-      var key = pairs[index++];
-      var value = pairs[index++];
-
-      map.put(key, value);
-    }
-
-    return map;
-  }
-
   final Object[] objs(Object... values) { return values; }
 
   final int[] pass0(int... values) { return values; }
 
   final int[] pass1(int... values) { return values; }
-
-  final <T> T skip(T value) {
-    return null;
-  }
-
-  final int[] t(int... values) { return values; }
 
   final void test(
       JavaTemplate template,

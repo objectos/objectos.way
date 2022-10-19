@@ -28,9 +28,11 @@ final class Pass0 {
   static final int JMP = -2;
 
   static final int COMPILATION_UNIT = -3;
-  static final int CLASS = -4;
+  static final int PACKAGE = -4;
+  static final int CLASS = -5;
 
-  static final int IDENTIFIER = -5;
+  static final int IDENTIFIER = -6;
+  static final int NAME = -7;
 
   private int[] code = new int[10];
 
@@ -46,6 +48,18 @@ final class Pass0 {
 
   public final void _class(int length) {
     element(CLASS, length);
+  }
+
+  public final void _package(String packageName) {
+    Check.notNull(packageName, "packageName == null");
+    Check.argument(
+      SourceVersion.isName(packageName),
+      packageName, " is not a valid package name"
+    );
+
+    name0(packageName);
+
+    element(PACKAGE, 1);
   }
 
   public final void id(String name) {
@@ -128,7 +142,7 @@ final class Pass0 {
       int c = code[currentElementIndex];
 
       int offset = switch (c) {
-        case CLASS -> {
+        case CLASS, PACKAGE -> {
           int children = code[currentElementIndex + 1];
 
           int skip = 1; // length;
@@ -140,7 +154,7 @@ final class Pass0 {
           yield skip;
         }
 
-        case IDENTIFIER -> 3;
+        case IDENTIFIER, NAME -> 3;
 
         default -> throw new UnsupportedOperationException("Implement me :: code=" + c);
       };
@@ -159,6 +173,12 @@ final class Pass0 {
     element = IntArrays.growIfNecessary(element, elementIndex);
 
     element[elementIndex++] = value;
+  }
+
+  private void name0(String name) {
+    markElement(codeIndex);
+
+    code(NAME, string(name), JMP, Integer.MIN_VALUE);
   }
 
   private int string(String value) {

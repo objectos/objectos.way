@@ -71,4 +71,64 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
     );
   }
 
+  @Test(description = """
+  package test;
+
+  class Foo {}
+  """)
+  public void testCase02() {
+    test(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _package("test");
+
+          _class(id("Foo"));
+        }
+      },
+
+      pass0(
+        /* 0*/Pass0.JMP, 22,
+        /* 2*/Pass0.NAME, 0, JMP, 6 + 4,
+        /* 6*/Pass0.PACKAGE, 1, JMP, 2, JMP, 22 + 4,
+        /*12*/Pass0.IDENTIFIER, 1, JMP, 16 + 4,
+        /*16*/Pass0.CLASS, 1, JMP, 12, JMP, 22 + 6,
+        /*22*/Pass0.COMPILATION_UNIT, 2, JMP, 6, JMP, 16, JMP, 30,
+        /*30*/Pass0.EOF
+      ),
+
+      objs("test", "Foo"),
+
+      pass1(
+        Pass1.COMPILATION_UNIT,
+        6, // package
+        Pass1.NOP, // imports
+        9, // class/interface
+        Pass1.NOP, // module
+        Pass1.EOF,
+
+        Pass1.PACKAGE,
+        Pass1.NOP, // annotations
+        0, // name
+
+        Pass1.CLASS,
+        Pass1.NOP, // annotations
+        Pass1.NOP, // mods
+        1, // name
+        Pass1.NOP, // type args
+        Pass1.NOP, // super
+        Pass1.NOP, // implements
+        Pass1.NOP, // permits
+        Pass1.NOP, // body
+        5 // NEXT
+      ),
+
+      """
+      package test;
+
+      class Foo {}
+      """
+    );
+  }
+
 }
