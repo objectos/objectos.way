@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
+import objectos.code.ClassName;
+import objectos.code.JavaTemplate;
+import objectos.code.PackageName;
 import org.testng.annotations.BeforeClass;
 
-public abstract class AbstractObjectosCodeTest {
+public abstract class AbstractObjectoxCodeTest {
 
   static final PackageName TEST = PackageName.of("test");
 
   private final ObjectosCodeTest outer;
 
-  AbstractObjectosCodeTest(ObjectosCodeTest outer) {
+  AbstractObjectoxCodeTest(ObjectosCodeTest outer) {
     this.outer = outer;
   }
 

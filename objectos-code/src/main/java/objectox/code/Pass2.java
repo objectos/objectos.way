@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
+import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
+import objectos.code.Keyword;
+import objectos.code.Separator;
 
-final class Pass2 {
+public final class Pass2 {
 
   private int[] codes;
 
@@ -110,7 +113,7 @@ final class Pass2 {
 
     processor.keyword(Keyword.EXTENDS);
 
-    cn.execute(processor, importSet);
+    importSet.execute(processor, cn);
   }
 
   private void executeClassIface(int index) {

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
+import objectos.code.JavaTemplate;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 
@@ -30,6 +31,7 @@ public class ObjectosCodeTest {
   @Factory
   public Object[] _factory() {
     return new Object[] {
+        new ClassTest(this),
         new CompilationUnitTest(this)
     };
   }

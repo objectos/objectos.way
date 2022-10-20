@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
 import java.util.Comparator;
 import java.util.List;
+import objectos.code.ClassName;
+import objectos.code.JavaTemplate.Renderer;
+import objectos.code.PackageName;
 import objectos.util.GrowableList;
 import objectos.util.GrowableSet;
 
-final class ImportSet {
+public final class ImportSet {
 
   private PackageName packageName;
 
@@ -45,7 +48,7 @@ final class ImportSet {
   }
 
   public final void clear() {
-    packageName = PackageName.UNNAMED;
+    packageName = PackageName.of();
 
     classNames.clear();
 
@@ -54,12 +57,28 @@ final class ImportSet {
     enabled = false;
   }
 
-  public final boolean contains(ClassName className) {
-    return classNames.contains(className);
-  }
-
   public final void enable() {
     enabled = true;
+  }
+
+  public final void execute(Renderer processor, ClassName name) {
+    if (classNames.contains(name)) {
+      processor.identifier(name.simpleName);
+    }
+
+    else if (canSkipImport(name.packageName)) {
+      simpleNames.add(name.simpleName);
+
+      processor.identifier(name.simpleName);
+    }
+
+    else if (simpleNames.add(name.simpleName)) {
+      processor.identifier(name.simpleName);
+    }
+
+    else {
+      processor.name(toString());
+    }
   }
 
   public final void packageName(PackageName packageName) {

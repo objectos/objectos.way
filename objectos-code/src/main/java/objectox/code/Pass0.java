@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
 import java.util.Arrays;
 import javax.lang.model.SourceVersion;
+import objectos.code.ClassName;
+import objectos.code.tmpl.Api;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-final class Pass0 {
+public final class Pass0 implements Api {
 
   private static final int NULL = Integer.MIN_VALUE;
 
@@ -49,12 +51,12 @@ final class Pass0 {
 
   private int objectIndex;
 
-  Pass0() {}
-
+  @Override
   public final void _class(int length) {
     element(CLASS, length);
   }
 
+  @Override
   public final void _extends(ClassName superclass) {
     Check.notNull(superclass, "superclass == null");
 
@@ -63,6 +65,12 @@ final class Pass0 {
     add(EXTENDS, store(superclass), JMP, NULL);
   }
 
+  @Override
+  public final void _final() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
   public final void _package(String packageName) {
     Check.notNull(packageName, "packageName == null");
     Check.argument(
@@ -75,12 +83,14 @@ final class Pass0 {
     element(PACKAGE, 1);
   }
 
+  @Override
   public final void autoImports() {
     markElement(codeIndex);
 
     add(AUTO_IMPORTS, JMP, NULL);
   }
 
+  @Override
   public final void id(String name) {
     Check.argument(
       SourceVersion.isIdentifier(name), // implicit null-check

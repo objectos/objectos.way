@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
+import objectos.code.JavaTemplate;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -46,7 +47,7 @@ public class Pass0Test extends ObjectosCodeTest {
 
     pass0.templateStart();
 
-    template.pass0(pass0);
+    template.eval(pass0);
 
     pass0.templateEnd();
 

@@ -15,6 +15,8 @@
  */
 package objectos.code;
 
+import objectox.code.Pass0;
+
 public final class JavaGenerator {
 
   Pass0 pass0 = new Pass0();

@@ -16,16 +16,15 @@
 package objectos.code;
 
 import javax.lang.model.SourceVersion;
-import objectos.code.JavaTemplate.Renderer;
 import objectos.lang.Check;
 import objectos.lang.Equals;
 import objectos.lang.HashCode;
 
-public class ClassName implements Comparable<ClassName> {
+public final class ClassName implements Comparable<ClassName> {
 
-  private final PackageName packageName;
+  public final PackageName packageName;
 
-  private final String simpleName;
+  public final String simpleName;
 
   private ClassName(PackageName packageName, String simpleName) {
     this.packageName = packageName;
@@ -64,26 +63,6 @@ public class ClassName implements Comparable<ClassName> {
   @Override
   public final String toString() {
     return packageName.toString(simpleName);
-  }
-
-  final void execute(Renderer processor, ImportSet set) {
-    if (set.contains(this)) {
-      processor.identifier(simpleName);
-    }
-
-    else if (set.canSkipImport(packageName)) {
-      set.addSimpleName(simpleName);
-
-      processor.identifier(simpleName);
-    }
-
-    else if (set.addSimpleName(simpleName)) {
-      processor.identifier(simpleName);
-    }
-
-    else {
-      processor.name(toString());
-    }
   }
 
 }

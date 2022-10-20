@@ -18,14 +18,18 @@ package objectos.code;
 import javax.lang.model.SourceVersion;
 import objectos.lang.Check;
 
-public class PackageName {
+public final class PackageName {
 
-  static final PackageName UNNAMED = new PackageName("");
+  private static final PackageName UNNAMED = new PackageName("");
 
-  private final String name;
+  public final String name;
 
   private PackageName(String name) {
     this.name = name;
+  }
+
+  public static PackageName of() {
+    return UNNAMED;
   }
 
   public static PackageName of(String name) {

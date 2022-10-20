@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
-import static objectos.code.PackageName.UNNAMED;
-import static objectos.code.Pass0.JMP;
+import static objectox.code.Pass0.JMP;
 
+import objectos.code.ClassName;
+import objectos.code.JavaTemplate;
+import objectos.code.PackageName;
 import org.testng.annotations.Test;
 
-final class CompilationUnitTest extends AbstractObjectosCodeTest {
+final class CompilationUnitTest extends AbstractObjectoxCodeTest {
 
   CompilationUnitTest(ObjectosCodeTest outer) { super(outer); }
 
@@ -66,7 +68,7 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
         5 // NEXT
       ),
 
-      imports(UNNAMED),
+      imports(PackageName.of()),
 
       """
       class Foo {}
@@ -189,7 +191,7 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
         Pass1.EOF
       ),
 
-      imports(UNNAMED, bar),
+      imports(PackageName.of(), bar),
 
       """
       import test.Bar;

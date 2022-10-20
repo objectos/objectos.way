@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.JavaTemplate;
+import objectos.code.JavaWriter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

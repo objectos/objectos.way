@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectox.code;
 
 import java.util.Arrays;
+import objectos.code.ClassName;
 import objectos.util.IntArrays;
 
-final class Pass1 {
+public final class Pass1 {
 
   private interface Class {
     int _COUNT = 9;

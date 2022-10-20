@@ -13,28 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.tmpl;
 
-abstract class JavaTemplateHelper {
+import objectos.code.ClassName;
+import objectox.code.Pass0;
 
-  protected sealed interface ClassElement {}
+public sealed interface Api permits Pass0 {
 
-  protected sealed interface ClassRef {}
+  public sealed interface ClassElement {}
 
-  protected sealed interface ExtendsRef
+  public sealed interface ClassRef {}
+
+  public sealed interface ExtendsRef
       extends ClassElement {}
 
-  protected sealed interface IdentifierRef
+  public sealed interface FinalRef
       extends ClassElement {}
 
-  static final class Ref
+  public sealed interface IdentifierRef
+      extends ClassElement {}
+
+  public static final class Ref
       implements
       ClassRef,
       ExtendsRef,
+      FinalRef,
       IdentifierRef {
 
-    static final Ref INSTANCE = new Ref();
+    private Ref() {}
 
   }
+
+  Ref REF = new Ref();
+
+  void _class(int length);
+
+  void _extends(ClassName superclass);
+
+  void _final();
+
+  void _package(String packageName);
+
+  void autoImports();
+
+  void id(String name);
 
 }
