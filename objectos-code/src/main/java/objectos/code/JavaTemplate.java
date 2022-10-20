@@ -17,7 +17,7 @@ package objectos.code;
 
 import objectos.lang.Check;
 
-public abstract class JavaTemplate extends AbstractJavaTemplate {
+public abstract class JavaTemplate extends JavaTemplateHelper {
 
   public interface Renderer {
 
@@ -75,8 +75,18 @@ public abstract class JavaTemplate extends AbstractJavaTemplate {
     return Ref.INSTANCE;
   }
 
+  protected final ExtendsRef _extends(ClassName superclass) {
+    pass0._extends(superclass);
+
+    return Ref.INSTANCE;
+  }
+
   protected final void _package(String packageName) {
     pass0._package(packageName);
+  }
+
+  protected final void autoImports() {
+    pass0.autoImports();
   }
 
   protected abstract void definition();

@@ -15,11 +15,14 @@
  */
 package objectos.code;
 
-abstract class AbstractJavaTemplate {
+abstract class JavaTemplateHelper {
 
   protected sealed interface ClassElement {}
 
   protected sealed interface ClassRef {}
+
+  protected sealed interface ExtendsRef
+      extends ClassElement {}
 
   protected sealed interface IdentifierRef
       extends ClassElement {}
@@ -27,6 +30,7 @@ abstract class AbstractJavaTemplate {
   static final class Ref
       implements
       ClassRef,
+      ExtendsRef,
       IdentifierRef {
 
     static final Ref INSTANCE = new Ref();

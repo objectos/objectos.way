@@ -43,15 +43,14 @@ public class Pass2Test extends ObjectosCodeTest {
   @Override
   final void test(
       JavaTemplate template,
-      int[] p0,
-      Object[] objs,
-      int[] p1,
+      int[] p0, Object[] objs,
+      int[] p1, ImportSet imports,
       String expectedSource) {
     if (p1 == null) {
       return;
     }
 
-    pass2.execute(p1, objs, writer);
+    pass2.execute(p1, objs, imports, writer);
 
     assertEquals(writer.toString(), expectedSource);
   }

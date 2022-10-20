@@ -21,17 +21,24 @@ import objectos.util.IntArrays;
 final class Pass1 {
 
   private interface Class {
+    int _COUNT = 9;
     int NAME = 3;
+    //int TYPE_ARGS = 4;
+    int SUPERCLASS = 5;
     int NEXT = 9;
   }
 
   private interface CompilationUnit {
+    int _COUNT = 5;
     int PACKAGE = 1;
+    int IMPORTS = 2;
     int CLASS_INTERFACE = 3;
     int MODULE = 4;
+    int EOF = 5;
   }
 
   private interface Package {
+    int _COUNT = 3;
     int NAME = 2;
   }
 
@@ -41,15 +48,29 @@ final class Pass1 {
 
   static final int COMPILATION_UNIT = -2;
 
-  static final int PACKAGE = -3;
+  static final int IMPORT = -3;
 
-  static final int CLASS = -4;
+  static final int IMPORT_ON_DEMAND = -4;
 
-  static final int EOF = -5;
+  static final int PACKAGE = -5;
+
+  static final int CLASS = -6;
+
+  static final int EOF = -7;
+
+  private final ImportSet importSet = new ImportSet();
 
   private int[] code = new int[32];
 
   private int codeIndex;
+
+  private Object[] object;
+
+  private int parent;
+
+  private int parentCount;
+
+  private int parentIndex;
 
   private int[] source;
 
@@ -59,8 +80,11 @@ final class Pass1 {
 
   private int stackIndex;
 
-  public final void execute(int[] source) {
+  public final void execute(int[] source, Object[] object) {
     this.source = source;
+    this.object = object;
+
+    importSet.clear();
 
     codeIndex = 0;
 
@@ -73,6 +97,19 @@ final class Pass1 {
 
   final int[] toArray() {
     return Arrays.copyOf(code, codeIndex);
+  }
+
+  private void add(int v0) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 0);
+
+    code[codeIndex++] = v0;
+  }
+
+  private void add(int v0, int v1) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 1);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
   }
 
   private void add(int v0, int v1, int v2) {
@@ -116,11 +153,15 @@ final class Pass1 {
       switch (code) {
         case Pass0.JMP -> sourceIndex = source[sourceIndex];
 
+        case Pass0.AUTO_IMPORTS -> executeAutoImports();
+
+        case Pass0.COMPILATION_UNIT -> executeCompilationUnit();
+
         case Pass0.PACKAGE -> executePackage();
 
         case Pass0.CLASS -> executeClass();
 
-        case Pass0.COMPILATION_UNIT -> executeCompilationUnit();
+        case Pass0.EXTENDS -> executeExtends();
 
         case Pass0.IDENTIFIER -> executeIdentifier();
 
@@ -137,47 +178,36 @@ final class Pass1 {
     }
   }
 
+  private void executeAutoImports() {
+    parentUpdate();
+
+    importSet.enable();
+  }
+
   private void executeClass() {
-    // parent update
-
-    parentDecrement();
-
-    var parentIndex = stack[stackIndex - 1];
-
-    var parent = code[parentIndex];
+    parentUpdate();
 
     switch (parent) {
       case COMPILATION_UNIT -> {
-        var moduleIndex = parentIndex + CompilationUnit.MODULE;
-
-        var module = code[moduleIndex];
+        var module = parentGet(CompilationUnit.MODULE);
 
         if (module != NULL) {
           throw new UnsupportedOperationException(
             "Implement me :: invalid class decl in module");
         }
 
-        var classIfaceIndex = parentIndex + CompilationUnit.CLASS_INTERFACE;
+        parentSetCode(
+          CompilationUnit.CLASS_INTERFACE,
+          "Implement me :: sibling class?"
+        );
 
-        var classIface = code[classIfaceIndex];
-
-        if (classIface != NULL) {
-          throw new UnsupportedOperationException(
-            "Implement me :: sibling class?");
-        }
-
-        code[classIfaceIndex] = codeIndex;
+        executeElementEnd(CompilationUnit._COUNT);
       }
 
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: parent=" + parent);
+      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
     }
 
-    // class
-
-    var len = source[sourceIndex++];
-
-    push(codeIndex, len);
+    push();
 
     add(
       CLASS,
@@ -193,28 +223,8 @@ final class Pass1 {
     );
   }
 
-  private void executeClassEnd(int count, int selfIndex) {
-    if (count > 0) {
-      return;
-    }
-
-    pop();
-
-    // self update
-
-    for (int i = 1; i < 9; i++) {
-      var idx = selfIndex + i;
-
-      if (code[idx] == NULL) {
-        code[idx] = NOP;
-      }
-    }
-  }
-
   private void executeCompilationUnit() {
-    var len = source[sourceIndex++];
-
-    push(codeIndex, len);
+    push();
 
     add(
       COMPILATION_UNIT,
@@ -226,53 +236,46 @@ final class Pass1 {
     );
   }
 
+  private void executeElementEnd(int count) {
+    if (parentCount > 0) {
+      return;
+    }
+
+    pop();
+
+    for (int i = 1; i < count; i++) {
+      var idx = parentIndex + i;
+
+      if (code[idx] == NULL) {
+        code[idx] = NOP;
+      }
+    }
+  }
+
   private void executeEof() {
-    assert stackIndex == 1;
-    assert stack[stackIndex] == 0;
+    assert stackIndex == -1 : stackIndex;
 
-    var index = stack[stackIndex - 1];
+    var imports = code[CompilationUnit.IMPORTS];
 
-    if (index != 0) {
-      throw new UnsupportedOperationException("Implement me :: expecting compilation unit");
+    if (imports != NOP) {
+      throw new UnsupportedOperationException("Implement me :: unexpected imports");
     }
 
-    index++;
-
-    // package
-    if (code[index] == NULL) {
-      code[index] = NOP;
+    if (importSet.enabled) {
+      executeEofImportSet();
     }
 
-    index++;
+    var classIface = code[CompilationUnit.CLASS_INTERFACE];
 
-    // imports
-    if (code[index] == NULL) {
-      code[index] = NOP;
-    }
-
-    index++;
-
-    var classIface = code[index];
-
-    if (classIface == NULL) {
-      code[index] = NOP;
-    } else {
+    if (classIface != NOP) {
       executeEofClassIface(classIface, 5);
     }
 
-    index++;
+    var eof = code[CompilationUnit.EOF];
 
-    var mod = code[index];
+    assert eof == NULL : eof;
 
-    if (mod == NULL) {
-      code[index] = NOP;
-    } else {
-      throw new UnsupportedOperationException("module-info.java not supported yet");
-    }
-
-    index++;
-
-    code[index] = EOF;
+    code[CompilationUnit.EOF] = EOF;
   }
 
   private void executeEofClassIface(int startIndex, int value) {
@@ -299,99 +302,79 @@ final class Pass1 {
     }
   }
 
-  private void executeIdentifier() {
-    var objectIndex = source[sourceIndex++];
+  private void executeEofImportSet() {
+    var sorted = importSet.sort();
 
-    int count = parentDecrement();
+    code[CompilationUnit.IMPORTS] = codeIndex;
 
-    var parentIndex = stack[stackIndex - 1];
+    for (int i = 0, size = sorted.size(); i < size; i++) {
+      add(IMPORT, i);
+    }
 
-    var parent = code[parentIndex];
+    add(EOF);
+  }
 
-    switch (code[parentIndex]) {
+  private void executeExtends() {
+    parentUpdate();
+
+    switch (parent) {
       case CLASS -> {
-        var index = parentIndex + Class.NAME;
+        parentSetObject(Class.SUPERCLASS, "Implement me :: replace superclass?");
 
-        var current = code[index];
-
-        if (current != NULL) {
-          throw new UnsupportedOperationException(
-            "Implement me :: replace name?");
-        }
-
-        code[index] = objectIndex;
-
-        executeClassEnd(count, parentIndex);
+        executeElementEnd(Class._COUNT);
       }
 
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: parent=" + parent);
+      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
+    }
+  }
+
+  private void executeIdentifier() {
+    parentUpdate();
+
+    switch (parent) {
+      case CLASS -> {
+        parentSetObject(Class.NAME, "Implement me :: replace name?");
+
+        executeElementEnd(Class._COUNT);
+      }
+
+      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
     }
   }
 
   private void executeName() {
-    var objectIndex = source[sourceIndex++];
+    parentUpdate();
 
-    int count = parentDecrement();
-
-    var parentIndex = stack[stackIndex - 1];
-
-    var parent = code[parentIndex];
-
-    switch (code[parentIndex]) {
+    switch (parent) {
       case PACKAGE -> {
-        var index = parentIndex + Package.NAME;
+        var pkg = parentSetObject(Package.NAME, "Implement me :: replace name?");
 
-        var current = code[index];
-
-        if (current != NULL) {
-          throw new UnsupportedOperationException(
-            "Implement me :: replace name?");
+        if (pkg instanceof String s) {
+          importSet.packageName(s);
+        } else {
+          throw new UnsupportedOperationException("Implement me");
         }
 
-        code[index] = objectIndex;
-
-        executePackageEnd(count, parentIndex);
+        executeElementEnd(Package._COUNT);
       }
 
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: parent=" + parent);
+      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
     }
-
   }
 
   private void executePackage() {
-    // parent update
-
-    parentDecrement();
-
-    var parentIndex = stack[stackIndex - 1];
-
-    var parent = code[parentIndex];
+    parentUpdate();
 
     switch (parent) {
-      case COMPILATION_UNIT -> {
-        var index = parentIndex + CompilationUnit.PACKAGE;
+      case COMPILATION_UNIT -> parentSetCode(
+        CompilationUnit.PACKAGE,
+        "Implement me :: multiple package declarations"
+      );
 
-        var pkg = code[index];
-
-        if (pkg != NULL) {
-          throw new UnsupportedOperationException(
-            "Implement me :: multiple package declarations");
-        }
-
-        code[index] = codeIndex;
-      }
-
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: parent=" + parent);
+      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
     }
 
-    // class
-
-    var len = source[sourceIndex++];
-
-    push(codeIndex, len);
+    push();
 
     add(
       PACKAGE,
@@ -400,32 +383,64 @@ final class Pass1 {
     );
   }
 
-  private void executePackageEnd(int count, int selfIndex) {
-    if (count > 0) {
-      return;
-    }
+  private int parentGet(int offset) {
+    var index = parentIndex + offset;
 
-    pop();
-
-    // self update
-
-    for (int i = 1; i < 3; i++) {
-      var idx = selfIndex + i;
-
-      if (code[idx] == NULL) {
-        code[idx] = NOP;
-      }
-    }
+    return code[index];
   }
 
-  private int parentDecrement() {
+  private void parentSetCode(int offset, String errorMessage) {
+    var index = parentIndex + offset;
+
+    var value = code[index];
+
+    if (value != NULL) {
+      throw new UnsupportedOperationException(errorMessage);
+    }
+
+    code[index] = codeIndex;
+  }
+
+  private Object parentSetObject(int offset, String errorMessage) {
+    var index = parentIndex + offset;
+
+    var current = code[index];
+
+    if (current != NULL) {
+      throw new UnsupportedOperationException(errorMessage);
+    }
+
+    var objectIndex = source[sourceIndex++];
+
+    var o = object[objectIndex];
+
+    if (o instanceof ClassName cn) {
+      importSet.addClassName(cn);
+    }
+
+    code[index] = objectIndex;
+
+    return o;
+  }
+
+  private void parentUpdate() {
     assert stackIndex >= 1;
 
-    return --stack[stackIndex];
+    parentCount = --stack[stackIndex];
+
+    parentIndex = stack[stackIndex - 1];
+
+    parent = code[parentIndex];
   }
 
   private void pop() {
     stackIndex -= 2;
+  }
+
+  private void push() {
+    var len = source[sourceIndex++];
+
+    push(codeIndex, len);
   }
 
   private void push(int v0, int v1) {

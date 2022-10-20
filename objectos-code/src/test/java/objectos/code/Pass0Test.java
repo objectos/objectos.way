@@ -37,9 +37,8 @@ public class Pass0Test extends ObjectosCodeTest {
   @Override
   final void test(
       JavaTemplate template,
-      int[] p0,
-      Object[] objs,
-      int[] p1,
+      int[] p0, Object[] objs,
+      int[] p1, ImportSet imports,
       String expectedSource) {
     if (p0 == null) {
       return;

@@ -19,17 +19,21 @@ import objectos.code.JavaTemplate.Renderer;
 
 final class Pass2 {
 
-  private int[] source;
+  private int[] codes;
 
   private Object[] objects;
 
+  private ImportSet importSet;
+
   private Renderer processor;
 
-  public final void execute(int[] source, Object[] objects, JavaTemplate.Renderer processor) {
-    this.source = source;
-    this.objects = objects;
-    this.processor = processor;
+  public final void execute(
+      int[] codes, Object[] objects, ImportSet importSet, Renderer processor) {
 
+    this.codes = codes;
+    this.objects = objects;
+    this.importSet = importSet;
+    this.processor = processor;
     execute0();
   }
 
@@ -40,13 +44,13 @@ final class Pass2 {
   private void executeClass(int index) {
     processor.classStart();
 
-    var annotations = source[index++];
+    var annotations = codes[index++];
 
     if (annotations != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    var modifiers = source[index++];
+    var modifiers = codes[index++];
 
     if (modifiers != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
@@ -54,25 +58,31 @@ final class Pass2 {
 
     processor.keyword(Keyword.CLASS);
 
-    var nameIdx = source[index++];
+    var nameIdx = codes[index++];
 
     var name = (String) objects[nameIdx];
 
     processor.identifier(name);
 
-    var _extends = source[index++];
+    var typeArgs = codes[index++];
 
-    if (_extends != Pass1.NOP) {
+    if (typeArgs != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    var _implements = source[index++];
+    var _extends = codes[index++];
+
+    if (_extends != Pass1.NOP) {
+      executeClassExtends(_extends);
+    }
+
+    var _implements = codes[index++];
 
     if (_implements != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    var _permits = source[index++];
+    var _permits = codes[index++];
 
     if (_permits != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
@@ -80,7 +90,7 @@ final class Pass2 {
 
     processor.blockStart();
 
-    var body = source[index++];
+    var body = codes[index++];
 
     if (body != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
@@ -91,8 +101,20 @@ final class Pass2 {
     processor.classEnd();
   }
 
+  private void executeClassExtends(int index) {
+    var superclass = objects[index];
+
+    assert superclass instanceof ClassName : superclass;
+
+    var cn = (ClassName) superclass;
+
+    processor.keyword(Keyword.EXTENDS);
+
+    cn.execute(processor, importSet);
+  }
+
   private void executeClassIface(int index) {
-    var code = source[index++];
+    var code = codes[index++];
 
     switch (code) {
       case Pass1.CLASS -> executeClass(index);
@@ -104,41 +126,65 @@ final class Pass2 {
   private void executeCompilationUnit() {
     var index = 0;
 
-    var code = source[index++];
+    var code = codes[index++];
 
     assert code == Pass1.COMPILATION_UNIT;
 
     processor.compilationUnitStart();
 
-    var pkg = source[index++];
+    var pkg = codes[index++];
 
     if (pkg != Pass1.NOP) {
       executePackage(pkg);
     }
 
-    var imports = source[index++];
+    var imports = codes[index++];
 
     if (imports != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+      executeImports(imports);
     }
 
-    var classIface = source[index++];
+    var classIface = codes[index++];
 
     if (classIface != Pass1.NOP) {
       executeClassIface(classIface);
     }
 
-    var module = source[index++];
+    var module = codes[index++];
 
     if (module != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    var eof = source[index++];
+    var eof = codes[index++];
 
     assert eof == Pass1.EOF;
 
     processor.compilationUnitEnd();
+  }
+
+  private void executeImports(int index) {
+    while (true) {
+      var code = codes[index++];
+
+      switch (code) {
+        case Pass1.IMPORT -> {
+          processor.keyword(Keyword.IMPORT);
+
+          var idx = codes[index++];
+
+          var cn = importSet.sorted(idx);
+
+          processor.name(cn.toString());
+
+          processor.separator(Separator.SEMICOLON);
+        }
+
+        case Pass1.EOF -> { return; }
+
+        default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+      }
+    }
   }
 
   private void executePackage(int index) {
@@ -146,7 +192,7 @@ final class Pass2 {
 
     index++;
 
-    var annotations = source[index++];
+    var annotations = codes[index++];
 
     if (annotations != Pass1.NOP) {
       throw new UnsupportedOperationException("Implement me");
@@ -154,7 +200,7 @@ final class Pass2 {
 
     processor.keyword(Keyword.PACKAGE);
 
-    var nameIdx = source[index++];
+    var nameIdx = codes[index++];
 
     var name = (String) objects[nameIdx];
 

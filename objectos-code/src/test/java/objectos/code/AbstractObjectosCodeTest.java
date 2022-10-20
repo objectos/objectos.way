@@ -19,6 +19,8 @@ import org.testng.annotations.BeforeClass;
 
 public abstract class AbstractObjectosCodeTest {
 
+  static final PackageName TEST = PackageName.of("test");
+
   private final ObjectosCodeTest outer;
 
   AbstractObjectosCodeTest(ObjectosCodeTest outer) {
@@ -28,6 +30,20 @@ public abstract class AbstractObjectosCodeTest {
   @BeforeClass
   public void _beforeClass() {
     outer._beforeClass();
+  }
+
+  final ImportSet imports(PackageName packageName, ClassName... names) {
+    var set = new ImportSet();
+
+    set.packageName(packageName);
+
+    for (var name : names) {
+      set.addClassName(name);
+    }
+
+    set.sort();
+
+    return set;
   }
 
   final Object[] objs(Object... values) { return values; }
@@ -41,8 +57,9 @@ public abstract class AbstractObjectosCodeTest {
       int[] pass0,
       Object[] objs,
       int[] pass1,
+      ImportSet imports,
       String expectedSource) {
-    outer.test(template, pass0, objs, pass1, expectedSource);
+    outer.test(template, pass0, objs, pass1, imports, expectedSource);
   }
 
 }

@@ -37,15 +37,14 @@ public class Pass1Test extends ObjectosCodeTest {
   @Override
   final void test(
       JavaTemplate template,
-      int[] p0,
-      Object[] objs,
-      int[] p1,
+      int[] p0, Object[] objs,
+      int[] p1, ImportSet imports,
       String expectedSource) {
     if (p1 == null) {
       return;
     }
 
-    pass1.execute(p0);
+    pass1.execute(p0, objs);
 
     int[] result = pass1.toArray();
 

@@ -34,7 +34,11 @@ public class ObjectosCodeTest {
     };
   }
 
-  void test(JavaTemplate template, int[] p0, Object[] objs, int[] p1, String expectedSource) {
+  void test(
+      JavaTemplate template,
+      int[] p0, Object[] objs,
+      int[] p1, ImportSet imports,
+      String expectedSource) {
 
   }
 

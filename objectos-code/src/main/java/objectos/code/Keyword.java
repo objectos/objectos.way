@@ -21,6 +21,10 @@ public enum Keyword {
 
   CLASS,
 
+  EXTENDS,
+
+  IMPORT,
+
   PACKAGE;
 
   private final String toString = name().toLowerCase(Locale.US);

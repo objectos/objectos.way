@@ -16,23 +16,26 @@
 package objectos.code;
 
 import java.util.Arrays;
-import java.util.List;
 import javax.lang.model.SourceVersion;
 import objectos.lang.Check;
-import objectos.util.GrowableList;
 import objectos.util.IntArrays;
+import objectos.util.ObjectArrays;
 
 final class Pass0 {
 
+  private static final int NULL = Integer.MIN_VALUE;
+
   static final int EOF = -1;
   static final int JMP = -2;
+  static final int AUTO_IMPORTS = -3;
 
-  static final int COMPILATION_UNIT = -3;
-  static final int PACKAGE = -4;
-  static final int CLASS = -5;
+  static final int COMPILATION_UNIT = -4;
+  static final int PACKAGE = -5;
+  static final int CLASS = -6;
+  static final int EXTENDS = -7;
 
-  static final int IDENTIFIER = -6;
-  static final int NAME = -7;
+  static final int IDENTIFIER = -8;
+  static final int NAME = -9;
 
   private int[] code = new int[10];
 
@@ -42,12 +45,22 @@ final class Pass0 {
 
   private int elementIndex;
 
-  private final List<String> strings = new GrowableList<>();
+  private Object[] object = new Object[10];
+
+  private int objectIndex;
 
   Pass0() {}
 
   public final void _class(int length) {
     element(CLASS, length);
+  }
+
+  public final void _extends(ClassName superclass) {
+    Check.notNull(superclass, "superclass == null");
+
+    markElement(codeIndex);
+
+    add(EXTENDS, store(superclass), JMP, NULL);
   }
 
   public final void _package(String packageName) {
@@ -62,6 +75,12 @@ final class Pass0 {
     element(PACKAGE, 1);
   }
 
+  public final void autoImports() {
+    markElement(codeIndex);
+
+    add(AUTO_IMPORTS, JMP, NULL);
+  }
+
   public final void id(String name) {
     Check.argument(
       SourceVersion.isIdentifier(name), // implicit null-check
@@ -70,7 +89,7 @@ final class Pass0 {
 
     markElement(codeIndex);
 
-    code(IDENTIFIER, string(name), JMP, Integer.MIN_VALUE);
+    add(IDENTIFIER, store(name), JMP, NULL);
   }
 
   public final void templateEnd() {
@@ -84,7 +103,7 @@ final class Pass0 {
 
     code[codeIndex - 1] = codeIndex;
 
-    code(EOF);
+    add(EOF);
   }
 
   public final void templateStart() {
@@ -92,37 +111,45 @@ final class Pass0 {
 
     elementIndex = 0;
 
-    strings.clear();
+    objectIndex = 0;
 
-    code(JMP, Integer.MIN_VALUE);
+    add(JMP, NULL);
   }
 
   final int[] toCodes() { return Arrays.copyOf(code, codeIndex); }
 
   final Object[] toObjects() {
-    return strings.toArray();
+    return Arrays.copyOf(object, objectIndex);
   }
 
-  private void code(int c0) {
+  private void add(int v0) {
     code = IntArrays.growIfNecessary(code, codeIndex);
 
-    code[codeIndex++] = c0;
+    code[codeIndex++] = v0;
   }
 
-  private void code(int c0, int c1) {
+  private void add(int v0, int v1) {
     code = IntArrays.growIfNecessary(code, codeIndex + 1);
 
-    code[codeIndex++] = c0;
-    code[codeIndex++] = c1;
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
   }
 
-  private void code(int c0, int c1, int c2, int c3) {
+  private void add(int v0, int v1, int v2) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 2);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+  }
+
+  private void add(int v0, int v1, int v2, int v3) {
     code = IntArrays.growIfNecessary(code, codeIndex + 3);
 
-    code[codeIndex++] = c0;
-    code[codeIndex++] = c1;
-    code[codeIndex++] = c2;
-    code[codeIndex++] = c3;
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
   }
 
   private void element(int type, int length) {
@@ -130,19 +157,19 @@ final class Pass0 {
 
     var mark = codeIndex;
 
-    code(type, length);
+    add(type, length);
 
     for (int i = start; i < elementIndex; i++) {
       int currentElementIndex = element[i];
 
-      code(JMP, currentElementIndex);
+      add(JMP, currentElementIndex);
 
       var ret = codeIndex;
 
       int c = code[currentElementIndex];
 
       int offset = switch (c) {
-        case CLASS, PACKAGE -> {
+        case PACKAGE, CLASS -> {
           int children = code[currentElementIndex + 1];
 
           int skip = 1; // length;
@@ -154,7 +181,9 @@ final class Pass0 {
           yield skip;
         }
 
-        case IDENTIFIER, NAME -> 3;
+        case AUTO_IMPORTS -> 2;
+
+        case EXTENDS, IDENTIFIER, NAME -> 3;
 
         default -> throw new UnsupportedOperationException("Implement me :: code=" + c);
       };
@@ -162,7 +191,7 @@ final class Pass0 {
       code[currentElementIndex + offset] = ret;
     }
 
-    code(JMP, Integer.MIN_VALUE);
+    add(JMP, NULL);
 
     elementIndex = start;
 
@@ -175,18 +204,20 @@ final class Pass0 {
     element[elementIndex++] = value;
   }
 
-  private void name0(String name) {
+  private void name0(Object name) {
     markElement(codeIndex);
 
-    code(NAME, string(name), JMP, Integer.MIN_VALUE);
+    add(NAME, store(name), JMP, NULL);
   }
 
-  private int string(String value) {
-    int index = strings.size();
+  private int store(Object value) {
+    int result = objectIndex;
 
-    strings.add(value);
+    object = ObjectArrays.growIfNecessary(object, objectIndex);
 
-    return index;
+    object[objectIndex++] = value;
+
+    return result;
   }
 
 }

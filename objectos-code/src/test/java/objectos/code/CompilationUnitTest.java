@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import static objectos.code.PackageName.UNNAMED;
 import static objectos.code.Pass0.JMP;
 
 import org.testng.annotations.Test;
@@ -64,6 +65,8 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
         Pass1.NOP, // body
         5 // NEXT
       ),
+
+      imports(UNNAMED),
 
       """
       class Foo {}
@@ -123,10 +126,75 @@ final class CompilationUnitTest extends AbstractObjectosCodeTest {
         5 // NEXT
       ),
 
+      imports(TEST),
+
       """
       package test;
 
       class Foo {}
+      """
+    );
+  }
+
+  @Test(description = """
+  import test.Bar;
+
+  class Foo extends Bar {}
+  """)
+  public void testCase03() {
+    var bar = ClassName.of(TEST, "Bar");
+
+    test(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          autoImports();
+
+          _class(id("Foo"), _extends(bar));
+        }
+      },
+
+      pass0(
+        /* 0*/Pass0.JMP, 21,
+        /* 2*/Pass0.AUTO_IMPORTS, JMP, 21 + 4,
+        /* 5*/Pass0.IDENTIFIER, 0, JMP, 13 + 4,
+        /* 9*/Pass0.EXTENDS, 1, JMP, 13 + 6,
+        /*13*/Pass0.CLASS, 2, JMP, 5, JMP, 9, JMP, 21 + 6,
+        /*21*/Pass0.COMPILATION_UNIT, 2, JMP, 2, JMP, 13, JMP, 29,
+        /*29*/Pass0.EOF
+      ),
+
+      objs("Foo", bar),
+
+      pass1(
+        Pass1.COMPILATION_UNIT,
+        Pass1.NOP, // package
+        16, // imports
+        6, // class/interface
+        Pass1.NOP, // module
+        Pass1.EOF,
+
+        Pass1.CLASS,
+        Pass1.NOP, // annotations
+        Pass1.NOP, // mods
+        0, // name
+        Pass1.NOP, // type args
+        1, // super
+        Pass1.NOP, // implements
+        Pass1.NOP, // permits
+        Pass1.NOP, // body
+        5, // NEXT
+
+        Pass1.IMPORT, 0,
+        Pass1.EOF
+      ),
+
+      imports(UNNAMED, bar),
+
+      """
+      import test.Bar;
+
+      class Foo extends Bar {}
       """
     );
   }
