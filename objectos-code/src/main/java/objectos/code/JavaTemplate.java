@@ -41,7 +41,9 @@ public abstract class JavaTemplate {
 
     void identifier(String name);
 
-    void keyword(Keyword keyword);
+    void keyword(String keyword);
+
+    void modifier(String name);
 
     void name(String name);
 
@@ -49,7 +51,7 @@ public abstract class JavaTemplate {
 
     void packageStart();
 
-    void separator(Separator separator);
+    void semicolon();
 
   }
 

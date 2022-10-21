@@ -21,30 +21,6 @@ import objectos.util.IntArrays;
 
 public final class Pass1 {
 
-  private interface Class {
-    int _COUNT = 9;
-    int NAME = 3;
-    //int TYPE_ARGS = 4;
-    int SUPERCLASS = 5;
-    int NEXT = 9;
-  }
-
-  private interface CompilationUnit {
-    int _COUNT = 5;
-    int PACKAGE = 1;
-    int IMPORTS = 2;
-    int CLASS_INTERFACE = 3;
-    int MODULE = 4;
-    int EOF = 5;
-  }
-
-  private interface Package {
-    int _COUNT = 3;
-    int NAME = 2;
-  }
-
-  private static final int NULL = Integer.MAX_VALUE;
-
   static final int NOP = -1;
 
   static final int COMPILATION_UNIT = -2;
@@ -57,7 +33,9 @@ public final class Pass1 {
 
   static final int CLASS = -6;
 
-  static final int EOF = -7;
+  static final int MODIFIER = -7;
+
+  static final int EOF = -8;
 
   private final ImportSet importSet = new ImportSet();
 
@@ -67,19 +45,9 @@ public final class Pass1 {
 
   private Object[] object;
 
-  private int parent;
-
-  private int parentCount;
-
-  private int parentIndex;
-
   private int[] source;
 
-  private int sourceIndex;
-
-  private int[] stack = new int[16];
-
-  private int stackIndex;
+  private int instruction;
 
   public final void execute(int[] source, Object[] object) {
     this.source = source;
@@ -89,11 +57,7 @@ public final class Pass1 {
 
     codeIndex = 0;
 
-    sourceIndex = 0;
-
-    stackIndex = -1;
-
-    execute0();
+    execute();
   }
 
   final int[] toArray() {
@@ -147,308 +111,295 @@ public final class Pass1 {
     code[codeIndex++] = v9;
   }
 
-  private void execute0() {
-    while (true) {
-      var code = source[sourceIndex++];
+  private void execute() {
+    var start = source[0];
 
-      switch (code) {
-        case Pass0.JMP -> sourceIndex = source[sourceIndex];
+    assert start == Pass0.JMP : start;
 
-        case Pass0.AUTO_IMPORTS -> executeAutoImports();
+    var jmp = source[1];
 
-        case Pass0.COMPILATION_UNIT -> executeCompilationUnit();
+    var inst = source[jmp];
 
-        case Pass0.PACKAGE -> executePackage();
+    assert inst == Pass0.COMPILATION_UNIT : instruction;
 
-        case Pass0.CLASS -> executeClass();
-
-        case Pass0.EXTENDS -> executeExtends();
-
-        case Pass0.IDENTIFIER -> executeIdentifier();
-
-        case Pass0.NAME -> executeName();
-
-        case Pass0.EOF -> {
-          executeEof();
-
-          return;
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
-      }
-    }
+    executeCompilationUnit(jmp);
   }
 
-  private void executeAutoImports() {
-    parentUpdate();
+  private int executeClass(int index) {
+    var self = codeIndex;
 
-    importSet.enable();
-  }
-
-  private void executeClass() {
-    parentUpdate();
-
-    switch (parent) {
-      case COMPILATION_UNIT -> {
-        var module = parentGet(CompilationUnit.MODULE);
-
-        if (module != NULL) {
-          throw new UnsupportedOperationException(
-            "Implement me :: invalid class decl in module");
-        }
-
-        parentSetCode(
-          CompilationUnit.CLASS_INTERFACE,
-          "Implement me :: sibling class?"
-        );
-
-        executeElementEnd(CompilationUnit._COUNT);
-      }
-
-      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
-    }
-
-    push();
+    var annotations = NOP;
+    var modifiers = NOP;
+    var name = NOP;
+    var typeArgs = NOP;
+    var _extends = NOP;
+    var _implements = NOP;
+    var _permits = NOP;
+    var body = NOP;
+    var next = EOF;
 
     add(
       CLASS,
-      NULL, // annotations
-      NULL, // mods
-      NULL, // name
-      NULL, // type args
-      NULL, // super
-      NULL, // implements
-      NULL, // permits
-      NULL, // body
-      NULL // NEXT
+      annotations,
+      modifiers,
+      name,
+      typeArgs,
+      _extends,
+      _implements,
+      _permits,
+      body,
+      next
     );
+
+    index++;
+
+    var children = source[index++];
+
+    for (int limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.MODIFIER -> {
+          modifiers = executeModifier(jmp, modifiers);
+        }
+
+        case Pass0.IDENTIFIER -> {
+          if (name == NOP) {
+            name = executeIdentifier(jmp);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        case Pass0.EXTENDS -> {
+          if (_extends == NOP) {
+            _extends = executeExtends(jmp);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
+    }
+
+    set(
+      self,
+
+      annotations,
+      modifiers,
+      name,
+      typeArgs,
+      _extends,
+      _implements,
+      _permits,
+      body,
+      next
+    );
+
+    return self;
   }
 
-  private void executeCompilationUnit() {
-    push();
+  private void executeCompilationUnit(int index) {
+    var self = codeIndex;
+
+    var _package = NOP;
+    var _import = NOP;
+    var _classIface = NOP;
+    var _module = NOP;
 
     add(
       COMPILATION_UNIT,
-      NULL, // package
-      NULL, // import
-      NULL, // class/interface
-      NULL, // module
-      NULL // EOF
+      _package,
+      _import,
+      _classIface,
+      _module,
+      EOF
     );
-  }
 
-  private void executeElementEnd(int count) {
-    if (parentCount > 0) {
-      return;
-    }
+    index++;
 
-    pop();
+    var children = source[index++];
 
-    for (int i = 1; i < count; i++) {
-      var idx = parentIndex + i;
+    for (int limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
 
-      if (code[idx] == NULL) {
-        code[idx] = NOP;
+      switch (inst) {
+        case Pass0.PACKAGE -> {
+          var value = executePackage(jmp);
+
+          if (_package != NOP) {
+            throw new UnsupportedOperationException("Implement me");
+          } else {
+            _package = value;
+          }
+        }
+
+        case Pass0.AUTO_IMPORTS -> importSet.enable();
+
+        case Pass0.CLASS -> {
+          var value = executeClass(jmp);
+
+          if (_classIface != NOP) {
+            throw new UnsupportedOperationException("Implement me");
+          } else {
+            _classIface = value;
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
     }
-  }
 
-  private void executeEof() {
-    assert stackIndex == -1 : stackIndex;
-
-    var imports = code[CompilationUnit.IMPORTS];
-
-    if (imports != NOP) {
+    if (_import != NOP) {
       throw new UnsupportedOperationException("Implement me :: unexpected imports");
     }
 
     if (importSet.enabled) {
-      executeEofImportSet();
+      _import = executeEofImportSet();
     }
 
-    var classIface = code[CompilationUnit.CLASS_INTERFACE];
+    set(
+      self,
 
-    if (classIface != NOP) {
-      executeEofClassIface(classIface, 5);
-    }
-
-    var eof = code[CompilationUnit.EOF];
-
-    assert eof == NULL : eof;
-
-    code[CompilationUnit.EOF] = EOF;
+      _package,
+      _import,
+      _classIface,
+      _module
+    );
   }
 
-  private void executeEofClassIface(int startIndex, int value) {
-    var index = startIndex;
+  private int executeEofImportSet() {
+    var self = codeIndex;
 
-    while (true) {
-      var type = code[index];
-
-      switch (type) {
-        case CLASS -> {
-          var next = code[index + Class.NEXT];
-
-          if (next == NULL) {
-            code[index + Class.NEXT] = value;
-
-            return;
-          } else {
-            index = next;
-          }
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me :: type=" + type);
-      }
-    }
-  }
-
-  private void executeEofImportSet() {
     var sorted = importSet.sort();
-
-    code[CompilationUnit.IMPORTS] = codeIndex;
 
     for (int i = 0, size = sorted.size(); i < size; i++) {
       add(IMPORT, i);
     }
 
     add(EOF);
+
+    return self;
   }
 
-  private void executeExtends() {
-    parentUpdate();
+  private int executeExtends(int index) {
+    index++;
 
-    switch (parent) {
-      case CLASS -> {
-        parentSetObject(Class.SUPERCLASS, "Implement me :: replace superclass?");
+    var result = source[index];
 
-        executeElementEnd(Class._COUNT);
-      }
-
-      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
-    }
-  }
-
-  private void executeIdentifier() {
-    parentUpdate();
-
-    switch (parent) {
-      case CLASS -> {
-        parentSetObject(Class.NAME, "Implement me :: replace name?");
-
-        executeElementEnd(Class._COUNT);
-      }
-
-      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
-    }
-  }
-
-  private void executeName() {
-    parentUpdate();
-
-    switch (parent) {
-      case PACKAGE -> {
-        var pkg = parentSetObject(Package.NAME, "Implement me :: replace name?");
-
-        if (pkg instanceof String s) {
-          importSet.packageName(s);
-        } else {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        executeElementEnd(Package._COUNT);
-      }
-
-      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
-    }
-  }
-
-  private void executePackage() {
-    parentUpdate();
-
-    switch (parent) {
-      case COMPILATION_UNIT -> parentSetCode(
-        CompilationUnit.PACKAGE,
-        "Implement me :: multiple package declarations"
-      );
-
-      default -> throw new UnsupportedOperationException("Implement me :: parent=" + parent);
-    }
-
-    push();
-
-    add(
-      PACKAGE,
-      NULL, // annotations
-      NULL // name
-    );
-  }
-
-  private int parentGet(int offset) {
-    var index = parentIndex + offset;
-
-    return code[index];
-  }
-
-  private void parentSetCode(int offset, String errorMessage) {
-    var index = parentIndex + offset;
-
-    var value = code[index];
-
-    if (value != NULL) {
-      throw new UnsupportedOperationException(errorMessage);
-    }
-
-    code[index] = codeIndex;
-  }
-
-  private Object parentSetObject(int offset, String errorMessage) {
-    var index = parentIndex + offset;
-
-    var current = code[index];
-
-    if (current != NULL) {
-      throw new UnsupportedOperationException(errorMessage);
-    }
-
-    var objectIndex = source[sourceIndex++];
-
-    var o = object[objectIndex];
+    var o = object[result];
 
     if (o instanceof ClassName cn) {
       importSet.addClassName(cn);
     }
 
-    code[index] = objectIndex;
-
-    return o;
+    return result;
   }
 
-  private void parentUpdate() {
-    assert stackIndex >= 1;
+  private int executeIdentifier(int index) {
+    index++;
 
-    parentCount = --stack[stackIndex];
-
-    parentIndex = stack[stackIndex - 1];
-
-    parent = code[parentIndex];
+    return source[index];
   }
 
-  private void pop() {
-    stackIndex -= 2;
+  private int executeModifier(int index, int list) {
+    index++;
+
+    var value = source[index];
+
+    if (list == NOP) {
+      list = codeIndex;
+
+      add(MODIFIER, 1, value);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return list;
   }
 
-  private void push() {
-    var len = source[sourceIndex++];
+  private int executeName(int index) {
+    index++;
 
-    push(codeIndex, len);
+    return source[index];
   }
 
-  private void push(int v0, int v1) {
-    stack = IntArrays.growIfNecessary(stack, stackIndex + 2);
+  private int executePackage(int index) {
+    var self = codeIndex;
 
-    stack[++stackIndex] = v0;
-    stack[++stackIndex] = v1;
+    var annotations = NOP;
+    var name = NOP;
+
+    add(
+      PACKAGE,
+      annotations,
+      name
+    );
+
+    index++;
+
+    var children = source[index++];
+
+    for (int limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.NAME -> {
+          var value = executeName(jmp);
+
+          if (name != NOP) {
+            throw new UnsupportedOperationException("Implement me");
+          } else {
+            name = value;
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
+    }
+
+    set(
+      self,
+
+      annotations,
+      name
+    );
+
+    return self;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2, int v3, int v4) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+    code[zero + 4] = v4;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+    code[zero + 4] = v4;
+    code[zero + 5] = v5;
+    code[zero + 6] = v6;
+    code[zero + 7] = v7;
+    code[zero + 8] = v8;
+    code[zero + 9] = v9;
   }
 
 }

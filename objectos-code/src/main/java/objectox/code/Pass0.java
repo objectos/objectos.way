@@ -17,6 +17,7 @@ package objectox.code;
 
 import java.util.Arrays;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.tmpl.Api;
 import objectos.lang.Check;
@@ -29,15 +30,16 @@ public final class Pass0 implements Api {
 
   static final int EOF = -1;
   static final int JMP = -2;
-  static final int AUTO_IMPORTS = -3;
 
-  static final int COMPILATION_UNIT = -4;
-  static final int PACKAGE = -5;
-  static final int CLASS = -6;
-  static final int EXTENDS = -7;
+  static final int COMPILATION_UNIT = -3;
+  static final int PACKAGE = -4;
+  static final int AUTO_IMPORTS = -5;
+  static final int MODIFIER = -6;
+  static final int CLASS = -7;
+  static final int EXTENDS = -8;
 
-  static final int IDENTIFIER = -8;
-  static final int NAME = -9;
+  static final int IDENTIFIER = -9;
+  static final int NAME = -10;
 
   private int[] code = new int[10];
 
@@ -60,14 +62,12 @@ public final class Pass0 implements Api {
   public final void _extends(ClassName superclass) {
     Check.notNull(superclass, "superclass == null");
 
-    markElement(codeIndex);
-
-    add(EXTENDS, store(superclass), JMP, NULL);
+    addObject(EXTENDS, superclass);
   }
 
   @Override
   public final void _final() {
-    throw new UnsupportedOperationException("Implement me");
+    addObject(MODIFIER, Modifier.FINAL);
   }
 
   @Override
@@ -87,7 +87,27 @@ public final class Pass0 implements Api {
   public final void autoImports() {
     markElement(codeIndex);
 
-    add(AUTO_IMPORTS, JMP, NULL);
+    add(AUTO_IMPORTS);
+  }
+
+  public final void compilationUnitEnd() {
+    element(COMPILATION_UNIT, elementIndex);
+
+    if (elementIndex != 1) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    code[1] = element[0];
+  }
+
+  public final void compilationUnitStart() {
+    codeIndex = 0;
+
+    elementIndex = 0;
+
+    objectIndex = 0;
+
+    add(JMP, NULL);
   }
 
   @Override
@@ -97,33 +117,7 @@ public final class Pass0 implements Api {
       name, " is not a valid identifier"
     );
 
-    markElement(codeIndex);
-
-    add(IDENTIFIER, store(name), JMP, NULL);
-  }
-
-  public final void templateEnd() {
-    element(COMPILATION_UNIT, elementIndex);
-
-    if (elementIndex != 1) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    code[1] = element[0];
-
-    code[codeIndex - 1] = codeIndex;
-
-    add(EOF);
-  }
-
-  public final void templateStart() {
-    codeIndex = 0;
-
-    elementIndex = 0;
-
-    objectIndex = 0;
-
-    add(JMP, NULL);
+    addObject(IDENTIFIER, name);
   }
 
   final int[] toCodes() { return Arrays.copyOf(code, codeIndex); }
@@ -145,21 +139,10 @@ public final class Pass0 implements Api {
     code[codeIndex++] = v1;
   }
 
-  private void add(int v0, int v1, int v2) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 2);
+  private void addObject(int type, Object value) {
+    markElement(codeIndex);
 
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
-  }
-
-  private void add(int v0, int v1, int v2, int v3) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 3);
-
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
-    code[codeIndex++] = v3;
+    add(type, store(value));
   }
 
   private void element(int type, int length) {
@@ -170,38 +153,8 @@ public final class Pass0 implements Api {
     add(type, length);
 
     for (int i = start; i < elementIndex; i++) {
-      int currentElementIndex = element[i];
-
-      add(JMP, currentElementIndex);
-
-      var ret = codeIndex;
-
-      int c = code[currentElementIndex];
-
-      int offset = switch (c) {
-        case PACKAGE, CLASS -> {
-          int children = code[currentElementIndex + 1];
-
-          int skip = 1; // length;
-
-          skip += children * 2;
-
-          skip += 2; // JMP
-
-          yield skip;
-        }
-
-        case AUTO_IMPORTS -> 2;
-
-        case EXTENDS, IDENTIFIER, NAME -> 3;
-
-        default -> throw new UnsupportedOperationException("Implement me :: code=" + c);
-      };
-
-      code[currentElementIndex + offset] = ret;
+      add(element[i]);
     }
-
-    add(JMP, NULL);
 
     elementIndex = start;
 
@@ -217,7 +170,7 @@ public final class Pass0 implements Api {
   private void name0(Object name) {
     markElement(codeIndex);
 
-    add(NAME, store(name), JMP, NULL);
+    add(NAME, store(name));
   }
 
   private int store(Object value) {

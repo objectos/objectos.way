@@ -32,11 +32,11 @@ public final class JavaGenerator {
   }
 
   final void templateEnd() {
-    pass0.templateEnd();
+    pass0.compilationUnitEnd();
   }
 
   final void templateStart() {
-    pass0.templateStart();
+    pass0.compilationUnitStart();
   }
 
 }

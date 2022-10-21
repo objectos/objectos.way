@@ -20,7 +20,7 @@ import objectox.code.Pass0;
 
 public sealed interface Api permits Pass0 {
 
-  public sealed interface ClassElement {}
+  public sealed interface ClassElement permits ExtendsRef, FinalRef, IdentifierRef {}
 
   public sealed interface ClassRef {}
 

@@ -45,11 +45,11 @@ public class Pass0Test extends ObjectosCodeTest {
       return;
     }
 
-    pass0.templateStart();
+    pass0.compilationUnitStart();
 
     template.eval(pass0);
 
-    pass0.templateEnd();
+    pass0.compilationUnitEnd();
 
     testArrays(
       pass0.toCodes(), p0, "Process (0) assertion failed"

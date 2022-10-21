@@ -60,8 +60,13 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
-  public final void keyword(Keyword keyword) {
-    word(keyword.toString());
+  public final void keyword(String keyword) {
+    word(keyword);
+  }
+
+  @Override
+  public void modifier(String name) {
+    word(name);
   }
 
   @Override
@@ -76,16 +81,9 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void packageStart() {}
 
   @Override
-  public void separator(Separator separator) {
-    switch (separator) {
-      case SEMICOLON -> {
-        out.append(';');
-
-        nl();
-      }
-
-      default -> throw new UnsupportedOperationException("Implement me");
-    }
+  public void semicolon() {
+    out.append(';');
+    nl();
   }
 
   @Override

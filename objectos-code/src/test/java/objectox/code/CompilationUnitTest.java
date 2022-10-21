@@ -15,8 +15,6 @@
  */
 package objectox.code;
 
-import static objectox.code.Pass0.JMP;
-
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate;
 import objectos.code.PackageName;
@@ -39,11 +37,10 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
       },
 
       pass0(
-        /* 0*/Pass0.JMP, 12,
-        /* 2*/Pass0.IDENTIFIER, 0, JMP, 10,
-        /* 6*/Pass0.CLASS, 1, JMP, 2, JMP, 16,
-        /*12*/Pass0.COMPILATION_UNIT, 1, JMP, 6, JMP, 18,
-        /*18*/Pass0.EOF
+        /* 0*/Pass0.JMP, 7,
+        /* 2*/Pass0.IDENTIFIER, 0,
+        /* 4*/Pass0.CLASS, 1, 2,
+        /* 7*/Pass0.COMPILATION_UNIT, 1, 4
       ),
 
       objs("Foo"),
@@ -65,7 +62,7 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        5 // NEXT
+        Pass1.EOF // NEXT
       ),
 
       imports(PackageName.of()),
@@ -93,13 +90,12 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
       },
 
       pass0(
-        /* 0*/Pass0.JMP, 22,
-        /* 2*/Pass0.NAME, 0, JMP, 6 + 4,
-        /* 6*/Pass0.PACKAGE, 1, JMP, 2, JMP, 22 + 4,
-        /*12*/Pass0.IDENTIFIER, 1, JMP, 16 + 4,
-        /*16*/Pass0.CLASS, 1, JMP, 12, JMP, 22 + 6,
-        /*22*/Pass0.COMPILATION_UNIT, 2, JMP, 6, JMP, 16, JMP, 30,
-        /*30*/Pass0.EOF
+        /* 0*/Pass0.JMP, 12,
+        /* 2*/Pass0.NAME, 0,
+        /* 4*/Pass0.PACKAGE, 1, 2,
+        /* 7*/Pass0.IDENTIFIER, 1,
+        /* 9*/Pass0.CLASS, 1, 7,
+        /*12*/Pass0.COMPILATION_UNIT, 2, 4, 9
       ),
 
       objs("test", "Foo"),
@@ -125,7 +121,7 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        5 // NEXT
+        Pass1.EOF // NEXT
       ),
 
       imports(TEST),
@@ -157,13 +153,12 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
       },
 
       pass0(
-        /* 0*/Pass0.JMP, 21,
-        /* 2*/Pass0.AUTO_IMPORTS, JMP, 21 + 4,
-        /* 5*/Pass0.IDENTIFIER, 0, JMP, 13 + 4,
-        /* 9*/Pass0.EXTENDS, 1, JMP, 13 + 6,
-        /*13*/Pass0.CLASS, 2, JMP, 5, JMP, 9, JMP, 21 + 6,
-        /*21*/Pass0.COMPILATION_UNIT, 2, JMP, 2, JMP, 13, JMP, 29,
-        /*29*/Pass0.EOF
+        /* 0*/Pass0.JMP, 11,
+        /* 2*/Pass0.AUTO_IMPORTS,
+        /* 3*/Pass0.IDENTIFIER, 0,
+        /* 5*/Pass0.EXTENDS, 1,
+        /* 7*/Pass0.CLASS, 2, 3, 5,
+        /*11*/Pass0.COMPILATION_UNIT, 2, 2, 7
       ),
 
       objs("Foo", bar),
@@ -185,7 +180,7 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        5, // NEXT
+        Pass1.EOF, // NEXT
 
         Pass1.IMPORT, 0,
         Pass1.EOF

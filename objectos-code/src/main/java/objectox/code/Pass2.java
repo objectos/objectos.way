@@ -15,10 +15,9 @@
  */
 package objectox.code;
 
+import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
-import objectos.code.Keyword;
-import objectos.code.Separator;
 
 public final class Pass2 {
 
@@ -56,10 +55,10 @@ public final class Pass2 {
     var modifiers = codes[index++];
 
     if (modifiers != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+      executeModifiers(modifiers);
     }
 
-    processor.keyword(Keyword.CLASS);
+    processor.keyword("class");
 
     var nameIdx = codes[index++];
 
@@ -111,7 +110,7 @@ public final class Pass2 {
 
     var cn = (ClassName) superclass;
 
-    processor.keyword(Keyword.EXTENDS);
+    processor.keyword("extends");
 
     importSet.execute(processor, cn);
   }
@@ -172,7 +171,7 @@ public final class Pass2 {
 
       switch (code) {
         case Pass1.IMPORT -> {
-          processor.keyword(Keyword.IMPORT);
+          processor.keyword("import");
 
           var idx = codes[index++];
 
@@ -180,13 +179,29 @@ public final class Pass2 {
 
           processor.name(cn.toString());
 
-          processor.separator(Separator.SEMICOLON);
+          processor.semicolon();
         }
 
         case Pass1.EOF -> { return; }
 
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
+    }
+  }
+
+  private void executeModifiers(int index) {
+    var code = codes[index++];
+
+    assert code == Pass1.MODIFIER;
+
+    var length = codes[index++];
+
+    for (int offset = 0; offset < length; offset++) {
+      var modIndex = codes[index + offset];
+
+      var mod = (Modifier) objects[modIndex];
+
+      processor.modifier(mod.toString());
     }
   }
 
@@ -201,7 +216,7 @@ public final class Pass2 {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    processor.keyword(Keyword.PACKAGE);
+    processor.keyword("package");
 
     var nameIdx = codes[index++];
 
@@ -209,7 +224,7 @@ public final class Pass2 {
 
     processor.name(name);
 
-    processor.separator(Separator.SEMICOLON);
+    processor.semicolon();
 
     processor.packageEnd();
   }
