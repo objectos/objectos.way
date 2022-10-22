@@ -20,15 +20,34 @@ import objectos.lang.Check;
 import objectos.lang.Equals;
 import objectos.lang.HashCode;
 
-public final class ClassName implements Comparable<ClassName> {
+public final class ClassName extends PackageOrClassName implements Comparable<ClassName> {
 
-  public final PackageName packageName;
+  public final PackageOrClassName enclosingName;
 
   public final String simpleName;
 
-  private ClassName(PackageName packageName, String simpleName) {
-    this.packageName = packageName;
+  private ClassName(PackageOrClassName enclosingName, String simpleName) {
+    this.enclosingName = enclosingName;
+
     this.simpleName = simpleName;
+  }
+
+  public static ClassName of(Class<?> type) {
+    var enclosingType = type.getEnclosingClass(); // implicit null-check
+
+    PackageOrClassName enclosingName;
+
+    if (enclosingType == null) {
+      var package_ = type.getPackage();
+
+      enclosingName = PackageName.of(package_);
+    } else {
+      enclosingName = of(enclosingType);
+    }
+
+    var simpleName = type.getSimpleName();
+
+    return new ClassName(enclosingName, simpleName);
   }
 
   public static ClassName of(PackageName packageName, String simpleName) {
@@ -50,19 +69,24 @@ public final class ClassName implements Comparable<ClassName> {
   public final boolean equals(Object obj) {
     return obj == this || obj instanceof ClassName that
         && Equals.of(
-          packageName, that.packageName,
+          enclosingName, that.enclosingName,
           simpleName, that.simpleName
         );
   }
 
   @Override
   public final int hashCode() {
-    return HashCode.of(packageName, simpleName);
+    return HashCode.of(enclosingName, simpleName);
+  }
+
+  @Override
+  public final PackageName packageName() {
+    return enclosingName.packageName();
   }
 
   @Override
   public final String toString() {
-    return packageName.toString(simpleName);
+    return enclosingName.toString(simpleName);
   }
 
 }

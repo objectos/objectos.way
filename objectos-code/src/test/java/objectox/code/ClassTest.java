@@ -16,6 +16,7 @@
 package objectox.code;
 
 import javax.lang.model.element.Modifier;
+import objectos.code.ClassName;
 import objectos.code.JavaTemplate;
 import objectos.code.PackageName;
 import org.testng.annotations.Test;
@@ -32,7 +33,7 @@ final class ClassTest extends AbstractObjectoxCodeTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(_final(), id("Foo"));
+          _class(_final(), id("Subject"));
         }
       },
 
@@ -44,7 +45,7 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         /*10*/Pass0.COMPILATION_UNIT, 1, 6
       ),
 
-      objs(Modifier.FINAL, "Foo"),
+      objs(Modifier.FINAL, "Subject"),
 
       pass1(
         Pass1.COMPILATION_UNIT,
@@ -65,13 +66,77 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // body
         Pass1.EOF, // NEXT
 
-        Pass1.MODIFIER, 1, 0
+        Pass1.LIST, 1, 0
       ),
 
       imports(PackageName.of()),
 
       """
-      final class Foo {}
+      final class Subject {}
+      """
+    );
+  }
+
+  @Test(description = """
+  single annotation on class
+
+  @java.lang.Deprecated
+  class Subject {}
+  """)
+  public void testCase02() {
+    test(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            annotation(Deprecated.class),
+            id("Subject")
+          );
+        }
+      },
+
+      pass0(
+        /* 0*/Pass0.JMP, 13,
+        /* 2*/Pass0.NAME, 0,
+        /* 4*/Pass0.ANNOTATION, 1, 2,
+        /* 7*/Pass0.IDENTIFIER, 1,
+        /* 9*/Pass0.CLASS, 2, 4, 7,
+        /*13*/Pass0.COMPILATION_UNIT, 1, 9
+      ),
+
+      objs(ClassName.of(Deprecated.class), "Subject"),
+
+      pass1(
+        Pass1.COMPILATION_UNIT,
+        Pass1.NOP, // package
+        Pass1.NOP, // imports
+        6, // class/interface
+        Pass1.NOP, // module
+        Pass1.EOF,
+
+        Pass1.CLASS,
+        19, // annotations
+        Pass1.NOP, // mods
+        1, // name
+        Pass1.NOP, // type args
+        Pass1.NOP, // super
+        Pass1.NOP, // implements
+        Pass1.NOP, // permits
+        Pass1.NOP, // body
+        Pass1.EOF, // NEXT
+
+        Pass1.ANNOTATION,
+        0, // name
+        Pass1.NOP, // element value pairs
+
+        Pass1.LIST, 1, 16
+      ),
+
+      imports(PackageName.of()),
+
+      """
+      @java.lang.Deprecated
+      class Subject {}
       """
     );
   }

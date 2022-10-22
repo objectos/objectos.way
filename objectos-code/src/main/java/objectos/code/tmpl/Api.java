@@ -20,7 +20,10 @@ import objectox.code.Pass0;
 
 public sealed interface Api permits Pass0 {
 
-  public sealed interface ClassElement permits ExtendsRef, FinalRef, IdentifierRef {}
+  public sealed interface AtRef
+      extends ClassElement {}
+
+  public sealed interface ClassElement permits AtRef, ExtendsRef, FinalRef, IdentifierRef {}
 
   public sealed interface ClassRef {}
 
@@ -35,6 +38,7 @@ public sealed interface Api permits Pass0 {
 
   public static final class Ref
       implements
+      AtRef,
       ClassRef,
       ExtendsRef,
       FinalRef,
@@ -54,7 +58,11 @@ public sealed interface Api permits Pass0 {
 
   void _package(String packageName);
 
+  void annotation(int length);
+
   void autoImports();
+
+  void className(ClassName name);
 
   void id(String name);
 

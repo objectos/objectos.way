@@ -19,7 +19,17 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   private final StringBuilder out = new StringBuilder();
 
-  private int lineStart;
+  private boolean word;
+
+  @Override
+  public void annotationEnd() {
+    nl();
+  }
+
+  @Override
+  public void annotationStart() {
+    write('@');
+  }
 
   @Override
   public void blockEnd() {
@@ -51,7 +61,7 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void compilationUnitStart() {
     out.setLength(0);
 
-    lineStart = 0;
+    word = false;
   }
 
   @Override
@@ -92,17 +102,17 @@ public class JavaWriter implements JavaTemplate.Renderer {
   private void nl() {
     out.append(System.lineSeparator());
 
-    lineStart = out.length();
+    word = false;
   }
 
   private void word(String s) {
-    int length = out.length();
-
-    if (length != lineStart) {
+    if (word) {
       out.append(' ');
     }
 
     out.append(s);
+
+    word = true;
   }
 
   private void write(char c) {

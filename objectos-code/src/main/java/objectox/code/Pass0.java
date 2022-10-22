@@ -34,12 +34,13 @@ public final class Pass0 implements Api {
   static final int COMPILATION_UNIT = -3;
   static final int PACKAGE = -4;
   static final int AUTO_IMPORTS = -5;
-  static final int MODIFIER = -6;
-  static final int CLASS = -7;
-  static final int EXTENDS = -8;
+  static final int ANNOTATION = -6;
+  static final int MODIFIER = -7;
+  static final int CLASS = -8;
+  static final int EXTENDS = -9;
 
-  static final int IDENTIFIER = -9;
-  static final int NAME = -10;
+  static final int IDENTIFIER = -10;
+  static final int NAME = -11;
 
   private int[] code = new int[10];
 
@@ -78,9 +79,14 @@ public final class Pass0 implements Api {
       packageName, " is not a valid package name"
     );
 
-    name0(packageName);
+    addObject(NAME, packageName);
 
     element(PACKAGE, 1);
+  }
+
+  @Override
+  public final void annotation(int length) {
+    element(ANNOTATION, length);
   }
 
   @Override
@@ -88,6 +94,13 @@ public final class Pass0 implements Api {
     markElement(codeIndex);
 
     add(AUTO_IMPORTS);
+  }
+
+  @Override
+  public final void className(ClassName name) {
+    Check.notNull(name, "name == null");
+
+    addObject(NAME, name);
   }
 
   public final void compilationUnitEnd() {
@@ -165,12 +178,6 @@ public final class Pass0 implements Api {
     element = IntArrays.growIfNecessary(element, elementIndex);
 
     element[elementIndex++] = value;
-  }
-
-  private void name0(Object name) {
-    markElement(codeIndex);
-
-    add(NAME, store(name));
   }
 
   private int store(Object value) {

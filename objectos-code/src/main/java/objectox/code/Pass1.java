@@ -33,9 +33,11 @@ public final class Pass1 {
 
   static final int CLASS = -6;
 
-  static final int MODIFIER = -7;
+  static final int LIST = -7;
 
   static final int EOF = -8;
+
+  static final int ANNOTATION = -9;
 
   private final ImportSet importSet = new ImportSet();
 
@@ -125,41 +127,75 @@ public final class Pass1 {
     executeCompilationUnit(jmp);
   }
 
-  private int executeClass(int index) {
+  private int executeAnnotation(int index) {
     var self = codeIndex;
 
-    var annotations = NOP;
-    var modifiers = NOP;
-    var name = NOP;
-    var typeArgs = NOP;
-    var _extends = NOP;
-    var _implements = NOP;
-    var _permits = NOP;
-    var body = NOP;
-    var next = EOF;
+    int name = NOP;
+    int pairs = NOP;
+
+    add(ANNOTATION, name, pairs);
+
+    index++;
+
+    int children = source[index++];
+
+    for (int limit = index + children; index < limit; index++) {
+      int jmp = source[index];
+      int inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.NAME -> {
+          if (name == NOP) {
+            name = executeName(jmp);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
+    }
+
+    set(self, name, pairs);
+
+    return self;
+  }
+
+  private int executeClass(int index) {
+    int self = codeIndex;
+
+    int annotations = NOP;
+    int modifiers = NOP;
+    int name = NOP;
+    int typeArgs = NOP;
+    int _extends = NOP;
+    int _implements = NOP;
+    int _permits = NOP;
+    int body = NOP;
+    int next = EOF;
 
     add(
       CLASS,
       annotations,
-      modifiers,
-      name,
-      typeArgs,
-      _extends,
-      _implements,
-      _permits,
-      body,
-      next
+      modifiers, name, typeArgs, _extends, _implements, _permits,
+      body, next
     );
 
     index++;
 
-    var children = source[index++];
+    int children = source[index++];
 
     for (int limit = index + children; index < limit; index++) {
-      var jmp = source[index];
-      var inst = source[jmp];
+      int jmp = source[index];
+      int inst = source[jmp];
 
       switch (inst) {
+        case Pass0.ANNOTATION -> {
+          var value = executeAnnotation(jmp);
+
+          annotations = listAdd(annotations, value);
+        }
+
         case Pass0.MODIFIER -> {
           modifiers = executeModifier(jmp, modifiers);
         }
@@ -186,16 +222,9 @@ public final class Pass1 {
 
     set(
       self,
-
       annotations,
-      modifiers,
-      name,
-      typeArgs,
-      _extends,
-      _implements,
-      _permits,
-      body,
-      next
+      modifiers, name, typeArgs, _extends, _implements, _permits,
+      body, next
     );
 
     return self;
@@ -313,7 +342,7 @@ public final class Pass1 {
     if (list == NOP) {
       list = codeIndex;
 
-      add(MODIFIER, 1, value);
+      add(LIST, 1, value);
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
@@ -370,6 +399,18 @@ public final class Pass1 {
     );
 
     return self;
+  }
+
+  private int listAdd(int list, int value) {
+    if (list == NOP) {
+      list = codeIndex;
+
+      add(LIST, 1, value);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return list;
   }
 
   private void set(

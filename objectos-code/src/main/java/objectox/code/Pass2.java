@@ -43,13 +43,49 @@ public final class Pass2 {
     executeCompilationUnit();
   }
 
+  private void executeAnnotation(int index) {
+    processor.annotationStart();
+
+    var code = codes[index++];
+
+    assert code == Pass1.ANNOTATION : code;
+
+    var nameIdx = codes[index++];
+
+    var name = (ClassName) objects[nameIdx];
+
+    importSet.execute(processor, name);
+
+    var pairs = codes[index++];
+
+    if (pairs != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.annotationEnd();
+  }
+
+  private void executeAnnotationList(int index) {
+    var code = codes[index++];
+
+    assert code == Pass1.LIST : code;
+
+    var length = codes[index++];
+
+    for (int offset = 0; offset < length; offset++) {
+      var annotation = codes[index + offset];
+
+      executeAnnotation(annotation);
+    }
+  }
+
   private void executeClass(int index) {
     processor.classStart();
 
     var annotations = codes[index++];
 
     if (annotations != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+      executeAnnotationList(annotations);
     }
 
     var modifiers = codes[index++];
@@ -192,7 +228,7 @@ public final class Pass2 {
   private void executeModifiers(int index) {
     var code = codes[index++];
 
-    assert code == Pass1.MODIFIER;
+    assert code == Pass1.LIST;
 
     var length = codes[index++];
 

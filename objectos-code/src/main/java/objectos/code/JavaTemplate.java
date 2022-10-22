@@ -15,7 +15,9 @@
  */
 package objectos.code;
 
+import java.lang.annotation.Annotation;
 import objectos.code.tmpl.Api;
+import objectos.code.tmpl.Api.AtRef;
 import objectos.code.tmpl.Api.ClassElement;
 import objectos.code.tmpl.Api.ClassRef;
 import objectos.code.tmpl.Api.ExtendsRef;
@@ -26,6 +28,10 @@ import objectos.lang.Check;
 public abstract class JavaTemplate {
 
   public interface Renderer {
+
+    void annotationEnd();
+
+    void annotationStart();
 
     void blockEnd();
 
@@ -107,6 +113,16 @@ public abstract class JavaTemplate {
 
   protected final void _package(String packageName) {
     api._package(packageName);
+  }
+
+  protected final AtRef annotation(Class<? extends Annotation> annotationType) {
+    var name = ClassName.of(annotationType); // implicit null-check
+
+    api.className(name);
+
+    api.annotation(1);
+
+    return Api.REF;
   }
 
   protected final void autoImports() {

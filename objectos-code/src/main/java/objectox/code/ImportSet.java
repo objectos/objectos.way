@@ -35,6 +35,8 @@ public final class ImportSet {
 
   boolean enabled;
 
+  boolean skipJavaLang;
+
   public final void addClassName(ClassName value) {
     classNames.add(value);
   }
@@ -44,7 +46,11 @@ public final class ImportSet {
   }
 
   public final boolean canSkipImport(PackageName otherPackageName) {
-    return otherPackageName.is("java.lang") || packageName.equals(otherPackageName);
+    if (otherPackageName.is("java.lang")) {
+      return skipJavaLang;
+    } else {
+      return packageName.equals(otherPackageName);
+    }
   }
 
   public final void clear() {
@@ -66,18 +72,14 @@ public final class ImportSet {
       processor.identifier(name.simpleName);
     }
 
-    else if (canSkipImport(name.packageName)) {
+    else if (canSkipImport(name.packageName())) {
       simpleNames.add(name.simpleName);
 
       processor.identifier(name.simpleName);
     }
 
-    else if (simpleNames.add(name.simpleName)) {
-      processor.identifier(name.simpleName);
-    }
-
     else {
-      processor.name(toString());
+      processor.name(name.toString());
     }
   }
 

@@ -18,7 +18,7 @@ package objectos.code;
 import javax.lang.model.SourceVersion;
 import objectos.lang.Check;
 
-public final class PackageName {
+public final class PackageName extends PackageOrClassName {
 
   private static final PackageName UNNAMED = new PackageName("");
 
@@ -30,6 +30,12 @@ public final class PackageName {
 
   public static PackageName of() {
     return UNNAMED;
+  }
+
+  public static PackageName of(Package packageInstance) {
+    var name = packageInstance.getName(); // implicit null-check
+
+    return new PackageName(name);
   }
 
   public static PackageName of(String name) {
@@ -58,8 +64,7 @@ public final class PackageName {
   @Override
   public final String toString() { return name; }
 
-  final String toString(String simpleName) {
-    return name + "." + simpleName;
-  }
+  @Override
+  final PackageName packageName() { return this; }
 
 }
