@@ -49,9 +49,7 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        6, // class/interface
-        Pass1.NOP, // module
-        Pass1.EOF,
+        13, // body
 
         Pass1.CLASS,
         Pass1.NOP, // annotations
@@ -62,7 +60,8 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        Pass1.EOF // NEXT
+
+        Pass1.LIST, 1, 4
       ),
 
       imports(PackageName.of()),
@@ -102,11 +101,9 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
 
       pass1(
         Pass1.COMPILATION_UNIT,
-        6, // package
+        4, // package
         Pass1.NOP, // imports
-        9, // class/interface
-        Pass1.NOP, // module
-        Pass1.EOF,
+        16, // body
 
         Pass1.PACKAGE,
         Pass1.NOP, // annotations
@@ -121,7 +118,8 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        Pass1.EOF // NEXT
+
+        Pass1.LIST, 1, 7
       ),
 
       imports(TEST),
@@ -167,9 +165,7 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         16, // imports
-        6, // class/interface
-        Pass1.NOP, // module
-        Pass1.EOF,
+        13, // body
 
         Pass1.CLASS,
         Pass1.NOP, // annotations
@@ -180,7 +176,8 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        Pass1.EOF, // NEXT
+
+        Pass1.LIST, 1, 4,
 
         Pass1.IMPORT, 0,
         Pass1.EOF

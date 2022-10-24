@@ -89,8 +89,17 @@ public final class Pass1 {
     code[codeIndex++] = v2;
   }
 
-  private void add(int v0, int v1, int v2, int v3, int v4, int v5) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 5);
+  private void add(int v0, int v1, int v2, int v3) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 3);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+  }
+
+  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 8);
 
     code[codeIndex++] = v0;
     code[codeIndex++] = v1;
@@ -98,6 +107,9 @@ public final class Pass1 {
     code[codeIndex++] = v3;
     code[codeIndex++] = v4;
     code[codeIndex++] = v5;
+    code[codeIndex++] = v6;
+    code[codeIndex++] = v7;
+    code[codeIndex++] = v8;
   }
 
   private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
@@ -174,13 +186,12 @@ public final class Pass1 {
     int _implements = NOP;
     int _permits = NOP;
     int body = NOP;
-    int next = EOF;
 
     add(
       CLASS,
       annotations,
       modifiers, name, typeArgs, _extends, _implements, _permits,
-      body, next
+      body
     );
 
     index++;
@@ -232,7 +243,7 @@ public final class Pass1 {
       self,
       annotations,
       modifiers, name, typeArgs, _extends, _implements, _permits,
-      body, next
+      body
     );
 
     return self;
@@ -243,16 +254,13 @@ public final class Pass1 {
 
     var _package = NOP;
     var _import = NOP;
-    var _classIface = NOP;
-    var _module = NOP;
+    var body = NOP;
 
     add(
       COMPILATION_UNIT,
       _package,
       _import,
-      _classIface,
-      _module,
-      EOF
+      body
     );
 
     index++;
@@ -279,11 +287,7 @@ public final class Pass1 {
         case Pass0.CLASS -> {
           var value = executeClass(jmp);
 
-          if (_classIface != NOP) {
-            throw new UnsupportedOperationException("Implement me");
-          } else {
-            _classIface = value;
-          }
+          body = listAdd(body, value);
         }
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
@@ -303,8 +307,7 @@ public final class Pass1 {
 
       _package,
       _import,
-      _classIface,
-      _module
+      body
     );
   }
 
@@ -481,11 +484,23 @@ public final class Pass1 {
 
   private void set(
       int zero,
-      int v1, int v2, int v3, int v4) {
+      int v1, int v2, int v3) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
     code[zero + 1] = v1;
     code[zero + 2] = v2;
     code[zero + 3] = v3;
     code[zero + 4] = v4;
+    code[zero + 5] = v5;
+    code[zero + 6] = v6;
+    code[zero + 7] = v7;
+    code[zero + 8] = v8;
   }
 
   private void set(

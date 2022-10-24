@@ -51,22 +51,21 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        6, // class/interface
-        Pass1.NOP, // module
-        Pass1.EOF,
+        16, // body
 
         Pass1.CLASS,
         Pass1.NOP, // annotations
-        16, // mods
+        13, // mods
         1, // name
         Pass1.NOP, // type params
         Pass1.NOP, // super
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        Pass1.EOF, // NEXT
 
-        Pass1.LIST, 1, 0
+        Pass1.LIST, 1, 0,
+
+        Pass1.LIST, 1, 4
       ),
 
       imports(PackageName.of()),
@@ -110,12 +109,10 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        6, // class/interface
-        Pass1.NOP, // module
-        Pass1.EOF,
+        19, // body
 
         Pass1.CLASS,
-        19, // annotations
+        16, // annotations
         Pass1.NOP, // mods
         1, // name
         Pass1.NOP, // type params
@@ -123,13 +120,14 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // implements
         Pass1.NOP, // permits
         Pass1.NOP, // body
-        Pass1.EOF, // NEXT
 
         Pass1.ANNOTATION,
         0, // name
         Pass1.NOP, // element value pairs
 
-        Pass1.LIST, 1, 16
+        Pass1.LIST, 1, 13,
+
+        Pass1.LIST, 1, 4
       ),
 
       imports(PackageName.of()),
@@ -175,11 +173,9 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        6, // class/interface
-        Pass1.NOP, // module
-        Pass1.EOF,
+        26, // body
 
-        /* 6*/Pass1.CLASS,
+        Pass1.CLASS,
         Pass1.NOP, // annotations
         Pass1.NOP, // mods
         0, // name
@@ -187,10 +183,9 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // super
         Pass1.NOP, // implements
         Pass1.NOP, // permits
-        26, // body
-        Pass1.EOF, // NEXT
+        23, // body
 
-        /*16*/Pass1.METHOD,
+        Pass1.METHOD,
         Pass1.NOP, // annotations
         Pass1.NOP, // mods
         Pass1.NOP, // type params
@@ -201,7 +196,9 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // throws
         Pass1.NOP, // body
 
-        /*26*/Pass1.LIST, 1, 16
+        Pass1.LIST, 1, 13,
+
+        Pass1.LIST, 1, 4
       ),
 
       imports(PackageName.of()),

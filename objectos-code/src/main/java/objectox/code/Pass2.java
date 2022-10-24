@@ -82,6 +82,8 @@ public final class Pass2 {
   private void executeClass(int index) {
     processor.classStart();
 
+    index++; // Pass1.CLASS
+
     var annotations = codes[index++];
 
     if (annotations != Pass1.NOP) {
@@ -185,16 +187,6 @@ public final class Pass2 {
     importSet.execute(processor, cn);
   }
 
-  private void executeClassIface(int index) {
-    var code = codes[index++];
-
-    switch (code) {
-      case Pass1.CLASS -> executeClass(index);
-
-      default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
-    }
-  }
-
   private void executeCompilationUnit() {
     var index = 0;
 
@@ -216,23 +208,33 @@ public final class Pass2 {
       executeImports(imports);
     }
 
-    var classIface = codes[index++];
+    var body = codes[index++];
 
-    if (classIface != Pass1.NOP) {
-      executeClassIface(classIface);
+    if (body != Pass1.NOP) {
+      executeCompilationUnitBody(body);
     }
-
-    var module = codes[index++];
-
-    if (module != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    var eof = codes[index++];
-
-    assert eof == Pass1.EOF;
 
     processor.compilationUnitEnd();
+  }
+
+  private void executeCompilationUnitBody(int index) {
+    var code = codes[index++];
+
+    assert code == Pass1.LIST;
+
+    var length = codes[index++];
+
+    for (int offset = 0; offset < length; offset++) {
+      var itemIndex = codes[index + offset];
+
+      var item = codes[itemIndex];
+
+      switch (item) {
+        case Pass1.CLASS -> executeClass(itemIndex);
+
+        default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+      }
+    }
   }
 
   private void executeImports(int index) {
