@@ -39,6 +39,8 @@ public final class Pass1 {
 
   static final int ANNOTATION = -9;
 
+  static final int METHOD = -10;
+
   private final ImportSet importSet = new ImportSet();
 
   private int[] code = new int[32];
@@ -216,6 +218,12 @@ public final class Pass1 {
           }
         }
 
+        case Pass0.METHOD -> {
+          var value = executeMethod(jmp);
+
+          body = listAdd(body, value);
+        }
+
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
     }
@@ -332,6 +340,57 @@ public final class Pass1 {
     index++;
 
     return source[index];
+  }
+
+  private int executeMethod(int index) {
+    int self = codeIndex;
+
+    int annotations = NOP;
+    int modifiers = NOP;
+    int typeParams = NOP;
+    int returnType = NOP;
+    int name = NOP;
+    int receiver = NOP;
+    int params = NOP;
+    int _throws = NOP;
+    int body = NOP;
+
+    add(
+      METHOD,
+      annotations,
+      modifiers, typeParams, returnType, name, receiver, params, _throws,
+      body
+    );
+
+    index++;
+
+    int children = source[index++];
+
+    for (int limit = index + children; index < limit; index++) {
+      int jmp = source[index];
+      int inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.IDENTIFIER -> {
+          if (name == NOP) {
+            name = executeIdentifier(jmp);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
+    }
+
+    set(
+      self,
+      annotations,
+      modifiers, typeParams, returnType, name, receiver, params, _throws,
+      body
+    );
+
+    return self;
   }
 
   private int executeModifier(int index, int list) {

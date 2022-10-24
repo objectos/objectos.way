@@ -59,7 +59,7 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // annotations
         16, // mods
         1, // name
-        Pass1.NOP, // type args
+        Pass1.NOP, // type params
         Pass1.NOP, // super
         Pass1.NOP, // implements
         Pass1.NOP, // permits
@@ -118,7 +118,7 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         19, // annotations
         Pass1.NOP, // mods
         1, // name
-        Pass1.NOP, // type args
+        Pass1.NOP, // type params
         Pass1.NOP, // super
         Pass1.NOP, // implements
         Pass1.NOP, // permits
@@ -137,6 +137,79 @@ final class ClassTest extends AbstractObjectoxCodeTest {
       """
       @java.lang.Deprecated
       class Subject {}
+      """
+    );
+  }
+
+  @Test(description = """
+  single method
+
+  class Subject {
+    void m0() {}
+  }
+  """)
+  public void testCase03() {
+    test(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            id("Subject"),
+            method(id("m0"))
+          );
+        }
+      },
+
+      pass0(
+        /* 0*/Pass0.JMP, 13,
+        /* 2*/Pass0.IDENTIFIER, 0,
+        /* 4*/Pass0.IDENTIFIER, 1,
+        /* 6*/Pass0.METHOD, 1, 4,
+        /* 9*/Pass0.CLASS, 2, 2, 6,
+        /*13*/Pass0.COMPILATION_UNIT, 1, 9
+      ),
+
+      objs("Subject", "m0"),
+
+      pass1(
+        Pass1.COMPILATION_UNIT,
+        Pass1.NOP, // package
+        Pass1.NOP, // imports
+        6, // class/interface
+        Pass1.NOP, // module
+        Pass1.EOF,
+
+        /* 6*/Pass1.CLASS,
+        Pass1.NOP, // annotations
+        Pass1.NOP, // mods
+        0, // name
+        Pass1.NOP, // type params
+        Pass1.NOP, // super
+        Pass1.NOP, // implements
+        Pass1.NOP, // permits
+        26, // body
+        Pass1.EOF, // NEXT
+
+        /*16*/Pass1.METHOD,
+        Pass1.NOP, // annotations
+        Pass1.NOP, // mods
+        Pass1.NOP, // type params
+        Pass1.NOP, // return
+        1, // name
+        Pass1.NOP, // receiver param
+        Pass1.NOP, // params
+        Pass1.NOP, // throws
+        Pass1.NOP, // body
+
+        /*26*/Pass1.LIST, 1, 16
+      ),
+
+      imports(PackageName.of()),
+
+      """
+      class Subject {
+        void m0() {}
+      }
       """
     );
   }

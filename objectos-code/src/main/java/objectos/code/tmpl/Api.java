@@ -23,7 +23,7 @@ public sealed interface Api permits Pass0 {
   public sealed interface AtRef
       extends ClassElement {}
 
-  public sealed interface ClassElement permits AtRef, ExtendsRef, FinalRef, IdentifierRef {}
+  public sealed interface ClassElement permits AtRef, ExtendsRef, FinalRef, IdentifierRef, MethodRef {}
 
   public sealed interface ClassRef {}
 
@@ -34,6 +34,11 @@ public sealed interface Api permits Pass0 {
       extends ClassElement {}
 
   public sealed interface IdentifierRef
+      extends ClassElement, MethodElement {}
+
+  public sealed interface MethodElement permits IdentifierRef {}
+
+  public sealed interface MethodRef
       extends ClassElement {}
 
   public static final class Ref
@@ -42,7 +47,8 @@ public sealed interface Api permits Pass0 {
       ClassRef,
       ExtendsRef,
       FinalRef,
-      IdentifierRef {
+      IdentifierRef,
+      MethodRef {
 
     private Ref() {}
 
@@ -65,5 +71,7 @@ public sealed interface Api permits Pass0 {
   void className(ClassName name);
 
   void id(String name);
+
+  void method(int length);
 
 }

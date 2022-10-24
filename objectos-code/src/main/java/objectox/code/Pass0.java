@@ -38,9 +38,10 @@ public final class Pass0 implements Api {
   static final int MODIFIER = -7;
   static final int CLASS = -8;
   static final int EXTENDS = -9;
+  static final int METHOD = -10;
 
-  static final int IDENTIFIER = -10;
-  static final int NAME = -11;
+  static final int IDENTIFIER = -11;
+  static final int NAME = -12;
 
   private int[] code = new int[10];
 
@@ -131,6 +132,11 @@ public final class Pass0 implements Api {
     );
 
     addObject(IDENTIFIER, name);
+  }
+
+  @Override
+  public final void method(int length) {
+    element(METHOD, length);
   }
 
   final int[] toCodes() { return Arrays.copyOf(code, codeIndex); }

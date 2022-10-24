@@ -23,6 +23,8 @@ import objectos.code.tmpl.Api.ClassRef;
 import objectos.code.tmpl.Api.ExtendsRef;
 import objectos.code.tmpl.Api.FinalRef;
 import objectos.code.tmpl.Api.IdentifierRef;
+import objectos.code.tmpl.Api.MethodElement;
+import objectos.code.tmpl.Api.MethodRef;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
@@ -32,6 +34,12 @@ public abstract class JavaTemplate {
     void annotationEnd();
 
     void annotationStart();
+
+    void blockAfterLastItem();
+
+    void blockBeforeFirstItem();
+
+    void blockBeforeNextItem();
 
     void blockEnd();
 
@@ -49,6 +57,10 @@ public abstract class JavaTemplate {
 
     void keyword(String keyword);
 
+    void methodEnd();
+
+    void methodStart();
+
     void modifier(String name);
 
     void name(String name);
@@ -56,6 +68,10 @@ public abstract class JavaTemplate {
     void packageEnd();
 
     void packageStart();
+
+    void parameterListEnd();
+
+    void parameterListStart();
 
     void semicolon();
 
@@ -133,6 +149,12 @@ public abstract class JavaTemplate {
 
   protected final IdentifierRef id(String name) {
     api.id(name);
+
+    return Api.REF;
+  }
+
+  protected final MethodRef method(MethodElement... elements) {
+    api.method(elements.length); // implicit elements null check
 
     return Api.REF;
   }

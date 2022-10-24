@@ -19,6 +19,8 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   private final StringBuilder out = new StringBuilder();
 
+  private int level;
+
   private boolean word;
 
   @Override
@@ -29,6 +31,22 @@ public class JavaWriter implements JavaTemplate.Renderer {
   @Override
   public void annotationStart() {
     write('@');
+  }
+
+  @Override
+  public void blockAfterLastItem() {
+    nl();
+  }
+
+  @Override
+  public void blockBeforeFirstItem() {
+    nl();
+  }
+
+  @Override
+  public void blockBeforeNextItem() {
+    nl();
+    nl();
   }
 
   @Override
@@ -43,10 +61,14 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
-  public void classEnd() {}
+  public void classEnd() {
+    level--;
+  }
 
   @Override
   public void classStart() {
+    level++;
+
     if (!out.isEmpty()) {
       nl();
     }
@@ -59,6 +81,8 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public void compilationUnitStart() {
+    level = 0;
+
     out.setLength(0);
 
     word = false;
@@ -72,6 +96,14 @@ public class JavaWriter implements JavaTemplate.Renderer {
   @Override
   public final void keyword(String keyword) {
     word(keyword);
+  }
+
+  @Override
+  public void methodEnd() {}
+
+  @Override
+  public void methodStart() {
+    identation();
   }
 
   @Override
@@ -91,6 +123,16 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void packageStart() {}
 
   @Override
+  public void parameterListEnd() {
+    out.append(')');
+  }
+
+  @Override
+  public void parameterListStart() {
+    out.append('(');
+  }
+
+  @Override
   public void semicolon() {
     out.append(';');
     nl();
@@ -98,6 +140,12 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public final String toString() { return out.toString(); }
+
+  private void identation() {
+    for (int i = 0; i < level; i++) {
+      out.append("  ");
+    }
+  }
 
   private void nl() {
     out.append(System.lineSeparator());

@@ -131,12 +131,46 @@ public final class Pass2 {
     var body = codes[index++];
 
     if (body != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+      executeClassBody(body);
     }
 
     processor.blockEnd();
 
     processor.classEnd();
+  }
+
+  private void executeClassBody(int index) {
+    var code = codes[index++];
+
+    assert code == Pass1.LIST;
+
+    var length = codes[index++];
+
+    if (length > 0) {
+      processor.blockBeforeFirstItem();
+
+      executeClassBody(index, 0);
+
+      for (int offset = 1; offset < length; offset++) {
+        processor.blockBeforeNextItem();
+
+        executeClassBody(index, offset);
+      }
+
+      processor.blockAfterLastItem();
+    }
+  }
+
+  private void executeClassBody(int index, int offset) {
+    var itemIndex = codes[index + offset];
+
+    var item = codes[itemIndex];
+
+    switch (item) {
+      case Pass1.METHOD -> executeMethod(itemIndex);
+
+      default -> throw new UnsupportedOperationException("Implement me :: item=" + item);
+    }
   }
 
   private void executeClassExtends(int index) {
@@ -223,6 +257,86 @@ public final class Pass2 {
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
     }
+  }
+
+  private void executeMethod(int index) {
+    processor.methodStart();
+
+    index++; // Pass1.METHOD
+
+    var annotations = codes[index++];
+
+    if (annotations != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    boolean _abstract = false;
+
+    var mods = codes[index++];
+
+    if (mods != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var typeParams = codes[index++];
+
+    if (typeParams != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var returnType = codes[index++];
+
+    if (returnType != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    } else {
+      processor.keyword("void");
+    }
+
+    var name = codes[index++];
+
+    if (name != Pass1.NOP) {
+      var methodName = (String) objects[name];
+
+      processor.identifier(methodName);
+    }
+
+    var receiver = codes[index++];
+
+    if (receiver != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.parameterListStart();
+
+    var params = codes[index++];
+
+    if (params != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.parameterListEnd();
+
+    var _throws = codes[index++];
+
+    if (_throws != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var body = codes[index++];
+
+    if (_abstract) {
+      processor.semicolon();
+    } else {
+      processor.blockStart();
+
+      if (body != Pass1.NOP) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      processor.blockEnd();
+    }
+
+    processor.methodEnd();
   }
 
   private void executeModifiers(int index) {
