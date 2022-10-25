@@ -24,11 +24,11 @@ public final class JavaGenerator {
   JavaGenerator() {}
 
   final void _class(int length) {
-    pass0._class(length);
+    pass0.classDeclaration(length);
   }
 
   final void id(String name) {
-    pass0.id(name);
+    pass0.identifier(name);
   }
 
   final void templateEnd() {

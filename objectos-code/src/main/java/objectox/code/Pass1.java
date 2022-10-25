@@ -47,6 +47,8 @@ public final class Pass1 {
 
   static final int MODIFIER = -13;
 
+  static final int METHOD_INVOCATION = -14;
+
   private final ImportSet importSet = new ImportSet();
 
   private int[] code = new int[32];
@@ -293,6 +295,8 @@ public final class Pass1 {
 
         case Pass0.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
 
+        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
     }
@@ -430,6 +434,36 @@ public final class Pass1 {
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );
+
+    return self;
+  }
+
+  private int executeMethodInvocation(int index) {
+    var self = codeIndex;
+
+    int callee = NOP;
+    int typeArgs = NOP;
+    int name = NOP;
+    int args = NOP;
+
+    add(METHOD_INVOCATION, callee, typeArgs, name, args);
+
+    index++;
+
+    int children = source[index++];
+
+    for (int limit = index + children; index < limit; index++) {
+      int jmp = source[index];
+      int inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.NAME -> name = setOrThrow(name, executeName(jmp));
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
+    }
+
+    set(self, callee, typeArgs, name, args);
 
     return self;
   }

@@ -16,18 +16,20 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
-import objectos.code.tmpl.Api;
-import objectos.code.tmpl.Api.AtRef;
-import objectos.code.tmpl.Api.ClassElement;
-import objectos.code.tmpl.Api.ClassRef;
-import objectos.code.tmpl.Api.ExpressionElement;
-import objectos.code.tmpl.Api.ExtendsRef;
-import objectos.code.tmpl.Api.FinalRef;
-import objectos.code.tmpl.Api.IdentifierRef;
-import objectos.code.tmpl.Api.LiteralRef;
-import objectos.code.tmpl.Api.LocalVariableDeclarationRef;
-import objectos.code.tmpl.Api.MethodElement;
-import objectos.code.tmpl.Api.MethodRef;
+import objectos.code.tmpl.InternalApi;
+import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.ClassElement;
+import objectos.code.tmpl.InternalApi.ClassRef;
+import objectos.code.tmpl.InternalApi.ExpressionElement;
+import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FinalRef;
+import objectos.code.tmpl.InternalApi.IdentifierRef;
+import objectos.code.tmpl.InternalApi.LiteralRef;
+import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
+import objectos.code.tmpl.InternalApi.MethodElement;
+import objectos.code.tmpl.InternalApi.MethodInvocationRef;
+import objectos.code.tmpl.InternalApi.MethodRef;
+import objectos.code.tmpl.InternalApi.NameRef;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
@@ -88,7 +90,7 @@ public abstract class JavaTemplate {
 
   }
 
-  private Api api;
+  private InternalApi api;
 
   /**
    * Sole constructor.
@@ -110,7 +112,7 @@ public abstract class JavaTemplate {
     }
   }
 
-  public final void eval(Api api) {
+  public final void eval(InternalApi api) {
     Check.state(this.api == null, """
     Another evaluation is already is progress.
     """);
@@ -121,25 +123,25 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassRef _class(ClassElement... elements) {
-    api._class(elements.length); // implicit elements null check
+    api.classDeclaration(elements.length); // implicit elements null check
 
-    return Api.REF;
+    return InternalApi.REF;
   }
 
   protected final ExtendsRef _extends(ClassName superclass) {
     api._extends(superclass);
 
-    return Api.REF;
+    return InternalApi.REF;
   }
 
   protected final FinalRef _final() {
     api._final();
 
-    return Api.REF;
+    return InternalApi.REF;
   }
 
   protected final void _package(String packageName) {
-    api._package(packageName);
+    api.packageDeclaration(packageName);
   }
 
   protected final AtRef annotation(Class<? extends Annotation> annotationType) {
@@ -149,7 +151,7 @@ public abstract class JavaTemplate {
 
     api.annotation(1);
 
-    return Api.REF;
+    return InternalApi.REF;
   }
 
   protected final void autoImports() {
@@ -159,27 +161,45 @@ public abstract class JavaTemplate {
   protected abstract void definition();
 
   protected final IdentifierRef id(String name) {
-    api.id(name);
+    api.identifier(name);
 
-    return Api.REF;
+    return InternalApi.REF;
+  }
+
+  protected final MethodInvocationRef invoke(NameRef methodName) {
+    api.methodInvocation(1);
+
+    return InternalApi.REF;
+  }
+
+  protected final MethodInvocationRef invoke(NameRef methodName, ExpressionElement expression) {
+    api.methodInvocation(2);
+
+    return InternalApi.REF;
   }
 
   protected final MethodRef method(MethodElement... elements) {
-    api.method(elements.length); // implicit elements null check
+    api.methodDeclaration(elements.length); // implicit elements null check
 
-    return Api.REF;
+    return InternalApi.REF;
+  }
+
+  protected final NameRef name(String value) {
+    api.name(value);
+
+    return InternalApi.REF;
   }
 
   protected final LiteralRef s(String value) {
     api.stringLiteral(value);
 
-    return Api.REF;
+    return InternalApi.REF;
   }
 
   protected final LocalVariableDeclarationRef var(IdentifierRef id, ExpressionElement expression) {
     api.localVariable(2);
 
-    return Api.REF;
+    return InternalApi.REF;
   }
 
 }

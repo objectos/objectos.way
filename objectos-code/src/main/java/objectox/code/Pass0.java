@@ -19,12 +19,12 @@ import java.util.Arrays;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
-import objectos.code.tmpl.Api;
+import objectos.code.tmpl.InternalApi;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-public final class Pass0 implements Api {
+public final class Pass0 implements InternalApi {
 
   private static final int NULL = Integer.MIN_VALUE;
 
@@ -45,6 +45,7 @@ public final class Pass0 implements Api {
   static final int STRING_LITERAL = -13;
 
   static final int LOCAL_VARIABLE = -14;
+  static final int METHOD_INVOCATION = -15;
 
   private int[] code = new int[10];
 
@@ -59,11 +60,6 @@ public final class Pass0 implements Api {
   private int objectIndex;
 
   @Override
-  public final void _class(int length) {
-    element(CLASS, length);
-  }
-
-  @Override
   public final void _extends(ClassName superclass) {
     Check.notNull(superclass, "superclass == null");
 
@@ -76,19 +72,6 @@ public final class Pass0 implements Api {
   }
 
   @Override
-  public final void _package(String packageName) {
-    Check.notNull(packageName, "packageName == null");
-    Check.argument(
-      SourceVersion.isName(packageName),
-      packageName, " is not a valid package name"
-    );
-
-    addObject(NAME, packageName);
-
-    element(PACKAGE, 1);
-  }
-
-  @Override
   public final void annotation(int length) {
     element(ANNOTATION, length);
   }
@@ -98,6 +81,11 @@ public final class Pass0 implements Api {
     markElement(codeIndex);
 
     add(AUTO_IMPORTS);
+  }
+
+  @Override
+  public final void classDeclaration(int length) {
+    element(CLASS, length);
   }
 
   @Override
@@ -128,7 +116,7 @@ public final class Pass0 implements Api {
   }
 
   @Override
-  public final void id(String name) {
+  public final void identifier(String name) {
     Check.argument(
       SourceVersion.isIdentifier(name), // implicit null-check
       name, " is not a valid identifier"
@@ -138,20 +126,48 @@ public final class Pass0 implements Api {
   }
 
   @Override
-  public void stringLiteral(String value) {
-    Check.notNull(value, "value == null");
-
-    addObject(STRING_LITERAL, value);
-  }
-
-  @Override
   public final void localVariable(int length) {
     element(LOCAL_VARIABLE, length);
   }
 
   @Override
-  public final void method(int length) {
+  public final void methodDeclaration(int length) {
     element(METHOD, length);
+  }
+
+  @Override
+  public final void methodInvocation(int length) {
+    element(METHOD_INVOCATION, length);
+  }
+
+  @Override
+  public final void name(String value) {
+    Check.argument(
+      SourceVersion.isIdentifier(value), // implicit null-check
+      value, " is not a valid identifier"
+    );
+
+    addObject(NAME, value);
+  }
+
+  @Override
+  public final void packageDeclaration(String packageName) {
+    Check.notNull(packageName, "packageName == null");
+    Check.argument(
+      SourceVersion.isName(packageName),
+      packageName, " is not a valid package name"
+    );
+
+    addObject(NAME, packageName);
+
+    element(PACKAGE, 1);
+  }
+
+  @Override
+  public void stringLiteral(String value) {
+    Check.notNull(value, "value == null");
+
+    addObject(STRING_LITERAL, value);
   }
 
   final int[] toCodes() { return Arrays.copyOf(code, codeIndex); }

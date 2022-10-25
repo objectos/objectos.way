@@ -33,7 +33,8 @@ public class ObjectosCodeTest {
     return new Object[] {
         new ClassTest(this),
         new CompilationUnitTest(this),
-        new LocalVariableTest(this)
+        new LocalVariableTest(this),
+        new MethodInvocationTest(this)
     };
   }
 

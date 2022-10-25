@@ -18,7 +18,7 @@ package objectos.code.tmpl;
 import objectos.code.ClassName;
 import objectox.code.Pass0;
 
-public sealed interface Api permits Pass0 {
+public sealed interface InternalApi permits Pass0 {
 
   sealed interface AtRef
       extends ClassElement {}
@@ -44,8 +44,12 @@ public sealed interface Api permits Pass0 {
 
   sealed interface MethodElement permits IdentifierRef {}
 
+  sealed interface MethodInvocationRef {}
+
   sealed interface MethodRef
       extends ClassElement {}
+
+  sealed interface NameRef {}
 
   static final class Ref
       implements
@@ -56,7 +60,9 @@ public sealed interface Api permits Pass0 {
       IdentifierRef,
       LiteralRef,
       LocalVariableDeclarationRef,
-      MethodRef {
+      MethodInvocationRef,
+      MethodRef,
+      NameRef {
 
     private Ref() {}
 
@@ -64,25 +70,29 @@ public sealed interface Api permits Pass0 {
 
   Ref REF = new Ref();
 
-  void _class(int length);
-
   void _extends(ClassName superclass);
 
   void _final();
-
-  void _package(String packageName);
 
   void annotation(int length);
 
   void autoImports();
 
+  void classDeclaration(int length);
+
   void className(ClassName name);
 
-  void id(String name);
+  void identifier(String name);
 
   void localVariable(int length);
 
-  void method(int length);
+  void methodDeclaration(int length);
+
+  void methodInvocation(int length);
+
+  void name(String value);
+
+  void packageDeclaration(String packageName);
 
   void stringLiteral(String value);
 

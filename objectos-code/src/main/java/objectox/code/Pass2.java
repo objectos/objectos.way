@@ -214,6 +214,14 @@ public final class Pass2 {
 
         case Pass1.LOCAL_VARIABLE -> executeLocalVariable(itemIndex);
 
+        case Pass1.METHOD_INVOCATION -> {
+          processor.statementStart();
+
+          executeMethodInvocation(itemIndex);
+
+          processor.statementEnd();
+        }
+
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
     }
@@ -373,6 +381,40 @@ public final class Pass2 {
     }
 
     processor.methodEnd();
+  }
+
+  private void executeMethodInvocation(int index) {
+    index++;
+
+    var callee = codes[index++];
+
+    if (callee != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var typeArgs = codes[index++];
+
+    if (typeArgs != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var name = codes[index++];
+
+    if (name != Pass1.NOP) {
+      var value = (String) objects[name];
+
+      processor.identifier(value);
+    }
+
+    processor.parameterListStart();
+
+    var args = codes[index++];
+
+    if (args != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.parameterListEnd();
   }
 
   private void executeModifier(int index) {
