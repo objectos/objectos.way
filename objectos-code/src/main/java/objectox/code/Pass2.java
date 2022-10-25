@@ -232,8 +232,26 @@ public final class Pass2 {
       switch (item) {
         case Pass1.CLASS -> executeClass(itemIndex);
 
+        case Pass1.LOCAL_VARIABLE -> executeLocalVariable(itemIndex);
+
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
+    }
+  }
+
+  private void executeExpression(int index) {
+    var code = codes[index++];
+
+    switch (code) {
+      case Pass1.STRING_LITERAL -> {
+        var objIndex = codes[index];
+
+        var s = (String) objects[objIndex];
+
+        processor.stringLiteral(s);
+      }
+
+      default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
     }
   }
 
@@ -259,6 +277,48 @@ public final class Pass2 {
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
     }
+  }
+
+  private void executeLocalVariable(int index) {
+    processor.statementStart();
+
+    index++; // Pass1.LOCAL_VAR
+
+    var modifiers = codes[index++];
+
+    if (modifiers != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var type = codes[index++];
+
+    if (type != Pass1.NOP) {
+      throw new UnsupportedOperationException("Implement me");
+    } else {
+      processor.keyword("var");
+    }
+
+    var name = codes[index++];
+
+    if (name != Pass1.NOP) {
+      var variableName = (String) objects[name];
+
+      processor.identifier(variableName);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    var init = codes[index++];
+
+    if (init != Pass1.NOP) {
+      processor.separator('=');
+
+      executeExpression(init);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    processor.statementEnd();
   }
 
   private void executeMethod(int index) {

@@ -42,6 +42,9 @@ public final class Pass0 implements Api {
 
   static final int IDENTIFIER = -11;
   static final int NAME = -12;
+  static final int STRING_LITERAL = -13;
+
+  static final int LOCAL_VARIABLE = -14;
 
   private int[] code = new int[10];
 
@@ -132,6 +135,18 @@ public final class Pass0 implements Api {
     );
 
     addObject(IDENTIFIER, name);
+  }
+
+  @Override
+  public void stringLiteral(String value) {
+    Check.notNull(value, "value == null");
+
+    addObject(STRING_LITERAL, value);
+  }
+
+  @Override
+  public final void localVariable(int length) {
+    element(LOCAL_VARIABLE, length);
   }
 
   @Override

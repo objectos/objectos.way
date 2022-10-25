@@ -20,9 +20,12 @@ import objectos.code.tmpl.Api;
 import objectos.code.tmpl.Api.AtRef;
 import objectos.code.tmpl.Api.ClassElement;
 import objectos.code.tmpl.Api.ClassRef;
+import objectos.code.tmpl.Api.ExpressionElement;
 import objectos.code.tmpl.Api.ExtendsRef;
 import objectos.code.tmpl.Api.FinalRef;
 import objectos.code.tmpl.Api.IdentifierRef;
+import objectos.code.tmpl.Api.LiteralRef;
+import objectos.code.tmpl.Api.LocalVariableDeclarationRef;
 import objectos.code.tmpl.Api.MethodElement;
 import objectos.code.tmpl.Api.MethodRef;
 import objectos.lang.Check;
@@ -74,6 +77,14 @@ public abstract class JavaTemplate {
     void parameterListStart();
 
     void semicolon();
+
+    void separator(char c);
+
+    void statementEnd();
+
+    void statementStart();
+
+    void stringLiteral(String s);
 
   }
 
@@ -155,6 +166,18 @@ public abstract class JavaTemplate {
 
   protected final MethodRef method(MethodElement... elements) {
     api.method(elements.length); // implicit elements null check
+
+    return Api.REF;
+  }
+
+  protected final LiteralRef s(String value) {
+    api.stringLiteral(value);
+
+    return Api.REF;
+  }
+
+  protected final LocalVariableDeclarationRef var(IdentifierRef id, ExpressionElement expression) {
+    api.localVariable(2);
 
     return Api.REF;
   }

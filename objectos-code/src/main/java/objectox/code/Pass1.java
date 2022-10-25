@@ -41,6 +41,10 @@ public final class Pass1 {
 
   static final int METHOD = -10;
 
+  static final int LOCAL_VARIABLE = -11;
+
+  static final int STRING_LITERAL = -12;
+
   private final ImportSet importSet = new ImportSet();
 
   private int[] code = new int[32];
@@ -96,6 +100,16 @@ public final class Pass1 {
     code[codeIndex++] = v1;
     code[codeIndex++] = v2;
     code[codeIndex++] = v3;
+  }
+
+  private void add(int v0, int v1, int v2, int v3, int v4) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 4);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+    code[codeIndex++] = v4;
   }
 
   private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
@@ -284,11 +298,9 @@ public final class Pass1 {
 
         case Pass0.AUTO_IMPORTS -> importSet.enable();
 
-        case Pass0.CLASS -> {
-          var value = executeClass(jmp);
+        case Pass0.CLASS -> body = listAdd(body, executeClass(jmp));
 
-          body = listAdd(body, value);
-        }
+        case Pass0.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -343,6 +355,44 @@ public final class Pass1 {
     index++;
 
     return source[index];
+  }
+
+  private int executeLocalVariable(int index) {
+    var self = codeIndex;
+
+    var modifiers = NOP;
+    var type = NOP;
+    var name = NOP;
+    var init = NOP;
+
+    add(
+      LOCAL_VARIABLE,
+      modifiers, type, name, init
+    );
+
+    index++;
+
+    var children = source[index++];
+
+    for (var limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+
+        case Pass0.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral(jmp));
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
+    }
+
+    set(
+      self,
+      modifiers, type, name, init
+    );
+
+    return self;
   }
 
   private int executeMethod(int index) {
@@ -463,6 +513,16 @@ public final class Pass1 {
     return self;
   }
 
+  private int executeStringLiteral(int index) {
+    var self = codeIndex;
+
+    index++;
+
+    add(STRING_LITERAL, source[index]);
+
+    return self;
+  }
+
   private int listAdd(int list, int value) {
     if (list == NOP) {
       list = codeIndex;
@@ -492,6 +552,15 @@ public final class Pass1 {
 
   private void set(
       int zero,
+      int v1, int v2, int v3, int v4) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+    code[zero + 4] = v4;
+  }
+
+  private void set(
+      int zero,
       int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
     code[zero + 1] = v1;
     code[zero + 2] = v2;
@@ -515,6 +584,14 @@ public final class Pass1 {
     code[zero + 7] = v7;
     code[zero + 8] = v8;
     code[zero + 9] = v9;
+  }
+
+  private int setOrThrow(int index, int value) {
+    if (index == NOP) {
+      return value;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

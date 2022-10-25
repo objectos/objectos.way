@@ -32,7 +32,8 @@ public class ObjectosCodeTest {
   public Object[] _factory() {
     return new Object[] {
         new ClassTest(this),
-        new CompilationUnitTest(this)
+        new CompilationUnitTest(this),
+        new LocalVariableTest(this)
     };
   }
 

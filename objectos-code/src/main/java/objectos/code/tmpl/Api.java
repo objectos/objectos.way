@@ -20,34 +20,42 @@ import objectox.code.Pass0;
 
 public sealed interface Api permits Pass0 {
 
-  public sealed interface AtRef
+  sealed interface AtRef
       extends ClassElement {}
 
-  public sealed interface ClassElement permits AtRef, ExtendsRef, FinalRef, IdentifierRef, MethodRef {}
+  sealed interface ClassElement permits AtRef, ExtendsRef, FinalRef, IdentifierRef, MethodRef {}
 
-  public sealed interface ClassRef {}
+  sealed interface ClassRef {}
 
-  public sealed interface ExtendsRef
+  sealed interface ExpressionElement {}
+
+  sealed interface ExtendsRef
       extends ClassElement {}
 
-  public sealed interface FinalRef
+  sealed interface FinalRef
       extends ClassElement {}
 
-  public sealed interface IdentifierRef
+  sealed interface IdentifierRef
       extends ClassElement, MethodElement {}
 
-  public sealed interface MethodElement permits IdentifierRef {}
+  sealed interface LiteralRef extends ExpressionElement {}
 
-  public sealed interface MethodRef
+  sealed interface LocalVariableDeclarationRef {}
+
+  sealed interface MethodElement permits IdentifierRef {}
+
+  sealed interface MethodRef
       extends ClassElement {}
 
-  public static final class Ref
+  static final class Ref
       implements
       AtRef,
       ClassRef,
       ExtendsRef,
       FinalRef,
       IdentifierRef,
+      LiteralRef,
+      LocalVariableDeclarationRef,
       MethodRef {
 
     private Ref() {}
@@ -72,6 +80,10 @@ public sealed interface Api permits Pass0 {
 
   void id(String name);
 
+  void localVariable(int length);
+
   void method(int length);
+
+  void stringLiteral(String value);
 
 }

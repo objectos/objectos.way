@@ -35,7 +35,6 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public void blockAfterLastItem() {
-    nl();
   }
 
   @Override
@@ -52,6 +51,7 @@ public class JavaWriter implements JavaTemplate.Renderer {
   @Override
   public void blockEnd() {
     write('}');
+    nl();
   }
 
   @Override
@@ -76,7 +76,6 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public void compilationUnitEnd() {
-    nl();
   }
 
   @Override
@@ -136,6 +135,29 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void semicolon() {
     out.append(';');
     nl();
+  }
+
+  @Override
+  public void separator(char c) {
+    out.append(' ');
+    out.append(c);
+    out.append(' ');
+  }
+
+  @Override
+  public void statementEnd() {
+    out.append(';');
+    nl();
+  }
+
+  @Override
+  public void statementStart() {}
+
+  @Override
+  public void stringLiteral(String s) {
+    out.append('"');
+    out.append(s);
+    out.append('"');
   }
 
   @Override
