@@ -65,30 +65,10 @@ public final class Pass2 {
     processor.annotationEnd();
   }
 
-  private void executeAnnotationList(int index) {
-    var code = codes[index++];
-
-    assert code == Pass1.LIST : code;
-
-    var length = codes[index++];
-
-    for (int offset = 0; offset < length; offset++) {
-      var annotation = codes[index + offset];
-
-      executeAnnotation(annotation);
-    }
-  }
-
   private void executeClass(int index) {
     processor.classStart();
 
     index++; // Pass1.CLASS
-
-    var annotations = codes[index++];
-
-    if (annotations != Pass1.NOP) {
-      executeAnnotationList(annotations);
-    }
 
     var modifiers = codes[index++];
 
@@ -326,12 +306,6 @@ public final class Pass2 {
 
     index++; // Pass1.METHOD
 
-    var annotations = codes[index++];
-
-    if (annotations != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
     boolean _abstract = false;
 
     var mods = codes[index++];
@@ -401,6 +375,16 @@ public final class Pass2 {
     processor.methodEnd();
   }
 
+  private void executeModifier(int index) {
+    index++;
+
+    var objIndex = codes[index];
+
+    var modifier = (Modifier) objects[objIndex];
+
+    processor.modifier(modifier.toString());
+  }
+
   private void executeModifiers(int index) {
     var code = codes[index++];
 
@@ -409,11 +393,16 @@ public final class Pass2 {
     var length = codes[index++];
 
     for (int offset = 0; offset < length; offset++) {
-      var modIndex = codes[index + offset];
+      var jmp = codes[index + offset];
+      var inst = codes[jmp];
 
-      var mod = (Modifier) objects[modIndex];
+      switch (inst) {
+        case Pass1.ANNOTATION -> executeAnnotation(jmp);
 
-      processor.modifier(mod.toString());
+        case Pass1.MODIFIER -> executeModifier(jmp);
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
     }
   }
 

@@ -51,11 +51,10 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        16, // body
+        17, // body
 
         Pass1.CLASS,
-        Pass1.NOP, // annotations
-        13, // mods
+        14, // mods
         1, // name
         Pass1.NOP, // type params
         Pass1.NOP, // super
@@ -63,7 +62,9 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // permits
         Pass1.NOP, // body
 
-        Pass1.LIST, 1, 0,
+        Pass1.MODIFIER, 0,
+
+        Pass1.LIST, 1, 12,
 
         Pass1.LIST, 1, 4
       ),
@@ -109,11 +110,10 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        19, // body
+        18, // body
 
         Pass1.CLASS,
-        16, // annotations
-        Pass1.NOP, // mods
+        15, // mods
         1, // name
         Pass1.NOP, // type params
         Pass1.NOP, // super
@@ -125,7 +125,7 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         0, // name
         Pass1.NOP, // element value pairs
 
-        Pass1.LIST, 1, 13,
+        Pass1.LIST, 1, 12,
 
         Pass1.LIST, 1, 4
       ),
@@ -173,20 +173,18 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        26, // body
+        24, // body
 
         Pass1.CLASS,
-        Pass1.NOP, // annotations
         Pass1.NOP, // mods
         0, // name
         Pass1.NOP, // type params
         Pass1.NOP, // super
         Pass1.NOP, // implements
         Pass1.NOP, // permits
-        23, // body
+        21, // body
 
         Pass1.METHOD,
-        Pass1.NOP, // annotations
         Pass1.NOP, // mods
         Pass1.NOP, // type params
         Pass1.NOP, // return
@@ -196,7 +194,7 @@ final class ClassTest extends AbstractObjectoxCodeTest {
         Pass1.NOP, // throws
         Pass1.NOP, // body
 
-        Pass1.LIST, 1, 13,
+        Pass1.LIST, 1, 12,
 
         Pass1.LIST, 1, 4
       ),

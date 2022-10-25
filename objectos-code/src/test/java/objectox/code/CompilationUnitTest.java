@@ -49,10 +49,9 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
         Pass1.NOP, // imports
-        13, // body
+        12, // body
 
         Pass1.CLASS,
-        Pass1.NOP, // annotations
         Pass1.NOP, // mods
         0, // name
         Pass1.NOP, // type args
@@ -103,14 +102,13 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
         Pass1.COMPILATION_UNIT,
         4, // package
         Pass1.NOP, // imports
-        16, // body
+        15, // body
 
         Pass1.PACKAGE,
         Pass1.NOP, // annotations
         0, // name
 
         Pass1.CLASS,
-        Pass1.NOP, // annotations
         Pass1.NOP, // mods
         1, // name
         Pass1.NOP, // type args
@@ -164,11 +162,10 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
       pass1(
         Pass1.COMPILATION_UNIT,
         Pass1.NOP, // package
-        16, // imports
-        13, // body
+        15, // imports
+        12, // body
 
         Pass1.CLASS,
-        Pass1.NOP, // annotations
         Pass1.NOP, // mods
         0, // name
         Pass1.NOP, // type args

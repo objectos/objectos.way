@@ -45,6 +45,8 @@ public final class Pass1 {
 
   static final int STRING_LITERAL = -12;
 
+  static final int MODIFIER = -13;
+
   private final ImportSet importSet = new ImportSet();
 
   private int[] code = new int[32];
@@ -112,6 +114,19 @@ public final class Pass1 {
     code[codeIndex++] = v4;
   }
 
+  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 7);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+    code[codeIndex++] = v4;
+    code[codeIndex++] = v5;
+    code[codeIndex++] = v6;
+    code[codeIndex++] = v7;
+  }
+
   private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
     code = IntArrays.growIfNecessary(code, codeIndex + 8);
 
@@ -124,21 +139,6 @@ public final class Pass1 {
     code[codeIndex++] = v6;
     code[codeIndex++] = v7;
     code[codeIndex++] = v8;
-  }
-
-  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 9);
-
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
-    code[codeIndex++] = v3;
-    code[codeIndex++] = v4;
-    code[codeIndex++] = v5;
-    code[codeIndex++] = v6;
-    code[codeIndex++] = v7;
-    code[codeIndex++] = v8;
-    code[codeIndex++] = v9;
   }
 
   private void execute() {
@@ -192,7 +192,6 @@ public final class Pass1 {
   private int executeClass(int index) {
     int self = codeIndex;
 
-    int annotations = NOP;
     int modifiers = NOP;
     int name = NOP;
     int typeArgs = NOP;
@@ -203,7 +202,6 @@ public final class Pass1 {
 
     add(
       CLASS,
-      annotations,
       modifiers, name, typeArgs, _extends, _implements, _permits,
       body
     );
@@ -217,15 +215,9 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.ANNOTATION -> {
-          var value = executeAnnotation(jmp);
+        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
 
-          annotations = listAdd(annotations, value);
-        }
-
-        case Pass0.MODIFIER -> {
-          modifiers = executeModifier(jmp, modifiers);
-        }
+        case Pass0.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
 
         case Pass0.IDENTIFIER -> {
           if (name == NOP) {
@@ -255,7 +247,6 @@ public final class Pass1 {
 
     set(
       self,
-      annotations,
       modifiers, name, typeArgs, _extends, _implements, _permits,
       body
     );
@@ -398,7 +389,6 @@ public final class Pass1 {
   private int executeMethod(int index) {
     int self = codeIndex;
 
-    int annotations = NOP;
     int modifiers = NOP;
     int typeParams = NOP;
     int returnType = NOP;
@@ -410,7 +400,6 @@ public final class Pass1 {
 
     add(
       METHOD,
-      annotations,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );
@@ -438,7 +427,6 @@ public final class Pass1 {
 
     set(
       self,
-      annotations,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );
@@ -446,20 +434,14 @@ public final class Pass1 {
     return self;
   }
 
-  private int executeModifier(int index, int list) {
+  private int executeModifier(int index) {
+    var self = codeIndex;
+
     index++;
 
-    var value = source[index];
+    add(MODIFIER, source[index]);
 
-    if (list == NOP) {
-      list = codeIndex;
-
-      add(LIST, 1, value);
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    return list;
+    return self;
   }
 
   private int executeName(int index) {
@@ -561,6 +543,18 @@ public final class Pass1 {
 
   private void set(
       int zero,
+      int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+    code[zero + 4] = v4;
+    code[zero + 5] = v5;
+    code[zero + 6] = v6;
+    code[zero + 7] = v7;
+  }
+
+  private void set(
+      int zero,
       int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
     code[zero + 1] = v1;
     code[zero + 2] = v2;
@@ -570,20 +564,6 @@ public final class Pass1 {
     code[zero + 6] = v6;
     code[zero + 7] = v7;
     code[zero + 8] = v8;
-  }
-
-  private void set(
-      int zero,
-      int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
-    code[zero + 1] = v1;
-    code[zero + 2] = v2;
-    code[zero + 3] = v3;
-    code[zero + 4] = v4;
-    code[zero + 5] = v5;
-    code[zero + 6] = v6;
-    code[zero + 7] = v7;
-    code[zero + 8] = v8;
-    code[zero + 9] = v9;
   }
 
   private int setOrThrow(int index, int value) {
