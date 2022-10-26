@@ -54,6 +54,8 @@ public abstract class JavaTemplate {
 
     void classStart();
 
+    void comma();
+
     void compilationUnitEnd();
 
     void compilationUnitStart();

@@ -75,6 +75,12 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
+  public void comma() {
+    write(',');
+    write(' ');
+  }
+
+  @Override
   public void compilationUnitEnd() {
   }
 

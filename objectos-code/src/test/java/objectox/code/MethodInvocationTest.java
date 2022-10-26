@@ -68,4 +68,54 @@ final class MethodInvocationTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  - unqualified
+  - single argument
+  """)
+  public void testCase02() {
+    test(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke(name("test"), s("a"));
+        }
+      },
+
+      pass0(
+        /* 0*/Pass0.JMP, 10,
+        /* 2*/Pass0.NAME, 0,
+        /* 4*/Pass0.STRING_LITERAL, 1,
+        /* 6*/Pass0.METHOD_INVOCATION, 2, 2, 4,
+        /*10*/Pass0.COMPILATION_UNIT, 1, 6
+      ),
+
+      objs("test", "a"),
+
+      pass1(
+        Pass1.COMPILATION_UNIT,
+        Pass1.NOP, // package
+        Pass1.NOP, // imports
+        14, // body
+
+        Pass1.METHOD_INVOCATION,
+        Pass1.NOP, // callee
+        Pass1.NOP, // type args
+        0, // name
+        11, // args
+
+        Pass1.STRING_LITERAL, 1,
+
+        Pass1.LIST, 1, 9,
+
+        Pass1.LIST, 1, 4
+      ),
+
+      imports(PackageName.of()),
+
+      """
+      test("a");
+      """
+    );
+  }
+
 }

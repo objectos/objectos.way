@@ -459,6 +459,8 @@ public final class Pass1 {
       switch (inst) {
         case Pass0.NAME -> name = setOrThrow(name, executeName(jmp));
 
+        case Pass0.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
+
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
     }

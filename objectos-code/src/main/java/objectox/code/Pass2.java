@@ -222,7 +222,7 @@ public final class Pass2 {
           processor.statementEnd();
         }
 
-        default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+        default -> throw new UnsupportedOperationException("Implement me :: item=" + item);
       }
     }
   }
@@ -411,10 +411,34 @@ public final class Pass2 {
     var args = codes[index++];
 
     if (args != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+      executeMethodInvocationArguments(args);
     }
 
     processor.parameterListEnd();
+  }
+
+  private void executeMethodInvocationArguments(int index) {
+    var code = codes[index++];
+
+    assert code == Pass1.LIST;
+
+    var length = codes[index++];
+
+    if (length > 0) {
+      executeMethodInvocationArguments(index, 0);
+
+      for (int offset = 1; offset < length; offset++) {
+        processor.comma();
+
+        executeMethodInvocationArguments(index, offset);
+      }
+    }
+  }
+
+  private void executeMethodInvocationArguments(int index, int offset) {
+    var value = codes[index + offset];
+
+    executeExpression(value);
   }
 
   private void executeModifier(int index) {
