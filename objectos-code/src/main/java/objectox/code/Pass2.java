@@ -56,6 +56,16 @@ public final class Pass2 {
     assert code == value : value;
   }
 
+  private int codelst() {
+    codeadv();
+
+    codeass(Pass1.LIST);
+
+    codeadv();
+
+    return code;
+  }
+
   private boolean codenop() {
     return code == Pass1.NOP;
   }
@@ -82,6 +92,85 @@ public final class Pass2 {
     return new UnsupportedOperationException("Implement me :: code=" + code);
   }
 
+  private void compilationUnit() {
+    codeadv();
+
+    codeass(Pass1.COMPILATION_UNIT);
+
+    processor.compilationUnitStart();
+
+    codeadv();
+
+    if (!codenop()) {
+      codepsh();
+      declarationPackage();
+      codepop();
+    }
+
+    codeadv();
+
+    if (!codenop()) {
+      codepsh();
+      declarationImports();
+      codepop();
+    }
+
+    codeadv();
+
+    if (!codenop()) {
+      codepsh();
+      compilationUnitBody();
+      codepop();
+    }
+
+    processor.compilationUnitEnd();
+  }
+
+  private void compilationUnitBody() {
+    var length = codelst();
+
+    for (int i = 0; i < length; i++) {
+      codeadv();
+
+      codepsh();
+
+      switch (code) {
+        case Pass1.CLASS -> declarationClass();
+
+        case Pass1.LOCAL_VARIABLE -> statementLocalVariable();
+
+        case Pass1.METHOD_INVOCATION -> statementMethodInvocation();
+
+        default -> throw codeuoe();
+      }
+
+      codepop();
+    }
+  }
+
+  private void declarationAnnotation() {
+    processor.annotationStart();
+
+    codeadv();
+
+    codeass(Pass1.ANNOTATION);
+
+    codeadv();
+
+    var name = (ClassName) codeobj();
+
+    importSet.execute(processor, name);
+
+    codeadv();
+
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: annotation element-value pairs");
+    }
+
+    processor.annotationEnd();
+  }
+
   private void declarationClass() {
     processor.classStart();
 
@@ -91,7 +180,7 @@ public final class Pass2 {
 
     if (!codenop()) {
       codepsh();
-      executeModifiers(cursor);
+      declarationModifierList();
       codepop();
     }
 
@@ -111,9 +200,11 @@ public final class Pass2 {
     codeadv();
 
     if (!codenop()) {
-      codepsh();
-      executeClassExtends(cursor);
-      codepop();
+      var superclass = (ClassName) codeobj();
+
+      processor.keyword("extends");
+
+      importSet.execute(processor, superclass);
     }
 
     codeadv();
@@ -136,7 +227,7 @@ public final class Pass2 {
 
     if (!codenop()) {
       codepsh();
-      executeClassBody(cursor);
+      declarationClassBody();
       codepop();
     }
 
@@ -145,145 +236,39 @@ public final class Pass2 {
     processor.classEnd();
   }
 
-  private void execute0() {
-    cursor = 0;
-
-    stackCursor = 0;
-
-    executeCompilationUnit();
-  }
-
-  private void executeAnnotation(int index) {
-    processor.annotationStart();
-
-    var code = codes[index++];
-
-    assert code == Pass1.ANNOTATION : code;
-
-    var nameIdx = codes[index++];
-
-    var name = (ClassName) objects[nameIdx];
-
-    importSet.execute(processor, name);
-
-    var pairs = codes[index++];
-
-    if (pairs != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    processor.annotationEnd();
-  }
-
-  private void executeClassBody(int index) {
-    var code = codes[index++];
-
-    assert code == Pass1.LIST;
-
-    var length = codes[index++];
+  private void declarationClassBody() {
+    var length = codelst();
 
     if (length > 0) {
       processor.blockBeforeFirstItem();
 
-      executeClassBody(index, 0);
+      declarationClassBodyItem();
 
       for (int offset = 1; offset < length; offset++) {
         processor.blockBeforeNextItem();
 
-        executeClassBody(index, offset);
+        declarationClassBodyItem();
       }
 
       processor.blockAfterLastItem();
     }
   }
 
-  private void executeClassBody(int index, int offset) {
-    var itemIndex = codes[index + offset];
+  private void declarationClassBodyItem() {
+    codeadv();
 
-    var item = codes[itemIndex];
+    codepsh();
 
-    switch (item) {
-      case Pass1.METHOD -> executeMethod(itemIndex);
+    switch (code) {
+      case Pass1.METHOD -> declarationMethod();
 
-      default -> throw new UnsupportedOperationException("Implement me :: item=" + item);
+      default -> throw codeuoe();
     }
+
+    codepop();
   }
 
-  private void executeClassExtends(int index) {
-    var superclass = objects[index];
-
-    assert superclass instanceof ClassName : superclass;
-
-    var cn = (ClassName) superclass;
-
-    processor.keyword("extends");
-
-    importSet.execute(processor, cn);
-  }
-
-  private void executeCompilationUnit() {
-    codeadv();
-
-    codeass(Pass1.COMPILATION_UNIT);
-
-    processor.compilationUnitStart();
-
-    codeadv();
-
-    if (!codenop()) {
-      codepsh();
-      executePackage();
-      codepop();
-    }
-
-    codeadv();
-
-    if (!codenop()) {
-      codepsh();
-      executeImports();
-      codepop();
-    }
-
-    codeadv();
-
-    if (!codenop()) {
-      codepsh();
-      executeCompilationUnitBody();
-      codepop();
-    }
-
-    processor.compilationUnitEnd();
-  }
-
-  private void executeCompilationUnitBody() {
-    codeadv();
-
-    codeass(Pass1.LIST);
-
-    codeadv();
-
-    var length = code;
-
-    for (int offset = 0; offset < length; offset++) {
-      codeadv();
-
-      codepsh();
-
-      switch (code) {
-        case Pass1.CLASS -> declarationClass();
-
-        case Pass1.LOCAL_VARIABLE -> statementLocalVariable();
-
-        case Pass1.METHOD_INVOCATION -> statementMethodInvocation();
-
-        default -> throw codeuoe();
-      }
-
-      codepop();
-    }
-  }
-
-  private void executeImports() {
+  private void declarationImports() {
     while (true) {
       codeadv();
 
@@ -307,72 +292,77 @@ public final class Pass2 {
     }
   }
 
-  private void executeMethod(int index) {
+  private void declarationMethod() {
     processor.methodStart();
 
-    index++; // Pass1.METHOD
+    codeadv(); // Pass1.METHOD
+
+    codeadv();
 
     boolean _abstract = false;
 
-    var mods = codes[index++];
-
-    if (mods != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method modifiers");
     }
 
-    var typeParams = codes[index++];
+    codeadv();
 
-    if (typeParams != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method type params");
     }
 
-    var returnType = codes[index++];
+    codeadv();
 
-    if (returnType != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method return type");
     } else {
       processor.keyword("void");
     }
 
-    var name = codes[index++];
+    codeadv();
 
-    if (name != Pass1.NOP) {
-      var methodName = (String) objects[name];
-
-      processor.identifier(methodName);
+    if (!codenop()) {
+      processor.identifier((String) codeobj());
     }
 
-    var receiver = codes[index++];
+    codeadv();
 
-    if (receiver != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method receiver param");
     }
+
+    codeadv();
 
     processor.parameterListStart();
 
-    var params = codes[index++];
-
-    if (params != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method parameters");
     }
 
     processor.parameterListEnd();
 
-    var _throws = codes[index++];
+    codeadv();
 
-    if (_throws != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method throws");
     }
 
-    var body = codes[index++];
+    codeadv();
 
     if (_abstract) {
       processor.semicolon();
     } else {
       processor.blockStart();
 
-      if (body != Pass1.NOP) {
-        throw new UnsupportedOperationException("Implement me");
+      if (!codenop()) {
+        throw new UnsupportedOperationException(
+          "Implement me :: method body");
       }
 
       processor.blockEnd();
@@ -381,38 +371,37 @@ public final class Pass2 {
     processor.methodEnd();
   }
 
-  private void executeModifier(int index) {
-    index++;
+  private void declarationModifier() {
+    codeadv();
 
-    var objIndex = codes[index];
+    codeadv();
 
-    var modifier = (Modifier) objects[objIndex];
+    var modifier = (Modifier) codeobj();
 
     processor.modifier(modifier.toString());
   }
 
-  private void executeModifiers(int index) {
-    var code = codes[index++];
+  private void declarationModifierList() {
+    var length = codelst();
 
-    assert code == Pass1.LIST;
+    for (int i = 0; i < length; i++) {
+      codeadv();
 
-    var length = codes[index++];
+      codepsh();
 
-    for (int offset = 0; offset < length; offset++) {
-      var jmp = codes[index + offset];
-      var inst = codes[jmp];
+      switch (code) {
+        case Pass1.ANNOTATION -> declarationAnnotation();
 
-      switch (inst) {
-        case Pass1.ANNOTATION -> executeAnnotation(jmp);
+        case Pass1.MODIFIER -> declarationModifier();
 
-        case Pass1.MODIFIER -> executeModifier(jmp);
-
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw codeuoe();
       }
+
+      codepop();
     }
   }
 
-  private void executePackage() {
+  private void declarationPackage() {
     processor.packageStart();
 
     codeadv(); // Pass1.PACKAGE
@@ -437,19 +426,27 @@ public final class Pass2 {
     processor.packageEnd();
   }
 
-  private void expression(int index) {
-    var code = codes[index++];
+  private void execute0() {
+    cursor = 0;
 
+    stackCursor = 0;
+
+    compilationUnit();
+  }
+
+  private void expression() {
     switch (code) {
       case Pass1.STRING_LITERAL -> {
-        var objIndex = codes[index];
+        codeadv();
 
-        var s = (String) objects[objIndex];
+        codeadv();
+
+        var s = (String) codeobj();
 
         processor.stringLiteral(s);
       }
 
-      default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+      default -> throw codeuoe();
     }
   }
 
@@ -490,31 +487,27 @@ public final class Pass2 {
   }
 
   private void expressionMethodInvocationArguments() {
-    codeadv();
-
-    codeass(Pass1.LIST);
-
-    codeadv();
-
-    var length = code;
+    var length = codelst();
 
     if (length > 0) {
-      codeadv();
-
-      codepsh();
-      expression(cursor);
-      codepop();
+      expressionMethodInvocationArgumentsItem();
 
       for (int offset = 1; offset < length; offset++) {
         processor.comma();
 
-        codeadv();
-
-        codepsh();
-        expression(cursor);
-        codepop();
+        expressionMethodInvocationArgumentsItem();
       }
     }
+  }
+
+  private void expressionMethodInvocationArgumentsItem() {
+    codeadv();
+
+    codepsh();
+
+    expression();
+
+    codepop();
   }
 
   private void statementLocalVariable() {
@@ -552,7 +545,9 @@ public final class Pass2 {
     if (!codenop()) {
       processor.separator('=');
 
-      expression(code);
+      codepsh();
+      expression();
+      codepop();
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: local var unitialized");
