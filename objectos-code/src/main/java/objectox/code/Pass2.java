@@ -18,10 +18,13 @@ package objectox.code;
 import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
+import objectos.util.IntArrays;
 
 public final class Pass2 {
 
   private int[] codes;
+
+  private int cursor;
 
   private Object[] objects;
 
@@ -29,17 +32,55 @@ public final class Pass2 {
 
   private Renderer processor;
 
+  private int[] stack = new int[16];
+
+  private int stackCursor;
+
+  private int code;
+
   public final void execute(
       int[] codes, Object[] objects, ImportSet importSet, Renderer processor) {
-
     this.codes = codes;
     this.objects = objects;
     this.importSet = importSet;
     this.processor = processor;
+
     execute0();
   }
 
+  private void codeadv() {
+    code = codes[cursor++];
+  }
+
+  private void codeass(int value) {
+    assert code == value : value;
+  }
+
+  private boolean codenop() {
+    return code == Pass1.NOP;
+  }
+
+  private Object codeobj() {
+    return objects[code];
+  }
+
+  private void codepop() {
+    cursor = stack[--stackCursor];
+  }
+
+  private void codepsh() {
+    stack = IntArrays.growIfNecessary(stack, stackCursor);
+
+    stack[stackCursor++] = cursor;
+
+    cursor = code;
+  }
+
   private void execute0() {
+    cursor = 0;
+
+    stackCursor = 0;
+
     executeCompilationUnit();
   }
 
@@ -168,30 +209,30 @@ public final class Pass2 {
   }
 
   private void executeCompilationUnit() {
-    var index = 0;
+    codeadv();
 
-    var code = codes[index++];
-
-    assert code == Pass1.COMPILATION_UNIT;
+    codeass(Pass1.COMPILATION_UNIT);
 
     processor.compilationUnitStart();
 
-    var pkg = codes[index++];
+    codeadv();
 
-    if (pkg != Pass1.NOP) {
-      executePackage(pkg);
+    if (!codenop()) {
+      codepsh();
+      executePackage();
+      codepop();
     }
 
-    var imports = codes[index++];
+    codeadv();
 
-    if (imports != Pass1.NOP) {
-      executeImports(imports);
+    if (!codenop()) {
+      executeImports(code);
     }
 
-    var body = codes[index++];
+    codeadv();
 
-    if (body != Pass1.NOP) {
-      executeCompilationUnitBody(body);
+    if (!codenop()) {
+      executeCompilationUnitBody(code);
     }
 
     processor.compilationUnitEnd();
@@ -472,22 +513,23 @@ public final class Pass2 {
     }
   }
 
-  private void executePackage(int index) {
+  private void executePackage() {
     processor.packageStart();
 
-    index++;
+    codeadv(); // Pass1.PACKAGE
 
-    var annotations = codes[index++];
+    codeadv();
 
-    if (annotations != Pass1.NOP) {
-      throw new UnsupportedOperationException("Implement me");
+    if (!codenop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: package modifiers");
     }
 
     processor.keyword("package");
 
-    var nameIdx = codes[index++];
+    codeadv();
 
-    var name = (String) objects[nameIdx];
+    var name = (String) codeobj();
 
     processor.name(name);
 
