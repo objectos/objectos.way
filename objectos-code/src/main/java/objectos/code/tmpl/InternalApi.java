@@ -44,7 +44,8 @@ public sealed interface InternalApi permits Pass0 {
 
   sealed interface MethodElement permits IdentifierRef {}
 
-  sealed interface MethodInvocationRef {}
+  sealed interface MethodInvocationRef
+      extends ExpressionElement {}
 
   sealed interface MethodRef
       extends ClassElement {}

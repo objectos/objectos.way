@@ -423,6 +423,8 @@ public final class Pass2 {
 
   private void expression() {
     switch (code) {
+      case Pass1.METHOD_INVOCATION -> expressionMethodInvocation();
+
       case Pass1.STRING_LITERAL -> {
         codeadv();
 

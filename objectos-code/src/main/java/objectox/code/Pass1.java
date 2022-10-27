@@ -467,6 +467,8 @@ public final class Pass1 {
       switch (inst) {
         case Pass0.NAME -> name = setOrThrow(name, executeName(jmp));
 
+        case Pass0.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
+
         case Pass0.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
@@ -558,26 +560,25 @@ public final class Pass1 {
       return list;
     }
 
-    // create cell
-
     var newcell = codeIndex;
 
     add(LIST_CELL, value, EOF, NOP);
 
-    // update last cell next value
-
     var lastcell = code[list + 1];
 
     if (lastcell == NOP) {
-      // this is only the 2nd item in the list
-      code[list + 1] = newcell;
+      code[list + 1] = newcell; // list last cell
       code[list + 3] = JMP;
       code[list + 4] = newcell;
 
       return list;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    code[list + 1] = newcell; // list last cell
+    code[lastcell + 2] = JMP;
+    code[lastcell + 3] = newcell;
+
+    return list;
   }
 
   private void set(

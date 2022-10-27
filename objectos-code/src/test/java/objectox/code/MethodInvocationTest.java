@@ -63,9 +63,9 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
   }
 
   @Test(description = """
-    - unqualified
-    - two arguments
-    """)
+  - unqualified
+  - two arguments
+  """)
   public void testCase03() {
     var tmpl = new JavaTemplate() {
       @Override
@@ -79,6 +79,28 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
 
       """
       test("a", "b");
+      """
+    );
+  }
+
+  @Test(description = """
+  - unqualified
+  - three args
+  - one arg is a nested invocation
+  """)
+  public void testCase04() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke(name("m0"), s("1"), invoke(name("m2")), s("3"));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      m0("1", m2(), "3");
       """
     );
   }

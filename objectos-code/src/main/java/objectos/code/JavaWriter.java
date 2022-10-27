@@ -82,6 +82,8 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void comma() {
     write(',');
     write(' ');
+
+    word = false;
   }
 
   @Override
