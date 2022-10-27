@@ -65,16 +65,6 @@ public final class Pass2 {
     assert code == value : value;
   }
 
-  private int codelst() {
-    codeadv();
-
-    codeass(Pass1.LIST);
-
-    codeadv();
-
-    return code;
-  }
-
   private boolean codenop() {
     return code == Pass1.NOP;
   }
@@ -136,11 +126,9 @@ public final class Pass2 {
   }
 
   private void compilationUnitBody() {
-    var length = codelst();
+    listset();
 
-    for (int i = 0; i < length; i++) {
-      codeadv();
-
+    while (listhas()) {
       codepsh();
 
       switch (code) {
@@ -154,6 +142,8 @@ public final class Pass2 {
       }
 
       codepop();
+
+      codeadv();
     }
   }
 
@@ -246,14 +236,14 @@ public final class Pass2 {
   }
 
   private void declarationClassBody() {
-    var length = codelst();
+    listset();
 
-    if (length > 0) {
+    if (listhas()) {
       processor.blockBeforeFirstItem();
 
       declarationClassBodyItem();
 
-      for (int offset = 1; offset < length; offset++) {
+      while (listhas()) {
         processor.blockBeforeNextItem();
 
         declarationClassBodyItem();
@@ -264,8 +254,6 @@ public final class Pass2 {
   }
 
   private void declarationClassBodyItem() {
-    codeadv();
-
     codepsh();
 
     switch (code) {
@@ -275,6 +263,8 @@ public final class Pass2 {
     }
 
     codepop();
+
+    codeadv();
   }
 
   private void declarationImports() {
@@ -391,11 +381,9 @@ public final class Pass2 {
   }
 
   private void declarationModifierList() {
-    var length = codelst();
+    listset();
 
-    for (int i = 0; i < length; i++) {
-      codeadv();
-
+    while (listhas()) {
       codepsh();
 
       switch (code) {
@@ -407,6 +395,8 @@ public final class Pass2 {
       }
 
       codepop();
+
+      codeadv();
     }
   }
 
@@ -496,12 +486,12 @@ public final class Pass2 {
   }
 
   private void expressionMethodInvocationArguments() {
-    var length = codelst();
+    listset();
 
-    if (length > 0) {
+    if (listhas()) {
       expressionMethodInvocationArgumentsItem();
 
-      for (int offset = 1; offset < length; offset++) {
+      while (listhas()) {
         processor.comma();
 
         expressionMethodInvocationArgumentsItem();
@@ -510,13 +500,27 @@ public final class Pass2 {
   }
 
   private void expressionMethodInvocationArgumentsItem() {
-    codeadv();
-
     codepsh();
 
     expression();
 
     codepop();
+
+    codeadv();
+  }
+
+  private boolean listhas() {
+    return code != Pass1.EOF;
+  }
+
+  private void listset() {
+    codeadv();
+
+    codeass(Pass1.LIST);
+
+    codeadv(); // last cell
+
+    codeadv(); // first value
   }
 
   private void statementLocalVariable() {

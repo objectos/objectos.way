@@ -78,8 +78,8 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
       tmpl,
 
       """
-        test("a");
-        """
+      test("a");
+      """
     );
   }
 

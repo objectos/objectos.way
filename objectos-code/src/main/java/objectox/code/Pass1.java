@@ -49,6 +49,8 @@ public final class Pass1 {
 
   static final int METHOD_INVOCATION = -14;
 
+  static final int LIST_CELL = -15;
+
   int[] code = new int[32];
 
   private int codeIndex;
@@ -549,12 +551,29 @@ public final class Pass1 {
     if (list == NOP) {
       list = codeIndex;
 
-      add(LIST, 1, value);
-    } else {
-      throw new UnsupportedOperationException("Implement me");
+      add(LIST, NOP, value, EOF);
+
+      return list;
     }
 
-    return list;
+    // create cell
+
+    var newcell = codeIndex;
+
+    add(LIST_CELL, value, EOF);
+
+    // update last cell next value
+
+    var lastcell = code[list + 1];
+
+    if (lastcell == NOP) {
+      // this is only the 2nd item in the list
+      code[list + 1] = code[list + 3] = newcell;
+
+      return list;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private void set(
