@@ -58,9 +58,13 @@ public final class ImportSet {
 
     classNames.clear();
 
+    simpleNames.clear();
+
     sorted.clear();
 
     enabled = false;
+
+    skipJavaLang = false;
   }
 
   public final void enable() {

@@ -47,7 +47,7 @@ public final class Pass0 implements InternalApi {
   static final int LOCAL_VARIABLE = -14;
   static final int METHOD_INVOCATION = -15;
 
-  private int[] code = new int[10];
+  int[] code = new int[10];
 
   private int codeIndex;
 
@@ -55,7 +55,7 @@ public final class Pass0 implements InternalApi {
 
   private int elementIndex;
 
-  private Object[] object = new Object[10];
+  Object[] object = new Object[10];
 
   private int objectIndex;
 

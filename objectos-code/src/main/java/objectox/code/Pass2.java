@@ -48,6 +48,15 @@ public final class Pass2 {
     execute0();
   }
 
+  public final void execute(Pass1 pass1, Renderer renderer) {
+    execute(
+      pass1.code,
+      pass1.object,
+      pass1.importSet,
+      renderer
+    );
+  }
+
   private void codeadv() {
     code = codes[cursor++];
   }

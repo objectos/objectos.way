@@ -168,14 +168,8 @@ public abstract class JavaTemplate {
     return InternalApi.REF;
   }
 
-  protected final MethodInvocationRef invoke(NameRef methodName) {
-    api.methodInvocation(1);
-
-    return InternalApi.REF;
-  }
-
-  protected final MethodInvocationRef invoke(NameRef methodName, ExpressionElement expression) {
-    api.methodInvocation(2);
+  protected final MethodInvocationRef invoke(NameRef methodName, ExpressionElement... arguments) {
+    api.methodInvocation(arguments.length + 1);
 
     return InternalApi.REF;
   }

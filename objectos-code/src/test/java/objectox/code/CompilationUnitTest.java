@@ -17,53 +17,23 @@ package objectox.code;
 
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate;
-import objectos.code.PackageName;
 import org.testng.annotations.Test;
 
-final class CompilationUnitTest extends AbstractObjectoxCodeTest {
-
-  CompilationUnitTest(ObjectosCodeTest outer) { super(outer); }
+public class CompilationUnitTest extends AbstractObjectoxCodeTest {
 
   @Test(description = """
   class Foo {}
   """)
   public void testCase01() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _class(id("Foo"));
-        }
-      },
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _class(id("Foo"));
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 7,
-        /* 2*/Pass0.IDENTIFIER, 0,
-        /* 4*/Pass0.CLASS, 1, 2,
-        /* 7*/Pass0.COMPILATION_UNIT, 1, 4
-      ),
-
-      objs("Foo"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        Pass1.NOP, // imports
-        12, // body
-
-        Pass1.CLASS,
-        Pass1.NOP, // mods
-        0, // name
-        Pass1.NOP, // type args
-        Pass1.NOP, // super
-        Pass1.NOP, // implements
-        Pass1.NOP, // permits
-        Pass1.NOP, // body
-
-        Pass1.LIST, 1, 4
-      ),
-
-      imports(PackageName.of()),
+    testDefault(
+      tmpl,
 
       """
       class Foo {}
@@ -77,50 +47,17 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
   class Foo {}
   """)
   public void testCase02() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _package("test");
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _package("test");
 
-          _class(id("Foo"));
-        }
-      },
+        _class(id("Foo"));
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 12,
-        /* 2*/Pass0.NAME, 0,
-        /* 4*/Pass0.PACKAGE, 1, 2,
-        /* 7*/Pass0.IDENTIFIER, 1,
-        /* 9*/Pass0.CLASS, 1, 7,
-        /*12*/Pass0.COMPILATION_UNIT, 2, 4, 9
-      ),
-
-      objs("test", "Foo"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        4, // package
-        Pass1.NOP, // imports
-        15, // body
-
-        Pass1.PACKAGE,
-        Pass1.NOP, // annotations
-        0, // name
-
-        Pass1.CLASS,
-        Pass1.NOP, // mods
-        1, // name
-        Pass1.NOP, // type args
-        Pass1.NOP, // super
-        Pass1.NOP, // implements
-        Pass1.NOP, // permits
-        Pass1.NOP, // body
-
-        Pass1.LIST, 1, 7
-      ),
-
-      imports(TEST),
+    testDefault(
+      tmpl,
 
       """
       package test;
@@ -136,51 +73,19 @@ final class CompilationUnitTest extends AbstractObjectoxCodeTest {
   class Foo extends Bar {}
   """)
   public void testCase03() {
-    var bar = ClassName.of(TEST, "Bar");
+    var tmpl = new JavaTemplate() {
+      final ClassName _Bar = ClassName.of(TEST, "Bar");
 
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          autoImports();
+      @Override
+      protected final void definition() {
+        autoImports();
 
-          _class(id("Foo"), _extends(bar));
-        }
-      },
+        _class(id("Foo"), _extends(_Bar));
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 11,
-        /* 2*/Pass0.AUTO_IMPORTS,
-        /* 3*/Pass0.IDENTIFIER, 0,
-        /* 5*/Pass0.EXTENDS, 1,
-        /* 7*/Pass0.CLASS, 2, 3, 5,
-        /*11*/Pass0.COMPILATION_UNIT, 2, 2, 7
-      ),
-
-      objs("Foo", bar),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        15, // imports
-        12, // body
-
-        Pass1.CLASS,
-        Pass1.NOP, // mods
-        0, // name
-        Pass1.NOP, // type args
-        1, // super
-        Pass1.NOP, // implements
-        Pass1.NOP, // permits
-        Pass1.NOP, // body
-
-        Pass1.LIST, 1, 4,
-
-        Pass1.IMPORT, 0,
-        Pass1.EOF
-      ),
-
-      imports(PackageName.of(), bar),
+    testDefault(
+      tmpl,
 
       """
       import test.Bar;

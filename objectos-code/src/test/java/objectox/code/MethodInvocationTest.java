@@ -16,51 +16,24 @@
 package objectox.code;
 
 import objectos.code.JavaTemplate;
-import objectos.code.PackageName;
 import org.testng.annotations.Test;
 
-final class MethodInvocationTest extends AbstractObjectoxCodeTest {
-
-  MethodInvocationTest(ObjectosCodeTest outer) { super(outer); }
+public class MethodInvocationTest extends AbstractObjectoxCodeTest {
 
   @Test(description = """
   - unqualified
   - no args
   """)
   public void testCase01() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          invoke(name("test"));
-        }
-      },
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke(name("test"));
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 7,
-        /* 2*/Pass0.NAME, 0,
-        /* 4*/Pass0.METHOD_INVOCATION, 1, 2,
-        /* 7*/Pass0.COMPILATION_UNIT, 1, 4
-      ),
-
-      objs("test"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        Pass1.NOP, // imports
-        9, // body
-
-        Pass1.METHOD_INVOCATION,
-        Pass1.NOP, // callee
-        Pass1.NOP, // type args
-        0, // name
-        Pass1.NOP, // args
-
-        Pass1.LIST, 1, 4
-      ),
-
-      imports(PackageName.of()),
+    testDefault(
+      tmpl,
 
       """
       test();
@@ -73,48 +46,40 @@ final class MethodInvocationTest extends AbstractObjectoxCodeTest {
   - single argument
   """)
   public void testCase02() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          invoke(name("test"), s("a"));
-        }
-      },
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke(name("test"), s("a"));
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 10,
-        /* 2*/Pass0.NAME, 0,
-        /* 4*/Pass0.STRING_LITERAL, 1,
-        /* 6*/Pass0.METHOD_INVOCATION, 2, 2, 4,
-        /*10*/Pass0.COMPILATION_UNIT, 1, 6
-      ),
-
-      objs("test", "a"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        Pass1.NOP, // imports
-        14, // body
-
-        Pass1.METHOD_INVOCATION,
-        Pass1.NOP, // callee
-        Pass1.NOP, // type args
-        0, // name
-        11, // args
-
-        Pass1.STRING_LITERAL, 1,
-
-        Pass1.LIST, 1, 9,
-
-        Pass1.LIST, 1, 4
-      ),
-
-      imports(PackageName.of()),
+    testDefault(
+      tmpl,
 
       """
       test("a");
       """
+    );
+  }
+
+  @Test(enabled = false, description = """
+    - unqualified
+    - two arguments
+    """)
+  public void testCase03() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke(name("test"), s("a"), s("b"));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+        test("a");
+        """
     );
   }
 

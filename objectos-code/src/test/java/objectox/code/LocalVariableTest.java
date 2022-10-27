@@ -16,53 +16,23 @@
 package objectox.code;
 
 import objectos.code.JavaTemplate;
-import objectos.code.PackageName;
 import org.testng.annotations.Test;
 
-final class LocalVariableTest extends AbstractObjectoxCodeTest {
-
-  LocalVariableTest(ObjectosCodeTest outer) { super(outer); }
+public class LocalVariableTest extends AbstractObjectoxCodeTest {
 
   @Test(description = """
   var s = "java";
   """)
   public void testCase01() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          var(id("s"), s("java"));
-        }
-      },
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        var(id("s"), s("java"));
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 10,
-        /* 2*/Pass0.IDENTIFIER, 0,
-        /* 4*/Pass0.STRING_LITERAL, 1,
-        /* 6*/Pass0.LOCAL_VARIABLE, 2, 2, 4,
-        /*10*/Pass0.COMPILATION_UNIT, 1, 6
-      ),
-
-      objs("s", "java"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        Pass1.NOP, // imports
-        11, // body
-
-        Pass1.LOCAL_VARIABLE,
-        Pass1.NOP, // mods
-        Pass1.NOP, // type
-        0, // name
-        9, // init
-
-        Pass1.STRING_LITERAL, 1,
-
-        Pass1.LIST, 1, 4
-      ),
-
-      imports(PackageName.of()),
+    testDefault(
+      tmpl,
 
       """
       var s = "java";

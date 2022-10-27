@@ -23,6 +23,10 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   private boolean word;
 
+  public static JavaWriter of() {
+    return new JavaWriter();
+  }
+
   @Override
   public void annotationEnd() {
     nl();

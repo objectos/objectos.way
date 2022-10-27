@@ -18,24 +18,24 @@ package objectox.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
+import objectos.code.JavaGenerator;
 import objectos.code.JavaTemplate;
+import objectos.code.JavaWriter;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Factory;
 
 public class ObjectosCodeTest {
 
+  private JavaGenerator generator;
+
+  private JavaWriter writer;
+
   @BeforeClass
   public void _beforeClass() {
-  }
+    if (generator == null) {
+      generator = JavaGenerator.of();
 
-  @Factory
-  public Object[] _factory() {
-    return new Object[] {
-        new ClassTest(this),
-        new CompilationUnitTest(this),
-        new LocalVariableTest(this),
-        new MethodInvocationTest(this)
-    };
+      writer = JavaWriter.of();
+    }
   }
 
   void test(
@@ -43,7 +43,9 @@ public class ObjectosCodeTest {
       int[] p0, Object[] objs,
       int[] p1, ImportSet imports,
       String expectedSource) {
+    generator.render(template, writer);
 
+    assertEquals(writer.toString(), expectedSource);
   }
 
   final void testArrays(int[] result, int[] expected, String header) {

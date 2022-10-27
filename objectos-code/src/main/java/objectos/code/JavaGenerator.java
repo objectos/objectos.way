@@ -15,28 +15,39 @@
  */
 package objectos.code;
 
+import objectos.code.JavaTemplate.Renderer;
+import objectos.lang.Check;
 import objectox.code.Pass0;
+import objectox.code.Pass1;
+import objectox.code.Pass2;
 
 public final class JavaGenerator {
 
   Pass0 pass0 = new Pass0();
 
+  Pass1 pass1 = new Pass1();
+
+  Pass2 pass2 = new Pass2();
+
   JavaGenerator() {}
 
-  final void _class(int length) {
-    pass0.classDeclaration(length);
+  public static JavaGenerator of() {
+    return new JavaGenerator();
   }
 
-  final void id(String name) {
-    pass0.identifier(name);
-  }
+  public final void render(JavaTemplate template, Renderer renderer) {
+    Check.notNull(template, "template == null");
+    Check.notNull(renderer, "renderer == null");
 
-  final void templateEnd() {
-    pass0.compilationUnitEnd();
-  }
-
-  final void templateStart() {
     pass0.compilationUnitStart();
+
+    template.acceptJavaGenerator(this);
+
+    pass0.compilationUnitEnd();
+
+    pass1.execute(pass0);
+
+    pass2.execute(pass1, renderer);
   }
 
 }

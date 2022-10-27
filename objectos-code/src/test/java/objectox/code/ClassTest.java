@@ -15,61 +15,24 @@
  */
 package objectox.code;
 
-import javax.lang.model.element.Modifier;
-import objectos.code.ClassName;
 import objectos.code.JavaTemplate;
-import objectos.code.PackageName;
 import org.testng.annotations.Test;
 
-final class ClassTest extends AbstractObjectoxCodeTest {
-
-  ClassTest(ObjectosCodeTest outer) { super(outer); }
+public class ClassTest extends AbstractObjectoxCodeTest {
 
   @Test(description = """
   final class Subject {}
   """)
   public void testCase01() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _class(_final(), id("Subject"));
-        }
-      },
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _class(_final(), id("Subject"));
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 10,
-        /* 2*/Pass0.MODIFIER, 0,
-        /* 4*/Pass0.IDENTIFIER, 1,
-        /* 6*/Pass0.CLASS, 2, 2, 4,
-        /*10*/Pass0.COMPILATION_UNIT, 1, 6
-      ),
-
-      objs(Modifier.FINAL, "Subject"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        Pass1.NOP, // imports
-        17, // body
-
-        Pass1.CLASS,
-        14, // mods
-        1, // name
-        Pass1.NOP, // type params
-        Pass1.NOP, // super
-        Pass1.NOP, // implements
-        Pass1.NOP, // permits
-        Pass1.NOP, // body
-
-        Pass1.MODIFIER, 0,
-
-        Pass1.LIST, 1, 12,
-
-        Pass1.LIST, 1, 4
-      ),
-
-      imports(PackageName.of()),
+    testDefault(
+      tmpl,
 
       """
       final class Subject {}
@@ -84,53 +47,18 @@ final class ClassTest extends AbstractObjectoxCodeTest {
   class Subject {}
   """)
   public void testCase02() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _class(
-            annotation(Deprecated.class),
-            id("Subject")
-          );
-        }
-      },
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _class(
+          annotation(Deprecated.class),
+          id("Subject")
+        );
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 13,
-        /* 2*/Pass0.NAME, 0,
-        /* 4*/Pass0.ANNOTATION, 1, 2,
-        /* 7*/Pass0.IDENTIFIER, 1,
-        /* 9*/Pass0.CLASS, 2, 4, 7,
-        /*13*/Pass0.COMPILATION_UNIT, 1, 9
-      ),
-
-      objs(ClassName.of(Deprecated.class), "Subject"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        Pass1.NOP, // imports
-        18, // body
-
-        Pass1.CLASS,
-        15, // mods
-        1, // name
-        Pass1.NOP, // type params
-        Pass1.NOP, // super
-        Pass1.NOP, // implements
-        Pass1.NOP, // permits
-        Pass1.NOP, // body
-
-        Pass1.ANNOTATION,
-        0, // name
-        Pass1.NOP, // element value pairs
-
-        Pass1.LIST, 1, 12,
-
-        Pass1.LIST, 1, 4
-      ),
-
-      imports(PackageName.of()),
+    testDefault(
+      tmpl,
 
       """
       @java.lang.Deprecated
@@ -147,59 +75,18 @@ final class ClassTest extends AbstractObjectoxCodeTest {
   }
   """)
   public void testCase03() {
-    test(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _class(
-            id("Subject"),
-            method(id("m0"))
-          );
-        }
-      },
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _class(
+          id("Subject"),
+          method(id("m0"))
+        );
+      }
+    };
 
-      pass0(
-        /* 0*/Pass0.JMP, 13,
-        /* 2*/Pass0.IDENTIFIER, 0,
-        /* 4*/Pass0.IDENTIFIER, 1,
-        /* 6*/Pass0.METHOD, 1, 4,
-        /* 9*/Pass0.CLASS, 2, 2, 6,
-        /*13*/Pass0.COMPILATION_UNIT, 1, 9
-      ),
-
-      objs("Subject", "m0"),
-
-      pass1(
-        Pass1.COMPILATION_UNIT,
-        Pass1.NOP, // package
-        Pass1.NOP, // imports
-        24, // body
-
-        Pass1.CLASS,
-        Pass1.NOP, // mods
-        0, // name
-        Pass1.NOP, // type params
-        Pass1.NOP, // super
-        Pass1.NOP, // implements
-        Pass1.NOP, // permits
-        21, // body
-
-        Pass1.METHOD,
-        Pass1.NOP, // mods
-        Pass1.NOP, // type params
-        Pass1.NOP, // return
-        1, // name
-        Pass1.NOP, // receiver param
-        Pass1.NOP, // params
-        Pass1.NOP, // throws
-        Pass1.NOP, // body
-
-        Pass1.LIST, 1, 12,
-
-        Pass1.LIST, 1, 4
-      ),
-
-      imports(PackageName.of()),
+    testDefault(
+      tmpl,
 
       """
       class Subject {

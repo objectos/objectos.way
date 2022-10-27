@@ -49,13 +49,13 @@ public final class Pass1 {
 
   static final int METHOD_INVOCATION = -14;
 
-  private final ImportSet importSet = new ImportSet();
-
-  private int[] code = new int[32];
+  int[] code = new int[32];
 
   private int codeIndex;
 
-  private Object[] object;
+  final ImportSet importSet = new ImportSet();
+
+  Object[] object;
 
   private int[] source;
 
@@ -70,6 +70,10 @@ public final class Pass1 {
     codeIndex = 0;
 
     execute();
+  }
+
+  public final void execute(Pass0 pass0) {
+    execute(pass0.code, pass0.object);
   }
 
   final int[] toArray() {

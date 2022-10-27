@@ -15,8 +15,11 @@
  */
 package objectox.code;
 
-import objectos.code.ClassName;
+import static org.testng.Assert.assertEquals;
+
+import objectos.code.JavaGenerator;
 import objectos.code.JavaTemplate;
+import objectos.code.JavaWriter;
 import objectos.code.PackageName;
 import org.testng.annotations.BeforeClass;
 
@@ -24,45 +27,23 @@ public abstract class AbstractObjectoxCodeTest {
 
   static final PackageName TEST = PackageName.of("test");
 
-  private final ObjectosCodeTest outer;
+  private JavaGenerator generator;
 
-  AbstractObjectoxCodeTest(ObjectosCodeTest outer) {
-    this.outer = outer;
-  }
+  private JavaWriter writer;
 
   @BeforeClass
   public void _beforeClass() {
-    outer._beforeClass();
-  }
+    if (generator == null) {
+      generator = JavaGenerator.of();
 
-  final ImportSet imports(PackageName packageName, ClassName... names) {
-    var set = new ImportSet();
-
-    set.packageName(packageName);
-
-    for (var name : names) {
-      set.addClassName(name);
+      writer = JavaWriter.of();
     }
-
-    set.sort();
-
-    return set;
   }
 
-  final Object[] objs(Object... values) { return values; }
+  protected final void testDefault(JavaTemplate template, String expected) {
+    generator.render(template, writer);
 
-  final int[] pass0(int... values) { return values; }
-
-  final int[] pass1(int... values) { return values; }
-
-  final void test(
-      JavaTemplate template,
-      int[] pass0,
-      Object[] objs,
-      int[] pass1,
-      ImportSet imports,
-      String expectedSource) {
-    outer.test(template, pass0, objs, pass1, imports, expectedSource);
+    assertEquals(writer.toString(), expected);
   }
 
 }
