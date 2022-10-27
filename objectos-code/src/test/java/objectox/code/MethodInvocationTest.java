@@ -62,7 +62,7 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
     - unqualified
     - two arguments
     """)
@@ -78,7 +78,7 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
       tmpl,
 
       """
-      test("a");
+      test("a", "b");
       """
     );
   }

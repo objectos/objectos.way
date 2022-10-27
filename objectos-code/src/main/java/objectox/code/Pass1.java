@@ -51,6 +51,8 @@ public final class Pass1 {
 
   static final int LIST_CELL = -15;
 
+  static final int JMP = -16;
+
   int[] code = new int[32];
 
   private int codeIndex;
@@ -551,7 +553,7 @@ public final class Pass1 {
     if (list == NOP) {
       list = codeIndex;
 
-      add(LIST, NOP, value, EOF);
+      add(LIST, NOP, value, EOF, NOP);
 
       return list;
     }
@@ -560,7 +562,7 @@ public final class Pass1 {
 
     var newcell = codeIndex;
 
-    add(LIST_CELL, value, EOF);
+    add(LIST_CELL, value, EOF, NOP);
 
     // update last cell next value
 
@@ -568,7 +570,9 @@ public final class Pass1 {
 
     if (lastcell == NOP) {
       // this is only the 2nd item in the list
-      code[list + 1] = code[list + 3] = newcell;
+      code[list + 1] = newcell;
+      code[list + 3] = JMP;
+      code[list + 4] = newcell;
 
       return list;
     }

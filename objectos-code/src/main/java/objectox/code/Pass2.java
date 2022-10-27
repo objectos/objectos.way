@@ -126,9 +126,7 @@ public final class Pass2 {
   }
 
   private void compilationUnitBody() {
-    listset();
-
-    while (listhas()) {
+    while (iternxt()) {
       codepsh();
 
       switch (code) {
@@ -142,8 +140,6 @@ public final class Pass2 {
       }
 
       codepop();
-
-      codeadv();
     }
   }
 
@@ -236,14 +232,12 @@ public final class Pass2 {
   }
 
   private void declarationClassBody() {
-    listset();
-
-    if (listhas()) {
+    if (iternxt()) {
       processor.blockBeforeFirstItem();
 
       declarationClassBodyItem();
 
-      while (listhas()) {
+      while (iternxt()) {
         processor.blockBeforeNextItem();
 
         declarationClassBodyItem();
@@ -263,8 +257,6 @@ public final class Pass2 {
     }
 
     codepop();
-
-    codeadv();
   }
 
   private void declarationImports() {
@@ -381,9 +373,7 @@ public final class Pass2 {
   }
 
   private void declarationModifierList() {
-    listset();
-
-    while (listhas()) {
+    while (iternxt()) {
       codepsh();
 
       switch (code) {
@@ -395,8 +385,6 @@ public final class Pass2 {
       }
 
       codepop();
-
-      codeadv();
     }
   }
 
@@ -486,12 +474,10 @@ public final class Pass2 {
   }
 
   private void expressionMethodInvocationArguments() {
-    listset();
-
-    if (listhas()) {
+    if (iternxt()) {
       expressionMethodInvocationArgumentsItem();
 
-      while (listhas()) {
+      while (iternxt()) {
         processor.comma();
 
         expressionMethodInvocationArgumentsItem();
@@ -505,22 +491,38 @@ public final class Pass2 {
     expression();
 
     codepop();
-
-    codeadv();
   }
 
-  private boolean listhas() {
-    return code != Pass1.EOF;
-  }
-
-  private void listset() {
+  private boolean iternxt() {
     codeadv();
 
-    codeass(Pass1.LIST);
+    if (code == Pass1.JMP) {
+      codeadv();
 
-    codeadv(); // last cell
+      cursor = code;
 
-    codeadv(); // first value
+      code = codes[cursor++];
+    }
+
+    return switch (code) {
+      case Pass1.EOF -> false;
+
+      case Pass1.LIST -> {
+        codeadv(); // last cell
+
+        codeadv(); // value
+
+        yield true;
+      }
+
+      case Pass1.LIST_CELL -> {
+        codeadv(); // value
+
+        yield true;
+      }
+
+      default -> throw codeuoe();
+    };
   }
 
   private void statementLocalVariable() {
