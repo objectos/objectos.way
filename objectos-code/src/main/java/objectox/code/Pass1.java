@@ -53,6 +53,8 @@ public final class Pass1 {
 
   static final int JMP = -16;
 
+  static final int NEW_LINE = -17;
+
   int[] code = new int[32];
 
   private int codeIndex;
@@ -467,6 +469,8 @@ public final class Pass1 {
       switch (inst) {
         case Pass0.NAME -> name = setOrThrow(name, executeName(jmp));
 
+        case Pass0.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
+
         case Pass0.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
 
         case Pass0.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
@@ -494,6 +498,14 @@ public final class Pass1 {
     index++;
 
     return source[index];
+  }
+
+  private int executeNewLine(int index) {
+    var self = codeIndex;
+
+    add(NEW_LINE);
+
+    return self;
   }
 
   private int executePackage(int index) {

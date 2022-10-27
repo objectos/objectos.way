@@ -27,9 +27,11 @@ import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.LiteralRef;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodElement;
+import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocationRef;
 import objectos.code.tmpl.InternalApi.MethodRef;
 import objectos.code.tmpl.InternalApi.NameRef;
+import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
@@ -71,6 +73,8 @@ public abstract class JavaTemplate {
     void modifier(String name);
 
     void name(String name);
+
+    void newLine();
 
     void packageEnd();
 
@@ -168,8 +172,9 @@ public abstract class JavaTemplate {
     return InternalApi.REF;
   }
 
-  protected final MethodInvocationRef invoke(NameRef methodName, ExpressionElement... arguments) {
-    api.methodInvocation(arguments.length + 1);
+  protected final MethodInvocationRef invoke(
+      NameRef methodName, MethodInvocationElement... elements) {
+    api.methodInvocation(elements.length + 1);
 
     return InternalApi.REF;
   }
@@ -182,6 +187,12 @@ public abstract class JavaTemplate {
 
   protected final NameRef name(String value) {
     api.name(value);
+
+    return InternalApi.REF;
+  }
+
+  protected final NewLineRef nl() {
+    api.newLine();
 
     return InternalApi.REF;
   }

@@ -73,6 +73,10 @@ public final class Pass2 {
     return objects[code];
   }
 
+  private int codepek() {
+    return codes[code];
+  }
+
   private void codepop() {
     cursor = stack[--stackCursor];
   }
@@ -476,12 +480,10 @@ public final class Pass2 {
   }
 
   private void expressionMethodInvocationArguments() {
-    if (iternxt()) {
+    if (iterarg(false)) {
       expressionMethodInvocationArgumentsItem();
 
-      while (iternxt()) {
-        processor.comma();
-
+      while (iterarg(true)) {
         expressionMethodInvocationArgumentsItem();
       }
     }
@@ -493,6 +495,34 @@ public final class Pass2 {
     expression();
 
     codepop();
+  }
+
+  private boolean iterarg(boolean comma) {
+    var result = false;
+
+    var nl = 0;
+
+    while (iternxt()) {
+      var peek = codepek();
+
+      if (peek != Pass1.NEW_LINE) {
+        result = true;
+
+        break;
+      }
+
+      nl++;
+    }
+
+    if (result && comma) {
+      processor.comma();
+    }
+
+    for (int i = 0; i < nl; i++) {
+      processor.newLine();
+    }
+
+    return result;
   }
 
   private boolean iternxt() {

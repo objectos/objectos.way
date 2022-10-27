@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
-import objectos.code.ClassName;
-import objectos.code.JavaTemplate;
 import org.testng.annotations.Test;
 
-public class CompilationUnitTest extends AbstractObjectoxCodeTest {
+public class MethodInvocationTest extends AbstractObjectoxCodeTest {
 
   @Test(description = """
-  class Foo {}
+  - unqualified
+  - no args
   """)
   public void testCase01() {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _class(id("Foo"));
+        invoke(name("test"));
       }
     };
 
@@ -36,23 +35,20 @@ public class CompilationUnitTest extends AbstractObjectoxCodeTest {
       tmpl,
 
       """
-      class Foo {}
+      test();
       """
     );
   }
 
   @Test(description = """
-  package test;
-
-  class Foo {}
+  - unqualified
+  - single argument
   """)
   public void testCase02() {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _package("test");
-
-        _class(id("Foo"));
+        invoke(name("test"), s("a"));
       }
     };
 
@@ -60,27 +56,20 @@ public class CompilationUnitTest extends AbstractObjectoxCodeTest {
       tmpl,
 
       """
-      package test;
-
-      class Foo {}
+      test("a");
       """
     );
   }
 
   @Test(description = """
-  import test.Bar;
-
-  class Foo extends Bar {}
+  - unqualified
+  - two arguments
   """)
   public void testCase03() {
     var tmpl = new JavaTemplate() {
-      final ClassName _Bar = ClassName.of(TEST, "Bar");
-
       @Override
       protected final void definition() {
-        autoImports();
-
-        _class(id("Foo"), _extends(_Bar));
+        invoke(name("test"), s("a"), s("b"));
       }
     };
 
@@ -88,9 +77,57 @@ public class CompilationUnitTest extends AbstractObjectoxCodeTest {
       tmpl,
 
       """
-      import test.Bar;
+      test("a", "b");
+      """
+    );
+  }
 
-      class Foo extends Bar {}
+  @Test(description = """
+  - unqualified
+  - three args
+  - one arg is a nested invocation
+  """)
+  public void testCase04() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke(name("m0"), s("1"), invoke(name("m2")), s("3"));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      m0("1", m2(), "3");
+      """
+    );
+  }
+
+  @Test(description = """
+  - unqualified
+  - three args
+  - explicit new lines
+  """)
+  public void testCase05() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke(name("m0"), nl(), s("1"), nl(), nl(), invoke(name("m2")), nl(), nl(), s("3"), nl());
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      m0(
+        "1",
+
+        m2(),
+
+        "3"
+      );
       """
     );
   }

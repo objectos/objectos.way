@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.code.JavaGenerator;
-import objectos.code.JavaTemplate;
-import objectos.code.JavaWriter;
-import objectos.code.PackageName;
 import org.testng.annotations.BeforeClass;
 
 public abstract class AbstractObjectoxCodeTest {
@@ -43,7 +39,9 @@ public abstract class AbstractObjectoxCodeTest {
   protected final void testDefault(JavaTemplate template, String expected) {
     generator.render(template, writer);
 
-    assertEquals(writer.toString(), expected);
+    var result = writer.toString();
+
+    assertEquals(result, expected);
   }
 
 }

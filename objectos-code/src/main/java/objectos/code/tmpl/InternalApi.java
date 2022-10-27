@@ -27,7 +27,7 @@ public sealed interface InternalApi permits Pass0 {
 
   sealed interface ClassRef {}
 
-  sealed interface ExpressionElement {}
+  sealed interface ExpressionElement extends MethodInvocationElement {}
 
   sealed interface ExtendsRef
       extends ClassElement {}
@@ -44,6 +44,8 @@ public sealed interface InternalApi permits Pass0 {
 
   sealed interface MethodElement permits IdentifierRef {}
 
+  sealed interface MethodInvocationElement {}
+
   sealed interface MethodInvocationRef
       extends ExpressionElement {}
 
@@ -51,6 +53,8 @@ public sealed interface InternalApi permits Pass0 {
       extends ClassElement {}
 
   sealed interface NameRef {}
+
+  sealed interface NewLineRef extends MethodInvocationElement {}
 
   static final class Ref
       implements
@@ -63,7 +67,8 @@ public sealed interface InternalApi permits Pass0 {
       LocalVariableDeclarationRef,
       MethodInvocationRef,
       MethodRef,
-      NameRef {
+      NameRef,
+      NewLineRef {
 
     private Ref() {}
 
@@ -92,6 +97,8 @@ public sealed interface InternalApi permits Pass0 {
   void methodInvocation(int length);
 
   void name(String value);
+
+  void newLine();
 
   void packageDeclaration(String packageName);
 

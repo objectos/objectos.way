@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
-import objectos.code.JavaTemplate;
 import org.testng.annotations.Test;
 
 public class LocalVariableTest extends AbstractObjectoxCodeTest {

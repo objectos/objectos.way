@@ -19,9 +19,15 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   private final StringBuilder out = new StringBuilder();
 
+  private int length;
+
   private int level;
 
   private boolean word;
+
+  private boolean parameterList;
+
+  private int parameterListLevel;
 
   public static JavaWriter of() {
     return new JavaWriter();
@@ -54,7 +60,12 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public void blockEnd() {
+    level--;
+
+    identation();
+
     write('}');
+
     nl();
   }
 
@@ -62,17 +73,15 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void blockStart() {
     write(' ');
     write('{');
+
+    level++;
   }
 
   @Override
-  public void classEnd() {
-    level--;
-  }
+  public void classEnd() {}
 
   @Override
   public void classStart() {
-    level++;
-
     if (!out.isEmpty()) {
       nl();
     }
@@ -81,9 +90,8 @@ public class JavaWriter implements JavaTemplate.Renderer {
   @Override
   public void comma() {
     write(',');
-    write(' ');
 
-    word = false;
+    word = true;
   }
 
   @Override
@@ -92,6 +100,8 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public void compilationUnitStart() {
+    length = 0;
+
     level = 0;
 
     out.setLength(0);
@@ -113,9 +123,7 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void methodEnd() {}
 
   @Override
-  public void methodStart() {
-    identation();
-  }
+  public void methodStart() {}
 
   @Override
   public void modifier(String name) {
@@ -128,6 +136,15 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
+  public void newLine() {
+    nl();
+
+    if (parameterList && level == parameterListLevel) {
+      level++;
+    }
+  }
+
+  @Override
   public void packageEnd() {}
 
   @Override
@@ -135,30 +152,38 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public void parameterListEnd() {
-    out.append(')');
+    write(')');
+
+    parameterList = false;
+    level = parameterListLevel;
   }
 
   @Override
   public void parameterListStart() {
-    out.append('(');
+    write('(');
+
+    parameterList = true;
+    parameterListLevel = level;
+    word = false;
   }
 
   @Override
   public void semicolon() {
-    out.append(';');
+    write(';');
+
     nl();
   }
 
   @Override
   public void separator(char c) {
-    out.append(' ');
-    out.append(c);
-    out.append(' ');
+    write(' ');
+    write(c);
   }
 
   @Override
   public void statementEnd() {
-    out.append(';');
+    write(';');
+
     nl();
   }
 
@@ -167,38 +192,62 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public void stringLiteral(String s) {
-    out.append('"');
-    out.append(s);
-    out.append('"');
+    identation();
+
+    word();
+
+    write('"');
+    write(s);
+    write('"');
   }
 
   @Override
   public final String toString() { return out.toString(); }
 
   private void identation() {
-    for (int i = 0; i < level; i++) {
-      out.append("  ");
+    if (length == 0) {
+      for (int i = 0; i < level; i++) {
+        out.append("  ");
+
+        length += 2;
+      }
     }
   }
 
   private void nl() {
     out.append(System.lineSeparator());
 
+    length = 0;
+
     word = false;
   }
 
-  private void word(String s) {
+  private void word() {
     if (word) {
       out.append(' ');
     }
+  }
 
-    out.append(s);
+  private void word(String s) {
+    identation();
+
+    word();
+
+    write(s);
 
     word = true;
   }
 
   private void write(char c) {
     out.append(c);
+
+    length += 1;
+  }
+
+  private void write(String s) {
+    out.append(s);
+
+    length += s.length();
   }
 
 }

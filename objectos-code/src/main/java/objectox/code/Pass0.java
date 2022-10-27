@@ -46,6 +46,7 @@ public final class Pass0 implements InternalApi {
 
   static final int LOCAL_VARIABLE = -14;
   static final int METHOD_INVOCATION = -15;
+  static final int NEW_LINE = -16;
 
   int[] code = new int[10];
 
@@ -148,6 +149,11 @@ public final class Pass0 implements InternalApi {
     );
 
     addObject(NAME, value);
+  }
+
+  @Override
+  public final void newLine() {
+    element(NEW_LINE, 0);
   }
 
   @Override
