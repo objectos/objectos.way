@@ -15,12 +15,30 @@
  */
 package objectos.code;
 
-sealed abstract class PackageOrClassName permits ClassName, PackageName {
+import org.testng.annotations.Test;
 
-  abstract PackageName packageName();
+public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
 
-  final String toString(String simpleName) {
-    return toString() + '.' + simpleName;
+  @Test(description = """
+  - single statement
+  """)
+  public void testCase01() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        method(
+          _void(), id("test")
+        );
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      void test() {}
+      """
+    );
   }
 
 }

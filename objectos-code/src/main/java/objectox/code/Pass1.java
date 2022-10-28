@@ -17,6 +17,7 @@ package objectox.code;
 
 import java.util.Arrays;
 import objectos.code.ClassName;
+import objectos.code.TypeName;
 import objectos.util.IntArrays;
 
 public final class Pass1 {
@@ -305,6 +306,8 @@ public final class Pass1 {
 
         case Pass0.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
 
+        case Pass0.METHOD -> body = listAdd(body, executeMethod(jmp));
+
         case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
@@ -427,13 +430,9 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.IDENTIFIER -> {
-          if (name == NOP) {
-            name = executeIdentifier(jmp);
-          } else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
+        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+
+        case Pass0.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -561,6 +560,20 @@ public final class Pass1 {
     add(STRING_LITERAL, source[index]);
 
     return self;
+  }
+
+  private int executeTypeName(int index) {
+    index++;
+
+    var result = source[index];
+
+    var o = object[result];
+
+    if (o instanceof TypeName typeName) {
+      typeName.acceptClassNameSet(importSet);
+    }
+
+    return result;
   }
 
   private int listAdd(int list, int value) {

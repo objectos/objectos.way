@@ -19,12 +19,15 @@ import java.util.Arrays;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
+import objectos.code.TypeName;
 import objectos.code.tmpl.InternalApi;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
 public final class Pass0 implements InternalApi {
+
+  public static final Ref REF = new Ref();
 
   private static final int NULL = Integer.MIN_VALUE;
 
@@ -47,6 +50,7 @@ public final class Pass0 implements InternalApi {
   static final int LOCAL_VARIABLE = -14;
   static final int METHOD_INVOCATION = -15;
   static final int NEW_LINE = -16;
+  static final int TYPE_NAME = -17;
 
   int[] code = new int[10];
 
@@ -174,6 +178,13 @@ public final class Pass0 implements InternalApi {
     Check.notNull(value, "value == null");
 
     addObject(STRING_LITERAL, value);
+  }
+
+  @Override
+  public final void typeName(TypeName typeName) {
+    Check.notNull(typeName, "typeName == null");
+
+    addObject(TYPE_NAME, typeName);
   }
 
   final int[] toCodes() { return Arrays.copyOf(code, codeIndex); }

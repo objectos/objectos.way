@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.tmpl;
 
-sealed abstract class PackageOrClassName permits ClassName, PackageName {
+import objectos.code.JavaTemplate;
 
-  abstract PackageName packageName();
-
-  final String toString(String simpleName) {
-    return toString() + '.' + simpleName;
-  }
-
-}
+/**
+ * Represents a valid argument to the {@link JavaTemplate} {@code _class}
+ * methods.
+ */
+public sealed interface ClassDeclarationElement //
+permits AtRef, ExtendsRef, FinalRef, IdentifierRef, MethodRef {}

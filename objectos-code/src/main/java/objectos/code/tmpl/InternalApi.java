@@ -16,65 +16,10 @@
 package objectos.code.tmpl;
 
 import objectos.code.ClassName;
+import objectos.code.TypeName;
 import objectox.code.Pass0;
 
 public sealed interface InternalApi permits Pass0 {
-
-  sealed interface AtRef
-      extends ClassElement {}
-
-  sealed interface ClassElement permits AtRef, ExtendsRef, FinalRef, IdentifierRef, MethodRef {}
-
-  sealed interface ClassRef {}
-
-  sealed interface ExpressionElement extends MethodInvocationElement {}
-
-  sealed interface ExtendsRef
-      extends ClassElement {}
-
-  sealed interface FinalRef
-      extends ClassElement {}
-
-  sealed interface IdentifierRef
-      extends ClassElement, MethodElement {}
-
-  sealed interface LiteralRef extends ExpressionElement {}
-
-  sealed interface LocalVariableDeclarationRef {}
-
-  sealed interface MethodElement permits IdentifierRef {}
-
-  sealed interface MethodInvocationElement {}
-
-  sealed interface MethodInvocationRef
-      extends ExpressionElement {}
-
-  sealed interface MethodRef
-      extends ClassElement {}
-
-  sealed interface NameRef {}
-
-  sealed interface NewLineRef extends MethodInvocationElement {}
-
-  static final class Ref
-      implements
-      AtRef,
-      ClassRef,
-      ExtendsRef,
-      FinalRef,
-      IdentifierRef,
-      LiteralRef,
-      LocalVariableDeclarationRef,
-      MethodInvocationRef,
-      MethodRef,
-      NameRef,
-      NewLineRef {
-
-    private Ref() {}
-
-  }
-
-  Ref REF = new Ref();
 
   void _extends(ClassName superclass);
 
@@ -103,5 +48,7 @@ public sealed interface InternalApi permits Pass0 {
   void packageDeclaration(String packageName);
 
   void stringLiteral(String value);
+
+  void typeName(TypeName typeName);
 
 }

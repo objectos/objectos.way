@@ -19,11 +19,14 @@ import java.util.Comparator;
 import java.util.List;
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
+import objectos.code.NoTypeName;
 import objectos.code.PackageName;
+import objectos.code.TypeName;
+import objectos.code.tmpl.ClassNameSet;
 import objectos.util.GrowableList;
 import objectos.util.GrowableSet;
 
-public final class ImportSet {
+public final class ImportSet implements ClassNameSet {
 
   private PackageName packageName;
 
@@ -37,6 +40,7 @@ public final class ImportSet {
 
   boolean skipJavaLang;
 
+  @Override
   public final void addClassName(ClassName value) {
     classNames.add(value);
   }
@@ -84,6 +88,12 @@ public final class ImportSet {
 
     else {
       processor.name(name.toString());
+    }
+  }
+
+  public final void execute(Renderer processor, TypeName typeName) {
+    if (typeName instanceof NoTypeName) {
+      processor.keyword("void");
     }
   }
 

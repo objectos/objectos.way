@@ -18,6 +18,7 @@ package objectox.code;
 import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
+import objectos.code.TypeName;
 import objectos.util.IntArrays;
 
 public final class Pass2 {
@@ -135,6 +136,8 @@ public final class Pass2 {
 
       switch (code) {
         case Pass1.CLASS -> declarationClass();
+
+        case Pass1.METHOD -> declarationMethod();
 
         case Pass1.LOCAL_VARIABLE -> statementLocalVariable();
 
@@ -311,8 +314,9 @@ public final class Pass2 {
     codeadv();
 
     if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method return type");
+      var returnType = (TypeName) codeobj();
+
+      importSet.execute(processor, returnType);
     } else {
       processor.keyword("void");
     }

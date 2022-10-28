@@ -13,14 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.tmpl;
 
-sealed abstract class PackageOrClassName permits ClassName, PackageName {
-
-  abstract PackageName packageName();
-
-  final String toString(String simpleName) {
-    return toString() + '.' + simpleName;
-  }
-
-}
+public sealed interface MethodInvocationElement //
+permits ExpressionElement, NewLineRef {}

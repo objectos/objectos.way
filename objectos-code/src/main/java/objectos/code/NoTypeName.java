@@ -15,12 +15,17 @@
  */
 package objectos.code;
 
-sealed abstract class PackageOrClassName permits ClassName, PackageName {
+import objectos.code.tmpl.ClassNameSet;
 
-  abstract PackageName packageName();
+public final class NoTypeName implements TypeName {
 
-  final String toString(String simpleName) {
-    return toString() + '.' + simpleName;
+  public static final NoTypeName INSTANCE = new NoTypeName();
+
+  NoTypeName() {}
+
+  @Override
+  public final void acceptClassNameSet(ClassNameSet set) {
+    // noop
   }
 
 }

@@ -16,23 +16,25 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
+import objectos.code.tmpl.AtRef;
+import objectos.code.tmpl.ClassDeclarationElement;
+import objectos.code.tmpl.ClassDeclarationRef;
+import objectos.code.tmpl.ExpressionElement;
+import objectos.code.tmpl.ExtendsRef;
+import objectos.code.tmpl.FinalRef;
+import objectos.code.tmpl.IdentifierRef;
 import objectos.code.tmpl.InternalApi;
-import objectos.code.tmpl.InternalApi.AtRef;
-import objectos.code.tmpl.InternalApi.ClassElement;
-import objectos.code.tmpl.InternalApi.ClassRef;
-import objectos.code.tmpl.InternalApi.ExpressionElement;
-import objectos.code.tmpl.InternalApi.ExtendsRef;
-import objectos.code.tmpl.InternalApi.FinalRef;
-import objectos.code.tmpl.InternalApi.IdentifierRef;
-import objectos.code.tmpl.InternalApi.LiteralRef;
-import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
-import objectos.code.tmpl.InternalApi.MethodElement;
-import objectos.code.tmpl.InternalApi.MethodInvocationElement;
-import objectos.code.tmpl.InternalApi.MethodInvocationRef;
-import objectos.code.tmpl.InternalApi.MethodRef;
-import objectos.code.tmpl.InternalApi.NameRef;
-import objectos.code.tmpl.InternalApi.NewLineRef;
+import objectos.code.tmpl.LiteralRef;
+import objectos.code.tmpl.LocalVariableDeclarationRef;
+import objectos.code.tmpl.MethodDeclarationElement;
+import objectos.code.tmpl.MethodInvocationElement;
+import objectos.code.tmpl.MethodInvocationRef;
+import objectos.code.tmpl.MethodRef;
+import objectos.code.tmpl.NameRef;
+import objectos.code.tmpl.NewLineRef;
+import objectos.code.tmpl.VoidRef;
 import objectos.lang.Check;
+import objectox.code.Pass0;
 
 public abstract class JavaTemplate {
 
@@ -128,26 +130,32 @@ public abstract class JavaTemplate {
     definition();
   }
 
-  protected final ClassRef _class(ClassElement... elements) {
+  protected final ClassDeclarationRef _class(ClassDeclarationElement... elements) {
     api.classDeclaration(elements.length); // implicit elements null check
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final ExtendsRef _extends(ClassName superclass) {
     api._extends(superclass);
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final FinalRef _final() {
     api._final();
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final void _package(String packageName) {
     api.packageDeclaration(packageName);
+  }
+
+  protected final VoidRef _void() {
+    api.typeName(TypeName.VOID);
+
+    return Pass0.REF;
   }
 
   protected final AtRef annotation(Class<? extends Annotation> annotationType) {
@@ -157,7 +165,7 @@ public abstract class JavaTemplate {
 
     api.annotation(1);
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final void autoImports() {
@@ -169,44 +177,44 @@ public abstract class JavaTemplate {
   protected final IdentifierRef id(String name) {
     api.identifier(name);
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final MethodInvocationRef invoke(
       NameRef methodName, MethodInvocationElement... elements) {
     api.methodInvocation(elements.length + 1);
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
-  protected final MethodRef method(MethodElement... elements) {
+  protected final MethodRef method(MethodDeclarationElement... elements) {
     api.methodDeclaration(elements.length); // implicit elements null check
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final NameRef name(String value) {
     api.name(value);
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final NewLineRef nl() {
     api.newLine();
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final LiteralRef s(String value) {
     api.stringLiteral(value);
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
   protected final LocalVariableDeclarationRef var(IdentifierRef id, ExpressionElement expression) {
     api.localVariable(2);
 
-    return InternalApi.REF;
+    return Pass0.REF;
   }
 
 }

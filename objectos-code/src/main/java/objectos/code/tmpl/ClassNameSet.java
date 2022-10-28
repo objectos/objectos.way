@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.tmpl;
 
-sealed abstract class PackageOrClassName permits ClassName, PackageName {
+import objectos.code.ClassName;
+import objectox.code.ImportSet;
 
-  abstract PackageName packageName();
+public sealed interface ClassNameSet permits ImportSet {
 
-  final String toString(String simpleName) {
-    return toString() + '.' + simpleName;
-  }
+  void addClassName(ClassName className);
 
 }

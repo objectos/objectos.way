@@ -15,12 +15,12 @@
  */
 package objectos.code;
 
-sealed abstract class PackageOrClassName permits ClassName, PackageName {
+import objectos.code.tmpl.ClassNameSet;
 
-  abstract PackageName packageName();
+public sealed interface TypeName permits ClassName, NoTypeName {
 
-  final String toString(String simpleName) {
-    return toString() + '.' + simpleName;
-  }
+  NoTypeName VOID = NoTypeName.INSTANCE;
+
+  void acceptClassNameSet(ClassNameSet set);
 
 }
