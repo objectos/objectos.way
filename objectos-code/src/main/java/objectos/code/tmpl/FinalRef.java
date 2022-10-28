@@ -18,4 +18,4 @@ package objectos.code.tmpl;
 import objectox.code.Ref;
 
 public sealed interface FinalRef
-    extends ClassDeclarationElement permits Ref {}
+    extends ClassDeclarationElement, MethodDeclarationElement permits Ref {}

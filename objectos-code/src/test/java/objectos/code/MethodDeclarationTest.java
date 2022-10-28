@@ -94,4 +94,28 @@ public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  - single modifier
+  - void
+  - empty body
+  """)
+  public void testCase04() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        method(
+          _final(), _void(), id("test")
+        );
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      final void test() {}
+      """
+    );
+  }
+
 }
