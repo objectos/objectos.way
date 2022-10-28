@@ -15,5 +15,5 @@
  */
 package objectos.code.tmpl;
 
-public sealed interface MethodDeclarationElement
-permits IdentifierRef, VoidRef {}
+public sealed interface MethodDeclarationElement //
+permits IdentifierRef, MethodInvocationRef, VoidRef {}

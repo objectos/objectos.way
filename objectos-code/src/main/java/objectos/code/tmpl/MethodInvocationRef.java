@@ -18,4 +18,4 @@ package objectos.code.tmpl;
 import objectox.code.Ref;
 
 public sealed interface MethodInvocationRef
-    extends ExpressionElement permits Ref {}
+    extends ExpressionElement, MethodDeclarationElement permits Ref {}

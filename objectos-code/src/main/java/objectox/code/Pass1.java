@@ -434,6 +434,8 @@ public final class Pass1 {
 
         case Pass0.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
 
+        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
     }

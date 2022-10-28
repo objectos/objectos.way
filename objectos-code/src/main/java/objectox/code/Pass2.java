@@ -360,14 +360,43 @@ public final class Pass2 {
       processor.blockStart();
 
       if (!codenop()) {
-        throw new UnsupportedOperationException(
-          "Implement me :: method body");
+        codepsh();
+        declarationMethodBody();
+        codepop();
       }
 
       processor.blockEnd();
     }
 
     processor.methodEnd();
+  }
+
+  private void declarationMethodBody() {
+    if (iternxt()) {
+      processor.blockBeforeFirstItem();
+
+      declarationMethodBodyItem();
+
+      while (iternxt()) {
+        processor.blockBeforeNextItem();
+
+        declarationMethodBodyItem();
+      }
+
+      processor.blockAfterLastItem();
+    }
+  }
+
+  private void declarationMethodBodyItem() {
+    codepsh();
+
+    switch (code) {
+      case Pass1.METHOD_INVOCATION -> statementMethodInvocation();
+
+      default -> throw codeuoe();
+    }
+
+    codepop();
   }
 
   private void declarationModifier() {

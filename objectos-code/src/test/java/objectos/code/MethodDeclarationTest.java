@@ -20,7 +20,8 @@ import org.testng.annotations.Test;
 public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
 
   @Test(description = """
-  - single statement
+  - void
+  - empty body
   """)
   public void testCase01() {
     var tmpl = new JavaTemplate() {
@@ -37,6 +38,32 @@ public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
 
       """
       void test() {}
+      """
+    );
+  }
+
+  @Test(description = """
+  - void
+  - single statement
+  """)
+  public void testCase02() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        method(
+          _void(), id("test"),
+          invoke(name("foo"))
+        );
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      void test() {
+        foo();
+      }
       """
     );
   }
