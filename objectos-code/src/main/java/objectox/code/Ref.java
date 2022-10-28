@@ -20,6 +20,7 @@ import objectos.code.tmpl.ClassDeclarationRef;
 import objectos.code.tmpl.ExtendsRef;
 import objectos.code.tmpl.FinalRef;
 import objectos.code.tmpl.IdentifierRef;
+import objectos.code.tmpl.IncludeRef;
 import objectos.code.tmpl.LiteralRef;
 import objectos.code.tmpl.LocalVariableDeclarationRef;
 import objectos.code.tmpl.MethodInvocationRef;
@@ -35,6 +36,7 @@ public final class Ref
     ExtendsRef,
     FinalRef,
     IdentifierRef,
+    IncludeRef,
     LiteralRef,
     LocalVariableDeclarationRef,
     MethodInvocationRef,

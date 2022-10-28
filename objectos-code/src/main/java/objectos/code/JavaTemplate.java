@@ -23,6 +23,7 @@ import objectos.code.tmpl.ExpressionElement;
 import objectos.code.tmpl.ExtendsRef;
 import objectos.code.tmpl.FinalRef;
 import objectos.code.tmpl.IdentifierRef;
+import objectos.code.tmpl.IncludeRef;
 import objectos.code.tmpl.InternalApi;
 import objectos.code.tmpl.LiteralRef;
 import objectos.code.tmpl.LocalVariableDeclarationRef;
@@ -96,6 +97,11 @@ public abstract class JavaTemplate {
 
     void stringLiteral(String s);
 
+  }
+
+  @FunctionalInterface
+  protected interface IncludeTarget {
+    void def1MainProperty();
   }
 
   private InternalApi api;
@@ -180,9 +186,17 @@ public abstract class JavaTemplate {
     return Pass0.REF;
   }
 
+  protected final IncludeRef include(IncludeTarget target) {
+    target.def1MainProperty();
+
+    return Pass0.REF;
+  }
+
   protected final MethodInvocationRef invoke(
-      NameRef methodName, MethodInvocationElement... elements) {
-    api.methodInvocation(elements.length + 1);
+      String methodName, MethodInvocationElement... elements) {
+    api.name(methodName);
+
+    api.methodInvocation(elements.length + 1); // implicit elements null check
 
     return Pass0.REF;
   }

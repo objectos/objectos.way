@@ -15,5 +15,8 @@
  */
 package objectos.code.tmpl;
 
-public sealed interface MethodDeclarationElement //
-permits AtRef, FinalRef, IdentifierRef, IncludeRef, MethodInvocationRef, VoidRef {}
+import objectox.code.Ref;
+
+public sealed interface IncludeRef
+    extends MethodDeclarationElement, MethodInvocationElement permits Ref {
+}

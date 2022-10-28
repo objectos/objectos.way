@@ -16,4 +16,4 @@
 package objectos.code.tmpl;
 
 public sealed interface MethodInvocationElement //
-permits ExpressionElement, NewLineRef {}
+permits ExpressionElement, IncludeRef, NewLineRef {}

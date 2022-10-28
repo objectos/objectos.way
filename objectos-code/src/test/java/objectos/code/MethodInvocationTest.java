@@ -27,7 +27,7 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        invoke(name("test"));
+        invoke("test");
       }
     };
 
@@ -48,7 +48,7 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        invoke(name("test"), s("a"));
+        invoke("test", s("a"));
       }
     };
 
@@ -69,7 +69,7 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        invoke(name("test"), s("a"), s("b"));
+        invoke("test", s("a"), s("b"));
       }
     };
 
@@ -91,7 +91,7 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        invoke(name("m0"), s("1"), invoke(name("m2")), s("3"));
+        invoke("m0", s("1"), invoke("m2"), s("3"));
       }
     };
 
@@ -113,7 +113,7 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        invoke(name("m0"), nl(), s("1"), nl(), nl(), invoke(name("m2")), nl(), nl(), s("3"), nl());
+        invoke("m0", nl(), s("1"), nl(), nl(), invoke("m2"), nl(), nl(), s("3"), nl());
       }
     };
 

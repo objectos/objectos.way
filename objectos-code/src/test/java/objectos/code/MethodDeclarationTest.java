@@ -52,7 +52,7 @@ public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
       protected final void definition() {
         method(
           _void(), id("test"),
-          invoke(name("foo"))
+          invoke("foo")
         );
       }
     };
