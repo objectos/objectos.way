@@ -300,8 +300,9 @@ public final class Pass2 {
     boolean _abstract = false;
 
     if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method modifiers");
+      codepsh();
+      declarationModifierList();
+      codepop();
     }
 
     codeadv();

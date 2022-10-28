@@ -430,6 +430,8 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
+        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
+
         case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
         case Pass0.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
