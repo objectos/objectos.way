@@ -461,6 +461,8 @@ public final class Pass2 {
 
   private void expression() {
     switch (code) {
+      case Pass1.EXPRESSION_NAME -> expressionName();
+
       case Pass1.METHOD_INVOCATION -> expressionMethodInvocation();
 
       case Pass1.STRING_LITERAL -> {
@@ -529,6 +531,30 @@ public final class Pass2 {
     expression();
 
     codepop();
+  }
+
+  private void expressionName() {
+    codeadv();
+
+    codeadv();
+
+    var length = code;
+
+    assert length > 0;
+
+    codeadv();
+
+    var first = codeobj();
+
+    if (first instanceof String s) {
+      processor.identifier(s);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (length > 1) {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
   private boolean iterarg(boolean comma) {

@@ -56,6 +56,8 @@ public final class Pass1 {
 
   static final int NEW_LINE = -17;
 
+  static final int EXPRESSION_NAME = -18;
+
   int[] code = new int[32];
 
   private int codeIndex;
@@ -345,6 +347,16 @@ public final class Pass1 {
     return self;
   }
 
+  private int executeExpressionName(int index) {
+    var self = codeIndex;
+
+    index++;
+
+    add(EXPRESSION_NAME, 1, source[index]);
+
+    return self;
+  }
+
   private int executeExtends(int index) {
     index++;
 
@@ -472,7 +484,9 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.NAME -> name = setOrThrow(name, executeName(jmp));
+        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+
+        case Pass0.NAME -> args = listAdd(args, executeExpressionName(jmp));
 
         case Pass0.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
 

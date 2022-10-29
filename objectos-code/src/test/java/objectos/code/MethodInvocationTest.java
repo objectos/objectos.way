@@ -132,4 +132,24 @@ public class MethodInvocationTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  - allow expression names
+  """)
+  public void testCase06() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke("test", n("field"));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      test(field);
+      """
+    );
+  }
+
 }

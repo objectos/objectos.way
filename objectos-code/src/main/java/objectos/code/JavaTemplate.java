@@ -194,7 +194,7 @@ public abstract class JavaTemplate {
 
   protected final MethodInvocationRef invoke(
       String methodName, MethodInvocationElement... elements) {
-    api.name(methodName);
+    api.identifier(methodName);
 
     api.methodInvocation(elements.length + 1); // implicit elements null check
 
@@ -203,6 +203,12 @@ public abstract class JavaTemplate {
 
   protected final MethodRef method(MethodDeclarationElement... elements) {
     api.methodDeclaration(elements.length); // implicit elements null check
+
+    return Pass0.REF;
+  }
+
+  protected final NameRef n(String value) {
+    api.name(value);
 
     return Pass0.REF;
   }
