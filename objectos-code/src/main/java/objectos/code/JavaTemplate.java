@@ -225,7 +225,9 @@ public abstract class JavaTemplate {
     return Pass0.REF;
   }
 
-  protected final LocalVariableDeclarationRef var(IdentifierRef id, ExpressionElement expression) {
+  protected final LocalVariableDeclarationRef var(String name, ExpressionElement expression) {
+    api.identifier(name);
+
     api.localVariable(2);
 
     return Pass0.REF;

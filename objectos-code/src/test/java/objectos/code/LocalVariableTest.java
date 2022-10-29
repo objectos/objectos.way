@@ -26,7 +26,7 @@ public class LocalVariableTest extends AbstractObjectoxCodeTest {
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        var(id("s"), s("java"));
+        var("s", s("java"));
       }
     };
 
