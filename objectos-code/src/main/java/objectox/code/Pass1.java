@@ -20,60 +20,32 @@ import objectos.util.IntArrays;
 
 public final class Pass1 {
 
-  static final int NOP = -1;
+  int[] codes = new int[32];
 
-  static final int COMPILATION_UNIT = -2;
+  private int codesCursor;
 
-  static final int IMPORT = -3;
+  Object[] objects;
 
-  static final int IMPORT_ON_DEMAND = -4;
+  private int[] protoArray;
 
-  static final int PACKAGE = -5;
-
-  static final int CLASS = -6;
-
-  static final int LIST = -7;
-
-  static final int EOF = -8;
-
-  static final int ANNOTATION = -9;
-
-  static final int METHOD = -10;
-
-  static final int LOCAL_VARIABLE = -11;
-
-  static final int STRING_LITERAL = -12;
-
-  static final int MODIFIER = -13;
-
-  static final int METHOD_INVOCATION = -14;
-
-  static final int LIST_CELL = -15;
-
-  static final int JMP = -16;
-
-  static final int NEW_LINE = -17;
-
-  static final int EXPRESSION_NAME = -18;
-
-  int[] code = new int[32];
-
-  private int codeIndex;
-
-  Object[] object;
-
-  private int[] source;
-
-  private int instruction;
+  private int protoCursor;
 
   ImportSet importSet;
 
+  private int proto;
+
+  private int[] stack = new int[16];
+
+  private int stackCursor;
+
   public final void execute(int[] source, Object[] object, ImportSet importSet) {
-    this.source = source;
-    this.object = object;
+    this.protoArray = source;
+    this.objects = object;
     this.importSet = importSet;
 
-    codeIndex = 0;
+    codesCursor = 0;
+
+    protoCursor = 0;
 
     execute();
   }
@@ -83,181 +55,208 @@ public final class Pass1 {
   }
 
   final int[] toArray() {
-    return Arrays.copyOf(code, codeIndex);
+    return Arrays.copyOf(codes, codesCursor);
   }
 
-  private void add(int v0) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 0);
+  private void codeadd(int v0) {
+    codes = IntArrays.growIfNecessary(codes, codesCursor + 0);
 
-    code[codeIndex++] = v0;
+    codes[codesCursor++] = v0;
   }
 
-  private void add(int v0, int v1) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 1);
+  private void codeadd(int v0, int v1) {
+    codes = IntArrays.growIfNecessary(codes, codesCursor + 1);
 
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
+    codes[codesCursor++] = v0;
+    codes[codesCursor++] = v1;
   }
 
-  private void add(int v0, int v1, int v2) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 2);
+  private void codeadd(int v0, int v1, int v2) {
+    codes = IntArrays.growIfNecessary(codes, codesCursor + 2);
 
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
+    codes[codesCursor++] = v0;
+    codes[codesCursor++] = v1;
+    codes[codesCursor++] = v2;
   }
 
-  private void add(int v0, int v1, int v2, int v3) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 3);
+  private void codeadd(int v0, int v1, int v2, int v3) {
+    codes = IntArrays.growIfNecessary(codes, codesCursor + 3);
 
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
-    code[codeIndex++] = v3;
+    codes[codesCursor++] = v0;
+    codes[codesCursor++] = v1;
+    codes[codesCursor++] = v2;
+    codes[codesCursor++] = v3;
   }
 
-  private void add(int v0, int v1, int v2, int v3, int v4) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 4);
+  private void codeadd(int v0, int v1, int v2, int v3, int v4) {
+    codes = IntArrays.growIfNecessary(codes, codesCursor + 4);
 
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
-    code[codeIndex++] = v3;
-    code[codeIndex++] = v4;
+    codes[codesCursor++] = v0;
+    codes[codesCursor++] = v1;
+    codes[codesCursor++] = v2;
+    codes[codesCursor++] = v3;
+    codes[codesCursor++] = v4;
   }
 
-  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 7);
+  private void codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    codes = IntArrays.growIfNecessary(codes, codesCursor + 7);
 
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
-    code[codeIndex++] = v3;
-    code[codeIndex++] = v4;
-    code[codeIndex++] = v5;
-    code[codeIndex++] = v6;
-    code[codeIndex++] = v7;
+    codes[codesCursor++] = v0;
+    codes[codesCursor++] = v1;
+    codes[codesCursor++] = v2;
+    codes[codesCursor++] = v3;
+    codes[codesCursor++] = v4;
+    codes[codesCursor++] = v5;
+    codes[codesCursor++] = v6;
+    codes[codesCursor++] = v7;
   }
 
-  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
-    code = IntArrays.growIfNecessary(code, codeIndex + 8);
+  private void codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    codes = IntArrays.growIfNecessary(codes, codesCursor + 8);
 
-    code[codeIndex++] = v0;
-    code[codeIndex++] = v1;
-    code[codeIndex++] = v2;
-    code[codeIndex++] = v3;
-    code[codeIndex++] = v4;
-    code[codeIndex++] = v5;
-    code[codeIndex++] = v6;
-    code[codeIndex++] = v7;
-    code[codeIndex++] = v8;
+    codes[codesCursor++] = v0;
+    codes[codesCursor++] = v1;
+    codes[codesCursor++] = v2;
+    codes[codesCursor++] = v3;
+    codes[codesCursor++] = v4;
+    codes[codesCursor++] = v5;
+    codes[codesCursor++] = v6;
+    codes[codesCursor++] = v7;
+    codes[codesCursor++] = v8;
+  }
+
+  private void codeset(
+      int zero,
+      int v1, int v2) {
+    codes[zero + 1] = v1;
+    codes[zero + 2] = v2;
+  }
+
+  private void codeset(
+      int zero,
+      int v1, int v2, int v3) {
+    codes[zero + 1] = v1;
+    codes[zero + 2] = v2;
+    codes[zero + 3] = v3;
+  }
+
+  private void codeset(
+      int zero,
+      int v1, int v2, int v3, int v4) {
+    codes[zero + 1] = v1;
+    codes[zero + 2] = v2;
+    codes[zero + 3] = v3;
+    codes[zero + 4] = v4;
+  }
+
+  private void codeset(
+      int zero,
+      int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    codes[zero + 1] = v1;
+    codes[zero + 2] = v2;
+    codes[zero + 3] = v3;
+    codes[zero + 4] = v4;
+    codes[zero + 5] = v5;
+    codes[zero + 6] = v6;
+    codes[zero + 7] = v7;
+  }
+
+  private void codeset(
+      int zero,
+      int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    codes[zero + 1] = v1;
+    codes[zero + 2] = v2;
+    codes[zero + 3] = v3;
+    codes[zero + 4] = v4;
+    codes[zero + 5] = v5;
+    codes[zero + 6] = v6;
+    codes[zero + 7] = v7;
+    codes[zero + 8] = v8;
   }
 
   private void execute() {
-    var start = source[0];
+    protorea(ByteProto.JMP);
 
-    assert start == ByteProto.JMP : start;
+    protorea();
 
-    var jmp = source[1];
+    protopsh();
 
-    var inst = source[jmp];
+    protoass(ByteProto.COMPILATION_UNIT);
 
-    assert inst == ByteProto.COMPILATION_UNIT : instruction;
-
-    executeCompilationUnit(jmp);
+    executeCompilationUnit();
   }
 
-  private int executeAnnotation(int index) {
-    var self = codeIndex;
+  private int executeAnnotation() {
+    var self = codesCursor;
 
-    int name = NOP;
-    int pairs = NOP;
+    int name = ByteCode.NOP;
+    int pairs = ByteCode.NOP;
 
-    add(ANNOTATION, name, pairs);
+    codeadd(ByteCode.ANNOTATION, name, pairs);
 
-    index++;
+    var children = protolst();
 
-    int children = source[index++];
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (int limit = index + children; index < limit; index++) {
-      int jmp = source[index];
-      int inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.CLASS_NAME -> {
-          if (name == NOP) {
-            name = executeClassName(jmp);
-          } else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> name = setOrThrow(name, protorea());
 
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
-    set(self, name, pairs);
+    codeset(self, name, pairs);
 
     return self;
   }
 
-  private int executeClass(int index) {
-    int self = codeIndex;
+  private int executeClass() {
+    int self = codesCursor;
 
-    int modifiers = NOP;
-    int name = NOP;
-    int typeArgs = NOP;
-    int _extends = NOP;
-    int _implements = NOP;
-    int _permits = NOP;
-    int body = NOP;
+    int modifiers = ByteCode.NOP;
+    int name = ByteCode.NOP;
+    int typeArgs = ByteCode.NOP;
+    int _extends = ByteCode.NOP;
+    int _implements = ByteCode.NOP;
+    int _permits = ByteCode.NOP;
+    int body = ByteCode.NOP;
 
-    add(
-      CLASS,
+    codeadd(
+      ByteCode.CLASS,
       modifiers, name, typeArgs, _extends, _implements, _permits,
       body
     );
 
-    index++;
+    var children = protolst();
 
-    int children = source[index++];
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (int limit = index + children; index < limit; index++) {
-      int jmp = source[index];
-      int inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
+      switch (proto) {
+        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation());
 
-        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier());
 
-        case ByteProto.IDENTIFIER -> {
-          if (name == NOP) {
-            name = executeIdentifier(jmp);
-          } else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, protorea());
 
-        case ByteProto.EXTENDS -> {
-          if (_extends == NOP) {
-            _extends = executeExtends(jmp);
-          } else {
-            throw new UnsupportedOperationException("Implement me");
-          }
-        }
+        case ByteProto.EXTENDS -> _extends = setOrThrow(_extends, protorea());
 
-        case ByteProto.METHOD -> {
-          var value = executeMethod(jmp);
+        case ByteProto.METHOD -> body = listAdd(body, executeMethod());
 
-          body = listAdd(body, value);
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
-    set(
+    codeset(
       self,
       modifiers, name, typeArgs, _extends, _implements, _permits,
       body
@@ -266,156 +265,126 @@ public final class Pass1 {
     return self;
   }
 
-  private int executeClassName(int index) {
-    index++;
+  private void executeCompilationUnit() {
+    var self = codesCursor;
 
-    return source[index];
-  }
+    var _package = ByteCode.NOP;
+    var _import = ByteCode.NOP;
+    var body = ByteCode.NOP;
 
-  private void executeCompilationUnit(int index) {
-    var self = codeIndex;
-
-    var _package = NOP;
-    var _import = NOP;
-    var body = NOP;
-
-    add(
-      COMPILATION_UNIT,
-      _package,
-      _import,
-      body
+    codeadd(
+      ByteCode.COMPILATION_UNIT,
+      _package, _import, body
     );
 
-    index++;
+    var children = protolst();
 
-    var children = source[index++];
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (int limit = index + children; index < limit; index++) {
-      var jmp = source[index];
-      var inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.PACKAGE -> {
-          var value = executePackage(jmp);
+      switch (proto) {
+        case ByteProto.PACKAGE -> _package = setOrThrow(_package, executePackage());
 
-          if (_package != NOP) {
-            throw new UnsupportedOperationException("Implement me");
-          } else {
-            _package = value;
-          }
-        }
+        case ByteProto.CLASS -> body = listAdd(body, executeClass());
 
-        case ByteProto.CLASS -> body = listAdd(body, executeClass(jmp));
+        case ByteProto.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable());
 
-        case ByteProto.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
+        case ByteProto.METHOD -> body = listAdd(body, executeMethod());
 
-        case ByteProto.METHOD -> body = listAdd(body, executeMethod(jmp));
+        case ByteProto.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation());
 
-        case ByteProto.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
-
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
-    if (_import != NOP) {
+    if (_import != ByteCode.NOP) {
       throw new UnsupportedOperationException("Implement me :: unexpected imports");
     }
 
     if (importSet.enabled) {
       _import = executeEofImportSet();
-    } else {
-      importSet.clear();
     }
 
-    set(
+    codeset(
       self,
-
-      _package,
-      _import,
-      body
+      _package, _import, body
     );
   }
 
   private int executeEofImportSet() {
-    var self = codeIndex;
+    var self = codesCursor;
 
     var sorted = importSet.sort();
 
     for (int i = 0, size = sorted.size(); i < size; i++) {
-      add(IMPORT, i);
+      codeadd(ByteCode.IMPORT, i);
     }
 
-    add(EOF);
+    codeadd(ByteCode.EOF);
 
     return self;
   }
 
-  private int executeExpressionName(int index) {
-    var self = codeIndex;
+  private int executeExpressionName() {
+    var self = codesCursor;
 
-    index++;
+    var children = protolst();
 
-    var children = source[index++];
+    codeadd(ByteCode.EXPRESSION_NAME, children);
 
-    add(EXPRESSION_NAME, children);
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (var limit = index + children; index < limit; index++) {
-      var jmp = source[index];
-      var inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.CLASS_NAME, ByteProto.IDENTIFIER -> add(source[++jmp]);
+      switch (proto) {
+        case ByteProto.CLASS_NAME, ByteProto.IDENTIFIER -> codeadd(protorea());
 
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
     return self;
   }
 
-  private int executeExtends(int index) {
-    index++;
+  private int executeLocalVariable() {
+    var self = codesCursor;
 
-    return source[index];
-  }
+    var modifiers = ByteCode.NOP;
+    var type = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var init = ByteCode.NOP;
 
-  private int executeIdentifier(int index) {
-    index++;
-
-    return source[index];
-  }
-
-  private int executeLocalVariable(int index) {
-    var self = codeIndex;
-
-    var modifiers = NOP;
-    var type = NOP;
-    var name = NOP;
-    var init = NOP;
-
-    add(
-      LOCAL_VARIABLE,
+    codeadd(
+      ByteCode.LOCAL_VARIABLE,
       modifiers, type, name, init
     );
 
-    index++;
+    var children = protolst();
 
-    var children = source[index++];
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (var limit = index + children; index < limit; index++) {
-      var jmp = source[index];
-      var inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, protorea());
 
-        case ByteProto.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral(jmp));
+        case ByteProto.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral());
 
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
-    set(
+    codeset(
       self,
       modifiers, type, name, init
     );
@@ -423,48 +392,49 @@ public final class Pass1 {
     return self;
   }
 
-  private int executeMethod(int index) {
-    int self = codeIndex;
+  private int executeMethod() {
+    int self = codesCursor;
 
-    int modifiers = NOP;
-    int typeParams = NOP;
-    int returnType = NOP;
-    int name = NOP;
-    int receiver = NOP;
-    int params = NOP;
-    int _throws = NOP;
-    int body = NOP;
+    int modifiers = ByteCode.NOP;
+    int typeParams = ByteCode.NOP;
+    int returnType = ByteCode.NOP;
+    int name = ByteCode.NOP;
+    int receiver = ByteCode.NOP;
+    int params = ByteCode.NOP;
+    int _throws = ByteCode.NOP;
+    int body = ByteCode.NOP;
 
-    add(
-      METHOD,
+    codeadd(
+      ByteCode.METHOD,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );
 
-    index++;
+    var children = protolst();
 
-    int children = source[index++];
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (int limit = index + children; index < limit; index++) {
-      int jmp = source[index];
-      int inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
+      switch (proto) {
+        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation());
 
-        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier());
 
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, protorea());
 
-        case ByteProto.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
+        case ByteProto.TYPE_NAME -> returnType = setOrThrow(returnType, protorea());
 
-        case ByteProto.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+        case ByteProto.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation());
 
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
-    set(
+    codeset(
       self,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
@@ -473,204 +443,176 @@ public final class Pass1 {
     return self;
   }
 
-  private int executeMethodInvocation(int index) {
-    var self = codeIndex;
+  private int executeMethodInvocation() {
+    var self = codesCursor;
 
-    int callee = NOP;
-    int typeArgs = NOP;
-    int name = NOP;
-    int args = NOP;
+    int callee = ByteCode.NOP;
+    int typeArgs = ByteCode.NOP;
+    int name = ByteCode.NOP;
+    int args = ByteCode.NOP;
 
-    add(METHOD_INVOCATION, callee, typeArgs, name, args);
+    codeadd(ByteCode.METHOD_INVOCATION, callee, typeArgs, name, args);
 
-    index++;
+    var children = protolst();
 
-    int children = source[index++];
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (int limit = index + children; index < limit; index++) {
-      int jmp = source[index];
-      int inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, protorea());
 
-        case ByteProto.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName(jmp));
+        case ByteProto.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName());
 
-        case ByteProto.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
+        case ByteProto.NEW_LINE -> args = listAdd(args, executeNewLine());
 
-        case ByteProto.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
+        case ByteProto.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation());
 
-        case ByteProto.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
+        case ByteProto.STRING_LITERAL -> args = listAdd(args, executeStringLiteral());
 
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
-    set(self, callee, typeArgs, name, args);
+    codeset(self, callee, typeArgs, name, args);
 
     return self;
   }
 
-  private int executeModifier(int index) {
-    var self = codeIndex;
+  private int executeModifier() {
+    var self = codesCursor;
 
-    index++;
+    protorea();
 
-    add(MODIFIER, source[index]);
-
-    return self;
-  }
-
-  private int executeNewLine(int index) {
-    var self = codeIndex;
-
-    add(NEW_LINE);
+    codeadd(ByteCode.MODIFIER, proto);
 
     return self;
   }
 
-  private int executePackage(int index) {
-    var self = codeIndex;
+  private int executeNewLine() {
+    var self = codesCursor;
 
-    var annotations = NOP;
-    var name = NOP;
+    codeadd(ByteCode.NEW_LINE);
 
-    add(
-      PACKAGE,
-      annotations,
-      name
+    return self;
+  }
+
+  private int executePackage() {
+    var self = codesCursor;
+
+    var annotations = ByteCode.NOP;
+    var name = ByteCode.NOP;
+
+    codeadd(
+      ByteCode.PACKAGE,
+      annotations, name
     );
 
-    index++;
+    var children = protolst();
 
-    var children = source[index++];
+    for (int i = 0; i < children; i++) {
+      protorea();
 
-    for (int limit = index + children; index < limit; index++) {
-      var jmp = source[index];
-      var inst = source[jmp];
+      protopsh();
 
-      switch (inst) {
-        case ByteProto.PACKAGE_NAME -> {
-          var value = executeClassName(jmp);
+      switch (proto) {
+        case ByteProto.PACKAGE_NAME -> name = setOrThrow(name, protorea());
 
-          if (name != NOP) {
-            throw new UnsupportedOperationException("Implement me");
-          } else {
-            name = value;
-          }
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+        default -> throw protouoe();
       }
+
+      protopop();
     }
 
-    set(
+    codeset(
       self,
-
-      annotations,
-      name
+      annotations, name
     );
 
     return self;
   }
 
-  private int executeStringLiteral(int index) {
-    var self = codeIndex;
+  private int executeStringLiteral() {
+    var self = codesCursor;
 
-    index++;
-
-    add(STRING_LITERAL, source[index]);
+    codeadd(ByteCode.STRING_LITERAL, protorea());
 
     return self;
-  }
-
-  private int executeTypeName(int index) {
-    index++;
-
-    return source[index];
   }
 
   private int listAdd(int list, int value) {
-    if (list == NOP) {
-      list = codeIndex;
+    if (list == ByteCode.NOP) {
+      list = codesCursor;
 
-      add(LIST, NOP, value, EOF, NOP);
-
-      return list;
-    }
-
-    var newcell = codeIndex;
-
-    add(LIST_CELL, value, EOF, NOP);
-
-    var lastcell = code[list + 1];
-
-    if (lastcell == NOP) {
-      code[list + 1] = newcell; // list last cell
-      code[list + 3] = JMP;
-      code[list + 4] = newcell;
+      codeadd(ByteCode.LIST, ByteCode.NOP, value, ByteCode.EOF, ByteCode.NOP);
 
       return list;
     }
 
-    code[list + 1] = newcell; // list last cell
-    code[lastcell + 2] = JMP;
-    code[lastcell + 3] = newcell;
+    var newcell = codesCursor;
+
+    codeadd(ByteCode.LIST_CELL, value, ByteCode.EOF, ByteCode.NOP);
+
+    var lastcell = codes[list + 1];
+
+    if (lastcell == ByteCode.NOP) {
+      codes[list + 1] = newcell; // list last cell
+      codes[list + 3] = ByteCode.JMP;
+      codes[list + 4] = newcell;
+
+      return list;
+    }
+
+    codes[list + 1] = newcell; // list last cell
+    codes[lastcell + 2] = ByteCode.JMP;
+    codes[lastcell + 3] = newcell;
 
     return list;
   }
 
-  private void set(
-      int zero,
-      int v1, int v2) {
-    code[zero + 1] = v1;
-    code[zero + 2] = v2;
+  private void protoass(int value) {
+    assert proto == value : value;
   }
 
-  private void set(
-      int zero,
-      int v1, int v2, int v3) {
-    code[zero + 1] = v1;
-    code[zero + 2] = v2;
-    code[zero + 3] = v3;
+  private int protolst() {
+    protorea();
+
+    return proto;
   }
 
-  private void set(
-      int zero,
-      int v1, int v2, int v3, int v4) {
-    code[zero + 1] = v1;
-    code[zero + 2] = v2;
-    code[zero + 3] = v3;
-    code[zero + 4] = v4;
+  private void protopop() {
+    protoCursor = stack[--stackCursor];
   }
 
-  private void set(
-      int zero,
-      int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
-    code[zero + 1] = v1;
-    code[zero + 2] = v2;
-    code[zero + 3] = v3;
-    code[zero + 4] = v4;
-    code[zero + 5] = v5;
-    code[zero + 6] = v6;
-    code[zero + 7] = v7;
+  private void protopsh() {
+    stack = IntArrays.growIfNecessary(stack, stackCursor);
+
+    stack[stackCursor++] = protoCursor;
+
+    protoCursor = proto;
+
+    protorea();
   }
 
-  private void set(
-      int zero,
-      int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
-    code[zero + 1] = v1;
-    code[zero + 2] = v2;
-    code[zero + 3] = v3;
-    code[zero + 4] = v4;
-    code[zero + 5] = v5;
-    code[zero + 6] = v6;
-    code[zero + 7] = v7;
-    code[zero + 8] = v8;
+  private int protorea() {
+    return proto = protoArray[protoCursor++];
+  }
+
+  private void protorea(int value) {
+    proto = protoArray[protoCursor++];
+
+    protoass(value);
+  }
+
+  private UnsupportedOperationException protouoe() {
+    return new UnsupportedOperationException("Implement me :: proto=" + proto);
   }
 
   private int setOrThrow(int index, int value) {
-    if (index == NOP) {
+    if (index == ByteCode.NOP) {
       return value;
     }
 

@@ -22,28 +22,28 @@ import objectos.util.ObjectArrays;
 
 public final class State {
 
-  private int[] elements = new int[10];
+  private int[] elementArray = new int[10];
 
-  private int elementsIndex;
+  private int elementCursor;
 
   private final ImportSet importSet = new ImportSet();
 
-  private Object[] objects = new Object[10];
+  private Object[] objectArray = new Object[10];
 
-  private int objectsIndex;
+  private int objectCursor;
 
-  private int[] protos = new int[10];
+  private int[] protoArray = new int[10];
 
-  private int protosCursor;
+  private int protoCursor;
 
   public final ImportSet importSet() { return importSet; }
 
   public final Object[] objects() {
-    return Arrays.copyOf(objects, objectsIndex);
+    return Arrays.copyOf(objectArray, objectCursor);
   }
 
   public final int[] protos() {
-    return Arrays.copyOf(protos, protosCursor);
+    return Arrays.copyOf(protoArray, protoCursor);
   }
 
   final void autoImports() {
@@ -51,23 +51,23 @@ public final class State {
   }
 
   final void elementadd(int type, int length) {
-    var start = elementsIndex - length;
+    var start = elementCursor - length;
 
-    var mark = protosCursor;
+    var mark = protoCursor;
 
     protoadd(type, length);
 
-    for (int i = start; i < elementsIndex; i++) {
-      protoadd(elements[i]);
+    for (int i = start; i < elementCursor; i++) {
+      protoadd(elementArray[i]);
     }
 
-    elementsIndex = start;
+    elementCursor = start;
 
     elementmark(mark);
   }
 
   final void objectadd(int type, Object value) {
-    elementmark(protosCursor);
+    elementmark(protoCursor);
 
     protoadd(type, objectadd(value));
   }
@@ -77,13 +77,13 @@ public final class State {
   }
 
   final void pass0end() {
-    elementadd(ByteProto.COMPILATION_UNIT, elementsIndex);
+    elementadd(ByteProto.COMPILATION_UNIT, elementCursor);
 
-    if (elementsIndex != 1) {
+    if (elementCursor != 1) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    protos[1] = elements[0];
+    protoArray[1] = elementArray[0];
   }
 
   final void pass0start() {
@@ -91,13 +91,13 @@ public final class State {
   }
 
   final State reset() {
-    elementsIndex = 0;
+    elementCursor = 0;
 
     importSet.clear();
 
-    objectsIndex = 0;
+    objectCursor = 0;
 
-    protosCursor = 0;
+    protoCursor = 0;
 
     protoadd(ByteProto.JMP, ByteProto.NULL);
 
@@ -109,32 +109,32 @@ public final class State {
   }
 
   private void elementmark(int value) {
-    elements = IntArrays.growIfNecessary(elements, elementsIndex);
+    elementArray = IntArrays.growIfNecessary(elementArray, elementCursor);
 
-    elements[elementsIndex++] = value;
+    elementArray[elementCursor++] = value;
   }
 
   private int objectadd(Object value) {
-    int result = objectsIndex;
+    int result = objectCursor;
 
-    objects = ObjectArrays.growIfNecessary(objects, objectsIndex);
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectCursor);
 
-    objects[objectsIndex++] = value;
+    objectArray[objectCursor++] = value;
 
     return result;
   }
 
   private void protoadd(int v0) {
-    protos = IntArrays.growIfNecessary(protos, protosCursor);
+    protoArray = IntArrays.growIfNecessary(protoArray, protoCursor);
 
-    protos[protosCursor++] = v0;
+    protoArray[protoCursor++] = v0;
   }
 
   private void protoadd(int v0, int v1) {
-    protos = IntArrays.growIfNecessary(protos, protosCursor + 1);
+    protoArray = IntArrays.growIfNecessary(protoArray, protoCursor + 1);
 
-    protos[protosCursor++] = v0;
-    protos[protosCursor++] = v1;
+    protoArray[protoCursor++] = v0;
+    protoArray[protoCursor++] = v1;
   }
 
 }
