@@ -17,4 +17,4 @@ package objectos.code.tmpl;
 
 import objectox.code.Ref;
 
-public sealed interface NameRef extends ExpressionElement permits Ref {}
+public sealed interface ExpressionNameRef extends ExpressionElement permits Ref {}

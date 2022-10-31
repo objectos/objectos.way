@@ -44,13 +44,15 @@ public final class Pass0 implements InternalApi {
   static final int METHOD = -10;
 
   static final int IDENTIFIER = -11;
-  static final int NAME = -12;
+  static final int CLASS_NAME = -12;
   static final int STRING_LITERAL = -13;
 
   static final int LOCAL_VARIABLE = -14;
   static final int METHOD_INVOCATION = -15;
   static final int NEW_LINE = -16;
   static final int TYPE_NAME = -17;
+  static final int EXPRESSION_NAME = -18;
+  static final int PACKAGE_NAME = -19;
 
   int[] code = new int[10];
 
@@ -97,7 +99,7 @@ public final class Pass0 implements InternalApi {
   public final void className(ClassName name) {
     Check.notNull(name, "name == null");
 
-    addObject(NAME, name);
+    addObject(CLASS_NAME, name);
   }
 
   public final void compilationUnitEnd() {
@@ -118,6 +120,11 @@ public final class Pass0 implements InternalApi {
     objectIndex = 0;
 
     add(JMP, NULL);
+  }
+
+  @Override
+  public final void expressionName(int length) {
+    element(EXPRESSION_NAME, length);
   }
 
   @Override
@@ -146,16 +153,6 @@ public final class Pass0 implements InternalApi {
   }
 
   @Override
-  public final void name(String value) {
-    Check.argument(
-      SourceVersion.isIdentifier(value), // implicit null-check
-      value, " is not a valid identifier"
-    );
-
-    addObject(NAME, value);
-  }
-
-  @Override
   public final void newLine() {
     element(NEW_LINE, 0);
   }
@@ -168,7 +165,7 @@ public final class Pass0 implements InternalApi {
       packageName, " is not a valid package name"
     );
 
-    addObject(NAME, packageName);
+    addObject(PACKAGE_NAME, packageName);
 
     element(PACKAGE, 1);
   }

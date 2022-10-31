@@ -187,9 +187,9 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.NAME -> {
+        case Pass0.CLASS_NAME -> {
           if (name == NOP) {
-            name = executeName(jmp);
+            name = executeClassName(jmp);
           } else {
             throw new UnsupportedOperationException("Implement me");
           }
@@ -267,6 +267,12 @@ public final class Pass1 {
     );
 
     return self;
+  }
+
+  private int executeClassName(int index) {
+    index++;
+
+    return source[index];
   }
 
   private void executeCompilationUnit(int index) {
@@ -352,7 +358,20 @@ public final class Pass1 {
 
     index++;
 
-    add(EXPRESSION_NAME, 1, source[index]);
+    var children = source[index++];
+
+    add(EXPRESSION_NAME, children);
+
+    for (var limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.CLASS_NAME, Pass0.IDENTIFIER -> add(source[++jmp]);
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
+      }
+    }
 
     return self;
   }
@@ -486,7 +505,7 @@ public final class Pass1 {
       switch (inst) {
         case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case Pass0.NAME -> args = listAdd(args, executeExpressionName(jmp));
+        case Pass0.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName(jmp));
 
         case Pass0.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
 
@@ -511,12 +530,6 @@ public final class Pass1 {
     add(MODIFIER, source[index]);
 
     return self;
-  }
-
-  private int executeName(int index) {
-    index++;
-
-    return source[index];
   }
 
   private int executeNewLine(int index) {
@@ -548,8 +561,8 @@ public final class Pass1 {
       var inst = source[jmp];
 
       switch (inst) {
-        case Pass0.NAME -> {
-          var value = executeName(jmp);
+        case Pass0.PACKAGE_NAME -> {
+          var value = executeClassName(jmp);
 
           if (name != NOP) {
             throw new UnsupportedOperationException("Implement me");

@@ -546,14 +546,32 @@ public final class Pass2 {
 
     var first = codeobj();
 
-    if (first instanceof String s) {
+    if (first instanceof ClassName cn) {
+      importSet.execute(processor, cn);
+    } else if (first instanceof String s) {
       processor.identifier(s);
     } else {
-      throw new UnsupportedOperationException("Implement me");
+      throw new UnsupportedOperationException("Implement me :: first=" + first);
     }
 
-    if (length > 1) {
-      throw new UnsupportedOperationException("Implement me");
+    if (length == 1) {
+      return;
+    }
+
+    for (int i = 1; i < length; i++) {
+      processor.dot();
+
+      codeadv();
+
+      var next = codeobj();
+
+      if (next instanceof ClassName cn) {
+        importSet.execute(processor, cn);
+      } else if (next instanceof String s2) {
+        processor.identifier(s2);
+      } else {
+        throw new UnsupportedOperationException("Implement me :: next=" + next);
+      }
     }
   }
 

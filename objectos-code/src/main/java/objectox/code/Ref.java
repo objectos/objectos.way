@@ -25,7 +25,7 @@ import objectos.code.tmpl.LiteralRef;
 import objectos.code.tmpl.LocalVariableDeclarationRef;
 import objectos.code.tmpl.MethodInvocationRef;
 import objectos.code.tmpl.MethodRef;
-import objectos.code.tmpl.NameRef;
+import objectos.code.tmpl.ExpressionNameRef;
 import objectos.code.tmpl.NewLineRef;
 import objectos.code.tmpl.VoidRef;
 
@@ -41,7 +41,7 @@ public final class Ref
     LocalVariableDeclarationRef,
     MethodInvocationRef,
     MethodRef,
-    NameRef,
+    ExpressionNameRef,
     NewLineRef,
     VoidRef {
 

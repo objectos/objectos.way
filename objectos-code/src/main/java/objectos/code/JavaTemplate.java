@@ -20,6 +20,7 @@ import objectos.code.tmpl.AtRef;
 import objectos.code.tmpl.ClassDeclarationElement;
 import objectos.code.tmpl.ClassDeclarationRef;
 import objectos.code.tmpl.ExpressionElement;
+import objectos.code.tmpl.ExpressionNameRef;
 import objectos.code.tmpl.ExtendsRef;
 import objectos.code.tmpl.FinalRef;
 import objectos.code.tmpl.IdentifierRef;
@@ -31,7 +32,6 @@ import objectos.code.tmpl.MethodDeclarationElement;
 import objectos.code.tmpl.MethodInvocationElement;
 import objectos.code.tmpl.MethodInvocationRef;
 import objectos.code.tmpl.MethodRef;
-import objectos.code.tmpl.NameRef;
 import objectos.code.tmpl.NewLineRef;
 import objectos.code.tmpl.VoidRef;
 import objectos.lang.Check;
@@ -64,6 +64,8 @@ public abstract class JavaTemplate {
     void compilationUnitEnd();
 
     void compilationUnitStart();
+
+    void dot();
 
     void identifier(String name);
 
@@ -207,14 +209,20 @@ public abstract class JavaTemplate {
     return Pass0.REF;
   }
 
-  protected final NameRef n(String value) {
-    api.name(value);
+  protected final ExpressionNameRef n(ClassName name, String identifier) {
+    api.className(name);
+
+    api.identifier(identifier);
+
+    api.expressionName(2);
 
     return Pass0.REF;
   }
 
-  protected final NameRef name(String value) {
-    api.name(value);
+  protected final ExpressionNameRef n(String value) {
+    api.identifier(value);
+
+    api.expressionName(1);
 
     return Pass0.REF;
   }

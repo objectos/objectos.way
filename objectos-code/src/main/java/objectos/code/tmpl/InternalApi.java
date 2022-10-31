@@ -33,6 +33,8 @@ public sealed interface InternalApi permits Pass0 {
 
   void className(ClassName name);
 
+  void expressionName(int length);
+
   void identifier(String name);
 
   void localVariable(int length);
@@ -40,8 +42,6 @@ public sealed interface InternalApi permits Pass0 {
   void methodDeclaration(int length);
 
   void methodInvocation(int length);
-
-  void name(String value);
 
   void newLine();
 

@@ -110,6 +110,13 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
+  public void dot() {
+    write('.');
+
+    word = false;
+  }
+
+  @Override
   public void identifier(String name) {
     word(name);
   }
