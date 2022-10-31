@@ -76,11 +76,7 @@ public final class ImportSet implements ClassNameSet {
   }
 
   public final void execute(Renderer processor, ClassName name) {
-    if (!enabled) {
-      processor.name(name.toString());
-    }
-
-    else if (classNames.contains(name)) {
+    if (classNames.contains(name)) {
       processor.identifier(name.simpleName);
     }
 
@@ -91,7 +87,7 @@ public final class ImportSet implements ClassNameSet {
     }
 
     else {
-      throw new UnsupportedOperationException("Implement me");
+      processor.name(name.toString());
     }
   }
 

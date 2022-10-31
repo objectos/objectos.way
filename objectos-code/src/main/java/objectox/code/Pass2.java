@@ -49,11 +49,11 @@ public final class Pass2 {
     execute0();
   }
 
-  public final void execute(State state, Renderer renderer) {
+  public final void execute(Pass1 pass1, Renderer renderer) {
     execute(
-      state.codeArray(),
-      state.objects(),
-      state.importSet(),
+      pass1.code,
+      pass1.object,
+      pass1.importSet,
       renderer
     );
   }
@@ -67,7 +67,7 @@ public final class Pass2 {
   }
 
   private boolean codenop() {
-    return code == ByteCode.NOP;
+    return code == Pass1.NOP;
   }
 
   private Object codeobj() {
@@ -99,7 +99,7 @@ public final class Pass2 {
   private void compilationUnit() {
     codeadv();
 
-    codeass(ByteCode.COMPILATION_UNIT);
+    codeass(Pass1.COMPILATION_UNIT);
 
     processor.compilationUnitStart();
 
@@ -135,13 +135,13 @@ public final class Pass2 {
       codepsh();
 
       switch (code) {
-        case ByteCode.CLASS -> declarationClass();
+        case Pass1.CLASS -> declarationClass();
 
-        case ByteCode.METHOD -> declarationMethod();
+        case Pass1.METHOD -> declarationMethod();
 
-        case ByteCode.LOCAL_VARIABLE -> statementLocalVariable();
+        case Pass1.LOCAL_VARIABLE -> statementLocalVariable();
 
-        case ByteCode.METHOD_INVOCATION -> statementMethodInvocation();
+        case Pass1.METHOD_INVOCATION -> statementMethodInvocation();
 
         default -> throw codeuoe();
       }
@@ -155,7 +155,7 @@ public final class Pass2 {
 
     codeadv();
 
-    codeass(ByteCode.ANNOTATION);
+    codeass(Pass1.ANNOTATION);
 
     codeadv();
 
@@ -176,7 +176,7 @@ public final class Pass2 {
   private void declarationClass() {
     processor.classStart();
 
-    codeadv(); // ByteCode.CLASS
+    codeadv(); // Pass1.CLASS
 
     codeadv();
 
@@ -258,7 +258,7 @@ public final class Pass2 {
     codepsh();
 
     switch (code) {
-      case ByteCode.METHOD -> declarationMethod();
+      case Pass1.METHOD -> declarationMethod();
 
       default -> throw codeuoe();
     }
@@ -271,7 +271,7 @@ public final class Pass2 {
       codeadv();
 
       switch (code) {
-        case ByteCode.IMPORT -> {
+        case Pass1.IMPORT -> {
           processor.keyword("import");
 
           codeadv();
@@ -283,7 +283,7 @@ public final class Pass2 {
           processor.semicolon();
         }
 
-        case ByteCode.EOF -> { return; }
+        case Pass1.EOF -> { return; }
 
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
@@ -293,7 +293,7 @@ public final class Pass2 {
   private void declarationMethod() {
     processor.methodStart();
 
-    codeadv(); // ByteCode.METHOD
+    codeadv(); // Pass1.METHOD
 
     codeadv();
 
@@ -392,7 +392,7 @@ public final class Pass2 {
     codepsh();
 
     switch (code) {
-      case ByteCode.METHOD_INVOCATION -> statementMethodInvocation();
+      case Pass1.METHOD_INVOCATION -> statementMethodInvocation();
 
       default -> throw codeuoe();
     }
@@ -415,9 +415,9 @@ public final class Pass2 {
       codepsh();
 
       switch (code) {
-        case ByteCode.ANNOTATION -> declarationAnnotation();
+        case Pass1.ANNOTATION -> declarationAnnotation();
 
-        case ByteCode.MODIFIER -> declarationModifier();
+        case Pass1.MODIFIER -> declarationModifier();
 
         default -> throw codeuoe();
       }
@@ -429,7 +429,7 @@ public final class Pass2 {
   private void declarationPackage() {
     processor.packageStart();
 
-    codeadv(); // ByteCode.PACKAGE
+    codeadv(); // Pass1.PACKAGE
 
     codeadv();
 
@@ -461,11 +461,11 @@ public final class Pass2 {
 
   private void expression() {
     switch (code) {
-      case ByteCode.EXPRESSION_NAME -> expressionName();
+      case Pass1.EXPRESSION_NAME -> expressionName();
 
-      case ByteCode.METHOD_INVOCATION -> expressionMethodInvocation();
+      case Pass1.METHOD_INVOCATION -> expressionMethodInvocation();
 
-      case ByteCode.STRING_LITERAL -> {
+      case Pass1.STRING_LITERAL -> {
         codeadv();
 
         codeadv();
@@ -583,7 +583,7 @@ public final class Pass2 {
     while (iternxt()) {
       var peek = codepek();
 
-      if (peek != ByteCode.NEW_LINE) {
+      if (peek != Pass1.NEW_LINE) {
         result = true;
 
         break;
@@ -606,7 +606,7 @@ public final class Pass2 {
   private boolean iternxt() {
     codeadv();
 
-    if (code == ByteCode.JMP) {
+    if (code == Pass1.JMP) {
       codeadv();
 
       cursor = code;
@@ -615,9 +615,9 @@ public final class Pass2 {
     }
 
     return switch (code) {
-      case ByteCode.EOF -> false;
+      case Pass1.EOF -> false;
 
-      case ByteCode.LIST -> {
+      case Pass1.LIST -> {
         codeadv(); // last cell
 
         codeadv(); // value
@@ -625,7 +625,7 @@ public final class Pass2 {
         yield true;
       }
 
-      case ByteCode.LIST_CELL -> {
+      case Pass1.LIST_CELL -> {
         codeadv(); // value
 
         yield true;
@@ -638,7 +638,7 @@ public final class Pass2 {
   private void statementLocalVariable() {
     processor.statementStart();
 
-    codeadv(); // ByteCode.LOCAL_VAR
+    codeadv(); // Pass1.LOCAL_VAR
 
     codeadv();
 

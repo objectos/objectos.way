@@ -15,339 +15,681 @@
  */
 package objectox.code;
 
+import java.util.Arrays;
+import objectos.code.ClassName;
+import objectos.code.TypeName;
+import objectos.util.IntArrays;
+
 public final class Pass1 {
 
-  private State state;
+  static final int NOP = -1;
 
-  public final void execute(State state) {
-    this.state = state.startPass1();
+  static final int COMPILATION_UNIT = -2;
+
+  static final int IMPORT = -3;
+
+  static final int IMPORT_ON_DEMAND = -4;
+
+  static final int PACKAGE = -5;
+
+  static final int CLASS = -6;
+
+  static final int LIST = -7;
+
+  static final int EOF = -8;
+
+  static final int ANNOTATION = -9;
+
+  static final int METHOD = -10;
+
+  static final int LOCAL_VARIABLE = -11;
+
+  static final int STRING_LITERAL = -12;
+
+  static final int MODIFIER = -13;
+
+  static final int METHOD_INVOCATION = -14;
+
+  static final int LIST_CELL = -15;
+
+  static final int JMP = -16;
+
+  static final int NEW_LINE = -17;
+
+  static final int EXPRESSION_NAME = -18;
+
+  int[] code = new int[32];
+
+  private int codeIndex;
+
+  final ImportSet importSet = new ImportSet();
+
+  Object[] object;
+
+  private int[] source;
+
+  private int instruction;
+
+  public final void execute(int[] source, Object[] object) {
+    this.source = source;
+    this.object = object;
+
+    importSet.clear();
+
+    codeIndex = 0;
 
     execute();
   }
 
-  private void execute() {
-    state.protorea(ByteProto.JMP);
-
-    state.protorea();
-
-    state.protopsh();
-
-    state.protoass(ByteProto.COMPILATION_UNIT);
-
-    executeCompilationUnit();
+  public final void execute(Pass0 pass0) {
+    execute(pass0.code, pass0.object);
   }
 
-  private int executeAnnotation() {
-    int name = ByteCode.NOP;
-    int pairs = ByteCode.NOP;
+  final int[] toArray() {
+    return Arrays.copyOf(code, codeIndex);
+  }
 
-    var self = state.codeadd(ByteCode.ANNOTATION, name, pairs);
+  private void add(int v0) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 0);
 
-    var children = state.protolst();
+    code[codeIndex++] = v0;
+  }
 
-    for (int i = 0; i < children; i++) {
-      state.protorea();
+  private void add(int v0, int v1) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 1);
 
-      switch (state.protopsh()) {
-        case ByteProto.CLASS_NAME -> name = setOrThrow(name, state.protorea());
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+  }
 
-        default -> throw state.protouoe();
+  private void add(int v0, int v1, int v2) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 2);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+  }
+
+  private void add(int v0, int v1, int v2, int v3) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 3);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+  }
+
+  private void add(int v0, int v1, int v2, int v3, int v4) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 4);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+    code[codeIndex++] = v4;
+  }
+
+  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 7);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+    code[codeIndex++] = v4;
+    code[codeIndex++] = v5;
+    code[codeIndex++] = v6;
+    code[codeIndex++] = v7;
+  }
+
+  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    code = IntArrays.growIfNecessary(code, codeIndex + 8);
+
+    code[codeIndex++] = v0;
+    code[codeIndex++] = v1;
+    code[codeIndex++] = v2;
+    code[codeIndex++] = v3;
+    code[codeIndex++] = v4;
+    code[codeIndex++] = v5;
+    code[codeIndex++] = v6;
+    code[codeIndex++] = v7;
+    code[codeIndex++] = v8;
+  }
+
+  private void execute() {
+    var start = source[0];
+
+    assert start == Pass0.JMP : start;
+
+    var jmp = source[1];
+
+    var inst = source[jmp];
+
+    assert inst == Pass0.COMPILATION_UNIT : instruction;
+
+    executeCompilationUnit(jmp);
+  }
+
+  private int executeAnnotation(int index) {
+    var self = codeIndex;
+
+    int name = NOP;
+    int pairs = NOP;
+
+    add(ANNOTATION, name, pairs);
+
+    index++;
+
+    int children = source[index++];
+
+    for (int limit = index + children; index < limit; index++) {
+      int jmp = source[index];
+      int inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.CLASS_NAME -> {
+          if (name == NOP) {
+            name = executeClassName(jmp);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
-    return state.codeset(self, name, pairs);
+    set(self, name, pairs);
+
+    return self;
   }
 
-  private int executeClass() {
-    int modifiers = ByteCode.NOP;
-    int name = ByteCode.NOP;
-    int typeArgs = ByteCode.NOP;
-    int _extends = ByteCode.NOP;
-    int _implements = ByteCode.NOP;
-    int _permits = ByteCode.NOP;
-    int body = ByteCode.NOP;
+  private int executeClass(int index) {
+    int self = codeIndex;
 
-    var self = state.codeadd(
-      ByteCode.CLASS,
+    int modifiers = NOP;
+    int name = NOP;
+    int typeArgs = NOP;
+    int _extends = NOP;
+    int _implements = NOP;
+    int _permits = NOP;
+    int body = NOP;
+
+    add(
+      CLASS,
       modifiers, name, typeArgs, _extends, _implements, _permits,
       body
     );
 
-    var children = state.protolst();
+    index++;
 
-    for (int i = 0; i < children; i++) {
-      state.protorea();
+    int children = source[index++];
 
-      switch (state.protopsh()) {
-        case ByteProto.ANNOTATION -> modifiers = state.codelst(modifiers, executeAnnotation());
+    for (int limit = index + children; index < limit; index++) {
+      int jmp = source[index];
+      int inst = source[jmp];
 
-        case ByteProto.MODIFIER -> modifiers = state.codelst(modifiers, executeModifier());
+      switch (inst) {
+        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
 
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, state.protorea());
+        case Pass0.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
 
-        case ByteProto.EXTENDS -> _extends = setOrThrow(_extends, state.protorea());
+        case Pass0.IDENTIFIER -> {
+          if (name == NOP) {
+            name = executeIdentifier(jmp);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
 
-        case ByteProto.METHOD -> body = state.codelst(body, executeMethod());
+        case Pass0.EXTENDS -> {
+          if (_extends == NOP) {
+            _extends = executeExtends(jmp);
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+        }
 
-        default -> throw state.protouoe();
+        case Pass0.METHOD -> {
+          var value = executeMethod(jmp);
+
+          body = listAdd(body, value);
+        }
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
-    return state.codeset(
+    set(
       self,
       modifiers, name, typeArgs, _extends, _implements, _permits,
       body
     );
+
+    return self;
   }
 
-  private void executeCompilationUnit() {
-    var _package = ByteCode.NOP;
-    var _import = ByteCode.NOP;
-    var body = ByteCode.NOP;
+  private int executeClassName(int index) {
+    index++;
 
-    var self = state.codeadd(
-      ByteCode.COMPILATION_UNIT,
-      _package, _import, body
+    return source[index];
+  }
+
+  private void executeCompilationUnit(int index) {
+    var self = codeIndex;
+
+    var _package = NOP;
+    var _import = NOP;
+    var body = NOP;
+
+    add(
+      COMPILATION_UNIT,
+      _package,
+      _import,
+      body
     );
 
-    var children = state.protolst();
+    index++;
 
-    for (int i = 0; i < children; i++) {
-      state.protorea();
+    var children = source[index++];
 
-      switch (state.protopsh()) {
-        case ByteProto.PACKAGE -> _package = setOrThrow(_package, executePackage());
+    for (int limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
 
-        case ByteProto.CLASS -> body = state.codelst(body, executeClass());
+      switch (inst) {
+        case Pass0.PACKAGE -> {
+          var value = executePackage(jmp);
 
-        case ByteProto.LOCAL_VARIABLE -> body = state.codelst(body, executeLocalVariable());
+          if (_package != NOP) {
+            throw new UnsupportedOperationException("Implement me");
+          } else {
+            _package = value;
+          }
+        }
 
-        case ByteProto.METHOD -> body = state.codelst(body, executeMethod());
+        case Pass0.AUTO_IMPORTS -> importSet.enable();
 
-        case ByteProto.METHOD_INVOCATION -> body = state.codelst(body, executeMethodInvocation());
+        case Pass0.CLASS -> body = listAdd(body, executeClass(jmp));
 
-        default -> throw state.protouoe();
+        case Pass0.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
+
+        case Pass0.METHOD -> body = listAdd(body, executeMethod(jmp));
+
+        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
-    if (_import != ByteCode.NOP) {
+    if (_import != NOP) {
       throw new UnsupportedOperationException("Implement me :: unexpected imports");
     }
 
-    if (state.importSet().enabled) {
+    if (importSet.enabled) {
       _import = executeEofImportSet();
     }
 
-    state.codeset(
+    set(
       self,
-      _package, _import, body
+
+      _package,
+      _import,
+      body
     );
   }
 
   private int executeEofImportSet() {
-    var self = state.codeadd();
+    var self = codeIndex;
 
-    var sorted = state.importSet().sort();
+    var sorted = importSet.sort();
 
     for (int i = 0, size = sorted.size(); i < size; i++) {
-      state.codeadd(ByteCode.IMPORT, i);
+      add(IMPORT, i);
     }
 
-    state.codeadd(ByteCode.EOF);
+    add(EOF);
 
     return self;
   }
 
-  private int executeExpressionName() {
-    var children = state.protolst();
+  private int executeExpressionName(int index) {
+    var self = codeIndex;
 
-    var self = state.codeadd(
-      ByteCode.EXPRESSION_NAME, children
-    );
+    index++;
 
-    for (int i = 0; i < children; i++) {
-      state.protorea();
+    var children = source[index++];
 
-      switch (state.protopsh()) {
-        case ByteProto.CLASS_NAME, ByteProto.IDENTIFIER -> state.codeadd(state.protorea());
+    add(EXPRESSION_NAME, children);
 
-        default -> throw state.protouoe();
+    for (var limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
+
+      switch (inst) {
+        case Pass0.CLASS_NAME, Pass0.IDENTIFIER -> add(source[++jmp]);
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
     return self;
   }
 
-  private int executeLocalVariable() {
-    var modifiers = ByteCode.NOP;
-    var type = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var init = ByteCode.NOP;
+  private int executeExtends(int index) {
+    index++;
 
-    var self = state.codeadd(
-      ByteCode.LOCAL_VARIABLE,
+    var result = source[index];
+
+    var o = object[result];
+
+    if (o instanceof ClassName cn) {
+      importSet.addClassName(cn);
+    }
+
+    return result;
+  }
+
+  private int executeIdentifier(int index) {
+    index++;
+
+    return source[index];
+  }
+
+  private int executeLocalVariable(int index) {
+    var self = codeIndex;
+
+    var modifiers = NOP;
+    var type = NOP;
+    var name = NOP;
+    var init = NOP;
+
+    add(
+      LOCAL_VARIABLE,
       modifiers, type, name, init
     );
 
-    var children = state.protolst();
+    index++;
 
-    for (int i = 0; i < children; i++) {
-      state.protorea();
+    var children = source[index++];
 
-      switch (state.protopsh()) {
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, state.protorea());
+    for (var limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
 
-        case ByteProto.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral());
+      switch (inst) {
+        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        default -> throw state.protouoe();
+        case Pass0.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral(jmp));
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
-    return state.codeset(
+    set(
       self,
       modifiers, type, name, init
     );
+
+    return self;
   }
 
-  private int executeMethod() {
-    int modifiers = ByteCode.NOP;
-    int typeParams = ByteCode.NOP;
-    int returnType = ByteCode.NOP;
-    int name = ByteCode.NOP;
-    int receiver = ByteCode.NOP;
-    int params = ByteCode.NOP;
-    int _throws = ByteCode.NOP;
-    int body = ByteCode.NOP;
+  private int executeMethod(int index) {
+    int self = codeIndex;
 
-    var self = state.codeadd(
-      ByteCode.METHOD,
+    int modifiers = NOP;
+    int typeParams = NOP;
+    int returnType = NOP;
+    int name = NOP;
+    int receiver = NOP;
+    int params = NOP;
+    int _throws = NOP;
+    int body = NOP;
+
+    add(
+      METHOD,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );
 
-    var children = state.protolst();
+    index++;
 
-    for (int i = 0; i < children; i++) {
-      state.protorea();
+    int children = source[index++];
 
-      switch (state.protopsh()) {
-        case ByteProto.ANNOTATION -> modifiers = state.codelst(modifiers, executeAnnotation());
+    for (int limit = index + children; index < limit; index++) {
+      int jmp = source[index];
+      int inst = source[jmp];
 
-        case ByteProto.MODIFIER -> modifiers = state.codelst(modifiers, executeModifier());
+      switch (inst) {
+        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
 
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, state.protorea());
+        case Pass0.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
 
-        case ByteProto.TYPE_NAME -> returnType = setOrThrow(returnType, state.protorea());
+        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case ByteProto.METHOD_INVOCATION -> body = state.codelst(body, executeMethodInvocation());
+        case Pass0.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
 
-        default -> throw state.protouoe();
+        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
-    return state.codeset(
+    set(
       self,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );
+
+    return self;
   }
 
-  private int executeMethodInvocation() {
-    int callee = ByteCode.NOP;
-    int typeArgs = ByteCode.NOP;
-    int name = ByteCode.NOP;
-    int args = ByteCode.NOP;
+  private int executeMethodInvocation(int index) {
+    var self = codeIndex;
 
-    var self = state.codeadd(
-      ByteCode.METHOD_INVOCATION,
-      callee, typeArgs, name, args
-    );
+    int callee = NOP;
+    int typeArgs = NOP;
+    int name = NOP;
+    int args = NOP;
 
-    var size = state.protolst();
+    add(METHOD_INVOCATION, callee, typeArgs, name, args);
 
-    for (int i = 0; i < size; i++) {
-      state.protorea();
+    index++;
 
-      switch (state.protopsh()) {
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, state.protorea());
+    int children = source[index++];
 
-        case ByteProto.EXPRESSION_NAME -> args = state.codelst(args, executeExpressionName());
+    for (int limit = index + children; index < limit; index++) {
+      int jmp = source[index];
+      int inst = source[jmp];
 
-        case ByteProto.NEW_LINE -> args = state.codelst(args, executeNewLine());
+      switch (inst) {
+        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case ByteProto.METHOD_INVOCATION -> args = state.codelst(args, executeMethodInvocation());
+        case Pass0.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName(jmp));
 
-        case ByteProto.STRING_LITERAL -> args = state.codelst(args, executeStringLiteral());
+        case Pass0.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
 
-        default -> throw state.protouoe();
+        case Pass0.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
+
+        case Pass0.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
+
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
-    return state.codeset(
-      self,
-      callee, typeArgs, name, args
+    set(self, callee, typeArgs, name, args);
+
+    return self;
+  }
+
+  private int executeModifier(int index) {
+    var self = codeIndex;
+
+    index++;
+
+    add(MODIFIER, source[index]);
+
+    return self;
+  }
+
+  private int executeNewLine(int index) {
+    var self = codeIndex;
+
+    add(NEW_LINE);
+
+    return self;
+  }
+
+  private int executePackage(int index) {
+    var self = codeIndex;
+
+    var annotations = NOP;
+    var name = NOP;
+
+    add(
+      PACKAGE,
+      annotations,
+      name
     );
-  }
 
-  private int executeModifier() {
-    var proto = state.protorea();
+    index++;
 
-    return state.codeadd(ByteCode.MODIFIER, proto);
-  }
+    var children = source[index++];
 
-  private int executeNewLine() {
-    return state.codeadd(ByteCode.NEW_LINE);
-  }
+    for (int limit = index + children; index < limit; index++) {
+      var jmp = source[index];
+      var inst = source[jmp];
 
-  private int executePackage() {
-    var annotations = ByteCode.NOP;
-    var name = ByteCode.NOP;
+      switch (inst) {
+        case Pass0.PACKAGE_NAME -> {
+          var value = executeClassName(jmp);
 
-    var self = state.codeadd(
-      ByteCode.PACKAGE,
-      annotations, name
-    );
+          if (name != NOP) {
+            throw new UnsupportedOperationException("Implement me");
+          } else {
+            name = value;
+          }
+        }
 
-    var children = state.protolst();
-
-    for (int i = 0; i < children; i++) {
-      state.protorea();
-
-      switch (state.protopsh()) {
-        case ByteProto.PACKAGE_NAME -> name = setOrThrow(name, state.protorea());
-
-        default -> throw state.protouoe();
+        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
-
-      state.protopop();
     }
 
-    return state.codeset(
+    set(
       self,
-      annotations, name
+
+      annotations,
+      name
     );
+
+    return self;
   }
 
-  private int executeStringLiteral() {
-    return state.codeadd(ByteCode.STRING_LITERAL, state.protorea());
+  private int executeStringLiteral(int index) {
+    var self = codeIndex;
+
+    index++;
+
+    add(STRING_LITERAL, source[index]);
+
+    return self;
+  }
+
+  private int executeTypeName(int index) {
+    index++;
+
+    var result = source[index];
+
+    var o = object[result];
+
+    if (o instanceof TypeName typeName) {
+      typeName.acceptClassNameSet(importSet);
+    }
+
+    return result;
+  }
+
+  private int listAdd(int list, int value) {
+    if (list == NOP) {
+      list = codeIndex;
+
+      add(LIST, NOP, value, EOF, NOP);
+
+      return list;
+    }
+
+    var newcell = codeIndex;
+
+    add(LIST_CELL, value, EOF, NOP);
+
+    var lastcell = code[list + 1];
+
+    if (lastcell == NOP) {
+      code[list + 1] = newcell; // list last cell
+      code[list + 3] = JMP;
+      code[list + 4] = newcell;
+
+      return list;
+    }
+
+    code[list + 1] = newcell; // list last cell
+    code[lastcell + 2] = JMP;
+    code[lastcell + 3] = newcell;
+
+    return list;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2, int v3) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2, int v3, int v4) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+    code[zero + 4] = v4;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+    code[zero + 4] = v4;
+    code[zero + 5] = v5;
+    code[zero + 6] = v6;
+    code[zero + 7] = v7;
+  }
+
+  private void set(
+      int zero,
+      int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    code[zero + 1] = v1;
+    code[zero + 2] = v2;
+    code[zero + 3] = v3;
+    code[zero + 4] = v4;
+    code[zero + 5] = v5;
+    code[zero + 6] = v6;
+    code[zero + 7] = v7;
+    code[zero + 8] = v8;
   }
 
   private int setOrThrow(int index, int value) {
-    if (index == ByteCode.NOP) {
+    if (index == NOP) {
       return value;
     }
 

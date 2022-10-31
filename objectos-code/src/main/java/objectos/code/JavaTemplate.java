@@ -113,6 +113,21 @@ public abstract class JavaTemplate {
    */
   protected JavaTemplate() {}
 
+  public final void acceptJavaGenerator(JavaGenerator generator) {
+    Check.state(this.api == null, """
+    Another code generation is already is progress.
+    """);
+    Check.notNull(generator, "generator == null");
+
+    api = generator.pass0;
+
+    try {
+      definition();
+    } finally {
+      this.api = null;
+    }
+  }
+
   public final void eval(InternalApi api) {
     Check.state(this.api == null, """
     Another evaluation is already is progress.
@@ -120,11 +135,7 @@ public abstract class JavaTemplate {
 
     this.api = Check.notNull(api, "api == null");
 
-    try {
-      definition();
-    } finally {
-      this.api = null;
-    }
+    definition();
   }
 
   protected final ClassDeclarationRef _class(ClassDeclarationElement... elements) {
