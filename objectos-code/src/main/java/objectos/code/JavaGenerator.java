@@ -20,6 +20,7 @@ import objectos.lang.Check;
 import objectox.code.Pass0;
 import objectox.code.Pass1;
 import objectox.code.Pass2;
+import objectox.code.State;
 
 public final class JavaGenerator {
 
@@ -28,6 +29,8 @@ public final class JavaGenerator {
   Pass1 pass1 = new Pass1();
 
   Pass2 pass2 = new Pass2();
+
+  State state = new State();
 
   JavaGenerator() {}
 
@@ -39,13 +42,9 @@ public final class JavaGenerator {
     Check.notNull(template, "template == null");
     Check.notNull(renderer, "renderer == null");
 
-    pass0.compilationUnitStart();
+    pass0.execute(state, template);
 
-    template.acceptJavaGenerator(this);
-
-    pass0.compilationUnitEnd();
-
-    pass1.execute(pass0);
+    pass1.execute(state);
 
     pass2.execute(pass1, renderer);
   }

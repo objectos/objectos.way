@@ -16,8 +16,6 @@
 package objectox.code;
 
 import java.util.Arrays;
-import objectos.code.ClassName;
-import objectos.code.TypeName;
 import objectos.util.IntArrays;
 
 public final class Pass1 {
@@ -62,27 +60,26 @@ public final class Pass1 {
 
   private int codeIndex;
 
-  final ImportSet importSet = new ImportSet();
-
   Object[] object;
 
   private int[] source;
 
   private int instruction;
 
-  public final void execute(int[] source, Object[] object) {
+  ImportSet importSet;
+
+  public final void execute(int[] source, Object[] object, ImportSet importSet) {
     this.source = source;
     this.object = object;
-
-    importSet.clear();
+    this.importSet = importSet;
 
     codeIndex = 0;
 
     execute();
   }
 
-  public final void execute(Pass0 pass0) {
-    execute(pass0.code, pass0.object);
+  public final void execute(State state) {
+    execute(state.protos(), state.objects(), state.importSet());
   }
 
   final int[] toArray() {
@@ -159,13 +156,13 @@ public final class Pass1 {
   private void execute() {
     var start = source[0];
 
-    assert start == Pass0.JMP : start;
+    assert start == ByteProto.JMP : start;
 
     var jmp = source[1];
 
     var inst = source[jmp];
 
-    assert inst == Pass0.COMPILATION_UNIT : instruction;
+    assert inst == ByteProto.COMPILATION_UNIT : instruction;
 
     executeCompilationUnit(jmp);
   }
@@ -187,7 +184,7 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.CLASS_NAME -> {
+        case ByteProto.CLASS_NAME -> {
           if (name == NOP) {
             name = executeClassName(jmp);
           } else {
@@ -230,11 +227,11 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
+        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
 
-        case Pass0.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
 
-        case Pass0.IDENTIFIER -> {
+        case ByteProto.IDENTIFIER -> {
           if (name == NOP) {
             name = executeIdentifier(jmp);
           } else {
@@ -242,7 +239,7 @@ public final class Pass1 {
           }
         }
 
-        case Pass0.EXTENDS -> {
+        case ByteProto.EXTENDS -> {
           if (_extends == NOP) {
             _extends = executeExtends(jmp);
           } else {
@@ -250,7 +247,7 @@ public final class Pass1 {
           }
         }
 
-        case Pass0.METHOD -> {
+        case ByteProto.METHOD -> {
           var value = executeMethod(jmp);
 
           body = listAdd(body, value);
@@ -298,7 +295,7 @@ public final class Pass1 {
       var inst = source[jmp];
 
       switch (inst) {
-        case Pass0.PACKAGE -> {
+        case ByteProto.PACKAGE -> {
           var value = executePackage(jmp);
 
           if (_package != NOP) {
@@ -308,15 +305,13 @@ public final class Pass1 {
           }
         }
 
-        case Pass0.AUTO_IMPORTS -> importSet.enable();
+        case ByteProto.CLASS -> body = listAdd(body, executeClass(jmp));
 
-        case Pass0.CLASS -> body = listAdd(body, executeClass(jmp));
+        case ByteProto.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
 
-        case Pass0.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
+        case ByteProto.METHOD -> body = listAdd(body, executeMethod(jmp));
 
-        case Pass0.METHOD -> body = listAdd(body, executeMethod(jmp));
-
-        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+        case ByteProto.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -328,6 +323,8 @@ public final class Pass1 {
 
     if (importSet.enabled) {
       _import = executeEofImportSet();
+    } else {
+      importSet.clear();
     }
 
     set(
@@ -367,7 +364,7 @@ public final class Pass1 {
       var inst = source[jmp];
 
       switch (inst) {
-        case Pass0.CLASS_NAME, Pass0.IDENTIFIER -> add(source[++jmp]);
+        case ByteProto.CLASS_NAME, ByteProto.IDENTIFIER -> add(source[++jmp]);
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -379,15 +376,7 @@ public final class Pass1 {
   private int executeExtends(int index) {
     index++;
 
-    var result = source[index];
-
-    var o = object[result];
-
-    if (o instanceof ClassName cn) {
-      importSet.addClassName(cn);
-    }
-
-    return result;
+    return source[index];
   }
 
   private int executeIdentifier(int index) {
@@ -418,9 +407,9 @@ public final class Pass1 {
       var inst = source[jmp];
 
       switch (inst) {
-        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case Pass0.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral(jmp));
+        case ByteProto.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -461,15 +450,15 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
+        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
 
-        case Pass0.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
 
-        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case Pass0.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
+        case ByteProto.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
 
-        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+        case ByteProto.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -503,15 +492,15 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case Pass0.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName(jmp));
+        case ByteProto.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName(jmp));
 
-        case Pass0.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
+        case ByteProto.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
 
-        case Pass0.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
+        case ByteProto.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
 
-        case Pass0.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
+        case ByteProto.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -561,7 +550,7 @@ public final class Pass1 {
       var inst = source[jmp];
 
       switch (inst) {
-        case Pass0.PACKAGE_NAME -> {
+        case ByteProto.PACKAGE_NAME -> {
           var value = executeClassName(jmp);
 
           if (name != NOP) {
@@ -598,15 +587,7 @@ public final class Pass1 {
   private int executeTypeName(int index) {
     index++;
 
-    var result = source[index];
-
-    var o = object[result];
-
-    if (o instanceof TypeName typeName) {
-      typeName.acceptClassNameSet(importSet);
-    }
-
-    return result;
+    return source[index];
   }
 
   private int listAdd(int list, int value) {
