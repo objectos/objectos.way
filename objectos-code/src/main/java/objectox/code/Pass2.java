@@ -49,11 +49,11 @@ public final class Pass2 {
     execute0();
   }
 
-  public final void execute(Pass1 pass1, Renderer renderer) {
+  public final void execute(State state, Renderer renderer) {
     execute(
-      pass1.codes,
-      pass1.objects,
-      pass1.importSet,
+      state.codeArray(),
+      state.objects(),
+      state.importSet(),
       renderer
     );
   }

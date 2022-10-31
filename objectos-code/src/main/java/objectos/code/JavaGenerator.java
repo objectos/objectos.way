@@ -46,7 +46,7 @@ public final class JavaGenerator {
 
     pass1.execute(state);
 
-    pass2.execute(pass1, renderer);
+    pass2.execute(state, renderer);
   }
 
 }
