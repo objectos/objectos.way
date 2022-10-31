@@ -38,6 +38,10 @@ public final class PackageName extends PackageOrClassName {
     return new PackageName(name);
   }
 
+  public static PackageName of(PackageName parent, String name) {
+    return parent.nested(name);
+  }
+
   public static PackageName of(String name) {
     Check.notNull(name, "name == null");
     Check.argument(
@@ -66,5 +70,14 @@ public final class PackageName extends PackageOrClassName {
 
   @Override
   final PackageName packageName() { return this; }
+
+  private PackageName nested(String name) {
+    Check.argument(
+      SourceVersion.isName(name),
+      name, " is not a valid part of a package name"
+    );
+
+    return new PackageName(toString(name));
+  }
 
 }
