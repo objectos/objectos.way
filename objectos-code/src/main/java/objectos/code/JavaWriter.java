@@ -29,37 +29,27 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   private int parameterListLevel;
 
+  private final int[] sections = new int[10];
+
+  private int sectionsCursor;
+
   public static JavaWriter of() {
     return new JavaWriter();
   }
 
   @Override
-  public void annotationEnd() {
+  public void beforeBlockNextItem() {
+    nl();
     nl();
   }
 
   @Override
-  public void annotationStart() {
-    write('@');
+  public void beforeClassFirstMember() {
+    nl();
   }
 
   @Override
   public void beforeCompilationUnitBody() {
-    nl();
-  }
-
-  @Override
-  public void blockAfterLastItem() {
-  }
-
-  @Override
-  public void blockBeforeFirstItem() {
-    nl();
-  }
-
-  @Override
-  public void blockBeforeNextItem() {
-    nl();
     nl();
   }
 
@@ -122,12 +112,6 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
-  public void methodEnd() {}
-
-  @Override
-  public void methodStart() {}
-
-  @Override
   public void modifier(String name) {
     word(name);
   }
@@ -177,6 +161,18 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
+  public void space() {
+    write(' ');
+  }
+
+  @Override
+  public final void spaceIf(boolean condition) {
+    if (condition) {
+      space();
+    }
+  }
+
+  @Override
   public void statementEnd() {
     write(';');
 
@@ -199,6 +195,22 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public final String toString() { return out.toString(); }
+
+  @Override
+  public final void write(char c) {
+    out.append(c);
+
+    length += 1;
+  }
+
+  @Override
+  public final void write(String s) {
+    identation();
+
+    out.append(s);
+
+    length += s.length();
+  }
 
   private void identation() {
     if (length == 0) {
@@ -232,18 +244,6 @@ public class JavaWriter implements JavaTemplate.Renderer {
     write(s);
 
     word = true;
-  }
-
-  private void write(char c) {
-    out.append(c);
-
-    length += 1;
-  }
-
-  private void write(String s) {
-    out.append(s);
-
-    length += s.length();
   }
 
 }

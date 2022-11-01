@@ -15,35 +15,20 @@
  */
 package objectox.code;
 
-import java.util.Arrays;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.TypeName;
 import objectos.code.tmpl.InternalApi;
 import objectos.lang.Check;
-import objectos.util.IntArrays;
-import objectos.util.ObjectArrays;
 
-public final class Pass0 implements InternalApi {
+public final class Pass0 extends Pass0Super implements InternalApi {
 
   public static final Ref REF = new Ref();
 
-  int[] protoArray = new int[10];
-
-  private int protoIndex;
-
-  private int[] element = new int[10];
-
-  private int elementIndex;
-
-  Object[] objectArray = new Object[10];
-
-  private int objectIndex;
-
   @Override
   public final void _extends(ClassName superclass) {
-    Check.notNull(superclass, "superclass == null");
+    superclass.acceptClassNameSet(importSet);
 
     addObject(ByteProto.EXTENDS, superclass);
   }
@@ -60,9 +45,7 @@ public final class Pass0 implements InternalApi {
 
   @Override
   public final void autoImports() {
-    elemMark(protoIndex);
-
-    protoAdd(ByteProto.AUTO_IMPORTS);
+    importSet.enable();
   }
 
   @Override
@@ -72,7 +55,7 @@ public final class Pass0 implements InternalApi {
 
   @Override
   public final void className(ClassName name) {
-    Check.notNull(name, "name == null");
+    name.acceptClassNameSet(importSet);
 
     addObject(ByteProto.CLASS_NAME, name);
   }
@@ -156,68 +139,9 @@ public final class Pass0 implements InternalApi {
 
   @Override
   public final void typeName(TypeName typeName) {
-    Check.notNull(typeName, "typeName == null");
+    typeName.acceptClassNameSet(importSet);
 
     addObject(ByteProto.TYPE_NAME, typeName);
-  }
-
-  final int[] toCodes() { return Arrays.copyOf(protoArray, protoIndex); }
-
-  final Object[] toObjects() {
-    return Arrays.copyOf(objectArray, objectIndex);
-  }
-
-  private void addObject(int type, Object value) {
-    elemMark(protoIndex);
-
-    protoAdd(type, objectAdd(value));
-  }
-
-  private void element(int type, int length) {
-    var start = elementIndex - length;
-
-    var mark = protoIndex;
-
-    protoAdd(type);
-
-    for (int i = start; i < elementIndex; i++) {
-      protoAdd(ByteProto.JMP, element[i]);
-    }
-
-    protoAdd(ByteProto.BREAK);
-
-    elementIndex = start;
-
-    elemMark(mark);
-  }
-
-  private void elemMark(int value) {
-    element = IntArrays.growIfNecessary(element, elementIndex);
-
-    element[elementIndex++] = value;
-  }
-
-  private int objectAdd(Object value) {
-    int result = objectIndex;
-
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    objectArray[objectIndex++] = value;
-
-    return result;
-  }
-
-  private void protoAdd(int v0) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex);
-
-    protoArray[protoIndex++] = v0;
-  }
-
-  private void protoAdd(int v0, int v1) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
-
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
   }
 
 }

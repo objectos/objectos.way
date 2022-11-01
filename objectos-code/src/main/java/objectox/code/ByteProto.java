@@ -14,7 +14,6 @@ final class ByteProto {
 
   static final int COMPILATION_UNIT = -3;
   static final int PACKAGE_DECLARATION = -4;
-  static final int AUTO_IMPORTS = -5;
   static final int ANNOTATION = -6;
   static final int MODIFIER = -7;
   static final int CLASS_DECLARATION = -8;

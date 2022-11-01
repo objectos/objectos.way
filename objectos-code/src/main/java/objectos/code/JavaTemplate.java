@@ -41,17 +41,11 @@ public abstract class JavaTemplate {
 
   public interface Renderer {
 
-    void annotationEnd();
+    void beforeBlockNextItem();
 
-    void annotationStart();
+    void beforeClassFirstMember();
 
     void beforeCompilationUnitBody();
-
-    void blockAfterLastItem();
-
-    void blockBeforeFirstItem();
-
-    void blockBeforeNextItem();
 
     void blockEnd();
 
@@ -69,10 +63,6 @@ public abstract class JavaTemplate {
 
     void keyword(String keyword);
 
-    void methodEnd();
-
-    void methodStart();
-
     void modifier(String name);
 
     void name(String name);
@@ -87,11 +77,19 @@ public abstract class JavaTemplate {
 
     void separator(char c);
 
+    void space();
+
+    void spaceIf(boolean condition);
+
     void statementEnd();
 
     void statementStart();
 
     void stringLiteral(String s);
+
+    void write(char c);
+
+    void write(String s);
 
   }
 

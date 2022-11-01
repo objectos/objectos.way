@@ -19,25 +19,14 @@ import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
 import objectos.code.TypeName;
-import objectos.util.IntArrays;
 
-public final class Pass2 {
+public final class Pass2 extends Pass2Super {
 
-  private int[] codes;
+  private boolean abstractModifier;
 
-  private int cursor;
+  private boolean annotationLast;
 
-  private Object[] objects;
-
-  private ImportSet importSet;
-
-  private Renderer processor;
-
-  private int[] stack = new int[16];
-
-  private int stackCursor;
-
-  private int code;
+  private int modifierCount;
 
   public final void execute(
       int[] codes, Object[] objects, ImportSet importSet, Renderer processor) {
@@ -58,58 +47,111 @@ public final class Pass2 {
     );
   }
 
-  private void codeadv() {
-    code = codes[cursor++];
+  private void annotation() {
+    if (codenxt()) {
+      processor.write('@');
+
+      var name = (ClassName) codeobj();
+
+      importSet.execute(processor, name);
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: no annotation class name!");
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: annotation element-value pairs");
+    }
   }
 
-  private void codeass(int value) {
-    assert code == value : value;
+  private void classDeclaration() {
+    var prevSection = false;
+
+    modifierReset();
+
+    if (codenxt()) {
+      codepsh();
+      modifierList();
+      codepop();
+
+      prevSection = true;
+    }
+
+    if (codenxt()) {
+      if (annotationLast && modifierCount == 0) {
+        processor.newLine();
+      } else {
+        processor.spaceIf(prevSection);
+      }
+
+      processor.write("class");
+
+      processor.space();
+
+      processor.write((String) codeobj());
+
+      prevSection = true;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: class type args");
+    }
+
+    if (codenxt()) {
+      processor.spaceIf(prevSection);
+
+      processor.write("extends");
+
+      processor.space();
+
+      var superclass = (ClassName) codeobj();
+
+      importSet.execute(processor, superclass);
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: class implements clause");
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: class permits clause");
+    }
+
+    processor.blockStart();
+
+    if (codenxt()) {
+      codepsh();
+      classDeclarationBody();
+      codepop();
+    }
+
+    processor.blockEnd();
   }
 
-  private void codejmp() {
-    codeadv();
+  private void classDeclarationBody() {
+    if (lhead()) {
+      processor.beforeClassFirstMember();
 
-    codeass(Pass1.JMP);
+      classDeclarationBodyItem();
 
-    codeadv();
-
-    codepsh();
+      while (lnext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
   }
 
-  private boolean codenop() {
-    return code == Pass1.NOP;
-  }
+  private void classDeclarationBodyItem() {
+    switch (code) {
+      case Pass1.METHOD -> methodDeclaration();
 
-  private boolean codenxt() {
-    codeadv();
-
-    return code != Pass1.NOP;
-  }
-
-  private Object codeobj() {
-    return objects[code];
-  }
-
-  private int codepek() {
-    return codes[code];
-  }
-
-  private void codepop() {
-    cursor = stack[--stackCursor];
-  }
-
-  private void codepsh() {
-    stack = IntArrays.growIfNecessary(stack, stackCursor);
-
-    stack[stackCursor++] = cursor;
-
-    cursor = code;
-
-    codeadv();
-  }
-
-  private UnsupportedOperationException codeuoe() {
-    return new UnsupportedOperationException("Implement me :: code=" + code);
+      default -> throw codeuoe();
+    }
   }
 
   private void compilationUnit() {
@@ -127,8 +169,15 @@ public final class Pass2 {
     }
 
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: imports");
+      if (prevSection) {
+        processor.beforeCompilationUnitBody();
+      }
+
+      codepsh();
+      importDeclarations();
+      codepop();
+
+      prevSection = true;
     }
 
     if (codenxt()) {
@@ -156,7 +205,7 @@ public final class Pass2 {
 
   private void compilationUnitBodyItem() {
     switch (code) {
-      case Pass1.CLASS -> declarationClass();
+      case Pass1.CLASS -> classDeclaration();
 
       //      case Pass1.METHOD -> declarationMethod();
       //
@@ -168,212 +217,17 @@ public final class Pass2 {
     }
   }
 
-  private void declarationAnnotation() {
-    processor.annotationStart();
-
-    codeadv();
-
-    codeass(Pass1.ANNOTATION);
-
-    codeadv();
-
-    var name = (ClassName) codeobj();
-
-    importSet.execute(processor, name);
-
-    codeadv();
-
-    if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: annotation element-value pairs");
-    }
-
-    processor.annotationEnd();
-  }
-
-  private void declarationClass() {
-    if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: modifiers");
-    }
-
-    if (codenxt()) {
-      processor.keyword("class");
-
-      processor.identifier((String) codeobj());
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: class type args");
-    }
-
-    if (codenxt()) {
-      var superclass = (ClassName) codeobj();
-
-      processor.keyword("extends");
-
-      importSet.execute(processor, superclass);
-    }
-
-    if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: class implements clause");
-    }
-
-    if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: class permits clause");
-    }
-
-    processor.blockStart();
-
-    if (codenxt()) {
-      codepsh();
-      declarationClassBody();
-      codepop();
-    }
-
-    processor.blockEnd();
-  }
-
-  private void declarationClassBody() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  private void declarationClassBodyItem() {
-    codepsh();
-
-    switch (code) {
-      case Pass1.METHOD -> declarationMethod();
-
-      default -> throw codeuoe();
-    }
-
-    codepop();
-  }
-
-  private void declarationImports() {
-    while (true) {
-      codeadv();
-
-      switch (code) {
-        case Pass1.IMPORT -> {
-          processor.keyword("import");
-
-          codeadv();
-
-          var cn = importSet.sorted(code);
-
-          processor.name(cn.toString());
-
-          processor.semicolon();
-        }
-
-        case Pass1.EOF -> { return; }
-
-        default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
-      }
-    }
-  }
-
-  private void declarationMethod() {
-    processor.methodStart();
-
-    codeadv(); // Pass1.METHOD
-
-    codeadv();
-
-    boolean _abstract = false;
-
-    if (!codenop()) {
-      codepsh();
-      declarationModifierList();
-      codepop();
-    }
-
-    codeadv();
-
-    if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method type params");
-    }
-
-    codeadv();
-
-    if (!codenop()) {
-      var returnType = (TypeName) codeobj();
-
-      importSet.execute(processor, returnType);
-    } else {
-      processor.keyword("void");
-    }
-
-    codeadv();
-
-    if (!codenop()) {
-      processor.identifier((String) codeobj());
-    }
-
-    codeadv();
-
-    if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method receiver param");
-    }
-
-    codeadv();
-
-    processor.parameterListStart();
-
-    if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method parameters");
-    }
-
-    processor.parameterListEnd();
-
-    codeadv();
-
-    if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method throws");
-    }
-
-    codeadv();
-
-    if (_abstract) {
-      processor.semicolon();
-    } else {
-      processor.blockStart();
-
-      if (!codenop()) {
-        codepsh();
-        declarationMethodBody();
-        codepop();
-      }
-
-      processor.blockEnd();
-    }
-
-    processor.methodEnd();
-  }
-
   private void declarationMethodBody() {
     if (iternxt()) {
-      processor.blockBeforeFirstItem();
+      processor.beforeClassFirstMember();
 
       declarationMethodBodyItem();
 
       while (iternxt()) {
-        processor.blockBeforeNextItem();
+        processor.beforeBlockNextItem();
 
         declarationMethodBodyItem();
       }
-
-      processor.blockAfterLastItem();
     }
   }
 
@@ -387,32 +241,6 @@ public final class Pass2 {
     }
 
     codepop();
-  }
-
-  private void declarationModifier() {
-    codeadv();
-
-    codeadv();
-
-    var modifier = (Modifier) codeobj();
-
-    processor.modifier(modifier.toString());
-  }
-
-  private void declarationModifierList() {
-    while (iternxt()) {
-      codepsh();
-
-      switch (code) {
-        case Pass1.ANNOTATION -> declarationAnnotation();
-
-        case Pass1.MODIFIER -> declarationModifier();
-
-        default -> throw codeuoe();
-      }
-
-      codepop();
-    }
   }
 
   private void execute0() {
@@ -543,6 +371,30 @@ public final class Pass2 {
     }
   }
 
+  private void importDeclarations() {
+    while (true) {
+      switch (code) {
+        case Pass1.IMPORT -> {
+          processor.keyword("import");
+
+          codeadv();
+
+          var cn = importSet.sorted(code);
+
+          processor.name(cn.toString());
+
+          processor.semicolon();
+
+          codeadv();
+        }
+
+        case Pass1.EOF -> { return; }
+
+        default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+      }
+    }
+  }
+
   private boolean iterarg(boolean comma) {
     var result = false;
 
@@ -625,6 +477,105 @@ public final class Pass2 {
     throw new UnsupportedOperationException("Implement me");
   }
 
+  private void methodDeclaration() {
+    if (codenxt()) {
+      codepsh();
+      modifierList();
+      codepop();
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method type params");
+    }
+
+    if (codenxt()) {
+      var returnType = (TypeName) codeobj();
+
+      importSet.execute(processor, returnType);
+    } else {
+      processor.write("void");
+    }
+
+    if (codenxt()) {
+      processor.space();
+
+      processor.write((String) codeobj());
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method receiver param");
+    }
+
+    processor.parameterListStart();
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method parameters");
+    }
+
+    processor.parameterListEnd();
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method throws");
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException("Implement me");
+    } else if (abstractModifier) {
+      processor.semicolon();
+    } else {
+      processor.blockStart();
+      processor.blockEnd();
+    }
+  }
+
+  private void modifier() {
+    codeadv();
+
+    var modifier = (Modifier) codeobj();
+
+    processor.modifier(modifier.toString());
+  }
+
+  private void modifierList() {
+    if (lhead()) {
+      modifierListItem();
+
+      while (lnext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+  }
+
+  private void modifierListItem() {
+    switch (code) {
+      case Pass1.ANNOTATION -> {
+        annotation();
+
+        annotationLast = true;
+      }
+
+      case Pass1.MODIFIER -> {
+        modifier();
+
+        modifierCount++;
+      }
+
+      default -> throw codeuoe();
+    }
+  }
+
+  private void modifierReset() {
+    abstractModifier = false;
+
+    annotationLast = false;
+
+    modifierCount = 0;
+  }
+
   private void packageDeclaration() {
     if (codenxt()) {
       throw new UnsupportedOperationException(
@@ -632,11 +583,13 @@ public final class Pass2 {
     }
 
     if (codenxt()) {
-      processor.keyword("package");
+      processor.write("package");
+
+      processor.space();
 
       var name = (String) codeobj();
 
-      processor.name(name);
+      processor.write(name);
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: no package name?");

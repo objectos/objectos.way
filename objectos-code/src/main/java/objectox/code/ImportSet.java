@@ -76,24 +76,28 @@ public final class ImportSet implements ClassNameSet {
   }
 
   public final void execute(Renderer processor, ClassName name) {
-    if (classNames.contains(name)) {
-      processor.identifier(name.simpleName);
+    if (!enabled) {
+      processor.write(name.toString());
+    }
+
+    else if (classNames.contains(name)) {
+      processor.write(name.simpleName);
     }
 
     else if (canSkipImport(name.packageName())) {
       simpleNames.add(name.simpleName);
 
-      processor.identifier(name.simpleName);
+      processor.write(name.simpleName);
     }
 
     else {
-      processor.name(name.toString());
+      throw new UnsupportedOperationException("Implement me");
     }
   }
 
   public final void execute(Renderer processor, TypeName typeName) {
     if (typeName instanceof NoTypeName) {
-      processor.keyword("void");
+      processor.write("void");
     }
   }
 
