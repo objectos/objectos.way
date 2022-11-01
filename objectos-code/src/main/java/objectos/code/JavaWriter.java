@@ -44,6 +44,11 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
+  public void beforeCompilationUnitBody() {
+    nl();
+  }
+
+  @Override
   public void blockAfterLastItem() {
   }
 
@@ -75,16 +80,6 @@ public class JavaWriter implements JavaTemplate.Renderer {
     write('{');
 
     level++;
-  }
-
-  @Override
-  public void classEnd() {}
-
-  @Override
-  public void classStart() {
-    if (!out.isEmpty()) {
-      nl();
-    }
   }
 
   @Override
@@ -150,12 +145,6 @@ public class JavaWriter implements JavaTemplate.Renderer {
       level++;
     }
   }
-
-  @Override
-  public void packageEnd() {}
-
-  @Override
-  public void packageStart() {}
 
   @Override
   public void parameterListEnd() {

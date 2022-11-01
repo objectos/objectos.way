@@ -58,6 +58,9 @@ public final class Pass1 {
 
   static final int EXPRESSION_NAME = -18;
 
+  static final int LHEAD = -19;
+  static final int LNEXT = -20;
+
   int[] code = new int[32];
 
   private int codeIndex;
@@ -68,7 +71,13 @@ public final class Pass1 {
 
   private int[] source;
 
-  private int instruction;
+  private int sourceIndex;
+
+  private int proto;
+
+  private int[] stack = new int[16];
+
+  private int stackIndex;
 
   public final void execute(int[] source, Object[] object) {
     this.source = source;
@@ -78,11 +87,15 @@ public final class Pass1 {
 
     codeIndex = 0;
 
+    sourceIndex = 0;
+
+    stackIndex = 0;
+
     execute();
   }
 
   public final void execute(Pass0 pass0) {
-    execute(pass0.code, pass0.object);
+    execute(pass0.protoArray, pass0.objectArray);
   }
 
   final int[] toArray() {
@@ -102,21 +115,29 @@ public final class Pass1 {
     code[codeIndex++] = v1;
   }
 
-  private void add(int v0, int v1, int v2) {
+  private int add(int v0, int v1, int v2) {
+    var self = codeIndex;
+
     code = IntArrays.growIfNecessary(code, codeIndex + 2);
 
     code[codeIndex++] = v0;
     code[codeIndex++] = v1;
     code[codeIndex++] = v2;
+
+    return self;
   }
 
-  private void add(int v0, int v1, int v2, int v3) {
+  private int add(int v0, int v1, int v2, int v3) {
+    var self = codeIndex;
+
     code = IntArrays.growIfNecessary(code, codeIndex + 3);
 
     code[codeIndex++] = v0;
     code[codeIndex++] = v1;
     code[codeIndex++] = v2;
     code[codeIndex++] = v3;
+
+    return self;
   }
 
   private void add(int v0, int v1, int v2, int v3, int v4) {
@@ -129,7 +150,9 @@ public final class Pass1 {
     code[codeIndex++] = v4;
   }
 
-  private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+  private int add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    var self = codeIndex;
+
     code = IntArrays.growIfNecessary(code, codeIndex + 7);
 
     code[codeIndex++] = v0;
@@ -140,6 +163,8 @@ public final class Pass1 {
     code[codeIndex++] = v5;
     code[codeIndex++] = v6;
     code[codeIndex++] = v7;
+
+    return self;
   }
 
   private void add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
@@ -156,18 +181,74 @@ public final class Pass1 {
     code[codeIndex++] = v8;
   }
 
+  private int classDeclaration() {
+    int modifiers = NOP;
+    int name = NOP;
+    int typeParams = NOP;
+    int _extends = NOP;
+    int _implements = NOP;
+    int _permits = NOP;
+    int body = NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    return add(CLASS, modifiers, name, typeParams, _extends, _implements, _permits, body);
+  }
+
+  private int compilationUnit() {
+    var _package = NOP;
+    var _import = NOP;
+    var body = NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.CLASS_DECLARATION -> body = listadd(body, classDeclaration());
+
+        case ByteProto.PACKAGE_DECLARATION -> _package = setOrThrow(_package, packageDeclaration());
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    if (_import != NOP) {
+      throw new UnsupportedOperationException("Implement me :: unexpected imports");
+    }
+
+    if (importSet.enabled) {
+      _import = executeEofImportSet();
+    }
+
+    return add(COMPILATION_UNIT, _package, _import, body);
+  }
+
   private void execute() {
-    var start = source[0];
+    add(JMP, NOP);
 
-    assert start == Pass0.JMP : start;
+    protoadv();
 
-    var jmp = source[1];
+    protojmp();
 
-    var inst = source[jmp];
+    protoass(ByteProto.COMPILATION_UNIT);
 
-    assert inst == Pass0.COMPILATION_UNIT : instruction;
-
-    executeCompilationUnit(jmp);
+    code[1] = compilationUnit();
   }
 
   private int executeAnnotation(int index) {
@@ -187,7 +268,7 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.CLASS_NAME -> {
+        case ByteProto.CLASS_NAME -> {
           if (name == NOP) {
             name = executeClassName(jmp);
           } else {
@@ -230,11 +311,11 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
+        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
 
-        case Pass0.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
 
-        case Pass0.IDENTIFIER -> {
+        case ByteProto.IDENTIFIER -> {
           if (name == NOP) {
             name = executeIdentifier(jmp);
           } else {
@@ -242,7 +323,7 @@ public final class Pass1 {
           }
         }
 
-        case Pass0.EXTENDS -> {
+        case ByteProto.EXTENDS -> {
           if (_extends == NOP) {
             _extends = executeExtends(jmp);
           } else {
@@ -250,7 +331,7 @@ public final class Pass1 {
           }
         }
 
-        case Pass0.METHOD -> {
+        case ByteProto.METHOD_DECLARATION -> {
           var value = executeMethod(jmp);
 
           body = listAdd(body, value);
@@ -273,70 +354,6 @@ public final class Pass1 {
     index++;
 
     return source[index];
-  }
-
-  private void executeCompilationUnit(int index) {
-    var self = codeIndex;
-
-    var _package = NOP;
-    var _import = NOP;
-    var body = NOP;
-
-    add(
-      COMPILATION_UNIT,
-      _package,
-      _import,
-      body
-    );
-
-    index++;
-
-    var children = source[index++];
-
-    for (int limit = index + children; index < limit; index++) {
-      var jmp = source[index];
-      var inst = source[jmp];
-
-      switch (inst) {
-        case Pass0.PACKAGE -> {
-          var value = executePackage(jmp);
-
-          if (_package != NOP) {
-            throw new UnsupportedOperationException("Implement me");
-          } else {
-            _package = value;
-          }
-        }
-
-        case Pass0.AUTO_IMPORTS -> importSet.enable();
-
-        case Pass0.CLASS -> body = listAdd(body, executeClass(jmp));
-
-        case Pass0.LOCAL_VARIABLE -> body = listAdd(body, executeLocalVariable(jmp));
-
-        case Pass0.METHOD -> body = listAdd(body, executeMethod(jmp));
-
-        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
-
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
-      }
-    }
-
-    if (_import != NOP) {
-      throw new UnsupportedOperationException("Implement me :: unexpected imports");
-    }
-
-    if (importSet.enabled) {
-      _import = executeEofImportSet();
-    }
-
-    set(
-      self,
-
-      _package,
-      _import,
-      body
-    );
   }
 
   private int executeEofImportSet() {
@@ -367,7 +384,7 @@ public final class Pass1 {
       var inst = source[jmp];
 
       switch (inst) {
-        case Pass0.CLASS_NAME, Pass0.IDENTIFIER -> add(source[++jmp]);
+        case ByteProto.CLASS_NAME, ByteProto.IDENTIFIER -> add(source[++jmp]);
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -418,9 +435,9 @@ public final class Pass1 {
       var inst = source[jmp];
 
       switch (inst) {
-        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case Pass0.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral(jmp));
+        case ByteProto.STRING_LITERAL -> init = setOrThrow(init, executeStringLiteral(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -461,15 +478,15 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
+        case ByteProto.ANNOTATION -> modifiers = listAdd(modifiers, executeAnnotation(jmp));
 
-        case Pass0.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers, executeModifier(jmp));
 
-        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case Pass0.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
+        case ByteProto.TYPE_NAME -> returnType = setOrThrow(returnType, executeTypeName(jmp));
 
-        case Pass0.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
+        case ByteProto.METHOD_INVOCATION -> body = listAdd(body, executeMethodInvocation(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -503,15 +520,15 @@ public final class Pass1 {
       int inst = source[jmp];
 
       switch (inst) {
-        case Pass0.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
+        case ByteProto.IDENTIFIER -> name = setOrThrow(name, executeIdentifier(jmp));
 
-        case Pass0.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName(jmp));
+        case ByteProto.EXPRESSION_NAME -> args = listAdd(args, executeExpressionName(jmp));
 
-        case Pass0.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
+        case ByteProto.NEW_LINE -> args = listAdd(args, executeNewLine(jmp));
 
-        case Pass0.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
+        case ByteProto.METHOD_INVOCATION -> args = listAdd(args, executeMethodInvocation(jmp));
 
-        case Pass0.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
+        case ByteProto.STRING_LITERAL -> args = listAdd(args, executeStringLiteral(jmp));
 
         default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
       }
@@ -540,51 +557,6 @@ public final class Pass1 {
     return self;
   }
 
-  private int executePackage(int index) {
-    var self = codeIndex;
-
-    var annotations = NOP;
-    var name = NOP;
-
-    add(
-      PACKAGE,
-      annotations,
-      name
-    );
-
-    index++;
-
-    var children = source[index++];
-
-    for (int limit = index + children; index < limit; index++) {
-      var jmp = source[index];
-      var inst = source[jmp];
-
-      switch (inst) {
-        case Pass0.PACKAGE_NAME -> {
-          var value = executeClassName(jmp);
-
-          if (name != NOP) {
-            throw new UnsupportedOperationException("Implement me");
-          } else {
-            name = value;
-          }
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me :: inst=" + inst);
-      }
-    }
-
-    set(
-      self,
-
-      annotations,
-      name
-    );
-
-    return self;
-  }
-
   private int executeStringLiteral(int index) {
     var self = codeIndex;
 
@@ -607,6 +579,14 @@ public final class Pass1 {
     }
 
     return result;
+  }
+
+  private int listadd(int list, int value) {
+    if (list == NOP) {
+      return add(LHEAD, value, NOP);
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private int listAdd(int list, int value) {
@@ -639,19 +619,76 @@ public final class Pass1 {
     return list;
   }
 
+  private int packageDeclaration() {
+    var annotations = NOP;
+    var name = NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.PACKAGE_NAME -> name = setOrReplace(name, protoadv());
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    return add(PACKAGE, annotations, name);
+  }
+
+  private int protoadv() {
+    return proto = source[sourceIndex++];
+  }
+
+  private void protoass(int value) {
+    assert proto == value : proto;
+  }
+
+  private void protojmp() {
+    protoass(ByteProto.JMP);
+
+    protoadv();
+
+    protopsh();
+  }
+
+  private boolean protolop() {
+    return proto != ByteProto.BREAK;
+  }
+
+  private void protonxt() {
+    protopop();
+
+    protoadv();
+  }
+
+  private void protopop() {
+    sourceIndex = stack[--stackIndex];
+  }
+
+  private void protopsh() {
+    stack = IntArrays.growIfNecessary(stack, stackIndex);
+
+    stack[stackIndex++] = sourceIndex;
+
+    sourceIndex = proto;
+
+    protoadv();
+  }
+
+  private UnsupportedOperationException protouoe() {
+    return new UnsupportedOperationException("Implement me :: proto=" + proto);
+  }
+
   private void set(
       int zero,
       int v1, int v2) {
     code[zero + 1] = v1;
     code[zero + 2] = v2;
-  }
-
-  private void set(
-      int zero,
-      int v1, int v2, int v3) {
-    code[zero + 1] = v1;
-    code[zero + 2] = v2;
-    code[zero + 3] = v3;
   }
 
   private void set(
@@ -686,6 +723,14 @@ public final class Pass1 {
     code[zero + 6] = v6;
     code[zero + 7] = v7;
     code[zero + 8] = v8;
+  }
+
+  private int setOrReplace(int pointer, int value) {
+    if (pointer == NOP) {
+      return value;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
   private int setOrThrow(int index, int value) {

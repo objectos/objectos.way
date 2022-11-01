@@ -45,7 +45,9 @@ public sealed interface InternalApi permits Pass0 {
 
   void newLine();
 
-  void packageDeclaration(String packageName);
+  void packageDeclaration(int length);
+
+  void packageName(String packageName);
 
   void stringLiteral(String value);
 

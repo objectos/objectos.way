@@ -66,8 +66,24 @@ public final class Pass2 {
     assert code == value : value;
   }
 
+  private void codejmp() {
+    codeadv();
+
+    codeass(Pass1.JMP);
+
+    codeadv();
+
+    codepsh();
+  }
+
   private boolean codenop() {
     return code == Pass1.NOP;
+  }
+
+  private boolean codenxt() {
+    codeadv();
+
+    return code != Pass1.NOP;
   }
 
   private Object codeobj() {
@@ -89,7 +105,7 @@ public final class Pass2 {
 
     cursor = code;
 
-    code = codes[cursor];
+    codeadv();
   }
 
   private UnsupportedOperationException codeuoe() {
@@ -97,31 +113,29 @@ public final class Pass2 {
   }
 
   private void compilationUnit() {
-    codeadv();
-
-    codeass(Pass1.COMPILATION_UNIT);
-
     processor.compilationUnitStart();
 
-    codeadv();
+    var prevSection = false;
 
-    if (!codenop()) {
+    if (codenxt()) {
       codepsh();
-      declarationPackage();
+      codeass(Pass1.PACKAGE);
+      packageDeclaration();
       codepop();
+
+      prevSection = true;
     }
 
-    codeadv();
-
-    if (!codenop()) {
-      codepsh();
-      declarationImports();
-      codepop();
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: imports");
     }
 
-    codeadv();
+    if (codenxt()) {
+      if (prevSection) {
+        processor.beforeCompilationUnitBody();
+      }
 
-    if (!codenop()) {
       codepsh();
       compilationUnitBody();
       codepop();
@@ -131,22 +145,26 @@ public final class Pass2 {
   }
 
   private void compilationUnitBody() {
-    while (iternxt()) {
-      codepsh();
+    if (lhead()) {
+      compilationUnitBodyItem();
 
-      switch (code) {
-        case Pass1.CLASS -> declarationClass();
-
-        case Pass1.METHOD -> declarationMethod();
-
-        case Pass1.LOCAL_VARIABLE -> statementLocalVariable();
-
-        case Pass1.METHOD_INVOCATION -> statementMethodInvocation();
-
-        default -> throw codeuoe();
+      while (lnext()) {
+        throw new UnsupportedOperationException("Implement me");
       }
+    }
+  }
 
-      codepop();
+  private void compilationUnitBodyItem() {
+    switch (code) {
+      case Pass1.CLASS -> declarationClass();
+
+      //      case Pass1.METHOD -> declarationMethod();
+      //
+      //      case Pass1.LOCAL_VARIABLE -> statementLocalVariable();
+      //
+      //      case Pass1.METHOD_INVOCATION -> statementMethodInvocation();
+
+      default -> throw codeuoe();
     }
   }
 
@@ -174,34 +192,25 @@ public final class Pass2 {
   }
 
   private void declarationClass() {
-    processor.classStart();
-
-    codeadv(); // Pass1.CLASS
-
-    codeadv();
-
-    if (!codenop()) {
-      codepsh();
-      declarationModifierList();
-      codepop();
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: modifiers");
     }
 
-    codeadv();
+    if (codenxt()) {
+      processor.keyword("class");
 
-    processor.keyword("class");
+      processor.identifier((String) codeobj());
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
 
-    processor.identifier((String) codeobj());
-
-    codeadv();
-
-    if (!codenop()) {
+    if (codenxt()) {
       throw new UnsupportedOperationException(
         "Implement me :: class type args");
     }
 
-    codeadv();
-
-    if (!codenop()) {
+    if (codenxt()) {
       var superclass = (ClassName) codeobj();
 
       processor.keyword("extends");
@@ -209,49 +218,29 @@ public final class Pass2 {
       importSet.execute(processor, superclass);
     }
 
-    codeadv();
-
-    if (!codenop()) {
+    if (codenxt()) {
       throw new UnsupportedOperationException(
         "Implement me :: class implements clause");
     }
 
-    codeadv();
-
-    if (!codenop()) {
+    if (codenxt()) {
       throw new UnsupportedOperationException(
         "Implement me :: class permits clause");
     }
 
     processor.blockStart();
 
-    codeadv();
-
-    if (!codenop()) {
+    if (codenxt()) {
       codepsh();
       declarationClassBody();
       codepop();
     }
 
     processor.blockEnd();
-
-    processor.classEnd();
   }
 
   private void declarationClassBody() {
-    if (iternxt()) {
-      processor.blockBeforeFirstItem();
-
-      declarationClassBodyItem();
-
-      while (iternxt()) {
-        processor.blockBeforeNextItem();
-
-        declarationClassBodyItem();
-      }
-
-      processor.blockAfterLastItem();
-    }
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private void declarationClassBodyItem() {
@@ -426,35 +415,14 @@ public final class Pass2 {
     }
   }
 
-  private void declarationPackage() {
-    processor.packageStart();
-
-    codeadv(); // Pass1.PACKAGE
-
-    codeadv();
-
-    if (!codenop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: package modifiers");
-    }
-
-    processor.keyword("package");
-
-    codeadv();
-
-    var name = (String) codeobj();
-
-    processor.name(name);
-
-    processor.semicolon();
-
-    processor.packageEnd();
-  }
-
   private void execute0() {
     cursor = 0;
 
     stackCursor = 0;
+
+    codejmp();
+
+    codeass(Pass1.COMPILATION_UNIT);
 
     compilationUnit();
   }
@@ -633,6 +601,48 @@ public final class Pass2 {
 
       default -> throw codeuoe();
     };
+  }
+
+  private boolean lhead() {
+    codeass(Pass1.LHEAD);
+
+    codeadv();
+
+    codepsh();
+
+    return true;
+  }
+
+  private boolean lnext() {
+    codepop();
+
+    codeadv();
+
+    if (code == Pass1.NOP) {
+      return false;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private void packageDeclaration() {
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: package modifiers");
+    }
+
+    if (codenxt()) {
+      processor.keyword("package");
+
+      var name = (String) codeobj();
+
+      processor.name(name);
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: no package name?");
+    }
+
+    processor.semicolon();
   }
 
   private void statementLocalVariable() {

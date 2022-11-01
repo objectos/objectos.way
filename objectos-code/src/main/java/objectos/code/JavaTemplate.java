@@ -45,6 +45,8 @@ public abstract class JavaTemplate {
 
     void annotationStart();
 
+    void beforeCompilationUnitBody();
+
     void blockAfterLastItem();
 
     void blockBeforeFirstItem();
@@ -54,10 +56,6 @@ public abstract class JavaTemplate {
     void blockEnd();
 
     void blockStart();
-
-    void classEnd();
-
-    void classStart();
 
     void comma();
 
@@ -80,10 +78,6 @@ public abstract class JavaTemplate {
     void name(String name);
 
     void newLine();
-
-    void packageEnd();
-
-    void packageStart();
 
     void parameterListEnd();
 
@@ -157,7 +151,9 @@ public abstract class JavaTemplate {
   }
 
   protected final void _package(String packageName) {
-    api.packageDeclaration(packageName);
+    api.packageName(packageName);
+
+    api.packageDeclaration(1);
   }
 
   protected final VoidRef _void() {
