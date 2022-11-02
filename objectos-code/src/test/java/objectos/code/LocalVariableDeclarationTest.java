@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class LocalVariableTest extends AbstractObjectoxCodeTest {
+public class LocalVariableDeclarationTest extends AbstractObjectoxCodeTest {
 
   @Test(description = """
   var s = "java";
@@ -35,6 +35,26 @@ public class LocalVariableTest extends AbstractObjectoxCodeTest {
 
       """
       var s = "java";
+      """
+    );
+  }
+
+  @Test(description = """
+  var s = m("java");
+  """)
+  public void testCase02() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        var("s", invoke("m", s("java")));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      var s = m("java");
       """
     );
   }

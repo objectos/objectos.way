@@ -136,6 +136,16 @@ public final class Pass1 extends Pass1Super {
     code[1] = unit;
   }
 
+  private int expression() {
+    return switch (proto) {
+      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+
+      case ByteProto.STRING_LITERAL -> stringLiteral();
+
+      default -> throw protouoe();
+    };
+  }
+
   private int expressionName() {
     var self = add(EXPRESSION_NAME);
 
@@ -186,9 +196,7 @@ public final class Pass1 extends Pass1Super {
       switch (proto) {
         case ByteProto.IDENTIFIER -> name = setOrThrow(name, protoadv());
 
-        case ByteProto.STRING_LITERAL -> init = setOrThrow(init, stringLiteral());
-
-        default -> throw protouoe();
+        default -> init = setOrThrow(init, expression());
       }
 
       protonxt();
