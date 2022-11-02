@@ -22,4 +22,8 @@ import objectos.code.JavaTemplate;
  * methods.
  */
 public sealed interface ClassDeclarationElement //
-permits AtRef, ExtendsRef, FinalRef, IdentifierRef, MethodRef {}
+permits AtRef, ExtendsRef, FinalRef, IdentifierRef, MethodRef {
+
+  void mark(MarkerApi api);
+
+}

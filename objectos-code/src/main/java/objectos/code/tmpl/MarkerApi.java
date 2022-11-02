@@ -15,9 +15,10 @@
  */
 package objectos.code.tmpl;
 
-public sealed interface MethodInvocationElement //
-permits ExpressionElement, IncludeRef, NewLineRef {
+public sealed interface MarkerApi permits TemplateApi {
 
-  void mark(MarkerApi api);
+  void markLambda();
+
+  void markReference();
 
 }

@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.tmpl;
+package objectox.code;
 
-public sealed interface MethodInvocationElement //
-permits ExpressionElement, IncludeRef, NewLineRef {
+import objectos.code.tmpl.IncludeRef;
+import objectos.code.tmpl.MarkerApi;
 
-  void mark(MarkerApi api);
+public final class Include implements IncludeRef {
+
+  public static final Include INSTANCE = new Include();
+
+  private Include() {}
+
+  @Override
+  public final void mark(MarkerApi api) {
+    api.markLambda();
+  }
 
 }

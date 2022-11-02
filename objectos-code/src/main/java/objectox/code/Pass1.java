@@ -17,7 +17,7 @@ package objectox.code;
 
 public final class Pass1 extends Pass1Super {
 
-  public final void execute(Pass0 pass0) {
+  public final void execute(Pass0Super pass0) {
     this.source = pass0.protoArray;
 
     this.object = pass0.objectArray;

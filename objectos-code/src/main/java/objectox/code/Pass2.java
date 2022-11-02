@@ -402,8 +402,6 @@ public final class Pass2 extends Pass2Super {
       statement();
 
       while (lnext()) {
-        processor.beforeBlockNextItem();
-
         statement();
       }
     }

@@ -16,4 +16,8 @@
 package objectos.code.tmpl;
 
 public sealed interface MethodDeclarationElement //
-permits AtRef, FinalRef, IdentifierRef, IncludeRef, MethodInvocationRef, VoidRef {}
+permits AtRef, FinalRef, IdentifierRef, IncludeRef, MethodInvocationRef, VoidRef {
+
+  void mark(MarkerApi api);
+
+}

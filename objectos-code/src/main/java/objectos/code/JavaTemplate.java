@@ -25,7 +25,6 @@ import objectos.code.tmpl.ExtendsRef;
 import objectos.code.tmpl.FinalRef;
 import objectos.code.tmpl.IdentifierRef;
 import objectos.code.tmpl.IncludeRef;
-import objectos.code.tmpl.InternalApi;
 import objectos.code.tmpl.LiteralRef;
 import objectos.code.tmpl.LocalVariableDeclarationRef;
 import objectos.code.tmpl.MethodDeclarationElement;
@@ -33,9 +32,11 @@ import objectos.code.tmpl.MethodInvocationElement;
 import objectos.code.tmpl.MethodInvocationRef;
 import objectos.code.tmpl.MethodRef;
 import objectos.code.tmpl.NewLineRef;
+import objectos.code.tmpl.TemplateApi;
 import objectos.code.tmpl.VoidRef;
 import objectos.lang.Check;
-import objectox.code.Pass0;
+import objectox.code.Include;
+import objectox.code.Ref;
 
 public abstract class JavaTemplate {
 
@@ -81,10 +82,10 @@ public abstract class JavaTemplate {
 
   @FunctionalInterface
   protected interface IncludeTarget {
-    void def1MainProperty();
+    void execute();
   }
 
-  private InternalApi api;
+  private TemplateApi api;
 
   /**
    * Sole constructor.
@@ -106,7 +107,7 @@ public abstract class JavaTemplate {
     }
   }
 
-  public final void eval(InternalApi api) {
+  public final void eval(TemplateApi api) {
     Check.state(this.api == null, """
     Another evaluation is already is progress.
     """);
@@ -117,33 +118,43 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassDeclarationRef _class(ClassDeclarationElement... elements) {
-    api.classDeclaration(elements.length); // implicit elements null check
+    api.markStart();
 
-    return Pass0.REF;
+    for (var element : elements) { // implicit elements null check
+      element.mark(api);
+    }
+
+    api.classDeclaration(); // implicit elements null check
+
+    return Ref.INSTANCE;
   }
 
   protected final ExtendsRef _extends(ClassName superclass) {
     api._extends(superclass);
 
-    return Pass0.REF;
+    return Ref.INSTANCE;
   }
 
   protected final FinalRef _final() {
     api._final();
 
-    return Pass0.REF;
+    return Ref.INSTANCE;
   }
 
   protected final void _package(String packageName) {
     api.packageName(packageName);
 
-    api.packageDeclaration(1);
+    api.markStart();
+
+    api.markReference();
+
+    api.packageDeclaration();
   }
 
   protected final VoidRef _void() {
     api.typeName(TypeName.VOID);
 
-    return Pass0.REF;
+    return Ref.INSTANCE;
   }
 
   protected final AtRef annotation(Class<? extends Annotation> annotationType) {
@@ -151,9 +162,13 @@ public abstract class JavaTemplate {
 
     api.className(name);
 
-    api.annotation(1);
+    api.markStart();
 
-    return Pass0.REF;
+    api.markReference();
+
+    api.annotation();
+
+    return Ref.INSTANCE;
   }
 
   protected final void autoImports() {
@@ -165,28 +180,46 @@ public abstract class JavaTemplate {
   protected final IdentifierRef id(String name) {
     api.identifier(name);
 
-    return Pass0.REF;
+    return Ref.INSTANCE;
   }
 
   protected final IncludeRef include(IncludeTarget target) {
-    target.def1MainProperty();
+    api.lambdaStart();
 
-    return Pass0.REF;
+    target.execute();
+
+    api.lambdaEnd();
+
+    return Include.INSTANCE;
   }
 
   protected final MethodInvocationRef invoke(
       String methodName, MethodInvocationElement... elements) {
     api.identifier(methodName);
 
-    api.methodInvocation(elements.length + 1); // implicit elements null check
+    api.markStart();
 
-    return Pass0.REF;
+    api.markReference();
+
+    for (var element : elements) { // implicit elements null check
+      element.mark(api);
+    }
+
+    api.methodInvocation();
+
+    return Ref.INSTANCE;
   }
 
   protected final MethodRef method(MethodDeclarationElement... elements) {
-    api.methodDeclaration(elements.length); // implicit elements null check
+    api.markStart();
 
-    return Pass0.REF;
+    for (var element : elements) { // implicit elements null check
+      element.mark(api);
+    }
+
+    api.methodDeclaration();
+
+    return Ref.INSTANCE;
   }
 
   protected final ExpressionNameRef n(ClassName name, String identifier) {
@@ -194,37 +227,53 @@ public abstract class JavaTemplate {
 
     api.identifier(identifier);
 
-    api.expressionName(2);
+    api.markStart();
 
-    return Pass0.REF;
+    api.markReference();
+
+    api.markReference();
+
+    api.expressionName();
+
+    return Ref.INSTANCE;
   }
 
   protected final ExpressionNameRef n(String value) {
     api.identifier(value);
 
-    api.expressionName(1);
+    api.markStart();
 
-    return Pass0.REF;
+    api.markReference();
+
+    api.expressionName();
+
+    return Ref.INSTANCE;
   }
 
   protected final NewLineRef nl() {
     api.newLine();
 
-    return Pass0.REF;
+    return Ref.INSTANCE;
   }
 
   protected final LiteralRef s(String value) {
     api.stringLiteral(value);
 
-    return Pass0.REF;
+    return Ref.INSTANCE;
   }
 
   protected final LocalVariableDeclarationRef var(String name, ExpressionElement expression) {
     api.identifier(name);
 
-    api.localVariable(2);
+    api.markStart();
 
-    return Pass0.REF;
+    api.markReference();
+
+    expression.mark(api);
+
+    api.localVariable();
+
+    return Ref.INSTANCE;
   }
 
 }

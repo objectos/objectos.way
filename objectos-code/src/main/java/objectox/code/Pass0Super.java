@@ -20,11 +20,21 @@ import objectos.util.ObjectArrays;
 
 abstract class Pass0Super {
 
-  int[] element = new int[10];
+  int[] elementArray = new int[10];
 
   int elementIndex;
 
   final ImportSet importSet = new ImportSet();
+
+  int[] lambdaArray = new int[10];
+
+  int lambdaIndex;
+
+  int lambdaSize;
+
+  int[] markArray = new int[10];
+
+  int markIndex;
 
   Object[] objectArray = new Object[10];
 
@@ -34,13 +44,9 @@ abstract class Pass0Super {
 
   int protoIndex;
 
-  final void addObject(int type, Object value) {
-    elemMark(protoIndex);
+  final void element(int type) {
+    var length = markArray[markIndex--];
 
-    protoAdd(type, objectAdd(value));
-  }
-
-  final void element(int type, int length) {
     var start = elementIndex - length;
 
     var mark = protoIndex;
@@ -48,20 +54,62 @@ abstract class Pass0Super {
     protoAdd(type);
 
     for (int i = start; i < elementIndex; i++) {
-      protoAdd(ByteProto.JMP, element[i]);
+      protoAdd(ByteProto.JMP, elementArray[i]);
     }
 
     protoAdd(ByteProto.BREAK);
 
     elementIndex = start;
 
-    elemMark(mark);
+    elementAdd(mark);
   }
 
-  final void elemMark(int value) {
-    element = IntArrays.growIfNecessary(element, elementIndex);
+  final void elementAdd(int value) {
+    elementArray = IntArrays.growIfNecessary(elementArray, elementIndex);
 
-    element[elementIndex++] = value;
+    elementArray[elementIndex++] = value;
+  }
+
+  final void lambdaCount() {
+    markArray[markIndex] += lambdaArray[--lambdaSize];
+  }
+
+  final void lambdaPop() {
+    var startCount = lambdaArray[lambdaIndex];
+
+    var diff = elementIndex - startCount;
+
+    lambdaArray[lambdaIndex] = diff;
+
+    lambdaIndex--;
+  }
+
+  final void lambdaPush() {
+    lambdaIndex++;
+
+    lambdaSize++;
+
+    lambdaArray = IntArrays.growIfNecessary(lambdaArray, lambdaIndex);
+
+    lambdaArray[lambdaIndex] = elementIndex;
+  }
+
+  final void markIncrement() {
+    markArray[markIndex]++;
+  }
+
+  final void markPush() {
+    markIndex++;
+
+    markArray = IntArrays.growIfNecessary(markArray, markIndex);
+
+    markArray[markIndex] = 0;
+  }
+
+  final void object(int type, Object value) {
+    elementAdd(protoIndex);
+
+    protoAdd(type, objectAdd(value));
   }
 
   final void protoAdd(int v0) {

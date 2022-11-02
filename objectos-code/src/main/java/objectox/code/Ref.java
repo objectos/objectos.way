@@ -17,15 +17,15 @@ package objectox.code;
 
 import objectos.code.tmpl.AtRef;
 import objectos.code.tmpl.ClassDeclarationRef;
+import objectos.code.tmpl.ExpressionNameRef;
 import objectos.code.tmpl.ExtendsRef;
 import objectos.code.tmpl.FinalRef;
 import objectos.code.tmpl.IdentifierRef;
-import objectos.code.tmpl.IncludeRef;
 import objectos.code.tmpl.LiteralRef;
 import objectos.code.tmpl.LocalVariableDeclarationRef;
+import objectos.code.tmpl.MarkerApi;
 import objectos.code.tmpl.MethodInvocationRef;
 import objectos.code.tmpl.MethodRef;
-import objectos.code.tmpl.ExpressionNameRef;
 import objectos.code.tmpl.NewLineRef;
 import objectos.code.tmpl.VoidRef;
 
@@ -36,7 +36,6 @@ public final class Ref
     ExtendsRef,
     FinalRef,
     IdentifierRef,
-    IncludeRef,
     LiteralRef,
     LocalVariableDeclarationRef,
     MethodInvocationRef,
@@ -45,6 +44,13 @@ public final class Ref
     NewLineRef,
     VoidRef {
 
-  Ref() {}
+  public static final Ref INSTANCE = new Ref();
+
+  private Ref() {}
+
+  @Override
+  public final void mark(MarkerApi api) {
+    api.markReference();
+  }
 
 }

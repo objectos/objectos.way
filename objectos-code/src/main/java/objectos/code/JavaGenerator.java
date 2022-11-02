@@ -29,6 +29,8 @@ public final class JavaGenerator {
 
   Pass2 pass2 = new Pass2();
 
+  private final JavaWriter writer = new JavaWriter();
+
   JavaGenerator() {}
 
   public static JavaGenerator of() {
@@ -48,6 +50,20 @@ public final class JavaGenerator {
     pass1.execute(pass0);
 
     pass2.execute(pass1, renderer);
+  }
+
+  public final String toString(JavaTemplate template) {
+    pass0.compilationUnitStart();
+
+    template.eval(pass0);
+
+    pass0.compilationUnitEnd();
+
+    pass1.execute(pass0);
+
+    pass2.execute(pass1, writer);
+
+    return writer.toString();
   }
 
 }

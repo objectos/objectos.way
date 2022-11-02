@@ -19,33 +19,39 @@ import objectos.code.ClassName;
 import objectos.code.TypeName;
 import objectox.code.Pass0;
 
-public sealed interface InternalApi permits Pass0 {
+public sealed interface TemplateApi extends MarkerApi permits Pass0 {
 
   void _extends(ClassName superclass);
 
   void _final();
 
-  void annotation(int length);
+  void annotation();
 
   void autoImports();
 
-  void classDeclaration(int length);
+  void classDeclaration();
 
   void className(ClassName name);
 
-  void expressionName(int length);
+  void expressionName();
 
   void identifier(String name);
 
-  void localVariable(int length);
+  void lambdaEnd();
 
-  void methodDeclaration(int length);
+  void lambdaStart();
 
-  void methodInvocation(int length);
+  void localVariable();
+
+  void markStart();
+
+  void methodDeclaration();
+
+  void methodInvocation();
 
   void newLine();
 
-  void packageDeclaration(int length);
+  void packageDeclaration();
 
   void packageName(String packageName);
 

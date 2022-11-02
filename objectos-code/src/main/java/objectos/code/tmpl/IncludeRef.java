@@ -15,8 +15,8 @@
  */
 package objectos.code.tmpl;
 
-import objectox.code.Ref;
+import objectox.code.Include;
 
 public sealed interface IncludeRef
-    extends MethodDeclarationElement, MethodInvocationElement permits Ref {
+    extends MethodDeclarationElement, MethodInvocationElement permits Include {
 }

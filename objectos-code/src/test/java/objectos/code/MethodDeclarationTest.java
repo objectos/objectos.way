@@ -118,4 +118,36 @@ public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  Add include support:
+
+  - single include
+  - single statement
+  """)
+  public void testCase05() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        method(
+          _void(), id("test"),
+          include(this::body)
+        );
+      }
+
+      private void body() {
+        invoke("foo");
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      void test() {
+        foo();
+      }
+      """
+    );
+  }
+
 }
