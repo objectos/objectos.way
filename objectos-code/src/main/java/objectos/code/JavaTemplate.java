@@ -41,6 +41,10 @@ public abstract class JavaTemplate {
 
   public interface Renderer {
 
+    void argumentListEnd();
+
+    void argumentListStart();
+
     void beforeBlockNextItem();
 
     void beforeClassFirstMember();
@@ -57,21 +61,7 @@ public abstract class JavaTemplate {
 
     void compilationUnitStart();
 
-    void dot();
-
-    void identifier(String name);
-
-    void keyword(String keyword);
-
-    void modifier(String name);
-
-    void name(String name);
-
     void newLine();
-
-    void parameterListEnd();
-
-    void parameterListStart();
 
     void semicolon();
 
@@ -80,10 +70,6 @@ public abstract class JavaTemplate {
     void space();
 
     void spaceIf(boolean condition);
-
-    void statementEnd();
-
-    void statementStart();
 
     void stringLiteral(String s);
 

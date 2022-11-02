@@ -1,7 +1,17 @@
 /*
- * Copyright 2022 Objectos Software LTDA.
+ * Copyright (C) 2014-2022 Objectos Software LTDA.
  *
- * Reprodução parcial ou total proibida.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package objectox.code;
 
@@ -49,6 +59,8 @@ abstract class Pass1Super {
 
   static final int LNEXT = -20;
 
+  static final int LNULL = -21;
+
   int[] code = new int[32];
 
   int codeIndex;
@@ -67,10 +79,30 @@ abstract class Pass1Super {
 
   int stackIndex;
 
-  final void add(int v0) {
+  protected final int setOrReplace(int pointer, int value) {
+    if (pointer == NOP) {
+      return value;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  protected final int setOrThrow(int index, int value) {
+    if (index == NOP) {
+      return value;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  final int add(int v0) {
+    var self = codeIndex;
+
     code = IntArrays.growIfNecessary(code, codeIndex + 0);
 
     code[codeIndex++] = v0;
+
+    return self;
   }
 
   final int add(int v0, int v1) {
@@ -109,7 +141,9 @@ abstract class Pass1Super {
     return self;
   }
 
-  final void add(int v0, int v1, int v2, int v3, int v4) {
+  final int add(int v0, int v1, int v2, int v3, int v4) {
+    var self = codeIndex;
+
     code = IntArrays.growIfNecessary(code, codeIndex + 4);
 
     code[codeIndex++] = v0;
@@ -117,6 +151,8 @@ abstract class Pass1Super {
     code[codeIndex++] = v2;
     code[codeIndex++] = v3;
     code[codeIndex++] = v4;
+
+    return self;
   }
 
   final int add(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
@@ -156,10 +192,68 @@ abstract class Pass1Super {
 
   final int listadd(int list, int value) {
     if (list == NOP) {
-      return add(LHEAD, value, NOP);
+      return add(LHEAD, value, LNULL, LNULL);
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    var head = code[list];
+
+    assert head == LHEAD : head;
+
+    var next = add(LNEXT, value, LNULL);
+
+    var last = code[list + 3];
+
+    var target = last != LNULL ? last : list;
+
+    code[target + 2] = next;
+
+    code[list + 3] = next;
+
+    return list;
+  }
+
+  final int protoadv() {
+    return proto = source[sourceIndex++];
+  }
+
+  final void protoass(int value) {
+    assert proto == value : proto;
+  }
+
+  final void protojmp() {
+    protoass(ByteProto.JMP);
+
+    protoadv();
+
+    protopsh();
+  }
+
+  final boolean protolop() {
+    return proto != ByteProto.BREAK;
+  }
+
+  final void protonxt() {
+    protopop();
+
+    protoadv();
+  }
+
+  final void protopop() {
+    sourceIndex = stack[--stackIndex];
+  }
+
+  final void protopsh() {
+    stack = IntArrays.growIfNecessary(stack, stackIndex);
+
+    stack[stackIndex++] = sourceIndex;
+
+    sourceIndex = proto;
+
+    protoadv();
+  }
+
+  final UnsupportedOperationException protouoe() {
+    return new UnsupportedOperationException("Implement me :: proto=" + proto);
   }
 
 }

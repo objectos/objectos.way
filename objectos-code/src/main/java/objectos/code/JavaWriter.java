@@ -23,18 +23,22 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   private int level;
 
-  private boolean word;
-
-  private boolean parameterList;
-
-  private int parameterListLevel;
-
-  private final int[] sections = new int[10];
-
-  private int sectionsCursor;
-
   public static JavaWriter of() {
     return new JavaWriter();
+  }
+
+  @Override
+  public void argumentListEnd() {
+    level--;
+
+    write(')');
+  }
+
+  @Override
+  public void argumentListStart() {
+    write('(');
+
+    level++;
   }
 
   @Override
@@ -57,26 +61,20 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void blockEnd() {
     level--;
 
-    identation();
-
     write('}');
-
     nl();
   }
 
   @Override
   public void blockStart() {
-    write(' ');
-    write('{');
+    write(" {");
 
     level++;
   }
 
   @Override
   public void comma() {
-    write(',');
-
-    word = true;
+    write(", ");
   }
 
   @Override
@@ -90,61 +88,11 @@ public class JavaWriter implements JavaTemplate.Renderer {
     level = 0;
 
     out.setLength(0);
-
-    word = false;
-  }
-
-  @Override
-  public void dot() {
-    write('.');
-
-    word = false;
-  }
-
-  @Override
-  public void identifier(String name) {
-    word(name);
-  }
-
-  @Override
-  public final void keyword(String keyword) {
-    word(keyword);
-  }
-
-  @Override
-  public void modifier(String name) {
-    word(name);
-  }
-
-  @Override
-  public void name(String name) {
-    word(name);
   }
 
   @Override
   public void newLine() {
     nl();
-
-    if (parameterList && level == parameterListLevel) {
-      level++;
-    }
-  }
-
-  @Override
-  public void parameterListEnd() {
-    write(')');
-
-    parameterList = false;
-    level = parameterListLevel;
-  }
-
-  @Override
-  public void parameterListStart() {
-    write('(');
-
-    parameterList = true;
-    parameterListLevel = level;
-    word = false;
   }
 
   @Override
@@ -158,6 +106,7 @@ public class JavaWriter implements JavaTemplate.Renderer {
   public void separator(char c) {
     write(' ');
     write(c);
+    write(' ');
   }
 
   @Override
@@ -166,28 +115,14 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
-  public final void spaceIf(boolean condition) {
+  public void spaceIf(boolean condition) {
     if (condition) {
       space();
     }
   }
 
   @Override
-  public void statementEnd() {
-    write(';');
-
-    nl();
-  }
-
-  @Override
-  public void statementStart() {}
-
-  @Override
   public void stringLiteral(String s) {
-    identation();
-
-    word();
-
     write('"');
     write(s);
     write('"');
@@ -198,6 +133,8 @@ public class JavaWriter implements JavaTemplate.Renderer {
 
   @Override
   public final void write(char c) {
+    identation();
+
     out.append(c);
 
     length += 1;
@@ -223,27 +160,25 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   private void nl() {
+    var builderLength = out.length();
+
+    var newLength = builderLength;
+
+    for (int i = builderLength - 1; i >= 0; i--) {
+      var c = out.charAt(i);
+
+      if (c == ' ') {
+        newLength--;
+      } else {
+        break;
+      }
+    }
+
+    out.setLength(newLength);
+
     out.append(System.lineSeparator());
 
     length = 0;
-
-    word = false;
-  }
-
-  private void word() {
-    if (word) {
-      out.append(' ');
-    }
-  }
-
-  private void word(String s) {
-    identation();
-
-    word();
-
-    write(s);
-
-    word = true;
   }
 
 }
