@@ -30,8 +30,6 @@ abstract class Pass0Super {
 
   int lambdaIndex;
 
-  int lambdaSize;
-
   int[] markArray = new int[10];
 
   int markIndex;
@@ -71,7 +69,7 @@ abstract class Pass0Super {
   }
 
   final void lambdaCount() {
-    markArray[markIndex] += lambdaArray[--lambdaSize];
+    markArray[markIndex] += lambdaArray[lambdaIndex--];
   }
 
   final void lambdaPop() {
@@ -80,14 +78,10 @@ abstract class Pass0Super {
     var diff = elementIndex - startCount;
 
     lambdaArray[lambdaIndex] = diff;
-
-    lambdaIndex--;
   }
 
   final void lambdaPush() {
     lambdaIndex++;
-
-    lambdaSize++;
 
     lambdaArray = IntArrays.growIfNecessary(lambdaArray, lambdaIndex);
 

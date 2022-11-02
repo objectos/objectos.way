@@ -81,8 +81,6 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
 
     lambdaIndex = -1;
 
-    lambdaSize = 0;
-
     markIndex = -1;
 
     protoIndex = 0;

@@ -71,4 +71,41 @@ public class IncludeTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  - many includes
+  - same level
+  """)
+  public void testCase03() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        invoke(
+          "test",
+          include(this::body1),
+          invoke("d"),
+          include(this::body2)
+        );
+      }
+
+      private void body1() {
+        invoke("a");
+        invoke("b");
+        invoke("c");
+      }
+
+      private void body2() {
+        invoke("e");
+        invoke("f");
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      test(a(), b(), c(), d(), e(), f());
+      """
+    );
+  }
+
 }
