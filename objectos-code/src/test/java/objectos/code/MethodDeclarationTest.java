@@ -150,4 +150,28 @@ public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  annotation + modifier
+  """)
+  public void testCase06() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        method(
+          annotation(Override.class),
+          _final(), _void(), id("test")
+        );
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      @java.lang.Override
+      final void test() {}
+      """
+    );
+  }
+
 }

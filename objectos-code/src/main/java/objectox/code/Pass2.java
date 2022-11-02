@@ -459,7 +459,9 @@ public final class Pass2 extends Pass2Super {
       modifierListItem();
 
       while (lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        newLineOrSpace(true);
+
+        modifierListItem();
       }
     }
   }
