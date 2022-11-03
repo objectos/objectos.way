@@ -121,4 +121,32 @@ public class CompilationUnitTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  autoImports() + same package
+  """)
+  public void testCase05() {
+    var tmpl = new JavaTemplate() {
+      final ClassName _Bar = ClassName.of(TEST, "Bar");
+
+      @Override
+      protected final void definition() {
+        _package("test");
+
+        autoImports();
+
+        _class(id("Test"), _extends(_Bar));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      package test;
+
+      class Test extends Bar {}
+      """
+    );
+  }
+
 }
