@@ -16,6 +16,7 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
+import objectos.code.tmpl.AnnotationElementValue;
 import objectos.code.tmpl.AtRef;
 import objectos.code.tmpl.ClassDeclarationElement;
 import objectos.code.tmpl.ClassDeclarationRef;
@@ -25,13 +26,13 @@ import objectos.code.tmpl.ExtendsRef;
 import objectos.code.tmpl.FinalRef;
 import objectos.code.tmpl.IdentifierRef;
 import objectos.code.tmpl.IncludeRef;
-import objectos.code.tmpl.LiteralRef;
 import objectos.code.tmpl.LocalVariableDeclarationRef;
 import objectos.code.tmpl.MethodDeclarationElement;
 import objectos.code.tmpl.MethodInvocationElement;
 import objectos.code.tmpl.MethodInvocationRef;
 import objectos.code.tmpl.MethodRef;
 import objectos.code.tmpl.NewLineRef;
+import objectos.code.tmpl.StringLiteralRef;
 import objectos.code.tmpl.TemplateApi;
 import objectos.code.tmpl.VoidRef;
 import objectos.lang.Check;
@@ -171,6 +172,20 @@ public abstract class JavaTemplate {
     return Ref.INSTANCE;
   }
 
+  protected final AtRef annotation(ClassName annotationType, AnnotationElementValue value) {
+    api.className(annotationType);
+
+    api.markStart();
+
+    api.markReference();
+
+    value.mark(api);
+
+    api.annotation();
+
+    return Ref.INSTANCE;
+  }
+
   protected final void autoImports() {
     api.autoImports();
   }
@@ -256,7 +271,7 @@ public abstract class JavaTemplate {
     return Ref.INSTANCE;
   }
 
-  protected final LiteralRef s(String value) {
+  protected final StringLiteralRef s(String value) {
     api.stringLiteral(value);
 
     return Ref.INSTANCE;

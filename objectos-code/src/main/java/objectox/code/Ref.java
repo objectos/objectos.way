@@ -21,27 +21,27 @@ import objectos.code.tmpl.ExpressionNameRef;
 import objectos.code.tmpl.ExtendsRef;
 import objectos.code.tmpl.FinalRef;
 import objectos.code.tmpl.IdentifierRef;
-import objectos.code.tmpl.LiteralRef;
 import objectos.code.tmpl.LocalVariableDeclarationRef;
 import objectos.code.tmpl.MarkerApi;
 import objectos.code.tmpl.MethodInvocationRef;
 import objectos.code.tmpl.MethodRef;
 import objectos.code.tmpl.NewLineRef;
+import objectos.code.tmpl.StringLiteralRef;
 import objectos.code.tmpl.VoidRef;
 
 public final class Ref
     implements
     AtRef,
     ClassDeclarationRef,
+    ExpressionNameRef,
     ExtendsRef,
     FinalRef,
     IdentifierRef,
-    LiteralRef,
     LocalVariableDeclarationRef,
     MethodInvocationRef,
     MethodRef,
-    ExpressionNameRef,
     NewLineRef,
+    StringLiteralRef,
     VoidRef {
 
   public static final Ref INSTANCE = new Ref();

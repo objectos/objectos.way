@@ -57,8 +57,25 @@ public final class Pass2 extends Pass2Super {
     }
 
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: annotation element-value pairs");
+      codepsh();
+
+      processor.argumentListStart();
+
+      while (lnext()) {
+        annotationPairItem();
+      }
+
+      processor.argumentListEnd();
+
+      codepop();
+    }
+  }
+
+  private void annotationPairItem() {
+    switch (code) {
+      case Pass1.STRING_LITERAL -> stringLiteral();
+
+      default -> throw codeuoe();
     }
   }
 
@@ -225,13 +242,7 @@ public final class Pass2 extends Pass2Super {
 
       case Pass1Super.METHOD_INVOCATION -> methodInvocation();
 
-      case Pass1Super.STRING_LITERAL -> {
-        codeadv();
-
-        var s = (String) codeobj();
-
-        processor.stringLiteral(s);
-      }
+      case Pass1Super.STRING_LITERAL -> stringLiteral();
 
       default -> throw codeuoe();
     }
@@ -532,6 +543,14 @@ public final class Pass2 extends Pass2Super {
 
       default -> throw codeuoe();
     }
+  }
+
+  private void stringLiteral() {
+    codeadv();
+
+    var s = (String) codeobj();
+
+    processor.stringLiteral(s);
   }
 
   private String typeName() {

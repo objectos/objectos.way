@@ -13,8 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.tmpl;
+package objectos.code;
 
-public sealed interface ExpressionElement
-    extends MethodInvocationElement //
-permits StringLiteralRef, MethodInvocationRef, ExpressionNameRef {}
+import org.testng.annotations.Test;
+
+public class AnnotationTest extends AbstractObjectoxCodeTest {
+
+  @Test(description = """
+  single element annotation + string literal
+  """)
+  public void testCase01() {
+    var tmpl = new JavaTemplate() {
+      final ClassName _Foo = ClassName.of(TEST, "Foo");
+
+      @Override
+      protected final void definition() {
+        _class(
+          annotation(_Foo, s("java")),
+          id("Test")
+        );
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      @test.Foo("java")
+      class Test {}
+      """
+    );
+  }
+
+}

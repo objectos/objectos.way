@@ -15,6 +15,9 @@
  */
 package objectos.code.tmpl;
 
-public sealed interface ExpressionElement
-    extends MethodInvocationElement //
-permits StringLiteralRef, MethodInvocationRef, ExpressionNameRef {}
+public sealed interface AnnotationElementValue //
+permits StringLiteralRef {
+
+  void mark(MarkerApi api);
+
+}

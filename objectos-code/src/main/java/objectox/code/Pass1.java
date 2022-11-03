@@ -48,6 +48,8 @@ public final class Pass1 extends Pass1Super {
       switch (proto) {
         case ByteProto.CLASS_NAME -> name = setOrThrow(name, typeName());
 
+        case ByteProto.STRING_LITERAL -> pairs = listadd(pairs, stringLiteral());
+
         default -> throw protouoe();
       }
 
