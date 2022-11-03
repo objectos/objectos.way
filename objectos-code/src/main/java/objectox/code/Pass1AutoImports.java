@@ -15,35 +15,16 @@
  */
 package objectox.code;
 
-import static org.testng.Assert.assertEquals;
+import java.util.Map.Entry;
+import java.util.Set;
+import objectos.code.ClassName;
 
-import objectos.code.JavaWriter;
-import objectos.code.TypeName;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+sealed interface Pass1AutoImports permits AutoImports {
 
-public class ImportSetTest {
+  boolean addClassName(ClassName className, int objectIndex);
 
-  private final ImportSet importSet = new ImportSet();
+  boolean enabled();
 
-  private final JavaWriter writer = new JavaWriter();
-
-  @BeforeMethod
-  public void _beforeMethod() {
-    importSet.clear();
-
-    writer.compilationUnitStart();
-  }
-
-  @Test
-  public void voidReturnType() {
-    var type = TypeName.VOID;
-
-    type.acceptClassNameSet(importSet);
-
-    importSet.execute(writer, type);
-
-    assertEquals(writer.toString(), "void");
-  }
+  Set<Entry<ClassName, Integer>> entrySet();
 
 }

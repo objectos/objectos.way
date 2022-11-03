@@ -18,7 +18,6 @@ package objectox.code;
 import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
-import objectos.code.TypeName;
 
 public final class Pass2 extends Pass2Super {
 
@@ -29,10 +28,9 @@ public final class Pass2 extends Pass2Super {
   private int modifierCount;
 
   public final void execute(
-      int[] codes, Object[] objects, ImportSet importSet, Renderer processor) {
+      int[] codes, Object[] objects, Renderer processor) {
     this.codes = codes;
     this.objects = objects;
-    this.importSet = importSet;
     this.processor = processor;
 
     execute0();
@@ -42,18 +40,17 @@ public final class Pass2 extends Pass2Super {
     execute(
       pass1.code,
       pass1.object,
-      pass1.importSet,
       renderer
     );
   }
 
   private void annotation() {
     if (codenxt()) {
+      codepsh();
       processor.write('@');
 
-      var name = (ClassName) codeobj();
-
-      importSet.execute(processor, name);
+      processor.write(typeName());
+      codepop();
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: no annotation class name!");
@@ -98,15 +95,15 @@ public final class Pass2 extends Pass2Super {
     }
 
     if (codenxt()) {
+      codepsh();
       processor.spaceIf(prevSection);
 
       processor.write("extends");
 
       processor.space();
 
-      var superclass = (ClassName) codeobj();
-
-      importSet.execute(processor, superclass);
+      processor.write(typeName());
+      codepop();
     }
 
     if (codenxt()) {
@@ -165,11 +162,12 @@ public final class Pass2 extends Pass2Super {
     }
 
     if (codenxt()) {
-      if (prevSection) {
+      codepsh();
+
+      if (prevSection && code != Pass1.EOF) {
         processor.beforeCompilationUnitBody();
       }
 
-      codepsh();
       importDeclarations();
       codepop();
 
@@ -255,14 +253,14 @@ public final class Pass2 extends Pass2Super {
   }
 
   private void expressionNameItem() {
-    var o = codeobj();
+    if (code == Pass1.IDENTIFIER) {
+      codeadv();
 
-    if (o instanceof ClassName cn) {
-      importSet.execute(processor, cn);
-    } else if (o instanceof String s) {
+      var s = (String) codeobj();
+
       processor.write(s);
     } else {
-      throw new UnsupportedOperationException("Implement me :: first=" + o);
+      processor.write(typeName());
     }
   }
 
@@ -276,9 +274,9 @@ public final class Pass2 extends Pass2Super {
 
           codeadv();
 
-          var cn = importSet.sorted(code);
+          var o = codeobj();
 
-          processor.write(cn.toString());
+          processor.write(o.toString());
 
           processor.semicolon();
 
@@ -349,9 +347,9 @@ public final class Pass2 extends Pass2Super {
     newLineOrSpace(prevSection);
 
     if (codenxt()) {
-      var returnType = (TypeName) codeobj();
-
-      importSet.execute(processor, returnType);
+      codepsh();
+      processor.write(typeName());
+      codepop();
     } else {
       processor.write("void");
     }
@@ -534,6 +532,30 @@ public final class Pass2 extends Pass2Super {
 
       default -> throw codeuoe();
     }
+  }
+
+  private String typeName() {
+    var type = code;
+
+    codeadv();
+
+    return switch (type) {
+      case Pass1.NO_TYPE -> "void";
+
+      case Pass1.QUALIFIED_NAME -> {
+        var qname = (ClassName) codeobj();
+
+        yield qname.toString();
+      }
+
+      case Pass1.SIMPLE_NAME -> {
+        var sname = (ClassName) codeobj();
+
+        yield sname.simpleName;
+      }
+
+      default -> throw codeuoe();
+    };
   }
 
 }

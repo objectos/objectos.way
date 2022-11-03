@@ -15,12 +15,8 @@
  */
 package objectos.code;
 
-import objectos.code.tmpl.ClassNameSet;
-
 public sealed interface TypeName permits ClassName, NoTypeName {
 
   NoTypeName VOID = NoTypeName.INSTANCE;
-
-  void acceptClassNameSet(ClassNameSet set);
 
 }

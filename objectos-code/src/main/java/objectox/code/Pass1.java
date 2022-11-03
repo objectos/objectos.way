@@ -15,14 +15,17 @@
  */
 package objectox.code;
 
+import objectos.code.ClassName;
+import objectos.code.NoTypeName;
+
 public final class Pass1 extends Pass1Super {
 
   public final void execute(Pass0Super pass0) {
+    this.autoImports = pass0.autoImports.toPass1();
+
     this.source = pass0.protoArray;
 
     this.object = pass0.objectArray;
-
-    this.importSet = pass0.importSet;
 
     codeIndex = 0;
 
@@ -43,7 +46,7 @@ public final class Pass1 extends Pass1Super {
       protojmp();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> name = setOrThrow(name, protoadv());
+        case ByteProto.CLASS_NAME -> name = setOrThrow(name, typeName());
 
         default -> throw protouoe();
       }
@@ -71,7 +74,7 @@ public final class Pass1 extends Pass1Super {
       switch (proto) {
         case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
 
-        case ByteProto.EXTENDS -> _extends = setOrReplace(_extends, protoadv());
+        case ByteProto.EXTENDS -> _extends = setOrReplace(_extends, typeName());
 
         case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
 
@@ -115,7 +118,7 @@ public final class Pass1 extends Pass1Super {
       throw new UnsupportedOperationException("Implement me :: unexpected imports");
     }
 
-    if (importSet.enabled) {
+    if (autoImports.enabled()) {
       _import = importDeclarations();
     }
 
@@ -155,7 +158,9 @@ public final class Pass1 extends Pass1Super {
       protojmp();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME, ByteProto.IDENTIFIER -> add(protoadv());
+        case ByteProto.CLASS_NAME -> typeName();
+
+        case ByteProto.IDENTIFIER -> add(IDENTIFIER, protoadv());
 
         default -> protouoe();
       }
@@ -171,10 +176,12 @@ public final class Pass1 extends Pass1Super {
   private int importDeclarations() {
     var self = codeIndex;
 
-    var sorted = importSet.sort();
+    var entries = autoImports.entrySet();
 
-    for (int i = 0, size = sorted.size(); i < size; i++) {
-      add(IMPORT, i);
+    for (var entry : entries) {
+      Integer value = entry.getValue();
+
+      add(IMPORT, value);
     }
 
     add(EOF);
@@ -227,7 +234,7 @@ public final class Pass1 extends Pass1Super {
 
         case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
 
-        case ByteProto.TYPE_NAME -> returnType = setOrReplace(returnType, protoadv());
+        case ByteProto.TYPE_NAME -> returnType = setOrReplace(returnType, typeName());
 
         default -> body = listadd(body, statement());
       }
@@ -314,6 +321,30 @@ public final class Pass1 extends Pass1Super {
 
   private int stringLiteral() {
     return add(STRING_LITERAL, protoadv());
+  }
+
+  private int typeName() {
+    protoadv();
+
+    var o = objget(proto);
+
+    var code = typeNameCode(o);
+
+    return add(code, proto);
+  }
+
+  private int typeNameCode(Object o) {
+    if (o instanceof ClassName className) {
+      if (autoImports.addClassName(className, proto)) {
+        return SIMPLE_NAME;
+      } else {
+        return QUALIFIED_NAME;
+      }
+    } else if (o instanceof NoTypeName noType) {
+      return NO_TYPE;
+    } else {
+      throw new UnsupportedOperationException("Implement me :: type=" + o.getClass());
+    }
   }
 
 }

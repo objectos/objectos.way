@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.tmpl;
+package objectox.code;
 
-import objectos.code.ClassName;
-import objectox.code.ImportSet;
+sealed interface Pass0AutoImports permits AutoImports {
 
-public sealed interface ClassNameSet permits ImportSet {
+  void clear();
 
-  void addClassName(ClassName className);
+  void enable();
+
+  void packageName(String name);
+
+  Pass1AutoImports toPass1();
 
 }

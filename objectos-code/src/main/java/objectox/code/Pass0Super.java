@@ -20,11 +20,11 @@ import objectos.util.ObjectArrays;
 
 abstract class Pass0Super {
 
+  final Pass0AutoImports autoImports = new AutoImports();
+
   int[] elementArray = new int[10];
 
   int elementIndex;
-
-  final ImportSet importSet = new ImportSet();
 
   int[] lambdaArray = new int[10];
 

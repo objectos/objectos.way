@@ -15,17 +15,10 @@
  */
 package objectos.code;
 
-import objectos.code.tmpl.ClassNameSet;
-
 public final class NoTypeName implements TypeName {
 
   public static final NoTypeName INSTANCE = new NoTypeName();
 
   NoTypeName() {}
-
-  @Override
-  public final void acceptClassNameSet(ClassNameSet set) {
-    // noop
-  }
 
 }

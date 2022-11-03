@@ -26,8 +26,6 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
 
   @Override
   public final void _extends(ClassName superclass) {
-    superclass.acceptClassNameSet(importSet);
-
     object(ByteProto.EXTENDS, superclass);
   }
 
@@ -43,7 +41,7 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
 
   @Override
   public final void autoImports() {
-    importSet.enable();
+    autoImports.enable();
   }
 
   @Override
@@ -53,8 +51,6 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
 
   @Override
   public final void className(ClassName name) {
-    name.acceptClassNameSet(importSet);
-
     object(ByteProto.CLASS_NAME, name);
   }
 
@@ -75,6 +71,8 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
   }
 
   public final void compilationUnitStart() {
+    autoImports.clear();
+
     elementIndex = 0;
 
     objectIndex = 0;
@@ -162,6 +160,8 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
       packageName, " is not a valid package name"
     );
 
+    autoImports.packageName(packageName);
+
     object(ByteProto.PACKAGE_NAME, packageName);
   }
 
@@ -174,8 +174,6 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
 
   @Override
   public final void typeName(TypeName typeName) {
-    typeName.acceptClassNameSet(importSet);
-
     object(ByteProto.TYPE_NAME, typeName);
   }
 

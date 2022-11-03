@@ -26,8 +26,6 @@ abstract class Pass2Super {
 
   Object[] objects;
 
-  ImportSet importSet;
-
   Renderer processor;
 
   int[] stack = new int[16];

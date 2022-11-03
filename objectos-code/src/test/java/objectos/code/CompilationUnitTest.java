@@ -93,4 +93,32 @@ public class CompilationUnitTest extends AbstractObjectoxCodeTest {
     );
   }
 
+  @Test(description = """
+  autoImports() + java.lang
+  """)
+  public void testCase04() {
+    var tmpl = new JavaTemplate() {
+      final ClassName _Thread = ClassName.of(Thread.class);
+
+      @Override
+      protected final void definition() {
+        _package("test");
+
+        autoImports();
+
+        _class(id("Test"), _extends(_Thread));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      package test;
+
+      class Test extends Thread {}
+      """
+    );
+  }
+
 }

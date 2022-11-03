@@ -16,7 +16,6 @@
 package objectos.code;
 
 import javax.lang.model.SourceVersion;
-import objectos.code.tmpl.ClassNameSet;
 import objectos.lang.Check;
 import objectos.lang.Equals;
 import objectos.lang.HashCode;
@@ -59,11 +58,6 @@ public final class ClassName extends PackageOrClassName implements Comparable<Cl
     );
 
     return new ClassName(packageName, simpleName);
-  }
-
-  @Override
-  public final void acceptClassNameSet(ClassNameSet set) {
-    set.addClassName(this);
   }
 
   @Override

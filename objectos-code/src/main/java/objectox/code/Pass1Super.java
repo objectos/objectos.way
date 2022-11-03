@@ -61,11 +61,19 @@ abstract class Pass1Super {
 
   static final int LNULL = -21;
 
+  static final int QUALIFIED_NAME = -22;
+
+  static final int SIMPLE_NAME = -23;
+
+  static final int IDENTIFIER = -24;
+
+  static final int NO_TYPE = -25;
+
+  Pass1AutoImports autoImports;
+
   int[] code = new int[32];
 
   int codeIndex;
-
-  ImportSet importSet;
 
   Object[] object;
 
@@ -210,6 +218,10 @@ abstract class Pass1Super {
     code[list + 3] = next;
 
     return list;
+  }
+
+  final Object objget(int index) {
+    return object[index];
   }
 
   final int protoadv() {
