@@ -15,7 +15,7 @@
  */
 package objectos.code.tmpl;
 
-public sealed interface MarkerApi permits TemplateApi {
+public interface MarkerApi {
 
   void markLambda();
 

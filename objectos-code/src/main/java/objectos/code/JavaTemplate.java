@@ -16,28 +16,27 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
-import objectos.code.tmpl.AnnotationElementValue;
-import objectos.code.tmpl.AtRef;
-import objectos.code.tmpl.ClassDeclarationElement;
-import objectos.code.tmpl.ClassDeclarationRef;
-import objectos.code.tmpl.ExpressionElement;
-import objectos.code.tmpl.ExpressionNameRef;
-import objectos.code.tmpl.ExtendsRef;
-import objectos.code.tmpl.FinalRef;
-import objectos.code.tmpl.IdentifierRef;
-import objectos.code.tmpl.IncludeRef;
-import objectos.code.tmpl.LocalVariableDeclarationRef;
-import objectos.code.tmpl.MethodDeclarationElement;
-import objectos.code.tmpl.MethodInvocationElement;
-import objectos.code.tmpl.MethodInvocationRef;
-import objectos.code.tmpl.MethodRef;
-import objectos.code.tmpl.NewLineRef;
-import objectos.code.tmpl.StringLiteralRef;
+import objectos.code.tmpl.IncludeTarget;
+import objectos.code.tmpl.InternalApi.AnnotationElementValue;
+import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
+import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
+import objectos.code.tmpl.InternalApi.Expression;
+import objectos.code.tmpl.InternalApi.ExpressionNameRef;
+import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FinalRef;
+import objectos.code.tmpl.InternalApi.IdentifierRef;
+import objectos.code.tmpl.InternalApi.IncludeRef;
+import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
+import objectos.code.tmpl.InternalApi.MethodDeclaration;
+import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
+import objectos.code.tmpl.InternalApi.MethodInvocation;
+import objectos.code.tmpl.InternalApi.MethodInvocationElement;
+import objectos.code.tmpl.InternalApi.NewLineRef;
+import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.VoidRef;
 import objectos.code.tmpl.TemplateApi;
-import objectos.code.tmpl.VoidRef;
 import objectos.lang.Check;
-import objectox.code.Include;
-import objectox.code.Ref;
 
 public abstract class JavaTemplate {
 
@@ -81,11 +80,6 @@ public abstract class JavaTemplate {
 
   }
 
-  @FunctionalInterface
-  protected interface IncludeTarget {
-    void execute();
-  }
-
   private TemplateApi api;
 
   /**
@@ -115,71 +109,31 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassDeclarationRef _class(ClassDeclarationElement... elements) {
-    api.markStart();
-
-    for (var element : elements) { // implicit elements null check
-      element.mark(api);
-    }
-
-    api.classDeclaration(); // implicit elements null check
-
-    return Ref.INSTANCE;
+    return api._class(elements);
   }
 
   protected final ExtendsRef _extends(ClassName superclass) {
-    api._extends(superclass);
-
-    return Ref.INSTANCE;
+    return api._extends(superclass);
   }
 
   protected final FinalRef _final() {
-    api._final();
-
-    return Ref.INSTANCE;
+    return api._final();
   }
 
   protected final void _package(String packageName) {
-    api.packageName(packageName);
-
-    api.markStart();
-
-    api.markReference();
-
-    api.packageDeclaration();
+    api._package(packageName);
   }
 
   protected final VoidRef _void() {
-    api.typeName(TypeName.VOID);
-
-    return Ref.INSTANCE;
+    return api._void();
   }
 
   protected final AtRef annotation(Class<? extends Annotation> annotationType) {
-    var name = ClassName.of(annotationType); // implicit null-check
-
-    api.className(name);
-
-    api.markStart();
-
-    api.markReference();
-
-    api.annotation();
-
-    return Ref.INSTANCE;
+    return api.annotation(annotationType);
   }
 
   protected final AtRef annotation(ClassName annotationType, AnnotationElementValue value) {
-    api.className(annotationType);
-
-    api.markStart();
-
-    api.markReference();
-
-    value.mark(api);
-
-    api.annotation();
-
-    return Ref.INSTANCE;
+    return api.annotation(annotationType, value);
   }
 
   protected final void autoImports() {
@@ -189,102 +143,40 @@ public abstract class JavaTemplate {
   protected abstract void definition();
 
   protected final IdentifierRef id(String name) {
-    api.identifier(name);
-
-    return Ref.INSTANCE;
+    return api.id(name);
   }
 
   protected final IncludeRef include(IncludeTarget target) {
-    api.lambdaStart();
-
-    target.execute();
-
-    api.lambdaEnd();
-
-    return Include.INSTANCE;
+    return api.include(target);
   }
 
-  protected final MethodInvocationRef invoke(
+  protected final MethodInvocation invoke(
       String methodName, MethodInvocationElement... elements) {
-    api.identifier(methodName);
-
-    api.markStart();
-
-    api.markReference();
-
-    for (var element : elements) { // implicit elements null check
-      element.mark(api);
-    }
-
-    api.methodInvocation();
-
-    return Ref.INSTANCE;
+    return api.invoke(methodName, elements);
   }
 
-  protected final MethodRef method(MethodDeclarationElement... elements) {
-    api.markStart();
-
-    for (var element : elements) { // implicit elements null check
-      element.mark(api);
-    }
-
-    api.methodDeclaration();
-
-    return Ref.INSTANCE;
+  protected final MethodDeclaration method(MethodDeclarationElement... elements) {
+    return api.method(elements);
   }
 
   protected final ExpressionNameRef n(ClassName name, String identifier) {
-    api.className(name);
-
-    api.identifier(identifier);
-
-    api.markStart();
-
-    api.markReference();
-
-    api.markReference();
-
-    api.expressionName();
-
-    return Ref.INSTANCE;
+    return api.n(name, identifier);
   }
 
   protected final ExpressionNameRef n(String value) {
-    api.identifier(value);
-
-    api.markStart();
-
-    api.markReference();
-
-    api.expressionName();
-
-    return Ref.INSTANCE;
+    return api.n(value);
   }
 
   protected final NewLineRef nl() {
-    api.newLine();
-
-    return Ref.INSTANCE;
+    return api.nl();
   }
 
-  protected final StringLiteralRef s(String value) {
-    api.stringLiteral(value);
-
-    return Ref.INSTANCE;
+  protected final StringLiteral s(String value) {
+    return api.s(value);
   }
 
-  protected final LocalVariableDeclarationRef var(String name, ExpressionElement expression) {
-    api.identifier(name);
-
-    api.markStart();
-
-    api.markReference();
-
-    expression.mark(api);
-
-    api.localVariable();
-
-    return Ref.INSTANCE;
+  protected final LocalVariableDeclarationRef var(String name, Expression expression) {
+    return api.var(name, expression);
   }
 
 }

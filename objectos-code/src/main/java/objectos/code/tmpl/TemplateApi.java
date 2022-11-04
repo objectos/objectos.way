@@ -15,48 +15,61 @@
  */
 package objectos.code.tmpl;
 
+import java.lang.annotation.Annotation;
 import objectos.code.ClassName;
-import objectos.code.TypeName;
-import objectox.code.Pass0;
+import objectos.code.tmpl.InternalApi.AnnotationElementValue;
+import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
+import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
+import objectos.code.tmpl.InternalApi.Expression;
+import objectos.code.tmpl.InternalApi.ExpressionNameRef;
+import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FinalRef;
+import objectos.code.tmpl.InternalApi.IdentifierRef;
+import objectos.code.tmpl.InternalApi.IncludeRef;
+import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
+import objectos.code.tmpl.InternalApi.MethodDeclaration;
+import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
+import objectos.code.tmpl.InternalApi.MethodInvocation;
+import objectos.code.tmpl.InternalApi.MethodInvocationElement;
+import objectos.code.tmpl.InternalApi.NewLineRef;
+import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.VoidRef;
 
-public sealed interface TemplateApi extends MarkerApi permits Pass0 {
+public interface TemplateApi extends MarkerApi {
 
-  void _extends(ClassName superclass);
+  ClassDeclarationRef _class(ClassDeclarationElement[] elements);
 
-  void _final();
+  ExtendsRef _extends(ClassName superclass);
 
-  void annotation();
+  FinalRef _final();
+
+  void _package(String packageName);
+
+  VoidRef _void();
+
+  AtRef annotation(Class<? extends Annotation> annotationType);
+
+  AtRef annotation(ClassName annotationType, AnnotationElementValue value);
 
   void autoImports();
 
-  void classDeclaration();
+  IdentifierRef id(String name);
 
-  void className(ClassName name);
+  IncludeRef include(IncludeTarget target);
 
-  void expressionName();
+  MethodInvocation invoke(String methodName, MethodInvocationElement[] elements);
 
-  void identifier(String name);
+  MethodDeclaration method(MethodDeclarationElement[] elements);
 
-  void lambdaEnd();
+  ExpressionNameRef n(ClassName name, String identifier);
 
-  void lambdaStart();
+  ExpressionNameRef n(String value);
 
-  void localVariable();
+  NewLineRef nl();
 
-  void markStart();
+  StringLiteral s(String value);
 
-  void methodDeclaration();
-
-  void methodInvocation();
-
-  void newLine();
-
-  void packageDeclaration();
-
-  void packageName(String packageName);
-
-  void stringLiteral(String value);
-
-  void typeName(TypeName typeName);
+  LocalVariableDeclarationRef var(String name, Expression expression);
 
 }

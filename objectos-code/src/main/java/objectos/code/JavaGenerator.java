@@ -18,15 +18,9 @@ package objectos.code;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.lang.Check;
-import objectox.code.Pass0;
-import objectox.code.Pass1;
 import objectox.code.Pass2;
 
 public class JavaGenerator {
-
-  Pass0 pass0 = new Pass0();
-
-  Pass1 pass1 = new Pass1();
 
   Pass2 pass2 = new Pass2();
 
@@ -48,15 +42,15 @@ public class JavaGenerator {
   }
 
   final String toString(JavaTemplate template) {
-    pass0.compilationUnitStart();
+    pass2.compilationUnitStart();
 
-    template.eval(pass0);
+    template.eval(pass2);
 
-    pass0.compilationUnitEnd();
+    pass2.compilationUnitEnd();
 
-    pass1.execute(pass0);
+    pass2.executePass1();
 
-    pass2.execute(pass1, writer);
+    pass2.executePass2(writer);
 
     return writer.toString();
   }

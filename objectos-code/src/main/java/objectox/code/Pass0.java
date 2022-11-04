@@ -15,28 +15,116 @@
  */
 package objectox.code;
 
+import java.lang.annotation.Annotation;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.TypeName;
+import objectos.code.tmpl.IncludeTarget;
+import objectos.code.tmpl.InternalApi;
+import objectos.code.tmpl.InternalApi.AnnotationElementValue;
+import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
+import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
+import objectos.code.tmpl.InternalApi.Expression;
+import objectos.code.tmpl.InternalApi.ExpressionNameRef;
+import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FinalRef;
+import objectos.code.tmpl.InternalApi.IdentifierRef;
+import objectos.code.tmpl.InternalApi.IncludeRef;
+import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
+import objectos.code.tmpl.InternalApi.MethodDeclaration;
+import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
+import objectos.code.tmpl.InternalApi.MethodInvocation;
+import objectos.code.tmpl.InternalApi.MethodInvocationElement;
+import objectos.code.tmpl.InternalApi.NewLineRef;
+import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.VoidRef;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
 
-public final class Pass0 extends Pass0Super implements TemplateApi {
+public class Pass0 extends Pass0Super implements TemplateApi {
 
   @Override
-  public final void _extends(ClassName superclass) {
+  public final ClassDeclarationRef _class(ClassDeclarationElement[] elements) {
+    markStart();
+
+    for (var element : elements) { // implicit elements null check
+      element.mark(this);
+    }
+
+    element(ByteProto.CLASS_DECLARATION);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final ExtendsRef _extends(ClassName superclass) {
     object(ByteProto.EXTENDS, superclass);
+
+    return InternalApi.REF;
   }
 
   @Override
-  public final void _final() {
+  public final FinalRef _final() {
     object(ByteProto.MODIFIER, Modifier.FINAL);
+
+    return InternalApi.REF;
   }
 
   @Override
-  public final void annotation() {
+  public final void _package(String packageName) {
+    Check.argument(
+      SourceVersion.isName(packageName),
+      packageName, " is not a valid package name"
+    );
+
+    autoImports.packageName(packageName);
+
+    object(ByteProto.PACKAGE_NAME, packageName);
+
+    markStart();
+
+    markReference();
+
+    element(ByteProto.PACKAGE_DECLARATION);
+  }
+
+  @Override
+  public final VoidRef _void() {
+    object(ByteProto.TYPE_NAME, TypeName.VOID);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final AtRef annotation(Class<? extends Annotation> annotationType) {
+    var name = ClassName.of(annotationType); // implicit null-check
+
+    className(name);
+
+    markStart();
+
+    markReference();
+
     element(ByteProto.ANNOTATION);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final AtRef annotation(ClassName annotationType, AnnotationElementValue value) {
+    className(annotationType);
+
+    markStart();
+
+    markReference();
+
+    value.mark(this);
+
+    element(ByteProto.ANNOTATION);
+
+    return InternalApi.REF;
   }
 
   @Override
@@ -44,40 +132,30 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
     autoImports.enable();
   }
 
-  @Override
-  public final void classDeclaration() {
-    element(ByteProto.CLASS_DECLARATION);
-  }
-
-  @Override
-  public final void className(ClassName name) {
-    object(ByteProto.CLASS_NAME, name);
-  }
-
   public final void compilationUnitEnd() {
     markStart();
 
-    for (int i = 0; i < elementIndex; i++) {
+    for (int i = 0; i < codeIndex; i++) {
       markReference();
     }
 
     element(ByteProto.COMPILATION_UNIT);
 
-    if (elementIndex != 1) {
+    if (codeIndex != 1) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    protoArray[1] = elementArray[0];
+    protoArray[1] = codeArray[0];
   }
 
   public final void compilationUnitStart() {
     autoImports.clear();
 
-    elementIndex = 0;
+    codeIndex = 0;
 
     objectIndex = 0;
 
-    lambdaIndex = -1;
+    stackIndex = -1;
 
     markIndex = -1;
 
@@ -87,33 +165,39 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
   }
 
   @Override
-  public final void expressionName() {
-    element(ByteProto.EXPRESSION_NAME);
+  public final IdentifierRef id(String name) {
+    identifier(name);
+
+    return InternalApi.REF;
   }
 
   @Override
-  public final void identifier(String name) {
-    Check.argument(
-      SourceVersion.isIdentifier(name), // implicit null-check
-      name, " is not a valid identifier"
-    );
+  public final IncludeRef include(IncludeTarget target) {
+    lambdaStart();
 
-    object(ByteProto.IDENTIFIER, name);
+    target.execute();
+
+    lambdaEnd();
+
+    return InternalApi.INCLUDE;
   }
 
   @Override
-  public final void lambdaEnd() {
-    lambdaPop();
-  }
+  public final MethodInvocation invoke(
+      String methodName, MethodInvocationElement[] elements) {
+    identifier(methodName);
 
-  @Override
-  public final void lambdaStart() {
-    lambdaPush();
-  }
+    markStart();
 
-  @Override
-  public final void localVariable() {
-    element(ByteProto.LOCAL_VARIABLE);
+    markReference();
+
+    for (var element : elements) { // implicit elements null check
+      element.mark(this);
+    }
+
+    methodInvocation();
+
+    return InternalApi.REF;
   }
 
   @Override
@@ -127,54 +211,108 @@ public final class Pass0 extends Pass0Super implements TemplateApi {
   }
 
   @Override
-  public final void markStart() {
-    markPush();
-  }
+  public final MethodDeclaration method(MethodDeclarationElement[] elements) {
+    markStart();
 
-  @Override
-  public final void methodDeclaration() {
+    for (var element : elements) { // implicit elements null check
+      element.mark(this);
+    }
+
     element(ByteProto.METHOD_DECLARATION);
+
+    return InternalApi.REF;
   }
 
   @Override
-  public final void methodInvocation() {
-    element(ByteProto.METHOD_INVOCATION);
+  public final ExpressionNameRef n(ClassName name, String identifier) {
+    className(name);
+
+    identifier(identifier);
+
+    markStart();
+
+    markReference();
+
+    markReference();
+
+    element(ByteProto.EXPRESSION_NAME);
+
+    return InternalApi.REF;
   }
 
   @Override
-  public final void newLine() {
+  public final ExpressionNameRef n(String value) {
+    identifier(value);
+
+    markStart();
+
+    markReference();
+
+    element(ByteProto.EXPRESSION_NAME);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final NewLineRef nl() {
     markStart();
 
     element(ByteProto.NEW_LINE);
+
+    return InternalApi.REF;
   }
 
   @Override
-  public final void packageDeclaration() {
-    element(ByteProto.PACKAGE_DECLARATION);
-  }
-
-  @Override
-  public final void packageName(String packageName) {
-    Check.argument(
-      SourceVersion.isName(packageName),
-      packageName, " is not a valid package name"
-    );
-
-    autoImports.packageName(packageName);
-
-    object(ByteProto.PACKAGE_NAME, packageName);
-  }
-
-  @Override
-  public void stringLiteral(String value) {
+  public final StringLiteral s(String value) {
     Check.notNull(value, "value == null");
 
     object(ByteProto.STRING_LITERAL, value);
+
+    return InternalApi.REF;
   }
 
   @Override
-  public final void typeName(TypeName typeName) {
-    object(ByteProto.TYPE_NAME, typeName);
+  public final LocalVariableDeclarationRef var(String name, Expression expression) {
+    identifier(name);
+
+    markStart();
+
+    markReference();
+
+    expression.mark(this);
+
+    element(ByteProto.LOCAL_VARIABLE);
+
+    return InternalApi.REF;
+  }
+
+  private void className(ClassName name) {
+    object(ByteProto.CLASS_NAME, name);
+  }
+
+  private void identifier(String name) {
+    Check.argument(
+      SourceVersion.isIdentifier(name), // implicit null-check
+      name, " is not a valid identifier"
+    );
+
+    object(ByteProto.IDENTIFIER, name);
+  }
+
+  private void lambdaEnd() {
+    lambdaPop();
+  }
+
+  private void lambdaStart() {
+    lambdaPush();
+  }
+
+  private void markStart() {
+    markPush();
+  }
+
+  private void methodInvocation() {
+    element(ByteProto.METHOD_INVOCATION);
   }
 
 }

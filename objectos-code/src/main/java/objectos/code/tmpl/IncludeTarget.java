@@ -15,6 +15,7 @@
  */
 package objectos.code.tmpl;
 
-import objectox.code.Ref;
-
-public sealed interface LocalVariableDeclarationRef permits Ref {}
+@FunctionalInterface
+public interface IncludeTarget {
+  void execute();
+}

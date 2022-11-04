@@ -19,7 +19,7 @@ import javax.lang.model.element.Modifier;
 import objectos.code.ClassName;
 import objectos.code.JavaTemplate.Renderer;
 
-public final class Pass2 extends Pass2Super {
+public final class Pass2 extends Pass1 {
 
   private boolean abstractModifier;
 
@@ -27,21 +27,10 @@ public final class Pass2 extends Pass2Super {
 
   private int modifierCount;
 
-  public final void execute(
-      int[] codes, Object[] objects, Renderer processor) {
-    this.codes = codes;
-    this.objects = objects;
-    this.processor = processor;
+  public final void executePass2(Renderer renderer) {
+    this.processor = renderer;
 
     execute0();
-  }
-
-  public final void execute(Pass1Super pass1, Renderer renderer) {
-    execute(
-      pass1.code,
-      pass1.object,
-      renderer
-    );
   }
 
   private void annotation() {
@@ -73,7 +62,7 @@ public final class Pass2 extends Pass2Super {
 
   private void annotationPairItem() {
     switch (code) {
-      case Pass1.STRING_LITERAL -> stringLiteral();
+      case ByteCode.STRING_LITERAL -> stringLiteral();
 
       default -> throw codeuoe();
     }
@@ -158,7 +147,7 @@ public final class Pass2 extends Pass2Super {
 
   private void classDeclarationBodyItem() {
     switch (code) {
-      case Pass1Super.METHOD -> methodDeclaration();
+      case ByteCode.METHOD -> methodDeclaration();
 
       default -> throw codeuoe();
     }
@@ -171,7 +160,7 @@ public final class Pass2 extends Pass2Super {
 
     if (codenxt()) {
       codepsh();
-      codeass(Pass1Super.PACKAGE);
+      codeass(ByteCode.PACKAGE);
       packageDeclaration();
       codepop();
 
@@ -181,7 +170,7 @@ public final class Pass2 extends Pass2Super {
     if (codenxt()) {
       codepsh();
 
-      if (prevSection && code != Pass1.EOF) {
+      if (prevSection && code != ByteCode.EOF) {
         processor.beforeCompilationUnitBody();
       }
 
@@ -216,33 +205,33 @@ public final class Pass2 extends Pass2Super {
 
   private void compilationUnitBodyItem() {
     switch (code) {
-      case Pass1Super.CLASS -> classDeclaration();
+      case ByteCode.CLASS -> classDeclaration();
 
-      case Pass1Super.METHOD -> methodDeclaration();
+      case ByteCode.METHOD -> methodDeclaration();
 
       default -> statement();
     }
   }
 
   private void execute0() {
-    cursor = 0;
+    codeIndex = 0;
 
-    stackCursor = 0;
+    stackIndex = 0;
 
     codejmp();
 
-    codeass(Pass1Super.COMPILATION_UNIT);
+    codeass(ByteCode.COMPILATION_UNIT);
 
     compilationUnit();
   }
 
   private void expression() {
     switch (code) {
-      case Pass1Super.EXPRESSION_NAME -> expressionName();
+      case ByteCode.EXPRESSION_NAME -> expressionName();
 
-      case Pass1Super.METHOD_INVOCATION -> methodInvocation();
+      case ByteCode.METHOD_INVOCATION -> methodInvocation();
 
-      case Pass1Super.STRING_LITERAL -> stringLiteral();
+      case ByteCode.STRING_LITERAL -> stringLiteral();
 
       default -> throw codeuoe();
     }
@@ -264,7 +253,7 @@ public final class Pass2 extends Pass2Super {
   }
 
   private void expressionNameItem() {
-    if (code == Pass1.IDENTIFIER) {
+    if (code == ByteCode.IDENTIFIER) {
       codeadv();
 
       var s = (String) codeobj();
@@ -278,7 +267,7 @@ public final class Pass2 extends Pass2Super {
   private void importDeclarations() {
     while (true) {
       switch (code) {
-        case Pass1Super.IMPORT -> {
+        case ByteCode.IMPORT -> {
           processor.write("import");
 
           processor.space();
@@ -294,7 +283,7 @@ public final class Pass2 extends Pass2Super {
           codeadv();
         }
 
-        case Pass1Super.EOF -> { return; }
+        case ByteCode.EOF -> { return; }
 
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
@@ -477,13 +466,13 @@ public final class Pass2 extends Pass2Super {
 
   private void modifierListItem() {
     switch (code) {
-      case Pass1Super.ANNOTATION -> {
+      case ByteCode.ANNOTATION -> {
         annotation();
 
         annotationLast = true;
       }
 
-      case Pass1Super.MODIFIER -> {
+      case ByteCode.MODIFIER -> {
         modifier();
 
         modifierCount++;
@@ -533,9 +522,9 @@ public final class Pass2 extends Pass2Super {
 
   private void statement() {
     switch (code) {
-      case Pass1Super.LOCAL_VARIABLE -> localVariableDeclaration();
+      case ByteCode.LOCAL_VARIABLE -> localVariableDeclaration();
 
-      case Pass1Super.METHOD_INVOCATION -> {
+      case ByteCode.METHOD_INVOCATION -> {
         methodInvocation();
 
         processor.semicolon();
@@ -559,15 +548,15 @@ public final class Pass2 extends Pass2Super {
     codeadv();
 
     return switch (type) {
-      case Pass1.NO_TYPE -> "void";
+      case ByteCode.NO_TYPE -> "void";
 
-      case Pass1.QUALIFIED_NAME -> {
+      case ByteCode.QUALIFIED_NAME -> {
         var qname = (ClassName) codeobj();
 
         yield qname.toString();
       }
 
-      case Pass1.SIMPLE_NAME -> {
+      case ByteCode.SIMPLE_NAME -> {
         var sname = (ClassName) codeobj();
 
         yield sname.simpleName;

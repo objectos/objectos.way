@@ -23,7 +23,7 @@ import objectos.code.ClassName;
 import objectos.code.PackageName;
 import objectos.util.GrowableSet;
 
-public final class AutoImports implements Pass0AutoImports, Pass1AutoImports {
+public final class AutoImports {
 
   private PackageName packageName;
 
@@ -35,7 +35,6 @@ public final class AutoImports implements Pass0AutoImports, Pass1AutoImports {
 
   boolean skipJavaLang;
 
-  @Override
   public final boolean addClassName(ClassName value, int objectIndex) {
     if (!enabled) {
       return false;
@@ -62,7 +61,6 @@ public final class AutoImports implements Pass0AutoImports, Pass1AutoImports {
     return false;
   }
 
-  @Override
   public final void clear() {
     packageName = PackageName.of();
 
@@ -75,19 +73,16 @@ public final class AutoImports implements Pass0AutoImports, Pass1AutoImports {
     skipJavaLang = false;
   }
 
-  @Override
   public final void enable() {
     enabled = true;
 
     skipJavaLang = true;
   }
 
-  @Override
   public final boolean enabled() {
     return enabled;
   }
 
-  @Override
   public final Set<Entry<ClassName, Integer>> entrySet() {
     return imports.entrySet();
   }
@@ -96,13 +91,9 @@ public final class AutoImports implements Pass0AutoImports, Pass1AutoImports {
     this.packageName = packageName;
   }
 
-  @Override
   public final void packageName(String s) {
     packageName = PackageName.of(s);
   }
-
-  @Override
-  public final Pass1AutoImports toPass1() { return this; }
 
   private boolean canSkipImport(PackageName otherPackageName) {
     if (otherPackageName.is("java.lang")) {

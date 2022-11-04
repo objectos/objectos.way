@@ -18,18 +18,12 @@ package objectox.code;
 import objectos.code.ClassName;
 import objectos.code.NoTypeName;
 
-public final class Pass1 extends Pass1Super {
+public class Pass1 extends Pass0 {
 
-  public final void execute(Pass0Super pass0) {
-    this.autoImports = pass0.autoImports.toPass1();
-
-    this.source = pass0.protoArray;
-
-    this.object = pass0.objectArray;
-
+  public final void executePass1() {
     codeIndex = 0;
 
-    sourceIndex = 0;
+    protoIndex = 0;
 
     stackIndex = 0;
 
@@ -37,8 +31,8 @@ public final class Pass1 extends Pass1Super {
   }
 
   private int annotation() {
-    int name = NOP;
-    int pairs = NOP;
+    int name = ByteCode.NOP;
+    int pairs = ByteCode.NOP;
 
     protoadv();
 
@@ -56,17 +50,17 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    return add(ANNOTATION, name, pairs);
+    return codeadd(ByteCode.ANNOTATION, name, pairs);
   }
 
   private int classDeclaration() {
-    int modifiers = NOP;
-    int name = NOP;
-    int typeParams = NOP;
-    int _extends = NOP;
-    int _implements = NOP;
-    int _permits = NOP;
-    int body = NOP;
+    int modifiers = ByteCode.NOP;
+    int name = ByteCode.NOP;
+    int typeParams = ByteCode.NOP;
+    int _extends = ByteCode.NOP;
+    int _implements = ByteCode.NOP;
+    int _permits = ByteCode.NOP;
+    int body = ByteCode.NOP;
 
     protoadv();
 
@@ -90,13 +84,14 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    return add(CLASS, modifiers, name, typeParams, _extends, _implements, _permits, body);
+    return codeadd(ByteCode.CLASS, modifiers, name, typeParams, _extends, _implements, _permits,
+      body);
   }
 
   private int compilationUnit() {
-    var _package = NOP;
-    var _import = NOP;
-    var body = NOP;
+    var _package = ByteCode.NOP;
+    var _import = ByteCode.NOP;
+    var body = ByteCode.NOP;
 
     protoadv();
 
@@ -116,7 +111,7 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    if (_import != NOP) {
+    if (_import != ByteCode.NOP) {
       throw new UnsupportedOperationException("Implement me :: unexpected imports");
     }
 
@@ -124,11 +119,11 @@ public final class Pass1 extends Pass1Super {
       _import = importDeclarations();
     }
 
-    return add(COMPILATION_UNIT, _package, _import, body);
+    return codeadd(ByteCode.COMPILATION_UNIT, _package, _import, body);
   }
 
   private void execute() {
-    add(JMP, NOP);
+    codeadd(ByteCode.JMP, ByteCode.NOP);
 
     protoadv();
 
@@ -138,7 +133,7 @@ public final class Pass1 extends Pass1Super {
 
     var unit = compilationUnit();
 
-    code[1] = unit;
+    codeArray[1] = unit;
   }
 
   private int expression() {
@@ -152,7 +147,7 @@ public final class Pass1 extends Pass1Super {
   }
 
   private int expressionName() {
-    var self = add(EXPRESSION_NAME);
+    var self = codeadd(ByteCode.EXPRESSION_NAME);
 
     protoadv();
 
@@ -162,7 +157,7 @@ public final class Pass1 extends Pass1Super {
       switch (proto) {
         case ByteProto.CLASS_NAME -> typeName();
 
-        case ByteProto.IDENTIFIER -> add(IDENTIFIER, protoadv());
+        case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, protoadv());
 
         default -> protouoe();
       }
@@ -170,7 +165,7 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    add(NOP);
+    codeadd(ByteCode.NOP);
 
     return self;
   }
@@ -183,19 +178,19 @@ public final class Pass1 extends Pass1Super {
     for (var entry : entries) {
       Integer value = entry.getValue();
 
-      add(IMPORT, value);
+      codeadd(ByteCode.IMPORT, value);
     }
 
-    add(EOF);
+    codeadd(ByteCode.EOF);
 
     return self;
   }
 
   private int localVariableDeclaration() {
-    var modifiers = NOP;
-    var type = NOP;
-    var name = NOP;
-    var init = NOP;
+    var modifiers = ByteCode.NOP;
+    var type = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var init = ByteCode.NOP;
 
     protoadv();
 
@@ -211,18 +206,18 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    return add(LOCAL_VARIABLE, modifiers, type, name, init);
+    return codeadd(ByteCode.LOCAL_VARIABLE, modifiers, type, name, init);
   }
 
   private int methodDeclaration() {
-    var modifiers = NOP;
-    var typeParams = NOP;
-    var returnType = NOP;
-    var name = NOP;
-    var receiver = NOP;
-    var params = NOP;
-    var _throws = NOP;
-    var body = NOP;
+    var modifiers = ByteCode.NOP;
+    var typeParams = ByteCode.NOP;
+    var returnType = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var receiver = ByteCode.NOP;
+    var params = ByteCode.NOP;
+    var _throws = ByteCode.NOP;
+    var body = ByteCode.NOP;
 
     protoadv();
 
@@ -244,18 +239,18 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    return add(
-      METHOD,
+    return codeadd(
+      ByteCode.METHOD,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );
   }
 
   private int methodInvocation() {
-    var callee = NOP;
-    var typeArgs = NOP;
-    var name = NOP;
-    var args = NOP;
+    var callee = ByteCode.NOP;
+    var typeArgs = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var args = ByteCode.NOP;
 
     protoadv();
 
@@ -279,20 +274,20 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    return add(METHOD_INVOCATION, callee, typeArgs, name, args);
+    return codeadd(ByteCode.METHOD_INVOCATION, callee, typeArgs, name, args);
   }
 
   private int modifier() {
-    return add(MODIFIER, protoadv());
+    return codeadd(ByteCode.MODIFIER, protoadv());
   }
 
   private int newLine() {
-    return add(NEW_LINE);
+    return codeadd(ByteCode.NEW_LINE);
   }
 
   private int packageDeclaration() {
-    var annotations = NOP;
-    var name = NOP;
+    var annotations = ByteCode.NOP;
+    var name = ByteCode.NOP;
 
     protoadv();
 
@@ -308,7 +303,7 @@ public final class Pass1 extends Pass1Super {
       protonxt();
     }
 
-    return add(PACKAGE, annotations, name);
+    return codeadd(ByteCode.PACKAGE, annotations, name);
   }
 
   private int statement() {
@@ -322,7 +317,7 @@ public final class Pass1 extends Pass1Super {
   }
 
   private int stringLiteral() {
-    return add(STRING_LITERAL, protoadv());
+    return codeadd(ByteCode.STRING_LITERAL, protoadv());
   }
 
   private int typeName() {
@@ -332,18 +327,18 @@ public final class Pass1 extends Pass1Super {
 
     var code = typeNameCode(o);
 
-    return add(code, proto);
+    return codeadd(code, proto);
   }
 
   private int typeNameCode(Object o) {
     if (o instanceof ClassName className) {
       if (autoImports.addClassName(className, proto)) {
-        return SIMPLE_NAME;
+        return ByteCode.SIMPLE_NAME;
       } else {
-        return QUALIFIED_NAME;
+        return ByteCode.QUALIFIED_NAME;
       }
     } else if (o instanceof NoTypeName noType) {
-      return NO_TYPE;
+      return ByteCode.NO_TYPE;
     } else {
       throw new UnsupportedOperationException("Implement me :: type=" + o.getClass());
     }
