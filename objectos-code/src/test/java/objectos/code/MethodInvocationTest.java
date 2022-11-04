@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class MethodInvocationTest extends AbstractObjectoxCodeTest {
+public class MethodInvocationTest extends AbstractObjectosCodeTest {
 
   @Test(description = """
   - unqualified

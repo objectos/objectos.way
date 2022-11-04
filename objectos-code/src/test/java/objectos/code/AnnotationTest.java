@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class AnnotationTest extends AbstractObjectoxCodeTest {
+public class AnnotationTest extends AbstractObjectosCodeTest {
 
   @Test(description = """
   single element annotation + string literal

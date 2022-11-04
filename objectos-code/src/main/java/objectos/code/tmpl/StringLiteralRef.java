@@ -17,4 +17,6 @@ package objectos.code.tmpl;
 
 import objectox.code.Ref;
 
-public sealed interface StringLiteralRef extends AnnotationElementValue, ExpressionElement permits Ref {}
+public sealed interface StringLiteralRef
+    extends AnnotationElementValue, ExpressionElement //
+permits Ref {}

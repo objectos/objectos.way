@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class MethodDeclarationTest extends AbstractObjectoxCodeTest {
+public class MethodDeclarationTest extends AbstractObjectosCodeTest {
 
   @Test(description = """
   - void

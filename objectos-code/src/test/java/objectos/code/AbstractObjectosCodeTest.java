@@ -15,13 +15,16 @@
  */
 package objectos.code;
 
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
 
-public class JavaWriterTest {
+public abstract class AbstractObjectosCodeTest {
 
-  @Test
-  public void arguments() {
+  static final PackageName TEST = PackageName.of("test");
 
+  protected final void testDefault(JavaTemplate template, String expected) {
+    var result = template.toString();
+
+    assertEquals(result, expected);
   }
 
 }

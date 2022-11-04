@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class IncludeTest extends AbstractObjectoxCodeTest {
+public class IncludeTest extends AbstractObjectosCodeTest {
 
   @Test(description = """
   - single include

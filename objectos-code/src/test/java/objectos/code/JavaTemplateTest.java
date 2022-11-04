@@ -17,31 +17,33 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-public abstract class AbstractObjectoxCodeTest {
+public class JavaTemplateTest {
 
-  static final PackageName TEST = PackageName.of("test");
+  @Test
+  public void testCase01() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _package("test");
 
-  private JavaGenerator generator;
+        autoImports();
 
-  private JavaWriter writer;
+        _class(
+          id("Test")
+        );
+      }
+    };
 
-  @BeforeClass
-  public void _beforeClass() {
-    if (generator == null) {
-      generator = JavaGenerator.of();
+    assertEquals(
+      tmpl.toString(),
+      """
+      package test;
 
-      writer = JavaWriter.of();
-    }
-  }
-
-  protected final void testDefault(JavaTemplate template, String expected) {
-    generator.render(template, writer);
-
-    var result = writer.toString();
-
-    assertEquals(result, expected);
+      class Test {}
+      """
+    );
   }
 
 }

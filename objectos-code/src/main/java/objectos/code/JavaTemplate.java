@@ -93,13 +93,12 @@ public abstract class JavaTemplate {
    */
   protected JavaTemplate() {}
 
-  public final void acceptJavaGenerator(JavaGenerator generator) {
+  public final void eval(TemplateApi api) {
     Check.state(this.api == null, """
-    Another code generation is already is progress.
+    Another evaluation is already is progress.
     """);
-    Check.notNull(generator, "generator == null");
 
-    api = generator.pass0;
+    this.api = Check.notNull(api, "api == null");
 
     try {
       definition();
@@ -108,14 +107,11 @@ public abstract class JavaTemplate {
     }
   }
 
-  public final void eval(TemplateApi api) {
-    Check.state(this.api == null, """
-    Another evaluation is already is progress.
-    """);
+  @Override
+  public String toString() {
+    var generator = new JavaGenerator();
 
-    this.api = Check.notNull(api, "api == null");
-
-    definition();
+    return generator.toString(this);
   }
 
   protected final ClassDeclarationRef _class(ClassDeclarationElement... elements) {

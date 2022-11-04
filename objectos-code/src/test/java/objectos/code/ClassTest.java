@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class ClassTest extends AbstractObjectoxCodeTest {
+public class ClassTest extends AbstractObjectosCodeTest {
 
   @Test(description = """
   final class Subject {}

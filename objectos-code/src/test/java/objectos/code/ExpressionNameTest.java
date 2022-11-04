@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class ExpressionNameTest extends AbstractObjectoxCodeTest {
+public class ExpressionNameTest extends AbstractObjectosCodeTest {
 
   @Test(description = """
   test(test.Suit.CLUBS);

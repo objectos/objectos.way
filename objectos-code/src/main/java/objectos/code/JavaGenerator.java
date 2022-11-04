@@ -15,13 +15,14 @@
  */
 package objectos.code;
 
-import objectos.code.JavaTemplate.Renderer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import objectos.lang.Check;
 import objectox.code.Pass0;
 import objectox.code.Pass1;
 import objectox.code.Pass2;
 
-public final class JavaGenerator {
+public class JavaGenerator {
 
   Pass0 pass0 = new Pass0();
 
@@ -37,22 +38,16 @@ public final class JavaGenerator {
     return new JavaGenerator();
   }
 
-  public final void render(JavaTemplate template, Renderer renderer) {
-    Check.notNull(template, "template == null");
-    Check.notNull(renderer, "renderer == null");
+  public static JavaGenerator ofDirectory(Path directory) {
+    Check.argument(
+      Files.isDirectory(directory),
+      directory, " does not exist, is not a directory, or could not be accessed."
+    );
 
-    pass0.compilationUnitStart();
-
-    template.acceptJavaGenerator(this);
-
-    pass0.compilationUnitEnd();
-
-    pass1.execute(pass0);
-
-    pass2.execute(pass1, renderer);
+    return null;
   }
 
-  public final String toString(JavaTemplate template) {
+  final String toString(JavaTemplate template) {
     pass0.compilationUnitStart();
 
     template.eval(pass0);

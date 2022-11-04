@@ -17,7 +17,7 @@ package objectos.code;
 
 import org.testng.annotations.Test;
 
-public class LocalVariableDeclarationTest extends AbstractObjectoxCodeTest {
+public class LocalVariableDeclarationTest extends AbstractObjectosCodeTest {
 
   @Test(description = """
   var s = "java";
