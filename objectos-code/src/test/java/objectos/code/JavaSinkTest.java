@@ -29,14 +29,9 @@ public class JavaSinkTest {
 
   private Path directory;
 
-  @SuppressWarnings("unused")
-  private JavaGenerator sink;
-
   @BeforeClass
   public void _setUp() throws IOException {
     directory = Files.createTempDirectory("java-sink-test-");
-
-    sink = JavaGenerator.ofDirectory(directory);
   }
 
   @AfterClass

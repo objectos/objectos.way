@@ -42,41 +42,41 @@ public abstract class JavaTemplate {
 
   public interface Renderer {
 
-    void argumentListEnd();
-
-    void argumentListStart();
-
-    void beforeBlockNextItem();
-
-    void beforeClassFirstMember();
-
-    void beforeCompilationUnitBody();
-
-    void blockEnd();
-
-    void blockStart();
-
-    void comma();
-
-    void compilationUnitEnd();
-
-    void compilationUnitStart();
-
-    void newLine();
-
-    void semicolon();
-
-    void separator(char c);
-
-    void space();
-
-    void spaceIf(boolean condition);
-
-    void stringLiteral(String s);
-
     void write(char c);
 
     void write(String s);
+
+    void writeArgumentListEnd();
+
+    void writeArgumentListStart();
+
+    void writeBeforeBlockNextItem();
+
+    void writeBeforeClassFirstMember();
+
+    void writeBeforeCompilationUnitBody();
+
+    void writeBlockEnd();
+
+    void writeBlockStart();
+
+    void writeComma();
+
+    void writeCompilationUnitEnd();
+
+    void writeCompilationUnitStart();
+
+    void writeNewLine();
+
+    void writeSemicolon();
+
+    void writeSeparator(char c);
+
+    void writeSpace();
+
+    void writeSpaceIf(boolean condition);
+
+    void writeStringLiteral(String s);
 
   }
 
@@ -103,9 +103,13 @@ public abstract class JavaTemplate {
 
   @Override
   public String toString() {
-    var generator = new JavaGenerator();
+    var out = new StringBuilder();
 
-    return generator.toString(this);
+    var sink = JavaSink.ofStringBuilder(out);
+
+    sink.eval(this);
+
+    return out.toString();
   }
 
   protected final ClassDeclarationRef _class(ClassDeclarationElement... elements) {
@@ -177,6 +181,20 @@ public abstract class JavaTemplate {
 
   protected final LocalVariableDeclarationRef var(String name, Expression expression) {
     return api.var(name, expression);
+  }
+
+  final void execute(Pass0 pass0) {
+    Check.state(this.api == null, """
+    Another evaluation is already in progress.
+    """);
+
+    this.api = pass0;
+
+    try {
+      definition();
+    } finally {
+      this.api = null;
+    }
   }
 
 }

@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
 import java.lang.annotation.Annotation;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
-import objectos.code.ClassName;
-import objectos.code.TypeName;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.InternalApi;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
@@ -43,7 +41,7 @@ import objectos.code.tmpl.InternalApi.VoidRef;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
 
-public class Pass0 extends Pass0Super implements TemplateApi {
+class Pass0 extends State implements TemplateApi {
 
   @Override
   public final ClassDeclarationRef _class(ClassDeclarationElement[] elements) {
@@ -130,38 +128,6 @@ public class Pass0 extends Pass0Super implements TemplateApi {
   @Override
   public final void autoImports() {
     autoImports.enable();
-  }
-
-  public final void compilationUnitEnd() {
-    markStart();
-
-    for (int i = 0; i < codeIndex; i++) {
-      markReference();
-    }
-
-    element(ByteProto.COMPILATION_UNIT);
-
-    if (codeIndex != 1) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    protoArray[1] = codeArray[0];
-  }
-
-  public final void compilationUnitStart() {
-    autoImports.clear();
-
-    codeIndex = 0;
-
-    objectIndex = 0;
-
-    stackIndex = -1;
-
-    markIndex = -1;
-
-    protoIndex = 0;
-
-    protoAdd(ByteProto.JMP, ByteProto.NULL);
   }
 
   @Override
@@ -286,6 +252,14 @@ public class Pass0 extends Pass0Super implements TemplateApi {
     return InternalApi.REF;
   }
 
+  final void pass0(JavaTemplate template) {
+    pass0Start();
+
+    template.execute(this);
+
+    pass0End();
+  }
+
   private void className(ClassName name) {
     object(ByteProto.CLASS_NAME, name);
   }
@@ -313,6 +287,38 @@ public class Pass0 extends Pass0Super implements TemplateApi {
 
   private void methodInvocation() {
     element(ByteProto.METHOD_INVOCATION);
+  }
+
+  private void pass0End() {
+    markStart();
+
+    for (int i = 0; i < codeIndex; i++) {
+      markReference();
+    }
+
+    element(ByteProto.COMPILATION_UNIT);
+
+    if (codeIndex != 1) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    protoArray[1] = codeArray[0];
+  }
+
+  private void pass0Start() {
+    autoImports.clear();
+
+    codeIndex = 0;
+
+    objectIndex = 0;
+
+    stackIndex = -1;
+
+    markIndex = -1;
+
+    protoIndex = 0;
+
+    protoAdd(ByteProto.JMP, ByteProto.NULL);
   }
 
 }

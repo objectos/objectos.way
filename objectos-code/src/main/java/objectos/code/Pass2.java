@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
 import javax.lang.model.element.Modifier;
-import objectos.code.ClassName;
-import objectos.code.JavaTemplate.Renderer;
 
-public final class Pass2 extends Pass1 {
+abstract class Pass2 extends Pass1 {
 
   private boolean abstractModifier;
 
@@ -27,18 +25,62 @@ public final class Pass2 extends Pass1 {
 
   private int modifierCount;
 
-  public final void executePass2(Renderer renderer) {
-    this.processor = renderer;
+  protected abstract void write(char c);
 
-    execute0();
+  protected abstract void write(String s);
+
+  protected abstract void writeArgumentListEnd();
+
+  protected abstract void writeArgumentListStart();
+
+  protected abstract void writeBeforeBlockNextItem();
+
+  protected abstract void writeBeforeClassFirstMember();
+
+  protected abstract void writeBeforeCompilationUnitBody();
+
+  protected abstract void writeBlockEnd();
+
+  protected abstract void writeBlockStart();
+
+  protected abstract void writeComma();
+
+  protected abstract void writeCompilationUnitEnd();
+
+  protected abstract void writeCompilationUnitStart();
+
+  protected abstract void writeNewLine();
+
+  protected abstract void writeSemicolon();
+
+  protected abstract void writeSeparator(char c);
+
+  protected abstract void writeSpace();
+
+  protected abstract void writeSpaceIf(boolean condition);
+
+  protected abstract void writeStringLiteral(String s);
+
+  final void pass2() {
+    codeIndex = 0;
+
+    stackIndex = 0;
+
+    codejmp();
+
+    codeass(ByteCode.COMPILATION_UNIT);
+
+    compilationUnit();
   }
 
   private void annotation() {
     if (codenxt()) {
       codepsh();
-      processor.write('@');
 
-      processor.write(typeName());
+      write('@');
+
+      write(typeName());
+
       codepop();
     } else {
       throw new UnsupportedOperationException(
@@ -48,13 +90,13 @@ public final class Pass2 extends Pass1 {
     if (codenxt()) {
       codepsh();
 
-      processor.argumentListStart();
+      writeArgumentListStart();
 
       while (lnext()) {
         annotationPairItem();
       }
 
-      processor.argumentListEnd();
+      writeArgumentListEnd();
 
       codepop();
     }
@@ -84,11 +126,11 @@ public final class Pass2 extends Pass1 {
     if (codenxt()) {
       newLineOrSpace(prevSection);
 
-      processor.write("class");
+      write("class");
 
-      processor.space();
+      writeSpace();
 
-      processor.write((String) codeobj());
+      write((String) codeobj());
 
       prevSection = true;
     } else {
@@ -102,13 +144,15 @@ public final class Pass2 extends Pass1 {
 
     if (codenxt()) {
       codepsh();
-      processor.spaceIf(prevSection);
 
-      processor.write("extends");
+      writeSpaceIf(prevSection);
 
-      processor.space();
+      write("extends");
 
-      processor.write(typeName());
+      writeSpace();
+
+      write(typeName());
+
       codepop();
     }
 
@@ -122,7 +166,7 @@ public final class Pass2 extends Pass1 {
         "Implement me :: class permits clause");
     }
 
-    processor.blockStart();
+    writeBlockStart();
 
     if (codenxt()) {
       codepsh();
@@ -130,12 +174,12 @@ public final class Pass2 extends Pass1 {
       codepop();
     }
 
-    processor.blockEnd();
+    writeBlockEnd();
   }
 
   private void classDeclarationBody() {
     if (lnext()) {
-      processor.beforeClassFirstMember();
+      writeBeforeClassFirstMember();
 
       classDeclarationBodyItem();
 
@@ -154,7 +198,7 @@ public final class Pass2 extends Pass1 {
   }
 
   private void compilationUnit() {
-    processor.compilationUnitStart();
+    writeCompilationUnitStart();
 
     var prevSection = false;
 
@@ -171,7 +215,7 @@ public final class Pass2 extends Pass1 {
       codepsh();
 
       if (prevSection && code != ByteCode.EOF) {
-        processor.beforeCompilationUnitBody();
+        writeBeforeCompilationUnitBody();
       }
 
       importDeclarations();
@@ -182,7 +226,7 @@ public final class Pass2 extends Pass1 {
 
     if (codenxt()) {
       if (prevSection) {
-        processor.beforeCompilationUnitBody();
+        writeBeforeCompilationUnitBody();
       }
 
       codepsh();
@@ -190,7 +234,7 @@ public final class Pass2 extends Pass1 {
       codepop();
     }
 
-    processor.compilationUnitEnd();
+    writeCompilationUnitEnd();
   }
 
   private void compilationUnitBody() {
@@ -213,18 +257,6 @@ public final class Pass2 extends Pass1 {
     }
   }
 
-  private void execute0() {
-    codeIndex = 0;
-
-    stackIndex = 0;
-
-    codejmp();
-
-    codeass(ByteCode.COMPILATION_UNIT);
-
-    compilationUnit();
-  }
-
   private void expression() {
     switch (code) {
       case ByteCode.EXPRESSION_NAME -> expressionName();
@@ -242,7 +274,7 @@ public final class Pass2 extends Pass1 {
       expressionNameItem();
 
       while (codenxt()) {
-        processor.write('.');
+        write('.');
 
         expressionNameItem();
       }
@@ -258,9 +290,9 @@ public final class Pass2 extends Pass1 {
 
       var s = (String) codeobj();
 
-      processor.write(s);
+      write(s);
     } else {
-      processor.write(typeName());
+      write(typeName());
     }
   }
 
@@ -268,17 +300,17 @@ public final class Pass2 extends Pass1 {
     while (true) {
       switch (code) {
         case ByteCode.IMPORT -> {
-          processor.write("import");
+          write("import");
 
-          processor.space();
+          writeSpace();
 
           codeadv();
 
           var o = codeobj();
 
-          processor.write(o.toString());
+          write(o.toString());
 
-          processor.semicolon();
+          writeSemicolon();
 
           codeadv();
         }
@@ -288,6 +320,32 @@ public final class Pass2 extends Pass1 {
         default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
       }
     }
+  }
+
+  private boolean largs(boolean comma) {
+    var result = false;
+
+    var nl = 0;
+
+    while (lnext()) {
+      if (code != ByteCode.NEW_LINE) {
+        result = true;
+
+        break;
+      }
+
+      nl++;
+    }
+
+    if (result && comma) {
+      writeComma();
+    }
+
+    for (int i = 0; i < nl; i++) {
+      writeNewLine();
+    }
+
+    return result;
   }
 
   private void localVariableDeclaration() {
@@ -300,20 +358,20 @@ public final class Pass2 extends Pass1 {
       throw new UnsupportedOperationException(
         "Implement me :: local var type");
     } else {
-      processor.write("var");
+      write("var");
     }
 
     if (codenxt()) {
-      processor.space();
+      writeSpace();
 
-      processor.write((String) codeobj());
+      write((String) codeobj());
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: local var name not defined?");
     }
 
     if (codenxt()) {
-      processor.separator('=');
+      writeSeparator('=');
 
       codepsh();
       expression();
@@ -323,7 +381,7 @@ public final class Pass2 extends Pass1 {
         "Implement me :: local var unitialized");
     }
 
-    processor.semicolon();
+    writeSemicolon();
   }
 
   private void methodDeclaration() {
@@ -348,16 +406,16 @@ public final class Pass2 extends Pass1 {
 
     if (codenxt()) {
       codepsh();
-      processor.write(typeName());
+      write(typeName());
       codepop();
     } else {
-      processor.write("void");
+      write("void");
     }
 
     if (codenxt()) {
-      processor.space();
+      writeSpace();
 
-      processor.write((String) codeobj());
+      write((String) codeobj());
     }
 
     if (codenxt()) {
@@ -365,14 +423,14 @@ public final class Pass2 extends Pass1 {
         "Implement me :: method receiver param");
     }
 
-    processor.write('(');
+    write('(');
 
     if (codenxt()) {
       throw new UnsupportedOperationException(
         "Implement me :: method parameters");
     }
 
-    processor.write(')');
+    write(')');
 
     if (codenxt()) {
       throw new UnsupportedOperationException(
@@ -380,22 +438,22 @@ public final class Pass2 extends Pass1 {
     }
 
     if (codenxt()) {
-      processor.blockStart();
+      writeBlockStart();
       codepsh();
       methodDeclarationBody();
       codepop();
-      processor.blockEnd();
+      writeBlockEnd();
     } else if (abstractModifier) {
-      processor.semicolon();
+      writeSemicolon();
     } else {
-      processor.blockStart();
-      processor.blockEnd();
+      writeBlockStart();
+      writeBlockEnd();
     }
   }
 
   private void methodDeclarationBody() {
     if (lnext()) {
-      processor.beforeClassFirstMember();
+      writeBeforeClassFirstMember();
 
       statement();
 
@@ -417,13 +475,13 @@ public final class Pass2 extends Pass1 {
     }
 
     if (codenxt()) {
-      processor.write((String) codeobj());
+      write((String) codeobj());
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: no method name");
     }
 
-    processor.argumentListStart();
+    writeArgumentListStart();
 
     if (codenxt()) {
       codepsh();
@@ -431,7 +489,7 @@ public final class Pass2 extends Pass1 {
       codepop();
     }
 
-    processor.argumentListEnd();
+    writeArgumentListEnd();
   }
 
   private void methodInvocationArguments() {
@@ -449,7 +507,7 @@ public final class Pass2 extends Pass1 {
 
     var modifier = (Modifier) codeobj();
 
-    processor.write(modifier.toString());
+    write(modifier.toString());
   }
 
   private void modifierList() {
@@ -492,9 +550,9 @@ public final class Pass2 extends Pass1 {
 
   private void newLineOrSpace(boolean prevSection) {
     if (annotationLast && modifierCount == 0) {
-      processor.newLine();
+      writeNewLine();
     } else {
-      processor.spaceIf(prevSection);
+      writeSpaceIf(prevSection);
     }
   }
 
@@ -505,19 +563,19 @@ public final class Pass2 extends Pass1 {
     }
 
     if (codenxt()) {
-      processor.write("package");
+      write("package");
 
-      processor.space();
+      writeSpace();
 
       var name = (String) codeobj();
 
-      processor.write(name);
+      write(name);
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: no package name?");
     }
 
-    processor.semicolon();
+    writeSemicolon();
   }
 
   private void statement() {
@@ -527,7 +585,7 @@ public final class Pass2 extends Pass1 {
       case ByteCode.METHOD_INVOCATION -> {
         methodInvocation();
 
-        processor.semicolon();
+        writeSemicolon();
       }
 
       default -> throw codeuoe();
@@ -539,7 +597,7 @@ public final class Pass2 extends Pass1 {
 
     var s = (String) codeobj();
 
-    processor.stringLiteral(s);
+    writeStringLiteral(s);
   }
 
   private String typeName() {

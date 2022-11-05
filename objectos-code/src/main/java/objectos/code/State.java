@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
-import objectos.code.JavaTemplate.Renderer;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-abstract class Pass0Super {
+abstract class State {
 
   final AutoImports autoImports = new AutoImports();
 
@@ -46,8 +45,6 @@ abstract class Pass0Super {
   int[] stackArray = new int[10];
 
   int stackIndex;
-
-  Renderer processor;
 
   final int codeadd(int v0) {
     var self = codeIndex;
@@ -244,32 +241,6 @@ abstract class Pass0Super {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex);
 
     stackArray[stackIndex] = codeIndex;
-  }
-
-  final boolean largs(boolean comma) {
-    var result = false;
-
-    var nl = 0;
-
-    while (lnext()) {
-      if (code != ByteCode.NEW_LINE) {
-        result = true;
-
-        break;
-      }
-
-      nl++;
-    }
-
-    if (result && comma) {
-      processor.comma();
-    }
-
-    for (int i = 0; i < nl; i++) {
-      processor.newLine();
-    }
-
-    return result;
   }
 
   final int listadd(int list, int value) {

@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import objectos.code.ClassName;
-import objectos.code.PackageName;
 import objectos.util.GrowableSet;
 
 public final class AutoImports {

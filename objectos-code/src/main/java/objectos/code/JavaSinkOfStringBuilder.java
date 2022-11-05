@@ -15,66 +15,21 @@
  */
 package objectos.code;
 
-public class JavaWriter implements JavaTemplate.Renderer {
+final class JavaSinkOfStringBuilder extends JavaSink {
 
-  private final StringBuilder out = new StringBuilder();
+  private final StringBuilder out;
 
   private int length;
 
   private int level;
 
-  public static JavaWriter of() {
-    return new JavaWriter();
-  }
-
-  @Override
-  public void writeArgumentListEnd() {
-    level--;
-
-    write(')');
-  }
-
-  @Override
-  public void writeArgumentListStart() {
-    write('(');
-
-    level++;
-  }
-
-  @Override
-  public void writeBeforeBlockNextItem() {
-    writenl();
-    writenl();
-  }
-
-  @Override
-  public void writeBeforeClassFirstMember() {
-    writenl();
-  }
-
-  @Override
-  public void writeBeforeCompilationUnitBody() {
-    writenl();
-  }
-
-  @Override
-  public void writeCompilationUnitEnd() {
-  }
-
-  @Override
-  public void writeCompilationUnitStart() {
-    length = 0;
-
-    level = 0;
-
-    out.setLength(0);
-  }
+  public JavaSinkOfStringBuilder(StringBuilder out) { this.out = out; }
 
   @Override
   public final String toString() { return out.toString(); }
 
   @Override
-  public final void write(char c) {
+  protected void write(char c) {
     writeIdentation();
 
     out.append(c);
@@ -83,7 +38,7 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
-  public final void write(String s) {
+  protected void write(String s) {
     writeIdentation();
 
     out.append(s);
@@ -92,7 +47,37 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
-  public void writeBlockEnd() {
+  protected void writeArgumentListEnd() {
+    level--;
+
+    write(')');
+  }
+
+  @Override
+  protected void writeArgumentListStart() {
+    write('(');
+
+    level++;
+  }
+
+  @Override
+  protected void writeBeforeBlockNextItem() {
+    writenl();
+    writenl();
+  }
+
+  @Override
+  protected void writeBeforeClassFirstMember() {
+    writenl();
+  }
+
+  @Override
+  protected void writeBeforeCompilationUnitBody() {
+    writenl();
+  }
+
+  @Override
+  protected void writeBlockEnd() {
     level--;
 
     write('}');
@@ -100,50 +85,63 @@ public class JavaWriter implements JavaTemplate.Renderer {
   }
 
   @Override
-  public void writeBlockStart() {
+  protected void writeBlockStart() {
     write(" {");
 
     level++;
   }
 
   @Override
-  public void writeComma() {
+  protected void writeComma() {
     write(", ");
   }
 
   @Override
-  public void writeNewLine() {
+  protected void writeCompilationUnitEnd() {
+  }
+
+  @Override
+  protected void writeCompilationUnitStart() {
+    length = 0;
+
+    level = 0;
+
+    out.setLength(0);
+  }
+
+  @Override
+  protected void writeNewLine() {
     writenl();
   }
 
   @Override
-  public void writeSemicolon() {
+  protected void writeSemicolon() {
     write(';');
 
     writenl();
   }
 
   @Override
-  public void writeSeparator(char c) {
+  protected void writeSeparator(char c) {
     write(' ');
     write(c);
     write(' ');
   }
 
   @Override
-  public void writeSpace() {
+  protected void writeSpace() {
     write(' ');
   }
 
   @Override
-  public void writeSpaceIf(boolean condition) {
+  protected void writeSpaceIf(boolean condition) {
     if (condition) {
       writeSpace();
     }
   }
 
   @Override
-  public void writeStringLiteral(String s) {
+  protected void writeStringLiteral(String s) {
     write('"');
     write(s);
     write('"');

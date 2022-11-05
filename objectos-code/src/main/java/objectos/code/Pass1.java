@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectox.code;
+package objectos.code;
 
-import objectos.code.ClassName;
-import objectos.code.NoTypeName;
+class Pass1 extends Pass0 {
 
-public class Pass1 extends Pass0 {
-
-  public final void executePass1() {
+  final void pass1() {
     codeIndex = 0;
 
     protoIndex = 0;
 
     stackIndex = 0;
 
-    execute();
+    codeadd(ByteCode.JMP, ByteCode.NOP);
+
+    protoadv();
+
+    protojmp();
+
+    protoass(ByteProto.COMPILATION_UNIT);
+
+    var unit = compilationUnit();
+
+    codeArray[1] = unit;
   }
 
   private int annotation() {
@@ -120,20 +127,6 @@ public class Pass1 extends Pass0 {
     }
 
     return codeadd(ByteCode.COMPILATION_UNIT, _package, _import, body);
-  }
-
-  private void execute() {
-    codeadd(ByteCode.JMP, ByteCode.NOP);
-
-    protoadv();
-
-    protojmp();
-
-    protoass(ByteProto.COMPILATION_UNIT);
-
-    var unit = compilationUnit();
-
-    codeArray[1] = unit;
   }
 
   private int expression() {
