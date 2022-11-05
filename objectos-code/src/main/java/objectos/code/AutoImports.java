@@ -23,7 +23,9 @@ import objectos.util.GrowableSet;
 
 public final class AutoImports {
 
-  private PackageName packageName;
+  PackageName packageName;
+
+  String fileName;
 
   private final Map<ClassName, Integer> imports = new TreeMap<>();
 
@@ -83,6 +85,10 @@ public final class AutoImports {
 
   public final Set<Entry<ClassName, Integer>> entrySet() {
     return imports.entrySet();
+  }
+
+  public final void fileName(boolean publicFound, String simpleName) {
+    fileName = simpleName + ".java";
   }
 
   public final void packageName(PackageName packageName) {

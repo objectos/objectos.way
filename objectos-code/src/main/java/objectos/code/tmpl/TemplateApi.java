@@ -24,7 +24,7 @@ import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
-import objectos.code.tmpl.InternalApi.FinalRef;
+import objectos.code.tmpl.InternalApi.FinalModifier;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.IncludeRef;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
@@ -33,6 +33,7 @@ import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocation;
 import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.NewLineRef;
+import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
 import objectos.code.tmpl.InternalApi.VoidRef;
 
@@ -42,9 +43,11 @@ public interface TemplateApi extends MarkerApi {
 
   ExtendsRef _extends(ClassName superclass);
 
-  FinalRef _final();
+  FinalModifier _final();
 
   void _package(String packageName);
+
+  PublicModifier _public();
 
   VoidRef _void();
 

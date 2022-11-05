@@ -15,6 +15,9 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -29,9 +32,13 @@ public class JavaSinkTest {
 
   private Path directory;
 
+  private JavaSink sink;
+
   @BeforeClass
   public void _setUp() throws IOException {
     directory = Files.createTempDirectory("java-sink-test-");
+
+    sink = JavaSink.ofDirectory(directory);
   }
 
   @AfterClass
@@ -54,8 +61,32 @@ public class JavaSinkTest {
   }
 
   @Test
-  public void testCase01() {
+  public void testCase01() throws IOException {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _package("a.b");
 
+        _class(
+          _public(), id("Test")
+        );
+      }
+    };
+
+    sink.write(tmpl);
+
+    var file = directory.resolve(Path.of("a", "b", "Test.java"));
+
+    assertTrue(Files.isRegularFile(file));
+
+    assertEquals(
+      Files.readString(file),
+      """
+      package a.b;
+
+      public class Test {}
+      """
+    );
   }
 
 }

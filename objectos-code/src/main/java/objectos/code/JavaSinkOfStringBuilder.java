@@ -15,7 +15,7 @@
  */
 package objectos.code;
 
-final class JavaSinkOfStringBuilder extends JavaSink {
+class JavaSinkOfStringBuilder extends JavaSink {
 
   private final StringBuilder out;
 
@@ -97,11 +97,11 @@ final class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected void writeCompilationUnitEnd() {
+  protected void writeCompilationUnitEnd(PackageName packageName, String fileName) {
   }
 
   @Override
-  protected void writeCompilationUnitStart() {
+  protected void writeCompilationUnitStart(PackageName packageName, String fileName) {
     length = 0;
 
     level = 0;

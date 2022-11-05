@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import java.nio.file.Path;
 import javax.lang.model.SourceVersion;
 import objectos.lang.Check;
 
@@ -65,11 +66,41 @@ public final class PackageName extends PackageOrClassName {
     return this.name.equals(name);
   }
 
+  public final Path resolve(Path path) {
+    var result = path;
+
+    var beginIndex = 0;
+
+    var endIndex = name.indexOf('.', beginIndex);
+
+    while (endIndex > 0) {
+      var part = name.substring(beginIndex, endIndex);
+
+      result = result.resolve(part);
+
+      beginIndex = endIndex + 1;
+
+      endIndex = name.indexOf('.', beginIndex);
+    }
+
+    endIndex = name.length();
+
+    if (beginIndex < endIndex) {
+      var part = name.substring(beginIndex, endIndex);
+
+      result = result.resolve(part);
+    }
+
+    return result;
+  }
+
   @Override
   public final String toString() { return name; }
 
   @Override
-  final PackageName packageName() { return this; }
+  final PackageName packageName() {
+    return this;
+  }
 
   private PackageName nested(String name) {
     Check.argument(

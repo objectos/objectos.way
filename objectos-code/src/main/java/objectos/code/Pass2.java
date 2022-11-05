@@ -45,9 +45,9 @@ abstract class Pass2 extends Pass1 {
 
   protected abstract void writeComma();
 
-  protected abstract void writeCompilationUnitEnd();
+  protected abstract void writeCompilationUnitEnd(PackageName packageName, String fileName);
 
-  protected abstract void writeCompilationUnitStart();
+  protected abstract void writeCompilationUnitStart(PackageName packageName, String fileName);
 
   protected abstract void writeNewLine();
 
@@ -198,7 +198,7 @@ abstract class Pass2 extends Pass1 {
   }
 
   private void compilationUnit() {
-    writeCompilationUnitStart();
+    writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
     var prevSection = false;
 
@@ -234,7 +234,7 @@ abstract class Pass2 extends Pass1 {
       codepop();
     }
 
-    writeCompilationUnitEnd();
+    writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
   }
 
   private void compilationUnitBody() {

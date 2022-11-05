@@ -15,6 +15,9 @@
  */
 package objectos.code;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import objectos.lang.Check;
 
 public abstract class JavaSink extends Pass2 {
@@ -23,6 +26,15 @@ public abstract class JavaSink extends Pass2 {
    * Sole constructor
    */
   protected JavaSink() {}
+
+  public static JavaSink ofDirectory(Path directory) {
+    Check.argument(
+      Files.isDirectory(directory),
+      directory, " does not exist, exists but is not a directory, or could not be accessed."
+    );
+
+    return new JavaSinkOfDirectory(directory);
+  }
 
   public static JavaSink ofStringBuilder(StringBuilder output) {
     Check.notNull(output, "output == null");
@@ -38,6 +50,10 @@ public abstract class JavaSink extends Pass2 {
     pass1();
 
     pass2();
+  }
+
+  public void write(JavaTemplate template) throws IOException {
+    eval(template);
   }
 
 }

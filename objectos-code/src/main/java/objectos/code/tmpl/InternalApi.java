@@ -49,7 +49,7 @@ public final class InternalApi {
   public sealed interface ExtendsRef
       extends ClassDeclarationElement {}
 
-  public sealed interface FinalRef
+  public sealed interface FinalModifier
       extends ClassDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface IdentifierRef
@@ -78,6 +78,9 @@ public final class InternalApi {
   public sealed interface NewLineRef
       extends MethodInvocationElement {}
 
+  public sealed interface PublicModifier
+      extends ClassDeclarationElement, MethodDeclarationElement {}
+
   public sealed interface Statement
       extends MethodDeclarationElement {}
 
@@ -101,12 +104,13 @@ public final class InternalApi {
       ClassDeclarationRef,
       ExpressionNameRef,
       ExtendsRef,
-      FinalRef,
+      FinalModifier,
       IdentifierRef,
       LocalVariableDeclarationRef,
       MethodInvocation,
       MethodDeclaration,
       NewLineRef,
+      PublicModifier,
       StringLiteral,
       VoidRef {
     private Ref() {}

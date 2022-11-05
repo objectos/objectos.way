@@ -15,6 +15,8 @@
  */
 package objectos.code;
 
+import javax.lang.model.element.Modifier;
+
 class Pass1 extends Pass0 {
 
   final void pass1() {
@@ -60,14 +62,17 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.ANNOTATION, name, pairs);
   }
 
-  private int classDeclaration() {
-    int modifiers = ByteCode.NOP;
-    int name = ByteCode.NOP;
-    int typeParams = ByteCode.NOP;
-    int _extends = ByteCode.NOP;
-    int _implements = ByteCode.NOP;
-    int _permits = ByteCode.NOP;
-    int body = ByteCode.NOP;
+  private int classDeclaration(boolean topLevel) {
+    var modifiers = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var typeParams = ByteCode.NOP;
+    var _extends = ByteCode.NOP;
+    var _implements = ByteCode.NOP;
+    var _permits = ByteCode.NOP;
+    var body = ByteCode.NOP;
+
+    var publicFound = false;
+    var simpleName = "Unnamed";
 
     protoadv();
 
@@ -79,11 +84,21 @@ class Pass1 extends Pass0 {
 
         case ByteProto.EXTENDS -> _extends = setOrReplace(_extends, typeName());
 
-        case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
+        case ByteProto.IDENTIFIER -> {
+          name = setOrReplace(name, protoadv());
+
+          simpleName = (String) objget(proto);
+        }
 
         case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
 
-        case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
+        case ByteProto.MODIFIER -> {
+          modifiers = listadd(modifiers, modifier());
+
+          var modifier = objget(proto);
+
+          publicFound = modifier == Modifier.PUBLIC;
+        }
 
         default -> throw protouoe();
       }
@@ -91,8 +106,15 @@ class Pass1 extends Pass0 {
       protonxt();
     }
 
-    return codeadd(ByteCode.CLASS, modifiers, name, typeParams, _extends, _implements, _permits,
-      body);
+    if (topLevel) {
+      autoImports.fileName(publicFound, simpleName);
+    }
+
+    return codeadd(
+      ByteCode.CLASS,
+      modifiers, name, typeParams, _extends, _implements, _permits,
+      body
+    );
   }
 
   private int compilationUnit() {
@@ -106,7 +128,7 @@ class Pass1 extends Pass0 {
       protojmp();
 
       switch (proto) {
-        case ByteProto.CLASS_DECLARATION -> body = listadd(body, classDeclaration());
+        case ByteProto.CLASS_DECLARATION -> body = listadd(body, classDeclaration(true));
 
         case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
 
