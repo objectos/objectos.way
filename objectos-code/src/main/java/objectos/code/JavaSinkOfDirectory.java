@@ -27,6 +27,8 @@ class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
 
   private Path file;
 
+  boolean skipExising;
+
   public JavaSinkOfDirectory(Path directory) {
     super(new StringBuilder());
 
@@ -36,6 +38,10 @@ class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
   @Override
   public final void write(JavaTemplate template) throws IOException {
     eval(template);
+
+    if (skipExising && Files.exists(file)) {
+      return;
+    }
 
     var parent = file.getParent();
 

@@ -22,6 +22,21 @@ import objectos.lang.Check;
 
 public abstract class JavaSink extends Pass2 {
 
+  public sealed abstract static class Option {
+
+    private static final class SkipExisting extends Option {
+      @Override
+      final void acceptOfDirectory(JavaSinkOfDirectory sink) {
+        sink.skipExising = true;
+      }
+    }
+
+    static final Option SKIP_EXISTING = new SkipExisting();
+
+    abstract void acceptOfDirectory(JavaSinkOfDirectory sink);
+
+  }
+
   /**
    * Sole constructor
    */
@@ -36,10 +51,27 @@ public abstract class JavaSink extends Pass2 {
     return new JavaSinkOfDirectory(directory);
   }
 
+  public static JavaSink ofDirectory(Path directory, Option option) {
+    Check.argument(
+      Files.isDirectory(directory),
+      directory, " does not exist, exists but is not a directory, or could not be accessed."
+    );
+
+    var sink = new JavaSinkOfDirectory(directory);
+
+    option.acceptOfDirectory(sink);
+
+    return sink;
+  }
+
   public static JavaSink ofStringBuilder(StringBuilder output) {
     Check.notNull(output, "output == null");
 
     return new JavaSinkOfStringBuilder(output);
+  }
+
+  public static Option skipExisting() {
+    return Option.SKIP_EXISTING;
   }
 
   public void eval(JavaTemplate template) {
