@@ -37,6 +37,19 @@ public final class InternalApi {
 
   public sealed interface ClassDeclarationRef {}
 
+  public sealed interface EnumConstant
+      extends EnumDeclarationElement {}
+
+  public sealed interface EnumConstantElement {
+    void mark(MarkerApi api);
+  }
+
+  public sealed interface EnumDeclaration {}
+
+  public sealed interface EnumDeclarationElement {
+    void mark(MarkerApi api);
+  }
+
   public sealed interface Expression
       extends MethodInvocationElement {}
 
@@ -53,7 +66,10 @@ public final class InternalApi {
       extends ClassDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface IdentifierRef
-      extends ClassDeclarationElement, MethodDeclarationElement {}
+      extends
+      ClassDeclarationElement,
+      EnumDeclarationElement, EnumConstantElement,
+      MethodDeclarationElement {}
 
   public sealed interface IncludeRef
       extends MethodDeclarationElement, MethodInvocationElement {}
@@ -102,6 +118,8 @@ public final class InternalApi {
       implements
       AtRef,
       ClassDeclarationRef,
+      EnumConstant,
+      EnumDeclaration,
       ExpressionNameRef,
       ExtendsRef,
       FinalModifier,

@@ -41,6 +41,9 @@ public final class ByteProto {
   public static final int EXPRESSION_NAME = -18;
   public static final int PACKAGE_NAME = -19;
 
+  public static final int ENUM_DECLARATION = -20;
+  public static final int ENUM_CONSTANT = -21;
+
   private ByteProto() {}
 
 }

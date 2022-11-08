@@ -251,10 +251,88 @@ abstract class Pass2 extends Pass1 {
     switch (code) {
       case ByteCode.CLASS -> classDeclaration();
 
+      case ByteCode.ENUM_DECLARATION -> enumDeclaration();
+
       case ByteCode.METHOD -> methodDeclaration();
 
       default -> statement();
     }
+  }
+
+  private void enumDeclaration() {
+    var prevSection = false;
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: modifiers");
+    }
+
+    if (codenxt()) {
+      newLineOrSpace(prevSection);
+
+      write("enum");
+
+      writeSpace();
+
+      write((String) codeobj());
+
+      prevSection = true;
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: implements clause");
+    }
+
+    writeBlockStart();
+
+    if (codenxt()) {
+      codepsh();
+      enumDeclarationConstants();
+      codepop();
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: body");
+    }
+
+    writeBlockEnd();
+  }
+
+  private void enumDeclarationConstants() {
+    if (lnext()) {
+      writeBeforeClassFirstMember();
+
+      enumDeclarationConstantsItem();
+
+      while (lnext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+  }
+
+  private void enumDeclarationConstantsItem() {
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: modifiers");
+    }
+
+    if (codenxt()) {
+      write((String) codeobj());
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: args");
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: body");
+    }
+
+    writeSemicolon();
   }
 
   private void expression() {

@@ -24,6 +24,10 @@ import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
+import objectos.code.tmpl.InternalApi.EnumConstant;
+import objectos.code.tmpl.InternalApi.EnumConstantElement;
+import objectos.code.tmpl.InternalApi.EnumDeclaration;
+import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
@@ -53,6 +57,19 @@ class Pass0 extends State implements TemplateApi {
     }
 
     element(ByteProto.CLASS_DECLARATION);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final EnumDeclaration _enum(EnumDeclarationElement[] elements) {
+    markStart();
+
+    for (var element : elements) { // implicit elements null check
+      element.mark(this);
+    }
+
+    element(ByteProto.ENUM_DECLARATION);
 
     return InternalApi.REF;
   }
@@ -136,6 +153,19 @@ class Pass0 extends State implements TemplateApi {
   @Override
   public final void autoImports() {
     autoImports.enable();
+  }
+
+  @Override
+  public final EnumConstant enumConstant(EnumConstantElement[] elements) {
+    markStart();
+
+    for (var element : elements) { // implicit elements null check
+      element.mark(this);
+    }
+
+    element(ByteProto.ENUM_CONSTANT);
+
+    return InternalApi.REF;
   }
 
   @Override

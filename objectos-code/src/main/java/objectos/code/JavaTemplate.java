@@ -21,6 +21,10 @@ import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
+import objectos.code.tmpl.InternalApi.EnumConstant;
+import objectos.code.tmpl.InternalApi.EnumConstantElement;
+import objectos.code.tmpl.InternalApi.EnumDeclaration;
+import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
@@ -117,6 +121,10 @@ public abstract class JavaTemplate {
     return api._class(elements);
   }
 
+  protected final EnumDeclaration _enum(EnumDeclarationElement... elements) {
+    return api._enum(elements);
+  }
+
   protected final ExtendsRef _extends(ClassName superclass) {
     return api._extends(superclass);
   }
@@ -150,6 +158,10 @@ public abstract class JavaTemplate {
   }
 
   protected abstract void definition();
+
+  protected final EnumConstant enumConstant(EnumConstantElement... elements) {
+    return api.enumConstant(elements);
+  }
 
   protected final IdentifierRef id(String name) {
     return api.id(name);

@@ -130,6 +130,8 @@ class Pass1 extends Pass0 {
       switch (proto) {
         case ByteProto.CLASS_DECLARATION -> body = listadd(body, classDeclaration(true));
 
+        case ByteProto.ENUM_DECLARATION -> body = listadd(body, enumDeclaration(true));
+
         case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
 
         case ByteProto.PACKAGE_DECLARATION -> _package = setOrThrow(_package, packageDeclaration());
@@ -149,6 +151,82 @@ class Pass1 extends Pass0 {
     }
 
     return codeadd(ByteCode.COMPILATION_UNIT, _package, _import, body);
+  }
+
+  private int enumConstant() {
+    var modifiers = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var arguments = ByteCode.NOP;
+    var body = ByteCode.NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    return codeadd(ByteCode.ENUM_CONSTANT, modifiers, name, arguments, body);
+  }
+
+  private int enumDeclaration(boolean topLevel) {
+    var modifiers = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var _implements = ByteCode.NOP;
+    var constants = ByteCode.NOP;
+    var body = ByteCode.NOP;
+
+    var publicFound = false;
+    var simpleName = "Unnamed";
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
+
+        case ByteProto.ENUM_CONSTANT -> constants = listadd(constants, enumConstant());
+
+        case ByteProto.IDENTIFIER -> {
+          name = setOrReplace(name, protoadv());
+
+          simpleName = (String) objget(proto);
+        }
+
+        case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
+
+        case ByteProto.MODIFIER -> {
+          modifiers = listadd(modifiers, modifier());
+
+          var modifier = objget(proto);
+
+          publicFound = modifier == Modifier.PUBLIC;
+        }
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    if (topLevel) {
+      autoImports.fileName(publicFound, simpleName);
+    }
+
+    return codeadd(
+      ByteCode.ENUM_DECLARATION,
+      modifiers, name, _implements, constants,
+      body
+    );
   }
 
   private int expression() {

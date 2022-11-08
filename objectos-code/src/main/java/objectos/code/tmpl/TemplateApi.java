@@ -21,6 +21,10 @@ import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
+import objectos.code.tmpl.InternalApi.EnumConstant;
+import objectos.code.tmpl.InternalApi.EnumConstantElement;
+import objectos.code.tmpl.InternalApi.EnumDeclaration;
+import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
@@ -41,6 +45,8 @@ public interface TemplateApi extends MarkerApi {
 
   ClassDeclarationRef _class(ClassDeclarationElement[] elements);
 
+  EnumDeclaration _enum(EnumDeclarationElement[] elements);
+
   ExtendsRef _extends(ClassName superclass);
 
   FinalModifier _final();
@@ -56,6 +62,8 @@ public interface TemplateApi extends MarkerApi {
   AtRef annotation(ClassName annotationType, AnnotationElementValue value);
 
   void autoImports();
+
+  EnumConstant enumConstant(EnumConstantElement[] elements);
 
   IdentifierRef id(String name);
 
