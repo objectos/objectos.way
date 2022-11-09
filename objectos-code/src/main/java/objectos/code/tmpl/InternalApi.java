@@ -51,7 +51,7 @@ public final class InternalApi {
   }
 
   public sealed interface Expression
-      extends MethodInvocationElement {}
+      extends EnumConstantElement, MethodInvocationElement {}
 
   public sealed interface ExpressionNameRef
       extends Expression {}

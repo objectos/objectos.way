@@ -164,10 +164,14 @@ class Pass1 extends Pass0 {
     while (protolop()) {
       protojmp();
 
-      switch (proto) {
-        case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
+      if (ByteProto.isExpression(proto)) {
+        arguments = listadd(arguments, expression());
+      } else {
+        switch (proto) {
+          case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
 
-        default -> throw protouoe();
+          default -> throw protouoe();
+        }
       }
 
       protonxt();
@@ -231,6 +235,8 @@ class Pass1 extends Pass0 {
 
   private int expression() {
     return switch (proto) {
+      case ByteProto.EXPRESSION_NAME -> expressionName();
+
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
 
       case ByteProto.STRING_LITERAL -> stringLiteral();

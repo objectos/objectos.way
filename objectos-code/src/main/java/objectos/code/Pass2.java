@@ -329,8 +329,11 @@ abstract class Pass2 extends Pass1 {
     }
 
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: args");
+      writeArgumentListStart();
+      codepsh();
+      methodInvocationArguments();
+      codepop();
+      writeArgumentListEnd();
     }
 
     if (codenxt()) {

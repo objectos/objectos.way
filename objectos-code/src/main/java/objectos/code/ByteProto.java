@@ -46,4 +46,12 @@ public final class ByteProto {
 
   private ByteProto() {}
 
+  public static boolean isExpression(int proto) {
+    return switch (proto) {
+      case EXPRESSION_NAME, METHOD_INVOCATION, STRING_LITERAL -> true;
+
+      default -> false;
+    };
+  }
+
 }

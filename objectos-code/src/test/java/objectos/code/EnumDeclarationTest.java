@@ -86,4 +86,43 @@ public class EnumDeclarationTest {
     );
   }
 
+  @Test(description = """
+  constants + args
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum(id("Test"),
+            enumConstant(id("ONE"), s("abc"))
+          );
+        }
+      }.toString(),
+
+      """
+      enum Test {
+        ONE("abc");
+      }
+      """
+    );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum(id("Test"),
+            enumConstant(id("ONE"), s("abc"), n("field"))
+          );
+        }
+      }.toString(),
+
+      """
+      enum Test {
+        ONE("abc", field);
+      }
+      """
+    );
+  }
+
 }
