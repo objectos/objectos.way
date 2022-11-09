@@ -29,7 +29,7 @@ public final class InternalApi {
   }
 
   public sealed interface AtRef
-      extends ClassDeclarationElement, MethodDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface ClassDeclarationElement {
     void mark(MarkerApi api);
@@ -95,7 +95,7 @@ public final class InternalApi {
       extends MethodInvocationElement {}
 
   public sealed interface PublicModifier
-      extends ClassDeclarationElement, MethodDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface Statement
       extends MethodDeclarationElement {}

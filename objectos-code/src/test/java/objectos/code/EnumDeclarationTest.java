@@ -125,4 +125,47 @@ public class EnumDeclarationTest {
     );
   }
 
+  @Test(description = """
+  modifiers (class level)
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum(
+            _public(), id("Test"),
+            enumConstant(id("ONE"))
+          );
+        }
+      }.toString(),
+
+      """
+      public enum Test {
+        ONE;
+      }
+      """
+    );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum(
+            annotation(Deprecated.class),
+            _public(), id("Test"),
+            enumConstant(id("ONE"))
+          );
+        }
+      }.toString(),
+
+      """
+      @java.lang.Deprecated
+      public enum Test {
+        ONE;
+      }
+      """
+    );
+  }
+
 }
