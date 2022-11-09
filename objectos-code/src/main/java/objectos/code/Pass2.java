@@ -307,9 +307,15 @@ abstract class Pass2 extends Pass1 {
       enumDeclarationConstantsItem();
 
       while (lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        writeComma();
+
+        writeBeforeBlockNextItem();
+
+        enumDeclarationConstantsItem();
       }
     }
+
+    writeSemicolon();
   }
 
   private void enumDeclarationConstantsItem() {
@@ -331,8 +337,6 @@ abstract class Pass2 extends Pass1 {
       throw new UnsupportedOperationException(
         "Implement me :: body");
     }
-
-    writeSemicolon();
   }
 
   private void expression() {

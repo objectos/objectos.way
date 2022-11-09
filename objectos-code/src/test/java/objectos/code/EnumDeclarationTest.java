@@ -21,7 +21,9 @@ import org.testng.annotations.Test;
 
 public class EnumDeclarationTest {
 
-  @Test
+  @Test(description = """
+  constants
+  """)
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
@@ -40,48 +42,48 @@ public class EnumDeclarationTest {
       """
     );
 
-    //    assertEquals(
-    //      new JavaTemplate() {
-    //        @Override
-    //        protected final void definition() {
-    //          _enum(id("Subject"),
-    //            enumConstant(id("ONE")),
-    //            enumConstant(id("TWO"))
-    //          );
-    //        }
-    //      }.toString(),
-    //
-    //      """
-    //      enum Subject {
-    //        ONE,
-    //
-    //        TWO;
-    //      }
-    //      """
-    //    );
-    //
-    //    assertEquals(
-    //      new JavaTemplate() {
-    //        @Override
-    //        protected final void definition() {
-    //          _enum(id("Subject"),
-    //            enumConstant(id("ONE")),
-    //            enumConstant(id("TWO")),
-    //            enumConstant(id("THREE"))
-    //          );
-    //        }
-    //      }.toString(),
-    //
-    //      """
-    //      enum Subject {
-    //        ONE,
-    //
-    //        TWO,
-    //
-    //        THREE;
-    //      }
-    //      """
-    //    );
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum(id("Subject"),
+            enumConstant(id("ONE")),
+            enumConstant(id("TWO"))
+          );
+        }
+      }.toString(),
+
+      """
+      enum Subject {
+        ONE,
+
+        TWO;
+      }
+      """
+    );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum(id("Subject"),
+            enumConstant(id("ONE")),
+            enumConstant(id("TWO")),
+            enumConstant(id("THREE"))
+          );
+        }
+      }.toString(),
+
+      """
+      enum Subject {
+        ONE,
+
+        TWO,
+
+        THREE;
+      }
+      """
+    );
   }
 
 }
