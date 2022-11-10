@@ -192,6 +192,27 @@ public class EnumDeclarationTest {
       }
       """
     );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          var iface1 = ClassName.of(AutoCloseable.class);
+          var iface2 = ClassName.of(Serializable.class);
+
+          _enum(
+            id("Test"), _implements(iface1, iface2),
+            enumConstant(id("ONE"))
+          );
+        }
+      }.toString(),
+
+      """
+      enum Test implements java.lang.AutoCloseable, java.io.Serializable {
+        ONE;
+      }
+      """
+    );
   }
 
 }

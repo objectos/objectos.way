@@ -398,7 +398,9 @@ abstract class Pass2 extends Pass1 {
       write(typeName());
 
       while (lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        writeComma();
+
+        write(typeName());
       }
     }
   }
