@@ -44,6 +44,8 @@ public final class ByteProto {
   public static final int ENUM_DECLARATION = -20;
   public static final int ENUM_CONSTANT = -21;
 
+  public static final int IMPLEMENTS = -22;
+
   private ByteProto() {}
 
   public static boolean isExpression(int proto) {

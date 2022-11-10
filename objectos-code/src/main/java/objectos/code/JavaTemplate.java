@@ -19,8 +19,8 @@ import java.lang.annotation.Annotation;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
-import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -30,6 +30,7 @@ import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FinalModifier;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
+import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
@@ -117,7 +118,7 @@ public abstract class JavaTemplate {
     return out.toString();
   }
 
-  protected final ClassDeclarationRef _class(ClassDeclarationElement... elements) {
+  protected final ClassDeclaration _class(ClassDeclarationElement... elements) {
     return api._class(elements);
   }
 
@@ -131,6 +132,10 @@ public abstract class JavaTemplate {
 
   protected final FinalModifier _final() {
     return api._final();
+  }
+
+  protected final Implements _implements(ClassName... interfaces) {
+    return api._implements(interfaces);
   }
 
   protected final void _package(String packageName) {

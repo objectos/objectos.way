@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.Serializable;
 import org.testng.annotations.Test;
 
 public class EnumDeclarationTest {
@@ -162,6 +163,31 @@ public class EnumDeclarationTest {
       """
       @java.lang.Deprecated
       public enum Test {
+        ONE;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  implements cause
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          var iface = ClassName.of(Serializable.class);
+
+          _enum(
+            id("Test"), _implements(iface),
+            enumConstant(id("ONE"))
+          );
+        }
+      }.toString(),
+
+      """
+      enum Test implements java.io.Serializable {
         ONE;
       }
       """

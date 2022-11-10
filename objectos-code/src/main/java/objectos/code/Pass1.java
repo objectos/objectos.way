@@ -206,6 +206,8 @@ class Pass1 extends Pass0 {
           simpleName = (String) objget(proto);
         }
 
+        case ByteProto.IMPLEMENTS -> _implements = implementsClause(_implements);
+
         case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
 
         case ByteProto.MODIFIER -> {
@@ -267,6 +269,24 @@ class Pass1 extends Pass0 {
     codeadd(ByteCode.NOP);
 
     return self;
+  }
+
+  private int implementsClause(int list) {
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.TYPE_NAME -> list = listadd(list, typeName());
+
+        default -> protouoe();
+      }
+
+      protonxt();
+    }
+
+    return list;
   }
 
   private int importDeclarations() {

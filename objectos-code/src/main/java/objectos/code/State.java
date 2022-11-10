@@ -322,6 +322,10 @@ abstract class State {
     markArray[markIndex]++;
   }
 
+  final void markIncrement(int count) {
+    markArray[markIndex] += count;
+  }
+
   final void markPush() {
     markIndex++;
 

@@ -285,8 +285,9 @@ abstract class Pass2 extends Pass1 {
     }
 
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: implements clause");
+      codepsh();
+      implementsClause(prevSection);
+      codepop();
     }
 
     writeBlockStart();
@@ -383,6 +384,22 @@ abstract class Pass2 extends Pass1 {
       write(s);
     } else {
       write(typeName());
+    }
+  }
+
+  private void implementsClause(boolean prevSection) {
+    writeSpaceIf(prevSection);
+
+    write("implements");
+
+    writeSpace();
+
+    if (lnext()) {
+      write(typeName());
+
+      while (lnext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
     }
   }
 

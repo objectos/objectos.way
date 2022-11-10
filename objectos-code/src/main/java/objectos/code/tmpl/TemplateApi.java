@@ -19,8 +19,8 @@ import java.lang.annotation.Annotation;
 import objectos.code.ClassName;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
-import objectos.code.tmpl.InternalApi.ClassDeclarationRef;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -30,6 +30,7 @@ import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FinalModifier;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
+import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
@@ -43,13 +44,15 @@ import objectos.code.tmpl.InternalApi.VoidRef;
 
 public interface TemplateApi extends MarkerApi {
 
-  ClassDeclarationRef _class(ClassDeclarationElement[] elements);
+  ClassDeclaration _class(ClassDeclarationElement[] elements);
 
   EnumDeclaration _enum(EnumDeclarationElement[] elements);
 
   ExtendsRef _extends(ClassName superclass);
 
   FinalModifier _final();
+
+  Implements _implements(ClassName[] interfaces);
 
   void _package(String packageName);
 
