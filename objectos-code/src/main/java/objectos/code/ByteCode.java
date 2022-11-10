@@ -69,6 +69,10 @@ final class ByteCode {
 
   static final int ENUM_DECLARATION = -26;
   static final int ENUM_CONSTANT = -27;
+  static final int FIELD_DECLARATION = -28;
+
+  static final int DECLARATOR_SIMPLE = -29;
+  static final int DECLARATOR_FULL = -30;
 
   private ByteCode() {}
 

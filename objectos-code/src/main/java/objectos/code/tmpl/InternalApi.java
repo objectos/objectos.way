@@ -24,31 +24,27 @@ package objectos.code.tmpl;
  */
 public final class InternalApi {
 
-  public sealed interface AnnotationElementValue {
-    void mark(MarkerApi api);
-  }
+  public sealed interface AnnotationElementValue extends Element {}
 
   public sealed interface AtRef
       extends ClassDeclarationElement, EnumDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface ClassDeclaration {}
 
-  public sealed interface ClassDeclarationElement {
+  public sealed interface ClassDeclarationElement extends Element {}
+
+  public sealed interface Element {
     void mark(MarkerApi api);
   }
 
   public sealed interface EnumConstant
       extends EnumDeclarationElement {}
 
-  public sealed interface EnumConstantElement {
-    void mark(MarkerApi api);
-  }
+  public sealed interface EnumConstantElement extends Element {}
 
   public sealed interface EnumDeclaration {}
 
-  public sealed interface EnumDeclarationElement {
-    void mark(MarkerApi api);
-  }
+  public sealed interface EnumDeclarationElement extends Element {}
 
   public sealed interface Expression
       extends EnumConstantElement, MethodInvocationElement {}
@@ -62,6 +58,10 @@ public final class InternalApi {
   public sealed interface ExtendsRef
       extends ClassDeclarationElement {}
 
+  public sealed interface FieldDeclaration {}
+
+  public sealed interface FieldDeclarationElement extends Element {}
+
   public sealed interface FinalModifier
       extends ClassDeclarationElement, MethodDeclarationElement {}
 
@@ -69,6 +69,7 @@ public final class InternalApi {
       extends
       ClassDeclarationElement,
       EnumDeclarationElement, EnumConstantElement,
+      FieldDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface Implements
@@ -83,16 +84,12 @@ public final class InternalApi {
   public sealed interface MethodDeclaration
       extends ClassDeclarationElement {}
 
-  public sealed interface MethodDeclarationElement {
-    void mark(MarkerApi api);
-  }
+  public sealed interface MethodDeclarationElement extends Element {}
 
   public sealed interface MethodInvocation
       extends Expression, ExpressionStatement {}
 
-  public sealed interface MethodInvocationElement {
-    void mark(MarkerApi api);
-  }
+  public sealed interface MethodInvocationElement extends Element {}
 
   public sealed interface NewLineRef
       extends MethodInvocationElement {}
@@ -105,6 +102,9 @@ public final class InternalApi {
 
   public sealed interface StringLiteral
       extends AnnotationElementValue, Expression {}
+
+  public sealed interface TypeNameInvocation
+      extends FieldDeclarationElement {}
 
   public sealed interface VoidRef extends MethodDeclarationElement {}
 
@@ -125,6 +125,7 @@ public final class InternalApi {
       EnumDeclaration,
       ExpressionNameRef,
       ExtendsRef,
+      FieldDeclaration,
       FinalModifier,
       IdentifierRef,
       Implements,
@@ -134,6 +135,7 @@ public final class InternalApi {
       NewLineRef,
       PublicModifier,
       StringLiteral,
+      TypeNameInvocation,
       VoidRef {
     private Ref() {}
 

@@ -31,6 +31,8 @@ import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FieldDeclaration;
+import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
@@ -43,6 +45,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
@@ -185,6 +188,19 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
+  public FieldDeclaration field(FieldDeclarationElement e1, FieldDeclarationElement e2) {
+    markStart();
+
+    e1.mark(this);
+
+    e2.mark(this);
+
+    element(ByteProto.FIELD_DECLARATION);
+
+    return InternalApi.REF;
+  }
+
+  @Override
   public final IdentifierRef id(String name) {
     identifier(name);
 
@@ -292,6 +308,13 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
+  public final TypeNameInvocation t(Class<?> type) {
+    var cn = ClassName.of(type);
+
+    return typeName(cn);
+  }
+
+  @Override
   public final LocalVariableDeclarationRef var(String name, Expression expression) {
     identifier(name);
 
@@ -373,6 +396,12 @@ class Pass0 extends State implements TemplateApi {
     protoIndex = 0;
 
     protoAdd(ByteProto.JMP, ByteProto.NULL);
+  }
+
+  private TypeNameInvocation typeName(TypeName value) {
+    object(ByteProto.TYPE_NAME, value);
+
+    return InternalApi.REF;
   }
 
 }

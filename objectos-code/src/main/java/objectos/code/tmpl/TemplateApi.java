@@ -28,6 +28,8 @@ import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FieldDeclaration;
+import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
@@ -40,6 +42,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
 
 public interface TemplateApi extends MarkerApi {
@@ -68,6 +71,8 @@ public interface TemplateApi extends MarkerApi {
 
   EnumConstant enumConstant(EnumConstantElement[] elements);
 
+  FieldDeclaration field(FieldDeclarationElement e1, FieldDeclarationElement e2);
+
   IdentifierRef id(String name);
 
   IncludeRef include(IncludeTarget target);
@@ -83,6 +88,8 @@ public interface TemplateApi extends MarkerApi {
   NewLineRef nl();
 
   StringLiteral s(String value);
+
+  TypeNameInvocation t(Class<?> type);
 
   LocalVariableDeclarationRef var(String name, Expression expression);
 

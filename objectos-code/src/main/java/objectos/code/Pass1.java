@@ -132,6 +132,8 @@ class Pass1 extends Pass0 {
 
         case ByteProto.ENUM_DECLARATION -> body = listadd(body, enumDeclaration(true));
 
+        case ByteProto.FIELD_DECLARATION -> body = listadd(body, fieldDeclaration());
+
         case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
 
         case ByteProto.PACKAGE_DECLARATION -> _package = setOrThrow(_package, packageDeclaration());
@@ -271,6 +273,63 @@ class Pass1 extends Pass0 {
     return self;
   }
 
+  private int fieldDeclaration() {
+    enum State {
+      START,
+
+      IDENTIFIER,
+
+      INITIALIZE;
+    }
+
+    var modifiers = ByteCode.NOP;
+    var type = ByteCode.NOP;
+    var declarators = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    @SuppressWarnings("unused")
+    var init = ByteCode.NOP;
+
+    var state = State.START;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> {
+          state = switch (state) {
+            case START -> {
+              name = protoadv();
+
+              yield State.IDENTIFIER;
+            }
+
+            default -> throw new UnsupportedOperationException("Implement me");
+          };
+        }
+
+        case ByteProto.TYPE_NAME -> type = setOrReplace(type, typeName());
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    switch (state) {
+      case IDENTIFIER -> declarators = listadd(
+        declarators,
+
+        codeadd(ByteCode.DECLARATOR_SIMPLE, name)
+      );
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    }
+
+    return codeadd(ByteCode.FIELD_DECLARATION, modifiers, type, declarators);
+  }
+
   private int implementsClause(int list) {
     protoadv();
 
@@ -280,7 +339,7 @@ class Pass1 extends Pass0 {
       switch (proto) {
         case ByteProto.TYPE_NAME -> list = listadd(list, typeName());
 
-        default -> protouoe();
+        default -> throw protouoe();
       }
 
       protonxt();

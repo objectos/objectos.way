@@ -28,6 +28,8 @@ import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionNameRef;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FieldDeclaration;
+import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
@@ -40,6 +42,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
@@ -168,6 +171,10 @@ public abstract class JavaTemplate {
     return api.enumConstant(elements);
   }
 
+  protected final FieldDeclaration field(FieldDeclarationElement e1, FieldDeclarationElement e2) {
+    return api.field(e1, e2);
+  }
+
   protected final IdentifierRef id(String name) {
     return api.id(name);
   }
@@ -199,6 +206,10 @@ public abstract class JavaTemplate {
 
   protected final StringLiteral s(String value) {
     return api.s(value);
+  }
+
+  protected final TypeNameInvocation t(Class<?> value) {
+    return api.t(value);
   }
 
   protected final LocalVariableDeclarationRef var(String name, Expression expression) {

@@ -253,9 +253,40 @@ abstract class Pass2 extends Pass1 {
 
       case ByteCode.ENUM_DECLARATION -> enumDeclaration();
 
+      case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
+
       case ByteCode.METHOD -> methodDeclaration();
 
       default -> statement();
+    }
+  }
+
+  private void declaratorList() {
+    if (lnext()) {
+      declaratorListItem();
+
+      while (lnext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+  }
+
+  private void declaratorListItem() {
+    switch (code) {
+      case ByteCode.DECLARATOR_SIMPLE -> declaratorSimple();
+
+      default -> throw codeuoe();
+    }
+
+    writeSemicolon();
+  }
+
+  private void declaratorSimple() {
+    if (codenxt()) {
+      write((String) codeobj());
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid declarator?");
     }
   }
 
@@ -384,6 +415,26 @@ abstract class Pass2 extends Pass1 {
       write(s);
     } else {
       write(typeName());
+    }
+  }
+
+  private void fieldDeclaration() {
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: modifiers");
+    }
+
+    if (codenxt()) {
+      codepsh();
+      write(typeName());
+      codepop();
+    }
+
+    if (codenxt()) {
+      writeSpace();
+      codepsh();
+      declaratorList();
+      codepop();
     }
   }
 
