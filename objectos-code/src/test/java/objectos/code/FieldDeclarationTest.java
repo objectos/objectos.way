@@ -118,4 +118,35 @@ public class FieldDeclarationTest {
     );
   }
 
+  @Test(description = """
+  init expression
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(t(String.class), id("a"), s("init"));
+        }
+      }.toString(),
+
+      """
+      java.lang.String a = "init";
+      """
+    );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(t(String.class), id("a"), s("a"), id("b"), id("c"), s("c"));
+        }
+      }.toString(),
+
+      """
+      java.lang.String a = "a", b, c = "c";
+      """
+    );
+  }
+
 }

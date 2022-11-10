@@ -261,6 +261,21 @@ abstract class Pass2 extends Pass1 {
     }
   }
 
+  private void declaratorFull() {
+    declaratorSimple();
+
+    if (codenxt()) {
+      writeSeparator('=');
+
+      codepsh();
+      expression();
+      codepop();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid declarator?");
+    }
+  }
+
   private void declaratorList() {
     if (lnext()) {
       declaratorListItem();
@@ -278,6 +293,8 @@ abstract class Pass2 extends Pass1 {
   private void declaratorListItem() {
     switch (code) {
       case ByteCode.DECLARATOR_SIMPLE -> declaratorSimple();
+
+      case ByteCode.DECLARATOR_FULL -> declaratorFull();
 
       default -> throw codeuoe();
     }

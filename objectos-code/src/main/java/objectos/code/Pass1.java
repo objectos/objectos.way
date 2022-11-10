@@ -155,6 +155,10 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.COMPILATION_UNIT, _package, _import, body);
   }
 
+  private int declaratorFull(int name, int init) {
+    return codeadd(ByteCode.DECLARATOR_FULL, name, init);
+  }
+
   private int declaratorSimple(int name) {
     return codeadd(ByteCode.DECLARATOR_SIMPLE, name);
   }
@@ -278,6 +282,12 @@ class Pass1 extends Pass0 {
   }
 
   private int fieldDeclaration() {
+    var modifiers = ByteCode.NOP;
+    var type = ByteCode.NOP;
+    var declarators = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var init = ByteCode.NOP;
+
     enum State {
       START,
 
@@ -286,19 +296,29 @@ class Pass1 extends Pass0 {
       INITIALIZE;
     }
 
-    var modifiers = ByteCode.NOP;
-    var type = ByteCode.NOP;
-    var declarators = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    @SuppressWarnings("unused")
-    var init = ByteCode.NOP;
-
     var state = State.START;
 
     protoadv();
 
     while (protolop()) {
       protojmp();
+
+      if (ByteProto.isExpression(proto)) {
+        state = switch (state) {
+          case IDENTIFIER -> {
+            init = expression();
+
+            yield State.INITIALIZE;
+          }
+
+          default -> throw new UnsupportedOperationException(
+            "Implement me :: state=" + state);
+        };
+
+        protonxt();
+
+        continue;
+      }
 
       switch (proto) {
         case ByteProto.IDENTIFIER -> {
@@ -317,7 +337,16 @@ class Pass1 extends Pass0 {
               yield State.IDENTIFIER;
             }
 
-            default -> throw new UnsupportedOperationException("Implement me");
+            case INITIALIZE -> {
+              declarators = listadd(declarators, declaratorFull(name, init));
+
+              name = protoadv();
+
+              yield State.IDENTIFIER;
+            }
+
+            default -> throw new UnsupportedOperationException(
+              "Implement me :: state=" + state);
           };
         }
 
@@ -333,6 +362,8 @@ class Pass1 extends Pass0 {
 
     switch (state) {
       case IDENTIFIER -> declarators = listadd(declarators, declaratorSimple(name));
+
+      case INITIALIZE -> declarators = listadd(declarators, declaratorFull(name, init));
 
       default -> throw new UnsupportedOperationException("Implement me");
     }

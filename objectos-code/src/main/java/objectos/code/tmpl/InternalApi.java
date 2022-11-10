@@ -47,7 +47,7 @@ public final class InternalApi {
   public sealed interface EnumDeclarationElement extends Element {}
 
   public sealed interface Expression
-      extends EnumConstantElement, MethodInvocationElement {}
+      extends EnumConstantElement, FieldDeclarationElement, MethodInvocationElement {}
 
   public sealed interface ExpressionNameRef
       extends Expression {}
