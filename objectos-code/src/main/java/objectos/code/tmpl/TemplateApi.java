@@ -71,7 +71,7 @@ public interface TemplateApi extends MarkerApi {
 
   EnumConstant enumConstant(EnumConstantElement[] elements);
 
-  FieldDeclaration field(FieldDeclarationElement e1, FieldDeclarationElement e2);
+  FieldDeclaration field(FieldDeclarationElement[] elements);
 
   IdentifierRef id(String name);
 

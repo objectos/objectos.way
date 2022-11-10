@@ -155,6 +155,10 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.COMPILATION_UNIT, _package, _import, body);
   }
 
+  private int declaratorSimple(int name) {
+    return codeadd(ByteCode.DECLARATOR_SIMPLE, name);
+  }
+
   private int enumConstant() {
     var modifiers = ByteCode.NOP;
     var name = ByteCode.NOP;
@@ -305,6 +309,14 @@ class Pass1 extends Pass0 {
               yield State.IDENTIFIER;
             }
 
+            case IDENTIFIER -> {
+              declarators = listadd(declarators, declaratorSimple(name));
+
+              name = protoadv();
+
+              yield State.IDENTIFIER;
+            }
+
             default -> throw new UnsupportedOperationException("Implement me");
           };
         }
@@ -318,11 +330,7 @@ class Pass1 extends Pass0 {
     }
 
     switch (state) {
-      case IDENTIFIER -> declarators = listadd(
-        declarators,
-
-        codeadd(ByteCode.DECLARATOR_SIMPLE, name)
-      );
+      case IDENTIFIER -> declarators = listadd(declarators, declaratorSimple(name));
 
       default -> throw new UnsupportedOperationException("Implement me");
     }

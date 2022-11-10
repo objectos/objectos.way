@@ -188,12 +188,12 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
-  public FieldDeclaration field(FieldDeclarationElement e1, FieldDeclarationElement e2) {
+  public FieldDeclaration field(FieldDeclarationElement[] elements) {
     markStart();
 
-    e1.mark(this);
-
-    e2.mark(this);
+    for (var element : elements) { // implicit elements null check
+      element.mark(this);
+    }
 
     element(ByteProto.FIELD_DECLARATION);
 

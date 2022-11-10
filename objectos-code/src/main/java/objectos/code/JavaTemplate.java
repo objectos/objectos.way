@@ -171,8 +171,8 @@ public abstract class JavaTemplate {
     return api.enumConstant(elements);
   }
 
-  protected final FieldDeclaration field(FieldDeclarationElement e1, FieldDeclarationElement e2) {
-    return api.field(e1, e2);
+  protected final FieldDeclaration field(FieldDeclarationElement... elements) {
+    return api.field(elements);
   }
 
   protected final IdentifierRef id(String name) {

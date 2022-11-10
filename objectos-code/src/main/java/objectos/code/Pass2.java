@@ -266,9 +266,13 @@ abstract class Pass2 extends Pass1 {
       declaratorListItem();
 
       while (lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        writeComma();
+
+        declaratorListItem();
       }
     }
+
+    writeSemicolon();
   }
 
   private void declaratorListItem() {
@@ -277,8 +281,6 @@ abstract class Pass2 extends Pass1 {
 
       default -> throw codeuoe();
     }
-
-    writeSemicolon();
   }
 
   private void declaratorSimple() {

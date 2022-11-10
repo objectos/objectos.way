@@ -44,7 +44,7 @@ public class FieldDeclarationTest {
   }
 
   @Test(description = """
-  typeName + name only
+  typeName + names
   """)
   public void testCase01() {
     assertEquals(
@@ -57,6 +57,19 @@ public class FieldDeclarationTest {
 
       """
       java.lang.String name;
+      """
+    );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(t(String.class), id("a"), id("b"), id("c"));
+        }
+      }.toString(),
+
+      """
+      java.lang.String a, b, c;
       """
     );
   }
