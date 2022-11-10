@@ -74,4 +74,48 @@ public class FieldDeclarationTest {
     );
   }
 
+  @Test(description = """
+  modifiers
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(_private(), t(String.class), id("a"));
+        }
+      }.toString(),
+
+      """
+      private java.lang.String a;
+      """
+    );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(_private(), _final(), t(String.class), id("a"));
+        }
+      }.toString(),
+
+      """
+      private final java.lang.String a;
+      """
+    );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(_private(), _static(), _final(), t(String.class), id("a"));
+        }
+      }.toString(),
+
+      """
+      private static final java.lang.String a;
+      """
+    );
+  }
+
 }

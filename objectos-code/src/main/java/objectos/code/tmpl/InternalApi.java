@@ -63,7 +63,7 @@ public final class InternalApi {
   public sealed interface FieldDeclarationElement extends Element {}
 
   public sealed interface FinalModifier
-      extends ClassDeclarationElement, MethodDeclarationElement {}
+      extends ClassDeclarationElement, FieldDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface IdentifierRef
       extends
@@ -94,11 +94,20 @@ public final class InternalApi {
   public sealed interface NewLineRef
       extends MethodInvocationElement {}
 
+  public sealed interface PrivateModifier
+      extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,
+      MethodDeclarationElement {}
+
   public sealed interface PublicModifier
-      extends ClassDeclarationElement, EnumDeclarationElement, MethodDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,
+      MethodDeclarationElement {}
 
   public sealed interface Statement
       extends MethodDeclarationElement {}
+
+  public sealed interface StaticModifier
+      extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,
+      MethodDeclarationElement {}
 
   public sealed interface StringLiteral
       extends AnnotationElementValue, Expression {}
@@ -133,7 +142,9 @@ public final class InternalApi {
       MethodInvocation,
       MethodDeclaration,
       NewLineRef,
+      PrivateModifier,
       PublicModifier,
+      StaticModifier,
       StringLiteral,
       TypeNameInvocation,
       VoidRef {

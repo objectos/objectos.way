@@ -40,7 +40,9 @@ import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocation;
 import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.NewLineRef;
+import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
+import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
 import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
@@ -59,7 +61,11 @@ public interface TemplateApi extends MarkerApi {
 
   void _package(String packageName);
 
+  PrivateModifier _private();
+
   PublicModifier _public();
+
+  StaticModifier _static();
 
   VoidRef _void();
 

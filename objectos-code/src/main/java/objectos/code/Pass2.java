@@ -421,14 +421,25 @@ abstract class Pass2 extends Pass1 {
   }
 
   private void fieldDeclaration() {
+    var prevSection = false;
+
+    modifierReset();
+
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: modifiers");
+      codepsh();
+      modifierList();
+      codepop();
+
+      prevSection = true;
     }
 
     if (codenxt()) {
       codepsh();
+
+      writeSpaceIf(prevSection);
+
       write(typeName());
+
       codepop();
     }
 

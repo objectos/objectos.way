@@ -40,7 +40,9 @@ import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocation;
 import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.NewLineRef;
+import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
+import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
 import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
@@ -145,8 +147,16 @@ public abstract class JavaTemplate {
     api._package(packageName);
   }
 
+  protected final PrivateModifier _private() {
+    return api._private();
+  }
+
   protected final PublicModifier _public() {
     return api._public();
+  }
+
+  protected final StaticModifier _static() {
+    return api._static();
   }
 
   protected final VoidRef _void() {

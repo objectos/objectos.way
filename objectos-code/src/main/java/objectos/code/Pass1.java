@@ -321,6 +321,8 @@ class Pass1 extends Pass0 {
           };
         }
 
+        case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
+
         case ByteProto.TYPE_NAME -> type = setOrReplace(type, typeName());
 
         default -> throw protouoe();
