@@ -21,6 +21,7 @@ import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
+import objectos.code.tmpl.InternalApi.ClassNameInvocation;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -39,12 +40,12 @@ import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocation;
 import objectos.code.tmpl.InternalApi.MethodInvocationElement;
+import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
@@ -194,6 +195,11 @@ public abstract class JavaTemplate {
   }
 
   protected final MethodInvocation invoke(
+      MethodInvocationSubject subject, String methodName, MethodInvocationElement... elements) {
+    return api.invoke(subject, methodName, elements);
+  }
+
+  protected final MethodInvocation invoke(
       String methodName, MethodInvocationElement... elements) {
     return api.invoke(methodName, elements);
   }
@@ -218,7 +224,7 @@ public abstract class JavaTemplate {
     return api.s(value);
   }
 
-  protected final TypeNameInvocation t(Class<?> value) {
+  protected final ClassNameInvocation t(Class<?> value) {
     return api.t(value);
   }
 

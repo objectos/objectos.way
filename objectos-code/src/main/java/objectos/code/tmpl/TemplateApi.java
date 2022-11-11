@@ -21,6 +21,7 @@ import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
+import objectos.code.tmpl.InternalApi.ClassNameInvocation;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -39,12 +40,12 @@ import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocation;
 import objectos.code.tmpl.InternalApi.MethodInvocationElement;
+import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
 
 public interface TemplateApi extends MarkerApi {
@@ -83,6 +84,9 @@ public interface TemplateApi extends MarkerApi {
 
   IncludeRef include(IncludeTarget target);
 
+  MethodInvocation invoke(
+      MethodInvocationSubject subject, String methodName, MethodInvocationElement[] elements);
+
   MethodInvocation invoke(String methodName, MethodInvocationElement[] elements);
 
   MethodDeclaration method(MethodDeclarationElement[] elements);
@@ -95,7 +99,7 @@ public interface TemplateApi extends MarkerApi {
 
   StringLiteral s(String value);
 
-  TypeNameInvocation t(Class<?> type);
+  ClassNameInvocation t(Class<?> type);
 
   LocalVariableDeclarationRef var(String name, Expression expression);
 

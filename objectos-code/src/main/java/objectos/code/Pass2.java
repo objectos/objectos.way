@@ -655,8 +655,13 @@ abstract class Pass2 extends Pass1 {
 
   private void methodInvocation() {
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method invocation callee");
+      codepsh();
+
+      methodInvocationSubject();
+
+      write('.');
+
+      codepop();
     }
 
     if (codenxt()) {
@@ -689,6 +694,14 @@ abstract class Pass2 extends Pass1 {
       while (largs(true)) {
         expression();
       }
+    }
+  }
+
+  private void methodInvocationSubject() {
+    if (ByteCode.isTypeName(code)) {
+      write(typeName());
+    } else {
+      throw new UnsupportedOperationException("Implement me");
     }
   }
 

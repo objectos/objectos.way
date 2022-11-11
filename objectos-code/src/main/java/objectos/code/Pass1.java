@@ -466,7 +466,7 @@ class Pass1 extends Pass0 {
   }
 
   private int methodInvocation() {
-    var callee = ByteCode.NOP;
+    var subject = ByteCode.NOP;
     var typeArgs = ByteCode.NOP;
     var name = ByteCode.NOP;
     var args = ByteCode.NOP;
@@ -487,13 +487,15 @@ class Pass1 extends Pass0 {
 
         case ByteProto.STRING_LITERAL -> args = listadd(args, stringLiteral());
 
+        case ByteProto.TYPE_NAME -> subject = setOrReplace(subject, typeName());
+
         default -> throw protouoe();
       }
 
       protonxt();
     }
 
-    return codeadd(ByteCode.METHOD_INVOCATION, callee, typeArgs, name, args);
+    return codeadd(ByteCode.METHOD_INVOCATION, subject, typeArgs, name, args);
   }
 
   private int modifier() {

@@ -24,6 +24,7 @@ import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AtRef;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
+import objectos.code.tmpl.InternalApi.ClassNameInvocation;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -42,12 +43,12 @@ import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocation;
 import objectos.code.tmpl.InternalApi.MethodInvocationElement;
+import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.TypeNameInvocation;
 import objectos.code.tmpl.InternalApi.VoidRef;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
@@ -236,6 +237,26 @@ class Pass0 extends State implements TemplateApi {
 
   @Override
   public final MethodInvocation invoke(
+      MethodInvocationSubject subject, String methodName, MethodInvocationElement[] elements) {
+    identifier(methodName);
+
+    markStart();
+
+    subject.mark(this);
+
+    markReference();
+
+    for (var element : elements) { // implicit elements null check
+      element.mark(this);
+    }
+
+    methodInvocation();
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final MethodInvocation invoke(
       String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
 
@@ -324,7 +345,7 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
-  public final TypeNameInvocation t(Class<?> type) {
+  public final ClassNameInvocation t(Class<?> type) {
     var cn = ClassName.of(type);
 
     return typeName(cn);
@@ -414,7 +435,7 @@ class Pass0 extends State implements TemplateApi {
     protoAdd(ByteProto.JMP, ByteProto.NULL);
   }
 
-  private TypeNameInvocation typeName(TypeName value) {
+  private ClassNameInvocation typeName(TypeName value) {
     object(ByteProto.TYPE_NAME, value);
 
     return InternalApi.REF;

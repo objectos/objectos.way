@@ -76,4 +76,12 @@ final class ByteCode {
 
   private ByteCode() {}
 
+  public static boolean isTypeName(int code) {
+    return switch (code) {
+      case NO_TYPE, SIMPLE_NAME, QUALIFIED_NAME -> true;
+
+      default -> false;
+    };
+  }
+
 }
