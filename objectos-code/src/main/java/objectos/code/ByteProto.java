@@ -43,10 +43,9 @@ public final class ByteProto {
 
   public static final int ENUM_DECLARATION = -20;
   public static final int ENUM_CONSTANT = -21;
-
   public static final int IMPLEMENTS = -22;
-
   public static final int FIELD_DECLARATION = -23;
+  public static final int RETURN_STATEMENT = -24;
 
   private ByteProto() {}
 

@@ -527,11 +527,40 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.PACKAGE, annotations, name);
   }
 
+  private int returnStatement() {
+    protoadv();
+
+    if (!protolop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid return statement");
+    }
+
+    protojmp();
+
+    if (!ByteProto.isExpression(proto)) {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid return statement");
+    }
+
+    var expression = expression();
+
+    protonxt();
+
+    if (protolop()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid return statement");
+    }
+
+    return codeadd(ByteCode.RETURN_STATEMENT, expression);
+  }
+
   private int statement() {
     return switch (proto) {
       case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
 
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
+
+      case ByteProto.RETURN_STATEMENT -> returnStatement();
 
       default -> throw protouoe();
     };

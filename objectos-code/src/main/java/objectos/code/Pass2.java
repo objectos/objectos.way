@@ -781,6 +781,23 @@ abstract class Pass2 extends Pass1 {
     writeSemicolon();
   }
 
+  private void returnStatement() {
+    if (!codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid return statement");
+    }
+
+    write("return");
+
+    writeSpace();
+
+    codepsh();
+    expression();
+    codepop();
+
+    writeSemicolon();
+  }
+
   private void statement() {
     switch (code) {
       case ByteCode.LOCAL_VARIABLE -> localVariableDeclaration();
@@ -790,6 +807,8 @@ abstract class Pass2 extends Pass1 {
 
         writeSemicolon();
       }
+
+      case ByteCode.RETURN_STATEMENT -> returnStatement();
 
       default -> throw codeuoe();
     }

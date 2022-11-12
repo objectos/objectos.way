@@ -44,6 +44,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
+import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
 import objectos.code.tmpl.InternalApi.VoidRef;
@@ -154,6 +155,10 @@ public abstract class JavaTemplate {
 
   protected final PublicModifier _public() {
     return api._public();
+  }
+
+  protected final ReturnStatement _return(Expression expression) {
+    return api._return(expression);
   }
 
   protected final StaticModifier _static() {

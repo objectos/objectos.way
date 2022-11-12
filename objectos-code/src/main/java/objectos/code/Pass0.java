@@ -47,6 +47,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
+import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
 import objectos.code.tmpl.InternalApi.VoidRef;
@@ -138,6 +139,17 @@ class Pass0 extends State implements TemplateApi {
   @Override
   public final PublicModifier _public() {
     object(ByteProto.MODIFIER, Modifier.PUBLIC);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final ReturnStatement _return(Expression expression) {
+    markStart();
+
+    expression.mark(this);
+
+    element(ByteProto.RETURN_STATEMENT);
 
     return InternalApi.REF;
   }

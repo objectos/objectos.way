@@ -107,6 +107,9 @@ public final class InternalApi {
       extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,
       MethodDeclarationElement {}
 
+  public sealed interface ReturnStatement
+      extends Statement {}
+
   public sealed interface Statement
       extends MethodDeclarationElement {}
 
@@ -147,6 +150,7 @@ public final class InternalApi {
       NewLineRef,
       PrivateModifier,
       PublicModifier,
+      ReturnStatement,
       StaticModifier,
       StringLiteral,
       VoidRef {

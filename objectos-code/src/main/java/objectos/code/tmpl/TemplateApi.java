@@ -44,6 +44,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
+import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
 import objectos.code.tmpl.InternalApi.VoidRef;
@@ -65,6 +66,8 @@ public interface TemplateApi extends MarkerApi {
   PrivateModifier _private();
 
   PublicModifier _public();
+
+  ReturnStatement _return(Expression expression);
 
   StaticModifier _static();
 

@@ -74,6 +74,8 @@ final class ByteCode {
   static final int DECLARATOR_SIMPLE = -29;
   static final int DECLARATOR_FULL = -30;
 
+  static final int RETURN_STATEMENT = -31;
+
   private ByteCode() {}
 
   public static boolean isTypeName(int code) {
