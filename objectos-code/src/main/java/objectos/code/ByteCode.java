@@ -50,6 +50,8 @@ final class ByteCode {
   static final int RETURN_STATEMENT = -31;
   static final int FORMAL_PARAMETER = -32;
   static final int ARRAY_ACCESS_EXPRESSION = -33;
+  static final int ARRAY_TYPE = -34;
+  static final int DIM = -35;
 
   private ByteCode() {}
 

@@ -23,6 +23,9 @@ import objectos.code.tmpl.InternalApi;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AnnotationInvocation;
 import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
+import objectos.code.tmpl.InternalApi.ArrayDimension;
+import objectos.code.tmpl.InternalApi.ArrayTypeElement;
+import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -223,6 +226,15 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
+  public final ArrayDimension dim() {
+    markStart();
+
+    element(ByteProto.DIM);
+
+    return InternalApi.REF;
+  }
+
+  @Override
   public final EnumConstant enumConstant(EnumConstantElement[] elements) {
     markStart();
 
@@ -393,6 +405,23 @@ class Pass0 extends State implements TemplateApi {
     var cn = ClassName.of(type);
 
     return typeName(cn);
+  }
+
+  @Override
+  public final ArrayTypeInvocation t(Class<?> type, ArrayTypeElement[] elements) {
+    var t = t(type);
+
+    markStart();
+
+    t.mark(this);
+
+    for (var element : elements) {
+      element.mark(this);
+    }
+
+    element(ByteProto.ARRAY_TYPE);
+
+    return InternalApi.REF;
   }
 
   @Override

@@ -20,6 +20,9 @@ import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AnnotationInvocation;
 import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
+import objectos.code.tmpl.InternalApi.ArrayDimension;
+import objectos.code.tmpl.InternalApi.ArrayTypeElement;
+import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -191,6 +194,10 @@ public abstract class JavaTemplate {
 
   protected abstract void definition();
 
+  protected final ArrayDimension dim() {
+    return api.dim();
+  }
+
   protected final EnumConstant enumConstant(EnumConstantElement... elements) {
     return api.enumConstant(elements);
   }
@@ -243,6 +250,10 @@ public abstract class JavaTemplate {
 
   protected final ClassNameInvocation t(Class<?> value) {
     return api.t(value);
+  }
+
+  protected final ArrayTypeInvocation t(Class<?> type, ArrayTypeElement... elements) {
+    return api.t(type, elements);
   }
 
   protected final LocalVariableDeclarationRef var(String name, Expression expression) {

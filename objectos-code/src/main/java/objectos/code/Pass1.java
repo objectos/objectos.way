@@ -91,6 +91,35 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.ARRAY_ACCESS_EXPRESSION, reference, expressions);
   }
 
+  private int arrayType() {
+    var type = ByteCode.NOP;
+    var list = ByteCode.NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.DIM -> list = listadd(list, arrayTypeDim());
+
+        case ByteProto.TYPE_NAME -> type = setOrThrow(type, typeName());
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    return codeadd(ByteCode.ARRAY_TYPE, type, list);
+  }
+
+  private int arrayTypeDim() {
+    protoadv();
+
+    return codeadd(ByteCode.DIM);
+  }
+
   private int classDeclaration(boolean topLevel) {
     var modifiers = ByteCode.NOP;
     var name = ByteCode.NOP;
@@ -360,6 +389,8 @@ class Pass1 extends Pass0 {
       }
 
       switch (proto) {
+        case ByteProto.ARRAY_TYPE -> type = setOrReplace(type, arrayType());
+
         case ByteProto.IDENTIFIER -> {
           state = switch (state) {
             case START -> {

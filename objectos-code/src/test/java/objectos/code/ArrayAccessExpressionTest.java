@@ -36,10 +36,11 @@ public class ArrayAccessExpressionTest {
       }.toString(),
 
       """
-      a[x];
-      a[x][y];
-      a[x][y][z];
-      """
+      a[x]
+
+      a[x][y]
+
+      a[x][y][z]"""
     );
   }
 

@@ -20,6 +20,9 @@ import objectos.code.ClassName;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AnnotationInvocation;
 import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
+import objectos.code.tmpl.InternalApi.ArrayDimension;
+import objectos.code.tmpl.InternalApi.ArrayTypeElement;
+import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -84,6 +87,8 @@ public interface TemplateApi extends MarkerApi {
 
   void autoImports();
 
+  ArrayDimension dim();
+
   EnumConstant enumConstant(EnumConstantElement[] elements);
 
   FieldDeclaration field(FieldDeclarationElement[] elements);
@@ -110,6 +115,8 @@ public interface TemplateApi extends MarkerApi {
   StringLiteral s(String value);
 
   ClassNameInvocation t(Class<?> type);
+
+  ArrayTypeInvocation t(Class<?> type, ArrayTypeElement[] elements);
 
   LocalVariableDeclarationRef var(String name, Expression expression);
 

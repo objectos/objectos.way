@@ -17,31 +17,9 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import org.testng.annotations.Test;
 
 public class FieldDeclarationTest {
-
-  class A {
-    class C {
-    }
-  }
-
-  @Target(ElementType.TYPE_USE)
-  @interface B {}
-
-  @Target(ElementType.FIELD)
-  @interface D {}
-
-  class Fields {
-    String a, b = "support", c, d = "this?";
-
-    int e, f, g, h = 123;
-
-    @D
-    A.@B C whyThough;
-  }
 
   @Test(description = """
   typeName + names
@@ -145,6 +123,32 @@ public class FieldDeclarationTest {
 
       """
       java.lang.String a = "a", b, c = "c";
+      """
+    );
+  }
+
+  @Test(description = """
+  array types
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(t(Object.class, dim()), id("a"));
+          field(t(Object.class, dim(), dim()), id("b"));
+          field(t(Object.class, dim(), dim(), dim()), id("c"));
+        }
+      }.toString(),
+
+      """
+      java.lang.Object[] a;
+
+
+      java.lang.Object[][] b;
+
+
+      java.lang.Object[][][] c;
       """
     );
   }

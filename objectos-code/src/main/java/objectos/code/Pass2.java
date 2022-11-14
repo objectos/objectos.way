@@ -79,7 +79,7 @@ abstract class Pass2 extends Pass1 {
 
       write('@');
 
-      write(typeName());
+      typeName();
 
       codepop();
     } else {
@@ -189,7 +189,7 @@ abstract class Pass2 extends Pass1 {
 
       writeSpace();
 
-      write(typeName());
+      typeName();
 
       codepop();
     }
@@ -286,16 +286,20 @@ abstract class Pass2 extends Pass1 {
       compilationUnitBodyItem();
 
       while (lnext()) {
+        writeBeforeBlockNextItem();
+
         compilationUnitBodyItem();
       }
     }
   }
 
   private void compilationUnitBodyItem() {
-    if (ByteCode.isExpression(code)) {
+    if (ByteCode.isExpressionStatement(code)) {
       expression();
 
       writeSemicolon();
+    } else if (ByteCode.isExpression(code)) {
+      expression();
     } else {
       switch (code) {
         case ByteCode.CLASS -> classDeclaration();
@@ -485,7 +489,7 @@ abstract class Pass2 extends Pass1 {
 
       write(s);
     } else {
-      write(typeName());
+      typeName();
     }
   }
 
@@ -507,7 +511,7 @@ abstract class Pass2 extends Pass1 {
 
       writeSpaceIf(prevSection);
 
-      write(typeName());
+      typeName();
 
       codepop();
     }
@@ -528,12 +532,12 @@ abstract class Pass2 extends Pass1 {
     writeSpace();
 
     if (lnext()) {
-      write(typeName());
+      typeName();
 
       while (lnext()) {
         writeComma();
 
-        write(typeName());
+        typeName();
       }
     }
   }
@@ -648,7 +652,7 @@ abstract class Pass2 extends Pass1 {
 
     if (codenxt()) {
       codepsh();
-      write(typeName());
+      typeName();
       codepop();
     } else {
       write("void");
@@ -701,6 +705,8 @@ abstract class Pass2 extends Pass1 {
       statement();
 
       while (lnext()) {
+        writeBeforeBlockNextItem();
+
         statement();
       }
     }
@@ -726,7 +732,7 @@ abstract class Pass2 extends Pass1 {
 
     if (codenxt()) {
       codepsh();
-      write(typeName());
+      typeName();
       codepop();
     } else {
       throw new UnsupportedOperationException(
@@ -794,7 +800,7 @@ abstract class Pass2 extends Pass1 {
 
   private void methodInvocationSubject() {
     if (ByteCode.isTypeName(code)) {
-      write(typeName());
+      typeName();
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
@@ -917,28 +923,70 @@ abstract class Pass2 extends Pass1 {
     writeStringLiteral(s);
   }
 
-  private String typeName() {
-    var type = code;
+  private void typeName() {
+    switch (code) {
+      case ByteCode.ARRAY_TYPE -> typeNameArrayType();
 
-    codeadv();
+      case ByteCode.NO_TYPE -> typeNameNoType();
 
-    return switch (type) {
-      case ByteCode.NO_TYPE -> "void";
+      case ByteCode.QUALIFIED_NAME -> typeNameQualifiedName();
 
-      case ByteCode.QUALIFIED_NAME -> {
-        var qname = (ClassName) codeobj();
-
-        yield qname.toString();
-      }
-
-      case ByteCode.SIMPLE_NAME -> {
-        var sname = (ClassName) codeobj();
-
-        yield sname.simpleName;
-      }
+      case ByteCode.SIMPLE_NAME -> typeNameSimpleName();
 
       default -> throw codeuoe();
-    };
+    }
+  }
+
+  private void typeNameArrayType() {
+    codeass("""
+      Invalid array type:
+
+      A no-operation (NOP) was found where the array type was expected.
+      """);
+
+    codepsh();
+    typeName();
+    codepop();
+
+    codeass("""
+      Invalid array type:
+
+      A no-operation (NOP) was found where the array dimensions or annotations were expected.
+      """);
+
+    codepsh();
+
+    while (lnext()) {
+      switch (code) {
+        case ByteCode.DIM -> write("[]");
+
+        default -> throw codeuoe();
+      }
+    }
+
+    codepop();
+  }
+
+  private void typeNameNoType() {
+    codeadv();
+
+    write("void");
+  }
+
+  private void typeNameQualifiedName() {
+    codeadv();
+
+    var qname = (ClassName) codeobj();
+
+    write(qname.toString());
+  }
+
+  private void typeNameSimpleName() {
+    codeadv();
+
+    var sname = (ClassName) codeobj();
+
+    write(sname.simpleName);
   }
 
 }

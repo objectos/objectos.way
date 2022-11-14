@@ -50,6 +50,10 @@ public final class ByteProto {
   public static final int FORMAL_PARAMETER = -25;
   public static final int ARRAY_ACCESS_EXPRESSION = -26;
 
+  public static final int DIM = -27;
+
+  public static final int ARRAY_TYPE = -28;
+
   private ByteProto() {}
 
   public static boolean isExpression(int proto) {

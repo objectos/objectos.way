@@ -31,6 +31,14 @@ public final class InternalApi {
 
   public sealed interface ArrayAccessExpression extends Expression {}
 
+  public sealed interface ArrayDimension
+      extends ArrayTypeElement {}
+
+  public sealed interface ArrayTypeElement extends Markable {}
+
+  public sealed interface ArrayTypeInvocation
+      extends FieldDeclarationElement, FormalParameterType {}
+
   public sealed interface ClassDeclaration {}
 
   public sealed interface ClassDeclarationElement extends Markable {}
@@ -145,6 +153,8 @@ public final class InternalApi {
       implements
       AnnotationInvocation,
       ArrayAccessExpression,
+      ArrayDimension,
+      ArrayTypeInvocation,
       ClassDeclaration,
       ClassNameInvocation,
       EnumConstant,
