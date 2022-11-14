@@ -183,6 +183,23 @@ public class MethodDeclarationTest {
       void test(java.lang.String a) {}
       """
     );
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _void(), id("test"),
+            param(t(String.class), id("a")),
+            param(t(String.class), id("b"))
+          );
+        }
+      }.toString(),
+
+      """
+      void test(java.lang.String a, java.lang.String b) {}
+      """
+    );
   }
 
 }
