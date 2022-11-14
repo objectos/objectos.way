@@ -110,6 +110,44 @@ abstract class Pass2 extends Pass1 {
     }
   }
 
+  private void arrayAccessExpression() {
+    codeass("""
+    Invalid array access expression:
+
+    A no-operation (NOP) was found where the array reference was expected.
+    """);
+
+    codepsh();
+    arrayAccessExpressionReference();
+    codepop();
+
+    codeass("""
+    Invalid array access expression:
+
+    A no-operation (NOP) was found where the array component expressions were expected.
+    """);
+
+    codepsh();
+
+    while (lnext()) {
+      write('[');
+
+      expression();
+
+      write(']');
+    }
+
+    codepop();
+  }
+
+  private void arrayAccessExpressionReference() {
+    switch (code) {
+      case ByteCode.EXPRESSION_NAME -> expressionName();
+
+      default -> throw codeuoe();
+    }
+  }
+
   private void classDeclaration() {
     var prevSection = false;
 
@@ -197,6 +235,12 @@ abstract class Pass2 extends Pass1 {
     }
   }
 
+  private void codeass(String message) {
+    if (!codenxt()) {
+      throw new AssertionError(message);
+    }
+  }
+
   private void compilationUnit() {
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
@@ -242,22 +286,28 @@ abstract class Pass2 extends Pass1 {
       compilationUnitBodyItem();
 
       while (lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        compilationUnitBodyItem();
       }
     }
   }
 
   private void compilationUnitBodyItem() {
-    switch (code) {
-      case ByteCode.CLASS -> classDeclaration();
+    if (ByteCode.isExpression(code)) {
+      expression();
 
-      case ByteCode.ENUM_DECLARATION -> enumDeclaration();
+      writeSemicolon();
+    } else {
+      switch (code) {
+        case ByteCode.CLASS -> classDeclaration();
 
-      case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
+        case ByteCode.ENUM_DECLARATION -> enumDeclaration();
 
-      case ByteCode.METHOD -> methodDeclaration();
+        case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
 
-      default -> statement();
+        case ByteCode.METHOD -> methodDeclaration();
+
+        default -> statement();
+      }
     }
   }
 
@@ -400,6 +450,8 @@ abstract class Pass2 extends Pass1 {
 
   private void expression() {
     switch (code) {
+      case ByteCode.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
+
       case ByteCode.EXPRESSION_NAME -> expressionName();
 
       case ByteCode.METHOD_INVOCATION -> methodInvocation();
@@ -842,18 +894,18 @@ abstract class Pass2 extends Pass1 {
   }
 
   private void statement() {
-    switch (code) {
-      case ByteCode.LOCAL_VARIABLE -> localVariableDeclaration();
+    if (ByteCode.isExpressionStatement(code)) {
+      expression();
 
-      case ByteCode.METHOD_INVOCATION -> {
-        methodInvocation();
+      writeSemicolon();
+    } else {
+      switch (code) {
+        case ByteCode.LOCAL_VARIABLE -> localVariableDeclaration();
 
-        writeSemicolon();
+        case ByteCode.RETURN_STATEMENT -> returnStatement();
+
+        default -> throw codeuoe();
       }
-
-      case ByteCode.RETURN_STATEMENT -> returnStatement();
-
-      default -> throw codeuoe();
     }
   }
 

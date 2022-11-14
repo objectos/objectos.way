@@ -48,12 +48,24 @@ public final class ByteProto {
   public static final int RETURN_STATEMENT = -24;
 
   public static final int FORMAL_PARAMETER = -25;
+  public static final int ARRAY_ACCESS_EXPRESSION = -26;
 
   private ByteProto() {}
 
   public static boolean isExpression(int proto) {
     return switch (proto) {
-      case EXPRESSION_NAME, METHOD_INVOCATION, STRING_LITERAL -> true;
+      case ARRAY_ACCESS_EXPRESSION,
+          EXPRESSION_NAME,
+          METHOD_INVOCATION,
+          STRING_LITERAL -> true;
+
+      default -> false;
+    };
+  }
+
+  public static boolean isExpressionStatement(int proto) {
+    return switch (proto) {
+      case METHOD_INVOCATION -> true;
 
       default -> false;
     };

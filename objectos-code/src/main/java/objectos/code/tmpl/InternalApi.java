@@ -29,6 +29,8 @@ public final class InternalApi {
   public sealed interface AnnotationInvocation
       extends ClassDeclarationElement, EnumDeclarationElement, MethodDeclarationElement {}
 
+  public sealed interface ArrayAccessExpression extends Expression {}
+
   public sealed interface ClassDeclaration {}
 
   public sealed interface ClassDeclarationElement extends Markable {}
@@ -46,10 +48,12 @@ public final class InternalApi {
   public sealed interface EnumDeclarationElement extends Markable {}
 
   public sealed interface Expression
-      extends EnumConstantElement, FieldDeclarationElement, MethodInvocationElement {}
+      extends
+      EnumConstantElement,
+      FieldDeclarationElement,
+      MethodInvocationElement {}
 
-  public sealed interface ExpressionNameRef
-      extends Expression {}
+  public sealed interface ExpressionName extends Expression {}
 
   public sealed interface ExpressionStatement
       extends Statement {}
@@ -140,11 +144,12 @@ public final class InternalApi {
   private static final class Ref
       implements
       AnnotationInvocation,
+      ArrayAccessExpression,
       ClassDeclaration,
       ClassNameInvocation,
       EnumConstant,
       EnumDeclaration,
-      ExpressionNameRef,
+      ExpressionName,
       ExtendsRef,
       FieldDeclaration,
       FinalModifier,

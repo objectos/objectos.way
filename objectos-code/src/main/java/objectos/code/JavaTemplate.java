@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AnnotationInvocation;
+import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -27,7 +28,7 @@ import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
 import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
-import objectos.code.tmpl.InternalApi.ExpressionNameRef;
+import objectos.code.tmpl.InternalApi.ExpressionName;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
@@ -171,6 +172,10 @@ public abstract class JavaTemplate {
     return api._void();
   }
 
+  protected final ArrayAccessExpression a(ExpressionName reference, Expression... expressions) {
+    return api.a(reference, expressions);
+  }
+
   protected final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
     return api.annotation(annotationType);
   }
@@ -216,11 +221,11 @@ public abstract class JavaTemplate {
     return api.method(elements);
   }
 
-  protected final ExpressionNameRef n(ClassName name, String identifier) {
+  protected final ExpressionName n(ClassName name, String identifier) {
     return api.n(name, identifier);
   }
 
-  protected final ExpressionNameRef n(String value) {
+  protected final ExpressionName n(String value) {
     return api.n(value);
   }
 

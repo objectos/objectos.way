@@ -49,8 +49,25 @@ final class ByteCode {
   static final int DECLARATOR_FULL = -30;
   static final int RETURN_STATEMENT = -31;
   static final int FORMAL_PARAMETER = -32;
+  static final int ARRAY_ACCESS_EXPRESSION = -33;
 
   private ByteCode() {}
+
+  public static boolean isExpression(int code) {
+    return switch (code) {
+      case ARRAY_ACCESS_EXPRESSION, METHOD_INVOCATION -> true;
+
+      default -> false;
+    };
+  }
+
+  public static boolean isExpressionStatement(int code) {
+    return switch (code) {
+      case METHOD_INVOCATION -> true;
+
+      default -> false;
+    };
+  }
 
   public static boolean isTypeName(int code) {
     return switch (code) {

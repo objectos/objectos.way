@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import objectos.code.ClassName;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AnnotationInvocation;
+import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -27,7 +28,7 @@ import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
 import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
-import objectos.code.tmpl.InternalApi.ExpressionNameRef;
+import objectos.code.tmpl.InternalApi.ExpressionName;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
@@ -75,6 +76,8 @@ public interface TemplateApi extends MarkerApi {
 
   VoidInvocation _void();
 
+  ArrayAccessExpression a(ExpressionName reference, Expression[] expressions);
+
   AnnotationInvocation annotation(Class<? extends Annotation> annotationType);
 
   AnnotationInvocation annotation(ClassName annotationType, AnnotationElementValue value);
@@ -96,9 +99,9 @@ public interface TemplateApi extends MarkerApi {
 
   MethodDeclaration method(MethodDeclarationElement[] elements);
 
-  ExpressionNameRef n(ClassName name, String identifier);
+  ExpressionName n(ClassName name, String identifier);
 
-  ExpressionNameRef n(String value);
+  ExpressionName n(String value);
 
   NewLineRef nl();
 

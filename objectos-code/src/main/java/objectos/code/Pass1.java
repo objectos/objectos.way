@@ -62,6 +62,35 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.ANNOTATION, name, pairs);
   }
 
+  private int arrayAccessExpression() {
+    int reference = ByteCode.NOP;
+    int expressions = ByteCode.NOP;
+
+    protoadv();
+
+    if (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.EXPRESSION_NAME -> reference = expressionName();
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+
+      while (protolop()) {
+        protojmp();
+
+        expressions = listadd(expressions, expression());
+
+        protonxt();
+      }
+    }
+
+    return codeadd(ByteCode.ARRAY_ACCESS_EXPRESSION, reference, expressions);
+  }
+
   private int classDeclaration(boolean topLevel) {
     var modifiers = ByteCode.NOP;
     var name = ByteCode.NOP;
@@ -138,7 +167,7 @@ class Pass1 extends Pass0 {
 
         case ByteProto.PACKAGE_DECLARATION -> _package = setOrThrow(_package, packageDeclaration());
 
-        default -> body = listadd(body, statement());
+        default -> body = listadd(body, compilationUnitBodyItem());
       }
 
       protonxt();
@@ -153,6 +182,14 @@ class Pass1 extends Pass0 {
     }
 
     return codeadd(ByteCode.COMPILATION_UNIT, _package, _import, body);
+  }
+
+  private int compilationUnitBodyItem() {
+    if (ByteProto.isExpression(proto)) {
+      return expression();
+    } else {
+      return statement();
+    }
   }
 
   private int declaratorFull(int name, int init) {
@@ -247,6 +284,8 @@ class Pass1 extends Pass0 {
 
   private int expression() {
     return switch (proto) {
+      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
+
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
@@ -582,15 +621,17 @@ class Pass1 extends Pass0 {
   }
 
   private int statement() {
-    return switch (proto) {
-      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
+    if (ByteProto.isExpressionStatement(proto)) {
+      return expression();
+    } else {
+      return switch (proto) {
+        case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
 
-      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+        case ByteProto.RETURN_STATEMENT -> returnStatement();
 
-      case ByteProto.RETURN_STATEMENT -> returnStatement();
-
-      default -> throw protouoe();
-    };
+        default -> throw protouoe();
+      };
+    }
   }
 
   private int stringLiteral() {

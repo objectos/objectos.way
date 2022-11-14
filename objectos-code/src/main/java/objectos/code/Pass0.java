@@ -22,6 +22,7 @@ import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.InternalApi;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AnnotationInvocation;
+import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -30,7 +31,7 @@ import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
 import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
-import objectos.code.tmpl.InternalApi.ExpressionNameRef;
+import objectos.code.tmpl.InternalApi.ExpressionName;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
@@ -166,6 +167,21 @@ class Pass0 extends State implements TemplateApi {
   @Override
   public final VoidInvocation _void() {
     object(ByteProto.TYPE_NAME, TypeName.VOID);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final ArrayAccessExpression a(ExpressionName reference, Expression[] expressions) {
+    markStart();
+
+    reference.mark(this);
+
+    for (var expression : expressions) {
+      expression.mark(this);
+    }
+
+    element(ByteProto.ARRAY_ACCESS_EXPRESSION);
 
     return InternalApi.REF;
   }
@@ -312,7 +328,7 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
-  public final ExpressionNameRef n(ClassName name, String identifier) {
+  public final ExpressionName n(ClassName name, String identifier) {
     className(name);
 
     identifier(identifier);
@@ -329,7 +345,7 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
-  public final ExpressionNameRef n(String value) {
+  public final ExpressionName n(String value) {
     identifier(value);
 
     markStart();
