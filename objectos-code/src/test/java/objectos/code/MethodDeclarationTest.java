@@ -15,26 +15,26 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-public class MethodDeclarationTest extends AbstractObjectosCodeTest {
+public class MethodDeclarationTest {
 
   @Test(description = """
   - void
   - empty body
   """)
   public void testCase01() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        method(
-          _void(), id("test")
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _void(), id("test")
+          );
+        }
+      }.toString(),
 
       """
       void test() {}
@@ -47,18 +47,16 @@ public class MethodDeclarationTest extends AbstractObjectosCodeTest {
   - single statement
   """)
   public void testCase02() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        method(
-          _void(), id("test"),
-          invoke("foo")
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _void(), id("test"),
+            invoke("foo")
+          );
+        }
+      }.toString(),
 
       """
       void test() {
@@ -74,18 +72,16 @@ public class MethodDeclarationTest extends AbstractObjectosCodeTest {
   - empty body
   """)
   public void testCase03() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        method(
-          annotation(Override.class),
-          _void(), id("test")
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            annotation(Override.class),
+            _void(), id("test")
+          );
+        }
+      }.toString(),
 
       """
       @java.lang.Override
@@ -100,17 +96,15 @@ public class MethodDeclarationTest extends AbstractObjectosCodeTest {
   - empty body
   """)
   public void testCase04() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        method(
-          _final(), _void(), id("test")
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _final(), _void(), id("test")
+          );
+        }
+      }.toString(),
 
       """
       final void test() {}
@@ -125,22 +119,20 @@ public class MethodDeclarationTest extends AbstractObjectosCodeTest {
   - single statement
   """)
   public void testCase05() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        method(
-          _void(), id("test"),
-          include(this::body)
-        );
-      }
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _void(), id("test"),
+            include(this::body)
+          );
+        }
 
-      private void body() {
-        invoke("foo");
-      }
-    };
-
-    testDefault(
-      tmpl,
+        private void body() {
+          invoke("foo");
+        }
+      }.toString(),
 
       """
       void test() {
@@ -154,22 +146,41 @@ public class MethodDeclarationTest extends AbstractObjectosCodeTest {
   annotation + modifier
   """)
   public void testCase06() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        method(
-          annotation(Override.class),
-          _final(), _void(), id("test")
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            annotation(Override.class),
+            _final(), _void(), id("test")
+          );
+        }
+      }.toString(),
 
       """
       @java.lang.Override
       final void test() {}
+      """
+    );
+  }
+
+  @Test(description = """
+  parameters
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _void(), id("test"),
+            param(t(String.class), id("a"))
+          );
+        }
+      }.toString(),
+
+      """
+      void test(java.lang.String a) {}
       """
     );
   }

@@ -371,6 +371,31 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.FIELD_DECLARATION, modifiers, type, declarators);
   }
 
+  private int formalParameter() {
+    var modifiers = ByteCode.NOP;
+    var type = ByteCode.NOP;
+    var name = ByteCode.NOP;
+    var varArity = ByteCode.NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
+
+        case ByteProto.TYPE_NAME -> type = setOrReplace(type, typeName());
+
+        default -> throw protouoe();
+      }
+
+      protonxt();
+    }
+
+    return codeadd(ByteCode.FORMAL_PARAMETER, modifiers, type, name, varArity);
+  }
+
   private int implementsClause(int list) {
     protoadv();
 
@@ -445,6 +470,8 @@ class Pass1 extends Pass0 {
 
       switch (proto) {
         case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
+
+        case ByteProto.FORMAL_PARAMETER -> params = listadd(params, formalParameter());
 
         case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
 

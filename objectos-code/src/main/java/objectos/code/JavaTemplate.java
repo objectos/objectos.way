@@ -18,7 +18,7 @@ package objectos.code;
 import java.lang.annotation.Annotation;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
-import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.AnnotationInvocation;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -32,6 +32,8 @@ import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
+import objectos.code.tmpl.InternalApi.FormalParameter;
+import objectos.code.tmpl.InternalApi.FormalParameterType;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
@@ -47,7 +49,7 @@ import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.VoidRef;
+import objectos.code.tmpl.InternalApi.VoidInvocation;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
 
@@ -165,15 +167,16 @@ public abstract class JavaTemplate {
     return api._static();
   }
 
-  protected final VoidRef _void() {
+  protected final VoidInvocation _void() {
     return api._void();
   }
 
-  protected final AtRef annotation(Class<? extends Annotation> annotationType) {
+  protected final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
     return api.annotation(annotationType);
   }
 
-  protected final AtRef annotation(ClassName annotationType, AnnotationElementValue value) {
+  protected final AnnotationInvocation annotation(ClassName annotationType,
+      AnnotationElementValue value) {
     return api.annotation(annotationType, value);
   }
 
@@ -223,6 +226,10 @@ public abstract class JavaTemplate {
 
   protected final NewLineRef nl() {
     return api.nl();
+  }
+
+  protected final FormalParameter param(FormalParameterType type, IdentifierRef name) {
+    return api.param(type, name);
   }
 
   protected final StringLiteral s(String value) {

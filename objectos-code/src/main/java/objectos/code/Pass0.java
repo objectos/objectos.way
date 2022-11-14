@@ -21,7 +21,7 @@ import javax.lang.model.element.Modifier;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.InternalApi;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
-import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.AnnotationInvocation;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -35,6 +35,8 @@ import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
+import objectos.code.tmpl.InternalApi.FormalParameter;
+import objectos.code.tmpl.InternalApi.FormalParameterType;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
@@ -50,7 +52,7 @@ import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.VoidRef;
+import objectos.code.tmpl.InternalApi.VoidInvocation;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
 
@@ -162,14 +164,14 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
-  public final VoidRef _void() {
+  public final VoidInvocation _void() {
     object(ByteProto.TYPE_NAME, TypeName.VOID);
 
     return InternalApi.REF;
   }
 
   @Override
-  public final AtRef annotation(Class<? extends Annotation> annotationType) {
+  public final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
     var name = ClassName.of(annotationType); // implicit null-check
 
     className(name);
@@ -184,7 +186,8 @@ class Pass0 extends State implements TemplateApi {
   }
 
   @Override
-  public final AtRef annotation(ClassName annotationType, AnnotationElementValue value) {
+  public final AnnotationInvocation annotation(ClassName annotationType,
+      AnnotationElementValue value) {
     className(annotationType);
 
     markStart();
@@ -343,6 +346,19 @@ class Pass0 extends State implements TemplateApi {
     markStart();
 
     element(ByteProto.NEW_LINE);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final FormalParameter param(FormalParameterType type, IdentifierRef name) {
+    markStart();
+
+    type.mark(this);
+
+    name.mark(this);
+
+    element(ByteProto.FORMAL_PARAMETER);
 
     return InternalApi.REF;
   }

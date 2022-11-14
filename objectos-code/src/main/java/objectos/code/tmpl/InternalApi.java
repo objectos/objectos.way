@@ -26,7 +26,7 @@ public final class InternalApi {
 
   public sealed interface AnnotationElementValue extends Markable {}
 
-  public sealed interface AtRef
+  public sealed interface AnnotationInvocation
       extends ClassDeclarationElement, EnumDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface ClassDeclaration {}
@@ -34,7 +34,7 @@ public final class InternalApi {
   public sealed interface ClassDeclarationElement extends Markable {}
 
   public sealed interface ClassNameInvocation
-      extends FieldDeclarationElement, MethodInvocationSubject {}
+      extends FieldDeclarationElement, FormalParameterType, MethodInvocationSubject {}
 
   public sealed interface EnumConstant
       extends EnumDeclarationElement {}
@@ -63,6 +63,12 @@ public final class InternalApi {
 
   public sealed interface FinalModifier
       extends ClassDeclarationElement, FieldDeclarationElement, MethodDeclarationElement {}
+
+  public sealed interface FormalParameter
+      extends MethodDeclarationElement {}
+
+  public sealed interface FormalParameterType
+      extends Markable {}
 
   public sealed interface IdentifierRef
       extends
@@ -120,7 +126,7 @@ public final class InternalApi {
   public sealed interface StringLiteral
       extends AnnotationElementValue, Expression {}
 
-  public sealed interface VoidRef extends MethodDeclarationElement {}
+  public sealed interface VoidInvocation extends MethodDeclarationElement {}
 
   private static final class Include implements IncludeRef {
     private Include() {}
@@ -133,7 +139,7 @@ public final class InternalApi {
 
   private static final class Ref
       implements
-      AtRef,
+      AnnotationInvocation,
       ClassDeclaration,
       ClassNameInvocation,
       EnumConstant,
@@ -142,6 +148,7 @@ public final class InternalApi {
       ExtendsRef,
       FieldDeclaration,
       FinalModifier,
+      FormalParameter,
       IdentifierRef,
       Implements,
       LocalVariableDeclarationRef,
@@ -153,7 +160,7 @@ public final class InternalApi {
       ReturnStatement,
       StaticModifier,
       StringLiteral,
-      VoidRef {
+      VoidInvocation {
     private Ref() {}
 
     @Override

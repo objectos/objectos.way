@@ -616,8 +616,9 @@ abstract class Pass2 extends Pass1 {
     write('(');
 
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method parameters");
+      codepsh();
+      methodDeclarationParameterList();
+      codepop();
     }
 
     write(')');
@@ -650,6 +651,48 @@ abstract class Pass2 extends Pass1 {
       while (lnext()) {
         statement();
       }
+    }
+  }
+
+  private void methodDeclarationParameterList() {
+    if (lnext()) {
+      methodDeclarationParameterListItem();
+
+      while (lnext()) {
+        writeComma();
+
+        methodDeclarationParameterListItem();
+      }
+    }
+  }
+
+  private void methodDeclarationParameterListItem() {
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: modifiers");
+    }
+
+    if (codenxt()) {
+      codepsh();
+      write(typeName());
+      codepop();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid parameter declaration?");
+    }
+
+    if (codenxt()) {
+      writeSpace();
+
+      write((String) codeobj());
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid parameter declaration?");
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: variable arity");
     }
   }
 

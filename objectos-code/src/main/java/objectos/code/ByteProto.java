@@ -47,6 +47,8 @@ public final class ByteProto {
   public static final int FIELD_DECLARATION = -23;
   public static final int RETURN_STATEMENT = -24;
 
+  public static final int FORMAL_PARAMETER = -25;
+
   private ByteProto() {}
 
   public static boolean isExpression(int proto) {

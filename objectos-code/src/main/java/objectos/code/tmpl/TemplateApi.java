@@ -18,7 +18,7 @@ package objectos.code.tmpl;
 import java.lang.annotation.Annotation;
 import objectos.code.ClassName;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
-import objectos.code.tmpl.InternalApi.AtRef;
+import objectos.code.tmpl.InternalApi.AnnotationInvocation;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -32,6 +32,8 @@ import objectos.code.tmpl.InternalApi.ExtendsRef;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
+import objectos.code.tmpl.InternalApi.FormalParameter;
+import objectos.code.tmpl.InternalApi.FormalParameterType;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
@@ -47,7 +49,7 @@ import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.VoidRef;
+import objectos.code.tmpl.InternalApi.VoidInvocation;
 
 public interface TemplateApi extends MarkerApi {
 
@@ -71,11 +73,11 @@ public interface TemplateApi extends MarkerApi {
 
   StaticModifier _static();
 
-  VoidRef _void();
+  VoidInvocation _void();
 
-  AtRef annotation(Class<? extends Annotation> annotationType);
+  AnnotationInvocation annotation(Class<? extends Annotation> annotationType);
 
-  AtRef annotation(ClassName annotationType, AnnotationElementValue value);
+  AnnotationInvocation annotation(ClassName annotationType, AnnotationElementValue value);
 
   void autoImports();
 
@@ -99,6 +101,8 @@ public interface TemplateApi extends MarkerApi {
   ExpressionNameRef n(String value);
 
   NewLineRef nl();
+
+  FormalParameter param(FormalParameterType type, IdentifierRef name);
 
   StringLiteral s(String value);
 
