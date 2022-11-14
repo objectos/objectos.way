@@ -705,8 +705,6 @@ abstract class Pass2 extends Pass1 {
       statement();
 
       while (lnext()) {
-        writeBeforeBlockNextItem();
-
         statement();
       }
     }
