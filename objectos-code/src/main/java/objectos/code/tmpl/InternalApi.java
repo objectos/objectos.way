@@ -29,7 +29,8 @@ public final class InternalApi {
   public sealed interface AnnotationInvocation
       extends ClassDeclarationElement, EnumDeclarationElement, MethodDeclarationElement {}
 
-  public sealed interface ArrayAccessExpression extends Expression {}
+  public sealed interface ArrayAccessExpression
+      extends Expression, LeftHandSide {}
 
   public sealed interface ArrayDimension
       extends ArrayTypeElement {}
@@ -40,6 +41,8 @@ public final class InternalApi {
       extends
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement {}
+
+  public sealed interface AssignmentExpression extends Expression {}
 
   public sealed interface ClassDeclaration {}
 
@@ -65,7 +68,8 @@ public final class InternalApi {
       FieldDeclarationElement,
       MethodInvocationElement {}
 
-  public sealed interface ExpressionName extends Expression {}
+  public sealed interface ExpressionName
+      extends Expression, LeftHandSide {}
 
   public sealed interface ExpressionStatement
       extends Statement {}
@@ -100,6 +104,8 @@ public final class InternalApi {
       extends MethodDeclarationElement, MethodInvocationElement {}
 
   public sealed interface IntPrimitiveType extends MethodDeclarationElement {}
+
+  public sealed interface LeftHandSide extends Markable {}
 
   public sealed interface LocalVariableDeclarationRef
       extends Statement {}
@@ -161,6 +167,7 @@ public final class InternalApi {
       ArrayAccessExpression,
       ArrayDimension,
       ArrayTypeInvocation,
+      AssignmentExpression,
       ClassDeclaration,
       ClassNameInvocation,
       EnumConstant,

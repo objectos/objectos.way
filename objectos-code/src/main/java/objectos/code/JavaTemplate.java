@@ -23,6 +23,7 @@ import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
 import objectos.code.tmpl.InternalApi.ArrayDimension;
 import objectos.code.tmpl.InternalApi.ArrayTypeElement;
 import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
+import objectos.code.tmpl.InternalApi.AssignmentExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -42,6 +43,7 @@ import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
 import objectos.code.tmpl.InternalApi.IntPrimitiveType;
+import objectos.code.tmpl.InternalApi.LeftHandSide;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
@@ -191,6 +193,10 @@ public abstract class JavaTemplate {
   protected final AnnotationInvocation annotation(ClassName annotationType,
       AnnotationElementValue value) {
     return api.annotation(annotationType, value);
+  }
+
+  protected final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
+    return api.assign(leftHandSide, expression);
   }
 
   protected final void autoImports() {

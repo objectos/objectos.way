@@ -16,6 +16,7 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
+import java.util.Objects;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import objectos.code.tmpl.IncludeTarget;
@@ -26,6 +27,7 @@ import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
 import objectos.code.tmpl.InternalApi.ArrayDimension;
 import objectos.code.tmpl.InternalApi.ArrayTypeElement;
 import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
+import objectos.code.tmpl.InternalApi.AssignmentExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -45,6 +47,7 @@ import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
 import objectos.code.tmpl.InternalApi.IntPrimitiveType;
+import objectos.code.tmpl.InternalApi.LeftHandSide;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
@@ -226,6 +229,31 @@ class Pass0 extends State implements TemplateApi {
     element(ByteProto.ANNOTATION);
 
     return InternalApi.REF;
+  }
+
+  @Override
+  public final AssignmentExpression assign(
+      AssignmentOperator operator, LeftHandSide leftHandSide, Expression expression) {
+    Objects.requireNonNull(operator, "operator == null");
+
+    object(ByteProto.ASSIGNMENT_OPERATOR, operator);
+
+    markStart();
+
+    markReference();
+
+    leftHandSide.mark(this);
+
+    expression.mark(this);
+
+    element(ByteProto.ASSIGNMENT_EXPRESSION);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
+    return assign(AssignmentOperator.SIMPLE, leftHandSide, expression);
   }
 
   @Override

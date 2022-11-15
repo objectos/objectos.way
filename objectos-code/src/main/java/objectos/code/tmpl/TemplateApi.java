@@ -16,6 +16,7 @@
 package objectos.code.tmpl;
 
 import java.lang.annotation.Annotation;
+import objectos.code.AssignmentOperator;
 import objectos.code.ClassName;
 import objectos.code.tmpl.InternalApi.AnnotationElementValue;
 import objectos.code.tmpl.InternalApi.AnnotationInvocation;
@@ -23,6 +24,7 @@ import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
 import objectos.code.tmpl.InternalApi.ArrayDimension;
 import objectos.code.tmpl.InternalApi.ArrayTypeElement;
 import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
+import objectos.code.tmpl.InternalApi.AssignmentExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
@@ -42,6 +44,7 @@ import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
 import objectos.code.tmpl.InternalApi.IntPrimitiveType;
+import objectos.code.tmpl.InternalApi.LeftHandSide;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
@@ -87,6 +90,11 @@ public interface TemplateApi extends MarkerApi {
   AnnotationInvocation annotation(Class<? extends Annotation> annotationType);
 
   AnnotationInvocation annotation(ClassName annotationType, AnnotationElementValue value);
+
+  AssignmentExpression assign(
+      AssignmentOperator operator, LeftHandSide leftHandSide, Expression expression);
+
+  AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression);
 
   void autoImports();
 

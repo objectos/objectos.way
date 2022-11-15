@@ -131,6 +131,15 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
+  protected void writeOperator(Operator operator) {
+    write(' ');
+
+    write(operator.toString());
+
+    write(' ');
+  }
+
+  @Override
   protected void writeSemicolon() {
     write(';');
   }

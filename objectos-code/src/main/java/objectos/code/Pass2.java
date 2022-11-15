@@ -55,6 +55,8 @@ abstract class Pass2 extends Pass1 {
 
   protected abstract void writeNewLine();
 
+  protected abstract void writeOperator(Operator operator);
+
   protected abstract void writeSemicolon();
 
   protected abstract void writeSeparator(char c);
@@ -150,6 +152,30 @@ abstract class Pass2 extends Pass1 {
 
       default -> throw codeuoe();
     }
+  }
+
+  private void assignmentExpression() {
+    codeadv();
+
+    assert !codenop();
+
+    codepsh();
+    expression();
+    codepop();
+
+    codeadv();
+
+    assert !codenop();
+
+    writeOperator((Operator) codeobj());
+
+    codeadv();
+
+    assert !codenop();
+
+    codepsh();
+    expression();
+    codepop();
   }
 
   private void classDeclaration() {
@@ -467,6 +493,8 @@ abstract class Pass2 extends Pass1 {
   private void expression() {
     switch (code) {
       case ByteCode.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
+
+      case ByteCode.ASSIGNMENT_EXPRESSION -> assignmentExpression();
 
       case ByteCode.EXPRESSION_NAME -> expressionName();
 

@@ -120,6 +120,36 @@ class Pass1 extends Pass0 {
     return codeadd(ByteCode.DIM);
   }
 
+  private int assignmentExpression() {
+    var lhs = ByteCode.NOP;
+    var operator = ByteCode.NOP;
+    var expression = ByteCode.NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.ASSIGNMENT_OPERATOR -> operator = setOrThrow(operator, protoadv());
+
+        case ByteProto.ARRAY_ACCESS_EXPRESSION, ByteProto.EXPRESSION_NAME -> {
+          if (lhs == ByteCode.NOP) {
+            lhs = setOrThrow(lhs, expression());
+          } else {
+            expression = setOrThrow(expression, expression());
+          }
+        }
+
+        default -> expression = setOrThrow(expression, expression());
+      }
+
+      protonxt();
+    }
+
+    return codeadd(ByteCode.ASSIGNMENT_EXPRESSION, lhs, operator, expression);
+  }
+
   private int classDeclaration(boolean topLevel) {
     var modifiers = ByteCode.NOP;
     var name = ByteCode.NOP;
@@ -314,6 +344,8 @@ class Pass1 extends Pass0 {
   private int expression() {
     return switch (proto) {
       case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
+
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
