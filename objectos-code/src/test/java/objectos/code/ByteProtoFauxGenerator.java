@@ -83,5 +83,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("EXPRESSION_NAME");
     value("METHOD_INVOCATION");
     value("STRING_LITERAL");
+    value("THIS");
   }
 }

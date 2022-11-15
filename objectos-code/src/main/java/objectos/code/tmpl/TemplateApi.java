@@ -57,6 +57,7 @@ import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.ThisKeyword;
 import objectos.code.tmpl.InternalApi.VoidInvocation;
 
 public interface TemplateApi extends MarkerApi {
@@ -82,6 +83,8 @@ public interface TemplateApi extends MarkerApi {
   ReturnStatement _return(Expression expression);
 
   StaticModifier _static();
+
+  ThisKeyword _this();
 
   VoidInvocation _void();
 

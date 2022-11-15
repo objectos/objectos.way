@@ -353,6 +353,8 @@ class Pass1 extends Pass0 {
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
+      case ByteProto.THIS -> thisKeyword();
+
       default -> throw protouoe();
     };
   }
@@ -709,6 +711,12 @@ class Pass1 extends Pass0 {
 
   private int stringLiteral() {
     return codeadd(ByteCode.STRING_LITERAL, protoadv());
+  }
+
+  private int thisKeyword() {
+    protoadv();
+
+    return codeadd(ByteCode.THIS);
   }
 
   private int typeName() {

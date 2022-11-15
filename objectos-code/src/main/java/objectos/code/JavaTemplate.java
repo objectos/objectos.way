@@ -56,6 +56,7 @@ import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.ThisKeyword;
 import objectos.code.tmpl.InternalApi.VoidInvocation;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
@@ -176,6 +177,10 @@ public abstract class JavaTemplate {
 
   protected final StaticModifier _static() {
     return api._static();
+  }
+
+  protected final ThisKeyword _this() {
+    return api._this();
   }
 
   protected final VoidInvocation _void() {

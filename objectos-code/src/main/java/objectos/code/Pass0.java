@@ -60,6 +60,7 @@ import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
 import objectos.code.tmpl.InternalApi.StringLiteral;
+import objectos.code.tmpl.InternalApi.ThisKeyword;
 import objectos.code.tmpl.InternalApi.VoidInvocation;
 import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
@@ -174,6 +175,15 @@ class Pass0 extends State implements TemplateApi {
   @Override
   public final StaticModifier _static() {
     object(ByteProto.MODIFIER, Modifier.STATIC);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final ThisKeyword _this() {
+    markStart();
+
+    element(ByteProto.THIS);
 
     return InternalApi.REF;
   }

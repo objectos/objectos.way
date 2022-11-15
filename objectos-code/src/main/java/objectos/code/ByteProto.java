@@ -78,19 +78,13 @@ final class ByteProto {
   static final int EXPRESSION_NAME = -28;
   static final int METHOD_INVOCATION = -29;
   static final int STRING_LITERAL = -30;
+  static final int THIS = -31;
 
   private ByteProto() {}
 
   public static boolean isExpression(int proto) {
-    return switch (proto) {
-      case ARRAY_ACCESS_EXPRESSION,
-          ASSIGNMENT_EXPRESSION,
-          EXPRESSION_NAME,
-          METHOD_INVOCATION,
-          STRING_LITERAL -> true;
-
-      default -> false;
-    };
+    return proto <= ARRAY_ACCESS_EXPRESSION
+        && proto >= THIS;
   }
 
   public static boolean isExpressionStatement(int proto) {

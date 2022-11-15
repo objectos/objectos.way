@@ -129,6 +129,8 @@ public final class InternalApi {
   public sealed interface NewLineRef
       extends MethodInvocationElement {}
 
+  public sealed interface PrimaryExpression extends Expression {}
+
   public sealed interface PrivateModifier
       extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,
       MethodDeclarationElement {}
@@ -149,6 +151,9 @@ public final class InternalApi {
 
   public sealed interface StringLiteral
       extends AnnotationElementValue, Expression {}
+
+  public sealed interface ThisKeyword
+      extends PrimaryExpression {}
 
   public sealed interface VoidInvocation extends MethodDeclarationElement {}
 
@@ -189,6 +194,7 @@ public final class InternalApi {
       ReturnStatement,
       StaticModifier,
       StringLiteral,
+      ThisKeyword,
       VoidInvocation {
     private Ref() {}
 

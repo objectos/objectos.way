@@ -80,17 +80,13 @@ final class ByteCode {
   static final int EXPRESSION_NAME = -32;
   static final int METHOD_INVOCATION = -33;
   static final int STRING_LITERAL = -34;
+  static final int THIS = -35;
 
   private ByteCode() {}
 
   public static boolean isExpression(int code) {
-    return switch (code) {
-      case ARRAY_ACCESS_EXPRESSION,
-          ASSIGNMENT_EXPRESSION,
-          METHOD_INVOCATION -> true;
-
-      default -> false;
-    };
+    return code <= ARRAY_ACCESS_EXPRESSION
+        && code >= THIS;
   }
 
   public static boolean isExpressionStatement(int code) {

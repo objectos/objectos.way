@@ -502,6 +502,8 @@ abstract class Pass2 extends Pass1 {
 
       case ByteCode.STRING_LITERAL -> stringLiteral();
 
+      case ByteCode.THIS -> write("this");
+
       default -> throw codeuoe();
     }
   }
