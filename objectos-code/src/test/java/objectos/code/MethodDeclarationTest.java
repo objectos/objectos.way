@@ -202,4 +202,50 @@ public class MethodDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Method declaration:
+  - multiple statements
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _void(), id("test0"),
+            invoke("a")
+          );
+          method(
+            _void(), id("test1"),
+            invoke("a"),
+            invoke("b")
+          );
+          method(
+            _void(), id("test2"),
+            invoke("a"),
+            invoke("b"),
+            invoke("c")
+          );
+        }
+      }.toString(),
+
+      """
+      void test0() {
+        a();
+      }
+
+      void test1() {
+        a();
+        b();
+      }
+
+      void test2() {
+        a();
+        b();
+        c();
+      }
+      """
+    );
+  }
+
 }

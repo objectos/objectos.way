@@ -15,44 +15,44 @@
  */
 package objectos.code;
 
-public final class ByteProto {
+final class ByteProto {
 
-  public static final int NULL = Integer.MIN_VALUE;
+  static final int NULL = Integer.MIN_VALUE;
 
-  public static final int JMP = -1;
-  public static final int BREAK = -2;
+  static final int JMP = -1;
+  static final int BREAK = -2;
 
-  public static final int COMPILATION_UNIT = -3;
-  public static final int PACKAGE_DECLARATION = -4;
-  public static final int ANNOTATION = -6;
-  public static final int MODIFIER = -7;
-  public static final int CLASS_DECLARATION = -8;
-  public static final int EXTENDS = -9;
-  public static final int METHOD_DECLARATION = -10;
+  static final int COMPILATION_UNIT = -3;
+  static final int PACKAGE_DECLARATION = -4;
+  static final int ANNOTATION = -6;
+  static final int MODIFIER = -7;
+  static final int CLASS_DECLARATION = -8;
+  static final int EXTENDS = -9;
+  static final int METHOD_DECLARATION = -10;
 
-  public static final int IDENTIFIER = -11;
-  public static final int CLASS_NAME = -12;
-  public static final int STRING_LITERAL = -13;
+  static final int IDENTIFIER = -11;
+  static final int CLASS_NAME = -12;
+  static final int STRING_LITERAL = -13;
 
-  public static final int LOCAL_VARIABLE = -14;
-  public static final int METHOD_INVOCATION = -15;
-  public static final int NEW_LINE = -16;
-  public static final int TYPE_NAME = -17;
-  public static final int EXPRESSION_NAME = -18;
-  public static final int PACKAGE_NAME = -19;
+  static final int LOCAL_VARIABLE = -14;
+  static final int METHOD_INVOCATION = -15;
+  static final int NEW_LINE = -16;
+  static final int TYPE_NAME = -17;
+  static final int EXPRESSION_NAME = -18;
+  static final int PACKAGE_NAME = -19;
 
-  public static final int ENUM_DECLARATION = -20;
-  public static final int ENUM_CONSTANT = -21;
-  public static final int IMPLEMENTS = -22;
-  public static final int FIELD_DECLARATION = -23;
-  public static final int RETURN_STATEMENT = -24;
+  static final int ENUM_DECLARATION = -20;
+  static final int ENUM_CONSTANT = -21;
+  static final int IMPLEMENTS = -22;
+  static final int FIELD_DECLARATION = -23;
+  static final int RETURN_STATEMENT = -24;
 
-  public static final int FORMAL_PARAMETER = -25;
-  public static final int ARRAY_ACCESS_EXPRESSION = -26;
+  static final int FORMAL_PARAMETER = -25;
+  static final int ARRAY_ACCESS_EXPRESSION = -26;
 
-  public static final int DIM = -27;
+  static final int DIM = -27;
 
-  public static final int ARRAY_TYPE = -28;
+  static final int ARRAY_TYPE = -28;
 
   private ByteProto() {}
 

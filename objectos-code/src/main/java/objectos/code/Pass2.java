@@ -37,6 +37,10 @@ abstract class Pass2 extends Pass1 {
 
   protected abstract void writeBeforeFirstMember();
 
+  protected abstract void writeBeforeFirstStatement();
+
+  protected abstract void writeBeforeNextStatement();
+
   protected abstract void writeBlockEnd(boolean contents);
 
   protected abstract void writeBlockStart();
@@ -708,11 +712,13 @@ abstract class Pass2 extends Pass1 {
 
   private void methodDeclarationBody() {
     if (lnext()) {
-      writeBeforeFirstMember();
+      writeBeforeFirstStatement();
 
       statement();
 
       while (lnext()) {
+        writeBeforeNextStatement();
+
         statement();
       }
     }

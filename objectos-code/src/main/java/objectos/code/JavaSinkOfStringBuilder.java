@@ -72,6 +72,16 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
+  protected void writeBeforeFirstStatement() {
+    writeBeforeFirstMember();
+  }
+
+  @Override
+  protected void writeBeforeNextStatement() {
+    writenl();
+  }
+
+  @Override
   protected void writeBlockEnd(boolean contents) {
     level--;
 
