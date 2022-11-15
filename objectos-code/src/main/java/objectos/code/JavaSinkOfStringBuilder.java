@@ -61,27 +61,25 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected void writeBeforeBlockNextItem() {
+  protected void writeBeforeBlockNextMember() {
     writenl();
     writenl();
   }
 
   @Override
-  protected void writeBeforeClassFirstMember() {
+  protected void writeBeforeFirstMember() {
     writenl();
   }
 
   @Override
-  protected void writeBeforeCompilationUnitBody() {
-    writenl();
-  }
-
-  @Override
-  protected void writeBlockEnd() {
+  protected void writeBlockEnd(boolean contents) {
     level--;
 
+    if (contents) {
+      writenl();
+    }
+
     write('}');
-    writenl();
   }
 
   @Override
@@ -98,6 +96,14 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
   @Override
   protected void writeCompilationUnitEnd(PackageName packageName, String fileName) {
+    writenl();
+  }
+
+  @Override
+  protected void writeCompilationUnitSeparator() {
+    writenl();
+
+    writenl();
   }
 
   @Override
@@ -117,8 +123,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
   @Override
   protected void writeSemicolon() {
     write(';');
-
-    writenl();
   }
 
   @Override

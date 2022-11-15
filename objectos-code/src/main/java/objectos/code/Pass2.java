@@ -33,19 +33,19 @@ abstract class Pass2 extends Pass1 {
 
   protected abstract void writeArgumentListStart();
 
-  protected abstract void writeBeforeBlockNextItem();
+  protected abstract void writeBeforeBlockNextMember();
 
-  protected abstract void writeBeforeClassFirstMember();
+  protected abstract void writeBeforeFirstMember();
 
-  protected abstract void writeBeforeCompilationUnitBody();
-
-  protected abstract void writeBlockEnd();
+  protected abstract void writeBlockEnd(boolean contents);
 
   protected abstract void writeBlockStart();
 
   protected abstract void writeComma();
 
   protected abstract void writeCompilationUnitEnd(PackageName packageName, String fileName);
+
+  protected abstract void writeCompilationUnitSeparator();
 
   protected abstract void writeCompilationUnitStart(PackageName packageName, String fileName);
 
@@ -206,18 +206,22 @@ abstract class Pass2 extends Pass1 {
 
     writeBlockStart();
 
+    var contents = false;
+
     if (codenxt()) {
       codepsh();
       classDeclarationBody();
       codepop();
+
+      contents = true;
     }
 
-    writeBlockEnd();
+    writeBlockEnd(contents);
   }
 
   private void classDeclarationBody() {
     if (lnext()) {
-      writeBeforeClassFirstMember();
+      writeBeforeFirstMember();
 
       classDeclarationBodyItem();
 
@@ -259,7 +263,7 @@ abstract class Pass2 extends Pass1 {
       codepsh();
 
       if (prevSection && code != ByteCode.EOF) {
-        writeBeforeCompilationUnitBody();
+        writeCompilationUnitSeparator();
       }
 
       importDeclarations();
@@ -270,7 +274,7 @@ abstract class Pass2 extends Pass1 {
 
     if (codenxt()) {
       if (prevSection) {
-        writeBeforeCompilationUnitBody();
+        writeCompilationUnitSeparator();
       }
 
       codepsh();
@@ -286,7 +290,7 @@ abstract class Pass2 extends Pass1 {
       compilationUnitBodyItem();
 
       while (lnext()) {
-        writeBeforeBlockNextItem();
+        writeCompilationUnitSeparator();
 
         compilationUnitBodyItem();
       }
@@ -396,10 +400,14 @@ abstract class Pass2 extends Pass1 {
 
     writeBlockStart();
 
+    var contents = false;
+
     if (codenxt()) {
       codepsh();
       enumDeclarationConstants();
       codepop();
+
+      contents = true;
     }
 
     if (codenxt()) {
@@ -407,19 +415,19 @@ abstract class Pass2 extends Pass1 {
         "Implement me :: body");
     }
 
-    writeBlockEnd();
+    writeBlockEnd(contents);
   }
 
   private void enumDeclarationConstants() {
     if (lnext()) {
-      writeBeforeClassFirstMember();
+      writeBeforeFirstMember();
 
       enumDeclarationConstantsItem();
 
       while (lnext()) {
         writeComma();
 
-        writeBeforeBlockNextItem();
+        writeBeforeBlockNextMember();
 
         enumDeclarationConstantsItem();
       }
@@ -689,18 +697,18 @@ abstract class Pass2 extends Pass1 {
       codepsh();
       methodDeclarationBody();
       codepop();
-      writeBlockEnd();
+      writeBlockEnd(true);
     } else if (abstractModifier) {
       writeSemicolon();
     } else {
       writeBlockStart();
-      writeBlockEnd();
+      writeBlockEnd(false);
     }
   }
 
   private void methodDeclarationBody() {
     if (lnext()) {
-      writeBeforeClassFirstMember();
+      writeBeforeFirstMember();
 
       statement();
 
