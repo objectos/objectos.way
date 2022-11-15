@@ -41,6 +41,7 @@ import objectos.code.tmpl.InternalApi.FormalParameterType;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
+import objectos.code.tmpl.InternalApi.IntPrimitiveType;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
@@ -66,6 +67,8 @@ public interface TemplateApi extends MarkerApi {
   FinalModifier _final();
 
   Implements _implements(ClassName[] interfaces);
+
+  IntPrimitiveType _int();
 
   void _package(String packageName);
 

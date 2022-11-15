@@ -953,6 +953,8 @@ abstract class Pass2 extends Pass1 {
 
       case ByteCode.NO_TYPE -> typeNameNoType();
 
+      case ByteCode.PRIMITIVE_TYPE -> typeNamePrimitiveType();
+
       case ByteCode.QUALIFIED_NAME -> typeNameQualifiedName();
 
       case ByteCode.SIMPLE_NAME -> typeNameSimpleName();
@@ -995,6 +997,14 @@ abstract class Pass2 extends Pass1 {
     codeadv();
 
     write("void");
+  }
+
+  private void typeNamePrimitiveType() {
+    codeadv();
+
+    var type = (PrimitiveType) codeobj();
+
+    write(type.toString());
   }
 
   private void typeNameQualifiedName() {

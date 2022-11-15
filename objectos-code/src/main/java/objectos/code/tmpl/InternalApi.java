@@ -37,14 +37,18 @@ public final class InternalApi {
   public sealed interface ArrayTypeElement extends Markable {}
 
   public sealed interface ArrayTypeInvocation
-      extends FieldDeclarationElement, FormalParameterType {}
+      extends
+      FieldDeclarationElement, FormalParameterType,
+      MethodDeclarationElement {}
 
   public sealed interface ClassDeclaration {}
 
   public sealed interface ClassDeclarationElement extends Markable {}
 
   public sealed interface ClassNameInvocation
-      extends FieldDeclarationElement, FormalParameterType, MethodInvocationSubject {}
+      extends
+      FieldDeclarationElement, FormalParameterType,
+      MethodDeclarationElement, MethodInvocationSubject {}
 
   public sealed interface EnumConstant
       extends EnumDeclarationElement {}
@@ -94,6 +98,8 @@ public final class InternalApi {
 
   public sealed interface IncludeRef
       extends MethodDeclarationElement, MethodInvocationElement {}
+
+  public sealed interface IntPrimitiveType extends MethodDeclarationElement {}
 
   public sealed interface LocalVariableDeclarationRef
       extends Statement {}
@@ -166,6 +172,7 @@ public final class InternalApi {
       FormalParameter,
       IdentifierRef,
       Implements,
+      IntPrimitiveType,
       LocalVariableDeclarationRef,
       MethodInvocation,
       MethodDeclaration,

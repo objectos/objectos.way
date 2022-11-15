@@ -203,7 +203,7 @@ public class MethodDeclarationTest {
   }
 
   @Test(description = """
-  Method declaration:
+  Method declarations TC08
   - multiple statements
   """)
   public void testCase08() {
@@ -244,6 +244,43 @@ public class MethodDeclarationTest {
         b();
         c();
       }
+      """
+    );
+  }
+
+  @Test(description = """
+  Method declarations TC09
+
+  - method return type
+  """)
+  public void testCase09() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _void(), id("test0")
+          );
+          method(
+            t(String.class, dim()), id("test1")
+          );
+          method(
+            _int(), id("test2")
+          );
+          method(
+            t(Integer.class), id("test3")
+          );
+        }
+      }.toString(),
+
+      """
+      void test0() {}
+
+      java.lang.String[] test1() {}
+
+      int test2() {}
+
+      java.lang.Integer test3() {}
       """
     );
   }

@@ -541,11 +541,15 @@ class Pass1 extends Pass0 {
       switch (proto) {
         case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
 
+        case ByteProto.ARRAY_TYPE -> returnType = setOrReplace(returnType, arrayType());
+
         case ByteProto.FORMAL_PARAMETER -> params = listadd(params, formalParameter());
 
         case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
 
         case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
+
+        case ByteProto.PRIMITIVE_TYPE -> returnType = setOrReplace(returnType, primitiveType());
 
         case ByteProto.TYPE_NAME -> returnType = setOrReplace(returnType, typeName());
 
@@ -622,6 +626,12 @@ class Pass1 extends Pass0 {
     }
 
     return codeadd(ByteCode.PACKAGE, annotations, name);
+  }
+
+  private int primitiveType() {
+    protoadv();
+
+    return codeadd(ByteCode.PRIMITIVE_TYPE, proto);
   }
 
   private int returnStatement() {

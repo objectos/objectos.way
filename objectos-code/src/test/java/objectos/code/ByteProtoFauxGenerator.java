@@ -32,10 +32,11 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("types");
 
-    value("PACKAGE_NAME");
     value("ARRAY_TYPE");
     value("DIM");
+    value("PACKAGE_NAME");
     value("CLASS_NAME");
+    value("PRIMITIVE_TYPE");
     value("TYPE_NAME");
 
     comment("declarations");

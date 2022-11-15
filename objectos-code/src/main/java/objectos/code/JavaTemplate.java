@@ -41,6 +41,7 @@ import objectos.code.tmpl.InternalApi.FormalParameterType;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
+import objectos.code.tmpl.InternalApi.IntPrimitiveType;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
@@ -149,6 +150,10 @@ public abstract class JavaTemplate {
 
   protected final Implements _implements(ClassName... interfaces) {
     return api._implements(interfaces);
+  }
+
+  protected final IntPrimitiveType _int() {
+    return api._int();
   }
 
   protected final void _package(String packageName) {

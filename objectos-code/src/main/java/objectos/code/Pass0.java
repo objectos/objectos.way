@@ -44,6 +44,7 @@ import objectos.code.tmpl.InternalApi.FormalParameterType;
 import objectos.code.tmpl.InternalApi.IdentifierRef;
 import objectos.code.tmpl.InternalApi.Implements;
 import objectos.code.tmpl.InternalApi.IncludeRef;
+import objectos.code.tmpl.InternalApi.IntPrimitiveType;
 import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
 import objectos.code.tmpl.InternalApi.MethodDeclaration;
 import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
@@ -113,6 +114,13 @@ class Pass0 extends State implements TemplateApi {
     markIncrement(interfaces.length);
 
     element(ByteProto.IMPLEMENTS);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final IntPrimitiveType _int() {
+    object(ByteProto.PRIMITIVE_TYPE, PrimitiveType.INT);
 
     return InternalApi.REF;
   }

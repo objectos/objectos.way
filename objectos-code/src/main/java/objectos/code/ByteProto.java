@@ -27,54 +27,55 @@ final class ByteProto {
 
   // types
 
-  static final int PACKAGE_NAME = -4;
-  static final int ARRAY_TYPE = -5;
-  static final int DIM = -6;
+  static final int ARRAY_TYPE = -4;
+  static final int DIM = -5;
+  static final int PACKAGE_NAME = -6;
   static final int CLASS_NAME = -7;
-  static final int TYPE_NAME = -8;
+  static final int PRIMITIVE_TYPE = -8;
+  static final int TYPE_NAME = -9;
 
   // declarations
 
-  static final int COMPILATION_UNIT = -9;
-  static final int PACKAGE_DECLARATION = -10;
+  static final int COMPILATION_UNIT = -10;
+  static final int PACKAGE_DECLARATION = -11;
 
   // class
 
-  static final int CLASS_DECLARATION = -11;
-  static final int MODIFIER = -12;
-  static final int IDENTIFIER = -13;
-  static final int EXTENDS = -14;
-  static final int IMPLEMENTS = -15;
+  static final int CLASS_DECLARATION = -12;
+  static final int MODIFIER = -13;
+  static final int IDENTIFIER = -14;
+  static final int EXTENDS = -15;
+  static final int IMPLEMENTS = -16;
 
   // field
 
-  static final int FIELD_DECLARATION = -16;
+  static final int FIELD_DECLARATION = -17;
 
   // method
 
-  static final int METHOD_DECLARATION = -17;
-  static final int FORMAL_PARAMETER = -18;
+  static final int METHOD_DECLARATION = -18;
+  static final int FORMAL_PARAMETER = -19;
 
   // enum
 
-  static final int ENUM_DECLARATION = -19;
-  static final int ENUM_CONSTANT = -20;
+  static final int ENUM_DECLARATION = -20;
+  static final int ENUM_CONSTANT = -21;
 
   // annotation
 
-  static final int ANNOTATION = -21;
+  static final int ANNOTATION = -22;
 
   // statements
 
-  static final int LOCAL_VARIABLE = -22;
-  static final int RETURN_STATEMENT = -23;
+  static final int LOCAL_VARIABLE = -23;
+  static final int RETURN_STATEMENT = -24;
 
   // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -24;
-  static final int EXPRESSION_NAME = -25;
-  static final int METHOD_INVOCATION = -26;
-  static final int STRING_LITERAL = -27;
+  static final int ARRAY_ACCESS_EXPRESSION = -25;
+  static final int EXPRESSION_NAME = -26;
+  static final int METHOD_INVOCATION = -27;
+  static final int STRING_LITERAL = -28;
 
   private ByteProto() {}
 
