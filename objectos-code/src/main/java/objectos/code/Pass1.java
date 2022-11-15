@@ -133,7 +133,9 @@ class Pass1 extends Pass0 {
       switch (proto) {
         case ByteProto.ASSIGNMENT_OPERATOR -> operator = setOrThrow(operator, protoadv());
 
-        case ByteProto.ARRAY_ACCESS_EXPRESSION, ByteProto.EXPRESSION_NAME -> {
+        case ByteProto.ARRAY_ACCESS_EXPRESSION,
+            ByteProto.EXPRESSION_NAME,
+            ByteProto.FIELD_ACCESS_EXPRESSION0 -> {
           if (lhs == ByteCode.NOP) {
             lhs = setOrThrow(lhs, expression());
           } else {
@@ -349,6 +351,8 @@ class Pass1 extends Pass0 {
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
+      case ByteProto.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
+
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
@@ -381,6 +385,33 @@ class Pass1 extends Pass0 {
     codeadd(ByteCode.NOP);
 
     return self;
+  }
+
+  private int fieldAccessExpression0() {
+    protoadv();
+
+    protobrk("""
+    Invalid field access expression:
+
+    Found BREAK but expected a primary expression
+    """);
+
+    protojmp();
+    var primary = expression();
+    protonxt();
+
+    protojmp();
+
+    protoass(ByteProto.IDENTIFIER, """
+    Invalid field access expression:
+
+    Expected an identifier but found proto=%d
+    """);
+
+    var identifier = protoadv();
+    protonxt();
+
+    return codeadd(ByteCode.FIELD_ACCESS_EXPRESSION0, primary, identifier);
   }
 
   private int fieldDeclaration() {

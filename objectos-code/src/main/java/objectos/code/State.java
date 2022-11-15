@@ -365,6 +365,18 @@ abstract class State {
     assert proto == value : proto;
   }
 
+  final void protoass(int value, String message) {
+    if (proto != value) {
+      throw new AssertionError(message.formatted(proto));
+    }
+  }
+
+  final void protobrk(String message) {
+    if (proto == ByteProto.BREAK) {
+      throw new AssertionError(message);
+    }
+  }
+
   final void protojmp() {
     protoass(ByteProto.JMP);
 

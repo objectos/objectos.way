@@ -34,6 +34,7 @@ import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionName;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FieldAccessExpression;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
@@ -250,6 +251,10 @@ public abstract class JavaTemplate {
 
   protected final ExpressionName n(String value) {
     return api.n(value);
+  }
+
+  protected final FieldAccessExpression n(ThisKeyword keyword, String identifier) {
+    return api.n(keyword, identifier);
   }
 
   protected final NewLineRef nl() {

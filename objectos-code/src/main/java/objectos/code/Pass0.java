@@ -38,6 +38,7 @@ import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionName;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FieldAccessExpression;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
@@ -411,6 +412,21 @@ class Pass0 extends State implements TemplateApi {
     markReference();
 
     element(ByteProto.EXPRESSION_NAME);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final FieldAccessExpression n(ThisKeyword keyword, String identifier) {
+    identifier(identifier);
+
+    markStart();
+
+    markReference();
+
+    markReference();
+
+    element(ByteProto.FIELD_ACCESS_EXPRESSION0);
 
     return InternalApi.REF;
   }

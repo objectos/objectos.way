@@ -35,6 +35,7 @@ import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
 import objectos.code.tmpl.InternalApi.Expression;
 import objectos.code.tmpl.InternalApi.ExpressionName;
 import objectos.code.tmpl.InternalApi.ExtendsRef;
+import objectos.code.tmpl.InternalApi.FieldAccessExpression;
 import objectos.code.tmpl.InternalApi.FieldDeclaration;
 import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
 import objectos.code.tmpl.InternalApi.FinalModifier;
@@ -121,6 +122,8 @@ public interface TemplateApi extends MarkerApi {
   ExpressionName n(ClassName name, String identifier);
 
   ExpressionName n(String value);
+
+  FieldAccessExpression n(ThisKeyword keyword, String identifier);
 
   NewLineRef nl();
 

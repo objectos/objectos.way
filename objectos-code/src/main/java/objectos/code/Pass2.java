@@ -155,23 +155,29 @@ abstract class Pass2 extends Pass1 {
   }
 
   private void assignmentExpression() {
-    codeadv();
+    codeass("""
+    Invalid assignment expression:
 
-    assert !codenop();
+    A no-operation (NOP) was found where the left hand side was expected.
+    """);
 
     codepsh();
     expression();
     codepop();
 
-    codeadv();
+    codeass("""
+    Invalid assignment expression:
 
-    assert !codenop();
+    A no-operation (NOP) was found where the operator was expected.
+    """);
 
     writeOperator((Operator) codeobj());
 
-    codeadv();
+    codeass("""
+    Invalid assignment expression:
 
-    assert !codenop();
+    A no-operation (NOP) was found where the expression was expected.
+    """);
 
     codepsh();
     expression();
@@ -498,6 +504,8 @@ abstract class Pass2 extends Pass1 {
 
       case ByteCode.EXPRESSION_NAME -> expressionName();
 
+      case ByteCode.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
+
       case ByteCode.METHOD_INVOCATION -> methodInvocation();
 
       case ByteCode.STRING_LITERAL -> stringLiteral();
@@ -533,6 +541,28 @@ abstract class Pass2 extends Pass1 {
     } else {
       typeName();
     }
+  }
+
+  private void fieldAccessExpression0() {
+    codeass("""
+    Invalid field access expression:
+
+    A no-operation (NOP) was found where a primary expression was expected.
+    """);
+
+    codepsh();
+    expression();
+    codepop();
+
+    write('.');
+
+    codeass("""
+    Invalid field access expression:
+
+    A no-operation (NOP) was found where an identifier was expected.
+    """);
+
+    write((String) codeobj());
   }
 
   private void fieldDeclaration() {

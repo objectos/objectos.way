@@ -76,9 +76,10 @@ final class ByteProto {
   static final int ASSIGNMENT_EXPRESSION = -26;
   static final int ASSIGNMENT_OPERATOR = -27;
   static final int EXPRESSION_NAME = -28;
-  static final int METHOD_INVOCATION = -29;
-  static final int STRING_LITERAL = -30;
-  static final int THIS = -31;
+  static final int FIELD_ACCESS_EXPRESSION0 = -29;
+  static final int METHOD_INVOCATION = -30;
+  static final int STRING_LITERAL = -31;
+  static final int THIS = -32;
 
   private ByteProto() {}
 

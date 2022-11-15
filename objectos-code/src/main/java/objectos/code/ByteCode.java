@@ -78,9 +78,10 @@ final class ByteCode {
   static final int ARRAY_ACCESS_EXPRESSION = -30;
   static final int ASSIGNMENT_EXPRESSION = -31;
   static final int EXPRESSION_NAME = -32;
-  static final int METHOD_INVOCATION = -33;
-  static final int STRING_LITERAL = -34;
-  static final int THIS = -35;
+  static final int FIELD_ACCESS_EXPRESSION0 = -33;
+  static final int METHOD_INVOCATION = -34;
+  static final int STRING_LITERAL = -35;
+  static final int THIS = -36;
 
   private ByteCode() {}
 

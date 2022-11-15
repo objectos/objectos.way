@@ -77,6 +77,9 @@ public final class InternalApi {
   public sealed interface ExtendsRef
       extends ClassDeclarationElement {}
 
+  public sealed interface FieldAccessExpression
+      extends LeftHandSide, PrimaryExpression {}
+
   public sealed interface FieldDeclaration {}
 
   public sealed interface FieldDeclarationElement extends Markable {}
@@ -179,6 +182,7 @@ public final class InternalApi {
       EnumDeclaration,
       ExpressionName,
       ExtendsRef,
+      FieldAccessExpression,
       FieldDeclaration,
       FinalModifier,
       FormalParameter,
