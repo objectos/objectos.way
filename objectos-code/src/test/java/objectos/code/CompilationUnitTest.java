@@ -149,4 +149,41 @@ public class CompilationUnitTest extends AbstractObjectosCodeTest {
     );
   }
 
+  @Test(description = """
+  Compilation Unit TC06
+  - multiple import declarations
+  """)
+  public void testCase06() {
+    var tmpl = new JavaTemplate() {
+      final ClassName _A = ClassName.of(TEST, "A");
+      final ClassName _B = ClassName.of(TEST, "B");
+      final ClassName _C = ClassName.of(TEST, "C");
+
+      @Override
+      protected final void definition() {
+        autoImports();
+
+        _class(id("Test0"), _extends(_A));
+        _class(id("Test1"), _extends(_B));
+        _class(id("Test2"), _extends(_C));
+      }
+    };
+
+    testDefault(
+      tmpl,
+
+      """
+      import test.A;
+      import test.B;
+      import test.C;
+
+      class Test0 extends A {}
+
+      class Test1 extends B {}
+
+      class Test2 extends C {}
+      """
+    );
+  }
+
 }

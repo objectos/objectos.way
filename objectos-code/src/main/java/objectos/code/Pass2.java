@@ -270,7 +270,7 @@ abstract class Pass2 extends Pass1 {
         writeCompilationUnitSeparator();
       }
 
-      importDeclarations();
+      importDeclarationList();
       codepop();
 
       prevSection = true;
@@ -554,30 +554,42 @@ abstract class Pass2 extends Pass1 {
     }
   }
 
-  private void importDeclarations() {
-    while (true) {
-      switch (code) {
-        case ByteCode.IMPORT -> {
-          write("import");
+  private void importDeclarationList() {
+    var eof = importDeclarationListItem(false);
 
-          writeSpace();
+    while (!eof) {
+      eof = importDeclarationListItem(true);
+    }
+  }
 
-          codeadv();
-
-          var o = codeobj();
-
-          write(o.toString());
-
-          writeSemicolon();
-
-          codeadv();
+  private boolean importDeclarationListItem(boolean next) {
+    return switch (code) {
+      case ByteCode.IMPORT -> {
+        if (next) {
+          writeBeforeNextStatement();
         }
 
-        case ByteCode.EOF -> { return; }
+        write("import");
 
-        default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+        writeSpace();
+
+        codeadv();
+
+        var o = codeobj();
+
+        write(o.toString());
+
+        writeSemicolon();
+
+        codeadv();
+
+        yield false;
       }
-    }
+
+      case ByteCode.EOF -> true;
+
+      default -> throw new UnsupportedOperationException("Implement me :: code=" + code);
+    };
   }
 
   private boolean largs(boolean comma) {
