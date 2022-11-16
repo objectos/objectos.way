@@ -215,4 +215,57 @@ public class EnumDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Enum class declarations TC05
+
+  - enum
+  """)
+  public void testCase05() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          var test = PackageName.of("test");
+          var iface = ClassName.of(test, "Iface");
+
+          _enum(
+            _public(), id("Test"), _implements(iface),
+            enumConstant(id("A"), s("a")),
+            enumConstant(id("B"), s("b")),
+            field(_private(), _final(), t(String.class), id("value")),
+            constructor(
+              _private(),
+              param(t(String.class), id("value")),
+              assign(n(_this(), "value"), n("value"))
+            ),
+            method(
+              annotation(Override.class),
+              _public(), _final(), t(String.class), id("toString"),
+              _return(n("value"))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      public enum Test implements test.Iface {
+        A("a"),
+
+        B("b");
+
+        private final java.lang.String value;
+
+        private Test(java.lang.String value) {
+          this.value = value;
+        }
+
+        @java.lang.Override
+        public final java.lang.String toString() {
+          return value;
+        }
+      }
+      """
+    );
+  }
+
 }

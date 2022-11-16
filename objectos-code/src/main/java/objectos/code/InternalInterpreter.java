@@ -35,11 +35,11 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeArgumentListStart();
 
-  protected abstract void writeBeforeBlockNextMember();
-
   protected abstract void writeBeforeFirstMember();
 
   protected abstract void writeBeforeFirstStatement();
+
+  protected abstract void writeBeforeNextMember();
 
   protected abstract void writeBeforeNextStatement();
 
@@ -264,7 +264,9 @@ abstract class InternalInterpreter extends InternalCompiler {
       classDeclarationBodyItem();
 
       while (lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        writeBeforeNextMember();
+
+        classDeclarationBodyItem();
       }
     }
   }
@@ -272,6 +274,8 @@ abstract class InternalInterpreter extends InternalCompiler {
   private void classDeclarationBodyItem() {
     switch (code) {
       case ByteCode.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
+
+      case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
 
       case ByteCode.METHOD_DECLARATION -> methodDeclaration();
 
@@ -513,8 +517,17 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
 
     if (codenxt()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: body");
+      codepsh();
+
+      while (lnext()) {
+        writeBeforeNextMember();
+
+        classDeclarationBodyItem();
+      }
+
+      codepop();
+
+      contents = true;
     }
 
     writeBlockEnd(contents);
@@ -529,7 +542,7 @@ abstract class InternalInterpreter extends InternalCompiler {
       while (lnext()) {
         writeComma();
 
-        writeBeforeBlockNextMember();
+        writeBeforeNextMember();
 
         enumDeclarationConstantsItem();
       }

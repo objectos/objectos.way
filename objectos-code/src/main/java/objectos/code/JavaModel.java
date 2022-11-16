@@ -24,103 +24,104 @@ package objectos.code;
  */
 public final class JavaModel {
 
-  public sealed interface AnnotationElementValue extends JavaModel.Markable {}
+  public sealed interface AnnotationElementValue extends Markable {}
 
   public sealed interface AnnotationInvocation
-      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement,
-      JavaModel.MethodDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement,
+      MethodDeclarationElement {}
 
   public sealed interface ArrayAccessExpression
-      extends JavaModel.Expression, JavaModel.LeftHandSide {}
+      extends Expression, LeftHandSide {}
 
   public sealed interface ArrayDimension
-      extends JavaModel.ArrayTypeElement {}
+      extends ArrayTypeElement {}
 
-  public sealed interface ArrayTypeElement extends JavaModel.Markable {}
+  public sealed interface ArrayTypeElement extends Markable {}
 
   public sealed interface ArrayTypeInvocation
       extends
-      JavaModel.FieldDeclarationElement, JavaModel.FormalParameterType,
-      JavaModel.MethodDeclarationElement {}
+      FieldDeclarationElement, FormalParameterType,
+      MethodDeclarationElement {}
 
   public sealed interface AssignmentExpression
-      extends JavaModel.Expression, JavaModel.ExpressionStatement {}
+      extends Expression, ExpressionStatement {}
 
   public sealed interface ClassDeclaration {}
 
-  public sealed interface ClassDeclarationElement extends JavaModel.Markable {}
+  public sealed interface ClassDeclarationElement extends Markable {}
 
   public sealed interface ClassNameInvocation
       extends
-      JavaModel.FieldDeclarationElement, JavaModel.FormalParameterType,
-      JavaModel.MethodDeclarationElement, JavaModel.MethodInvocationSubject {}
+      FieldDeclarationElement, FormalParameterType,
+      MethodDeclarationElement, MethodInvocationSubject {}
 
   public sealed interface ConstructorDeclaration
-      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement {}
 
-  public sealed interface ConstructorDeclarationElement extends JavaModel.Markable {}
+  public sealed interface ConstructorDeclarationElement extends Markable {}
 
   public sealed interface EnumConstant
-      extends JavaModel.EnumDeclarationElement {}
+      extends EnumDeclarationElement {}
 
-  public sealed interface EnumConstantElement extends JavaModel.Markable {}
+  public sealed interface EnumConstantElement extends Markable {}
 
   public sealed interface EnumDeclaration {}
 
-  public sealed interface EnumDeclarationElement extends JavaModel.Markable {}
+  public sealed interface EnumDeclarationElement extends Markable {}
 
   public sealed interface Expression
       extends
-      JavaModel.EnumConstantElement,
-      JavaModel.FieldDeclarationElement,
-      JavaModel.MethodInvocationElement {}
+      EnumConstantElement,
+      FieldDeclarationElement,
+      MethodInvocationElement {}
 
   public sealed interface ExpressionName
-      extends JavaModel.Expression, JavaModel.LeftHandSide {}
+      extends Expression, LeftHandSide {}
 
   public sealed interface ExpressionStatement
-      extends JavaModel.Statement {}
+      extends Statement {}
 
   public sealed interface ExtendsRef
-      extends JavaModel.ClassDeclarationElement {}
+      extends ClassDeclarationElement {}
 
   public sealed interface FieldAccessExpression
-      extends JavaModel.LeftHandSide, JavaModel.PrimaryExpression {}
+      extends LeftHandSide, PrimaryExpression {}
 
-  public sealed interface FieldDeclaration {}
+  public sealed interface FieldDeclaration
+      extends ClassDeclarationElement, EnumDeclarationElement {}
 
-  public sealed interface FieldDeclarationElement extends JavaModel.Markable {}
+  public sealed interface FieldDeclarationElement extends Markable {}
 
   public sealed interface FinalModifier
-      extends JavaModel.ClassDeclarationElement, JavaModel.FieldDeclarationElement,
-      JavaModel.MethodDeclarationElement {}
+      extends ClassDeclarationElement, FieldDeclarationElement,
+      MethodDeclarationElement {}
 
   public sealed interface FormalParameter
-      extends JavaModel.ConstructorDeclarationElement, JavaModel.MethodDeclarationElement {}
+      extends ConstructorDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface FormalParameterType
-      extends JavaModel.Markable {}
+      extends Markable {}
 
   public sealed interface IdentifierRef
       extends
-      JavaModel.ClassDeclarationElement,
-      JavaModel.EnumDeclarationElement, JavaModel.EnumConstantElement,
-      JavaModel.FieldDeclarationElement,
-      JavaModel.MethodDeclarationElement {}
+      ClassDeclarationElement,
+      EnumDeclarationElement, EnumConstantElement,
+      FieldDeclarationElement,
+      MethodDeclarationElement {}
 
   public sealed interface Implements
-      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement {}
 
   public sealed interface IncludeRef
-      extends JavaModel.MethodDeclarationElement, JavaModel.MethodInvocationElement {}
+      extends MethodDeclarationElement, MethodInvocationElement {}
 
   public sealed interface IntPrimitiveType
-      extends JavaModel.FormalParameterType, JavaModel.MethodDeclarationElement {}
+      extends FormalParameterType, MethodDeclarationElement {}
 
-  public sealed interface LeftHandSide extends JavaModel.Markable {}
+  public sealed interface LeftHandSide extends Markable {}
 
   public sealed interface LocalVariableDeclarationRef
-      extends JavaModel.Statement {}
+      extends Statement {}
 
   public sealed interface Markable {
     void mark(MarkerApi api);
@@ -135,56 +136,56 @@ public final class JavaModel {
   }
 
   public sealed interface MethodDeclaration
-      extends JavaModel.ClassDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement {}
 
-  public sealed interface MethodDeclarationElement extends JavaModel.Markable {}
+  public sealed interface MethodDeclarationElement extends Markable {}
 
   public sealed interface MethodInvocation
-      extends JavaModel.Expression, JavaModel.ExpressionStatement {}
+      extends Expression, ExpressionStatement {}
 
-  public sealed interface MethodInvocationElement extends JavaModel.Markable {}
+  public sealed interface MethodInvocationElement extends Markable {}
 
-  public sealed interface MethodInvocationSubject extends JavaModel.Markable {}
+  public sealed interface MethodInvocationSubject extends Markable {}
 
   public sealed interface NewLineRef
-      extends JavaModel.MethodInvocationElement {}
+      extends MethodInvocationElement {}
 
-  public sealed interface PrimaryExpression extends JavaModel.Expression {}
+  public sealed interface PrimaryExpression extends Expression {}
 
-  public sealed interface PrivateModifier extends JavaModel.AccessModifier {}
+  public sealed interface PrivateModifier extends AccessModifier {}
 
-  public sealed interface ProtectedModifier extends JavaModel.AccessModifier {}
+  public sealed interface ProtectedModifier extends AccessModifier {}
 
-  public sealed interface PublicModifier extends JavaModel.AccessModifier {}
+  public sealed interface PublicModifier extends AccessModifier {}
 
   public sealed interface ReturnStatement
-      extends JavaModel.Statement {}
+      extends Statement {}
 
   public sealed interface Statement
-      extends JavaModel.ConstructorDeclarationElement, JavaModel.MethodDeclarationElement {}
+      extends ConstructorDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface StaticModifier
-      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement,
-      JavaModel.FieldDeclarationElement,
-      JavaModel.MethodDeclarationElement {}
+      extends ClassDeclarationElement, EnumDeclarationElement,
+      FieldDeclarationElement,
+      MethodDeclarationElement {}
 
   public sealed interface StringLiteral
-      extends JavaModel.AnnotationElementValue, JavaModel.Expression {}
+      extends AnnotationElementValue, Expression {}
 
   public sealed interface ThisKeyword
-      extends JavaModel.PrimaryExpression {}
+      extends PrimaryExpression {}
 
-  public sealed interface VoidInvocation extends JavaModel.MethodDeclarationElement {}
+  public sealed interface VoidInvocation extends MethodDeclarationElement {}
 
   private sealed interface AccessModifier
       extends
-      JavaModel.ClassDeclarationElement,
-      JavaModel.ConstructorDeclarationElement,
-      JavaModel.EnumDeclarationElement,
-      JavaModel.FieldDeclarationElement,
-      JavaModel.MethodDeclarationElement {}
+      ClassDeclarationElement,
+      ConstructorDeclarationElement,
+      EnumDeclarationElement,
+      FieldDeclarationElement,
+      MethodDeclarationElement {}
 
-  private static final class Include implements JavaModel.IncludeRef {
+  private static final class Include implements IncludeRef {
     private Include() {}
 
     @Override
@@ -195,37 +196,37 @@ public final class JavaModel {
 
   private static final class Ref
       implements
-      JavaModel.AnnotationInvocation,
-      JavaModel.ArrayAccessExpression,
-      JavaModel.ArrayDimension,
-      JavaModel.ArrayTypeInvocation,
-      JavaModel.AssignmentExpression,
-      JavaModel.ClassDeclaration,
-      JavaModel.ClassNameInvocation,
-      JavaModel.ConstructorDeclaration,
-      JavaModel.EnumConstant,
-      JavaModel.EnumDeclaration,
-      JavaModel.ExpressionName,
-      JavaModel.ExtendsRef,
-      JavaModel.FieldAccessExpression,
-      JavaModel.FieldDeclaration,
-      JavaModel.FinalModifier,
-      JavaModel.FormalParameter,
-      JavaModel.IdentifierRef,
-      JavaModel.Implements,
-      JavaModel.IntPrimitiveType,
-      JavaModel.LocalVariableDeclarationRef,
-      JavaModel.MethodInvocation,
-      JavaModel.MethodDeclaration,
-      JavaModel.NewLineRef,
-      JavaModel.PrivateModifier,
-      JavaModel.ProtectedModifier,
-      JavaModel.PublicModifier,
-      JavaModel.ReturnStatement,
-      JavaModel.StaticModifier,
-      JavaModel.StringLiteral,
-      JavaModel.ThisKeyword,
-      JavaModel.VoidInvocation {
+      AnnotationInvocation,
+      ArrayAccessExpression,
+      ArrayDimension,
+      ArrayTypeInvocation,
+      AssignmentExpression,
+      ClassDeclaration,
+      ClassNameInvocation,
+      ConstructorDeclaration,
+      EnumConstant,
+      EnumDeclaration,
+      ExpressionName,
+      ExtendsRef,
+      FieldAccessExpression,
+      FieldDeclaration,
+      FinalModifier,
+      FormalParameter,
+      IdentifierRef,
+      Implements,
+      IntPrimitiveType,
+      LocalVariableDeclarationRef,
+      MethodInvocation,
+      MethodDeclaration,
+      NewLineRef,
+      PrivateModifier,
+      ProtectedModifier,
+      PublicModifier,
+      ReturnStatement,
+      StaticModifier,
+      StringLiteral,
+      ThisKeyword,
+      VoidInvocation {
     private Ref() {}
 
     @Override
@@ -234,9 +235,9 @@ public final class JavaModel {
     }
   }
 
-  public static final JavaModel.Ref REF = new Ref();
+  public static final Ref REF = new Ref();
 
-  public static final JavaModel.Include INCLUDE = new Include();
+  public static final Include INCLUDE = new Include();
 
   private JavaModel() {}
 

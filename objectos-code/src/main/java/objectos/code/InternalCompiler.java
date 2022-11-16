@@ -343,7 +343,11 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
 
+        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listadd(body, constructorDeclaration());
+
         case ByteProto.ENUM_CONSTANT -> constants = listadd(constants, enumConstant());
+
+        case ByteProto.FIELD_DECLARATION -> body = listadd(body, fieldDeclaration());
 
         case ByteProto.IDENTIFIER -> {
           name = setOrReplace(name, protoadv());
