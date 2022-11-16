@@ -68,7 +68,7 @@ import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 
-class Pass0 extends State implements MarkerApi {
+class InternalApi extends State implements MarkerApi {
 
   public final ClassDeclaration _class(ClassDeclarationElement[] elements) {
     markStart();

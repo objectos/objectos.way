@@ -20,7 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.lang.Check;
 
-public abstract class JavaSink extends Pass2 {
+public abstract class JavaSink extends InternalInterpreter {
 
   public sealed abstract static class Option {
 

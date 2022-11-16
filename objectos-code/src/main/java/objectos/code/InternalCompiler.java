@@ -17,7 +17,7 @@ package objectos.code;
 
 import javax.lang.model.element.Modifier;
 
-class Pass1 extends Pass0 {
+class InternalCompiler extends InternalApi {
 
   final void pass1() {
     codeIndex = 0;

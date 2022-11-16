@@ -17,7 +17,7 @@ package objectos.code;
 
 import javax.lang.model.element.Modifier;
 
-abstract class Pass2 extends Pass1 {
+abstract class InternalInterpreter extends InternalCompiler {
 
   private boolean abstractModifier;
 
