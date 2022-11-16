@@ -25,6 +25,8 @@ abstract class Pass2 extends Pass1 {
 
   private int modifierCount;
 
+  private String constructorName;
+
   protected abstract void write(char c);
 
   protected abstract void write(String s);
@@ -204,7 +206,7 @@ abstract class Pass2 extends Pass1 {
 
       writeSpace();
 
-      write((String) codeobj());
+      write(simpleName());
 
       prevSection = true;
     } else {
@@ -269,7 +271,9 @@ abstract class Pass2 extends Pass1 {
 
   private void classDeclarationBodyItem() {
     switch (code) {
-      case ByteCode.METHOD -> methodDeclaration();
+      case ByteCode.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
+
+      case ByteCode.METHOD_DECLARATION -> methodDeclaration();
 
       default -> throw codeuoe();
     }
@@ -334,6 +338,8 @@ abstract class Pass2 extends Pass1 {
   }
 
   private void compilationUnitBodyItem() {
+    constructorReset();
+
     if (ByteCode.isExpressionStatement(code)) {
       expression();
 
@@ -344,15 +350,75 @@ abstract class Pass2 extends Pass1 {
       switch (code) {
         case ByteCode.CLASS -> classDeclaration();
 
+        case ByteCode.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
+
         case ByteCode.ENUM_DECLARATION -> enumDeclaration();
 
         case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
 
-        case ByteCode.METHOD -> methodDeclaration();
+        case ByteCode.METHOD_DECLARATION -> methodDeclaration();
 
         default -> statement();
       }
     }
+  }
+
+  private void constructorDeclaration() {
+    var prevSection = false;
+
+    modifierReset();
+
+    if (codenxt()) {
+      codepsh();
+      modifierList();
+      codepop();
+
+      prevSection = true;
+    }
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: constructor type params");
+    }
+
+    newLineOrSpace(prevSection);
+
+    write(constructorName);
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: constructor receiver param");
+    }
+
+    write('(');
+
+    if (codenxt()) {
+      codepsh();
+      methodDeclarationParameterList();
+      codepop();
+    }
+
+    write(')');
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: constructor throws");
+    }
+
+    if (codenxt()) {
+      writeBlockStart();
+      codepsh();
+      methodDeclarationBody();
+      codepop();
+      writeBlockEnd(true);
+    } else {
+      writeBlockStart();
+      writeBlockEnd(false);
+    }
+  }
+
+  private void constructorReset() {
+    constructorName = "Constructor";
   }
 
   private void declaratorFull() {
@@ -423,7 +489,7 @@ abstract class Pass2 extends Pass1 {
 
       writeSpace();
 
-      write((String) codeobj());
+      write(simpleName());
 
       prevSection = true;
     }
@@ -981,6 +1047,10 @@ abstract class Pass2 extends Pass1 {
     codepop();
 
     writeSemicolon();
+  }
+
+  private String simpleName() {
+    return constructorName = (String) codeobj();
   }
 
   private void statement() {

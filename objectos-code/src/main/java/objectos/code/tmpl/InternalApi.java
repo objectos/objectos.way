@@ -53,6 +53,11 @@ public final class InternalApi {
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement, MethodInvocationSubject {}
 
+  public sealed interface ConstructorDeclaration
+      extends ClassDeclarationElement, EnumDeclarationElement {}
+
+  public sealed interface ConstructorDeclarationElement extends Markable {}
+
   public sealed interface EnumConstant
       extends EnumDeclarationElement {}
 
@@ -134,13 +139,11 @@ public final class InternalApi {
 
   public sealed interface PrimaryExpression extends Expression {}
 
-  public sealed interface PrivateModifier
-      extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,
-      MethodDeclarationElement {}
+  public sealed interface PrivateModifier extends AccessModifier {}
 
-  public sealed interface PublicModifier
-      extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,
-      MethodDeclarationElement {}
+  public sealed interface ProtectedModifier extends AccessModifier {}
+
+  public sealed interface PublicModifier extends AccessModifier {}
 
   public sealed interface ReturnStatement
       extends Statement {}
@@ -160,6 +163,14 @@ public final class InternalApi {
 
   public sealed interface VoidInvocation extends MethodDeclarationElement {}
 
+  private sealed interface AccessModifier
+      extends
+      ClassDeclarationElement,
+      ConstructorDeclarationElement,
+      EnumDeclarationElement,
+      FieldDeclarationElement,
+      MethodDeclarationElement {}
+
   private static final class Include implements IncludeRef {
     private Include() {}
 
@@ -178,6 +189,7 @@ public final class InternalApi {
       AssignmentExpression,
       ClassDeclaration,
       ClassNameInvocation,
+      ConstructorDeclaration,
       EnumConstant,
       EnumDeclaration,
       ExpressionName,
@@ -194,6 +206,7 @@ public final class InternalApi {
       MethodDeclaration,
       NewLineRef,
       PrivateModifier,
+      ProtectedModifier,
       PublicModifier,
       ReturnStatement,
       StaticModifier,

@@ -27,6 +27,8 @@ import objectos.code.tmpl.InternalApi.AssignmentExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
+import objectos.code.tmpl.InternalApi.ConstructorDeclaration;
+import objectos.code.tmpl.InternalApi.ConstructorDeclarationElement;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -53,6 +55,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
+import objectos.code.tmpl.InternalApi.ProtectedModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
@@ -63,46 +66,6 @@ import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
-
-  public interface Renderer {
-
-    void write(char c);
-
-    void write(String s);
-
-    void writeArgumentListEnd();
-
-    void writeArgumentListStart();
-
-    void writeBeforeBlockNextItem();
-
-    void writeBeforeClassFirstMember();
-
-    void writeBeforeCompilationUnitBody();
-
-    void writeBlockEnd();
-
-    void writeBlockStart();
-
-    void writeComma();
-
-    void writeCompilationUnitEnd();
-
-    void writeCompilationUnitStart();
-
-    void writeNewLine();
-
-    void writeSemicolon();
-
-    void writeSeparator(char c);
-
-    void writeSpace();
-
-    void writeSpaceIf(boolean condition);
-
-    void writeStringLiteral(String s);
-
-  }
 
   private TemplateApi api;
 
@@ -168,6 +131,10 @@ public abstract class JavaTemplate {
     return api._private();
   }
 
+  protected final ProtectedModifier _protected() {
+    return api._protected();
+  }
+
   protected final PublicModifier _public() {
     return api._public();
   }
@@ -207,6 +174,10 @@ public abstract class JavaTemplate {
 
   protected final void autoImports() {
     api.autoImports();
+  }
+
+  protected final ConstructorDeclaration constructor(ConstructorDeclarationElement... elements) {
+    return api.constructor(elements);
   }
 
   protected abstract void definition();

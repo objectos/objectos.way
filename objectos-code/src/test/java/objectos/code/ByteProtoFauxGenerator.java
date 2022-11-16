@@ -56,9 +56,10 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("FIELD_DECLARATION");
 
-    comment("method");
+    comment("method/constructor");
 
     value("METHOD_DECLARATION");
+    value("CONSTRUCTOR_DECLARATION");
     value("FORMAL_PARAMETER");
 
     comment("enum");

@@ -51,35 +51,36 @@ final class ByteProto {
 
   static final int FIELD_DECLARATION = -17;
 
-  // method
+  // method/constructor
 
   static final int METHOD_DECLARATION = -18;
-  static final int FORMAL_PARAMETER = -19;
+  static final int CONSTRUCTOR_DECLARATION = -19;
+  static final int FORMAL_PARAMETER = -20;
 
   // enum
 
-  static final int ENUM_DECLARATION = -20;
-  static final int ENUM_CONSTANT = -21;
+  static final int ENUM_DECLARATION = -21;
+  static final int ENUM_CONSTANT = -22;
 
   // annotation
 
-  static final int ANNOTATION = -22;
+  static final int ANNOTATION = -23;
 
   // statements
 
-  static final int LOCAL_VARIABLE = -23;
-  static final int RETURN_STATEMENT = -24;
+  static final int LOCAL_VARIABLE = -24;
+  static final int RETURN_STATEMENT = -25;
 
   // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -25;
-  static final int ASSIGNMENT_EXPRESSION = -26;
-  static final int ASSIGNMENT_OPERATOR = -27;
-  static final int EXPRESSION_NAME = -28;
-  static final int FIELD_ACCESS_EXPRESSION0 = -29;
-  static final int METHOD_INVOCATION = -30;
-  static final int STRING_LITERAL = -31;
-  static final int THIS = -32;
+  static final int ARRAY_ACCESS_EXPRESSION = -26;
+  static final int ASSIGNMENT_EXPRESSION = -27;
+  static final int ASSIGNMENT_OPERATOR = -28;
+  static final int EXPRESSION_NAME = -29;
+  static final int FIELD_ACCESS_EXPRESSION0 = -30;
+  static final int METHOD_INVOCATION = -31;
+  static final int STRING_LITERAL = -32;
+  static final int THIS = -33;
 
   private ByteProto() {}
 

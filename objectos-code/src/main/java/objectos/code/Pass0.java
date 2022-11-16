@@ -31,6 +31,8 @@ import objectos.code.tmpl.InternalApi.AssignmentExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
+import objectos.code.tmpl.InternalApi.ConstructorDeclaration;
+import objectos.code.tmpl.InternalApi.ConstructorDeclarationElement;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -57,6 +59,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
+import objectos.code.tmpl.InternalApi.ProtectedModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
@@ -151,6 +154,13 @@ class Pass0 extends State implements TemplateApi {
   @Override
   public final PrivateModifier _private() {
     object(ByteProto.MODIFIER, Modifier.PRIVATE);
+
+    return InternalApi.REF;
+  }
+
+  @Override
+  public final ProtectedModifier _protected() {
+    object(ByteProto.MODIFIER, Modifier.PROTECTED);
 
     return InternalApi.REF;
   }
@@ -270,6 +280,19 @@ class Pass0 extends State implements TemplateApi {
   @Override
   public final void autoImports() {
     autoImports.enable();
+  }
+
+  @Override
+  public final ConstructorDeclaration constructor(ConstructorDeclarationElement[] elements) {
+    markStart();
+
+    for (var element : elements) {
+      element.mark(this);
+    }
+
+    element(ByteProto.CONSTRUCTOR_DECLARATION);
+
+    return InternalApi.REF;
   }
 
   @Override

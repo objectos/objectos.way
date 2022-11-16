@@ -61,9 +61,10 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("DECLARATOR_SIMPLE");
     value("DECLARATOR_FULL");
 
-    comment("method");
+    comment("method/constructor");
 
-    value("METHOD");
+    value("METHOD_DECLARATION");
+    value("CONSTRUCTOR_DECLARATION");
     value("FORMAL_PARAMETER");
 
     comment("enum");

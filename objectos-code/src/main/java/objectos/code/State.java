@@ -121,6 +121,22 @@ abstract class State {
     return self;
   }
 
+  final int codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6) {
+    var self = codeIndex;
+
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 6);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+    codeArray[codeIndex++] = v5;
+    codeArray[codeIndex++] = v6;
+
+    return self;
+  }
+
   final int codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
     var self = codeIndex;
 

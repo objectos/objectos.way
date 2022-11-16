@@ -172,6 +172,8 @@ class Pass1 extends Pass0 {
       switch (proto) {
         case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
 
+        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listadd(body, constructorDeclaration());
+
         case ByteProto.EXTENDS -> _extends = setOrReplace(_extends, typeName());
 
         case ByteProto.IDENTIFIER -> {
@@ -220,6 +222,8 @@ class Pass1 extends Pass0 {
       switch (proto) {
         case ByteProto.CLASS_DECLARATION -> body = listadd(body, classDeclaration(true));
 
+        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listadd(body, constructorDeclaration());
+
         case ByteProto.ENUM_DECLARATION -> body = listadd(body, enumDeclaration(true));
 
         case ByteProto.FIELD_DECLARATION -> body = listadd(body, fieldDeclaration());
@@ -251,6 +255,39 @@ class Pass1 extends Pass0 {
     } else {
       return statement();
     }
+  }
+
+  private int constructorDeclaration() {
+    var modifiers = ByteCode.NOP;
+    var typeParams = ByteCode.NOP;
+    var receiver = ByteCode.NOP;
+    var params = ByteCode.NOP;
+    var _throws = ByteCode.NOP;
+    var body = ByteCode.NOP;
+
+    protoadv();
+
+    while (protolop()) {
+      protojmp();
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
+
+        case ByteProto.FORMAL_PARAMETER -> params = listadd(params, formalParameter());
+
+        case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
+
+        default -> body = listadd(body, statement());
+      }
+
+      protonxt();
+    }
+
+    return codeadd(
+      ByteCode.CONSTRUCTOR_DECLARATION,
+      modifiers, typeParams, receiver, params, _throws,
+      body
+    );
   }
 
   private int declaratorFull(int name, int init) {
@@ -625,7 +662,7 @@ class Pass1 extends Pass0 {
     }
 
     return codeadd(
-      ByteCode.METHOD,
+      ByteCode.METHOD_DECLARATION,
       modifiers, typeParams, returnType, name, receiver, params, _throws,
       body
     );

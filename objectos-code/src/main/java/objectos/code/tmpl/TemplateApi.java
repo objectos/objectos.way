@@ -28,6 +28,8 @@ import objectos.code.tmpl.InternalApi.AssignmentExpression;
 import objectos.code.tmpl.InternalApi.ClassDeclaration;
 import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
 import objectos.code.tmpl.InternalApi.ClassNameInvocation;
+import objectos.code.tmpl.InternalApi.ConstructorDeclaration;
+import objectos.code.tmpl.InternalApi.ConstructorDeclarationElement;
 import objectos.code.tmpl.InternalApi.EnumConstant;
 import objectos.code.tmpl.InternalApi.EnumConstantElement;
 import objectos.code.tmpl.InternalApi.EnumDeclaration;
@@ -54,6 +56,7 @@ import objectos.code.tmpl.InternalApi.MethodInvocationElement;
 import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
 import objectos.code.tmpl.InternalApi.NewLineRef;
 import objectos.code.tmpl.InternalApi.PrivateModifier;
+import objectos.code.tmpl.InternalApi.ProtectedModifier;
 import objectos.code.tmpl.InternalApi.PublicModifier;
 import objectos.code.tmpl.InternalApi.ReturnStatement;
 import objectos.code.tmpl.InternalApi.StaticModifier;
@@ -79,6 +82,8 @@ public interface TemplateApi extends MarkerApi {
 
   PrivateModifier _private();
 
+  ProtectedModifier _protected();
+
   PublicModifier _public();
 
   ReturnStatement _return(Expression expression);
@@ -101,6 +106,8 @@ public interface TemplateApi extends MarkerApi {
   AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression);
 
   void autoImports();
+
+  ConstructorDeclaration constructor(ConstructorDeclarationElement[] elements);
 
   ArrayDimension dim();
 
