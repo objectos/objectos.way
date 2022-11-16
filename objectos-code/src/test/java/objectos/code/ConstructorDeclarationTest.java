@@ -62,4 +62,68 @@ public class ConstructorDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Constructor declarations TC02:
+
+  - parameters
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          constructor(
+            param(_int(), id("a"))
+          );
+          constructor(
+            param(_int(), id("a")),
+            param(_int(), id("b"))
+          );
+        }
+      }.toString(),
+
+      """
+      Constructor(int a) {}
+
+      Constructor(int a, int b) {}
+      """
+    );
+  }
+
+  @Test(description = """
+  Constructor declarations TC03:
+
+  - body
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          constructor(
+            param(_int(), id("a")),
+            assign(n(_this(), "a"), n("a"))
+          );
+          constructor(
+            param(_int(), id("a")),
+            param(_int(), id("b")),
+            assign(n(_this(), "a"), n("a")),
+            assign(n(_this(), "b"), n("b"))
+          );
+        }
+      }.toString(),
+
+      """
+      Constructor(int a) {
+        this.a = a;
+      }
+
+      Constructor(int a, int b) {
+        this.a = a;
+        this.b = b;
+      }
+      """
+    );
+  }
+
 }

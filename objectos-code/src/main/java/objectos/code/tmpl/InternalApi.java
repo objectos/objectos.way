@@ -42,7 +42,8 @@ public final class InternalApi {
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement {}
 
-  public sealed interface AssignmentExpression extends Expression {}
+  public sealed interface AssignmentExpression
+      extends Expression, ExpressionStatement {}
 
   public sealed interface ClassDeclaration {}
 
@@ -93,7 +94,7 @@ public final class InternalApi {
       extends ClassDeclarationElement, FieldDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface FormalParameter
-      extends MethodDeclarationElement {}
+      extends ConstructorDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface FormalParameterType
       extends Markable {}
@@ -111,7 +112,7 @@ public final class InternalApi {
   public sealed interface IncludeRef
       extends MethodDeclarationElement, MethodInvocationElement {}
 
-  public sealed interface IntPrimitiveType extends MethodDeclarationElement {}
+  public sealed interface IntPrimitiveType extends FormalParameterType, MethodDeclarationElement {}
 
   public sealed interface LeftHandSide extends Markable {}
 
@@ -149,7 +150,7 @@ public final class InternalApi {
       extends Statement {}
 
   public sealed interface Statement
-      extends MethodDeclarationElement {}
+      extends ConstructorDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface StaticModifier
       extends ClassDeclarationElement, EnumDeclarationElement, FieldDeclarationElement,

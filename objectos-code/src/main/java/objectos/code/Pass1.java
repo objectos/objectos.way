@@ -557,6 +557,8 @@ class Pass1 extends Pass0 {
       switch (proto) {
         case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
 
+        case ByteProto.PRIMITIVE_TYPE -> type = setOrReplace(type, primitiveType());
+
         case ByteProto.TYPE_NAME -> type = setOrReplace(type, typeName());
 
         default -> throw protouoe();
