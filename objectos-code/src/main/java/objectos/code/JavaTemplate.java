@@ -61,10 +61,14 @@ import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
 import objectos.code.JavaModel.VoidInvocation;
-import objectos.code.tmpl.IncludeTarget;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
+
+  @FunctionalInterface
+  protected interface IncludeTarget {
+    void execute();
+  }
 
   private Pass0 api;
 

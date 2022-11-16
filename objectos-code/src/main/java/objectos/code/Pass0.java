@@ -50,6 +50,7 @@ import objectos.code.JavaModel.IncludeRef;
 import objectos.code.JavaModel.IntPrimitiveType;
 import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
+import objectos.code.JavaModel.MarkerApi;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocation;
@@ -64,8 +65,7 @@ import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
 import objectos.code.JavaModel.VoidInvocation;
-import objectos.code.tmpl.IncludeTarget;
-import objectos.code.tmpl.MarkerApi;
+import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 
 class Pass0 extends State implements MarkerApi {

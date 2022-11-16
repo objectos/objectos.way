@@ -15,8 +15,6 @@
  */
 package objectos.code;
 
-import objectos.code.tmpl.MarkerApi;
-
 /**
  * Holds the hierarchy of interfaces representing elements and types of the
  * Java language.
@@ -29,7 +27,8 @@ public final class JavaModel {
   public sealed interface AnnotationElementValue extends JavaModel.Markable {}
 
   public sealed interface AnnotationInvocation
-      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement, JavaModel.MethodDeclarationElement {}
+      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement,
+      JavaModel.MethodDeclarationElement {}
 
   public sealed interface ArrayAccessExpression
       extends JavaModel.Expression, JavaModel.LeftHandSide {}
@@ -93,7 +92,8 @@ public final class JavaModel {
   public sealed interface FieldDeclarationElement extends JavaModel.Markable {}
 
   public sealed interface FinalModifier
-      extends JavaModel.ClassDeclarationElement, JavaModel.FieldDeclarationElement, JavaModel.MethodDeclarationElement {}
+      extends JavaModel.ClassDeclarationElement, JavaModel.FieldDeclarationElement,
+      JavaModel.MethodDeclarationElement {}
 
   public sealed interface FormalParameter
       extends JavaModel.ConstructorDeclarationElement, JavaModel.MethodDeclarationElement {}
@@ -126,6 +126,14 @@ public final class JavaModel {
     void mark(MarkerApi api);
   }
 
+  public interface MarkerApi {
+
+    void markLambda();
+
+    void markReference();
+
+  }
+
   public sealed interface MethodDeclaration
       extends JavaModel.ClassDeclarationElement {}
 
@@ -156,7 +164,8 @@ public final class JavaModel {
       extends JavaModel.ConstructorDeclarationElement, JavaModel.MethodDeclarationElement {}
 
   public sealed interface StaticModifier
-      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement, JavaModel.FieldDeclarationElement,
+      extends JavaModel.ClassDeclarationElement, JavaModel.EnumDeclarationElement,
+      JavaModel.FieldDeclarationElement,
       JavaModel.MethodDeclarationElement {}
 
   public sealed interface StringLiteral
