@@ -19,59 +19,57 @@ import java.lang.annotation.Annotation;
 import java.util.Objects;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
+import objectos.code.JavaModel.AnnotationElementValue;
+import objectos.code.JavaModel.AnnotationInvocation;
+import objectos.code.JavaModel.ArrayAccessExpression;
+import objectos.code.JavaModel.ArrayDimension;
+import objectos.code.JavaModel.ArrayTypeElement;
+import objectos.code.JavaModel.ArrayTypeInvocation;
+import objectos.code.JavaModel.AssignmentExpression;
+import objectos.code.JavaModel.ClassDeclaration;
+import objectos.code.JavaModel.ClassDeclarationElement;
+import objectos.code.JavaModel.ClassNameInvocation;
+import objectos.code.JavaModel.ConstructorDeclaration;
+import objectos.code.JavaModel.ConstructorDeclarationElement;
+import objectos.code.JavaModel.EnumConstant;
+import objectos.code.JavaModel.EnumConstantElement;
+import objectos.code.JavaModel.EnumDeclaration;
+import objectos.code.JavaModel.EnumDeclarationElement;
+import objectos.code.JavaModel.Expression;
+import objectos.code.JavaModel.ExpressionName;
+import objectos.code.JavaModel.ExtendsRef;
+import objectos.code.JavaModel.FieldAccessExpression;
+import objectos.code.JavaModel.FieldDeclaration;
+import objectos.code.JavaModel.FieldDeclarationElement;
+import objectos.code.JavaModel.FinalModifier;
+import objectos.code.JavaModel.FormalParameter;
+import objectos.code.JavaModel.FormalParameterType;
+import objectos.code.JavaModel.IdentifierRef;
+import objectos.code.JavaModel.Implements;
+import objectos.code.JavaModel.IncludeRef;
+import objectos.code.JavaModel.IntPrimitiveType;
+import objectos.code.JavaModel.LeftHandSide;
+import objectos.code.JavaModel.LocalVariableDeclarationRef;
+import objectos.code.JavaModel.MethodDeclaration;
+import objectos.code.JavaModel.MethodDeclarationElement;
+import objectos.code.JavaModel.MethodInvocation;
+import objectos.code.JavaModel.MethodInvocationElement;
+import objectos.code.JavaModel.MethodInvocationSubject;
+import objectos.code.JavaModel.NewLineRef;
+import objectos.code.JavaModel.PrivateModifier;
+import objectos.code.JavaModel.ProtectedModifier;
+import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.ReturnStatement;
+import objectos.code.JavaModel.StaticModifier;
+import objectos.code.JavaModel.StringLiteral;
+import objectos.code.JavaModel.ThisKeyword;
+import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.tmpl.IncludeTarget;
-import objectos.code.tmpl.InternalApi;
-import objectos.code.tmpl.InternalApi.AnnotationElementValue;
-import objectos.code.tmpl.InternalApi.AnnotationInvocation;
-import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
-import objectos.code.tmpl.InternalApi.ArrayDimension;
-import objectos.code.tmpl.InternalApi.ArrayTypeElement;
-import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
-import objectos.code.tmpl.InternalApi.AssignmentExpression;
-import objectos.code.tmpl.InternalApi.ClassDeclaration;
-import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
-import objectos.code.tmpl.InternalApi.ClassNameInvocation;
-import objectos.code.tmpl.InternalApi.ConstructorDeclaration;
-import objectos.code.tmpl.InternalApi.ConstructorDeclarationElement;
-import objectos.code.tmpl.InternalApi.EnumConstant;
-import objectos.code.tmpl.InternalApi.EnumConstantElement;
-import objectos.code.tmpl.InternalApi.EnumDeclaration;
-import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
-import objectos.code.tmpl.InternalApi.Expression;
-import objectos.code.tmpl.InternalApi.ExpressionName;
-import objectos.code.tmpl.InternalApi.ExtendsRef;
-import objectos.code.tmpl.InternalApi.FieldAccessExpression;
-import objectos.code.tmpl.InternalApi.FieldDeclaration;
-import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
-import objectos.code.tmpl.InternalApi.FinalModifier;
-import objectos.code.tmpl.InternalApi.FormalParameter;
-import objectos.code.tmpl.InternalApi.FormalParameterType;
-import objectos.code.tmpl.InternalApi.IdentifierRef;
-import objectos.code.tmpl.InternalApi.Implements;
-import objectos.code.tmpl.InternalApi.IncludeRef;
-import objectos.code.tmpl.InternalApi.IntPrimitiveType;
-import objectos.code.tmpl.InternalApi.LeftHandSide;
-import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
-import objectos.code.tmpl.InternalApi.MethodDeclaration;
-import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
-import objectos.code.tmpl.InternalApi.MethodInvocation;
-import objectos.code.tmpl.InternalApi.MethodInvocationElement;
-import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
-import objectos.code.tmpl.InternalApi.NewLineRef;
-import objectos.code.tmpl.InternalApi.PrivateModifier;
-import objectos.code.tmpl.InternalApi.ProtectedModifier;
-import objectos.code.tmpl.InternalApi.PublicModifier;
-import objectos.code.tmpl.InternalApi.ReturnStatement;
-import objectos.code.tmpl.InternalApi.StaticModifier;
-import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.ThisKeyword;
-import objectos.code.tmpl.InternalApi.VoidInvocation;
-import objectos.code.tmpl.TemplateApi;
+import objectos.code.tmpl.MarkerApi;
 import objectos.lang.Check;
 
-class Pass0 extends State implements TemplateApi {
+class Pass0 extends State implements MarkerApi {
 
-  @Override
   public final ClassDeclaration _class(ClassDeclarationElement[] elements) {
     markStart();
 
@@ -81,10 +79,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.CLASS_DECLARATION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final EnumDeclaration _enum(EnumDeclarationElement[] elements) {
     markStart();
 
@@ -94,24 +91,21 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.ENUM_DECLARATION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ExtendsRef _extends(ClassName superclass) {
     object(ByteProto.EXTENDS, superclass);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final FinalModifier _final() {
     object(ByteProto.MODIFIER, Modifier.FINAL);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final Implements _implements(ClassName[] interfaces) {
     for (var iface : interfaces) {
       object(ByteProto.TYPE_NAME, iface);
@@ -123,17 +117,15 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.IMPLEMENTS);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final IntPrimitiveType _int() {
     object(ByteProto.PRIMITIVE_TYPE, PrimitiveType.INT);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final void _package(String packageName) {
     Check.argument(
       SourceVersion.isName(packageName),
@@ -151,28 +143,24 @@ class Pass0 extends State implements TemplateApi {
     element(ByteProto.PACKAGE_DECLARATION);
   }
 
-  @Override
   public final PrivateModifier _private() {
     object(ByteProto.MODIFIER, Modifier.PRIVATE);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ProtectedModifier _protected() {
     object(ByteProto.MODIFIER, Modifier.PROTECTED);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final PublicModifier _public() {
     object(ByteProto.MODIFIER, Modifier.PUBLIC);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ReturnStatement _return(Expression expression) {
     markStart();
 
@@ -180,33 +168,29 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.RETURN_STATEMENT);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final StaticModifier _static() {
     object(ByteProto.MODIFIER, Modifier.STATIC);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ThisKeyword _this() {
     markStart();
 
     element(ByteProto.THIS);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final VoidInvocation _void() {
     object(ByteProto.TYPE_NAME, TypeName.VOID);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ArrayAccessExpression a(ExpressionName reference, Expression[] expressions) {
     markStart();
 
@@ -218,10 +202,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.ARRAY_ACCESS_EXPRESSION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
     var name = ClassName.of(annotationType); // implicit null-check
 
@@ -233,10 +216,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.ANNOTATION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final AnnotationInvocation annotation(ClassName annotationType,
       AnnotationElementValue value) {
     className(annotationType);
@@ -249,10 +231,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.ANNOTATION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final AssignmentExpression assign(
       AssignmentOperator operator, LeftHandSide leftHandSide, Expression expression) {
     Objects.requireNonNull(operator, "operator == null");
@@ -269,20 +250,17 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.ASSIGNMENT_EXPRESSION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
     return assign(AssignmentOperator.SIMPLE, leftHandSide, expression);
   }
 
-  @Override
   public final void autoImports() {
     autoImports.enable();
   }
 
-  @Override
   public final ConstructorDeclaration constructor(ConstructorDeclarationElement[] elements) {
     markStart();
 
@@ -292,19 +270,17 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.CONSTRUCTOR_DECLARATION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ArrayDimension dim() {
     markStart();
 
     element(ByteProto.DIM);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final EnumConstant enumConstant(EnumConstantElement[] elements) {
     markStart();
 
@@ -314,10 +290,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.ENUM_CONSTANT);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public FieldDeclaration field(FieldDeclarationElement[] elements) {
     markStart();
 
@@ -327,17 +302,15 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.FIELD_DECLARATION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final IdentifierRef id(String name) {
     identifier(name);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final IncludeRef include(IncludeTarget target) {
     lambdaStart();
 
@@ -345,10 +318,9 @@ class Pass0 extends State implements TemplateApi {
 
     lambdaEnd();
 
-    return InternalApi.INCLUDE;
+    return JavaModel.INCLUDE;
   }
 
-  @Override
   public final MethodInvocation invoke(
       MethodInvocationSubject subject, String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
@@ -365,10 +337,9 @@ class Pass0 extends State implements TemplateApi {
 
     methodInvocation();
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final MethodInvocation invoke(
       String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
@@ -383,7 +354,7 @@ class Pass0 extends State implements TemplateApi {
 
     methodInvocation();
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
   @Override
@@ -396,7 +367,6 @@ class Pass0 extends State implements TemplateApi {
     markIncrement();
   }
 
-  @Override
   public final MethodDeclaration method(MethodDeclarationElement[] elements) {
     markStart();
 
@@ -406,10 +376,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.METHOD_DECLARATION);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ExpressionName n(ClassName name, String identifier) {
     className(name);
 
@@ -423,10 +392,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.EXPRESSION_NAME);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ExpressionName n(String value) {
     identifier(value);
 
@@ -436,10 +404,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.EXPRESSION_NAME);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final FieldAccessExpression n(ThisKeyword keyword, String identifier) {
     identifier(identifier);
 
@@ -451,19 +418,17 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.FIELD_ACCESS_EXPRESSION0);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final NewLineRef nl() {
     markStart();
 
     element(ByteProto.NEW_LINE);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final FormalParameter param(FormalParameterType type, IdentifierRef name) {
     markStart();
 
@@ -473,26 +438,23 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.FORMAL_PARAMETER);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final StringLiteral s(String value) {
     Check.notNull(value, "value == null");
 
     object(ByteProto.STRING_LITERAL, value);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final ClassNameInvocation t(Class<?> type) {
     var cn = ClassName.of(type);
 
     return typeName(cn);
   }
 
-  @Override
   public final ArrayTypeInvocation t(Class<?> type, ArrayTypeElement[] elements) {
     var t = t(type);
 
@@ -506,10 +468,9 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.ARRAY_TYPE);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
-  @Override
   public final LocalVariableDeclarationRef var(String name, Expression expression) {
     identifier(name);
 
@@ -521,7 +482,7 @@ class Pass0 extends State implements TemplateApi {
 
     element(ByteProto.LOCAL_VARIABLE);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
   final void pass0(JavaTemplate template) {
@@ -596,7 +557,7 @@ class Pass0 extends State implements TemplateApi {
   private ClassNameInvocation typeName(TypeName value) {
     object(ByteProto.TYPE_NAME, value);
 
-    return InternalApi.REF;
+    return JavaModel.REF;
   }
 
 }

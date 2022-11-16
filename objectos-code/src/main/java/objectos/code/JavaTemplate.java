@@ -16,77 +16,62 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
+import objectos.code.JavaModel.AnnotationElementValue;
+import objectos.code.JavaModel.AnnotationInvocation;
+import objectos.code.JavaModel.ArrayAccessExpression;
+import objectos.code.JavaModel.ArrayDimension;
+import objectos.code.JavaModel.ArrayTypeElement;
+import objectos.code.JavaModel.ArrayTypeInvocation;
+import objectos.code.JavaModel.AssignmentExpression;
+import objectos.code.JavaModel.ClassDeclaration;
+import objectos.code.JavaModel.ClassDeclarationElement;
+import objectos.code.JavaModel.ClassNameInvocation;
+import objectos.code.JavaModel.ConstructorDeclaration;
+import objectos.code.JavaModel.ConstructorDeclarationElement;
+import objectos.code.JavaModel.EnumConstant;
+import objectos.code.JavaModel.EnumConstantElement;
+import objectos.code.JavaModel.EnumDeclaration;
+import objectos.code.JavaModel.EnumDeclarationElement;
+import objectos.code.JavaModel.Expression;
+import objectos.code.JavaModel.ExpressionName;
+import objectos.code.JavaModel.ExtendsRef;
+import objectos.code.JavaModel.FieldAccessExpression;
+import objectos.code.JavaModel.FieldDeclaration;
+import objectos.code.JavaModel.FieldDeclarationElement;
+import objectos.code.JavaModel.FinalModifier;
+import objectos.code.JavaModel.FormalParameter;
+import objectos.code.JavaModel.FormalParameterType;
+import objectos.code.JavaModel.IdentifierRef;
+import objectos.code.JavaModel.Implements;
+import objectos.code.JavaModel.IncludeRef;
+import objectos.code.JavaModel.IntPrimitiveType;
+import objectos.code.JavaModel.LeftHandSide;
+import objectos.code.JavaModel.LocalVariableDeclarationRef;
+import objectos.code.JavaModel.MethodDeclaration;
+import objectos.code.JavaModel.MethodDeclarationElement;
+import objectos.code.JavaModel.MethodInvocation;
+import objectos.code.JavaModel.MethodInvocationElement;
+import objectos.code.JavaModel.MethodInvocationSubject;
+import objectos.code.JavaModel.NewLineRef;
+import objectos.code.JavaModel.PrivateModifier;
+import objectos.code.JavaModel.ProtectedModifier;
+import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.ReturnStatement;
+import objectos.code.JavaModel.StaticModifier;
+import objectos.code.JavaModel.StringLiteral;
+import objectos.code.JavaModel.ThisKeyword;
+import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.tmpl.IncludeTarget;
-import objectos.code.tmpl.InternalApi.AnnotationElementValue;
-import objectos.code.tmpl.InternalApi.AnnotationInvocation;
-import objectos.code.tmpl.InternalApi.ArrayAccessExpression;
-import objectos.code.tmpl.InternalApi.ArrayDimension;
-import objectos.code.tmpl.InternalApi.ArrayTypeElement;
-import objectos.code.tmpl.InternalApi.ArrayTypeInvocation;
-import objectos.code.tmpl.InternalApi.AssignmentExpression;
-import objectos.code.tmpl.InternalApi.ClassDeclaration;
-import objectos.code.tmpl.InternalApi.ClassDeclarationElement;
-import objectos.code.tmpl.InternalApi.ClassNameInvocation;
-import objectos.code.tmpl.InternalApi.ConstructorDeclaration;
-import objectos.code.tmpl.InternalApi.ConstructorDeclarationElement;
-import objectos.code.tmpl.InternalApi.EnumConstant;
-import objectos.code.tmpl.InternalApi.EnumConstantElement;
-import objectos.code.tmpl.InternalApi.EnumDeclaration;
-import objectos.code.tmpl.InternalApi.EnumDeclarationElement;
-import objectos.code.tmpl.InternalApi.Expression;
-import objectos.code.tmpl.InternalApi.ExpressionName;
-import objectos.code.tmpl.InternalApi.ExtendsRef;
-import objectos.code.tmpl.InternalApi.FieldAccessExpression;
-import objectos.code.tmpl.InternalApi.FieldDeclaration;
-import objectos.code.tmpl.InternalApi.FieldDeclarationElement;
-import objectos.code.tmpl.InternalApi.FinalModifier;
-import objectos.code.tmpl.InternalApi.FormalParameter;
-import objectos.code.tmpl.InternalApi.FormalParameterType;
-import objectos.code.tmpl.InternalApi.IdentifierRef;
-import objectos.code.tmpl.InternalApi.Implements;
-import objectos.code.tmpl.InternalApi.IncludeRef;
-import objectos.code.tmpl.InternalApi.IntPrimitiveType;
-import objectos.code.tmpl.InternalApi.LeftHandSide;
-import objectos.code.tmpl.InternalApi.LocalVariableDeclarationRef;
-import objectos.code.tmpl.InternalApi.MethodDeclaration;
-import objectos.code.tmpl.InternalApi.MethodDeclarationElement;
-import objectos.code.tmpl.InternalApi.MethodInvocation;
-import objectos.code.tmpl.InternalApi.MethodInvocationElement;
-import objectos.code.tmpl.InternalApi.MethodInvocationSubject;
-import objectos.code.tmpl.InternalApi.NewLineRef;
-import objectos.code.tmpl.InternalApi.PrivateModifier;
-import objectos.code.tmpl.InternalApi.ProtectedModifier;
-import objectos.code.tmpl.InternalApi.PublicModifier;
-import objectos.code.tmpl.InternalApi.ReturnStatement;
-import objectos.code.tmpl.InternalApi.StaticModifier;
-import objectos.code.tmpl.InternalApi.StringLiteral;
-import objectos.code.tmpl.InternalApi.ThisKeyword;
-import objectos.code.tmpl.InternalApi.VoidInvocation;
-import objectos.code.tmpl.TemplateApi;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
 
-  private TemplateApi api;
+  private Pass0 api;
 
   /**
    * Sole constructor.
    */
   protected JavaTemplate() {}
-
-  public final void eval(TemplateApi api) {
-    Check.state(this.api == null, """
-    Another evaluation is already is progress.
-    """);
-
-    this.api = Check.notNull(api, "api == null");
-
-    try {
-      definition();
-    } finally {
-      this.api = null;
-    }
-  }
 
   @Override
   public String toString() {
