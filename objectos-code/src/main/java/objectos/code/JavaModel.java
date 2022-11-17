@@ -50,6 +50,9 @@ public final class JavaModel {
 
   public sealed interface ClassDeclarationElement extends Markable {}
 
+  public sealed interface ClassInstanceCreationExpression
+      extends Expression, ExpressionStatement {}
+
   public sealed interface ClassNameInvocation
       extends
       FieldDeclarationElement, FormalParameterType,
@@ -203,6 +206,7 @@ public final class JavaModel {
       AssignmentExpression,
       ClassDeclaration,
       ClassNameInvocation,
+      ClassInstanceCreationExpression,
       ConstructorDeclaration,
       EnumConstant,
       EnumDeclaration,

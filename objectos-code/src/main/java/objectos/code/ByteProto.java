@@ -76,11 +76,12 @@ final class ByteProto {
   static final int ARRAY_ACCESS_EXPRESSION = -26;
   static final int ASSIGNMENT_EXPRESSION = -27;
   static final int ASSIGNMENT_OPERATOR = -28;
-  static final int EXPRESSION_NAME = -29;
-  static final int FIELD_ACCESS_EXPRESSION0 = -30;
-  static final int METHOD_INVOCATION = -31;
-  static final int STRING_LITERAL = -32;
-  static final int THIS = -33;
+  static final int CLASS_INSTANCE_CREATION0 = -29;
+  static final int EXPRESSION_NAME = -30;
+  static final int FIELD_ACCESS_EXPRESSION0 = -31;
+  static final int METHOD_INVOCATION = -32;
+  static final int STRING_LITERAL = -33;
+  static final int THIS = -34;
 
   private ByteProto() {}
 
@@ -91,7 +92,9 @@ final class ByteProto {
 
   public static boolean isExpressionStatement(int proto) {
     return switch (proto) {
-      case ASSIGNMENT_EXPRESSION, METHOD_INVOCATION -> true;
+      case ASSIGNMENT_EXPRESSION,
+          CLASS_INSTANCE_CREATION0,
+          METHOD_INVOCATION -> true;
 
       default -> false;
     };

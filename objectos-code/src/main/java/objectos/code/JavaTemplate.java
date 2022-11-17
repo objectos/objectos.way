@@ -25,6 +25,7 @@ import objectos.code.JavaModel.ArrayTypeInvocation;
 import objectos.code.JavaModel.AssignmentExpression;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
+import objectos.code.JavaModel.ClassInstanceCreationExpression;
 import objectos.code.JavaModel.ClassNameInvocation;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
@@ -110,6 +111,11 @@ public abstract class JavaTemplate {
 
   protected final IntPrimitiveType _int() {
     return api()._int();
+  }
+
+  protected final ClassInstanceCreationExpression _new(
+      ClassNameInvocation type, Expression... arguments) {
+    return api()._new(type, arguments);
   }
 
   protected final void _package(String packageName) {

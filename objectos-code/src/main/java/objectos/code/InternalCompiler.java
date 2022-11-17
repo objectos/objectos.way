@@ -209,6 +209,47 @@ class InternalCompiler extends InternalApi {
     );
   }
 
+  /*
+   * new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )
+   */
+  private int classInstanceCreation0() {
+    var qualifier = ByteCode.NOP;
+    var ctypeargs = ByteCode.NOP;
+    var type = ByteCode.NOP;
+    var typeargs = ByteCode.NOP;
+    var args = ByteCode.NOP;
+    var cbody = ByteCode.NOP;
+
+    protoadv();
+
+    protobrk("""
+    Invalid class instance creation (0) expression:
+
+    Found 'BREAK' but expected 'type to be instantiated' instead.
+    """);
+
+    protojmp();
+    type = typeName();
+    protonxt();
+
+    while (protolop()) {
+      protojmp();
+
+      if (ByteProto.isExpression(proto)) {
+        args = listadd(args, expression());
+      } else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      protonxt();
+    }
+
+    return codeadd(
+      ByteCode.CLASS_INSTANCE_CREATION,
+      qualifier, ctypeargs, type, typeargs, args, cbody
+    );
+  }
+
   private int compilationUnit() {
     var _package = ByteCode.NOP;
     var _import = ByteCode.NOP;
@@ -389,6 +430,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
 
       case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreation0();
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 

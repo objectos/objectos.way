@@ -258,7 +258,7 @@ abstract class State {
     markArray[markIndex] += stackArray[stackIndex--];
   }
 
-  final void lambdaPop() {
+  final void lambdaEnd() {
     var startCount = stackArray[stackIndex];
 
     var diff = codeIndex - startCount;
@@ -266,7 +266,7 @@ abstract class State {
     stackArray[stackIndex] = diff;
   }
 
-  final void lambdaPush() {
+  final void lambdaStart() {
     stackIndex++;
 
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex);
@@ -342,7 +342,7 @@ abstract class State {
     markArray[markIndex] += count;
   }
 
-  final void markPush() {
+  final void markStart() {
     markIndex++;
 
     markArray = IntArrays.growIfNecessary(markArray, markIndex);

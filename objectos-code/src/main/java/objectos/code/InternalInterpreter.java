@@ -118,6 +118,16 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
   }
 
+  private void argumentList() {
+    if (largs(false)) {
+      expression();
+
+      while (largs(true)) {
+        expression();
+      }
+    }
+  }
+
   private void arrayAccessExpression() {
     codeass("""
     Invalid array access expression:
@@ -280,6 +290,52 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.METHOD_DECLARATION -> methodDeclaration();
 
       default -> throw codeuoe();
+    }
+  }
+
+  private void classInstanceCreationExpression() {
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE qualifier");
+    }
+
+    write("new");
+
+    writeSpace();
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE constructor type args");
+    }
+
+    codeass("""
+    Invalid class instance creation expression:
+
+    A no-operation (NOP) was found where the type to be instantiated was expected.
+    """);
+
+    codepsh();
+    typeName();
+    codepop();
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE type args");
+    }
+
+    writeArgumentListStart();
+
+    if (codenxt()) {
+      codepsh();
+      argumentList();
+      codepop();
+    }
+
+    writeArgumentListEnd();
+
+    if (codenxt()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE class body");
     }
   }
 
@@ -564,7 +620,7 @@ abstract class InternalInterpreter extends InternalCompiler {
     if (codenxt()) {
       writeArgumentListStart();
       codepsh();
-      methodInvocationArguments();
+      argumentList();
       codepop();
       writeArgumentListEnd();
     }
@@ -580,6 +636,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
 
       case ByteCode.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteCode.CLASS_INSTANCE_CREATION -> classInstanceCreationExpression();
 
       case ByteCode.EXPRESSION_NAME -> expressionName();
 
@@ -944,21 +1002,11 @@ abstract class InternalInterpreter extends InternalCompiler {
 
     if (codenxt()) {
       codepsh();
-      methodInvocationArguments();
+      argumentList();
       codepop();
     }
 
     writeArgumentListEnd();
-  }
-
-  private void methodInvocationArguments() {
-    if (largs(false)) {
-      expression();
-
-      while (largs(true)) {
-        expression();
-      }
-    }
   }
 
   private void methodInvocationSubject() {

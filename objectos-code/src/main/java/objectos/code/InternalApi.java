@@ -28,6 +28,7 @@ import objectos.code.JavaModel.ArrayTypeInvocation;
 import objectos.code.JavaModel.AssignmentExpression;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
+import objectos.code.JavaModel.ClassInstanceCreationExpression;
 import objectos.code.JavaModel.ClassNameInvocation;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
@@ -122,6 +123,21 @@ class InternalApi extends State implements MarkerApi {
 
   public final IntPrimitiveType _int() {
     object(ByteProto.PRIMITIVE_TYPE, PrimitiveType.INT);
+
+    return JavaModel.REF;
+  }
+
+  public final ClassInstanceCreationExpression _new(
+      ClassNameInvocation type, Expression[] arguments) {
+    markStart();
+
+    type.mark(this);
+
+    for (var arg : arguments) {
+      arg.mark(this);
+    }
+
+    element(ByteProto.CLASS_INSTANCE_CREATION0);
 
     return JavaModel.REF;
   }
@@ -504,18 +520,6 @@ class InternalApi extends State implements MarkerApi {
     );
 
     object(ByteProto.IDENTIFIER, name);
-  }
-
-  private void lambdaEnd() {
-    lambdaPop();
-  }
-
-  private void lambdaStart() {
-    lambdaPush();
-  }
-
-  private void markStart() {
-    markPush();
   }
 
   private void methodInvocation() {
