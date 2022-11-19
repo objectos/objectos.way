@@ -15,23 +15,25 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-public class CompilationUnitTest extends AbstractObjectosCodeTest {
+public class CompilationUnitTest {
+
+  private final PackageName TEST = PackageName.of("test");
 
   @Test(description = """
   class Foo {}
   """)
   public void testCase01() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        _class(id("Foo"));
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(id("Foo"));
+        }
+      }.toString(),
 
       """
       class Foo {}
@@ -45,17 +47,15 @@ public class CompilationUnitTest extends AbstractObjectosCodeTest {
   class Foo {}
   """)
   public void testCase02() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        _package("test");
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _package("test");
 
-        _class(id("Foo"));
-      }
-    };
-
-    testDefault(
-      tmpl,
+          _class(id("Foo"));
+        }
+      }.toString(),
 
       """
       package test;
@@ -71,19 +71,17 @@ public class CompilationUnitTest extends AbstractObjectosCodeTest {
   class Foo extends Bar {}
   """)
   public void testCase03() {
-    var tmpl = new JavaTemplate() {
-      final ClassName _Bar = ClassName.of(TEST, "Bar");
+    assertEquals(
+      new JavaTemplate() {
+        final ClassName _Bar = ClassName.of(TEST, "Bar");
 
-      @Override
-      protected final void definition() {
-        autoImports();
+        @Override
+        protected final void definition() {
+          autoImports();
 
-        _class(id("Foo"), _extends(_Bar));
-      }
-    };
-
-    testDefault(
-      tmpl,
+          _class(id("Foo"), _extends(_Bar));
+        }
+      }.toString(),
 
       """
       import test.Bar;
@@ -97,21 +95,19 @@ public class CompilationUnitTest extends AbstractObjectosCodeTest {
   autoImports() + java.lang
   """)
   public void testCase04() {
-    var tmpl = new JavaTemplate() {
-      final ClassName _Thread = ClassName.of(Thread.class);
+    assertEquals(
+      new JavaTemplate() {
+        final ClassName _Thread = ClassName.of(Thread.class);
 
-      @Override
-      protected final void definition() {
-        _package("test");
+        @Override
+        protected final void definition() {
+          _package("test");
 
-        autoImports();
+          autoImports();
 
-        _class(id("Test"), _extends(_Thread));
-      }
-    };
-
-    testDefault(
-      tmpl,
+          _class(id("Test"), _extends(_Thread));
+        }
+      }.toString(),
 
       """
       package test;
@@ -125,21 +121,19 @@ public class CompilationUnitTest extends AbstractObjectosCodeTest {
   autoImports() + same package
   """)
   public void testCase05() {
-    var tmpl = new JavaTemplate() {
-      final ClassName _Bar = ClassName.of(TEST, "Bar");
+    assertEquals(
+      new JavaTemplate() {
+        final ClassName _Bar = ClassName.of(TEST, "Bar");
 
-      @Override
-      protected final void definition() {
-        _package("test");
+        @Override
+        protected final void definition() {
+          _package("test");
 
-        autoImports();
+          autoImports();
 
-        _class(id("Test"), _extends(_Bar));
-      }
-    };
-
-    testDefault(
-      tmpl,
+          _class(id("Test"), _extends(_Bar));
+        }
+      }.toString(),
 
       """
       package test;
@@ -154,23 +148,21 @@ public class CompilationUnitTest extends AbstractObjectosCodeTest {
   - multiple import declarations
   """)
   public void testCase06() {
-    var tmpl = new JavaTemplate() {
-      final ClassName _A = ClassName.of(TEST, "A");
-      final ClassName _B = ClassName.of(TEST, "B");
-      final ClassName _C = ClassName.of(TEST, "C");
+    assertEquals(
+      new JavaTemplate() {
+        final ClassName _A = ClassName.of(TEST, "A");
+        final ClassName _B = ClassName.of(TEST, "B");
+        final ClassName _C = ClassName.of(TEST, "C");
 
-      @Override
-      protected final void definition() {
-        autoImports();
+        @Override
+        protected final void definition() {
+          autoImports();
 
-        _class(id("Test0"), _extends(_A));
-        _class(id("Test1"), _extends(_B));
-        _class(id("Test2"), _extends(_C));
-      }
-    };
-
-    testDefault(
-      tmpl,
+          _class(id("Test0"), _extends(_A));
+          _class(id("Test1"), _extends(_B));
+          _class(id("Test2"), _extends(_C));
+        }
+      }.toString(),
 
       """
       import test.A;

@@ -34,6 +34,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("LNULL"); // remove
     value("JMP"); // remove
     value("NEW_LINE");
+    value("OBJECT_STRING");
 
     comment("types");
 
@@ -54,7 +55,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("CLASS");
     value("MODIFIER");
-    value("IDENTIFIER");
+    value("IDENTIFIER"); // remove
 
     comment("field");
 

@@ -205,7 +205,7 @@ class InternalCompiler2 extends InternalApi2 {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.IDENTIFIER -> $elemset(2, identifier());
+        case ByteProto.IDENTIFIER -> $elemset(2, objectString());
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -255,11 +255,11 @@ class InternalCompiler2 extends InternalApi2 {
     return $elempop();
   }
 
-  private int identifier() {
+  private int objectString() {
     int value = $protonxt();
 
     $elemadd(
-      ByteCode.IDENTIFIER,
+      ByteCode.OBJECT_STRING,
       value
     );
 
@@ -277,7 +277,7 @@ class InternalCompiler2 extends InternalApi2 {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.PACKAGE_NAME -> $elemset(2, packageName());
+        case ByteProto.PACKAGE_NAME -> $elemset(2, objectString());
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -288,14 +288,6 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     return $elempop();
-  }
-
-  private int packageName() {
-    int value = $protonxt();
-
-    $stackpop();
-
-    return value;
   }
 
 }

@@ -19,6 +19,11 @@ import objectos.util.IntArrays;
 
 abstract class InternalInterpreter2 extends InternalCompiler2 {
 
+  @FunctionalInterface
+  private interface Executable {
+    void execute();
+  }
+
   protected abstract void write(char c);
 
   protected abstract void write(String s);
@@ -116,7 +121,9 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   private boolean $codejmp(int expected) {
     var success = $codejmp();
 
-    $codeass(expected);
+    if (success) {
+      $codeass(expected);
+    }
 
     return success;
   }
@@ -146,6 +153,20 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     """.formatted(codeIndex - 1));
   }
 
+  private void $execjmp(Executable executable) {
+    executable.execute();
+
+    $coderet();
+  }
+
+  private void $execlst(Executable executable) {
+    $codejmp();
+
+    executable.execute();
+
+    $coderet();
+  }
+
   private int $stackpop() {
     return stackArray[stackIndex--];
   }
@@ -173,9 +194,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     writeSpace();
 
     if ($codejmp()) {
-      declarationSimpleName();
-
-      $coderet();
+      $execjmp(this::declarationSimpleName);
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
@@ -215,8 +234,12 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   private void compilationUnit() {
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
-    if ($codejmp()) {
-      throw new UnsupportedOperationException("Implement me");
+    var prevSection = false;
+
+    if ($codejmp(ByteCode.LHEAD)) {
+      $execjmp(this::compilationUnitPackage);
+
+      prevSection = true;
     }
 
     if ($codejmp()) {
@@ -224,44 +247,81 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     }
 
     if ($codejmp(ByteCode.LHEAD)) {
-      compilationUnitBody();
-
-      while ($codejmp()) {
-        throw new UnsupportedOperationException("Implement me");
+      if (prevSection) {
+        writeCompilationUnitSeparator();
       }
 
-      $coderet();
+      $execjmp(this::compilationUnitBody);
     }
 
     writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
   }
 
   private void compilationUnitBody() {
-    $codejmp();
+    $execlst(this::compilationUnitBodyItem);
 
+    while ($codejmp()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private void compilationUnitBodyItem() {
     switch (code) {
       case ByteCode.CLASS -> classDeclaration();
 
       default -> $throwuoe();
     }
-
-    $coderet();
   }
 
-  private void declarationSimpleName() {
+  private void compilationUnitPackage() {
+    $execlst(this::compilationUnitPackageItem);
+
+    while ($codejmp()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private void compilationUnitPackageItem() {
     switch (code) {
-      case ByteCode.IDENTIFIER -> identifier();
+      case ByteCode.PACKAGE -> packageDeclaration();
 
       default -> $throwuoe();
     }
   }
 
-  private void identifier() {
+  private void declarationSimpleName() {
+    switch (code) {
+      case ByteCode.OBJECT_STRING -> objectString();
+
+      default -> $throwuoe();
+    }
+  }
+
+  private void objectString() {
     $codenxt();
 
     var s = (String) objectArray[code];
 
     write(s);
+  }
+
+  private void packageDeclaration() {
+    if ($codejmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: package modifiers");
+    }
+
+    write("package");
+
+    writeSpace();
+
+    if ($codejmp()) {
+      $execjmp(this::objectString);
+    } else {
+      throw new UnsupportedOperationException("Implement me :: no package name");
+    }
+
+    writeSemicolon();
   }
 
 }
