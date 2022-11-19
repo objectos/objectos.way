@@ -26,11 +26,16 @@ class InternalCompiler2 extends InternalApi2 {
 
     stackIndex = 0;
 
+    $elemadd(
+      ByteCode.ROOT,
+      ByteCode.NOP // compilation unit = 1
+    );
+
     loop: while ($prototru()) {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.COMPILATION_UNIT -> compilationUnit();
+        case ByteProto.COMPILATION_UNIT -> $elemset(1, compilationUnit());
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -39,6 +44,13 @@ class InternalCompiler2 extends InternalApi2 {
         default -> throw $protouoe(proto);
       }
     }
+  }
+
+  private void $codeadd(int v0, int v1) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 1);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
   }
 
   private void $codeadd(int v0, int v1, int v2) {
@@ -79,6 +91,18 @@ class InternalCompiler2 extends InternalApi2 {
     markArray[markIndex] = codeIndex;
   }
 
+  private void $elemadd(int v0, int v1) {
+    $codepsh();
+
+    $codeadd(v0, v1);
+  }
+
+  private void $elemadd(int v0, int v1, int v2) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2);
+  }
+
   private void $elemadd(int v0, int v1, int v2, int v3) {
     $codepsh();
 
@@ -101,7 +125,7 @@ class InternalCompiler2 extends InternalApi2 {
     if (list == ByteCode.NOP) {
       list = codeIndex;
 
-      $codeadd(ByteCode.LHEAD, value, ByteCode.LNULL, ByteCode.LNULL);
+      $codeadd(ByteCode.LHEAD, value, ByteCode.NOP, ByteCode.NOP);
 
       codeArray[listIndex] = list;
     } else {
@@ -111,11 +135,11 @@ class InternalCompiler2 extends InternalApi2 {
 
       var next = codeIndex;
 
-      $codeadd(ByteCode.LNEXT, value, ByteCode.LNULL);
+      $codeadd(ByteCode.LNEXT, value, ByteCode.NOP);
 
       var last = codeArray[list + 3];
 
-      var target = last != ByteCode.LNULL ? last : list;
+      var target = last != ByteCode.NOP ? last : list;
 
       codeArray[target + 2] = next;
 
@@ -162,77 +186,16 @@ class InternalCompiler2 extends InternalApi2 {
     protoIndex = location;
   }
 
-  private int arrayAccessExpression() {
-    int reference = ByteCode.NOP;
-    int expressions = ByteCode.NOP;
-
-    protoadv();
-
-    if (protolop()) {
-      protojmp();
-
-      switch (proto) {
-        case ByteProto.EXPRESSION_NAME -> reference = expressionName();
-
-        default -> throw protouoe();
-      }
-
-      protonxt();
-
-      while (protolop()) {
-        protojmp();
-
-        expressions = listadd(expressions, expression());
-
-        protonxt();
-      }
-    }
-
-    return codeadd(ByteCode.ARRAY_ACCESS_EXPRESSION, reference, expressions);
-  }
-
-  private int assignmentExpression() {
-    var lhs = ByteCode.NOP;
-    var operator = ByteCode.NOP;
-    var expression = ByteCode.NOP;
-
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
-
-      switch (proto) {
-        case ByteProto.ASSIGNMENT_OPERATOR -> operator = setOrThrow(operator, protoadv());
-
-        case ByteProto.ARRAY_ACCESS_EXPRESSION,
-            ByteProto.EXPRESSION_NAME,
-            ByteProto.FIELD_ACCESS_EXPRESSION0 -> {
-          if (lhs == ByteCode.NOP) {
-            lhs = setOrThrow(lhs, expression());
-          } else {
-            expression = setOrThrow(expression, expression());
-          }
-        }
-
-        default -> expression = setOrThrow(expression, expression());
-      }
-
-      protonxt();
-    }
-
-    return codeadd(ByteCode.ASSIGNMENT_EXPRESSION, lhs, operator, expression);
-  }
-
   private int classDeclaration(boolean topLevel) {
     $elemadd(
       ByteCode.CLASS,
-      ByteCode.NOP, /* modifiers = 1 */
-      ByteCode.NOP, /* name = 2 */
-      ByteCode.NOP, /* tparams = 3 */
-      ByteCode.NOP, /* extends = 4 */
-      ByteCode.NOP, /* implements = 5 */
-      ByteCode.NOP, /* permits = 6 */
-      ByteCode.NOP /* body = 7 */
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // name = 2
+      ByteCode.NOP, // tparams = 3
+      ByteCode.NOP, // extends = 4
+      ByteCode.NOP, // implements = 5
+      ByteCode.NOP, // permits = 6
+      ByteCode.NOP /// body = 7
     );
 
     var publicFound = false;
@@ -259,47 +222,6 @@ class InternalCompiler2 extends InternalApi2 {
     return $elempop();
   }
 
-  /*
-   * new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )
-   */
-  private int classInstanceCreation0() {
-    var qualifier = ByteCode.NOP;
-    var ctypeargs = ByteCode.NOP;
-    var type = ByteCode.NOP;
-    var typeargs = ByteCode.NOP;
-    var args = ByteCode.NOP;
-    var cbody = ByteCode.NOP;
-
-    protoadv();
-
-    protobrk("""
-    Invalid class instance creation (0) expression:
-
-    Found 'BREAK' but expected 'type to be instantiated' instead.
-    """);
-
-    protojmp();
-    type = typeName();
-    protonxt();
-
-    while (protolop()) {
-      protojmp();
-
-      if (ByteProto.isExpression(proto)) {
-        args = listadd(args, expression());
-      } else {
-        throw new UnsupportedOperationException("Implement me");
-      }
-
-      protonxt();
-    }
-
-    return codeadd(
-      ByteCode.CLASS_INSTANCE_CREATION,
-      qualifier, ctypeargs, type, typeargs, args, cbody
-    );
-  }
-
   private int compilationUnit() {
     $elemadd(
       ByteCode.COMPILATION_UNIT,
@@ -313,6 +235,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       switch (proto) {
         case ByteProto.CLASS_DECLARATION -> $elemlst(3, classDeclaration(true));
+
+        case ByteProto.PACKAGE_DECLARATION -> $elemlst(1, packageDeclaration());
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -331,156 +255,47 @@ class InternalCompiler2 extends InternalApi2 {
     return $elempop();
   }
 
-  private int expression() {
-    return switch (proto) {
-      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
+  private int identifier() {
+    int value = $protonxt();
 
-      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+    $elemadd(
+      ByteCode.IDENTIFIER,
+      value
+    );
 
-      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreation0();
-
-      case ByteProto.EXPRESSION_NAME -> expressionName();
-
-      case ByteProto.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
-
-      case ByteProto.METHOD_INVOCATION -> methodInvocation();
-
-      case ByteProto.STRING_LITERAL -> stringLiteral();
-
-      case ByteProto.THIS -> thisKeyword();
-
-      default -> throw protouoe();
-    };
+    return $elempop();
   }
 
-  private int expressionName() {
-    var self = codeadd(ByteCode.EXPRESSION_NAME);
+  private int packageDeclaration() {
+    $elemadd(
+      ByteCode.PACKAGE,
+      ByteCode.NOP, /* annotations = 1 */
+      ByteCode.NOP /* name = 2 */
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> typeName();
+        case ByteProto.PACKAGE_NAME -> $elemset(2, packageName());
 
-        case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, protoadv());
+        case ByteProto.JMP -> $stackpsh();
 
-        default -> protouoe();
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
       }
-
-      protonxt();
     }
 
-    codeadd(ByteCode.NOP);
-
-    return self;
+    return $elempop();
   }
 
-  private int fieldAccessExpression0() {
-    protoadv();
-
-    protobrk("""
-    Invalid field access expression:
-
-    Found BREAK but expected a primary expression
-    """);
-
-    protojmp();
-    var primary = expression();
-    protonxt();
-
-    protojmp();
-
-    protoass(ByteProto.IDENTIFIER, """
-    Invalid field access expression:
-
-    Expected an identifier but found proto=%d
-    """);
-
-    var identifier = protoadv();
-    protonxt();
-
-    return codeadd(ByteCode.FIELD_ACCESS_EXPRESSION0, primary, identifier);
-  }
-
-  private int identifier() {
+  private int packageName() {
     int value = $protonxt();
 
     $stackpop();
 
     return value;
-  }
-
-  private int methodInvocation() {
-    var subject = ByteCode.NOP;
-    var typeArgs = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var args = ByteCode.NOP;
-
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
-
-      switch (proto) {
-        case ByteProto.EXPRESSION_NAME -> args = listadd(args, expressionName());
-
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, protoadv());
-
-        case ByteProto.NEW_LINE -> args = listadd(args, newLine());
-
-        case ByteProto.METHOD_INVOCATION -> args = listadd(args, methodInvocation());
-
-        case ByteProto.STRING_LITERAL -> args = listadd(args, stringLiteral());
-
-        case ByteProto.TYPE_NAME -> subject = setOrReplace(subject, typeName());
-
-        default -> throw protouoe();
-      }
-
-      protonxt();
-    }
-
-    return codeadd(ByteCode.METHOD_INVOCATION, subject, typeArgs, name, args);
-  }
-
-  private int newLine() {
-    return codeadd(ByteCode.NEW_LINE);
-  }
-
-  private int stringLiteral() {
-    return codeadd(ByteCode.STRING_LITERAL, protoadv());
-  }
-
-  private int thisKeyword() {
-    protoadv();
-
-    return codeadd(ByteCode.THIS);
-  }
-
-  private int typeName() {
-    protoadv();
-
-    var o = objget(proto);
-
-    var code = typeNameCode(o);
-
-    return codeadd(code, proto);
-  }
-
-  private int typeNameCode(Object o) {
-    if (o instanceof ClassName className) {
-      if (autoImports.addClassName(className, proto)) {
-        return ByteCode.SIMPLE_NAME;
-      } else {
-        return ByteCode.QUALIFIED_NAME;
-      }
-    } else if (o instanceof NoTypeName noType) {
-      return ByteCode.NO_TYPE;
-    } else {
-      throw new UnsupportedOperationException("Implement me :: type=" + o.getClass());
-    }
   }
 
 }

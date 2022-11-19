@@ -26,12 +26,13 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
   public final void execute() {
     comment("internal instructions");
 
+    value("ROOT");
     value("NOP");
     value("EOF");
     value("LHEAD");
     value("LNEXT");
-    value("LNULL");
-    value("JMP");
+    value("LNULL"); // remove
+    value("JMP"); // remove
     value("NEW_LINE");
 
     comment("types");
