@@ -205,6 +205,8 @@ class InternalCompiler2 extends InternalApi2 {
       var proto = $protonxt();
 
       switch (proto) {
+        case ByteProto.EXTENDS -> $elemset(4, extendsClause());
+
         case ByteProto.IDENTIFIER -> $elemset(2, objectString());
 
         case ByteProto.JMP -> $stackpsh();
@@ -218,6 +220,20 @@ class InternalCompiler2 extends InternalApi2 {
     if (topLevel) {
       autoImports.fileName(publicFound, simpleName);
     }
+
+    return $elempop();
+  }
+
+  private int className() {
+    var proto = $protonxt();
+
+    var o = (ClassName) objectArray[proto];
+
+    var code = autoImports.addClassName(o, proto)
+        ? ByteCode.SIMPLE_NAME
+        : ByteCode.QUALIFIED_NAME;
+
+    $elemadd(code, proto);
 
     return $elempop();
   }
@@ -236,13 +252,13 @@ class InternalCompiler2 extends InternalApi2 {
       switch (proto) {
         case ByteProto.CLASS_DECLARATION -> $elemlst(3, classDeclaration(true));
 
-        case ByteProto.PACKAGE_DECLARATION -> $elemlst(1, packageDeclaration());
+        case ByteProto.PACKAGE_DECLARATION -> $elemset(1, packageDeclaration());
 
         case ByteProto.JMP -> $stackpsh();
 
         case ByteProto.BREAK -> {
           if (autoImports.enabled()) {
-            throw new UnsupportedOperationException("Implement me");
+            importDeclarations(2);
           }
 
           break loop;
@@ -253,6 +269,43 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     return $elempop();
+  }
+
+  private int extendsClause() {
+    $elemadd(
+      ByteCode.EXTENDS,
+      ByteCode.NOP // value = 1
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    return $elempop();
+  }
+
+  private void importDeclarations(int offset) {
+    var entries = autoImports.entrySet();
+
+    for (var entry : entries) {
+      var self = codeIndex;
+
+      Integer value = entry.getValue();
+
+      $codeadd(ByteCode.IMPORT, value);
+
+      $elemlst(offset, self);
+    }
   }
 
   private int objectString() {

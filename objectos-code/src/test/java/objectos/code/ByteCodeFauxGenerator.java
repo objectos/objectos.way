@@ -55,6 +55,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("CLASS");
     value("MODIFIER");
+    value("EXTENDS");
     value("IDENTIFIER"); // remove
 
     comment("field");

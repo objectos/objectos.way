@@ -19,11 +19,6 @@ import objectos.util.IntArrays;
 
 abstract class InternalInterpreter2 extends InternalCompiler2 {
 
-  @FunctionalInterface
-  private interface Executable {
-    void execute();
-  }
-
   protected abstract void write(char c);
 
   protected abstract void write(String s);
@@ -73,8 +68,10 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     $codenxt(ByteCode.ROOT);
 
-    if ($codejmp(ByteCode.COMPILATION_UNIT)) {
+    if ($nextjmp()) {
+      $codentr(ByteCode.COMPILATION_UNIT);
       compilationUnit();
+      $codexit();
     } else {
       $coderr();
     }
@@ -90,42 +87,20 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     }
   }
 
-  private boolean $codejmp() {
-    $codenxt();
-
-    if (code == ByteCode.NOP) {
-      return false;
-    }
-
-    if (code < 0) {
-      throw new InvalidTemplateException("""
-
-      Could not render template.
-
-      Expected a jump offset but found an instruction instead.
-
-        code=%d
-        codeIndex=%d
-      """.formatted(code, codeIndex - 1));
-    }
-
+  private void $codentr() {
     $stackpsh();
 
     codeIndex = code;
 
     $codenxt();
-
-    return true;
   }
 
-  private boolean $codejmp(int expected) {
-    var success = $codejmp();
+  private void $codentr(int expected) {
+    $stackpsh();
 
-    if (success) {
-      $codeass(expected);
-    }
+    codeIndex = code;
 
-    return success;
+    $codenxt(expected);
   }
 
   private void $codenxt() {
@@ -138,8 +113,8 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     $codeass(expected);
   }
 
-  private void $coderet() {
-    codeIndex = $stackpop();
+  private Object $codeobj() {
+    return objectArray[code];
   }
 
   private void $coderr() {
@@ -153,18 +128,48 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     """.formatted(codeIndex - 1));
   }
 
-  private void $execjmp(Executable executable) {
-    executable.execute();
-
-    $coderet();
+  private void $codexit() {
+    codeIndex = $stackpop();
   }
 
-  private void $execlst(Executable executable) {
-    $codejmp();
+  private boolean $lnext() {
+    if (code == ByteCode.LHEAD) {
+      $codenxt();
 
-    executable.execute();
+      return true;
+    }
 
-    $coderet();
+    $codenxt();
+
+    if (code == ByteCode.NOP) {
+      return false;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private void $malformed() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private boolean $nextjmp() {
+    $codenxt();
+
+    if (code > 0) {
+      return true;
+    } else if (code == ByteCode.NOP) {
+      return false;
+    } else {
+      throw new InvalidTemplateException("""
+
+      Could not render template.
+
+      Expected a jump offset but found an instruction instead.
+
+        code=%d
+        codeIndex=%d
+      """.formatted(code, codeIndex - 1));
+    }
   }
 
   private int $stackpop() {
@@ -184,7 +189,9 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   }
 
   private void classDeclaration() {
-    if ($codejmp()) {
+    var prevSection = false;
+
+    if ($nextjmp()) {
       throw new UnsupportedOperationException(
         "Implement me :: modifiers");
     }
@@ -193,28 +200,35 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     writeSpace();
 
-    if ($codejmp()) {
-      $execjmp(this::declarationSimpleName);
+    if ($nextjmp()) {
+      $codentr();
+      declarationSimpleName();
+      $codexit();
+
+      prevSection = true;
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    if ($codejmp()) {
+    if ($nextjmp()) {
       throw new UnsupportedOperationException(
         "Implement me :: tparams");
     }
 
-    if ($codejmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: extends");
+    if ($nextjmp()) {
+      writeSpaceIf(prevSection);
+
+      $codentr();
+      extendsSingleClause();
+      $codexit();
     }
 
-    if ($codejmp()) {
+    if ($nextjmp()) {
       throw new UnsupportedOperationException(
         "Implement me :: implements");
     }
 
-    if ($codejmp()) {
+    if ($nextjmp()) {
       throw new UnsupportedOperationException(
         "Implement me :: permits");
     }
@@ -223,7 +237,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     var contents = false;
 
-    if ($codejmp()) {
+    if ($nextjmp()) {
       throw new UnsupportedOperationException(
         "Implement me :: body");
     }
@@ -236,32 +250,48 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     var prevSection = false;
 
-    if ($codejmp(ByteCode.LHEAD)) {
-      $execjmp(this::compilationUnitPackage);
+    if ($nextjmp()) {
+      $codentr(ByteCode.PACKAGE);
+      packageDeclaration();
+      $codexit();
 
       prevSection = true;
     }
 
-    if ($codejmp()) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    if ($codejmp(ByteCode.LHEAD)) {
+    if ($nextjmp()) {
       if (prevSection) {
         writeCompilationUnitSeparator();
       }
 
-      $execjmp(this::compilationUnitBody);
+      $codentr();
+      importDeclarationList();
+      $codexit();
+
+      prevSection = true;
+    }
+
+    if ($nextjmp()) {
+      if (prevSection) {
+        writeCompilationUnitSeparator();
+      }
+
+      $codentr(ByteCode.LHEAD);
+      compilationUnitBody();
+      $codexit();
     }
 
     writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
   }
 
   private void compilationUnitBody() {
-    $execlst(this::compilationUnitBodyItem);
+    if ($lnext()) {
+      $codentr();
+      compilationUnitBodyItem();
+      $codexit();
 
-    while ($codejmp()) {
-      throw new UnsupportedOperationException("Implement me");
+      while ($lnext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
     }
   }
 
@@ -273,25 +303,55 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     }
   }
 
-  private void compilationUnitPackage() {
-    $execlst(this::compilationUnitPackageItem);
-
-    while ($codejmp()) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-  }
-
-  private void compilationUnitPackageItem() {
+  private void declarationSimpleName() {
     switch (code) {
-      case ByteCode.PACKAGE -> packageDeclaration();
+      case ByteCode.OBJECT_STRING -> objectString();
 
       default -> $throwuoe();
     }
   }
 
-  private void declarationSimpleName() {
+  private void extendsSingleClause() {
+    write("extends");
+
+    writeSpace();
+
+    if ($nextjmp()) {
+      $codentr();
+      typeName();
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
+  private void importDeclarationList() {
+    if ($lnext()) {
+      $codentr();
+      importDeclarationListItem();
+      $codexit();
+
+      while ($lnext()) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+  }
+
+  private void importDeclarationListItem() {
     switch (code) {
-      case ByteCode.OBJECT_STRING -> objectString();
+      case ByteCode.IMPORT -> {
+        write("import");
+
+        writeSpace();
+
+        $codenxt();
+
+        var o = objectArray[code];
+
+        write(o.toString());
+
+        writeSemicolon();
+      }
 
       default -> $throwuoe();
     }
@@ -306,7 +366,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   }
 
   private void packageDeclaration() {
-    if ($codejmp()) {
+    if ($nextjmp()) {
       throw new UnsupportedOperationException(
         "Implement me :: package modifiers");
     }
@@ -315,13 +375,29 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     writeSpace();
 
-    if ($codejmp()) {
-      $execjmp(this::objectString);
+    if ($nextjmp()) {
+      $codentr();
+      objectString();
+      $codexit();
     } else {
       throw new UnsupportedOperationException("Implement me :: no package name");
     }
 
     writeSemicolon();
+  }
+
+  private void typeName() {
+    switch (code) {
+      case ByteCode.SIMPLE_NAME -> {
+        $codenxt();
+
+        var sname = (ClassName) $codeobj();
+
+        write(sname.simpleName);
+      }
+
+      default -> $throwuoe();
+    }
   }
 
 }

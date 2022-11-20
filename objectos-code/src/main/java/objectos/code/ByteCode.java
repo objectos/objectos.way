@@ -48,44 +48,45 @@ final class ByteCode {
 
   static final int CLASS = -19;
   static final int MODIFIER = -20;
-  static final int IDENTIFIER = -21;
+  static final int EXTENDS = -21;
+  static final int IDENTIFIER = -22;
 
   // field
 
-  static final int FIELD_DECLARATION = -22;
-  static final int DECLARATOR_SIMPLE = -23;
-  static final int DECLARATOR_FULL = -24;
+  static final int FIELD_DECLARATION = -23;
+  static final int DECLARATOR_SIMPLE = -24;
+  static final int DECLARATOR_FULL = -25;
 
   // method/constructor
 
-  static final int METHOD_DECLARATION = -25;
-  static final int CONSTRUCTOR_DECLARATION = -26;
-  static final int FORMAL_PARAMETER = -27;
+  static final int METHOD_DECLARATION = -26;
+  static final int CONSTRUCTOR_DECLARATION = -27;
+  static final int FORMAL_PARAMETER = -28;
 
   // enum
 
-  static final int ENUM_DECLARATION = -28;
-  static final int ENUM_CONSTANT = -29;
+  static final int ENUM_DECLARATION = -29;
+  static final int ENUM_CONSTANT = -30;
 
   // annotation
 
-  static final int ANNOTATION = -30;
+  static final int ANNOTATION = -31;
 
   // statements
 
-  static final int LOCAL_VARIABLE = -31;
-  static final int RETURN_STATEMENT = -32;
+  static final int LOCAL_VARIABLE = -32;
+  static final int RETURN_STATEMENT = -33;
 
   // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -33;
-  static final int ASSIGNMENT_EXPRESSION = -34;
-  static final int CLASS_INSTANCE_CREATION = -35;
-  static final int EXPRESSION_NAME = -36;
-  static final int FIELD_ACCESS_EXPRESSION0 = -37;
-  static final int METHOD_INVOCATION = -38;
-  static final int STRING_LITERAL = -39;
-  static final int THIS = -40;
+  static final int ARRAY_ACCESS_EXPRESSION = -34;
+  static final int ASSIGNMENT_EXPRESSION = -35;
+  static final int CLASS_INSTANCE_CREATION = -36;
+  static final int EXPRESSION_NAME = -37;
+  static final int FIELD_ACCESS_EXPRESSION0 = -38;
+  static final int METHOD_INVOCATION = -39;
+  static final int STRING_LITERAL = -40;
+  static final int THIS = -41;
 
   private ByteCode() {}
 

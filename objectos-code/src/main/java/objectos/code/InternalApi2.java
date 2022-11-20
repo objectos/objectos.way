@@ -99,7 +99,13 @@ class InternalApi2 extends State2 implements MarkerApi, TempInternalApi {
 
   @Override
   public final ExtendsRef _extends(ClassName superclass) {
-    object(ByteProto.EXTENDS, superclass);
+    className(superclass);
+
+    markStart();
+
+    markReference();
+
+    element(ByteProto.EXTENDS);
 
     return JavaModel.REF;
   }
