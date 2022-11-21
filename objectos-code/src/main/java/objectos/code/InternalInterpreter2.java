@@ -145,7 +145,13 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
       return false;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    codeIndex = code;
+
+    $codenxt(ByteCode.LNEXT);
+
+    $codenxt();
+
+    return true;
   }
 
   private void $malformed() {
@@ -186,6 +192,38 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
   private void $throwuoe() {
     throw new UnsupportedOperationException("Implement me :: code=" + code);
+  }
+
+  private void argumentList() {
+    var arg = 0;
+    var nl = 0;
+
+    while ($lnext()) {
+      $codentr();
+
+      if (code == ByteCode.NEW_LINE) {
+        nl++;
+      } else {
+        if (arg > 0) {
+          writeComma();
+        }
+
+        for (int i = 0; i < nl; i++) {
+          writeNewLine();
+        }
+
+        expression();
+
+        arg++;
+        nl = 0;
+      }
+
+      $codexit();
+    }
+
+    for (int i = 0; i < nl; i++) {
+      writeNewLine();
+    }
   }
 
   private void classDeclaration() {
@@ -290,7 +328,11 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
       $codexit();
 
       while ($lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        writeCompilationUnitSeparator();
+
+        $codentr();
+        compilationUnitBodyItem();
+        $codexit();
       }
     }
   }
@@ -299,7 +341,9 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     switch (code) {
       case ByteCode.CLASS -> classDeclaration();
 
-      default -> $throwuoe();
+      case ByteCode.METHOD_DECLARATION -> methodDeclaration();
+
+      default -> statement();
     }
   }
 
@@ -309,6 +353,62 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
       default -> $throwuoe();
     }
+  }
+
+  private void expression() {
+    switch (code) {
+      case ByteCode.EXPRESSION_NAME -> expressionName();
+
+      case ByteCode.METHOD_INVOCATION -> methodInvocation();
+
+      case ByteCode.STRING_LITERAL -> stringLiteral();
+
+      default -> $throwuoe();
+    }
+  }
+
+  private void expressionName() {
+    if ($nextjmp()) {
+      $codentr();
+      typeName();
+      $codexit();
+
+      write('.');
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+      expressionNameList();
+      $codexit();
+    }
+  }
+
+  private void expressionNameList() {
+    if ($lnext()) {
+      $codentr();
+      declarationSimpleName();
+      $codexit();
+
+      while ($lnext()) {
+        write('.');
+
+        $codentr();
+        declarationSimpleName();
+        $codexit();
+      }
+    }
+  }
+
+  private void expressionStatement() {
+    if ($nextjmp()) {
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    writeSemicolon();
   }
 
   private void extendsSingleClause() {
@@ -332,7 +432,11 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
       $codexit();
 
       while ($lnext()) {
-        throw new UnsupportedOperationException("Implement me");
+        writeBeforeNextStatement();
+
+        $codentr();
+        importDeclarationListItem();
+        $codexit();
       }
     }
   }
@@ -355,6 +459,99 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
       default -> $throwuoe();
     }
+  }
+
+  private void methodDeclaration() {
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method modifiers");
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method type params");
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+      typeName();
+      $codexit();
+    }
+
+    writeSpace();
+
+    if ($nextjmp()) {
+      $codentr();
+      declarationSimpleName();
+      $codexit();
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method receiver param");
+    }
+
+    write('(');
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method formal parameters");
+    }
+
+    write(')');
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method throws");
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method body");
+    } else {
+      writeBlockStart();
+      writeBlockEnd(false);
+    }
+  }
+
+  private void methodInvocation() {
+    if ($nextjmp()) {
+      $codentr();
+
+      if (ByteCode.isTypeName(code)) {
+        typeName();
+      } else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      $codexit();
+
+      write('.');
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: method invocation type args");
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+      declarationSimpleName();
+      $codexit();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: no method name");
+    }
+
+    writeArgumentListStart();
+
+    if ($nextjmp()) {
+      $codentr();
+      argumentList();
+      $codexit();
+    }
+
+    writeArgumentListEnd();
   }
 
   private void objectString() {
@@ -386,8 +583,34 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     writeSemicolon();
   }
 
+  private void statement() {
+    switch (code) {
+      case ByteCode.EXPRESSION_STATEMENT -> expressionStatement();
+
+      default -> $throwuoe();
+    }
+  }
+
+  private void stringLiteral() {
+    $codenxt();
+
+    var s = (String) objectArray[code];
+
+    writeStringLiteral(s);
+  }
+
   private void typeName() {
     switch (code) {
+      case ByteCode.NO_TYPE -> write("void");
+
+      case ByteCode.QUALIFIED_NAME -> {
+        $codenxt();
+
+        var qname = (ClassName) codeobj();
+
+        write(qname.toString());
+      }
+
       case ByteCode.SIMPLE_NAME -> {
         $codenxt();
 

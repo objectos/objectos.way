@@ -36,8 +36,6 @@ abstract class State2 {
 
   int objectIndex;
 
-  int proto;
-
   int[] protoArray = new int[10];
 
   int protoIndex;
@@ -381,60 +379,8 @@ abstract class State2 {
     protoArray[protoIndex++] = v2;
   }
 
-  final int protoadv() {
-    return proto = protoArray[protoIndex++];
-  }
-
-  final void protoass(int value) {
-    assert proto == value : proto;
-  }
-
-  final void protoass(int value, String message) {
-    if (proto != value) {
-      throw new AssertionError(message.formatted(proto));
-    }
-  }
-
-  final void protobrk(String message) {
-    if (proto == ByteProto.BREAK) {
-      throw new AssertionError(message);
-    }
-  }
-
-  final void protojmp() {
-    protoass(ByteProto.JMP);
-
-    protoadv();
-
-    protopsh();
-  }
-
-  final boolean protolop() {
-    return proto != ByteProto.BREAK;
-  }
-
-  final void protonxt() {
-    protopop();
-
-    protoadv();
-  }
-
   final void protopop() {
     protoIndex = stackArray[--stackIndex];
-  }
-
-  final void protopsh() {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex);
-
-    stackArray[stackIndex++] = protoIndex;
-
-    protoIndex = proto;
-
-    protoadv();
-  }
-
-  final UnsupportedOperationException protouoe() {
-    return new UnsupportedOperationException("Implement me :: proto=" + proto);
   }
 
   final int setOrReplace(int pointer, int value) {

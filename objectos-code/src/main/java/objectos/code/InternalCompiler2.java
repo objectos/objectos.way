@@ -46,6 +46,12 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
+  private void $codeadd(int v0) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 0);
+
+    codeArray[codeIndex++] = v0;
+  }
+
   private void $codeadd(int v0, int v1) {
     codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 1);
 
@@ -70,6 +76,16 @@ class InternalCompiler2 extends InternalApi2 {
     codeArray[codeIndex++] = v3;
   }
 
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 4);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+  }
+
   private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
     codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 7);
 
@@ -82,6 +98,22 @@ class InternalCompiler2 extends InternalApi2 {
     codeArray[codeIndex++] = v6;
     codeArray[codeIndex++] = v7;
   }
+
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 8);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+    codeArray[codeIndex++] = v5;
+    codeArray[codeIndex++] = v6;
+    codeArray[codeIndex++] = v7;
+    codeArray[codeIndex++] = v8;
+  }
+
+  private int $codepop() { return markArray[markIndex--]; }
 
   private void $codepsh() {
     markIndex++;
@@ -109,10 +141,22 @@ class InternalCompiler2 extends InternalApi2 {
     $codeadd(v0, v1, v2, v3);
   }
 
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4);
+  }
+
   private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
     $codepsh();
 
     $codeadd(v0, v1, v2, v3, v4, v5, v6, v7);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4, v5, v6, v7, v8);
   }
 
   private void $elemlst(int offset, int value) {
@@ -150,7 +194,7 @@ class InternalCompiler2 extends InternalApi2 {
   private int $elempop() {
     $stackpop();
 
-    return markArray[markIndex--];
+    return $codepop();
   }
 
   private void $elemset(int offset, int value) {
@@ -159,22 +203,36 @@ class InternalCompiler2 extends InternalApi2 {
     codeArray[base + offset] = value;
   }
 
-  private int $protonxt() {
-    return protoArray[protoIndex++];
-  }
+  private int $protonxt() { return protoArray[protoIndex++]; }
 
-  private boolean $prototru() {
-    return true;
-  }
+  private boolean $prototru() { return true; }
 
   private UnsupportedOperationException $protouoe(int proto) {
     return new UnsupportedOperationException(
       "Implement me :: proto=" + proto);
   }
 
-  private void $stackpop() {
-    protoIndex = stackArray[--stackIndex];
+  private int $simpleadd(int v0) {
+    var self = codeIndex;
+
+    $codeadd(v0);
+
+    $stackpop();
+
+    return self;
   }
+
+  private int $simpleadd(int v0, int v1) {
+    var self = codeIndex;
+
+    $codeadd(v0, v1);
+
+    $stackpop();
+
+    return self;
+  }
+
+  private void $stackpop() { protoIndex = stackArray[--stackIndex]; }
 
   private void $stackpsh() {
     var location = $protonxt();
@@ -233,9 +291,7 @@ class InternalCompiler2 extends InternalApi2 {
         ? ByteCode.SIMPLE_NAME
         : ByteCode.QUALIFIED_NAME;
 
-    $elemadd(code, proto);
-
-    return $elempop();
+    return $simpleadd(code, proto);
   }
 
   private int compilationUnit() {
@@ -252,6 +308,8 @@ class InternalCompiler2 extends InternalApi2 {
       switch (proto) {
         case ByteProto.CLASS_DECLARATION -> $elemlst(3, classDeclaration(true));
 
+        case ByteProto.METHOD_DECLARATION -> $elemlst(3, methodDeclaration());
+
         case ByteProto.PACKAGE_DECLARATION -> $elemset(1, packageDeclaration());
 
         case ByteProto.JMP -> $stackpsh();
@@ -264,11 +322,55 @@ class InternalCompiler2 extends InternalApi2 {
           break loop;
         }
 
+        default -> $elemlst(3, statement(proto));
+      }
+    }
+
+    return $elempop();
+  }
+
+  private int expression(int proto) {
+    return switch (proto) {
+      case ByteProto.EXPRESSION_NAME -> expressionName();
+
+      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+
+      case ByteProto.STRING_LITERAL -> stringLiteral();
+
+      default -> throw $protouoe(proto);
+    };
+  }
+
+  private int expressionName() {
+    $elemadd(
+      ByteCode.EXPRESSION_NAME,
+      ByteCode.NOP, // base = 1
+      ByteCode.NOP /// list = 2
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
+
+        case ByteProto.IDENTIFIER -> $elemlst(2, objectString());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
         default -> throw $protouoe(proto);
       }
     }
 
     return $elempop();
+  }
+
+  private int expressionStatement(int proto) {
+    $elemadd(ByteCode.EXPRESSION_STATEMENT, expression(proto));
+
+    return $codepop();
   }
 
   private int extendsClause() {
@@ -308,15 +410,78 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
-  private int objectString() {
-    int value = $protonxt();
-
+  private int methodDeclaration() {
     $elemadd(
-      ByteCode.OBJECT_STRING,
-      value
+      ByteCode.METHOD_DECLARATION,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // tparams = 2
+      ByteCode.NOP, // rtype = 3,
+      ByteCode.NOP, // name = 4,
+      ByteCode.NOP, // receiver = 5
+      ByteCode.NOP, // params = 6
+      ByteCode.NOP, // throws = 7
+      ByteCode.NOP /// body = 8
     );
 
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> $elemset(4, objectString());
+
+        case ByteProto.NO_TYPE -> $elemset(3, noType());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemlst(8, statement(proto));
+      }
+    }
+
     return $elempop();
+  }
+
+  private int methodInvocation() {
+    $elemadd(
+      ByteCode.METHOD_INVOCATION,
+      ByteCode.NOP, // subject = 1
+      ByteCode.NOP, // targs = 2
+      ByteCode.NOP, // name = 3
+      ByteCode.NOP /// args = 4
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
+
+        case ByteProto.IDENTIFIER -> $elemset(3, objectString());
+
+        case ByteProto.NEW_LINE -> $elemlst(4, newLine());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemlst(4, expression(proto));
+      }
+    }
+
+    return $elempop();
+  }
+
+  private int newLine() {
+    return $simpleadd(ByteCode.NEW_LINE);
+  }
+
+  private int noType() {
+    return $simpleadd(ByteCode.NO_TYPE);
+  }
+
+  private int objectString() {
+    return $simpleadd(ByteCode.OBJECT_STRING, $protonxt());
   }
 
   private int packageDeclaration() {
@@ -341,6 +506,16 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     return $elempop();
+  }
+
+  private int statement(int proto) {
+    return switch (proto) {
+      default -> expressionStatement(proto);
+    };
+  }
+
+  private int stringLiteral() {
+    return $simpleadd(ByteCode.STRING_LITERAL, $protonxt());
   }
 
 }
