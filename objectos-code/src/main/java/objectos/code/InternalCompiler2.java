@@ -86,6 +86,18 @@ class InternalCompiler2 extends InternalApi2 {
     codeArray[codeIndex++] = v4;
   }
 
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 6);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+    codeArray[codeIndex++] = v5;
+    codeArray[codeIndex++] = v6;
+  }
+
   private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
     codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 7);
 
@@ -145,6 +157,12 @@ class InternalCompiler2 extends InternalApi2 {
     $codepsh();
 
     $codeadd(v0, v1, v2, v3, v4);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4, v5, v6);
   }
 
   private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
@@ -244,6 +262,78 @@ class InternalCompiler2 extends InternalApi2 {
     protoIndex = location;
   }
 
+  private int arrayAccessExpression() {
+    $elemadd(
+      ByteCode.ARRAY_ACCESS_EXPRESSION,
+      ByteCode.NOP, // reference = 1
+      ByteCode.NOP /// expressions = 2
+    );
+
+    var reference = false;
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> {
+          if (!reference) {
+            $elemset(1, expression(proto));
+
+            reference = true;
+          } else {
+            $elemlst(2, expression(proto));
+          }
+        }
+      }
+    }
+
+    return $elempop();
+  }
+
+  private int assignmentExpression() {
+    $elemadd(
+      ByteCode.ASSIGNMENT_EXPRESSION,
+      ByteCode.NOP, // lhs = 1
+      ByteCode.NOP, // operator = 2
+      ByteCode.NOP /// expression = 3
+    );
+
+    var lhs = false;
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.ASSIGNMENT_OPERATOR -> { $elemset(2, $protonxt()); $stackpop(); }
+
+        case
+            ByteProto.ARRAY_ACCESS_EXPRESSION,
+            ByteProto.EXPRESSION_NAME,
+            ByteProto.FIELD_ACCESS_EXPRESSION0 -> {
+          if (!lhs) {
+            $elemset(1, expression(proto));
+
+            lhs = true;
+          } else {
+            $elemset(3, expression(proto));
+          }
+        }
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemset(3, expression(proto));
+      }
+    }
+
+    return $elempop();
+  }
+
   private int classDeclaration(boolean topLevel) {
     $elemadd(
       ByteCode.CLASS,
@@ -277,6 +367,43 @@ class InternalCompiler2 extends InternalApi2 {
 
     if (topLevel) {
       autoImports.fileName(publicFound, simpleName);
+    }
+
+    return $elempop();
+  }
+
+  /*
+   * new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )
+   */
+  private int classInstanceCreation0() {
+    $elemadd(
+      ByteCode.CLASS_INSTANCE_CREATION,
+      ByteCode.NOP, // qualifier = 1
+      ByteCode.NOP, // ctypeargs = 2
+      ByteCode.NOP, // type = 3
+      ByteCode.NOP, // teargs = 4
+      ByteCode.NOP, // args = 5
+      ByteCode.NOP // cbody = 6
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      if (ByteProto.isExpression(proto)) {
+        $elemlst(5, expression(proto));
+
+        continue;
+      }
+
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemset(3, className());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
     }
 
     return $elempop();
@@ -322,20 +449,42 @@ class InternalCompiler2 extends InternalApi2 {
           break loop;
         }
 
-        default -> $elemlst(3, statement(proto));
+        default -> $elemlst(3, compilationUnitBodyItem(proto));
       }
     }
 
     return $elempop();
   }
 
+  private int compilationUnitBodyItem(int proto) {
+    if (ByteProto.isExpressionStatement(proto)) {
+      return statement(proto);
+    }
+
+    if (ByteProto.isExpression(proto)) {
+      return expression(proto);
+    }
+
+    return statement(proto);
+  }
+
   private int expression(int proto) {
     return switch (proto) {
+      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
+
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreation0();
+
       case ByteProto.EXPRESSION_NAME -> expressionName();
+
+      case ByteProto.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
 
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
+
+      case ByteProto.THIS -> thisKeyword();
 
       default -> throw $protouoe(proto);
     };
@@ -396,6 +545,30 @@ class InternalCompiler2 extends InternalApi2 {
     return $elempop();
   }
 
+  private int fieldAccessExpression0() {
+    $elemadd(
+      ByteCode.FIELD_ACCESS_EXPRESSION0,
+      ByteCode.NOP, // primary = 1
+      ByteCode.NOP /// identifier = 2
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> $elemset(2, objectString());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemset(1, expression(proto));
+      }
+    }
+
+    return $elempop();
+  }
+
   private void importDeclarations(int offset) {
     var entries = autoImports.entrySet();
 
@@ -408,6 +581,32 @@ class InternalCompiler2 extends InternalApi2 {
 
       $elemlst(offset, self);
     }
+  }
+
+  private int localVariableDeclaration() {
+    $elemadd(
+      ByteCode.LOCAL_VARIABLE,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // type = 2
+      ByteCode.NOP, // name = 3
+      ByteCode.NOP /// init = 4
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> $elemset(3, objectString());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemset(4, expression(proto));
+      }
+    }
+
+    return $elempop();
   }
 
   private int methodDeclaration() {
@@ -487,8 +686,8 @@ class InternalCompiler2 extends InternalApi2 {
   private int packageDeclaration() {
     $elemadd(
       ByteCode.PACKAGE,
-      ByteCode.NOP, /* annotations = 1 */
-      ByteCode.NOP /* name = 2 */
+      ByteCode.NOP, // annotations = 1
+      ByteCode.NOP /// name = 2
     );
 
     loop: while ($prototru()) {
@@ -508,14 +707,43 @@ class InternalCompiler2 extends InternalApi2 {
     return $elempop();
   }
 
+  private int returnStatement() {
+    $elemadd(
+      ByteCode.RETURN_STATEMENT,
+      ByteCode.NOP /// expression = 1
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemset(1, expression(proto));
+      }
+    }
+
+    return $elempop();
+  }
+
   private int statement(int proto) {
     return switch (proto) {
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
+
+      case ByteProto.RETURN_STATEMENT -> returnStatement();
+
       default -> expressionStatement(proto);
     };
   }
 
   private int stringLiteral() {
     return $simpleadd(ByteCode.STRING_LITERAL, $protonxt());
+  }
+
+  private int thisKeyword() {
+    return $simpleadd(ByteCode.THIS);
   }
 
 }

@@ -226,6 +226,56 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     }
   }
 
+  private void arrayAccessExpression() {
+    if ($nextjmp()) {
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      $malformed();
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+
+      while ($lnext()) {
+        write('[');
+
+        $codentr();
+        expression();
+        $codexit();
+
+        write(']');
+      }
+
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
+  private void assignmentExpression() {
+    if ($nextjmp()) {
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      $malformed();
+    }
+
+    $codenxt();
+
+    writeOperator((Operator) $codeobj());
+
+    if ($nextjmp()) {
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
   private void classDeclaration() {
     var prevSection = false;
 
@@ -283,6 +333,50 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     writeBlockEnd(contents);
   }
 
+  private void classInstanceCreationExpression() {
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE qualifier");
+    }
+
+    write("new");
+
+    writeSpace();
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE constructor type args");
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+      typeName();
+      $codexit();
+    } else {
+      $malformed();
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE type args");
+    }
+
+    writeArgumentListStart();
+
+    if ($nextjmp()) {
+      $codentr();
+      argumentList();
+      $codexit();
+    }
+
+    writeArgumentListEnd();
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: CICE class body");
+    }
+  }
+
   private void compilationUnit() {
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
@@ -338,6 +432,12 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   }
 
   private void compilationUnitBodyItem() {
+    if (ByteCode.isExpression(code)) {
+      expression();
+
+      return;
+    }
+
     switch (code) {
       case ByteCode.CLASS -> classDeclaration();
 
@@ -357,11 +457,21 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
   private void expression() {
     switch (code) {
+      case ByteCode.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
+
+      case ByteCode.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteCode.CLASS_INSTANCE_CREATION -> classInstanceCreationExpression();
+
       case ByteCode.EXPRESSION_NAME -> expressionName();
+
+      case ByteCode.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
 
       case ByteCode.METHOD_INVOCATION -> methodInvocation();
 
       case ByteCode.STRING_LITERAL -> stringLiteral();
+
+      case ByteCode.THIS -> write("this");
 
       default -> $throwuoe();
     }
@@ -425,6 +535,26 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     }
   }
 
+  private void fieldAccessExpression0() {
+    if ($nextjmp()) {
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      $malformed();
+    }
+
+    write('.');
+
+    if ($nextjmp()) {
+      $codentr();
+      declarationSimpleName();
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
   private void importDeclarationList() {
     if ($lnext()) {
       $codentr();
@@ -459,6 +589,44 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
       default -> $throwuoe();
     }
+  }
+
+  private void localVariableDeclaration() {
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: local var modifiers");
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: local var type");
+    } else {
+      write("var");
+    }
+
+    if ($nextjmp()) {
+      writeSpace();
+
+      $codentr();
+      declarationSimpleName();
+      $codexit();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: local var name not defined?");
+    }
+
+    if ($nextjmp()) {
+      writeSeparator('=');
+
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: local var unitialized");
+    }
+
+    writeSemicolon();
   }
 
   private void methodDeclaration() {
@@ -583,9 +751,29 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     writeSemicolon();
   }
 
+  private void returnStatement() {
+    if ($nextjmp()) {
+      write("return");
+
+      writeSpace();
+
+      $codentr();
+      expression();
+      $codexit();
+
+      writeSemicolon();
+    } else {
+      $malformed();
+    }
+  }
+
   private void statement() {
     switch (code) {
       case ByteCode.EXPRESSION_STATEMENT -> expressionStatement();
+
+      case ByteCode.LOCAL_VARIABLE -> localVariableDeclaration();
+
+      case ByteCode.RETURN_STATEMENT -> returnStatement();
 
       default -> $throwuoe();
     }
