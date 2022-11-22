@@ -16,6 +16,7 @@
 package objectos.code;
 
 import javax.lang.model.element.Modifier;
+import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
 
@@ -26,406 +27,692 @@ class InternalCompiler extends InternalApi {
 
     stackIndex = 0;
 
-    codeadd(ByteCode.JMP, ByteCode.NOP);
+    $elemadd(
+      ByteCode.ROOT,
+      ByteCode.NOP // compilation unit = 1
+    );
 
-    protoadv();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
-    protojmp();
+      switch (proto) {
+        case ByteProto.COMPILATION_UNIT -> $elemset(1, compilationUnit());
 
-    protoass(ByteProto.COMPILATION_UNIT);
+        case ByteProto.JMP -> $stackpsh();
 
-    var unit = compilationUnit();
+        case ByteProto.BREAK -> { break loop; }
 
-    codeArray[1] = unit;
+        default -> throw $protouoe(proto);
+      }
+    }
+  }
+
+  private void $codeadd(int v0) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 0);
+
+    codeArray[codeIndex++] = v0;
+  }
+
+  private void $codeadd(int v0, int v1) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 1);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+  }
+
+  private void $codeadd(int v0, int v1, int v2) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 2);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+  }
+
+  private void $codeadd(int v0, int v1, int v2, int v3) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 3);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+  }
+
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 4);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+  }
+
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 5);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+    codeArray[codeIndex++] = v5;
+  }
+
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 6);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+    codeArray[codeIndex++] = v5;
+    codeArray[codeIndex++] = v6;
+  }
+
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 7);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+    codeArray[codeIndex++] = v5;
+    codeArray[codeIndex++] = v6;
+    codeArray[codeIndex++] = v7;
+  }
+
+  private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 8);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+    codeArray[codeIndex++] = v2;
+    codeArray[codeIndex++] = v3;
+    codeArray[codeIndex++] = v4;
+    codeArray[codeIndex++] = v5;
+    codeArray[codeIndex++] = v6;
+    codeArray[codeIndex++] = v7;
+    codeArray[codeIndex++] = v8;
+  }
+
+  private int $codepop() { return markArray[markIndex--]; }
+
+  private void $codepsh() {
+    markIndex++;
+
+    markArray = IntArrays.growIfNecessary(markArray, markIndex);
+
+    markArray[markIndex] = codeIndex;
+  }
+
+  private void $elemadd(int v0, int v1) {
+    $codepsh();
+
+    $codeadd(v0, v1);
+  }
+
+  private void $elemadd(int v0, int v1, int v2) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4, v5);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4, v5, v6);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4, v5, v6, v7);
+  }
+
+  private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    $codepsh();
+
+    $codeadd(v0, v1, v2, v3, v4, v5, v6, v7, v8);
+  }
+
+  private void $elemlst(int offset, int value) {
+    var base = markArray[markIndex];
+
+    var listIndex = base + offset;
+
+    var list = codeArray[listIndex];
+
+    if (list == ByteCode.NOP) {
+      list = codeIndex;
+
+      $codeadd(ByteCode.LHEAD, value, ByteCode.NOP, ByteCode.NOP);
+
+      codeArray[listIndex] = list;
+    } else {
+      var head = codeArray[list];
+
+      assert head == ByteCode.LHEAD : head;
+
+      var next = codeIndex;
+
+      $codeadd(ByteCode.LNEXT, value, ByteCode.NOP);
+
+      var last = codeArray[list + 3];
+
+      var target = last != ByteCode.NOP ? last : list;
+
+      codeArray[target + 2] = next;
+
+      codeArray[list + 3] = next;
+    }
+  }
+
+  private int $elempop() {
+    $stackpop();
+
+    return $codepop();
+  }
+
+  private void $elemset(int offset, int value) {
+    var base = markArray[markIndex];
+
+    codeArray[base + offset] = value;
+  }
+
+  private Object $objget() {
+    var proto = protoArray[protoIndex];
+
+    return objectArray[proto];
+  }
+
+  private int $protonxt() { return protoArray[protoIndex++]; }
+
+  private boolean $prototru() { return true; }
+
+  private UnsupportedOperationException $protouoe(int proto) {
+    return new UnsupportedOperationException(
+      "Implement me :: proto=" + proto);
+  }
+
+  private int $simpleadd(int v0) {
+    var self = codeIndex;
+
+    $codeadd(v0);
+
+    $stackpop();
+
+    return self;
+  }
+
+  private int $simpleadd(int v0, int v1) {
+    var self = codeIndex;
+
+    $codeadd(v0, v1);
+
+    $stackpop();
+
+    return self;
+  }
+
+  private void $stackpop() { protoIndex = stackArray[--stackIndex]; }
+
+  private void $stackpsh() {
+    var location = $protonxt();
+
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex);
+
+    stackArray[stackIndex++] = protoIndex;
+
+    protoIndex = location;
   }
 
   private int annotation() {
-    int name = ByteCode.NOP;
-    int pairs = ByteCode.NOP;
+    $elemadd(
+      ByteCode.ANNOTATION,
+      ByteCode.NOP, // name = 1
+      ByteCode.NOP /// pairs = 2
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> name = setOrThrow(name, typeName());
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
 
-        case ByteProto.STRING_LITERAL -> pairs = listadd(pairs, stringLiteral());
+        case ByteProto.STRING_LITERAL -> $elemlst(2, stringLiteral());
 
-        default -> throw protouoe();
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
       }
-
-      protonxt();
     }
 
-    return codeadd(ByteCode.ANNOTATION, name, pairs);
+    return $elempop();
   }
 
   private int arrayAccessExpression() {
-    int reference = ByteCode.NOP;
-    int expressions = ByteCode.NOP;
+    $elemadd(
+      ByteCode.ARRAY_ACCESS_EXPRESSION,
+      ByteCode.NOP, // reference = 1
+      ByteCode.NOP /// expressions = 2
+    );
 
-    protoadv();
+    var reference = false;
 
-    if (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.EXPRESSION_NAME -> reference = expressionName();
+        case ByteProto.JMP -> $stackpsh();
 
-        default -> throw protouoe();
-      }
+        case ByteProto.BREAK -> { break loop; }
 
-      protonxt();
+        default -> {
+          if (!reference) {
+            $elemset(1, expression(proto));
 
-      while (protolop()) {
-        protojmp();
-
-        expressions = listadd(expressions, expression());
-
-        protonxt();
+            reference = true;
+          } else {
+            $elemlst(2, expression(proto));
+          }
+        }
       }
     }
 
-    return codeadd(ByteCode.ARRAY_ACCESS_EXPRESSION, reference, expressions);
+    return $elempop();
   }
 
   private int arrayType() {
-    var type = ByteCode.NOP;
-    var list = ByteCode.NOP;
+    $elemadd(
+      ByteCode.ARRAY_TYPE,
+      ByteCode.NOP, // type = 1
+      ByteCode.NOP /// list = 2
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.DIM -> list = listadd(list, arrayTypeDim());
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
 
-        case ByteProto.TYPE_NAME -> type = setOrThrow(type, typeName());
+        case ByteProto.DIM -> $elemlst(2, arrayTypeDim());
 
-        default -> throw protouoe();
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
       }
-
-      protonxt();
     }
 
-    return codeadd(ByteCode.ARRAY_TYPE, type, list);
+    return $elempop();
   }
 
   private int arrayTypeDim() {
-    protoadv();
-
-    return codeadd(ByteCode.DIM);
+    return $simpleadd(ByteCode.DIM);
   }
 
   private int assignmentExpression() {
-    var lhs = ByteCode.NOP;
-    var operator = ByteCode.NOP;
-    var expression = ByteCode.NOP;
+    $elemadd(
+      ByteCode.ASSIGNMENT_EXPRESSION,
+      ByteCode.NOP, // lhs = 1
+      ByteCode.NOP, // operator = 2
+      ByteCode.NOP /// expression = 3
+    );
 
-    protoadv();
+    var lhs = false;
 
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.ASSIGNMENT_OPERATOR -> operator = setOrThrow(operator, protoadv());
+        case ByteProto.ASSIGNMENT_OPERATOR -> { $elemset(2, $protonxt()); $stackpop(); }
 
-        case ByteProto.ARRAY_ACCESS_EXPRESSION,
+        case
+            ByteProto.ARRAY_ACCESS_EXPRESSION,
             ByteProto.EXPRESSION_NAME,
             ByteProto.FIELD_ACCESS_EXPRESSION0 -> {
-          if (lhs == ByteCode.NOP) {
-            lhs = setOrThrow(lhs, expression());
+          if (!lhs) {
+            $elemset(1, expression(proto));
+
+            lhs = true;
           } else {
-            expression = setOrThrow(expression, expression());
+            $elemset(3, expression(proto));
           }
         }
 
-        default -> expression = setOrThrow(expression, expression());
-      }
+        case ByteProto.JMP -> $stackpsh();
 
-      protonxt();
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemset(3, expression(proto));
+      }
     }
 
-    return codeadd(ByteCode.ASSIGNMENT_EXPRESSION, lhs, operator, expression);
+    return $elempop();
   }
 
   private int classDeclaration(boolean topLevel) {
-    var modifiers = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var typeParams = ByteCode.NOP;
-    var _extends = ByteCode.NOP;
-    var _implements = ByteCode.NOP;
-    var _permits = ByteCode.NOP;
-    var body = ByteCode.NOP;
+    $elemadd(
+      ByteCode.CLASS,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // name = 2
+      ByteCode.NOP, // tparams = 3
+      ByteCode.NOP, // extends = 4
+      ByteCode.NOP, // implements = 5
+      ByteCode.NOP, // permits = 6
+      ByteCode.NOP /// body = 7
+    );
 
     var publicFound = false;
     var simpleName = "Unnamed";
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
+        case ByteProto.ANNOTATION -> $elemlst(1, annotation());
 
-        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listadd(body, constructorDeclaration());
+        case ByteProto.CONSTRUCTOR_DECLARATION -> $elemlst(7, constructorDeclaration());
 
-        case ByteProto.EXTENDS -> _extends = setOrReplace(_extends, typeName());
+        case ByteProto.EXTENDS -> $elemset(4, extendsClause());
+
+        case ByteProto.FIELD_DECLARATION -> $elemlst(7, fieldDeclaration());
 
         case ByteProto.IDENTIFIER -> {
-          name = setOrReplace(name, protoadv());
+          simpleName = (String) $objget();
 
-          simpleName = (String) objget(proto);
+          $elemset(2, objectString());
         }
 
-        case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
+        case ByteProto.METHOD_DECLARATION -> $elemlst(7, methodDeclaration());
 
         case ByteProto.MODIFIER -> {
-          modifiers = listadd(modifiers, modifier());
-
-          var modifier = objget(proto);
+          var modifier = $objget();
 
           publicFound = modifier == Modifier.PUBLIC;
+
+          $elemlst(1, modifier());
         }
 
-        default -> throw protouoe();
-      }
+        case ByteProto.JMP -> $stackpsh();
 
-      protonxt();
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
     }
 
     if (topLevel) {
       autoImports.fileName(publicFound, simpleName);
     }
 
-    return codeadd(
-      ByteCode.CLASS,
-      modifiers, name, typeParams, _extends, _implements, _permits,
-      body
-    );
+    return $elempop();
   }
 
   /*
    * new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )
    */
   private int classInstanceCreation0() {
-    var qualifier = ByteCode.NOP;
-    var ctypeargs = ByteCode.NOP;
-    var type = ByteCode.NOP;
-    var typeargs = ByteCode.NOP;
-    var args = ByteCode.NOP;
-    var cbody = ByteCode.NOP;
+    $elemadd(
+      ByteCode.CLASS_INSTANCE_CREATION,
+      ByteCode.NOP, // qualifier = 1
+      ByteCode.NOP, // ctypeargs = 2
+      ByteCode.NOP, // type = 3
+      ByteCode.NOP, // teargs = 4
+      ByteCode.NOP, // args = 5
+      ByteCode.NOP // cbody = 6
+    );
 
-    protoadv();
-
-    protobrk("""
-    Invalid class instance creation (0) expression:
-
-    Found 'BREAK' but expected 'type to be instantiated' instead.
-    """);
-
-    protojmp();
-    type = typeName();
-    protonxt();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       if (ByteProto.isExpression(proto)) {
-        args = listadd(args, expression());
-      } else {
-        throw new UnsupportedOperationException("Implement me");
+        $elemlst(5, expression(proto));
+
+        continue;
       }
 
-      protonxt();
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemset(3, className());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
     }
 
-    return codeadd(
-      ByteCode.CLASS_INSTANCE_CREATION,
-      qualifier, ctypeargs, type, typeargs, args, cbody
-    );
+    return $elempop();
+  }
+
+  private int className() {
+    var proto = $protonxt();
+
+    var o = (ClassName) objectArray[proto];
+
+    var code = autoImports.addClassName(o, proto)
+        ? ByteCode.SIMPLE_NAME
+        : ByteCode.QUALIFIED_NAME;
+
+    return $simpleadd(code, proto);
   }
 
   private int compilationUnit() {
-    var _package = ByteCode.NOP;
-    var _import = ByteCode.NOP;
-    var body = ByteCode.NOP;
+    $elemadd(
+      ByteCode.COMPILATION_UNIT,
+      ByteCode.NOP, /* package = 1 */
+      ByteCode.NOP, /* imports = 2 */
+      ByteCode.NOP /* body = 3 */
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_DECLARATION -> body = listadd(body, classDeclaration(true));
+        case ByteProto.CLASS_DECLARATION -> $elemlst(3, classDeclaration(true));
 
-        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listadd(body, constructorDeclaration());
+        case ByteProto.CONSTRUCTOR_DECLARATION -> $elemlst(3, constructorDeclaration());
 
-        case ByteProto.ENUM_DECLARATION -> body = listadd(body, enumDeclaration(true));
+        case ByteProto.ENUM_DECLARATION -> $elemlst(3, enumDeclaration(true));
 
-        case ByteProto.FIELD_DECLARATION -> body = listadd(body, fieldDeclaration());
+        case ByteProto.FIELD_DECLARATION -> $elemlst(3, fieldDeclaration());
 
-        case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
+        case ByteProto.METHOD_DECLARATION -> $elemlst(3, methodDeclaration());
 
-        case ByteProto.PACKAGE_DECLARATION -> _package = setOrThrow(_package, packageDeclaration());
+        case ByteProto.PACKAGE_DECLARATION -> $elemset(1, packageDeclaration());
 
-        default -> body = listadd(body, compilationUnitBodyItem());
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> {
+          if (autoImports.enabled()) {
+            importDeclarations(2);
+          }
+
+          break loop;
+        }
+
+        default -> $elemlst(3, compilationUnitBodyItem(proto));
       }
-
-      protonxt();
     }
 
-    if (_import != ByteCode.NOP) {
-      throw new UnsupportedOperationException("Implement me :: unexpected imports");
-    }
-
-    if (autoImports.enabled()) {
-      _import = importDeclarations();
-    }
-
-    return codeadd(ByteCode.COMPILATION_UNIT, _package, _import, body);
+    return $elempop();
   }
 
-  private int compilationUnitBodyItem() {
-    if (ByteProto.isExpression(proto)) {
-      return expression();
-    } else {
-      return statement();
+  private int compilationUnitBodyItem(int proto) {
+    if (ByteProto.isExpressionStatement(proto)) {
+      return statement(proto);
     }
+
+    if (ByteProto.isExpression(proto)) {
+      return expression(proto);
+    }
+
+    return statement(proto);
   }
 
   private int constructorDeclaration() {
-    var modifiers = ByteCode.NOP;
-    var typeParams = ByteCode.NOP;
-    var receiver = ByteCode.NOP;
-    var params = ByteCode.NOP;
-    var _throws = ByteCode.NOP;
-    var body = ByteCode.NOP;
+    $elemadd(
+      ByteCode.CONSTRUCTOR_DECLARATION,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // tparams = 2
+      ByteCode.NOP, // receiver = 3
+      ByteCode.NOP, // params = 4
+      ByteCode.NOP, // throws = 5
+      ByteCode.NOP /// body = 6
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
+        case ByteProto.ANNOTATION -> $elemlst(1, annotation());
 
-        case ByteProto.FORMAL_PARAMETER -> params = listadd(params, formalParameter());
+        case ByteProto.FORMAL_PARAMETER -> $elemlst(4, formalParameter());
 
-        case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
+        case ByteProto.MODIFIER -> $elemlst(1, modifier());
 
-        default -> body = listadd(body, statement());
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemlst(6, statement(proto));
       }
-
-      protonxt();
     }
 
-    return codeadd(
-      ByteCode.CONSTRUCTOR_DECLARATION,
-      modifiers, typeParams, receiver, params, _throws,
-      body
-    );
+    return $elempop();
   }
 
   private int declaratorFull(int name, int init) {
-    return codeadd(ByteCode.DECLARATOR_FULL, name, init);
+    var self = codeIndex;
+
+    $codeadd(ByteCode.DECLARATOR_FULL, name, init);
+
+    return self;
   }
 
   private int declaratorSimple(int name) {
-    return codeadd(ByteCode.DECLARATOR_SIMPLE, name);
+    var self = codeIndex;
+
+    $codeadd(ByteCode.DECLARATOR_SIMPLE, name);
+
+    return self;
   }
 
   private int enumConstant() {
-    var modifiers = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var arguments = ByteCode.NOP;
-    var body = ByteCode.NOP;
+    $elemadd(
+      ByteCode.ENUM_CONSTANT,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // name = 2
+      ByteCode.NOP, // arguments = 3
+      ByteCode.NOP /// body = 4
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       if (ByteProto.isExpression(proto)) {
-        arguments = listadd(arguments, expression());
-      } else {
-        switch (proto) {
-          case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
+        $elemlst(3, expression(proto));
 
-          default -> throw protouoe();
-        }
+        continue;
       }
 
-      protonxt();
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> $elemset(2, objectString());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
     }
 
-    return codeadd(ByteCode.ENUM_CONSTANT, modifiers, name, arguments, body);
+    return $elempop();
   }
 
   private int enumDeclaration(boolean topLevel) {
-    var modifiers = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var _implements = ByteCode.NOP;
-    var constants = ByteCode.NOP;
-    var body = ByteCode.NOP;
+    $elemadd(
+      ByteCode.ENUM_DECLARATION,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // name = 2
+      ByteCode.NOP, // implements = 3
+      ByteCode.NOP, // constants = 4
+      ByteCode.NOP /// body = 5
+    );
 
     var publicFound = false;
     var simpleName = "Unnamed";
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
+        case ByteProto.ANNOTATION -> $elemlst(1, annotation());
 
-        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listadd(body, constructorDeclaration());
+        case ByteProto.CONSTRUCTOR_DECLARATION -> $elemlst(5, constructorDeclaration());
 
-        case ByteProto.ENUM_CONSTANT -> constants = listadd(constants, enumConstant());
+        case ByteProto.ENUM_CONSTANT -> $elemlst(4, enumConstant());
 
-        case ByteProto.FIELD_DECLARATION -> body = listadd(body, fieldDeclaration());
+        case ByteProto.FIELD_DECLARATION -> $elemlst(5, fieldDeclaration());
 
         case ByteProto.IDENTIFIER -> {
-          name = setOrReplace(name, protoadv());
+          simpleName = (String) $objget();
 
-          simpleName = (String) objget(proto);
+          $elemset(2, objectString());
         }
 
-        case ByteProto.IMPLEMENTS -> _implements = implementsClause(_implements);
+        case ByteProto.IMPLEMENTS -> typeList(3);
 
-        case ByteProto.METHOD_DECLARATION -> body = listadd(body, methodDeclaration());
+        case ByteProto.METHOD_DECLARATION -> $elemlst(5, methodDeclaration());
 
         case ByteProto.MODIFIER -> {
-          modifiers = listadd(modifiers, modifier());
-
-          var modifier = objget(proto);
+          var modifier = $objget();
 
           publicFound = modifier == Modifier.PUBLIC;
+
+          $elemlst(1, modifier());
         }
 
-        default -> throw protouoe();
-      }
+        case ByteProto.JMP -> $stackpsh();
 
-      protonxt();
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
     }
 
     if (topLevel) {
       autoImports.fileName(publicFound, simpleName);
     }
 
-    return codeadd(
-      ByteCode.ENUM_DECLARATION,
-      modifiers, name, _implements, constants,
-      body
-    );
+    return $elempop();
   }
 
-  private int expression() {
+  private int expression(int proto) {
     return switch (proto) {
       case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
 
@@ -443,67 +730,96 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.THIS -> thisKeyword();
 
-      default -> throw protouoe();
+      default -> throw $protouoe(proto);
     };
   }
 
   private int expressionName() {
-    var self = codeadd(ByteCode.EXPRESSION_NAME);
+    $elemadd(
+      ByteCode.EXPRESSION_NAME,
+      ByteCode.NOP, // base = 1
+      ByteCode.NOP /// list = 2
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> typeName();
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
 
-        case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, protoadv());
+        case ByteProto.IDENTIFIER -> $elemlst(2, objectString());
 
-        default -> protouoe();
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
       }
-
-      protonxt();
     }
 
-    codeadd(ByteCode.NOP);
+    return $elempop();
+  }
 
-    return self;
+  private int expressionStatement(int proto) {
+    $elemadd(ByteCode.EXPRESSION_STATEMENT, expression(proto));
+
+    return $codepop();
+  }
+
+  private int extendsClause() {
+    $elemadd(
+      ByteCode.EXTENDS,
+      ByteCode.NOP // value = 1
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    return $elempop();
   }
 
   private int fieldAccessExpression0() {
-    protoadv();
+    $elemadd(
+      ByteCode.FIELD_ACCESS_EXPRESSION0,
+      ByteCode.NOP, // primary = 1
+      ByteCode.NOP /// identifier = 2
+    );
 
-    protobrk("""
-    Invalid field access expression:
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
-    Found BREAK but expected a primary expression
-    """);
+      switch (proto) {
+        case ByteProto.IDENTIFIER -> $elemset(2, objectString());
 
-    protojmp();
-    var primary = expression();
-    protonxt();
+        case ByteProto.JMP -> $stackpsh();
 
-    protojmp();
+        case ByteProto.BREAK -> { break loop; }
 
-    protoass(ByteProto.IDENTIFIER, """
-    Invalid field access expression:
+        default -> $elemset(1, expression(proto));
+      }
+    }
 
-    Expected an identifier but found proto=%d
-    """);
-
-    var identifier = protoadv();
-    protonxt();
-
-    return codeadd(ByteCode.FIELD_ACCESS_EXPRESSION0, primary, identifier);
+    return $elempop();
   }
 
   private int fieldDeclaration() {
-    var modifiers = ByteCode.NOP;
-    var type = ByteCode.NOP;
-    var declarators = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var init = ByteCode.NOP;
+    $elemadd(
+      ByteCode.FIELD_DECLARATION,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // type = 2
+      ByteCode.NOP /// declarators = 3
+    );
 
     enum State {
       START,
@@ -514,350 +830,310 @@ class InternalCompiler extends InternalApi {
     }
 
     var state = State.START;
+    var name = ByteCode.NOP;
+    var init = ByteCode.NOP;
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
-
-      if (ByteProto.isExpression(proto)) {
-        state = switch (state) {
-          case IDENTIFIER -> {
-            init = expression();
-
-            yield State.INITIALIZE;
-          }
-
-          default -> throw new UnsupportedOperationException(
-            "Implement me :: state=" + state);
-        };
-
-        protonxt();
-
-        continue;
-      }
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.ARRAY_TYPE -> type = setOrReplace(type, arrayType());
+        case ByteProto.ARRAY_TYPE -> $elemset(2, arrayType());
+
+        case ByteProto.CLASS_NAME -> $elemset(2, className());
 
         case ByteProto.IDENTIFIER -> {
-          state = switch (state) {
-            case START -> {
-              name = protoadv();
+          switch (state) {
+            case IDENTIFIER -> $elemlst(3, declaratorSimple(name));
 
-              yield State.IDENTIFIER;
-            }
+            case INITIALIZE -> $elemlst(3, declaratorFull(name, init));
 
-            case IDENTIFIER -> {
-              declarators = listadd(declarators, declaratorSimple(name));
+            default -> {}
+          }
 
-              name = protoadv();
+          name = objectString();
 
-              yield State.IDENTIFIER;
-            }
-
-            case INITIALIZE -> {
-              declarators = listadd(declarators, declaratorFull(name, init));
-
-              name = protoadv();
-
-              yield State.IDENTIFIER;
-            }
-
-            default -> throw new UnsupportedOperationException(
-              "Implement me :: state=" + state);
-          };
+          state = State.IDENTIFIER;
         }
 
-        case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
+        case ByteProto.MODIFIER -> $elemlst(1, modifier());
 
-        case ByteProto.TYPE_NAME -> type = setOrReplace(type, typeName());
+        case ByteProto.JMP -> $stackpsh();
 
-        default -> throw protouoe();
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> {
+          if (ByteProto.isExpression(proto)) {
+            state = switch (state) {
+              case IDENTIFIER -> {
+                init = expression(proto);
+
+                yield State.INITIALIZE;
+              }
+
+              default -> throw new UnsupportedOperationException(
+                "Implement me :: state=" + state);
+            };
+          } else {
+            throw $protouoe(proto);
+          }
+        }
       }
-
-      protonxt();
     }
 
     switch (state) {
-      case IDENTIFIER -> declarators = listadd(declarators, declaratorSimple(name));
+      case IDENTIFIER -> $elemlst(3, declaratorSimple(name));
 
-      case INITIALIZE -> declarators = listadd(declarators, declaratorFull(name, init));
+      case INITIALIZE -> $elemlst(3, declaratorFull(name, init));
 
       default -> throw new UnsupportedOperationException("Implement me");
     }
 
-    return codeadd(ByteCode.FIELD_DECLARATION, modifiers, type, declarators);
+    return $elempop();
   }
 
   private int formalParameter() {
-    var modifiers = ByteCode.NOP;
-    var type = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var varArity = ByteCode.NOP;
+    $elemadd(
+      ByteCode.FORMAL_PARAMETER,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // type = 2
+      ByteCode.NOP, // name = 3
+      ByteCode.NOP /// varArity = 4
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
-
-      switch (proto) {
-        case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
-
-        case ByteProto.PRIMITIVE_TYPE -> type = setOrReplace(type, primitiveType());
-
-        case ByteProto.TYPE_NAME -> type = setOrReplace(type, typeName());
-
-        default -> throw protouoe();
-      }
-
-      protonxt();
-    }
-
-    return codeadd(ByteCode.FORMAL_PARAMETER, modifiers, type, name, varArity);
-  }
-
-  private int implementsClause(int list) {
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.TYPE_NAME -> list = listadd(list, typeName());
+        case ByteProto.CLASS_NAME -> $elemset(2, className());
 
-        default -> throw protouoe();
+        case ByteProto.IDENTIFIER -> $elemset(3, objectString());
+
+        case ByteProto.PRIMITIVE_TYPE -> $elemset(2, primitiveType());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
       }
-
-      protonxt();
     }
 
-    return list;
+    return $elempop();
   }
 
-  private int importDeclarations() {
-    var self = codeIndex;
-
+  private void importDeclarations(int offset) {
     var entries = autoImports.entrySet();
 
     for (var entry : entries) {
+      var self = codeIndex;
+
       Integer value = entry.getValue();
 
-      codeadd(ByteCode.IMPORT, value);
+      $codeadd(ByteCode.IMPORT, value);
+
+      $elemlst(offset, self);
     }
-
-    codeadd(ByteCode.EOF);
-
-    return self;
   }
 
   private int localVariableDeclaration() {
-    var modifiers = ByteCode.NOP;
-    var type = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var init = ByteCode.NOP;
+    $elemadd(
+      ByteCode.LOCAL_VARIABLE,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // type = 2
+      ByteCode.NOP, // name = 3
+      ByteCode.NOP /// init = 4
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, protoadv());
+        case ByteProto.IDENTIFIER -> $elemset(3, objectString());
 
-        default -> init = setOrThrow(init, expression());
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemset(4, expression(proto));
       }
-
-      protonxt();
     }
 
-    return codeadd(ByteCode.LOCAL_VARIABLE, modifiers, type, name, init);
+    return $elempop();
   }
 
   private int methodDeclaration() {
-    var modifiers = ByteCode.NOP;
-    var typeParams = ByteCode.NOP;
-    var returnType = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var receiver = ByteCode.NOP;
-    var params = ByteCode.NOP;
-    var _throws = ByteCode.NOP;
-    var body = ByteCode.NOP;
+    $elemadd(
+      ByteCode.METHOD_DECLARATION,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // tparams = 2
+      ByteCode.NOP, // rtype = 3,
+      ByteCode.NOP, // name = 4,
+      ByteCode.NOP, // receiver = 5
+      ByteCode.NOP, // params = 6
+      ByteCode.NOP, // throws = 7
+      ByteCode.NOP /// body = 8
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.ANNOTATION -> modifiers = listadd(modifiers, annotation());
+        case ByteProto.ANNOTATION -> $elemlst(1, annotation());
 
-        case ByteProto.ARRAY_TYPE -> returnType = setOrReplace(returnType, arrayType());
+        case ByteProto.ARRAY_TYPE -> $elemset(3, arrayType());
 
-        case ByteProto.FORMAL_PARAMETER -> params = listadd(params, formalParameter());
+        case ByteProto.CLASS_NAME -> $elemset(3, className());
 
-        case ByteProto.IDENTIFIER -> name = setOrReplace(name, protoadv());
+        case ByteProto.FORMAL_PARAMETER -> $elemlst(6, formalParameter());
 
-        case ByteProto.MODIFIER -> modifiers = listadd(modifiers, modifier());
+        case ByteProto.IDENTIFIER -> $elemset(4, objectString());
 
-        case ByteProto.PRIMITIVE_TYPE -> returnType = setOrReplace(returnType, primitiveType());
+        case ByteProto.MODIFIER -> $elemlst(1, modifier());
 
-        case ByteProto.TYPE_NAME -> returnType = setOrReplace(returnType, typeName());
+        case ByteProto.NO_TYPE -> $elemset(3, noType());
 
-        default -> body = listadd(body, statement());
+        case ByteProto.PRIMITIVE_TYPE -> $elemset(3, primitiveType());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemlst(8, statement(proto));
       }
-
-      protonxt();
     }
 
-    return codeadd(
-      ByteCode.METHOD_DECLARATION,
-      modifiers, typeParams, returnType, name, receiver, params, _throws,
-      body
-    );
+    return $elempop();
   }
 
   private int methodInvocation() {
-    var subject = ByteCode.NOP;
-    var typeArgs = ByteCode.NOP;
-    var name = ByteCode.NOP;
-    var args = ByteCode.NOP;
+    $elemadd(
+      ByteCode.METHOD_INVOCATION,
+      ByteCode.NOP, // subject = 1
+      ByteCode.NOP, // targs = 2
+      ByteCode.NOP, // name = 3
+      ByteCode.NOP /// args = 4
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.EXPRESSION_NAME -> args = listadd(args, expressionName());
+        case ByteProto.CLASS_NAME -> $elemset(1, className());
 
-        case ByteProto.IDENTIFIER -> name = setOrThrow(name, protoadv());
+        case ByteProto.IDENTIFIER -> $elemset(3, objectString());
 
-        case ByteProto.NEW_LINE -> args = listadd(args, newLine());
+        case ByteProto.NEW_LINE -> $elemlst(4, newLine());
 
-        case ByteProto.METHOD_INVOCATION -> args = listadd(args, methodInvocation());
+        case ByteProto.JMP -> $stackpsh();
 
-        case ByteProto.STRING_LITERAL -> args = listadd(args, stringLiteral());
+        case ByteProto.BREAK -> { break loop; }
 
-        case ByteProto.TYPE_NAME -> subject = setOrReplace(subject, typeName());
-
-        default -> throw protouoe();
+        default -> $elemlst(4, expression(proto));
       }
-
-      protonxt();
     }
 
-    return codeadd(ByteCode.METHOD_INVOCATION, subject, typeArgs, name, args);
+    return $elempop();
   }
 
   private int modifier() {
-    return codeadd(ByteCode.MODIFIER, protoadv());
+    return $simpleadd(ByteCode.MODIFIER, $protonxt());
   }
 
   private int newLine() {
-    return codeadd(ByteCode.NEW_LINE);
+    return $simpleadd(ByteCode.NEW_LINE);
+  }
+
+  private int noType() {
+    return $simpleadd(ByteCode.NO_TYPE);
+  }
+
+  private int objectString() {
+    return $simpleadd(ByteCode.OBJECT_STRING, $protonxt());
   }
 
   private int packageDeclaration() {
-    var annotations = ByteCode.NOP;
-    var name = ByteCode.NOP;
+    $elemadd(
+      ByteCode.PACKAGE,
+      ByteCode.NOP, // annotations = 1
+      ByteCode.NOP /// name = 2
+    );
 
-    protoadv();
-
-    while (protolop()) {
-      protojmp();
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.PACKAGE_NAME -> name = setOrReplace(name, protoadv());
+        case ByteProto.PACKAGE_NAME -> $elemset(2, objectString());
 
-        default -> throw protouoe();
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
       }
-
-      protonxt();
     }
 
-    return codeadd(ByteCode.PACKAGE, annotations, name);
+    return $elempop();
   }
 
   private int primitiveType() {
-    protoadv();
-
-    return codeadd(ByteCode.PRIMITIVE_TYPE, proto);
+    return $simpleadd(ByteCode.PRIMITIVE_TYPE, $protonxt());
   }
 
   private int returnStatement() {
-    protoadv();
+    $elemadd(
+      ByteCode.RETURN_STATEMENT,
+      ByteCode.NOP /// expression = 1
+    );
 
-    if (!protolop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: invalid return statement");
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemset(1, expression(proto));
+      }
     }
 
-    protojmp();
-
-    if (!ByteProto.isExpression(proto)) {
-      throw new UnsupportedOperationException(
-        "Implement me :: invalid return statement");
-    }
-
-    var expression = expression();
-
-    protonxt();
-
-    if (protolop()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: invalid return statement");
-    }
-
-    return codeadd(ByteCode.RETURN_STATEMENT, expression);
+    return $elempop();
   }
 
-  private int statement() {
-    if (ByteProto.isExpressionStatement(proto)) {
-      return expression();
-    } else {
-      return switch (proto) {
-        case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
+  private int statement(int proto) {
+    return switch (proto) {
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
 
-        case ByteProto.RETURN_STATEMENT -> returnStatement();
+      case ByteProto.RETURN_STATEMENT -> returnStatement();
 
-        default -> throw protouoe();
-      };
-    }
+      default -> expressionStatement(proto);
+    };
   }
 
   private int stringLiteral() {
-    return codeadd(ByteCode.STRING_LITERAL, protoadv());
+    return $simpleadd(ByteCode.STRING_LITERAL, $protonxt());
   }
 
   private int thisKeyword() {
-    protoadv();
-
-    return codeadd(ByteCode.THIS);
+    return $simpleadd(ByteCode.THIS);
   }
 
-  private int typeName() {
-    protoadv();
+  private void typeList(int offset) {
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
-    var o = objget(proto);
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemlst(offset, className());
 
-    var code = typeNameCode(o);
+        case ByteProto.JMP -> $stackpsh();
 
-    return codeadd(code, proto);
-  }
+        case ByteProto.BREAK -> { break loop; }
 
-  private int typeNameCode(Object o) {
-    if (o instanceof ClassName className) {
-      if (autoImports.addClassName(className, proto)) {
-        return ByteCode.SIMPLE_NAME;
-      } else {
-        return ByteCode.QUALIFIED_NAME;
+        default -> throw $protouoe(proto);
       }
-    } else if (o instanceof NoTypeName noType) {
-      return ByteCode.NO_TYPE;
-    } else {
-      throw new UnsupportedOperationException("Implement me :: type=" + o.getClass());
     }
+
+    $stackpop();
   }
 
 }

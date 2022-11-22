@@ -99,7 +99,13 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final ExtendsRef _extends(ClassName superclass) {
-    object(ByteProto.EXTENDS, superclass);
+    className(superclass);
+
+    markStart();
+
+    markReference();
+
+    element(ByteProto.EXTENDS);
 
     return JavaModel.REF;
   }
@@ -114,7 +120,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
   @Override
   public final Implements _implements(ClassName[] interfaces) {
     for (var iface : interfaces) {
-      object(ByteProto.TYPE_NAME, iface);
+      className(iface);
     }
 
     markStart();
@@ -217,7 +223,9 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final VoidInvocation _void() {
-    object(ByteProto.TYPE_NAME, TypeName.VOID);
+    markStart();
+
+    element(ByteProto.NO_TYPE);
 
     return JavaModel.REF;
   }
@@ -378,7 +386,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
       element.mark(this);
     }
 
-    methodInvocation();
+    element(ByteProto.METHOD_INVOCATION);
 
     return JavaModel.REF;
   }
@@ -396,7 +404,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
       element.mark(this);
     }
 
-    methodInvocation();
+    element(ByteProto.METHOD_INVOCATION);
 
     return JavaModel.REF;
   }
@@ -504,7 +512,9 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
   public final ClassNameInvocation t(Class<?> type) {
     var cn = ClassName.of(type);
 
-    return typeName(cn);
+    object(ByteProto.CLASS_NAME, cn);
+
+    return JavaModel.REF;
   }
 
   @Override
@@ -560,10 +570,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     object(ByteProto.IDENTIFIER, name);
   }
 
-  private void methodInvocation() {
-    element(ByteProto.METHOD_INVOCATION);
-  }
-
   private void pass0End() {
     markStart();
 
@@ -594,12 +600,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     protoIndex = 0;
 
     protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.BREAK);
-  }
-
-  private ClassNameInvocation typeName(TypeName value) {
-    object(ByteProto.TYPE_NAME, value);
-
-    return JavaModel.REF;
   }
 
 }

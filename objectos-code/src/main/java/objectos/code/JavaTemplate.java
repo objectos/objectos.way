@@ -82,7 +82,7 @@ public abstract class JavaTemplate {
   public String toString() {
     var out = new StringBuilder();
 
-    var sink = JavaSink2.ofStringBuilder(out);
+    var sink = JavaSink.ofStringBuilder(out);
 
     sink.eval(this);
 
@@ -248,20 +248,6 @@ public abstract class JavaTemplate {
   }
 
   final void execute(InternalApi api) {
-    Check.state(this.api == null, """
-    Another evaluation is already in progress.
-    """);
-
-    this.api = api;
-
-    try {
-      definition();
-    } finally {
-      this.api = null;
-    }
-  }
-
-  final void execute(InternalApi2 api) {
     Check.state(this.api == null, """
     Another evaluation is already in progress.
     """);

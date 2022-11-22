@@ -61,12 +61,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected void writeBeforeNextMember() {
-    writenl();
-    writenl();
-  }
-
-  @Override
   protected void writeBeforeFirstMember() {
     writenl();
   }
@@ -74,6 +68,12 @@ class JavaSinkOfStringBuilder extends JavaSink {
   @Override
   protected void writeBeforeFirstStatement() {
     writeBeforeFirstMember();
+  }
+
+  @Override
+  protected void writeBeforeNextMember() {
+    writenl();
+    writenl();
   }
 
   @Override
