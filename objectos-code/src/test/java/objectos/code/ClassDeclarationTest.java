@@ -15,23 +15,23 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-public class ClassDeclarationTest extends AbstractObjectosCodeTest {
+public class ClassDeclarationTest {
 
   @Test(description = """
   final class Subject {}
   """)
   public void testCase01() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        _class(_final(), id("Subject"));
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(_final(), id("Subject"));
+        }
+      }.toString(),
 
       """
       final class Subject {}
@@ -46,18 +46,16 @@ public class ClassDeclarationTest extends AbstractObjectosCodeTest {
   class Subject {}
   """)
   public void testCase02() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        _class(
-          annotation(Deprecated.class),
-          id("Subject")
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            annotation(Deprecated.class),
+            id("Subject")
+          );
+        }
+      }.toString(),
 
       """
       @java.lang.Deprecated
@@ -74,22 +72,49 @@ public class ClassDeclarationTest extends AbstractObjectosCodeTest {
   }
   """)
   public void testCase03() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        _class(
-          id("Subject"),
-          method(id("m0"))
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            id("Subject"),
+            method(id("m0"))
+          );
+        }
+      }.toString(),
 
       """
       class Subject {
         void m0() {}
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  Class declarations TC04
+
+  - allow includes
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            id("Test"),
+            include(this::includeTest)
+          );
+        }
+
+        private void includeTest() {
+          field(_int(), id("a"));
+        }
+      }.toString(),
+
+      """
+      class Test {
+        int a;
       }
       """
     );

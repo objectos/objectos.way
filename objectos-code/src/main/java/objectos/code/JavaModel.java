@@ -116,10 +116,13 @@ public final class JavaModel {
       extends ClassDeclarationElement, EnumDeclarationElement {}
 
   public sealed interface IncludeRef
-      extends MethodDeclarationElement, MethodInvocationElement {}
+      extends
+      ClassDeclarationElement,
+      EnumDeclarationElement,
+      MethodDeclarationElement, MethodInvocationElement {}
 
   public sealed interface IntPrimitiveType
-      extends FormalParameterType, MethodDeclarationElement {}
+      extends FieldDeclarationElement, FormalParameterType, MethodDeclarationElement {}
 
   public sealed interface LeftHandSide extends Markable {}
 
