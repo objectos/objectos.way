@@ -17,7 +17,7 @@ package objectos.code;
 
 final class ByteCode {
 
-  //  internal instructions
+  //   internal instructions
 
   static final int ROOT = -1;
   static final int NOP = -2;
@@ -29,7 +29,7 @@ final class ByteCode {
   static final int NEW_LINE = -8;
   static final int OBJECT_STRING = -9;
 
-  //  types
+  //   types
 
   static final int ARRAY_TYPE = -10;
   static final int DIM = -11;
@@ -38,56 +38,57 @@ final class ByteCode {
   static final int QUALIFIED_NAME = -14;
   static final int SIMPLE_NAME = -15;
 
-  //  declarations
+  // declarations
 
   static final int COMPILATION_UNIT = -16;
   static final int IMPORT = -17;
   static final int PACKAGE = -18;
+  static final int TYPE_LIST = -19;
 
-  //  class
+  // class
 
-  static final int CLASS = -19;
-  static final int MODIFIER = -20;
-  static final int EXTENDS = -21;
-  static final int IDENTIFIER = -22;
+  static final int CLASS = -20;
+  static final int MODIFIER = -21;
+  static final int EXTENDS = -22;
+  static final int IDENTIFIER = -23;
 
-  //  field
+  // field
 
-  static final int FIELD_DECLARATION = -23;
-  static final int DECLARATOR_SIMPLE = -24;
-  static final int DECLARATOR_FULL = -25;
+  static final int FIELD_DECLARATION = -24;
+  static final int DECLARATOR_SIMPLE = -25;
+  static final int DECLARATOR_FULL = -26;
 
-  //  method/constructor
+  // method/constructor
 
-  static final int METHOD_DECLARATION = -26;
-  static final int CONSTRUCTOR_DECLARATION = -27;
-  static final int FORMAL_PARAMETER = -28;
+  static final int METHOD_DECLARATION = -27;
+  static final int CONSTRUCTOR_DECLARATION = -28;
+  static final int FORMAL_PARAMETER = -29;
 
-  //  enum
+  // enum
 
-  static final int ENUM_DECLARATION = -29;
-  static final int ENUM_CONSTANT = -30;
+  static final int ENUM_DECLARATION = -30;
+  static final int ENUM_CONSTANT = -31;
 
-  //  annotation
+  // annotation
 
-  static final int ANNOTATION = -31;
+  static final int ANNOTATION = -32;
 
   // statements
 
-  static final int EXPRESSION_STATEMENT = -32;
-  static final int LOCAL_VARIABLE = -33;
-  static final int RETURN_STATEMENT = -34;
+  static final int EXPRESSION_STATEMENT = -33;
+  static final int LOCAL_VARIABLE = -34;
+  static final int RETURN_STATEMENT = -35;
 
   // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -35;
-  static final int ASSIGNMENT_EXPRESSION = -36;
-  static final int CLASS_INSTANCE_CREATION = -37;
-  static final int EXPRESSION_NAME = -38;
-  static final int FIELD_ACCESS_EXPRESSION0 = -39;
-  static final int METHOD_INVOCATION = -40;
-  static final int STRING_LITERAL = -41;
-  static final int THIS = -42;
+  static final int ARRAY_ACCESS_EXPRESSION = -36;
+  static final int ASSIGNMENT_EXPRESSION = -37;
+  static final int CLASS_INSTANCE_CREATION = -38;
+  static final int EXPRESSION_NAME = -39;
+  static final int FIELD_ACCESS_EXPRESSION0 = -40;
+  static final int METHOD_INVOCATION = -41;
+  static final int STRING_LITERAL = -42;
+  static final int THIS = -43;
 
   private ByteCode() {}
 

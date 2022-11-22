@@ -120,7 +120,7 @@ class InternalApi2 extends State2 implements MarkerApi, TempInternalApi {
   @Override
   public final Implements _implements(ClassName[] interfaces) {
     for (var iface : interfaces) {
-      object(ByteProto.TYPE_NAME, iface);
+      className(iface);
     }
 
     markStart();

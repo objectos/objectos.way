@@ -50,6 +50,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("COMPILATION_UNIT");
     value("IMPORT");
     value("PACKAGE");
+    value("TYPE_LIST");
 
     comment("class");
 

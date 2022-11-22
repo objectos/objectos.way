@@ -15,28 +15,29 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-public class AnnotationTest extends AbstractObjectosCodeTest {
+public class AnnotationTest {
 
   @Test(description = """
   single element annotation + string literal
   """)
   public void testCase01() {
-    var tmpl = new JavaTemplate() {
-      final ClassName _Foo = ClassName.of(TEST, "Foo");
+    assertEquals(
+      new JavaTemplate() {
+        final PackageName TEST = PackageName.of("test");
+        final ClassName _Foo = ClassName.of(TEST, "Foo");
 
-      @Override
-      protected final void definition() {
-        _class(
-          annotation(_Foo, s("java")),
-          id("Test")
-        );
-      }
-    };
-
-    testDefault(
-      tmpl,
+        @Override
+        protected final void definition() {
+          _class(
+            annotation(_Foo, s("java")),
+            id("Test")
+          );
+        }
+      }.toString(),
 
       """
       @test.Foo("java")

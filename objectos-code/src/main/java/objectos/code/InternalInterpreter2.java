@@ -15,9 +15,14 @@
  */
 package objectos.code;
 
+import javax.lang.model.element.Modifier;
 import objectos.util.IntArrays;
 
 abstract class InternalInterpreter2 extends InternalCompiler2 {
+
+  private static final int _STATE_ANNOTATION = 1 << 0;
+
+  private static final int _STATE_MODIFIER = 1 << 1;
 
   protected abstract void write(char c);
 
@@ -62,7 +67,13 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   protected abstract void writeStringLiteral(String s);
 
   final void pass2() {
+    code = 0;
+
     codeIndex = 0;
+
+    markIndex = 0;
+
+    objectIndex = -1;
 
     stackIndex = -1;
 
@@ -132,6 +143,10 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     codeIndex = $stackpop();
   }
 
+  private void $constructorclr() {
+    objectIndex = -1;
+  }
+
   private boolean $lnext() {
     if (code == ByteCode.LHEAD) {
       $codenxt();
@@ -190,8 +205,63 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     stackArray[stackIndex] = codeIndex;
   }
 
+  private void $stateclr() {
+    markIndex = 0;
+  }
+
+  private boolean $stateget(int value) {
+    return (markIndex & value) != 0;
+  }
+
+  private void $stateoff(int value) {
+    markIndex &= ~value;
+  }
+
+  private void $stateset(int value) {
+    markIndex |= value;
+  }
+
   private void $throwuoe() {
     throw new UnsupportedOperationException("Implement me :: code=" + code);
+  }
+
+  private void annotation() {
+    if ($nextjmp()) {
+      $codentr();
+
+      write('@');
+
+      typeName();
+
+      $codexit();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: no annotation class name!");
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+
+      writeArgumentListStart();
+
+      while ($lnext()) {
+        $codentr();
+        annotationPairItem();
+        $codexit();
+      }
+
+      writeArgumentListEnd();
+
+      $codexit();
+    }
+  }
+
+  private void annotationPairItem() {
+    switch (code) {
+      case ByteCode.STRING_LITERAL -> stringLiteral();
+
+      default -> $throwuoe();
+    }
   }
 
   private void argumentList() {
@@ -280,9 +350,14 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     var prevSection = false;
 
     if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: modifiers");
+      $codentr();
+      modifierList();
+      $codexit();
+
+      prevSection = true;
     }
+
+    newLineOrSpace(prevSection);
 
     write("class");
 
@@ -290,7 +365,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     if ($nextjmp()) {
       $codentr();
-      declarationSimpleName();
+      classSimpleName();
       $codexit();
 
       prevSection = true;
@@ -326,11 +401,44 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     var contents = false;
 
     if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: body");
+      $codentr();
+      classDeclarationBody();
+      $codexit();
+
+      contents = true;
     }
 
     writeBlockEnd(contents);
+  }
+
+  private void classDeclarationBody() {
+    if ($lnext()) {
+      writeBeforeFirstMember();
+
+      $codentr();
+      classDeclarationBodyItem();
+      $codexit();
+
+      while ($lnext()) {
+        writeBeforeNextMember();
+
+        $codentr();
+        classDeclarationBodyItem();
+        $codexit();
+      }
+    }
+  }
+
+  private void classDeclarationBodyItem() {
+    switch (code) {
+      case ByteCode.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
+
+      case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
+
+      case ByteCode.METHOD_DECLARATION -> methodDeclaration();
+
+      default -> $throwuoe();
+    }
   }
 
   private void classInstanceCreationExpression() {
@@ -374,6 +482,18 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     if ($nextjmp()) {
       throw new UnsupportedOperationException(
         "Implement me :: CICE class body");
+    }
+  }
+
+  private void classSimpleName() {
+    switch (code) {
+      case ByteCode.OBJECT_STRING -> {
+        objectString();
+
+        objectIndex = code;
+      }
+
+      default -> $throwuoe();
     }
   }
 
@@ -432,6 +552,8 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   }
 
   private void compilationUnitBodyItem() {
+    $constructorclr();
+
     if (ByteCode.isExpression(code)) {
       expression();
 
@@ -441,17 +563,244 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     switch (code) {
       case ByteCode.CLASS -> classDeclaration();
 
+      case ByteCode.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
+
+      case ByteCode.ENUM_DECLARATION -> enumDeclaration();
+
+      case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
+
       case ByteCode.METHOD_DECLARATION -> methodDeclaration();
 
       default -> statement();
     }
   }
 
-  private void declarationSimpleName() {
+  private void constructorDeclaration() {
+    var prevSection = false;
+
+    if ($nextjmp()) {
+      $codentr();
+      modifierList();
+      $codexit();
+
+      prevSection = true;
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: constructor type params");
+    }
+
+    newLineOrSpace(prevSection);
+
+    if (objectIndex < 0) {
+      write("Constructor");
+    } else {
+      var s = (String) objectArray[objectIndex];
+
+      write(s);
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: constructor receiver param");
+    }
+
+    write('(');
+
+    if ($nextjmp()) {
+      $codentr();
+      formalParameterList();
+      $codexit();
+    }
+
+    write(')');
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: constructor throws");
+    }
+
+    if ($nextjmp()) {
+      writeBlockStart();
+
+      $codentr();
+      methodDeclarationBody();
+      $codexit();
+
+      writeBlockEnd(true);
+    } else {
+      writeBlockStart();
+      writeBlockEnd(false);
+    }
+  }
+
+  private void declaratorFull() {
+    declaratorSimple();
+
+    if ($nextjmp()) {
+      writeSeparator('=');
+
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
+  private void declaratorList() {
+    if ($lnext()) {
+      $codentr();
+      declaratorListItem();
+      $codexit();
+
+      while ($lnext()) {
+        writeComma();
+
+        $codentr();
+        declaratorListItem();
+        $codexit();
+      }
+    }
+
+    writeSemicolon();
+  }
+
+  private void declaratorListItem() {
     switch (code) {
-      case ByteCode.OBJECT_STRING -> objectString();
+      case ByteCode.DECLARATOR_SIMPLE -> declaratorSimple();
+
+      case ByteCode.DECLARATOR_FULL -> declaratorFull();
 
       default -> $throwuoe();
+    }
+  }
+
+  private void declaratorSimple() {
+    if ($nextjmp()) {
+      $codentr();
+      identifier();
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
+  private void enumDeclaration() {
+    var prevSection = false;
+
+    if ($nextjmp()) {
+      $codentr();
+      modifierList();
+      $codexit();
+
+      prevSection = true;
+    }
+
+    if ($nextjmp()) {
+      newLineOrSpace(prevSection);
+
+      write("enum");
+
+      writeSpace();
+
+      $codentr();
+      classSimpleName();
+      $codexit();
+
+      prevSection = true;
+    }
+
+    if ($nextjmp()) {
+      writeSpaceIf(prevSection);
+
+      write("implements");
+
+      writeSpace();
+
+      $codentr();
+      typeList();
+      $codexit();
+    }
+
+    writeBlockStart();
+
+    var contents = false;
+
+    if ($nextjmp()) {
+      $codentr();
+      enumDeclarationConstants();
+      $codexit();
+
+      contents = true;
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+
+      while ($lnext()) {
+        writeBeforeNextMember();
+
+        $codentr();
+        classDeclarationBodyItem();
+        $codexit();
+      }
+
+      $codexit();
+
+      contents = true;
+    }
+
+    writeBlockEnd(contents);
+  }
+
+  private void enumDeclarationConstants() {
+    if ($lnext()) {
+      writeBeforeFirstMember();
+
+      $codentr();
+      enumDeclarationConstantsItem();
+      $codexit();
+
+      while ($lnext()) {
+        writeComma();
+
+        writeBeforeNextMember();
+
+        $codentr();
+        enumDeclarationConstantsItem();
+        $codexit();
+      }
+    }
+
+    writeSemicolon();
+  }
+  private void enumDeclarationConstantsItem() {
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: modifiers");
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+      identifier();
+      $codexit();
+    }
+
+    if ($nextjmp()) {
+      writeArgumentListStart();
+
+      $codentr();
+      argumentList();
+      $codexit();
+
+      writeArgumentListEnd();
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: body");
     }
   }
 
@@ -496,14 +845,14 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   private void expressionNameList() {
     if ($lnext()) {
       $codentr();
-      declarationSimpleName();
+      identifier();
       $codexit();
 
       while ($lnext()) {
         write('.');
 
         $codentr();
-        declarationSimpleName();
+        identifier();
         $codexit();
       }
     }
@@ -548,11 +897,91 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     if ($nextjmp()) {
       $codentr();
-      declarationSimpleName();
+      identifier();
       $codexit();
     } else {
       $malformed();
     }
+  }
+
+  private void fieldDeclaration() {
+    var prevSection = false;
+
+    if ($nextjmp()) {
+      $codentr();
+      modifierList();
+      $codexit();
+
+      prevSection = true;
+    }
+
+    if ($nextjmp()) {
+      writeSpaceIf(prevSection);
+
+      $codentr();
+      typeName();
+      $codexit();
+    }
+
+    if ($nextjmp()) {
+      writeSpace();
+
+      $codentr();
+      declaratorList();
+      $codexit();
+    }
+  }
+
+  private void formalParameterList() {
+    if ($lnext()) {
+      $codentr();
+      formalParameterListItem();
+      $codexit();
+
+      while ($lnext()) {
+        writeComma();
+
+        $codentr();
+        formalParameterListItem();
+        $codexit();
+      }
+    }
+  }
+
+  private void formalParameterListItem() {
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: modifiers");
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+      typeName();
+      $codexit();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid parameter declaration?");
+    }
+
+    if ($nextjmp()) {
+      writeSpace();
+
+      $codentr();
+      identifier();
+      $codexit();
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: invalid parameter declaration?");
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: variable arity");
+    }
+  }
+
+  private void identifier() {
+    objectString();
   }
 
   private void importDeclarationList() {
@@ -608,7 +1037,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
       writeSpace();
 
       $codentr();
-      declarationSimpleName();
+      identifier();
       $codexit();
     } else {
       throw new UnsupportedOperationException(
@@ -630,9 +1059,14 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   }
 
   private void methodDeclaration() {
+    var prevSection = false;
+
     if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method modifiers");
+      $codentr();
+      modifierList();
+      $codexit();
+
+      prevSection = true;
     }
 
     if ($nextjmp()) {
@@ -640,17 +1074,21 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
         "Implement me :: method type params");
     }
 
+    newLineOrSpace(prevSection);
+
     if ($nextjmp()) {
       $codentr();
       typeName();
       $codexit();
+    } else {
+      write("void");
     }
 
     writeSpace();
 
     if ($nextjmp()) {
       $codentr();
-      declarationSimpleName();
+      identifier();
       $codexit();
     }
 
@@ -662,8 +1100,9 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     write('(');
 
     if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method formal parameters");
+      $codentr();
+      formalParameterList();
+      $codexit();
     }
 
     write(')');
@@ -674,11 +1113,34 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     }
 
     if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method body");
+      writeBlockStart();
+
+      $codentr();
+      methodDeclarationBody();
+      $codexit();
+
+      writeBlockEnd(true);
     } else {
       writeBlockStart();
       writeBlockEnd(false);
+    }
+  }
+
+  private void methodDeclarationBody() {
+    if ($lnext()) {
+      writeBeforeFirstStatement();
+
+      $codentr();
+      statement();
+      $codexit();
+
+      while ($lnext()) {
+        writeBeforeNextStatement();
+
+        $codentr();
+        statement();
+        $codexit();
+      }
     }
   }
 
@@ -704,7 +1166,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     if ($nextjmp()) {
       $codentr();
-      declarationSimpleName();
+      identifier();
       $codexit();
     } else {
       throw new UnsupportedOperationException(
@@ -720,6 +1182,59 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     }
 
     writeArgumentListEnd();
+  }
+
+  private void modifier() {
+    $codenxt();
+
+    var modifier = (Modifier) $codeobj();
+
+    write(modifier.toString());
+  }
+
+  private void modifierList() {
+    $stateclr();
+
+    if ($lnext()) {
+      $codentr();
+      modifierListItem();
+      $codexit();
+
+      while ($lnext()) {
+        newLineOrSpace(true);
+
+        $codentr();
+        modifierListItem();
+        $codexit();
+      }
+    }
+  }
+
+  private void modifierListItem() {
+    switch (code) {
+      case ByteCode.ANNOTATION -> {
+        annotation();
+
+        $stateset(_STATE_ANNOTATION);
+      }
+
+      case ByteCode.MODIFIER -> {
+        modifier();
+
+        $stateoff(_STATE_ANNOTATION);
+        $stateset(_STATE_MODIFIER);
+      }
+
+      default -> $throwuoe();
+    }
+  }
+
+  private void newLineOrSpace(boolean prevSection) {
+    if ($stateget(_STATE_ANNOTATION) && !$stateget(_STATE_MODIFIER)) {
+      writeNewLine();
+    } else {
+      writeSpaceIf(prevSection);
+    }
   }
 
   private void objectString() {
@@ -787,14 +1302,68 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     writeStringLiteral(s);
   }
 
+  private void typeList() {
+    if ($lnext()) {
+      $codentr();
+      typeName();
+      $codexit();
+
+      while ($lnext()) {
+        writeComma();
+
+        $codentr();
+        typeName();
+        $codexit();
+      }
+    }
+  }
+
   private void typeName() {
     switch (code) {
+      case ByteCode.ARRAY_TYPE -> {
+        if ($nextjmp()) {
+          $codentr();
+          typeName();
+          $codexit();
+        } else {
+          $malformed();
+        }
+
+        if ($nextjmp()) {
+          $codentr();
+
+          while ($lnext()) {
+            $codentr();
+
+            switch (code) {
+              case ByteCode.DIM -> write("[]");
+
+              default -> $throwuoe();
+            }
+
+            $codexit();
+          }
+
+          $codexit();
+        } else {
+          $malformed();
+        }
+      }
+
       case ByteCode.NO_TYPE -> write("void");
+
+      case ByteCode.PRIMITIVE_TYPE -> {
+        $codenxt();
+
+        var type = (PrimitiveType) $codeobj();
+
+        write(type.toString());
+      }
 
       case ByteCode.QUALIFIED_NAME -> {
         $codenxt();
 
-        var qname = (ClassName) codeobj();
+        var qname = (ClassName) $codeobj();
 
         write(qname.toString());
       }

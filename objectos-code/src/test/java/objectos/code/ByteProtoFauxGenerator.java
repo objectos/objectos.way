@@ -38,7 +38,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("CLASS_NAME");
     value("NO_TYPE");
     value("PRIMITIVE_TYPE");
-    value("TYPE_NAME");
+    value("TYPE_NAME"); // remove
 
     comment("declarations");
 
