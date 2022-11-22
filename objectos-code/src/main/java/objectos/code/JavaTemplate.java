@@ -18,6 +18,7 @@ package objectos.code;
 import java.lang.annotation.Annotation;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
+import objectos.code.JavaModel.AnyType;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
 import objectos.code.JavaModel.ArrayTypeElement;
@@ -54,6 +55,7 @@ import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
+import objectos.code.JavaModel.ParameterizedTypeInvocation;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
@@ -71,7 +73,7 @@ public abstract class JavaTemplate {
     void execute();
   }
 
-  private TempInternalApi api;
+  private InternalApi api;
 
   /**
    * Sole constructor.
@@ -243,6 +245,11 @@ public abstract class JavaTemplate {
     return api().t(type, elements);
   }
 
+  protected final ParameterizedTypeInvocation t(
+      ClassNameInvocation rawType, AnyType... arguments) {
+    return api().t(rawType, arguments);
+  }
+
   protected final LocalVariableDeclarationRef var(String name, Expression expression) {
     return api().var(name, expression);
   }
@@ -261,7 +268,7 @@ public abstract class JavaTemplate {
     }
   }
 
-  private TempInternalApi api() {
+  private InternalApi api() {
     Check.state(api != null, """
     An InternalApi instance was not set.
 

@@ -30,6 +30,8 @@ public final class JavaModel {
       extends ClassDeclarationElement, EnumDeclarationElement,
       MethodDeclarationElement {}
 
+  public sealed interface AnyType extends Markable {}
+
   public sealed interface ArrayAccessExpression
       extends Expression, LeftHandSide {}
 
@@ -40,6 +42,7 @@ public final class JavaModel {
 
   public sealed interface ArrayTypeInvocation
       extends
+      AnyType,
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement {}
 
@@ -55,6 +58,7 @@ public final class JavaModel {
 
   public sealed interface ClassNameInvocation
       extends
+      AnyType,
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement, MethodInvocationSubject {}
 
@@ -96,11 +100,15 @@ public final class JavaModel {
   public sealed interface FieldDeclarationElement extends Markable {}
 
   public sealed interface FinalModifier
-      extends ClassDeclarationElement, FieldDeclarationElement,
+      extends
+      ClassDeclarationElement,
+      FieldDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface FormalParameter
-      extends ConstructorDeclarationElement, MethodDeclarationElement {}
+      extends
+      ConstructorDeclarationElement,
+      MethodDeclarationElement {}
 
   public sealed interface FormalParameterType
       extends Markable {}
@@ -122,7 +130,7 @@ public final class JavaModel {
       MethodDeclarationElement, MethodInvocationElement {}
 
   public sealed interface IntPrimitiveType
-      extends FieldDeclarationElement, FormalParameterType, MethodDeclarationElement {}
+      extends AnyType, FieldDeclarationElement, FormalParameterType, MethodDeclarationElement {}
 
   public sealed interface LeftHandSide extends Markable {}
 
@@ -155,6 +163,12 @@ public final class JavaModel {
 
   public sealed interface NewLineRef
       extends MethodInvocationElement {}
+
+  public sealed interface ParameterizedTypeInvocation
+      extends
+      AnyType,
+      FieldDeclarationElement, FormalParameterType,
+      MethodDeclarationElement {}
 
   public sealed interface PrimaryExpression extends Expression {}
 
@@ -226,6 +240,7 @@ public final class JavaModel {
       MethodInvocation,
       MethodDeclaration,
       NewLineRef,
+      ParameterizedTypeInvocation,
       PrivateModifier,
       ProtectedModifier,
       PublicModifier,

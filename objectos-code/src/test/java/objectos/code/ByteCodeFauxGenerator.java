@@ -41,6 +41,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("ARRAY_TYPE");
     value("DIM");
     value("NO_TYPE");
+    value("PARAMETERIZED_TYPE");
     value("PRIMITIVE_TYPE");
     value("QUALIFIED_NAME");
     value("SIMPLE_NAME");

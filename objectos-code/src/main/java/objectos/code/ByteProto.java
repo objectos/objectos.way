@@ -19,7 +19,7 @@ final class ByteProto {
 
   static final int NULL = Integer.MIN_VALUE;
 
-  //  internal instructions
+  //   internal instructions
 
   static final int JMP = -1;
   static final int BREAK = -2;
@@ -32,57 +32,58 @@ final class ByteProto {
   static final int PACKAGE_NAME = -6;
   static final int CLASS_NAME = -7;
   static final int NO_TYPE = -8;
-  static final int PRIMITIVE_TYPE = -9;
-  static final int TYPE_NAME = -10;
+  static final int PARAMETERIZED_TYPE = -9;
+  static final int PRIMITIVE_TYPE = -10;
+  static final int TYPE_NAME = -11;
 
   // declarations
 
-  static final int COMPILATION_UNIT = -11;
-  static final int PACKAGE_DECLARATION = -12;
+  static final int COMPILATION_UNIT = -12;
+  static final int PACKAGE_DECLARATION = -13;
 
   // class
 
-  static final int CLASS_DECLARATION = -13;
-  static final int MODIFIER = -14;
-  static final int IDENTIFIER = -15;
-  static final int EXTENDS = -16;
-  static final int IMPLEMENTS = -17;
+  static final int CLASS_DECLARATION = -14;
+  static final int MODIFIER = -15;
+  static final int IDENTIFIER = -16;
+  static final int EXTENDS = -17;
+  static final int IMPLEMENTS = -18;
 
   // field
 
-  static final int FIELD_DECLARATION = -18;
+  static final int FIELD_DECLARATION = -19;
 
   // method/constructor
 
-  static final int METHOD_DECLARATION = -19;
-  static final int CONSTRUCTOR_DECLARATION = -20;
-  static final int FORMAL_PARAMETER = -21;
+  static final int METHOD_DECLARATION = -20;
+  static final int CONSTRUCTOR_DECLARATION = -21;
+  static final int FORMAL_PARAMETER = -22;
 
   // enum
 
-  static final int ENUM_DECLARATION = -22;
-  static final int ENUM_CONSTANT = -23;
+  static final int ENUM_DECLARATION = -23;
+  static final int ENUM_CONSTANT = -24;
 
   // annotation
 
-  static final int ANNOTATION = -24;
+  static final int ANNOTATION = -25;
 
   // statements
 
-  static final int LOCAL_VARIABLE = -25;
-  static final int RETURN_STATEMENT = -26;
+  static final int LOCAL_VARIABLE = -26;
+  static final int RETURN_STATEMENT = -27;
 
   // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -27;
-  static final int ASSIGNMENT_EXPRESSION = -28;
-  static final int ASSIGNMENT_OPERATOR = -29;
-  static final int CLASS_INSTANCE_CREATION0 = -30;
-  static final int EXPRESSION_NAME = -31;
-  static final int FIELD_ACCESS_EXPRESSION0 = -32;
-  static final int METHOD_INVOCATION = -33;
-  static final int STRING_LITERAL = -34;
-  static final int THIS = -35;
+  static final int ARRAY_ACCESS_EXPRESSION = -28;
+  static final int ASSIGNMENT_EXPRESSION = -29;
+  static final int ASSIGNMENT_OPERATOR = -30;
+  static final int CLASS_INSTANCE_CREATION0 = -31;
+  static final int EXPRESSION_NAME = -32;
+  static final int FIELD_ACCESS_EXPRESSION0 = -33;
+  static final int METHOD_INVOCATION = -34;
+  static final int STRING_LITERAL = -35;
+  static final int THIS = -36;
 
   private ByteProto() {}
 

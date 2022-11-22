@@ -1352,6 +1352,42 @@ abstract class InternalInterpreter extends InternalCompiler {
 
       case ByteCode.NO_TYPE -> write("void");
 
+      case ByteCode.PARAMETERIZED_TYPE -> {
+        if ($nextjmp()) {
+          $codentr();
+          typeName();
+          $codexit();
+        } else {
+          $malformed();
+        }
+
+        if ($nextjmp()) {
+          $codentr();
+
+          write('<');
+
+          if ($lnext()) {
+            $codentr();
+            typeName();
+            $codexit();
+
+            while ($lnext()) {
+              writeComma();
+
+              $codentr();
+              typeName();
+              $codexit();
+            }
+          }
+
+          write('>');
+
+          $codexit();
+        } else {
+          $malformed();
+        }
+      }
+
       case ByteCode.PRIMITIVE_TYPE -> {
         $codenxt();
 

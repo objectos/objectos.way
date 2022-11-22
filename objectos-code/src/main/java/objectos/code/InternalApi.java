@@ -21,6 +21,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
+import objectos.code.JavaModel.AnyType;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
 import objectos.code.JavaModel.ArrayTypeElement;
@@ -58,6 +59,7 @@ import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
+import objectos.code.JavaModel.ParameterizedTypeInvocation;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
@@ -69,9 +71,8 @@ import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 
-class InternalApi extends State implements MarkerApi, TempInternalApi {
+class InternalApi extends State implements MarkerApi {
 
-  @Override
   public final ClassDeclaration _class(ClassDeclarationElement[] elements) {
     markStart();
 
@@ -84,7 +85,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final EnumDeclaration _enum(EnumDeclarationElement[] elements) {
     markStart();
 
@@ -97,7 +97,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final ExtendsRef _extends(ClassName superclass) {
     className(superclass);
 
@@ -110,14 +109,12 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final FinalModifier _final() {
     object(ByteProto.MODIFIER, Modifier.FINAL);
 
     return JavaModel.REF;
   }
 
-  @Override
   public final Implements _implements(ClassName[] interfaces) {
     for (var iface : interfaces) {
       className(iface);
@@ -132,14 +129,12 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final IntPrimitiveType _int() {
     object(ByteProto.PRIMITIVE_TYPE, PrimitiveType.INT);
 
     return JavaModel.REF;
   }
 
-  @Override
   public final ClassInstanceCreationExpression _new(
       ClassNameInvocation type, Expression[] arguments) {
     markStart();
@@ -155,7 +150,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final void _package(String packageName) {
     Check.argument(
       SourceVersion.isName(packageName),
@@ -173,28 +167,24 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     element(ByteProto.PACKAGE_DECLARATION);
   }
 
-  @Override
   public final PrivateModifier _private() {
     object(ByteProto.MODIFIER, Modifier.PRIVATE);
 
     return JavaModel.REF;
   }
 
-  @Override
   public final ProtectedModifier _protected() {
     object(ByteProto.MODIFIER, Modifier.PROTECTED);
 
     return JavaModel.REF;
   }
 
-  @Override
   public final PublicModifier _public() {
     object(ByteProto.MODIFIER, Modifier.PUBLIC);
 
     return JavaModel.REF;
   }
 
-  @Override
   public final ReturnStatement _return(Expression expression) {
     markStart();
 
@@ -205,14 +195,12 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final StaticModifier _static() {
     object(ByteProto.MODIFIER, Modifier.STATIC);
 
     return JavaModel.REF;
   }
 
-  @Override
   public final ThisKeyword _this() {
     markStart();
 
@@ -221,7 +209,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final VoidInvocation _void() {
     markStart();
 
@@ -230,7 +217,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final ArrayAccessExpression a(ExpressionName reference, Expression[] expressions) {
     markStart();
 
@@ -245,7 +231,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
     var name = ClassName.of(annotationType); // implicit null-check
 
@@ -260,7 +245,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final AnnotationInvocation annotation(ClassName annotationType,
       AnnotationElementValue value) {
     className(annotationType);
@@ -295,17 +279,14 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
     return assign(AssignmentOperator.SIMPLE, leftHandSide, expression);
   }
 
-  @Override
   public final void autoImports() {
     autoImports.enable();
   }
 
-  @Override
   public final ConstructorDeclaration constructor(ConstructorDeclarationElement[] elements) {
     markStart();
 
@@ -318,7 +299,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final ArrayDimension dim() {
     markStart();
 
@@ -327,7 +307,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final EnumConstant enumConstant(EnumConstantElement[] elements) {
     markStart();
 
@@ -340,7 +319,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public FieldDeclaration field(FieldDeclarationElement[] elements) {
     markStart();
 
@@ -353,14 +331,12 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final IdentifierRef id(String name) {
     identifier(name);
 
     return JavaModel.REF;
   }
 
-  @Override
   public final IncludeRef include(IncludeTarget target) {
     lambdaStart();
 
@@ -371,7 +347,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.INCLUDE;
   }
 
-  @Override
   public final MethodInvocation invoke(
       MethodInvocationSubject subject, String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
@@ -391,7 +366,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final MethodInvocation invoke(
       String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
@@ -419,7 +393,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     markIncrement();
   }
 
-  @Override
   public final MethodDeclaration method(MethodDeclarationElement[] elements) {
     markStart();
 
@@ -432,7 +405,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final ExpressionName n(ClassName name, String identifier) {
     className(name);
 
@@ -449,7 +421,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final ExpressionName n(String value) {
     identifier(value);
 
@@ -462,7 +433,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final FieldAccessExpression n(ThisKeyword keyword, String identifier) {
     identifier(identifier);
 
@@ -477,7 +447,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final NewLineRef nl() {
     markStart();
 
@@ -486,7 +455,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final FormalParameter param(FormalParameterType type, IdentifierRef name) {
     markStart();
 
@@ -499,7 +467,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final StringLiteral s(String value) {
     Check.notNull(value, "value == null");
 
@@ -508,7 +475,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final ClassNameInvocation t(Class<?> type) {
     var cn = ClassName.of(type);
 
@@ -517,7 +483,6 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
   public final ArrayTypeInvocation t(Class<?> type, ArrayTypeElement[] elements) {
     var t = t(type);
 
@@ -534,7 +499,20 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
-  @Override
+  public final ParameterizedTypeInvocation t(ClassNameInvocation rawType, AnyType[] arguments) {
+    markStart();
+
+    rawType.mark(this);
+
+    for (var arg : arguments) {
+      arg.mark(this);
+    }
+
+    element(ByteProto.PARAMETERIZED_TYPE);
+
+    return JavaModel.REF;
+  }
+
   public final LocalVariableDeclarationRef var(String name, Expression expression) {
     identifier(name);
 
