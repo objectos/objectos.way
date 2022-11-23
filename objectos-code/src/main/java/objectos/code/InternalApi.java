@@ -37,6 +37,7 @@ import objectos.code.JavaModel.EnumConstant;
 import objectos.code.JavaModel.EnumConstantElement;
 import objectos.code.JavaModel.EnumDeclaration;
 import objectos.code.JavaModel.EnumDeclarationElement;
+import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsRef;
@@ -197,6 +198,18 @@ class InternalApi extends State implements MarkerApi {
 
   public final StaticModifier _static() {
     object(ByteProto.MODIFIER, Modifier.STATIC);
+
+    return JavaModel.REF;
+  }
+
+  public final ExplicitConstructorInvocation _super(Expression[] arguments) {
+    markStart();
+
+    for (var arg : arguments) {
+      arg.mark(this);
+    }
+
+    element(ByteProto.SUPER_INVOCATION);
 
     return JavaModel.REF;
   }

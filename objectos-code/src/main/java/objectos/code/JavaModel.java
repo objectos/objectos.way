@@ -79,6 +79,10 @@ public final class JavaModel {
 
   public sealed interface EnumDeclarationElement extends Markable {}
 
+  public sealed interface ExplicitConstructorInvocation
+      extends
+      ConstructorDeclarationElement {}
+
   public sealed interface Expression
       extends
       EnumConstantElement,
@@ -230,6 +234,7 @@ public final class JavaModel {
       ConstructorDeclaration,
       EnumConstant,
       EnumDeclaration,
+      ExplicitConstructorInvocation,
       ExpressionName,
       ExtendsRef,
       FieldAccessExpression,

@@ -19,7 +19,7 @@ final class ByteProto {
 
   static final int NULL = Integer.MIN_VALUE;
 
-  //   internal instructions
+  // internal instructions
 
   static final int JMP = -1;
   static final int BREAK = -2;
@@ -56,34 +56,37 @@ final class ByteProto {
   // method/constructor
 
   static final int METHOD_DECLARATION = -20;
-  static final int CONSTRUCTOR_DECLARATION = -21;
-  static final int FORMAL_PARAMETER = -22;
+  static final int FORMAL_PARAMETER = -21;
+  static final int CONSTRUCTOR_DECLARATION = -22;
+  static final int THIS_INVOCATION = -23;
+  static final int SUPER_INVOCATION = -24;
+  static final int QUALIFIED_SUPER_INVOCATION = -25;
 
   // enum
 
-  static final int ENUM_DECLARATION = -23;
-  static final int ENUM_CONSTANT = -24;
+  static final int ENUM_DECLARATION = -26;
+  static final int ENUM_CONSTANT = -27;
 
   // annotation
 
-  static final int ANNOTATION = -25;
+  static final int ANNOTATION = -28;
 
   // statements
 
-  static final int LOCAL_VARIABLE = -26;
-  static final int RETURN_STATEMENT = -27;
+  static final int LOCAL_VARIABLE = -29;
+  static final int RETURN_STATEMENT = -30;
 
   // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -28;
-  static final int ASSIGNMENT_EXPRESSION = -29;
-  static final int ASSIGNMENT_OPERATOR = -30;
-  static final int CLASS_INSTANCE_CREATION0 = -31;
-  static final int EXPRESSION_NAME = -32;
-  static final int FIELD_ACCESS_EXPRESSION0 = -33;
-  static final int METHOD_INVOCATION = -34;
-  static final int STRING_LITERAL = -35;
-  static final int THIS = -36;
+  static final int ARRAY_ACCESS_EXPRESSION = -31;
+  static final int ASSIGNMENT_EXPRESSION = -32;
+  static final int ASSIGNMENT_OPERATOR = -33;
+  static final int CLASS_INSTANCE_CREATION0 = -34;
+  static final int EXPRESSION_NAME = -35;
+  static final int FIELD_ACCESS_EXPRESSION0 = -36;
+  static final int METHOD_INVOCATION = -37;
+  static final int STRING_LITERAL = -38;
+  static final int THIS = -39;
 
   private ByteProto() {}
 

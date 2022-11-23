@@ -34,6 +34,7 @@ import objectos.code.JavaModel.EnumConstant;
 import objectos.code.JavaModel.EnumConstantElement;
 import objectos.code.JavaModel.EnumDeclaration;
 import objectos.code.JavaModel.EnumDeclarationElement;
+import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsRef;
@@ -142,6 +143,10 @@ public abstract class JavaTemplate {
 
   protected final StaticModifier _static() {
     return api()._static();
+  }
+
+  protected final ExplicitConstructorInvocation _super(Expression... arguments) {
+    return api()._super(arguments);
   }
 
   protected final ThisKeyword _this() {

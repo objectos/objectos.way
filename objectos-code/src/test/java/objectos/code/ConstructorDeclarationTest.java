@@ -126,4 +126,44 @@ public class ConstructorDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Constructor declarations TC04:
+
+  - super invocations
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          constructor(_super());
+          constructor(_super(s("a")));
+          constructor(_super(s("a"), s("b")));
+          constructor(
+            _super(s("a"), s("b")),
+            _super()
+          );
+        }
+      }.toString(),
+
+      """
+      Constructor() {
+        super();
+      }
+
+      Constructor() {
+        super("a");
+      }
+
+      Constructor() {
+        super("a", "b");
+      }
+
+      Constructor() {
+        super();
+      }
+      """
+    );
+  }
+
 }

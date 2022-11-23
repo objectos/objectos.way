@@ -623,18 +623,35 @@ abstract class InternalInterpreter extends InternalCompiler {
         "Implement me :: constructor throws");
     }
 
+    writeBlockStart();
+
+    var contents = false;
+
     if ($nextjmp()) {
-      writeBlockStart();
+      writeBeforeFirstStatement();
 
       $codentr();
-      methodDeclarationBody();
+
+      switch (code) {
+        case ByteCode.SUPER_CONSTRUCTOR_INVOCATION -> superConstructorInvocation();
+
+        default -> $throwuoe();
+      }
+
       $codexit();
 
-      writeBlockEnd(true);
-    } else {
-      writeBlockStart();
-      writeBlockEnd(false);
+      contents = true;
     }
+
+    if ($nextjmp()) {
+      $codentr();
+      methodDeclarationBody(contents);
+      $codexit();
+
+      contents = true;
+    }
+
+    writeBlockEnd(contents);
   }
 
   private void declaratorFull() {
@@ -778,6 +795,7 @@ abstract class InternalInterpreter extends InternalCompiler {
 
     writeSemicolon();
   }
+
   private void enumDeclarationConstantsItem() {
     if ($nextjmp()) {
       throw new UnsupportedOperationException(
@@ -1118,7 +1136,7 @@ abstract class InternalInterpreter extends InternalCompiler {
       writeBlockStart();
 
       $codentr();
-      methodDeclarationBody();
+      methodDeclarationBody(false);
       $codexit();
 
       writeBlockEnd(true);
@@ -1128,9 +1146,11 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
   }
 
-  private void methodDeclarationBody() {
+  private void methodDeclarationBody(boolean contents) {
     if ($lnext()) {
-      writeBeforeFirstStatement();
+      if (!contents) {
+        writeBeforeFirstStatement();
+      }
 
       $codentr();
       statement();
@@ -1302,6 +1322,32 @@ abstract class InternalInterpreter extends InternalCompiler {
     var s = (String) objectArray[code];
 
     writeStringLiteral(s);
+  }
+
+  private void superConstructorInvocation() {
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: qualifier");
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: type arguments");
+    }
+
+    write("super");
+
+    writeArgumentListStart();
+
+    if ($nextjmp()) {
+      $codentr();
+      argumentList();
+      $codexit();
+    }
+
+    writeArgumentListEnd();
+
+    writeSemicolon();
   }
 
   private void typeList() {

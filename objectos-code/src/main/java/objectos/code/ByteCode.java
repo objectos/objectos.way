@@ -62,34 +62,36 @@ final class ByteCode {
   // method/constructor
 
   static final int METHOD_DECLARATION = -28;
-  static final int CONSTRUCTOR_DECLARATION = -29;
-  static final int FORMAL_PARAMETER = -30;
+  static final int FORMAL_PARAMETER = -29;
+  static final int CONSTRUCTOR_DECLARATION = -30;
+  static final int SUPER_CONSTRUCTOR_INVOCATION = -31;
+  static final int THIS_CONSTRUCTOR_INVOCATION = -32;
 
   // enum
 
-  static final int ENUM_DECLARATION = -31;
-  static final int ENUM_CONSTANT = -32;
+  static final int ENUM_DECLARATION = -33;
+  static final int ENUM_CONSTANT = -34;
 
   // annotation
 
-  static final int ANNOTATION = -33;
+  static final int ANNOTATION = -35;
 
   // statements
 
-  static final int EXPRESSION_STATEMENT = -34;
-  static final int LOCAL_VARIABLE = -35;
-  static final int RETURN_STATEMENT = -36;
+  static final int EXPRESSION_STATEMENT = -36;
+  static final int LOCAL_VARIABLE = -37;
+  static final int RETURN_STATEMENT = -38;
 
   // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -37;
-  static final int ASSIGNMENT_EXPRESSION = -38;
-  static final int CLASS_INSTANCE_CREATION = -39;
-  static final int EXPRESSION_NAME = -40;
-  static final int FIELD_ACCESS_EXPRESSION0 = -41;
-  static final int METHOD_INVOCATION = -42;
-  static final int STRING_LITERAL = -43;
-  static final int THIS = -44;
+  static final int ARRAY_ACCESS_EXPRESSION = -39;
+  static final int ASSIGNMENT_EXPRESSION = -40;
+  static final int CLASS_INSTANCE_CREATION = -41;
+  static final int EXPRESSION_NAME = -42;
+  static final int FIELD_ACCESS_EXPRESSION0 = -43;
+  static final int METHOD_INVOCATION = -44;
+  static final int STRING_LITERAL = -45;
+  static final int THIS = -46;
 
   private ByteCode() {}
 

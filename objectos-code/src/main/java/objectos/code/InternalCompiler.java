@@ -584,7 +584,8 @@ class InternalCompiler extends InternalApi {
       ByteCode.NOP, // receiver = 3
       ByteCode.NOP, // params = 4
       ByteCode.NOP, // throws = 5
-      ByteCode.NOP /// body = 6
+      ByteCode.NOP, // exp. const. invocation = 6
+      ByteCode.NOP /// body = 7
     );
 
     loop: while ($prototru()) {
@@ -597,11 +598,13 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.MODIFIER -> $elemlst(1, modifier());
 
+        case ByteProto.SUPER_INVOCATION -> $elemset(6, superInvocation());
+
         case ByteProto.JMP -> $stackpsh();
 
         case ByteProto.BREAK -> { break loop; }
 
-        default -> $elemlst(6, statement(proto));
+        default -> $elemlst(7, statement(proto));
       }
     }
 
@@ -1152,6 +1155,29 @@ class InternalCompiler extends InternalApi {
 
   private int stringLiteral() {
     return $simpleadd(ByteCode.STRING_LITERAL, $protonxt());
+  }
+
+  private int superInvocation() {
+    $elemadd(
+      ByteCode.SUPER_CONSTRUCTOR_INVOCATION,
+      ByteCode.NOP, // qualifier = 1
+      ByteCode.NOP, // targs = 2
+      ByteCode.NOP /// arguments = 3
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemlst(3, expression(proto));
+      }
+    }
+
+    return $elempop();
   }
 
   private int thisKeyword() {
