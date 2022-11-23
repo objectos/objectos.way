@@ -431,6 +431,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   private void classDeclarationBodyItem() {
     switch (code) {
+      case ByteCode.CLASS -> classDeclaration();
+
       case ByteCode.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
 
       case ByteCode.FIELD_DECLARATION -> fieldDeclaration();

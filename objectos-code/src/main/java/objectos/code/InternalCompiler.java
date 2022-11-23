@@ -435,6 +435,8 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.ANNOTATION -> $elemlst(1, annotation());
 
+        case ByteProto.CLASS_DECLARATION -> $elemlst(7, classDeclaration(false));
+
         case ByteProto.CONSTRUCTOR_DECLARATION -> $elemlst(7, constructorDeclaration());
 
         case ByteProto.EXTENDS -> $elemset(4, extendsClause());

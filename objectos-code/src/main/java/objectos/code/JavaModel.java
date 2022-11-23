@@ -49,7 +49,10 @@ public final class JavaModel {
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
 
-  public sealed interface ClassDeclaration {}
+  public sealed interface ClassDeclaration
+      extends
+      ClassDeclarationElement,
+      EnumDeclarationElement {}
 
   public sealed interface ClassDeclarationElement extends Markable {}
 

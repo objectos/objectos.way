@@ -120,4 +120,59 @@ public class ClassDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Class declarations TC05
+
+  - nested class declaration
+  """)
+  public void testCase05() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            id("Level1"),
+            _class(id("A"))
+          );
+
+          _class(
+            id("Level2"),
+            _class(id("A"),
+              _class(id("B"))
+            )
+          );
+
+          _class(
+            id("Level3"),
+            _class(id("A"),
+              _class(id("B"),
+                _class(id("C"))
+              )
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Level1 {
+        class A {}
+      }
+
+      class Level2 {
+        class A {
+          class B {}
+        }
+      }
+
+      class Level3 {
+        class A {
+          class B {
+            class C {}
+          }
+        }
+      }
+      """
+    );
+  }
+
 }
