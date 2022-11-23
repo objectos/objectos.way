@@ -374,7 +374,7 @@ class InternalApi extends State implements MarkerApi {
       element.mark(this);
     }
 
-    element(ByteProto.METHOD_INVOCATION);
+    element(ByteProto.METHOD_INVOCATION1);
 
     return JavaModel.REF;
   }
@@ -391,7 +391,7 @@ class InternalApi extends State implements MarkerApi {
       element.mark(this);
     }
 
-    element(ByteProto.METHOD_INVOCATION);
+    element(ByteProto.METHOD_INVOCATION0);
 
     return JavaModel.REF;
   }

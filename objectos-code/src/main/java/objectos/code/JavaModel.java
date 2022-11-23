@@ -90,7 +90,7 @@ public final class JavaModel {
       MethodInvocationElement {}
 
   public sealed interface ExpressionName
-      extends Expression, LeftHandSide {}
+      extends Expression, LeftHandSide, MethodInvocationSubject {}
 
   public sealed interface ExpressionStatement
       extends Statement {}

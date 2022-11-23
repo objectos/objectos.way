@@ -84,9 +84,10 @@ final class ByteProto {
   static final int CLASS_INSTANCE_CREATION0 = -34;
   static final int EXPRESSION_NAME = -35;
   static final int FIELD_ACCESS_EXPRESSION0 = -36;
-  static final int METHOD_INVOCATION = -37;
-  static final int STRING_LITERAL = -38;
-  static final int THIS = -39;
+  static final int METHOD_INVOCATION0 = -37;
+  static final int METHOD_INVOCATION1 = -38;
+  static final int STRING_LITERAL = -39;
+  static final int THIS = -40;
 
   private ByteProto() {}
 
@@ -99,7 +100,8 @@ final class ByteProto {
     return switch (proto) {
       case ASSIGNMENT_EXPRESSION,
           CLASS_INSTANCE_CREATION0,
-          METHOD_INVOCATION -> true;
+          METHOD_INVOCATION0,
+          METHOD_INVOCATION1 -> true;
 
       default -> false;
     };

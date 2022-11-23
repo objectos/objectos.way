@@ -160,4 +160,33 @@ public class MethodInvocationExpressionTest {
     );
   }
 
+  @Test(description = """
+  Method Invocation Expresions TC08
+
+  - expression name
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke(n("a"), "x");
+          invoke(n("b"), "y", s("1"));
+          invoke(n("c"), "z", s("1"), s("2"));
+          invoke(n(ClassName.of(Foo.class), "CTE"), "m");
+        }
+      }.toString(),
+
+      """
+      a.x();
+
+      b.y("1");
+
+      c.z("1", "2");
+
+      objectos.code.Foo.CTE.m();
+      """
+    );
+  }
+
 }

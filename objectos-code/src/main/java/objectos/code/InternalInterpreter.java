@@ -1172,6 +1172,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
       if (ByteCode.isTypeName(code)) {
         typeName();
+      } else if (code == ByteCode.EXPRESSION_NAME) {
+        expressionName();
       } else {
         throw new UnsupportedOperationException("Implement me");
       }

@@ -729,7 +729,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
 
-      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+      case ByteProto.METHOD_INVOCATION0 -> methodInvocation(proto);
+
+      case ByteProto.METHOD_INVOCATION1 -> methodInvocation(proto);
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
@@ -1014,7 +1016,7 @@ class InternalCompiler extends InternalApi {
     return $elempop();
   }
 
-  private int methodInvocation() {
+  private int methodInvocation(int kind) {
     $elemadd(
       ByteCode.METHOD_INVOCATION,
       ByteCode.NOP, // subject = 1
@@ -1023,11 +1025,23 @@ class InternalCompiler extends InternalApi {
       ByteCode.NOP /// args = 4
     );
 
+    var subject = false;
+
     loop: while ($prototru()) {
       var proto = $protonxt();
 
       switch (proto) {
         case ByteProto.CLASS_NAME -> $elemset(1, className());
+
+        case ByteProto.EXPRESSION_NAME -> {
+          if (kind == ByteProto.METHOD_INVOCATION1 && !subject) {
+            $elemset(1, expressionName());
+
+            subject = true;
+          } else {
+            $elemlst(4, expression(proto));
+          }
+        }
 
         case ByteProto.IDENTIFIER -> $elemset(3, objectString());
 
