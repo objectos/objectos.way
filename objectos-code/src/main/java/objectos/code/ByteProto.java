@@ -19,13 +19,13 @@ final class ByteProto {
 
   static final int NULL = Integer.MIN_VALUE;
 
-  // internal instructions
+  //internal instructions
 
   static final int JMP = -1;
   static final int BREAK = -2;
   static final int NEW_LINE = -3;
 
-  // types
+  //types
 
   static final int ARRAY_TYPE = -4;
   static final int DIM = -5;
@@ -36,12 +36,12 @@ final class ByteProto {
   static final int PRIMITIVE_TYPE = -10;
   static final int TYPE_NAME = -11;
 
-  // declarations
+  //declarations
 
   static final int COMPILATION_UNIT = -12;
   static final int PACKAGE_DECLARATION = -13;
 
-  // class
+  //class
 
   static final int CLASS_DECLARATION = -14;
   static final int MODIFIER = -15;
@@ -49,11 +49,11 @@ final class ByteProto {
   static final int EXTENDS = -17;
   static final int IMPLEMENTS = -18;
 
-  // field
+  //field
 
   static final int FIELD_DECLARATION = -19;
 
-  // method/constructor
+  //method/constructor
 
   static final int METHOD_DECLARATION = -20;
   static final int FORMAL_PARAMETER = -21;
@@ -62,32 +62,33 @@ final class ByteProto {
   static final int SUPER_INVOCATION = -24;
   static final int QUALIFIED_SUPER_INVOCATION = -25;
 
-  // enum
+  //enum
 
   static final int ENUM_DECLARATION = -26;
   static final int ENUM_CONSTANT = -27;
 
-  // annotation
+  //annotation
 
   static final int ANNOTATION = -28;
 
-  // statements
+  //statements
 
   static final int LOCAL_VARIABLE = -29;
   static final int RETURN_STATEMENT = -30;
 
-  // expressions
+  //expressions
 
   static final int ARRAY_ACCESS_EXPRESSION = -31;
   static final int ASSIGNMENT_EXPRESSION = -32;
   static final int ASSIGNMENT_OPERATOR = -33;
-  static final int CLASS_INSTANCE_CREATION0 = -34;
-  static final int EXPRESSION_NAME = -35;
-  static final int FIELD_ACCESS_EXPRESSION0 = -36;
-  static final int METHOD_INVOCATION0 = -37;
-  static final int METHOD_INVOCATION1 = -38;
-  static final int STRING_LITERAL = -39;
-  static final int THIS = -40;
+  static final int CHAINED_METHOD_INVOCATION = -34;
+  static final int CLASS_INSTANCE_CREATION0 = -35;
+  static final int EXPRESSION_NAME = -36;
+  static final int FIELD_ACCESS_EXPRESSION0 = -37;
+  static final int METHOD_INVOCATION0 = -38;
+  static final int METHOD_INVOCATION1 = -39;
+  static final int STRING_LITERAL = -40;
+  static final int THIS = -41;
 
   private ByteProto() {}
 
@@ -99,6 +100,7 @@ final class ByteProto {
   public static boolean isExpressionStatement(int proto) {
     return switch (proto) {
       case ASSIGNMENT_EXPRESSION,
+          CHAINED_METHOD_INVOCATION,
           CLASS_INSTANCE_CREATION0,
           METHOD_INVOCATION0,
           METHOD_INVOCATION1 -> true;

@@ -30,7 +30,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
   @Override
   protected void write(char c) {
-    writeIdentation();
+    writeIndentation(level);
 
     out.append(c);
 
@@ -39,7 +39,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
   @Override
   protected void write(String s) {
-    writeIdentation();
+    writeIndentation(level);
 
     out.append(s);
 
@@ -126,6 +126,11 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
+  protected void writeIndentation() {
+    writeIndentation(level + 2);
+  }
+
+  @Override
   protected void writeNewLine() {
     writenl();
   }
@@ -170,7 +175,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
     write('"');
   }
 
-  private void writeIdentation() {
+  private void writeIndentation(int level) {
     if (length == 0) {
       for (int i = 0; i < level; i++) {
         out.append("  ");

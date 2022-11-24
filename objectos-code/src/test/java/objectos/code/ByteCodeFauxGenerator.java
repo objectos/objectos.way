@@ -93,6 +93,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("ARRAY_ACCESS_EXPRESSION");
     value("ASSIGNMENT_EXPRESSION");
+    value("CHAINED_METHOD_INVOCATION");
     value("CLASS_INSTANCE_CREATION");
     value("EXPRESSION_NAME");
     value("FIELD_ACCESS_EXPRESSION0");

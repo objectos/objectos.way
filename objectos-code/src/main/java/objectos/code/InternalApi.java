@@ -28,6 +28,9 @@ import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
 import objectos.code.JavaModel.AssignmentExpression;
+import objectos.code.JavaModel.ChainedMethodInvocation;
+import objectos.code.JavaModel.ChainedMethodInvocationElement;
+import objectos.code.JavaModel.ChainedMethodInvocationHead;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
@@ -56,7 +59,6 @@ import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MarkerApi;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
-import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
@@ -65,10 +67,12 @@ import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.QualifiedMethodInvocation;
 import objectos.code.JavaModel.ReturnStatement;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
+import objectos.code.JavaModel.UnqualifiedMethodInvocation;
 import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
@@ -313,6 +317,21 @@ class InternalApi extends State implements MarkerApi {
     autoImports.enable();
   }
 
+  public final ChainedMethodInvocation chain(
+      ChainedMethodInvocationHead first, ChainedMethodInvocationElement[] more) {
+    markStart();
+
+    first.mark(this);
+
+    for (var element : more) {
+      element.mark(this);
+    }
+
+    element(ByteProto.CHAINED_METHOD_INVOCATION);
+
+    return JavaModel.REF;
+  }
+
   public final ConstructorDeclaration constructor(ConstructorDeclarationElement[] elements) {
     markStart();
 
@@ -373,7 +392,7 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.INCLUDE;
   }
 
-  public final MethodInvocation invoke(
+  public final QualifiedMethodInvocation invoke(
       MethodInvocationSubject subject, String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
 
@@ -392,7 +411,7 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final MethodInvocation invoke(
+  public final UnqualifiedMethodInvocation invoke(
       String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
 

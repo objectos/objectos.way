@@ -52,6 +52,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeCompilationUnitStart(PackageName packageName, String fileName);
 
+  protected abstract void writeIndentation();
+
   protected abstract void writeNewLine();
 
   protected abstract void writeOperator(Operator operator);
@@ -340,6 +342,48 @@ abstract class InternalInterpreter extends InternalCompiler {
     if ($nextjmp()) {
       $codentr();
       expression();
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
+  private void chainedMethodInvocation() {
+    if ($nextjmp()) {
+      $codentr();
+      expression();
+      $codexit();
+    } else {
+      $malformed();
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+
+      var indent = false;
+
+      while ($lnext()) {
+        $codentr();
+
+        if (code == ByteCode.NEW_LINE) {
+          writeNewLine();
+
+          indent = true;
+        } else {
+          if (indent) {
+            writeIndentation();
+          }
+
+          write('.');
+
+          expression();
+
+          indent = false;
+        }
+
+        $codexit();
+      }
+
       $codexit();
     } else {
       $malformed();
@@ -829,6 +873,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
 
       case ByteCode.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteCode.CHAINED_METHOD_INVOCATION -> chainedMethodInvocation();
 
       case ByteCode.CLASS_INSTANCE_CREATION -> classInstanceCreationExpression();
 

@@ -86,12 +86,13 @@ final class ByteCode {
 
   static final int ARRAY_ACCESS_EXPRESSION = -39;
   static final int ASSIGNMENT_EXPRESSION = -40;
-  static final int CLASS_INSTANCE_CREATION = -41;
-  static final int EXPRESSION_NAME = -42;
-  static final int FIELD_ACCESS_EXPRESSION0 = -43;
-  static final int METHOD_INVOCATION = -44;
-  static final int STRING_LITERAL = -45;
-  static final int THIS = -46;
+  static final int CHAINED_METHOD_INVOCATION = -41;
+  static final int CLASS_INSTANCE_CREATION = -42;
+  static final int EXPRESSION_NAME = -43;
+  static final int FIELD_ACCESS_EXPRESSION0 = -44;
+  static final int METHOD_INVOCATION = -45;
+  static final int STRING_LITERAL = -46;
+  static final int THIS = -47;
 
   private ByteCode() {}
 
@@ -102,7 +103,9 @@ final class ByteCode {
 
   public static boolean isExpressionStatement(int code) {
     return switch (code) {
-      case ASSIGNMENT_EXPRESSION,
+      case
+          ASSIGNMENT_EXPRESSION,
+          CHAINED_METHOD_INVOCATION,
           CLASS_INSTANCE_CREATION,
           METHOD_INVOCATION -> true;
 
@@ -112,7 +115,12 @@ final class ByteCode {
 
   public static boolean isTypeName(int code) {
     return switch (code) {
-      case NO_TYPE, SIMPLE_NAME, QUALIFIED_NAME -> true;
+      case
+          ARRAY_TYPE,
+          NO_TYPE,
+          PRIMITIVE_TYPE,
+          SIMPLE_NAME,
+          QUALIFIED_NAME -> true;
 
       default -> false;
     };

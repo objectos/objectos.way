@@ -416,6 +416,42 @@ class InternalCompiler extends InternalApi {
     return $elempop();
   }
 
+  private int chainedMethodInvocation() {
+    $elemadd(
+      ByteCode.CHAINED_METHOD_INVOCATION,
+      ByteCode.NOP, // head = 1
+      ByteCode.NOP /// list = 2
+    );
+
+    var head = false;
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.METHOD_INVOCATION0, ByteProto.METHOD_INVOCATION1 -> {
+          if (!head) {
+            $elemset(1, methodInvocation(proto));
+
+            head = true;
+          } else {
+            $elemlst(2, methodInvocation(proto));
+          }
+        }
+
+        case ByteProto.NEW_LINE -> $elemlst(2, newLine());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    return $elempop();
+  }
+
   private int classDeclaration(boolean topLevel) {
     $elemadd(
       ByteCode.CLASS,
@@ -724,6 +760,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
 
       case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteProto.CHAINED_METHOD_INVOCATION -> chainedMethodInvocation();
 
       case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreation0();
 

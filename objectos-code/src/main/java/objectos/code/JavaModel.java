@@ -53,6 +53,12 @@ public final class JavaModel {
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
 
+  public sealed interface ChainedMethodInvocation extends MethodInvocation {}
+
+  public sealed interface ChainedMethodInvocationElement extends Markable {}
+
+  public sealed interface ChainedMethodInvocationHead extends Markable {}
+
   public sealed interface ClassDeclaration
       extends
       ClassDeclarationElement,
@@ -164,15 +170,14 @@ public final class JavaModel {
 
   public sealed interface MethodDeclarationElement extends Markable {}
 
-  public sealed interface MethodInvocation
-      extends Expression, ExpressionStatement {}
+  public sealed interface MethodInvocation extends Expression, ExpressionStatement {}
 
   public sealed interface MethodInvocationElement extends Markable {}
 
   public sealed interface MethodInvocationSubject extends Markable {}
 
   public sealed interface NewLineRef
-      extends MethodInvocationElement {}
+      extends ChainedMethodInvocationElement, MethodInvocationElement {}
 
   public sealed interface ParameterizedTypeInvocation
       extends
@@ -196,6 +201,9 @@ public final class JavaModel {
 
   public sealed interface PublicModifier extends AccessModifier {}
 
+  public sealed interface QualifiedMethodInvocation
+      extends ChainedMethodInvocationHead, MethodInvocation {}
+
   public sealed interface ReferenceType
       extends
       ArrayTypeComponent {}
@@ -216,6 +224,9 @@ public final class JavaModel {
 
   public sealed interface ThisKeyword
       extends PrimaryExpression {}
+
+  public sealed interface UnqualifiedMethodInvocation
+      extends ChainedMethodInvocationHead, ChainedMethodInvocationElement, MethodInvocation {}
 
   public sealed interface VoidInvocation extends MethodDeclarationElement {}
 
@@ -243,6 +254,7 @@ public final class JavaModel {
       ArrayDimension,
       ArrayType,
       AssignmentExpression,
+      ChainedMethodInvocation,
       ClassDeclaration,
       ClassOrInterfaceType,
       ClassInstanceCreationExpression,
@@ -259,7 +271,6 @@ public final class JavaModel {
       IdentifierRef,
       Implements,
       LocalVariableDeclarationRef,
-      MethodInvocation,
       MethodDeclaration,
       NewLineRef,
       ParameterizedTypeInvocation,
@@ -267,10 +278,12 @@ public final class JavaModel {
       PrivateModifier,
       ProtectedModifier,
       PublicModifier,
+      QualifiedMethodInvocation,
       ReturnStatement,
       StaticModifier,
       StringLiteral,
       ThisKeyword,
+      UnqualifiedMethodInvocation,
       VoidInvocation {
     private Ref() {}
 

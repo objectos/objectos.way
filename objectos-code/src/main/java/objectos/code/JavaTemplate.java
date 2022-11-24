@@ -25,6 +25,9 @@ import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
 import objectos.code.JavaModel.AssignmentExpression;
+import objectos.code.JavaModel.ChainedMethodInvocation;
+import objectos.code.JavaModel.ChainedMethodInvocationElement;
+import objectos.code.JavaModel.ChainedMethodInvocationHead;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
@@ -52,7 +55,6 @@ import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
-import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
@@ -61,10 +63,12 @@ import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.QualifiedMethodInvocation;
 import objectos.code.JavaModel.ReturnStatement;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
+import objectos.code.JavaModel.UnqualifiedMethodInvocation;
 import objectos.code.JavaModel.VoidInvocation;
 import objectos.lang.Check;
 
@@ -187,6 +191,16 @@ public abstract class JavaTemplate {
     api().autoImports();
   }
 
+  @Deprecated
+  protected final ChainedMethodInvocation chain(ChainedMethodInvocationHead invalid0) {
+    throw new UnsupportedOperationException();
+  }
+
+  protected final ChainedMethodInvocation chain(
+      ChainedMethodInvocationHead first, ChainedMethodInvocationElement... more) {
+    return api().chain(first, more);
+  }
+
   protected final ConstructorDeclaration constructor(ConstructorDeclarationElement... elements) {
     return api().constructor(elements);
   }
@@ -213,12 +227,12 @@ public abstract class JavaTemplate {
     return api().include(target);
   }
 
-  protected final MethodInvocation invoke(
+  protected final QualifiedMethodInvocation invoke(
       MethodInvocationSubject subject, String methodName, MethodInvocationElement... elements) {
     return api().invoke(subject, methodName, elements);
   }
 
-  protected final MethodInvocation invoke(
+  protected final UnqualifiedMethodInvocation invoke(
       String methodName, MethodInvocationElement... elements) {
     return api().invoke(methodName, elements);
   }
