@@ -85,8 +85,8 @@ final class ByteProto {
   static final int CLASS_INSTANCE_CREATION0 = -35;
   static final int EXPRESSION_NAME = -36;
   static final int FIELD_ACCESS_EXPRESSION0 = -37;
-  static final int METHOD_INVOCATION0 = -38;
-  static final int METHOD_INVOCATION1 = -39;
+  static final int METHOD_INVOCATION = -38;
+  static final int METHOD_INVOCATION_QUALIFIED = -39;
   static final int STRING_LITERAL = -40;
   static final int THIS = -41;
 
@@ -102,8 +102,8 @@ final class ByteProto {
       case ASSIGNMENT_EXPRESSION,
           CHAINED_METHOD_INVOCATION,
           CLASS_INSTANCE_CREATION0,
-          METHOD_INVOCATION0,
-          METHOD_INVOCATION1 -> true;
+          METHOD_INVOCATION,
+          METHOD_INVOCATION_QUALIFIED -> true;
 
       default -> false;
     };

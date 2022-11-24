@@ -56,11 +56,11 @@ import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
 import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
+import objectos.code.JavaModel.Markable;
 import objectos.code.JavaModel.MarkerApi;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
-import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
 import objectos.code.JavaModel.ParameterizedTypeInvocation;
 import objectos.code.JavaModel.PrimitiveType;
@@ -393,7 +393,7 @@ class InternalApi extends State implements MarkerApi {
   }
 
   public final QualifiedMethodInvocation invoke(
-      MethodInvocationSubject subject, String methodName, MethodInvocationElement[] elements) {
+      Markable subject, String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
 
     markStart();
@@ -406,7 +406,7 @@ class InternalApi extends State implements MarkerApi {
       element.mark(this);
     }
 
-    element(ByteProto.METHOD_INVOCATION1);
+    element(ByteProto.METHOD_INVOCATION_QUALIFIED);
 
     return JavaModel.REF;
   }
@@ -423,7 +423,7 @@ class InternalApi extends State implements MarkerApi {
       element.mark(this);
     }
 
-    element(ByteProto.METHOD_INVOCATION0);
+    element(ByteProto.METHOD_INVOCATION);
 
     return JavaModel.REF;
   }

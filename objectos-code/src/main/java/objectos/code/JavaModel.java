@@ -67,7 +67,9 @@ public final class JavaModel {
   public sealed interface ClassDeclarationElement extends Markable {}
 
   public sealed interface ClassInstanceCreationExpression
-      extends Expression, ExpressionStatement {}
+      extends
+      ExpressionStatement,
+      PrimaryExpression {}
 
   public sealed interface ClassOrInterfaceType
       extends
@@ -75,7 +77,7 @@ public final class JavaModel {
       ReferenceType,
 
       FieldDeclarationElement, FormalParameterType,
-      MethodDeclarationElement, MethodInvocationSubject {}
+      MethodDeclarationElement {}
 
   public sealed interface ConstructorDeclaration
       extends ClassDeclarationElement, EnumDeclarationElement {}
@@ -101,8 +103,7 @@ public final class JavaModel {
       FieldDeclarationElement,
       MethodInvocationElement {}
 
-  public sealed interface ExpressionName
-      extends Expression, LeftHandSide, MethodInvocationSubject {}
+  public sealed interface ExpressionName extends Expression, LeftHandSide {}
 
   public sealed interface ExpressionStatement
       extends Statement {}
@@ -174,8 +175,6 @@ public final class JavaModel {
 
   public sealed interface MethodInvocationElement extends Markable {}
 
-  public sealed interface MethodInvocationSubject extends Markable {}
-
   public sealed interface NewLineRef
       extends ChainedMethodInvocationElement, MethodInvocationElement {}
 
@@ -185,7 +184,9 @@ public final class JavaModel {
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement {}
 
-  public sealed interface PrimaryExpression extends Expression {}
+  public sealed interface PrimaryExpression
+      extends
+      Expression {}
 
   public sealed interface PrimitiveType
       extends

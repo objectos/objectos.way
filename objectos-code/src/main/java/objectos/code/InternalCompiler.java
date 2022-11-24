@@ -429,7 +429,8 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.METHOD_INVOCATION0, ByteProto.METHOD_INVOCATION1 -> {
+        case
+            ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED -> {
           if (!head) {
             $elemset(1, methodInvocation(proto));
 
@@ -769,9 +770,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
 
-      case ByteProto.METHOD_INVOCATION0 -> methodInvocation(proto);
+      case ByteProto.METHOD_INVOCATION -> methodInvocation(proto);
 
-      case ByteProto.METHOD_INVOCATION1 -> methodInvocation(proto);
+      case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocation(proto);
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
@@ -1073,16 +1074,6 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.CLASS_NAME -> $elemset(1, className());
 
-        case ByteProto.EXPRESSION_NAME -> {
-          if (kind == ByteProto.METHOD_INVOCATION1 && !subject) {
-            $elemset(1, expressionName());
-
-            subject = true;
-          } else {
-            $elemlst(4, expression(proto));
-          }
-        }
-
         case ByteProto.IDENTIFIER -> $elemset(3, objectString());
 
         case ByteProto.NEW_LINE -> $elemlst(4, newLine());
@@ -1091,7 +1082,15 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.BREAK -> { break loop; }
 
-        default -> $elemlst(4, expression(proto));
+        default -> {
+          if (kind != ByteProto.METHOD_INVOCATION && !subject) {
+            $elemset(1, expression(proto));
+
+            subject = true;
+          } else {
+            $elemlst(4, expression(proto));
+          }
+        }
       }
     }
 

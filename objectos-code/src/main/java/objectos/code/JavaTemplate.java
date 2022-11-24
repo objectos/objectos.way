@@ -56,9 +56,9 @@ import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
-import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
 import objectos.code.JavaModel.ParameterizedTypeInvocation;
+import objectos.code.JavaModel.PrimaryExpression;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
@@ -228,8 +228,18 @@ public abstract class JavaTemplate {
   }
 
   protected final QualifiedMethodInvocation invoke(
-      MethodInvocationSubject subject, String methodName, MethodInvocationElement... elements) {
-    return api().invoke(subject, methodName, elements);
+      ClassOrInterfaceType typeName, String methodName, MethodInvocationElement... elements) {
+    return api().invoke(typeName, methodName, elements);
+  }
+
+  protected final QualifiedMethodInvocation invoke(
+      ExpressionName expressionName, String methodName, MethodInvocationElement... elements) {
+    return api().invoke(expressionName, methodName, elements);
+  }
+
+  protected final QualifiedMethodInvocation invoke(
+      PrimaryExpression primary, String methodName, MethodInvocationElement... elements) {
+    return api().invoke(primary, methodName, elements);
   }
 
   protected final UnqualifiedMethodInvocation invoke(

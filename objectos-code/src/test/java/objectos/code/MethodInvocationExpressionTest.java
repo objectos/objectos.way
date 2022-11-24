@@ -224,4 +224,24 @@ public class MethodInvocationExpressionTest {
     );
   }
 
+  @Test(description = """
+  Method Invocation Expresions TC10
+
+  - primary expressions
+  """)
+  public void testCase10() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke(_new(t(Thread.class)), "start");
+        }
+      }.toString(),
+
+      """
+      new java.lang.Thread().start();
+      """
+    );
+  }
+
 }
