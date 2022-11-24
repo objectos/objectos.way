@@ -17,7 +17,11 @@ package objectos.code;
 
 import java.util.Locale;
 
-enum PrimitiveType {
+enum PrimitiveTypeKind {
+
+  BOOLEAN,
+
+  DOUBLE,
 
   INT;
 

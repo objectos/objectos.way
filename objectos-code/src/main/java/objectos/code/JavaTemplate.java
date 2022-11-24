@@ -22,6 +22,7 @@ import objectos.code.JavaModel.AnyType;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
 import objectos.code.JavaModel.ArrayType;
+import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
 import objectos.code.JavaModel.AssignmentExpression;
 import objectos.code.JavaModel.ClassDeclaration;
@@ -47,7 +48,6 @@ import objectos.code.JavaModel.FormalParameterType;
 import objectos.code.JavaModel.IdentifierRef;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
-import objectos.code.JavaModel.IntPrimitiveType;
 import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MethodDeclaration;
@@ -57,10 +57,10 @@ import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
 import objectos.code.JavaModel.ParameterizedTypeInvocation;
+import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
-import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnStatement;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
@@ -93,8 +93,16 @@ public abstract class JavaTemplate {
     return out.toString();
   }
 
+  protected final PrimitiveType _boolean() {
+    return api()._boolean();
+  }
+
   protected final ClassDeclaration _class(ClassDeclarationElement... elements) {
     return api()._class(elements);
+  }
+
+  protected final PrimitiveType _double() {
+    return api()._double();
   }
 
   protected final EnumDeclaration _enum(EnumDeclarationElement... elements) {
@@ -113,7 +121,7 @@ public abstract class JavaTemplate {
     return api()._implements(interfaces);
   }
 
-  protected final IntPrimitiveType _int() {
+  protected final PrimitiveType _int() {
     return api()._int();
   }
 
@@ -243,6 +251,10 @@ public abstract class JavaTemplate {
     return api().s(value);
   }
 
+  protected final ArrayType t(ArrayTypeComponent type, ArrayTypeElement... elements) {
+    return api().t(type, elements);
+  }
+
   protected final ClassOrInterfaceType t(Class<?> value) {
     return api().t(value);
   }
@@ -250,10 +262,6 @@ public abstract class JavaTemplate {
   protected final ParameterizedTypeInvocation t(
       ClassOrInterfaceType rawType, AnyType... arguments) {
     return api().t(rawType, arguments);
-  }
-
-  protected final ArrayType t(ReferenceType type, ArrayTypeElement... elements) {
-    return api().t(type, elements);
   }
 
   protected final LocalVariableDeclarationRef var(String name, Expression expression) {

@@ -25,6 +25,7 @@ import objectos.code.JavaModel.AnyType;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
 import objectos.code.JavaModel.ArrayType;
+import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
 import objectos.code.JavaModel.AssignmentExpression;
 import objectos.code.JavaModel.ClassDeclaration;
@@ -50,7 +51,6 @@ import objectos.code.JavaModel.FormalParameterType;
 import objectos.code.JavaModel.IdentifierRef;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
-import objectos.code.JavaModel.IntPrimitiveType;
 import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MarkerApi;
@@ -61,10 +61,10 @@ import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.MethodInvocationSubject;
 import objectos.code.JavaModel.NewLineRef;
 import objectos.code.JavaModel.ParameterizedTypeInvocation;
+import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
-import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnStatement;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
@@ -75,6 +75,12 @@ import objectos.lang.Check;
 
 class InternalApi extends State implements MarkerApi {
 
+  public final PrimitiveType _boolean() {
+    object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.BOOLEAN);
+
+    return JavaModel.REF;
+  }
+
   public final ClassDeclaration _class(ClassDeclarationElement[] elements) {
     markStart();
 
@@ -83,6 +89,12 @@ class InternalApi extends State implements MarkerApi {
     }
 
     element(ByteProto.CLASS_DECLARATION);
+
+    return JavaModel.REF;
+  }
+
+  public final PrimitiveType _double() {
+    object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.DOUBLE);
 
     return JavaModel.REF;
   }
@@ -131,8 +143,8 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final IntPrimitiveType _int() {
-    object(ByteProto.PRIMITIVE_TYPE, PrimitiveType.INT);
+  public final PrimitiveType _int() {
+    object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.INT);
 
     return JavaModel.REF;
   }
@@ -489,6 +501,20 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
+  public final ArrayType t(ArrayTypeComponent type, ArrayTypeElement[] elements) {
+    markStart();
+
+    type.mark(this);
+
+    for (var element : elements) {
+      element.mark(this);
+    }
+
+    element(ByteProto.ARRAY_TYPE);
+
+    return JavaModel.REF;
+  }
+
   public final ClassOrInterfaceType t(Class<?> type) {
     var cn = ClassName.of(type);
 
@@ -507,20 +533,6 @@ class InternalApi extends State implements MarkerApi {
     }
 
     element(ByteProto.PARAMETERIZED_TYPE);
-
-    return JavaModel.REF;
-  }
-
-  public final ArrayType t(ReferenceType type, ArrayTypeElement[] elements) {
-    markStart();
-
-    type.mark(this);
-
-    for (var element : elements) {
-      element.mark(this);
-    }
-
-    element(ByteProto.ARRAY_TYPE);
 
     return JavaModel.REF;
   }

@@ -1441,7 +1441,7 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.PRIMITIVE_TYPE -> {
         $codenxt();
 
-        var type = (PrimitiveType) $codeobj();
+        var type = (PrimitiveTypeKind) $codeobj();
 
         write(type.toString());
       }

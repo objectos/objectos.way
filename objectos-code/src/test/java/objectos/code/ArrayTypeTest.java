@@ -47,4 +47,30 @@ public class ArrayTypeTest {
     );
   }
 
+  @Test(description = """
+  Array types TC02
+
+  - primitive types
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(t(_int(), dim()), id("a"));
+          field(t(_double(), dim(), dim()), id("b"));
+          field(t(_boolean(), dim(), dim(), dim()), id("c"));
+        }
+      }.toString(),
+
+      """
+      int[] a;
+
+      double[][] b;
+
+      boolean[][][] c;
+      """
+    );
+  }
+
 }

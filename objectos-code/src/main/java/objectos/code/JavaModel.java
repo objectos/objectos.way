@@ -46,6 +46,8 @@ public final class JavaModel {
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement {}
 
+  public sealed interface ArrayTypeComponent extends Markable {}
+
   public sealed interface ArrayTypeElement extends Markable {}
 
   public sealed interface AssignmentExpression
@@ -140,9 +142,6 @@ public final class JavaModel {
       EnumDeclarationElement,
       MethodDeclarationElement, MethodInvocationElement {}
 
-  public sealed interface IntPrimitiveType
-      extends AnyType, FieldDeclarationElement, FormalParameterType, MethodDeclarationElement {}
-
   public sealed interface LeftHandSide extends Markable {}
 
   public sealed interface LocalVariableDeclarationRef
@@ -183,13 +182,23 @@ public final class JavaModel {
 
   public sealed interface PrimaryExpression extends Expression {}
 
+  public sealed interface PrimitiveType
+      extends
+      AnyType,
+      ArrayTypeComponent,
+
+      FieldDeclarationElement, FormalParameterType,
+      MethodDeclarationElement {}
+
   public sealed interface PrivateModifier extends AccessModifier {}
 
   public sealed interface ProtectedModifier extends AccessModifier {}
 
   public sealed interface PublicModifier extends AccessModifier {}
 
-  public sealed interface ReferenceType extends Markable {}
+  public sealed interface ReferenceType
+      extends
+      ArrayTypeComponent {}
 
   public sealed interface ReturnStatement
       extends Statement {}
@@ -249,12 +258,12 @@ public final class JavaModel {
       FormalParameter,
       IdentifierRef,
       Implements,
-      IntPrimitiveType,
       LocalVariableDeclarationRef,
       MethodInvocation,
       MethodDeclaration,
       NewLineRef,
       ParameterizedTypeInvocation,
+      PrimitiveType,
       PrivateModifier,
       ProtectedModifier,
       PublicModifier,
