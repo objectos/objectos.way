@@ -262,7 +262,7 @@ public class MethodDeclarationTest {
             _void(), id("test0")
           );
           method(
-            t(String.class, dim()), id("test1")
+            t(t(String.class), dim()), id("test1")
           );
           method(
             _int(), id("test2")

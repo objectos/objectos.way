@@ -38,13 +38,15 @@ public final class JavaModel {
   public sealed interface ArrayDimension
       extends ArrayTypeElement {}
 
-  public sealed interface ArrayTypeElement extends Markable {}
-
-  public sealed interface ArrayTypeInvocation
+  public sealed interface ArrayType
       extends
       AnyType,
+      ReferenceType,
+
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement {}
+
+  public sealed interface ArrayTypeElement extends Markable {}
 
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
@@ -59,9 +61,11 @@ public final class JavaModel {
   public sealed interface ClassInstanceCreationExpression
       extends Expression, ExpressionStatement {}
 
-  public sealed interface ClassNameInvocation
+  public sealed interface ClassOrInterfaceType
       extends
       AnyType,
+      ReferenceType,
+
       FieldDeclarationElement, FormalParameterType,
       MethodDeclarationElement, MethodInvocationSubject {}
 
@@ -185,6 +189,8 @@ public final class JavaModel {
 
   public sealed interface PublicModifier extends AccessModifier {}
 
+  public sealed interface ReferenceType extends Markable {}
+
   public sealed interface ReturnStatement
       extends Statement {}
 
@@ -226,10 +232,10 @@ public final class JavaModel {
       AnnotationInvocation,
       ArrayAccessExpression,
       ArrayDimension,
-      ArrayTypeInvocation,
+      ArrayType,
       AssignmentExpression,
       ClassDeclaration,
-      ClassNameInvocation,
+      ClassOrInterfaceType,
       ClassInstanceCreationExpression,
       ConstructorDeclaration,
       EnumConstant,

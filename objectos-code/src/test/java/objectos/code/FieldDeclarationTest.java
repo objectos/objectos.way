@@ -129,31 +129,28 @@ public class FieldDeclarationTest {
   }
 
   @Test(description = """
-  array types
+  Field declarations TC05
+
+  - array type
   """)
   public void testCase04() {
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          field(t(Object.class, dim()), id("a"));
-          field(t(Object.class, dim(), dim()), id("b"));
-          field(t(Object.class, dim(), dim(), dim()), id("c"));
+          field(t(t(Object.class), dim()), id("a"));
         }
       }.toString(),
 
       """
       java.lang.Object[] a;
-
-      java.lang.Object[][] b;
-
-      java.lang.Object[][][] c;
       """
     );
   }
 
   @Test(description = """
   Field declarations TC05
+
   - parameterized type
   """)
   public void testCase05() {

@@ -21,13 +21,13 @@ import objectos.code.JavaModel.AnnotationInvocation;
 import objectos.code.JavaModel.AnyType;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
+import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeElement;
-import objectos.code.JavaModel.ArrayTypeInvocation;
 import objectos.code.JavaModel.AssignmentExpression;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
-import objectos.code.JavaModel.ClassNameInvocation;
+import objectos.code.JavaModel.ClassOrInterfaceType;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
 import objectos.code.JavaModel.EnumConstant;
@@ -60,6 +60,7 @@ import objectos.code.JavaModel.ParameterizedTypeInvocation;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnStatement;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
@@ -117,7 +118,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassInstanceCreationExpression _new(
-      ClassNameInvocation type, Expression... arguments) {
+      ClassOrInterfaceType type, Expression... arguments) {
     return api()._new(type, arguments);
   }
 
@@ -242,17 +243,17 @@ public abstract class JavaTemplate {
     return api().s(value);
   }
 
-  protected final ClassNameInvocation t(Class<?> value) {
+  protected final ClassOrInterfaceType t(Class<?> value) {
     return api().t(value);
   }
 
-  protected final ArrayTypeInvocation t(Class<?> type, ArrayTypeElement... elements) {
-    return api().t(type, elements);
+  protected final ParameterizedTypeInvocation t(
+      ClassOrInterfaceType rawType, AnyType... arguments) {
+    return api().t(rawType, arguments);
   }
 
-  protected final ParameterizedTypeInvocation t(
-      ClassNameInvocation rawType, AnyType... arguments) {
-    return api().t(rawType, arguments);
+  protected final ArrayType t(ReferenceType type, ArrayTypeElement... elements) {
+    return api().t(type, elements);
   }
 
   protected final LocalVariableDeclarationRef var(String name, Expression expression) {

@@ -24,13 +24,13 @@ import objectos.code.JavaModel.AnnotationInvocation;
 import objectos.code.JavaModel.AnyType;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
+import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeElement;
-import objectos.code.JavaModel.ArrayTypeInvocation;
 import objectos.code.JavaModel.AssignmentExpression;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
-import objectos.code.JavaModel.ClassNameInvocation;
+import objectos.code.JavaModel.ClassOrInterfaceType;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
 import objectos.code.JavaModel.EnumConstant;
@@ -64,6 +64,7 @@ import objectos.code.JavaModel.ParameterizedTypeInvocation;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnStatement;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
@@ -137,7 +138,7 @@ class InternalApi extends State implements MarkerApi {
   }
 
   public final ClassInstanceCreationExpression _new(
-      ClassNameInvocation type, Expression[] arguments) {
+      ClassOrInterfaceType type, Expression[] arguments) {
     markStart();
 
     type.mark(this);
@@ -488,7 +489,7 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ClassNameInvocation t(Class<?> type) {
+  public final ClassOrInterfaceType t(Class<?> type) {
     var cn = ClassName.of(type);
 
     object(ByteProto.CLASS_NAME, cn);
@@ -496,23 +497,7 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ArrayTypeInvocation t(Class<?> type, ArrayTypeElement[] elements) {
-    var t = t(type);
-
-    markStart();
-
-    t.mark(this);
-
-    for (var element : elements) {
-      element.mark(this);
-    }
-
-    element(ByteProto.ARRAY_TYPE);
-
-    return JavaModel.REF;
-  }
-
-  public final ParameterizedTypeInvocation t(ClassNameInvocation rawType, AnyType[] arguments) {
+  public final ParameterizedTypeInvocation t(ClassOrInterfaceType rawType, AnyType[] arguments) {
     markStart();
 
     rawType.mark(this);
@@ -522,6 +507,20 @@ class InternalApi extends State implements MarkerApi {
     }
 
     element(ByteProto.PARAMETERIZED_TYPE);
+
+    return JavaModel.REF;
+  }
+
+  public final ArrayType t(ReferenceType type, ArrayTypeElement[] elements) {
+    markStart();
+
+    type.mark(this);
+
+    for (var element : elements) {
+      element.mark(this);
+    }
+
+    element(ByteProto.ARRAY_TYPE);
 
     return JavaModel.REF;
   }
