@@ -39,6 +39,7 @@ import objectos.code.JavaModel.ClassInstanceCreationExpression;
 import objectos.code.JavaModel.ClassOrInterfaceType;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
+import objectos.code.JavaModel.Ellipsis;
 import objectos.code.JavaModel.EnumConstant;
 import objectos.code.JavaModel.EnumConstantElement;
 import objectos.code.JavaModel.EnumDeclaration;
@@ -53,7 +54,7 @@ import objectos.code.JavaModel.FieldDeclaration;
 import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
-import objectos.code.JavaModel.FormalParameterType;
+import objectos.code.JavaModel.FormalParameterElement;
 import objectos.code.JavaModel.IdentifierRef;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
@@ -396,6 +397,14 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
+  public final Ellipsis ellipsis() {
+    markStart();
+
+    element(ByteProto.ELLIPSIS);
+
+    return JavaModel.REF;
+  }
+
   public final EnumConstant enumConstant(EnumConstantElement[] elements) {
     markStart();
 
@@ -552,12 +561,12 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final FormalParameter param(FormalParameterType type, IdentifierRef name) {
+  public final FormalParameter param(FormalParameterElement[] elements) {
     markStart();
 
-    type.mark(this);
-
-    name.mark(this);
+    for (var element : elements) {
+      element.mark(this);
+    }
 
     element(ByteProto.FORMAL_PARAMETER);
 

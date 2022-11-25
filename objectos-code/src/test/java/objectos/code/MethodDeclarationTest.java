@@ -165,7 +165,9 @@ public class MethodDeclarationTest {
   }
 
   @Test(description = """
-  parameters
+  Method declarations TC07
+
+  - parameters
   """)
   public void testCase07() {
     assertEquals(
@@ -173,31 +175,38 @@ public class MethodDeclarationTest {
         @Override
         protected final void definition() {
           method(
-            _void(), id("test"),
+            _void(), id("test0"),
             param(t(String.class), id("a"))
           );
-        }
-      }.toString(),
 
-      """
-      void test(java.lang.String a) {}
-      """
-    );
-
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
           method(
-            _void(), id("test"),
+            _void(), id("test1"),
             param(t(String.class), id("a")),
             param(t(String.class), id("b"))
           );
+
+          method(
+            _void(), id("test2"),
+            param(_int(), id("a")),
+            param(_double(), id("b")),
+            param(_boolean(), id("c"))
+          );
+
+          method(
+            _void(), id("test3"),
+            param(_int(), ellipsis(), id("a"))
+          );
         }
       }.toString(),
 
       """
-      void test(java.lang.String a, java.lang.String b) {}
+      void test0(java.lang.String a) {}
+
+      void test1(java.lang.String a, java.lang.String b) {}
+
+      void test2(int a, double b, boolean c) {}
+
+      void test3(int... a) {}
       """
     );
   }

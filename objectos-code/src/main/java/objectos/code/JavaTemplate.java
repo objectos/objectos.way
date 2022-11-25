@@ -36,6 +36,7 @@ import objectos.code.JavaModel.ClassInstanceCreationExpression;
 import objectos.code.JavaModel.ClassOrInterfaceType;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
+import objectos.code.JavaModel.Ellipsis;
 import objectos.code.JavaModel.EnumConstant;
 import objectos.code.JavaModel.EnumConstantElement;
 import objectos.code.JavaModel.EnumDeclaration;
@@ -50,7 +51,7 @@ import objectos.code.JavaModel.FieldDeclaration;
 import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
-import objectos.code.JavaModel.FormalParameterType;
+import objectos.code.JavaModel.FormalParameterElement;
 import objectos.code.JavaModel.IdentifierRef;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
@@ -234,6 +235,10 @@ public abstract class JavaTemplate {
     return api().dim();
   }
 
+  protected final Ellipsis ellipsis() {
+    return api().ellipsis();
+  }
+
   protected final EnumConstant enumConstant(EnumConstantElement... elements) {
     return api().enumConstant(elements);
   }
@@ -294,8 +299,18 @@ public abstract class JavaTemplate {
     return api().nl();
   }
 
-  protected final FormalParameter param(FormalParameterType type, IdentifierRef name) {
-    return api().param(type, name);
+  @Deprecated
+  protected final FormalParameter param() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Deprecated
+  protected final FormalParameter param(FormalParameterElement e1) {
+    throw new UnsupportedOperationException();
+  }
+
+  protected final FormalParameter param(FormalParameterElement... elements) {
+    return api().param(elements);
   }
 
   protected final StringLiteral s(String value) {

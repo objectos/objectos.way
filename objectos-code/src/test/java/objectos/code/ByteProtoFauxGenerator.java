@@ -62,6 +62,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("METHOD_DECLARATION");
     value("FORMAL_PARAMETER");
+    value("ELLIPSIS");
     value("CONSTRUCTOR_DECLARATION");
     value("THIS_INVOCATION");
     value("SUPER_INVOCATION");

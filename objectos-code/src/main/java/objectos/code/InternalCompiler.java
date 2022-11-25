@@ -1006,20 +1006,22 @@ class InternalCompiler extends InternalApi {
     $elemadd(
       ByteCode.FORMAL_PARAMETER,
       ByteCode.NOP, // modifiers = 1
-      ByteCode.NOP, // type = 2
-      ByteCode.NOP, // name = 3
-      ByteCode.NOP /// varArity = 4
+      ByteCode.NOP, // varArity = 2
+      ByteCode.NOP, // type = 3
+      ByteCode.NOP // name = 4
     );
 
     loop: while ($prototru()) {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemset(2, className());
+        case ByteProto.CLASS_NAME -> $elemset(3, className());
 
-        case ByteProto.IDENTIFIER -> $elemset(3, objectString());
+        case ByteProto.ELLIPSIS -> { $elemset(2, 1); $stackpop(); }
 
-        case ByteProto.PRIMITIVE_TYPE -> $elemset(2, primitiveType());
+        case ByteProto.IDENTIFIER -> $elemset(4, objectString());
+
+        case ByteProto.PRIMITIVE_TYPE -> $elemset(3, primitiveType());
 
         case ByteProto.JMP -> $stackpsh();
 

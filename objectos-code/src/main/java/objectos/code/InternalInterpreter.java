@@ -1092,9 +1092,16 @@ abstract class InternalInterpreter extends InternalCompiler {
         "Implement me :: modifiers");
     }
 
+    var varArity = $nextjmp();
+
     if ($nextjmp()) {
       $codentr();
       typeName();
+
+      if (varArity) {
+        write("...");
+      }
+
       $codexit();
     } else {
       throw new UnsupportedOperationException(
@@ -1110,11 +1117,6 @@ abstract class InternalInterpreter extends InternalCompiler {
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: invalid parameter declaration?");
-    }
-
-    if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: variable arity");
     }
   }
 

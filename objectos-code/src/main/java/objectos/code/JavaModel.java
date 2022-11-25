@@ -49,7 +49,7 @@ public final class JavaModel {
       AnyType,
       ReferenceType,
 
-      FieldDeclarationElement, FormalParameterType,
+      FieldDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface ArrayTypeComponent extends Markable {}
@@ -82,13 +82,15 @@ public final class JavaModel {
       AnyType,
       ReferenceType,
 
-      FieldDeclarationElement, FormalParameterType,
+      FieldDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface ConstructorDeclaration
       extends ClassDeclarationElement, EnumDeclarationElement {}
 
   public sealed interface ConstructorDeclarationElement extends Markable {}
+
+  public sealed interface Ellipsis extends FormalParameterElement {}
 
   public sealed interface EnumConstant
       extends EnumDeclarationElement {}
@@ -139,14 +141,15 @@ public final class JavaModel {
       ConstructorDeclarationElement,
       MethodDeclarationElement {}
 
-  public sealed interface FormalParameterType
-      extends Markable {}
+  public sealed interface FormalParameterElement extends Markable {}
 
   public sealed interface IdentifierRef
       extends
       ClassDeclarationElement,
-      EnumDeclarationElement, EnumConstantElement,
+      EnumConstantElement,
+      EnumDeclarationElement,
       FieldDeclarationElement,
+      FormalParameterElement,
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
@@ -199,7 +202,7 @@ public final class JavaModel {
   public sealed interface ParameterizedTypeInvocation
       extends
       AnyType,
-      FieldDeclarationElement, FormalParameterType,
+      FieldDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface PrimaryExpression
@@ -211,7 +214,8 @@ public final class JavaModel {
       AnyType,
       ArrayTypeComponent,
 
-      FieldDeclarationElement, FormalParameterType,
+      FieldDeclarationElement,
+      FormalParameterElement,
       MethodDeclarationElement {}
 
   public sealed interface PrivateModifier extends AccessModifier {}
@@ -225,7 +229,8 @@ public final class JavaModel {
 
   public sealed interface ReferenceType
       extends
-      ArrayTypeComponent {}
+      ArrayTypeComponent,
+      FormalParameterElement {}
 
   public sealed interface ReturnStatement
       extends Statement {}
@@ -283,6 +288,7 @@ public final class JavaModel {
       ClassOrInterfaceType,
       ClassInstanceCreationExpression,
       ConstructorDeclaration,
+      Ellipsis,
       EnumConstant,
       EnumDeclaration,
       ExplicitConstructorInvocation,
