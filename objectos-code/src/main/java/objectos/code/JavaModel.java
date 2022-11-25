@@ -27,7 +27,10 @@ public final class JavaModel {
   public sealed interface AnnotationElementValue extends Markable {}
 
   public sealed interface AnnotationInvocation
-      extends ClassDeclarationElement, EnumDeclarationElement,
+      extends
+      ClassDeclarationElement,
+      EnumDeclarationElement,
+      InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface AnyType extends Markable {}
@@ -112,8 +115,10 @@ public final class JavaModel {
   public sealed interface ExpressionStatement
       extends Statement {}
 
-  public sealed interface ExtendsRef
-      extends ClassDeclarationElement {}
+  public sealed interface ExtendsMany extends InterfaceDeclarationElement {}
+
+  public sealed interface ExtendsSingle
+      extends ClassDeclarationElement, InterfaceDeclarationElement {}
 
   public sealed interface FieldAccessExpression
       extends LeftHandSide, PrimaryExpression {}
@@ -142,6 +147,7 @@ public final class JavaModel {
       ClassDeclarationElement,
       EnumDeclarationElement, EnumConstantElement,
       FieldDeclarationElement,
+      InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface Implements
@@ -154,6 +160,10 @@ public final class JavaModel {
       MethodDeclarationElement, MethodInvocationElement {}
 
   public sealed interface IntegerLiteral extends Literal {}
+
+  public sealed interface InterfaceDeclaration {}
+
+  public sealed interface InterfaceDeclarationElement extends Markable {}
 
   public sealed interface LeftHandSide extends Markable {}
 
@@ -224,8 +234,11 @@ public final class JavaModel {
       extends ConstructorDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface StaticModifier
-      extends ClassDeclarationElement, EnumDeclarationElement,
+      extends
+      ClassDeclarationElement,
+      EnumDeclarationElement,
       FieldDeclarationElement,
+      InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
   public sealed interface StringLiteral
@@ -245,6 +258,7 @@ public final class JavaModel {
       ConstructorDeclarationElement,
       EnumDeclarationElement,
       FieldDeclarationElement,
+      InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
   private static final class Include implements IncludeRef {
@@ -273,7 +287,8 @@ public final class JavaModel {
       EnumDeclaration,
       ExplicitConstructorInvocation,
       ExpressionName,
-      ExtendsRef,
+      ExtendsMany,
+      ExtendsSingle,
       FieldAccessExpression,
       FieldDeclaration,
       FinalModifier,
@@ -281,6 +296,7 @@ public final class JavaModel {
       IdentifierRef,
       Implements,
       IntegerLiteral,
+      InterfaceDeclaration,
       LocalVariableDeclarationRef,
       MethodDeclaration,
       NewLineRef,

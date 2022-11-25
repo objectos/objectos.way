@@ -43,7 +43,8 @@ import objectos.code.JavaModel.EnumDeclarationElement;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionName;
-import objectos.code.JavaModel.ExtendsRef;
+import objectos.code.JavaModel.ExtendsMany;
+import objectos.code.JavaModel.ExtendsSingle;
 import objectos.code.JavaModel.FieldAccessExpression;
 import objectos.code.JavaModel.FieldDeclaration;
 import objectos.code.JavaModel.FieldDeclarationElement;
@@ -54,6 +55,8 @@ import objectos.code.JavaModel.IdentifierRef;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
 import objectos.code.JavaModel.IntegerLiteral;
+import objectos.code.JavaModel.InterfaceDeclaration;
+import objectos.code.JavaModel.InterfaceDeclarationElement;
 import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MethodDeclaration;
@@ -116,8 +119,17 @@ public abstract class JavaTemplate {
     return api()._enum(elements);
   }
 
-  protected final ExtendsRef _extends(ClassName superclass) {
-    return api()._extends(superclass);
+  @Deprecated
+  protected final ExtendsSingle _extends() {
+    throw new UnsupportedOperationException();
+  }
+
+  protected final ExtendsSingle _extends(ClassName value) {
+    return api()._extends(value);
+  }
+
+  protected final ExtendsMany _extends(ClassName... interfaces) {
+    return api()._extends(interfaces);
   }
 
   protected final FinalModifier _final() {
@@ -130,6 +142,10 @@ public abstract class JavaTemplate {
 
   protected final PrimitiveType _int() {
     return api()._int();
+  }
+
+  protected final InterfaceDeclaration _interface(InterfaceDeclarationElement... elements) {
+    return api()._interface(elements);
   }
 
   protected final ClassInstanceCreationExpression _new(

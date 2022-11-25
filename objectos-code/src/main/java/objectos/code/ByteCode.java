@@ -51,7 +51,7 @@ final class ByteCode {
 
   static final int CLASS = -22;
   static final int MODIFIER = -23;
-  static final int EXTENDS = -24;
+  static final int EXTENDS_SINGLE = -24;
   static final int IDENTIFIER = -25;
 
   //field
@@ -73,28 +73,33 @@ final class ByteCode {
   static final int ENUM_DECLARATION = -34;
   static final int ENUM_CONSTANT = -35;
 
+  //interface
+
+  static final int INTERFACE_DECLARATION = -36;
+  static final int EXTENDS_MANY = -37;
+
   //annotation
 
-  static final int ANNOTATION = -36;
+  static final int ANNOTATION = -38;
 
   //statements
 
-  static final int EXPRESSION_STATEMENT = -37;
-  static final int LOCAL_VARIABLE = -38;
-  static final int RETURN_STATEMENT = -39;
+  static final int EXPRESSION_STATEMENT = -39;
+  static final int LOCAL_VARIABLE = -40;
+  static final int RETURN_STATEMENT = -41;
 
   //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -40;
-  static final int ASSIGNMENT_EXPRESSION = -41;
-  static final int CHAINED_METHOD_INVOCATION = -42;
-  static final int CLASS_INSTANCE_CREATION = -43;
-  static final int EXPRESSION_NAME = -44;
-  static final int FIELD_ACCESS_EXPRESSION0 = -45;
-  static final int METHOD_INVOCATION = -46;
-  static final int PRIMITIVE_LITERAL = -47;
-  static final int STRING_LITERAL = -48;
-  static final int THIS = -49;
+  static final int ARRAY_ACCESS_EXPRESSION = -42;
+  static final int ASSIGNMENT_EXPRESSION = -43;
+  static final int CHAINED_METHOD_INVOCATION = -44;
+  static final int CLASS_INSTANCE_CREATION = -45;
+  static final int EXPRESSION_NAME = -46;
+  static final int FIELD_ACCESS_EXPRESSION0 = -47;
+  static final int METHOD_INVOCATION = -48;
+  static final int PRIMITIVE_LITERAL = -49;
+  static final int STRING_LITERAL = -50;
+  static final int THIS = -51;
 
   private ByteCode() {}
 

@@ -499,7 +499,7 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.CONSTRUCTOR_DECLARATION -> $elemlst(7, constructorDeclaration());
 
-        case ByteProto.EXTENDS -> $elemset(4, extendsClause());
+        case ByteProto.EXTENDS_SINGLE -> $elemset(4, extendsSingle());
 
         case ByteProto.FIELD_DECLARATION -> $elemlst(7, fieldDeclaration());
 
@@ -602,6 +602,8 @@ class InternalCompiler extends InternalApi {
         case ByteProto.ENUM_DECLARATION -> $elemlst(3, enumDeclaration(true));
 
         case ByteProto.FIELD_DECLARATION -> $elemlst(3, fieldDeclaration());
+
+        case ByteProto.INTERFACE_DECLARATION -> $elemlst(3, interfaceDeclaration(true));
 
         case ByteProto.METHOD_DECLARATION -> $elemlst(3, methodDeclaration());
 
@@ -837,9 +839,32 @@ class InternalCompiler extends InternalApi {
     return $codepop();
   }
 
-  private int extendsClause() {
+  private int extendsMany() {
     $elemadd(
-      ByteCode.EXTENDS,
+      ByteCode.EXTENDS_MANY,
+      ByteCode.NOP // value = 1
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemlst(1, className());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    return $elempop();
+  }
+
+  private int extendsSingle() {
+    $elemadd(
+      ByteCode.EXTENDS_SINGLE,
       ByteCode.NOP // value = 1
     );
 
@@ -1019,6 +1044,63 @@ class InternalCompiler extends InternalApi {
 
       $elemlst(offset, self);
     }
+  }
+
+  private int interfaceDeclaration(boolean topLevel) {
+    $elemadd(
+      ByteCode.INTERFACE_DECLARATION,
+      ByteCode.NOP, // modifiers = 1
+      ByteCode.NOP, // name = 2
+      ByteCode.NOP, // tparams = 3
+      ByteCode.NOP, // extends = 4
+      ByteCode.NOP, // permits = 5
+      ByteCode.NOP /// body = 6
+    );
+
+    var publicFound = false;
+    var simpleName = "Unnamed";
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> $elemlst(1, annotation());
+
+        case ByteProto.FIELD_DECLARATION -> $elemlst(6, fieldDeclaration());
+
+        case ByteProto.EXTENDS_MANY -> $elemlst(4, extendsMany());
+
+        case ByteProto.EXTENDS_SINGLE -> $elemlst(4, extendsSingle());
+
+        case ByteProto.IDENTIFIER -> {
+          simpleName = (String) $objget();
+
+          $elemset(2, objectString());
+        }
+
+        case ByteProto.METHOD_DECLARATION -> $elemlst(6, methodDeclaration());
+
+        case ByteProto.MODIFIER -> {
+          var modifier = $objget();
+
+          publicFound = modifier == Modifier.PUBLIC;
+
+          $elemlst(1, modifier());
+        }
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    if (topLevel) {
+      autoImports.fileName(publicFound, simpleName);
+    }
+
+    return $elempop();
   }
 
   private int localVariableDeclaration() {

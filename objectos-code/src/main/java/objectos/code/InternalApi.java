@@ -46,7 +46,8 @@ import objectos.code.JavaModel.EnumDeclarationElement;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionName;
-import objectos.code.JavaModel.ExtendsRef;
+import objectos.code.JavaModel.ExtendsMany;
+import objectos.code.JavaModel.ExtendsSingle;
 import objectos.code.JavaModel.FieldAccessExpression;
 import objectos.code.JavaModel.FieldDeclaration;
 import objectos.code.JavaModel.FieldDeclarationElement;
@@ -57,6 +58,8 @@ import objectos.code.JavaModel.IdentifierRef;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
 import objectos.code.JavaModel.IntegerLiteral;
+import objectos.code.JavaModel.InterfaceDeclaration;
+import objectos.code.JavaModel.InterfaceDeclarationElement;
 import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.Markable;
@@ -118,14 +121,28 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ExtendsRef _extends(ClassName superclass) {
+  public final ExtendsSingle _extends(ClassName superclass) {
     className(superclass);
 
     markStart();
 
     markReference();
 
-    element(ByteProto.EXTENDS);
+    element(ByteProto.EXTENDS_SINGLE);
+
+    return JavaModel.REF;
+  }
+
+  public final ExtendsMany _extends(ClassName[] interfaces) {
+    for (var iface : interfaces) {
+      className(iface);
+    }
+
+    markStart();
+
+    markIncrement(interfaces.length);
+
+    element(ByteProto.EXTENDS_MANY);
 
     return JavaModel.REF;
   }
@@ -152,6 +169,18 @@ class InternalApi extends State implements MarkerApi {
 
   public final PrimitiveType _int() {
     object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.INT);
+
+    return JavaModel.REF;
+  }
+
+  public final InterfaceDeclaration _interface(InterfaceDeclarationElement[] elements) {
+    markStart();
+
+    for (var element : elements) {
+      element.mark(this);
+    }
+
+    element(ByteProto.INTERFACE_DECLARATION);
 
     return JavaModel.REF;
   }

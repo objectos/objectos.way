@@ -46,7 +46,7 @@ final class ByteProto {
   static final int CLASS_DECLARATION = -14;
   static final int MODIFIER = -15;
   static final int IDENTIFIER = -16;
-  static final int EXTENDS = -17;
+  static final int EXTENDS_SINGLE = -17;
   static final int IMPLEMENTS = -18;
 
   //field
@@ -67,29 +67,34 @@ final class ByteProto {
   static final int ENUM_DECLARATION = -26;
   static final int ENUM_CONSTANT = -27;
 
+  //interface
+
+  static final int INTERFACE_DECLARATION = -28;
+  static final int EXTENDS_MANY = -29;
+
   //annotation
 
-  static final int ANNOTATION = -28;
+  static final int ANNOTATION = -30;
 
   //statements
 
-  static final int LOCAL_VARIABLE = -29;
-  static final int RETURN_STATEMENT = -30;
+  static final int LOCAL_VARIABLE = -31;
+  static final int RETURN_STATEMENT = -32;
 
   //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -31;
-  static final int ASSIGNMENT_EXPRESSION = -32;
-  static final int ASSIGNMENT_OPERATOR = -33;
-  static final int CHAINED_METHOD_INVOCATION = -34;
-  static final int CLASS_INSTANCE_CREATION0 = -35;
-  static final int EXPRESSION_NAME = -36;
-  static final int FIELD_ACCESS_EXPRESSION0 = -37;
-  static final int METHOD_INVOCATION = -38;
-  static final int METHOD_INVOCATION_QUALIFIED = -39;
-  static final int PRIMITIVE_LITERAL = -40;
-  static final int STRING_LITERAL = -41;
-  static final int THIS = -42;
+  static final int ARRAY_ACCESS_EXPRESSION = -33;
+  static final int ASSIGNMENT_EXPRESSION = -34;
+  static final int ASSIGNMENT_OPERATOR = -35;
+  static final int CHAINED_METHOD_INVOCATION = -36;
+  static final int CLASS_INSTANCE_CREATION0 = -37;
+  static final int EXPRESSION_NAME = -38;
+  static final int FIELD_ACCESS_EXPRESSION0 = -39;
+  static final int METHOD_INVOCATION = -40;
+  static final int METHOD_INVOCATION_QUALIFIED = -41;
+  static final int PRIMITIVE_LITERAL = -42;
+  static final int STRING_LITERAL = -43;
+  static final int THIS = -44;
 
   private ByteProto() {}
 

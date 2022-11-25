@@ -459,8 +459,12 @@ abstract class InternalInterpreter extends InternalCompiler {
     if ($nextjmp()) {
       writeSpaceIf(prevSection);
 
+      write("extends");
+
+      writeSpace();
+
       $codentr();
-      extendsSingleClause();
+      extendsSingle();
       $codexit();
     }
 
@@ -648,6 +652,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.ENUM_DECLARATION -> enumDeclaration();
 
       case ByteCode.FIELD_DECLARATION -> fieldDeclaration();
+
+      case ByteCode.INTERFACE_DECLARATION -> interfaceDeclaration();
 
       case ByteCode.METHOD_DECLARATION -> methodDeclaration();
 
@@ -972,17 +978,47 @@ abstract class InternalInterpreter extends InternalCompiler {
     writeSemicolon();
   }
 
-  private void extendsSingleClause() {
-    write("extends");
+  private void extendsMany() {
+    if ($nextjmp()) {
+      $codentr();
 
-    writeSpace();
+      if ($lnext()) {
+        $codentr();
+        typeName();
+        $codexit();
 
+        while ($lnext()) {
+          writeComma();
+
+          $codentr();
+          typeName();
+          $codexit();
+        }
+      }
+
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
+  private void extendsSingle() {
     if ($nextjmp()) {
       $codentr();
       typeName();
       $codexit();
     } else {
       $malformed();
+    }
+  }
+
+  private void extendsSingleOrMany() {
+    switch (code) {
+      case ByteCode.EXTENDS_MANY -> extendsMany();
+
+      case ByteCode.EXTENDS_SINGLE -> extendsSingle();
+
+      default -> $throwuoe();
     }
   }
 
@@ -1119,6 +1155,84 @@ abstract class InternalInterpreter extends InternalCompiler {
       }
 
       default -> $throwuoe();
+    }
+  }
+
+  private void interfaceDeclaration() {
+    var prevSection = false;
+
+    if ($nextjmp()) {
+      $codentr();
+      modifierList();
+      $codexit();
+
+      prevSection = true;
+    }
+
+    newLineOrSpace(prevSection);
+
+    write("interface");
+
+    writeSpace();
+
+    if ($nextjmp()) {
+      $codentr();
+      classSimpleName();
+      $codexit();
+
+      prevSection = true;
+    } else {
+      $malformed();
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: tparams");
+    }
+
+    if ($nextjmp()) {
+      writeSpaceIf(prevSection);
+
+      write("extends");
+
+      writeSpace();
+
+      $codentr();
+      interfaceDeclarationExtends();
+      $codexit();
+    }
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: permits");
+    }
+
+    writeBlockStart();
+
+    var contents = false;
+
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException(
+        "Implement me :: body");
+    }
+
+    writeBlockEnd(contents);
+
+  }
+
+  private void interfaceDeclarationExtends() {
+    if ($lnext()) {
+      $codentr();
+      extendsSingleOrMany();
+      $codexit();
+
+      while ($lnext()) {
+        writeComma();
+
+        $codentr();
+        extendsSingleOrMany();
+        $codexit();
+      }
     }
   }
 

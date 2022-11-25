@@ -58,7 +58,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("CLASS");
     value("MODIFIER");
-    value("EXTENDS");
+    value("EXTENDS_SINGLE");
     value("IDENTIFIER"); // remove
 
     comment("field");
@@ -79,6 +79,11 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("ENUM_DECLARATION");
     value("ENUM_CONSTANT");
+
+    comment("interface");
+
+    value("INTERFACE_DECLARATION");
+    value("EXTENDS_MANY");
 
     comment("annotation");
 
