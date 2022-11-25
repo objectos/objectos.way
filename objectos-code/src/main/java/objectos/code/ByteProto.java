@@ -34,7 +34,7 @@ final class ByteProto {
   static final int NO_TYPE = -8;
   static final int PARAMETERIZED_TYPE = -9;
   static final int PRIMITIVE_TYPE = -10;
-  static final int TYPE_NAME = -11;
+  static final int ARRAY_INITIALIZER = -11;
 
   //declarations
 
@@ -87,8 +87,9 @@ final class ByteProto {
   static final int FIELD_ACCESS_EXPRESSION0 = -37;
   static final int METHOD_INVOCATION = -38;
   static final int METHOD_INVOCATION_QUALIFIED = -39;
-  static final int STRING_LITERAL = -40;
-  static final int THIS = -41;
+  static final int PRIMITIVE_LITERAL = -40;
+  static final int STRING_LITERAL = -41;
+  static final int THIS = -42;
 
   private ByteProto() {}
 

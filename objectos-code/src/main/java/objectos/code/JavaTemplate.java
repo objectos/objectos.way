@@ -21,6 +21,8 @@ import objectos.code.JavaModel.AnnotationInvocation;
 import objectos.code.JavaModel.AnyType;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
+import objectos.code.JavaModel.ArrayInitializer;
+import objectos.code.JavaModel.ArrayInitializerElement;
 import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
@@ -51,6 +53,7 @@ import objectos.code.JavaModel.FormalParameterType;
 import objectos.code.JavaModel.IdentifierRef;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
+import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.LeftHandSide;
 import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MethodDeclaration;
@@ -170,8 +173,12 @@ public abstract class JavaTemplate {
     return api()._void();
   }
 
-  protected final ArrayAccessExpression a(ExpressionName reference, Expression... expressions) {
-    return api().a(reference, expressions);
+  protected final ArrayInitializer a(ArrayInitializerElement... elements) {
+    return api().a(elements);
+  }
+
+  protected final ArrayAccessExpression aget(ExpressionName reference, Expression... expressions) {
+    return api().aget(reference, expressions);
   }
 
   protected final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
@@ -217,6 +224,10 @@ public abstract class JavaTemplate {
 
   protected final FieldDeclaration field(FieldDeclarationElement... elements) {
     return api().field(elements);
+  }
+
+  protected final IntegerLiteral i(int value) {
+    return api().i(value);
   }
 
   protected final IdentifierRef id(String name) {

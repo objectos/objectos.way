@@ -32,11 +32,14 @@ public final class JavaModel {
 
   public sealed interface AnyType extends Markable {}
 
-  public sealed interface ArrayAccessExpression
-      extends Expression, LeftHandSide {}
+  public sealed interface ArrayAccessExpression extends Expression, LeftHandSide {}
 
-  public sealed interface ArrayDimension
-      extends ArrayTypeElement {}
+  public sealed interface ArrayDimension extends ArrayTypeElement {}
+
+  public sealed interface ArrayInitializer
+      extends ArrayInitializerElement, FieldDeclarationElement {}
+
+  public sealed interface ArrayInitializerElement extends Markable {}
 
   public sealed interface ArrayType
       extends
@@ -99,6 +102,7 @@ public final class JavaModel {
 
   public sealed interface Expression
       extends
+      ArrayInitializerElement,
       EnumConstantElement,
       FieldDeclarationElement,
       MethodInvocationElement {}
@@ -149,7 +153,11 @@ public final class JavaModel {
       EnumDeclarationElement,
       MethodDeclarationElement, MethodInvocationElement {}
 
+  public sealed interface IntegerLiteral extends Literal {}
+
   public sealed interface LeftHandSide extends Markable {}
+
+  public sealed interface Literal extends PrimaryExpression {}
 
   public sealed interface LocalVariableDeclarationRef
       extends Statement {}
@@ -221,7 +229,7 @@ public final class JavaModel {
       MethodDeclarationElement {}
 
   public sealed interface StringLiteral
-      extends AnnotationElementValue, Expression {}
+      extends AnnotationElementValue, Literal {}
 
   public sealed interface ThisKeyword
       extends PrimaryExpression {}
@@ -253,6 +261,7 @@ public final class JavaModel {
       AnnotationInvocation,
       ArrayAccessExpression,
       ArrayDimension,
+      ArrayInitializer,
       ArrayType,
       AssignmentExpression,
       ChainedMethodInvocation,
@@ -271,6 +280,7 @@ public final class JavaModel {
       FormalParameter,
       IdentifierRef,
       Implements,
+      IntegerLiteral,
       LocalVariableDeclarationRef,
       MethodDeclaration,
       NewLineRef,

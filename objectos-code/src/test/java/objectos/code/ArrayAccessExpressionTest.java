@@ -29,9 +29,9 @@ public class ArrayAccessExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          a(n("a"), n("x"));
-          a(n("a"), n("x"), n("y"));
-          a(n("a"), n("x"), n("y"), n("z"));
+          aget(n("a"), n("x"));
+          aget(n("a"), n("x"), n("y"));
+          aget(n("a"), n("x"), n("y"), n("z"));
         }
       }.toString(),
 

@@ -344,6 +344,27 @@ class InternalCompiler extends InternalApi {
     return $elempop();
   }
 
+  private int arrayInitializer() {
+    $elemadd(
+      ByteCode.ARRAY_INITIALIZER,
+      ByteCode.NOP /// list = 1
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> $elemlst(1, expression(proto));
+      }
+    }
+
+    return $elempop();
+  }
+
   private int arrayType() {
     $elemadd(
       ByteCode.ARRAY_TYPE,
@@ -774,6 +795,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocation(proto);
 
+      case ByteProto.PRIMITIVE_LITERAL -> primitiveLiteral();
+
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
       case ByteProto.THIS -> thisKeyword();
@@ -918,6 +941,17 @@ class InternalCompiler extends InternalApi {
             state = switch (state) {
               case IDENTIFIER -> {
                 init = expression(proto);
+
+                yield State.INITIALIZE;
+              }
+
+              default -> throw new UnsupportedOperationException(
+                "Implement me :: state=" + state);
+            };
+          } else if (proto == ByteProto.ARRAY_INITIALIZER) {
+            state = switch (state) {
+              case IDENTIFIER -> {
+                init = arrayInitializer();
 
                 yield State.INITIALIZE;
               }
@@ -1169,6 +1203,10 @@ class InternalCompiler extends InternalApi {
     }
 
     return $elempop();
+  }
+
+  private int primitiveLiteral() {
+    return $simpleadd(ByteCode.PRIMITIVE_LITERAL, $protonxt());
   }
 
   private int primitiveType() {

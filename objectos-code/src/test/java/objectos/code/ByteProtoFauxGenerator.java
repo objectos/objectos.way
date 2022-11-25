@@ -39,7 +39,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("NO_TYPE");
     value("PARAMETERIZED_TYPE");
     value("PRIMITIVE_TYPE");
-    value("TYPE_NAME"); // remove
+    value("ARRAY_INITIALIZER");
 
     comment("declarations");
 
@@ -92,6 +92,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("FIELD_ACCESS_EXPRESSION0");
     value("METHOD_INVOCATION");
     value("METHOD_INVOCATION_QUALIFIED");
+    value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
     value("THIS");
   }

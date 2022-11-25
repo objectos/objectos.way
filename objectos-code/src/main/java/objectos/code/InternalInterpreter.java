@@ -326,6 +326,40 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
   }
 
+  private void arrayInitializer() {
+    write('{');
+
+    if ($nextjmp()) {
+      $codentr();
+
+      if ($lnext()) {
+        $codentr();
+        arrayInitializerOrExpression();
+        $codexit();
+
+        while ($lnext()) {
+          writeComma();
+
+          $codentr();
+          arrayInitializerOrExpression();
+          $codexit();
+        }
+      }
+
+      $codexit();
+    }
+
+    write('}');
+  }
+
+  private void arrayInitializerOrExpression() {
+    switch (code) {
+      case ByteCode.ARRAY_INITIALIZER -> arrayInitializer();
+
+      default -> expression();
+    }
+  }
+
   private void assignmentExpression() {
     if ($nextjmp()) {
       $codentr();
@@ -705,7 +739,7 @@ abstract class InternalInterpreter extends InternalCompiler {
       writeSeparator('=');
 
       $codentr();
-      expression();
+      arrayInitializerOrExpression();
       $codexit();
     } else {
       $malformed();
@@ -883,6 +917,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0();
 
       case ByteCode.METHOD_INVOCATION -> methodInvocation();
+
+      case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();
 
       case ByteCode.STRING_LITERAL -> stringLiteral();
 
@@ -1334,6 +1370,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
 
     writeSemicolon();
+  }
+
+  private void primitiveLiteral() {
+    $codenxt();
+
+    var s = (String) objectArray[code];
+
+    write(s);
   }
 
   private void returnStatement() {

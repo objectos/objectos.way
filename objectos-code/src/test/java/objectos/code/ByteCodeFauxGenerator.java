@@ -45,6 +45,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("PRIMITIVE_TYPE");
     value("QUALIFIED_NAME");
     value("SIMPLE_NAME");
+    value("ARRAY_INITIALIZER");
 
     comment("declarations");
 
@@ -98,6 +99,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("EXPRESSION_NAME");
     value("FIELD_ACCESS_EXPRESSION0");
     value("METHOD_INVOCATION");
+    value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
     value("THIS");
   }

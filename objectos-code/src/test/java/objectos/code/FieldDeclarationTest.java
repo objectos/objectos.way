@@ -167,4 +167,31 @@ public class FieldDeclarationTest {
       """
     );
   }
+
+  @Test(description = """
+  Field declarations TC06
+
+  - array initializer
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          field(t(_int(), dim()), id("a"), a());
+          field(t(_int(), dim()), id("b"), a(i(0)));
+          field(t(_int(), dim()), id("c"), a(i(0), i(1)));
+        }
+      }.toString(),
+
+      """
+      int[] a = {};
+
+      int[] b = {0};
+
+      int[] c = {0, 1};
+      """
+    );
+  }
+
 }
