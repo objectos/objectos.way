@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.util.Objects;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
+import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
 import objectos.code.JavaModel.AnyType;
@@ -85,6 +86,12 @@ import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 
 class InternalApi extends State implements MarkerApi {
+
+  public final AbstractModifier _abstract() {
+    object(ByteProto.MODIFIER, Modifier.ABSTRACT);
+
+    return JavaModel.REF;
+  }
 
   public final PrimitiveType _boolean() {
     object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.BOOLEAN);

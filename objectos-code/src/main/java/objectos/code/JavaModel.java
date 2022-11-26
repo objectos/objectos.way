@@ -24,6 +24,12 @@ package objectos.code;
  */
 public final class JavaModel {
 
+  public sealed interface AbstractModifier
+      extends
+      ClassDeclarationElement,
+      InterfaceDeclarationElement,
+      MethodDeclarationElement {}
+
   public sealed interface AnnotationElementValue extends Markable {}
 
   public sealed interface AnnotationInvocation
@@ -277,6 +283,7 @@ public final class JavaModel {
 
   private static final class Ref
       implements
+      AbstractModifier,
       AnnotationInvocation,
       ArrayAccessExpression,
       ArrayDimension,

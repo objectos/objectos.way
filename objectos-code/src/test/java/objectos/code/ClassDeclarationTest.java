@@ -175,4 +175,39 @@ public class ClassDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Class declarations TC06
+
+  - class modifiers
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(_public(), id("A"));
+          _class(_protected(), id("B"));
+          _class(_private(), id("C"));
+          _class(_static(), id("D"));
+          _class(_abstract(), id("E"));
+          _class(_final(), id("F"));
+        }
+      }.toString(),
+
+      """
+      public class A {}
+
+      protected class B {}
+
+      private class C {}
+
+      static class D {}
+
+      abstract class E {}
+
+      final class F {}
+      """
+    );
+  }
+
 }

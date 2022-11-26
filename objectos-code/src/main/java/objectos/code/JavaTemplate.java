@@ -16,6 +16,7 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
+import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
 import objectos.code.JavaModel.AnyType;
@@ -102,6 +103,10 @@ public abstract class JavaTemplate {
     sink.eval(this);
 
     return out.toString();
+  }
+
+  protected final AbstractModifier _abstract() {
+    return api()._abstract();
   }
 
   protected final PrimitiveType _boolean() {
