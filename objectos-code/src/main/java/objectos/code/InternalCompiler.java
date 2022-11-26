@@ -1015,6 +1015,8 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
+        case ByteProto.ARRAY_TYPE -> $elemset(3, arrayType());
+
         case ByteProto.CLASS_NAME -> $elemset(3, className());
 
         case ByteProto.ELLIPSIS -> { $elemset(2, 1); $stackpop(); }

@@ -196,6 +196,11 @@ public class MethodDeclarationTest {
             _void(), id("test3"),
             param(_int(), ellipsis(), id("a"))
           );
+
+          method(
+            _void(), id("test4"),
+            param(t(t(String.class), dim()), id("args"))
+          );
         }
       }.toString(),
 
@@ -207,6 +212,8 @@ public class MethodDeclarationTest {
       void test2(int a, double b, boolean c) {}
 
       void test3(int... a) {}
+
+      void test4(java.lang.String[] args) {}
       """
     );
   }
