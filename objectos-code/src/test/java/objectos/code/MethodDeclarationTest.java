@@ -301,4 +301,31 @@ public class MethodDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Method declarations TC10
+
+  - abstract method vs method w/ empty body
+  """)
+  public void testCase10() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            _abstract(), _void(), id("test0")
+          );
+          method(
+            _void(), id("test1")
+          );
+        }
+      }.toString(),
+
+      """
+      abstract void test0();
+
+      void test1() {}
+      """
+    );
+  }
+
 }

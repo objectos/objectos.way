@@ -123,8 +123,9 @@ class InternalCompiler extends InternalApi {
     codeArray[codeIndex++] = v7;
   }
 
-  private void $codeadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
-    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 8);
+  private void $codeadd(
+      int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 9);
 
     codeArray[codeIndex++] = v0;
     codeArray[codeIndex++] = v1;
@@ -135,6 +136,7 @@ class InternalCompiler extends InternalApi {
     codeArray[codeIndex++] = v6;
     codeArray[codeIndex++] = v7;
     codeArray[codeIndex++] = v8;
+    codeArray[codeIndex++] = v9;
   }
 
   private int $codepop() { return markArray[markIndex--]; }
@@ -189,10 +191,11 @@ class InternalCompiler extends InternalApi {
     $codeadd(v0, v1, v2, v3, v4, v5, v6, v7);
   }
 
-  private void $elemadd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+  private void $elemadd(
+      int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
     $codepsh();
 
-    $codeadd(v0, v1, v2, v3, v4, v5, v6, v7, v8);
+    $codeadd(v0, v1, v2, v3, v4, v5, v6, v7, v8, v9);
   }
 
   private void $elemlst(int offset, int value) {
@@ -1143,8 +1146,11 @@ class InternalCompiler extends InternalApi {
       ByteCode.NOP, // receiver = 5
       ByteCode.NOP, // params = 6
       ByteCode.NOP, // throws = 7
-      ByteCode.NOP /// body = 8
+      ByteCode.NOP, // abstract = 8
+      ByteCode.NOP /// body = 9
     );
+
+    var abstractFound = false;
 
     loop: while ($prototru()) {
       var proto = $protonxt();
@@ -1160,7 +1166,13 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.IDENTIFIER -> $elemset(4, objectString());
 
-        case ByteProto.MODIFIER -> $elemlst(1, modifier());
+        case ByteProto.MODIFIER -> {
+          var modifier = $objget();
+
+          abstractFound = modifier == Modifier.ABSTRACT;
+
+          $elemlst(1, modifier());
+        }
 
         case ByteProto.NO_TYPE -> $elemset(3, noType());
 
@@ -1170,8 +1182,12 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.BREAK -> { break loop; }
 
-        default -> $elemlst(8, statement(proto));
+        default -> $elemlst(9, statement(proto));
       }
+    }
+
+    if (abstractFound) {
+      $elemset(8, 1);
     }
 
     return $elempop();

@@ -1330,7 +1330,13 @@ abstract class InternalInterpreter extends InternalCompiler {
         "Implement me :: method throws");
     }
 
-    if ($nextjmp()) {
+    var abstractFound = $nextjmp();
+
+    var hasBody = $nextjmp();
+
+    if (abstractFound) {
+      writeSemicolon();
+    } else if (hasBody) {
       writeBlockStart();
 
       $codentr();
