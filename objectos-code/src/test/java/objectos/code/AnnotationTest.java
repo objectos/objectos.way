@@ -27,20 +27,17 @@ public class AnnotationTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        final PackageName TEST = PackageName.of("test");
-        final ClassName _Foo = ClassName.of(TEST, "Foo");
-
         @Override
         protected final void definition() {
           _class(
-            annotation(_Foo, s("java")),
+            annotation(t(Foo.class), s("java")),
             id("Test")
           );
         }
       }.toString(),
 
       """
-      @test.Foo("java")
+      @objectos.code.Foo("java")
       class Test {}
       """
     );

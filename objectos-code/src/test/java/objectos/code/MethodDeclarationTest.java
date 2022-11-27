@@ -77,7 +77,7 @@ public class MethodDeclarationTest {
         @Override
         protected final void definition() {
           method(
-            annotation(Override.class),
+            annotation(t(Override.class)),
             _void(), id("test")
           );
         }
@@ -151,7 +151,7 @@ public class MethodDeclarationTest {
         @Override
         protected final void definition() {
           method(
-            annotation(Override.class),
+            annotation(t(Override.class)),
             _final(), _void(), id("test")
           );
         }

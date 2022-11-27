@@ -153,7 +153,7 @@ public class EnumDeclarationTest {
         @Override
         protected final void definition() {
           _enum(
-            annotation(Deprecated.class),
+            annotation(t(Deprecated.class)),
             _public(), id("Test"),
             enumConstant(id("ONE"))
           );
@@ -239,7 +239,7 @@ public class EnumDeclarationTest {
               assign(n(_this(), "value"), n("value"))
             ),
             method(
-              annotation(Override.class),
+              annotation(t(Override.class)),
               _public(), _final(), t(String.class), id("toString"),
               _return(n("value"))
             )

@@ -51,7 +51,7 @@ public class ClassDeclarationTest {
         @Override
         protected final void definition() {
           _class(
-            annotation(Deprecated.class),
+            annotation(t(Deprecated.class)),
             id("Subject")
           );
         }

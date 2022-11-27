@@ -15,7 +15,6 @@
  */
 package objectos.code;
 
-import java.lang.annotation.Annotation;
 import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
@@ -203,11 +202,11 @@ public abstract class JavaTemplate {
     return api().aget(reference, expressions);
   }
 
-  protected final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
+  protected final AnnotationInvocation annotation(ClassOrInterfaceType annotationType) {
     return api().annotation(annotationType);
   }
 
-  protected final AnnotationInvocation annotation(ClassName annotationType,
+  protected final AnnotationInvocation annotation(ClassOrInterfaceType annotationType,
       AnnotationElementValue value) {
     return api().annotation(annotationType, value);
   }

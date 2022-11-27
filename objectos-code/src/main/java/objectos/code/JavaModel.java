@@ -333,8 +333,10 @@ public final class JavaModel {
     }
   }
 
+  @SuppressWarnings("exports")
   public static final Ref REF = new Ref();
 
+  @SuppressWarnings("exports")
   public static final Include INCLUDE = new Include();
 
   private JavaModel() {}

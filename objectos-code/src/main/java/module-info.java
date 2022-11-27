@@ -27,6 +27,7 @@ module br.com.objectos.code {
   exports br.com.objectos.code.processing;
   exports br.com.objectos.code.processing.type;
   exports br.com.objectos.code.util;
+  exports objectos.code;
 
   requires transitive objectos.util;
   requires transitive java.compiler;

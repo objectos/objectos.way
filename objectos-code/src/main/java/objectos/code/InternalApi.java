@@ -15,7 +15,6 @@
  */
 package objectos.code;
 
-import java.lang.annotation.Annotation;
 import java.util.Objects;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
@@ -313,27 +312,21 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final AnnotationInvocation annotation(Class<? extends Annotation> annotationType) {
-    var name = ClassName.of(annotationType); // implicit null-check
-
-    className(name);
-
+  public final AnnotationInvocation annotation(ClassOrInterfaceType annotationType) {
     markStart();
 
-    markReference();
+    annotationType.mark(this);
 
     element(ByteProto.ANNOTATION);
 
     return JavaModel.REF;
   }
 
-  public final AnnotationInvocation annotation(ClassName annotationType,
-      AnnotationElementValue value) {
-    className(annotationType);
-
+  public final AnnotationInvocation annotation(
+      ClassOrInterfaceType annotationType, AnnotationElementValue value) {
     markStart();
 
-    markReference();
+    annotationType.mark(this);
 
     value.mark(this);
 

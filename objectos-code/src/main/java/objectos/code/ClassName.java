@@ -22,7 +22,7 @@ import objectos.lang.HashCode;
 
 public final class ClassName extends PackageOrClassName implements Comparable<ClassName>, TypeName {
 
-  public final PackageOrClassName enclosingName;
+  final PackageOrClassName enclosingName;
 
   public final String simpleName;
 

@@ -56,11 +56,11 @@ public class InterfaceDeclarationTest {
         protected final void definition() {
           _interface(_public(), id("A"));
 
-          _interface(annotation(TypeAnnotation.class), id("B"));
+          _interface(annotation(t(TypeAnnotation.class)), id("B"));
 
-          _interface(annotation(TypeAnnotation.class), _protected(), id("C"));
+          _interface(annotation(t(TypeAnnotation.class)), _protected(), id("C"));
 
-          _interface(_private(), _static(), annotation(TypeAnnotation.class), id("D"));
+          _interface(_private(), _static(), annotation(t(TypeAnnotation.class)), id("D"));
         }
       }.toString(),
 
