@@ -202,6 +202,11 @@ public class MethodDeclarationTest {
             _void(), id("test4"),
             param(t(t(String.class), dim()), id("args"))
           );
+
+          method(
+            _void(), id("test5"),
+            param(tvar("N"), id("n"))
+          );
         }
       }.toString(),
 
@@ -215,6 +220,8 @@ public class MethodDeclarationTest {
       void test3(int... a) {}
 
       void test4(java.lang.String[] args) {}
+
+      void test5(N n) {}
       """
     );
   }

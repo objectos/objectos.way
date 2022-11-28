@@ -1028,6 +1028,8 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.PRIMITIVE_TYPE -> $elemset(3, primitiveType());
 
+        case ByteProto.TYPE_VARIABLE -> $elemset(3, typeVariable());
+
         case ByteProto.JMP -> $stackpsh();
 
         case ByteProto.BREAK -> { break loop; }
