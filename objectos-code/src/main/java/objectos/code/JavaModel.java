@@ -167,6 +167,7 @@ public final class JavaModel {
       extends
       ClassDeclarationElement,
       EnumDeclarationElement,
+      InterfaceDeclarationElement,
       MethodDeclarationElement, MethodInvocationElement {}
 
   public sealed interface IntegerLiteral extends Literal {}

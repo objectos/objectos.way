@@ -84,19 +84,34 @@ public class InterfaceDeclarationTest {
   - extends clause
   """)
   public void testCase03() {
+    var a = ClassName.of(IfaceA.class);
+    var b = ClassName.of(IfaceB.class);
+    var c = ClassName.of(IfaceC.class);
+
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _interface(id("A"), _extends(ClassName.of(IfaceA.class)));
+          _interface(id("A"), _extends(a));
 
-          _interface(id("B"), _extends(ClassName.of(IfaceA.class), ClassName.of(IfaceB.class)));
+          _interface(id("B"), _extends(a, b));
 
           _interface(
             id("C"),
-            _extends(ClassName.of(IfaceA.class), ClassName.of(IfaceB.class)),
-            _extends(ClassName.of(IfaceC.class))
+            _extends(a, b),
+            _extends(c)
           );
+
+          _interface(
+            id("D"),
+            include(this::interfaceD)
+          );
+        }
+
+        private void interfaceD() {
+          _extends(a);
+          _extends(b);
+          _extends(c);
         }
       }.toString(),
 
@@ -106,6 +121,8 @@ public class InterfaceDeclarationTest {
       interface B extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB {}
 
       interface C extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB, objectos.code.Types.IfaceC {}
+
+      interface D extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB, objectos.code.Types.IfaceC {}
       """
     );
   }
