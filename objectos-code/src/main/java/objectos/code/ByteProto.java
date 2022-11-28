@@ -36,68 +36,69 @@ final class ByteProto {
   static final int PACKAGE_NAME = -10;
   static final int PARAMETERIZED_TYPE = -11;
   static final int PRIMITIVE_TYPE = -12;
+  static final int TYPE_VARIABLE = -13;
 
   //declarations
 
-  static final int COMPILATION_UNIT = -13;
-  static final int PACKAGE_DECLARATION = -14;
-  static final int TYPE_PARAMETER = -15;
+  static final int COMPILATION_UNIT = -14;
+  static final int PACKAGE_DECLARATION = -15;
+  static final int TYPE_PARAMETER = -16;
 
   //class
 
-  static final int CLASS_DECLARATION = -16;
-  static final int MODIFIER = -17;
-  static final int IDENTIFIER = -18;
-  static final int EXTENDS_SINGLE = -19;
-  static final int IMPLEMENTS = -20;
+  static final int CLASS_DECLARATION = -17;
+  static final int MODIFIER = -18;
+  static final int IDENTIFIER = -19;
+  static final int EXTENDS_SINGLE = -20;
+  static final int IMPLEMENTS = -21;
 
   //field
 
-  static final int FIELD_DECLARATION = -21;
+  static final int FIELD_DECLARATION = -22;
 
   //method/constructor
 
-  static final int METHOD_DECLARATION = -22;
-  static final int FORMAL_PARAMETER = -23;
-  static final int ELLIPSIS = -24;
-  static final int CONSTRUCTOR_DECLARATION = -25;
-  static final int THIS_INVOCATION = -26;
-  static final int SUPER_INVOCATION = -27;
-  static final int QUALIFIED_SUPER_INVOCATION = -28;
+  static final int METHOD_DECLARATION = -23;
+  static final int FORMAL_PARAMETER = -24;
+  static final int ELLIPSIS = -25;
+  static final int CONSTRUCTOR_DECLARATION = -26;
+  static final int THIS_INVOCATION = -27;
+  static final int SUPER_INVOCATION = -28;
+  static final int QUALIFIED_SUPER_INVOCATION = -29;
 
   //enum
 
-  static final int ENUM_DECLARATION = -29;
-  static final int ENUM_CONSTANT = -30;
+  static final int ENUM_DECLARATION = -30;
+  static final int ENUM_CONSTANT = -31;
 
   //interface
 
-  static final int INTERFACE_DECLARATION = -31;
-  static final int EXTENDS_MANY = -32;
+  static final int INTERFACE_DECLARATION = -32;
+  static final int EXTENDS_MANY = -33;
 
   //annotation
 
-  static final int ANNOTATION = -33;
+  static final int ANNOTATION = -34;
 
   //statements
 
-  static final int LOCAL_VARIABLE = -34;
-  static final int RETURN_STATEMENT = -35;
+  static final int LOCAL_VARIABLE = -35;
+  static final int RETURN_STATEMENT = -36;
 
   //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -36;
-  static final int ASSIGNMENT_EXPRESSION = -37;
-  static final int ASSIGNMENT_OPERATOR = -38;
-  static final int CHAINED_METHOD_INVOCATION = -39;
-  static final int CLASS_INSTANCE_CREATION0 = -40;
-  static final int EXPRESSION_NAME = -41;
-  static final int FIELD_ACCESS_EXPRESSION0 = -42;
-  static final int METHOD_INVOCATION = -43;
-  static final int METHOD_INVOCATION_QUALIFIED = -44;
-  static final int PRIMITIVE_LITERAL = -45;
-  static final int STRING_LITERAL = -46;
-  static final int THIS = -47;
+  static final int ARRAY_ACCESS_EXPRESSION = -37;
+  static final int ASSIGNMENT_EXPRESSION = -38;
+  static final int ASSIGNMENT_OPERATOR = -39;
+  static final int CHAINED_METHOD_INVOCATION = -40;
+  static final int CLASS_INSTANCE_CREATION0 = -41;
+  static final int EXPRESSION_NAME = -42;
+  static final int FIELD_ACCESS_EXPRESSION0 = -43;
+  static final int METHOD_INVOCATION = -44;
+  static final int METHOD_INVOCATION_QUALIFIED = -45;
+  static final int PRIMITIVE_LITERAL = -46;
+  static final int STRING_LITERAL = -47;
+  static final int THIS = -48;
 
   private ByteProto() {}
 

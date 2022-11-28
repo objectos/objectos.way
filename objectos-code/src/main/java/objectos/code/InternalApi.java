@@ -81,6 +81,7 @@ import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
 import objectos.code.JavaModel.TypeParameter;
 import objectos.code.JavaModel.TypeParameterBound;
+import objectos.code.JavaModel.TypeVariable;
 import objectos.code.JavaModel.UnqualifiedMethodInvocation;
 import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
@@ -639,6 +640,14 @@ class InternalApi extends State implements MarkerApi {
     }
 
     element(ByteProto.TYPE_PARAMETER);
+
+    return JavaModel.REF;
+  }
+
+  public final TypeVariable tvar(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    object(ByteProto.TYPE_VARIABLE, name);
 
     return JavaModel.REF;
   }

@@ -77,6 +77,7 @@ import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
 import objectos.code.JavaModel.TypeParameter;
 import objectos.code.JavaModel.TypeParameterBound;
+import objectos.code.JavaModel.TypeVariable;
 import objectos.code.JavaModel.UnqualifiedMethodInvocation;
 import objectos.code.JavaModel.VoidInvocation;
 import objectos.lang.Check;
@@ -342,6 +343,10 @@ public abstract class JavaTemplate {
 
   protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {
     return api().tparam(name, bounds);
+  }
+
+  protected final TypeVariable tvar(String name) {
+    return api().tvar(name);
   }
 
   protected final LocalVariableDeclarationRef var(String name, Expression expression) {

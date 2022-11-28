@@ -237,7 +237,8 @@ public final class JavaModel {
   public sealed interface ReferenceType
       extends
       ArrayTypeComponent,
-      FormalParameterElement {}
+      FormalParameterElement,
+      MethodDeclarationElement {}
 
   public sealed interface ReturnStatement
       extends Statement {}
@@ -263,6 +264,8 @@ public final class JavaModel {
       extends MethodDeclarationElement {}
 
   public sealed interface TypeParameterBound extends Markable {}
+
+  public sealed interface TypeVariable extends ReferenceType {}
 
   public sealed interface UnqualifiedMethodInvocation
       extends ChainedMethodInvocationHead, ChainedMethodInvocationElement, MethodInvocation {}
@@ -330,6 +333,7 @@ public final class JavaModel {
       StringLiteral,
       ThisKeyword,
       TypeParameter,
+      TypeVariable,
       UnqualifiedMethodInvocation,
       VoidInvocation {
     private Ref() {}

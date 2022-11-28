@@ -1679,6 +1679,14 @@ abstract class InternalInterpreter extends InternalCompiler {
         write(sname.simpleName);
       }
 
+      case ByteCode.TYPE_VARIABLE -> {
+        $codenxt();
+
+        var name = (String) $codeobj();
+
+        write(name);
+      }
+
       default -> $throwuoe();
     }
   }

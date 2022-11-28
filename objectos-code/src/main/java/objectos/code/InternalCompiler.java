@@ -1180,6 +1180,8 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.TYPE_PARAMETER -> $elemlst(2, typeParameter());
 
+        case ByteProto.TYPE_VARIABLE -> $elemset(3, typeVariable());
+
         case ByteProto.JMP -> $stackpsh();
 
         case ByteProto.BREAK -> { break loop; }
@@ -1421,6 +1423,10 @@ class InternalCompiler extends InternalApi {
     }
 
     return $elempop();
+  }
+
+  private int typeVariable() {
+    return $simpleadd(ByteCode.TYPE_VARIABLE, $protonxt());
   }
 
 }

@@ -287,6 +287,9 @@ public class MethodDeclarationTest {
           method(
             t(Integer.class), id("test3")
           );
+          method(
+            tvar("E"), id("test4")
+          );
         }
       }.toString(),
 
@@ -298,6 +301,8 @@ public class MethodDeclarationTest {
       int test2() {}
 
       java.lang.Integer test3() {}
+
+      E test4() {}
       """
     );
   }
