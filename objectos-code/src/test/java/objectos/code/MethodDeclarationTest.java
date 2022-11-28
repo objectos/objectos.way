@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.Serializable;
 import org.testng.annotations.Test;
 
 public class MethodDeclarationTest {
@@ -324,6 +325,48 @@ public class MethodDeclarationTest {
       abstract void test0();
 
       void test1() {}
+      """
+    );
+  }
+
+  @Test(description = """
+  Method declarations TC11
+
+  - type parameters
+  """)
+  public void testCase11() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          method(
+            tparam("T"), _void(), id("test0")
+          );
+          method(
+            _public(), tparam("T"), _void(), id("test1")
+          );
+          method(
+            tparam("E1"), tparam("E2"), _void(), id("test2")
+          );
+          method(
+            tparam("T", t(Object.class)), _void(), id("test3")
+          );
+          method(
+            tparam("T", t(Object.class), t(Serializable.class)), _void(), id("test4")
+          );
+        }
+      }.toString(),
+
+      """
+      <T> void test0() {}
+
+      public <T> void test1() {}
+
+      <E1, E2> void test2() {}
+
+      <T extends java.lang.Object> void test3() {}
+
+      <T extends java.lang.Object & java.io.Serializable> void test4() {}
       """
     );
   }

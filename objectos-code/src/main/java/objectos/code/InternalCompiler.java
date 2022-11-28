@@ -1178,6 +1178,8 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.PRIMITIVE_TYPE -> $elemset(3, primitiveType());
 
+        case ByteProto.TYPE_PARAMETER -> $elemlst(2, typeParameter());
+
         case ByteProto.JMP -> $stackpsh();
 
         case ByteProto.BREAK -> { break loop; }
@@ -1393,6 +1395,32 @@ class InternalCompiler extends InternalApi {
     }
 
     $stackpop();
+  }
+
+  private int typeParameter() {
+    $elemadd(
+      ByteCode.TYPE_PARAMETER,
+      ByteCode.NOP, // name = 1
+      ByteCode.NOP /// bounds = 2
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.CLASS_NAME -> $elemlst(2, className());
+
+        case ByteProto.IDENTIFIER -> $elemset(1, objectString());
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    return $elempop();
   }
 
 }

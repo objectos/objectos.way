@@ -1288,8 +1288,13 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
 
     if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: method type params");
+      writeSpaceIf(prevSection);
+
+      $codentr();
+      typeParameterList();
+      $codexit();
+
+      prevSection = true;
     }
 
     newLineOrSpace(prevSection);
@@ -1675,6 +1680,66 @@ abstract class InternalInterpreter extends InternalCompiler {
       }
 
       default -> $throwuoe();
+    }
+  }
+
+  private void typeParameterList() {
+    write('<');
+
+    if ($lnext()) {
+      $codentr();
+      typeParameterListItem();
+      $codexit();
+
+      while ($lnext()) {
+        writeComma();
+
+        $codentr();
+        typeParameterListItem();
+        $codexit();
+      }
+    }
+
+    write('>');
+  }
+
+  private void typeParameterListItem() {
+    if ($nextjmp()) {
+      $codentr();
+      identifier();
+      $codexit();
+    } else {
+      $malformed();
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+
+      if ($lnext()) {
+        writeSpace();
+
+        write("extends");
+
+        writeSpace();
+
+        $codentr();
+        typeName();
+        $codexit();
+
+        while ($lnext()) {
+          writeSpace();
+
+          write('&');
+
+          writeSpace();
+
+          $codentr();
+          typeName();
+          $codexit();
+        }
+      }
+
+      $codexit();
     }
   }
 

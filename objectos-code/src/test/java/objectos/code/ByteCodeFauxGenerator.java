@@ -38,6 +38,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("types");
 
+    value("ARRAY_INITIALIZER");
     value("ARRAY_TYPE");
     value("DIM");
     value("NO_TYPE");
@@ -45,7 +46,6 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("PRIMITIVE_TYPE");
     value("QUALIFIED_NAME");
     value("SIMPLE_NAME");
-    value("ARRAY_INITIALIZER");
 
     comment("declarations");
 
@@ -53,6 +53,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("IMPORT");
     value("PACKAGE");
     value("TYPE_LIST");
+    value("TYPE_PARAMETER");
 
     comment("class");
 

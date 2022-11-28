@@ -79,6 +79,8 @@ import objectos.code.JavaModel.ReturnStatement;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
+import objectos.code.JavaModel.TypeParameter;
+import objectos.code.JavaModel.TypeParameterBound;
 import objectos.code.JavaModel.UnqualifiedMethodInvocation;
 import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
@@ -621,6 +623,22 @@ class InternalApi extends State implements MarkerApi {
     }
 
     element(ByteProto.PARAMETERIZED_TYPE);
+
+    return JavaModel.REF;
+  }
+
+  public final TypeParameter tparam(String name, TypeParameterBound[] bounds) {
+    identifier(name);
+
+    markStart();
+
+    markReference();
+
+    for (var bound : bounds) {
+      bound.mark(this);
+    }
+
+    element(ByteProto.TYPE_PARAMETER);
 
     return JavaModel.REF;
   }

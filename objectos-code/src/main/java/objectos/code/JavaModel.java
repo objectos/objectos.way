@@ -87,6 +87,7 @@ public final class JavaModel {
       extends
       AnyType,
       ReferenceType,
+      TypeParameterBound,
 
       FieldDeclarationElement,
       MethodDeclarationElement {}
@@ -258,6 +259,11 @@ public final class JavaModel {
   public sealed interface ThisKeyword
       extends PrimaryExpression {}
 
+  public sealed interface TypeParameter
+      extends MethodDeclarationElement {}
+
+  public sealed interface TypeParameterBound extends Markable {}
+
   public sealed interface UnqualifiedMethodInvocation
       extends ChainedMethodInvocationHead, ChainedMethodInvocationElement, MethodInvocation {}
 
@@ -323,6 +329,7 @@ public final class JavaModel {
       StaticModifier,
       StringLiteral,
       ThisKeyword,
+      TypeParameter,
       UnqualifiedMethodInvocation,
       VoidInvocation {
     private Ref() {}
