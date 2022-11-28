@@ -329,6 +329,10 @@ public abstract class JavaTemplate {
     return api().t(value);
   }
 
+  protected final ClassOrInterfaceType t(ClassName name) {
+    return api().t(name);
+  }
+
   protected final ParameterizedTypeInvocation t(
       ClassOrInterfaceType rawType, AnyType... arguments) {
     return api().t(rawType, arguments);

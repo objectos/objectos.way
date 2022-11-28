@@ -603,6 +603,14 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
+  public final ClassOrInterfaceType t(ClassName name) {
+    Objects.requireNonNull(name, "name == null");
+
+    object(ByteProto.CLASS_NAME, name);
+
+    return JavaModel.REF;
+  }
+
   public final ParameterizedTypeInvocation t(ClassOrInterfaceType rawType, AnyType[] arguments) {
     markStart();
 

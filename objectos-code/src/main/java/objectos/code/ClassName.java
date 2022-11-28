@@ -22,7 +22,7 @@ import objectos.lang.HashCode;
 
 public final class ClassName extends PackageOrClassName implements Comparable<ClassName>, TypeName {
 
-  final PackageOrClassName enclosingName;
+  public final PackageOrClassName enclosingName;
 
   public final String simpleName;
 
@@ -50,11 +50,21 @@ public final class ClassName extends PackageOrClassName implements Comparable<Cl
     return new ClassName(enclosingName, simpleName);
   }
 
+  public static ClassName of(ClassName outerClass, String simpleName) {
+    Check.notNull(outerClass, "outerClass == null");
+    Check.argument(
+      SourceVersion.isName(simpleName),
+      simpleName, " is not a valid type name"
+    );
+
+    return new ClassName(outerClass, simpleName);
+  }
+
   public static ClassName of(PackageName packageName, String simpleName) {
     Check.notNull(packageName, "packageName == null");
     Check.argument(
       SourceVersion.isName(simpleName),
-      simpleName, " is not a valid package name"
+      simpleName, " is not a valid type name"
     );
 
     return new ClassName(packageName, simpleName);

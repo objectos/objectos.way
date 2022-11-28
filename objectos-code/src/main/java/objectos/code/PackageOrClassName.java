@@ -15,7 +15,7 @@
  */
 package objectos.code;
 
-sealed abstract class PackageOrClassName permits ClassName, PackageName {
+public sealed abstract class PackageOrClassName permits ClassName, PackageName {
 
   abstract PackageName packageName();
 
