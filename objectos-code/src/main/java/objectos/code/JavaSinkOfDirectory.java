@@ -18,14 +18,21 @@ package objectos.code;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
 
+  private static final OpenOption[] DEFAULT = {StandardOpenOption.CREATE_NEW};
+
+  private static final OpenOption[] OVERWRITE = {StandardOpenOption.CREATE};
+
   private final Path directory;
 
   private Path file;
+
+  boolean overwriteExising;
 
   boolean skipExising;
 
@@ -47,10 +54,13 @@ class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
 
     Files.createDirectories(parent);
 
-    Files.writeString(
-      file, toString(), StandardCharsets.UTF_8,
-      StandardOpenOption.CREATE_NEW
-    );
+    var options = DEFAULT;
+
+    if (overwriteExising) {
+      options = OVERWRITE;
+    }
+
+    Files.writeString(file, toString(), StandardCharsets.UTF_8, options);
   }
 
   @Override

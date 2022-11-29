@@ -24,12 +24,21 @@ public abstract class JavaSink extends InternalInterpreter {
 
   public sealed abstract static class Option {
 
+    private static final class OverwriteExisting extends Option {
+      @Override
+      final void acceptOfDirectory(JavaSinkOfDirectory sink) {
+        sink.overwriteExising = true;
+      }
+    }
+
     private static final class SkipExisting extends Option {
       @Override
       final void acceptOfDirectory(JavaSinkOfDirectory sink) {
         sink.skipExising = true;
       }
     }
+
+    static final Option OVERWRITE_EXISTING = new OverwriteExisting();
 
     static final Option SKIP_EXISTING = new SkipExisting();
 
@@ -68,6 +77,10 @@ public abstract class JavaSink extends InternalInterpreter {
     Check.notNull(output, "output == null");
 
     return new JavaSinkOfStringBuilder(output);
+  }
+
+  public static Option overwriteExisting() {
+    return Option.OVERWRITE_EXISTING;
   }
 
   public static Option skipExisting() {

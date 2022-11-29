@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -75,7 +76,9 @@ public class JavaSinkTest {
 
     sink.write(tmpl);
 
-    var file = directory.resolve(Path.of("a", "b", "Test.java"));
+    var path = Path.of("a", "b", "Test.java");
+
+    var file = directory.resolve(path);
 
     assertTrue(Files.isRegularFile(file));
 
@@ -85,6 +88,65 @@ public class JavaSinkTest {
       package a.b;
 
       public class Test {}
+      """
+    );
+  }
+
+  @Test(dependsOnMethods = "testCase01")
+  public void testCase02() {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _package("a.b");
+
+        _class(
+          _public(), id("Test")
+        );
+      }
+    };
+
+    try {
+      sink.write(tmpl);
+
+      Assert.fail();
+    } catch (IOException expected) {
+
+    }
+  }
+
+  @Test(dependsOnMethods = "testCase02")
+  public void testCase03() throws IOException {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _package("a.b");
+
+        _class(
+          _public(), id("Test"),
+          constructor(_private())
+        );
+      }
+    };
+
+    var path = Path.of("a", "b", "Test.java");
+
+    var file = directory.resolve(path);
+
+    assertTrue(Files.isRegularFile(file));
+
+    var overwritingSink = JavaSink.ofDirectory(directory, JavaSink.overwriteExisting());
+
+    overwritingSink.write(tmpl);
+
+    assertEquals(
+      Files.readString(file),
+
+      """
+      package a.b;
+
+      public class Test {
+        private Test() {}
+      }
       """
     );
   }
