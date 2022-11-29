@@ -15,48 +15,63 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-public class ExpressionNameTest extends AbstractObjectosCodeTest {
+public class ExpressionNameTest {
 
   @Test(description = """
-  test(test.Suit.CLUBS);
+  Expression name TC01:
+
+  - identifiers
   """)
   public void testCase01() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        invoke("test", n("field"));
-      }
-    };
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", n("a"));
 
-    testDefault(
-      tmpl,
+          invoke("test", n("a", "b"));
+
+          invoke("test", n("a", "b", "c"));
+        }
+      }.toString(),
 
       """
-      test(field);
+      test(a);
+
+      test(a.b);
+
+      test(a.b.c);
       """
     );
   }
 
   @Test(description = """
-  test(test.Suit.CLUBS);
+  Expression name TC01:
+
+  - base = ClassName
   """)
   public void testCase02() {
-    var cn = ClassName.of(TEST, "Suit");
+    var pkg = PackageName.of("test");
+    var cn = ClassName.of(pkg, "Suit");
 
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        invoke("test", n(cn, "CLUBS"));
-      }
-    };
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", n(cn, "CLUBS"));
 
-    testDefault(
-      tmpl,
+          invoke("test", n(cn, "CLUBS", "field"));
+        }
+      }.toString(),
 
       """
       test(test.Suit.CLUBS);
+
+      test(test.Suit.CLUBS.field);
       """
     );
   }

@@ -290,12 +290,22 @@ public abstract class JavaTemplate {
     return api().method(elements);
   }
 
-  protected final ExpressionName n(ClassName name, String identifier) {
-    return api().n(name, identifier);
+  @Deprecated
+  protected final ExpressionName n() {
+    throw new UnsupportedOperationException();
   }
 
-  protected final ExpressionName n(String value) {
-    return api().n(value);
+  @Deprecated
+  protected final ExpressionName n(ClassName name) {
+    throw new UnsupportedOperationException();
+  }
+
+  protected final ExpressionName n(ClassName name, String... identifiers) {
+    return api().n(name, identifiers);
+  }
+
+  protected final ExpressionName n(String... identifiers) {
+    return api().n(identifiers);
   }
 
   protected final FieldAccessExpression n(ThisKeyword keyword, String identifier) {

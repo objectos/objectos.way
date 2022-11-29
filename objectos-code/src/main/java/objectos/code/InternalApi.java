@@ -514,28 +514,36 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ExpressionName n(ClassName name, String identifier) {
+  public final ExpressionName n(ClassName name, String... identifiers) {
     className(name);
 
-    identifier(identifier);
+    for (var identifier : identifiers) {
+      identifier(identifier);
+    }
 
     markStart();
 
     markReference();
 
-    markReference();
+    for (int i = 0; i < identifiers.length; i++) {
+      markReference();
+    }
 
     element(ByteProto.EXPRESSION_NAME);
 
     return JavaModel.REF;
   }
 
-  public final ExpressionName n(String value) {
-    identifier(value);
+  public final ExpressionName n(String... identifiers) {
+    for (var identifier : identifiers) {
+      identifier(identifier);
+    }
 
     markStart();
 
-    markReference();
+    for (int i = 0; i < identifiers.length; i++) {
+      markReference();
+    }
 
     element(ByteProto.EXPRESSION_NAME);
 
