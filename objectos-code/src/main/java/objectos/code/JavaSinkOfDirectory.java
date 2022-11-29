@@ -26,7 +26,8 @@ class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
 
   private static final OpenOption[] DEFAULT = {StandardOpenOption.CREATE_NEW};
 
-  private static final OpenOption[] OVERWRITE = {StandardOpenOption.CREATE};
+  private static final OpenOption[] OVERWRITE = {
+      StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
 
   private final Path directory;
 
