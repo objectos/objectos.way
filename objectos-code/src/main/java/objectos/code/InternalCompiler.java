@@ -1180,6 +1180,8 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.NO_TYPE -> $elemset(3, noType());
 
+        case ByteProto.PARAMETERIZED_TYPE -> $elemset(3, parameterizedType());
+
         case ByteProto.PRIMITIVE_TYPE -> $elemset(3, primitiveType());
 
         case ByteProto.TYPE_PARAMETER -> $elemlst(2, typeParameter());
@@ -1303,6 +1305,10 @@ class InternalCompiler extends InternalApi {
             $elemlst(2, className());
           }
         }
+
+        case ByteProto.PARAMETERIZED_TYPE -> $elemlst(2, parameterizedType());
+
+        case ByteProto.TYPE_VARIABLE -> $elemlst(2, typeVariable());
 
         case ByteProto.JMP -> $stackpsh();
 

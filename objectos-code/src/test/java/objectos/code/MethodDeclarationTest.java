@@ -18,6 +18,7 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.io.Serializable;
+import java.util.Map;
 import org.testng.annotations.Test;
 
 public class MethodDeclarationTest {
@@ -297,6 +298,9 @@ public class MethodDeclarationTest {
           method(
             tvar("E"), id("test4")
           );
+          method(
+            t(t(Map.class), tvar("K"), tvar("V")), id("test5")
+          );
         }
       }.toString(),
 
@@ -310,6 +314,8 @@ public class MethodDeclarationTest {
       java.lang.Integer test3() {}
 
       E test4() {}
+
+      java.util.Map<K, V> test5() {}
       """
     );
   }

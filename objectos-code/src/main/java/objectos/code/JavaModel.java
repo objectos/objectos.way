@@ -167,6 +167,7 @@ public final class JavaModel {
       extends
       ClassDeclarationElement,
       EnumDeclarationElement,
+      FieldDeclarationElement,
       InterfaceDeclarationElement,
       MethodDeclarationElement, MethodInvocationElement {}
 
@@ -237,6 +238,7 @@ public final class JavaModel {
 
   public sealed interface ReferenceType
       extends
+      AnyType,
       ArrayTypeComponent,
       FormalParameterElement,
       MethodDeclarationElement {}
