@@ -512,6 +512,8 @@ class InternalCompiler extends InternalApi {
           $elemset(2, objectString());
         }
 
+        case ByteProto.IMPLEMENTS -> typeList(5);
+
         case ByteProto.METHOD_DECLARATION -> $elemlst(7, methodDeclaration());
 
         case ByteProto.MODIFIER -> {

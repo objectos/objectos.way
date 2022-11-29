@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.Serializable;
 import org.testng.annotations.Test;
 
 public class ClassDeclarationTest {
@@ -206,6 +207,37 @@ public class ClassDeclarationTest {
       abstract class E {}
 
       final class F {}
+      """
+    );
+  }
+
+  @Test(description = """
+  Class declarations TC07
+
+  - implements clause
+  """)
+  public void testCase07() {
+    var iface1 = ClassName.of(AutoCloseable.class);
+    var iface2 = ClassName.of(Serializable.class);
+
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(id("A"), _implements(iface1));
+
+          _class(id("B"), _implements(iface1, iface2));
+
+          _class(id("C"), _extends(ClassName.of(Foo.class)), _implements(iface1, iface2));
+        }
+      }.toString(),
+
+      """
+      class A implements java.lang.AutoCloseable {}
+
+      class B implements java.lang.AutoCloseable, java.io.Serializable {}
+
+      class C extends objectos.code.Foo implements java.lang.AutoCloseable, java.io.Serializable {}
       """
     );
   }

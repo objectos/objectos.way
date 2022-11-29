@@ -466,11 +466,16 @@ abstract class InternalInterpreter extends InternalCompiler {
       $codentr();
       extendsSingle();
       $codexit();
+
+      prevSection = true;
     }
 
     if ($nextjmp()) {
-      throw new UnsupportedOperationException(
-        "Implement me :: implements");
+      writeSpaceIf(prevSection);
+
+      $codentr();
+      implementsClause();
+      $codexit();
     }
 
     if ($nextjmp()) {
@@ -818,12 +823,8 @@ abstract class InternalInterpreter extends InternalCompiler {
     if ($nextjmp()) {
       writeSpaceIf(prevSection);
 
-      write("implements");
-
-      writeSpace();
-
       $codentr();
-      typeList();
+      implementsClause();
       $codexit();
     }
 
@@ -1122,6 +1123,14 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   private void identifier() {
     objectString();
+  }
+
+  private void implementsClause() {
+    write("implements");
+
+    writeSpace();
+
+    typeList();
   }
 
   private void importDeclarationList() {
