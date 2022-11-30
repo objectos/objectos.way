@@ -636,6 +636,12 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
+  public final ClassOrInterfaceType t(String packageName, String simpleName) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+
+    return JavaModel.REF;
+  }
+
   public final TypeParameter tparam(String name, TypeParameterBound[] bounds) {
     identifier(name);
 

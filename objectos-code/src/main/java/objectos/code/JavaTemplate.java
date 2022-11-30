@@ -351,6 +351,10 @@ public abstract class JavaTemplate {
     return api().t(rawType, arguments);
   }
 
+  protected final ClassOrInterfaceType t(String packageName, String simpleName) {
+    return api().t(packageName, simpleName);
+  }
+
   protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {
     return api().tparam(name, bounds);
   }
