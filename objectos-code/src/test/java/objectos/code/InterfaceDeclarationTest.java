@@ -84,22 +84,18 @@ public class InterfaceDeclarationTest {
   - extends clause
   """)
   public void testCase03() {
-    var a = ClassName.of(IfaceA.class);
-    var b = ClassName.of(IfaceB.class);
-    var c = ClassName.of(IfaceC.class);
-
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _interface(id("A"), _extends(a));
+          _interface(id("A"), _extends(t(IfaceA.class)));
 
-          _interface(id("B"), _extends(a, b));
+          _interface(id("B"), _extends(t(IfaceA.class), t(IfaceB.class)));
 
           _interface(
             id("C"),
-            _extends(a, b),
-            _extends(c)
+            _extends(t(IfaceA.class), t(IfaceB.class)),
+            _extends(t(IfaceC.class))
           );
 
           _interface(
@@ -109,9 +105,9 @@ public class InterfaceDeclarationTest {
         }
 
         private void interfaceD() {
-          _extends(a);
-          _extends(b);
-          _extends(c);
+          _extends(t(IfaceA.class));
+          _extends(t(IfaceB.class));
+          _extends(t(IfaceC.class));
         }
       }.toString(),
 

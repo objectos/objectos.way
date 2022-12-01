@@ -177,10 +177,8 @@ public class EnumDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          var iface = ClassName.of(Serializable.class);
-
           _enum(
-            id("Test"), _implements(iface),
+            id("Test"), _implements(t(Serializable.class)),
             enumConstant(id("ONE"))
           );
         }
@@ -197,11 +195,8 @@ public class EnumDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          var iface1 = ClassName.of(AutoCloseable.class);
-          var iface2 = ClassName.of(Serializable.class);
-
           _enum(
-            id("Test"), _implements(iface1, iface2),
+            id("Test"), _implements(t(AutoCloseable.class), t(Serializable.class)),
             enumConstant(id("ONE"))
           );
         }
@@ -225,11 +220,8 @@ public class EnumDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          var test = PackageName.of("test");
-          var iface = ClassName.of(test, "Iface");
-
           _enum(
-            _public(), id("Test"), _implements(iface),
+            _public(), id("Test"), _implements(t("test", "Iface")),
             enumConstant(id("A"), s("a")),
             enumConstant(id("B"), s("b")),
             field(_private(), _final(), t(String.class), id("value")),

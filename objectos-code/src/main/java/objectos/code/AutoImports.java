@@ -15,62 +15,96 @@
  */
 package objectos.code;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.TreeSet;
 import objectos.util.GrowableSet;
 
 public final class AutoImports {
+
+  static final int NAME1 = 1 << 0;
 
   PackageName packageName;
 
   String fileName;
 
-  private final Map<ClassName, Integer> imports = new TreeMap<>();
+  private final StringBuilder canonicalName = new StringBuilder(200);
+
+  private String classTypePackageName;
+
+  private String classTypeSimpleName;
 
   private final GrowableSet<String> simpleNames = new GrowableSet<>();
+
+  private final Set<String> types = new TreeSet<>();
 
   private boolean enabled;
 
   boolean skipJavaLang;
 
-  public final boolean addClassName(ClassName value, int objectIndex) {
+  public final int classTypeInstruction() {
     if (!enabled) {
-      return false;
+      return ByteCode.NOP;
     }
 
-    if (imports.containsKey(value)) {
-      return true;
+    var cname = canonicalName.toString();
+
+    if (types.contains(cname)) {
+      return NAME1;
     }
 
-    var otherPackageName = value.packageName();
-
-    if (canSkipImport(otherPackageName)) {
-      simpleNames.add(value.simpleName);
-
-      return true;
+    if (skipJavaLang && classTypePackageName.equals("java.lang")) {
+      if (simpleNames.add(classTypeSimpleName)) {
+        return NAME1;
+      } else {
+        return ByteCode.NOP;
+      }
     }
 
-    if (simpleNames.add(value.simpleName)) {
-      imports.put(value, objectIndex);
-
-      return true;
+    if (packageName.name.equals(classTypePackageName)) {
+      if (simpleNames.add(classTypeSimpleName)) {
+        return NAME1;
+      } else {
+        return ByteCode.NOP;
+      }
     }
 
-    return false;
+    if (simpleNames.add(classTypeSimpleName)) {
+      types.add(cname);
+
+      return NAME1;
+    }
+
+    return ByteCode.NOP;
+  }
+
+  public final void classTypePackageName(String value) {
+    canonicalName.setLength(0);
+
+    canonicalName.append(value);
+
+    classTypePackageName = value;
+  }
+
+  public final void classTypeSimpleName(String value) {
+    if (canonicalName.length() > 0) {
+      canonicalName.append('.');
+    }
+
+    canonicalName.append(value);
+
+    classTypeSimpleName = value;
   }
 
   public final void clear() {
-    packageName = PackageName.of();
+    enabled = false;
 
-    imports.clear();
+    packageName = PackageName.of();
 
     simpleNames.clear();
 
-    enabled = false;
-
     skipJavaLang = false;
+
+    types.clear();
   }
 
   public final void enable() {
@@ -81,10 +115,6 @@ public final class AutoImports {
 
   public final boolean enabled() {
     return enabled;
-  }
-
-  public final Set<Entry<ClassName, Integer>> entrySet() {
-    return imports.entrySet();
   }
 
   public final void fileName(boolean publicFound, String simpleName) {
@@ -99,12 +129,8 @@ public final class AutoImports {
     packageName = PackageName.of(s);
   }
 
-  private boolean canSkipImport(PackageName otherPackageName) {
-    if (otherPackageName.is("java.lang")) {
-      return skipJavaLang;
-    } else {
-      return packageName.equals(otherPackageName);
-    }
+  public final Set<String> types() {
+    return types;
   }
 
 }

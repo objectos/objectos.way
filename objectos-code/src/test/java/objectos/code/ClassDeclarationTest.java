@@ -217,18 +217,18 @@ public class ClassDeclarationTest {
   - implements clause
   """)
   public void testCase07() {
-    var iface1 = ClassName.of(AutoCloseable.class);
-    var iface2 = ClassName.of(Serializable.class);
-
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(id("A"), _implements(iface1));
+          _class(id("A"), _implements(t(AutoCloseable.class)));
 
-          _class(id("B"), _implements(iface1, iface2));
+          _class(id("B"), _implements(t(AutoCloseable.class), t(Serializable.class)));
 
-          _class(id("C"), _extends(ClassName.of(Foo.class)), _implements(iface1, iface2));
+          _class(
+            id("C"), _extends(t("objectos.code", "Foo")),
+            _implements(t(AutoCloseable.class), t(Serializable.class))
+          );
         }
       }.toString(),
 

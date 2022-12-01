@@ -31,8 +31,6 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("EOF");
     value("LHEAD");
     value("LNEXT");
-    value("LNULL"); // remove
-    value("JMP"); // remove
     value("NEW_LINE");
     value("OBJECT_STRING");
 
@@ -40,8 +38,10 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("ARRAY_INITIALIZER");
     value("ARRAY_TYPE");
+    value("CLASS_TYPE");
     value("DIM");
     value("NO_TYPE");
+    value("PACKAGE_NAME");
     value("PARAMETERIZED_TYPE");
     value("PRIMITIVE_TYPE");
     value("QUALIFIED_NAME");
@@ -61,7 +61,6 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("CLASS");
     value("MODIFIER");
     value("EXTENDS_SINGLE");
-    value("IDENTIFIER"); // remove
 
     comment("field");
 

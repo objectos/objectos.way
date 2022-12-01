@@ -33,7 +33,7 @@ import objectos.code.JavaModel.ChainedMethodInvocationHead;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
-import objectos.code.JavaModel.ClassOrInterfaceType;
+import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
 import objectos.code.JavaModel.Ellipsis;
@@ -64,7 +64,7 @@ import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLineRef;
-import objectos.code.JavaModel.ParameterizedTypeInvocation;
+import objectos.code.JavaModel.ParameterizedClassType;
 import objectos.code.JavaModel.PrimaryExpression;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
@@ -132,19 +132,19 @@ public abstract class JavaTemplate {
     throw new UnsupportedOperationException();
   }
 
-  protected final ExtendsSingle _extends(ClassName value) {
-    return api()._extends(value);
+  protected final ExtendsMany _extends(ClassType... interfaces) {
+    return api()._extends(interfaces);
   }
 
-  protected final ExtendsMany _extends(ClassName... interfaces) {
-    return api()._extends(interfaces);
+  protected final ExtendsSingle _extends(ClassType value) {
+    return api()._extends(value);
   }
 
   protected final FinalModifier _final() {
     return api()._final();
   }
 
-  protected final Implements _implements(ClassName... interfaces) {
+  protected final Implements _implements(ClassType... interfaces) {
     return api()._implements(interfaces);
   }
 
@@ -157,7 +157,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassInstanceCreationExpression _new(
-      ClassOrInterfaceType type, Expression... arguments) {
+      ClassType type, Expression... arguments) {
     return api()._new(type, arguments);
   }
 
@@ -205,11 +205,11 @@ public abstract class JavaTemplate {
     return api().aget(reference, expressions);
   }
 
-  protected final AnnotationInvocation annotation(ClassOrInterfaceType annotationType) {
+  protected final AnnotationInvocation annotation(ClassType annotationType) {
     return api().annotation(annotationType);
   }
 
-  protected final AnnotationInvocation annotation(ClassOrInterfaceType annotationType,
+  protected final AnnotationInvocation annotation(ClassType annotationType,
       AnnotationElementValue value) {
     return api().annotation(annotationType, value);
   }
@@ -267,7 +267,7 @@ public abstract class JavaTemplate {
   }
 
   protected final QualifiedMethodInvocation invoke(
-      ClassOrInterfaceType typeName, String methodName, MethodInvocationElement... elements) {
+      ClassType typeName, String methodName, MethodInvocationElement... elements) {
     return api().invoke(typeName, methodName, elements);
   }
 
@@ -296,12 +296,12 @@ public abstract class JavaTemplate {
   }
 
   @Deprecated
-  protected final ExpressionName n(ClassName name) {
+  protected final ExpressionName n(ClassType type) {
     throw new UnsupportedOperationException();
   }
 
-  protected final ExpressionName n(ClassName name, String... identifiers) {
-    return api().n(name, identifiers);
+  protected final ExpressionName n(ClassType type, String... identifiers) {
+    return api().n(type, identifiers);
   }
 
   protected final ExpressionName n(String... identifiers) {
@@ -338,20 +338,16 @@ public abstract class JavaTemplate {
     return api().t(type, elements);
   }
 
-  protected final ClassOrInterfaceType t(Class<?> value) {
+  protected final ClassType t(Class<?> value) {
     return api().t(value);
   }
 
-  protected final ClassOrInterfaceType t(ClassName name) {
-    return api().t(name);
-  }
-
-  protected final ParameterizedTypeInvocation t(
-      ClassOrInterfaceType rawType, AnyType... arguments) {
+  protected final ParameterizedClassType t(
+      ClassType rawType, AnyType... arguments) {
     return api().t(rawType, arguments);
   }
 
-  protected final ClassOrInterfaceType t(String packageName, String simpleName) {
+  protected final ClassType t(String packageName, String simpleName) {
     return api().t(packageName, simpleName);
   }
 

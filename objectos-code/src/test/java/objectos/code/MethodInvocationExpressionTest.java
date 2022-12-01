@@ -173,7 +173,7 @@ public class MethodInvocationExpressionTest {
           invoke(n("a"), "x");
           invoke(n("b"), "y", s("1"));
           invoke(n("c"), "z", s("1"), s("2"));
-          invoke(n(ClassName.of(Foo.class), "CTE"), "m");
+          invoke(n(t(Foo.class), "CTE"), "m");
         }
       }.toString(),
 

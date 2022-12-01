@@ -83,7 +83,7 @@ public final class JavaModel {
       ExpressionStatement,
       PrimaryExpression {}
 
-  public sealed interface ClassOrInterfaceType
+  public sealed interface ClassType
       extends
       AnyType,
       ReferenceType,
@@ -208,7 +208,7 @@ public final class JavaModel {
   public sealed interface NewLineRef
       extends ChainedMethodInvocationElement, MethodInvocationElement {}
 
-  public sealed interface ParameterizedTypeInvocation
+  public sealed interface ParameterizedClassType
       extends
       AnyType,
       FieldDeclarationElement,
@@ -304,7 +304,7 @@ public final class JavaModel {
       AssignmentExpression,
       ChainedMethodInvocation,
       ClassDeclaration,
-      ClassOrInterfaceType,
+      ClassType,
       ClassInstanceCreationExpression,
       ConstructorDeclaration,
       Ellipsis,
@@ -325,7 +325,7 @@ public final class JavaModel {
       LocalVariableDeclarationRef,
       MethodDeclaration,
       NewLineRef,
-      ParameterizedTypeInvocation,
+      ParameterizedClassType,
       PrimitiveType,
       PrivateModifier,
       ProtectedModifier,

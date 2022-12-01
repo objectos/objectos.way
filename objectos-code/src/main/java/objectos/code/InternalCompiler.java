@@ -300,7 +300,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemset(1, className());
+        case ByteProto.CLASS_TYPE -> $elemset(1, classType(true));
 
         case ByteProto.STRING_LITERAL -> $elemlst(2, stringLiteral());
 
@@ -379,7 +379,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemset(1, className());
+        case ByteProto.CLASS_TYPE -> $elemset(1, classType(true));
 
         case ByteProto.DIM -> $elemlst(2, arrayTypeDim());
 
@@ -548,7 +548,7 @@ class InternalCompiler extends InternalApi {
       ByteCode.NOP, // qualifier = 1
       ByteCode.NOP, // ctypeargs = 2
       ByteCode.NOP, // type = 3
-      ByteCode.NOP, // teargs = 4
+      ByteCode.NOP, // targs = 4
       ByteCode.NOP, // args = 5
       ByteCode.NOP // cbody = 6
     );
@@ -563,7 +563,7 @@ class InternalCompiler extends InternalApi {
       }
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemset(3, className());
+        case ByteProto.CLASS_TYPE -> $elemset(3, classType(true));
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -576,16 +576,69 @@ class InternalCompiler extends InternalApi {
     return $elempop();
   }
 
-  private int className() {
-    var proto = $protonxt();
+  /*
+  * t("com.example", "Foo");
+  * -> com.example.Foo
+  *
+  * t("com.example", at(t(A.class)), "Foo");
+  * -> com.example. @A Foo
+  *
+  * t("com.example", at(t(A.class)), at(t(B.class), "Foo");
+  * -> com.example. @A @B Foo
+  *
+  * t(t("com.example", "Foo"), "Bar");
+  * -> com.example.Foo.Bar
+  *
+  * t(t("com.example", "Foo"), at(t(A.class)), "Bar");
+  * -> com.example.Foo. @A Bar
+  *
+  * t(t("com.example", at(t(A.class)), "Foo"), at(t(B.class)), "Bar");
+  * -> com.example. @A Foo. @B Bar
+  */
+  private int classType(boolean topLevel) {
+    $elemadd(
+      ByteCode.CLASS_TYPE,
+      ByteCode.NOP, // auto imports instructions = 1
+      ByteCode.NOP, // enclosing = 2
+      ByteCode.NOP, // annotations = 3
+      ByteCode.NOP /// name = 4
+    );
 
-    var o = (ClassName) objectArray[proto];
+    loop: while ($prototru()) {
+      var proto = $protonxt();
 
-    var code = autoImports.addClassName(o, proto)
-        ? ByteCode.SIMPLE_NAME
-        : ByteCode.QUALIFIED_NAME;
+      switch (proto) {
+        case ByteProto.CLASS_TYPE -> $elemset(2, classType(false));
 
-    return $simpleadd(code, proto);
+        case ByteProto.PACKAGE_NAME -> {
+          var value = (String) $objget();
+
+          autoImports.classTypePackageName(value);
+
+          $elemset(2, packageName());
+        }
+
+        case ByteProto.SIMPLE_NAME -> {
+          var value = (String) $objget();
+
+          autoImports.classTypeSimpleName(value);
+
+          $elemset(4, objectString());
+        }
+
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    if (topLevel) {
+      $elemset(1, autoImports.classTypeInstruction());
+    }
+
+    return $elempop();
   }
 
   private int compilationUnit() {
@@ -618,7 +671,7 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.BREAK -> {
           if (autoImports.enabled()) {
-            importDeclarations(2);
+            $elemset(2, 1);
           }
 
           break loop;
@@ -823,7 +876,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemset(1, className());
+        case ByteProto.CLASS_TYPE -> $elemset(1, classType(true));
 
         case ByteProto.IDENTIFIER -> $elemlst(2, objectString());
 
@@ -854,7 +907,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemlst(1, className());
+        case ByteProto.CLASS_TYPE -> $elemlst(1, classType(true));
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -877,7 +930,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemset(1, className());
+        case ByteProto.CLASS_TYPE -> $elemset(1, classType(true));
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -940,7 +993,7 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.ARRAY_TYPE -> $elemset(2, arrayType());
 
-        case ByteProto.CLASS_NAME -> $elemset(2, className());
+        case ByteProto.CLASS_TYPE -> $elemset(2, classType(true));
 
         case ByteProto.IDENTIFIER -> {
           switch (state) {
@@ -1022,7 +1075,7 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.ARRAY_TYPE -> $elemset(3, arrayType());
 
-        case ByteProto.CLASS_NAME -> $elemset(3, className());
+        case ByteProto.CLASS_TYPE -> $elemset(3, classType(true));
 
         case ByteProto.ELLIPSIS -> { $elemset(2, 1); $stackpop(); }
 
@@ -1041,20 +1094,6 @@ class InternalCompiler extends InternalApi {
     }
 
     return $elempop();
-  }
-
-  private void importDeclarations(int offset) {
-    var entries = autoImports.entrySet();
-
-    for (var entry : entries) {
-      var self = codeIndex;
-
-      Integer value = entry.getValue();
-
-      $codeadd(ByteCode.IMPORT, value);
-
-      $elemlst(offset, self);
-    }
   }
 
   private int interfaceDeclaration(boolean topLevel) {
@@ -1164,7 +1203,7 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.ARRAY_TYPE -> $elemset(3, arrayType());
 
-        case ByteProto.CLASS_NAME -> $elemset(3, className());
+        case ByteProto.CLASS_TYPE -> $elemset(3, classType(true));
 
         case ByteProto.FORMAL_PARAMETER -> $elemlst(6, formalParameter());
 
@@ -1218,7 +1257,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemset(1, className());
+        case ByteProto.CLASS_TYPE -> $elemset(1, classType(true));
 
         case ByteProto.IDENTIFIER -> $elemset(3, objectString());
 
@@ -1283,6 +1322,10 @@ class InternalCompiler extends InternalApi {
     return $elempop();
   }
 
+  private int packageName() {
+    return $simpleadd(ByteCode.PACKAGE_NAME, $protonxt());
+  }
+
   private int parameterizedType() {
     $elemadd(
       ByteCode.PARAMETERIZED_TYPE,
@@ -1296,13 +1339,13 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> {
+        case ByteProto.CLASS_TYPE -> {
           if (!raw) {
-            $elemset(1, className());
+            $elemset(1, classType(true));
 
             raw = true;
           } else {
-            $elemlst(2, className());
+            $elemlst(2, classType(true));
           }
         }
 
@@ -1396,7 +1439,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemlst(offset, className());
+        case ByteProto.CLASS_TYPE -> $elemlst(offset, classType(true));
 
         case ByteProto.JMP -> $stackpsh();
 
@@ -1420,7 +1463,7 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_NAME -> $elemlst(2, className());
+        case ByteProto.CLASS_TYPE -> $elemlst(2, classType(true));
 
         case ByteProto.IDENTIFIER -> $elemset(1, objectString());
 

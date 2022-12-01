@@ -21,8 +21,6 @@ import org.testng.annotations.Test;
 
 public class CompilationUnitTest {
 
-  private final PackageName TEST = PackageName.of("test");
-
   @Test(description = """
   class Foo {}
   """)
@@ -73,13 +71,11 @@ public class CompilationUnitTest {
   public void testCase03() {
     assertEquals(
       new JavaTemplate() {
-        final ClassName _Bar = ClassName.of(TEST, "Bar");
-
         @Override
         protected final void definition() {
           autoImports();
 
-          _class(id("Foo"), _extends(_Bar));
+          _class(id("Foo"), _extends(t("test", "Bar")));
         }
       }.toString(),
 
@@ -97,15 +93,13 @@ public class CompilationUnitTest {
   public void testCase04() {
     assertEquals(
       new JavaTemplate() {
-        final ClassName _Thread = ClassName.of(Thread.class);
-
         @Override
         protected final void definition() {
           _package("test");
 
           autoImports();
 
-          _class(id("Test"), _extends(_Thread));
+          _class(id("Test"), _extends(t(Thread.class)));
         }
       }.toString(),
 
@@ -123,15 +117,13 @@ public class CompilationUnitTest {
   public void testCase05() {
     assertEquals(
       new JavaTemplate() {
-        final ClassName _Bar = ClassName.of(TEST, "Bar");
-
         @Override
         protected final void definition() {
           _package("test");
 
           autoImports();
 
-          _class(id("Test"), _extends(_Bar));
+          _class(id("Test"), _extends(t("test", "Bar")));
         }
       }.toString(),
 
@@ -150,17 +142,13 @@ public class CompilationUnitTest {
   public void testCase06() {
     assertEquals(
       new JavaTemplate() {
-        final ClassName _A = ClassName.of(TEST, "A");
-        final ClassName _B = ClassName.of(TEST, "B");
-        final ClassName _C = ClassName.of(TEST, "C");
-
         @Override
         protected final void definition() {
           autoImports();
 
-          _class(id("Test0"), _extends(_A));
-          _class(id("Test1"), _extends(_B));
-          _class(id("Test2"), _extends(_C));
+          _class(id("Test0"), _extends(t("test", "A")));
+          _class(id("Test1"), _extends(t("test", "B")));
+          _class(id("Test2"), _extends(t("test", "C")));
         }
       }.toString(),
 

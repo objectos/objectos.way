@@ -29,13 +29,13 @@ final class ByteProto {
 
   static final int ARRAY_INITIALIZER = -4;
   static final int ARRAY_TYPE = -5;
-  static final int CLASS_NAME = -6;
-  static final int CLASS_OR_INTERFACE_TYPE = -7;
-  static final int DIM = -8;
-  static final int NO_TYPE = -9;
-  static final int PACKAGE_NAME = -10;
-  static final int PARAMETERIZED_TYPE = -11;
-  static final int PRIMITIVE_TYPE = -12;
+  static final int CLASS_TYPE = -6;
+  static final int DIM = -7;
+  static final int NO_TYPE = -8;
+  static final int PACKAGE_NAME = -9;
+  static final int PARAMETERIZED_TYPE = -10;
+  static final int PRIMITIVE_TYPE = -11;
+  static final int SIMPLE_NAME = -12;
   static final int TYPE_VARIABLE = -13;
 
   //declarations

@@ -34,13 +34,13 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ARRAY_INITIALIZER");
     value("ARRAY_TYPE");
-    value("CLASS_NAME");
-    value("CLASS_OR_INTERFACE_TYPE");
+    value("CLASS_TYPE");
     value("DIM");
     value("NO_TYPE");
     value("PACKAGE_NAME");
     value("PARAMETERIZED_TYPE");
     value("PRIMITIVE_TYPE");
+    value("SIMPLE_NAME");
     value("TYPE_VARIABLE");
 
     comment("declarations");

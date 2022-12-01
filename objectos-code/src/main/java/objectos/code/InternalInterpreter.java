@@ -586,6 +586,60 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
   }
 
+  private void classType() {
+    if ($nextjmp()) {
+      switch (code) {
+        case AutoImports.NAME1 -> {
+          $codenxt();
+
+          classTypeAnnotationsAndSimpleName();
+        }
+
+        default -> $throwuoe();
+      }
+    } else {
+      // write all
+
+      if ($nextjmp()) {
+        $codentr();
+
+        if (code == ByteCode.PACKAGE_NAME) {
+          $codenxt();
+
+          var name = (String) $codeobj();
+
+          if (!name.isEmpty()) {
+            write(name);
+
+            write('.');
+          }
+        } else {
+          classType();
+
+          write('.');
+        }
+
+        $codexit();
+      }
+
+      classTypeAnnotationsAndSimpleName();
+    }
+  }
+
+  private void classTypeAnnotationsAndSimpleName() {
+    if ($nextjmp()) {
+      throw new UnsupportedOperationException("Implement me annotations");
+    }
+
+    if ($nextjmp()) {
+      $codentr();
+      objectString();
+      $codexit();
+    } else {
+      $malformed();
+    }
+  }
+
   private void compilationUnit() {
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
@@ -604,11 +658,23 @@ abstract class InternalInterpreter extends InternalCompiler {
         writeCompilationUnitSeparator();
       }
 
-      $codentr();
-      importDeclarationList();
-      $codexit();
+      prevSection = false;
 
-      prevSection = true;
+      var types = autoImports.types();
+
+      var iter = types.iterator();
+
+      if (iter.hasNext()) {
+        importType(iter.next());
+
+        prevSection = true;
+
+        while (iter.hasNext()) {
+          writeBeforeNextStatement();
+
+          importType(iter.next());
+        }
+      }
     }
 
     if ($nextjmp()) {
@@ -1133,40 +1199,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     typeList();
   }
 
-  private void importDeclarationList() {
-    if ($lnext()) {
-      $codentr();
-      importDeclarationListItem();
-      $codexit();
+  private void importType(String type) {
+    write("import");
 
-      while ($lnext()) {
-        writeBeforeNextStatement();
+    writeSpace();
 
-        $codentr();
-        importDeclarationListItem();
-        $codexit();
-      }
-    }
-  }
+    write(type);
 
-  private void importDeclarationListItem() {
-    switch (code) {
-      case ByteCode.IMPORT -> {
-        write("import");
-
-        writeSpace();
-
-        $codenxt();
-
-        var o = objectArray[code];
-
-        write(o.toString());
-
-        writeSemicolon();
-      }
-
-      default -> $throwuoe();
-    }
+    writeSemicolon();
   }
 
   private void interfaceDeclaration() {
@@ -1625,6 +1665,8 @@ abstract class InternalInterpreter extends InternalCompiler {
           $malformed();
         }
       }
+
+      case ByteCode.CLASS_TYPE -> classType();
 
       case ByteCode.NO_TYPE -> write("void");
 

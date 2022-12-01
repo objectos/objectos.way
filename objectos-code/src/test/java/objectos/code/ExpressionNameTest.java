@@ -55,16 +55,13 @@ public class ExpressionNameTest {
   - base = ClassName
   """)
   public void testCase02() {
-    var pkg = PackageName.of("test");
-    var cn = ClassName.of(pkg, "Suit");
-
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", n(cn, "CLUBS"));
+          invoke("test", n(t("test", "Suit"), "CLUBS"));
 
-          invoke("test", n(cn, "CLUBS", "field"));
+          invoke("test", n(t("test", "Suit"), "CLUBS", "field"));
         }
       }.toString(),
 

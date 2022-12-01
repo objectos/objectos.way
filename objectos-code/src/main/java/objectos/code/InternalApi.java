@@ -36,7 +36,7 @@ import objectos.code.JavaModel.ChainedMethodInvocationHead;
 import objectos.code.JavaModel.ClassDeclaration;
 import objectos.code.JavaModel.ClassDeclarationElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
-import objectos.code.JavaModel.ClassOrInterfaceType;
+import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.ConstructorDeclarationElement;
 import objectos.code.JavaModel.Ellipsis;
@@ -69,7 +69,7 @@ import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLineRef;
-import objectos.code.JavaModel.ParameterizedTypeInvocation;
+import objectos.code.JavaModel.ParameterizedClassType;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
@@ -131,26 +131,22 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ExtendsSingle _extends(ClassName superclass) {
-    className(superclass);
-
+  public final ExtendsSingle _extends(ClassType superclass) {
     markStart();
 
-    markReference();
+    superclass.mark(this);
 
     element(ByteProto.EXTENDS_SINGLE);
 
     return JavaModel.REF;
   }
 
-  public final ExtendsMany _extends(ClassName[] interfaces) {
-    for (var iface : interfaces) {
-      className(iface);
-    }
-
+  public final ExtendsMany _extends(ClassType[] interfaces) {
     markStart();
 
-    markIncrement(interfaces.length);
+    for (var iface : interfaces) {
+      iface.mark(this);
+    }
 
     element(ByteProto.EXTENDS_MANY);
 
@@ -163,14 +159,12 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final Implements _implements(ClassName[] interfaces) {
-    for (var iface : interfaces) {
-      className(iface);
-    }
-
+  public final Implements _implements(ClassType[] interfaces) {
     markStart();
 
-    markIncrement(interfaces.length);
+    for (var iface : interfaces) {
+      iface.mark(this);
+    }
 
     element(ByteProto.IMPLEMENTS);
 
@@ -196,7 +190,7 @@ class InternalApi extends State implements MarkerApi {
   }
 
   public final ClassInstanceCreationExpression _new(
-      ClassOrInterfaceType type, Expression[] arguments) {
+      ClassType type, Expression[] arguments) {
     markStart();
 
     type.mark(this);
@@ -315,7 +309,7 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final AnnotationInvocation annotation(ClassOrInterfaceType annotationType) {
+  public final AnnotationInvocation annotation(ClassType annotationType) {
     markStart();
 
     annotationType.mark(this);
@@ -326,7 +320,7 @@ class InternalApi extends State implements MarkerApi {
   }
 
   public final AnnotationInvocation annotation(
-      ClassOrInterfaceType annotationType, AnnotationElementValue value) {
+      ClassType annotationType, AnnotationElementValue value) {
     markStart();
 
     annotationType.mark(this);
@@ -514,8 +508,8 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ExpressionName n(ClassName name, String... identifiers) {
-    className(name);
+  public final ExpressionName n(ClassType type, String... identifiers) {
+    Objects.requireNonNull(type, "type == null");
 
     for (var identifier : identifiers) {
       identifier(identifier);
@@ -606,23 +600,37 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ClassOrInterfaceType t(Class<?> type) {
-    var cn = ClassName.of(type);
+  public final ClassType t(Class<?> type) {
+    var last = objectIndex;
 
-    object(ByteProto.CLASS_NAME, cn);
+    while (true) {
+      var simpleName = type.getSimpleName();
 
-    return JavaModel.REF;
+      objectAdd(simpleName);
+
+      var outer = type.getEnclosingClass(); // implicit null-check
+
+      if (outer == null) {
+        break;
+      } else {
+        type = outer;
+      }
+    }
+
+    var index = objectIndex - 1;
+
+    var packageName = type.getPackageName();
+
+    var outer = t(packageName, (String) objectArray[index]);
+
+    for (index = index - 1; index >= last; index--) {
+      outer = t(outer, (String) objectArray[index]);
+    }
+
+    return outer;
   }
 
-  public final ClassOrInterfaceType t(ClassName name) {
-    Objects.requireNonNull(name, "name == null");
-
-    object(ByteProto.CLASS_NAME, name);
-
-    return JavaModel.REF;
-  }
-
-  public final ParameterizedTypeInvocation t(ClassOrInterfaceType rawType, AnyType[] arguments) {
+  public final ParameterizedClassType t(ClassType rawType, AnyType[] arguments) {
     markStart();
 
     rawType.mark(this);
@@ -636,8 +644,37 @@ class InternalApi extends State implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ClassOrInterfaceType t(String packageName, String simpleName) {
+  public final ClassType t(ClassType outer, String simpleName) {
+    JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
+
+    object(ByteProto.SIMPLE_NAME, simpleName);
+
+    markStart();
+
+    outer.mark(this);
+
+    markReference();
+
+    element(ByteProto.CLASS_TYPE);
+
+    return JavaModel.REF;
+  }
+
+  public final ClassType t(String packageName, String simpleName) {
     JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
+
+    object(ByteProto.PACKAGE_NAME, packageName);
+
+    object(ByteProto.SIMPLE_NAME, simpleName);
+
+    markStart();
+
+    markReference();
+
+    markReference();
+
+    element(ByteProto.CLASS_TYPE);
 
     return JavaModel.REF;
   }
@@ -686,10 +723,6 @@ class InternalApi extends State implements MarkerApi {
     template.execute(this);
 
     pass0End();
-  }
-
-  private void className(ClassName name) {
-    object(ByteProto.CLASS_NAME, name);
   }
 
   private void identifier(String name) {

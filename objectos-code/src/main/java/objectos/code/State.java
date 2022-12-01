@@ -112,6 +112,16 @@ abstract class State {
     protoAdd(type, objectAdd(value));
   }
 
+  final int objectAdd(Object value) {
+    int result = objectIndex;
+
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    objectArray[objectIndex++] = value;
+
+    return result;
+  }
+
   final Object objget(int index) {
     return objectArray[index];
   }
@@ -139,16 +149,6 @@ abstract class State {
 
   final void protopop() {
     protoIndex = stackArray[--stackIndex];
-  }
-
-  private int objectAdd(Object value) {
-    int result = objectIndex;
-
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    objectArray[objectIndex++] = value;
-
-    return result;
   }
 
 }

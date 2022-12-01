@@ -17,19 +17,9 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class ClassOrInterfaceTypeTest {
-
-  private ClassName Bar;
-
-  @BeforeClass
-  public void _beforeClass() {
-    var comExample = PackageName.of("com.example");
-
-    Bar = ClassName.of(comExample, "Bar");
-  }
+public class ClassTypeTest {
 
   @Test(description = """
   ClassOrInterfaceType TC01
@@ -41,7 +31,7 @@ public class ClassOrInterfaceTypeTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          field(t(Bar), id("a"));
+          field(t("com.example", "Bar"), id("a"));
         }
       }.toString(),
 
