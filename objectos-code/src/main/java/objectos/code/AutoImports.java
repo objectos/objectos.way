@@ -15,15 +15,15 @@
  */
 package objectos.code;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import objectos.util.GrowableMap;
 import objectos.util.GrowableSet;
 
-public final class AutoImports {
+final class AutoImports {
 
-  static final int NAME1 = 1 << 0;
-
-  PackageName packageName;
+  String packageName;
 
   String fileName;
 
@@ -33,9 +33,11 @@ public final class AutoImports {
 
   private String classTypeSimpleName;
 
+  private final Set<String> importTypes = new TreeSet<>();
+
   private final GrowableSet<String> simpleNames = new GrowableSet<>();
 
-  private final Set<String> types = new TreeSet<>();
+  private final Map<String, Integer> visitedTypes = new GrowableMap<>();
 
   private boolean enabled;
 
@@ -48,33 +50,30 @@ public final class AutoImports {
 
     var cname = canonicalName.toString();
 
-    if (types.contains(cname)) {
-      return NAME1;
+    var existing = visitedTypes.get(cname);
+
+    if (existing != null) {
+      return existing.intValue();
     }
 
-    if (skipJavaLang && classTypePackageName.equals("java.lang")) {
+    var result = ByteCode.NOP;
+
+    if (classTypePackageName.equals("java.lang") && skipJavaLang
+        || classTypePackageName.equals(packageName)) {
+
       if (simpleNames.add(classTypeSimpleName)) {
-        return NAME1;
-      } else {
-        return ByteCode.NOP;
+        result = 1;
       }
+
+    } else if (simpleNames.add(classTypeSimpleName)) {
+      result = 1;
+
+      importTypes.add(cname);
     }
 
-    if (packageName.name.equals(classTypePackageName)) {
-      if (simpleNames.add(classTypeSimpleName)) {
-        return NAME1;
-      } else {
-        return ByteCode.NOP;
-      }
-    }
+    visitedTypes.put(cname, result);
 
-    if (simpleNames.add(classTypeSimpleName)) {
-      types.add(cname);
-
-      return NAME1;
-    }
-
-    return ByteCode.NOP;
+    return result;
   }
 
   public final void classTypePackageName(String value) {
@@ -98,13 +97,15 @@ public final class AutoImports {
   public final void clear() {
     enabled = false;
 
-    packageName = PackageName.of();
+    importTypes.clear();
+
+    packageName = "";
 
     simpleNames.clear();
 
     skipJavaLang = false;
 
-    types.clear();
+    visitedTypes.clear();
   }
 
   public final void enable() {
@@ -121,16 +122,12 @@ public final class AutoImports {
     fileName = simpleName + ".java";
   }
 
-  public final void packageName(PackageName packageName) {
-    this.packageName = packageName;
-  }
-
   public final void packageName(String s) {
-    packageName = PackageName.of(s);
+    packageName = s;
   }
 
   public final Set<String> types() {
-    return types;
+    return importTypes;
   }
 
 }

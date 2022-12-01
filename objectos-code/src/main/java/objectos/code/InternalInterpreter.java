@@ -46,11 +46,11 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeComma();
 
-  protected abstract void writeCompilationUnitEnd(PackageName packageName, String fileName);
+  protected abstract void writeCompilationUnitEnd(String packageName, String fileName);
 
   protected abstract void writeCompilationUnitSeparator();
 
-  protected abstract void writeCompilationUnitStart(PackageName packageName, String fileName);
+  protected abstract void writeCompilationUnitStart(String packageName, String fileName);
 
   protected abstract void writeIndentation();
 
@@ -589,7 +589,7 @@ abstract class InternalInterpreter extends InternalCompiler {
   private void classType() {
     if ($nextjmp()) {
       switch (code) {
-        case AutoImports.NAME1 -> {
+        case 1 -> {
           $codenxt();
 
           classTypeAnnotationsAndSimpleName();
@@ -1712,22 +1712,6 @@ abstract class InternalInterpreter extends InternalCompiler {
         var type = (PrimitiveTypeKind) $codeobj();
 
         write(type.toString());
-      }
-
-      case ByteCode.QUALIFIED_NAME -> {
-        $codenxt();
-
-        var qname = (ClassName) $codeobj();
-
-        write(qname.toString());
-      }
-
-      case ByteCode.SIMPLE_NAME -> {
-        $codenxt();
-
-        var sname = (ClassName) $codeobj();
-
-        write(sname.simpleName);
       }
 
       case ByteCode.TYPE_VARIABLE -> {

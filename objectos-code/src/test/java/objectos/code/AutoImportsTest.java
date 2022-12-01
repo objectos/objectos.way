@@ -35,7 +35,8 @@ public class AutoImportsTest {
     autoImports.enable();
     autoImports.packageName("com.example");
 
-    assertEquals(t("java.io", "InputStream"), AutoImports.NAME1);
+    assertEquals(t("java.lang", "String"), 1);
+    assertEquals(t("java.io", "InputStream"), 1);
 
     assertEquals(
       List.copyOf(autoImports.types()),

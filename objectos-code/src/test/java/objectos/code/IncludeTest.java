@@ -15,28 +15,28 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-public class IncludeTest extends AbstractObjectosCodeTest {
+public class IncludeTest {
 
   @Test(description = """
   - single include
   - single statement
   """)
   public void testCase01() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        invoke("test", include(this::body));
-      }
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", include(this::body));
+        }
 
-      private void body() {
-        invoke("foo");
-      }
-    };
-
-    testDefault(
-      tmpl,
+        private void body() {
+          invoke("foo");
+        }
+      }.toString(),
 
       """
       test(foo());
@@ -49,21 +49,19 @@ public class IncludeTest extends AbstractObjectosCodeTest {
   - many statements
   """)
   public void testCase02() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        invoke("test", include(this::body));
-      }
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", include(this::body));
+        }
 
-      private void body() {
-        invoke("a");
-        invoke("b");
-        invoke("c");
-      }
-    };
-
-    testDefault(
-      tmpl,
+        private void body() {
+          invoke("a");
+          invoke("b");
+          invoke("c");
+        }
+      }.toString(),
 
       """
       test(a(), b(), c());
@@ -76,31 +74,29 @@ public class IncludeTest extends AbstractObjectosCodeTest {
   - same level
   """)
   public void testCase03() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        invoke(
-          "test",
-          include(this::body1),
-          invoke("d"),
-          include(this::body2)
-        );
-      }
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke(
+            "test",
+            include(this::body1),
+            invoke("d"),
+            include(this::body2)
+          );
+        }
 
-      private void body1() {
-        invoke("a");
-        invoke("b");
-        invoke("c");
-      }
+        private void body1() {
+          invoke("a");
+          invoke("b");
+          invoke("c");
+        }
 
-      private void body2() {
-        invoke("e");
-        invoke("f");
-      }
-    };
-
-    testDefault(
-      tmpl,
+        private void body2() {
+          invoke("e");
+          invoke("f");
+        }
+      }.toString(),
 
       """
       test(a(), b(), c(), d(), e(), f());

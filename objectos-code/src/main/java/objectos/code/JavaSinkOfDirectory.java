@@ -65,12 +65,40 @@ class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
   }
 
   @Override
-  protected void writeCompilationUnitEnd(PackageName packageName, String fileName) {
+  protected void writeCompilationUnitEnd(String packageName, String fileName) {
     super.writeCompilationUnitEnd(packageName, fileName);
 
-    var packageDirectory = packageName.resolve(directory);
+    var packageDirectory = resolve(packageName, directory);
 
     file = packageDirectory.resolve(fileName);
+  }
+
+  private Path resolve(String name, Path path) {
+    var result = path;
+
+    var beginIndex = 0;
+
+    var endIndex = name.indexOf('.', beginIndex);
+
+    while (endIndex > 0) {
+      var part = name.substring(beginIndex, endIndex);
+
+      result = result.resolve(part);
+
+      beginIndex = endIndex + 1;
+
+      endIndex = name.indexOf('.', beginIndex);
+    }
+
+    endIndex = name.length();
+
+    if (beginIndex < endIndex) {
+      var part = name.substring(beginIndex, endIndex);
+
+      result = result.resolve(part);
+    }
+
+    return result;
   }
 
 }

@@ -105,7 +105,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected void writeCompilationUnitEnd(PackageName packageName, String fileName) {
+  protected void writeCompilationUnitEnd(String packageName, String fileName) {
     writenl();
   }
 
@@ -117,7 +117,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected void writeCompilationUnitStart(PackageName packageName, String fileName) {
+  protected void writeCompilationUnitStart(String packageName, String fileName) {
     length = 0;
 
     level = 0;

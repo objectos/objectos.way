@@ -15,23 +15,23 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
-public class LocalVariableDeclarationTest extends AbstractObjectosCodeTest {
+public class LocalVariableDeclarationTest {
 
   @Test(description = """
   var s = "java";
   """)
   public void testCase01() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        var("s", s("java"));
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          var("s", s("java"));
+        }
+      }.toString(),
 
       """
       var s = "java";
@@ -43,15 +43,13 @@ public class LocalVariableDeclarationTest extends AbstractObjectosCodeTest {
   var s = m("java");
   """)
   public void testCase02() {
-    var tmpl = new JavaTemplate() {
-      @Override
-      protected final void definition() {
-        var("s", invoke("m", s("java")));
-      }
-    };
-
-    testDefault(
-      tmpl,
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          var("s", invoke("m", s("java")));
+        }
+      }.toString(),
 
       """
       var s = m("java");

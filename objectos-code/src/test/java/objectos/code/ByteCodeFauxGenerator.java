@@ -44,8 +44,6 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("PACKAGE_NAME");
     value("PARAMETERIZED_TYPE");
     value("PRIMITIVE_TYPE");
-    value("QUALIFIED_NAME");
-    value("SIMPLE_NAME");
     value("TYPE_VARIABLE");
 
     comment("declarations");
