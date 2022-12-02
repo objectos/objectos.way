@@ -211,8 +211,7 @@ public final class JavaModel {
   public sealed interface ParameterizedClassType
       extends
       AnyType,
-      FieldDeclarationElement,
-      MethodDeclarationElement {}
+      ReferenceType {}
 
   public sealed interface PrimaryExpression
       extends
@@ -240,6 +239,8 @@ public final class JavaModel {
       extends
       AnyType,
       ArrayTypeComponent,
+
+      FieldDeclarationElement,
       FormalParameterElement,
       MethodDeclarationElement {}
 

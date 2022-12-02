@@ -18,6 +18,7 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
 
@@ -208,6 +209,11 @@ public class MethodDeclarationTest {
             _void(), id("test5"),
             param(tvar("N"), id("n"))
           );
+
+          method(
+            _void(), id("test6"),
+            param(t(t(List.class), tvar("N")), id("list"))
+          );
         }
       }.toString(),
 
@@ -223,6 +229,8 @@ public class MethodDeclarationTest {
       void test4(java.lang.String[] args) {}
 
       void test5(N n) {}
+
+      void test6(java.util.List<N> list) {}
       """
     );
   }

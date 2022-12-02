@@ -1081,6 +1081,8 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.IDENTIFIER -> $elemset(4, objectString());
 
+        case ByteProto.PARAMETERIZED_TYPE -> $elemset(3, parameterizedType());
+
         case ByteProto.PRIMITIVE_TYPE -> $elemset(3, primitiveType());
 
         case ByteProto.TYPE_VARIABLE -> $elemset(3, typeVariable());
