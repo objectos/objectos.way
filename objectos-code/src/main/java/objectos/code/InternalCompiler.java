@@ -1259,7 +1259,11 @@ class InternalCompiler extends InternalApi {
       var proto = $protonxt();
 
       switch (proto) {
-        case ByteProto.CLASS_TYPE -> $elemset(1, classType(true));
+        case ByteProto.CLASS_TYPE -> {
+          $elemset(1, classType(true));
+
+          subject = true;
+        }
 
         case ByteProto.IDENTIFIER -> $elemset(3, objectString());
 

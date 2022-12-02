@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Collections;
 import org.testng.annotations.Test;
 
 public class MethodInvocationExpressionTest {
@@ -151,11 +152,14 @@ public class MethodInvocationExpressionTest {
         @Override
         protected final void definition() {
           invoke(t(Thread.class), "currentThread");
+          invoke(t(Collections.class), "sort", n("list"));
         }
       }.toString(),
 
       """
       java.lang.Thread.currentThread();
+
+      java.util.Collections.sort(list);
       """
     );
   }
