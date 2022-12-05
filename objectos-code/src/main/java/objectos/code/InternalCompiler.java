@@ -440,6 +440,27 @@ class InternalCompiler extends InternalApi {
     return $elempop();
   }
 
+  private int block() {
+    $elemadd(
+      ByteCode.BLOCK,
+      ByteCode.NOP /// list = 1
+    );
+
+    loop: while ($prototru()) {
+      var proto = $protonxt();
+
+      switch (proto) {
+        case ByteProto.JMP -> $stackpsh();
+
+        case ByteProto.BREAK -> { break loop; }
+
+        default -> throw $protouoe(proto);
+      }
+    }
+
+    return $elempop();
+  }
+
   private int chainedMethodInvocation() {
     $elemadd(
       ByteCode.CHAINED_METHOD_INVOCATION,
@@ -1401,6 +1422,8 @@ class InternalCompiler extends InternalApi {
 
   private int statement(int proto) {
     return switch (proto) {
+      case ByteProto.BLOCK -> block();
+
       case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
 
       case ByteProto.RETURN_STATEMENT -> returnStatement();

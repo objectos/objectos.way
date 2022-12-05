@@ -100,6 +100,13 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
+  protected void writeBlockStart2() {
+    write('{');
+
+    level++;
+  }
+
+  @Override
   protected void writeComma() {
     write(", ");
   }

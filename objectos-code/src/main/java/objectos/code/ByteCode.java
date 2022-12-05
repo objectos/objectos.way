@@ -83,22 +83,23 @@ final class ByteCode {
 
   //statements
 
-  static final int EXPRESSION_STATEMENT = -38;
-  static final int LOCAL_VARIABLE = -39;
-  static final int RETURN_STATEMENT = -40;
+  static final int BLOCK = -38;
+  static final int EXPRESSION_STATEMENT = -39;
+  static final int LOCAL_VARIABLE = -40;
+  static final int RETURN_STATEMENT = -41;
 
-  //expressions
+  // expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -41;
-  static final int ASSIGNMENT_EXPRESSION = -42;
-  static final int CHAINED_METHOD_INVOCATION = -43;
-  static final int CLASS_INSTANCE_CREATION = -44;
-  static final int EXPRESSION_NAME = -45;
-  static final int FIELD_ACCESS_EXPRESSION0 = -46;
-  static final int METHOD_INVOCATION = -47;
-  static final int PRIMITIVE_LITERAL = -48;
-  static final int STRING_LITERAL = -49;
-  static final int THIS = -50;
+  static final int ARRAY_ACCESS_EXPRESSION = -42;
+  static final int ASSIGNMENT_EXPRESSION = -43;
+  static final int CHAINED_METHOD_INVOCATION = -44;
+  static final int CLASS_INSTANCE_CREATION = -45;
+  static final int EXPRESSION_NAME = -46;
+  static final int FIELD_ACCESS_EXPRESSION0 = -47;
+  static final int METHOD_INVOCATION = -48;
+  static final int PRIMITIVE_LITERAL = -49;
+  static final int STRING_LITERAL = -50;
+  static final int THIS = -51;
 
   private ByteCode() {}
 

@@ -65,6 +65,12 @@ public final class JavaModel {
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
 
+  public sealed interface Block extends Statement {}
+
+  public sealed interface BlockElement extends Markable {}
+
+  public sealed interface BlockStatement extends BlockElement {}
+
   public sealed interface ChainedMethodInvocation extends MethodInvocation {}
 
   public sealed interface ChainedMethodInvocationElement extends Markable {}
@@ -160,6 +166,9 @@ public final class JavaModel {
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
+  public sealed interface IfStatement
+      extends Statement {}
+
   public sealed interface Implements
       extends ClassDeclarationElement, EnumDeclarationElement {}
 
@@ -182,7 +191,7 @@ public final class JavaModel {
   public sealed interface Literal extends PrimaryExpression {}
 
   public sealed interface LocalVariableDeclarationRef
-      extends Statement {}
+      extends BlockStatement {}
 
   public sealed interface Markable {
     void mark(MarkerApi api);
@@ -206,7 +215,7 @@ public final class JavaModel {
   public sealed interface MethodInvocationElement extends Markable {}
 
   public sealed interface NewLineRef
-      extends ChainedMethodInvocationElement, MethodInvocationElement {}
+      extends BlockElement, ChainedMethodInvocationElement, MethodInvocationElement {}
 
   public sealed interface ParameterizedClassType
       extends
@@ -248,7 +257,7 @@ public final class JavaModel {
       extends Statement {}
 
   public sealed interface Statement
-      extends ConstructorDeclarationElement, MethodDeclarationElement {}
+      extends BlockStatement, ConstructorDeclarationElement, MethodDeclarationElement {}
 
   public sealed interface StaticModifier
       extends
@@ -303,6 +312,7 @@ public final class JavaModel {
       ArrayInitializer,
       ArrayType,
       AssignmentExpression,
+      Block,
       ChainedMethodInvocation,
       ClassDeclaration,
       ClassType,
@@ -320,6 +330,7 @@ public final class JavaModel {
       FinalModifier,
       FormalParameter,
       IdentifierRef,
+      IfStatement,
       Implements,
       IntegerLiteral,
       InterfaceDeclaration,

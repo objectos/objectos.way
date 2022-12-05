@@ -30,6 +30,8 @@ import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
 import objectos.code.JavaModel.AssignmentExpression;
+import objectos.code.JavaModel.Block;
+import objectos.code.JavaModel.BlockElement;
 import objectos.code.JavaModel.ChainedMethodInvocation;
 import objectos.code.JavaModel.ChainedMethodInvocationElement;
 import objectos.code.JavaModel.ChainedMethodInvocationHead;
@@ -357,6 +359,18 @@ class InternalApi extends State implements MarkerApi {
 
   public final void autoImports() {
     autoImports.enable();
+  }
+
+  public final Block block(BlockElement[] elements) {
+    markStart();
+
+    for (var element : elements) {
+      element.mark(this);
+    }
+
+    element(ByteProto.BLOCK);
+
+    return JavaModel.REF;
   }
 
   public final ChainedMethodInvocation chain(

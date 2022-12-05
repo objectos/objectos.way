@@ -90,6 +90,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("statements");
 
+    value("BLOCK");
     value("EXPRESSION_STATEMENT");
     value("LOCAL_VARIABLE");
     value("RETURN_STATEMENT");

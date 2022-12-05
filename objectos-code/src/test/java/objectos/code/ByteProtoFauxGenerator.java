@@ -87,6 +87,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("statements");
 
+    value("BLOCK");
     value("LOCAL_VARIABLE");
     value("RETURN_STATEMENT");
 

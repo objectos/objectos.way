@@ -44,6 +44,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeBlockStart();
 
+  protected abstract void writeBlockStart2();
+
   protected abstract void writeComma();
 
   protected abstract void writeCompilationUnitEnd(String packageName, String fileName);
@@ -380,6 +382,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     } else {
       $malformed();
     }
+  }
+
+  private void block() {
+    writeBlockStart2();
+
+    var contents = false;
+
+    writeBlockEnd(contents);
   }
 
   private void chainedMethodInvocation() {
@@ -1574,6 +1584,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   private void statement() {
     switch (code) {
+      case ByteCode.BLOCK -> block();
+
       case ByteCode.EXPRESSION_STATEMENT -> expressionStatement();
 
       case ByteCode.LOCAL_VARIABLE -> localVariableDeclaration();
