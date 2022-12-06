@@ -191,7 +191,7 @@ public final class JavaModel {
   public sealed interface Literal extends PrimaryExpression {}
 
   public sealed interface LocalVariableDeclarationRef
-      extends BlockStatement {}
+      extends BlockStatement, MethodDeclarationElement {}
 
   public sealed interface Markable {
     void mark(MarkerApi api);

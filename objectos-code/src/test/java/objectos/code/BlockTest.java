@@ -41,4 +41,37 @@ public class BlockTest {
     );
   }
 
+  @Test(description = """
+  Blocks TC02
+
+  - statements only
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          block(
+            invoke("a")
+          );
+          block(
+            invoke("a"),
+            invoke("b")
+          );
+        }
+      }.toString(),
+
+      """
+      {
+        a();
+      }
+
+      {
+        a();
+        b();
+      }
+      """
+    );
+  }
+
 }

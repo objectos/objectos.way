@@ -454,7 +454,7 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.BREAK -> { break loop; }
 
-        default -> throw $protouoe(proto);
+        default -> $elemlst(1, statement(proto));
       }
     }
 

@@ -389,6 +389,14 @@ abstract class InternalInterpreter extends InternalCompiler {
 
     var contents = false;
 
+    if ($nextjmp()) {
+      $codentr();
+      methodDeclarationBody(contents);
+      $codexit();
+
+      contents = true;
+    }
+
     writeBlockEnd(contents);
   }
 
