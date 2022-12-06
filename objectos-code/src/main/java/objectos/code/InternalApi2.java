@@ -89,7 +89,7 @@ import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 
-class InternalApi extends State implements MarkerApi, TempInternalApi {
+class InternalApi2 extends State2 implements MarkerApi, TempInternalApi {
 
   @Override
   public final AbstractModifier _abstract() {
@@ -501,6 +501,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.INCLUDE;
   }
 
+  @Override
   public final QualifiedMethodInvocation invoke(
       Markable subject, String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
