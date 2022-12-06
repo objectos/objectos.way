@@ -88,7 +88,7 @@ final class ByteCode {
   static final int LOCAL_VARIABLE = -40;
   static final int RETURN_STATEMENT = -41;
 
-  // expressions
+  //expressions
 
   static final int ARRAY_ACCESS_EXPRESSION = -42;
   static final int ASSIGNMENT_EXPRESSION = -43;
@@ -100,6 +100,12 @@ final class ByteCode {
   static final int PRIMITIVE_LITERAL = -49;
   static final int STRING_LITERAL = -50;
   static final int THIS = -51;
+
+  //v2
+
+  static final int IDENTIFIER = -52;
+  static final int RESERVED_KEYWORD = -53;
+  static final int SEPARATOR = -54;
 
   private ByteCode() {}
 

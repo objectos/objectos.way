@@ -29,6 +29,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("JMP");
     value("BREAK");
     value("NEW_LINE");
+    value("EOF");
 
     comment("types");
 

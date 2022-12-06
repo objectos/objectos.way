@@ -24,82 +24,83 @@ final class ByteProto {
   static final int JMP = -1;
   static final int BREAK = -2;
   static final int NEW_LINE = -3;
+  static final int EOF = -4;
 
   //types
 
-  static final int ARRAY_INITIALIZER = -4;
-  static final int ARRAY_TYPE = -5;
-  static final int CLASS_TYPE = -6;
-  static final int DIM = -7;
-  static final int NO_TYPE = -8;
-  static final int PACKAGE_NAME = -9;
-  static final int PARAMETERIZED_TYPE = -10;
-  static final int PRIMITIVE_TYPE = -11;
-  static final int SIMPLE_NAME = -12;
-  static final int TYPE_VARIABLE = -13;
+  static final int ARRAY_INITIALIZER = -5;
+  static final int ARRAY_TYPE = -6;
+  static final int CLASS_TYPE = -7;
+  static final int DIM = -8;
+  static final int NO_TYPE = -9;
+  static final int PACKAGE_NAME = -10;
+  static final int PARAMETERIZED_TYPE = -11;
+  static final int PRIMITIVE_TYPE = -12;
+  static final int SIMPLE_NAME = -13;
+  static final int TYPE_VARIABLE = -14;
 
   //declarations
 
-  static final int COMPILATION_UNIT = -14;
-  static final int PACKAGE_DECLARATION = -15;
-  static final int TYPE_PARAMETER = -16;
+  static final int COMPILATION_UNIT = -15;
+  static final int PACKAGE_DECLARATION = -16;
+  static final int TYPE_PARAMETER = -17;
 
   //class
 
-  static final int CLASS_DECLARATION = -17;
-  static final int MODIFIER = -18;
-  static final int IDENTIFIER = -19;
-  static final int EXTENDS_SINGLE = -20;
-  static final int IMPLEMENTS = -21;
+  static final int CLASS_DECLARATION = -18;
+  static final int MODIFIER = -19;
+  static final int IDENTIFIER = -20;
+  static final int EXTENDS_SINGLE = -21;
+  static final int IMPLEMENTS = -22;
 
   //field
 
-  static final int FIELD_DECLARATION = -22;
+  static final int FIELD_DECLARATION = -23;
 
   //method/constructor
 
-  static final int METHOD_DECLARATION = -23;
-  static final int FORMAL_PARAMETER = -24;
-  static final int ELLIPSIS = -25;
-  static final int CONSTRUCTOR_DECLARATION = -26;
-  static final int THIS_INVOCATION = -27;
-  static final int SUPER_INVOCATION = -28;
-  static final int QUALIFIED_SUPER_INVOCATION = -29;
+  static final int METHOD_DECLARATION = -24;
+  static final int FORMAL_PARAMETER = -25;
+  static final int ELLIPSIS = -26;
+  static final int CONSTRUCTOR_DECLARATION = -27;
+  static final int THIS_INVOCATION = -28;
+  static final int SUPER_INVOCATION = -29;
+  static final int QUALIFIED_SUPER_INVOCATION = -30;
 
   //enum
 
-  static final int ENUM_DECLARATION = -30;
-  static final int ENUM_CONSTANT = -31;
+  static final int ENUM_DECLARATION = -31;
+  static final int ENUM_CONSTANT = -32;
 
   //interface
 
-  static final int INTERFACE_DECLARATION = -32;
-  static final int EXTENDS_MANY = -33;
+  static final int INTERFACE_DECLARATION = -33;
+  static final int EXTENDS_MANY = -34;
 
   //annotation
 
-  static final int ANNOTATION = -34;
+  static final int ANNOTATION = -35;
 
   //statements
 
-  static final int BLOCK = -35;
-  static final int LOCAL_VARIABLE = -36;
-  static final int RETURN_STATEMENT = -37;
+  static final int BLOCK = -36;
+  static final int LOCAL_VARIABLE = -37;
+  static final int RETURN_STATEMENT = -38;
 
-  // expressions
+  //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -38;
-  static final int ASSIGNMENT_EXPRESSION = -39;
-  static final int ASSIGNMENT_OPERATOR = -40;
-  static final int CHAINED_METHOD_INVOCATION = -41;
-  static final int CLASS_INSTANCE_CREATION0 = -42;
-  static final int EXPRESSION_NAME = -43;
-  static final int FIELD_ACCESS_EXPRESSION0 = -44;
-  static final int METHOD_INVOCATION = -45;
-  static final int METHOD_INVOCATION_QUALIFIED = -46;
-  static final int PRIMITIVE_LITERAL = -47;
-  static final int STRING_LITERAL = -48;
-  static final int THIS = -49;
+  static final int ARRAY_ACCESS_EXPRESSION = -39;
+  static final int ASSIGNMENT_EXPRESSION = -40;
+  static final int ASSIGNMENT_OPERATOR = -41;
+  static final int CHAINED_METHOD_INVOCATION = -42;
+  static final int CLASS_INSTANCE_CREATION0 = -43;
+  static final int EXPRESSION_NAME = -44;
+  static final int FIELD_ACCESS_EXPRESSION0 = -45;
+  static final int METHOD_INVOCATION = -46;
+  static final int METHOD_INVOCATION_QUALIFIED = -47;
+  static final int PRIMITIVE_LITERAL = -48;
+  static final int STRING_LITERAL = -49;
+  static final int THIS = -50;
 
   private ByteProto() {}
 

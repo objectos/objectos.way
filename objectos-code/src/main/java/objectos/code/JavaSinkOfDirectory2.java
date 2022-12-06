@@ -29,6 +29,7 @@ class JavaSinkOfDirectory2 extends JavaSinkOfStringBuilder2 {
   private static final OpenOption[] OVERWRITE = {
       StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
 
+  @SuppressWarnings("unused")
   private final Path directory;
 
   private Path file;
@@ -62,43 +63,6 @@ class JavaSinkOfDirectory2 extends JavaSinkOfStringBuilder2 {
     }
 
     Files.writeString(file, toString(), StandardCharsets.UTF_8, options);
-  }
-
-  @Override
-  protected void writeCompilationUnitEnd(String packageName, String fileName) {
-    super.writeCompilationUnitEnd(packageName, fileName);
-
-    var packageDirectory = resolve(packageName, directory);
-
-    file = packageDirectory.resolve(fileName);
-  }
-
-  private Path resolve(String name, Path path) {
-    var result = path;
-
-    var beginIndex = 0;
-
-    var endIndex = name.indexOf('.', beginIndex);
-
-    while (endIndex > 0) {
-      var part = name.substring(beginIndex, endIndex);
-
-      result = result.resolve(part);
-
-      beginIndex = endIndex + 1;
-
-      endIndex = name.indexOf('.', beginIndex);
-    }
-
-    endIndex = name.length();
-
-    if (beginIndex < endIndex) {
-      var part = name.substring(beginIndex, endIndex);
-
-      result = result.resolve(part);
-    }
-
-    return result;
   }
 
 }

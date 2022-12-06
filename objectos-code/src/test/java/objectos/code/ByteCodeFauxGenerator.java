@@ -24,6 +24,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
   @Override
   public final void execute() {
+    comment(" TO DEPRECATE ");
     comment("internal instructions");
 
     value("ROOT");
@@ -107,5 +108,11 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
     value("THIS");
+
+    comment("v2");
+
+    value("IDENTIFIER");
+    value("RESERVED_KEYWORD");
+    value("SEPARATOR");
   }
 }

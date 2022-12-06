@@ -831,7 +831,7 @@ class InternalApi2 extends State2 implements MarkerApi, TempInternalApi {
 
     protoIndex = 0;
 
-    protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.BREAK);
+    protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.EOF);
   }
 
 }
