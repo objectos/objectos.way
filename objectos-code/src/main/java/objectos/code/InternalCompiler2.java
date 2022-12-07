@@ -147,7 +147,7 @@ class InternalCompiler2 extends InternalApi2 {
   private boolean $parentbitget(int offset, int value) {
     var index = markIndex - offset;
 
-    return (markArray[index] & value) == 1;
+    return (markArray[index] & value) != 0;
   }
 
   private void $parentbitset(int offset, int value) {

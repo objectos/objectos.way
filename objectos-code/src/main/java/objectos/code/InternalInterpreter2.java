@@ -81,6 +81,10 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   private void autoImportsRender() {
     var types = autoImports.types();
 
+    if (types.isEmpty()) {
+      return;
+    }
+
     var iterator = types.iterator();
 
     if (iterator.hasNext()) {
