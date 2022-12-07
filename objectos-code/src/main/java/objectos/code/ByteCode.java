@@ -103,9 +103,12 @@ final class ByteCode {
 
   //v2
 
-  static final int IDENTIFIER = -52;
-  static final int RESERVED_KEYWORD = -53;
-  static final int SEPARATOR = -54;
+  static final int AUTO_IMPORTS = -52;
+  static final int IDENTIFIER = -53;
+  static final int NOP1 = -54;
+  static final int PSEUDO_ELEMENT = -55;
+  static final int RESERVED_KEYWORD = -56;
+  static final int SEPARATOR = -57;
 
   private ByteCode() {}
 

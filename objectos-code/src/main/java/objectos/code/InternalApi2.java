@@ -89,7 +89,7 @@ import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 
-class InternalApi2 extends State2 implements MarkerApi, TempInternalApi {
+class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi {
 
   @Override
   public final AbstractModifier _abstract() {

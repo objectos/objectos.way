@@ -27,7 +27,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("internal instructions");
 
     value("JMP");
-    value("BREAK");
+    value("BREAK"); // rename 2 ELEMENT_END
+    value("OBJECT_END");
     value("NEW_LINE");
     value("EOF");
 

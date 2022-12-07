@@ -111,7 +111,10 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("v2");
 
+    value("AUTO_IMPORTS");
     value("IDENTIFIER");
+    value("NOP1");
+    value("PSEUDO_ELEMENT");
     value("RESERVED_KEYWORD");
     value("SEPARATOR");
   }

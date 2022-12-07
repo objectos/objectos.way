@@ -18,7 +18,7 @@ package objectos.code;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-abstract class State2 {
+abstract class InternalState2 {
 
   final AutoImports autoImports = new AutoImports();
 
@@ -109,7 +109,7 @@ abstract class State2 {
   final void object(int type, Object value) {
     elementAdd(protoIndex);
 
-    protoAdd(type, objectAdd(value));
+    protoAdd(type, objectAdd(value), ByteProto.OBJECT_END);
   }
 
   final int objectAdd(Object value) {

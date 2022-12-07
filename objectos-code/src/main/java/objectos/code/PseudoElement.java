@@ -15,27 +15,16 @@
  */
 package objectos.code;
 
-import java.util.Locale;
+public enum PseudoElement {
 
-public enum ReservedKeyword {
+  BEFORE_NEXT_TOP_LEVEL_ITEM,
 
-  CLASS,
+  BEFORE_NEXT_STATEMENT;
 
-  EXTENDS,
+  private static final PseudoElement[] VALUES = values();
 
-  IMPORT,
-
-  PACKAGE;
-
-  private static final ReservedKeyword[] VALUES = values();
-
-  private final String toString = name().toLowerCase(Locale.US);
-
-  static ReservedKeyword get(int index) {
+  static PseudoElement get(int index) {
     return VALUES[index];
   }
-
-  @Override
-  public final String toString() { return toString; }
 
 }
