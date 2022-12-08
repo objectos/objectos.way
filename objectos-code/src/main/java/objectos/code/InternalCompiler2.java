@@ -334,6 +334,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.PRIMITIVE_TYPE -> loop0(proto, ByteCode.RESERVED_KEYWORD);
 
+      case ByteProto.THIS -> { loopparent(proto); $codeadd(ReservedKeyword.THIS); }
+
       default -> { loopparent(proto); $parentpush(0, proto); }
     }
 
@@ -415,6 +417,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.PACKAGE_DECLARATION -> $codeadd(Separator.SEMICOLON);
 
       case ByteProto.PARAMETERIZED_TYPE -> $codeadd(Separator.GREATER_THAN_SIGN);
+
+      case ByteProto.RETURN_STATEMENT -> $codeadd(Separator.SEMICOLON);
     }
   }
 
@@ -443,6 +447,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.PACKAGE_DECLARATION -> packageDeclaration(child);
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(child);
+
+      case ByteProto.RETURN_STATEMENT -> returnStatement(child);
     }
   }
 
@@ -486,6 +492,12 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     $parentvalinc(1);
+  }
+
+  private void returnStatement(int child) {
+    $codeadd(ReservedKeyword.RETURN);
+
+    $codeadd(PseudoElement.MANDATORY_WHITESPACE);
   }
 
   private void root(int child) {

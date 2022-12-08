@@ -289,9 +289,9 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final ThisKeyword _this() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.THIS);
+    protoAdd(ByteProto.THIS, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }

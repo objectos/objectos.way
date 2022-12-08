@@ -43,7 +43,11 @@ public enum ReservedKeyword {
 
   PUBLIC,
 
-  STATIC;
+  RETURN,
+
+  STATIC,
+
+  THIS;
 
   private static final ReservedKeyword[] VALUES = values();
 
