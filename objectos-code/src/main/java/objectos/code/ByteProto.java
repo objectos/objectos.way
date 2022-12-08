@@ -29,16 +29,19 @@ final class ByteProto {
 
   //types
 
-  static final int ARRAY_INITIALIZER = -6;
-  static final int ARRAY_TYPE = -7;
-  static final int CLASS_TYPE = -8;
-  static final int DIM = -9;
-  static final int NO_TYPE = -10;
-  static final int PACKAGE_NAME = -11;
-  static final int PARAMETERIZED_TYPE = -12;
-  static final int PRIMITIVE_TYPE = -13;
-  static final int SIMPLE_NAME = -14;
-  static final int TYPE_VARIABLE = -15;
+  static final int ARRAY_TYPE = -6;
+  static final int CLASS_TYPE = -7;
+  static final int NO_TYPE = -8;
+  static final int PARAMETERIZED_TYPE = -9;
+  static final int PRIMITIVE_TYPE = -10;
+  static final int TYPE_VARIABLE = -11;
+
+  //type aux
+
+  static final int ARRAY_INITIALIZER = -12;
+  static final int DIM = -13;
+  static final int PACKAGE_NAME = -14;
+  static final int SIMPLE_NAME = -15;
 
   //declarations
 
@@ -120,6 +123,11 @@ final class ByteProto {
 
       default -> false;
     };
+  }
+
+  public static boolean isType(int proto) {
+    return proto <= ARRAY_TYPE
+        && proto >= TYPE_VARIABLE;
   }
 
 }

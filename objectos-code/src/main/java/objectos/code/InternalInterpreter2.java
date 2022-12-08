@@ -23,11 +23,19 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
   protected abstract void writeIdentifier(String name);
 
+  protected abstract void writeLiteral(String value);
+
+  protected abstract void writeName(String name);
+
+  protected abstract void writeOperator(Operator2 operator);
+
   protected abstract void writePseudoElement(PseudoElement value);
 
   protected abstract void writeReservedKeyword(ReservedKeyword value);
 
   protected abstract void writeSeparator(Separator value);
+
+  protected abstract void writeStringLiteral(String value);
 
   final void pass2() {
     codeIndex = 0;
@@ -59,13 +67,21 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
       case ByteCode.IDENTIFIER -> identifier();
 
+      case ByteCode.NAME -> name();
+
       case ByteCode.NOP1 -> $codenxt();
+
+      case ByteCode.OPERATOR -> operator();
+
+      case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();
 
       case ByteCode.PSEUDO_ELEMENT -> pseudoElement();
 
       case ByteCode.RESERVED_KEYWORD -> reservedKeyword();
 
       case ByteCode.SEPARATOR -> separator();
+
+      case ByteCode.STRING_LITERAL -> stringLiteral();
 
       default -> throw $uoe_code(code);
     }
@@ -103,6 +119,8 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   private void autoImportsRenderItem(String type) {
     writeReservedKeyword(ReservedKeyword.IMPORT);
 
+    writePseudoElement(PseudoElement.MANDATORY_WHITESPACE);
+
     writeIdentifier(type);
 
     writeSeparator(Separator.SEMICOLON);
@@ -114,6 +132,30 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     var name = (String) objectArray[index];
 
     writeIdentifier(name);
+  }
+
+  private void name() {
+    var index = $codenxt();
+
+    var name = (String) objectArray[index];
+
+    writeName(name);
+  }
+
+  private void operator() {
+    var index = $codenxt();
+
+    var value = Operator2.get(index);
+
+    writeOperator(value);
+  }
+
+  private void primitiveLiteral() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeLiteral(value);
   }
 
   private void pseudoElement() {
@@ -138,6 +180,14 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     var value = Separator.get(index);
 
     writeSeparator(value);
+  }
+
+  private void stringLiteral() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeStringLiteral(value);
   }
 
 }

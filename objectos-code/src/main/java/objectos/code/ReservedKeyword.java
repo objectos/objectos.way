@@ -19,13 +19,31 @@ import java.util.Locale;
 
 public enum ReservedKeyword {
 
+  ABSTRACT,
+
+  BOOLEAN,
+
   CLASS,
+
+  DOUBLE,
 
   EXTENDS,
 
+  FINAL,
+
   IMPORT,
 
-  PACKAGE;
+  INT,
+
+  PACKAGE,
+
+  PRIVATE,
+
+  PROTECTED,
+
+  PUBLIC,
+
+  STATIC;
 
   private static final ReservedKeyword[] VALUES = values();
 

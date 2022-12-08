@@ -15,20 +15,30 @@
  */
 package objectos.code;
 
-public enum PseudoElement {
+public enum Operator2 {
 
-  BEFORE_NEXT_TOP_LEVEL_ITEM,
+  /*
 
-  BEFORE_NEXT_STATEMENT,
+  =   >   <   !   ~   ?   :   ->
+  ==  >=  <=  !=  &&  ||  ++  --
+  +   -   *   /   &   |   ^   %   <<   >>   >>>
+  +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
 
-  MANDATORY_WHITESPACE,
+   */
 
-  OPTIONAL_WHITESPACE;
+  ASSIGNMENT("=");
 
-  private static final PseudoElement[] VALUES = values();
+  private static final Operator2[] VALUES = values();
 
-  static PseudoElement get(int index) {
+  private final String word;
+
+  private Operator2(String word) { this.word = word; }
+
+  static Operator2 get(int index) {
     return VALUES[index];
   }
+
+  @Override
+  public final String toString() { return word; }
 
 }

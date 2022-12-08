@@ -31,23 +31,14 @@ public class FieldDeclarationTest {
         @Override
         protected final void definition() {
           field(t(String.class), id("name"));
-        }
-      }.toString(),
 
-      """
-      java.lang.String name;
-      """
-    );
-
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
           field(t(String.class), id("a"), id("b"), id("c"));
         }
       }.toString(),
 
       """
+      java.lang.String name;
+
       java.lang.String a, b, c;
       """
     );
@@ -62,37 +53,19 @@ public class FieldDeclarationTest {
         @Override
         protected final void definition() {
           field(_private(), t(String.class), id("a"));
+
+          field(_private(), _final(), t(String.class), id("b"));
+
+          field(_private(), _static(), _final(), t(String.class), id("c"));
         }
       }.toString(),
 
       """
       private java.lang.String a;
-      """
-    );
 
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          field(_private(), _final(), t(String.class), id("a"));
-        }
-      }.toString(),
+      private final java.lang.String b;
 
-      """
-      private final java.lang.String a;
-      """
-    );
-
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          field(_private(), _static(), _final(), t(String.class), id("a"));
-        }
-      }.toString(),
-
-      """
-      private static final java.lang.String a;
+      private static final java.lang.String c;
       """
     );
   }
@@ -105,24 +78,15 @@ public class FieldDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          field(t(String.class), id("a"), s("init"));
-        }
-      }.toString(),
+          field(t(String.class), id("x"), s("init"));
 
-      """
-      java.lang.String a = "init";
-      """
-    );
-
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
           field(t(String.class), id("a"), s("a"), id("b"), id("c"), s("c"));
         }
       }.toString(),
 
       """
+      java.lang.String x = "init";
+
       java.lang.String a = "a", b, c = "c";
       """
     );

@@ -19,7 +19,7 @@ public enum Separator {
 
   LEFT_PARENTHESIS("("),
 
-  RIGH_PARENTHESIS(")"),
+  RIGHT_PARENTHESIS(")"),
 
   LEFT_CURLY_BRACKET("{"),
 
@@ -39,7 +39,14 @@ public enum Separator {
 
   COMMERCIAL_AT("@"),
 
-  DOUBLE_COLON("::");
+  DOUBLE_COLON("::"),
+
+  // these are JLS operators...
+  // but should be treated as separators in parameterized types.
+
+  LESS_THAN_SIGN("<"),
+
+  GREATER_THAN_SIGN(">");
 
   private static final Separator[] VALUES = values();
 

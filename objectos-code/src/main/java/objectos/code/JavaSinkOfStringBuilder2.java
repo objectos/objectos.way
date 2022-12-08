@@ -38,9 +38,22 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
   @Override
   protected final void writeIdentifier(String name) {
-    writeSpaceIfNecessary();
-
     out.append(name);
+  }
+
+  @Override
+  protected final void writeLiteral(String value) {
+    out.append(value);
+  }
+
+  @Override
+  protected final void writeName(String name) {
+    out.append(name);
+  }
+
+  @Override
+  protected final void writeOperator(Operator2 operator) {
+    out.append(operator.toString());
   }
 
   @Override
@@ -50,42 +63,39 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
       case BEFORE_NEXT_STATEMENT -> writenl();
 
+      case MANDATORY_WHITESPACE, OPTIONAL_WHITESPACE -> out.append(' ');
+
       default -> {}
     }
   }
 
   @Override
   protected final void writeReservedKeyword(ReservedKeyword value) {
-    writeSpaceIfNecessary();
-
     out.append(value);
   }
 
   @Override
   protected final void writeSeparator(Separator value) {
     switch (value) {
-      case LEFT_CURLY_BRACKET -> writeSpaceIfNecessary();
+      case COMMA -> out.append(", ");
 
-      default -> {}
+      default -> out.append(value);
     }
-
-    out.append(value);
   }
 
-  private boolean startOfLine() {
-    return out.length() == markIndex;
+  @Override
+  protected final void writeStringLiteral(String value) {
+    out.append('"');
+
+    out.append(value);
+
+    out.append('"');
   }
 
   private void writenl() {
     out.append(System.lineSeparator());
 
     markIndex = out.length();
-  }
-
-  private void writeSpaceIfNecessary() {
-    if (!startOfLine()) {
-      out.append(' ');
-    }
   }
 
 }
