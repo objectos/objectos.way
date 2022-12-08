@@ -503,7 +503,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
   @Override
   public final QualifiedMethodInvocation invoke(
       Markable subject, String methodName, MethodInvocationElement[] elements) {
-    identifier(methodName);
+    invokeMethodName(methodName);
 
     markStart();
 
@@ -523,7 +523,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
   @Override
   public final UnqualifiedMethodInvocation invoke(
       String methodName, MethodInvocationElement[] elements) {
-    identifier(methodName);
+    invokeMethodName(methodName);
 
     markStart();
 
@@ -616,9 +616,9 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final NewLineRef nl() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.NEW_LINE);
+    protoAdd(ByteProto.NEW_LINE, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }
@@ -799,6 +799,12 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
     );
 
     object(ByteProto.IDENTIFIER, name);
+  }
+
+  private void invokeMethodName(String methodName) {
+    JavaModel.checkMethodName(methodName);
+
+    object(ByteProto.INVOKE_METHOD_NAME, methodName);
   }
 
   private void modifier(ReservedKeyword value) {

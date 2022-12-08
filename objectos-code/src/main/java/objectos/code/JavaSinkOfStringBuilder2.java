@@ -63,7 +63,13 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
       case BEFORE_NEXT_STATEMENT -> writenl();
 
-      case MANDATORY_WHITESPACE, OPTIONAL_WHITESPACE -> out.append(' ');
+      case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
+
+      case INDENTATION -> {
+        for (int i = 0, l = level(); i < l; i++) {
+          out.append("  ");
+        }
+      }
 
       default -> {}
     }
@@ -77,7 +83,9 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
   @Override
   protected final void writeSeparator(Separator value) {
     switch (value) {
-      case COMMA -> out.append(", ");
+      case LEFT_PARENTHESIS -> { levelIncrease(); out.append(value); }
+
+      case RIGHT_PARENTHESIS -> { levelDecrease(); out.append(value); }
 
       default -> out.append(value);
     }
@@ -90,6 +98,27 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
     out.append(value);
 
     out.append('"');
+  }
+
+  @Override
+  protected final void writeWhitespace(Whitespace value) {
+    switch (value) {
+      case MANDATORY, OPTIONAL -> out.append(' ');
+
+      case NEW_LINE -> writenl();
+    }
+  }
+
+  private int level() {
+    return protoIndex;
+  }
+
+  private void levelDecrease() {
+    protoIndex--;
+  }
+
+  private void levelIncrease() {
+    protoIndex++;
   }
 
   private void writenl() {

@@ -367,6 +367,14 @@ public final class JavaModel {
 
   private JavaModel() {}
 
+  static void checkMethodName(String methodName) {
+    if (methodName.isEmpty()) {
+      throw new IllegalArgumentException("Method name must not be empty");
+    }
+
+    checkName(methodName, false, "an invalid method name");
+  }
+
   static void checkPackageName(String s) {
     checkName(s, true, "an invalid package name");
   }

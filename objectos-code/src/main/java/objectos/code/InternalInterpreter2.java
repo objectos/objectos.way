@@ -37,12 +37,18 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
   protected abstract void writeStringLiteral(String value);
 
+  protected abstract void writeWhitespace(Whitespace value);
+
   final void pass2() {
     codeIndex = 0;
 
     markIndex = 0;
 
     objectIndex = 0;
+
+    protoIndex = 0;
+
+    stackIndex = 0;
 
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
@@ -83,6 +89,8 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
       case ByteCode.STRING_LITERAL -> stringLiteral();
 
+      case ByteCode.WHITESPACE -> whitespace();
+
       default -> throw $uoe_code(code);
     }
 
@@ -119,7 +127,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   private void autoImportsRenderItem(String type) {
     writeReservedKeyword(ReservedKeyword.IMPORT);
 
-    writePseudoElement(PseudoElement.MANDATORY_WHITESPACE);
+    writeWhitespace(Whitespace.MANDATORY);
 
     writeIdentifier(type);
 
@@ -188,6 +196,14 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     var value = (String) objectArray[index];
 
     writeStringLiteral(value);
+  }
+
+  private void whitespace() {
+    var index = $codenxt();
+
+    var value = Whitespace.get(index);
+
+    writeWhitespace(value);
   }
 
 }

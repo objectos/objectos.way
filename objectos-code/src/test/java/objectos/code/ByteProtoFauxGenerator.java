@@ -31,6 +31,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("OBJECT_END");
     value("NEW_LINE");
     value("EOF");
+    value("INVOKE_METHOD_NAME");
 
     comment("types");
 

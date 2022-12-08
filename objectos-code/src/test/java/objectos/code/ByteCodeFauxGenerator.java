@@ -119,5 +119,6 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("PSEUDO_ELEMENT");
     value("RESERVED_KEYWORD");
     value("SEPARATOR");
+    value("WHITESPACE");
   }
 }

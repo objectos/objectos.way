@@ -15,19 +15,17 @@
  */
 package objectos.code;
 
-public enum PseudoElement {
+public enum Whitespace {
 
-  BEFORE_NEXT_TOP_LEVEL_ITEM,
+  MANDATORY,
 
-  BEFORE_NEXT_STATEMENT,
+  OPTIONAL,
 
-  BEFORE_NEXT_COMMA_SEPARATED_ITEM,
+  NEW_LINE;
 
-  INDENTATION;
+  private static final Whitespace[] VALUES = values();
 
-  private static final PseudoElement[] VALUES = values();
-
-  static PseudoElement get(int index) {
+  static Whitespace get(int index) {
     return VALUES[index];
   }
 

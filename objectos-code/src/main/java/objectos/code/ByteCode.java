@@ -111,6 +111,7 @@ final class ByteCode {
   static final int PSEUDO_ELEMENT = -57;
   static final int RESERVED_KEYWORD = -58;
   static final int SEPARATOR = -59;
+  static final int WHITESPACE = -60;
 
   private ByteCode() {}
 
