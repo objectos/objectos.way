@@ -23,7 +23,9 @@ public enum PseudoElement {
 
   BEFORE_NEXT_COMMA_SEPARATED_ITEM,
 
-  INDENTATION;
+  INDENTATION,
+
+  CONTINUATION_INDENTATION;
 
   private static final PseudoElement[] VALUES = values();
 

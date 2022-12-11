@@ -65,11 +65,9 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
       case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
 
-      case INDENTATION -> {
-        for (int i = 0, l = level(); i < l; i++) {
-          out.append("  ");
-        }
-      }
+      case INDENTATION -> writeIndentation(level());
+
+      case CONTINUATION_INDENTATION -> writeIndentation(level() + 2);
 
       default -> {}
     }
@@ -119,6 +117,12 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
   private void levelIncrease() {
     protoIndex++;
+  }
+
+  private void writeIndentation(int length) {
+    for (int i = 0; i < length; i++) {
+      out.append("  ");
+    }
   }
 
   private void writenl() {

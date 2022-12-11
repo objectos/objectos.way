@@ -35,6 +35,8 @@ public enum ReservedKeyword {
 
   INT,
 
+  NEW,
+
   PACKAGE,
 
   PRIVATE,

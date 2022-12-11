@@ -19,6 +19,12 @@ import objectos.util.IntArrays;
 
 class InternalCompiler2 extends InternalApi2 {
 
+  private interface ChainIvk {
+    int START = 0;
+    int NL = 1;
+    int NEXT = 2;
+  }
+
   private interface CUnit {
     int CONTENTS = 1 << 0;
     int AUTO_IMPORTS = 1 << 1;
@@ -43,6 +49,12 @@ class InternalCompiler2 extends InternalApi2 {
     int LEFT_PAR = 2;
     int ARG = 3;
     int SLOT = 4;
+  }
+
+  private interface NewExpr {
+    int START = 0;
+    int TYPE = 1;
+    int ARG = 2;
   }
 
   private static final int NULL = Integer.MIN_VALUE;
@@ -232,6 +244,32 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
+  private void chainedMethodInvocation(int child) {
+    var state = $parentvalget(1);
+
+    switch (state) {
+      case ChainIvk.START -> $parentvalset(1, ChainIvk.NEXT);
+
+      case ChainIvk.NEXT -> {
+        if (child == ByteProto.NEW_LINE) {
+          $parentvalset(1, ChainIvk.NL);
+        } else {
+          $codeadd(Separator.DOT);
+        }
+      }
+
+      case ChainIvk.NL -> {
+        if (child != ByteProto.NEW_LINE) {
+          $codeadd(PseudoElement.CONTINUATION_INDENTATION);
+
+          $codeadd(Separator.DOT);
+
+          $parentvalset(1, ChainIvk.NEXT);
+        }
+      }
+    }
+  }
+
   private void classDeclaration(int child) {
     switch (child) {
       case ByteProto.IDENTIFIER -> {
@@ -252,6 +290,44 @@ class InternalCompiler2 extends InternalApi2 {
 
       default -> throw $uoe_state(state);
     }
+  }
+
+  private void classInstanceCreation(int child) {
+    var state = $parentvalget(1);
+
+    switch (state) {
+      case NewExpr.START -> {
+        $codeadd(ReservedKeyword.NEW);
+
+        $codeadd(Whitespace.MANDATORY);
+
+        if (child == ByteProto.CLASS_TYPE) {
+          $parentvalset(1, NewExpr.TYPE);
+        }
+      }
+
+      case NewExpr.TYPE -> {
+        $codeadd(Separator.LEFT_PARENTHESIS);
+
+        $parentvalset(1, NewExpr.ARG);
+      }
+
+      case NewExpr.ARG -> {
+        commaAndSpace();
+
+        $parentvalset(1, NewExpr.ARG);
+      }
+    }
+  }
+
+  private void classInstanceCreationBreak(int state) {
+    if (state == NewExpr.TYPE) {
+      $codeadd(Separator.LEFT_PARENTHESIS);
+    }
+
+    $codeadd(Separator.RIGHT_PARENTHESIS);
+
+    semicolonIfNecessary();
   }
 
   private void classType() {
@@ -477,7 +553,11 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.ARRAY_TYPE -> arrayType(child);
 
+      case ByteProto.CHAINED_METHOD_INVOCATION -> chainedMethodInvocation(child);
+
       case ByteProto.CLASS_DECLARATION -> classDeclaration(child);
+
+      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreation(child);
 
       case ByteProto.CLASS_TYPE -> classType(child);
 
@@ -514,7 +594,11 @@ class InternalCompiler2 extends InternalApi2 {
     switch (self) {
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializerBreak(state);
 
+      case ByteProto.CHAINED_METHOD_INVOCATION -> semicolonIfNecessary();
+
       case ByteProto.CLASS_DECLARATION -> classDeclarationBreak(state);
+
+      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreationBreak(state);
 
       case ByteProto.CLASS_TYPE -> classTypeBreak(state);
 
@@ -619,11 +703,7 @@ class InternalCompiler2 extends InternalApi2 {
 
     $codeadd(Separator.RIGHT_PARENTHESIS);
 
-    switch ($parentpeek()) {
-      case ByteProto.COMPILATION_UNIT -> $codeadd(Separator.SEMICOLON);
-
-      case ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
-    }
+    semicolonIfNecessary();
   }
 
   private void methodInvocationCallback(int child) {
@@ -695,6 +775,14 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private void root(int child) {
+  }
+
+  private void semicolonIfNecessary() {
+    switch ($parentpeek()) {
+      case ByteProto.COMPILATION_UNIT -> $codeadd(Separator.SEMICOLON);
+
+      case ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
+    }
   }
 
 }
