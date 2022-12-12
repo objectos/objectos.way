@@ -17,7 +17,7 @@ package objectos.code;
 
 public enum PseudoElement {
 
-  AFTER_CLASS_ANNOTATION,
+  AFTER_ANNOTATION,
 
   BEFORE_NEXT_TOP_LEVEL_ITEM,
 

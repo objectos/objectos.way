@@ -35,6 +35,8 @@ public enum Keyword {
 
   INT,
 
+  INTERFACE,
+
   NEW,
 
   PACKAGE,

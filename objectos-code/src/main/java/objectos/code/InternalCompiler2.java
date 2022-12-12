@@ -32,7 +32,6 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private interface ClassDecl {
-    @SuppressWarnings("unused")
     int START = 0;
     int MODS = 1;
   }
@@ -48,11 +47,23 @@ class InternalCompiler2 extends InternalApi2 {
     int NAME = 2;
   }
 
+  private interface ExtClause {
+    int START = 0;
+    int TYPE = 1;
+  }
+
   private interface FieldDecl {
     int START = 0;
     int MODIFIERS = 1;
     int IDENTIFIER = 2;
     int INITIALIZE = 3;
+  }
+
+  private interface IfaceDecl {
+    int START = 0;
+    int MODS = 1;
+    int NAME = 2;
+    int TYPE = 3;
   }
 
   private interface LocalVar {
@@ -75,8 +86,6 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private static final int NULL = Integer.MIN_VALUE;
-
-  private static final int _START = 0;
 
   final void pass1() {
     code = 0;
@@ -226,11 +235,6 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void $protopop() { protoIndex = stackArray[--stackIndex]; }
 
-  private UnsupportedOperationException $uoe_state(int state) {
-    return new UnsupportedOperationException(
-      "Implement me :: state = " + state);
-  }
-
   private void annotation(int child) {
     var state = $parentvalget(1);
 
@@ -331,13 +335,11 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void classDeclarationBreak(int state) {
     switch (state) {
-      case _START -> {
+      case ClassDecl.START -> {
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
-
-      default -> throw $uoe_state(state);
     }
   }
 
@@ -348,7 +350,7 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.ANNOTATION -> {
 
         if (state != ClassDecl.MODS) {
-          $codeadd(PseudoElement.AFTER_CLASS_ANNOTATION);
+          $codeadd(PseudoElement.AFTER_ANNOTATION);
         }
 
       }
@@ -486,14 +488,36 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
-  private void extendsSingle(int child) {
-    if (child == ByteProto.CLASS_TYPE) {
-      $codeadd(Whitespace.MANDATORY);
+  private void extendsMany(int child) {
+    var state = $parentvalget(1);
 
-      $codeadd(Keyword.EXTENDS);
+    switch (state) {
+      case ExtClause.START -> {
 
-      $codeadd(Whitespace.MANDATORY);
+        if (child == ByteProto.CLASS_TYPE) {
+          $codeadd(Whitespace.MANDATORY);
+
+          $codeadd(Keyword.EXTENDS);
+
+          $codeadd(Whitespace.MANDATORY);
+
+          $parentvalset(1, ExtClause.TYPE);
+        }
+
+      }
+
+      case ExtClause.TYPE -> {
+
+        if (child == ByteProto.CLASS_TYPE) {
+          commaAndSpace();
+        }
+
+      }
     }
+  }
+
+  private void extendsSingle(int child) {
+    extendsMany(child);
   }
 
   private void fieldDeclaration(int child) {
@@ -542,6 +566,72 @@ class InternalCompiler2 extends InternalApi2 {
       }
 
       return;
+    }
+  }
+
+  private void interfaceDeclaration(int child) {
+    var state = $parentvalget(1);
+
+    switch (child) {
+      case ByteProto.ANNOTATION -> {
+        if (state == IfaceDecl.MODS) {
+          $codeadd(Whitespace.MANDATORY);
+        }
+      }
+
+      case ByteProto.EXTENDS_SINGLE, ByteProto.EXTENDS_MANY -> {
+        if (state == IfaceDecl.TYPE) {
+          code = ExtClause.TYPE;
+        } else {
+          code = ExtClause.START;
+        }
+
+        $parentvalset(1, IfaceDecl.TYPE);
+      }
+
+      case ByteProto.IDENTIFIER -> {
+        if (state != IfaceDecl.START) {
+          $codeadd(Whitespace.MANDATORY);
+        }
+
+        $codeadd(Keyword.INTERFACE);
+
+        $codeadd(Whitespace.MANDATORY);
+
+        $parentvalset(1, IfaceDecl.NAME);
+      }
+
+      case ByteProto.MODIFIER -> {
+        if (state != IfaceDecl.START) {
+          $codeadd(Whitespace.MANDATORY);
+        }
+
+        $parentvalset(1, IfaceDecl.MODS);
+      }
+    }
+  }
+
+  private void interfaceDeclarationBreak(int state) {
+    switch (state) {
+      case IfaceDecl.NAME, IfaceDecl.TYPE -> {
+        $codeadd(Whitespace.OPTIONAL);
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+    }
+  }
+
+  private void interfaceDeclarationCallback(int child) {
+    var state = $parentvalget(1);
+
+    switch (child) {
+      case ByteProto.ANNOTATION -> {
+
+        if (state != IfaceDecl.MODS) {
+          $codeadd(PseudoElement.AFTER_ANNOTATION);
+        }
+
+      }
     }
   }
 
@@ -648,7 +738,7 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.VAR_NAME -> varName();
 
-      default -> { loop1Parent(proto); $parentpush(0, proto); }
+      default -> { code = 0; loop1Parent(proto); $parentpush(code, proto); }
     }
 
     return proto;
@@ -682,11 +772,15 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.EOF -> root(child);
 
+      case ByteProto.EXTENDS_MANY -> extendsMany(child);
+
       case ByteProto.EXTENDS_SINGLE -> extendsSingle(child);
 
       case ByteProto.EXPRESSION_NAME -> expressionName(child);
 
       case ByteProto.FIELD_DECLARATION -> fieldDeclaration(child);
+
+      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclaration(child);
 
       case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration(child);
 
@@ -727,6 +821,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.FIELD_DECLARATION -> $codeadd(Separator.SEMICOLON);
 
+      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclarationBreak(state);
+
       case ByteProto.LOCAL_VARIABLE -> localVariableDeclarationBreak(state);
 
       case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
@@ -741,6 +837,8 @@ class InternalCompiler2 extends InternalApi2 {
 
     switch ($parentpeek()) {
       case ByteProto.CLASS_DECLARATION -> classDeclarationCallback(self);
+
+      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclarationCallback(self);
 
       case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocationCallback(self);
     }
