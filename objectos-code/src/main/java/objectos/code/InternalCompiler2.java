@@ -19,10 +19,22 @@ import objectos.util.IntArrays;
 
 class InternalCompiler2 extends InternalApi2 {
 
+  private interface At {
+    int START = 0;
+    int TYPE = 1;
+    int VALUE = 2;
+  }
+
   private interface ChainIvk {
     int START = 0;
     int NL = 1;
     int NEXT = 2;
+  }
+
+  private interface ClassDecl {
+    @SuppressWarnings("unused")
+    int START = 0;
+    int MODS = 1;
   }
 
   private interface CUnit {
@@ -219,6 +231,38 @@ class InternalCompiler2 extends InternalApi2 {
       "Implement me :: state = " + state);
   }
 
+  private void annotation(int child) {
+    var state = $parentvalget(1);
+
+    if (child == ByteProto.CLASS_TYPE) {
+      if (state == At.START) {
+        $codeadd(Separator.COMMERCIAL_AT);
+
+        $parentvalset(1, At.TYPE);
+      }
+
+      return;
+    }
+
+    // if child != @ element name
+
+    switch (state) {
+      case At.TYPE -> {
+        $codeadd(Separator.LEFT_PARENTHESIS);
+
+        $parentvalset(1, At.VALUE);
+      }
+    }
+  }
+
+  private void annotationBreak(int state) {
+    switch (state) {
+      case At.VALUE -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+    }
+  }
+
   private void arrayInitializer(int child) {
     int count = $parentvalget(1);
 
@@ -294,6 +338,20 @@ class InternalCompiler2 extends InternalApi2 {
       }
 
       default -> throw $uoe_state(state);
+    }
+  }
+
+  private void classDeclarationCallback(int child) {
+    var state = $parentvalget(1);
+
+    switch (child) {
+      case ByteProto.ANNOTATION -> {
+
+        if (state != ClassDecl.MODS) {
+          $codeadd(PseudoElement.AFTER_CLASS_ANNOTATION);
+        }
+
+      }
     }
   }
 
@@ -606,6 +664,8 @@ class InternalCompiler2 extends InternalApi2 {
     var parent = $parentpeek();
 
     switch (parent) {
+      case ByteProto.ANNOTATION -> annotation(child);
+
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(child);
 
       case ByteProto.ARRAY_TYPE -> arrayType(child);
@@ -651,6 +711,8 @@ class InternalCompiler2 extends InternalApi2 {
     var state = $parentpop();
 
     switch (self) {
+      case ByteProto.ANNOTATION -> annotationBreak(state);
+
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializerBreak(state);
 
       case ByteProto.CHAINED_METHOD_INVOCATION -> semicolonIfNecessary();
@@ -678,6 +740,8 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     switch ($parentpeek()) {
+      case ByteProto.CLASS_DECLARATION -> classDeclarationCallback(self);
+
       case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocationCallback(self);
     }
   }

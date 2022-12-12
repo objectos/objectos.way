@@ -59,6 +59,8 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
   @Override
   protected final void writePseudoElement(PseudoElement value) {
     switch (value) {
+      case AFTER_CLASS_ANNOTATION -> writenl();
+
       case BEFORE_NEXT_TOP_LEVEL_ITEM -> { writenl(); writenl(); }
 
       case BEFORE_NEXT_STATEMENT -> writenl();
