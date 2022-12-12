@@ -19,6 +19,12 @@ import objectos.util.IntArrays;
 
 class InternalCompiler2 extends InternalApi2 {
 
+  private interface ArrAccess {
+    int START = 0;
+    int FIRST = 1;
+    int NEXT = 2;
+  }
+
   private interface At {
     int START = 0;
     int TYPE = 1;
@@ -263,6 +269,34 @@ class InternalCompiler2 extends InternalApi2 {
     switch (state) {
       case At.VALUE -> {
         $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+    }
+  }
+
+  private void arrayAccessExpression(int child) {
+    var state = $parentvalget(1);
+
+    switch (state) {
+      case ArrAccess.START -> $parentvalset(1, ArrAccess.FIRST);
+
+      case ArrAccess.FIRST -> {
+        $codeadd(Separator.LEFT_SQUARE_BRACKET);
+
+        $parentvalset(1, ArrAccess.NEXT);
+      }
+
+      case ArrAccess.NEXT -> {
+        $codeadd(Separator.RIGHT_SQUARE_BRACKET);
+
+        $codeadd(Separator.LEFT_SQUARE_BRACKET);
+      }
+    }
+  }
+
+  private void arrayAccessExpressionBreak(int state) {
+    switch (state) {
+      case ArrAccess.FIRST, ArrAccess.NEXT -> {
+        $codeadd(Separator.RIGHT_SQUARE_BRACKET);
       }
     }
   }
@@ -756,6 +790,8 @@ class InternalCompiler2 extends InternalApi2 {
     switch (parent) {
       case ByteProto.ANNOTATION -> annotation(child);
 
+      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression(child);
+
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(child);
 
       case ByteProto.ARRAY_TYPE -> arrayType(child);
@@ -806,6 +842,8 @@ class InternalCompiler2 extends InternalApi2 {
 
     switch (self) {
       case ByteProto.ANNOTATION -> annotationBreak(state);
+
+      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpressionBreak(state);
 
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializerBreak(state);
 
