@@ -25,6 +25,12 @@ class InternalCompiler2 extends InternalApi2 {
     int NEXT = 2;
   }
 
+  private interface Assign {
+    int START = 0;
+    int LHS = 1;
+    int RHS = 2;
+  }
+
   private interface At {
     int START = 0;
     int TYPE = 1;
@@ -327,6 +333,66 @@ class InternalCompiler2 extends InternalApi2 {
         $codeadd(Separator.LEFT_SQUARE_BRACKET);
 
         $codeadd(Separator.RIGHT_SQUARE_BRACKET);
+      }
+    }
+  }
+
+  private void assignmentExpression() {
+    var proto = ByteProto.ASSIGNMENT_EXPRESSION;
+
+    loop1Parent(proto);
+
+    $parentpush(
+      NULL, // 2 = operator location
+      Assign.START, // 1 = state
+      proto
+    );
+  }
+
+  private void assignmentExpression(int child) {
+    var state = $parentvalget(1);
+
+    switch (state) {
+      case Assign.START -> {
+        if (child != ByteProto.ASSIGNMENT_OPERATOR) {
+          $parentvalset(1, Assign.LHS);
+        }
+      }
+
+      case Assign.LHS -> {
+        if (child != ByteProto.ASSIGNMENT_OPERATOR) {
+          $codeadd(Whitespace.OPTIONAL);
+
+          var operatorLocation = codeIndex;
+
+          $codeadd(ByteCode.NOP1, 0);
+
+          $codeadd(Whitespace.OPTIONAL);
+
+          $parentvalset(2, operatorLocation);
+
+          $parentvalset(1, Assign.RHS);
+        }
+      }
+    }
+  }
+
+  private void assignmentExpressionBreak(int state) {
+    $parentpop(); // operator location
+
+    semicolonIfNecessary();
+  }
+
+  private void assignmentOperator() {
+    var parent = $parentpeek();
+
+    switch (parent) {
+      case ByteProto.ASSIGNMENT_EXPRESSION -> {
+        int location = $parentvalget(2);
+
+        codeArray[location + 0] = ByteCode.OPERATOR;
+
+        codeArray[location + 1] = $protonxt();
       }
     }
   }
@@ -734,6 +800,10 @@ class InternalCompiler2 extends InternalApi2 {
     var proto = $protonxt();
 
     switch (proto) {
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteProto.ASSIGNMENT_OPERATOR -> assignmentOperator();
+
       case ByteProto.BREAK -> { loop2Break(); $protopop(); }
 
       case ByteProto.CLASS_TYPE -> classType();
@@ -796,6 +866,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.ARRAY_TYPE -> arrayType(child);
 
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression(child);
+
       case ByteProto.CHAINED_METHOD_INVOCATION -> chainedMethodInvocation(child);
 
       case ByteProto.CLASS_DECLARATION -> classDeclaration(child);
@@ -846,6 +918,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpressionBreak(state);
 
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializerBreak(state);
+
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpressionBreak(state);
 
       case ByteProto.CHAINED_METHOD_INVOCATION -> semicolonIfNecessary();
 

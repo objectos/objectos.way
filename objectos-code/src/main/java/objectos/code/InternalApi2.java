@@ -358,11 +358,16 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
     return JavaModel.REF;
   }
 
+  @Override
+  public final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
+    return assign(Operator2.ASSIGNMENT, leftHandSide, expression);
+  }
+
   public final AssignmentExpression assign(
-      AssignmentOperator operator, LeftHandSide leftHandSide, Expression expression) {
+      Operator2 operator, LeftHandSide leftHandSide, Expression expression) {
     Objects.requireNonNull(operator, "operator == null");
 
-    object(ByteProto.ASSIGNMENT_OPERATOR, operator);
+    operator(operator);
 
     markStart();
 
@@ -375,11 +380,6 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
     element(ByteProto.ASSIGNMENT_EXPRESSION);
 
     return JavaModel.REF;
-  }
-
-  @Override
-  public final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
-    return assign(AssignmentOperator.SIMPLE, leftHandSide, expression);
   }
 
   @Override
@@ -811,6 +811,12 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
     elementAdd(protoIndex);
 
     protoAdd(ByteProto.MODIFIER, value.ordinal(), ByteProto.OBJECT_END);
+  }
+
+  private void operator(Operator2 operator) {
+    elementAdd(protoIndex);
+
+    protoAdd(ByteProto.ASSIGNMENT_OPERATOR, operator.ordinal(), ByteProto.OBJECT_END);
   }
 
   private void pass0End() {
