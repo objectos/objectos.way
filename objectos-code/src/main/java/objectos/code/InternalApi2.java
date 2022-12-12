@@ -92,14 +92,14 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final AbstractModifier _abstract() {
-    modifier(ReservedKeyword.ABSTRACT);
+    modifier(Keyword.ABSTRACT);
 
     return JavaModel.REF;
   }
 
   @Override
   public final PrimitiveType _boolean() {
-    primitive(ReservedKeyword.BOOLEAN);
+    primitive(Keyword.BOOLEAN);
 
     return JavaModel.REF;
   }
@@ -119,7 +119,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final PrimitiveType _double() {
-    primitive(ReservedKeyword.DOUBLE);
+    primitive(Keyword.DOUBLE);
 
     return JavaModel.REF;
   }
@@ -163,7 +163,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final FinalModifier _final() {
-    modifier(ReservedKeyword.FINAL);
+    modifier(Keyword.FINAL);
 
     return JavaModel.REF;
   }
@@ -183,7 +183,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final PrimitiveType _int() {
-    primitive(ReservedKeyword.INT);
+    primitive(Keyword.INT);
 
     return JavaModel.REF;
   }
@@ -237,21 +237,21 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final PrivateModifier _private() {
-    modifier(ReservedKeyword.PRIVATE);
+    modifier(Keyword.PRIVATE);
 
     return JavaModel.REF;
   }
 
   @Override
   public final ProtectedModifier _protected() {
-    modifier(ReservedKeyword.PROTECTED);
+    modifier(Keyword.PROTECTED);
 
     return JavaModel.REF;
   }
 
   @Override
   public final PublicModifier _public() {
-    modifier(ReservedKeyword.PUBLIC);
+    modifier(Keyword.PUBLIC);
 
     return JavaModel.REF;
   }
@@ -269,7 +269,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final StaticModifier _static() {
-    modifier(ReservedKeyword.STATIC);
+    modifier(Keyword.STATIC);
 
     return JavaModel.REF;
   }
@@ -771,7 +771,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final LocalVariableDeclarationRef var(String name, Expression expression) {
-    identifier(name);
+    varName(name);
 
     markStart();
 
@@ -807,7 +807,7 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
     object(ByteProto.INVOKE_METHOD_NAME, methodName);
   }
 
-  private void modifier(ReservedKeyword value) {
+  private void modifier(Keyword value) {
     elementAdd(protoIndex);
 
     protoAdd(ByteProto.MODIFIER, value.ordinal(), ByteProto.OBJECT_END);
@@ -845,10 +845,16 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
     protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.EOF);
   }
 
-  private void primitive(ReservedKeyword value) {
+  private void primitive(Keyword value) {
     elementAdd(protoIndex);
 
     protoAdd(ByteProto.PRIMITIVE_TYPE, value.ordinal(), ByteProto.OBJECT_END);
+  }
+
+  private void varName(String name) {
+    JavaModel.checkVarName(name);
+
+    object(ByteProto.VAR_NAME, name);
   }
 
 }

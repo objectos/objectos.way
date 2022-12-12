@@ -43,6 +43,11 @@ class InternalCompiler2 extends InternalApi2 {
     int INITIALIZE = 3;
   }
 
+  private interface LocalVar {
+    int START = 0;
+    int INIT = 1;
+  }
+
   private interface MInvoke {
     int SUBJECT = 0;
     int METHOD_NAME = 1;
@@ -96,16 +101,16 @@ class InternalCompiler2 extends InternalApi2 {
     codeArray[codeIndex++] = v1;
   }
 
+  private void $codeadd(Keyword keyword) {
+    $codeadd(ByteCode.RESERVED_KEYWORD, keyword.ordinal());
+  }
+
   private void $codeadd(Operator2 operator) {
     $codeadd(ByteCode.OPERATOR, operator.ordinal());
   }
 
   private void $codeadd(PseudoElement element) {
     $codeadd(ByteCode.PSEUDO_ELEMENT, element.ordinal());
-  }
-
-  private void $codeadd(ReservedKeyword keyword) {
-    $codeadd(ByteCode.RESERVED_KEYWORD, keyword.ordinal());
   }
 
   private void $codeadd(Separator separator) {
@@ -273,7 +278,7 @@ class InternalCompiler2 extends InternalApi2 {
   private void classDeclaration(int child) {
     switch (child) {
       case ByteProto.IDENTIFIER -> {
-        $codeadd(ReservedKeyword.CLASS);
+        $codeadd(Keyword.CLASS);
 
         $codeadd(Whitespace.MANDATORY);
       }
@@ -297,7 +302,7 @@ class InternalCompiler2 extends InternalApi2 {
 
     switch (state) {
       case NewExpr.START -> {
-        $codeadd(ReservedKeyword.NEW);
+        $codeadd(Keyword.NEW);
 
         $codeadd(Whitespace.MANDATORY);
 
@@ -427,7 +432,7 @@ class InternalCompiler2 extends InternalApi2 {
     if (child == ByteProto.CLASS_TYPE) {
       $codeadd(Whitespace.MANDATORY);
 
-      $codeadd(ReservedKeyword.EXTENDS);
+      $codeadd(Keyword.EXTENDS);
 
       $codeadd(Whitespace.MANDATORY);
     }
@@ -495,6 +500,54 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
+  private void localVariableDeclaration() {
+    var proto = ByteProto.LOCAL_VARIABLE;
+
+    loop1Parent(proto);
+
+    $parentpush(
+      NULL, // 2 = name location
+      LocalVar.START, // 1 = state
+      proto
+    );
+  }
+
+  private void localVariableDeclaration(int child) {
+    var state = $parentvalget(1);
+
+    if (ByteProto.isExpression(child)) {
+      switch (state) {
+        case LocalVar.START -> {
+          $codeadd(Keyword.VAR);
+
+          $codeadd(Whitespace.MANDATORY);
+
+          var nameLocation = codeIndex;
+
+          $codeadd(ByteCode.NOP1, 0);
+
+          $parentvalset(2, nameLocation);
+
+          $codeadd(Whitespace.OPTIONAL);
+
+          $codeadd(Operator2.ASSIGNMENT);
+
+          $codeadd(Whitespace.OPTIONAL);
+
+          $parentvalset(1, LocalVar.INIT);
+        }
+      }
+
+      return;
+    }
+  }
+
+  private void localVariableDeclarationBreak(int state) {
+    $parentpop(); // name location
+
+    $codeadd(Separator.SEMICOLON);
+  }
+
   private int loop() {
     var proto = $protonxt();
 
@@ -510,6 +563,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.INVOKE_METHOD_NAME -> invokeMethodName();
 
       case ByteProto.JMP -> $jump();
+
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
 
       case ByteProto.MODIFIER -> loop0(proto, ByteCode.RESERVED_KEYWORD);
 
@@ -531,7 +586,9 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.PRIMITIVE_TYPE -> loop0(proto, ByteCode.RESERVED_KEYWORD);
 
-      case ByteProto.THIS -> { loop1Parent(proto); $codeadd(ReservedKeyword.THIS); }
+      case ByteProto.THIS -> { loop1Parent(proto); $codeadd(Keyword.THIS); }
+
+      case ByteProto.VAR_NAME -> varName();
 
       default -> { loop1Parent(proto); $parentpush(0, proto); }
     }
@@ -571,6 +628,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.FIELD_DECLARATION -> fieldDeclaration(child);
 
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration(child);
+
       case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
           -> methodInvocation(child);
 
@@ -605,6 +664,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.COMPILATION_UNIT -> $codeadd(ByteCode.EOF);
 
       case ByteProto.FIELD_DECLARATION -> $codeadd(Separator.SEMICOLON);
+
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclarationBreak(state);
 
       case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
           -> methodInvocationBreak(state);
@@ -747,7 +808,7 @@ class InternalCompiler2 extends InternalApi2 {
   private void packageDeclaration(int child) {
     switch (child) {
       case ByteProto.PACKAGE_NAME -> {
-        $codeadd(ReservedKeyword.PACKAGE);
+        $codeadd(Keyword.PACKAGE);
 
         $codeadd(Whitespace.MANDATORY);
       }
@@ -769,7 +830,7 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private void returnStatement(int child) {
-    $codeadd(ReservedKeyword.RETURN);
+    $codeadd(Keyword.RETURN);
 
     $codeadd(Whitespace.MANDATORY);
   }
@@ -782,6 +843,19 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.COMPILATION_UNIT -> $codeadd(Separator.SEMICOLON);
 
       case ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
+    }
+  }
+
+  private void varName() {
+    var parent = $parentpeek();
+
+    switch (parent) {
+      case ByteProto.LOCAL_VARIABLE -> {
+        int location = $parentvalget(2);
+
+        codeArray[location + 0] = ByteCode.IDENTIFIER;
+        codeArray[location + 1] = $protonxt();
+      }
     }
   }
 

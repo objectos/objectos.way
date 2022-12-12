@@ -387,6 +387,14 @@ public final class JavaModel {
     checkName(s, false, "an invalid simple name");
   }
 
+  static void checkVarName(String name) {
+    if (name.isEmpty()) {
+      throw new IllegalArgumentException("Local variable name must not be empty");
+    }
+
+    checkName(name, false, "an invalid local variable name");
+  }
+
   private static void checkName(String s, boolean allowDots, String message) {
     var hasDot = false;
 

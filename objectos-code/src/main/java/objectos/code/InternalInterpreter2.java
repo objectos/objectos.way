@@ -31,7 +31,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
   protected abstract void writePseudoElement(PseudoElement value);
 
-  protected abstract void writeReservedKeyword(ReservedKeyword value);
+  protected abstract void writeReservedKeyword(Keyword value);
 
   protected abstract void writeSeparator(Separator value);
 
@@ -125,7 +125,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   }
 
   private void autoImportsRenderItem(String type) {
-    writeReservedKeyword(ReservedKeyword.IMPORT);
+    writeReservedKeyword(Keyword.IMPORT);
 
     writeWhitespace(Whitespace.MANDATORY);
 
@@ -177,7 +177,7 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
   private void reservedKeyword() {
     var index = $codenxt();
 
-    var value = ReservedKeyword.get(index);
+    var value = Keyword.get(index);
 
     writeReservedKeyword(value);
   }

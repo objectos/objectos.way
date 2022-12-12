@@ -17,7 +17,7 @@ package objectos.code;
 
 import java.util.Locale;
 
-public enum ReservedKeyword {
+public enum Keyword {
 
   ABSTRACT,
 
@@ -49,13 +49,15 @@ public enum ReservedKeyword {
 
   STATIC,
 
-  THIS;
+  THIS,
 
-  private static final ReservedKeyword[] VALUES = values();
+  VAR;
+
+  private static final Keyword[] VALUES = values();
 
   private final String toString = name().toLowerCase(Locale.US);
 
-  static ReservedKeyword get(int index) {
+  static Keyword get(int index) {
     return VALUES[index];
   }
 

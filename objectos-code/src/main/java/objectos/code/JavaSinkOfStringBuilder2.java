@@ -74,7 +74,7 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
   }
 
   @Override
-  protected final void writeReservedKeyword(ReservedKeyword value) {
+  protected final void writeReservedKeyword(Keyword value) {
     out.append(value);
   }
 
