@@ -19,83 +19,45 @@ import objectos.util.IntArrays;
 
 class InternalCompiler2 extends InternalApi2 {
 
-  private interface ArrAccess {
-    int START = 0;
-    int FIRST = 1;
-    int NEXT = 2;
-  }
+  private interface ArrAccess { int START = 0; int FIRST = 1; int NEXT = 2; }
 
-  private interface Assign {
-    int START = 0;
-    int LHS = 1;
-    int RHS = 2;
-  }
+  private interface Assign { int START = 0; int LHS = 1; int RHS = 2; }
 
-  private interface At {
-    int START = 0;
-    int TYPE = 1;
-    int VALUE = 2;
-  }
+  private interface At { int START = 0; int TYPE = 1; int VALUE = 2; }
 
-  private interface ChainIvk {
-    int START = 0;
-    int NL = 1;
-    int NEXT = 2;
-  }
+  private interface ChainIvk { int START = 0; int NL = 1; int NEXT = 2; }
 
-  private interface ClassDecl {
+  private interface ClassDecl { int START = 0; int MODS = 1; }
+
+  private interface CUnit { int CONTENTS = 1 << 0; int AUTO_IMPORTS = 1 << 1; }
+
+  private interface ExpName { int START = 0; int BASE = 1; int NAME = 2; }
+
+  private interface ExtClause { int START = 0; int TYPE = 1; }
+
+  private interface FieldDecl { int START = 0; int MODS = 1; int NAME = 2; int INIT = 3; }
+
+  private interface IfaceDecl { int START = 0; int MODS = 1; int NAME = 2; int TYPE = 3; }
+
+  private interface LocalVar { int START = 0; int INIT = 1; }
+
+  private interface MethDecl {
     int START = 0;
     int MODS = 1;
-  }
-
-  private interface CUnit {
-    int CONTENTS = 1 << 0;
-    int AUTO_IMPORTS = 1 << 1;
-  }
-
-  private interface ExpName {
-    int START = 0;
-    int BASE = 1;
-    int NAME = 2;
-  }
-
-  private interface ExtClause {
-    int START = 0;
-    int TYPE = 1;
-  }
-
-  private interface FieldDecl {
-    int START = 0;
-    int MODIFIERS = 1;
-    int IDENTIFIER = 2;
-    int INITIALIZE = 3;
-  }
-
-  private interface IfaceDecl {
-    int START = 0;
-    int MODS = 1;
-    int NAME = 2;
+    int TPAR = 2;
     int TYPE = 3;
+    int NAME = 4;
+    int PARAM = 5;
+    int BODY = 6;
   }
 
-  private interface LocalVar {
-    int START = 0;
-    int INIT = 1;
-  }
+  private interface MInvoke { int RECV = 0; int NAME = 1; int LPAR = 2; int ARG = 3; int SLOT = 4; }
 
-  private interface MInvoke {
-    int SUBJECT = 0;
-    int METHOD_NAME = 1;
-    int LEFT_PAR = 2;
-    int ARG = 3;
-    int SLOT = 4;
-  }
+  private interface NewExpr { int START = 0; int TYPE = 1; int ARG = 2; }
 
-  private interface NewExpr {
-    int START = 0;
-    int TYPE = 1;
-    int ARG = 2;
-  }
+  private interface Param { int START = 0; int TYPE = 1; int NAME = 2; }
+
+  private interface TypeParam { int NAME = 0; int TYPE = 1; }
 
   private static final int NULL = Integer.MIN_VALUE;
 
@@ -117,8 +79,190 @@ class InternalCompiler2 extends InternalApi2 {
     var proto = 0;
 
     do {
-      proto = loop();
+      proto = $cloop();
     } while (proto != ByteProto.EOF);
+  }
+
+  private int $cloop() {
+    var proto = $protonxt();
+
+    switch (proto) {
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+
+      case ByteProto.ASSIGNMENT_OPERATOR -> assignmentOperator();
+
+      case ByteProto.BREAK -> { $cloop2break(); $protopop(); }
+
+      case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.ELLIPSIS -> { $cloop1parent(proto); $codeadd(Separator.ELLIPSIS); }
+
+      case ByteProto.EOF -> {}
+
+      case ByteProto.IDENTIFIER -> $cloop0add(proto, ByteCode.IDENTIFIER);
+
+      case ByteProto.INVOKE_METHOD_NAME -> invokeMethodName();
+
+      case ByteProto.JMP -> $jump();
+
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
+
+      case ByteProto.MODIFIER -> $cloop0add(proto, ByteCode.RESERVED_KEYWORD);
+
+      case ByteProto.NEW_LINE -> { $cloop1parent(proto); $codeadd(Whitespace.NEW_LINE); }
+
+      case ByteProto.OBJECT_END -> $protopop();
+
+      case ByteProto.PACKAGE_NAME -> $cloop0add(proto, ByteCode.IDENTIFIER);
+
+      case ByteProto.SIMPLE_NAME -> $cloop0add(proto, ByteCode.NAME);
+
+      case ByteProto.STRING_LITERAL -> $cloop0add(proto, ByteCode.STRING_LITERAL);
+
+      case ByteProto.METHOD_DECLARATION -> methodDeclaration();
+
+      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+
+      case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocationQualified();
+
+      case ByteProto.NO_TYPE -> { $cloop1parent(proto); $codeadd(Keyword.VOID); }
+
+      case ByteProto.PRIMITIVE_LITERAL -> $cloop0add(proto, ByteCode.PRIMITIVE_LITERAL);
+
+      case ByteProto.PRIMITIVE_TYPE -> $cloop0add(proto, ByteCode.RESERVED_KEYWORD);
+
+      case ByteProto.THIS -> { $cloop1parent(proto); $codeadd(Keyword.THIS); }
+
+      case ByteProto.TYPE_PARAMETER -> typeParameter();
+
+      case ByteProto.TYPE_VARIABLE -> $cloop0add(proto, ByteCode.IDENTIFIER);
+
+      case ByteProto.VAR_NAME -> varName();
+
+      default -> { code = 0; $cloop1parent(proto); $parentpush(code, proto); }
+    }
+
+    return proto;
+  }
+
+  private void $cloop0add(int proto, int code) {
+    $cloop1parent(proto);
+
+    $codeadd(code, $protonxt());
+  }
+
+  private void $cloop1parent(int child) {
+    var parent = $parentpeek();
+
+    switch (parent) {
+      case ByteProto.ANNOTATION -> annotation(child);
+
+      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression(child);
+
+      case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(child);
+
+      case ByteProto.ARRAY_TYPE -> arrayType(child);
+
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression(child);
+
+      case ByteProto.CHAINED_METHOD_INVOCATION -> chainedMethodInvocation(child);
+
+      case ByteProto.CLASS_DECLARATION -> classDeclaration(child);
+
+      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreation(child);
+
+      case ByteProto.CLASS_TYPE -> classType(child);
+
+      case ByteProto.COMPILATION_UNIT -> compilationUnit(child);
+
+      case ByteProto.EOF -> root(child);
+
+      case ByteProto.EXTENDS_MANY -> extendsMany(child);
+
+      case ByteProto.EXTENDS_SINGLE -> extendsSingle(child);
+
+      case ByteProto.EXPRESSION_NAME -> expressionName(child);
+
+      case ByteProto.FIELD_DECLARATION -> fieldDeclaration(child);
+
+      case ByteProto.FORMAL_PARAMETER -> formalParameter(child);
+
+      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclaration(child);
+
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration(child);
+
+      case ByteProto.METHOD_DECLARATION -> methodDeclaration(child);
+
+      case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
+          -> methodInvocation(child);
+
+      case ByteProto.PACKAGE_DECLARATION -> packageDeclaration(child);
+
+      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(child);
+
+      case ByteProto.RETURN_STATEMENT -> returnStatement(child);
+
+      case ByteProto.TYPE_PARAMETER -> typeParameter(child);
+    }
+  }
+
+  private void $cloop2break() {
+    if (markIndex < 0) {
+      return;
+    }
+
+    var self = $parentpop();
+
+    var state = $parentpop();
+
+    switch (self) {
+      case ByteProto.ANNOTATION -> annotationBreak(state);
+
+      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpressionBreak(state);
+
+      case ByteProto.ARRAY_INITIALIZER -> arrayInitializerBreak(state);
+
+      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpressionBreak(state);
+
+      case ByteProto.CHAINED_METHOD_INVOCATION -> semicolonIfNecessary();
+
+      case ByteProto.CLASS_DECLARATION -> classDeclarationBreak(state);
+
+      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreationBreak(state);
+
+      case ByteProto.CLASS_TYPE -> classTypeBreak(state);
+
+      case ByteProto.COMPILATION_UNIT -> $codeadd(ByteCode.EOF);
+
+      case ByteProto.FIELD_DECLARATION -> $codeadd(Separator.SEMICOLON);
+
+      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclarationBreak(state);
+
+      case ByteProto.LOCAL_VARIABLE -> localVariableDeclarationBreak(state);
+
+      case ByteProto.METHOD_DECLARATION -> methodDeclarationBreak(state);
+
+      case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
+          -> methodInvocationBreak(state);
+
+      case ByteProto.PACKAGE_DECLARATION -> $codeadd(Separator.SEMICOLON);
+
+      case ByteProto.PARAMETERIZED_TYPE -> $codeadd(Separator.RIGHT_ANGLE_BRACKET);
+
+      case ByteProto.RETURN_STATEMENT -> $codeadd(Separator.SEMICOLON);
+
+      case ByteProto.TYPE_PARAMETER -> typeParameterBreak(state);
+    }
+
+    switch ($parentpeek()) {
+      case ByteProto.CLASS_DECLARATION -> classDeclarationCallback(self);
+
+      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclarationCallback(self);
+
+      case ByteProto.METHOD_DECLARATION -> methodDeclarationCallback(self);
+
+      case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocationCallback(self);
+    }
   }
 
   private void $codeadd(int v0) {
@@ -162,6 +306,12 @@ class InternalCompiler2 extends InternalApi2 {
     stackArray[stackIndex++] = protoIndex;
 
     protoIndex = location;
+  }
+
+  private Keyword $keywordpeek() {
+    var index = protoArray[protoIndex];
+
+    return Keyword.get(index);
   }
 
   private Object $objectpeek() {
@@ -340,7 +490,7 @@ class InternalCompiler2 extends InternalApi2 {
   private void assignmentExpression() {
     var proto = ByteProto.ASSIGNMENT_EXPRESSION;
 
-    loop1Parent(proto);
+    $cloop1parent(proto);
 
     $parentpush(
       NULL, // 2 = operator location
@@ -498,7 +648,7 @@ class InternalCompiler2 extends InternalApi2 {
   private void classType() {
     var proto = ByteProto.CLASS_TYPE;
 
-    loop1Parent(proto);
+    $cloop1parent(proto);
 
     $parentpush(
       NULL, // 2 = code start
@@ -628,14 +778,14 @@ class InternalCompiler2 extends InternalApi2 {
         $codeadd(Whitespace.MANDATORY);
       }
 
-      $parentvalset(1, FieldDecl.MODIFIERS);
+      $parentvalset(1, FieldDecl.MODS);
 
       return;
     }
 
     if (child == ByteProto.IDENTIFIER) {
       switch (state) {
-        case FieldDecl.START, FieldDecl.MODIFIERS
+        case FieldDecl.START, FieldDecl.MODS
             -> $codeadd(Whitespace.MANDATORY);
 
         default -> {
@@ -643,7 +793,7 @@ class InternalCompiler2 extends InternalApi2 {
         }
       }
 
-      $parentvalset(1, FieldDecl.IDENTIFIER);
+      $parentvalset(1, FieldDecl.NAME);
 
       return;
     }
@@ -657,12 +807,34 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     if (ByteProto.isExpression(child) || child == ByteProto.ARRAY_INITIALIZER) {
-      if (state == FieldDecl.IDENTIFIER) {
+      if (state == FieldDecl.NAME) {
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Operator2.ASSIGNMENT);
         $codeadd(Whitespace.OPTIONAL);
 
-        $parentvalset(1, FieldDecl.INITIALIZE);
+        $parentvalset(1, FieldDecl.INIT);
+      }
+
+      return;
+    }
+  }
+
+  private void formalParameter(int child) {
+    var state = $parentvalget(1);
+
+    if (ByteProto.isType(child)) {
+      if (state == Param.START) {
+        $parentvalset(1, Param.TYPE);
+      }
+
+      return;
+    }
+
+    if (child == ByteProto.IDENTIFIER) {
+      if (state == Param.TYPE) {
+        $codeadd(Whitespace.MANDATORY);
+
+        $parentvalset(1, Param.NAME);
       }
 
       return;
@@ -745,13 +917,20 @@ class InternalCompiler2 extends InternalApi2 {
         codeArray[location + 0] = ByteCode.IDENTIFIER;
         codeArray[location + 1] = $protonxt();
       }
+
+      case ByteProto.TYPE_PARAMETER -> {
+        int location = $parentvalget(2);
+
+        codeArray[location + 0] = ByteCode.IDENTIFIER;
+        codeArray[location + 1] = $protonxt();
+      }
     }
   }
 
   private void localVariableDeclaration() {
     var proto = ByteProto.LOCAL_VARIABLE;
 
-    loop1Parent(proto);
+    $cloop1parent(proto);
 
     $parentpush(
       NULL, // 2 = name location
@@ -796,170 +975,180 @@ class InternalCompiler2 extends InternalApi2 {
     $codeadd(Separator.SEMICOLON);
   }
 
-  private int loop() {
-    var proto = $protonxt();
+  private void methodDeclaration() {
+    var proto = ByteProto.METHOD_DECLARATION;
 
-    switch (proto) {
-      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
+    $cloop1parent(proto);
 
-      case ByteProto.ASSIGNMENT_OPERATOR -> assignmentOperator();
-
-      case ByteProto.BREAK -> { loop2Break(); $protopop(); }
-
-      case ByteProto.CLASS_TYPE -> classType();
-
-      case ByteProto.EOF -> {}
-
-      case ByteProto.IDENTIFIER -> loop0(proto, ByteCode.IDENTIFIER);
-
-      case ByteProto.INVOKE_METHOD_NAME -> invokeMethodName();
-
-      case ByteProto.JMP -> $jump();
-
-      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration();
-
-      case ByteProto.MODIFIER -> loop0(proto, ByteCode.RESERVED_KEYWORD);
-
-      case ByteProto.NEW_LINE -> { loop1Parent(proto); $codeadd(Whitespace.NEW_LINE); }
-
-      case ByteProto.OBJECT_END -> $protopop();
-
-      case ByteProto.PACKAGE_NAME -> loop0(proto, ByteCode.IDENTIFIER);
-
-      case ByteProto.SIMPLE_NAME -> loop0(proto, ByteCode.NAME);
-
-      case ByteProto.STRING_LITERAL -> loop0(proto, ByteCode.STRING_LITERAL);
-
-      case ByteProto.METHOD_INVOCATION -> methodInvocation();
-
-      case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocationQualified();
-
-      case ByteProto.PRIMITIVE_LITERAL -> loop0(proto, ByteCode.PRIMITIVE_LITERAL);
-
-      case ByteProto.PRIMITIVE_TYPE -> loop0(proto, ByteCode.RESERVED_KEYWORD);
-
-      case ByteProto.THIS -> { loop1Parent(proto); $codeadd(Keyword.THIS); }
-
-      case ByteProto.VAR_NAME -> varName();
-
-      default -> { code = 0; loop1Parent(proto); $parentpush(code, proto); }
-    }
-
-    return proto;
+    $parentpush(
+      0, // 2 = is abstract?
+      MethDecl.START, // 1 = state
+      proto
+    );
   }
 
-  private void loop0(int proto, int code) {
-    loop1Parent(proto);
+  private void methodDeclaration(int child) {
+    var state = $parentvalget(1);
 
-    $codeadd(code, $protonxt());
-  }
+    if (child == ByteProto.MODIFIER) {
+      var modifier = $keywordpeek();
 
-  private void loop1Parent(int child) {
-    var parent = $parentpeek();
+      if (modifier == Keyword.ABSTRACT) {
+        $parentvalinc(2);
+      }
 
-    switch (parent) {
-      case ByteProto.ANNOTATION -> annotation(child);
+      if (state == MethDecl.MODS) {
+        $codeadd(Whitespace.MANDATORY);
+      }
 
-      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression(child);
+      $parentvalset(1, MethDecl.MODS);
 
-      case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(child);
-
-      case ByteProto.ARRAY_TYPE -> arrayType(child);
-
-      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression(child);
-
-      case ByteProto.CHAINED_METHOD_INVOCATION -> chainedMethodInvocation(child);
-
-      case ByteProto.CLASS_DECLARATION -> classDeclaration(child);
-
-      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreation(child);
-
-      case ByteProto.CLASS_TYPE -> classType(child);
-
-      case ByteProto.COMPILATION_UNIT -> compilationUnit(child);
-
-      case ByteProto.EOF -> root(child);
-
-      case ByteProto.EXTENDS_MANY -> extendsMany(child);
-
-      case ByteProto.EXTENDS_SINGLE -> extendsSingle(child);
-
-      case ByteProto.EXPRESSION_NAME -> expressionName(child);
-
-      case ByteProto.FIELD_DECLARATION -> fieldDeclaration(child);
-
-      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclaration(child);
-
-      case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration(child);
-
-      case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
-          -> methodInvocation(child);
-
-      case ByteProto.PACKAGE_DECLARATION -> packageDeclaration(child);
-
-      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(child);
-
-      case ByteProto.RETURN_STATEMENT -> returnStatement(child);
-    }
-  }
-
-  private void loop2Break() {
-    if (markIndex < 0) {
       return;
     }
 
-    var self = $parentpop();
+    if (child == ByteProto.TYPE_PARAMETER) {
+      switch (state) {
+        case MethDecl.START -> {
+          $codeadd(Separator.LEFT_ANGLE_BRACKET);
 
-    var state = $parentpop();
+          $parentvalset(1, MethDecl.TPAR);
+        }
 
-    switch (self) {
-      case ByteProto.ANNOTATION -> annotationBreak(state);
+        case MethDecl.MODS -> {
+          $codeadd(Whitespace.MANDATORY);
 
-      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpressionBreak(state);
+          $codeadd(Separator.LEFT_ANGLE_BRACKET);
 
-      case ByteProto.ARRAY_INITIALIZER -> arrayInitializerBreak(state);
+          $parentvalset(1, MethDecl.TPAR);
+        }
 
-      case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpressionBreak(state);
+        case MethDecl.TPAR -> {
+          commaAndSpace();
+        }
+      }
 
-      case ByteProto.CHAINED_METHOD_INVOCATION -> semicolonIfNecessary();
-
-      case ByteProto.CLASS_DECLARATION -> classDeclarationBreak(state);
-
-      case ByteProto.CLASS_INSTANCE_CREATION0 -> classInstanceCreationBreak(state);
-
-      case ByteProto.CLASS_TYPE -> classTypeBreak(state);
-
-      case ByteProto.COMPILATION_UNIT -> $codeadd(ByteCode.EOF);
-
-      case ByteProto.FIELD_DECLARATION -> $codeadd(Separator.SEMICOLON);
-
-      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclarationBreak(state);
-
-      case ByteProto.LOCAL_VARIABLE -> localVariableDeclarationBreak(state);
-
-      case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
-          -> methodInvocationBreak(state);
-
-      case ByteProto.PACKAGE_DECLARATION -> $codeadd(Separator.SEMICOLON);
-
-      case ByteProto.PARAMETERIZED_TYPE -> $codeadd(Separator.GREATER_THAN_SIGN);
-
-      case ByteProto.RETURN_STATEMENT -> $codeadd(Separator.SEMICOLON);
+      return;
     }
 
-    switch ($parentpeek()) {
-      case ByteProto.CLASS_DECLARATION -> classDeclarationCallback(self);
+    if (ByteProto.isType(child)) {
+      switch (state) {
+        case MethDecl.MODS -> $codeadd(Whitespace.MANDATORY);
 
-      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclarationCallback(self);
+        case MethDecl.TPAR -> {
+          $codeadd(Separator.RIGHT_ANGLE_BRACKET);
 
-      case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocationCallback(self);
+          $codeadd(Whitespace.OPTIONAL);
+        }
+      }
+
+      $parentvalset(1, MethDecl.TYPE);
+
+      return;
+    }
+
+    if (child == ByteProto.IDENTIFIER) {
+      if (state < MethDecl.TYPE) {
+        $codeadd(Keyword.VOID);
+      }
+
+      $codeadd(Whitespace.MANDATORY);
+
+      $parentvalset(1, MethDecl.NAME);
+
+      return;
+    }
+
+    if (child == ByteProto.FORMAL_PARAMETER) {
+      if (state != MethDecl.PARAM) {
+        $codeadd(Separator.LEFT_PARENTHESIS);
+      } else {
+        commaAndSpace();
+      }
+
+      $parentvalset(1, MethDecl.PARAM);
+
+      return;
+    }
+
+    // body
+
+    switch (state) {
+      case MethDecl.NAME -> {
+        $codeadd(Separator.LEFT_PARENTHESIS);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+        $codeadd(Whitespace.OPTIONAL);
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+
+        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+
+        $codeadd(PseudoElement.INDENTATION);
+
+        $parentvalset(1, MethDecl.BODY);
+      }
+
+      case MethDecl.BODY -> {
+        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+
+        $codeadd(PseudoElement.INDENTATION);
+      }
+    }
+  }
+
+  private void methodDeclarationBreak(int state) {
+    var isAbstract = $parentpop() > 0; // is abstract
+
+    switch (state) {
+      case MethDecl.NAME -> {
+        $codeadd(Separator.LEFT_PARENTHESIS);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+
+        if (isAbstract) {
+          $codeadd(Separator.SEMICOLON);
+        } else {
+          $codeadd(Whitespace.OPTIONAL);
+          $codeadd(Separator.LEFT_CURLY_BRACKET);
+          $codeadd(Separator.RIGHT_CURLY_BRACKET);
+        }
+      }
+
+      case MethDecl.PARAM -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+
+        if (isAbstract) {
+          $codeadd(Separator.SEMICOLON);
+        } else {
+          $codeadd(Whitespace.OPTIONAL);
+          $codeadd(Separator.LEFT_CURLY_BRACKET);
+          $codeadd(Separator.RIGHT_CURLY_BRACKET);
+        }
+      }
+
+      case MethDecl.BODY -> {
+        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+    }
+  }
+
+  private void methodDeclarationCallback(int child) {
+    var state = $parentvalget(1);
+
+    switch (child) {
+      case ByteProto.ANNOTATION -> {
+
+        if (state != MethDecl.MODS) {
+          $codeadd(PseudoElement.AFTER_ANNOTATION);
+        }
+
+      }
     }
   }
 
   private void methodInvocation() {
     var proto = ByteProto.METHOD_INVOCATION;
 
-    loop1Parent(proto);
+    $cloop1parent(proto);
 
     var nameLocation = codeIndex;
 
@@ -969,7 +1158,7 @@ class InternalCompiler2 extends InternalApi2 {
       0, // 4 = NL
       nameLocation, // 3
       NULL, // 2 = comma slot
-      MInvoke.METHOD_NAME, // 1 = state
+      MInvoke.NAME, // 1 = state
       proto
     );
   }
@@ -978,19 +1167,19 @@ class InternalCompiler2 extends InternalApi2 {
     var state = $parentvalget(1);
 
     switch (state) {
-      case MInvoke.METHOD_NAME -> {
+      case MInvoke.NAME -> {
         $codeadd(Separator.LEFT_PARENTHESIS);
 
         if (child == ByteProto.NEW_LINE) {
           $parentvalinc(4);
 
-          $parentvalset(1, MInvoke.LEFT_PAR);
+          $parentvalset(1, MInvoke.LPAR);
         } else {
           $parentvalset(1, MInvoke.ARG);
         }
       }
 
-      case MInvoke.LEFT_PAR -> {
+      case MInvoke.LPAR -> {
         if (child != ByteProto.NEW_LINE) {
           $parentindent(4);
 
@@ -1032,7 +1221,7 @@ class InternalCompiler2 extends InternalApi2 {
     $parentpop(); // name loc
     $parentpop(); // nl
 
-    if (state == MInvoke.METHOD_NAME) {
+    if (state == MInvoke.NAME) {
       $codeadd(Separator.LEFT_PARENTHESIS);
     }
 
@@ -1044,7 +1233,7 @@ class InternalCompiler2 extends InternalApi2 {
   private void methodInvocationCallback(int child) {
     var state = $parentvalget(1);
 
-    if (state == MInvoke.SUBJECT) {
+    if (state == MInvoke.RECV) {
       $codeadd(Separator.DOT);
 
       var nameLocation = codeIndex;
@@ -1053,20 +1242,20 @@ class InternalCompiler2 extends InternalApi2 {
 
       $parentvalset(3, nameLocation);
 
-      $parentvalset(1, MInvoke.METHOD_NAME);
+      $parentvalset(1, MInvoke.NAME);
     }
   }
 
   private void methodInvocationQualified() {
     var proto = ByteProto.METHOD_INVOCATION_QUALIFIED;
 
-    loop1Parent(proto);
+    $cloop1parent(proto);
 
     $parentpush(
       0, // 4 = NL
       NULL, // 3
       NULL, // 2 = comma slot
-      MInvoke.SUBJECT, // 1 = state
+      MInvoke.RECV, // 1 = state
       proto
     );
   }
@@ -1095,7 +1284,7 @@ class InternalCompiler2 extends InternalApi2 {
     switch (count) {
       case 0 -> {}
 
-      case 1 -> $codeadd(Separator.LESS_THAN_SIGN);
+      case 1 -> $codeadd(Separator.LEFT_ANGLE_BRACKET);
 
       default -> commaAndSpace();
     }
@@ -1118,6 +1307,54 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
     }
+  }
+
+  private void typeParameter() {
+    var proto = ByteProto.TYPE_PARAMETER;
+
+    $cloop1parent(proto);
+
+    var nameLocation = codeIndex;
+
+    $codeadd(ByteCode.NOP1, 0);
+
+    $parentpush(
+      nameLocation, // 2 = name location
+      TypeParam.NAME, // 1 = state
+      proto
+    );
+  }
+
+  private void typeParameter(int child) {
+    var state = $parentvalget(1);
+
+    if (ByteProto.isType(child)) {
+      switch (state) {
+        case TypeParam.NAME -> {
+          $codeadd(Whitespace.MANDATORY);
+
+          $codeadd(Keyword.EXTENDS);
+
+          $codeadd(Whitespace.MANDATORY);
+
+          $parentvalset(1, TypeParam.TYPE);
+        }
+
+        case TypeParam.TYPE -> {
+          $codeadd(Whitespace.OPTIONAL);
+
+          $codeadd(Separator.AMPERSAND);
+
+          $codeadd(Whitespace.OPTIONAL);
+        }
+      }
+
+      return;
+    }
+  }
+
+  private void typeParameterBreak(int state) {
+    $parentpop(); // name location
   }
 
   private void varName() {

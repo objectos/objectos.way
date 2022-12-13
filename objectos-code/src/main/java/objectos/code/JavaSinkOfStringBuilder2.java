@@ -83,9 +83,9 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
   @Override
   protected final void writeSeparator(Separator value) {
     switch (value) {
-      case LEFT_PARENTHESIS -> { levelIncrease(); out.append(value); }
+      case LEFT_CURLY_BRACKET, LEFT_PARENTHESIS -> { levelIncrease(); out.append(value); }
 
-      case RIGHT_PARENTHESIS -> { levelDecrease(); out.append(value); }
+      case RIGHT_CURLY_BRACKET, RIGHT_PARENTHESIS -> { levelDecrease(); out.append(value); }
 
       default -> out.append(value);
     }

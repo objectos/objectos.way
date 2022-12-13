@@ -18,15 +18,17 @@ package objectos.code;
 public enum Operator2 {
 
   /*
-
+  
   =   >   <   !   ~   ?   :   ->
   ==  >=  <=  !=  &&  ||  ++  --
   +   -   *   /   &   |   ^   %   <<   >>   >>>
   +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
-
+  
    */
 
-  ASSIGNMENT("=");
+  ASSIGNMENT("="),
+
+  BITWISE_AND("&");
 
   private static final Operator2[] VALUES = values();
 

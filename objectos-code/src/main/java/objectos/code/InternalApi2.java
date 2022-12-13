@@ -298,9 +298,9 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final VoidInvocation _void() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.NO_TYPE);
+    protoAdd(ByteProto.NO_TYPE, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }
@@ -440,9 +440,9 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final Ellipsis ellipsis() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.ELLIPSIS);
+    protoAdd(ByteProto.ELLIPSIS, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }
@@ -745,13 +745,15 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
 
   @Override
   public final TypeParameter tparam(String name, TypeParameterBound[] bounds) {
-    identifier(name);
+    Objects.requireNonNull(name, "name == null");
+
+    object(ByteProto.INVOKE_METHOD_NAME, name);
 
     markStart();
 
     markReference();
 
-    for (var bound : bounds) {
+    for (var bound : bounds) { // implicit null check
       bound.mark(this);
     }
 

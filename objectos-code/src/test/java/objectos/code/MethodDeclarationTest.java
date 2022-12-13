@@ -94,23 +94,27 @@ public class MethodDeclarationTest {
   }
 
   @Test(description = """
-  - single modifier
-  - void
-  - empty body
+  Method declarations TC04
+
+  - modifiers
   """)
   public void testCase04() {
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          method(
-            _final(), _void(), id("test")
-          );
+          method(_final(), _void(), id("a"));
+          method(_public(), _final(), _void(), id("b"));
+          method(_protected(), _static(), _final(), _void(), id("c"));
         }
       }.toString(),
 
       """
-      final void test() {}
+      final void a() {}
+
+      public final void b() {}
+
+      protected static final void c() {}
       """
     );
   }
@@ -378,7 +382,7 @@ public class MethodDeclarationTest {
             tparam("T", t(Object.class)), _void(), id("test3")
           );
           method(
-            tparam("T", t(Object.class), t(Serializable.class)), _void(), id("test4")
+            tparam("T", t(Object.class), t(Serializable.class)), t(String.class), id("test4")
           );
         }
       }.toString(),
@@ -392,7 +396,7 @@ public class MethodDeclarationTest {
 
       <T extends java.lang.Object> void test3() {}
 
-      <T extends java.lang.Object & java.io.Serializable> void test4() {}
+      <T extends java.lang.Object & java.io.Serializable> java.lang.String test4() {}
       """
     );
   }

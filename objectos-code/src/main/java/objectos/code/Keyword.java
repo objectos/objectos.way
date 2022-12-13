@@ -53,7 +53,9 @@ public enum Keyword {
 
   THIS,
 
-  VAR;
+  VAR,
+
+  VOID;
 
   private static final Keyword[] VALUES = values();
 

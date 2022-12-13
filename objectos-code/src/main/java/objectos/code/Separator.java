@@ -42,11 +42,12 @@ public enum Separator {
   DOUBLE_COLON("::"),
 
   // these are JLS operators...
-  // but should be treated as separators in parameterized types.
+  // but should be treated as separators in types.
+  AMPERSAND("&"),
 
-  LESS_THAN_SIGN("<"),
+  LEFT_ANGLE_BRACKET("<"),
 
-  GREATER_THAN_SIGN(">");
+  RIGHT_ANGLE_BRACKET(">");
 
   private static final Separator[] VALUES = values();
 
