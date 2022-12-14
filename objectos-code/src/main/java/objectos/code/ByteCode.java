@@ -107,13 +107,14 @@ final class ByteCode {
   static final int CONSTRUCTOR_NAME = -53;
   static final int CONSTRUCTOR_NAME_STORE = -54;
   static final int IDENTIFIER = -55;
-  static final int NAME = -56;
-  static final int NOP1 = -57;
-  static final int OPERATOR = -58;
-  static final int PSEUDO_ELEMENT = -59;
-  static final int RESERVED_KEYWORD = -60;
-  static final int SEPARATOR = -61;
-  static final int WHITESPACE = -62;
+  static final int INDENTATION = -56;
+  static final int NAME = -57;
+  static final int NOP1 = -58;
+  static final int OPERATOR = -59;
+  static final int PSEUDO_ELEMENT = -60;
+  static final int RESERVED_KEYWORD = -61;
+  static final int SEPARATOR = -62;
+  static final int WHITESPACE = -63;
 
   private ByteCode() {}
 
@@ -124,11 +125,10 @@ final class ByteCode {
 
   public static boolean isExpressionStatement(int code) {
     return switch (code) {
-      case
-          ASSIGNMENT_EXPRESSION,
-          CHAINED_METHOD_INVOCATION,
-          CLASS_INSTANCE_CREATION,
-          METHOD_INVOCATION -> true;
+      case ASSIGNMENT_EXPRESSION,
+           CHAINED_METHOD_INVOCATION,
+           CLASS_INSTANCE_CREATION,
+           METHOD_INVOCATION -> true;
 
       default -> false;
     };
@@ -136,12 +136,11 @@ final class ByteCode {
 
   public static boolean isTypeName(int code) {
     return switch (code) {
-      case
-          ARRAY_TYPE,
-          CLASS_TYPE,
-          NO_TYPE,
-          PARAMETERIZED_TYPE,
-          PRIMITIVE_TYPE -> true;
+      case ARRAY_TYPE,
+           CLASS_TYPE,
+           NO_TYPE,
+           PARAMETERIZED_TYPE,
+           PRIMITIVE_TYPE -> true;
 
       default -> false;
     };

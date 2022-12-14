@@ -29,11 +29,7 @@ public enum PseudoElement {
 
   BEFORE_NEXT_COMMA_SEPARATED_ITEM,
 
-  BEFORE_NON_EMPTY_BLOCK_END,
-
-  INDENTATION,
-
-  CONTINUATION_INDENTATION;
+  BEFORE_NON_EMPTY_BLOCK_END;
 
   private static final PseudoElement[] VALUES = values();
 

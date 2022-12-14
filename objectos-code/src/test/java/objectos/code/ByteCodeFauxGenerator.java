@@ -115,6 +115,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("CONSTRUCTOR_NAME");
     value("CONSTRUCTOR_NAME_STORE");
     value("IDENTIFIER");
+    value("INDENTATION");
     value("NAME");
     value("NOP1");
     value("OPERATOR");

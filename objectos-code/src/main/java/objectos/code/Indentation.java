@@ -15,61 +15,24 @@
  */
 package objectos.code;
 
-import java.util.Locale;
+public enum Indentation {
 
-public enum Keyword {
+  CONTINUATION,
 
-  ABSTRACT,
+  ENTER_BLOCK,
 
-  BOOLEAN,
+  EXIT_BLOCK,
 
-  CLASS,
+  ENTER_PARENTHESIS,
 
-  DOUBLE,
+  EXIT_PARENTHESIS,
 
-  EXTENDS,
+  EMIT;
 
-  FINAL,
+  private static final Indentation[] VALUES = values();
 
-  IMPLEMENTS,
-
-  IMPORT,
-
-  INT,
-
-  INTERFACE,
-
-  NEW,
-
-  PACKAGE,
-
-  PRIVATE,
-
-  PROTECTED,
-
-  PUBLIC,
-
-  RETURN,
-
-  STATIC,
-
-  SUPER,
-
-  THIS,
-
-  VAR,
-
-  VOID;
-
-  private static final Keyword[] VALUES = values();
-
-  private final String toString = name().toLowerCase(Locale.US);
-
-  static Keyword get(int index) {
+  static Indentation get(int index) {
     return VALUES[index];
   }
-
-  @Override
-  public final String toString() { return toString; }
 
 }

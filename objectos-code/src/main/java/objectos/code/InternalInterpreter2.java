@@ -23,6 +23,8 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
   protected abstract void writeIdentifier(String name);
 
+  protected abstract void writeIndentation(Indentation value);
+
   protected abstract void writeLiteral(String value);
 
   protected abstract void writeName(String name);
@@ -84,6 +86,8 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
       case ByteCode.EOF -> {}
 
       case ByteCode.IDENTIFIER -> identifier();
+
+      case ByteCode.INDENTATION -> indentation();
 
       case ByteCode.NAME -> name();
 
@@ -152,6 +156,14 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     var name = (String) objectArray[index];
 
     writeIdentifier(name);
+  }
+
+  private void indentation() {
+    var index = $codenxt();
+
+    var value = Indentation.get(index);
+
+    writeIndentation(value);
   }
 
   private void name() {

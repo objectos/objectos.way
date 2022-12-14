@@ -42,6 +42,25 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
   }
 
   @Override
+  protected final void writeIndentation(Indentation value) {
+    switch (value) {
+      case CONTINUATION -> writeIndentation(level() + 2);
+
+      case ENTER_BLOCK -> levelIncrease();
+
+      case EXIT_BLOCK -> levelDecrease();
+
+      case ENTER_PARENTHESIS -> levelIncrease();
+
+      case EXIT_PARENTHESIS -> levelDecrease();
+
+      case EMIT -> writeIndentation(level());
+
+      default -> {}
+    }
+  }
+
+  @Override
   protected final void writeLiteral(String value) {
     out.append(value);
   }
@@ -53,7 +72,7 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
   @Override
   protected final void writeOperator(Operator2 operator) {
-    out.append(operator.toString());
+    out.append(operator);
   }
 
   @Override
@@ -71,10 +90,6 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
       case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
 
-      case INDENTATION -> writeIndentation(level());
-
-      case CONTINUATION_INDENTATION -> writeIndentation(level() + 2);
-
       default -> {}
     }
   }
@@ -86,21 +101,7 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
   @Override
   protected final void writeSeparator(Separator value) {
-    switch (value) {
-      case LEFT_CURLY_BRACKET, LEFT_PARENTHESIS -> {
-        levelIncrease();
-
-        out.append(value);
-      }
-
-      case RIGHT_CURLY_BRACKET, RIGHT_PARENTHESIS -> {
-        levelDecrease();
-
-        out.append(value);
-      }
-
-      default -> out.append(value);
-    }
+    out.append(value);
   }
 
   @Override
