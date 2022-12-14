@@ -27,6 +27,8 @@ public enum Keyword {
 
   DOUBLE,
 
+  ENUM,
+
   EXTENDS,
 
   FINAL,

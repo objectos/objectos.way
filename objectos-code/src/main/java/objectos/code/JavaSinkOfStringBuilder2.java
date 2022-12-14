@@ -82,6 +82,8 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
 
       case BEFORE_FIRST_MEMBER -> writenl();
 
+      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); }
+
       case BEFORE_NEXT_TOP_LEVEL_ITEM -> { writenl(); writenl(); }
 
       case BEFORE_NEXT_STATEMENT -> writenl();

@@ -48,16 +48,18 @@ class InternalCompiler2 extends InternalApi2 {
   private static final int NULL = Integer.MIN_VALUE;
 
   private static final int _START = 0;
-  private static final int _LHS = 1;
+  private static final int _ANNOTATION = 1;
   private static final int _MODS = 2;
   private static final int _TPAR = 3;
   private static final int _TYPE = 4;
   private static final int _NAME = 5;
   private static final int _EXTENDS = 6;
   private static final int _IMPLEMENTS = 7;
-  private static final int _PARAM = 8;
-  private static final int _ARG = 9;
-  private static final int _BODY = 10;
+  private static final int _CONSTANTS = 8;
+  private static final int _PARAM = 9;
+  private static final int _ARG = 10;
+  private static final int _BODY = 11;
+  private static final int _LHS = 12;
 
   final void pass1() {
     code = 0;
@@ -175,6 +177,10 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.CONSTRUCTOR_DECLARATION -> constructorDeclaration(child);
 
+      case ByteProto.ENUM_CONSTANT -> enumConstant(child);
+
+      case ByteProto.ENUM_DECLARATION -> enumDeclaration(child);
+
       case ByteProto.EOF -> root(child);
 
       case ByteProto.EXTENDS_MANY -> extendsMany(child);
@@ -241,6 +247,10 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.COMPILATION_UNIT -> $codeadd(ByteCode.EOF);
 
       case ByteProto.CONSTRUCTOR_DECLARATION -> constructorDeclarationBreak(state);
+
+      case ByteProto.ENUM_CONSTANT -> enumConstantBreak(state);
+
+      case ByteProto.ENUM_DECLARATION -> enumDeclarationBreak(state);
 
       case ByteProto.FIELD_DECLARATION -> $codeadd(Separator.SEMICOLON);
 
@@ -920,6 +930,167 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
+  private void enumConstant(int child) {
+    var state = $parentvalget(1);
+
+    if (child == ByteProto.IDENTIFIER) {
+      if (state == _START) {
+        $parentvalset(1, _NAME);
+      }
+    } else if (ByteProto.isExpression(child)) {
+      switch (state) {
+        case _NAME -> {
+          $codeadd(Separator.LEFT_PARENTHESIS);
+
+          $parentvalset(1, _ARG);
+        }
+
+        case _ARG -> {
+          commaAndSpace();
+        }
+      }
+    }
+  }
+
+  private void enumConstantBreak(int state) {
+    switch (state) {
+      case _ARG -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+    }
+  }
+
+  private void enumDeclaration(int child) {
+    var state = $parentvalget(1);
+
+    switch (child) {
+      case ByteProto.ANNOTATION -> {
+        if (state == _ANNOTATION) {
+          $codeadd(PseudoElement.AFTER_ANNOTATION);
+          $codeadd(Indentation.EMIT);
+        } else {
+          $codeadd(Indentation.EMIT);
+
+          $parentvalset(1, _ANNOTATION);
+        }
+      }
+
+      case ByteProto.MODIFIER -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Indentation.EMIT);
+
+            $parentvalset(1, _MODS);
+          }
+
+          case _ANNOTATION -> {
+            $codeadd(PseudoElement.AFTER_ANNOTATION);
+            $codeadd(Indentation.EMIT);
+
+            $parentvalset(1, _MODS);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+          }
+        }
+      }
+
+      case ByteProto.IDENTIFIER -> {
+        $codeadd(ByteCode.CONSTRUCTOR_NAME_STORE, $protopeek());
+
+        switch (state) {
+          case _START -> {
+            $codeadd(Keyword.ENUM);
+            $codeadd(Whitespace.MANDATORY);
+
+            $parentvalset(1, _NAME);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $codeadd(Keyword.ENUM);
+            $codeadd(Whitespace.MANDATORY);
+
+            $parentvalset(1, _NAME);
+          }
+        }
+      }
+
+      case ByteProto.IMPLEMENTS -> {
+        switch (state) {
+          case _NAME -> {
+            $codeadd(Whitespace.MANDATORY);
+
+            $parentvalset(1, _IMPLEMENTS);
+
+            code = _START;
+          }
+
+          case _IMPLEMENTS -> {
+            code = _TYPE;
+          }
+        }
+      }
+
+      case ByteProto.ENUM_CONSTANT -> {
+        switch (state) {
+          case _NAME, _IMPLEMENTS -> {
+            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Separator.LEFT_CURLY_BRACKET);
+            $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.ENTER_BLOCK);
+            $codeadd(Indentation.EMIT);
+
+            $parentvalset(1, _CONSTANTS);
+          }
+
+          case _CONSTANTS -> {
+            $codeadd(Separator.COMMA);
+            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+            $codeadd(Indentation.EMIT);
+          }
+        }
+      }
+
+      default -> {
+        switch (state) {
+          case _CONSTANTS -> {
+            $codeadd(Separator.SEMICOLON);
+            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+            $codeadd(Indentation.EMIT);
+
+            $parentvalset(1, _BODY);
+          }
+
+          case _BODY -> {
+            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+            $codeadd(Indentation.EMIT);
+          }
+        }
+      }
+    }
+  }
+
+  private void enumDeclarationBreak(int state) {
+    switch (state) {
+      case _CONSTANTS -> {
+        $codeadd(Separator.SEMICOLON);
+        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Indentation.EMIT);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _BODY -> {
+        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Indentation.EMIT);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+    }
+  }
+
   private void expressionName(int child) {
     if (child == ByteProto.IDENTIFIER) {
       int state = $parentvalget(1);
@@ -1218,11 +1389,17 @@ class InternalCompiler2 extends InternalApi2 {
         $parentvalinc(2);
       }
 
-      if (state == _MODS) {
-        $codeadd(Whitespace.MANDATORY);
-      }
+      switch (state) {
+        case _START -> {
+          $codeadd(Indentation.EMIT);
 
-      $parentvalset(1, _MODS);
+          $parentvalset(1, _MODS);
+        }
+
+        case _MODS -> {
+          $codeadd(Whitespace.MANDATORY);
+        }
+      }
 
       return;
     }
