@@ -27,8 +27,6 @@ class InternalCompiler2 extends InternalApi2 {
 
   private interface ChainIvk { int START = 0; int NL = 1; int NEXT = 2; }
 
-  private interface ClassDecl { int START = 0; int MODS = 1; }
-
   private interface CUnit { int CONTENTS = 1 << 0; int AUTO_IMPORTS = 1 << 1; }
 
   private interface ExpName { int START = 0; int BASE = 1; int NAME = 2; }
@@ -41,16 +39,6 @@ class InternalCompiler2 extends InternalApi2 {
 
   private interface LocalVar { int START = 0; int INIT = 1; }
 
-  private interface MethDecl {
-    int START = 0;
-    int MODS = 1;
-    int TPAR = 2;
-    int TYPE = 3;
-    int NAME = 4;
-    int PARAM = 5;
-    int BODY = 6;
-  }
-
   private interface MInvoke { int RECV = 0; int NAME = 1; int LPAR = 2; int ARG = 3; int SLOT = 4; }
 
   private interface NewExpr { int START = 0; int TYPE = 1; int ARG = 2; }
@@ -60,6 +48,18 @@ class InternalCompiler2 extends InternalApi2 {
   private interface TypeParam { int NAME = 0; int TYPE = 1; }
 
   private static final int NULL = Integer.MIN_VALUE;
+
+  private static final int _START = 0;
+
+  private static final int LHS = 1;
+
+  private static final int _MODS = 2;
+  private static final int _TPAR = 3;
+  private static final int _RTYPE = 4;
+  private static final int _NAME = 5;
+  private static final int _PARAM = 6;
+  private static final int _ARG = 7;
+  private static final int _BODY = 8;
 
   final void pass1() {
     code = 0;
@@ -139,7 +139,7 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.VAR_NAME -> varName();
 
-      default -> { code = 0; $cloop1parent(proto); $parentpush(code, proto); }
+      default -> { code = _START; $cloop1parent(proto); $parentpush(code, proto); }
     }
 
     return proto;
@@ -175,6 +175,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.COMPILATION_UNIT -> compilationUnit(child);
 
+      case ByteProto.CONSTRUCTOR_DECLARATION -> constructorDeclaration(child);
+
       case ByteProto.EOF -> root(child);
 
       case ByteProto.EXTENDS_MANY -> extendsMany(child);
@@ -182,6 +184,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.EXTENDS_SINGLE -> extendsSingle(child);
 
       case ByteProto.EXPRESSION_NAME -> expressionName(child);
+
+      case ByteProto.FIELD_ACCESS_EXPRESSION0 -> fieldAccessExpression0(child);
 
       case ByteProto.FIELD_DECLARATION -> fieldDeclaration(child);
 
@@ -194,13 +198,15 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.METHOD_DECLARATION -> methodDeclaration(child);
 
       case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
-          -> methodInvocation(child);
+           -> methodInvocation(child);
 
       case ByteProto.PACKAGE_DECLARATION -> packageDeclaration(child);
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(child);
 
       case ByteProto.RETURN_STATEMENT -> returnStatement(child);
+
+      case ByteProto.SUPER_INVOCATION -> superInvocation(child);
 
       case ByteProto.TYPE_PARAMETER -> typeParameter(child);
     }
@@ -234,6 +240,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.COMPILATION_UNIT -> $codeadd(ByteCode.EOF);
 
+      case ByteProto.CONSTRUCTOR_DECLARATION -> constructorDeclarationBreak(state);
+
       case ByteProto.FIELD_DECLARATION -> $codeadd(Separator.SEMICOLON);
 
       case ByteProto.INTERFACE_DECLARATION -> interfaceDeclarationBreak(state);
@@ -243,13 +251,15 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.METHOD_DECLARATION -> methodDeclarationBreak(state);
 
       case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
-          -> methodInvocationBreak(state);
+           -> methodInvocationBreak(state);
 
       case ByteProto.PACKAGE_DECLARATION -> $codeadd(Separator.SEMICOLON);
 
       case ByteProto.PARAMETERIZED_TYPE -> $codeadd(Separator.RIGHT_ANGLE_BRACKET);
 
       case ByteProto.RETURN_STATEMENT -> $codeadd(Separator.SEMICOLON);
+
+      case ByteProto.SUPER_INVOCATION -> superInvocationBreak(state);
 
       case ByteProto.TYPE_PARAMETER -> typeParameterBreak(state);
     }
@@ -395,6 +405,8 @@ class InternalCompiler2 extends InternalApi2 {
 
   private int $protonxt() { return protoArray[protoIndex++]; }
 
+  private int $protopeek() { return protoArray[protoIndex]; }
+
   private void $protopop() { protoIndex = stackArray[--stackIndex]; }
 
   private void annotation(int child) {
@@ -443,7 +455,6 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ArrAccess.NEXT -> {
         $codeadd(Separator.RIGHT_SQUARE_BRACKET);
-
         $codeadd(Separator.LEFT_SQUARE_BRACKET);
       }
     }
@@ -564,9 +575,7 @@ class InternalCompiler2 extends InternalApi2 {
       case ChainIvk.NL -> {
         if (child != ByteProto.NEW_LINE) {
           $codeadd(PseudoElement.CONTINUATION_INDENTATION);
-
           $codeadd(Separator.DOT);
-
           $parentvalset(1, ChainIvk.NEXT);
         }
       }
@@ -574,20 +583,40 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private void classDeclaration(int child) {
-    switch (child) {
-      case ByteProto.IDENTIFIER -> {
-        $codeadd(Keyword.CLASS);
+    var state = $parentvalget(1);
 
-        $codeadd(Whitespace.MANDATORY);
+    switch (state) {
+      case _START -> {
+        if (child == ByteProto.IDENTIFIER) {
+          $codeadd(ByteCode.CONSTRUCTOR_NAME_STORE, $protopeek());
+          $codeadd(Keyword.CLASS);
+          $codeadd(Whitespace.MANDATORY);
+
+          $parentvalset(1, _NAME);
+        }
+      }
+
+      case _NAME -> {
+        $codeadd(Whitespace.OPTIONAL);
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
+        $codeadd(PseudoElement.INDENTATION);
+
+        $parentvalset(1, _BODY);
       }
     }
   }
 
   private void classDeclarationBreak(int state) {
     switch (state) {
-      case ClassDecl.START -> {
+      case _NAME -> {
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _BODY -> {
+        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
     }
@@ -598,11 +627,9 @@ class InternalCompiler2 extends InternalApi2 {
 
     switch (child) {
       case ByteProto.ANNOTATION -> {
-
-        if (state != ClassDecl.MODS) {
+        if (state != _MODS) {
           $codeadd(PseudoElement.AFTER_ANNOTATION);
         }
-
       }
     }
   }
@@ -613,7 +640,6 @@ class InternalCompiler2 extends InternalApi2 {
     switch (state) {
       case NewExpr.START -> {
         $codeadd(Keyword.NEW);
-
         $codeadd(Whitespace.MANDATORY);
 
         if (child == ByteProto.CLASS_TYPE) {
@@ -704,7 +730,6 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void commaAndSpace() {
     $codeadd(Separator.COMMA);
-
     $codeadd(PseudoElement.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
   }
 
@@ -722,6 +747,120 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     $parentbitset(1, CUnit.CONTENTS);
+  }
+
+  private void constructorDeclaration(int child) {
+    var state = $parentvalget(1);
+
+    switch (child) {
+      case ByteProto.MODIFIER -> {
+        if (state == _MODS) {
+          $codeadd(Whitespace.MANDATORY);
+        } else {
+          $parentvalset(1, _MODS);
+        }
+      }
+
+      case ByteProto.FORMAL_PARAMETER -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(ByteCode.CONSTRUCTOR_NAME);
+            $codeadd(Separator.LEFT_PARENTHESIS);
+
+            $parentvalset(1, _PARAM);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $codeadd(ByteCode.CONSTRUCTOR_NAME);
+            $codeadd(Separator.LEFT_PARENTHESIS);
+
+            $parentvalset(1, _PARAM);
+          }
+
+          case _PARAM -> commaAndSpace();
+        }
+      }
+
+      default -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(ByteCode.CONSTRUCTOR_NAME);
+            $codeadd(Separator.LEFT_PARENTHESIS);
+            $codeadd(Separator.RIGHT_PARENTHESIS);
+            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Separator.LEFT_CURLY_BRACKET);
+            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(PseudoElement.INDENTATION);
+
+            $parentvalset(1, _BODY);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $codeadd(ByteCode.CONSTRUCTOR_NAME);
+            $codeadd(Separator.LEFT_PARENTHESIS);
+            $codeadd(Separator.RIGHT_PARENTHESIS);
+            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Separator.LEFT_CURLY_BRACKET);
+            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(PseudoElement.INDENTATION);
+
+            $parentvalset(1, _BODY);
+          }
+
+          case _PARAM -> {
+            $codeadd(Separator.RIGHT_PARENTHESIS);
+            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Separator.LEFT_CURLY_BRACKET);
+            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(PseudoElement.INDENTATION);
+
+            $parentvalset(1, _BODY);
+          }
+
+          case _BODY -> {
+            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(PseudoElement.INDENTATION);
+          }
+        }
+      }
+    }
+  }
+
+  private void constructorDeclarationBreak(int state) {
+    switch (state) {
+      case _START -> {
+        $codeadd(ByteCode.CONSTRUCTOR_NAME);
+        $codeadd(Separator.LEFT_PARENTHESIS);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+        $codeadd(Whitespace.OPTIONAL);
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _MODS -> {
+        $codeadd(Whitespace.MANDATORY);
+        $codeadd(ByteCode.CONSTRUCTOR_NAME);
+        $codeadd(Separator.LEFT_PARENTHESIS);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+        $codeadd(Whitespace.OPTIONAL);
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _PARAM -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+        $codeadd(Whitespace.OPTIONAL);
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _BODY -> {
+        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+    }
   }
 
   private void expressionName(int child) {
@@ -743,31 +882,35 @@ class InternalCompiler2 extends InternalApi2 {
 
     switch (state) {
       case ExtClause.START -> {
-
         if (child == ByteProto.CLASS_TYPE) {
           $codeadd(Whitespace.MANDATORY);
-
           $codeadd(Keyword.EXTENDS);
-
           $codeadd(Whitespace.MANDATORY);
 
           $parentvalset(1, ExtClause.TYPE);
         }
-
       }
 
       case ExtClause.TYPE -> {
-
         if (child == ByteProto.CLASS_TYPE) {
           commaAndSpace();
         }
-
       }
     }
   }
 
   private void extendsSingle(int child) {
     extendsMany(child);
+  }
+
+  private void fieldAccessExpression0(int child) {
+    var state = $parentvalget(1);
+
+    if (state == _START) {
+      $parentvalset(1, LHS);
+    } else {
+      $codeadd(Separator.DOT);
+    }
   }
 
   private void fieldDeclaration(int child) {
@@ -786,7 +929,7 @@ class InternalCompiler2 extends InternalApi2 {
     if (child == ByteProto.IDENTIFIER) {
       switch (state) {
         case FieldDecl.START, FieldDecl.MODS
-            -> $codeadd(Whitespace.MANDATORY);
+             -> $codeadd(Whitespace.MANDATORY);
 
         default -> {
           commaAndSpace();
@@ -982,7 +1125,7 @@ class InternalCompiler2 extends InternalApi2 {
 
     $parentpush(
       0, // 2 = is abstract?
-      MethDecl.START, // 1 = state
+      _START, // 1 = state
       proto
     );
   }
@@ -997,32 +1140,32 @@ class InternalCompiler2 extends InternalApi2 {
         $parentvalinc(2);
       }
 
-      if (state == MethDecl.MODS) {
+      if (state == _MODS) {
         $codeadd(Whitespace.MANDATORY);
       }
 
-      $parentvalset(1, MethDecl.MODS);
+      $parentvalset(1, _MODS);
 
       return;
     }
 
     if (child == ByteProto.TYPE_PARAMETER) {
       switch (state) {
-        case MethDecl.START -> {
+        case _START -> {
           $codeadd(Separator.LEFT_ANGLE_BRACKET);
 
-          $parentvalset(1, MethDecl.TPAR);
+          $parentvalset(1, _TPAR);
         }
 
-        case MethDecl.MODS -> {
+        case _MODS -> {
           $codeadd(Whitespace.MANDATORY);
 
           $codeadd(Separator.LEFT_ANGLE_BRACKET);
 
-          $parentvalset(1, MethDecl.TPAR);
+          $parentvalset(1, _TPAR);
         }
 
-        case MethDecl.TPAR -> {
+        case _TPAR -> {
           commaAndSpace();
         }
       }
@@ -1032,40 +1175,40 @@ class InternalCompiler2 extends InternalApi2 {
 
     if (ByteProto.isType(child)) {
       switch (state) {
-        case MethDecl.MODS -> $codeadd(Whitespace.MANDATORY);
+        case _MODS -> $codeadd(Whitespace.MANDATORY);
 
-        case MethDecl.TPAR -> {
+        case _TPAR -> {
           $codeadd(Separator.RIGHT_ANGLE_BRACKET);
 
           $codeadd(Whitespace.OPTIONAL);
         }
       }
 
-      $parentvalset(1, MethDecl.TYPE);
+      $parentvalset(1, _RTYPE);
 
       return;
     }
 
     if (child == ByteProto.IDENTIFIER) {
-      if (state < MethDecl.TYPE) {
+      if (state < _RTYPE) {
         $codeadd(Keyword.VOID);
       }
 
       $codeadd(Whitespace.MANDATORY);
 
-      $parentvalset(1, MethDecl.NAME);
+      $parentvalset(1, _NAME);
 
       return;
     }
 
     if (child == ByteProto.FORMAL_PARAMETER) {
-      if (state != MethDecl.PARAM) {
+      if (state != _PARAM) {
         $codeadd(Separator.LEFT_PARENTHESIS);
       } else {
         commaAndSpace();
       }
 
-      $parentvalset(1, MethDecl.PARAM);
+      $parentvalset(1, _PARAM);
 
       return;
     }
@@ -1073,20 +1216,18 @@ class InternalCompiler2 extends InternalApi2 {
     // body
 
     switch (state) {
-      case MethDecl.NAME -> {
+      case _NAME -> {
         $codeadd(Separator.LEFT_PARENTHESIS);
         $codeadd(Separator.RIGHT_PARENTHESIS);
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
-
         $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
-
         $codeadd(PseudoElement.INDENTATION);
 
-        $parentvalset(1, MethDecl.BODY);
+        $parentvalset(1, _BODY);
       }
 
-      case MethDecl.BODY -> {
+      case _BODY -> {
         $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
 
         $codeadd(PseudoElement.INDENTATION);
@@ -1098,7 +1239,7 @@ class InternalCompiler2 extends InternalApi2 {
     var isAbstract = $parentpop() > 0; // is abstract
 
     switch (state) {
-      case MethDecl.NAME -> {
+      case _NAME -> {
         $codeadd(Separator.LEFT_PARENTHESIS);
         $codeadd(Separator.RIGHT_PARENTHESIS);
 
@@ -1111,7 +1252,7 @@ class InternalCompiler2 extends InternalApi2 {
         }
       }
 
-      case MethDecl.PARAM -> {
+      case _PARAM -> {
         $codeadd(Separator.RIGHT_PARENTHESIS);
 
         if (isAbstract) {
@@ -1123,8 +1264,8 @@ class InternalCompiler2 extends InternalApi2 {
         }
       }
 
-      case MethDecl.BODY -> {
-        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+      case _BODY -> {
+        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
 
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
@@ -1137,7 +1278,7 @@ class InternalCompiler2 extends InternalApi2 {
     switch (child) {
       case ByteProto.ANNOTATION -> {
 
-        if (state != MethDecl.MODS) {
+        if (state != _MODS) {
           $codeadd(PseudoElement.AFTER_ANNOTATION);
         }
 
@@ -1303,10 +1444,45 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void semicolonIfNecessary() {
     switch ($parentpeek()) {
-      case ByteProto.COMPILATION_UNIT -> $codeadd(Separator.SEMICOLON);
-
-      case ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
+      case ByteProto.COMPILATION_UNIT,
+           ByteProto.CONSTRUCTOR_DECLARATION,
+           ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
     }
+  }
+
+  private void superInvocation(int child) {
+    var state = $parentvalget(1);
+
+    if (ByteProto.isExpression(child)) {
+      switch (state) {
+        case _START -> {
+          $codeadd(Keyword.SUPER);
+          $codeadd(Separator.LEFT_PARENTHESIS);
+
+          $parentvalset(1, _ARG);
+        }
+
+        case _ARG -> {
+          commaAndSpace();
+        }
+      }
+    }
+  }
+
+  private void superInvocationBreak(int state) {
+    switch (state) {
+      case _START -> {
+        $codeadd(Keyword.SUPER);
+        $codeadd(Separator.LEFT_PARENTHESIS);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+
+      case _ARG -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+    }
+
+    $codeadd(Separator.SEMICOLON);
   }
 
   private void typeParameter() {

@@ -112,6 +112,8 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     comment("v2");
 
     value("AUTO_IMPORTS");
+    value("CONSTRUCTOR_NAME");
+    value("CONSTRUCTOR_NAME_STORE");
     value("IDENTIFIER");
     value("NAME");
     value("NOP1");

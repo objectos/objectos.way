@@ -139,10 +139,6 @@ public class ConstructorDeclarationTest {
           constructor(_super());
           constructor(_super(s("a")));
           constructor(_super(s("a"), s("b")));
-          constructor(
-            _super(s("a"), s("b")),
-            _super()
-          );
         }
       }.toString(),
 
@@ -157,10 +153,6 @@ public class ConstructorDeclarationTest {
 
       Constructor() {
         super("a", "b");
-      }
-
-      Constructor() {
-        super();
       }
       """
     );

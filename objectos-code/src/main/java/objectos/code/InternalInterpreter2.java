@@ -44,11 +44,9 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     markIndex = 0;
 
-    objectIndex = 0;
+    objectIndex = -1;
 
     protoIndex = 0;
-
-    stackIndex = 0;
 
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
@@ -68,6 +66,20 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
 
     switch (code) {
       case ByteCode.AUTO_IMPORTS -> autoImportsRender();
+
+      case ByteCode.CONSTRUCTOR_NAME -> {
+        var name = "Constructor";
+
+        if (objectIndex >= 0) {
+          name = (String) objectArray[objectIndex];
+        }
+
+        writeIdentifier(name);
+
+        objectIndex = -1;
+      }
+
+      case ByteCode.CONSTRUCTOR_NAME_STORE -> objectIndex = $codenxt();
 
       case ByteCode.EOF -> {}
 

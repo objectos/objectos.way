@@ -51,6 +51,8 @@ public enum Keyword {
 
   STATIC,
 
+  SUPER,
+
   THIS,
 
   VAR,

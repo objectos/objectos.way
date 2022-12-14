@@ -61,11 +61,15 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
     switch (value) {
       case AFTER_ANNOTATION -> writenl();
 
+      case BEFORE_FIRST_MEMBER -> writenl();
+
       case BEFORE_NEXT_TOP_LEVEL_ITEM -> { writenl(); writenl(); }
 
       case BEFORE_NEXT_STATEMENT -> writenl();
 
       case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
+
+      case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
 
       case INDENTATION -> writeIndentation(level());
 
@@ -83,9 +87,17 @@ class JavaSinkOfStringBuilder2 extends JavaSink2 {
   @Override
   protected final void writeSeparator(Separator value) {
     switch (value) {
-      case LEFT_CURLY_BRACKET, LEFT_PARENTHESIS -> { levelIncrease(); out.append(value); }
+      case LEFT_CURLY_BRACKET, LEFT_PARENTHESIS -> {
+        levelIncrease();
 
-      case RIGHT_CURLY_BRACKET, RIGHT_PARENTHESIS -> { levelDecrease(); out.append(value); }
+        out.append(value);
+      }
+
+      case RIGHT_CURLY_BRACKET, RIGHT_PARENTHESIS -> {
+        levelDecrease();
+
+        out.append(value);
+      }
 
       default -> out.append(value);
     }
