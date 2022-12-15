@@ -110,6 +110,12 @@ public class MethodInvocationExpressionTest {
         @Override
         protected final void definition() {
           invoke("m0", nl(), s("1"), nl(), nl(), invoke("m2"), nl(), nl(), s("3"), nl());
+
+          _class(id("A"),
+            method(id("foo"),
+              invoke("m0", nl(), s("1"), nl())
+            )
+          );
         }
       }.toString(),
 
@@ -121,6 +127,14 @@ public class MethodInvocationExpressionTest {
 
         "3"
       );
+
+      class A {
+        void foo() {
+          m0(
+            "1"
+          );
+        }
+      }
       """
     );
   }

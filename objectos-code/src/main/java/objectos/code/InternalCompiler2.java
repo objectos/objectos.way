@@ -430,6 +430,7 @@ class InternalCompiler2 extends InternalApi2 {
 
     if (child == ByteProto.CLASS_TYPE) {
       if (state == At.START) {
+        $codeadd(Indentation.EMIT);
         $codeadd(Separator.COMMERCIAL_AT);
 
         $parentvalset(1, At.TYPE);
@@ -644,6 +645,8 @@ class InternalCompiler2 extends InternalApi2 {
         if (state == _MODS) {
           $codeadd(Whitespace.MANDATORY);
         } else {
+          $codeadd(Indentation.EMIT);
+
           $parentvalset(1, _MODS);
         }
       }
@@ -653,6 +656,7 @@ class InternalCompiler2 extends InternalApi2 {
 
         switch (state) {
           case _START -> {
+            $codeadd(Indentation.EMIT);
             $codeadd(Keyword.CLASS);
             $codeadd(Whitespace.MANDATORY);
 
@@ -700,7 +704,6 @@ class InternalCompiler2 extends InternalApi2 {
             $codeadd(Separator.LEFT_CURLY_BRACKET);
             $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
             $codeadd(Indentation.ENTER_BLOCK);
-            $codeadd(Indentation.EMIT);
 
             $parentvalset(1, _BODY);
           }
@@ -888,16 +891,23 @@ class InternalCompiler2 extends InternalApi2 {
 
     switch (child) {
       case ByteProto.MODIFIER -> {
-        if (state == _MODS) {
-          $codeadd(Whitespace.MANDATORY);
-        } else {
-          $parentvalset(1, _MODS);
+        switch (state) {
+          case _START -> {
+            $codeadd(Indentation.EMIT);
+
+            $parentvalset(1, _MODS);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+          }
         }
       }
 
       case ByteProto.FORMAL_PARAMETER -> {
         switch (state) {
           case _START -> {
+            $codeadd(Indentation.EMIT);
             $codeadd(ByteCode.CONSTRUCTOR_NAME);
             $codeadd(Separator.LEFT_PARENTHESIS);
 
@@ -919,6 +929,7 @@ class InternalCompiler2 extends InternalApi2 {
       default -> {
         switch (state) {
           case _START -> {
+            $codeadd(Indentation.EMIT);
             $codeadd(ByteCode.CONSTRUCTOR_NAME);
             $codeadd(Separator.LEFT_PARENTHESIS);
             $codeadd(Separator.RIGHT_PARENTHESIS);
@@ -968,6 +979,7 @@ class InternalCompiler2 extends InternalApi2 {
   private void constructorDeclarationBreak(int state) {
     switch (state) {
       case _START -> {
+        $codeadd(Indentation.EMIT);
         $codeadd(ByteCode.CONSTRUCTOR_NAME);
         $codeadd(Separator.LEFT_PARENTHESIS);
         $codeadd(Separator.RIGHT_PARENTHESIS);
@@ -1132,14 +1144,12 @@ class InternalCompiler2 extends InternalApi2 {
           case _CTES -> {
             $codeadd(Separator.SEMICOLON);
             $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
-            $codeadd(Indentation.EMIT);
 
             $parentvalset(1, _BODY);
           }
 
           case _BODY -> {
             $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
-            $codeadd(Indentation.EMIT);
           }
         }
       }
@@ -1220,19 +1230,26 @@ class InternalCompiler2 extends InternalApi2 {
     int state = $parentvalget(1);
 
     if (child == ByteProto.MODIFIER) {
-      if (state != FieldDecl.START) {
-        $codeadd(Whitespace.MANDATORY);
-      }
+      switch (state) {
+        case FieldDecl.START -> {
+          $codeadd(Indentation.EMIT);
 
-      $parentvalset(1, FieldDecl.MODS);
+          $parentvalset(1, FieldDecl.MODS);
+        }
+
+        case FieldDecl.MODS -> {
+          $codeadd(Whitespace.MANDATORY);
+        }
+      }
 
       return;
     }
 
     if (child == ByteProto.IDENTIFIER) {
       switch (state) {
-        case FieldDecl.START, FieldDecl.MODS
-             -> $codeadd(Whitespace.MANDATORY);
+        case FieldDecl.START, FieldDecl.MODS -> {
+          $codeadd(Whitespace.MANDATORY);
+        }
 
         default -> {
           commaAndSpace();
@@ -1247,6 +1264,8 @@ class InternalCompiler2 extends InternalApi2 {
     if (ByteProto.isType(child)) {
       if (state != FieldDecl.START) {
         $codeadd(Whitespace.MANDATORY);
+      } else {
+        $codeadd(Indentation.EMIT);
       }
 
       return;
@@ -1713,7 +1732,7 @@ class InternalCompiler2 extends InternalApi2 {
   private void methodInvocationBreak(int state) {
     $parentpop(); // comma slot
     $parentpop(); // name loc
-    $parentpop(); // nl
+    int nl = $parentpop(); // nl
 
     if (state == MInvoke.NAME) {
       $codeadd(Separator.LEFT_PARENTHESIS);
@@ -1721,6 +1740,9 @@ class InternalCompiler2 extends InternalApi2 {
     }
 
     $codeadd(Indentation.EXIT_PARENTHESIS);
+    if (nl > 0) {
+      $codeadd(Indentation.EMIT);
+    }
     $codeadd(Separator.RIGHT_PARENTHESIS);
 
     semicolonIfNecessary();
