@@ -27,8 +27,6 @@ class InternalCompiler2 extends InternalApi2 {
 
   private interface ChainIvk { int START = 0; int NL = 1; int NEXT = 2; }
 
-  private interface CUnit { int CONTENTS = 1 << 0; int AUTO_IMPORTS = 1 << 1; }
-
   private interface ExpName { int START = 0; int BASE = 1; int NAME = 2; }
 
   private interface FieldDecl { int START = 0; int MODS = 1; int NAME = 2; int INIT = 3; }
@@ -51,17 +49,19 @@ class InternalCompiler2 extends InternalApi2 {
 
   private static final int _START = 0;
   private static final int _ANNOS = 1;
-  private static final int _MODS = 2;
-  private static final int _TPAR = 3;
-  private static final int _TYPE = 4;
-  private static final int _NAME = 5;
-  private static final int _EXTS = 6;
-  private static final int _IMPLS = 7;
-  private static final int _CTES = 8;
-  private static final int _PARAM = 9;
-  private static final int _ARG = 10;
-  private static final int _BODY = 11;
-  private static final int _LHS = 12;
+  private static final int _PKG = 2;
+  private static final int _IMPO = 3;
+  private static final int _MODS = 4;
+  private static final int _TPAR = 5;
+  private static final int _TYPE = 6;
+  private static final int _NAME = 7;
+  private static final int _EXTS = 8;
+  private static final int _IMPLS = 9;
+  private static final int _CTES = 10;
+  private static final int _PARAM = 11;
+  private static final int _ARG = 12;
+  private static final int _BODY = 13;
+  private static final int _LHS = 14;
 
   final void pass1() {
     code = 0;
@@ -92,6 +92,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression();
 
       case ByteProto.ASSIGNMENT_OPERATOR -> assignmentOperator();
+
+      case ByteProto.AUTO_IMPORTS -> { $cloop1parent(proto); }
 
       case ByteProto.BREAK -> { $cloop2break(); $protopop(); }
 
@@ -256,7 +258,7 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.CLASS_TYPE -> classTypeBreak(state);
 
-      case ByteProto.COMPILATION_UNIT -> $codeadd(ByteCode.EOF);
+      case ByteProto.COMPILATION_UNIT -> compilationUnitBreak(state);
 
       case ByteProto.CONSTRUCTOR_DECLARATION -> constructorDeclarationBreak(state);
 
@@ -354,18 +356,6 @@ class InternalCompiler2 extends InternalApi2 {
     var index = protoArray[protoIndex];
 
     return objectArray[index];
-  }
-
-  private boolean $parentbitget(int offset, int value) {
-    var index = markIndex - offset;
-
-    return (markArray[index] & value) != 0;
-  }
-
-  private void $parentbitset(int offset, int value) {
-    var index = markIndex - offset;
-
-    markArray[index] |= value;
   }
 
   private void $parentindent(int offset) {
@@ -848,19 +838,47 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private void compilationUnit(int child) {
-    if (child != ByteProto.PACKAGE_DECLARATION &&
-        !$parentbitget(1, CUnit.AUTO_IMPORTS) &&
-        autoImports.enabled()) {
-      $codeadd(ByteCode.AUTO_IMPORTS);
+    var state = $parentvalget(1);
 
-      $parentbitset(1, CUnit.AUTO_IMPORTS);
+    switch (child) {
+      case ByteProto.PACKAGE_DECLARATION -> {
+        if (state == _START) {
+          $parentvalset(1, _PKG);
+        }
+      }
+
+      case ByteProto.AUTO_IMPORTS -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(ByteCode.AUTO_IMPORTS0);
+
+            $parentvalset(1, _IMPO);
+          }
+
+          case _PKG -> {
+            $codeadd(ByteCode.AUTO_IMPORTS1);
+
+            $parentvalset(1, _IMPO);
+          }
+        }
+      }
+
+      default -> {
+        switch (state) {
+          case _START -> {
+            $parentvalset(1, _BODY);
+          }
+
+          default -> {
+            $codeadd(PseudoElement.BEFORE_NEXT_TOP_LEVEL_ITEM);
+          }
+        }
+      }
     }
+  }
 
-    if ($parentbitget(1, CUnit.CONTENTS)) {
-      $codeadd(PseudoElement.BEFORE_NEXT_TOP_LEVEL_ITEM);
-    }
-
-    $parentbitset(1, CUnit.CONTENTS);
+  private void compilationUnitBreak(int state) {
+    $codeadd(ByteCode.EOF);
   }
 
   private void constructorDeclaration(int child) {

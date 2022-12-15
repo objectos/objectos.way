@@ -137,6 +137,7 @@ public class CompilationUnitTest {
 
   @Test(description = """
   Compilation Unit TC06
+
   - multiple import declarations
   """)
   public void testCase06() {
@@ -153,6 +154,43 @@ public class CompilationUnitTest {
       }.toString(),
 
       """
+      import test.A;
+      import test.B;
+      import test.C;
+
+      class Test0 extends A {}
+
+      class Test1 extends B {}
+
+      class Test2 extends C {}
+      """
+    );
+  }
+
+  @Test(description = """
+  Compilation Unit TC07
+
+  - package declaration
+  - multiple import declarations
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _package("foo");
+
+          autoImports();
+
+          _class(id("Test0"), _extends(t("test", "A")));
+          _class(id("Test1"), _extends(t("test", "B")));
+          _class(id("Test2"), _extends(t("test", "C")));
+        }
+      }.toString(),
+
+      """
+      package foo;
+
       import test.A;
       import test.B;
       import test.C;

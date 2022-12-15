@@ -67,7 +67,9 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
     var code = $codenxt();
 
     switch (code) {
-      case ByteCode.AUTO_IMPORTS -> autoImportsRender();
+      case ByteCode.AUTO_IMPORTS0 -> autoImportsRender(false);
+
+      case ByteCode.AUTO_IMPORTS1 -> autoImportsRender(true);
 
       case ByteCode.CONSTRUCTOR_NAME -> {
         var name = "Constructor";
@@ -118,11 +120,15 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
       "Implement me :: code = " + code);
   }
 
-  private void autoImportsRender() {
+  private void autoImportsRender(boolean initialNewLine) {
     var types = autoImports.types();
 
     if (types.isEmpty()) {
       return;
+    }
+
+    if (initialNewLine) {
+      writePseudoElement(PseudoElement.BEFORE_NEXT_TOP_LEVEL_ITEM);
     }
 
     var iterator = types.iterator();
@@ -136,8 +142,6 @@ abstract class InternalInterpreter2 extends InternalCompiler2 {
         autoImportsRenderItem(iterator.next());
       }
     }
-
-    writePseudoElement(PseudoElement.BEFORE_NEXT_TOP_LEVEL_ITEM);
   }
 
   private void autoImportsRenderItem(String type) {

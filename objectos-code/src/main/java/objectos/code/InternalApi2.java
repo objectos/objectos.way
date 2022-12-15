@@ -385,6 +385,10 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
   @Override
   public final void autoImports() {
     autoImports.enable();
+
+    elementAdd(protoIndex);
+
+    protoAdd(ByteProto.AUTO_IMPORTS, ByteProto.OBJECT_END);
   }
 
   @Override
