@@ -151,4 +151,38 @@ public class JavaSinkTest {
     );
   }
 
+  @Test(enabled = false)
+  public void testCase04() throws IOException {
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _package("test4");
+
+        _enum(
+          _public(), id("Test"),
+          enumConstant(id("INSTANCE"))
+        );
+      }
+    };
+
+    sink.write(tmpl);
+
+    var path = Path.of("test4", "Test.java");
+
+    var file = directory.resolve(path);
+
+    assertTrue(Files.isRegularFile(file));
+
+    assertEquals(
+      Files.readString(file),
+      """
+      package test4;
+
+      public enum Test {
+        INSTANCE;
+      }
+      """
+    );
+  }
+
 }
