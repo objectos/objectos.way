@@ -102,7 +102,7 @@ public abstract class JavaTemplate {
   public String toString() {
     var out = new StringBuilder();
 
-    var sink = JavaSink2.ofStringBuilder(out);
+    var sink = JavaSink.ofStringBuilder(out);
 
     sink.eval(this);
 

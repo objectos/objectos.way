@@ -218,6 +218,12 @@ public class MethodDeclarationTest {
             _void(), id("test6"),
             param(t(t(List.class), tvar("N")), id("list"))
           );
+
+          method(
+            t(String.class), id("test7"),
+            param(t(String.class), id("a")),
+            _return(n("a"))
+          );
         }
       }.toString(),
 
@@ -235,6 +241,10 @@ public class MethodDeclarationTest {
       void test5(N n) {}
 
       void test6(java.util.List<N> list) {}
+
+      java.lang.String test7(java.lang.String a) {
+        return a;
+      }
       """
     );
   }

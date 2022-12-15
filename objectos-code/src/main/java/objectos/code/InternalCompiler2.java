@@ -1597,9 +1597,19 @@ class InternalCompiler2 extends InternalApi2 {
         $parentvalset(1, _BODY);
       }
 
+      case _PARAM -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+        $codeadd(Whitespace.OPTIONAL);
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Indentation.ENTER_BLOCK);
+        $codeadd(Indentation.EMIT);
+
+        $parentvalset(1, _BODY);
+      }
+
       case _BODY -> {
         $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
-
         $codeadd(Indentation.EMIT);
       }
     }
@@ -1812,7 +1822,6 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void returnStatement(int child) {
     $codeadd(Keyword.RETURN);
-
     $codeadd(Whitespace.MANDATORY);
   }
 
