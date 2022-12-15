@@ -48,14 +48,14 @@ class InternalCompiler2 extends InternalApi2 {
   private static final int NULL = Integer.MIN_VALUE;
 
   private static final int _START = 0;
-  private static final int _ANNOTATION = 1;
+  private static final int _ANNOS = 1;
   private static final int _MODS = 2;
   private static final int _TPAR = 3;
   private static final int _TYPE = 4;
   private static final int _NAME = 5;
-  private static final int _EXTENDS = 6;
-  private static final int _IMPLEMENTS = 7;
-  private static final int _CONSTANTS = 8;
+  private static final int _EXTS = 6;
+  private static final int _IMPLS = 7;
+  private static final int _CTES = 8;
   private static final int _PARAM = 9;
   private static final int _ARG = 10;
   private static final int _BODY = 11;
@@ -165,6 +165,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpression(child);
 
+      case ByteProto.BLOCK -> block(child);
+
       case ByteProto.CHAINED_METHOD_INVOCATION -> chainedMethodInvocation(child);
 
       case ByteProto.CLASS_DECLARATION -> classDeclaration(child);
@@ -235,6 +237,8 @@ class InternalCompiler2 extends InternalApi2 {
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializerBreak(state);
 
       case ByteProto.ASSIGNMENT_EXPRESSION -> assignmentExpressionBreak(state);
+
+      case ByteProto.BLOCK -> blockBreak(state);
 
       case ByteProto.CHAINED_METHOD_INVOCATION -> semicolonIfNecessary();
 
@@ -572,6 +576,42 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
+  private void block(int child) {
+    var state = $parentvalget(1);
+
+    switch (state) {
+      case _START -> {
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Indentation.ENTER_BLOCK);
+        $codeadd(Indentation.EMIT);
+
+        $parentvalset(1, _BODY);
+      }
+
+      case _BODY -> {
+        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Indentation.EMIT);
+      }
+    }
+  }
+
+  private void blockBreak(int state) {
+    switch (state) {
+      case _START -> {
+        $codeadd(Separator.LEFT_CURLY_BRACKET);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _BODY -> {
+        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Indentation.EMIT);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+    }
+  }
+
   private void chainedMethodInvocation(int child) {
     var state = $parentvalget(1);
 
@@ -634,20 +674,20 @@ class InternalCompiler2 extends InternalApi2 {
           $codeadd(Whitespace.MANDATORY);
         }
 
-        $parentvalset(1, _EXTENDS);
+        $parentvalset(1, _EXTS);
       }
 
       case ByteProto.IMPLEMENTS -> {
         switch (state) {
-          case _NAME, _EXTENDS -> {
+          case _NAME, _EXTS -> {
             $codeadd(Whitespace.MANDATORY);
 
-            $parentvalset(1, _IMPLEMENTS);
+            $parentvalset(1, _IMPLS);
 
             code = _START;
           }
 
-          case _IMPLEMENTS -> {
+          case _IMPLS -> {
             code = _TYPE;
           }
         }
@@ -669,7 +709,7 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void classDeclarationBreak(int state) {
     switch (state) {
-      case _NAME, _EXTENDS, _IMPLEMENTS -> {
+      case _NAME, _EXTS, _IMPLS -> {
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -965,13 +1005,13 @@ class InternalCompiler2 extends InternalApi2 {
 
     switch (child) {
       case ByteProto.ANNOTATION -> {
-        if (state == _ANNOTATION) {
+        if (state == _ANNOS) {
           $codeadd(PseudoElement.AFTER_ANNOTATION);
           $codeadd(Indentation.EMIT);
         } else {
           $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, _ANNOTATION);
+          $parentvalset(1, _ANNOS);
         }
       }
 
@@ -983,7 +1023,7 @@ class InternalCompiler2 extends InternalApi2 {
             $parentvalset(1, _MODS);
           }
 
-          case _ANNOTATION -> {
+          case _ANNOS -> {
             $codeadd(PseudoElement.AFTER_ANNOTATION);
             $codeadd(Indentation.EMIT);
 
@@ -1022,12 +1062,12 @@ class InternalCompiler2 extends InternalApi2 {
           case _NAME -> {
             $codeadd(Whitespace.MANDATORY);
 
-            $parentvalset(1, _IMPLEMENTS);
+            $parentvalset(1, _IMPLS);
 
             code = _START;
           }
 
-          case _IMPLEMENTS -> {
+          case _IMPLS -> {
             code = _TYPE;
           }
         }
@@ -1035,17 +1075,17 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.ENUM_CONSTANT -> {
         switch (state) {
-          case _NAME, _IMPLEMENTS -> {
+          case _NAME, _IMPLS -> {
             $codeadd(Whitespace.OPTIONAL);
             $codeadd(Separator.LEFT_CURLY_BRACKET);
             $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
             $codeadd(Indentation.ENTER_BLOCK);
             $codeadd(Indentation.EMIT);
 
-            $parentvalset(1, _CONSTANTS);
+            $parentvalset(1, _CTES);
           }
 
-          case _CONSTANTS -> {
+          case _CTES -> {
             $codeadd(Separator.COMMA);
             $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
             $codeadd(Indentation.EMIT);
@@ -1055,7 +1095,7 @@ class InternalCompiler2 extends InternalApi2 {
 
       default -> {
         switch (state) {
-          case _CONSTANTS -> {
+          case _CTES -> {
             $codeadd(Separator.SEMICOLON);
             $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
             $codeadd(Indentation.EMIT);
@@ -1074,7 +1114,7 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void enumDeclarationBreak(int state) {
     switch (state) {
-      case _CONSTANTS -> {
+      case _CTES -> {
         $codeadd(Separator.SEMICOLON);
         $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
@@ -1702,7 +1742,8 @@ class InternalCompiler2 extends InternalApi2 {
 
   private void semicolonIfNecessary() {
     switch ($parentpeek()) {
-      case ByteProto.COMPILATION_UNIT,
+      case ByteProto.BLOCK,
+           ByteProto.COMPILATION_UNIT,
            ByteProto.CONSTRUCTOR_DECLARATION,
            ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
     }
