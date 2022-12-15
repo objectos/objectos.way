@@ -107,6 +107,8 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.IDENTIFIER -> $cloop0add(proto, ByteCode.IDENTIFIER);
 
+      case ByteProto.INTERFACE_DECLARATION -> typeDeclaration(proto);
+
       case ByteProto.INVOKE_METHOD_NAME -> invokeMethodName();
 
       case ByteProto.JMP -> $jump();
@@ -1296,6 +1298,29 @@ class InternalCompiler2 extends InternalApi2 {
         }
       }
 
+      case ByteProto.MODIFIER -> {
+        typeDeclarationModifier();
+
+        if (state != IfaceDecl.START) {
+          $codeadd(Whitespace.MANDATORY);
+        }
+
+        $parentvalset(1, IfaceDecl.MODS);
+      }
+
+      case ByteProto.IDENTIFIER -> {
+        typeDeclarationIdentifier();
+
+        if (state != IfaceDecl.START) {
+          $codeadd(Whitespace.MANDATORY);
+        }
+
+        $codeadd(Keyword.INTERFACE);
+        $codeadd(Whitespace.MANDATORY);
+
+        $parentvalset(1, IfaceDecl.NAME);
+      }
+
       case ByteProto.EXTENDS_SINGLE, ByteProto.EXTENDS_MANY -> {
         if (state == IfaceDecl.TYPE) {
           code = _TYPE;
@@ -1307,29 +1332,12 @@ class InternalCompiler2 extends InternalApi2 {
 
         $parentvalset(1, IfaceDecl.TYPE);
       }
-
-      case ByteProto.IDENTIFIER -> {
-        if (state != IfaceDecl.START) {
-          $codeadd(Whitespace.MANDATORY);
-        }
-
-        $codeadd(Keyword.INTERFACE);
-        $codeadd(Whitespace.MANDATORY);
-
-        $parentvalset(1, IfaceDecl.NAME);
-      }
-
-      case ByteProto.MODIFIER -> {
-        if (state != IfaceDecl.START) {
-          $codeadd(Whitespace.MANDATORY);
-        }
-
-        $parentvalset(1, IfaceDecl.MODS);
-      }
     }
   }
 
   private void interfaceDeclarationBreak(int state) {
+    typeDeclarationBreak();
+
     switch (state) {
       case IfaceDecl.NAME, IfaceDecl.TYPE -> {
         $codeadd(Whitespace.OPTIONAL);

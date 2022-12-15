@@ -97,6 +97,8 @@ final class AutoImports {
   public final void clear() {
     enabled = false;
 
+    fileName = null;
+
     importTypes.clear();
 
     packageName = "";
