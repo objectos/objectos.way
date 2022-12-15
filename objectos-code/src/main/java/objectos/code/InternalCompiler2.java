@@ -694,14 +694,16 @@ class InternalCompiler2 extends InternalApi2 {
       }
 
       default -> {
-        if (state == _NAME) {
-          $codeadd(Whitespace.OPTIONAL);
-          $codeadd(Separator.LEFT_CURLY_BRACKET);
-          $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
-          $codeadd(Indentation.ENTER_BLOCK);
-          $codeadd(Indentation.EMIT);
+        switch (state) {
+          case _NAME, _EXTS, _IMPLS -> {
+            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Separator.LEFT_CURLY_BRACKET);
+            $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.ENTER_BLOCK);
+            $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, _BODY);
+            $parentvalset(1, _BODY);
+          }
         }
       }
     }
@@ -1494,6 +1496,7 @@ class InternalCompiler2 extends InternalApi2 {
     if (child == ByteProto.TYPE_PARAMETER) {
       switch (state) {
         case _START -> {
+          $codeadd(Indentation.EMIT);
           $codeadd(Separator.LEFT_ANGLE_BRACKET);
 
           $parentvalset(1, _TPAR);
@@ -1516,7 +1519,13 @@ class InternalCompiler2 extends InternalApi2 {
 
     if (ByteProto.isType(child)) {
       switch (state) {
-        case _MODS -> $codeadd(Whitespace.MANDATORY);
+        case _START -> {
+          $codeadd(Indentation.EMIT);
+        }
+
+        case _MODS -> {
+          $codeadd(Whitespace.MANDATORY);
+        }
 
         case _TPAR -> {
           $codeadd(Separator.RIGHT_ANGLE_BRACKET);
@@ -1531,6 +1540,7 @@ class InternalCompiler2 extends InternalApi2 {
 
     if (child == ByteProto.IDENTIFIER) {
       if (state < _TYPE) {
+        $codeadd(Indentation.EMIT);
         $codeadd(Keyword.VOID);
       }
 

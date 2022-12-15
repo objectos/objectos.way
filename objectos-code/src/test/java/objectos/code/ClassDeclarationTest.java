@@ -242,4 +242,49 @@ public class ClassDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Class declarations TC08
+
+  - annotated method
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            id("A"), _extends(t(Thread.class)),
+
+            method(
+              annotation(t(Override.class)),
+              id("foo")
+            )
+          );
+
+          _class(
+            id("B"), _implements(t(Serializable.class)),
+
+            method(
+              annotation(t(Override.class)),
+              id("foo")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class A extends java.lang.Thread {
+        @java.lang.Override
+        void foo() {}
+      }
+
+
+      class B implements java.io.Serializable {
+        @java.lang.Override
+        void foo() {}
+      }
+      """
+    );
+  }
+
 }
