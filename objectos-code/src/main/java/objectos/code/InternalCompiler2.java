@@ -46,9 +46,8 @@ class InternalCompiler2 extends InternalApi2 {
   private interface TypeParam { int NAME = 0; int TYPE = 1; }
 
   private static final int NULL = Integer.MIN_VALUE;
-
-  private static final int TOPLEVEL = 1 << 0;
-  private static final int IS_PUBLIC = 1 << 1;
+  private static final int FALSE = 0;
+  private static final int TRUE = 1;
 
   private static final int _START = 0;
   private static final int _ANNOS = 1;
@@ -96,13 +95,15 @@ class InternalCompiler2 extends InternalApi2 {
 
       case ByteProto.BREAK -> { $cloop2break(); $protopop(); }
 
-      case ByteProto.CLASS_DECLARATION -> classDeclaration();
+      case ByteProto.CLASS_DECLARATION -> typeDeclaration(proto);
 
       case ByteProto.CLASS_TYPE -> classType();
 
       case ByteProto.ELLIPSIS -> { $cloop1parent(proto); $codeadd(Separator.ELLIPSIS); }
 
       case ByteProto.EOF -> {}
+
+      case ByteProto.ENUM_DECLARATION -> typeDeclaration(proto);
 
       case ByteProto.IDENTIFIER -> $cloop0add(proto, ByteCode.IDENTIFIER);
 
@@ -398,15 +399,6 @@ class InternalCompiler2 extends InternalApi2 {
     markArray[++markIndex] = v2;
   }
 
-  private void $parentpush(int v0, int v1, int v2, int v3) {
-    markArray = IntArrays.growIfNecessary(markArray, markIndex + 4);
-
-    markArray[++markIndex] = v0;
-    markArray[++markIndex] = v1;
-    markArray[++markIndex] = v2;
-    markArray[++markIndex] = v3;
-  }
-
   private void $parentpush(int v0, int v1, int v2, int v3, int v4) {
     markArray = IntArrays.growIfNecessary(markArray, markIndex + 5);
 
@@ -650,29 +642,12 @@ class InternalCompiler2 extends InternalApi2 {
     }
   }
 
-  private void classDeclaration() {
-    var proto = ByteProto.CLASS_DECLARATION;
-
-    $cloop1parent(proto);
-
-    $parentpush(
-      NULL, // 3 = simple name
-      typeDeclarationBitmask(), // 2 = bitmask
-      _START, // 1 = state
-      proto
-    );
-  }
-
   private void classDeclaration(int child) {
     var state = $parentvalget(1);
 
     switch (child) {
       case ByteProto.MODIFIER -> {
-        var modifier = $keywordpeek();
-
-        if (modifier == Keyword.PUBLIC) {
-          $parentbitset(2, IS_PUBLIC);
-        }
+        typeDeclarationModifier();
 
         if (state == _MODS) {
           $codeadd(Whitespace.MANDATORY);
@@ -682,9 +657,7 @@ class InternalCompiler2 extends InternalApi2 {
       }
 
       case ByteProto.IDENTIFIER -> {
-        int nameIndex = $protopeek();
-        $codeadd(ByteCode.CONSTRUCTOR_NAME_STORE, nameIndex);
-        $parentvalset(3, nameIndex);
+        typeDeclarationIdentifier();
 
         switch (state) {
           case _START -> {
@@ -743,20 +716,7 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private void classDeclarationBreak(int state) {
-    var bitmask = $parentpop();
-    var nameIndex = $parentpop();
-
-    if ((bitmask | TOPLEVEL) != 0) {
-      var publicFound = (bitmask | IS_PUBLIC) != 0;
-
-      var simpleName = "Unnamed";
-
-      if (nameIndex >= 0) {
-        simpleName = (String) objectArray[nameIndex];
-      }
-
-      autoImports.fileName(publicFound, simpleName);
-    }
+    typeDeclarationBreak();
 
     switch (state) {
       case _NAME, _EXTS, _IMPLS -> {
@@ -1066,6 +1026,8 @@ class InternalCompiler2 extends InternalApi2 {
       }
 
       case ByteProto.MODIFIER -> {
+        typeDeclarationModifier();
+
         switch (state) {
           case _START -> {
             $codeadd(Indentation.EMIT);
@@ -1087,7 +1049,7 @@ class InternalCompiler2 extends InternalApi2 {
       }
 
       case ByteProto.IDENTIFIER -> {
-        $codeadd(ByteCode.CONSTRUCTOR_NAME_STORE, $protopeek());
+        typeDeclarationIdentifier();
 
         switch (state) {
           case _START -> {
@@ -1163,6 +1125,8 @@ class InternalCompiler2 extends InternalApi2 {
   }
 
   private void enumDeclarationBreak(int state) {
+    typeDeclarationBreak();
+
     switch (state) {
       case _CTES -> {
         $codeadd(Separator.SEMICOLON);
@@ -1407,6 +1371,13 @@ class InternalCompiler2 extends InternalApi2 {
         codeArray[location + 1] = $protonxt();
       }
     }
+  }
+
+  private int isTopLevel() {
+
+    var parent = $parentpeek();
+
+    return parent == ByteProto.COMPILATION_UNIT ? TRUE : FALSE;
   }
 
   private void localVariableDeclaration() {
@@ -1834,16 +1805,46 @@ class InternalCompiler2 extends InternalApi2 {
     $codeadd(Separator.SEMICOLON);
   }
 
-  private int typeDeclarationBitmask() {
-    var bitmask = 0;
+  private void typeDeclaration(int proto) {
+    $cloop1parent(proto);
 
-    var parent = $parentpeek();
+    $parentpush(
+      NULL, // 4 = simple name
+      FALSE, // 3 = public?
+      isTopLevel(), // 2 = top level?
+      _START, // 1 = state
+      proto
+    );
+  }
 
-    if (parent == ByteProto.COMPILATION_UNIT) {
-      bitmask = TOPLEVEL;
+  private void typeDeclarationBreak() {
+    var topLevel = $parentpop();
+    var publicFound = $parentpop();
+    var nameIndex = $parentpop();
+
+    if (topLevel == TRUE) {
+      var simpleName = "Unnamed";
+
+      if (nameIndex >= 0) {
+        simpleName = (String) objectArray[nameIndex];
+      }
+
+      autoImports.fileName(publicFound == TRUE, simpleName);
     }
+  }
 
-    return bitmask;
+  private void typeDeclarationIdentifier() {
+    int nameIndex = $protopeek();
+    $codeadd(ByteCode.CONSTRUCTOR_NAME_STORE, nameIndex);
+    $parentvalset(4, nameIndex);
+  }
+
+  private void typeDeclarationModifier() {
+    var modifier = $keywordpeek();
+
+    if (modifier == Keyword.PUBLIC) {
+      $parentvalset(3, TRUE);
+    }
   }
 
   private void typeParameter() {

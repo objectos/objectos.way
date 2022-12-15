@@ -151,7 +151,7 @@ public class JavaSinkTest {
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase04() throws IOException {
     var tmpl = new JavaTemplate() {
       @Override
