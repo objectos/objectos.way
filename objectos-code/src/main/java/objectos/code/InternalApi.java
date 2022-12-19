@@ -17,7 +17,6 @@ package objectos.code;
 
 import java.util.Objects;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Modifier;
 import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
@@ -89,18 +88,18 @@ import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 
-class InternalApi extends State implements MarkerApi, TempInternalApi {
+class InternalApi extends InternalState implements MarkerApi, TempInternalApi {
 
   @Override
   public final AbstractModifier _abstract() {
-    object(ByteProto.MODIFIER, Modifier.ABSTRACT);
+    modifier(Keyword.ABSTRACT);
 
     return JavaModel.REF;
   }
 
   @Override
   public final PrimitiveType _boolean() {
-    object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.BOOLEAN);
+    primitive(Keyword.BOOLEAN);
 
     return JavaModel.REF;
   }
@@ -120,7 +119,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final PrimitiveType _double() {
-    object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.DOUBLE);
+    primitive(Keyword.DOUBLE);
 
     return JavaModel.REF;
   }
@@ -164,7 +163,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final FinalModifier _final() {
-    object(ByteProto.MODIFIER, Modifier.FINAL);
+    modifier(Keyword.FINAL);
 
     return JavaModel.REF;
   }
@@ -184,7 +183,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final PrimitiveType _int() {
-    object(ByteProto.PRIMITIVE_TYPE, PrimitiveTypeKind.INT);
+    primitive(Keyword.INT);
 
     return JavaModel.REF;
   }
@@ -238,21 +237,21 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final PrivateModifier _private() {
-    object(ByteProto.MODIFIER, Modifier.PRIVATE);
+    modifier(Keyword.PRIVATE);
 
     return JavaModel.REF;
   }
 
   @Override
   public final ProtectedModifier _protected() {
-    object(ByteProto.MODIFIER, Modifier.PROTECTED);
+    modifier(Keyword.PROTECTED);
 
     return JavaModel.REF;
   }
 
   @Override
   public final PublicModifier _public() {
-    object(ByteProto.MODIFIER, Modifier.PUBLIC);
+    modifier(Keyword.PUBLIC);
 
     return JavaModel.REF;
   }
@@ -270,7 +269,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final StaticModifier _static() {
-    object(ByteProto.MODIFIER, Modifier.STATIC);
+    modifier(Keyword.STATIC);
 
     return JavaModel.REF;
   }
@@ -290,18 +289,18 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final ThisKeyword _this() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.THIS);
+    protoAdd(ByteProto.THIS, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }
 
   @Override
   public final VoidInvocation _void() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.NO_TYPE);
+    protoAdd(ByteProto.NO_TYPE, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }
@@ -359,11 +358,16 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.REF;
   }
 
+  @Override
+  public final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
+    return assign(Operator2.ASSIGNMENT, leftHandSide, expression);
+  }
+
   public final AssignmentExpression assign(
-      AssignmentOperator operator, LeftHandSide leftHandSide, Expression expression) {
+      Operator2 operator, LeftHandSide leftHandSide, Expression expression) {
     Objects.requireNonNull(operator, "operator == null");
 
-    object(ByteProto.ASSIGNMENT_OPERATOR, operator);
+    operator(operator);
 
     markStart();
 
@@ -379,13 +383,12 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
   }
 
   @Override
-  public final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
-    return assign(AssignmentOperator.SIMPLE, leftHandSide, expression);
-  }
-
-  @Override
   public final void autoImports() {
     autoImports.enable();
+
+    elementAdd(protoIndex);
+
+    protoAdd(ByteProto.AUTO_IMPORTS, ByteProto.OBJECT_END);
   }
 
   @Override
@@ -441,9 +444,9 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final Ellipsis ellipsis() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.ELLIPSIS);
+    protoAdd(ByteProto.ELLIPSIS, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }
@@ -504,7 +507,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
   @Override
   public final QualifiedMethodInvocation invoke(
       Markable subject, String methodName, MethodInvocationElement[] elements) {
-    identifier(methodName);
+    invokeMethodName(methodName);
 
     markStart();
 
@@ -524,7 +527,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
   @Override
   public final UnqualifiedMethodInvocation invoke(
       String methodName, MethodInvocationElement[] elements) {
-    identifier(methodName);
+    invokeMethodName(methodName);
 
     markStart();
 
@@ -617,9 +620,9 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final NewLineRef nl() {
-    markStart();
+    elementAdd(protoIndex);
 
-    element(ByteProto.NEW_LINE);
+    protoAdd(ByteProto.NEW_LINE, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
   }
@@ -769,13 +772,15 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final TypeParameter tparam(String name, TypeParameterBound[] bounds) {
-    identifier(name);
+    Objects.requireNonNull(name, "name == null");
+
+    object(ByteProto.INVOKE_METHOD_NAME, name);
 
     markStart();
 
     markReference();
 
-    for (var bound : bounds) {
+    for (var bound : bounds) { // implicit null check
       bound.mark(this);
     }
 
@@ -795,7 +800,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
   @Override
   public final LocalVariableDeclarationRef var(String name, Expression expression) {
-    identifier(name);
+    varName(name);
 
     markStart();
 
@@ -823,6 +828,24 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     );
 
     object(ByteProto.IDENTIFIER, name);
+  }
+
+  private void invokeMethodName(String methodName) {
+    JavaModel.checkMethodName(methodName);
+
+    object(ByteProto.INVOKE_METHOD_NAME, methodName);
+  }
+
+  private void modifier(Keyword value) {
+    elementAdd(protoIndex);
+
+    protoAdd(ByteProto.MODIFIER, value.ordinal(), ByteProto.OBJECT_END);
+  }
+
+  private void operator(Operator2 operator) {
+    elementAdd(protoIndex);
+
+    protoAdd(ByteProto.ASSIGNMENT_OPERATOR, operator.ordinal(), ByteProto.OBJECT_END);
   }
 
   private void pass0End() {
@@ -854,7 +877,19 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
 
     protoIndex = 0;
 
-    protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.BREAK);
+    protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.EOF);
+  }
+
+  private void primitive(Keyword value) {
+    elementAdd(protoIndex);
+
+    protoAdd(ByteProto.PRIMITIVE_TYPE, value.ordinal(), ByteProto.OBJECT_END);
+  }
+
+  private void varName(String name) {
+    JavaModel.checkVarName(name);
+
+    object(ByteProto.VAR_NAME, name);
   }
 
 }

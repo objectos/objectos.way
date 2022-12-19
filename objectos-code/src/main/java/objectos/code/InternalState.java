@@ -18,7 +18,7 @@ package objectos.code;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-abstract class InternalState2 {
+abstract class InternalState {
 
   final AutoImports autoImports = new AutoImports();
 

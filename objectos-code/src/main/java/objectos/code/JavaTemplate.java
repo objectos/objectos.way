@@ -383,20 +383,6 @@ public abstract class JavaTemplate {
     }
   }
 
-  final void execute(InternalApi2 api) {
-    Check.state(this.api == null, """
-    Another evaluation is already in progress.
-    """);
-
-    this.api = api;
-
-    try {
-      definition();
-    } finally {
-      this.api = null;
-    }
-  }
-
   private TempInternalApi api() {
     Check.state(api != null, """
     An InternalApi instance was not set.

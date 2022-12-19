@@ -19,97 +19,10 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
   private final StringBuilder out;
 
-  private int length;
-
-  private int level;
-
   public JavaSinkOfStringBuilder(StringBuilder out) { this.out = out; }
 
   @Override
   public final String toString() { return out.toString(); }
-
-  @Override
-  protected void write(char c) {
-    writeIndentation(level);
-
-    out.append(c);
-
-    length += 1;
-  }
-
-  @Override
-  protected void write(String s) {
-    writeIndentation(level);
-
-    out.append(s);
-
-    length += s.length();
-  }
-
-  @Override
-  protected void writeArgumentListEnd() {
-    level--;
-
-    write(')');
-  }
-
-  @Override
-  protected void writeArgumentListStart() {
-    write('(');
-
-    level++;
-  }
-
-  @Override
-  protected void writeBeforeFirstMember() {
-    writenl();
-  }
-
-  @Override
-  protected void writeBeforeFirstStatement() {
-    writeBeforeFirstMember();
-  }
-
-  @Override
-  protected void writeBeforeNextMember() {
-    writenl();
-    writenl();
-  }
-
-  @Override
-  protected void writeBeforeNextStatement() {
-    writenl();
-  }
-
-  @Override
-  protected void writeBlockEnd(boolean contents) {
-    level--;
-
-    if (contents) {
-      writenl();
-    }
-
-    write('}');
-  }
-
-  @Override
-  protected void writeBlockStart() {
-    write(" {");
-
-    level++;
-  }
-
-  @Override
-  protected void writeBlockStart2() {
-    write('{');
-
-    level++;
-  }
-
-  @Override
-  protected void writeComma() {
-    write(", ");
-  }
 
   @Override
   protected void writeCompilationUnitEnd(String packageName, String fileName) {
@@ -117,101 +30,122 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected void writeCompilationUnitSeparator() {
-    writenl();
-
-    writenl();
-  }
-
-  @Override
   protected void writeCompilationUnitStart(String packageName, String fileName) {
-    length = 0;
-
-    level = 0;
-
     out.setLength(0);
+
+    markIndex = out.length();
   }
 
   @Override
-  protected void writeIndentation() {
-    writeIndentation(level + 2);
+  protected final void writeIdentifier(String name) {
+    out.append(name);
   }
 
   @Override
-  protected void writeNewLine() {
-    writenl();
-  }
+  protected final void writeIndentation(Indentation value) {
+    switch (value) {
+      case CONTINUATION -> writeIndentation(level() + 2);
 
-  @Override
-  protected void writeOperator(Operator operator) {
-    write(' ');
+      case ENTER_BLOCK -> levelIncrease();
 
-    write(operator.toString());
+      case EXIT_BLOCK -> levelDecrease();
 
-    write(' ');
-  }
+      case ENTER_PARENTHESIS -> levelIncrease();
 
-  @Override
-  protected void writeSemicolon() {
-    write(';');
-  }
+      case EXIT_PARENTHESIS -> levelDecrease();
 
-  @Override
-  protected void writeSeparator(char c) {
-    write(' ');
-    write(c);
-    write(' ');
-  }
+      case EMIT -> writeIndentation(level());
 
-  @Override
-  protected void writeSpace() {
-    write(' ');
-  }
-
-  @Override
-  protected void writeSpaceIf(boolean condition) {
-    if (condition) {
-      writeSpace();
+      default -> {}
     }
   }
 
   @Override
-  protected void writeStringLiteral(String s) {
-    write('"');
-    write(s);
-    write('"');
+  protected final void writeLiteral(String value) {
+    out.append(value);
   }
 
-  private void writeIndentation(int level) {
-    if (length == 0) {
-      for (int i = 0; i < level; i++) {
-        out.append("  ");
+  @Override
+  protected final void writeName(String name) {
+    out.append(name);
+  }
 
-        length += 2;
-      }
+  @Override
+  protected final void writeOperator(Operator2 operator) {
+    out.append(operator);
+  }
+
+  @Override
+  protected final void writePseudoElement(PseudoElement value) {
+    switch (value) {
+      case AFTER_ANNOTATION -> writenl();
+
+      case BEFORE_FIRST_MEMBER -> writenl();
+
+      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); }
+
+      case BEFORE_NEXT_TOP_LEVEL_ITEM -> { writenl(); writenl(); }
+
+      case BEFORE_NEXT_STATEMENT -> writenl();
+
+      case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
+
+      case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
+
+      default -> {}
+    }
+  }
+
+  @Override
+  protected final void writeReservedKeyword(Keyword value) {
+    out.append(value);
+  }
+
+  @Override
+  protected final void writeSeparator(Separator value) {
+    out.append(value);
+  }
+
+  @Override
+  protected final void writeStringLiteral(String value) {
+    out.append('"');
+
+    out.append(value);
+
+    out.append('"');
+  }
+
+  @Override
+  protected final void writeWhitespace(Whitespace value) {
+    switch (value) {
+      case MANDATORY, OPTIONAL -> out.append(' ');
+
+      case NEW_LINE -> writenl();
+    }
+  }
+
+  private int level() {
+    return protoIndex;
+  }
+
+  private void levelDecrease() {
+    protoIndex--;
+  }
+
+  private void levelIncrease() {
+    protoIndex++;
+  }
+
+  private void writeIndentation(int length) {
+    for (int i = 0; i < length; i++) {
+      out.append("  ");
     }
   }
 
   private void writenl() {
-    var builderLength = out.length();
-
-    var newLength = builderLength;
-
-    for (int i = builderLength - 1; i >= 0; i--) {
-      var c = out.charAt(i);
-
-      if (c == ' ') {
-        newLength--;
-      } else {
-        break;
-      }
-    }
-
-    out.setLength(newLength);
-
     out.append(System.lineSeparator());
 
-    length = 0;
+    markIndex = out.length();
   }
 
 }

@@ -278,7 +278,6 @@ public class ClassDeclarationTest {
         void foo() {}
       }
 
-
       class B implements java.io.Serializable {
         @java.lang.Override
         void foo() {}
