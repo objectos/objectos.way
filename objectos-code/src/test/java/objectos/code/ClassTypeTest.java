@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 public class ClassTypeTest {
 
   @Test(description = """
-  ClassOrInterfaceType TC01
+  ClassType TC01
 
   - pkg + name
   """)
@@ -37,6 +37,36 @@ public class ClassTypeTest {
 
       """
       com.example.Bar a;
+      """
+    );
+  }
+
+  @Test(description = """
+  ClassType TC02
+
+  - nested class
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _package("com.example");
+
+          autoImports();
+
+          _class(id("A"),
+            field(t("com.example", "A", "B"), id("t01"))
+          );
+        }
+      }.toString(),
+
+      """
+      package com.example;
+
+      class A {
+        B t01;
+      }
       """
     );
   }

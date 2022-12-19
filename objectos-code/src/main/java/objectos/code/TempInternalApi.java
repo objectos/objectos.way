@@ -190,6 +190,8 @@ interface TempInternalApi {
 
   ClassType t(String packageName, String simpleName);
 
+  ClassType t(String packageName, String[] simpleNames);
+
   TypeParameter tparam(String name, TypeParameterBound[] bounds);
 
   TypeVariable tvar(String name);

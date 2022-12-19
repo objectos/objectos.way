@@ -353,12 +353,8 @@ public abstract class JavaTemplate {
     return api().t(rawType, arguments);
   }
 
-  protected final ClassType t(ClassType outer, String name) {
-    return api().t(outer, name);
-  }
-
-  protected final ClassType t(String packageName, String simpleName) {
-    return api().t(packageName, simpleName);
+  protected final ClassType t(String packageName, String... simpleNames) {
+    return api().t(packageName, simpleNames);
   }
 
   protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {

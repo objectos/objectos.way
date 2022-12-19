@@ -501,6 +501,7 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     return JavaModel.INCLUDE;
   }
 
+  @Override
   public final QualifiedMethodInvocation invoke(
       Markable subject, String methodName, MethodInvocationElement[] elements) {
     identifier(methodName);
@@ -737,6 +738,29 @@ class InternalApi extends State implements MarkerApi, TempInternalApi {
     markReference();
 
     markReference();
+
+    element(ByteProto.CLASS_TYPE);
+
+    return JavaModel.REF;
+  }
+
+  @Override
+  public final ClassType t(String packageName, String[] simpleNames) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+
+    object(ByteProto.PACKAGE_NAME, packageName);
+
+    for (var simpleName : simpleNames) {
+      JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
+
+      object(ByteProto.SIMPLE_NAME, simpleName);
+    }
+
+    markStart();
+
+    markReference();
+
+    markIncrement(simpleNames.length);
 
     element(ByteProto.CLASS_TYPE);
 

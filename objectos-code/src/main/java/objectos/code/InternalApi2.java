@@ -748,6 +748,29 @@ class InternalApi2 extends InternalState2 implements MarkerApi, TempInternalApi 
   }
 
   @Override
+  public final ClassType t(String packageName, String[] simpleNames) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+
+    object(ByteProto.PACKAGE_NAME, packageName);
+
+    for (var simpleName : simpleNames) {
+      JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
+
+      object(ByteProto.SIMPLE_NAME, simpleName);
+    }
+
+    markStart();
+
+    markReference();
+
+    markIncrement(simpleNames.length);
+
+    element(ByteProto.CLASS_TYPE);
+
+    return JavaModel.REF;
+  }
+
+  @Override
   public final TypeParameter tparam(String name, TypeParameterBound[] bounds) {
     Objects.requireNonNull(name, "name == null");
 

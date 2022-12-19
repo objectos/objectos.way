@@ -827,11 +827,28 @@ class InternalCompiler2 extends InternalApi2 {
       return;
     }
 
-    if (instruction == nameCount) {
-      // skip package name & dot
-
+    if (instruction == 1) {
+      // skip package name
       codeArray[codeStart] = ByteCode.NOP1;
+
+      // skip DOT
       codeArray[codeStart + 2] = ByteCode.NOP1;
+
+      var toSkip = nameCount - instruction;
+
+      for (int i = 0; i < toSkip; i++) {
+        var index = codeStart;
+
+        index += 4;
+
+        index += 2 * i;
+
+        // skip DOT
+        codeArray[index] = ByteCode.NOP1;
+
+        // skip name
+        codeArray[index + 2] = ByteCode.NOP1;
+      }
 
       return;
     }

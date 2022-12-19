@@ -110,12 +110,13 @@ final class ByteCode {
   static final int IDENTIFIER = -56;
   static final int INDENTATION = -57;
   static final int NAME = -58;
-  static final int NOP1 = -59;
-  static final int OPERATOR = -60;
-  static final int PSEUDO_ELEMENT = -61;
-  static final int RESERVED_KEYWORD = -62;
-  static final int SEPARATOR = -63;
-  static final int WHITESPACE = -64;
+  static final int NOP0 = -59;
+  static final int NOP1 = -60;
+  static final int OPERATOR = -61;
+  static final int PSEUDO_ELEMENT = -62;
+  static final int RESERVED_KEYWORD = -63;
+  static final int SEPARATOR = -64;
+  static final int WHITESPACE = -65;
 
   private ByteCode() {}
 
