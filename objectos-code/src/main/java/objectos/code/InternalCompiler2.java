@@ -707,6 +707,10 @@ class InternalCompiler2 extends InternalApi2 {
 
             $parentvalset(1, _BODY);
           }
+
+          case _BODY -> {
+            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+          }
         }
       }
     }

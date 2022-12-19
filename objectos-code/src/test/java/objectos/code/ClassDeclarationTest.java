@@ -287,4 +287,39 @@ public class ClassDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Class declarations TC09
+
+  - more than one member
+  """)
+  public void testCase09() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class(
+            id("A"),
+
+            field(_int(), id("value")),
+
+            method(
+              _int(), id("value"),
+              _return(n("value"))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class A {
+        int value;
+
+        int value() {
+          return value;
+        }
+      }
+      """
+    );
+  }
+
 }
