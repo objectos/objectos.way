@@ -31,8 +31,6 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeOperator(Operator2 operator);
 
-  protected abstract void writePseudoElement(PseudoElement value);
-
   protected abstract void writeReservedKeyword(Keyword value);
 
   protected abstract void writeSeparator(Separator value);
@@ -99,8 +97,6 @@ abstract class InternalInterpreter extends InternalCompiler {
 
       case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();
 
-      case ByteCode.PSEUDO_ELEMENT -> pseudoElement();
-
       case ByteCode.RESERVED_KEYWORD -> reservedKeyword();
 
       case ByteCode.SEPARATOR -> separator();
@@ -128,7 +124,7 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
 
     if (initialNewLine) {
-      writePseudoElement(PseudoElement.BEFORE_NEXT_TOP_LEVEL_ITEM);
+      writeWhitespace(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
     }
 
     var iterator = types.iterator();
@@ -137,7 +133,7 @@ abstract class InternalInterpreter extends InternalCompiler {
       autoImportsRenderItem(iterator.next());
 
       while (iterator.hasNext()) {
-        writePseudoElement(PseudoElement.BEFORE_NEXT_STATEMENT);
+        writeWhitespace(Whitespace.BEFORE_NEXT_STATEMENT);
 
         autoImportsRenderItem(iterator.next());
       }
@@ -192,14 +188,6 @@ abstract class InternalInterpreter extends InternalCompiler {
     var value = (String) objectArray[index];
 
     writeLiteral(value);
-  }
-
-  private void pseudoElement() {
-    var index = $codenxt();
-
-    var value = PseudoElement.get(index);
-
-    writePseudoElement(value);
   }
 
   private void reservedKeyword() {

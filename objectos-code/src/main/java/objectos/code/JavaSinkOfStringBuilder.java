@@ -76,27 +76,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected final void writePseudoElement(PseudoElement value) {
-    switch (value) {
-      case AFTER_ANNOTATION -> writenl();
-
-      case BEFORE_FIRST_MEMBER -> writenl();
-
-      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); }
-
-      case BEFORE_NEXT_TOP_LEVEL_ITEM -> { writenl(); writenl(); }
-
-      case BEFORE_NEXT_STATEMENT -> writenl();
-
-      case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
-
-      case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
-
-      default -> {}
-    }
-  }
-
-  @Override
   protected final void writeReservedKeyword(Keyword value) {
     out.append(value);
   }
@@ -121,6 +100,20 @@ class JavaSinkOfStringBuilder extends JavaSink {
       case MANDATORY, OPTIONAL -> out.append(' ');
 
       case NEW_LINE -> writenl();
+
+      case AFTER_ANNOTATION -> writenl();
+
+      case BEFORE_FIRST_MEMBER -> writenl();
+
+      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); }
+
+      case BEFORE_NEXT_TOP_LEVEL_ITEM -> { writenl(); writenl(); }
+
+      case BEFORE_NEXT_STATEMENT -> writenl();
+
+      case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
+
+      case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
     }
   }
 

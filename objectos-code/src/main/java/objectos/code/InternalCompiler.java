@@ -310,10 +310,6 @@ class InternalCompiler extends InternalApi {
     $codeadd(ByteCode.OPERATOR, operator.ordinal());
   }
 
-  private void $codeadd(PseudoElement element) {
-    $codeadd(ByteCode.PSEUDO_ELEMENT, element.ordinal());
-  }
-
   private void $codeadd(Separator separator) {
     $codeadd(ByteCode.SEPARATOR, separator.ordinal());
   }
@@ -567,7 +563,7 @@ class InternalCompiler extends InternalApi {
     switch (state) {
       case _START -> {
         $codeadd(Separator.LEFT_CURLY_BRACKET);
-        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
         $codeadd(Indentation.ENTER_BLOCK);
         $codeadd(Indentation.EMIT);
 
@@ -575,7 +571,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case _BODY -> {
-        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
         $codeadd(Indentation.EMIT);
       }
     }
@@ -589,7 +585,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case _BODY -> {
-        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
         $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -688,14 +684,14 @@ class InternalCompiler extends InternalApi {
           case _NAME, _EXTS, _IMPLS -> {
             $codeadd(Whitespace.OPTIONAL);
             $codeadd(Separator.LEFT_CURLY_BRACKET);
-            $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             $codeadd(Indentation.ENTER_BLOCK);
 
             $parentvalset(1, _BODY);
           }
 
           case _BODY -> {
-            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+            $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
           }
         }
       }
@@ -713,7 +709,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case _BODY -> {
-        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
         $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -727,7 +723,7 @@ class InternalCompiler extends InternalApi {
     switch (child) {
       case ByteProto.ANNOTATION -> {
         if (state != _MODS) {
-          $codeadd(PseudoElement.AFTER_ANNOTATION);
+          $codeadd(Whitespace.AFTER_ANNOTATION);
         }
       }
     }
@@ -846,7 +842,7 @@ class InternalCompiler extends InternalApi {
 
   private void commaAndSpace() {
     $codeadd(Separator.COMMA);
-    $codeadd(PseudoElement.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+    $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
   }
 
   private void compilationUnit(int child) {
@@ -882,7 +878,7 @@ class InternalCompiler extends InternalApi {
           }
 
           default -> {
-            $codeadd(PseudoElement.BEFORE_NEXT_TOP_LEVEL_ITEM);
+            $codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
           }
         }
       }
@@ -942,7 +938,7 @@ class InternalCompiler extends InternalApi {
             $codeadd(Separator.RIGHT_PARENTHESIS);
             $codeadd(Whitespace.OPTIONAL);
             $codeadd(Separator.LEFT_CURLY_BRACKET);
-            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
             $codeadd(Indentation.ENTER_BLOCK);
             $codeadd(Indentation.EMIT);
 
@@ -956,7 +952,7 @@ class InternalCompiler extends InternalApi {
             $codeadd(Separator.RIGHT_PARENTHESIS);
             $codeadd(Whitespace.OPTIONAL);
             $codeadd(Separator.LEFT_CURLY_BRACKET);
-            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
             $codeadd(Indentation.ENTER_BLOCK);
             $codeadd(Indentation.EMIT);
 
@@ -967,7 +963,7 @@ class InternalCompiler extends InternalApi {
             $codeadd(Separator.RIGHT_PARENTHESIS);
             $codeadd(Whitespace.OPTIONAL);
             $codeadd(Separator.LEFT_CURLY_BRACKET);
-            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
             $codeadd(Indentation.ENTER_BLOCK);
             $codeadd(Indentation.EMIT);
 
@@ -975,7 +971,7 @@ class InternalCompiler extends InternalApi {
           }
 
           case _BODY -> {
-            $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+            $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
             $codeadd(Indentation.EMIT);
           }
         }
@@ -1013,7 +1009,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case _BODY -> {
-        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
         $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -1057,7 +1053,7 @@ class InternalCompiler extends InternalApi {
     switch (child) {
       case ByteProto.ANNOTATION -> {
         if (state == _ANNOS) {
-          $codeadd(PseudoElement.AFTER_ANNOTATION);
+          $codeadd(Whitespace.AFTER_ANNOTATION);
           $codeadd(Indentation.EMIT);
         } else {
           $codeadd(Indentation.EMIT);
@@ -1077,7 +1073,7 @@ class InternalCompiler extends InternalApi {
           }
 
           case _ANNOS -> {
-            $codeadd(PseudoElement.AFTER_ANNOTATION);
+            $codeadd(Whitespace.AFTER_ANNOTATION);
             $codeadd(Indentation.EMIT);
 
             $parentvalset(1, _MODS);
@@ -1131,7 +1127,7 @@ class InternalCompiler extends InternalApi {
           case _NAME, _IMPLS -> {
             $codeadd(Whitespace.OPTIONAL);
             $codeadd(Separator.LEFT_CURLY_BRACKET);
-            $codeadd(PseudoElement.BEFORE_FIRST_MEMBER);
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             $codeadd(Indentation.ENTER_BLOCK);
             $codeadd(Indentation.EMIT);
 
@@ -1140,7 +1136,7 @@ class InternalCompiler extends InternalApi {
 
           case _CTES -> {
             $codeadd(Separator.COMMA);
-            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+            $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
             $codeadd(Indentation.EMIT);
           }
         }
@@ -1150,13 +1146,13 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _CTES -> {
             $codeadd(Separator.SEMICOLON);
-            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+            $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
 
             $parentvalset(1, _BODY);
           }
 
           case _BODY -> {
-            $codeadd(PseudoElement.BEFORE_NEXT_MEMBER);
+            $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
           }
         }
       }
@@ -1169,14 +1165,14 @@ class InternalCompiler extends InternalApi {
     switch (state) {
       case _CTES -> {
         $codeadd(Separator.SEMICOLON);
-        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
         $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
       case _BODY -> {
-        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
         $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -1400,7 +1396,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ANNOTATION -> {
 
         if (state != _MODS) {
-          $codeadd(PseudoElement.AFTER_ANNOTATION);
+          $codeadd(Whitespace.AFTER_ANNOTATION);
         }
 
       }
@@ -1597,7 +1593,7 @@ class InternalCompiler extends InternalApi {
         $codeadd(Separator.RIGHT_PARENTHESIS);
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
-        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
         $codeadd(Indentation.ENTER_BLOCK);
         $codeadd(Indentation.EMIT);
 
@@ -1608,7 +1604,7 @@ class InternalCompiler extends InternalApi {
         $codeadd(Separator.RIGHT_PARENTHESIS);
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
-        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
         $codeadd(Indentation.ENTER_BLOCK);
         $codeadd(Indentation.EMIT);
 
@@ -1616,7 +1612,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case _BODY -> {
-        $codeadd(PseudoElement.BEFORE_NEXT_STATEMENT);
+        $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
         $codeadd(Indentation.EMIT);
       }
     }
@@ -1652,7 +1648,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case _BODY -> {
-        $codeadd(PseudoElement.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
         $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -1667,7 +1663,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ANNOTATION -> {
 
         if (state != _MODS) {
-          $codeadd(PseudoElement.AFTER_ANNOTATION);
+          $codeadd(Whitespace.AFTER_ANNOTATION);
         }
 
       }

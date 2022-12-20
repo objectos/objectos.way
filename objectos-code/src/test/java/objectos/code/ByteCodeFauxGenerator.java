@@ -118,10 +118,8 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("IDENTIFIER");
     value("INDENTATION");
     value("NAME");
-    value("NOP0");
     value("NOP1");
     value("OPERATOR");
-    value("PSEUDO_ELEMENT");
     value("RESERVED_KEYWORD");
     value("SEPARATOR");
     value("WHITESPACE");

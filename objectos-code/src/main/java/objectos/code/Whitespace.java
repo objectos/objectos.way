@@ -21,7 +21,21 @@ public enum Whitespace {
 
   OPTIONAL,
 
-  NEW_LINE;
+  NEW_LINE,
+
+  AFTER_ANNOTATION,
+
+  BEFORE_NEXT_TOP_LEVEL_ITEM,
+
+  BEFORE_FIRST_MEMBER,
+
+  BEFORE_NEXT_MEMBER,
+
+  BEFORE_NEXT_STATEMENT,
+
+  BEFORE_NEXT_COMMA_SEPARATED_ITEM,
+
+  BEFORE_NON_EMPTY_BLOCK_END;
 
   private static final Whitespace[] VALUES = values();
 
