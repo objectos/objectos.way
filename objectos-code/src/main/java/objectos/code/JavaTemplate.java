@@ -91,7 +91,7 @@ public abstract class JavaTemplate {
     void execute();
   }
 
-  private TempInternalApi api;
+  private InternalApi api;
 
   /**
    * Sole constructor.
@@ -383,7 +383,7 @@ public abstract class JavaTemplate {
     }
   }
 
-  private TempInternalApi api() {
+  private InternalApi api() {
     Check.state(api != null, """
     An InternalApi instance was not set.
 

@@ -19,30 +19,6 @@ import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
 
-  private interface ArrAccess { int START = 0; int FIRST = 1; int NEXT = 2; }
-
-  private interface Assign { int START = 0; int LHS = 1; int RHS = 2; }
-
-  private interface At { int START = 0; int TYPE = 1; int VALUE = 2; }
-
-  private interface ChainIvk { int START = 0; int NL = 1; int NEXT = 2; }
-
-  private interface ExpName { int START = 0; int BASE = 1; int NAME = 2; }
-
-  private interface FieldDecl { int START = 0; int MODS = 1; int NAME = 2; int INIT = 3; }
-
-  private interface IfaceDecl { int START = 0; int MODS = 1; int NAME = 2; int TYPE = 3; }
-
-  private interface LocalVar { int START = 0; int INIT = 1; }
-
-  private interface MInvoke { int RECV = 0; int NAME = 1; int LPAR = 2; int ARG = 3; int SLOT = 4; }
-
-  private interface NewExpr { int START = 0; int TYPE = 1; int ARG = 2; }
-
-  private interface Param { int START = 0; int TYPE = 1; int NAME = 2; }
-
-  private interface TypeParam { int NAME = 0; int TYPE = 1; }
-
   private static final int NULL = Integer.MIN_VALUE;
   private static final int FALSE = 0;
   private static final int TRUE = 1;
@@ -62,6 +38,16 @@ class InternalCompiler extends InternalApi {
   private static final int _ARG = 12;
   private static final int _BODY = 13;
   private static final int _LHS = 14;
+  private static final int _RHS = 15;
+  private static final int _VALUE = 16;
+  private static final int _INIT = 17;
+  private static final int _BASE = 18;
+  private static final int _FIRST = 19;
+  private static final int _NL = 20;
+  private static final int _NEXT = 21;
+  private static final int _RECV = 22;
+  private static final int _LPAR = 23;
+  private static final int _SLOT = 24;
 
   final void pass1() {
     code = 0;
@@ -429,11 +415,11 @@ class InternalCompiler extends InternalApi {
     var state = $parentvalget(1);
 
     if (child == ByteProto.CLASS_TYPE) {
-      if (state == At.START) {
+      if (state == _START) {
         $codeadd(Indentation.EMIT);
         $codeadd(Separator.COMMERCIAL_AT);
 
-        $parentvalset(1, At.TYPE);
+        $parentvalset(1, _TYPE);
       }
 
       return;
@@ -442,17 +428,17 @@ class InternalCompiler extends InternalApi {
     // if child != @ element name
 
     switch (state) {
-      case At.TYPE -> {
+      case _TYPE -> {
         $codeadd(Separator.LEFT_PARENTHESIS);
 
-        $parentvalset(1, At.VALUE);
+        $parentvalset(1, _VALUE);
       }
     }
   }
 
   private void annotationBreak(int state) {
     switch (state) {
-      case At.VALUE -> {
+      case _VALUE -> {
         $codeadd(Separator.RIGHT_PARENTHESIS);
       }
     }
@@ -462,15 +448,15 @@ class InternalCompiler extends InternalApi {
     var state = $parentvalget(1);
 
     switch (state) {
-      case ArrAccess.START -> $parentvalset(1, ArrAccess.FIRST);
+      case _START -> $parentvalset(1, _FIRST);
 
-      case ArrAccess.FIRST -> {
+      case _FIRST -> {
         $codeadd(Separator.LEFT_SQUARE_BRACKET);
 
-        $parentvalset(1, ArrAccess.NEXT);
+        $parentvalset(1, _NEXT);
       }
 
-      case ArrAccess.NEXT -> {
+      case _NEXT -> {
         $codeadd(Separator.RIGHT_SQUARE_BRACKET);
         $codeadd(Separator.LEFT_SQUARE_BRACKET);
       }
@@ -479,7 +465,7 @@ class InternalCompiler extends InternalApi {
 
   private void arrayAccessExpressionBreak(int state) {
     switch (state) {
-      case ArrAccess.FIRST, ArrAccess.NEXT -> {
+      case _FIRST, _NEXT -> {
         $codeadd(Separator.RIGHT_SQUARE_BRACKET);
       }
     }
@@ -522,7 +508,7 @@ class InternalCompiler extends InternalApi {
 
     $parentpush(
       NULL, // 2 = operator location
-      Assign.START, // 1 = state
+      _START, // 1 = state
       proto
     );
   }
@@ -531,13 +517,13 @@ class InternalCompiler extends InternalApi {
     var state = $parentvalget(1);
 
     switch (state) {
-      case Assign.START -> {
+      case _START -> {
         if (child != ByteProto.ASSIGNMENT_OPERATOR) {
-          $parentvalset(1, Assign.LHS);
+          $parentvalset(1, _LHS);
         }
       }
 
-      case Assign.LHS -> {
+      case _LHS -> {
         if (child != ByteProto.ASSIGNMENT_OPERATOR) {
           $codeadd(Whitespace.OPTIONAL);
 
@@ -549,7 +535,7 @@ class InternalCompiler extends InternalApi {
 
           $parentvalset(2, operatorLocation);
 
-          $parentvalset(1, Assign.RHS);
+          $parentvalset(1, _RHS);
         }
       }
     }
@@ -615,21 +601,21 @@ class InternalCompiler extends InternalApi {
     var state = $parentvalget(1);
 
     switch (state) {
-      case ChainIvk.START -> $parentvalset(1, ChainIvk.NEXT);
+      case _START -> $parentvalset(1, _NEXT);
 
-      case ChainIvk.NEXT -> {
+      case _NEXT -> {
         if (child == ByteProto.NEW_LINE) {
-          $parentvalset(1, ChainIvk.NL);
+          $parentvalset(1, _NL);
         } else {
           $codeadd(Separator.DOT);
         }
       }
 
-      case ChainIvk.NL -> {
+      case _NL -> {
         if (child != ByteProto.NEW_LINE) {
           $codeadd(Indentation.CONTINUATION);
           $codeadd(Separator.DOT);
-          $parentvalset(1, ChainIvk.NEXT);
+          $parentvalset(1, _NEXT);
         }
       }
     }
@@ -751,31 +737,31 @@ class InternalCompiler extends InternalApi {
     var state = $parentvalget(1);
 
     switch (state) {
-      case NewExpr.START -> {
+      case _START -> {
         $codeadd(Keyword.NEW);
         $codeadd(Whitespace.MANDATORY);
 
         if (child == ByteProto.CLASS_TYPE) {
-          $parentvalset(1, NewExpr.TYPE);
+          $parentvalset(1, _TYPE);
         }
       }
 
-      case NewExpr.TYPE -> {
+      case _TYPE -> {
         $codeadd(Separator.LEFT_PARENTHESIS);
 
-        $parentvalset(1, NewExpr.ARG);
+        $parentvalset(1, _ARG);
       }
 
-      case NewExpr.ARG -> {
+      case _ARG -> {
         commaAndSpace();
 
-        $parentvalset(1, NewExpr.ARG);
+        $parentvalset(1, _ARG);
       }
     }
   }
 
   private void classInstanceCreationBreak(int state) {
-    if (state == NewExpr.TYPE) {
+    if (state == _TYPE) {
       $codeadd(Separator.LEFT_PARENTHESIS);
     }
 
@@ -1202,13 +1188,13 @@ class InternalCompiler extends InternalApi {
     if (child == ByteProto.IDENTIFIER) {
       int state = $parentvalget(1);
 
-      if (state != ExpName.START) {
+      if (state != _START) {
         $codeadd(Separator.DOT);
       }
 
-      $parentvalset(1, ExpName.NAME);
+      $parentvalset(1, _NAME);
     } else {
-      $parentvalset(1, ExpName.BASE);
+      $parentvalset(1, _BASE);
     }
   }
 
@@ -1252,13 +1238,13 @@ class InternalCompiler extends InternalApi {
 
     if (child == ByteProto.MODIFIER) {
       switch (state) {
-        case FieldDecl.START -> {
+        case _START -> {
           $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, FieldDecl.MODS);
+          $parentvalset(1, _MODS);
         }
 
-        case FieldDecl.MODS -> {
+        case _MODS -> {
           $codeadd(Whitespace.MANDATORY);
         }
       }
@@ -1268,7 +1254,7 @@ class InternalCompiler extends InternalApi {
 
     if (child == ByteProto.IDENTIFIER) {
       switch (state) {
-        case FieldDecl.START, FieldDecl.MODS -> {
+        case _START, _MODS -> {
           $codeadd(Whitespace.MANDATORY);
         }
 
@@ -1277,13 +1263,13 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      $parentvalset(1, FieldDecl.NAME);
+      $parentvalset(1, _NAME);
 
       return;
     }
 
     if (ByteProto.isType(child)) {
-      if (state != FieldDecl.START) {
+      if (state != _START) {
         $codeadd(Whitespace.MANDATORY);
       } else {
         $codeadd(Indentation.EMIT);
@@ -1293,12 +1279,12 @@ class InternalCompiler extends InternalApi {
     }
 
     if (ByteProto.isExpression(child) || child == ByteProto.ARRAY_INITIALIZER) {
-      if (state == FieldDecl.NAME) {
+      if (state == _NAME) {
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Operator2.ASSIGNMENT);
         $codeadd(Whitespace.OPTIONAL);
 
-        $parentvalset(1, FieldDecl.INIT);
+        $parentvalset(1, _INIT);
       }
 
       return;
@@ -1309,18 +1295,18 @@ class InternalCompiler extends InternalApi {
     var state = $parentvalget(1);
 
     if (ByteProto.isType(child)) {
-      if (state == Param.START) {
-        $parentvalset(1, Param.TYPE);
+      if (state == _START) {
+        $parentvalset(1, _TYPE);
       }
 
       return;
     }
 
     if (child == ByteProto.IDENTIFIER) {
-      if (state == Param.TYPE) {
+      if (state == _TYPE) {
         $codeadd(Whitespace.MANDATORY);
 
-        $parentvalset(1, Param.NAME);
+        $parentvalset(1, _NAME);
       }
 
       return;
@@ -1353,7 +1339,7 @@ class InternalCompiler extends InternalApi {
 
     switch (child) {
       case ByteProto.ANNOTATION -> {
-        if (state == IfaceDecl.MODS) {
+        if (state == _MODS) {
           $codeadd(Whitespace.MANDATORY);
         }
       }
@@ -1361,28 +1347,28 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> {
         typeDeclarationModifier();
 
-        if (state != IfaceDecl.START) {
+        if (state != _START) {
           $codeadd(Whitespace.MANDATORY);
         }
 
-        $parentvalset(1, IfaceDecl.MODS);
+        $parentvalset(1, _MODS);
       }
 
       case ByteProto.IDENTIFIER -> {
         typeDeclarationIdentifier();
 
-        if (state != IfaceDecl.START) {
+        if (state != _START) {
           $codeadd(Whitespace.MANDATORY);
         }
 
         $codeadd(Keyword.INTERFACE);
         $codeadd(Whitespace.MANDATORY);
 
-        $parentvalset(1, IfaceDecl.NAME);
+        $parentvalset(1, _NAME);
       }
 
       case ByteProto.EXTENDS_SINGLE, ByteProto.EXTENDS_MANY -> {
-        if (state == IfaceDecl.TYPE) {
+        if (state == _TYPE) {
           code = _TYPE;
         } else {
           $codeadd(Whitespace.MANDATORY);
@@ -1390,7 +1376,7 @@ class InternalCompiler extends InternalApi {
           code = _START;
         }
 
-        $parentvalset(1, IfaceDecl.TYPE);
+        $parentvalset(1, _TYPE);
       }
     }
   }
@@ -1399,7 +1385,7 @@ class InternalCompiler extends InternalApi {
     typeDeclarationBreak();
 
     switch (state) {
-      case IfaceDecl.NAME, IfaceDecl.TYPE -> {
+      case _NAME, _TYPE -> {
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -1413,7 +1399,7 @@ class InternalCompiler extends InternalApi {
     switch (child) {
       case ByteProto.ANNOTATION -> {
 
-        if (state != IfaceDecl.MODS) {
+        if (state != _MODS) {
           $codeadd(PseudoElement.AFTER_ANNOTATION);
         }
 
@@ -1455,7 +1441,7 @@ class InternalCompiler extends InternalApi {
 
     $parentpush(
       NULL, // 2 = name location
-      LocalVar.START, // 1 = state
+      _START, // 1 = state
       proto
     );
   }
@@ -1465,7 +1451,7 @@ class InternalCompiler extends InternalApi {
 
     if (ByteProto.isExpression(child)) {
       switch (state) {
-        case LocalVar.START -> {
+        case _START -> {
           $codeadd(Keyword.VAR);
 
           $codeadd(Whitespace.MANDATORY);
@@ -1482,7 +1468,7 @@ class InternalCompiler extends InternalApi {
 
           $codeadd(Whitespace.OPTIONAL);
 
-          $parentvalset(1, LocalVar.INIT);
+          $parentvalset(1, _INIT);
         }
       }
 
@@ -1701,7 +1687,7 @@ class InternalCompiler extends InternalApi {
       0, // 4 = NL
       nameLocation, // 3
       NULL, // 2 = comma slot
-      MInvoke.NAME, // 1 = state
+      _NAME, // 1 = state
       proto
     );
   }
@@ -1710,42 +1696,42 @@ class InternalCompiler extends InternalApi {
     var state = $parentvalget(1);
 
     switch (state) {
-      case MInvoke.NAME -> {
+      case _NAME -> {
         $codeadd(Separator.LEFT_PARENTHESIS);
         $codeadd(Indentation.ENTER_PARENTHESIS);
 
         if (child == ByteProto.NEW_LINE) {
           $parentvalinc(4);
 
-          $parentvalset(1, MInvoke.LPAR);
+          $parentvalset(1, _LPAR);
         } else {
-          $parentvalset(1, MInvoke.ARG);
+          $parentvalset(1, _ARG);
         }
       }
 
-      case MInvoke.LPAR -> {
+      case _LPAR -> {
         if (child != ByteProto.NEW_LINE) {
           $parentindent(4);
 
-          $parentvalset(1, MInvoke.ARG);
+          $parentvalset(1, _ARG);
         }
       }
 
-      case MInvoke.ARG -> {
+      case _ARG -> {
         if (child == ByteProto.NEW_LINE) {
           $parentvalinc(4);
 
           $parentvalset(2, nop1());
 
-          $parentvalset(1, MInvoke.SLOT);
+          $parentvalset(1, _SLOT);
         } else {
           commaAndSpace();
 
-          $parentvalset(1, MInvoke.ARG);
+          $parentvalset(1, _ARG);
         }
       }
 
-      case MInvoke.SLOT -> {
+      case _SLOT -> {
         if (child != ByteProto.NEW_LINE) {
           $parentindent(4);
 
@@ -1754,7 +1740,7 @@ class InternalCompiler extends InternalApi {
           codeArray[slot + 0] = ByteCode.SEPARATOR;
           codeArray[slot + 1] = Separator.COMMA.ordinal();
 
-          $parentvalset(1, MInvoke.ARG);
+          $parentvalset(1, _ARG);
         }
       }
     }
@@ -1765,7 +1751,7 @@ class InternalCompiler extends InternalApi {
     $parentpop(); // name loc
     int nl = $parentpop(); // nl
 
-    if (state == MInvoke.NAME) {
+    if (state == _NAME) {
       $codeadd(Separator.LEFT_PARENTHESIS);
       $codeadd(Indentation.ENTER_PARENTHESIS);
     }
@@ -1782,7 +1768,7 @@ class InternalCompiler extends InternalApi {
   private void methodInvocationCallback(int child) {
     var state = $parentvalget(1);
 
-    if (state == MInvoke.RECV) {
+    if (state == _RECV) {
       $codeadd(Separator.DOT);
 
       var nameLocation = codeIndex;
@@ -1791,7 +1777,7 @@ class InternalCompiler extends InternalApi {
 
       $parentvalset(3, nameLocation);
 
-      $parentvalset(1, MInvoke.NAME);
+      $parentvalset(1, _NAME);
     }
   }
 
@@ -1804,7 +1790,7 @@ class InternalCompiler extends InternalApi {
       0, // 4 = NL
       NULL, // 3
       NULL, // 2 = comma slot
-      MInvoke.RECV, // 1 = state
+      _RECV, // 1 = state
       proto
     );
   }
@@ -1946,7 +1932,7 @@ class InternalCompiler extends InternalApi {
 
     $parentpush(
       nameLocation, // 2 = name location
-      TypeParam.NAME, // 1 = state
+      _NAME, // 1 = state
       proto
     );
   }
@@ -1956,17 +1942,17 @@ class InternalCompiler extends InternalApi {
 
     if (ByteProto.isType(child)) {
       switch (state) {
-        case TypeParam.NAME -> {
+        case _NAME -> {
           $codeadd(Whitespace.MANDATORY);
 
           $codeadd(Keyword.EXTENDS);
 
           $codeadd(Whitespace.MANDATORY);
 
-          $parentvalset(1, TypeParam.TYPE);
+          $parentvalset(1, _TYPE);
         }
 
-        case TypeParam.TYPE -> {
+        case _TYPE -> {
           $codeadd(Whitespace.OPTIONAL);
 
           $codeadd(Separator.AMPERSAND);
