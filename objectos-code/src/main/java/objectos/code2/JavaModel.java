@@ -24,12 +24,15 @@ package objectos.code2;
  */
 final class JavaModel {
 
+  public sealed interface Body {}
+
   public sealed interface ClassKeyword {}
 
   public sealed interface FinalModifier {}
 
-  private static final class Ref
+  static final class Ref
       implements
+      Body,
       ClassKeyword,
       FinalModifier {
     private Ref() {}

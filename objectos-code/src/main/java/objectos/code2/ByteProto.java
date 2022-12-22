@@ -17,8 +17,17 @@ package objectos.code2;
 
 final class ByteProto {
 
-  static final int KEYWORD = -1;
-  static final int MODIFIER = -2;
+  static final int NULL = Integer.MIN_VALUE;
+
+  static final int EOF = -1;
+  static final int POP = -2;
+  static final int PROTOS = -3;
+
+  static final int COMPILATION_UNIT = -4;
+  static final int MODIFIER = -5;
+  static final int CLASS0 = -6;
+  static final int CLASS_DECLARATION = -7;
+  static final int BODY = -8;
 
   private ByteProto() {}
 

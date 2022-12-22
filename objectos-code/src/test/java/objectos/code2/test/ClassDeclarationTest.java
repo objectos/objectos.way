@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 public class ClassDeclarationTest {
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   final class Subject {}
   """)
   public void testCase01() {
@@ -31,16 +31,12 @@ public class ClassDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _final(); _class("A");
-
-          //_final(); _class("B"); body();
+          _final(); _class("A"); body();
         }
       }.toString(),
 
       """
       final class A {}
-
-      final class B {}
       """
     );
     // @formatter:on

@@ -15,6 +15,7 @@
  */
 package objectos.code2;
 
+import objectos.code2.JavaModel.Body;
 import objectos.code2.JavaModel.ClassKeyword;
 import objectos.code2.JavaModel.FinalModifier;
 import objectos.lang.Check;
@@ -28,12 +29,27 @@ public abstract class JavaTemplate {
    */
   protected JavaTemplate() {}
 
+  @Override
+  public String toString() {
+    var out = new StringBuilder();
+
+    var sink = JavaSink.ofStringBuilder(out);
+
+    sink.eval(this);
+
+    return out.toString();
+  }
+
   protected final ClassKeyword _class(String name) {
     return api()._class(name);
   }
 
   protected final FinalModifier _final() {
     return api()._final();
+  }
+
+  protected final Body body() {
+    return api().body();
   }
 
   protected abstract void definition();

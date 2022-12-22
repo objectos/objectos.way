@@ -15,14 +15,34 @@
  */
 package objectos.code2;
 
-final class ByteCode {
+import java.io.IOException;
+import objectos.lang.Check;
 
-  static final int EOF = -1;
-  static final int KEYWORD = -2;
-  static final int WHITESPACE = -3;
-  static final int IDENTIFIER = -4;
-  static final int SEPARATOR = -5;
+public abstract class JavaSink extends InternalInterpreter {
 
-  private ByteCode() {}
+  /**
+   * Sole constructor
+   */
+  protected JavaSink() {}
+
+  public static JavaSink ofStringBuilder(StringBuilder output) {
+    Check.notNull(output, "output == null");
+
+    return new JavaSinkOfStringBuilder(output);
+  }
+
+  public void eval(JavaTemplate template) {
+    Check.notNull(template, "template == null");
+
+    accept(template);
+
+    compile();
+
+    interpret();
+  }
+
+  public void write(JavaTemplate template) throws IOException {
+    eval(template);
+  }
 
 }
