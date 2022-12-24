@@ -24,17 +24,29 @@ package objectos.code2;
  */
 final class JavaModel {
 
+  public sealed interface AutoImports {}
+
   public sealed interface Body {}
 
   public sealed interface ClassKeyword {}
 
+  public sealed interface ClassType {}
+
+  public sealed interface ExtendsKeyword {}
+
   public sealed interface FinalModifier {}
+
+  public sealed interface PackageKeyword {}
 
   static final class Ref
       implements
+      AutoImports,
       Body,
       ClassKeyword,
-      FinalModifier {
+      ClassType,
+      ExtendsKeyword,
+      FinalModifier,
+      PackageKeyword {
     private Ref() {}
   }
 

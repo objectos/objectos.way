@@ -15,9 +15,13 @@
  */
 package objectos.code2;
 
+import objectos.code2.JavaModel.AutoImports;
 import objectos.code2.JavaModel.Body;
 import objectos.code2.JavaModel.ClassKeyword;
+import objectos.code2.JavaModel.ClassType;
+import objectos.code2.JavaModel.ExtendsKeyword;
 import objectos.code2.JavaModel.FinalModifier;
+import objectos.code2.JavaModel.PackageKeyword;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
@@ -44,8 +48,20 @@ public abstract class JavaTemplate {
     return api()._class(name);
   }
 
+  protected final ExtendsKeyword _extends(ClassType type) {
+    return api()._extends(type);
+  }
+
   protected final FinalModifier _final() {
     return api()._final();
+  }
+
+  protected final PackageKeyword _package(String name) {
+    return api()._package(name);
+  }
+
+  protected final AutoImports autoImports() {
+    return api().autoImports();
   }
 
   protected final Body body() {
@@ -53,6 +69,14 @@ public abstract class JavaTemplate {
   }
 
   protected abstract void definition();
+
+  protected final ClassType t(Class<?> value) {
+    return api().t(value);
+  }
+
+  protected final ClassType t(String packageName, String simpleName) {
+    return api().t(packageName, simpleName);
+  }
 
   final void execute(InternalApi api) {
     Check.state(this.api == null, """

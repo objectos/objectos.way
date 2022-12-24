@@ -15,13 +15,19 @@
  */
 package objectos.code2;
 
+import objectos.code2.JavaModel.AutoImports;
 import objectos.code2.JavaModel.Body;
 import objectos.code2.JavaModel.ClassKeyword;
+import objectos.code2.JavaModel.ClassType;
+import objectos.code2.JavaModel.ExtendsKeyword;
 import objectos.code2.JavaModel.FinalModifier;
+import objectos.code2.JavaModel.PackageKeyword;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
 class InternalApi {
+
+  AutoImportsHey autoImports = new AutoImportsHey();
 
   int aux;
 
@@ -45,8 +51,30 @@ class InternalApi {
     return $protoret();
   }
 
+  public final ExtendsKeyword _extends(ClassType type) {
+    return $elemret(ByteProto.EXTENDS, 1);
+  }
+
   public final FinalModifier _final() {
     modifier(Keyword.FINAL);
+
+    return $protoret();
+  }
+
+  public final PackageKeyword _package(String name) {
+    JavaModel.checkPackageName(name.toString()); // implicit null check
+
+    autoImports.packageName(name);
+
+    $protoadd(ByteProto.PACKAGE, $objectadd(name));
+
+    return $protoret();
+  }
+
+  public final AutoImports autoImports() {
+    autoImports.enable();
+
+    $protoadd(ByteProto.AUTO_IMPORTS);
 
     return $protoret();
   }
@@ -55,10 +83,68 @@ class InternalApi {
     return $elemret(ByteProto.BODY, 0);
   }
 
+  public final ClassType t(Class<?> type) {
+    var last = objectIndex;
+
+    while (true) {
+      var simpleName = type.getSimpleName(); // implicit null-check
+
+      $objectadd(simpleName);
+
+      var outer = type.getEnclosingClass();
+
+      if (outer == null) {
+        break;
+      } else {
+        type = outer;
+      }
+    }
+
+    var first = objectIndex - 1;
+
+    var names = objectIndex - last;
+
+    var packageName = type.getPackageName();
+
+    $protoadd(ByteProto.CLASS_TYPE, $objectadd(packageName), names);
+
+    for (var index = first; index >= last; index--) {
+      var simpleName = objectArray[index];
+
+      $protoadd($objectadd(simpleName));
+    }
+
+    return $protoret();
+  }
+
+  public final ClassType t(String packageName, String simpleName) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
+
+    $protoadd(
+      ByteProto.CLASS_TYPE, $objectadd(packageName),
+      1, $objectadd(simpleName)
+    );
+
+    return $protoret();
+  }
+
+  final int $objectadd(Object value) {
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    var result = objectIndex;
+
+    objectArray[objectIndex++] = value;
+
+    return result;
+  }
+
   final void accept(JavaTemplate template) {
+    autoImports.clear();
+
     aux = elemIndex = objectIndex = protoIndex = 0;
 
-    $elempsh(ByteProto.COMPILATION_UNIT);
+    $elemadd(ByteProto.COMPILATION_UNIT);
 
     template.execute(this);
 
@@ -94,30 +180,28 @@ class InternalApi {
     $elemadd(ByteProto.POP);
   }
 
-  private void $elempsh(int value) {
-    $elemcnt();
+  private JavaModel.Ref $elemret(int value, int protos) {
+    var diff = aux - protos;
+
+    if (diff > 0) {
+      $elemadd(ByteProto.PROTOS, diff);
+    }
+
+    aux = 0;
 
     $elemadd(value);
-  }
-
-  private JavaModel.Ref $elemret(int value, int protos) {
-    $elempsh(value);
 
     $elemadd(ByteProto.PROTOS, protos);
 
-    $elempop();
+    $elemadd(ByteProto.POP);
 
     return JavaModel.REF;
   }
 
-  private int $objectadd(Object value) {
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+  private void $protoadd(int v0) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 0);
 
-    var result = objectIndex;
-
-    objectArray[objectIndex++] = value;
-
-    return result;
+    protoArray[protoIndex++] = v0;
   }
 
   private void $protoadd(int v0, int v1) {
@@ -125,6 +209,23 @@ class InternalApi {
 
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
+  }
+
+  private void $protoadd(int v0, int v1, int v2) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
+
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+  }
+
+  private void $protoadd(int v0, int v1, int v2, int v3) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 3);
+
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
   }
 
   private JavaModel.Ref $protoret() {

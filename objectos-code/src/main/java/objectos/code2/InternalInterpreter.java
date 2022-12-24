@@ -17,11 +17,15 @@ package objectos.code2;
 
 abstract class InternalInterpreter extends InternalCompiler {
 
+  protected abstract void writeComment(String value);
+
   protected abstract void writeCompilationUnitEnd(String packageName, String fileName);
 
   protected abstract void writeIdentifier(String name);
 
   protected abstract void writeKeyword(Keyword value);
+
+  protected abstract void writeRaw(String value);
 
   protected abstract void writeSeparator(Separator value);
 
@@ -49,11 +53,19 @@ abstract class InternalInterpreter extends InternalCompiler {
     var code = $codenxt();
 
     switch (code) {
+      case ByteCode.AUTO_IMPORTS0 -> autoImportsRender(false);
+
+      case ByteCode.AUTO_IMPORTS1 -> autoImportsRender(true);
+
+      case ByteCode.COMMENT -> comment();
+
       case ByteCode.EOF -> {}
 
       case ByteCode.IDENTIFIER -> identifier();
 
       case ByteCode.KEYWORD -> keyword();
+
+      case ByteCode.RAW -> raw();
 
       case ByteCode.SEPARATOR -> separator();
 
@@ -70,6 +82,48 @@ abstract class InternalInterpreter extends InternalCompiler {
       "Implement me :: code = " + code);
   }
 
+  private void autoImportsRender(boolean initialNewLine) {
+    var types = autoImports.types();
+
+    if (types.isEmpty()) {
+      return;
+    }
+
+    if (initialNewLine) {
+      writeWhitespace(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+    }
+
+    var iterator = types.iterator();
+
+    if (iterator.hasNext()) {
+      autoImportsRenderItem(iterator.next());
+
+      while (iterator.hasNext()) {
+        writeWhitespace(Whitespace.BEFORE_NEXT_STATEMENT);
+
+        autoImportsRenderItem(iterator.next());
+      }
+    }
+  }
+
+  private void autoImportsRenderItem(String type) {
+    writeKeyword(Keyword.IMPORT);
+
+    writeWhitespace(Whitespace.MANDATORY);
+
+    writeIdentifier(type);
+
+    writeSeparator(Separator.SEMICOLON);
+  }
+
+  private void comment() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeComment(value);
+  }
+
   private void identifier() {
     var index = $codenxt();
 
@@ -84,6 +138,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     var value = Keyword.get(index);
 
     writeKeyword(value);
+  }
+
+  private void raw() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeRaw(value);
   }
 
   private void separator() {

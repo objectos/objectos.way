@@ -19,15 +19,29 @@ final class ByteProto {
 
   static final int NULL = Integer.MIN_VALUE;
 
+  //internal instructions
+
   static final int EOF = -1;
   static final int POP = -2;
   static final int PROTOS = -3;
 
-  static final int COMPILATION_UNIT = -4;
-  static final int MODIFIER = -5;
-  static final int CLASS0 = -6;
-  static final int CLASS_DECLARATION = -7;
-  static final int BODY = -8;
+  //types
+
+  static final int CLASS_TYPE = -4;
+
+  //compilation unit
+
+  static final int COMPILATION_UNIT = -5;
+  static final int PACKAGE = -6;
+  static final int AUTO_IMPORTS = -7;
+
+  //type declarations
+
+  static final int CLASS0 = -8;
+  static final int CLASS_DECLARATION = -9;
+  static final int MODIFIER = -10;
+  static final int EXTENDS = -11;
+  static final int BODY = -12;
 
   private ByteProto() {}
 

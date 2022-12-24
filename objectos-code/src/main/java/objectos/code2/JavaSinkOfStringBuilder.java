@@ -25,7 +25,14 @@ class JavaSinkOfStringBuilder extends JavaSink {
   public final String toString() { return out.toString(); }
 
   @Override
-  protected void writeCompilationUnitEnd(String packageName, String fileName) {
+  protected final void writeComment(String value) {
+    out.append("/* ");
+    out.append(value);
+    out.append(" */");
+  }
+
+  @Override
+  protected final void writeCompilationUnitEnd(String packageName, String fileName) {
     writenl();
   }
 
@@ -36,10 +43,13 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected final void writeKeyword(Keyword value) { out.append(value); }
 
   @Override
+  protected final void writeRaw(String value) { out.append(value); }
+
+  @Override
   protected final void writeSeparator(Separator value) { out.append(value); }
 
   @Override
-  protected void writeWhitespace(Whitespace value) {
+  protected final void writeWhitespace(Whitespace value) {
     switch (value) {
       case MANDATORY, OPTIONAL -> out.append(' ');
 

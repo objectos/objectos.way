@@ -15,21 +15,37 @@
  */
 package objectos.code2;
 
-final class ByteCode {
+public class ByteProtoFauxGenerator extends FauxGenerator {
+  public static void main(String[] args) {
+    var gen = new ByteProtoFauxGenerator();
 
-  static final int AUTO_IMPORTS0 = -1; // no package
-  static final int AUTO_IMPORTS1 = -2; // package
-  static final int COMMENT = -3;
-  static final int COMMENT_EOL = -4;
-  static final int EOF = -5;
-  static final int IDENTIFIER = -6;
-  static final int INDENTATION = -7;
-  static final int KEYWORD = -8;
-  static final int NOP0 = -9;
-  static final int RAW = -10;
-  static final int SEPARATOR = -12;
-  static final int WHITESPACE = -13;
+    gen.execute();
+  }
 
-  private ByteCode() {}
+  @Override
+  public final void execute() {
+    comment("internal instructions");
 
+    value("EOF");
+    value("POP");
+    value("PROTOS");
+
+    comment("types");
+
+    value("CLASS_TYPE");
+
+    comment("compilation unit");
+
+    value("COMPILATION_UNIT");
+    value("PACKAGE");
+    value("AUTO_IMPORTS");
+
+    comment("type declarations");
+
+    value("CLASS0");
+    value("CLASS_DECLARATION");
+    value("MODIFIER");
+    value("EXTENDS");
+    value("BODY");
+  }
 }

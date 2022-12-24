@@ -15,21 +15,22 @@
  */
 package objectos.code2;
 
-final class ByteCode {
+import static java.lang.System.out;
 
-  static final int AUTO_IMPORTS0 = -1; // no package
-  static final int AUTO_IMPORTS1 = -2; // package
-  static final int COMMENT = -3;
-  static final int COMMENT_EOL = -4;
-  static final int EOF = -5;
-  static final int IDENTIFIER = -6;
-  static final int INDENTATION = -7;
-  static final int KEYWORD = -8;
-  static final int NOP0 = -9;
-  static final int RAW = -10;
-  static final int SEPARATOR = -12;
-  static final int WHITESPACE = -13;
+abstract class FauxGenerator {
 
-  private ByteCode() {}
+  private int value = -1;
+
+  public abstract void execute();
+
+  final void comment(String string) {
+    out.println();
+    out.println("// " + string);
+    out.println();
+  }
+
+  final void value(String string) {
+    out.println("static final int " + string + " = " + value-- + ";");
+  }
 
 }
