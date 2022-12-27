@@ -40,6 +40,25 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected final void writeIdentifier(String name) { out.append(name); }
 
   @Override
+  protected final void writeIndentation(Indentation value) {
+    switch (value) {
+      case CONTINUATION -> writeIndentation(level() + 2);
+
+      case ENTER_BLOCK -> levelIncrease();
+
+      case EXIT_BLOCK -> levelDecrease();
+
+      case ENTER_PARENTHESIS -> levelIncrease();
+
+      case EXIT_PARENTHESIS -> levelDecrease();
+
+      case EMIT -> writeIndentation(level());
+
+      default -> {}
+    }
+  }
+
+  @Override
   protected final void writeKeyword(Keyword value) { out.append(value); }
 
   @Override
@@ -73,10 +92,28 @@ class JavaSinkOfStringBuilder extends JavaSink {
     }
   }
 
+  private int level() {
+    return itemIndex;
+  }
+
+  private void levelDecrease() {
+    itemIndex--;
+  }
+
+  private void levelIncrease() {
+    itemIndex++;
+  }
+
+  private void writeIndentation(int length) {
+    for (int i = 0; i < length; i++) {
+      out.append("  ");
+    }
+  }
+
   private void writenl() {
     out.append(System.lineSeparator());
 
-    elemIndex = out.length();
+    rootIndex = out.length();
   }
 
 }

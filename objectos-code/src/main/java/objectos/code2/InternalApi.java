@@ -15,13 +15,7 @@
  */
 package objectos.code2;
 
-import objectos.code2.JavaModel.AutoImports;
-import objectos.code2.JavaModel.Body;
-import objectos.code2.JavaModel.ClassKeyword;
 import objectos.code2.JavaModel.ClassType;
-import objectos.code2.JavaModel.ExtendsKeyword;
-import objectos.code2.JavaModel.FinalModifier;
-import objectos.code2.JavaModel.PackageKeyword;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
@@ -29,58 +23,70 @@ class InternalApi {
 
   AutoImportsHey autoImports = new AutoImportsHey();
 
-  int aux;
+  int[] itemArray = new int[256];
 
-  int[] elemArray = new int[128];
-
-  int elemIndex;
+  int itemIndex;
 
   Object[] objectArray = new Object[64];
 
   int objectIndex;
 
-  int[] protoArray = new int[256];
+  int[] rootArray = new int[64];
 
-  int protoIndex;
+  int rootIndex;
 
-  public final ClassKeyword _class(String name) {
-    JavaModel.checkSimpleName(name.toString()); // implicit null check
+  public final JavaModel._Elem elem(int proto, int count) {
+    int self = itemIndex;
 
-    $protoadd(ByteProto.CLASS0, $objectadd(name));
+    $itemadd(proto, count);
 
-    return $protoret();
+    $rootcopy(count);
+
+    $rootadd(self);
+
+    return $elemret();
   }
 
-  public final ExtendsKeyword _extends(ClassType type) {
-    return $elemret(ByteProto.EXTENDS, 1);
+  public final JavaModel._Item item(int v0) {
+    $rootadd(itemIndex);
+
+    $itemadd(v0);
+
+    return $itemret();
   }
 
-  public final FinalModifier _final() {
-    modifier(Keyword.FINAL);
+  public final JavaModel._Item item(int v0, int v1) {
+    $rootadd(itemIndex);
 
-    return $protoret();
+    $itemadd(v0, v1);
+
+    return $itemret();
   }
 
-  public final PackageKeyword _package(String name) {
-    JavaModel.checkPackageName(name.toString()); // implicit null check
+  public final JavaModel._Item item(int v0, int v1, int v2, int v3) {
+    $rootadd(itemIndex);
 
-    autoImports.packageName(name);
+    $itemadd(v0, v1, v2, v3);
 
-    $protoadd(ByteProto.PACKAGE, $objectadd(name));
-
-    return $protoret();
+    return $itemret();
   }
 
-  public final AutoImports autoImports() {
-    autoImports.enable();
+  public final JavaModel._Item modifier(Keyword value) {
+    $rootadd(itemIndex);
 
-    $protoadd(ByteProto.AUTO_IMPORTS);
+    $itemadd(ByteProto.MODIFIER, value.ordinal());
 
-    return $protoret();
+    return $itemret();
   }
 
-  public final Body body() {
-    return $elemret(ByteProto.BODY, 0);
+  public final int object(Object value) {
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    var result = objectIndex;
+
+    objectArray[objectIndex++] = value;
+
+    return result;
   }
 
   public final ClassType t(Class<?> type) {
@@ -89,7 +95,7 @@ class InternalApi {
     while (true) {
       var simpleName = type.getSimpleName(); // implicit null-check
 
-      $objectadd(simpleName);
+      object(simpleName);
 
       var outer = type.getEnclosingClass();
 
@@ -106,136 +112,89 @@ class InternalApi {
 
     var packageName = type.getPackageName();
 
-    $protoadd(ByteProto.CLASS_TYPE, $objectadd(packageName), names);
+    $rootadd(itemIndex);
+
+    $itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
 
     for (var index = first; index >= last; index--) {
       var simpleName = objectArray[index];
 
-      $protoadd($objectadd(simpleName));
+      $itemadd(object(simpleName));
     }
 
-    return $protoret();
-  }
-
-  public final ClassType t(String packageName, String simpleName) {
-    JavaModel.checkPackageName(packageName.toString()); // implicit null check
-    JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
-
-    $protoadd(
-      ByteProto.CLASS_TYPE, $objectadd(packageName),
-      1, $objectadd(simpleName)
-    );
-
-    return $protoret();
-  }
-
-  final int $objectadd(Object value) {
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    var result = objectIndex;
-
-    objectArray[objectIndex++] = value;
-
-    return result;
+    return $itemret();
   }
 
   final void accept(JavaTemplate template) {
     autoImports.clear();
 
-    aux = elemIndex = objectIndex = protoIndex = 0;
-
-    $elemadd(ByteProto.COMPILATION_UNIT);
+    itemIndex = objectIndex = rootIndex = 0;
 
     template.execute(this);
 
-    $elempop();
+    int self = itemIndex;
 
-    $elemadd(ByteProto.EOF);
+    int count = rootIndex;
+
+    $itemadd(ByteProto.COMPILATION_UNIT, count);
+
+    $rootcopy(count);
+
+    itemIndex = self;
   }
 
-  private void $elemadd(int v0) {
-    elemArray = IntArrays.growIfNecessary(elemArray, elemIndex + 0);
-
-    elemArray[elemIndex++] = v0;
+  private JavaModel._Elem $elemret() {
+    return JavaModel.ELEM;
   }
 
-  private void $elemadd(int v0, int v1) {
-    elemArray = IntArrays.growIfNecessary(elemArray, elemIndex + 1);
+  private void $itemadd(int v0) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 0);
 
-    elemArray[elemIndex++] = v0;
-    elemArray[elemIndex++] = v1;
+    itemArray[itemIndex++] = v0;
   }
 
-  private void $elemcnt() {
-    if (aux > 0) {
-      $elemadd(ByteProto.PROTOS, aux);
+  private void $itemadd(int v0, int v1) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 1);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+  }
+
+  private void $itemadd(int v0, int v1, int v2) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+    itemArray[itemIndex++] = v2;
+  }
+
+  private void $itemadd(int v0, int v1, int v2, int v3) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 3);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+    itemArray[itemIndex++] = v2;
+    itemArray[itemIndex++] = v3;
+  }
+
+  private JavaModel._Item $itemret() {
+    return JavaModel.ITEM;
+  }
+
+  private void $rootadd(int value) {
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 0);
+
+    rootArray[rootIndex++] = value;
+  }
+
+  private void $rootcopy(int count) {
+    if (count > 0) {
+      rootIndex -= count;
+      int itemMax = itemIndex + count - 1;
+      itemArray = IntArrays.growIfNecessary(itemArray, itemMax);
+      System.arraycopy(rootArray, rootIndex, itemArray, itemIndex, count);
+      itemIndex += count;
     }
-
-    aux = 0;
-  }
-
-  private void $elempop() {
-    $elemcnt();
-
-    $elemadd(ByteProto.POP);
-  }
-
-  private JavaModel.Ref $elemret(int value, int protos) {
-    var diff = aux - protos;
-
-    if (diff > 0) {
-      $elemadd(ByteProto.PROTOS, diff);
-    }
-
-    aux = 0;
-
-    $elemadd(value);
-
-    $elemadd(ByteProto.PROTOS, protos);
-
-    $elemadd(ByteProto.POP);
-
-    return JavaModel.REF;
-  }
-
-  private void $protoadd(int v0) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 0);
-
-    protoArray[protoIndex++] = v0;
-  }
-
-  private void $protoadd(int v0, int v1) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
-
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-  }
-
-  private void $protoadd(int v0, int v1, int v2) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
-
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-    protoArray[protoIndex++] = v2;
-  }
-
-  private void $protoadd(int v0, int v1, int v2, int v3) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 3);
-
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-    protoArray[protoIndex++] = v2;
-    protoArray[protoIndex++] = v3;
-  }
-
-  private JavaModel.Ref $protoret() {
-    aux++;
-
-    return JavaModel.REF;
-  }
-
-  private void modifier(Keyword value) {
-    $protoadd(ByteProto.MODIFIER, value.ordinal());
   }
 
 }

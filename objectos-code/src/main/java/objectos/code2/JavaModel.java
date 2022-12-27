@@ -24,35 +24,66 @@ package objectos.code2;
  */
 final class JavaModel {
 
-  public sealed interface AutoImports {}
-
-  public sealed interface Body {}
-
-  public sealed interface ClassKeyword {}
-
-  public sealed interface ClassType {}
-
-  public sealed interface ExtendsKeyword {}
-
-  public sealed interface FinalModifier {}
-
-  public sealed interface PackageKeyword {}
-
-  static final class Ref
+  static final class _Elem
       implements
-      AutoImports,
+      At,
       Body,
-      ClassKeyword,
-      ClassType,
-      ExtendsKeyword,
-      FinalModifier,
-      PackageKeyword {
-    private Ref() {}
+      Block,
+      ExtendsKeyword {
+    private _Elem() {}
   }
 
-  public static final Ref REF = new Ref();
+  static final class _Item
+      implements
+      AutoImports,
+      ClassKeyword,
+      ClassType,
+      FinalModifier,
+      Identifier,
+      PackageKeyword,
+      VoidKeyword {
+    private _Item() {}
+  }
+
+  sealed interface _Kind {}
+
+  sealed interface At extends BodyElement {}
+
+  sealed interface AutoImports extends _Kind {}
+
+  sealed interface Block extends BodyElement {}
+
+  sealed interface Body extends BodyElement {}
+
+  sealed interface BodyElement extends _Kind {}
+
+  sealed interface ClassKeyword extends BodyElement {}
+
+  sealed interface ClassType extends BodyElement {}
+
+  sealed interface ExtendsKeyword extends BodyElement {}
+
+  sealed interface FinalModifier extends BodyElement {}
+
+  sealed interface Identifier extends BodyElement {}
+
+  sealed interface PackageKeyword extends _Kind {}
+
+  sealed interface VoidKeyword extends BodyElement {}
+
+  static final _Elem ELEM = new _Elem();
+
+  static final _Item ITEM = new _Item();
 
   private JavaModel() {}
+
+  static void checkIdentifier(String s) {
+    if (s.isEmpty()) {
+      throw new IllegalArgumentException("Identifier must not be empty");
+    }
+
+    checkName(s, false, "an invalid identifier");
+  }
 
   static void checkMethodName(String methodName) {
     if (methodName.isEmpty()) {

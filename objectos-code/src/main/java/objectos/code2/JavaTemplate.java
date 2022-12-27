@@ -15,13 +15,18 @@
  */
 package objectos.code2;
 
+import objectos.code2.JavaModel.At;
 import objectos.code2.JavaModel.AutoImports;
+import objectos.code2.JavaModel.Block;
 import objectos.code2.JavaModel.Body;
+import objectos.code2.JavaModel.BodyElement;
 import objectos.code2.JavaModel.ClassKeyword;
 import objectos.code2.JavaModel.ClassType;
 import objectos.code2.JavaModel.ExtendsKeyword;
 import objectos.code2.JavaModel.FinalModifier;
+import objectos.code2.JavaModel.Identifier;
 import objectos.code2.JavaModel.PackageKeyword;
+import objectos.code2.JavaModel.VoidKeyword;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
@@ -45,37 +50,81 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassKeyword _class(String name) {
-    return api()._class(name);
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+
+    return api().item(ByteProto.CLASS0, api.object(name));
   }
 
   protected final ExtendsKeyword _extends(ClassType type) {
-    return api()._extends(type);
+    return api().elem(ByteProto.EXTENDS, 1);
   }
 
   protected final FinalModifier _final() {
-    return api()._final();
+    return api().modifier(Keyword.FINAL);
   }
 
   protected final PackageKeyword _package(String name) {
-    return api()._package(name);
+    JavaModel.checkPackageName(name.toString()); // implicit null check
+
+    var api = api();
+
+    api.autoImports.packageName(name);
+
+    return api.item(ByteProto.PACKAGE, api.object(name));
+  }
+
+  protected final VoidKeyword _void() {
+    return api().item(ByteProto.VOID);
+  }
+
+  protected final At at(ClassType annotationType) {
+    return api().elem(ByteProto.ANNOTATION, 1);
   }
 
   protected final AutoImports autoImports() {
-    return api().autoImports();
+    var api = api();
+
+    api.autoImports.enable();
+
+    return api.item(ByteProto.AUTO_IMPORTS);
+  }
+
+  protected final Block block() {
+    return api().elem(ByteProto.BLOCK, 0);
   }
 
   protected final Body body() {
-    return api().body();
+    return api().elem(ByteProto.BODY, 0);
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3) {
+    return api().elem(ByteProto.BODY, 3);
   }
 
   protected abstract void definition();
 
-  protected final ClassType t(Class<?> value) {
-    return api().t(value);
+  protected final Identifier id(String name) {
+    JavaModel.checkIdentifier(name);
+
+    var api = api();
+
+    return api.item(ByteProto.IDENTIFIER, api.object(name));
+  }
+
+  protected final ClassType t(Class<?> type) {
+    return api().t(type);
   }
 
   protected final ClassType t(String packageName, String simpleName) {
-    return api().t(packageName, simpleName);
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(
+      ByteProto.CLASS_TYPE, api.object(packageName),
+      1, api.object(simpleName)
+    );
   }
 
   final void execute(InternalApi api) {

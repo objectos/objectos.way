@@ -23,6 +23,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeIdentifier(String name);
 
+  protected abstract void writeIndentation(Indentation value);
+
   protected abstract void writeKeyword(Keyword value);
 
   protected abstract void writeRaw(String value);
@@ -32,7 +34,7 @@ abstract class InternalInterpreter extends InternalCompiler {
   protected abstract void writeWhitespace(Whitespace value);
 
   final void interpret() {
-    codeIndex = elemIndex = protoIndex = 0;
+    codeIndex = itemIndex = rootIndex = 0;
 
     objectIndex = -1;
 
@@ -62,6 +64,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.EOF -> {}
 
       case ByteCode.IDENTIFIER -> identifier();
+
+      case ByteCode.INDENTATION -> indentation();
 
       case ByteCode.KEYWORD -> keyword();
 
@@ -130,6 +134,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     var name = (String) objectArray[index];
 
     writeIdentifier(name);
+  }
+
+  private void indentation() {
+    var index = $codenxt();
+
+    var value = Indentation.get(index);
+
+    writeIndentation(value);
   }
 
   private void keyword() {

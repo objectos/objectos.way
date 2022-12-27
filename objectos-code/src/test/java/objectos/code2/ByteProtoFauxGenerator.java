@@ -24,15 +24,10 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
   @Override
   public final void execute() {
-    comment("internal instructions");
-
-    value("EOF");
-    value("POP");
-    value("PROTOS");
-
     comment("types");
 
     value("CLASS_TYPE");
+    value("VOID");
 
     comment("compilation unit");
 
@@ -40,12 +35,19 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PACKAGE");
     value("AUTO_IMPORTS");
 
-    comment("type declarations");
+    comment("declarations");
 
-    value("CLASS0");
-    value("CLASS_DECLARATION");
-    value("MODIFIER");
-    value("EXTENDS");
+    value("ANNOTATION");
     value("BODY");
+    value("CLASS0");
+    value("CLASS_BODY");
+    value("CLASS_DECLARATION");
+    value("EXTENDS");
+    value("IDENTIFIER");
+    value("MODIFIER");
+
+    comment("statements");
+
+    value("BLOCK");
   }
 }
