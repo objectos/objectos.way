@@ -25,11 +25,20 @@ import objectos.code2.JavaModel.ClassType;
 import objectos.code2.JavaModel.ExtendsKeyword;
 import objectos.code2.JavaModel.FinalModifier;
 import objectos.code2.JavaModel.Identifier;
+import objectos.code2.JavaModel.ImplementsKeyword;
+import objectos.code2.JavaModel.Include;
+import objectos.code2.JavaModel.Modifier;
 import objectos.code2.JavaModel.PackageKeyword;
+import objectos.code2.JavaModel.PrimitiveType;
 import objectos.code2.JavaModel.VoidKeyword;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
+
+  @FunctionalInterface
+  protected interface IncludeTarget {
+    void execute();
+  }
 
   private InternalApi api;
 
@@ -49,18 +58,34 @@ public abstract class JavaTemplate {
     return out.toString();
   }
 
+  protected final Modifier _abstract() {
+    return api().modifier(Keyword.ABSTRACT);
+  }
+
   protected final ClassKeyword _class(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
 
-    return api().item(ByteProto.CLASS0, api.object(name));
+    var api = api();
+
+    return api.item(ByteProto.CLASS0, api.object(name));
   }
 
   protected final ExtendsKeyword _extends(ClassType type) {
-    return api().elem(ByteProto.EXTENDS, 1);
+    var api = api();
+
+    return api.elem(ByteProto.EXTENDS, api.count(type));
   }
 
   protected final FinalModifier _final() {
     return api().modifier(Keyword.FINAL);
+  }
+
+  protected final ImplementsKeyword _implements() {
+    return api.item(ByteProto.IMPLEMENTS);
+  }
+
+  protected final PrimitiveType _int() {
+    return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
   }
 
   protected final PackageKeyword _package(String name) {
@@ -71,6 +96,22 @@ public abstract class JavaTemplate {
     api.autoImports.packageName(name);
 
     return api.item(ByteProto.PACKAGE, api.object(name));
+  }
+
+  protected final Modifier _private() {
+    return api().modifier(Keyword.PRIVATE);
+  }
+
+  protected final Modifier _protected() {
+    return api().modifier(Keyword.PROTECTED);
+  }
+
+  protected final Modifier _public() {
+    return api().modifier(Keyword.PUBLIC);
+  }
+
+  protected final Modifier _static() {
+    return api().modifier(Keyword.STATIC);
   }
 
   protected final VoidKeyword _void() {
@@ -97,8 +138,36 @@ public abstract class JavaTemplate {
     return api().elem(ByteProto.BODY, 0);
   }
 
+  protected final Body body(BodyElement e1) {
+    var api = api();
+
+    var count = api.count(e1);
+
+    return api.elem(ByteProto.BODY, count);
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2);
+
+    return api.elem(ByteProto.BODY, count);
+  }
+
   protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3) {
-    return api().elem(ByteProto.BODY, 3);
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2) + api.count(e3);
+
+    return api.elem(ByteProto.BODY, count);
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2) + api.count(e3) + api.count(e4);
+
+    return api.elem(ByteProto.BODY, count);
   }
 
   protected abstract void definition();
@@ -109,6 +178,18 @@ public abstract class JavaTemplate {
     var api = api();
 
     return api.item(ByteProto.IDENTIFIER, api.object(name));
+  }
+
+  protected final Include include(IncludeTarget target) {
+    var api = api();
+
+    api.lambdaStart();
+
+    target.execute(); // implicit null-check
+
+    api.lambdaEnd();
+
+    return JavaModel.INCLUDE;
   }
 
   protected final ClassType t(Class<?> type) {

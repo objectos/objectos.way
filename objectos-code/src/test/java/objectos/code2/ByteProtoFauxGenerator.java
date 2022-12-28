@@ -27,6 +27,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("types");
 
     value("CLASS_TYPE");
+    value("PRIMITIVE_TYPE");
     value("VOID");
 
     comment("compilation unit");
@@ -44,6 +45,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("CLASS_DECLARATION");
     value("EXTENDS");
     value("IDENTIFIER");
+    value("IMPLEMENTS");
+    value("METHOD_DECLARATION");
     value("MODIFIER");
 
     comment("statements");

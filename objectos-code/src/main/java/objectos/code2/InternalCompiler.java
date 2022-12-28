@@ -26,14 +26,14 @@ class InternalCompiler extends InternalApi {
   private static final int _PACKAGE = 2;
   private static final int _IMPORTS = 3;
   private static final int _MODS = 4;
-  private static final int _EXTENDS = 5;
-  private static final int _LCURLY = 6;
-  private static final int _BODY = 7;
-  private static final int _TYPE = 8;
-
-  int[] codeArray = new int[128];
-
-  int codeIndex;
+  @SuppressWarnings("unused")
+  private static final int _EXTENDS = 5, _EXTENDS_TYPE = 6;
+  private static final int _IMPLEMENTS = 7, _IMPLEMENTS_TYPE = 8;
+  private static final int _LCURLY = 9;
+  private static final int _BODY = 10;
+  private static final int _VOID = 11;
+  private static final int _TYPE = 12;
+  private static final int _NAME = 13;
 
   final void compile() {
     codeIndex = 0;
@@ -95,8 +95,12 @@ class InternalCompiler extends InternalApi {
       case 3 -> $element03();
       case 4 -> $element04();
       case 5 -> $element05();
+      case 6 -> $element06();
+      case 7 -> $element07();
       case 10 -> $element10();
       case 11 -> $element11();
+      case 15 -> $element15();
+      case 18 -> $element18();
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: size=" + size);
@@ -138,6 +142,22 @@ class InternalCompiler extends InternalApi {
     $item(v4);
   }
 
+  private void $element06() {
+    int v0 = $itemnxt(); int v1 = $itemnxt(); int v2 = $itemnxt(); int v3 = $itemnxt();
+    int v4 = $itemnxt(); int v5 = $itemnxt();
+
+    $item(v0); $item(v1); $item(v2); $item(v3);
+    $item(v4); $item(v5);
+  }
+
+  private void $element07() {
+    int v0 = $itemnxt(); int v1 = $itemnxt(); int v2 = $itemnxt(); int v3 = $itemnxt();
+    int v4 = $itemnxt(); int v5 = $itemnxt(); int v6 = $itemnxt();
+
+    $item(v0); $item(v1); $item(v2); $item(v3);
+    $item(v4); $item(v5); $item(v6);
+  }
+
   private void $element10() {
     int v0 = $itemnxt(); int v1 = $itemnxt(); int v2 = $itemnxt(); int v3 = $itemnxt();
     int v4 = $itemnxt(); int v5 = $itemnxt(); int v6 = $itemnxt(); int v7 = $itemnxt();
@@ -156,6 +176,32 @@ class InternalCompiler extends InternalApi {
     $item(v00); $item(v01); $item(v02); $item(v03);
     $item(v04); $item(v05); $item(v06); $item(v07);
     $item(v08); $item(v09); $item(v10);
+  }
+
+  private void $element15() {
+    int v00 = $itemnxt(); int v01 = $itemnxt(); int v02 = $itemnxt(); int v03 = $itemnxt();
+    int v04 = $itemnxt(); int v05 = $itemnxt(); int v06 = $itemnxt(); int v07 = $itemnxt();
+    int v08 = $itemnxt(); int v09 = $itemnxt(); int v10 = $itemnxt(); int v11 = $itemnxt();
+    int v12 = $itemnxt(); int v13 = $itemnxt(); int v14 = $itemnxt();
+
+    $item(v00); $item(v01); $item(v02); $item(v03);
+    $item(v04); $item(v05); $item(v06); $item(v07);
+    $item(v08); $item(v09); $item(v10); $item(v11);
+    $item(v12); $item(v13); $item(v14);
+  }
+
+  private void $element18() {
+    int v00 = $itemnxt(); int v01 = $itemnxt(); int v02 = $itemnxt(); int v03 = $itemnxt();
+    int v04 = $itemnxt(); int v05 = $itemnxt(); int v06 = $itemnxt(); int v07 = $itemnxt();
+    int v08 = $itemnxt(); int v09 = $itemnxt(); int v10 = $itemnxt(); int v11 = $itemnxt();
+    int v12 = $itemnxt(); int v13 = $itemnxt(); int v14 = $itemnxt(); int v15 = $itemnxt();
+    int v16 = $itemnxt(); int v17 = $itemnxt();
+
+    $item(v00); $item(v01); $item(v02); $item(v03);
+    $item(v04); $item(v05); $item(v06); $item(v07);
+    $item(v08); $item(v09); $item(v10); $item(v11);
+    $item(v12); $item(v13); $item(v14); $item(v15);
+    $item(v16); $item(v17);
   }
   // @formatter:on
 
@@ -184,11 +230,15 @@ class InternalCompiler extends InternalApi {
     switch (parent) {
       case ByteProto.ANNOTATION -> annotation(state, child);
 
+      case ByteProto.CLASS_BODY -> classBody(state, child);
+
       case ByteProto.CLASS_DECLARATION -> classDeclaration(state, child);
 
       case ByteProto.COMPILATION_UNIT -> compilationUnit(state, child);
 
       case ByteProto.EXTENDS -> extendsKeyword(state, child);
+
+      case ByteProto.METHOD_DECLARATION -> methodDeclaration(state, child);
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: parent=%s child=%s".formatted($stub0(parent), $stub0(child)));
@@ -210,6 +260,14 @@ class InternalCompiler extends InternalApi {
   private int $statepeek(int offset) { return rootArray[rootIndex - offset]; }
 
   private int $statepop() { return rootArray[rootIndex--]; }
+
+  private int $statepop(int expected) {
+    int elem = $statepop();
+    if (elem != expected) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+    return $statepop();
+  }
 
   private void $statepop(int expected, int count) {
     var current = $statepeek();
@@ -254,6 +312,14 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.IDENTIFIER -> "Identifier";
 
+      case ByteProto.IMPLEMENTS -> "Implements";
+
+      case ByteProto.METHOD_DECLARATION -> "Method Decl.";
+
+      case ByteProto.MODIFIER -> "Modifier";
+
+      case ByteProto.PRIMITIVE_TYPE -> "Primitive Type";
+
       case ByteProto.VOID -> "Void";
 
       default -> Integer.toString(value);
@@ -289,7 +355,15 @@ class InternalCompiler extends InternalApi {
   }
 
   private void annotation() {
-    $statepush(_START, ByteProto.ANNOTATION);
+    var proto = ByteProto.ANNOTATION;
+    $statepush(_START, proto);
+    $element();
+    var state = $statepop(proto);
+    switch (state) {
+      case _TYPE -> {}
+
+      default -> $stubpop(proto, state);
+    }
   }
 
   private void annotation(int state, int child) {
@@ -299,7 +373,6 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS_TYPE -> {
         switch (state) {
           case _START -> {
-            $codeadd(Indentation.EMIT);
             $codeadd(Separator.COMMERCIAL_AT);
             $stateset(1, _TYPE);
             classType();
@@ -318,15 +391,26 @@ class InternalCompiler extends InternalApi {
     $codeadd(Separator.LEFT_CURLY_BRACKET);
     $codeadd(Indentation.ENTER_BLOCK);
     $element();
-    int body = $statepop();
-    if (body != proto) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-    var state = $statepop();
+    var state = $statepop(proto);
     switch (state) {
       case _START -> {
         $codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
         $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _BODY -> {
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Indentation.EMIT);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _NAME -> {
+        $codeadd(Separator.SEMICOLON);
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
@@ -342,16 +426,126 @@ class InternalCompiler extends InternalApi {
     $codeadd(ByteCode.IDENTIFIER, $protonxt());
   }
 
+  private void classBody(int state, int child) {
+    var proto = ByteProto.CLASS_BODY;
+
+    switch (child) {
+      case ByteProto.ANNOTATION -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _ANNOTATIONS);
+            annotation();
+          }
+
+          default -> $stubstate(proto, state, child);
+        }
+      }
+
+      case ByteProto.CLASS0 -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _BODY);
+            class0();
+          }
+
+          default -> $stubstate(proto, state, child);
+        }
+      }
+
+      case ByteProto.IDENTIFIER -> {
+        switch (state) {
+          case _TYPE -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _NAME);
+            identifier();
+          }
+
+          case _VOID -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _BODY);
+            methodDeclaration();
+          }
+
+          default -> $stubstate(proto, state, child);
+        }
+      }
+
+      case ByteProto.PRIMITIVE_TYPE -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $codeadd(ByteCode.KEYWORD, $itemnxt());
+            $stateset(1, _TYPE);
+          }
+
+          case _ANNOTATIONS -> {
+            $codeadd(Whitespace.AFTER_ANNOTATION);
+            $codeadd(Indentation.EMIT);
+            $codeadd(ByteCode.KEYWORD, $itemnxt());
+            $stateset(1, _TYPE);
+          }
+
+          default -> $stubstate(proto, state, child);
+        }
+      }
+
+      case ByteProto.VOID -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $codeadd(Keyword.VOID);
+            $stateset(1, _VOID);
+          }
+
+          case _ANNOTATIONS -> {
+            $codeadd(Whitespace.AFTER_ANNOTATION);
+            $codeadd(Indentation.EMIT);
+            $codeadd(Keyword.VOID);
+            $stateset(1, _VOID);
+          }
+
+          default -> $stubstate(proto, state, child);
+        }
+      }
+
+      default -> $stubchild(proto, state, child);
+    }
+  }
+
   private void classDeclaration(int state, int child) {
     var proto = ByteProto.CLASS_DECLARATION;
 
     switch (child) {
       case ByteProto.BODY -> {
         switch (state) {
-          case _START, _EXTENDS -> {
+          case _START, _EXTENDS, _IMPLEMENTS, _IMPLEMENTS_TYPE -> {
             $codeadd(Whitespace.OPTIONAL);
             $statepop(proto, 2);
             body(ByteProto.CLASS_BODY);
+          }
+
+          default -> $stubstate(proto, state, child);
+        }
+      }
+
+      case ByteProto.CLASS_TYPE -> {
+        switch (state) {
+          case _IMPLEMENTS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _IMPLEMENTS_TYPE);
+            classType();
+          }
+
+          case _IMPLEMENTS_TYPE -> {
+            $codeadd(Separator.COMMA);
+            $codeadd(Whitespace.OPTIONAL);
+            classType();
           }
 
           default -> $stubstate(proto, state, child);
@@ -370,24 +564,12 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.IDENTIFIER -> {
+      case ByteProto.IMPLEMENTS -> {
         switch (state) {
-          case _TYPE -> {
+          case _START, _EXTENDS -> {
             $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _BODY);
-            methodDeclaration();
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.VOID -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Indentation.EMIT);
-            $codeadd(Keyword.VOID);
-            $stateset(1, _TYPE);
+            $stateset(1, _IMPLEMENTS);
+            $codeadd(Keyword.IMPLEMENTS);
           }
 
           default -> $stubstate(proto, state, child);
@@ -512,6 +694,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS0 -> {
         switch (state) {
           case _START -> {
+            $stateset(1, _BODY);
             class0();
           }
 
@@ -540,6 +723,12 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> {
         switch (state) {
           case _START -> {
+            $stateset(1, _MODS);
+            modifier();
+          }
+
+          case _BODY -> {
+            $codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
             $stateset(1, _MODS);
             modifier();
           }
@@ -583,6 +772,8 @@ class InternalCompiler extends InternalApi {
             $stateset(1, _TYPE);
             classType();
           }
+
+          default -> $stubstate(proto, state, child);
         }
       }
 
@@ -590,8 +781,36 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void identifier() {
+    $codeadd(ByteCode.IDENTIFIER, $protonxt());
+  }
+
   private void methodDeclaration() {
-    throw new UnsupportedOperationException("Implement me");
+    $statepush(_START, ByteProto.METHOD_DECLARATION);
+
+    $codeadd(ByteCode.IDENTIFIER, $protonxt());
+    $codeadd(Separator.LEFT_PARENTHESIS);
+  }
+
+  private void methodDeclaration(int state, int child) {
+    var proto = ByteProto.METHOD_DECLARATION;
+
+    switch (child) {
+      case ByteProto.BLOCK -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Separator.RIGHT_PARENTHESIS);
+            $codeadd(Whitespace.OPTIONAL);
+            $statepop(proto, 2);
+            body(child);
+          }
+
+          default -> $stubstate(proto, state, child);
+        }
+      }
+
+      default -> $stubchild(proto, state, child);
+    }
   }
 
   private void modifier() {

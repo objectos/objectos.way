@@ -17,6 +17,7 @@ package objectos.code2.test;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.Serializable;
 import objectos.code2.JavaTemplate;
 import org.testng.annotations.Test;
 
@@ -41,8 +42,6 @@ public class ClassDeclarationTest {
     );
     // @formatter:on
   }
-
-  /*
 
   @Test(description = """
   single annotation on class
@@ -103,18 +102,18 @@ public class ClassDeclarationTest {
   - allow includes
   """)
   public void testCase04() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(
-            id("Test"),
+          _class("Test"); body(
             include(this::includeTest)
           );
         }
 
         private void includeTest() {
-          field(_int(), id("a"));
+          _int(); id("a");
         }
       }.toString(),
 
@@ -124,6 +123,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -132,27 +132,25 @@ public class ClassDeclarationTest {
   - nested class declaration
   """)
   public void testCase05() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(
-            id("Level1"),
-            _class(id("A"))
+          _class("Level1"); body(
+            _class("A"), body()
           );
 
-          _class(
-            id("Level2"),
-            _class(id("A"),
-              _class(id("B"))
+          _class("Level2"); body(
+            _class("A"), body(
+              _class("B"), body()
             )
           );
 
-          _class(
-            id("Level3"),
-            _class(id("A"),
-              _class(id("B"),
-                _class(id("C"))
+          _class("Level3"); body(
+            _class("A"), body(
+              _class("B"), body(
+                _class("C"), body()
               )
             )
           );
@@ -179,6 +177,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -187,16 +186,22 @@ public class ClassDeclarationTest {
   - class modifiers
   """)
   public void testCase06() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(_public(), id("A"));
-          _class(_protected(), id("B"));
-          _class(_private(), id("C"));
-          _class(_static(), id("D"));
-          _class(_abstract(), id("E"));
-          _class(_final(), id("F"));
+          _public(); _class("A"); body();
+
+          _protected(); _class("B"); body();
+
+          _private(); _class("C"); body();
+
+          _static(); _class("D"); body();
+
+          _abstract(); _class("E"); body();
+
+          _final(); _class("F"); body();
         }
       }.toString(),
 
@@ -214,6 +219,7 @@ public class ClassDeclarationTest {
       final class F {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -222,18 +228,17 @@ public class ClassDeclarationTest {
   - implements clause
   """)
   public void testCase07() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(id("A"), _implements(t(AutoCloseable.class)));
+          _class("A"); _implements(); t(AutoCloseable.class); body();
 
-          _class(id("B"), _implements(t(AutoCloseable.class), t(Serializable.class)));
+          _class("B"); _implements(); t(AutoCloseable.class); t(Serializable.class); body();
 
-          _class(
-            id("C"), _extends(t("objectos.code", "Foo")),
-            _implements(t(AutoCloseable.class), t(Serializable.class))
-          );
+          _class("C"); _extends(t("objectos.code", "Foo"));
+          _implements(); t(AutoCloseable.class); t(Serializable.class); body();
         }
       }.toString(),
 
@@ -245,6 +250,7 @@ public class ClassDeclarationTest {
       class C extends objectos.code.Foo implements java.lang.AutoCloseable, java.io.Serializable {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -253,26 +259,19 @@ public class ClassDeclarationTest {
   - annotated method
   """)
   public void testCase08() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(
-            id("A"), _extends(t(Thread.class)),
-
-            method(
-              annotation(t(Override.class)),
-              id("foo")
-            )
+          _class("A"); _extends(t(Thread.class)); body(
+            at(t(Override.class)),
+            _void(), id("foo"), block()
           );
 
-          _class(
-            id("B"), _implements(t(Serializable.class)),
-
-            method(
-              annotation(t(Override.class)),
-              id("foo")
-            )
+          _class("B"); _implements(); t(Serializable.class); body(
+            at(t(Override.class)),
+            _void(), id("foo"), block()
           );
         }
       }.toString(),
@@ -289,7 +288,10 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
+
+  /*
 
   @Test(description = """
   Class declarations TC09
@@ -297,17 +299,15 @@ public class ClassDeclarationTest {
   - more than one member
   """)
   public void testCase09() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class(
-            id("A"),
+          _class("A"); body(
+            _int(), id("value"),
 
-            field(_int(), id("value")),
-
-            method(
-              _int(), id("value"),
+            _int(), id("value"), block(
               _return(n("value"))
             )
           );
@@ -324,6 +324,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
   */

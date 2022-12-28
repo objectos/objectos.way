@@ -24,42 +24,49 @@ package objectos.code2;
  */
 final class JavaModel {
 
-  static final class _Elem
+  enum _Elem
       implements
       At,
       Body,
       Block,
       ExtendsKeyword {
-    private _Elem() {}
+    INSTANCE;
   }
 
-  static final class _Item
+  enum _Include implements Include {
+    INSTANCE;
+  }
+
+  enum _Item
       implements
       AutoImports,
       ClassKeyword,
       ClassType,
       FinalModifier,
       Identifier,
+      ImplementsKeyword,
+      Modifier,
       PackageKeyword,
+      PrimitiveType,
       VoidKeyword {
-    private _Item() {}
+    INSTANCE;
   }
-
-  sealed interface _Kind {}
 
   sealed interface At extends BodyElement {}
 
-  sealed interface AutoImports extends _Kind {}
+  sealed interface AutoImports extends Element {}
 
   sealed interface Block extends BodyElement {}
 
   sealed interface Body extends BodyElement {}
 
-  sealed interface BodyElement extends _Kind {}
+  sealed interface BodyElement extends Element {}
 
   sealed interface ClassKeyword extends BodyElement {}
 
   sealed interface ClassType extends BodyElement {}
+
+  sealed interface Element {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -67,13 +74,23 @@ final class JavaModel {
 
   sealed interface Identifier extends BodyElement {}
 
-  sealed interface PackageKeyword extends _Kind {}
+  sealed interface ImplementsKeyword extends Element {}
+
+  sealed interface Include extends BodyElement {}
+
+  sealed interface Modifier extends BodyElement {}
+
+  sealed interface PackageKeyword extends Element {}
+
+  sealed interface PrimitiveType extends Element {}
 
   sealed interface VoidKeyword extends BodyElement {}
 
-  static final _Elem ELEM = new _Elem();
+  static final _Elem ELEM = _Elem.INSTANCE;
 
-  static final _Item ITEM = new _Item();
+  static final _Include INCLUDE = _Include.INSTANCE;
+
+  static final _Item ITEM = _Item.INSTANCE;
 
   private JavaModel() {}
 

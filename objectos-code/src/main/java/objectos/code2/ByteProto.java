@@ -22,28 +22,31 @@ final class ByteProto {
   //types
 
   static final int CLASS_TYPE = -1;
-  static final int VOID = -2;
+  static final int PRIMITIVE_TYPE = -2;
+  static final int VOID = -3;
 
   //compilation unit
 
-  static final int COMPILATION_UNIT = -3;
-  static final int PACKAGE = -4;
-  static final int AUTO_IMPORTS = -5;
+  static final int COMPILATION_UNIT = -4;
+  static final int PACKAGE = -5;
+  static final int AUTO_IMPORTS = -6;
 
   //declarations
 
-  static final int ANNOTATION = -6;
-  static final int BODY = -7;
-  static final int CLASS0 = -8;
-  static final int CLASS_BODY = -9;
-  static final int CLASS_DECLARATION = -10;
-  static final int EXTENDS = -11;
-  static final int IDENTIFIER = -12;
-  static final int MODIFIER = -13;
+  static final int ANNOTATION = -7;
+  static final int BODY = -8;
+  static final int CLASS0 = -9;
+  static final int CLASS_BODY = -10;
+  static final int CLASS_DECLARATION = -11;
+  static final int EXTENDS = -12;
+  static final int IDENTIFIER = -13;
+  static final int IMPLEMENTS = -14;
+  static final int METHOD_DECLARATION = -15;
+  static final int MODIFIER = -16;
 
   //statements
 
-  static final int BLOCK = -14;
+  static final int BLOCK = -17;
 
   private ByteProto() {}
 

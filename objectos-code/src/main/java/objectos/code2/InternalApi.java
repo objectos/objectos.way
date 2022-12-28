@@ -16,12 +16,17 @@
 package objectos.code2;
 
 import objectos.code2.JavaModel.ClassType;
+import objectos.code2.JavaModel.Element;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
 class InternalApi {
 
   AutoImportsHey autoImports = new AutoImportsHey();
+
+  int[] codeArray = new int[128];
+
+  int codeIndex;
 
   int[] itemArray = new int[256];
 
@@ -34,6 +39,14 @@ class InternalApi {
   int[] rootArray = new int[64];
 
   int rootIndex;
+
+  public final int count(Element e) {
+    if (e == JavaModel.INCLUDE) {
+      return codeArray[codeIndex--];
+    } else {
+      return 1;
+    }
+  }
 
   public final JavaModel._Elem elem(int proto, int count) {
     int self = itemIndex;
@@ -69,6 +82,22 @@ class InternalApi {
     $itemadd(v0, v1, v2, v3);
 
     return $itemret();
+  }
+
+  public final void lambdaEnd() {
+    var startCount = codeArray[codeIndex];
+
+    var diff = rootIndex - startCount;
+
+    codeArray[codeIndex] = diff;
+  }
+
+  public final void lambdaStart() {
+    codeIndex++;
+
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex);
+
+    codeArray[codeIndex] = rootIndex;
   }
 
   public final JavaModel._Item modifier(Keyword value) {
@@ -127,6 +156,8 @@ class InternalApi {
 
   final void accept(JavaTemplate template) {
     autoImports.clear();
+
+    codeIndex = -1;
 
     itemIndex = objectIndex = rootIndex = 0;
 
