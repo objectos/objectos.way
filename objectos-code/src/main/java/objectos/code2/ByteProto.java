@@ -47,6 +47,11 @@ final class ByteProto {
   //statements
 
   static final int BLOCK = -17;
+  static final int RETURN_STATEMENT = -18;
+
+  //expressions
+
+  static final int STRING_LITERAL = -19;
 
   private ByteProto() {}
 

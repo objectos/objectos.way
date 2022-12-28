@@ -29,7 +29,8 @@ final class JavaModel {
       At,
       Body,
       Block,
-      ExtendsKeyword {
+      ExtendsKeyword,
+      ReturnStatement {
     INSTANCE;
   }
 
@@ -48,6 +49,7 @@ final class JavaModel {
       Modifier,
       PackageKeyword,
       PrimitiveType,
+      StringLiteral,
       VoidKeyword {
     INSTANCE;
   }
@@ -57,6 +59,8 @@ final class JavaModel {
   sealed interface AutoImports extends Element {}
 
   sealed interface Block extends BodyElement {}
+
+  sealed interface BlockElement extends Element {}
 
   sealed interface Body extends BodyElement {}
 
@@ -68,6 +72,8 @@ final class JavaModel {
 
   sealed interface Element {}
 
+  sealed interface Expression extends Element {}
+
   sealed interface ExtendsKeyword extends BodyElement {}
 
   sealed interface FinalModifier extends BodyElement {}
@@ -78,11 +84,19 @@ final class JavaModel {
 
   sealed interface Include extends BodyElement {}
 
+  sealed interface Literal extends PrimaryExpression {}
+
   sealed interface Modifier extends BodyElement {}
 
   sealed interface PackageKeyword extends Element {}
 
+  sealed interface PrimaryExpression extends Expression {}
+
   sealed interface PrimitiveType extends Element {}
+
+  sealed interface ReturnStatement extends BlockElement {}
+
+  sealed interface StringLiteral extends Literal {}
 
   sealed interface VoidKeyword extends BodyElement {}
 

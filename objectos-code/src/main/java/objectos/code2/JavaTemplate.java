@@ -22,6 +22,7 @@ import objectos.code2.JavaModel.Body;
 import objectos.code2.JavaModel.BodyElement;
 import objectos.code2.JavaModel.ClassKeyword;
 import objectos.code2.JavaModel.ClassType;
+import objectos.code2.JavaModel.Expression;
 import objectos.code2.JavaModel.ExtendsKeyword;
 import objectos.code2.JavaModel.FinalModifier;
 import objectos.code2.JavaModel.Identifier;
@@ -30,6 +31,8 @@ import objectos.code2.JavaModel.Include;
 import objectos.code2.JavaModel.Modifier;
 import objectos.code2.JavaModel.PackageKeyword;
 import objectos.code2.JavaModel.PrimitiveType;
+import objectos.code2.JavaModel.ReturnStatement;
+import objectos.code2.JavaModel.StringLiteral;
 import objectos.code2.JavaModel.VoidKeyword;
 import objectos.lang.Check;
 
@@ -108,6 +111,14 @@ public abstract class JavaTemplate {
 
   protected final Modifier _public() {
     return api().modifier(Keyword.PUBLIC);
+  }
+
+  protected final ReturnStatement _return(Expression expression) {
+    var api = api();
+
+    var count = api.count(expression);
+
+    return api.elem(ByteProto.RETURN_STATEMENT, count);
   }
 
   protected final Modifier _static() {
@@ -190,6 +201,10 @@ public abstract class JavaTemplate {
     api.lambdaEnd();
 
     return JavaModel.INCLUDE;
+  }
+
+  protected final StringLiteral s(String string) {
+    return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
   }
 
   protected final ClassType t(Class<?> type) {

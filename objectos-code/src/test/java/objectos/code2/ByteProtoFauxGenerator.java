@@ -52,5 +52,10 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("statements");
 
     value("BLOCK");
+    value("RETURN_STATEMENT");
+
+    comment("expressions");
+
+    value("STRING_LITERAL");
   }
 }

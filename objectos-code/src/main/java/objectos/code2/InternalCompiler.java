@@ -223,25 +223,39 @@ class InternalCompiler extends InternalApi {
   private void $item(int location) {
     itemIndex = location;
 
+    var child = $itemnxt();
     var parent = $statepeek();
     var state = $statepeek(1);
-    var child = $itemnxt();
 
-    switch (parent) {
-      case ByteProto.ANNOTATION -> annotation(state, child);
+    switch (child) {
+      case ByteProto.ANNOTATION -> annotation(child, parent, state);
 
-      case ByteProto.CLASS_BODY -> classBody(state, child);
+      case ByteProto.AUTO_IMPORTS -> autoImports(child, parent, state);
 
-      case ByteProto.CLASS_DECLARATION -> classDeclaration(state, child);
+      case ByteProto.BODY -> body(child, parent, state);
 
-      case ByteProto.COMPILATION_UNIT -> compilationUnit(state, child);
+      case ByteProto.BLOCK -> block(child, parent, state);
 
-      case ByteProto.EXTENDS -> extendsKeyword(state, child);
+      case ByteProto.CLASS0 -> class0(child, parent, state);
 
-      case ByteProto.METHOD_DECLARATION -> methodDeclaration(state, child);
+      case ByteProto.CLASS_TYPE -> classType(child, parent, state);
+
+      case ByteProto.EXTENDS -> extendsKeyword(child, parent, state);
+
+      case ByteProto.IDENTIFIER -> identifier(child, parent, state);
+
+      case ByteProto.IMPLEMENTS -> implementsKeyword(child, parent, state);
+
+      case ByteProto.MODIFIER -> modifier(child, parent, state);
+
+      case ByteProto.PACKAGE -> packageKeyword(child, parent, state);
+
+      case ByteProto.PRIMITIVE_TYPE -> primitiveType(child, parent, state);
+
+      case ByteProto.VOID -> voidKeyword(child, parent, state);
 
       default -> throw new UnsupportedOperationException(
-        "Implement me :: parent=%s child=%s".formatted($stub0(parent), $stub0(child)));
+        "Implement me :: child=%s parent=%s".formatted($stub0(child), $stub0(parent)));
     }
   }
 
@@ -318,7 +332,11 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.MODIFIER -> "Modifier";
 
+      case ByteProto.PACKAGE -> "Package";
+
       case ByteProto.PRIMITIVE_TYPE -> "Primitive Type";
+
+      case ByteProto.RETURN_STATEMENT -> "Return Stmt.";
 
       case ByteProto.VOID -> "Void";
 
@@ -326,10 +344,10 @@ class InternalCompiler extends InternalApi {
     };
   }
 
-  private void $stubchild(int location, int state, int child) {
+  private void $stubparent(int self, int parent, int state) {
     $err(
-      "Child stub: at '%s' got child '%s'. state=%d"
-          .formatted($stub0(location), $stub0(child), state)
+      "Parent stub: at '%s' got parent '%s', state=%d"
+          .formatted($stub0(self), $stub0(parent), state)
     );
   }
 
@@ -347,51 +365,133 @@ class InternalCompiler extends InternalApi {
     );
   }
 
-  private void $stubstate(int location, int state, int child) {
+  private void $stubstate(int self, int parent, int state) {
     $err(
-      "State stub: at '%s' with child '%s' and state=%d"
-          .formatted($stub0(location), $stub0(child), state)
+      "State stub: at '%s' with parent '%s', state=%d"
+          .formatted($stub0(self), $stub0(parent), state)
     );
   }
 
-  private void annotation() {
-    var proto = ByteProto.ANNOTATION;
-    $statepush(_START, proto);
-    $element();
-    var state = $statepop(proto);
-    switch (state) {
-      case _TYPE -> {}
-
-      default -> $stubpop(proto, state);
-    }
-  }
-
-  private void annotation(int state, int child) {
-    var proto = ByteProto.ANNOTATION;
-
-    switch (child) {
-      case ByteProto.CLASS_TYPE -> {
+  private void annotation(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> {
         switch (state) {
           case _START -> {
-            $codeadd(Separator.COMMERCIAL_AT);
-            $stateset(1, _TYPE);
-            classType();
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _ANNOTATIONS);
           }
 
-          default -> $stubstate(proto, state, child);
+          default -> $stubstate(self, parent, state);
         }
       }
 
-      default -> $stubchild(proto, state, child);
+      case ByteProto.COMPILATION_UNIT -> {
+        switch (state) {
+          case _START -> {
+            $stateset(1, _ANNOTATIONS);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $statepush(_START, self);
+    $element();
+
+    state = $statepop(self);
+    switch (state) {
+      case _TYPE -> {}
+
+      default -> $stubpop(self, state);
     }
   }
 
-  private void body(int proto) {
-    $statepush(_START, proto);
+  private void autoImports(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.COMPILATION_UNIT -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(ByteCode.AUTO_IMPORTS0);
+            $stateset(1, _IMPORTS);
+          }
+
+          case _PACKAGE -> {
+            $codeadd(ByteCode.AUTO_IMPORTS1);
+            $stateset(1, _IMPORTS);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+  }
+
+  private void block(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.METHOD_DECLARATION -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Separator.LEFT_PARENTHESIS);
+            $codeadd(Separator.RIGHT_PARENTHESIS);
+            $codeadd(Whitespace.OPTIONAL);
+            $statepop(parent, 2);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $statepush(_START, self);
     $codeadd(Separator.LEFT_CURLY_BRACKET);
     $codeadd(Indentation.ENTER_BLOCK);
     $element();
-    var state = $statepop(proto);
+
+    state = $statepop(self);
+    switch (state) {
+      case _START -> {
+        $codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
+        $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      default -> $stubpop(self, state);
+    }
+  }
+
+  private void body(int self, int parent, int state) {
+    var body = ByteProto.NULL;
+
+    switch (parent) {
+      case ByteProto.CLASS_DECLARATION -> {
+        switch (state) {
+          case _START, _EXTENDS, _IMPLEMENTS, _IMPLEMENTS_TYPE -> {
+            $codeadd(Whitespace.OPTIONAL);
+            $statepop(parent, 2);
+            body = ByteProto.CLASS_BODY;
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $statepush(_START, body);
+    $codeadd(Separator.LEFT_CURLY_BRACKET);
+    $codeadd(Indentation.ENTER_BLOCK);
+    $element();
+
+    state = $statepop(body);
     switch (state) {
       case _START -> {
         $codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
@@ -414,170 +514,57 @@ class InternalCompiler extends InternalApi {
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      default -> $stubpop(proto, state);
+      default -> $stubpop(body, state);
     }
   }
 
-  private void class0() {
+  private void class0(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _BODY);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      case ByteProto.COMPILATION_UNIT -> {
+        switch (state) {
+          case _START -> {
+            $stateset(1, _BODY);
+          }
+
+          case _ANNOTATIONS -> {
+            $codeadd(Whitespace.AFTER_ANNOTATION);
+            $stateset(1, _BODY);
+          }
+
+          case _PACKAGE, _IMPORTS, _BODY -> {
+            $codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+            $stateset(1, _BODY);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _BODY);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
     $statepush(_START, ByteProto.CLASS_DECLARATION);
 
     $codeadd(Keyword.CLASS);
     $codeadd(Whitespace.MANDATORY);
     $codeadd(ByteCode.IDENTIFIER, $protonxt());
-  }
-
-  private void classBody(int state, int child) {
-    var proto = ByteProto.CLASS_BODY;
-
-    switch (child) {
-      case ByteProto.ANNOTATION -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
-            $codeadd(Indentation.EMIT);
-            $stateset(1, _ANNOTATIONS);
-            annotation();
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.CLASS0 -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
-            $codeadd(Indentation.EMIT);
-            $stateset(1, _BODY);
-            class0();
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.IDENTIFIER -> {
-        switch (state) {
-          case _TYPE -> {
-            $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _NAME);
-            identifier();
-          }
-
-          case _VOID -> {
-            $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _BODY);
-            methodDeclaration();
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.PRIMITIVE_TYPE -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
-            $codeadd(Indentation.EMIT);
-            $codeadd(ByteCode.KEYWORD, $itemnxt());
-            $stateset(1, _TYPE);
-          }
-
-          case _ANNOTATIONS -> {
-            $codeadd(Whitespace.AFTER_ANNOTATION);
-            $codeadd(Indentation.EMIT);
-            $codeadd(ByteCode.KEYWORD, $itemnxt());
-            $stateset(1, _TYPE);
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.VOID -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
-            $codeadd(Indentation.EMIT);
-            $codeadd(Keyword.VOID);
-            $stateset(1, _VOID);
-          }
-
-          case _ANNOTATIONS -> {
-            $codeadd(Whitespace.AFTER_ANNOTATION);
-            $codeadd(Indentation.EMIT);
-            $codeadd(Keyword.VOID);
-            $stateset(1, _VOID);
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      default -> $stubchild(proto, state, child);
-    }
-  }
-
-  private void classDeclaration(int state, int child) {
-    var proto = ByteProto.CLASS_DECLARATION;
-
-    switch (child) {
-      case ByteProto.BODY -> {
-        switch (state) {
-          case _START, _EXTENDS, _IMPLEMENTS, _IMPLEMENTS_TYPE -> {
-            $codeadd(Whitespace.OPTIONAL);
-            $statepop(proto, 2);
-            body(ByteProto.CLASS_BODY);
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.CLASS_TYPE -> {
-        switch (state) {
-          case _IMPLEMENTS -> {
-            $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _IMPLEMENTS_TYPE);
-            classType();
-          }
-
-          case _IMPLEMENTS_TYPE -> {
-            $codeadd(Separator.COMMA);
-            $codeadd(Whitespace.OPTIONAL);
-            classType();
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.EXTENDS -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _EXTENDS);
-            extendsKeyword(proto);
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.IMPLEMENTS -> {
-        switch (state) {
-          case _START, _EXTENDS -> {
-            $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _IMPLEMENTS);
-            $codeadd(Keyword.IMPLEMENTS);
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      default -> $stubchild(proto, state, child);
-    }
   }
 
   private void classDeclarationPop(int state) {
@@ -597,7 +584,49 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void classType() {
+  private void classType(int child, int parent, int state) {
+    switch (parent) {
+      case ByteProto.ANNOTATION -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Separator.COMMERCIAL_AT);
+            $stateset(1, _TYPE);
+          }
+
+          default -> $stubstate(child, parent, state);
+        }
+      }
+
+      case ByteProto.CLASS_DECLARATION -> {
+        switch (state) {
+          case _IMPLEMENTS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _IMPLEMENTS_TYPE);
+          }
+
+          case _IMPLEMENTS_TYPE -> {
+            $codeadd(Separator.COMMA);
+            $codeadd(Whitespace.OPTIONAL);
+          }
+
+          default -> $stubstate(child, parent, state);
+        }
+      }
+
+      case ByteProto.EXTENDS -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _TYPE);
+          }
+
+          default -> $stubstate(child, parent, state);
+        }
+      }
+
+      default -> $stubparent(child, parent, state);
+    }
+
     var packageIndex = $protonxt();
 
     var packageName = (String) $objectget(packageIndex);
@@ -660,168 +689,170 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void compilationUnit(int state, int child) {
-    var proto = ByteProto.COMPILATION_UNIT;
-
-    switch (child) {
-      case ByteProto.ANNOTATION -> {
+  private void extendsKeyword(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_DECLARATION -> {
         switch (state) {
           case _START -> {
-            $stateset(1, _ANNOTATIONS);
-            annotation();
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _EXTENDS);
           }
 
-          default -> $stubstate(proto, state, child);
+          default -> $stubstate(self, parent, state);
         }
       }
 
-      case ByteProto.AUTO_IMPORTS -> {
+      default -> $stubparent(self, parent, state);
+    }
+
+    $codeadd(Keyword.EXTENDS);
+    $statepush(_START, self);
+    $element();
+    $statepop(self, 2);
+  }
+
+  private void identifier(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> {
         switch (state) {
-          case _START -> {
-            $codeadd(ByteCode.AUTO_IMPORTS0);
-            $stateset(1, _IMPORTS);
+          case _TYPE -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _NAME);
           }
 
-          case _PACKAGE -> {
-            $codeadd(ByteCode.AUTO_IMPORTS1);
-            $stateset(1, _IMPORTS);
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      case ByteProto.CLASS0 -> {
-        switch (state) {
-          case _START -> {
-            $stateset(1, _BODY);
-            class0();
-          }
-
-          case _ANNOTATIONS -> {
-            $codeadd(Whitespace.AFTER_ANNOTATION);
-            $stateset(1, _BODY);
-            class0();
-          }
-
-          case _PACKAGE, _IMPORTS, _BODY -> {
-            $codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-            $stateset(1, _BODY);
-            class0();
-          }
-
-          case _MODS -> {
+          case _VOID -> {
             $codeadd(Whitespace.MANDATORY);
             $stateset(1, _BODY);
-            class0();
+            methodDeclaration();
           }
 
-          default -> $stubstate(proto, state, child);
+          default -> $stubstate(self, parent, state);
         }
       }
 
-      case ByteProto.MODIFIER -> {
+      default -> $stubparent(self, parent, state);
+    }
+
+    $codeadd(ByteCode.IDENTIFIER, $protonxt());
+  }
+
+  private void implementsKeyword(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_DECLARATION -> {
+        switch (state) {
+          case _START, _EXTENDS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _IMPLEMENTS);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $codeadd(Keyword.IMPLEMENTS);
+  }
+
+  private void methodDeclaration() {
+    $statepush(_START, ByteProto.METHOD_DECLARATION);
+  }
+
+  private void modifier(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.COMPILATION_UNIT -> {
         switch (state) {
           case _START -> {
             $stateset(1, _MODS);
-            modifier();
           }
 
           case _BODY -> {
             $codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
             $stateset(1, _MODS);
-            modifier();
           }
 
-          default -> $stubstate(proto, state, child);
+          default -> $stubstate(self, parent, state);
         }
       }
 
-      case ByteProto.PACKAGE -> {
-        switch (state) {
-          case _START -> {
-            $stateset(1, _PACKAGE);
-            packageKeyword();
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      default -> $stubchild(proto, state, child);
+      default -> $stubparent(self, parent, state);
     }
-  }
 
-  private void extendsKeyword(int parent) {
-    var proto = ByteProto.EXTENDS;
-
-    $codeadd(Keyword.EXTENDS);
-    $statepush(_START, proto);
-    $element();
-    $statepop(proto, 2);
-  }
-
-  private void extendsKeyword(int state, int child) {
-    var proto = ByteProto.EXTENDS;
-
-    switch (child) {
-      case ByteProto.CLASS_TYPE -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _TYPE);
-            classType();
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      default -> $stubchild(proto, state, child);
-    }
-  }
-
-  private void identifier() {
-    $codeadd(ByteCode.IDENTIFIER, $protonxt());
-  }
-
-  private void methodDeclaration() {
-    $statepush(_START, ByteProto.METHOD_DECLARATION);
-
-    $codeadd(ByteCode.IDENTIFIER, $protonxt());
-    $codeadd(Separator.LEFT_PARENTHESIS);
-  }
-
-  private void methodDeclaration(int state, int child) {
-    var proto = ByteProto.METHOD_DECLARATION;
-
-    switch (child) {
-      case ByteProto.BLOCK -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Separator.RIGHT_PARENTHESIS);
-            $codeadd(Whitespace.OPTIONAL);
-            $statepop(proto, 2);
-            body(child);
-          }
-
-          default -> $stubstate(proto, state, child);
-        }
-      }
-
-      default -> $stubchild(proto, state, child);
-    }
-  }
-
-  private void modifier() {
     $codeadd(ByteCode.KEYWORD, $protonxt());
   }
 
-  private void packageKeyword() {
+  private void packageKeyword(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.COMPILATION_UNIT -> {
+        switch (state) {
+          case _START -> {
+            $stateset(1, _PACKAGE);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
     $codeadd(Keyword.PACKAGE);
     $codeadd(Whitespace.MANDATORY);
     $codeadd(ByteCode.IDENTIFIER, $protonxt());
     $codeadd(Separator.SEMICOLON);
+  }
+
+  private void primitiveType(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $codeadd(ByteCode.KEYWORD, $itemnxt());
+            $stateset(1, _TYPE);
+          }
+
+          case _ANNOTATIONS -> {
+            $codeadd(Whitespace.AFTER_ANNOTATION);
+            $codeadd(Indentation.EMIT);
+            $codeadd(ByteCode.KEYWORD, $itemnxt());
+            $stateset(1, _TYPE);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+  }
+
+  private void voidKeyword(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _VOID);
+          }
+
+          case _ANNOTATIONS -> {
+            $codeadd(Whitespace.AFTER_ANNOTATION);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _VOID);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $codeadd(Keyword.VOID);
   }
 
 }
