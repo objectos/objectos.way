@@ -57,5 +57,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("expressions");
 
     value("STRING_LITERAL");
+    value("THIS");
   }
 }

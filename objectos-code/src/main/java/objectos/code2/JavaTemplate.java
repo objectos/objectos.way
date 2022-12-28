@@ -34,6 +34,7 @@ import objectos.code2.JavaModel.PackageKeyword;
 import objectos.code2.JavaModel.PrimitiveType;
 import objectos.code2.JavaModel.ReturnStatement;
 import objectos.code2.JavaModel.StringLiteral;
+import objectos.code2.JavaModel.ThisKeyword;
 import objectos.code2.JavaModel.VoidKeyword;
 import objectos.lang.Check;
 
@@ -124,6 +125,10 @@ public abstract class JavaTemplate {
 
   protected final Modifier _static() {
     return api().modifier(Keyword.STATIC);
+  }
+
+  protected final ThisKeyword _this() {
+    return api().item(ByteProto.THIS);
   }
 
   protected final VoidKeyword _void() {

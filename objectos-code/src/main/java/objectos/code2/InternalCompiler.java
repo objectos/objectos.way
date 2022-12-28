@@ -256,6 +256,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.STRING_LITERAL -> stringLiteral(child, parent, state);
 
+      case ByteProto.THIS -> thisKeyword(child, parent, state);
+
       case ByteProto.VOID -> voidKeyword(child, parent, state);
 
       default -> throw new UnsupportedOperationException(
@@ -854,6 +856,18 @@ class InternalCompiler extends InternalApi {
     }
 
     $codeadd(ByteCode.STRING_LITERAL, $itemnxt());
+  }
+
+  private void thisKeyword(int child, int parent, int state) {
+    switch (parent) {
+      case ByteProto.RETURN_STATEMENT -> {
+        $codeadd(Whitespace.MANDATORY);
+      }
+
+      default -> $stubparent(child, parent, state);
+    }
+
+    $codeadd(Keyword.THIS);
   }
 
   private void voidKeyword(int self, int parent, int state) {

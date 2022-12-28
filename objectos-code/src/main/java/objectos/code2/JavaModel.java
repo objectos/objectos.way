@@ -50,6 +50,7 @@ final class JavaModel {
       PackageKeyword,
       PrimitiveType,
       StringLiteral,
+      ThisKeyword,
       VoidKeyword {
     INSTANCE;
   }
@@ -97,6 +98,8 @@ final class JavaModel {
   sealed interface ReturnStatement extends BlockElement {}
 
   sealed interface StringLiteral extends Literal {}
+
+  sealed interface ThisKeyword extends PrimaryExpression {}
 
   sealed interface VoidKeyword extends BodyElement {}
 

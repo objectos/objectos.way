@@ -52,6 +52,7 @@ final class ByteProto {
   //expressions
 
   static final int STRING_LITERAL = -19;
+  static final int THIS = -20;
 
   private ByteProto() {}
 
