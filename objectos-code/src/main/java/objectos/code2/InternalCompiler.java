@@ -252,6 +252,10 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PRIMITIVE_TYPE -> primitiveType(child, parent, state);
 
+      case ByteProto.RETURN_STATEMENT -> returnStatement(child, parent, state);
+
+      case ByteProto.STRING_LITERAL -> stringLiteral(child, parent, state);
+
       case ByteProto.VOID -> voidKeyword(child, parent, state);
 
       default -> throw new UnsupportedOperationException(
@@ -337,6 +341,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.PRIMITIVE_TYPE -> "Primitive Type";
 
       case ByteProto.RETURN_STATEMENT -> "Return Stmt.";
+
+      case ByteProto.STRING_LITERAL -> "String Literal";
 
       case ByteProto.VOID -> "Void";
 
@@ -705,8 +711,8 @@ class InternalCompiler extends InternalApi {
       default -> $stubparent(self, parent, state);
     }
 
-    $codeadd(Keyword.EXTENDS);
     $statepush(_START, self);
+    $codeadd(Keyword.EXTENDS);
     $element();
     $statepop(self, 2);
   }
@@ -827,6 +833,27 @@ class InternalCompiler extends InternalApi {
 
       default -> $stubparent(self, parent, state);
     }
+  }
+
+  private void returnStatement(int self, int parent, int state) {
+    $statepush(_START, self);
+    $codeadd(Indentation.EMIT);
+    $codeadd(Keyword.RETURN);
+    $element();
+    $codeadd(Separator.SEMICOLON);
+    $statepop(self);
+  }
+
+  private void stringLiteral(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.RETURN_STATEMENT -> {
+        $codeadd(Whitespace.OPTIONAL);
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $codeadd(ByteCode.STRING_LITERAL, $itemnxt());
   }
 
   private void voidKeyword(int self, int parent, int state) {

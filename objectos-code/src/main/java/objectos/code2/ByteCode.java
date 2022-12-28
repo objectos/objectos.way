@@ -28,7 +28,8 @@ final class ByteCode {
   static final int NOP0 = -9;
   static final int RAW = -10;
   static final int SEPARATOR = -12;
-  static final int WHITESPACE = -13;
+  static final int STRING_LITERAL = -13;
+  static final int WHITESPACE = -14;
 
   private ByteCode() {}
 

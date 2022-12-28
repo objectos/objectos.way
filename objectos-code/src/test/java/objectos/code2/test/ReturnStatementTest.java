@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 public class ReturnStatementTest {
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - simple expression
   - single line
   """)

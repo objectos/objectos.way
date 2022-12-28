@@ -15,6 +15,7 @@
  */
 package objectos.code2;
 
+import java.util.Objects;
 import objectos.code2.JavaModel.At;
 import objectos.code2.JavaModel.AutoImports;
 import objectos.code2.JavaModel.Block;
@@ -204,7 +205,11 @@ public abstract class JavaTemplate {
   }
 
   protected final StringLiteral s(String string) {
-    return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
+    Objects.requireNonNull(string, "string == null");
+
+    var api = api();
+
+    return api.item(ByteProto.STRING_LITERAL, api.object(string));
   }
 
   protected final ClassType t(Class<?> type) {

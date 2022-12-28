@@ -31,6 +31,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeSeparator(Separator value);
 
+  protected abstract void writeStringLiteral(String value);
+
   protected abstract void writeWhitespace(Whitespace value);
 
   final void interpret() {
@@ -72,6 +74,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.RAW -> raw();
 
       case ByteCode.SEPARATOR -> separator();
+
+      case ByteCode.STRING_LITERAL -> stringLiteral();
 
       case ByteCode.WHITESPACE -> whitespace();
 
@@ -166,6 +170,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     var value = Separator.get(index);
 
     writeSeparator(value);
+  }
+
+  private void stringLiteral() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeStringLiteral(value);
   }
 
   private void whitespace() {
