@@ -36,6 +36,7 @@ class InternalCompiler extends InternalApi {
   private static final int _NAME = 13;
   private static final int _INIT = 14;
   private static final int _DIMS = 15;
+  private static final int _ARGS = 16;
 
   final void compile() {
     codeIndex = 0;
@@ -260,6 +261,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.ARRAY_DIMENSION -> arrayDimension(child, parent, state);
 
+      case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(child, parent, state);
+
       case ByteProto.ARRAY_TYPE -> arrayType(child, parent, state);
 
       case ByteProto.AUTO_IMPORTS -> autoImports(child, parent, state);
@@ -281,6 +284,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> modifier(child, parent, state);
 
       case ByteProto.PACKAGE -> packageKeyword(child, parent, state);
+
+      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(child, parent, state);
 
       case ByteProto.PRIMITIVE_TYPE -> primitiveType(child, parent, state);
 
@@ -341,6 +346,8 @@ class InternalCompiler extends InternalApi {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
 
+      case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
+
       case ByteProto.ARRAY_TYPE -> "Array Type";
 
       case ByteProto.BLOCK -> "Block";
@@ -369,9 +376,13 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PACKAGE -> "Package";
 
+      case ByteProto.PARAMETERIZED_TYPE -> "Parameterized Type";
+
       case ByteProto.PRIMITIVE_TYPE -> "Primitive Type";
 
       case ByteProto.RETURN_STATEMENT -> "Return Stmt.";
+
+      case ByteProto.PRIMITIVE_LITERAL -> "Primitive Literal";
 
       case ByteProto.STRING_LITERAL -> "String Literal";
 
@@ -466,6 +477,31 @@ class InternalCompiler extends InternalApi {
 
     $codeadd(Separator.LEFT_SQUARE_BRACKET);
     $codeadd(Separator.RIGHT_SQUARE_BRACKET);
+  }
+
+  private void arrayInitializer(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _NAME -> {
+            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Operator.ASSIGNMENT);
+            $codeadd(Whitespace.OPTIONAL);
+            $stateset(1, _INIT);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $statepush(_START, self);
+    $codeadd(Separator.LEFT_CURLY_BRACKET);
+    $element();
+    $codeadd(Separator.RIGHT_CURLY_BRACKET);
+    $statepop(self);
   }
 
   private void arrayType(int self, int parent, int state) {
@@ -667,15 +703,7 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.ARRAY_TYPE -> {
-        switch (state) {
-          case _START -> {
-            $stateset(1, _TYPE);
-          }
-
-          default -> $stubstate(self, parent, state);
-        }
-      }
+      case ByteProto.ARRAY_TYPE -> typeArrayType(self, parent, state);
 
       case ByteProto.CLASS_BODY -> typeClassBody(self, parent, state);
 
@@ -687,8 +715,7 @@ class InternalCompiler extends InternalApi {
           }
 
           case _IMPLEMENTS_TYPE -> {
-            $codeadd(Separator.COMMA);
-            $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+            commaAndSpace();
           }
 
           default -> $stubstate(self, parent, state);
@@ -705,6 +732,8 @@ class InternalCompiler extends InternalApi {
           default -> $stubstate(self, parent, state);
         }
       }
+
+      case ByteProto.PARAMETERIZED_TYPE -> typeParameterizedType(self, parent, state);
 
       default -> $stubparent(self, parent, state);
     }
@@ -747,6 +776,11 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void commaAndSpace() {
+    $codeadd(Separator.COMMA);
+    $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+  }
+
   private void compilationUnit() {
     var proto = ByteProto.COMPILATION_UNIT;
 
@@ -773,6 +807,16 @@ class InternalCompiler extends InternalApi {
 
   private void expression(int self, int parent, int state) {
     switch (parent) {
+      case ByteProto.ARRAY_INITIALIZER -> {
+        switch (state) {
+          case _START -> $stateset(1, _BODY);
+
+          case _BODY -> commaAndSpace();
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.CLASS_BODY -> {
         switch (state) {
           case _NAME -> {
@@ -786,14 +830,14 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.RETURN_STATEMENT -> {
-        $codeadd(Whitespace.OPTIONAL);
-      }
+      case ByteProto.RETURN_STATEMENT -> $codeadd(Whitespace.OPTIONAL);
 
       default -> $stubparent(self, parent, state);
     }
 
     switch (self) {
+      case ByteProto.PRIMITIVE_LITERAL -> $codeadd(ByteCode.PRIMITIVE_LITERAL, $itemnxt());
+
       case ByteProto.STRING_LITERAL -> $codeadd(ByteCode.STRING_LITERAL, $itemnxt());
 
       case ByteProto.THIS -> $codeadd(Keyword.THIS);
@@ -841,8 +885,7 @@ class InternalCompiler extends InternalApi {
           }
 
           case _NAME, _INIT -> {
-            $codeadd(Separator.COMMA);
-            $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+            commaAndSpace();
             $stateset(1, _NAME);
           }
 
@@ -946,35 +989,32 @@ class InternalCompiler extends InternalApi {
     $codeadd(Separator.SEMICOLON);
   }
 
+  private void parameterizedType(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.ARRAY_TYPE -> typeArrayType(self, parent, state);
+
+      case ByteProto.CLASS_BODY -> typeClassBody(self, parent, state);
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $statepush(_START, self);
+    $element();
+    state = $statepop(self);
+    switch (state) {
+      case _ARGS -> {
+        $codeadd(Separator.RIGHT_ANGLE_BRACKET);
+      }
+
+      default -> $stubpop(self, state);
+    }
+  }
+
   private void primitiveType(int self, int parent, int state) {
     switch (parent) {
-      case ByteProto.ARRAY_TYPE -> {
-        switch (state) {
-          case _START -> {
-            $stateset(1, _TYPE);
-          }
+      case ByteProto.ARRAY_TYPE -> typeArrayType(self, parent, state);
 
-          default -> $stubstate(self, parent, state);
-        }
-      }
-
-      case ByteProto.CLASS_BODY -> {
-        switch (state) {
-          case _START -> {
-            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
-            $codeadd(Indentation.EMIT);
-            $stateset(1, _TYPE);
-          }
-
-          case _ANNOTATIONS -> {
-            $codeadd(Whitespace.AFTER_ANNOTATION);
-            $codeadd(Indentation.EMIT);
-            $stateset(1, _TYPE);
-          }
-
-          default -> $stubstate(self, parent, state);
-        }
-      }
+      case ByteProto.CLASS_BODY -> typeClassBody(self, parent, state);
 
       default -> $stubparent(self, parent, state);
     }
@@ -991,10 +1031,26 @@ class InternalCompiler extends InternalApi {
     $statepop(self);
   }
 
+  private void typeArrayType(int self, int parent, int state) {
+    switch (state) {
+      case _START -> {
+        $stateset(1, _TYPE);
+      }
+
+      default -> $stubstate(self, parent, state);
+    }
+  }
+
   private void typeClassBody(int self, int parent, int state) {
     switch (state) {
       case _START -> {
         $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+        $codeadd(Indentation.EMIT);
+        $stateset(1, _TYPE);
+      }
+
+      case _ANNOTATIONS -> {
+        $codeadd(Whitespace.AFTER_ANNOTATION);
         $codeadd(Indentation.EMIT);
         $stateset(1, _TYPE);
       }
@@ -1009,6 +1065,25 @@ class InternalCompiler extends InternalApi {
         $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
         $codeadd(Indentation.EMIT);
         $stateset(1, _TYPE);
+      }
+
+      default -> $stubstate(self, parent, state);
+    }
+  }
+
+  private void typeParameterizedType(int self, int parent, int state) {
+    switch (state) {
+      case _START -> {
+        $stateset(1, _TYPE);
+      }
+
+      case _TYPE -> {
+        $codeadd(Separator.LEFT_ANGLE_BRACKET);
+        $stateset(1, _ARGS);
+      }
+
+      case _ARGS -> {
+        commaAndSpace();
       }
 
       default -> $stubstate(self, parent, state);

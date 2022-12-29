@@ -17,6 +17,8 @@ package objectos.code2;
 
 import java.util.Objects;
 import objectos.code2.JavaModel.ArrayDimension;
+import objectos.code2.JavaModel.ArrayInitializer;
+import objectos.code2.JavaModel.ArrayInitializerElement;
 import objectos.code2.JavaModel.ArrayType;
 import objectos.code2.JavaModel.ArrayTypeComponent;
 import objectos.code2.JavaModel.ArrayTypeElement;
@@ -33,9 +35,12 @@ import objectos.code2.JavaModel.FinalModifier;
 import objectos.code2.JavaModel.Identifier;
 import objectos.code2.JavaModel.ImplementsKeyword;
 import objectos.code2.JavaModel.Include;
+import objectos.code2.JavaModel.IntegerLiteral;
 import objectos.code2.JavaModel.Modifier;
 import objectos.code2.JavaModel.PackageKeyword;
+import objectos.code2.JavaModel.ParameterizedType;
 import objectos.code2.JavaModel.PrimitiveType;
+import objectos.code2.JavaModel.ReferenceType;
 import objectos.code2.JavaModel.ReturnStatement;
 import objectos.code2.JavaModel.StringLiteral;
 import objectos.code2.JavaModel.ThisKeyword;
@@ -147,6 +152,52 @@ public abstract class JavaTemplate {
     return api().item(ByteProto.VOID);
   }
 
+  protected final ArrayInitializer a() {
+    var api = api();
+
+    return api.elem(ByteProto.ARRAY_INITIALIZER, 0);
+  }
+
+  protected final ArrayInitializer a(
+      ArrayInitializerElement e1) {
+    var api = api();
+
+    var count = api.count(e1);
+
+    return api.elem(ByteProto.ARRAY_INITIALIZER, count);
+  }
+
+  protected final ArrayInitializer a(
+      ArrayInitializerElement... elements) {
+    var api = api();
+
+    var count = 0;
+
+    for (var element : elements) {
+      count += api.count(element);
+    }
+
+    return api.elem(ByteProto.ARRAY_INITIALIZER, count);
+  }
+
+  protected final ArrayInitializer a(
+      ArrayInitializerElement e1, ArrayInitializerElement e2) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2);
+
+    return api.elem(ByteProto.ARRAY_INITIALIZER, count);
+  }
+
+  protected final ArrayInitializer a(
+      ArrayInitializerElement e1, ArrayInitializerElement e2, ArrayInitializerElement e3) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2) + api.count(e3);
+
+    return api.elem(ByteProto.ARRAY_INITIALIZER, count);
+  }
+
   protected final At at(ClassType annotationType) {
     return api().elem(ByteProto.ANNOTATION, 1);
   }
@@ -240,6 +291,14 @@ public abstract class JavaTemplate {
     return api().item(ByteProto.ARRAY_DIMENSION);
   }
 
+  protected final IntegerLiteral i(int value) {
+    var s = Integer.toString(value);
+
+    var api = api();
+
+    return api.item(ByteProto.PRIMITIVE_LITERAL, api.object(s));
+  }
+
   protected final Identifier id(String name) {
     JavaModel.checkIdentifier(name);
 
@@ -310,6 +369,36 @@ public abstract class JavaTemplate {
 
   protected final ClassType t(Class<?> type) {
     return api().t(type);
+  }
+
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1) {
+    var api = api();
+
+    var count = api.count(rawType) + api.count(arg1);
+
+    return api.elem(ByteProto.PARAMETERIZED_TYPE, count);
+  }
+
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1, ReferenceType arg2) {
+    var api = api();
+
+    var count = api.count(rawType) + api.count(arg1) + api.count(arg2);
+
+    return api.elem(ByteProto.PARAMETERIZED_TYPE, count);
+  }
+
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1, ReferenceType arg2, ReferenceType arg3) {
+    var api = api();
+
+    var count = api.count(rawType) + api.count(arg1) + api.count(arg2) + api.count(arg3);
+
+    return api.elem(ByteProto.PARAMETERIZED_TYPE, count);
   }
 
   protected final ClassType t(String packageName, String simpleName) {

@@ -27,6 +27,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeKeyword(Keyword value);
 
+  protected abstract void writeLiteral(String value);
+
   protected abstract void writeOperator(Operator value);
 
   protected abstract void writeRaw(String value);
@@ -74,6 +76,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.KEYWORD -> keyword();
 
       case ByteCode.OPERATOR -> operator();
+
+      case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();
 
       case ByteCode.RAW -> raw();
 
@@ -166,6 +170,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     var value = Operator.get(index);
 
     writeOperator(value);
+  }
+
+  private void primitiveLiteral() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeLiteral(value);
   }
 
   private void raw() {

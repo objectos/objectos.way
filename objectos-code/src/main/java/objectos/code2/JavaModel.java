@@ -26,11 +26,13 @@ final class JavaModel {
 
   enum _Elem
       implements
+      ArrayInitializer,
       ArrayType,
       At,
       Body,
       Block,
       ExtendsKeyword,
+      ParameterizedType,
       ReturnStatement {
     INSTANCE;
   }
@@ -48,6 +50,7 @@ final class JavaModel {
       FinalModifier,
       Identifier,
       ImplementsKeyword,
+      IntegerLiteral,
       Modifier,
       PackageKeyword,
       PrimitiveType,
@@ -58,6 +61,10 @@ final class JavaModel {
   }
 
   sealed interface ArrayDimension extends ArrayTypeElement {}
+
+  sealed interface ArrayInitializer extends ArrayInitializerElement {}
+
+  sealed interface ArrayInitializerElement extends BodyElement {}
 
   sealed interface ArrayType extends BodyElement, ReferenceType {}
 
@@ -83,7 +90,7 @@ final class JavaModel {
 
   sealed interface Element {}
 
-  sealed interface Expression extends Element {}
+  sealed interface Expression extends ArrayInitializerElement {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -95,17 +102,21 @@ final class JavaModel {
 
   sealed interface Include extends BodyElement {}
 
+  sealed interface IntegerLiteral extends Literal {}
+
   sealed interface Literal extends PrimaryExpression {}
 
   sealed interface Modifier extends BodyElement {}
 
   sealed interface PackageKeyword extends Element {}
 
+  sealed interface ParameterizedType extends ReferenceType {}
+
   sealed interface PrimaryExpression extends BodyElement, Expression {}
 
-  sealed interface PrimitiveType extends ArrayTypeComponent, Element {}
+  sealed interface PrimitiveType extends ArrayTypeComponent, BodyElement {}
 
-  sealed interface ReferenceType extends ArrayTypeComponent, Element {}
+  sealed interface ReferenceType extends ArrayTypeComponent, BodyElement {}
 
   sealed interface ReturnStatement extends BlockElement {}
 

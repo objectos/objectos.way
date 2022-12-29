@@ -17,6 +17,7 @@ package objectos.code2.test;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Map;
 import objectos.code2.JavaTemplate;
 import org.testng.annotations.Test;
 
@@ -136,76 +137,95 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  /*
-
   @Test(description = """
   Field declarations TC05
-  
+
   - parameterized type
   """)
   public void testCase05() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          field(t(t(Map.class), t(String.class), t(Integer.class)), id("map"));
+          _class("Fields"); body(
+            t(t(Map.class), t(String.class), t(Integer.class)), id("map")
+          );
         }
       }.toString(),
-  
+
       """
-      java.util.Map<java.lang.String, java.lang.Integer> map;
+      class Fields {
+        java.util.Map<java.lang.String, java.lang.Integer> map;
+      }
       """
     );
+    // @formatter:on
   }
-  
+
   @Test(description = """
   Field declarations TC06
-  
+
   - array initializer
   """)
   public void testCase06() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          field(t(_int(), dim()), id("a"), a());
-          field(t(_int(), dim()), id("b"), a(i(0)));
-          field(t(_int(), dim()), id("c"), a(i(0), i(1)));
+          _class("Fields"); body(
+            t(_int(), dim()), id("a"), a(),
+
+            t(_int(), dim()), id("b"), a(i(0)),
+
+            t(_int(), dim()), id("c"), a(i(0), i(1))
+          );
         }
       }.toString(),
-  
+
       """
-      int[] a = {};
-  
-      int[] b = {0};
-  
-      int[] c = {0, 1};
+      class Fields {
+        int[] a = {};
+
+        int[] b = {0};
+
+        int[] c = {0, 1};
+      }
       """
     );
+    // @formatter:on
   }
-  
+
+  /*
+
   @Test(description = """
   Field declarations TC07
-  
+
   - includes
   """)
   public void testCase07() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
           field(_int(), id("a"), include(this::a));
         }
-  
+
+        @Override
         private void a() {
           invoke("a");
         }
       }.toString(),
-  
+
       """
-      int a = a();
+      class Fields {
+        int a = a();
+      }
       """
     );
+    // @formatter:on
   }
 
   */

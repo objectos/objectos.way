@@ -28,11 +28,13 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ARRAY_TYPE");
     value("CLASS_TYPE");
+    value("PARAMETERIZED_TYPE");
     value("PRIMITIVE_TYPE");
     value("VOID");
 
     comment("type aux");
 
+    value("ARRAY_INITIALIZER");
     value("ARRAY_DIMENSION");
 
     comment("compilation unit");
@@ -61,6 +63,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("expressions");
 
+    value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
     value("THIS");
   }
