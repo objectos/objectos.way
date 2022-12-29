@@ -91,7 +91,7 @@ final class JavaModel {
 
   sealed interface PackageKeyword extends Element {}
 
-  sealed interface PrimaryExpression extends Expression {}
+  sealed interface PrimaryExpression extends BodyElement, Expression {}
 
   sealed interface PrimitiveType extends Element {}
 

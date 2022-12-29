@@ -34,6 +34,7 @@ class InternalCompiler extends InternalApi {
   private static final int _VOID = 11;
   private static final int _TYPE = 12;
   private static final int _NAME = 13;
+  private static final int _INIT = 14;
 
   final void compile() {
     codeIndex = 0;
@@ -81,6 +82,10 @@ class InternalCompiler extends InternalApi {
 
   private void $codeadd(Keyword value) { $codeadd(ByteCode.KEYWORD, value.ordinal()); }
 
+  private void $codeadd(Operator value) {
+    $codeadd(ByteCode.OPERATOR, value.ordinal());
+  }
+
   private void $codeadd(Separator value) { $codeadd(ByteCode.SEPARATOR, value.ordinal()); }
 
   private void $codeadd(Whitespace value) { $codeadd(ByteCode.WHITESPACE, value.ordinal()); }
@@ -97,8 +102,10 @@ class InternalCompiler extends InternalApi {
       case 5 -> $element05();
       case 6 -> $element06();
       case 7 -> $element07();
+      case 9 -> $element09();
       case 10 -> $element10();
       case 11 -> $element11();
+      case 12 -> $element12();
       case 15 -> $element15();
       case 18 -> $element18();
 
@@ -158,6 +165,16 @@ class InternalCompiler extends InternalApi {
     $item(v4); $item(v5); $item(v6);
   }
 
+  private void $element09() {
+    int v0 = $itemnxt(); int v1 = $itemnxt(); int v2 = $itemnxt(); int v3 = $itemnxt();
+    int v4 = $itemnxt(); int v5 = $itemnxt(); int v6 = $itemnxt(); int v7 = $itemnxt();
+    int v8 = $itemnxt();
+
+    $item(v0); $item(v1); $item(v2); $item(v3);
+    $item(v4); $item(v5); $item(v6); $item(v7);
+    $item(v8);
+  }
+
   private void $element10() {
     int v0 = $itemnxt(); int v1 = $itemnxt(); int v2 = $itemnxt(); int v3 = $itemnxt();
     int v4 = $itemnxt(); int v5 = $itemnxt(); int v6 = $itemnxt(); int v7 = $itemnxt();
@@ -176,6 +193,16 @@ class InternalCompiler extends InternalApi {
     $item(v00); $item(v01); $item(v02); $item(v03);
     $item(v04); $item(v05); $item(v06); $item(v07);
     $item(v08); $item(v09); $item(v10);
+  }
+
+  private void $element12() {
+    int v00 = $itemnxt(); int v01 = $itemnxt(); int v02 = $itemnxt(); int v03 = $itemnxt();
+    int v04 = $itemnxt(); int v05 = $itemnxt(); int v06 = $itemnxt(); int v07 = $itemnxt();
+    int v08 = $itemnxt(); int v09 = $itemnxt(); int v10 = $itemnxt(); int v11 = $itemnxt();
+
+    $item(v00); $item(v01); $item(v02); $item(v03);
+    $item(v04); $item(v05); $item(v06); $item(v07);
+    $item(v08); $item(v09); $item(v10); $item(v11);
   }
 
   private void $element15() {
@@ -254,14 +281,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.RETURN_STATEMENT -> returnStatement(child, parent, state);
 
-      case ByteProto.STRING_LITERAL -> stringLiteral(child, parent, state);
-
-      case ByteProto.THIS -> thisKeyword(child, parent, state);
-
       case ByteProto.VOID -> voidKeyword(child, parent, state);
 
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: child=%s parent=%s".formatted($stub0(child), $stub0(parent)));
+      default -> expression(child, parent, state);
     }
   }
 
@@ -514,7 +536,7 @@ class InternalCompiler extends InternalApi {
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      case _NAME -> {
+      case _NAME, _INIT -> {
         $codeadd(Separator.SEMICOLON);
         $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         $codeadd(Indentation.EXIT_BLOCK);
@@ -605,6 +627,30 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _TYPE);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _TYPE);
+          }
+
+          case _NAME, _INIT -> {
+            $codeadd(Separator.SEMICOLON);
+            $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _TYPE);
+          }
+
+          default -> $stubstate(child, parent, state);
+        }
+      }
+
       case ByteProto.CLASS_DECLARATION -> {
         switch (state) {
           case _IMPLEMENTS -> {
@@ -614,7 +660,7 @@ class InternalCompiler extends InternalApi {
 
           case _IMPLEMENTS_TYPE -> {
             $codeadd(Separator.COMMA);
-            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
           }
 
           default -> $stubstate(child, parent, state);
@@ -697,6 +743,38 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void expression(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _NAME -> {
+            $codeadd(Whitespace.OPTIONAL);
+            $codeadd(Operator.ASSIGNMENT);
+            $codeadd(Whitespace.OPTIONAL);
+            $stateset(1, _INIT);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      case ByteProto.RETURN_STATEMENT -> {
+        $codeadd(Whitespace.OPTIONAL);
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    switch (self) {
+      case ByteProto.STRING_LITERAL -> $codeadd(ByteCode.STRING_LITERAL, $itemnxt());
+
+      case ByteProto.THIS -> $codeadd(Keyword.THIS);
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: self=%s parent=%s".formatted($stub0(self), $stub0(parent)));
+    }
+  }
+
   private void extendsKeyword(int self, int parent, int state) {
     switch (parent) {
       case ByteProto.CLASS_DECLARATION -> {
@@ -734,6 +812,12 @@ class InternalCompiler extends InternalApi {
             methodDeclaration();
           }
 
+          case _NAME, _INIT -> {
+            $codeadd(Separator.COMMA);
+            $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+            $stateset(1, _NAME);
+          }
+
           default -> $stubstate(self, parent, state);
         }
       }
@@ -769,6 +853,29 @@ class InternalCompiler extends InternalApi {
 
   private void modifier(int self, int parent, int state) {
     switch (parent) {
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _MODS);
+          }
+
+          case _MODS -> {
+            $codeadd(Whitespace.MANDATORY);
+          }
+
+          case _NAME -> {
+            $codeadd(Separator.SEMICOLON);
+            $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _MODS);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.COMPILATION_UNIT -> {
         switch (state) {
           case _START -> {
@@ -844,30 +951,6 @@ class InternalCompiler extends InternalApi {
     $element();
     $codeadd(Separator.SEMICOLON);
     $statepop(self);
-  }
-
-  private void stringLiteral(int self, int parent, int state) {
-    switch (parent) {
-      case ByteProto.RETURN_STATEMENT -> {
-        $codeadd(Whitespace.OPTIONAL);
-      }
-
-      default -> $stubparent(self, parent, state);
-    }
-
-    $codeadd(ByteCode.STRING_LITERAL, $itemnxt());
-  }
-
-  private void thisKeyword(int child, int parent, int state) {
-    switch (parent) {
-      case ByteProto.RETURN_STATEMENT -> {
-        $codeadd(Whitespace.MANDATORY);
-      }
-
-      default -> $stubparent(child, parent, state);
-    }
-
-    $codeadd(Keyword.THIS);
   }
 
   private void voidKeyword(int self, int parent, int state) {

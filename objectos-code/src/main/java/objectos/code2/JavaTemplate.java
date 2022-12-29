@@ -187,6 +187,41 @@ public abstract class JavaTemplate {
     return api.elem(ByteProto.BODY, count);
   }
 
+  protected final Body body(
+      BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4, BodyElement e5,
+      BodyElement e6) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2) + api.count(e3) + api.count(e4) + api.count(e5) +
+        api.count(e6);
+
+    return api.elem(ByteProto.BODY, count);
+  }
+
+  protected final Body body(
+      BodyElement e01, BodyElement e02, BodyElement e03, BodyElement e04, BodyElement e05,
+      BodyElement e06, BodyElement e07, BodyElement e08, BodyElement e09) {
+    var api = api();
+
+    var count = api.count(e01) + api.count(e02) + api.count(e03) + api.count(e04) + api.count(e05) +
+        api.count(e06) + api.count(e07) + api.count(e08) + api.count(e09);
+
+    return api.elem(ByteProto.BODY, count);
+  }
+
+  protected final Body body(
+      BodyElement e01, BodyElement e02, BodyElement e03, BodyElement e04, BodyElement e05,
+      BodyElement e06, BodyElement e07, BodyElement e08, BodyElement e09, BodyElement e10,
+      BodyElement e11, BodyElement e12) {
+    var api = api();
+
+    var count = api.count(e01) + api.count(e02) + api.count(e03) + api.count(e04) + api.count(e05) +
+        api.count(e06) + api.count(e07) + api.count(e08) + api.count(e09) + api.count(e10) +
+        api.count(e11) + api.count(e12);
+
+    return api.elem(ByteProto.BODY, count);
+  }
+
   protected abstract void definition();
 
   protected final Identifier id(String name) {

@@ -26,7 +26,8 @@ final class ByteCode {
   static final int INDENTATION = -7;
   static final int KEYWORD = -8;
   static final int NOP0 = -9;
-  static final int RAW = -10;
+  static final int OPERATOR = -10;
+  static final int RAW = -11;
   static final int SEPARATOR = -12;
   static final int STRING_LITERAL = -13;
   static final int WHITESPACE = -14;
