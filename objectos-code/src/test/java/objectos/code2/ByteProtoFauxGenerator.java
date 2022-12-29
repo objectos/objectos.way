@@ -26,9 +26,14 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
   public final void execute() {
     comment("types");
 
+    value("ARRAY_TYPE");
     value("CLASS_TYPE");
     value("PRIMITIVE_TYPE");
     value("VOID");
+
+    comment("type aux");
+
+    value("ARRAY_DIMENSION");
 
     comment("compilation unit");
 

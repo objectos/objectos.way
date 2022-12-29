@@ -26,6 +26,7 @@ final class JavaModel {
 
   enum _Elem
       implements
+      ArrayType,
       At,
       Body,
       Block,
@@ -40,6 +41,7 @@ final class JavaModel {
 
   enum _Item
       implements
+      ArrayDimension,
       AutoImports,
       ClassKeyword,
       ClassType,
@@ -55,6 +57,14 @@ final class JavaModel {
     INSTANCE;
   }
 
+  sealed interface ArrayDimension extends ArrayTypeElement {}
+
+  sealed interface ArrayType extends BodyElement, ReferenceType {}
+
+  sealed interface ArrayTypeComponent extends Element {}
+
+  sealed interface ArrayTypeElement extends Element {}
+
   sealed interface At extends BodyElement {}
 
   sealed interface AutoImports extends Element {}
@@ -69,7 +79,7 @@ final class JavaModel {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassType extends BodyElement {}
+  sealed interface ClassType extends BodyElement, ReferenceType {}
 
   sealed interface Element {}
 
@@ -93,7 +103,9 @@ final class JavaModel {
 
   sealed interface PrimaryExpression extends BodyElement, Expression {}
 
-  sealed interface PrimitiveType extends Element {}
+  sealed interface PrimitiveType extends ArrayTypeComponent, Element {}
+
+  sealed interface ReferenceType extends ArrayTypeComponent, Element {}
 
   sealed interface ReturnStatement extends BlockElement {}
 

@@ -16,6 +16,10 @@
 package objectos.code2;
 
 import java.util.Objects;
+import objectos.code2.JavaModel.ArrayDimension;
+import objectos.code2.JavaModel.ArrayType;
+import objectos.code2.JavaModel.ArrayTypeComponent;
+import objectos.code2.JavaModel.ArrayTypeElement;
 import objectos.code2.JavaModel.At;
 import objectos.code2.JavaModel.AutoImports;
 import objectos.code2.JavaModel.Block;
@@ -67,12 +71,20 @@ public abstract class JavaTemplate {
     return api().modifier(Keyword.ABSTRACT);
   }
 
+  protected final PrimitiveType _boolean() {
+    return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.BOOLEAN.ordinal());
+  }
+
   protected final ClassKeyword _class(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
 
     var api = api();
 
     return api.item(ByteProto.CLASS0, api.object(name));
+  }
+
+  protected final PrimitiveType _double() {
+    return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.DOUBLE.ordinal());
   }
 
   protected final ExtendsKeyword _extends(ClassType type) {
@@ -224,6 +236,10 @@ public abstract class JavaTemplate {
 
   protected abstract void definition();
 
+  protected final ArrayDimension dim() {
+    return api().item(ByteProto.ARRAY_DIMENSION);
+  }
+
   protected final Identifier id(String name) {
     JavaModel.checkIdentifier(name);
 
@@ -250,6 +266,46 @@ public abstract class JavaTemplate {
     var api = api();
 
     return api.item(ByteProto.STRING_LITERAL, api.object(string));
+  }
+
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1) {
+    var api = api();
+
+    var count = api.count(type) + api.count(e1);
+
+    return api.elem(ByteProto.ARRAY_TYPE, count);
+  }
+
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2) {
+    var api = api();
+
+    var count = api.count(type) + api.count(e1) + api.count(e2);
+
+    return api.elem(ByteProto.ARRAY_TYPE, count);
+  }
+
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2, ArrayTypeElement e3) {
+    var api = api();
+
+    var count = api.count(type) + api.count(e1) + api.count(e2) + api.count(e3);
+
+    return api.elem(ByteProto.ARRAY_TYPE, count);
+  }
+
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2, ArrayTypeElement e3, ArrayTypeElement e4) {
+    var api = api();
+
+    var count = api.count(type) + api.count(e1) + api.count(e2) + api.count(e3) + api.count(e4);
+
+    return api.elem(ByteProto.ARRAY_TYPE, count);
   }
 
   protected final ClassType t(Class<?> type) {

@@ -110,28 +110,34 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  /*
-  
   @Test(description = """
   Field declarations TC05
-  
+
   - array type
   """)
   public void testCase04() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          field(t(t(Object.class), dim()), id("a"));
+          _class("Fields"); body(
+            t(t(Object.class), dim()), id("a")
+          );
         }
       }.toString(),
-  
+
       """
-      java.lang.Object[] a;
+      class Fields {
+        java.lang.Object[] a;
+      }
       """
     );
+    // @formatter:on
   }
-  
+
+  /*
+
   @Test(description = """
   Field declarations TC05
   

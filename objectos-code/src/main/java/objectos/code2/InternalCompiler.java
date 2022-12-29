@@ -35,6 +35,7 @@ class InternalCompiler extends InternalApi {
   private static final int _TYPE = 12;
   private static final int _NAME = 13;
   private static final int _INIT = 14;
+  private static final int _DIMS = 15;
 
   final void compile() {
     codeIndex = 0;
@@ -257,6 +258,10 @@ class InternalCompiler extends InternalApi {
     switch (child) {
       case ByteProto.ANNOTATION -> annotation(child, parent, state);
 
+      case ByteProto.ARRAY_DIMENSION -> arrayDimension(child, parent, state);
+
+      case ByteProto.ARRAY_TYPE -> arrayType(child, parent, state);
+
       case ByteProto.AUTO_IMPORTS -> autoImports(child, parent, state);
 
       case ByteProto.BODY -> body(child, parent, state);
@@ -335,6 +340,8 @@ class InternalCompiler extends InternalApi {
   private String $stub0(int value) {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
+
+      case ByteProto.ARRAY_TYPE -> "Array Type";
 
       case ByteProto.BLOCK -> "Block";
 
@@ -438,6 +445,39 @@ class InternalCompiler extends InternalApi {
 
       default -> $stubpop(self, state);
     }
+  }
+
+  private void arrayDimension(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.ARRAY_TYPE -> {
+        switch (state) {
+          case _TYPE -> {
+            $stateset(1, _DIMS);
+          }
+
+          case _DIMS -> {}
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $codeadd(Separator.LEFT_SQUARE_BRACKET);
+    $codeadd(Separator.RIGHT_SQUARE_BRACKET);
+  }
+
+  private void arrayType(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.CLASS_BODY -> typeClassBody(self, parent, state);
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $statepush(_START, self);
+    $element();
+    $statepop(self);
   }
 
   private void autoImports(int self, int parent, int state) {
@@ -614,7 +654,7 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void classType(int child, int parent, int state) {
+  private void classType(int self, int parent, int state) {
     switch (parent) {
       case ByteProto.ANNOTATION -> {
         switch (state) {
@@ -623,33 +663,21 @@ class InternalCompiler extends InternalApi {
             $stateset(1, _TYPE);
           }
 
-          default -> $stubstate(child, parent, state);
+          default -> $stubstate(self, parent, state);
         }
       }
 
-      case ByteProto.CLASS_BODY -> {
+      case ByteProto.ARRAY_TYPE -> {
         switch (state) {
           case _START -> {
-            $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
-            $codeadd(Indentation.EMIT);
             $stateset(1, _TYPE);
           }
 
-          case _MODS -> {
-            $codeadd(Whitespace.MANDATORY);
-            $stateset(1, _TYPE);
-          }
-
-          case _NAME, _INIT -> {
-            $codeadd(Separator.SEMICOLON);
-            $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
-            $codeadd(Indentation.EMIT);
-            $stateset(1, _TYPE);
-          }
-
-          default -> $stubstate(child, parent, state);
+          default -> $stubstate(self, parent, state);
         }
       }
+
+      case ByteProto.CLASS_BODY -> typeClassBody(self, parent, state);
 
       case ByteProto.CLASS_DECLARATION -> {
         switch (state) {
@@ -663,7 +691,7 @@ class InternalCompiler extends InternalApi {
             $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
           }
 
-          default -> $stubstate(child, parent, state);
+          default -> $stubstate(self, parent, state);
         }
       }
 
@@ -674,11 +702,11 @@ class InternalCompiler extends InternalApi {
             $stateset(1, _TYPE);
           }
 
-          default -> $stubstate(child, parent, state);
+          default -> $stubstate(self, parent, state);
         }
       }
 
-      default -> $stubparent(child, parent, state);
+      default -> $stubparent(self, parent, state);
     }
 
     var packageIndex = $protonxt();
@@ -920,19 +948,27 @@ class InternalCompiler extends InternalApi {
 
   private void primitiveType(int self, int parent, int state) {
     switch (parent) {
+      case ByteProto.ARRAY_TYPE -> {
+        switch (state) {
+          case _START -> {
+            $stateset(1, _TYPE);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.CLASS_BODY -> {
         switch (state) {
           case _START -> {
             $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             $codeadd(Indentation.EMIT);
-            $codeadd(ByteCode.KEYWORD, $itemnxt());
             $stateset(1, _TYPE);
           }
 
           case _ANNOTATIONS -> {
             $codeadd(Whitespace.AFTER_ANNOTATION);
             $codeadd(Indentation.EMIT);
-            $codeadd(ByteCode.KEYWORD, $itemnxt());
             $stateset(1, _TYPE);
           }
 
@@ -942,6 +978,8 @@ class InternalCompiler extends InternalApi {
 
       default -> $stubparent(self, parent, state);
     }
+
+    $codeadd(ByteCode.KEYWORD, $itemnxt());
   }
 
   private void returnStatement(int self, int parent, int state) {
@@ -951,6 +989,30 @@ class InternalCompiler extends InternalApi {
     $element();
     $codeadd(Separator.SEMICOLON);
     $statepop(self);
+  }
+
+  private void typeClassBody(int self, int parent, int state) {
+    switch (state) {
+      case _START -> {
+        $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+        $codeadd(Indentation.EMIT);
+        $stateset(1, _TYPE);
+      }
+
+      case _MODS -> {
+        $codeadd(Whitespace.MANDATORY);
+        $stateset(1, _TYPE);
+      }
+
+      case _NAME, _INIT -> {
+        $codeadd(Separator.SEMICOLON);
+        $codeadd(Whitespace.BEFORE_NEXT_MEMBER);
+        $codeadd(Indentation.EMIT);
+        $stateset(1, _TYPE);
+      }
+
+      default -> $stubstate(self, parent, state);
+    }
   }
 
   private void voidKeyword(int self, int parent, int state) {
