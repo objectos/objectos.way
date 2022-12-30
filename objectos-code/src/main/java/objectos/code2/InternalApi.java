@@ -16,7 +16,7 @@
 package objectos.code2;
 
 import objectos.code2.JavaModel.ClassType;
-import objectos.code2.JavaModel.Element;
+import objectos.code2.JavaModel.UnqualifiedMethodInvocation;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
@@ -40,7 +40,7 @@ class InternalApi {
 
   int rootIndex;
 
-  public final int count(Element e) {
+  public final int count(Object e) {
     if (e == JavaModel.INCLUDE) {
       return codeArray[codeIndex--];
     } else {
@@ -54,6 +54,44 @@ class InternalApi {
     $itemadd(proto, count);
 
     $rootcopy(count);
+
+    $rootadd(self);
+
+    return $elemret();
+  }
+
+  public final int identifier(String value) {
+    int self = itemIndex;
+
+    $itemadd(ByteProto.IDENTIFIER, object(value));
+
+    return self;
+  }
+
+  public final void includeEnd() {
+    var startCount = codeArray[codeIndex];
+
+    var diff = rootIndex - startCount;
+
+    codeArray[codeIndex] = diff;
+  }
+
+  public final void includeStart() {
+    codeIndex++;
+
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex);
+
+    codeArray[codeIndex] = rootIndex;
+  }
+
+  public final UnqualifiedMethodInvocation invoke(String methodName) {
+    int id = identifier(methodName);
+
+    int self = itemIndex;
+
+    $itemadd(ByteProto.METHOD_INVOCATION, 1);
+
+    $itemadd(id);
 
     $rootadd(self);
 
@@ -82,22 +120,6 @@ class InternalApi {
     $itemadd(v0, v1, v2, v3);
 
     return $itemret();
-  }
-
-  public final void lambdaEnd() {
-    var startCount = codeArray[codeIndex];
-
-    var diff = rootIndex - startCount;
-
-    codeArray[codeIndex] = diff;
-  }
-
-  public final void lambdaStart() {
-    codeIndex++;
-
-    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex);
-
-    codeArray[codeIndex] = rootIndex;
   }
 
   public final JavaModel._Item modifier(Keyword value) {

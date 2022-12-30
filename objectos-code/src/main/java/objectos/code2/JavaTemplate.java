@@ -25,8 +25,10 @@ import objectos.code2.JavaModel.ArrayTypeElement;
 import objectos.code2.JavaModel.At;
 import objectos.code2.JavaModel.AutoImports;
 import objectos.code2.JavaModel.Block;
+import objectos.code2.JavaModel.BlockElement;
 import objectos.code2.JavaModel.Body;
 import objectos.code2.JavaModel.BodyElement;
+import objectos.code2.JavaModel.ClassInstanceCreationExpression;
 import objectos.code2.JavaModel.ClassKeyword;
 import objectos.code2.JavaModel.ClassType;
 import objectos.code2.JavaModel.Expression;
@@ -44,6 +46,7 @@ import objectos.code2.JavaModel.ReferenceType;
 import objectos.code2.JavaModel.ReturnStatement;
 import objectos.code2.JavaModel.StringLiteral;
 import objectos.code2.JavaModel.ThisKeyword;
+import objectos.code2.JavaModel.UnqualifiedMethodInvocation;
 import objectos.code2.JavaModel.VoidKeyword;
 import objectos.lang.Check;
 
@@ -108,6 +111,67 @@ public abstract class JavaTemplate {
 
   protected final PrimitiveType _int() {
     return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
+  }
+
+  protected final ClassInstanceCreationExpression _new(
+      ClassType type) {
+    var api = api();
+
+    var count = api.count(type);
+
+    return api.elem(ByteProto.CLASS_INSTANCE_CREATION, count);
+  }
+
+  protected final ClassInstanceCreationExpression _new(
+      ClassType type,
+      Expression arg1) {
+    var api = api();
+
+    var count = api.count(type) + api.count(arg1);
+
+    return api.elem(ByteProto.CLASS_INSTANCE_CREATION, count);
+  }
+
+  protected final ClassInstanceCreationExpression _new(
+      ClassType type,
+      Expression arg1, Expression arg2) {
+    var api = api();
+
+    var count = api.count(type) + api.count(arg1) + api.count(arg2);
+
+    return api.elem(ByteProto.CLASS_INSTANCE_CREATION, count);
+  }
+
+  protected final ClassInstanceCreationExpression _new(
+      ClassType type,
+      Expression arg1, Expression arg2, Expression arg3) {
+    var api = api();
+
+    var count = api.count(type) + api.count(arg1) + api.count(arg2) + api.count(arg3);
+
+    return api.elem(ByteProto.CLASS_INSTANCE_CREATION, count);
+  }
+
+  protected final ClassInstanceCreationExpression _new(
+      ClassType type,
+      Expression arg1, Expression arg2, Expression arg3, Expression arg4) {
+    var api = api();
+
+    var count = api.count(type) +
+        api.count(arg1) + api.count(arg2) + api.count(arg3) + api.count(arg4);
+
+    return api.elem(ByteProto.CLASS_INSTANCE_CREATION, count);
+  }
+
+  protected final ClassInstanceCreationExpression _new(
+      ClassType type,
+      Expression arg1, Expression arg2, Expression arg3, Expression arg4, Expression arg5) {
+    var api = api();
+
+    var count = api.count(type) +
+        api.count(arg1) + api.count(arg2) + api.count(arg3) + api.count(arg4) + api.count(arg5);
+
+    return api.elem(ByteProto.CLASS_INSTANCE_CREATION, count);
   }
 
   protected final PackageKeyword _package(String name) {
@@ -214,6 +278,38 @@ public abstract class JavaTemplate {
     return api().elem(ByteProto.BLOCK, 0);
   }
 
+  protected final Block block(BlockElement e1) {
+    var api = api();
+
+    var count = api.count(e1);
+
+    return api.elem(ByteProto.BLOCK, count);
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2);
+
+    return api.elem(ByteProto.BLOCK, count);
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2) + api.count(e3);
+
+    return api.elem(ByteProto.BLOCK, count);
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4) {
+    var api = api();
+
+    var count = api.count(e1) + api.count(e2) + api.count(e3) + api.count(e4);
+
+    return api.elem(ByteProto.BLOCK, count);
+  }
+
   protected final Body body() {
     return api().elem(ByteProto.BODY, 0);
   }
@@ -310,13 +406,31 @@ public abstract class JavaTemplate {
   protected final Include include(IncludeTarget target) {
     var api = api();
 
-    api.lambdaStart();
+    api.includeStart();
 
     target.execute(); // implicit null-check
 
-    api.lambdaEnd();
+    api.includeEnd();
 
     return JavaModel.INCLUDE;
+  }
+
+  protected final Include include(JavaTemplate template) {
+    var api = api();
+
+    api.includeStart();
+
+    template.execute(api);
+
+    api.includeEnd();
+
+    return JavaModel.INCLUDE;
+  }
+
+  protected final UnqualifiedMethodInvocation invoke(String methodName) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    return api().invoke(methodName);
   }
 
   protected final StringLiteral s(String string) {

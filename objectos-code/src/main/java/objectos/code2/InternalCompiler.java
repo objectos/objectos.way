@@ -17,6 +17,7 @@ package objectos.code2;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import objectos.code.Separator;
 import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
@@ -358,6 +359,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS_BODY -> "Class Body";
 
+      case ByteProto.CLASS_INSTANCE_CREATION -> "Class Instance Creation";
+
       case ByteProto.CLASS_DECLARATION -> "Class Declaration";
 
       case ByteProto.CLASS_TYPE -> "Class Type";
@@ -371,6 +374,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IMPLEMENTS -> "Implements";
 
       case ByteProto.METHOD_DECLARATION -> "Method Decl.";
+
+      case ByteProto.METHOD_INVOCATION -> "Method Invocation (Unq.)";
 
       case ByteProto.MODIFIER -> "Modifier";
 
@@ -540,6 +545,17 @@ class InternalCompiler extends InternalApi {
 
   private void block(int self, int parent, int state) {
     switch (parent) {
+      case ByteProto.CLASS_BODY -> {
+        switch (state) {
+          case _MODS -> {
+            $codeadd(Whitespace.OPTIONAL);
+            $stateset(1, _BODY);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.METHOD_DECLARATION -> {
         switch (state) {
           case _START -> {
@@ -566,6 +582,13 @@ class InternalCompiler extends InternalApi {
       case _START -> {
         $codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
         $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _BODY -> {
+        $codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        $codeadd(Indentation.EXIT_BLOCK);
+        $codeadd(Indentation.EMIT);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
@@ -690,6 +713,25 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void classInstanceCreation(int self, int parent, int state) {
+    $codeadd(Keyword.NEW);
+    $statepush(_START, self);
+    $element();
+    state = $statepop(self);
+    switch (state) {
+      case _TYPE -> {
+        $codeadd(Separator.LEFT_PARENTHESIS);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+
+      case _ARGS -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+
+      default -> $stubpop(self, state);
+    }
+  }
+
   private void classType(int self, int parent, int state) {
     switch (parent) {
       case ByteProto.ANNOTATION -> {
@@ -716,6 +758,17 @@ class InternalCompiler extends InternalApi {
 
           case _IMPLEMENTS_TYPE -> {
             commaAndSpace();
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      case ByteProto.CLASS_INSTANCE_CREATION -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.MANDATORY);
+            $stateset(1, _TYPE);
           }
 
           default -> $stubstate(self, parent, state);
@@ -817,6 +870,23 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.BLOCK -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.NEW_LINE);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _BODY);
+          }
+
+          case _BODY -> {
+            $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
+            $codeadd(Indentation.EMIT);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.CLASS_BODY -> {
         switch (state) {
           case _NAME -> {
@@ -830,12 +900,35 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.CLASS_INSTANCE_CREATION -> {
+        switch (state) {
+          case _TYPE -> {
+            $codeadd(Separator.LEFT_PARENTHESIS);
+            $stateset(1, _ARGS);
+          }
+
+          case _ARGS -> commaAndSpace();
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.RETURN_STATEMENT -> $codeadd(Whitespace.OPTIONAL);
 
       default -> $stubparent(self, parent, state);
     }
 
     switch (self) {
+      case ByteProto.CLASS_INSTANCE_CREATION -> {
+        classInstanceCreation(self, parent, state);
+        semicolonIfNecessary(parent);
+      }
+
+      case ByteProto.METHOD_INVOCATION -> {
+        methodInvocation(self, parent, state);
+        semicolonIfNecessary(parent);
+      }
+
       case ByteProto.PRIMITIVE_LITERAL -> $codeadd(ByteCode.PRIMITIVE_LITERAL, $itemnxt());
 
       case ByteProto.STRING_LITERAL -> $codeadd(ByteCode.STRING_LITERAL, $itemnxt());
@@ -893,6 +986,16 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.METHOD_INVOCATION -> {
+        switch (state) {
+          case _START -> {
+            $stateset(1, _NAME);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       default -> $stubparent(self, parent, state);
     }
 
@@ -920,6 +1023,20 @@ class InternalCompiler extends InternalApi {
 
   private void methodDeclaration() {
     $statepush(_START, ByteProto.METHOD_DECLARATION);
+  }
+
+  private void methodInvocation(int self, int parent, int state) {
+    $statepush(_START, self);
+    $element();
+    state = $statepop(self);
+    switch (state) {
+      case _NAME -> {
+        $codeadd(Separator.LEFT_PARENTHESIS);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+
+      default -> $stubpop(self, state);
+    }
   }
 
   private void modifier(int self, int parent, int state) {
@@ -1029,6 +1146,12 @@ class InternalCompiler extends InternalApi {
     $element();
     $codeadd(Separator.SEMICOLON);
     $statepop(self);
+  }
+
+  private void semicolonIfNecessary(int parent) {
+    switch (parent) {
+      case ByteProto.BLOCK -> $codeadd(Separator.SEMICOLON);
+    }
   }
 
   private void typeArrayType(int self, int parent, int state) {

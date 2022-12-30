@@ -58,9 +58,12 @@ final class ByteProto {
 
   //expressions
 
-  static final int PRIMITIVE_LITERAL = -23;
-  static final int STRING_LITERAL = -24;
-  static final int THIS = -25;
+  static final int CLASS_INSTANCE_CREATION = -23;
+  static final int METHOD_INVOCATION = -24;
+  static final int METHOD_INVOCATION_QUALIFIED = -25;
+  static final int PRIMITIVE_LITERAL = -26;
+  static final int STRING_LITERAL = -27;
+  static final int THIS = -28;
 
   private ByteProto() {}
 
