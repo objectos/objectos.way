@@ -50,20 +50,22 @@ final class ByteProto {
   static final int IMPLEMENTS = -18;
   static final int METHOD_DECLARATION = -19;
   static final int MODIFIER = -20;
+  static final int NEW_LINE = -21;
 
   //statements
 
-  static final int BLOCK = -21;
-  static final int RETURN_STATEMENT = -22;
+  static final int BLOCK = -22;
+  static final int RETURN_STATEMENT = -23;
 
   //expressions
 
-  static final int CLASS_INSTANCE_CREATION = -23;
-  static final int METHOD_INVOCATION = -24;
-  static final int METHOD_INVOCATION_QUALIFIED = -25;
-  static final int PRIMITIVE_LITERAL = -26;
-  static final int STRING_LITERAL = -27;
-  static final int THIS = -28;
+  static final int CLASS_INSTANCE_CREATION = -24;
+  static final int EXPRESSION_NAME = -25;
+  static final int METHOD_INVOCATION = -26;
+  static final int METHOD_INVOCATION_QUALIFIED = -27;
+  static final int PRIMITIVE_LITERAL = -28;
+  static final int STRING_LITERAL = -29;
+  static final int THIS = -30;
 
   private ByteProto() {}
 

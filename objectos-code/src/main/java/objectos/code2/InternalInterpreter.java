@@ -75,6 +75,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
       case ByteCode.KEYWORD -> keyword();
 
+      case ByteCode.NOP1 -> $codenxt();
+
       case ByteCode.OPERATOR -> operator();
 
       case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();

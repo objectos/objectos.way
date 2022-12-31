@@ -32,6 +32,7 @@ final class JavaModel {
       Body,
       Block,
       ClassInstanceCreationExpression,
+      ExpressionName,
       ExtendsKeyword,
       ParameterizedType,
       QualifiedMethodInvocation,
@@ -55,6 +56,7 @@ final class JavaModel {
       ImplementsKeyword,
       IntegerLiteral,
       Modifier,
+      NewLine,
       PackageKeyword,
       PrimitiveType,
       StringLiteral,
@@ -91,11 +93,13 @@ final class JavaModel {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassType extends BodyElement, ReferenceType {}
+  sealed interface ClassType extends BodyElement, MethodInvocationQualifier, ReferenceType {}
 
   sealed interface Element {}
 
-  sealed interface Expression extends ArrayInitializerElement {}
+  sealed interface Expression extends ArrayInitializerElement, MethodInvocationElement {}
+
+  sealed interface ExpressionName extends Expression, LeftHandSide {}
 
   sealed interface ExpressionStatement extends Statement {}
 
@@ -111,11 +115,19 @@ final class JavaModel {
 
   sealed interface IntegerLiteral extends Literal {}
 
+  sealed interface LeftHandSide {}
+
   sealed interface Literal extends PrimaryExpression {}
 
   sealed interface MethodInvocation extends Expression, ExpressionStatement {}
 
+  sealed interface MethodInvocationElement extends Element {}
+
+  sealed interface MethodInvocationQualifier extends Element {}
+
   sealed interface Modifier extends BodyElement {}
+
+  sealed interface NewLine extends MethodInvocationElement {}
 
   sealed interface PackageKeyword extends Element {}
 

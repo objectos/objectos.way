@@ -26,12 +26,13 @@ final class ByteCode {
   static final int INDENTATION = -7;
   static final int KEYWORD = -8;
   static final int NOP0 = -9;
-  static final int OPERATOR = -10;
-  static final int PRIMITIVE_LITERAL = -11;
-  static final int RAW = -12;
-  static final int SEPARATOR = -13;
-  static final int STRING_LITERAL = -14;
-  static final int WHITESPACE = -15;
+  static final int NOP1 = -10;
+  static final int OPERATOR = -11;
+  static final int PRIMITIVE_LITERAL = -12;
+  static final int RAW = -13;
+  static final int SEPARATOR = -14;
+  static final int STRING_LITERAL = -15;
+  static final int WHITESPACE = -16;
 
   private ByteCode() {}
 

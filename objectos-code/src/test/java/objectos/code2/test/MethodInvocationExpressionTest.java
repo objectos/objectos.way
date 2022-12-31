@@ -17,6 +17,7 @@ package objectos.code2.test;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Collections;
 import objectos.code2.JavaTemplate;
 import objectos.code2.test.Fixture.Kind;
 import org.testng.annotations.Test;
@@ -48,23 +49,25 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  /*
-  
   @Test(description = """
   - unqualified
   - single argument
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", s("a"));
         }
-      }.toString(),
+      }),
 
       """
-      test("a");
+      class Invoke {
+        void method() {
+          test("a");
+        }
+      }
       """
     );
   }
@@ -75,15 +78,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", s("a"), s("b"));
         }
-      }.toString(),
+      }),
 
       """
-      test("a", "b");
+      class Invoke {
+        void method() {
+          test("a", "b");
+        }
+      }
       """
     );
   }
@@ -95,15 +102,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase04() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("m0", s("1"), invoke("m2"), s("3"));
         }
-      }.toString(),
+      }),
 
       """
-      m0("1", m2(), "3");
+      class Invoke {
+        void method() {
+          m0("1", m2(), "3");
+        }
+      }
       """
     );
   }
@@ -115,32 +126,22 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase05() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("m0", nl(), s("1"), nl(), nl(), invoke("m2"), nl(), nl(), s("3"), nl());
-
-          _class(id("A"),
-            method(id("foo"),
-              invoke("m0", nl(), s("1"), nl())
-            )
-          );
         }
-      }.toString(),
+      }),
 
       """
-      m0(
-        "1",
-
-        m2(),
-
-        "3"
-      );
-
-      class A {
-        void foo() {
+      class Invoke {
+        void method() {
           m0(
-            "1"
+            "1",
+
+            m2(),
+
+            "3"
           );
         }
       }
@@ -153,15 +154,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase06() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", n("field"));
         }
-      }.toString(),
+      }),
 
       """
-      test(field);
+      class Invoke {
+        void method() {
+          test(field);
+        }
+      }
       """
     );
   }
@@ -171,25 +176,30 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase07() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke(t(Thread.class), "currentThread");
           invoke(t(Collections.class), "sort", n("list"));
         }
-      }.toString(),
+      }),
 
       """
-      java.lang.Thread.currentThread();
-
-      java.util.Collections.sort(list);
+      class Invoke {
+        void method() {
+          java.lang.Thread.currentThread();
+          java.util.Collections.sort(list);
+        }
+      }
       """
     );
   }
 
+  /*
+  
   @Test(description = """
   Method Invocation Expresions TC08
-
+  
   - expression name
   """)
   public void testCase08() {
@@ -203,22 +213,22 @@ public class MethodInvocationExpressionTest {
           invoke(n(t(Foo.class), "CTE"), "m");
         }
       }.toString(),
-
+  
       """
       a.x();
-
+  
       b.y("1");
-
+  
       c.z("1", "2");
-
+  
       objectos.code.Foo.CTE.m();
       """
     );
   }
-
+  
   @Test(description = """
   Method Invocation Expresions TC09
-
+  
   - chain support
   """)
   public void testCase09() {
@@ -236,24 +246,24 @@ public class MethodInvocationExpressionTest {
           );
         }
       }.toString(),
-
+  
       """
       a().b();
-
+  
       a().b().c();
-
+  
       foo.a().b().c();
-
+  
       list.add("1")
           .add("2")
           .build();
       """
     );
   }
-
+  
   @Test(description = """
   Method Invocation Expresions TC10
-
+  
   - primary expressions
   """)
   public void testCase10() {
@@ -264,13 +274,13 @@ public class MethodInvocationExpressionTest {
           invoke(_new(t(Thread.class)), "start");
         }
       }.toString(),
-
+  
       """
       new java.lang.Thread().start();
       """
     );
   }
-
+  
   */
 
 }

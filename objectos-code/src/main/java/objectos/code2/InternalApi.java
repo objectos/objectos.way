@@ -16,6 +16,8 @@
 package objectos.code2;
 
 import objectos.code2.JavaModel.ClassType;
+import objectos.code2.JavaModel.ExpressionName;
+import objectos.code2.JavaModel.QualifiedMethodInvocation;
 import objectos.code2.JavaModel.UnqualifiedMethodInvocation;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
@@ -60,6 +62,20 @@ class InternalApi {
     return $elemret();
   }
 
+  public final ExpressionName expressionName(String identifier) {
+    int id = identifier(identifier);
+
+    int self = itemIndex;
+
+    $itemadd(ByteProto.EXPRESSION_NAME, 1);
+
+    $itemadd(id);
+
+    $rootadd(self);
+
+    return $elemret();
+  }
+
   public final int identifier(String value) {
     int self = itemIndex;
 
@@ -84,14 +100,14 @@ class InternalApi {
     codeArray[codeIndex] = rootIndex;
   }
 
-  public final UnqualifiedMethodInvocation invoke(String methodName) {
-    int id = identifier(methodName);
-
+  public final UnqualifiedMethodInvocation invoke(int id, int rootCount) {
     int self = itemIndex;
 
-    $itemadd(ByteProto.METHOD_INVOCATION, 1);
+    $itemadd(ByteProto.METHOD_INVOCATION, 1 + rootCount);
 
     $itemadd(id);
+
+    $rootcopy(rootCount);
 
     $rootadd(self);
 
@@ -138,6 +154,24 @@ class InternalApi {
     objectArray[objectIndex++] = value;
 
     return result;
+  }
+
+  public final QualifiedMethodInvocation qualifiedMethodInvocation(int id, int rootCount) {
+    int self = itemIndex;
+
+    $itemadd(ByteProto.METHOD_INVOCATION_QUALIFIED, 1 + rootCount);
+
+    $itemadd(rootArray[rootIndex - rootCount]);
+
+    $itemadd(id);
+
+    $rootcopy(rootCount - 1);
+
+    rootIndex--;
+
+    $rootadd(self);
+
+    return $elemret();
   }
 
   public final ClassType t(Class<?> type) {

@@ -15,6 +15,8 @@
  */
 package objectos.code2;
 
+import static objectos.code2.ByteProto.NULL;
+
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import objectos.code.Separator;
@@ -34,10 +36,13 @@ class InternalCompiler extends InternalApi {
   private static final int _BODY = 10;
   private static final int _VOID = 11;
   private static final int _TYPE = 12;
-  private static final int _NAME = 13;
-  private static final int _INIT = 14;
-  private static final int _DIMS = 15;
-  private static final int _ARGS = 16;
+  private static final int _RECV = 13;
+  private static final int _NAME = 14;
+  private static final int _INIT = 15;
+  private static final int _DIMS = 16;
+  private static final int _ARGS = 17;
+  private static final int _NL = 18;
+  private static final int _SLOT = 19;
 
   final void compile() {
     codeIndex = 0;
@@ -284,6 +289,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.MODIFIER -> modifier(child, parent, state);
 
+      case ByteProto.NEW_LINE -> newLine(child, parent, state);
+
       case ByteProto.PACKAGE -> packageKeyword(child, parent, state);
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(child, parent, state);
@@ -307,6 +314,10 @@ class InternalCompiler extends InternalApi {
   private int $protonxt() { return itemArray[itemIndex++]; }
 
   private boolean $stateempty() { return rootIndex < 0; }
+
+  private int $stateget(int offset) {
+    return rootArray[rootIndex - offset];
+  }
 
   private int $statepeek() { return rootArray[rootIndex]; }
 
@@ -339,6 +350,14 @@ class InternalCompiler extends InternalApi {
     rootArray[++rootIndex] = v1;
   }
 
+  private void $statepush(int v0, int v1, int v2) {
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 3);
+
+    rootArray[++rootIndex] = v0;
+    rootArray[++rootIndex] = v1;
+    rootArray[++rootIndex] = v2;
+  }
+
   private void $stateset(int offset, int value) {
     rootArray[rootIndex - offset] = value;
   }
@@ -367,6 +386,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.COMPILATION_UNIT -> "Compilation Unit";
 
+      case ByteProto.EXPRESSION_NAME -> "Expression Name";
+
       case ByteProto.EXTENDS -> "Extends";
 
       case ByteProto.IDENTIFIER -> "Identifier";
@@ -375,9 +396,11 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.METHOD_DECLARATION -> "Method Decl.";
 
-      case ByteProto.METHOD_INVOCATION -> "Method Invocation (Unq.)";
+      case ByteProto.METHOD_INVOCATION -> "Method Invocation";
 
       case ByteProto.MODIFIER -> "Modifier";
+
+      case ByteProto.NEW_LINE -> "NL";
 
       case ByteProto.PACKAGE -> "Package";
 
@@ -786,6 +809,14 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.METHOD_INVOCATION -> {
+        switch (state) {
+          case _START -> $stateset(1, _TYPE);
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.PARAMETERIZED_TYPE -> typeParameterizedType(self, parent, state);
 
       default -> $stubparent(self, parent, state);
@@ -913,6 +944,34 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.METHOD_INVOCATION -> {
+        switch (state) {
+          case _NAME -> {
+            $codeadd(Separator.LEFT_PARENTHESIS);
+            $stateset(1, _ARGS);
+          }
+
+          case _ARGS -> commaAndSpace();
+
+          case _NL -> {
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _ARGS);
+          }
+
+          case _SLOT -> {
+            var slot = $stateget(2);
+
+            codeArray[slot + 0] = ByteCode.SEPARATOR;
+            codeArray[slot + 1] = Separator.COMMA.ordinal();
+
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _ARGS);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.RETURN_STATEMENT -> $codeadd(Whitespace.OPTIONAL);
 
       default -> $stubparent(self, parent, state);
@@ -924,7 +983,9 @@ class InternalCompiler extends InternalApi {
         semicolonIfNecessary(parent);
       }
 
-      case ByteProto.METHOD_INVOCATION -> {
+      case ByteProto.EXPRESSION_NAME -> expressionName(self, parent, state);
+
+      case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED -> {
         methodInvocation(self, parent, state);
         semicolonIfNecessary(parent);
       }
@@ -938,6 +999,12 @@ class InternalCompiler extends InternalApi {
       default -> throw new UnsupportedOperationException(
         "Implement me :: self=%s parent=%s".formatted($stub0(self), $stub0(parent)));
     }
+  }
+
+  private void expressionName(int self, int parent, int state) {
+    $statepush(_START, self);
+    $element();
+    $statepop(self);
   }
 
   private void extendsKeyword(int self, int parent, int state) {
@@ -986,11 +1053,24 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.METHOD_INVOCATION -> {
+      case ByteProto.EXPRESSION_NAME -> {
         switch (state) {
           case _START -> {
             $stateset(1, _NAME);
           }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      case ByteProto.METHOD_INVOCATION -> {
+        switch (state) {
+          case _TYPE -> {
+            $codeadd(Separator.DOT);
+            $stateset(1, _NAME);
+          }
+
+          case _RECV -> $stateset(1, _NAME);
 
           default -> $stubstate(self, parent, state);
         }
@@ -1026,16 +1106,32 @@ class InternalCompiler extends InternalApi {
   }
 
   private void methodInvocation(int self, int parent, int state) {
-    $statepush(_START, self);
+    int proto = ByteProto.METHOD_INVOCATION;
+    $statepush(
+      NULL, // 2 = slot
+      self == ByteProto.METHOD_INVOCATION ? _RECV : _START,
+      proto
+    );
     $element();
-    state = $statepop(self);
+    state = $statepop(proto);
+    $statepop();
     switch (state) {
       case _NAME -> {
         $codeadd(Separator.LEFT_PARENTHESIS);
         $codeadd(Separator.RIGHT_PARENTHESIS);
       }
 
-      default -> $stubpop(self, state);
+      case _ARGS -> {
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+
+      case _SLOT -> {
+        $codeadd(Indentation.EXIT_PARENTHESIS);
+        $codeadd(Indentation.EMIT);
+        $codeadd(Separator.RIGHT_PARENTHESIS);
+      }
+
+      default -> $stubpop(proto, state);
     }
   }
 
@@ -1083,6 +1179,41 @@ class InternalCompiler extends InternalApi {
     }
 
     $codeadd(ByteCode.KEYWORD, $protonxt());
+  }
+
+  private void newLine(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.METHOD_INVOCATION -> {
+        switch (state) {
+          case _NAME -> {
+            $codeadd(Separator.LEFT_PARENTHESIS);
+            $codeadd(Indentation.ENTER_PARENTHESIS);
+            $stateset(1, _NL);
+          }
+
+          case _ARGS -> {
+            $stateset(1, _SLOT);
+            $stateset(2, nop1());
+          }
+
+          case _SLOT -> {}
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
+    }
+
+    $codeadd(Whitespace.NEW_LINE);
+  }
+
+  private int nop1() {
+    var result = codeIndex;
+
+    $codeadd(ByteCode.NOP1, 0);
+
+    return result;
   }
 
   private void packageKeyword(int self, int parent, int state) {

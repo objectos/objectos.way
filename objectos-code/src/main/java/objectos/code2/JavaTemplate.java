@@ -32,16 +32,21 @@ import objectos.code2.JavaModel.ClassInstanceCreationExpression;
 import objectos.code2.JavaModel.ClassKeyword;
 import objectos.code2.JavaModel.ClassType;
 import objectos.code2.JavaModel.Expression;
+import objectos.code2.JavaModel.ExpressionName;
 import objectos.code2.JavaModel.ExtendsKeyword;
 import objectos.code2.JavaModel.FinalModifier;
 import objectos.code2.JavaModel.Identifier;
 import objectos.code2.JavaModel.ImplementsKeyword;
 import objectos.code2.JavaModel.Include;
 import objectos.code2.JavaModel.IntegerLiteral;
+import objectos.code2.JavaModel.MethodInvocationElement;
+import objectos.code2.JavaModel.MethodInvocationQualifier;
 import objectos.code2.JavaModel.Modifier;
+import objectos.code2.JavaModel.NewLine;
 import objectos.code2.JavaModel.PackageKeyword;
 import objectos.code2.JavaModel.ParameterizedType;
 import objectos.code2.JavaModel.PrimitiveType;
+import objectos.code2.JavaModel.QualifiedMethodInvocation;
 import objectos.code2.JavaModel.ReferenceType;
 import objectos.code2.JavaModel.ReturnStatement;
 import objectos.code2.JavaModel.StringLiteral;
@@ -427,10 +432,126 @@ public abstract class JavaTemplate {
     return JavaModel.INCLUDE;
   }
 
-  protected final UnqualifiedMethodInvocation invoke(String methodName) {
+  protected final QualifiedMethodInvocation invoke(
+      MethodInvocationQualifier receiver,
+      String methodName) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null-check
 
-    return api().invoke(methodName);
+    var api = api();
+
+    return api.qualifiedMethodInvocation(
+      api.identifier(methodName), 1
+    );
+  }
+
+  protected final QualifiedMethodInvocation invoke(
+      MethodInvocationQualifier receiver,
+      String methodName,
+      MethodInvocationElement e01) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.qualifiedMethodInvocation(
+      api.identifier(methodName), 1 +
+          api.count(e01)
+    );
+  }
+
+  protected final QualifiedMethodInvocation invoke(
+      MethodInvocationQualifier receiver,
+      String methodName,
+      MethodInvocationElement e01, MethodInvocationElement e02, MethodInvocationElement e03,
+      MethodInvocationElement e04, MethodInvocationElement e05, MethodInvocationElement e06,
+      MethodInvocationElement e07, MethodInvocationElement e08, MethodInvocationElement e09) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.qualifiedMethodInvocation(
+      api.identifier(methodName), 1 +
+          api.count(e01) + api.count(e02) + api.count(e03) +
+          api.count(e04) + api.count(e05) + api.count(e06) +
+          api.count(e07) + api.count(e08) + api.count(e09)
+    );
+  }
+
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.invoke(
+      api.identifier(methodName),
+      0
+    );
+  }
+
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.invoke(
+      api.identifier(methodName),
+      api.count(e1)
+    );
+  }
+
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.invoke(
+      api.identifier(methodName),
+      api.count(e1) + api.count(e2)
+    );
+  }
+
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.invoke(
+      api.identifier(methodName),
+      api.count(e1) + api.count(e2) + api.count(e3)
+    );
+  }
+
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e01, MethodInvocationElement e02, MethodInvocationElement e03,
+      MethodInvocationElement e04, MethodInvocationElement e05, MethodInvocationElement e06,
+      MethodInvocationElement e07, MethodInvocationElement e08, MethodInvocationElement e09) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.invoke(
+      api.identifier(methodName), 0 +
+          api.count(e01) + api.count(e02) + api.count(e03) +
+          api.count(e04) + api.count(e05) + api.count(e06) +
+          api.count(e07) + api.count(e08) + api.count(e09)
+    );
+  }
+
+  protected final ExpressionName n(String identifier) {
+    JavaModel.checkIdentifier(identifier);
+
+    return api().expressionName(identifier);
+  }
+
+  protected final NewLine nl() {
+    return api().item(ByteProto.NEW_LINE);
   }
 
   protected final StringLiteral s(String string) {

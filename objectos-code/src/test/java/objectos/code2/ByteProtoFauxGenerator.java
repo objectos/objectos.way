@@ -55,6 +55,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("IMPLEMENTS");
     value("METHOD_DECLARATION");
     value("MODIFIER");
+    value("NEW_LINE");
 
     comment("statements");
 
@@ -64,6 +65,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("expressions");
 
     value("CLASS_INSTANCE_CREATION");
+    value("EXPRESSION_NAME");
     value("METHOD_INVOCATION");
     value("METHOD_INVOCATION_QUALIFIED");
     value("PRIMITIVE_LITERAL");
