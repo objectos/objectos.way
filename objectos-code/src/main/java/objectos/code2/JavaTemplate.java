@@ -461,6 +461,20 @@ public abstract class JavaTemplate {
   protected final QualifiedMethodInvocation invoke(
       MethodInvocationQualifier receiver,
       String methodName,
+      MethodInvocationElement e01, MethodInvocationElement e02) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null-check
+
+    var api = api();
+
+    return api.qualifiedMethodInvocation(
+      api.identifier(methodName), 1 +
+          api.count(e01) + api.count(e02)
+    );
+  }
+
+  protected final QualifiedMethodInvocation invoke(
+      MethodInvocationQualifier receiver,
+      String methodName,
       MethodInvocationElement e01, MethodInvocationElement e02, MethodInvocationElement e03,
       MethodInvocationElement e04, MethodInvocationElement e05, MethodInvocationElement e06,
       MethodInvocationElement e07, MethodInvocationElement e08, MethodInvocationElement e09) {
@@ -544,10 +558,37 @@ public abstract class JavaTemplate {
     );
   }
 
-  protected final ExpressionName n(String identifier) {
-    JavaModel.checkIdentifier(identifier);
+  protected final ExpressionName n(ClassType type, String id1) {
+    JavaModel.checkIdentifier(id1);
 
-    return api().expressionName(identifier);
+    return api().expressionNameClassType(id1);
+  }
+
+  protected final ExpressionName n(ClassType type, String id1, String id2) {
+    JavaModel.checkIdentifier(id1);
+
+    return api().expressionNameClassType(id1, id2);
+  }
+
+  protected final ExpressionName n(String id1) {
+    JavaModel.checkIdentifier(id1);
+
+    return api().expressionName(id1);
+  }
+
+  protected final ExpressionName n(String id1, String id2) {
+    JavaModel.checkIdentifier(id1);
+    JavaModel.checkIdentifier(id2);
+
+    return api().expressionName(id1, id2);
+  }
+
+  protected final ExpressionName n(String id1, String id2, String id3) {
+    JavaModel.checkIdentifier(id1);
+    JavaModel.checkIdentifier(id2);
+    JavaModel.checkIdentifier(id3);
+
+    return api().expressionName(id1, id2, id3);
   }
 
   protected final NewLine nl() {

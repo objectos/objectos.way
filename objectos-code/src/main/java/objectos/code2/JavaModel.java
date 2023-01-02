@@ -99,7 +99,7 @@ final class JavaModel {
 
   sealed interface Expression extends ArrayInitializerElement, MethodInvocationElement {}
 
-  sealed interface ExpressionName extends Expression, LeftHandSide {}
+  sealed interface ExpressionName extends Expression, LeftHandSide, MethodInvocationQualifier {}
 
   sealed interface ExpressionStatement extends Statement {}
 

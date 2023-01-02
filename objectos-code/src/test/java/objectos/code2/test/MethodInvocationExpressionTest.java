@@ -195,36 +195,37 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  /*
-  
   @Test(description = """
   Method Invocation Expresions TC08
-  
+
   - expression name
   """)
   public void testCase08() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke(n("a"), "x");
           invoke(n("b"), "y", s("1"));
           invoke(n("c"), "z", s("1"), s("2"));
-          invoke(n(t(Foo.class), "CTE"), "m");
+          invoke(n(t("objectos.code", "Foo"), "CTE"), "m");
         }
-      }.toString(),
-  
+      }),
+
       """
-      a.x();
-  
-      b.y("1");
-  
-      c.z("1", "2");
-  
-      objectos.code.Foo.CTE.m();
+      class Invoke {
+        void method() {
+          a.x();
+          b.y("1");
+          c.z("1", "2");
+          objectos.code.Foo.CTE.m();
+        }
+      }
       """
     );
   }
+
+  /*
   
   @Test(description = """
   Method Invocation Expresions TC09
@@ -236,10 +237,10 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          chain(invoke("a"), invoke("b"));
-          chain(invoke("a"), invoke("b"), invoke("c"));
-          chain(invoke(n("foo"), "a"), invoke("b"), invoke("c"));
-          chain(
+          stmt(invoke("a"), invoke("b"));
+          stmt(invoke("a"), invoke("b"), invoke("c"));
+          stmt(invoke(n("foo"), "a"), invoke("b"), invoke("c"));
+          stmt(
             invoke(n("list"), "add", s("1")), nl(),
             invoke("add", s("2")), nl(),
             invoke("build")

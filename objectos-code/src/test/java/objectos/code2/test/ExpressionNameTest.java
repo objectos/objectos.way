@@ -21,33 +21,62 @@ import objectos.code2.JavaTemplate;
 import objectos.code2.test.Fixture.Kind;
 import org.testng.annotations.Test;
 
-public class ReturnStatementTest {
+public class ExpressionNameTest {
 
-  private final Fixture fix = new Fixture("Return", Kind.VOID_METHOD);
+  private final Fixture fix = new Fixture("ExprName", Kind.VOID_METHOD);
 
   @Test(description = """
-  - simple expression
-  - single line
+  Expression name TC01:
+
+  - identifiers
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _return(s("abc"));
+          invoke("test", n("a"));
+          invoke("test", n("a", "b"));
+          invoke("test", n("a", "b", "c"));
         }
       }),
 
       """
-      class Return {
+      class ExprName {
         void method() {
-          return "abc";
+          test(a);
+          test(a.b);
+          test(a.b.c);
         }
       }
       """
     );
-    // @formatter:on
+  }
+
+  @Test(description = """
+  Expression name TC01:
+
+  - base = ClassName
+  """)
+  public void testCase02() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", n(t("test", "Suit"), "CLUBS"));
+          invoke("test", n(t("test", "Suit"), "CLUBS", "field"));
+        }
+      }),
+
+      """
+      class ExprName {
+        void method() {
+          test(test.Suit.CLUBS);
+          test(test.Suit.CLUBS.field);
+        }
+      }
+      """
+    );
   }
 
 }

@@ -798,6 +798,14 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.EXPRESSION_NAME -> {
+        switch (state) {
+          case _START -> $stateset(1, _NAME);
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
       case ByteProto.EXTENDS -> {
         switch (state) {
           case _START -> {
@@ -946,6 +954,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.METHOD_INVOCATION -> {
         switch (state) {
+          case _START -> $stateset(1, _TYPE);
+
           case _NAME -> {
             $codeadd(Separator.LEFT_PARENTHESIS);
             $stateset(1, _ARGS);
@@ -1057,6 +1067,10 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _START -> {
             $stateset(1, _NAME);
+          }
+
+          case _NAME -> {
+            $codeadd(Separator.DOT);
           }
 
           default -> $stubstate(self, parent, state);
@@ -1271,8 +1285,9 @@ class InternalCompiler extends InternalApi {
   }
 
   private void returnStatement(int self, int parent, int state) {
+    statement(self, parent, state);
+
     $statepush(_START, self);
-    $codeadd(Indentation.EMIT);
     $codeadd(Keyword.RETURN);
     $element();
     $codeadd(Separator.SEMICOLON);
@@ -1282,6 +1297,29 @@ class InternalCompiler extends InternalApi {
   private void semicolonIfNecessary(int parent) {
     switch (parent) {
       case ByteProto.BLOCK -> $codeadd(Separator.SEMICOLON);
+    }
+  }
+
+  private void statement(int self, int parent, int state) {
+    switch (parent) {
+      case ByteProto.BLOCK -> {
+        switch (state) {
+          case _START -> {
+            $codeadd(Whitespace.NEW_LINE);
+            $codeadd(Indentation.EMIT);
+            $stateset(1, _BODY);
+          }
+
+          case _BODY -> {
+            $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
+            $codeadd(Indentation.EMIT);
+          }
+
+          default -> $stubstate(self, parent, state);
+        }
+      }
+
+      default -> $stubparent(self, parent, state);
     }
   }
 

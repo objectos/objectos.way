@@ -18,9 +18,12 @@ package objectos.code2.test;
 import static org.testng.Assert.assertEquals;
 
 import objectos.code2.JavaTemplate;
+import objectos.code2.test.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class PrimaryExpressionTest {
+
+  private final Fixture fix = new Fixture("Primary", Kind.VOID_METHOD);
 
   @Test(description = """
   Primary expressions TC03
@@ -29,15 +32,19 @@ public class PrimaryExpressionTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           _return(_this());
         }
-      }.toString(),
+      }),
 
       """
-      return this;
+      class Primary {
+        void method() {
+          return this;
+        }
+      }
       """
     );
   }

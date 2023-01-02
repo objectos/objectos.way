@@ -62,14 +62,78 @@ class InternalApi {
     return $elemret();
   }
 
-  public final ExpressionName expressionName(String identifier) {
-    int id = identifier(identifier);
+  public final ExpressionName expressionName(String id01) {
+    int xd01 = identifier(id01);
 
     int self = itemIndex;
 
     $itemadd(ByteProto.EXPRESSION_NAME, 1);
 
-    $itemadd(id);
+    $itemadd(xd01);
+
+    $rootadd(self);
+
+    return $elemret();
+  }
+
+  public final ExpressionName expressionName(String id01, String id02) {
+    int xd01 = identifier(id01);
+    int xd02 = identifier(id02);
+
+    int self = itemIndex;
+
+    $itemadd(ByteProto.EXPRESSION_NAME, 2);
+
+    $itemadd(xd01, xd02);
+
+    $rootadd(self);
+
+    return $elemret();
+  }
+
+  public final ExpressionName expressionName(String id01, String id02, String id03) {
+    int xd01 = identifier(id01);
+    int xd02 = identifier(id02);
+    int xd03 = identifier(id03);
+
+    int self = itemIndex;
+
+    $itemadd(ByteProto.EXPRESSION_NAME, 3);
+
+    $itemadd(xd01, xd02, xd03);
+
+    $rootadd(self);
+
+    return $elemret();
+  }
+
+  public final ExpressionName expressionNameClassType(String id01) {
+    int xd01 = identifier(id01);
+
+    int self = itemIndex;
+
+    $itemadd(ByteProto.EXPRESSION_NAME, 2);
+
+    $rootcopy(1);
+
+    $itemadd(xd01);
+
+    $rootadd(self);
+
+    return $elemret();
+  }
+
+  public final ExpressionName expressionNameClassType(String id01, String id02) {
+    int xd01 = identifier(id01);
+    int xd02 = identifier(id02);
+
+    int self = itemIndex;
+
+    $itemadd(ByteProto.EXPRESSION_NAME, 3);
+
+    $rootcopy(1);
+
+    $itemadd(xd01, xd02);
 
     $rootadd(self);
 
