@@ -54,7 +54,7 @@ public class ExpressionNameTest {
   }
 
   @Test(description = """
-  Expression name TC01:
+  Expression name TC02:
 
   - base = ClassName
   """)

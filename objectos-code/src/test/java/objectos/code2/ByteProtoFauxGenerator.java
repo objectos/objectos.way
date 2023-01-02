@@ -57,6 +57,11 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("MODIFIER");
     value("NEW_LINE");
 
+    comment("stmt builder");
+
+    value("RETURN");
+    value("STATEMENT");
+
     comment("statements");
 
     value("BLOCK");
