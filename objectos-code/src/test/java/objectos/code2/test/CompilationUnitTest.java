@@ -81,7 +81,7 @@ public class CompilationUnitTest {
         protected final void definition() {
           autoImports();
 
-          _class("Foo"); _extends(t("test", "Bar")); body();
+          _class("Foo"); _extends(); t("test", "Bar"); body();
         }
       }.toString(),
 
@@ -107,7 +107,7 @@ public class CompilationUnitTest {
 
           autoImports();
 
-          _class("Test"); _extends(t(Thread.class)); body();
+          _class("Test"); _extends(); t(Thread.class); body();
         }
       }.toString(),
 

@@ -35,7 +35,7 @@ public class ReturnStatementTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _return(s("abc"));
+          _return(); s("abc");
         }
       }),
 

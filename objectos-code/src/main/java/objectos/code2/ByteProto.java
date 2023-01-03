@@ -29,48 +29,47 @@ final class ByteProto {
 
   //type aux
 
-  static final int ARRAY_INITIALIZER = -6;
-  static final int ARRAY_DIMENSION = -7;
+  static final int ARRAY_DIMENSION = -6;
+  static final int ARRAY_INITIALIZER = -7;
 
   //compilation unit
 
-  static final int COMPILATION_UNIT = -8;
-  static final int PACKAGE = -9;
-  static final int AUTO_IMPORTS = -10;
+  static final int AUTO_IMPORTS = -8;
+  static final int EOF = -9;
+  static final int PACKAGE = -10;
 
   //declarations
 
   static final int ANNOTATION = -11;
   static final int BODY = -12;
-  static final int CLASS0 = -13;
-  static final int CLASS_BODY = -14;
-  static final int CLASS_DECLARATION = -15;
-  static final int EXTENDS = -16;
-  static final int IDENTIFIER = -17;
-  static final int IMPLEMENTS = -18;
-  static final int METHOD_DECLARATION = -19;
-  static final int MODIFIER = -20;
-  static final int NEW_LINE = -21;
+  static final int CLASS = -13;
+  static final int EXTENDS = -14;
+  static final int IDENTIFIER = -15;
+  static final int IMPLEMENTS = -16;
+  static final int METHOD_DECLARATION = -17;
+  static final int MODIFIER = -18;
+  static final int NEW_LINE = -19;
+  static final int PERMITS = -20;
 
   //stmt builder
 
-  static final int RETURN = -22;
-  static final int STATEMENT = -23;
+  static final int RETURN = -21;
+  static final int STATEMENT = -22;
 
   //statements
 
-  static final int BLOCK = -24;
-  static final int RETURN_STATEMENT = -25;
+  static final int BLOCK = -23;
+  static final int RETURN_STATEMENT = -24;
 
   //expressions
 
-  static final int CLASS_INSTANCE_CREATION = -26;
-  static final int EXPRESSION_NAME = -27;
-  static final int METHOD_INVOCATION = -28;
-  static final int METHOD_INVOCATION_QUALIFIED = -29;
-  static final int PRIMITIVE_LITERAL = -30;
-  static final int STRING_LITERAL = -31;
-  static final int THIS = -32;
+  static final int CLASS_INSTANCE_CREATION = -25;
+  static final int EXPRESSION_NAME = -26;
+  static final int METHOD_INVOCATION = -27;
+  static final int METHOD_INVOCATION_QUALIFIED = -28;
+  static final int PRIMITIVE_LITERAL = -29;
+  static final int STRING_LITERAL = -30;
+  static final int THIS = -31;
 
   private ByteProto() {}
 

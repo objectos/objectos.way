@@ -31,11 +31,12 @@ public class PrimaryExpressionTest {
   - this
   """)
   public void testCase03() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _return(_this());
+          _return(); _this();
         }
       }),
 
@@ -47,6 +48,7 @@ public class PrimaryExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
 }

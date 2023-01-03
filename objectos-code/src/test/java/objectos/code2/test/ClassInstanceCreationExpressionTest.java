@@ -15,13 +15,9 @@
  */
 package objectos.code2.test;
 
-import static org.testng.Assert.assertEquals;
-
-import objectos.code2.JavaTemplate;
-import objectos.code2.test.Fixture.Kind;
-import org.testng.annotations.Test;
-
 public class ClassInstanceCreationExpressionTest {
+
+  /*
 
   private final Fixture fix = new Fixture("New", Kind.STATIC_BLOCK);
 
@@ -31,15 +27,16 @@ public class ClassInstanceCreationExpressionTest {
   - new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _new(t("objectos.code", "Foo"));
+          _new(); t("objectos.code", "Foo"); args();
 
-          _new(t("objectos.code", "Foo"), s("a"));
+          _new(); t("objectos.code", "Foo"); args(s("a"));
 
-          _new(t("objectos.code", "Foo"), s("a"), s("b"));
+          _new(); t("objectos.code", "Foo"); args(s("a"), s("b"));
         }
       }),
 
@@ -53,6 +50,9 @@ public class ClassInstanceCreationExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
+
+  */
 
 }

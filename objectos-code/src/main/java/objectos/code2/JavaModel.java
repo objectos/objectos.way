@@ -33,10 +33,10 @@ final class JavaModel {
       Block,
       ClassInstanceCreationExpression,
       ExpressionName,
-      ExtendsKeyword,
       ParameterizedType,
       QualifiedMethodInvocation,
       ReturnStatement,
+      StatementBuilder,
       UnqualifiedMethodInvocation {
     INSTANCE;
   }
@@ -51,6 +51,7 @@ final class JavaModel {
       AutoImports,
       ClassKeyword,
       ClassType,
+      ExtendsKeyword,
       FinalModifier,
       Identifier,
       ImplementsKeyword,
@@ -59,6 +60,7 @@ final class JavaModel {
       NewLine,
       PackageKeyword,
       PrimitiveType,
+      ReturnKeyword,
       StringLiteral,
       ThisKeyword,
       VoidKeyword {
@@ -97,7 +99,8 @@ final class JavaModel {
 
   sealed interface Element {}
 
-  sealed interface Expression extends ArrayInitializerElement, MethodInvocationElement {}
+  sealed interface Expression
+      extends ArrayInitializerElement, MethodInvocationElement, StatementElement {}
 
   sealed interface ExpressionName extends Expression, LeftHandSide, MethodInvocationQualifier {}
 
@@ -141,9 +144,15 @@ final class JavaModel {
 
   sealed interface ReferenceType extends ArrayTypeComponent, BodyElement {}
 
+  sealed interface ReturnKeyword extends StatementElement {}
+
   sealed interface ReturnStatement extends BlockElement {}
 
   sealed interface Statement extends BlockElement {}
+
+  sealed interface StatementBuilder extends BlockElement {}
+
+  sealed interface StatementElement extends Element {}
 
   sealed interface StringLiteral extends Literal {}
 

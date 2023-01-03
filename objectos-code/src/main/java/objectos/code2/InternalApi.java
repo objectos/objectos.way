@@ -30,6 +30,8 @@ class InternalApi {
 
   int codeIndex;
 
+  int item;
+
   int[] itemArray = new int[256];
 
   int itemIndex;
@@ -53,13 +55,27 @@ class InternalApi {
   public final JavaModel._Elem elem(int proto, int count) {
     int self = itemIndex;
 
-    $itemadd(proto, count);
+    itemadd(proto, count);
 
     $rootcopy(count);
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
+  }
+
+  public final JavaModel._Elem elemret() {
+    itemadd(ByteProto.EOF);
+
+    rootadd(item);
+
+    return JavaModel.ELEM;
+  }
+
+  public final void elemstart(int proto) {
+    item = itemIndex;
+
+    itemadd(proto);
   }
 
   public final ExpressionName expressionName(String id01) {
@@ -67,13 +83,13 @@ class InternalApi {
 
     int self = itemIndex;
 
-    $itemadd(ByteProto.EXPRESSION_NAME, 1);
+    itemadd(ByteProto.EXPRESSION_NAME, 1);
 
-    $itemadd(xd01);
+    itemadd(xd01);
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
   }
 
   public final ExpressionName expressionName(String id01, String id02) {
@@ -82,13 +98,13 @@ class InternalApi {
 
     int self = itemIndex;
 
-    $itemadd(ByteProto.EXPRESSION_NAME, 2);
+    itemadd(ByteProto.EXPRESSION_NAME, 2);
 
-    $itemadd(xd01, xd02);
+    itemadd(xd01, xd02);
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
   }
 
   public final ExpressionName expressionName(String id01, String id02, String id03) {
@@ -98,13 +114,13 @@ class InternalApi {
 
     int self = itemIndex;
 
-    $itemadd(ByteProto.EXPRESSION_NAME, 3);
+    itemadd(ByteProto.EXPRESSION_NAME, 3);
 
-    $itemadd(xd01, xd02, xd03);
+    itemadd(xd01, xd02, xd03);
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
   }
 
   public final ExpressionName expressionNameClassType(String id01) {
@@ -112,15 +128,15 @@ class InternalApi {
 
     int self = itemIndex;
 
-    $itemadd(ByteProto.EXPRESSION_NAME, 2);
+    itemadd(ByteProto.EXPRESSION_NAME, 2);
 
     $rootcopy(1);
 
-    $itemadd(xd01);
+    itemadd(xd01);
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
   }
 
   public final ExpressionName expressionNameClassType(String id01, String id02) {
@@ -129,21 +145,21 @@ class InternalApi {
 
     int self = itemIndex;
 
-    $itemadd(ByteProto.EXPRESSION_NAME, 3);
+    itemadd(ByteProto.EXPRESSION_NAME, 3);
 
     $rootcopy(1);
 
-    $itemadd(xd01, xd02);
+    itemadd(xd01, xd02);
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
   }
 
   public final int identifier(String value) {
     int self = itemIndex;
 
-    $itemadd(ByteProto.IDENTIFIER, object(value));
+    itemadd(ByteProto.IDENTIFIER, object(value));
 
     return self;
   }
@@ -167,47 +183,77 @@ class InternalApi {
   public final UnqualifiedMethodInvocation invoke(int id, int rootCount) {
     int self = itemIndex;
 
-    $itemadd(ByteProto.METHOD_INVOCATION, 1 + rootCount);
+    itemadd(ByteProto.METHOD_INVOCATION, 1 + rootCount);
 
-    $itemadd(id);
+    itemadd(id);
 
     $rootcopy(rootCount);
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
   }
 
   public final JavaModel._Item item(int v0) {
-    $rootadd(itemIndex);
+    itemstart();
 
-    $itemadd(v0);
+    itemadd(v0);
 
-    return $itemret();
-  }
-
-  public final JavaModel._Item item(int v0, int v1) {
-    $rootadd(itemIndex);
-
-    $itemadd(v0, v1);
-
-    return $itemret();
+    return itemret();
   }
 
   public final JavaModel._Item item(int v0, int v1, int v2, int v3) {
-    $rootadd(itemIndex);
+    itemstart();
 
-    $itemadd(v0, v1, v2, v3);
+    itemadd(v0, v1, v2, v3);
 
-    return $itemret();
+    return itemret();
+  }
+
+  public final void itemadd(int v0) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 0);
+
+    itemArray[itemIndex++] = v0;
+  }
+
+  public final void itemadd(int v0, int v1) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 1);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+  }
+
+  public final void itemadd(int v0, int v1, int v2) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+    itemArray[itemIndex++] = v2;
+  }
+
+  public final void itemadd(int v0, int v1, int v2, int v3) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 3);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+    itemArray[itemIndex++] = v2;
+    itemArray[itemIndex++] = v3;
+  }
+
+  public final JavaModel._Item itemret() {
+    return JavaModel.ITEM;
+  }
+
+  public final void itemstart() {
+    rootadd(itemIndex);
   }
 
   public final JavaModel._Item modifier(Keyword value) {
-    $rootadd(itemIndex);
+    rootadd(itemIndex);
 
-    $itemadd(ByteProto.MODIFIER, value.ordinal());
+    itemadd(ByteProto.MODIFIER, value.ordinal());
 
-    return $itemret();
+    return itemret();
   }
 
   public final int object(Object value) {
@@ -223,19 +269,19 @@ class InternalApi {
   public final QualifiedMethodInvocation qualifiedMethodInvocation(int id, int rootCount) {
     int self = itemIndex;
 
-    $itemadd(ByteProto.METHOD_INVOCATION_QUALIFIED, 1 + rootCount);
+    itemadd(ByteProto.METHOD_INVOCATION_QUALIFIED, 1 + rootCount);
 
-    $itemadd(rootArray[rootIndex - rootCount]);
+    itemadd(rootArray[rootIndex - rootCount]);
 
-    $itemadd(id);
+    itemadd(id);
 
     $rootcopy(rootCount - 1);
 
     rootIndex--;
 
-    $rootadd(self);
+    rootadd(self);
 
-    return $elemret();
+    return elemret();
   }
 
   public final ClassType t(Class<?> type) {
@@ -261,17 +307,17 @@ class InternalApi {
 
     var packageName = type.getPackageName();
 
-    $rootadd(itemIndex);
+    rootadd(itemIndex);
 
-    $itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
+    itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
 
     for (var index = first; index >= last; index--) {
       var simpleName = objectArray[index];
 
-      $itemadd(object(simpleName));
+      itemadd(object(simpleName));
     }
 
-    return $itemret();
+    return itemret();
   }
 
   final void accept(JavaTemplate template) {
@@ -287,55 +333,11 @@ class InternalApi {
 
     int count = rootIndex;
 
-    $itemadd(ByteProto.COMPILATION_UNIT, count);
-
     $rootcopy(count);
 
+    itemadd(ByteProto.EOF);
+
     itemIndex = self;
-  }
-
-  private JavaModel._Elem $elemret() {
-    return JavaModel.ELEM;
-  }
-
-  private void $itemadd(int v0) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 0);
-
-    itemArray[itemIndex++] = v0;
-  }
-
-  private void $itemadd(int v0, int v1) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 1);
-
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
-  }
-
-  private void $itemadd(int v0, int v1, int v2) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
-
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
-    itemArray[itemIndex++] = v2;
-  }
-
-  private void $itemadd(int v0, int v1, int v2, int v3) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 3);
-
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
-    itemArray[itemIndex++] = v2;
-    itemArray[itemIndex++] = v3;
-  }
-
-  private JavaModel._Item $itemret() {
-    return JavaModel.ITEM;
-  }
-
-  private void $rootadd(int value) {
-    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 0);
-
-    rootArray[rootIndex++] = value;
   }
 
   private void $rootcopy(int count) {
@@ -346,6 +348,12 @@ class InternalApi {
       System.arraycopy(rootArray, rootIndex, itemArray, itemIndex, count);
       itemIndex += count;
     }
+  }
+
+  private void rootadd(int value) {
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 0);
+
+    rootArray[rootIndex++] = value;
   }
 
 }

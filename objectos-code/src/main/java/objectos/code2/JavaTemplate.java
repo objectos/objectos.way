@@ -48,7 +48,9 @@ import objectos.code2.JavaModel.ParameterizedType;
 import objectos.code2.JavaModel.PrimitiveType;
 import objectos.code2.JavaModel.QualifiedMethodInvocation;
 import objectos.code2.JavaModel.ReferenceType;
-import objectos.code2.JavaModel.ReturnStatement;
+import objectos.code2.JavaModel.ReturnKeyword;
+import objectos.code2.JavaModel.StatementBuilder;
+import objectos.code2.JavaModel.StatementElement;
 import objectos.code2.JavaModel.StringLiteral;
 import objectos.code2.JavaModel.ThisKeyword;
 import objectos.code2.JavaModel.UnqualifiedMethodInvocation;
@@ -93,17 +95,19 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(ByteProto.CLASS0, api.object(name));
+    api.itemstart();
+
+    api.itemadd(ByteProto.CLASS, api.object(name), 0);
+
+    return api.itemret();
   }
 
   protected final PrimitiveType _double() {
     return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.DOUBLE.ordinal());
   }
 
-  protected final ExtendsKeyword _extends(ClassType type) {
-    var api = api();
-
-    return api.elem(ByteProto.EXTENDS, api.count(type));
+  protected final ExtendsKeyword _extends() {
+    return api().item(ByteProto.EXTENDS);
   }
 
   protected final FinalModifier _final() {
@@ -186,7 +190,11 @@ public abstract class JavaTemplate {
 
     api.autoImports.packageName(name);
 
-    return api.item(ByteProto.PACKAGE, api.object(name));
+    api.itemstart();
+
+    api.itemadd(ByteProto.PACKAGE, api.object(name));
+
+    return api.itemret();
   }
 
   protected final Modifier _private() {
@@ -201,12 +209,8 @@ public abstract class JavaTemplate {
     return api().modifier(Keyword.PUBLIC);
   }
 
-  protected final ReturnStatement _return(Expression expression) {
-    var api = api();
-
-    var count = api.count(expression);
-
-    return api.elem(ByteProto.RETURN_STATEMENT, count);
+  protected final ReturnKeyword _return() {
+    return api().item(ByteProto.RETURN);
   }
 
   protected final Modifier _static() {
@@ -276,7 +280,11 @@ public abstract class JavaTemplate {
 
     api.autoImports.enable();
 
-    return api.item(ByteProto.AUTO_IMPORTS);
+    api.itemstart();
+
+    api.itemadd(ByteProto.AUTO_IMPORTS);
+
+    return api.itemret();
   }
 
   protected final Block block() {
@@ -316,7 +324,11 @@ public abstract class JavaTemplate {
   }
 
   protected final Body body() {
-    return api().elem(ByteProto.BODY, 0);
+    var api = api();
+
+    api.elemstart(ByteProto.BODY);
+
+    return api.elemret();
   }
 
   protected final Body body(BodyElement e1) {
@@ -603,6 +615,24 @@ public abstract class JavaTemplate {
     return api.item(ByteProto.STRING_LITERAL, api.object(string));
   }
 
+  protected final StatementBuilder stmt(
+      StatementElement e01) {
+    var api = api();
+
+    var count = api.count(e01);
+
+    return api.elem(ByteProto.STATEMENT, count);
+  }
+
+  protected final StatementBuilder stmt(
+      StatementElement e01, StatementElement e02) {
+    var api = api();
+
+    var count = api.count(e01) + api.count(e02);
+
+    return api.elem(ByteProto.STATEMENT, count);
+  }
+
   protected final ArrayType t(
       ArrayTypeComponent type,
       ArrayTypeElement e1) {
@@ -681,12 +711,7 @@ public abstract class JavaTemplate {
     JavaModel.checkPackageName(packageName.toString()); // implicit null check
     JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
 
-    var api = api();
-
-    return api.item(
-      ByteProto.CLASS_TYPE, api.object(packageName),
-      1, api.object(simpleName)
-    );
+    return api().item(ByteProto.CLASS_TYPE, api.object(packageName), 1, api.object(simpleName));
   }
 
   final void execute(InternalApi api) {
