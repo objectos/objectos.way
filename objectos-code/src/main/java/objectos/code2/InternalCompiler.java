@@ -29,27 +29,10 @@ class InternalCompiler extends InternalApi {
   }
 
   private static final int _START = 0;
-  private static final int _ERROR = 1;
-  private static final int _ANNOTATIONS = 2;
-  private static final int _PACKAGE = 3;
-  private static final int _IMPORTS = 4;
-  private static final int _MODS = 5;
-  private static final int _CLASS = 6;
-  private static final int _EXTENDS = 7;
-  private static final int _IMPLEMENTS = 8;
-  private static final int _IMPLEMENTS_TYPE = 9;
-  private static final int _LCURLY = 10;
-  private static final int _BODY = 11;
-  private static final int _VOID = 12;
-  private static final int _TYPE = 13;
-  private static final int _RECV = 14;
-  private static final int _NAME = 15;
-  private static final int _INIT = 16;
-  private static final int _DIMS = 17;
-  private static final int _ARGS = 18;
-  private static final int _NL = 19;
-  private static final int _SLOT = 20;
-  private static final int _EXPRESSION = 21;
+  private static final int _SEMICOLON = 1;
+  private static final int _WORD = 2;
+  private static final int _KEYWORD = 3;
+  private static final int _TYPE = 4;
 
   final void compile() {
     codeIndex = 0;
@@ -578,13 +561,73 @@ class InternalCompiler extends InternalApi {
   private void classOrInterfaceDeclaration() {
     typeModifiers();
 
-    switch (itempeek()) {
+    switch (jmppeek()) {
       case ByteProto.CLASS -> classDeclaration();
 
       default -> {
         throw new UnsupportedOperationException("Implement me");
       }
     }
+  }
+
+  private void classType() {
+    int state = statepeek();
+
+    trxbegin();
+
+    if (itemnot(ByteProto.CLASS_TYPE)) {
+      trxrollback();
+      return;
+    }
+
+    switch (state) {
+      case _KEYWORD -> codeadd(Whitespace.MANDATORY);
+
+      default -> {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    var packageIndex = itemnxt();
+
+    var packageName = (String) objectget(packageIndex);
+
+    autoImports.classTypePackageName(packageName);
+
+    var count = itemnxt();
+
+    switch (count) {
+      case 1 -> {
+        var n1Index = itemnxt();
+
+        var n1 = (String) objectget(n1Index);
+
+        autoImports.classTypeSimpleName(n1);
+
+        int instruction = autoImports.classTypeInstruction();
+
+        switch (instruction) {
+          case 1 -> {
+            codeadd(ByteCode.IDENTIFIER, n1Index);
+          }
+
+          default -> {
+            codeadd(ByteCode.IDENTIFIER, packageIndex);
+            codeadd(Separator.DOT);
+            codeadd(ByteCode.IDENTIFIER, n1Index);
+          }
+        }
+      }
+
+      default -> {
+        throw new UnsupportedOperationException(
+          "Implement me :: count=" + count);
+      }
+    }
+
+    trxcommit();
+
+    stateset(_TYPE);
   }
 
   private void classType(int self) {
@@ -659,11 +702,18 @@ class InternalCompiler extends InternalApi {
   }
 
   private void compilationUnit() {
+    statepush(_START);
+
     packageDeclaration();
 
     importDeclarationList();
 
-    classOrInterfaceDeclaration();
+    while (!itempeek(ByteProto.EOF)) {
+      if (statenot(_START)) {
+        codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+      }
+      classOrInterfaceDeclaration();
+    }
   }
 
   private int compilationUnit(int self, int state, int item) {
@@ -816,43 +866,62 @@ class InternalCompiler extends InternalApi {
   }
 
   private void extendsSingle() {
-    if (itempeek(ByteProto.EXTENDS)) {
-      throw new UnsupportedOperationException(
-        "Implement me :: extends clause");
+    int state = statepeek();
+
+    trxbegin();
+
+    if (itemnot(ByteProto.EXTENDS)) {
+      trxrollback();
+      return;
     }
+
+    switch (state) {
+      default -> codeadd(Whitespace.MANDATORY);
+    }
+
+    codeadd(Keyword.EXTENDS);
+    trxcommit();
+    stateset(_KEYWORD);
+
+    classType();
   }
 
   private void implementsClause() {
-    if (itempeek(ByteProto.IMPLEMENTS)) {
+    if (jmppeek(ByteProto.IMPLEMENTS)) {
       throw new UnsupportedOperationException(
         "Implement me :: implements clause");
     }
   }
 
   private void importDeclarationList() {
+    int state = statepeek();
+
     trxbegin();
 
     switch (item) {
       case ByteProto.AUTO_IMPORTS -> {
-        throw new UnsupportedOperationException("Implement me");
+        if (state == _START) {
+          codeadd(ByteCode.AUTO_IMPORTS0);
+        } else {
+          codeadd(ByteCode.AUTO_IMPORTS1);
+        }
+
+        trxcommit();
+        stateset(_SEMICOLON);
       }
 
       default -> trxrollback();
     }
   }
 
+  private boolean itemis(int value) { return item == value; }
+
+  private boolean itemnot(int value) { return item != value; }
+
   private int itemnxt() { return itemArray[itemIndex++]; }
 
-  private int itempeek() {
-    int location = itemArray[itemIndex];
-
-    return itemArray[location];
-  }
-
   private boolean itempeek(int expected) {
-    int actual = itempeek();
-
-    return actual == expected;
+    return itemArray[itemIndex] == expected;
   }
 
   private void itemx(int location) {
@@ -1030,6 +1099,22 @@ class InternalCompiler extends InternalApi {
     item = itemArray[itemIndex++];
   }
 
+  private int jmppeek() {
+    int location = itemArray[itemIndex];
+
+    return itemArray[location];
+  }
+
+  private boolean jmppeek(int expected) {
+    int item = itemArray[itemIndex];
+
+    if (item >= 0) {
+      item = itemArray[item];
+    }
+
+    return item == expected;
+  }
+
   private void methodDeclaration() {
     statepush(_START, ByteProto.METHOD_DECLARATION);
   }
@@ -1178,7 +1263,7 @@ class InternalCompiler extends InternalApi {
 
     annotations();
 
-    if (!itempeek(ByteProto.PACKAGE)) {
+    if (!jmppeek(ByteProto.PACKAGE)) {
       trxrollback();
 
       return;
@@ -1186,10 +1271,12 @@ class InternalCompiler extends InternalApi {
 
     codeadd(Keyword.PACKAGE);
     codeadd(Whitespace.MANDATORY);
-    codeadd(ByteCode.IDENTIFIER, protonxt());
+    codeadd(ByteCode.IDENTIFIER, itemnxt());
     codeadd(Separator.SEMICOLON);
 
     trxcommit();
+
+    stateset(_SEMICOLON);
   }
 
   private void parameterizedType(int self) {
@@ -1231,13 +1318,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void permitsClause() {
-    if (itempeek(ByteProto.PERMITS)) {
+    if (jmppeek(ByteProto.PERMITS)) {
       throw new UnsupportedOperationException(
         "Implement me :: permits");
     }
   }
-
-  private int protonxt() { return itemArray[itemIndex++]; }
 
   private void returnStatement(int item, int parent, int state) {
     switch (item) {
@@ -1288,6 +1373,10 @@ class InternalCompiler extends InternalApi {
     return rootArray[rootIndex - offset];
   }
 
+  private boolean stateis(int value) { return rootArray[rootIndex] == value; }
+
+  private boolean statenot(int value) { return rootArray[rootIndex] != value; }
+
   private int statepeek() { return rootArray[rootIndex]; }
 
   private int statepeek(int offset) { return rootArray[rootIndex - offset]; }
@@ -1332,6 +1421,8 @@ class InternalCompiler extends InternalApi {
     rootArray[++rootIndex] = v1;
     rootArray[++rootIndex] = v2;
   }
+
+  private void stateset(int value) { rootArray[rootIndex] = value; }
 
   private int stubchild(int self, int state, int item) {
     return warn(
@@ -1392,11 +1483,13 @@ class InternalCompiler extends InternalApi {
     }
 
     jmpcommit();
+
+    stateset(_WORD);
   }
 
   private void typeModifiers() {
     loop: while (true) {
-      switch (itempeek()) {
+      switch (jmppeek()) {
         case ByteProto.ANNOTATION -> {
           throw new UnsupportedOperationException(
             "Implement me :: modifier");
