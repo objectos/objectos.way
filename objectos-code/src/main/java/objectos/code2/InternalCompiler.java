@@ -20,18 +20,18 @@ import static objectos.code2.ByteProto.NULL;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import objectos.util.IntArrays;
+import objectos.util.ObjectArrays;
 
 class InternalCompiler extends InternalApi {
 
   @FunctionalInterface
   private interface ElementX {
-    int execute(int self, int state, int item);
+    void execute(int item);
   }
 
   private static final int _START = 0,
       _ANNOTATIONS = 1, _PACKAGE = 2, _IMPORTS = 3, _MODIFIERS = 4, _CLASS = 5,
-      _CLASS_EXTENDS = 6, _CLASS_EXTENDS_TYPE = 7;
-  private static final int _EXTENDS = 7;
+      _EXTENDS = 6, _EXTENDS_TYPE = 7;
   private static final int _IMPLEMENTS = 8, _IMPLEMENTS_TYPE = 9;
   private static final int _BODY = 11;
   private static final int _VOID = 12;
@@ -63,7 +63,7 @@ class InternalCompiler extends InternalApi {
         return;
       }
 
-      elementx(proto, _START, this::compilationUnit);
+      elementx(this::compilationUnit);
     } catch (RuntimeException e) {
       codeadd(Whitespace.NEW_LINE);
       codeadd(Whitespace.NEW_LINE);
@@ -228,25 +228,12 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void body(int self) {
-    var parent = statepeek();
-
-    var body = switch (parent) {
-      case ByteProto.CLASS_DECLARATION -> {
-        statepop(parent, 2);
-        yield ByteProto.CLASS_BODY;
-      }
-
-      default -> {
-        throw new UnsupportedOperationException("Implement me :: parent=" + warname(parent));
-      }
-    };
-
-    statepush(_START, body);
+  private void body() {
     codeadd(Separator.LEFT_CURLY_BRACKET);
     codeadd(Indentation.ENTER_BLOCK);
-    elementx();
-    var state = statepop(body);
+
+    int state = elementx(this::body);
+
     switch (state) {
       case _START -> {
         codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
@@ -269,47 +256,17 @@ class InternalCompiler extends InternalApi {
         codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      default -> stubpop(body, state);
+      default -> defstate(ByteProto.BODY, state);
     }
   }
 
-  private int body(int self, int nextState) {
-    codeadd(Separator.LEFT_CURLY_BRACKET);
-    codeadd(Indentation.ENTER_BLOCK);
+  private void body(int item) {
+    int self = ByteProto.BODY;
+    int state = statepeek();
 
-    int state = elementx(self, _START, this::body);
-    switch (state) {
-      case _START -> {
-        codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
-        codeadd(Indentation.EXIT_BLOCK);
-        codeadd(Separator.RIGHT_CURLY_BRACKET);
-      }
-
-      case _BODY -> {
-        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-        codeadd(Indentation.EXIT_BLOCK);
-        codeadd(Indentation.EMIT);
-        codeadd(Separator.RIGHT_CURLY_BRACKET);
-      }
-
-      case _NAME, _INIT -> {
-        codeadd(Separator.SEMICOLON);
-        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-        codeadd(Indentation.EXIT_BLOCK);
-        codeadd(Indentation.EMIT);
-        codeadd(Separator.RIGHT_CURLY_BRACKET);
-      }
-
-      default -> defstate(self, state);
-    }
-
-    return nextState;
-  }
-
-  private int body(int self, int state, int item) {
-    return switch (item) {
+    switch (item) {
       default -> defitem(self, state, item);
-    };
+    }
   }
 
   private void classBody(int item, int parent, int state) {
@@ -475,6 +432,52 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void classDeclaration(int item) {
+    int self = ByteProto.CLASS_DECLARATION;
+    int state = statepeek();
+
+    switch (item) {
+      case ByteProto.BODY -> {
+        switch (state) {
+          case _START, _EXTENDS_TYPE -> {
+            statepop();
+            lambdapop();
+            codeadd(Whitespace.OPTIONAL);
+            body();
+          }
+
+          default -> defstate(self, state, item);
+        }
+      }
+
+      case ByteProto.CLASS_TYPE -> {
+        switch (state) {
+          case _EXTENDS -> {
+            codeadd(Whitespace.MANDATORY);
+            classType();
+            stateset(_EXTENDS_TYPE);
+          }
+
+          default -> defstate(self, state, item);
+        }
+      }
+
+      case ByteProto.EXTENDS -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.MANDATORY);
+            codeadd(Keyword.EXTENDS);
+            stateset(_EXTENDS);
+          }
+
+          default -> defstate(self, state, item);
+        }
+      }
+
+      default -> defitem(self, state, item);
+    }
+  }
+
   private void classDeclaration(int item, int parent, int state) {
     switch (item) {
       case ByteProto.BODY -> {
@@ -577,12 +580,52 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int classKeyword(int nextState) {
+  private void classKeyword() {
     codeadd(Keyword.CLASS);
     codeadd(Whitespace.MANDATORY);
-    codeadd(ByteCode.IDENTIFIER, protonxt());
+    codeadd(ByteCode.IDENTIFIER, itemnxt());
 
-    return nextState;
+    lambdapush(this::classDeclaration);
+    statepush(_START);
+  }
+
+  private void classType() {
+    var packageIndex = itemnxt();
+
+    var packageName = (String) objectget(packageIndex);
+
+    autoImports.classTypePackageName(packageName);
+
+    var count = itemnxt();
+
+    switch (count) {
+      case 1 -> {
+        var n1Index = itemnxt();
+
+        var n1 = (String) objectget(n1Index);
+
+        autoImports.classTypeSimpleName(n1);
+
+        int instruction = autoImports.classTypeInstruction();
+
+        switch (instruction) {
+          case 1 -> {
+            codeadd(ByteCode.IDENTIFIER, n1Index);
+          }
+
+          default -> {
+            codeadd(ByteCode.IDENTIFIER, packageIndex);
+            codeadd(Separator.DOT);
+            codeadd(ByteCode.IDENTIFIER, n1Index);
+          }
+        }
+      }
+
+      default -> {
+        throw new UnsupportedOperationException(
+          "Implement me :: count=" + count);
+      }
+    }
   }
 
   private int classType(int nextState) {
@@ -658,104 +701,94 @@ class InternalCompiler extends InternalApi {
     codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
   }
 
-  private int compilationUnit(int self, int state, int item) {
-    return switch (item) {
-      case ByteProto.ANNOTATION -> switch (state) {
-        case _START -> {
-          yield _ANNOTATIONS;
+  private void compilationUnit(int item) {
+    int self = ByteProto.COMPILATION_UNIT;
+    int state = statepeek();
+
+    switch (item) {
+      case ByteProto.ANNOTATION -> {
+        switch (state) {
+          case _START -> {
+            stateset(_ANNOTATIONS);
+          }
+
+          default -> defstate(self, state, item);
         }
+      }
 
-        default -> defstate(self, state, item);
-      };
+      case ByteProto.AUTO_IMPORTS -> {
+        switch (state) {
+          case _START -> {
+            codeadd(ByteCode.AUTO_IMPORTS0);
+            stateset(_IMPORTS);
+          }
 
-      case ByteProto.AUTO_IMPORTS -> switch (state) {
-        case _START -> {
-          codeadd(ByteCode.AUTO_IMPORTS0);
-          yield _IMPORTS;
+          case _PACKAGE -> {
+            codeadd(ByteCode.AUTO_IMPORTS1);
+            stateset(_IMPORTS);
+          }
+
+          default -> defstate(self, state, item);
         }
+      }
 
-        case _PACKAGE -> {
-          codeadd(ByteCode.AUTO_IMPORTS1);
-          yield _IMPORTS;
+      case ByteProto.CLASS0 -> {
+        switch (state) {
+          case _START -> {
+            stateset(_CLASS);
+            classKeyword();
+          }
+
+          case _ANNOTATIONS -> {
+            codeadd(Whitespace.AFTER_ANNOTATION);
+            stateset(_CLASS);
+            classKeyword();
+          }
+
+          case _PACKAGE, _IMPORTS, _CLASS -> {
+            codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+            stateset(_CLASS);
+            classKeyword();
+          }
+
+          case _MODIFIERS -> {
+            codeadd(Whitespace.MANDATORY);
+            stateset(_CLASS);
+            classKeyword();
+          }
+
+          default -> defstate(self, state, item);
         }
+      }
 
-        default -> defstate(self, state, item);
-      };
+      case ByteProto.MODIFIER -> {
+        switch (state) {
+          case _START -> {
+            stateset(_MODIFIERS);
+          }
 
-      case ByteProto.BODY -> switch (state) {
-        case _CLASS,
-             _CLASS_EXTENDS_TYPE -> {
-          codeadd(Whitespace.OPTIONAL);
-          yield body(item, _BODY);
+          case _BODY -> {
+            codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+            stateset(_MODIFIERS);
+          }
+
+          default -> defstate(self, state, item);
         }
+      }
 
-        default -> defstate(self, state, item);
-      };
+      case ByteProto.PACKAGE -> {
+        switch (state) {
+          case _START -> {
+            packageKeyword();
+            stateset(_PACKAGE);
+          }
 
-      case ByteProto.CLASS0 -> switch (state) {
-        case _START -> {
-          yield classKeyword(_CLASS);
+          default -> defstate(self, state, item);
         }
-
-        case _ANNOTATIONS -> {
-          codeadd(Whitespace.AFTER_ANNOTATION);
-          yield classKeyword(_CLASS);
-        }
-
-        case _PACKAGE, _IMPORTS, _BODY -> {
-          codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-          yield classKeyword(_CLASS);
-        }
-
-        case _MODIFIERS -> {
-          codeadd(Whitespace.MANDATORY);
-          yield classKeyword(_CLASS);
-        }
-
-        default -> defstate(self, state, item);
-      };
-
-      case ByteProto.CLASS_TYPE -> switch (state) {
-        case _CLASS_EXTENDS -> {
-          codeadd(Whitespace.MANDATORY);
-          yield classType(_CLASS_EXTENDS_TYPE);
-        }
-
-        default -> defstate(self, state, item);
-      };
-
-      case ByteProto.EXTENDS -> switch (state) {
-        case _CLASS -> {
-          codeadd(Whitespace.MANDATORY);
-          yield extendsKeyword(_CLASS_EXTENDS);
-        }
-
-        default -> defstate(self, state, item);
-      };
-
-      case ByteProto.MODIFIER -> switch (state) {
-        case _START -> {
-          yield _MODIFIERS;
-        }
-
-        case _BODY -> {
-          codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-          yield _MODIFIERS;
-        }
-
-        default -> defstate(self, state, item);
-      };
-
-      case ByteProto.PACKAGE -> switch (state) {
-        case _START -> {
-          yield packageKeyword(_PACKAGE);
-        }
-
-        default -> defstate(self, state, item);
-      };
+      }
 
       default -> defitem(self, state, item);
-    };
+    }
   }
 
   private int defitem(int self, int state, int item) {
@@ -804,21 +837,26 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int elementx(int self, int initialState, ElementX lambda) {
-    int state = initialState;
+  private int elementx(ElementX initialLambda) {
+    statepush(_START);
+    lambdapush(initialLambda);
+
     int size = itemnxt();
     int start = itemIndex;
     int max = start + size;
 
     for (int i = start; i < max; i++) {
+      var lambda = lambdapeek();
+
       itemIndex = itemArray[i];
 
       int item = itemnxt();
 
-      state = lambda.execute(self, state, item);
+      lambda.execute(item);
     }
 
-    return state;
+    lambdapop();
+    return statepop();
   }
 
   // @formatter:off
@@ -984,12 +1022,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int extendsKeyword(int nextState) {
-    codeadd(Keyword.EXTENDS);
-
-    return nextState;
-  }
-
   private int itemnxt() { return itemArray[itemIndex++]; }
 
   private void itemx(int location) {
@@ -1020,8 +1052,6 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS_DECLARATION -> classDeclaration(item, parent, state);
 
       case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation(item, parent, state);
-
-      case ByteProto.COMPILATION_UNIT -> compilationUnit(item, parent, state);
 
       case ByteProto.EXPRESSION_NAME -> expressionName(item, parent, state);
 
@@ -1137,6 +1167,16 @@ class InternalCompiler extends InternalApi {
             .formatted(warname(self), warname(parent), state)
       );
     }
+  }
+
+  private ElementX lambdapeek() { return (ElementX) objectArray[objectIndex]; }
+
+  private ElementX lambdapop() { return (ElementX) objectArray[objectIndex--]; }
+
+  private void lambdapush(ElementX value) {
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex + 1);
+
+    objectArray[++objectIndex] = value;
   }
 
   private void methodDeclaration() {
@@ -1291,13 +1331,11 @@ class InternalCompiler extends InternalApi {
     return nextState;
   }
 
-  private int packageKeyword(int nextState) {
+  private void packageKeyword() {
     codeadd(Keyword.PACKAGE);
     codeadd(Whitespace.MANDATORY);
     codeadd(ByteCode.IDENTIFIER, itemnxt());
     codeadd(Separator.SEMICOLON);
-
-    return nextState;
   }
 
   private void parameterizedType(int self) {
@@ -1402,6 +1440,12 @@ class InternalCompiler extends InternalApi {
     rootIndex -= count;
   }
 
+  private void statepush(int v0) {
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 1);
+
+    rootArray[++rootIndex] = v0;
+  }
+
   private void statepush(int v0, int v1) {
     rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 2);
 
@@ -1415,6 +1459,10 @@ class InternalCompiler extends InternalApi {
     rootArray[++rootIndex] = v0;
     rootArray[++rootIndex] = v1;
     rootArray[++rootIndex] = v2;
+  }
+
+  private void stateset(int value) {
+    rootArray[rootIndex] = value;
   }
 
   private void stateset(int offset, int value) {
