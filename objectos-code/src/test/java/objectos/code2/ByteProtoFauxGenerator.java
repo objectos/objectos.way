@@ -26,54 +26,55 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
   public final void execute() {
     comment("types");
 
-    proto("ARRAY_TYPE");
-    proto("CLASS_TYPE");
-    proto("PARAMETERIZED_TYPE");
-    proto("PRIMITIVE_TYPE");
-    proto("VOID");
+    value("ARRAY_TYPE");
+    value("CLASS_TYPE");
+    value("PARAMETERIZED_TYPE");
+    value("PRIMITIVE_TYPE");
+    value("VOID");
 
     comment("type aux");
 
-    proto("ARRAY_DIMENSION");
-    proto("ARRAY_INITIALIZER");
+    value("ARRAY_INITIALIZER");
+    value("ARRAY_DIMENSION");
 
     comment("compilation unit");
 
-    proto("AUTO_IMPORTS");
-    proto("EOF");
-    proto("PACKAGE");
+    value("COMPILATION_UNIT");
+    value("PACKAGE");
+    value("AUTO_IMPORTS");
 
     comment("declarations");
 
-    proto("ANNOTATION");
-    proto("BODY"); // remove
-    proto("CLASS");
-    proto("EXTENDS");
-    proto("IDENTIFIER");
-    proto("IMPLEMENTS");
-    proto("METHOD_DECLARATION");
-    proto("MODIFIER");
-    proto("NEW_LINE");
-    proto("PERMITS");
+    value("ANNOTATION");
+    value("BODY");
+    value("CLASS0");
+    value("CLASS_BODY");
+    value("CLASS_DECLARATION");
+    value("EXTENDS");
+    value("IDENTIFIER");
+    value("IMPLEMENTS");
+    value("METHOD_DECLARATION");
+    value("MODIFIER");
+    value("NEW_LINE");
 
     comment("stmt builder");
 
-    proto("RETURN");
-    proto("STATEMENT");
+    value("RETURN");
+    value("STATEMENT");
 
     comment("statements");
 
-    proto("BLOCK");
-    proto("RETURN_STATEMENT");
+    value("BLOCK");
+    value("RETURN_STATEMENT");
 
     comment("expressions");
 
-    proto("CLASS_INSTANCE_CREATION");
-    proto("EXPRESSION_NAME");
-    proto("METHOD_INVOCATION");
-    proto("METHOD_INVOCATION_QUALIFIED");
-    proto("PRIMITIVE_LITERAL");
-    proto("STRING_LITERAL");
-    proto("THIS");
+    value("CLASS_INSTANCE_CREATION");
+    value("EXPRESSION_NAME");
+    value("METHOD_INVOCATION");
+    value("METHOD_INVOCATION_QUALIFIED");
+    value("PRIMITIVE_LITERAL");
+    value("STRING_LITERAL");
+    value("THIS");
   }
 }

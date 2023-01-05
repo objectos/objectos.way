@@ -19,7 +19,7 @@ import static java.lang.System.out;
 
 abstract class FauxGenerator {
 
-  int value = -1;
+  private int value = -1;
 
   public abstract void execute();
 
@@ -29,12 +29,8 @@ abstract class FauxGenerator {
     out.println();
   }
 
-  final void proto(String string) {
+  final void value(String string) {
     out.println("static final int " + string + " = " + value-- + ";");
-  }
-
-  final void state(String string) {
-    out.println("private static final int _" + string + " = " + ++value + ";");
   }
 
 }
