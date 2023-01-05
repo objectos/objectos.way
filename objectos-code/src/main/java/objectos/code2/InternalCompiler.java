@@ -31,10 +31,9 @@ class InternalCompiler extends InternalApi {
 
   private static final int _START = 0,
       _ANNOTATIONS = 1, _PACKAGE = 2, _IMPORTS = 3, _MODIFIERS = 4, _CLASS = 5,
-      _EXTENDS = 6, _EXTENDS_TYPE = 7;
-  private static final int _IMPLEMENTS = 8, _IMPLEMENTS_TYPE = 9;
+      _EXTENDS = 6, _EXTENDS_TYPE = 7, _BLOCK = 8;
+  private static final int _IMPLEMENTS = 9, _IMPLEMENTS_TYPE = 10;
   private static final int _BODY = 11;
-  private static final int _VOID = 12;
   private static final int _TYPE = 13;
   private static final int _RECV = 14;
   private static final int _NAME = 15;
@@ -84,31 +83,32 @@ class InternalCompiler extends InternalApi {
     codeadd(ByteCode.EOF);
   }
 
-  private void annotation(int self) {
-    statepush(_START, self);
-    elementx();
-    var state = statepop(self);
+  private void annotation() {
+    codeadd(Separator.COMMERCIAL_AT);
+    int state = elementx(this::annotation);
     switch (state) {
       case _TYPE -> {}
 
-      default -> stubpop(self, state);
+      default -> defstate(ByteProto.ANNOTATION, state);
     }
   }
 
-  private void annotation(int item, int parent, int state) {
+  private void annotation(int item) {
+    int self = ByteProto.ANNOTATION;
+    int state = statepeek();
     switch (item) {
       case ByteProto.CLASS_TYPE -> {
         switch (state) {
           case _START -> {
-            codeadd(Separator.COMMERCIAL_AT);
-            stateset(1, _TYPE);
+            classType();
+            stateset(_TYPE);
           }
 
-          default -> stubstate(item, parent, state);
+          default -> defstate(self, state, item);
         }
       }
 
-      default -> stubchild(item, parent, state);
+      default -> defitem(self, state, item);
     }
   }
 
@@ -162,12 +162,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void block(int self) {
-    statepush(_START, self);
+  private void block() {
     codeadd(Separator.LEFT_CURLY_BRACKET);
     codeadd(Indentation.ENTER_BLOCK);
-    elementx();
-    var state = statepop(self);
+    int state = elementx(this::block);
     switch (state) {
       case _START -> {
         codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
@@ -182,11 +180,14 @@ class InternalCompiler extends InternalApi {
         codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      default -> stubpop(self, state);
+      default -> defstate(ByteProto.BLOCK, state);
     }
   }
 
-  private void block(int item, int parent, int state) {
+  private void block(int item) {
+    int self = ByteProto.BLOCK;
+    int state = statepeek();
+
     switch (item) {
       case ByteProto.CLASS_INSTANCE_CREATION,
            ByteProto.METHOD_INVOCATION,
@@ -195,7 +196,7 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.NEW_LINE);
             codeadd(Indentation.EMIT);
-            stateset(1, _BODY);
+            stateset(_BODY);
           }
 
           case _BODY -> {
@@ -203,7 +204,7 @@ class InternalCompiler extends InternalApi {
             codeadd(Indentation.EMIT);
           }
 
-          default -> stubstate(item, parent, state);
+          default -> defstate(self, state, item);
         }
       }
 
@@ -212,7 +213,7 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.NEW_LINE);
             codeadd(Indentation.EMIT);
-            stateset(1, _BODY);
+            stateset(_BODY);
           }
 
           case _BODY -> {
@@ -220,11 +221,11 @@ class InternalCompiler extends InternalApi {
             codeadd(Indentation.EMIT);
           }
 
-          default -> stubstate(item, parent, state);
+          default -> defstate(self, state, item);
         }
       }
 
-      default -> stubchild(item, parent, state);
+      default -> defitem(self, state, item);
     }
   }
 
@@ -241,7 +242,7 @@ class InternalCompiler extends InternalApi {
         codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      case _BODY -> {
+      case _BLOCK -> {
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
         codeadd(Indentation.EMIT);
@@ -265,6 +266,58 @@ class InternalCompiler extends InternalApi {
     int state = statepeek();
 
     switch (item) {
+      case ByteProto.BLOCK -> {
+        switch (state) {
+          case _NAME -> {
+            codeadd(Separator.LEFT_PARENTHESIS);
+            codeadd(Separator.RIGHT_PARENTHESIS);
+            codeadd(Whitespace.OPTIONAL);
+            stateset(_BLOCK);
+            block();
+          }
+
+          default -> defstate(self, state, item);
+        }
+      }
+
+      case ByteProto.IDENTIFIER -> {
+        switch (state) {
+          case _TYPE -> {
+            codeadd(Whitespace.MANDATORY);
+            stateset(_NAME);
+            identifier();
+          }
+
+          case _NAME, _INIT -> {
+            commaAndSpace();
+            stateset(_NAME);
+            identifier();
+          }
+
+          default -> defstate(self, state, item);
+        }
+      }
+
+      case ByteProto.VOID -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            codeadd(Indentation.EMIT);
+            stateset(_TYPE);
+            voidKeyword();
+          }
+
+          case _ANNOTATIONS -> {
+            codeadd(Whitespace.AFTER_ANNOTATION);
+            codeadd(Indentation.EMIT);
+            stateset(_TYPE);
+            voidKeyword();
+          }
+
+          default -> defstate(self, state, item);
+        }
+      }
+
       default -> defitem(self, state, item);
     }
   }
@@ -352,28 +405,6 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.IDENTIFIER -> {
-        switch (state) {
-          case _TYPE -> {
-            codeadd(Whitespace.MANDATORY);
-            stateset(1, _NAME);
-          }
-
-          case _VOID -> {
-            codeadd(Whitespace.MANDATORY);
-            stateset(1, _BODY);
-            methodDeclaration();
-          }
-
-          case _NAME, _INIT -> {
-            commaAndSpace();
-            stateset(1, _NAME);
-          }
-
-          default -> stubstate(item, parent, state);
-        }
-      }
-
       case ByteProto.MODIFIER -> {
         switch (state) {
           case _START -> {
@@ -410,24 +441,6 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.VOID -> {
-        switch (state) {
-          case _START -> {
-            codeadd(Whitespace.BEFORE_FIRST_MEMBER);
-            codeadd(Indentation.EMIT);
-            stateset(1, _VOID);
-          }
-
-          case _ANNOTATIONS -> {
-            codeadd(Whitespace.AFTER_ANNOTATION);
-            codeadd(Indentation.EMIT);
-            stateset(1, _VOID);
-          }
-
-          default -> stubstate(item, parent, state);
-        }
-      }
-
       default -> stubchild(item, parent, state);
     }
   }
@@ -454,8 +467,8 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _EXTENDS -> {
             codeadd(Whitespace.MANDATORY);
-            classType();
             stateset(_EXTENDS_TYPE);
+            classType();
           }
 
           default -> defstate(self, state, item);
@@ -710,6 +723,7 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _START -> {
             stateset(_ANNOTATIONS);
+            annotation();
           }
 
           default -> defstate(self, state, item);
@@ -765,11 +779,13 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _START -> {
             stateset(_MODIFIERS);
+            modifier();
           }
 
           case _BODY -> {
             codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
             stateset(_MODIFIERS);
+            modifier();
           }
 
           default -> defstate(self, state, item);
@@ -1022,6 +1038,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void identifier() {
+    codeadd(ByteCode.IDENTIFIER, itemnxt());
+  }
+
   private int itemnxt() { return itemArray[itemIndex++]; }
 
   private void itemx(int location) {
@@ -1039,13 +1059,9 @@ class InternalCompiler extends InternalApi {
     var state = statepeek(1);
 
     switch (parent) {
-      case ByteProto.ANNOTATION -> annotation(item, parent, state);
-
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(item, parent, state);
 
       case ByteProto.ARRAY_TYPE -> arrayType(item, parent, state);
-
-      case ByteProto.BLOCK -> block(item, parent, state);
 
       case ByteProto.CLASS_BODY -> classBody(item, parent, state);
 
@@ -1179,10 +1195,6 @@ class InternalCompiler extends InternalApi {
     objectArray[++objectIndex] = value;
   }
 
-  private void methodDeclaration() {
-    statepush(_START, ByteProto.METHOD_DECLARATION);
-  }
-
   private void methodDeclaration(int item, int parent, int state) {
     switch (item) {
       case ByteProto.BLOCK -> {
@@ -1308,6 +1320,10 @@ class InternalCompiler extends InternalApi {
 
       default -> stubchild(item, parent, state);
     }
+  }
+
+  private void modifier() {
+    codeadd(ByteCode.KEYWORD, itemnxt());
   }
 
   private int nop1() {
@@ -1488,6 +1504,10 @@ class InternalCompiler extends InternalApi {
       "Warning: unimplemented state '%s' (state=%d) with item '%s'"
           .formatted(warname(parent), state, warname(self))
     );
+  }
+
+  private void voidKeyword() {
+    codeadd(Keyword.VOID);
   }
 
   private void warn(String msg) {

@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 public class ClassDeclarationTest {
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   final class Subject {}
   """)
   public void testCase01() {
@@ -43,7 +43,7 @@ public class ClassDeclarationTest {
     // @formatter:on
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   single annotation on class
 
   @java.lang.Deprecated
@@ -68,7 +68,7 @@ public class ClassDeclarationTest {
     // @formatter:on
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   single method
 
   class Subject {
