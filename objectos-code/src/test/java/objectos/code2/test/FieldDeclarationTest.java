@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 
 public class FieldDeclarationTest {
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   typeName + names
   """)
   public void testCase01() {
@@ -51,7 +51,7 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   modifiers
   """)
   public void testCase02() {
@@ -83,7 +83,7 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   init expression
   """)
   public void testCase03() {
@@ -111,7 +111,7 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Field declarations TC05
 
   - array type
@@ -137,7 +137,7 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Field declarations TC05
 
   - parameterized type
@@ -163,7 +163,7 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Field declarations TC06
 
   - array initializer

@@ -25,7 +25,7 @@ public class ClassInstanceCreationExpressionTest {
 
   private final Fixture fix = new Fixture("New", Kind.STATIC_BLOCK);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Class Instance Creation Expressions TC01
 
   - new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )

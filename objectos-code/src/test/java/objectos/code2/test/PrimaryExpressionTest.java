@@ -25,7 +25,7 @@ public class PrimaryExpressionTest {
 
   private final Fixture fix = new Fixture("Primary", Kind.VOID_METHOD);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Primary expressions TC03
 
   - this

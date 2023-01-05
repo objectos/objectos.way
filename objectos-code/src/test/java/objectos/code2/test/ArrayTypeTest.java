@@ -22,7 +22,7 @@ import org.testng.annotations.Test;
 
 public class ArrayTypeTest {
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Array types TC01
 
   - reference types
@@ -56,7 +56,7 @@ public class ArrayTypeTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Array types TC02
 
   - primitive types

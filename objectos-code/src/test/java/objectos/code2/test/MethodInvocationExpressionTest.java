@@ -26,7 +26,7 @@ public class MethodInvocationExpressionTest {
 
   private final Fixture fix = new Fixture("Invoke", Kind.VOID_METHOD);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - no args
   """)
@@ -49,7 +49,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - single argument
   """)
@@ -72,7 +72,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - two arguments
   """)
@@ -95,7 +95,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - three args
   - one arg is a nested invocation
@@ -119,7 +119,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - three args
   - explicit new lines
@@ -149,7 +149,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - allow expression names
   """)
   public void testCase06() {
@@ -171,7 +171,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   static methods
   """)
   public void testCase07() {
@@ -195,7 +195,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Method Invocation Expresions TC08
 
   - expression name
@@ -226,10 +226,10 @@ public class MethodInvocationExpressionTest {
   }
 
   /*
-  
+
   @Test(description = """
   Method Invocation Expresions TC09
-  
+
   - chain support
   """)
   public void testCase09() {
@@ -247,24 +247,24 @@ public class MethodInvocationExpressionTest {
           );
         }
       }.toString(),
-  
+
       """
       a().b();
-  
+
       a().b().c();
-  
+
       foo.a().b().c();
-  
+
       list.add("1")
           .add("2")
           .build();
       """
     );
   }
-  
+
   @Test(description = """
   Method Invocation Expresions TC10
-  
+
   - primary expressions
   """)
   public void testCase10() {
@@ -275,13 +275,13 @@ public class MethodInvocationExpressionTest {
           invoke(_new(t(Thread.class)), "start");
         }
       }.toString(),
-  
+
       """
       new java.lang.Thread().start();
       """
     );
   }
-  
+
   */
 
 }

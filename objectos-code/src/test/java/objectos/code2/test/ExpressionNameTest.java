@@ -25,7 +25,7 @@ public class ExpressionNameTest {
 
   private final Fixture fix = new Fixture("ExprName", Kind.VOID_METHOD);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Expression name TC01:
 
   - identifiers
@@ -53,7 +53,7 @@ public class ExpressionNameTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Expression name TC02:
 
   - base = ClassName

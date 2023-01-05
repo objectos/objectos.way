@@ -100,10 +100,8 @@ public abstract class JavaTemplate {
     return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.DOUBLE.ordinal());
   }
 
-  protected final ExtendsKeyword _extends(ClassType type) {
-    var api = api();
-
-    return api.elem(ByteProto.EXTENDS, api.count(type));
+  protected final ExtendsKeyword _extends() {
+    return api().item(ByteProto.EXTENDS);
   }
 
   protected final FinalModifier _final() {

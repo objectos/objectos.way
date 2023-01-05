@@ -23,26 +23,27 @@ import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
 
-  private static final int _START = 0;
-  private static final int _ANNOTATIONS = 1;
-  private static final int _PACKAGE = 2;
-  private static final int _IMPORTS = 3;
-  private static final int _MODS = 4;
-  @SuppressWarnings("unused")
-  private static final int _EXTENDS = 5, _EXTENDS_TYPE = 6;
-  private static final int _IMPLEMENTS = 7, _IMPLEMENTS_TYPE = 8;
-  private static final int _LCURLY = 9;
-  private static final int _BODY = 10;
-  private static final int _VOID = 11;
-  private static final int _TYPE = 12;
-  private static final int _RECV = 13;
-  private static final int _NAME = 14;
-  private static final int _INIT = 15;
-  private static final int _DIMS = 16;
-  private static final int _ARGS = 17;
-  private static final int _NL = 18;
-  private static final int _SLOT = 19;
-  private static final int _EXPRESSION = 20;
+  @FunctionalInterface
+  private interface ElementX {
+    int execute(int self, int state, int item);
+  }
+
+  private static final int _START = 0,
+      _ANNOTATIONS = 1, _PACKAGE = 2, _IMPORTS = 3, _MODIFIERS = 4, _CLASS = 5,
+      _CLASS_EXTENDS = 6, _CLASS_EXTENDS_TYPE = 7;
+  private static final int _EXTENDS = 7;
+  private static final int _IMPLEMENTS = 8, _IMPLEMENTS_TYPE = 9;
+  private static final int _BODY = 11;
+  private static final int _VOID = 12;
+  private static final int _TYPE = 13;
+  private static final int _RECV = 14;
+  private static final int _NAME = 15;
+  private static final int _INIT = 16;
+  private static final int _DIMS = 17;
+  private static final int _ARGS = 18;
+  private static final int _NL = 19;
+  private static final int _SLOT = 20;
+  private static final int _EXPRESSION = 21;
 
   final void compile() {
     codeIndex = 0;
@@ -50,7 +51,19 @@ class InternalCompiler extends InternalApi {
     rootIndex = -1;
 
     try {
-      compilationUnit();
+      var proto = ByteProto.COMPILATION_UNIT;
+
+      var item = itemnxt();
+
+      if (item != proto) {
+        warn(
+          "InternalCompiler error: expecting 'Compilation Unit' but found '%s'"
+              .formatted(warname(item)));
+
+        return;
+      }
+
+      elementx(proto, _START, this::compilationUnit);
     } catch (RuntimeException e) {
       codeadd(Whitespace.NEW_LINE);
       codeadd(Whitespace.NEW_LINE);
@@ -260,6 +273,45 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private int body(int self, int nextState) {
+    codeadd(Separator.LEFT_CURLY_BRACKET);
+    codeadd(Indentation.ENTER_BLOCK);
+
+    int state = elementx(self, _START, this::body);
+    switch (state) {
+      case _START -> {
+        codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
+        codeadd(Indentation.EXIT_BLOCK);
+        codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _BODY -> {
+        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        codeadd(Indentation.EXIT_BLOCK);
+        codeadd(Indentation.EMIT);
+        codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      case _NAME, _INIT -> {
+        codeadd(Separator.SEMICOLON);
+        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        codeadd(Indentation.EXIT_BLOCK);
+        codeadd(Indentation.EMIT);
+        codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      default -> defstate(self, state);
+    }
+
+    return nextState;
+  }
+
+  private int body(int self, int state, int item) {
+    return switch (item) {
+      default -> defitem(self, state, item);
+    };
+  }
+
   private void classBody(int item, int parent, int state) {
     switch (item) {
       case ByteProto.ANNOTATION -> {
@@ -304,7 +356,7 @@ class InternalCompiler extends InternalApi {
             stateset(1, _TYPE);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             codeadd(Whitespace.MANDATORY);
             stateset(1, _TYPE);
           }
@@ -322,7 +374,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.BLOCK -> {
         switch (state) {
-          case _MODS -> {
+          case _MODIFIERS -> {
             codeadd(Whitespace.OPTIONAL);
             stateset(1, _BODY);
           }
@@ -370,10 +422,10 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(1, _MODS);
+            stateset(1, _MODIFIERS);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             codeadd(Whitespace.MANDATORY);
           }
 
@@ -381,7 +433,7 @@ class InternalCompiler extends InternalApi {
             codeadd(Separator.SEMICOLON);
             codeadd(Whitespace.BEFORE_NEXT_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(1, _MODS);
+            stateset(1, _MODIFIERS);
           }
 
           default -> stubstate(item, parent, state);
@@ -476,23 +528,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void classDeclarationPop(int state) {
-    switch (state) {
-      case _START, _EXTENDS -> {
-        codeadd(Whitespace.OPTIONAL);
-        codeadd(Separator.LEFT_CURLY_BRACKET);
-        codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
-        codeadd(Separator.RIGHT_CURLY_BRACKET);
-      }
-
-      case _LCURLY -> {
-        codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
-        codeadd(Indentation.EXIT_BLOCK);
-        codeadd(Separator.RIGHT_CURLY_BRACKET);
-      }
-    }
-  }
-
   private void classInstanceCreation(int self) {
     codeadd(Keyword.NEW);
     statepush(_START, self);
@@ -542,18 +577,26 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void classType(int self) {
-    var packageIndex = protonxt();
+  private int classKeyword(int nextState) {
+    codeadd(Keyword.CLASS);
+    codeadd(Whitespace.MANDATORY);
+    codeadd(ByteCode.IDENTIFIER, protonxt());
+
+    return nextState;
+  }
+
+  private int classType(int nextState) {
+    var packageIndex = itemnxt();
 
     var packageName = (String) objectget(packageIndex);
 
     autoImports.classTypePackageName(packageName);
 
-    var count = protonxt();
+    var count = itemnxt();
 
     switch (count) {
       case 1 -> {
-        var n1Index = protonxt();
+        var n1Index = itemnxt();
 
         var n1 = (String) objectget(n1Index);
 
@@ -579,6 +622,8 @@ class InternalCompiler extends InternalApi {
           "Implement me :: count=" + count);
       }
     }
+
+    return nextState;
   }
 
   private void codeadd(Indentation indentation) {
@@ -613,118 +658,126 @@ class InternalCompiler extends InternalApi {
     codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
   }
 
-  private void compilationUnit() {
-    var proto = ByteProto.COMPILATION_UNIT;
+  private int compilationUnit(int self, int state, int item) {
+    return switch (item) {
+      case ByteProto.ANNOTATION -> switch (state) {
+        case _START -> {
+          yield _ANNOTATIONS;
+        }
 
-    var item = itemnxt();
+        default -> defstate(self, state, item);
+      };
 
-    if (item != proto) {
-      warn(
-        "InternalCompiler error: expecting 'Compilation Unit' but found '%s'"
-            .formatted(warname(item)));
+      case ByteProto.AUTO_IMPORTS -> switch (state) {
+        case _START -> {
+          codeadd(ByteCode.AUTO_IMPORTS0);
+          yield _IMPORTS;
+        }
 
-      return;
-    }
+        case _PACKAGE -> {
+          codeadd(ByteCode.AUTO_IMPORTS1);
+          yield _IMPORTS;
+        }
 
-    statepush(_START, proto);
-    elementx();
-    while (!stateempty()) {
-      var elem = statepop();
-      var state = statepop();
-      elementpop(proto, elem, state);
-    }
+        default -> defstate(self, state, item);
+      };
+
+      case ByteProto.BODY -> switch (state) {
+        case _CLASS,
+             _CLASS_EXTENDS_TYPE -> {
+          codeadd(Whitespace.OPTIONAL);
+          yield body(item, _BODY);
+        }
+
+        default -> defstate(self, state, item);
+      };
+
+      case ByteProto.CLASS0 -> switch (state) {
+        case _START -> {
+          yield classKeyword(_CLASS);
+        }
+
+        case _ANNOTATIONS -> {
+          codeadd(Whitespace.AFTER_ANNOTATION);
+          yield classKeyword(_CLASS);
+        }
+
+        case _PACKAGE, _IMPORTS, _BODY -> {
+          codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+          yield classKeyword(_CLASS);
+        }
+
+        case _MODIFIERS -> {
+          codeadd(Whitespace.MANDATORY);
+          yield classKeyword(_CLASS);
+        }
+
+        default -> defstate(self, state, item);
+      };
+
+      case ByteProto.CLASS_TYPE -> switch (state) {
+        case _CLASS_EXTENDS -> {
+          codeadd(Whitespace.MANDATORY);
+          yield classType(_CLASS_EXTENDS_TYPE);
+        }
+
+        default -> defstate(self, state, item);
+      };
+
+      case ByteProto.EXTENDS -> switch (state) {
+        case _CLASS -> {
+          codeadd(Whitespace.MANDATORY);
+          yield extendsKeyword(_CLASS_EXTENDS);
+        }
+
+        default -> defstate(self, state, item);
+      };
+
+      case ByteProto.MODIFIER -> switch (state) {
+        case _START -> {
+          yield _MODIFIERS;
+        }
+
+        case _BODY -> {
+          codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+          yield _MODIFIERS;
+        }
+
+        default -> defstate(self, state, item);
+      };
+
+      case ByteProto.PACKAGE -> switch (state) {
+        case _START -> {
+          yield packageKeyword(_PACKAGE);
+        }
+
+        default -> defstate(self, state, item);
+      };
+
+      default -> defitem(self, state, item);
+    };
   }
 
-  private void compilationUnit(int item, int parent, int state) {
-    switch (item) {
-      case ByteProto.ANNOTATION -> {
-        switch (state) {
-          case _START -> {
-            stateset(1, _ANNOTATIONS);
-          }
+  private int defitem(int self, int state, int item) {
+    warn(
+      "no-op item  @ '%s' (state=%d) with item '%s'"
+          .formatted(warname(self), state, warname(item))
+    );
 
-          default -> stubstate(item, parent, state);
-        }
-      }
-
-      case ByteProto.AUTO_IMPORTS -> {
-        switch (state) {
-          case _START -> {
-            codeadd(ByteCode.AUTO_IMPORTS0);
-            stateset(1, _IMPORTS);
-          }
-
-          case _PACKAGE -> {
-            codeadd(ByteCode.AUTO_IMPORTS1);
-            stateset(1, _IMPORTS);
-          }
-
-          default -> stubstate(item, parent, state);
-        }
-      }
-
-      case ByteProto.CLASS0 -> {
-        switch (state) {
-          case _START -> {
-            stateset(1, _BODY);
-          }
-
-          case _ANNOTATIONS -> {
-            codeadd(Whitespace.AFTER_ANNOTATION);
-            stateset(1, _BODY);
-          }
-
-          case _PACKAGE, _IMPORTS, _BODY -> {
-            codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-            stateset(1, _BODY);
-          }
-
-          case _MODS -> {
-            codeadd(Whitespace.MANDATORY);
-            stateset(1, _BODY);
-          }
-
-          default -> stubstate(item, parent, state);
-        }
-      }
-
-      case ByteProto.MODIFIER -> {
-        switch (state) {
-          case _START -> {
-            stateset(1, _MODS);
-          }
-
-          case _BODY -> {
-            codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-            stateset(1, _MODS);
-          }
-
-          default -> stubstate(item, parent, state);
-        }
-      }
-
-      case ByteProto.PACKAGE -> {
-        switch (state) {
-          case _START -> {
-            stateset(1, _PACKAGE);
-          }
-
-          default -> stubstate(item, parent, state);
-        }
-      }
-
-      default -> stubchild(item, parent, state);
-    }
+    return state;
   }
 
-  private void elementpop(int parent, int elem, int state) {
-    switch (elem) {
-      case ByteProto.CLASS_DECLARATION -> classDeclarationPop(state);
+  private void defstate(int self, int state) {
+    warn("no-op state @ '%s' (state=%d)".formatted(warname(self), state));
+  }
 
-      case ByteProto.COMPILATION_UNIT -> {}
+  private int defstate(int self, int state, int item) {
+    warn(
+      "no-op state @ '%s' (state=%d) with item '%s'"
+          .formatted(warname(self), state, warname(item))
+    );
 
-      default -> stubpop(parent, elem, state);
-    }
+    return state;
   }
 
   private void elementx() {
@@ -749,6 +802,23 @@ class InternalCompiler extends InternalApi {
       default -> throw new UnsupportedOperationException(
         "Implement me :: size=" + size);
     }
+  }
+
+  private int elementx(int self, int initialState, ElementX lambda) {
+    int state = initialState;
+    int size = itemnxt();
+    int start = itemIndex;
+    int max = start + size;
+
+    for (int i = start; i < max; i++) {
+      itemIndex = itemArray[i];
+
+      int item = itemnxt();
+
+      state = lambda.execute(self, state, item);
+    }
+
+    return state;
   }
 
   // @formatter:off
@@ -912,6 +982,12 @@ class InternalCompiler extends InternalApi {
 
       default -> stubchild(item, parent, state);
     }
+  }
+
+  private int extendsKeyword(int nextState) {
+    codeadd(Keyword.EXTENDS);
+
+    return nextState;
   }
 
   private int itemnxt() { return itemArray[itemIndex++]; }
@@ -1206,11 +1282,22 @@ class InternalCompiler extends InternalApi {
     return objectArray[index];
   }
 
-  private void packageDeclaration(int self) {
+  private int packageDeclaration(int nextState) {
     codeadd(Keyword.PACKAGE);
     codeadd(Whitespace.MANDATORY);
-    codeadd(ByteCode.IDENTIFIER, protonxt());
+    codeadd(ByteCode.IDENTIFIER, itemnxt());
     codeadd(Separator.SEMICOLON);
+
+    return nextState;
+  }
+
+  private int packageKeyword(int nextState) {
+    codeadd(Keyword.PACKAGE);
+    codeadd(Whitespace.MANDATORY);
+    codeadd(ByteCode.IDENTIFIER, itemnxt());
+    codeadd(Separator.SEMICOLON);
+
+    return nextState;
   }
 
   private void parameterizedType(int self) {
@@ -1287,8 +1374,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private boolean stateempty() { return rootIndex < 0; }
-
   private int stateget(int offset) {
     return rootArray[rootIndex - offset];
   }
@@ -1347,13 +1432,6 @@ class InternalCompiler extends InternalApi {
     warn(
       "Pop stub: at '%s' unexpected state=%d"
           .formatted(warname(location), state)
-    );
-  }
-
-  private void stubpop(int parent, int elem, int state) {
-    warn(
-      "Pop stub: at '%s' popped '%s', state=%d"
-          .formatted(warname(parent), warname(elem), state)
     );
   }
 

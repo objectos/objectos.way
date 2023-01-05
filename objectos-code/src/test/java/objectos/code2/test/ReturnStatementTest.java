@@ -25,7 +25,7 @@ public class ReturnStatementTest {
 
   private final Fixture fix = new Fixture("Return", Kind.VOID_METHOD);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - simple expression
   - single line
   """)

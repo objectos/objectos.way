@@ -81,7 +81,7 @@ public class CompilationUnitTest {
         protected final void definition() {
           autoImports();
 
-          _class("Foo"); _extends(t("test", "Bar")); body();
+          _class("Foo"); _extends(); t("test", "Bar"); body();
         }
       }.toString(),
 
@@ -107,7 +107,7 @@ public class CompilationUnitTest {
 
           autoImports();
 
-          _class("Test"); _extends(t(Thread.class)); body();
+          _class("Test"); _extends(); t(Thread.class); body();
         }
       }.toString(),
 
@@ -133,7 +133,7 @@ public class CompilationUnitTest {
 
           autoImports();
 
-          _class("Test"); _extends(t("test", "Bar")); body();
+          _class("Test"); _extends(); t("test", "Bar"); body();
         }
       }.toString(),
 
@@ -159,11 +159,11 @@ public class CompilationUnitTest {
         protected final void definition() {
           autoImports();
 
-          _class("Test0"); _extends(t("test", "A")); body();
+          _class("Test0"); _extends(); t("test", "A"); body();
 
-          _class("Test1"); _extends(t("test", "B")); body();
+          _class("Test1"); _extends(); t("test", "B"); body();
 
-          _class("Test2"); _extends(t("test", "C")); body();
+          _class("Test2"); _extends(); t("test", "C"); body();
         }
       }.toString(),
 
@@ -198,11 +198,11 @@ public class CompilationUnitTest {
 
           autoImports();
 
-          _class("Test0"); _extends(t("test", "A")); body();
+          _class("Test0"); _extends(); t("test", "A"); body();
 
-          _class("Test1"); _extends(t("test", "B")); body();
+          _class("Test1"); _extends(); t("test", "B"); body();
 
-          _class("Test2"); _extends(t("test", "C")); body();
+          _class("Test2"); _extends(); t("test", "C"); body();
         }
       }.toString(),
 
