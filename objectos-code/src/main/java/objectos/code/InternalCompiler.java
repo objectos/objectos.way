@@ -15,18 +15,21 @@
  */
 package objectos.code;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
 
   private static final int NULL = Integer.MIN_VALUE;
+
   private static final int FALSE = 0;
   private static final int TRUE = 1;
-
   private static final int _START = 0;
-  private static final int _ANNOS = 1;
-  private static final int _PKG = 2;
-  private static final int _IMPO = 3;
+
+  private static final int _ANNOTATION = 1;
+  private static final int _PACKAGE = 2;
+  private static final int _IMPORTS = 3;
   private static final int _MODS = 4;
   private static final int _TPAR = 5;
   private static final int _TYPE = 6;
@@ -49,16 +52,46 @@ class InternalCompiler extends InternalApi {
   private static final int _LPAR = 23;
   private static final int _SLOT = 24;
 
+  final void compile() {
+    codeIndex = 0;
+
+    rootIndex = -1;
+
+    try {
+      stackpush(ByteProto.COMPILATION_UNIT, _START);
+      element();
+    } catch (RuntimeException e) {
+      codeadd(Whitespace.NEW_LINE);
+      codeadd(Whitespace.NEW_LINE);
+
+      var collector = Collectors.joining(
+        System.lineSeparator(),
+        e.getMessage() + System.lineSeparator() + System.lineSeparator(),
+        ""
+      );
+
+      var stackTrace = Stream.of(e.getStackTrace())
+          .map(Object::toString)
+          .collect(collector);
+
+      codeadd(ByteCode.RAW, object(stackTrace));
+
+      e.printStackTrace();
+    }
+
+    codeadd(ByteCode.EOF);
+  }
+
   final void pass1() {
     code = 0;
 
     codeIndex = 0;
 
-    markIndex = -1;
+    rootIndex = -1;
 
     objectIndex = 0;
 
-    protoIndex = 0;
+    itemIndex = 0;
 
     stackIndex = 0;
 
@@ -217,7 +250,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void $cloop2break() {
-    if (markIndex < 0) {
+    if (rootIndex < 0) {
       return;
     }
 
@@ -323,19 +356,19 @@ class InternalCompiler extends InternalApi {
 
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex);
 
-    stackArray[stackIndex++] = protoIndex;
+    stackArray[stackIndex++] = itemIndex;
 
-    protoIndex = location;
+    itemIndex = location;
   }
 
   private Keyword $keywordpeek() {
-    var index = protoArray[protoIndex];
+    var index = itemArray[itemIndex];
 
     return Keyword.get(index);
   }
 
   private Object $objectpeek() {
-    var index = protoArray[protoIndex];
+    var index = itemArray[itemIndex];
 
     return objectArray[index];
   }
@@ -351,61 +384,61 @@ class InternalCompiler extends InternalApi {
   }
 
   private int $parentpeek() {
-    return markArray[markIndex];
+    return rootArray[rootIndex];
   }
 
   private int $parentpop() {
-    return markArray[markIndex--];
+    return rootArray[rootIndex--];
   }
 
   private void $parentpush(int v0, int v1) {
-    markArray = IntArrays.growIfNecessary(markArray, markIndex + 2);
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 2);
 
-    markArray[++markIndex] = v0;
-    markArray[++markIndex] = v1;
+    rootArray[++rootIndex] = v0;
+    rootArray[++rootIndex] = v1;
   }
 
   private void $parentpush(int v0, int v1, int v2) {
-    markArray = IntArrays.growIfNecessary(markArray, markIndex + 3);
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 3);
 
-    markArray[++markIndex] = v0;
-    markArray[++markIndex] = v1;
-    markArray[++markIndex] = v2;
+    rootArray[++rootIndex] = v0;
+    rootArray[++rootIndex] = v1;
+    rootArray[++rootIndex] = v2;
   }
 
   private void $parentpush(int v0, int v1, int v2, int v3, int v4) {
-    markArray = IntArrays.growIfNecessary(markArray, markIndex + 5);
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 5);
 
-    markArray[++markIndex] = v0;
-    markArray[++markIndex] = v1;
-    markArray[++markIndex] = v2;
-    markArray[++markIndex] = v3;
-    markArray[++markIndex] = v4;
+    rootArray[++rootIndex] = v0;
+    rootArray[++rootIndex] = v1;
+    rootArray[++rootIndex] = v2;
+    rootArray[++rootIndex] = v3;
+    rootArray[++rootIndex] = v4;
   }
 
   private int $parentvalget(int offset) {
-    var index = markIndex - offset;
+    var index = rootIndex - offset;
 
-    return markArray[index];
+    return rootArray[index];
   }
 
   private void $parentvalinc(int offset) {
-    var index = markIndex - offset;
+    var index = rootIndex - offset;
 
-    markArray[index]++;
+    rootArray[index]++;
   }
 
   private void $parentvalset(int offset, int value) {
-    var index = markIndex - offset;
+    var index = rootIndex - offset;
 
-    markArray[index] = value;
+    rootArray[index] = value;
   }
 
-  private int $protonxt() { return protoArray[protoIndex++]; }
+  private int $protonxt() { return itemArray[itemIndex++]; }
 
-  private int $protopeek() { return protoArray[protoIndex]; }
+  private int $protopeek() { return itemArray[itemIndex]; }
 
-  private void $protopop() { protoIndex = stackArray[--stackIndex]; }
+  private void $protopop() { itemIndex = stackArray[--stackIndex]; }
 
   private void annotation(int child) {
     var state = $parentvalget(1);
@@ -593,6 +626,42 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void body() {
+    codeadd(Separator.LEFT_CURLY_BRACKET);
+    codeadd(Indentation.ENTER_BLOCK);
+
+    stackpush(ByteProto.BODY, _START);
+
+    element();
+
+    int state = contextpop();
+
+    switch (state) {
+      case _START -> {
+        codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
+        codeadd(Indentation.EXIT_BLOCK);
+        codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
+
+      //      case _BLOCK -> {
+      //        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+      //        codeadd(Indentation.EXIT_BLOCK);
+      //        codeadd(Indentation.EMIT);
+      //        codeadd(Separator.RIGHT_CURLY_BRACKET);
+      //      }
+
+      //      case _NAME, _INIT -> {
+      //        codeadd(Separator.SEMICOLON);
+      //        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+      //        codeadd(Indentation.EXIT_BLOCK);
+      //        codeadd(Indentation.EMIT);
+      //        codeadd(Separator.RIGHT_CURLY_BRACKET);
+      //      }
+
+      default -> stubPop(ByteProto.BODY, state);
+    }
+  }
+
   private void chainedMethodInvocation(int child) {
     var state = $parentvalget(1);
 
@@ -698,6 +767,23 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void classDeclaration(int ctx, int state, int item) {
+    switch (item) {
+      case ByteProto.BODY -> {
+        switch (state) {
+          case _START -> {
+            contextpop();
+            codeadd(Whitespace.OPTIONAL);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
+      default -> stubItem(ctx, state, item);
+    }
+  }
+
   private void classDeclarationBreak(int state) {
     typeDeclarationBreak();
 
@@ -764,6 +850,14 @@ class InternalCompiler extends InternalApi {
     $codeadd(Separator.RIGHT_PARENTHESIS);
 
     semicolonIfNecessary();
+  }
+
+  private void classKeyword() {
+    codeadd(Keyword.CLASS);
+    codeadd(Whitespace.MANDATORY);
+    codeadd(ByteCode.IDENTIFIER, itemnxt());
+
+    stackpush(ByteProto.CLASS_DECLARATION, _START);
   }
 
   private void classType() {
@@ -840,6 +934,27 @@ class InternalCompiler extends InternalApi {
           + instruction);
   }
 
+  private void codeadd(Indentation value) { codeadd(ByteCode.INDENTATION, value.ordinal()); }
+
+  private void codeadd(int v0) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 0);
+
+    codeArray[codeIndex++] = v0;
+  }
+
+  private void codeadd(int v0, int v1) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 1);
+
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
+  }
+
+  private void codeadd(Keyword value) { codeadd(ByteCode.RESERVED_KEYWORD, value.ordinal()); }
+
+  private void codeadd(Separator value) { codeadd(ByteCode.SEPARATOR, value.ordinal()); }
+
+  private void codeadd(Whitespace value) { codeadd(ByteCode.WHITESPACE, value.ordinal()); }
+
   private void commaAndSpace() {
     $codeadd(Separator.COMMA);
     $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
@@ -851,7 +966,7 @@ class InternalCompiler extends InternalApi {
     switch (child) {
       case ByteProto.PACKAGE_DECLARATION -> {
         if (state == _START) {
-          $parentvalset(1, _PKG);
+          $parentvalset(1, _PACKAGE);
         }
       }
 
@@ -860,13 +975,13 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             $codeadd(ByteCode.AUTO_IMPORTS0);
 
-            $parentvalset(1, _IMPO);
+            $parentvalset(1, _IMPORTS);
           }
 
-          case _PKG -> {
+          case _PACKAGE -> {
             $codeadd(ByteCode.AUTO_IMPORTS1);
 
-            $parentvalset(1, _IMPO);
+            $parentvalset(1, _IMPORTS);
           }
         }
       }
@@ -882,6 +997,75 @@ class InternalCompiler extends InternalApi {
           }
         }
       }
+    }
+  }
+
+  private void compilationUnit(int ctx, int state, int item) {
+    switch (item) {
+      case ByteProto.AUTO_IMPORTS -> {
+        switch (state) {
+          case _START -> {
+            codeadd(ByteCode.AUTO_IMPORTS0);
+            stateset(_IMPORTS);
+          }
+
+          case _PACKAGE -> {
+            codeadd(ByteCode.AUTO_IMPORTS1);
+            stateset(_IMPORTS);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
+      case ByteProto.CLASS -> {
+        switch (state) {
+          case _START -> {
+            stateset(_BODY);
+          }
+
+          case _ANNOTATION -> {
+            codeadd(Whitespace.AFTER_ANNOTATION);
+            stateset(_BODY);
+          }
+
+          case _PACKAGE, _IMPORTS, _BODY -> {
+            codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+            stateset(_BODY);
+          }
+
+          case _MODS -> {
+            codeadd(Whitespace.MANDATORY);
+            stateset(_BODY);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
+      case ByteProto.PACKAGE_DECLARATION -> {
+        switch (state) {
+          case _START -> {
+            stateset(_PACKAGE);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
+      //      default -> {
+      //        switch (state) {
+      //          case _START -> {
+      //            $parentvalset(1, _BODY);
+      //          }
+      //
+      //          default -> {
+      //            $codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+      //          }
+      //        }
+      //      }
+
+      default -> stubItem(ctx, state, item);
     }
   }
 
@@ -1017,6 +1201,44 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void context(int context, int state, int item) {
+    switch (context) {
+      case ByteProto.CLASS_DECLARATION -> classDeclaration(context, state, item);
+
+      case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
+
+      default -> warn(
+        "no-op context '%s'".formatted(protoname(context))
+      );
+    }
+  }
+
+  private int contextpop() {
+    int state = rootArray[rootIndex];
+    rootIndex -= 2;
+    return state;
+  }
+
+  private void element() {
+    int size = itemnxt();
+    int start = itemIndex;
+    int max = start + size;
+
+    for (int i = start; i < max; i++) {
+      int context = stackpeek(1);
+
+      int state = stackpeek(0);
+
+      itemIndex = itemArray[i];
+
+      int item = itemnxt();
+
+      context(context, state, item);
+
+      item(context, state, item);
+    }
+  }
+
   private void enumConstant(int child) {
     var state = $parentvalget(1);
 
@@ -1052,13 +1274,13 @@ class InternalCompiler extends InternalApi {
 
     switch (child) {
       case ByteProto.ANNOTATION -> {
-        if (state == _ANNOS) {
+        if (state == _ANNOTATION) {
           $codeadd(Whitespace.AFTER_ANNOTATION);
           $codeadd(Indentation.EMIT);
         } else {
           $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, _ANNOS);
+          $parentvalset(1, _ANNOTATION);
         }
       }
 
@@ -1072,7 +1294,7 @@ class InternalCompiler extends InternalApi {
             $parentvalset(1, _MODS);
           }
 
-          case _ANNOS -> {
+          case _ANNOTATION -> {
             $codeadd(Whitespace.AFTER_ANNOTATION);
             $codeadd(Indentation.EMIT);
 
@@ -1424,11 +1646,24 @@ class InternalCompiler extends InternalApi {
   }
 
   private int isTopLevel() {
-
     var parent = $parentpeek();
 
     return parent == ByteProto.COMPILATION_UNIT ? TRUE : FALSE;
   }
+
+  private void item(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.BODY -> body();
+
+      case ByteProto.CLASS -> classKeyword();
+
+      default -> warn(
+        "no-op item '%s'".formatted(protoname(item))
+      );
+    }
+  }
+
+  private int itemnxt() { return itemArray[itemIndex++]; }
 
   private void localVariableDeclaration() {
     var proto = ByteProto.LOCAL_VARIABLE;
@@ -1823,6 +2058,54 @@ class InternalCompiler extends InternalApi {
     $parentvalinc(1);
   }
 
+  private String protoname(int value) {
+    return switch (value) {
+      case ByteProto.ANNOTATION -> "Annotation";
+
+      case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
+
+      case ByteProto.ARRAY_TYPE -> "Array Type";
+
+      case ByteProto.BLOCK -> "Block";
+
+      case ByteProto.BODY -> "Body";
+
+      case ByteProto.CLASS -> "Class";
+
+      case ByteProto.CLASS_DECLARATION -> "Class Declaration";
+
+      case ByteProto.CLASS_TYPE -> "Class Type";
+
+      case ByteProto.COMPILATION_UNIT -> "Compilation Unit";
+
+      case ByteProto.EXPRESSION_NAME -> "Expression Name";
+
+      case ByteProto.IDENTIFIER -> "Identifier";
+
+      case ByteProto.IMPLEMENTS -> "Implements";
+
+      case ByteProto.METHOD_DECLARATION -> "Method Decl.";
+
+      case ByteProto.METHOD_INVOCATION -> "Method Invocation";
+
+      case ByteProto.MODIFIER -> "Modifier";
+
+      case ByteProto.NEW_LINE -> "NL";
+
+      case ByteProto.PARAMETERIZED_TYPE -> "Parameterized Type";
+
+      case ByteProto.PRIMITIVE_TYPE -> "Primitive Type";
+
+      case ByteProto.RETURN_STATEMENT -> "Return Stmt.";
+
+      case ByteProto.PRIMITIVE_LITERAL -> "Primitive Literal";
+
+      case ByteProto.STRING_LITERAL -> "String Literal";
+
+      default -> Integer.toString(value);
+    };
+  }
+
   private void returnStatement(int child) {
     $codeadd(Keyword.RETURN);
     $codeadd(Whitespace.MANDATORY);
@@ -1838,6 +2121,32 @@ class InternalCompiler extends InternalApi {
            ByteProto.CONSTRUCTOR_DECLARATION,
            ByteProto.METHOD_DECLARATION -> $codeadd(Separator.SEMICOLON);
     }
+  }
+
+  private int stackpeek(int offset) { return rootArray[rootIndex - offset]; }
+
+  private void stackpush(int v0, int v1) {
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 2);
+
+    rootArray[++rootIndex] = v0;
+    rootArray[++rootIndex] = v1;
+  }
+
+  private void stateset(int value) { rootArray[rootIndex] = value; }
+
+  private void stubItem(int ctx, int state, int item) {
+    warn("no-op item  @ '%s' (state=%d) with item '%s'".formatted(
+      protoname(ctx), state, protoname(item)));
+  }
+
+  private void stubPop(int ctx, int state) {
+    warn("no-op pop @ '%s' (state=%d)".formatted(
+      protoname(ctx), state));
+  }
+
+  private void stubState(int ctx, int state, int item) {
+    warn("no-op state @ '%s' (state=%d) with item '%s'".formatted(
+      protoname(ctx), state, protoname(item)));
   }
 
   private void superInvocation(int child) {
@@ -1976,6 +2285,11 @@ class InternalCompiler extends InternalApi {
         codeArray[location + 1] = $protonxt();
       }
     }
+  }
+
+  private void warn(String msg) {
+    codeadd(Whitespace.NEW_LINE);
+    codeadd(ByteCode.COMMENT, object(msg));
   }
 
 }

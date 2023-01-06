@@ -113,6 +113,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("AUTO_IMPORTS0"); // no package
     value("AUTO_IMPORTS1"); // package
+    value("COMMENT");
     value("CONSTRUCTOR_NAME");
     value("CONSTRUCTOR_NAME_STORE");
     value("IDENTIFIER");
@@ -120,6 +121,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("NAME");
     value("NOP1");
     value("OPERATOR");
+    value("RAW");
     value("RESERVED_KEYWORD");
     value("SEPARATOR");
     value("WHITESPACE");

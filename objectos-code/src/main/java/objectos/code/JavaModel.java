@@ -285,6 +285,26 @@ public final class JavaModel {
 
   public sealed interface VoidInvocation extends MethodDeclarationElement {}
 
+  enum _Elem
+      implements
+      Body {
+    INSTANCE;
+  }
+
+  enum _Item
+      implements
+      ClassKeyword {
+    INSTANCE;
+  }
+
+  sealed interface Body extends BodyElement {}
+
+  sealed interface BodyElement extends Element {}
+
+  sealed interface ClassKeyword extends BodyElement {}
+
+  sealed interface Element {}
+
   private sealed interface AccessModifier
       extends
       ClassDeclarationElement,
@@ -358,6 +378,10 @@ public final class JavaModel {
       api.markReference();
     }
   }
+
+  static final _Elem ELEM = _Elem.INSTANCE;
+
+  static final _Item ITEM = _Item.INSTANCE;
 
   @SuppressWarnings("exports")
   public static final Ref REF = new Ref();

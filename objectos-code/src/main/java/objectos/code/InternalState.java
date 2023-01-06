@@ -24,32 +24,32 @@ abstract class InternalState {
 
   int code;
 
-  int[] codeArray = new int[10];
+  int[] codeArray = new int[128];
 
   int codeIndex;
 
-  int[] markArray = new int[10];
+  int[] itemArray = new int[256];
 
-  int markIndex;
+  int itemIndex;
 
-  Object[] objectArray = new Object[10];
+  Object[] objectArray = new Object[64];
 
   int objectIndex;
 
-  int[] protoArray = new int[10];
+  int[] rootArray = new int[64];
 
-  int protoIndex;
+  int rootIndex;
 
   int[] stackArray = new int[10];
 
   int stackIndex;
 
   final void element(int type) {
-    var length = markArray[markIndex--];
+    var length = rootArray[rootIndex--];
 
     var start = codeIndex - length;
 
-    var mark = protoIndex;
+    var mark = itemIndex;
 
     protoAdd(type);
 
@@ -71,7 +71,7 @@ abstract class InternalState {
   }
 
   final void lambdaCount() {
-    markArray[markIndex] += stackArray[stackIndex--];
+    rootArray[rootIndex] += stackArray[stackIndex--];
   }
 
   final void lambdaEnd() {
@@ -91,23 +91,23 @@ abstract class InternalState {
   }
 
   final void markIncrement() {
-    markArray[markIndex]++;
+    rootArray[rootIndex]++;
   }
 
   final void markIncrement(int count) {
-    markArray[markIndex] += count;
+    rootArray[rootIndex] += count;
   }
 
   final void markStart() {
-    markIndex++;
+    rootIndex++;
 
-    markArray = IntArrays.growIfNecessary(markArray, markIndex);
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex);
 
-    markArray[markIndex] = 0;
+    rootArray[rootIndex] = 0;
   }
 
   final void object(int type, Object value) {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(type, objectAdd(value), ByteProto.OBJECT_END);
   }
@@ -127,28 +127,28 @@ abstract class InternalState {
   }
 
   final void protoAdd(int v0) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex);
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex);
 
-    protoArray[protoIndex++] = v0;
+    itemArray[itemIndex++] = v0;
   }
 
   final void protoAdd(int v0, int v1) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 1);
 
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
   }
 
   final void protoAdd(int v0, int v1, int v2) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
 
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-    protoArray[protoIndex++] = v2;
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+    itemArray[itemIndex++] = v2;
   }
 
   final void protopop() {
-    protoIndex = stackArray[--stackIndex];
+    itemIndex = stackArray[--stackIndex];
   }
 
 }

@@ -15,34 +15,26 @@
  */
 package objectos.code;
 
-public enum Whitespace {
+import objectos.code.JavaModel.Body;
+import objectos.code.JavaModel.ClassKeyword;
 
-  MANDATORY,
+abstract class JavaTemplate2 extends JavaTemplate {
 
-  OPTIONAL,
+  protected final ClassKeyword _class(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
 
-  NEW_LINE,
+    var api = api();
 
-  AFTER_ANNOTATION,
+    return api.item(ByteProto.CLASS, api.object(name));
+  }
 
-  BEFORE_NEXT_TOP_LEVEL_ITEM,
+  protected final Body body() {
+    return api().elem(ByteProto.BODY, 0);
+  }
 
-  BEFORE_FIRST_MEMBER,
-
-  BEFORE_NEXT_MEMBER,
-
-  BEFORE_NEXT_STATEMENT,
-
-  BEFORE_NEXT_COMMA_SEPARATED_ITEM,
-
-  BEFORE_NON_EMPTY_BLOCK_END,
-
-  BEFORE_EMPTY_BODY_END;
-
-  private static final Whitespace[] VALUES = values();
-
-  static Whitespace get(int index) {
-    return VALUES[index];
+  @Override
+  final void onEval() {
+    v2 = true;
   }
 
 }

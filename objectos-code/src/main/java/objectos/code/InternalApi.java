@@ -87,8 +87,12 @@ import objectos.code.JavaModel.UnqualifiedMethodInvocation;
 import objectos.code.JavaModel.VoidInvocation;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
+import objectos.util.IntArrays;
+import objectos.util.ObjectArrays;
 
 class InternalApi extends InternalState implements MarkerApi {
+
+  boolean v2;
 
   public final AbstractModifier _abstract() {
     modifier(Keyword.ABSTRACT);
@@ -269,7 +273,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final ThisKeyword _this() {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.THIS, ByteProto.OBJECT_END);
 
@@ -277,7 +281,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final VoidInvocation _void() {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.NO_TYPE, ByteProto.OBJECT_END);
 
@@ -359,7 +363,7 @@ class InternalApi extends InternalState implements MarkerApi {
   public final void autoImports() {
     autoImports.enable();
 
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.AUTO_IMPORTS, ByteProto.OBJECT_END);
   }
@@ -411,8 +415,20 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
+  public final JavaModel._Elem elem(int proto, int count) {
+    int self = itemIndex;
+
+    itemadd(proto, count);
+
+    rootcopy(count);
+
+    rootadd(self);
+
+    return elemret();
+  }
+
   public final Ellipsis ellipsis() {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.ELLIPSIS, ByteProto.OBJECT_END);
 
@@ -503,6 +519,14 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
+  public final JavaModel._Item item(int v0, int v1) {
+    rootadd(itemIndex);
+
+    itemadd(v0, v1);
+
+    return itemret();
+  }
+
   @Override
   public final void markLambda() {
     lambdaCount();
@@ -576,11 +600,21 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final NewLineRef nl() {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.NEW_LINE, ByteProto.OBJECT_END);
 
     return JavaModel.REF;
+  }
+
+  public final int object(Object value) {
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    var result = objectIndex;
+
+    objectArray[objectIndex++] = value;
+
+    return result;
   }
 
   public final FormalParameter param(FormalParameterElement[] elements) {
@@ -758,12 +792,36 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
+  final void accept(JavaTemplate template) {
+    autoImports.clear();
+
+    codeIndex = -1;
+
+    itemIndex = objectIndex = rootIndex = 0;
+
+    template.execute(this);
+
+    int self = itemIndex;
+
+    int count = rootIndex;
+
+    itemadd(count);
+
+    rootcopy(count);
+
+    itemIndex = self;
+  }
+
   final void pass0(JavaTemplate template) {
     pass0Start();
 
     template.execute(this);
 
     pass0End();
+  }
+
+  private JavaModel._Elem elemret() {
+    return JavaModel.ELEM;
   }
 
   private void identifier(String name) {
@@ -781,14 +839,31 @@ class InternalApi extends InternalState implements MarkerApi {
     object(ByteProto.INVOKE_METHOD_NAME, methodName);
   }
 
+  private void itemadd(int v0) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 0);
+
+    itemArray[itemIndex++] = v0;
+  }
+
+  private void itemadd(int v0, int v1) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 1);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+  }
+
+  private JavaModel._Item itemret() {
+    return JavaModel.ITEM;
+  }
+
   private void modifier(Keyword value) {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.MODIFIER, value.ordinal(), ByteProto.OBJECT_END);
   }
 
   private void operator(Operator2 operator) {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.ASSIGNMENT_OPERATOR, operator.ordinal(), ByteProto.OBJECT_END);
   }
@@ -806,7 +881,7 @@ class InternalApi extends InternalState implements MarkerApi {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    protoArray[1] = codeArray[0];
+    itemArray[1] = codeArray[0];
   }
 
   private void pass0Start() {
@@ -818,17 +893,33 @@ class InternalApi extends InternalState implements MarkerApi {
 
     stackIndex = -1;
 
-    markIndex = -1;
+    rootIndex = -1;
 
-    protoIndex = 0;
+    itemIndex = 0;
 
     protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.EOF);
   }
 
   private void primitive(Keyword value) {
-    elementAdd(protoIndex);
+    elementAdd(itemIndex);
 
     protoAdd(ByteProto.PRIMITIVE_TYPE, value.ordinal(), ByteProto.OBJECT_END);
+  }
+
+  private void rootadd(int value) {
+    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 0);
+
+    rootArray[rootIndex++] = value;
+  }
+
+  private void rootcopy(int count) {
+    if (count > 0) {
+      rootIndex -= count;
+      int itemMax = itemIndex + count - 1;
+      itemArray = IntArrays.growIfNecessary(itemArray, itemMax);
+      System.arraycopy(rootArray, rootIndex, itemArray, itemIndex, count);
+      itemIndex += count;
+    }
   }
 
   private void varName(String name) {

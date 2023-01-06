@@ -25,11 +25,12 @@ public class CompilationUnitTest {
   class Foo {}
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(id("Foo"));
+          _class("Foo"); body();
         }
       }.toString(),
 
@@ -37,6 +38,7 @@ public class CompilationUnitTest {
       class Foo {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

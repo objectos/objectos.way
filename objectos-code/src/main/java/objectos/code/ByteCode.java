@@ -105,16 +105,18 @@ final class ByteCode {
 
   static final int AUTO_IMPORTS0 = -52;
   static final int AUTO_IMPORTS1 = -53;
-  static final int CONSTRUCTOR_NAME = -54;
-  static final int CONSTRUCTOR_NAME_STORE = -55;
-  static final int IDENTIFIER = -56;
-  static final int INDENTATION = -57;
-  static final int NAME = -58;
-  static final int NOP1 = -59;
-  static final int OPERATOR = -60;
-  static final int RESERVED_KEYWORD = -61;
-  static final int SEPARATOR = -62;
-  static final int WHITESPACE = -63;
+  static final int COMMENT = -54;
+  static final int CONSTRUCTOR_NAME = -55;
+  static final int CONSTRUCTOR_NAME_STORE = -56;
+  static final int IDENTIFIER = -57;
+  static final int INDENTATION = -58;
+  static final int NAME = -59;
+  static final int NOP1 = -60;
+  static final int OPERATOR = -61;
+  static final int RAW = -62;
+  static final int RESERVED_KEYWORD = -63;
+  static final int SEPARATOR = -64;
+  static final int WHITESPACE = -65;
 
   private ByteCode() {}
 

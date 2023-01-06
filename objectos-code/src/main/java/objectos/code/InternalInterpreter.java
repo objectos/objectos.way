@@ -17,6 +17,8 @@ package objectos.code;
 
 abstract class InternalInterpreter extends InternalCompiler {
 
+  protected abstract void writeComment(String value);
+
   protected abstract void writeCompilationUnitEnd(String packageName, String fileName);
 
   protected abstract void writeCompilationUnitStart(String packageName, String fileName);
@@ -39,14 +41,30 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeWhitespace(Whitespace value);
 
-  final void pass2() {
-    codeIndex = 0;
-
-    markIndex = 0;
+  final void interpret() {
+    codeIndex = itemIndex = rootIndex = 0;
 
     objectIndex = -1;
 
-    protoIndex = 0;
+    writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
+
+    var code = 0;
+
+    do {
+      code = $loop();
+    } while (code != ByteCode.EOF);
+
+    writeCompilationUnitEnd(null, null);
+  }
+
+  final void pass2() {
+    codeIndex = 0;
+
+    rootIndex = 0;
+
+    objectIndex = -1;
+
+    itemIndex = 0;
 
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
@@ -68,6 +86,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.AUTO_IMPORTS0 -> autoImportsRender(false);
 
       case ByteCode.AUTO_IMPORTS1 -> autoImportsRender(true);
+
+      case ByteCode.COMMENT -> comment();
 
       case ByteCode.CONSTRUCTOR_NAME -> {
         var name = "Constructor";
@@ -148,6 +168,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     writeIdentifier(type);
 
     writeSeparator(Separator.SEMICOLON);
+  }
+
+  private void comment() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeComment(value);
   }
 
   private void identifier() {

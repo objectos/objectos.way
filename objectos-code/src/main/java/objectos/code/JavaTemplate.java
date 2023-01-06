@@ -93,6 +93,8 @@ public abstract class JavaTemplate {
 
   private InternalApi api;
 
+  boolean v2;
+
   /**
    * Sole constructor.
    */
@@ -369,6 +371,17 @@ public abstract class JavaTemplate {
     return api().var(name, expression);
   }
 
+  InternalApi api() {
+    Check.state(api != null, """
+    An InternalApi instance was not set.
+
+    Are you trying to execute the method directly?
+    Please not that this method should only be invoked inside a definition() method.
+    """);
+
+    return api;
+  }
+
   final void execute(InternalApi api) {
     Check.state(this.api == null, """
     Another evaluation is already in progress.
@@ -383,15 +396,6 @@ public abstract class JavaTemplate {
     }
   }
 
-  private InternalApi api() {
-    Check.state(api != null, """
-    An InternalApi instance was not set.
-
-    Are you trying to execute the method directly?
-    Please not that this method should only be invoked inside a definition() method.
-    """);
-
-    return api;
-  }
+  void onEval() {}
 
 }

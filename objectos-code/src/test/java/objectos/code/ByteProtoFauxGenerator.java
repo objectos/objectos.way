@@ -52,6 +52,11 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("declarations");
 
+    value("BODY");
+    value("CLASS");
+
+    comment("declarations v2");
+
     value("COMPILATION_UNIT");
     value("PACKAGE_DECLARATION");
     value("AUTO_IMPORTS");

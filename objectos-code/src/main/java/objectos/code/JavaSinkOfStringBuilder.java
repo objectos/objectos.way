@@ -25,6 +25,13 @@ class JavaSinkOfStringBuilder extends JavaSink {
   public final String toString() { return out.toString(); }
 
   @Override
+  protected final void writeComment(String value) {
+    out.append("/* ");
+    out.append(value);
+    out.append(" */");
+  }
+
+  @Override
   protected void writeCompilationUnitEnd(String packageName, String fileName) {
     writenl();
   }
@@ -33,7 +40,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected void writeCompilationUnitStart(String packageName, String fileName) {
     out.setLength(0);
 
-    markIndex = out.length();
+    rootIndex = out.length();
   }
 
   @Override
@@ -114,19 +121,21 @@ class JavaSinkOfStringBuilder extends JavaSink {
       case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
 
       case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
+
+      case BEFORE_EMPTY_BODY_END -> {}
     }
   }
 
   private int level() {
-    return protoIndex;
+    return itemIndex;
   }
 
   private void levelDecrease() {
-    protoIndex--;
+    itemIndex--;
   }
 
   private void levelIncrease() {
-    protoIndex++;
+    itemIndex++;
   }
 
   private void writeIndentation(int length) {
@@ -138,7 +147,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   private void writenl() {
     out.append(System.lineSeparator());
 
-    markIndex = out.length();
+    rootIndex = out.length();
   }
 
 }
