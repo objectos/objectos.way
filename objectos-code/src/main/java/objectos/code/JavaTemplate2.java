@@ -43,6 +43,8 @@ abstract class JavaTemplate2 extends JavaTemplate {
 
     var api = api();
 
+    api.autoImports.packageName(packageName);
+
     return api.item(ByteProto.PACKAGE, api.object(packageName));
   }
 
@@ -57,6 +59,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
 
   protected final Body body() {
     return api().elem(ByteProto.BODY, 0);
+  }
+
+  @Override
+  protected final ClassType t(Class<?> type) {
+    return api().classType(type);
   }
 
   @Override

@@ -100,7 +100,7 @@ class InternalApi {
 
     itemadd(ByteProto.EXPRESSION_NAME, 3);
 
-    $itemadd(xd01, xd02, xd03);
+    itemadd(xd01, xd02, xd03);
 
     rootadd(self);
 
@@ -263,7 +263,7 @@ class InternalApi {
 
     rootadd(itemIndex);
 
-    $itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
+    itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
 
     for (var index = first; index >= last; index--) {
       var simpleName = objectArray[index];
@@ -311,7 +311,7 @@ class InternalApi {
     itemArray[itemIndex++] = v1;
   }
 
-  private void $itemadd(int v0, int v1, int v2) {
+  private void itemadd(int v0, int v1, int v2) {
     itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
 
     itemArray[itemIndex++] = v0;

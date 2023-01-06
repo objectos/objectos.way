@@ -97,15 +97,16 @@ public class CompilationUnitTest {
   autoImports() + java.lang
   """)
   public void testCase04() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
           _package("test");
 
           autoImports();
 
-          _class(id("Test"), _extends(t(Thread.class)));
+          _class("Test"); _extends(); t(Thread.class); body();
         }
       }.toString(),
 
@@ -115,21 +116,23 @@ public class CompilationUnitTest {
       class Test extends Thread {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
   autoImports() + same package
   """)
   public void testCase05() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
           _package("test");
 
           autoImports();
 
-          _class(id("Test"), _extends(t("test", "Bar")));
+          _class("Test"); _extends(); t("test", "Bar"); body();
         }
       }.toString(),
 
@@ -139,6 +142,7 @@ public class CompilationUnitTest {
       class Test extends Bar {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -147,15 +151,16 @@ public class CompilationUnitTest {
   - multiple import declarations
   """)
   public void testCase06() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
           autoImports();
 
-          _class(id("Test0"), _extends(t("test", "A")));
-          _class(id("Test1"), _extends(t("test", "B")));
-          _class(id("Test2"), _extends(t("test", "C")));
+          _class("Test0"); _extends(); t("test", "A"); body();
+          _class("Test1"); _extends(); t("test", "B"); body();
+          _class("Test2"); _extends(); t("test", "C"); body();
         }
       }.toString(),
 
@@ -171,6 +176,7 @@ public class CompilationUnitTest {
       class Test2 extends C {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -180,17 +186,18 @@ public class CompilationUnitTest {
   - multiple import declarations
   """)
   public void testCase07() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
           _package("foo");
 
           autoImports();
 
-          _class(id("Test0"), _extends(t("test", "A")));
-          _class(id("Test1"), _extends(t("test", "B")));
-          _class(id("Test2"), _extends(t("test", "C")));
+          _class("Test0"); _extends(); t("test", "A"); body();
+          _class("Test1"); _extends(); t("test", "B"); body();
+          _class("Test2"); _extends(); t("test", "C"); body();
         }
       }.toString(),
 
@@ -208,6 +215,7 @@ public class CompilationUnitTest {
       class Test2 extends C {}
       """
     );
+    // @formatter:on
   }
 
 }

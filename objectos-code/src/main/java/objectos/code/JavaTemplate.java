@@ -150,8 +150,16 @@ public abstract class JavaTemplate {
     return api()._final();
   }
 
+  protected final Implements _implements(ClassType type) {
+    return api()._implements(type);
+  }
+
   protected final Implements _implements(ClassType... interfaces) {
     return api()._implements(interfaces);
+  }
+
+  protected final Implements _implements(ClassType type1, ClassType type2) {
+    return api()._implements(type1, type2);
   }
 
   protected final PrimitiveType _int() {
@@ -350,7 +358,7 @@ public abstract class JavaTemplate {
     return api().t(type, elements);
   }
 
-  protected final ClassType t(Class<?> value) {
+  protected ClassType t(Class<?> value) {
     return api().t(value);
   }
 

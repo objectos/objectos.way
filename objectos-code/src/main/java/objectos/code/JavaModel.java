@@ -89,6 +89,14 @@ public final class JavaModel {
       ExpressionStatement,
       PrimaryExpression {}
 
+  public sealed interface ClassType extends BodyElement,
+      AnyType,
+      ReferenceType,
+      TypeParameterBound,
+
+      FieldDeclarationElement,
+      MethodDeclarationElement {}
+
   public sealed interface ConstructorDeclaration
       extends ClassDeclarationElement, EnumDeclarationElement {}
 
@@ -305,14 +313,6 @@ public final class JavaModel {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassType extends BodyElement,
-      AnyType,
-      ReferenceType,
-      TypeParameterBound,
-
-      FieldDeclarationElement,
-      MethodDeclarationElement {}
-
   sealed interface Element {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
@@ -397,11 +397,9 @@ public final class JavaModel {
 
   static final _Item ITEM = _Item.INSTANCE;
 
-  @SuppressWarnings("exports")
-  public static final Ref REF = new Ref();
+  static final Ref REF = new Ref();
 
-  @SuppressWarnings("exports")
-  public static final Include INCLUDE = new Include();
+  static final Include INCLUDE = new Include();
 
   private JavaModel() {}
 

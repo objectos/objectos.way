@@ -164,7 +164,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final Implements _implements(ClassType[] interfaces) {
+  public final Implements _implements(ClassType... interfaces) {
     markStart();
 
     for (var iface : interfaces) {
@@ -393,6 +393,42 @@ class InternalApi extends InternalState implements MarkerApi {
     element(ByteProto.CHAINED_METHOD_INVOCATION);
 
     return JavaModel.REF;
+  }
+
+  public final ClassType classType(Class<?> type) {
+    var last = objectIndex;
+
+    while (true) {
+      var simpleName = type.getSimpleName(); // implicit null-check
+
+      object(simpleName);
+
+      var outer = type.getEnclosingClass();
+
+      if (outer == null) {
+        break;
+      } else {
+        type = outer;
+      }
+    }
+
+    var first = objectIndex - 1;
+
+    var names = objectIndex - last;
+
+    var packageName = type.getPackageName();
+
+    rootadd(itemIndex);
+
+    itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
+
+    for (var index = first; index >= last; index--) {
+      var simpleName = objectArray[index];
+
+      itemadd(object(simpleName));
+    }
+
+    return itemret();
   }
 
   public final ConstructorDeclaration constructor(ConstructorDeclarationElement[] elements) {
@@ -866,6 +902,14 @@ class InternalApi extends InternalState implements MarkerApi {
 
     itemArray[itemIndex++] = v0;
     itemArray[itemIndex++] = v1;
+  }
+
+  private void itemadd(int v0, int v1, int v2) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+    itemArray[itemIndex++] = v2;
   }
 
   private void itemadd(int v0, int v1, int v2, int v3) {
