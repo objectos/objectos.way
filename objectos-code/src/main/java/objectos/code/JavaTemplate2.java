@@ -20,6 +20,7 @@ import objectos.code.JavaModel.Body;
 import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ExtendsKeyword;
+import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.PackageKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
@@ -35,6 +36,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final ExtendsKeyword _extends() {
     return api().item(ByteProto.EXTENDS);
+  }
+
+  @Override
+  protected final FinalModifier _final() {
+    return api().item(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
 
   @Override

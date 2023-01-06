@@ -26,11 +26,12 @@ public class ClassDeclarationTest {
   final class Subject {}
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(_final(), id("Subject"));
+          _final(); _class("Subject"); body();
         }
       }.toString(),
 
@@ -38,6 +39,7 @@ public class ClassDeclarationTest {
       final class Subject {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

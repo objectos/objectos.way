@@ -1106,6 +1106,21 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.MODIFIER -> {
+        switch (state) {
+          case _START -> {
+            stateset(_MODS);
+          }
+
+          case _BODY -> {
+            codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+            stateset(_MODS);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
       case ByteProto.PACKAGE -> {
         switch (state) {
           case _START -> {
@@ -1732,6 +1747,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PACKAGE -> packageKeyword();
 
+      case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
+
       default -> warn(
         "no-op item '%s'".formatted(protoname(item))
       );
@@ -2227,7 +2244,7 @@ class InternalCompiler extends InternalApi {
   private void stateset(int value) { rootArray[rootIndex] = value; }
 
   private void stubItem(int ctx, int state, int item) {
-    warn("no-op item  '%s' @ '%s' (state=%d)".formatted(
+    warn("no-op item '%s' @ '%s' (state=%d)".formatted(
       protoname(item), protoname(ctx), state));
   }
 
@@ -2237,8 +2254,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private void stubState(int ctx, int state, int item) {
-    warn("no-op state '%s' @ '%s' (state=%d)".formatted(
-      protoname(item), protoname(ctx), state));
+    warn("no-op state @ '%s' (state=%d) item '%s'".formatted(
+      protoname(ctx), state, protoname(item)));
   }
 
   private void superInvocation(int child) {

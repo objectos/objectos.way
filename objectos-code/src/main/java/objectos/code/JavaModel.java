@@ -296,6 +296,7 @@ public final class JavaModel {
       ClassKeyword,
       ClassType,
       ExtendsKeyword,
+      FinalModifier,
       PackageKeyword {
     INSTANCE;
 

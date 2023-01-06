@@ -146,7 +146,7 @@ public abstract class JavaTemplate {
     return api()._extends(value);
   }
 
-  protected final FinalModifier _final() {
+  protected FinalModifier _final() {
     return api()._final();
   }
 
