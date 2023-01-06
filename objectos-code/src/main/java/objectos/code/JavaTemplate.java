@@ -66,6 +66,7 @@ import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLineRef;
+import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.ParameterizedClassType;
 import objectos.code.JavaModel.PrimaryExpression;
 import objectos.code.JavaModel.PrimitiveType;
@@ -165,8 +166,9 @@ public abstract class JavaTemplate {
     return api()._new(type, arguments);
   }
 
-  protected final void _package(String packageName) {
+  protected PackageKeyword _package(String packageName) {
     api()._package(packageName);
+    return null;
   }
 
   protected final PrivateModifier _private() {

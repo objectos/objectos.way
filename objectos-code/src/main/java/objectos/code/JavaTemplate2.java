@@ -17,6 +17,7 @@ package objectos.code;
 
 import objectos.code.JavaModel.Body;
 import objectos.code.JavaModel.ClassKeyword;
+import objectos.code.JavaModel.PackageKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
 
@@ -26,6 +27,15 @@ abstract class JavaTemplate2 extends JavaTemplate {
     var api = api();
 
     return api.item(ByteProto.CLASS, api.object(name));
+  }
+
+  @Override
+  protected final PackageKeyword _package(String packageName) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(ByteProto.PACKAGE, api.object(packageName));
   }
 
   protected final Body body() {

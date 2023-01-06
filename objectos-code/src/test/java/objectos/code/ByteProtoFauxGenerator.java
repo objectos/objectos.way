@@ -50,12 +50,13 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PACKAGE_NAME");
     value("SIMPLE_NAME");
 
-    comment("declarations");
+    comment("declarations v2");
 
     value("BODY");
     value("CLASS");
+    value("PACKAGE");
 
-    comment("declarations v2");
+    comment("declarations old");
 
     value("COMPILATION_UNIT");
     value("PACKAGE_DECLARATION");

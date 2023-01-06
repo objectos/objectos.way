@@ -1043,7 +1043,7 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.PACKAGE_DECLARATION -> {
+      case ByteProto.PACKAGE -> {
         switch (state) {
           case _START -> {
             stateset(_PACKAGE);
@@ -1657,6 +1657,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS -> classKeyword();
 
+      case ByteProto.PACKAGE -> packageKeyword();
+
       default -> warn(
         "no-op item '%s'".formatted(protoname(item))
       );
@@ -2044,6 +2046,13 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void packageKeyword() {
+    codeadd(Keyword.PACKAGE);
+    codeadd(Whitespace.MANDATORY);
+    codeadd(ByteCode.IDENTIFIER, itemnxt());
+    codeadd(Separator.SEMICOLON);
+  }
+
   private void parameterizedType(int child) {
     int count = $parentvalget(1);
 
@@ -2091,6 +2100,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> "Modifier";
 
       case ByteProto.NEW_LINE -> "NL";
+
+      case ByteProto.PACKAGE -> "Package";
 
       case ByteProto.PARAMETERIZED_TYPE -> "Parameterized Type";
 

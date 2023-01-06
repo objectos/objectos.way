@@ -293,7 +293,8 @@ public final class JavaModel {
 
   enum _Item
       implements
-      ClassKeyword {
+      ClassKeyword,
+      PackageKeyword {
     INSTANCE;
   }
 
@@ -304,6 +305,8 @@ public final class JavaModel {
   sealed interface ClassKeyword extends BodyElement {}
 
   sealed interface Element {}
+
+  sealed interface PackageKeyword extends Element {}
 
   private sealed interface AccessModifier
       extends
