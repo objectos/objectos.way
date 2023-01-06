@@ -17,6 +17,8 @@ package objectos.code;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import objectos.code2.Separator;
+import objectos.code2.Whitespace;
 import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
@@ -25,32 +27,31 @@ class InternalCompiler extends InternalApi {
 
   private static final int FALSE = 0;
   private static final int TRUE = 1;
-  private static final int _START = 0;
+  private static final int _START = 0,
+      _PACKAGE = 1, _IMPORTS = 2,
+      _ANNOTATION = 3,
+      _EXTENDS = 4, _EXTENDS_TYPE = 5;
 
-  private static final int _ANNOTATION = 1;
-  private static final int _PACKAGE = 2;
-  private static final int _IMPORTS = 3;
-  private static final int _MODS = 4;
-  private static final int _TPAR = 5;
-  private static final int _TYPE = 6;
-  private static final int _NAME = 7;
-  private static final int _EXTS = 8;
-  private static final int _IMPLS = 9;
-  private static final int _CTES = 10;
-  private static final int _PARAM = 11;
-  private static final int _ARG = 12;
-  private static final int _BODY = 13;
-  private static final int _LHS = 14;
-  private static final int _RHS = 15;
-  private static final int _VALUE = 16;
-  private static final int _INIT = 17;
-  private static final int _BASE = 18;
-  private static final int _FIRST = 19;
-  private static final int _NL = 20;
-  private static final int _NEXT = 21;
-  private static final int _RECV = 22;
-  private static final int _LPAR = 23;
-  private static final int _SLOT = 24;
+  private static final int _MODS = 54;
+  private static final int _TPAR = 55;
+  private static final int _TYPE = 56;
+  private static final int _NAME = 57;
+  private static final int _IMPLS = 59;
+  private static final int _CTES = 60;
+  private static final int _PARAM = 61;
+  private static final int _ARG = 62;
+  private static final int _BODY = 63;
+  private static final int _LHS = 64;
+  private static final int _RHS = 65;
+  private static final int _VALUE = 66;
+  private static final int _INIT = 67;
+  private static final int _BASE = 68;
+  private static final int _FIRST = 69;
+  private static final int _NL = 70;
+  private static final int _NEXT = 71;
+  private static final int _RECV = 72;
+  private static final int _LPAR = 73;
+  private static final int _SLOT = 74;
 
   final void compile() {
     codeIndex = 0;
@@ -118,7 +119,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS_DECLARATION -> typeDeclaration(proto);
 
-      case ByteProto.CLASS_TYPE -> classType();
+      case ByteProto.CLASS_TYPE -> classType$();
 
       case ByteProto.ELLIPSIS -> { $cloop1parent(proto); $codeadd(Separator.ELLIPSIS); }
 
@@ -729,12 +730,12 @@ class InternalCompiler extends InternalApi {
           $codeadd(Whitespace.MANDATORY);
         }
 
-        $parentvalset(1, _EXTS);
+        $parentvalset(1, _EXTENDS);
       }
 
       case ByteProto.IMPLEMENTS -> {
         switch (state) {
-          case _NAME, _EXTS -> {
+          case _NAME, _EXTENDS -> {
             $codeadd(Whitespace.MANDATORY);
 
             $parentvalset(1, _IMPLS);
@@ -750,7 +751,7 @@ class InternalCompiler extends InternalApi {
 
       default -> {
         switch (state) {
-          case _NAME, _EXTS, _IMPLS -> {
+          case _NAME, _EXTENDS, _IMPLS -> {
             $codeadd(Whitespace.OPTIONAL);
             $codeadd(Separator.LEFT_CURLY_BRACKET);
             $codeadd(Whitespace.BEFORE_FIRST_MEMBER);
@@ -771,9 +772,32 @@ class InternalCompiler extends InternalApi {
     switch (item) {
       case ByteProto.BODY -> {
         switch (state) {
-          case _START -> {
+          case _START,
+               _EXTENDS_TYPE -> {
             contextpop();
             codeadd(Whitespace.OPTIONAL);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
+      case ByteProto.CLASS_TYPE -> {
+        switch (state) {
+          case _EXTENDS -> {
+            codeadd(Whitespace.MANDATORY);
+            stateset(_EXTENDS_TYPE);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
+      case ByteProto.EXTENDS -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.MANDATORY);
+            stateset(_EXTENDS);
           }
 
           default -> stubState(ctx, state, item);
@@ -788,7 +812,7 @@ class InternalCompiler extends InternalApi {
     typeDeclarationBreak();
 
     switch (state) {
-      case _NAME, _EXTS, _IMPLS -> {
+      case _NAME, _EXTENDS, _IMPLS -> {
         $codeadd(Whitespace.OPTIONAL);
         $codeadd(Separator.LEFT_CURLY_BRACKET);
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
@@ -861,15 +885,42 @@ class InternalCompiler extends InternalApi {
   }
 
   private void classType() {
-    var proto = ByteProto.CLASS_TYPE;
+    var packageIndex = itemnxt();
 
-    $cloop1parent(proto);
+    var packageName = (String) objectget(packageIndex);
 
-    $parentpush(
-      NULL, // 2 = code start
-      0, // 1 = name count
-      proto
-    );
+    autoImports.classTypePackageName(packageName);
+
+    var count = itemnxt();
+
+    switch (count) {
+      case 1 -> {
+        var n1Index = itemnxt();
+
+        var n1 = (String) objectget(n1Index);
+
+        autoImports.classTypeSimpleName(n1);
+
+        int instruction = autoImports.classTypeInstruction();
+
+        switch (instruction) {
+          case 1 -> {
+            codeadd(ByteCode.IDENTIFIER, n1Index);
+          }
+
+          default -> {
+            codeadd(ByteCode.IDENTIFIER, packageIndex);
+            codeadd(Separator.DOT);
+            codeadd(ByteCode.IDENTIFIER, n1Index);
+          }
+        }
+      }
+
+      default -> {
+        throw new UnsupportedOperationException(
+          "Implement me :: count=" + count);
+      }
+    }
   }
 
   private void classType(int child) {
@@ -892,6 +943,18 @@ class InternalCompiler extends InternalApi {
         $parentvalinc(1);
       }
     }
+  }
+
+  private void classType$() {
+    var proto = ByteProto.CLASS_TYPE;
+
+    $cloop1parent(proto);
+
+    $parentpush(
+      NULL, // 2 = code start
+      0, // 1 = name count
+      proto
+    );
   }
 
   private void classTypeBreak(int nameCount) {
@@ -1416,6 +1479,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void extendsKeyword() {
+    codeadd(Keyword.EXTENDS);
+  }
+
   private void extendsMany(int child) {
     var state = $parentvalget(1);
 
@@ -1653,9 +1720,15 @@ class InternalCompiler extends InternalApi {
 
   private void item(int context, int state, int item) {
     switch (item) {
+      case ByteProto.AUTO_IMPORTS -> {}
+
       case ByteProto.BODY -> body();
 
       case ByteProto.CLASS -> classKeyword();
+
+      case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.EXTENDS -> extendsKeyword();
 
       case ByteProto.PACKAGE -> packageKeyword();
 
@@ -2036,6 +2109,10 @@ class InternalCompiler extends InternalApi {
     return result;
   }
 
+  private Object objectget(int index) {
+    return objectArray[index];
+  }
+
   private void packageDeclaration(int child) {
     switch (child) {
       case ByteProto.PACKAGE_NAME -> {
@@ -2075,6 +2152,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.ARRAY_TYPE -> "Array Type";
 
+      case ByteProto.AUTO_IMPORTS -> "Auto Imports";
+
       case ByteProto.BLOCK -> "Block";
 
       case ByteProto.BODY -> "Body";
@@ -2088,6 +2167,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.COMPILATION_UNIT -> "Compilation Unit";
 
       case ByteProto.EXPRESSION_NAME -> "Expression Name";
+
+      case ByteProto.EXTENDS -> "Extends";
 
       case ByteProto.IDENTIFIER -> "Identifier";
 
@@ -2146,8 +2227,8 @@ class InternalCompiler extends InternalApi {
   private void stateset(int value) { rootArray[rootIndex] = value; }
 
   private void stubItem(int ctx, int state, int item) {
-    warn("no-op item  @ '%s' (state=%d) with item '%s'".formatted(
-      protoname(ctx), state, protoname(item)));
+    warn("no-op item  '%s' @ '%s' (state=%d)".formatted(
+      protoname(item), protoname(ctx), state));
   }
 
   private void stubPop(int ctx, int state) {
@@ -2156,8 +2237,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private void stubState(int ctx, int state, int item) {
-    warn("no-op state @ '%s' (state=%d) with item '%s'".formatted(
-      protoname(ctx), state, protoname(item)));
+    warn("no-op state '%s' @ '%s' (state=%d)".formatted(
+      protoname(item), protoname(ctx), state));
   }
 
   private void superInvocation(int child) {

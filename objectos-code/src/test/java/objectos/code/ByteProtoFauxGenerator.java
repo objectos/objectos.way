@@ -54,6 +54,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("BODY");
     value("CLASS");
+    value("EXTENDS");
     value("PACKAGE");
 
     comment("declarations old");

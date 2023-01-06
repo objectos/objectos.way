@@ -519,10 +519,26 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
+  public final JavaModel._Item item(int v0) {
+    rootadd(itemIndex);
+
+    itemadd(v0);
+
+    return itemret();
+  }
+
   public final JavaModel._Item item(int v0, int v1) {
     rootadd(itemIndex);
 
     itemadd(v0, v1);
+
+    return itemret();
+  }
+
+  public final JavaModel._Item item(int v0, int v1, int v2, int v3) {
+    rootadd(itemIndex);
+
+    itemadd(v0, v1, v2, v3);
 
     return itemret();
   }
@@ -850,6 +866,15 @@ class InternalApi extends InternalState implements MarkerApi {
 
     itemArray[itemIndex++] = v0;
     itemArray[itemIndex++] = v1;
+  }
+
+  private void itemadd(int v0, int v1, int v2, int v3) {
+    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 3);
+
+    itemArray[itemIndex++] = v0;
+    itemArray[itemIndex++] = v1;
+    itemArray[itemIndex++] = v2;
+    itemArray[itemIndex++] = v3;
   }
 
   private JavaModel._Item itemret() {

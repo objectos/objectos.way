@@ -27,6 +27,7 @@ import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
 import objectos.code.JavaModel.AssignmentExpression;
+import objectos.code.JavaModel.AutoImports;
 import objectos.code.JavaModel.Block;
 import objectos.code.JavaModel.BlockElement;
 import objectos.code.JavaModel.ChainedMethodInvocation;
@@ -46,6 +47,7 @@ import objectos.code.JavaModel.EnumDeclarationElement;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionName;
+import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.ExtendsMany;
 import objectos.code.JavaModel.ExtendsSingle;
 import objectos.code.JavaModel.FieldAccessExpression;
@@ -132,8 +134,7 @@ public abstract class JavaTemplate {
     return api()._enum(elements);
   }
 
-  @Deprecated
-  protected final ExtendsSingle _extends() {
+  protected ExtendsKeyword _extends() {
     throw new UnsupportedOperationException();
   }
 
@@ -224,8 +225,9 @@ public abstract class JavaTemplate {
     return api().assign(leftHandSide, expression);
   }
 
-  protected final void autoImports() {
+  protected AutoImports autoImports() {
     api().autoImports();
+    return null;
   }
 
   protected final Block block(BlockElement... elements) {
@@ -355,6 +357,10 @@ public abstract class JavaTemplate {
   protected final ParameterizedClassType t(
       ClassType rawType, AnyType... arguments) {
     return api().t(rawType, arguments);
+  }
+
+  protected ClassType t(String packageName, String simpleName) {
+    return api().t(packageName, simpleName);
   }
 
   protected final ClassType t(String packageName, String... simpleNames) {

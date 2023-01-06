@@ -73,13 +73,14 @@ public class CompilationUnitTest {
   class Foo extends Bar {}
   """)
   public void testCase03() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
           autoImports();
 
-          _class(id("Foo"), _extends(t("test", "Bar")));
+          _class("Foo"); _extends(); t("test", "Bar"); body();
         }
       }.toString(),
 
@@ -89,6 +90,7 @@ public class CompilationUnitTest {
       class Foo extends Bar {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

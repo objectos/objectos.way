@@ -89,15 +89,6 @@ public final class JavaModel {
       ExpressionStatement,
       PrimaryExpression {}
 
-  public sealed interface ClassType
-      extends
-      AnyType,
-      ReferenceType,
-      TypeParameterBound,
-
-      FieldDeclarationElement,
-      MethodDeclarationElement {}
-
   public sealed interface ConstructorDeclaration
       extends ClassDeclarationElement, EnumDeclarationElement {}
 
@@ -293,10 +284,20 @@ public final class JavaModel {
 
   enum _Item
       implements
+      AutoImports,
       ClassKeyword,
+      ClassType,
+      ExtendsKeyword,
       PackageKeyword {
     INSTANCE;
+
+    @Override
+    public final void mark(MarkerApi api) {
+      throw new UnsupportedOperationException();
+    }
   }
+
+  sealed interface AutoImports extends Element {}
 
   sealed interface Body extends BodyElement {}
 
@@ -304,7 +305,17 @@ public final class JavaModel {
 
   sealed interface ClassKeyword extends BodyElement {}
 
+  sealed interface ClassType extends BodyElement,
+      AnyType,
+      ReferenceType,
+      TypeParameterBound,
+
+      FieldDeclarationElement,
+      MethodDeclarationElement {}
+
   sealed interface Element {}
+
+  sealed interface ExtendsKeyword extends BodyElement {}
 
   sealed interface PackageKeyword extends Element {}
 
