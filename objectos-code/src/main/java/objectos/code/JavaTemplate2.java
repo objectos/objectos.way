@@ -17,12 +17,16 @@ package objectos.code;
 
 import objectos.code.JavaModel.At;
 import objectos.code.JavaModel.AutoImports;
+import objectos.code.JavaModel.Block;
 import objectos.code.JavaModel.Body;
+import objectos.code.JavaModel.BodyElement;
 import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.FinalModifier;
+import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.PackageKeyword;
+import objectos.code.JavaModel.VoidKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
 
@@ -55,13 +59,15 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api.item(ByteProto.PACKAGE, api.object(packageName));
   }
 
+  @Override
+  protected final VoidKeyword _void() {
+    return api().item(ByteProto.VOID);
+  }
+
   protected final At at(ClassType annotationType) {
     var api = api();
-
     api.elemstart(ByteProto.ANNOTATION);
-
     api.elemcnt(annotationType);
-
     return api.elemret();
   }
 
@@ -74,12 +80,33 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api.item(ByteProto.AUTO_IMPORTS);
   }
 
+  protected final Block block() {
+    var api = api();
+    api.elemstart(ByteProto.BLOCK);
+    return api.elemret();
+  }
+
   protected final Body body() {
     var api = api();
-
     api.elemstart(ByteProto.BODY);
-
     return api.elemret();
+  }
+
+  protected final Body body(
+      BodyElement e1, BodyElement e2, BodyElement e3) {
+    var api = api();
+    api.elemstart(ByteProto.BODY);
+    api.elemcnt(e1);
+    api.elemcnt(e2);
+    api.elemcnt(e3);
+    return api.elemret();
+  }
+
+  @Override
+  protected final Identifier id(String name) {
+    JavaModel.checkIdentifier(name);
+    var api = api();
+    return api.item(ByteProto.IDENTIFIER, api.object(name));
   }
 
   @Override

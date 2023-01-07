@@ -56,7 +56,7 @@ import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
 import objectos.code.JavaModel.FormalParameterElement;
-import objectos.code.JavaModel.IdentifierRef;
+import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
 import objectos.code.JavaModel.IntegerLiteral;
@@ -84,7 +84,7 @@ import objectos.code.JavaModel.TypeParameter;
 import objectos.code.JavaModel.TypeParameterBound;
 import objectos.code.JavaModel.TypeVariable;
 import objectos.code.JavaModel.UnqualifiedMethodInvocation;
-import objectos.code.JavaModel.VoidInvocation;
+import objectos.code.JavaModel.VoidKeyword;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
@@ -208,7 +208,7 @@ public abstract class JavaTemplate {
     return api()._this();
   }
 
-  protected final VoidInvocation _void() {
+  protected VoidKeyword _void() {
     return api()._void();
   }
 
@@ -238,7 +238,7 @@ public abstract class JavaTemplate {
     return null;
   }
 
-  protected final Block block(BlockElement... elements) {
+  protected Block block(BlockElement... elements) {
     return api().block(elements);
   }
 
@@ -278,7 +278,7 @@ public abstract class JavaTemplate {
     return api().i(value);
   }
 
-  protected final IdentifierRef id(String name) {
+  protected Identifier id(String name) {
     return api().id(name);
   }
 

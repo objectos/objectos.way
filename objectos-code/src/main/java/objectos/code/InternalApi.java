@@ -56,7 +56,7 @@ import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
 import objectos.code.JavaModel.FormalParameterElement;
-import objectos.code.JavaModel.IdentifierRef;
+import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.Implements;
 import objectos.code.JavaModel.IncludeRef;
 import objectos.code.JavaModel.IntegerLiteral;
@@ -84,7 +84,7 @@ import objectos.code.JavaModel.TypeParameter;
 import objectos.code.JavaModel.TypeParameterBound;
 import objectos.code.JavaModel.TypeVariable;
 import objectos.code.JavaModel.UnqualifiedMethodInvocation;
-import objectos.code.JavaModel.VoidInvocation;
+import objectos.code.JavaModel.VoidKeyword;
 import objectos.code.JavaTemplate.IncludeTarget;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -280,7 +280,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final VoidInvocation _void() {
+  public final VoidKeyword _void() {
     elementAdd(itemIndex);
 
     protoAdd(ByteProto.NO_TYPE, ByteProto.OBJECT_END);
@@ -532,7 +532,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final IdentifierRef id(String name) {
+  public final Identifier id(String name) {
     identifier(name);
 
     return JavaModel.REF;

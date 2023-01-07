@@ -65,10 +65,6 @@ public final class JavaModel {
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
 
-  public sealed interface Block extends Statement {}
-
-  public sealed interface BlockElement extends Markable {}
-
   public sealed interface BlockStatement extends BlockElement {}
 
   public sealed interface ChainedMethodInvocation extends MethodInvocation {}
@@ -154,16 +150,6 @@ public final class JavaModel {
       MethodDeclarationElement {}
 
   public sealed interface FormalParameterElement extends Markable {}
-
-  public sealed interface IdentifierRef
-      extends
-      ClassDeclarationElement,
-      EnumConstantElement,
-      EnumDeclarationElement,
-      FieldDeclarationElement,
-      FormalParameterElement,
-      InterfaceDeclarationElement,
-      MethodDeclarationElement {}
 
   public sealed interface IfStatement
       extends Statement {}
@@ -282,13 +268,17 @@ public final class JavaModel {
   public sealed interface UnqualifiedMethodInvocation
       extends ChainedMethodInvocationHead, ChainedMethodInvocationElement, MethodInvocation {}
 
-  public sealed interface VoidInvocation extends MethodDeclarationElement {}
-
   enum _Elem
       implements
       At,
+      Block,
       Body {
     INSTANCE;
+
+    @Override
+    public final void mark(MarkerApi api) {
+      throw new UnsupportedOperationException();
+    }
   }
 
   enum _Item
@@ -298,7 +288,9 @@ public final class JavaModel {
       ClassType,
       ExtendsKeyword,
       FinalModifier,
-      PackageKeyword {
+      Identifier,
+      PackageKeyword,
+      VoidKeyword {
     INSTANCE;
 
     @Override
@@ -311,6 +303,12 @@ public final class JavaModel {
 
   sealed interface AutoImports extends Element {}
 
+  sealed interface Block extends BodyElement,
+      /* to remove */
+      Statement {}
+
+  sealed interface BlockElement extends Markable {}
+
   sealed interface Body extends BodyElement {}
 
   sealed interface BodyElement extends Element {}
@@ -321,7 +319,21 @@ public final class JavaModel {
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
+  sealed interface Identifier extends BodyElement,
+      /* to remove */
+      ClassDeclarationElement,
+      EnumConstantElement,
+      EnumDeclarationElement,
+      FieldDeclarationElement,
+      FormalParameterElement,
+      InterfaceDeclarationElement,
+      MethodDeclarationElement {}
+
   sealed interface PackageKeyword extends Element {}
+
+  sealed interface VoidKeyword extends BodyElement,
+      /* to remove */
+      MethodDeclarationElement {}
 
   private sealed interface AccessModifier
       extends
@@ -367,7 +379,7 @@ public final class JavaModel {
       FieldDeclaration,
       FinalModifier,
       FormalParameter,
-      IdentifierRef,
+      Identifier,
       IfStatement,
       Implements,
       IntegerLiteral,
@@ -388,7 +400,7 @@ public final class JavaModel {
       TypeParameter,
       TypeVariable,
       UnqualifiedMethodInvocation,
-      VoidInvocation {
+      VoidKeyword {
     private Ref() {}
 
     @Override
@@ -406,6 +418,14 @@ public final class JavaModel {
   static final Include INCLUDE = new Include();
 
   private JavaModel() {}
+
+  static void checkIdentifier(String s) {
+    if (s.isEmpty()) {
+      throw new IllegalArgumentException("Identifier must not be empty");
+    }
+
+    checkName(s, false, "an invalid identifier");
+  }
 
   static void checkMethodName(String methodName) {
     if (methodName.isEmpty()) {

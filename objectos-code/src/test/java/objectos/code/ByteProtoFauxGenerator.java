@@ -42,6 +42,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PARAMETERIZED_TYPE");
     value("PRIMITIVE_TYPE");
     value("TYPE_VARIABLE");
+    value("VOID");
 
     comment("type aux");
 

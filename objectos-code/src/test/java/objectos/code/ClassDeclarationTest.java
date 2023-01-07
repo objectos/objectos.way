@@ -75,13 +75,13 @@ public class ClassDeclarationTest {
   }
   """)
   public void testCase03() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(
-            id("Subject"),
-            method(id("m0"))
+          _class("Subject"); body(
+            _void(), id("m0"), block()
           );
         }
       }.toString(),
@@ -92,6 +92,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
