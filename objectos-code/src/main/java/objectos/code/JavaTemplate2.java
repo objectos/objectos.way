@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import objectos.code.JavaModel.At;
 import objectos.code.JavaModel.AutoImports;
 import objectos.code.JavaModel.Body;
 import objectos.code.JavaModel.ClassKeyword;
@@ -54,6 +55,16 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api.item(ByteProto.PACKAGE, api.object(packageName));
   }
 
+  protected final At at(ClassType annotationType) {
+    var api = api();
+
+    api.elemstart(ByteProto.ANNOTATION);
+
+    api.elemcnt(annotationType);
+
+    return api.elemret();
+  }
+
   @Override
   protected final AutoImports autoImports() {
     var api = api();
@@ -64,7 +75,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
   }
 
   protected final Body body() {
-    return api().elem(ByteProto.BODY, 0);
+    var api = api();
+
+    api.elemstart(ByteProto.BODY);
+
+    return api.elemret();
   }
 
   @Override

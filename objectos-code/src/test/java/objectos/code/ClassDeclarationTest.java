@@ -49,14 +49,13 @@ public class ClassDeclarationTest {
   class Subject {}
   """)
   public void testCase02() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(
-            annotation(t(Deprecated.class)),
-            id("Subject")
-          );
+          at(t(Deprecated.class));
+          _class("Subject"); body();
         }
       }.toString(),
 
@@ -65,6 +64,7 @@ public class ClassDeclarationTest {
       class Subject {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

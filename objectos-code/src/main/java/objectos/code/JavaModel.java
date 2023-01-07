@@ -286,6 +286,7 @@ public final class JavaModel {
 
   enum _Elem
       implements
+      At,
       Body {
     INSTANCE;
   }
@@ -305,6 +306,8 @@ public final class JavaModel {
       throw new UnsupportedOperationException();
     }
   }
+
+  sealed interface At extends Element {}
 
   sealed interface AutoImports extends Element {}
 

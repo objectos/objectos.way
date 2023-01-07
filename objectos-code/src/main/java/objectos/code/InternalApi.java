@@ -463,6 +463,35 @@ class InternalApi extends InternalState implements MarkerApi {
     return elemret();
   }
 
+  public final void elemcnt(Object obj) {
+    if (obj == JavaModel.ITEM || obj == JavaModel.ELEM) {
+      codeArray[1]++; // total count
+      codeArray[2]++; // root count
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  public final JavaModel._Elem elemret() {
+    int totalCount = codeArray[1];
+
+    itemadd(totalCount);
+
+    rootcopy(totalCount);
+
+    rootadd(codeArray[0]);
+
+    return JavaModel.ELEM;
+  }
+
+  public final void elemstart(int value) {
+    codeArray[0] = itemIndex;
+    codeArray[1] = 0; // total count
+    codeArray[2] = 0; // root count
+
+    itemadd(value);
+  }
+
   public final Ellipsis ellipsis() {
     elementAdd(itemIndex);
 
@@ -870,10 +899,6 @@ class InternalApi extends InternalState implements MarkerApi {
     template.execute(this);
 
     pass0End();
-  }
-
-  private JavaModel._Elem elemret() {
-    return JavaModel.ELEM;
   }
 
   private void identifier(String name) {

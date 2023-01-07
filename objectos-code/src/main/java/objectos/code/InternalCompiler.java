@@ -29,7 +29,7 @@ class InternalCompiler extends InternalApi {
   private static final int TRUE = 1;
   private static final int _START = 0,
       _PACKAGE = 1, _IMPORTS = 2,
-      _ANNOTATION = 3,
+      _ANNOTATIONS = 3,
       _EXTENDS = 4, _EXTENDS_TYPE = 5;
 
   private static final int _MODS = 54;
@@ -441,6 +441,22 @@ class InternalCompiler extends InternalApi {
 
   private void $protopop() { itemIndex = stackArray[--stackIndex]; }
 
+  private void annotation() {
+    codeadd(Separator.COMMERCIAL_AT);
+
+    stackpush(ByteProto.ANNOTATION, _START);
+
+    element();
+
+    int state = contextpop();
+
+    switch (state) {
+      case _TYPE -> {}
+
+      default -> stubPop(ByteProto.ANNOTATION, state);
+    }
+  }
+
   private void annotation(int child) {
     var state = $parentvalget(1);
 
@@ -463,6 +479,22 @@ class InternalCompiler extends InternalApi {
 
         $parentvalset(1, _VALUE);
       }
+    }
+  }
+
+  private void annotation(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.CLASS_TYPE -> {
+        switch (state) {
+          case _START -> {
+            stateset(_TYPE);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
     }
   }
 
@@ -1065,6 +1097,16 @@ class InternalCompiler extends InternalApi {
 
   private void compilationUnit(int ctx, int state, int item) {
     switch (item) {
+      case ByteProto.ANNOTATION -> {
+        switch (state) {
+          case _START -> {
+            stateset(_ANNOTATIONS);
+          }
+
+          default -> stubState(ctx, state, item);
+        }
+      }
+
       case ByteProto.AUTO_IMPORTS -> {
         switch (state) {
           case _START -> {
@@ -1087,7 +1129,7 @@ class InternalCompiler extends InternalApi {
             stateset(_BODY);
           }
 
-          case _ANNOTATION -> {
+          case _ANNOTATIONS -> {
             codeadd(Whitespace.AFTER_ANNOTATION);
             stateset(_BODY);
           }
@@ -1281,6 +1323,8 @@ class InternalCompiler extends InternalApi {
 
   private void context(int context, int state, int item) {
     switch (context) {
+      case ByteProto.ANNOTATION -> annotation(context, state, item);
+
       case ByteProto.CLASS_DECLARATION -> classDeclaration(context, state, item);
 
       case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
@@ -1352,13 +1396,13 @@ class InternalCompiler extends InternalApi {
 
     switch (child) {
       case ByteProto.ANNOTATION -> {
-        if (state == _ANNOTATION) {
+        if (state == _ANNOTATIONS) {
           $codeadd(Whitespace.AFTER_ANNOTATION);
           $codeadd(Indentation.EMIT);
         } else {
           $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, _ANNOTATION);
+          $parentvalset(1, _ANNOTATIONS);
         }
       }
 
@@ -1372,7 +1416,7 @@ class InternalCompiler extends InternalApi {
             $parentvalset(1, _MODS);
           }
 
-          case _ANNOTATION -> {
+          case _ANNOTATIONS -> {
             $codeadd(Whitespace.AFTER_ANNOTATION);
             $codeadd(Indentation.EMIT);
 
@@ -1735,6 +1779,8 @@ class InternalCompiler extends InternalApi {
 
   private void item(int context, int state, int item) {
     switch (item) {
+      case ByteProto.ANNOTATION -> annotation();
+
       case ByteProto.AUTO_IMPORTS -> {}
 
       case ByteProto.BODY -> body();
