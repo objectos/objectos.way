@@ -157,14 +157,6 @@ public final class JavaModel {
   public sealed interface Implements
       extends ClassDeclarationElement, EnumDeclarationElement {}
 
-  public sealed interface IncludeRef
-      extends
-      ClassDeclarationElement,
-      EnumDeclarationElement,
-      FieldDeclarationElement,
-      InterfaceDeclarationElement,
-      MethodDeclarationElement, MethodInvocationElement {}
-
   public sealed interface IntegerLiteral extends Literal {}
 
   public sealed interface InterfaceDeclaration {}
@@ -210,15 +202,6 @@ public final class JavaModel {
   public sealed interface PrimaryExpression
       extends
       Expression {}
-
-  public sealed interface PrimitiveType
-      extends
-      AnyType,
-      ArrayTypeComponent,
-
-      FieldDeclarationElement,
-      FormalParameterElement,
-      MethodDeclarationElement {}
 
   public sealed interface PrivateModifier extends AccessModifier {}
 
@@ -281,6 +264,15 @@ public final class JavaModel {
     }
   }
 
+  enum _Include implements Include {
+    INSTANCE;
+
+    @Override
+    public final void mark(MarkerApi api) {
+      api.markLambda();
+    }
+  }
+
   enum _Item
       implements
       AutoImports,
@@ -290,6 +282,7 @@ public final class JavaModel {
       FinalModifier,
       Identifier,
       PackageKeyword,
+      PrimitiveType,
       VoidKeyword {
     INSTANCE;
 
@@ -329,7 +322,24 @@ public final class JavaModel {
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
+  sealed interface Include extends BodyElement,
+      /* to remove */
+      ClassDeclarationElement,
+      EnumDeclarationElement,
+      FieldDeclarationElement,
+      InterfaceDeclarationElement,
+      MethodDeclarationElement, MethodInvocationElement {}
+
   sealed interface PackageKeyword extends Element {}
+
+  sealed interface PrimitiveType extends BodyElement,
+      /* to remove */
+      AnyType,
+      ArrayTypeComponent,
+
+      FieldDeclarationElement,
+      FormalParameterElement,
+      MethodDeclarationElement {}
 
   sealed interface VoidKeyword extends BodyElement,
       /* to remove */
@@ -343,15 +353,6 @@ public final class JavaModel {
       FieldDeclarationElement,
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
-
-  private static final class Include implements IncludeRef {
-    private Include() {}
-
-    @Override
-    public final void mark(MarkerApi api) {
-      api.markLambda();
-    }
-  }
 
   private static final class Ref
       implements
@@ -415,7 +416,7 @@ public final class JavaModel {
 
   static final Ref REF = new Ref();
 
-  static final Include INCLUDE = new Include();
+  static final _Include INCLUDE = _Include.INSTANCE;
 
   private JavaModel() {}
 

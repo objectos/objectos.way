@@ -24,17 +24,13 @@ import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
 
-  private static final int NULL = Integer.MIN_VALUE;
-
-  private static final int FALSE = 0;
-  private static final int TRUE = 1;
   private static final int _START = 0,
       _PACKAGE = 1, _IMPORTS = 2,
-      _ANNOTATIONS = 3,
-      _EXTENDS = 4, _EXTENDS_TYPE = 5,
-      _TYPE = 6, _NAME = 7, _BLOCK = 8;
+      _ANNOTATIONS = 3, _MODIFIERS = 4,
+      _EXTENDS = 5, _EXTENDS_TYPE = 6,
+      _TYPE = 7, _NAME = 8, _INIT = 9,
+      _BLOCK = 10;
 
-  private static final int _MODS = 54;
   private static final int _TPAR = 55;
   private static final int _IMPLS = 59;
   private static final int _CTES = 60;
@@ -44,7 +40,6 @@ class InternalCompiler extends InternalApi {
   private static final int _LHS = 64;
   private static final int _RHS = 65;
   private static final int _VALUE = 66;
-  private static final int _INIT = 67;
   private static final int _BASE = 68;
   private static final int _FIRST = 69;
   private static final int _NL = 70;
@@ -52,6 +47,10 @@ class InternalCompiler extends InternalApi {
   private static final int _RECV = 72;
   private static final int _LPAR = 73;
   private static final int _SLOT = 74;
+
+  private static final int NULL = Integer.MIN_VALUE;
+  private static final int FALSE = 0;
+  private static final int TRUE = 1;
 
   final void compile() {
     codeIndex = 0;
@@ -710,13 +709,13 @@ class InternalCompiler extends InternalApi {
         codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      //      case _NAME, _INIT -> {
-      //        codeadd(Separator.SEMICOLON);
-      //        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-      //        codeadd(Indentation.EXIT_BLOCK);
-      //        codeadd(Indentation.EMIT);
-      //        codeadd(Separator.RIGHT_CURLY_BRACKET);
-      //      }
+      case _NAME, _INIT -> {
+        codeadd(Separator.SEMICOLON);
+        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        codeadd(Indentation.EXIT_BLOCK);
+        codeadd(Indentation.EMIT);
+        codeadd(Separator.RIGHT_CURLY_BRACKET);
+      }
 
       default -> stubPop(ByteProto.BODY, state);
     }
@@ -724,6 +723,39 @@ class InternalCompiler extends InternalApi {
 
   private void body(int context, int state, int item) {
     switch (item) {
+      case ByteProto.ARRAY_TYPE,
+           ByteProto.CLASS_TYPE,
+           ByteProto.PARAMETERIZED_TYPE,
+           ByteProto.PRIMITIVE_TYPE -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            codeadd(Indentation.EMIT);
+            stateset(_TYPE);
+          }
+
+          case _ANNOTATIONS -> {
+            codeadd(Whitespace.AFTER_ANNOTATION);
+            codeadd(Indentation.EMIT);
+            stateset(_TYPE);
+          }
+
+          case _MODIFIERS -> {
+            codeadd(Whitespace.MANDATORY);
+            stateset(_TYPE);
+          }
+
+          case _NAME, _INIT -> {
+            codeadd(Separator.SEMICOLON);
+            codeadd(Whitespace.BEFORE_NEXT_MEMBER);
+            codeadd(Indentation.EMIT);
+            stateset(_TYPE);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.BLOCK -> {
         switch (state) {
           case _NAME -> {
@@ -806,12 +838,12 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> {
         typeDeclarationModifier();
 
-        if (state == _MODS) {
+        if (state == _MODIFIERS) {
           $codeadd(Whitespace.MANDATORY);
         } else {
           $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, _MODS);
+          $parentvalset(1, _MODIFIERS);
         }
       }
 
@@ -827,7 +859,7 @@ class InternalCompiler extends InternalApi {
             $parentvalset(1, _NAME);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             $codeadd(Whitespace.MANDATORY);
             $codeadd(Keyword.CLASS);
             $codeadd(Whitespace.MANDATORY);
@@ -944,7 +976,7 @@ class InternalCompiler extends InternalApi {
 
     switch (child) {
       case ByteProto.ANNOTATION -> {
-        if (state != _MODS) {
+        if (state != _MODIFIERS) {
           $codeadd(Whitespace.AFTER_ANNOTATION);
         }
       }
@@ -1219,7 +1251,7 @@ class InternalCompiler extends InternalApi {
             stateset(_BODY);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             codeadd(Whitespace.MANDATORY);
             stateset(_BODY);
           }
@@ -1231,12 +1263,12 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> {
         switch (state) {
           case _START -> {
-            stateset(_MODS);
+            stateset(_MODIFIERS);
           }
 
           case _BODY -> {
             codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-            stateset(_MODS);
+            stateset(_MODIFIERS);
           }
 
           default -> stubState(ctx, state, item);
@@ -1282,10 +1314,10 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             $codeadd(Indentation.EMIT);
 
-            $parentvalset(1, _MODS);
+            $parentvalset(1, _MODIFIERS);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             $codeadd(Whitespace.MANDATORY);
           }
         }
@@ -1301,7 +1333,7 @@ class InternalCompiler extends InternalApi {
             $parentvalset(1, _PARAM);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             $codeadd(Whitespace.MANDATORY);
             $codeadd(ByteCode.CONSTRUCTOR_NAME);
             $codeadd(Separator.LEFT_PARENTHESIS);
@@ -1329,7 +1361,7 @@ class InternalCompiler extends InternalApi {
             $parentvalset(1, _BODY);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             $codeadd(Whitespace.MANDATORY);
             $codeadd(ByteCode.CONSTRUCTOR_NAME);
             $codeadd(Separator.LEFT_PARENTHESIS);
@@ -1375,7 +1407,7 @@ class InternalCompiler extends InternalApi {
         $codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      case _MODS -> {
+      case _MODIFIERS -> {
         $codeadd(Whitespace.MANDATORY);
         $codeadd(ByteCode.CONSTRUCTOR_NAME);
         $codeadd(Separator.LEFT_PARENTHESIS);
@@ -1495,17 +1527,17 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             $codeadd(Indentation.EMIT);
 
-            $parentvalset(1, _MODS);
+            $parentvalset(1, _MODIFIERS);
           }
 
           case _ANNOTATIONS -> {
             $codeadd(Whitespace.AFTER_ANNOTATION);
             $codeadd(Indentation.EMIT);
 
-            $parentvalset(1, _MODS);
+            $parentvalset(1, _MODIFIERS);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             $codeadd(Whitespace.MANDATORY);
           }
         }
@@ -1522,7 +1554,7 @@ class InternalCompiler extends InternalApi {
             $parentvalset(1, _NAME);
           }
 
-          case _MODS -> {
+          case _MODIFIERS -> {
             $codeadd(Whitespace.MANDATORY);
             $codeadd(Keyword.ENUM);
             $codeadd(Whitespace.MANDATORY);
@@ -1663,10 +1695,10 @@ class InternalCompiler extends InternalApi {
         case _START -> {
           $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, _MODS);
+          $parentvalset(1, _MODIFIERS);
         }
 
-        case _MODS -> {
+        case _MODIFIERS -> {
           $codeadd(Whitespace.MANDATORY);
         }
       }
@@ -1676,7 +1708,7 @@ class InternalCompiler extends InternalApi {
 
     if (child == ByteProto.IDENTIFIER) {
       switch (state) {
-        case _START, _MODS -> {
+        case _START, _MODIFIERS -> {
           $codeadd(Whitespace.MANDATORY);
         }
 
@@ -1761,7 +1793,7 @@ class InternalCompiler extends InternalApi {
 
     switch (child) {
       case ByteProto.ANNOTATION -> {
-        if (state == _MODS) {
+        if (state == _MODIFIERS) {
           $codeadd(Whitespace.MANDATORY);
         }
       }
@@ -1773,7 +1805,7 @@ class InternalCompiler extends InternalApi {
           $codeadd(Whitespace.MANDATORY);
         }
 
-        $parentvalset(1, _MODS);
+        $parentvalset(1, _MODIFIERS);
       }
 
       case ByteProto.IDENTIFIER -> {
@@ -1821,7 +1853,7 @@ class InternalCompiler extends InternalApi {
     switch (child) {
       case ByteProto.ANNOTATION -> {
 
-        if (state != _MODS) {
+        if (state != _MODIFIERS) {
           $codeadd(Whitespace.AFTER_ANNOTATION);
         }
 
@@ -1874,6 +1906,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, itemnxt());
 
       case ByteProto.PACKAGE -> packageKeyword();
+
+      case ByteProto.PRIMITIVE_TYPE -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
       case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
@@ -1961,10 +1995,10 @@ class InternalCompiler extends InternalApi {
         case _START -> {
           $codeadd(Indentation.EMIT);
 
-          $parentvalset(1, _MODS);
+          $parentvalset(1, _MODIFIERS);
         }
 
-        case _MODS -> {
+        case _MODIFIERS -> {
           $codeadd(Whitespace.MANDATORY);
         }
       }
@@ -1981,7 +2015,7 @@ class InternalCompiler extends InternalApi {
           $parentvalset(1, _TPAR);
         }
 
-        case _MODS -> {
+        case _MODIFIERS -> {
           $codeadd(Whitespace.MANDATORY);
           $codeadd(Separator.LEFT_ANGLE_BRACKET);
 
@@ -2002,7 +2036,7 @@ class InternalCompiler extends InternalApi {
           $codeadd(Indentation.EMIT);
         }
 
-        case _MODS -> {
+        case _MODIFIERS -> {
           $codeadd(Whitespace.MANDATORY);
         }
 
@@ -2119,7 +2153,7 @@ class InternalCompiler extends InternalApi {
     switch (child) {
       case ByteProto.ANNOTATION -> {
 
-        if (state != _MODS) {
+        if (state != _MODIFIERS) {
           $codeadd(Whitespace.AFTER_ANNOTATION);
         }
 

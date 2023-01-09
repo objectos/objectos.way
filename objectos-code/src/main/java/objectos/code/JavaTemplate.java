@@ -58,7 +58,7 @@ import objectos.code.JavaModel.FormalParameter;
 import objectos.code.JavaModel.FormalParameterElement;
 import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.Implements;
-import objectos.code.JavaModel.IncludeRef;
+import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.InterfaceDeclaration;
 import objectos.code.JavaModel.InterfaceDeclarationElement;
@@ -162,7 +162,7 @@ public abstract class JavaTemplate {
     return api()._implements(type1, type2);
   }
 
-  protected final PrimitiveType _int() {
+  protected PrimitiveType _int() {
     return api()._int();
   }
 
@@ -282,7 +282,7 @@ public abstract class JavaTemplate {
     return api().id(name);
   }
 
-  protected final IncludeRef include(IncludeTarget target) {
+  protected Include include(IncludeTarget target) {
     return api().include(target);
   }
 

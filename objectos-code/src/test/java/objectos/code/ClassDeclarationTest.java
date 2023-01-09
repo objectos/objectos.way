@@ -101,18 +101,18 @@ public class ClassDeclarationTest {
   - allow includes
   """)
   public void testCase04() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(
-            id("Test"),
+          _class("Test"); body(
             include(this::includeTest)
           );
         }
 
         private void includeTest() {
-          field(_int(), id("a"));
+          _int(); id("a");
         }
       }.toString(),
 
@@ -122,6 +122,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

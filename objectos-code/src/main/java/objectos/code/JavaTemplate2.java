@@ -25,7 +25,9 @@ import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.Identifier;
+import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.PackageKeyword;
+import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.VoidKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
@@ -46,6 +48,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final FinalModifier _final() {
     return api().item(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
+  }
+
+  @Override
+  protected final PrimitiveType _int() {
+    return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
   }
 
   @Override
@@ -93,6 +100,14 @@ abstract class JavaTemplate2 extends JavaTemplate {
   }
 
   protected final Body body(
+      BodyElement e1) {
+    var api = api();
+    api.elemstart(ByteProto.BODY);
+    api.elemcnt(e1);
+    return api.elemret();
+  }
+
+  protected final Body body(
       BodyElement e1, BodyElement e2, BodyElement e3) {
     var api = api();
     api.elemstart(ByteProto.BODY);
@@ -107,6 +122,15 @@ abstract class JavaTemplate2 extends JavaTemplate {
     JavaModel.checkIdentifier(name);
     var api = api();
     return api.item(ByteProto.IDENTIFIER, api.object(name));
+  }
+
+  @Override
+  protected final Include include(IncludeTarget target) {
+    var api = api();
+    api.includestart();
+    target.execute(); // implicit null-check
+    api.includeend();
+    return JavaModel.INCLUDE;
   }
 
   @Override
