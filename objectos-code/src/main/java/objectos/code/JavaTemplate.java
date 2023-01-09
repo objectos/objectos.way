@@ -114,7 +114,7 @@ public abstract class JavaTemplate {
     return out.toString();
   }
 
-  protected final AbstractModifier _abstract() {
+  protected AbstractModifier _abstract() {
     return api()._abstract();
   }
 
@@ -180,15 +180,15 @@ public abstract class JavaTemplate {
     return null;
   }
 
-  protected final PrivateModifier _private() {
+  protected PrivateModifier _private() {
     return api()._private();
   }
 
-  protected final ProtectedModifier _protected() {
+  protected ProtectedModifier _protected() {
     return api()._protected();
   }
 
-  protected final PublicModifier _public() {
+  protected PublicModifier _public() {
     return api()._public();
   }
 
@@ -196,7 +196,7 @@ public abstract class JavaTemplate {
     return api()._return(expression);
   }
 
-  protected final StaticModifier _static() {
+  protected StaticModifier _static() {
     return api()._static();
   }
 

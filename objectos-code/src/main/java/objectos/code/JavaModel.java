@@ -24,12 +24,6 @@ package objectos.code;
  */
 public final class JavaModel {
 
-  public sealed interface AbstractModifier
-      extends
-      ClassDeclarationElement,
-      InterfaceDeclarationElement,
-      MethodDeclarationElement {}
-
   public sealed interface AnnotationElementValue extends Markable {}
 
   public sealed interface AnnotationInvocation
@@ -203,12 +197,6 @@ public final class JavaModel {
       extends
       Expression {}
 
-  public sealed interface PrivateModifier extends AccessModifier {}
-
-  public sealed interface ProtectedModifier extends AccessModifier {}
-
-  public sealed interface PublicModifier extends AccessModifier {}
-
   public sealed interface QualifiedMethodInvocation
       extends ChainedMethodInvocationHead, MethodInvocation {}
 
@@ -226,14 +214,6 @@ public final class JavaModel {
 
   public sealed interface Statement
       extends BlockStatement, ConstructorDeclarationElement, MethodDeclarationElement {}
-
-  public sealed interface StaticModifier
-      extends
-      ClassDeclarationElement,
-      EnumDeclarationElement,
-      FieldDeclarationElement,
-      InterfaceDeclarationElement,
-      MethodDeclarationElement {}
 
   public sealed interface StringLiteral
       extends AnnotationElementValue, Literal {}
@@ -275,6 +255,7 @@ public final class JavaModel {
 
   enum _Item
       implements
+      AbstractModifier,
       AutoImports,
       ClassKeyword,
       ClassType,
@@ -283,6 +264,10 @@ public final class JavaModel {
       Identifier,
       PackageKeyword,
       PrimitiveType,
+      PrivateModifier,
+      ProtectedModifier,
+      PublicModifier,
+      StaticModifier,
       VoidKeyword {
     INSTANCE;
 
@@ -291,6 +276,12 @@ public final class JavaModel {
       throw new UnsupportedOperationException();
     }
   }
+
+  sealed interface AbstractModifier extends BodyElement,
+      /* to remove */
+      ClassDeclarationElement,
+      InterfaceDeclarationElement,
+      MethodDeclarationElement {}
 
   sealed interface At extends Element {}
 
@@ -341,12 +332,26 @@ public final class JavaModel {
       FormalParameterElement,
       MethodDeclarationElement {}
 
+  sealed interface PrivateModifier extends AccessModifier {}
+
+  sealed interface ProtectedModifier extends AccessModifier {}
+
+  sealed interface PublicModifier extends AccessModifier {}
+
+  sealed interface StaticModifier extends BodyElement,
+      /* to remove */
+      ClassDeclarationElement,
+      EnumDeclarationElement,
+      FieldDeclarationElement,
+      InterfaceDeclarationElement,
+      MethodDeclarationElement {}
+
   sealed interface VoidKeyword extends BodyElement,
       /* to remove */
       MethodDeclarationElement {}
 
-  private sealed interface AccessModifier
-      extends
+  private sealed interface AccessModifier extends BodyElement,
+      /* to remove */
       ClassDeclarationElement,
       ConstructorDeclarationElement,
       EnumDeclarationElement,

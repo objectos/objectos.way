@@ -29,14 +29,13 @@ class InternalCompiler extends InternalApi {
       _ANNOTATIONS = 3, _MODIFIERS = 4,
       _EXTENDS = 5, _EXTENDS_TYPE = 6,
       _TYPE = 7, _NAME = 8, _INIT = 9,
-      _BLOCK = 10;
+      _BODY = 10;
 
   private static final int _TPAR = 55;
   private static final int _IMPLS = 59;
   private static final int _CTES = 60;
   private static final int _PARAM = 61;
   private static final int _ARG = 62;
-  private static final int _BODY = 63;
   private static final int _LHS = 64;
   private static final int _RHS = 65;
   private static final int _VALUE = 66;
@@ -702,15 +701,15 @@ class InternalCompiler extends InternalApi {
         codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      case _BLOCK -> {
+      case _NAME, _INIT -> {
+        codeadd(Separator.SEMICOLON);
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
         codeadd(Indentation.EMIT);
         codeadd(Separator.RIGHT_CURLY_BRACKET);
       }
 
-      case _NAME, _INIT -> {
-        codeadd(Separator.SEMICOLON);
+      case _BODY -> {
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
         codeadd(Indentation.EMIT);
@@ -762,7 +761,19 @@ class InternalCompiler extends InternalApi {
             codeadd(Separator.LEFT_PARENTHESIS);
             codeadd(Separator.RIGHT_PARENTHESIS);
             codeadd(Whitespace.OPTIONAL);
-            stateset(_BLOCK);
+            stateset(_BODY);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.CLASS -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            codeadd(Indentation.EMIT);
+            stateset(_BODY);
           }
 
           default -> stubState(context, state, item);

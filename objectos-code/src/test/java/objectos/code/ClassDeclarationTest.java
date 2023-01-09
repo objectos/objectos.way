@@ -131,33 +131,30 @@ public class ClassDeclarationTest {
   - nested class declaration
   """)
   public void testCase05() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(
-            id("Level1"),
-            _class(id("A"))
+          _class("Level1"); body(
+            _class("A"), body()
           );
 
-          _class(
-            id("Level2"),
-            _class(id("A"),
-              _class(id("B"))
+          _class("Level2"); body(
+            _class("A"), body(
+              _class("B"), body()
             )
           );
 
-          _class(
-            id("Level3"),
-            _class(id("A"),
-              _class(id("B"),
-                _class(id("C"))
+          _class("Level3"); body(
+            _class("A"), body(
+              _class("B"), body(
+                _class("C"), body()
               )
             )
           );
         }
       }.toString(),
-
       """
       class Level1 {
         class A {}
@@ -178,6 +175,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -186,16 +184,22 @@ public class ClassDeclarationTest {
   - class modifiers
   """)
   public void testCase06() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(_public(), id("A"));
-          _class(_protected(), id("B"));
-          _class(_private(), id("C"));
-          _class(_static(), id("D"));
-          _class(_abstract(), id("E"));
-          _class(_final(), id("F"));
+          _public(); _class("A"); body();
+
+          _protected(); _class("B"); body();
+
+          _private(); _class("C"); body();
+
+          _static(); _class("D"); body();
+
+          _abstract(); _class("E"); body();
+
+          _final(); _class("F"); body();
         }
       }.toString(),
 
@@ -213,6 +217,7 @@ public class ClassDeclarationTest {
       final class F {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

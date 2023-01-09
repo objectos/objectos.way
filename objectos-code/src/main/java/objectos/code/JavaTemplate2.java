@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.At;
 import objectos.code.JavaModel.AutoImports;
 import objectos.code.JavaModel.Block;
@@ -28,9 +29,18 @@ import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.PrimitiveType;
+import objectos.code.JavaModel.PrivateModifier;
+import objectos.code.JavaModel.ProtectedModifier;
+import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.VoidKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
+
+  @Override
+  protected final AbstractModifier _abstract() {
+    return modifier(Keyword.ABSTRACT);
+  }
 
   protected final ClassKeyword _class(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
@@ -64,6 +74,26 @@ abstract class JavaTemplate2 extends JavaTemplate {
     api.autoImports.packageName(packageName);
 
     return api.item(ByteProto.PACKAGE, api.object(packageName));
+  }
+
+  @Override
+  protected final PrivateModifier _private() {
+    return modifier(Keyword.PRIVATE);
+  }
+
+  @Override
+  protected final ProtectedModifier _protected() {
+    return modifier(Keyword.PROTECTED);
+  }
+
+  @Override
+  protected final PublicModifier _public() {
+    return modifier(Keyword.PUBLIC);
+  }
+
+  @Override
+  protected final StaticModifier _static() {
+    return modifier(Keyword.STATIC);
   }
 
   @Override
@@ -108,6 +138,15 @@ abstract class JavaTemplate2 extends JavaTemplate {
   }
 
   protected final Body body(
+      BodyElement e1, BodyElement e2) {
+    var api = api();
+    api.elemstart(ByteProto.BODY);
+    api.elemcnt(e1);
+    api.elemcnt(e2);
+    return api.elemret();
+  }
+
+  protected final Body body(
       BodyElement e1, BodyElement e2, BodyElement e3) {
     var api = api();
     api.elemstart(ByteProto.BODY);
@@ -116,6 +155,9 @@ abstract class JavaTemplate2 extends JavaTemplate {
     api.elemcnt(e3);
     return api.elemret();
   }
+
+  @Override
+  protected void definition() {}
 
   @Override
   protected final Identifier id(String name) {
@@ -154,6 +196,10 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   final void onEval() {
     v2 = true;
+  }
+
+  private JavaModel._Item modifier(Keyword value) {
+    return api().item(ByteProto.MODIFIER, value.ordinal());
   }
 
 }
