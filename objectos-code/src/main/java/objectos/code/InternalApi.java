@@ -92,6 +92,14 @@ import objectos.util.ObjectArrays;
 
 class InternalApi extends InternalState implements MarkerApi {
 
+  private static final int _LOCAL = -1;
+  @SuppressWarnings("unused")
+  private static final int _EXT = -2;
+
+  int[] externalArray = new int[64];
+
+  int externalIndex;
+
   boolean v2;
 
   public final AbstractModifier _abstract() {
@@ -418,7 +426,7 @@ class InternalApi extends InternalState implements MarkerApi {
 
     var packageName = type.getPackageName();
 
-    rootadd(itemIndex);
+    localadd(itemIndex);
 
     itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
 
@@ -451,45 +459,66 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final JavaModel._Elem elem(int proto, int count) {
-    int self = itemIndex;
-
-    itemadd(proto, count);
-
-    rootcopy(count);
-
-    rootadd(self);
+  public final JavaModel._Elem elem(int proto) {
+    elemstart(proto);
 
     return elemret();
   }
 
-  public final void elemcnt(Object obj) {
-    if (obj == JavaModel.ITEM || obj == JavaModel.ELEM) {
-      codeinc(1);
-    } else if (obj == JavaModel.INCLUDE) {
-      codeinc(stackpop());
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
+  public final JavaModel._Elem elem(int proto, Object e1) {
+    elempre(e1);
+    elemstart(proto);
+    elemcnt(e1);
+    return elemret();
   }
 
-  public final JavaModel._Elem elemret() {
-    int count = codepop();
-    int self = codepop();
-
-    itemadd(count);
-
-    rootcopy(count);
-
-    rootadd(self);
-
-    return JavaModel.ELEM;
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2) {
+    elempre(e1);
+    elempre(e2);
+    elemstart(proto);
+    elemcnt(e1);
+    elemcnt(e2);
+    return elemret();
   }
 
-  public final void elemstart(int value) {
-    codepush(itemIndex, 0 /* root count */);
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3) {
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elemstart(proto);
+    elemcnt(e1);
+    elemcnt(e2);
+    elemcnt(e3);
+    return elemret();
+  }
 
-    itemadd(value);
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4) {
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elempre(e4);
+    elemstart(proto);
+    elemcnt(e1);
+    elemcnt(e2);
+    elemcnt(e3);
+    elemcnt(e4);
+    return elemret();
+  }
+
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5) {
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elempre(e4);
+    elempre(e5);
+    elemstart(proto);
+    elemcnt(e1);
+    elemcnt(e2);
+    elemcnt(e3);
+    elemcnt(e4);
+    elemcnt(e5);
+    return elemret();
   }
 
   public final Ellipsis ellipsis() {
@@ -533,9 +562,15 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final Identifier id(String name) {
-    identifier(name);
+    identifier$(name);
 
     return JavaModel.REF;
+  }
+
+  public final void identifierext(String value) {
+    externaladd(itemIndex);
+
+    itemadd(ByteProto.IDENTIFIER, object(value));
   }
 
   public final Include include(IncludeTarget target) {
@@ -551,13 +586,13 @@ class InternalApi extends InternalState implements MarkerApi {
   public final void includeend() {
     int startCount = stackpop();
 
-    int diff = rootIndex - startCount;
+    int diff = localIndex - startCount;
 
     stackpush(diff);
   }
 
   public final void includestart() {
-    stackpush(rootIndex);
+    stackpush(localIndex);
   }
 
   public final QualifiedMethodInvocation invoke(
@@ -597,7 +632,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final JavaModel._Item item(int v0) {
-    rootadd(itemIndex);
+    localadd(itemIndex);
 
     itemadd(v0);
 
@@ -605,7 +640,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final JavaModel._Item item(int v0, int v1) {
-    rootadd(itemIndex);
+    localadd(itemIndex);
 
     itemadd(v0, v1);
 
@@ -613,7 +648,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final JavaModel._Item item(int v0, int v1, int v2, int v3) {
-    rootadd(itemIndex);
+    localadd(itemIndex);
 
     itemadd(v0, v1, v2, v3);
 
@@ -646,7 +681,7 @@ class InternalApi extends InternalState implements MarkerApi {
     Objects.requireNonNull(type, "type == null");
 
     for (var identifier : identifiers) {
-      identifier(identifier);
+      identifier$(identifier);
     }
 
     markStart();
@@ -664,7 +699,7 @@ class InternalApi extends InternalState implements MarkerApi {
 
   public final ExpressionName n(String[] identifiers) {
     for (var identifier : identifiers) {
-      identifier(identifier);
+      identifier$(identifier);
     }
 
     markStart();
@@ -679,7 +714,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final FieldAccessExpression n(ThisKeyword keyword, String identifier) {
-    identifier(identifier);
+    identifier$(identifier);
 
     markStart();
 
@@ -890,17 +925,17 @@ class InternalApi extends InternalState implements MarkerApi {
 
     codeIndex = stackIndex = -1;
 
-    itemIndex = objectIndex = rootIndex = 0;
+    externalIndex = itemIndex = localIndex = objectIndex = 0;
 
     template.execute(this);
 
     int self = itemIndex;
 
-    int count = rootIndex;
+    int count = localIndex;
 
     itemadd(count);
 
-    rootcopy(count);
+    localcopy(count);
 
     itemIndex = self;
   }
@@ -913,18 +948,85 @@ class InternalApi extends InternalState implements MarkerApi {
     pass0End();
   }
 
-  private void codeinc(int value) { codeArray[codeIndex] += value; }
+  private void codeinc(int offset, int value) { codeArray[codeIndex - offset] += value; }
 
   private int codepop() { return codeArray[codeIndex--]; }
 
-  private void codepush(int v0, int v1) {
-    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 2);
+  private void codepush(int v0, int v1, int v2) {
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 3);
 
     codeArray[++codeIndex] = v0;
     codeArray[++codeIndex] = v1;
+    codeArray[++codeIndex] = v2;
   }
 
-  private void identifier(String name) {
+  private void elemcnt(Object obj) {
+    if (obj == JavaModel.ITEM || obj == JavaModel.ELEM) {
+      codeinc(0, 1);
+      itemadd(_LOCAL);
+    } else if (obj == JavaModel.INCLUDE) {
+      int count = stackpop();
+      codeinc(0, count);
+      for (int i = 0; i < count; i++) {
+        itemadd(_LOCAL);
+      }
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private void elempre(Object value) {
+
+  }
+
+  private JavaModel._Elem elemret() {
+    int localCount = codepop();
+    int localStart = localIndex - localCount;
+    int localOffset = 0;
+    int extCount = codepop();
+    int extStart = externalIndex - extCount;
+    @SuppressWarnings("unused")
+    int extOffset = 0;
+    int self = codepop();
+
+    int selfCount = localCount + extCount;
+    int selfIndex = self + 1;
+    itemArray[selfIndex++] = selfCount;
+    int selfMax = selfIndex + selfCount;
+    for (; selfIndex < selfMax; selfIndex++) {
+      int value = itemArray[selfIndex];
+      if (value == _LOCAL) {
+        itemArray[selfIndex] = localArray[localStart + localOffset++];
+      } else {
+        throw new UnsupportedOperationException("Implement me");
+      }
+    }
+
+    localIndex = localStart;
+    externalIndex = extStart;
+
+    localadd(self);
+
+    return JavaModel.ELEM;
+  }
+
+  private void elemstart(int value) {
+    codepush(
+      itemIndex, // 2
+      0, // 1 = extCount
+      0 // 0 = localCount
+    );
+
+    itemadd(value, 0);
+  }
+
+  private void externaladd(int value) {
+    externalArray = IntArrays.growIfNecessary(externalArray, externalIndex);
+
+    externalArray[externalIndex++] = value;
+  }
+
+  private void identifier$(String name) {
     Check.argument(
       SourceVersion.isIdentifier(name), // implicit null-check
       name, " is not a valid identifier"
@@ -973,6 +1075,22 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.ITEM;
   }
 
+  private void localadd(int value) {
+    localArray = IntArrays.growIfNecessary(localArray, localIndex + 0);
+
+    localArray[localIndex++] = value;
+  }
+
+  private void localcopy(int count) {
+    if (count > 0) {
+      localIndex -= count;
+      int itemMax = itemIndex + count - 1;
+      itemArray = IntArrays.growIfNecessary(itemArray, itemMax);
+      System.arraycopy(localArray, localIndex, itemArray, itemIndex, count);
+      itemIndex += count;
+    }
+  }
+
   private void modifier(Keyword value) {
     elementAdd(itemIndex);
 
@@ -1010,7 +1128,7 @@ class InternalApi extends InternalState implements MarkerApi {
 
     stackIndex = -1;
 
-    rootIndex = -1;
+    localIndex = -1;
 
     itemIndex = 0;
 
@@ -1021,22 +1139,6 @@ class InternalApi extends InternalState implements MarkerApi {
     elementAdd(itemIndex);
 
     protoAdd(ByteProto.PRIMITIVE_TYPE, value.ordinal(), ByteProto.OBJECT_END);
-  }
-
-  private void rootadd(int value) {
-    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 0);
-
-    rootArray[rootIndex++] = value;
-  }
-
-  private void rootcopy(int count) {
-    if (count > 0) {
-      rootIndex -= count;
-      int itemMax = itemIndex + count - 1;
-      itemArray = IntArrays.growIfNecessary(itemArray, itemMax);
-      System.arraycopy(rootArray, rootIndex, itemArray, itemIndex, count);
-      itemIndex += count;
-    }
   }
 
   private int stackpop() { return stackArray[stackIndex--]; }

@@ -25,6 +25,7 @@ import objectos.code.JavaModel.Body;
 import objectos.code.JavaModel.BodyElement;
 import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
+import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.Identifier;
@@ -116,10 +117,7 @@ abstract class JavaTemplate2 extends JavaTemplate {
   }
 
   protected final At at(ClassType annotationType) {
-    var api = api();
-    api.elemstart(ByteProto.ANNOTATION);
-    api.elemcnt(annotationType);
-    return api.elemret();
+    return api().elem(ByteProto.ANNOTATION, annotationType.self());
   }
 
   @Override
@@ -132,70 +130,41 @@ abstract class JavaTemplate2 extends JavaTemplate {
   }
 
   protected final Block block() {
-    var api = api();
-    api.elemstart(ByteProto.BLOCK);
-    return api.elemret();
+    return api().elem(ByteProto.BLOCK);
   }
 
-  protected final Block block(
-      BlockElement e1) {
-    var api = api();
-    api.elemstart(ByteProto.BLOCK);
-    api.elemcnt(e1);
-    return api.elemret();
+  protected final Block block(BlockElement e1) {
+    return api().elem(ByteProto.BLOCK, e1.self());
   }
 
-  protected final Block block(
-      BlockElement e1, BlockElement e2) {
-    var api = api();
-    api.elemstart(ByteProto.BLOCK);
-    api.elemcnt(e1);
-    api.elemcnt(e2);
-    return api.elemret();
+  protected final Block block(BlockElement e1, BlockElement e2) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self());
   }
 
   protected final Body body() {
-    var api = api();
-    api.elemstart(ByteProto.BODY);
-    return api.elemret();
+    return api().elem(ByteProto.BODY);
   }
 
-  protected final Body body(
-      BodyElement e1) {
-    var api = api();
-    api.elemstart(ByteProto.BODY);
-    api.elemcnt(e1);
-    return api.elemret();
+  protected final Body body(BodyElement e1) {
+    return api().elem(ByteProto.BODY, e1.self());
   }
 
-  protected final Body body(
-      BodyElement e1, BodyElement e2) {
-    var api = api();
-    api.elemstart(ByteProto.BODY);
-    api.elemcnt(e1);
-    api.elemcnt(e2);
-    return api.elemret();
+  protected final Body body(BodyElement e1, BodyElement e2) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self());
   }
 
-  protected final Body body(
-      BodyElement e1, BodyElement e2, BodyElement e3) {
-    var api = api();
-    api.elemstart(ByteProto.BODY);
-    api.elemcnt(e1);
-    api.elemcnt(e2);
-    api.elemcnt(e3);
-    return api.elemret();
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self());
   }
 
-  protected final Body body(
-      BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4) {
-    var api = api();
-    api.elemstart(ByteProto.BODY);
-    api.elemcnt(e1);
-    api.elemcnt(e2);
-    api.elemcnt(e3);
-    api.elemcnt(e4);
-    return api.elemret();
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self());
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4,
+      BodyElement e5) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self());
   }
 
   @Override
@@ -223,6 +192,14 @@ abstract class JavaTemplate2 extends JavaTemplate {
     template.execute(api);
     api.includeend();
     return JavaModel.INCLUDE;
+  }
+
+  protected final ExpressionName n(String id1) {
+    JavaModel.checkIdentifier(id1.toString()); // implicit null check
+
+    var api = api();
+    api.identifierext(id1);
+    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT);
   }
 
   @Override

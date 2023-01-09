@@ -32,20 +32,20 @@ abstract class InternalState {
 
   int itemIndex;
 
+  int[] localArray = new int[64];
+
+  int localIndex;
+
   Object[] objectArray = new Object[64];
 
   int objectIndex;
-
-  int[] rootArray = new int[64];
-
-  int rootIndex;
 
   int[] stackArray = new int[10];
 
   int stackIndex;
 
   final void element(int type) {
-    var length = rootArray[rootIndex--];
+    var length = localArray[localIndex--];
 
     var start = codeIndex - length;
 
@@ -71,7 +71,7 @@ abstract class InternalState {
   }
 
   final void lambdaCount() {
-    rootArray[rootIndex] += stackArray[stackIndex--];
+    localArray[localIndex] += stackArray[stackIndex--];
   }
 
   final void lambdaEnd() {
@@ -91,19 +91,19 @@ abstract class InternalState {
   }
 
   final void markIncrement() {
-    rootArray[rootIndex]++;
+    localArray[localIndex]++;
   }
 
   final void markIncrement(int count) {
-    rootArray[rootIndex] += count;
+    localArray[localIndex] += count;
   }
 
   final void markStart() {
-    rootIndex++;
+    localIndex++;
 
-    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex);
+    localArray = IntArrays.growIfNecessary(localArray, localIndex);
 
-    rootArray[rootIndex] = 0;
+    localArray[localIndex] = 0;
   }
 
   final void object(int type, Object value) {

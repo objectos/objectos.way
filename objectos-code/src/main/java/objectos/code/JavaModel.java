@@ -107,8 +107,6 @@ public final class JavaModel {
       extends
       ConstructorDeclarationElement {}
 
-  public sealed interface ExpressionName extends Expression, LeftHandSide {}
-
   public sealed interface ExpressionStatement
       extends Statement {}
 
@@ -213,13 +211,18 @@ public final class JavaModel {
       implements
       At,
       Block,
-      Body {
+      Body,
+      ExpressionName {
     INSTANCE;
 
     @Override
     public final void mark(MarkerApi api) {
       throw new UnsupportedOperationException();
     }
+  }
+
+  enum _Ext {
+    INSTANCE;
   }
 
   enum _Include implements Include {
@@ -272,7 +275,7 @@ public final class JavaModel {
       /* to remove */
       Statement {}
 
-  sealed interface BlockElement extends Markable {}
+  sealed interface BlockElement extends Element, Markable {}
 
   sealed interface Body extends BodyElement {}
 
@@ -280,7 +283,12 @@ public final class JavaModel {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface Element {}
+  sealed interface Element {
+    /**
+     * Triggers implicit null check.
+     */
+    default Object self() { return this; }
+  }
 
   sealed interface Expression extends BlockElement,
       /* to remove */
@@ -288,6 +296,8 @@ public final class JavaModel {
       EnumConstantElement,
       FieldDeclarationElement,
       MethodInvocationElement {}
+
+  sealed interface ExpressionName extends Expression, LeftHandSide {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -420,6 +430,8 @@ public final class JavaModel {
   }
 
   static final _Elem ELEM = _Elem.INSTANCE;
+
+  static final _Ext EXT = _Ext.INSTANCE;
 
   static final _Item ITEM = _Item.INSTANCE;
 

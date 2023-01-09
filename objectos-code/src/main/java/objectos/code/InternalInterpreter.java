@@ -33,6 +33,8 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeOperator(Operator2 operator);
 
+  protected abstract void writeRaw(String value);
+
   protected abstract void writeReservedKeyword(Keyword value);
 
   protected abstract void writeSeparator(Separator value);
@@ -42,7 +44,7 @@ abstract class InternalInterpreter extends InternalCompiler {
   protected abstract void writeWhitespace(Whitespace value);
 
   final void interpret() {
-    codeIndex = itemIndex = rootIndex = 0;
+    codeIndex = itemIndex = localIndex = 0;
 
     objectIndex = -1;
 
@@ -60,7 +62,7 @@ abstract class InternalInterpreter extends InternalCompiler {
   final void pass2() {
     codeIndex = 0;
 
-    rootIndex = 0;
+    localIndex = 0;
 
     objectIndex = -1;
 
@@ -116,6 +118,8 @@ abstract class InternalInterpreter extends InternalCompiler {
       case ByteCode.OPERATOR -> operator();
 
       case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();
+
+      case ByteCode.RAW -> raw();
 
       case ByteCode.RESERVED_KEYWORD -> reservedKeyword();
 
@@ -216,6 +220,14 @@ abstract class InternalInterpreter extends InternalCompiler {
     var value = (String) objectArray[index];
 
     writeLiteral(value);
+  }
+
+  private void raw() {
+    var index = $codenxt();
+
+    var value = (String) objectArray[index];
+
+    writeRaw(value);
   }
 
   private void reservedKeyword() {

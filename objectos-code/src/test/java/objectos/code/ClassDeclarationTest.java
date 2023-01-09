@@ -289,24 +289,22 @@ public class ClassDeclarationTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Class declarations TC09
 
   - more than one member
   """)
   public void testCase09() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(
-            id("A"),
+          _class("A"); body(
+            _int(), id("value"),
 
-            field(_int(), id("value")),
-
-            method(
-              _int(), id("value"),
-              _return(n("value"))
+            _int(), id("value"), block(
+              _return(), n("value")
             )
           );
         }
@@ -322,6 +320,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
 }

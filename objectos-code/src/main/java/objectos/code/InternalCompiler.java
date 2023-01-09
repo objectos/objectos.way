@@ -56,7 +56,7 @@ class InternalCompiler extends InternalApi {
   final void compile() {
     codeIndex = 0;
 
-    rootIndex = -1;
+    localIndex = -1;
 
     try {
       stackpush(ByteProto.COMPILATION_UNIT, _START);
@@ -88,7 +88,7 @@ class InternalCompiler extends InternalApi {
 
     codeIndex = 0;
 
-    rootIndex = -1;
+    localIndex = -1;
 
     objectIndex = 0;
 
@@ -251,7 +251,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void $cloop2break() {
-    if (rootIndex < 0) {
+    if (localIndex < 0) {
       return;
     }
 
@@ -385,54 +385,54 @@ class InternalCompiler extends InternalApi {
   }
 
   private int $parentpeek() {
-    return rootArray[rootIndex];
+    return localArray[localIndex];
   }
 
   private int $parentpop() {
-    return rootArray[rootIndex--];
+    return localArray[localIndex--];
   }
 
   private void $parentpush(int v0, int v1) {
-    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 2);
+    localArray = IntArrays.growIfNecessary(localArray, localIndex + 2);
 
-    rootArray[++rootIndex] = v0;
-    rootArray[++rootIndex] = v1;
+    localArray[++localIndex] = v0;
+    localArray[++localIndex] = v1;
   }
 
   private void $parentpush(int v0, int v1, int v2) {
-    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 3);
+    localArray = IntArrays.growIfNecessary(localArray, localIndex + 3);
 
-    rootArray[++rootIndex] = v0;
-    rootArray[++rootIndex] = v1;
-    rootArray[++rootIndex] = v2;
+    localArray[++localIndex] = v0;
+    localArray[++localIndex] = v1;
+    localArray[++localIndex] = v2;
   }
 
   private void $parentpush(int v0, int v1, int v2, int v3, int v4) {
-    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 5);
+    localArray = IntArrays.growIfNecessary(localArray, localIndex + 5);
 
-    rootArray[++rootIndex] = v0;
-    rootArray[++rootIndex] = v1;
-    rootArray[++rootIndex] = v2;
-    rootArray[++rootIndex] = v3;
-    rootArray[++rootIndex] = v4;
+    localArray[++localIndex] = v0;
+    localArray[++localIndex] = v1;
+    localArray[++localIndex] = v2;
+    localArray[++localIndex] = v3;
+    localArray[++localIndex] = v4;
   }
 
   private int $parentvalget(int offset) {
-    var index = rootIndex - offset;
+    var index = localIndex - offset;
 
-    return rootArray[index];
+    return localArray[index];
   }
 
   private void $parentvalinc(int offset) {
-    var index = rootIndex - offset;
+    var index = localIndex - offset;
 
-    rootArray[index]++;
+    localArray[index]++;
   }
 
   private void $parentvalset(int offset, int value) {
-    var index = rootIndex - offset;
+    var index = localIndex - offset;
 
-    rootArray[index] = value;
+    localArray[index] = value;
   }
 
   private int $protonxt() { return itemArray[itemIndex++]; }
@@ -1508,8 +1508,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private int contextpop() {
-    int state = rootArray[rootIndex];
-    rootIndex -= 2;
+    int state = localArray[localIndex];
+    localIndex -= 2;
     return state;
   }
 
@@ -2507,16 +2507,16 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int stackpeek(int offset) { return rootArray[rootIndex - offset]; }
+  private int stackpeek(int offset) { return localArray[localIndex - offset]; }
 
   private void stackpush(int v0, int v1) {
-    rootArray = IntArrays.growIfNecessary(rootArray, rootIndex + 2);
+    localArray = IntArrays.growIfNecessary(localArray, localIndex + 2);
 
-    rootArray[++rootIndex] = v0;
-    rootArray[++rootIndex] = v1;
+    localArray[++localIndex] = v0;
+    localArray[++localIndex] = v1;
   }
 
-  private void stateset(int value) { rootArray[rootIndex] = value; }
+  private void stateset(int value) { localArray[localIndex] = value; }
 
   private void stubItem(int ctx, int state, int item) {
     warn("no-op item '%s' @ '%s' (state=%d)".formatted(

@@ -40,13 +40,11 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected void writeCompilationUnitStart(String packageName, String fileName) {
     out.setLength(0);
 
-    rootIndex = out.length();
+    localIndex = out.length();
   }
 
   @Override
-  protected final void writeIdentifier(String name) {
-    out.append(name);
-  }
+  protected final void writeIdentifier(String name) { out.append(name); }
 
   @Override
   protected final void writeIndentation(Indentation value) {
@@ -68,36 +66,27 @@ class JavaSinkOfStringBuilder extends JavaSink {
   }
 
   @Override
-  protected final void writeLiteral(String value) {
-    out.append(value);
-  }
+  protected final void writeLiteral(String value) { out.append(value); }
 
   @Override
-  protected final void writeName(String name) {
-    out.append(name);
-  }
+  protected final void writeName(String name) { out.append(name); }
 
   @Override
-  protected final void writeOperator(Operator2 operator) {
-    out.append(operator);
-  }
+  protected final void writeOperator(Operator2 operator) { out.append(operator); }
 
   @Override
-  protected final void writeReservedKeyword(Keyword value) {
-    out.append(value);
-  }
+  protected final void writeRaw(String value) { out.append(value); }
 
   @Override
-  protected final void writeSeparator(Separator value) {
-    out.append(value);
-  }
+  protected final void writeReservedKeyword(Keyword value) { out.append(value); }
+
+  @Override
+  protected final void writeSeparator(Separator value) { out.append(value); }
 
   @Override
   protected final void writeStringLiteral(String value) {
     out.append('"');
-
     out.append(value);
-
     out.append('"');
   }
 
@@ -126,17 +115,11 @@ class JavaSinkOfStringBuilder extends JavaSink {
     }
   }
 
-  private int level() {
-    return itemIndex;
-  }
+  private int level() { return itemIndex; }
 
-  private void levelDecrease() {
-    itemIndex--;
-  }
+  private void levelDecrease() { itemIndex--; }
 
-  private void levelIncrease() {
-    itemIndex++;
-  }
+  private void levelIncrease() { itemIndex++; }
 
   private void writeIndentation(int length) {
     for (int i = 0; i < length; i++) {
@@ -147,7 +130,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   private void writenl() {
     out.append(System.lineSeparator());
 
-    rootIndex = out.length();
+    localIndex = out.length();
   }
 
 }
