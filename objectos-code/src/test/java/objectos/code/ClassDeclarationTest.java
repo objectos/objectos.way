@@ -226,18 +226,17 @@ public class ClassDeclarationTest {
   - implements clause
   """)
   public void testCase07() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(id("A"), _implements(t(AutoCloseable.class)));
+          _class("A"); _implements(); t(AutoCloseable.class); body();
 
-          _class(id("B"), _implements(t(AutoCloseable.class), t(Serializable.class)));
+          _class("B"); _implements(); t(AutoCloseable.class); t(Serializable.class); body();
 
-          _class(
-            id("C"), _extends(t("objectos.code", "Foo")),
-            _implements(t(AutoCloseable.class), t(Serializable.class))
-          );
+          _class("C"); _extends(); t("objectos.code", "Foo");
+          _implements(); t(AutoCloseable.class); t(Serializable.class); body();
         }
       }.toString(),
 
@@ -249,6 +248,7 @@ public class ClassDeclarationTest {
       class C extends objectos.code.Foo implements java.lang.AutoCloseable, java.io.Serializable {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -257,26 +257,19 @@ public class ClassDeclarationTest {
   - annotated method
   """)
   public void testCase08() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(
-            id("A"), _extends(t(Thread.class)),
-
-            method(
-              annotation(t(Override.class)),
-              id("foo")
-            )
+          _class("A"); _extends(); t(Thread.class); body(
+            at(t(Override.class)),
+            _void(), id("foo"), block()
           );
 
-          _class(
-            id("B"), _implements(t(Serializable.class)),
-
-            method(
-              annotation(t(Override.class)),
-              id("foo")
-            )
+          _class("B"); _implements(); t(Serializable.class); body(
+            at(t(Override.class)),
+            _void(), id("foo"), block()
           );
         }
       }.toString(),
@@ -293,6 +286,7 @@ public class ClassDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

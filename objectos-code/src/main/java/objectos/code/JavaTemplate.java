@@ -57,7 +57,7 @@ import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
 import objectos.code.JavaModel.FormalParameterElement;
 import objectos.code.JavaModel.Identifier;
-import objectos.code.JavaModel.Implements;
+import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.InterfaceDeclaration;
@@ -150,15 +150,19 @@ public abstract class JavaTemplate {
     return api()._final();
   }
 
-  protected final Implements _implements(ClassType type) {
+  protected ImplementsKeyword _implements() {
+    throw new UnsupportedOperationException();
+  }
+
+  protected final ImplementsKeyword _implements(ClassType type) {
     return api()._implements(type);
   }
 
-  protected final Implements _implements(ClassType... interfaces) {
+  protected final ImplementsKeyword _implements(ClassType... interfaces) {
     return api()._implements(interfaces);
   }
 
-  protected final Implements _implements(ClassType type1, ClassType type2) {
+  protected final ImplementsKeyword _implements(ClassType type1, ClassType type2) {
     return api()._implements(type1, type2);
   }
 

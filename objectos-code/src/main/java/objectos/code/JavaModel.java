@@ -148,9 +148,6 @@ public final class JavaModel {
   public sealed interface IfStatement
       extends Statement {}
 
-  public sealed interface Implements
-      extends ClassDeclarationElement, EnumDeclarationElement {}
-
   public sealed interface IntegerLiteral extends Literal {}
 
   public sealed interface InterfaceDeclaration {}
@@ -262,6 +259,7 @@ public final class JavaModel {
       ExtendsKeyword,
       FinalModifier,
       Identifier,
+      ImplementsKeyword,
       PackageKeyword,
       PrimitiveType,
       PrivateModifier,
@@ -283,7 +281,7 @@ public final class JavaModel {
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
-  sealed interface At extends Element {}
+  sealed interface At extends BodyElement {}
 
   sealed interface AutoImports extends Element {}
 
@@ -312,6 +310,10 @@ public final class JavaModel {
       FormalParameterElement,
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
+
+  sealed interface ImplementsKeyword extends BodyElement,
+      /* to remove */
+      ClassDeclarationElement, EnumDeclarationElement {}
 
   sealed interface Include extends BodyElement,
       /* to remove */
@@ -387,7 +389,7 @@ public final class JavaModel {
       FormalParameter,
       Identifier,
       IfStatement,
-      Implements,
+      ImplementsKeyword,
       IntegerLiteral,
       InterfaceDeclaration,
       LocalVariableDeclarationRef,

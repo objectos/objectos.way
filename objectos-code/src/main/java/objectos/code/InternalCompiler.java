@@ -27,10 +27,11 @@ class InternalCompiler extends InternalApi {
   private static final int _START = 0,
       _PACKAGE = 1, _IMPORTS = 2,
       _ANNOTATIONS = 3, _MODIFIERS = 4,
-      _EXTENDS = 5, _EXTENDS_TYPE = 6,
+      _CLAUSE = 5, _CLAUSE_TYPE = 6,
       _TYPE = 7, _NAME = 8, _INIT = 9,
       _BODY = 10;
 
+  private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
   private static final int _IMPLS = 59;
   private static final int _CTES = 60;
@@ -722,6 +723,18 @@ class InternalCompiler extends InternalApi {
 
   private void body(int context, int state, int item) {
     switch (item) {
+      case ByteProto.ANNOTATION -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            codeadd(Indentation.EMIT);
+            stateset(_ANNOTATIONS);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.ARRAY_TYPE,
            ByteProto.CLASS_TYPE,
            ByteProto.PARAMETERIZED_TYPE,
@@ -928,7 +941,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.BODY -> {
         switch (state) {
           case _START,
-               _EXTENDS_TYPE -> {
+               _CLAUSE_TYPE -> {
             contextpop();
             codeadd(Whitespace.OPTIONAL);
           }
@@ -939,20 +952,26 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS_TYPE -> {
         switch (state) {
-          case _EXTENDS -> {
+          case _CLAUSE -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_EXTENDS_TYPE);
+            stateset(_CLAUSE_TYPE);
+          }
+
+          case _CLAUSE_TYPE -> {
+            commaAndSpace();
           }
 
           default -> stubState(ctx, state, item);
         }
       }
 
-      case ByteProto.EXTENDS -> {
+      case ByteProto.EXTENDS,
+           ByteProto.IMPLEMENTS -> {
         switch (state) {
-          case _START -> {
+          case _START,
+               _CLAUSE_TYPE -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_EXTENDS);
+            stateset(_CLAUSE);
           }
 
           default -> stubState(ctx, state, item);
@@ -1915,6 +1934,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.EXTENDS -> codeadd(Keyword.EXTENDS);
 
       case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, itemnxt());
+
+      case ByteProto.IMPLEMENTS -> codeadd(Keyword.IMPLEMENTS);
 
       case ByteProto.PACKAGE -> packageKeyword();
 

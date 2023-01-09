@@ -51,22 +51,22 @@ final class ByteProto {
   static final int BODY = -19;
   static final int CLASS = -20;
   static final int EXTENDS = -21;
-  static final int PACKAGE = -22;
+  static final int IMPLEMENTS = -22;
+  static final int PACKAGE = -23;
 
   //declarations old
 
-  static final int COMPILATION_UNIT = -23;
-  static final int PACKAGE_DECLARATION = -24;
-  static final int AUTO_IMPORTS = -25;
-  static final int TYPE_PARAMETER = -26;
+  static final int COMPILATION_UNIT = -24;
+  static final int PACKAGE_DECLARATION = -25;
+  static final int AUTO_IMPORTS = -26;
+  static final int TYPE_PARAMETER = -27;
 
   //class
 
-  static final int CLASS_DECLARATION = -27;
-  static final int MODIFIER = -28;
-  static final int IDENTIFIER = -29;
-  static final int EXTENDS_SINGLE = -30;
-  static final int IMPLEMENTS = -31;
+  static final int CLASS_DECLARATION = -28;
+  static final int MODIFIER = -29;
+  static final int IDENTIFIER = -30;
+  static final int EXTENDS_SINGLE = -31;
 
   //field
 

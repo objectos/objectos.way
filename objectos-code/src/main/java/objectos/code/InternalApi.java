@@ -57,7 +57,7 @@ import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
 import objectos.code.JavaModel.FormalParameterElement;
 import objectos.code.JavaModel.Identifier;
-import objectos.code.JavaModel.Implements;
+import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.InterfaceDeclaration;
@@ -164,7 +164,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final Implements _implements(ClassType... interfaces) {
+  public final ImplementsKeyword _implements(ClassType... interfaces) {
     markStart();
 
     for (var iface : interfaces) {
