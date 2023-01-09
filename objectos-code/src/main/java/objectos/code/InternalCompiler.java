@@ -29,7 +29,8 @@ class InternalCompiler extends InternalApi {
       _ANNOTATIONS = 3, _MODIFIERS = 4,
       _CLAUSE = 5, _CLAUSE_TYPE = 6,
       _TYPE = 7, _NAME = 8, _INIT = 9,
-      _BODY = 10;
+      _BODY = 10,
+      _EXPRESSION = 11;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -666,6 +667,29 @@ class InternalCompiler extends InternalApi {
         $codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
         $codeadd(Indentation.EMIT);
       }
+    }
+  }
+
+  private void block(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.RETURN -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.NEW_LINE);
+            codeadd(Indentation.EMIT);
+            stateset(_BODY);
+          }
+
+          case _BODY -> {
+            codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
+            codeadd(Indentation.EMIT);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
     }
   }
 
@@ -1467,11 +1491,15 @@ class InternalCompiler extends InternalApi {
     switch (context) {
       case ByteProto.ANNOTATION -> annotation(context, state, item);
 
+      case ByteProto.BLOCK -> block(context, state, item);
+
       case ByteProto.BODY -> body(context, state, item);
 
       case ByteProto.CLASS_DECLARATION -> classDeclaration(context, state, item);
 
       case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
+
+      case ByteProto.RETURN_STATEMENT -> returnStatement(context, state, item);
 
       default -> warn(
         "no-op context '%s'".formatted(protoname(context))
@@ -1502,6 +1530,8 @@ class InternalCompiler extends InternalApi {
       context(context, state, item);
 
       item(context, state, item);
+
+      pop(context);
     }
   }
 
@@ -1937,11 +1967,15 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.IMPLEMENTS -> codeadd(Keyword.IMPLEMENTS);
 
+      case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
+
       case ByteProto.PACKAGE -> packageKeyword();
 
       case ByteProto.PRIMITIVE_TYPE -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
-      case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
+      case ByteProto.RETURN -> returnStatement();
+
+      case ByteProto.STRING_LITERAL -> codeadd(ByteCode.STRING_LITERAL, itemnxt());
 
       case ByteProto.VOID -> codeadd(Keyword.VOID);
 
@@ -2357,6 +2391,12 @@ class InternalCompiler extends InternalApi {
     $parentvalinc(1);
   }
 
+  private void pop(int context) {
+    switch (context) {
+      case ByteProto.RETURN_STATEMENT -> returnStatementPop(context);
+    }
+  }
+
   private String protoname(int value) {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
@@ -2401,6 +2441,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PRIMITIVE_TYPE -> "Primitive Type";
 
+      case ByteProto.RETURN -> "Return";
+
       case ByteProto.RETURN_STATEMENT -> "Return Stmt.";
 
       case ByteProto.PRIMITIVE_LITERAL -> "Primitive Literal";
@@ -2413,9 +2455,44 @@ class InternalCompiler extends InternalApi {
     };
   }
 
+  private void returnStatement() {
+    codeadd(Keyword.RETURN);
+    stackpush(ByteProto.RETURN_STATEMENT, _START);
+  }
+
   private void returnStatement(int child) {
     $codeadd(Keyword.RETURN);
     $codeadd(Whitespace.MANDATORY);
+  }
+
+  private void returnStatement(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.STRING_LITERAL -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.OPTIONAL);
+            stateset(_EXPRESSION);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
+    }
+  }
+
+  private void returnStatementPop(int context) {
+    int state = stackpeek(0);
+
+    switch (state) {
+      case _EXPRESSION -> {
+        codeadd(Separator.SEMICOLON);
+        contextpop();
+      }
+
+      default -> stubPop(context, state);
+    }
   }
 
   private void root(int child) {

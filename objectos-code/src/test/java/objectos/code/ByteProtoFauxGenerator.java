@@ -53,6 +53,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("declarations v2");
 
+    value("ANNOTATION");
     value("BODY");
     value("CLASS");
     value("EXTENDS");
@@ -97,9 +98,9 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("INTERFACE_DECLARATION");
     value("EXTENDS_MANY");
 
-    comment("annotation");
+    comment("statements aux");
 
-    value("ANNOTATION");
+    value("RETURN");
 
     comment("statements");
 

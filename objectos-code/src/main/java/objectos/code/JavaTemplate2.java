@@ -15,10 +15,12 @@
  */
 package objectos.code;
 
+import java.util.Objects;
 import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.At;
 import objectos.code.JavaModel.AutoImports;
 import objectos.code.JavaModel.Block;
+import objectos.code.JavaModel.BlockElement;
 import objectos.code.JavaModel.Body;
 import objectos.code.JavaModel.BodyElement;
 import objectos.code.JavaModel.ClassKeyword;
@@ -33,7 +35,9 @@ import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
+import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.VoidKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
@@ -97,6 +101,10 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return modifier(Keyword.PUBLIC);
   }
 
+  protected final ReturnKeyword _return() {
+    return api().item(ByteProto.RETURN);
+  }
+
   @Override
   protected final StaticModifier _static() {
     return modifier(Keyword.STATIC);
@@ -126,6 +134,23 @@ abstract class JavaTemplate2 extends JavaTemplate {
   protected final Block block() {
     var api = api();
     api.elemstart(ByteProto.BLOCK);
+    return api.elemret();
+  }
+
+  protected final Block block(
+      BlockElement e1) {
+    var api = api();
+    api.elemstart(ByteProto.BLOCK);
+    api.elemcnt(e1);
+    return api.elemret();
+  }
+
+  protected final Block block(
+      BlockElement e1, BlockElement e2) {
+    var api = api();
+    api.elemstart(ByteProto.BLOCK);
+    api.elemcnt(e1);
+    api.elemcnt(e2);
     return api.elemret();
   }
 
@@ -190,6 +215,23 @@ abstract class JavaTemplate2 extends JavaTemplate {
     target.execute(); // implicit null-check
     api.includeend();
     return JavaModel.INCLUDE;
+  }
+
+  protected final Include include(JavaTemplate2 template) {
+    var api = api();
+    api.includestart();
+    template.execute(api);
+    api.includeend();
+    return JavaModel.INCLUDE;
+  }
+
+  @Override
+  protected final StringLiteral s(String string) {
+    Objects.requireNonNull(string, "string == null");
+
+    var api = api();
+
+    return api.item(ByteProto.STRING_LITERAL, api.object(string));
   }
 
   @Override

@@ -76,7 +76,7 @@ import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
 import objectos.code.JavaModel.QualifiedMethodInvocation;
-import objectos.code.JavaModel.ReturnStatement;
+import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
@@ -196,7 +196,7 @@ public abstract class JavaTemplate {
     return api()._public();
   }
 
-  protected final ReturnStatement _return(Expression expression) {
+  protected final ReturnKeyword _return(Expression expression) {
     return api()._return(expression);
   }
 
@@ -354,7 +354,7 @@ public abstract class JavaTemplate {
     return api().param(elements);
   }
 
-  protected final StringLiteral s(String value) {
+  protected StringLiteral s(String value) {
     return api().s(value);
   }
 

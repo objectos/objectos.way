@@ -76,7 +76,7 @@ import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
 import objectos.code.JavaModel.QualifiedMethodInvocation;
-import objectos.code.JavaModel.ReturnStatement;
+import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
@@ -244,7 +244,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ReturnStatement _return(Expression expression) {
+  public final ReturnKeyword _return(Expression expression) {
     markStart();
 
     expression.mark(this);
@@ -722,7 +722,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final StringLiteral s(String value) {
+  public StringLiteral s(String value) {
     Check.notNull(value, "value == null");
 
     object(ByteProto.STRING_LITERAL, value);
