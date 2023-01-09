@@ -1499,6 +1499,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
 
+      case ByteProto.EXPRESSION_NAME -> expressionName(context, state, item);
+
       case ByteProto.RETURN_STATEMENT -> returnStatement(context, state, item);
 
       default -> warn(
@@ -1698,6 +1700,12 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void expressionName() {
+    stackpush(ByteProto.EXPRESSION_NAME, _START);
+    element();
+    contextpop();
+  }
+
   private void expressionName(int child) {
     if (child == ByteProto.IDENTIFIER) {
       int state = $parentvalget(1);
@@ -1709,6 +1717,26 @@ class InternalCompiler extends InternalApi {
       $parentvalset(1, _NAME);
     } else {
       $parentvalset(1, _BASE);
+    }
+  }
+
+  private void expressionName(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.IDENTIFIER -> {
+        switch (state) {
+          case _START -> {
+            stateset(_NAME);
+          }
+
+          case _NAME -> {
+            codeadd(Separator.DOT);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
     }
   }
 
@@ -1960,6 +1988,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS -> classKeyword();
 
       case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.EXPRESSION_NAME -> expressionName();
 
       case ByteProto.EXTENDS -> codeadd(Keyword.EXTENDS);
 
@@ -2467,6 +2497,17 @@ class InternalCompiler extends InternalApi {
 
   private void returnStatement(int context, int state, int item) {
     switch (item) {
+      case ByteProto.EXPRESSION_NAME -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.MANDATORY);
+            stateset(_EXPRESSION);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.STRING_LITERAL -> {
         switch (state) {
           case _START -> {

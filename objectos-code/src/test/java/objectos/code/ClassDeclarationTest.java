@@ -289,7 +289,7 @@ public class ClassDeclarationTest {
     // @formatter:on
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Class declarations TC09
 
   - more than one member

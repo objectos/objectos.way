@@ -93,7 +93,6 @@ import objectos.util.ObjectArrays;
 class InternalApi extends InternalState implements MarkerApi {
 
   private static final int _LOCAL = -1;
-  @SuppressWarnings("unused")
   private static final int _EXT = -2;
 
   int[] externalArray = new int[64];
@@ -964,6 +963,9 @@ class InternalApi extends InternalState implements MarkerApi {
     if (obj == JavaModel.ITEM || obj == JavaModel.ELEM) {
       codeinc(0, 1);
       itemadd(_LOCAL);
+    } else if (obj == JavaModel.EXT) {
+      codeinc(1, 1);
+      itemadd(_EXT);
     } else if (obj == JavaModel.INCLUDE) {
       int count = stackpop();
       codeinc(0, count);
@@ -975,30 +977,31 @@ class InternalApi extends InternalState implements MarkerApi {
     }
   }
 
-  private void elempre(Object value) {
-
+  private void elempre(Object obj) {
   }
 
   private JavaModel._Elem elemret() {
-    int localCount = codepop();
-    int localStart = localIndex - localCount;
-    int localOffset = 0;
-    int extCount = codepop();
-    int extStart = externalIndex - extCount;
-    @SuppressWarnings("unused")
-    int extOffset = 0;
-    int self = codepop();
+    int localCount = codepop(),
+        localStart = localIndex - localCount,
+        localOffset = 0;
 
-    int selfCount = localCount + extCount;
-    int selfIndex = self + 1;
+    int extCount = codepop(),
+        extStart = externalIndex - extCount,
+        extOffset = 0;
+
+    int self = codepop(),
+        selfCount = localCount + extCount,
+        selfIndex = self + 1,
+        selfMax = selfIndex + 1 + selfCount;
+
     itemArray[selfIndex++] = selfCount;
-    int selfMax = selfIndex + selfCount;
+
     for (; selfIndex < selfMax; selfIndex++) {
       int value = itemArray[selfIndex];
       if (value == _LOCAL) {
         itemArray[selfIndex] = localArray[localStart + localOffset++];
       } else {
-        throw new UnsupportedOperationException("Implement me");
+        itemArray[selfIndex] = externalArray[extStart + extOffset++];
       }
     }
 
