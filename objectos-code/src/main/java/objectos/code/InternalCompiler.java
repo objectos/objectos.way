@@ -92,7 +92,7 @@ class InternalCompiler extends InternalApi {
 
     objectIndex = 0;
 
-    itemIndex = 0;
+    protoIndex = 0;
 
     stackIndex = 0;
 
@@ -357,19 +357,19 @@ class InternalCompiler extends InternalApi {
 
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex);
 
-    stackArray[stackIndex++] = itemIndex;
+    stackArray[stackIndex++] = protoIndex;
 
-    itemIndex = location;
+    protoIndex = location;
   }
 
   private Keyword $keywordpeek() {
-    var index = itemArray[itemIndex];
+    var index = protoArray[protoIndex];
 
     return Keyword.get(index);
   }
 
   private Object $objectpeek() {
-    var index = itemArray[itemIndex];
+    var index = protoArray[protoIndex];
 
     return objectArray[index];
   }
@@ -435,11 +435,11 @@ class InternalCompiler extends InternalApi {
     localArray[index] = value;
   }
 
-  private int $protonxt() { return itemArray[itemIndex++]; }
+  private int $protonxt() { return protoArray[protoIndex++]; }
 
-  private int $protopeek() { return itemArray[itemIndex]; }
+  private int $protopeek() { return protoArray[protoIndex]; }
 
-  private void $protopop() { itemIndex = stackArray[--stackIndex]; }
+  private void $protopop() { protoIndex = stackArray[--stackIndex]; }
 
   private void annotation() {
     codeadd(Separator.COMMERCIAL_AT);
@@ -1517,7 +1517,7 @@ class InternalCompiler extends InternalApi {
 
   private void element() {
     int size = itemnxt();
-    int start = itemIndex;
+    int start = protoIndex;
     int max = start + size;
 
     for (int i = start; i < max; i++) {
@@ -1525,7 +1525,7 @@ class InternalCompiler extends InternalApi {
 
       int state = stackpeek(0);
 
-      itemIndex = itemArray[i];
+      protoIndex = protoArray[i];
 
       int item = itemnxt();
 
@@ -2015,7 +2015,7 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int itemnxt() { return itemArray[itemIndex++]; }
+  private int itemnxt() { return protoArray[protoIndex++]; }
 
   private void localVariableDeclaration() {
     var proto = ByteProto.LOCAL_VARIABLE;

@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import java.util.Arrays;
 import java.util.Objects;
 import javax.lang.model.SourceVersion;
 import objectos.code.JavaModel.AbstractModifier;
@@ -92,12 +93,15 @@ import objectos.util.ObjectArrays;
 
 class InternalApi extends InternalState implements MarkerApi {
 
-  private static final int _LOCAL = -1;
-  private static final int _EXT = -2;
+  private static final int LOCAL = -1;
+  private static final int EXT = -2;
+  private static final int LAMBDA = -3;
 
-  int[] externalArray = new int[64];
+  int[][] levelArray = new int[2][];
 
-  int externalIndex;
+  int[] levelIndex = new int[2];
+
+  int level;
 
   boolean v2;
 
@@ -280,7 +284,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final ThisKeyword _this() {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.THIS, ByteProto.OBJECT_END);
 
@@ -288,7 +292,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final VoidKeyword _void() {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.NO_TYPE, ByteProto.OBJECT_END);
 
@@ -370,7 +374,7 @@ class InternalApi extends InternalState implements MarkerApi {
   public final void autoImports() {
     autoImports.enable();
 
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.AUTO_IMPORTS, ByteProto.OBJECT_END);
   }
@@ -425,14 +429,14 @@ class InternalApi extends InternalState implements MarkerApi {
 
     var packageName = type.getPackageName();
 
-    localadd(itemIndex);
+    leveladd(LOCAL, protoIndex);
 
-    itemadd(ByteProto.CLASS_TYPE, object(packageName), names);
+    protoadd(ByteProto.CLASS_TYPE, object(packageName), names);
 
     for (var index = first; index >= last; index--) {
       var simpleName = objectArray[index];
 
-      itemadd(object(simpleName));
+      protoadd(object(simpleName));
     }
 
     return itemret();
@@ -459,69 +463,74 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final JavaModel._Elem elem(int proto) {
-    elemstart(proto);
-
+    elempre();
+    elemcnt(proto);
     return elemret();
   }
 
   public final JavaModel._Elem elem(int proto, Object e1) {
+    elempre();
     elempre(e1);
-    elemstart(proto);
-    elemcnt(e1);
+    elemcnt(proto);
+    elemcntx(e1);
     return elemret();
   }
 
   public final JavaModel._Elem elem(int proto, Object e1, Object e2) {
+    elempre();
     elempre(e1);
     elempre(e2);
-    elemstart(proto);
-    elemcnt(e1);
-    elemcnt(e2);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
     return elemret();
   }
 
   public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3) {
+    elempre();
     elempre(e1);
     elempre(e2);
     elempre(e3);
-    elemstart(proto);
-    elemcnt(e1);
-    elemcnt(e2);
-    elemcnt(e3);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
     return elemret();
   }
 
   public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4) {
+    elempre();
     elempre(e1);
     elempre(e2);
     elempre(e3);
     elempre(e4);
-    elemstart(proto);
-    elemcnt(e1);
-    elemcnt(e2);
-    elemcnt(e3);
-    elemcnt(e4);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
+    elemcntx(e4);
     return elemret();
   }
 
   public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5) {
+    elempre();
     elempre(e1);
     elempre(e2);
     elempre(e3);
     elempre(e4);
     elempre(e5);
-    elemstart(proto);
-    elemcnt(e1);
-    elemcnt(e2);
-    elemcnt(e3);
-    elemcnt(e4);
-    elemcnt(e5);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
+    elemcntx(e4);
+    elemcntx(e5);
     return elemret();
   }
 
   public final Ellipsis ellipsis() {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.ELLIPSIS, ByteProto.OBJECT_END);
 
@@ -567,9 +576,9 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final void identifierext(String value) {
-    externaladd(itemIndex);
+    leveladd(EXT, protoIndex);
 
-    itemadd(ByteProto.IDENTIFIER, object(value));
+    protoadd(ByteProto.IDENTIFIER, object(value));
   }
 
   public final Include include(IncludeTarget target) {
@@ -580,18 +589,6 @@ class InternalApi extends InternalState implements MarkerApi {
     lambdaEnd();
 
     return JavaModel.INCLUDE;
-  }
-
-  public final void includeend() {
-    int startCount = stackpop();
-
-    int diff = localIndex - startCount;
-
-    stackpush(diff);
-  }
-
-  public final void includestart() {
-    stackpush(localIndex);
   }
 
   public final QualifiedMethodInvocation invoke(
@@ -631,27 +628,37 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final JavaModel._Item item(int v0) {
-    localadd(itemIndex);
+    leveladd(LOCAL, protoIndex);
 
-    itemadd(v0);
+    protoadd(v0);
 
     return itemret();
   }
 
   public final JavaModel._Item item(int v0, int v1) {
-    localadd(itemIndex);
+    leveladd(LOCAL, protoIndex);
 
-    itemadd(v0, v1);
+    protoadd(v0, v1);
 
     return itemret();
   }
 
   public final JavaModel._Item item(int v0, int v1, int v2, int v3) {
-    localadd(itemIndex);
+    leveladd(LOCAL, protoIndex);
 
-    itemadd(v0, v1, v2, v3);
+    protoadd(v0, v1, v2, v3);
 
     return itemret();
+  }
+
+  public final void lambdaend() {
+    level--;
+  }
+
+  public final void lambdastart() {
+    leveladd(LAMBDA, level + 1);
+    level++;
+    levelIndex = IntArrays.growIfNecessary(levelIndex, level);
   }
 
   @Override
@@ -727,7 +734,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final NewLineRef nl() {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.NEW_LINE, ByteProto.OBJECT_END);
 
@@ -922,21 +929,39 @@ class InternalApi extends InternalState implements MarkerApi {
   final void accept(JavaTemplate template) {
     autoImports.clear();
 
-    codeIndex = stackIndex = -1;
+    stackIndex = -1;
 
-    externalIndex = itemIndex = localIndex = objectIndex = 0;
+    codeIndex = protoIndex = level = localIndex = objectIndex = 0;
+
+    Arrays.fill(levelIndex, 0);
 
     template.execute(this);
 
-    int self = itemIndex;
+    assert level == 0;
 
-    int count = localIndex;
+    int self = protoIndex;
 
-    itemadd(count);
+    int[] array = levelArray[level];
 
-    localcopy(count);
+    int length = levelIndex[level];
 
-    itemIndex = self;
+    int count = length / 2;
+
+    protoadd(count);
+
+    for (int i = 0; i < length;) {
+      int code = array[i++];
+
+      if (code == LOCAL) {
+        protoadd(array[i++]);
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: code=" + code
+        );
+      }
+    }
+
+    protoIndex = self;
   }
 
   final void pass0(JavaTemplate template) {
@@ -947,86 +972,94 @@ class InternalApi extends InternalState implements MarkerApi {
     pass0End();
   }
 
-  private void codeinc(int offset, int value) { codeArray[codeIndex - offset] += value; }
+  private void elemcnt(int value) {
+    int itemCount = stackpop(),
+        levelStart = levelIndex[level] - (itemCount * 2),
+        localIndex = levelStart,
+        extIndex = levelStart,
+        includeIndex = levelStart;
 
-  private int codepop() { return codeArray[codeIndex--]; }
+    stackpush(
+      /*4*/protoIndex,
+      /*3*/levelStart,
+      /*2*/includeIndex,
+      /*1*/extIndex,
+      /*0*/localIndex
+    );
 
-  private void codepush(int v0, int v1, int v2) {
-    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 3);
-
-    codeArray[++codeIndex] = v0;
-    codeArray[++codeIndex] = v1;
-    codeArray[++codeIndex] = v2;
+    protoadd(value, 0);
   }
 
-  private void elemcnt(Object obj) {
+  private void elemcntx(Object obj) {
     if (obj == JavaModel.ITEM || obj == JavaModel.ELEM) {
-      codeinc(0, 1);
-      itemadd(_LOCAL);
-    } else if (obj == JavaModel.EXT) {
-      codeinc(1, 1);
-      itemadd(_EXT);
+      int localIndex = stackpeek(0);
+
+      localIndex = levelsearch(localIndex, LOCAL);
+
+      localIndex++;
+
+      int value = levelget(localIndex);
+
+      protoadd(value);
+
+      stackset(0, localIndex);
     } else if (obj == JavaModel.INCLUDE) {
-      int count = stackpop();
-      codeinc(0, count);
-      for (int i = 0; i < count; i++) {
-        itemadd(_LOCAL);
+      int codeIndex = stackpeek(2);
+
+      codeIndex = levelsearch(codeIndex, LAMBDA);
+
+      codeIndex++;
+
+      int level = levelget(codeIndex);
+
+      int[] array = levelArray[level];
+
+      int length = levelIndex[level];
+
+      for (int i = 0; i < length;) {
+        int code = array[i++];
+
+        if (code == LOCAL) {
+          protoadd(array[i++]);
+        } else {
+          throw new UnsupportedOperationException(
+            "Implement me :: code=" + code);
+        }
       }
+
+      stackset(2, codeIndex);
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
   }
 
+  private void elempre() {
+    stackpush(0);
+  }
+
   private void elempre(Object obj) {
+    stackinc(0);
   }
 
   private JavaModel._Elem elemret() {
-    int localCount = codepop(),
-        localStart = localIndex - localCount,
-        localOffset = 0;
+    /*localIndex = */stackpop();
+    /*extIndex = */stackpop();
+    /*includeIndex = */stackpop();
 
-    int extCount = codepop(),
-        extStart = externalIndex - extCount,
-        extOffset = 0;
+    int levelStart = stackpop(),
+        self = stackpop();
 
-    int self = codepop(),
-        selfCount = localCount + extCount,
-        selfIndex = self + 1,
-        selfMax = selfIndex + 1 + selfCount;
+    levelIndex[level] = levelStart;
 
-    itemArray[selfIndex++] = selfCount;
+    int itemStart = self + 2;
 
-    for (; selfIndex < selfMax; selfIndex++) {
-      int value = itemArray[selfIndex];
-      if (value == _LOCAL) {
-        itemArray[selfIndex] = localArray[localStart + localOffset++];
-      } else {
-        itemArray[selfIndex] = externalArray[extStart + extOffset++];
-      }
-    }
+    int count = protoIndex - itemStart;
 
-    localIndex = localStart;
-    externalIndex = extStart;
+    protoArray[self + 1] = count;
 
-    localadd(self);
+    leveladd(LOCAL, self);
 
     return JavaModel.ELEM;
-  }
-
-  private void elemstart(int value) {
-    codepush(
-      itemIndex, // 2
-      0, // 1 = extCount
-      0 // 0 = localCount
-    );
-
-    itemadd(value, 0);
-  }
-
-  private void externaladd(int value) {
-    externalArray = IntArrays.growIfNecessary(externalArray, externalIndex);
-
-    externalArray[externalIndex++] = value;
   }
 
   private void identifier$(String name) {
@@ -1044,64 +1077,52 @@ class InternalApi extends InternalState implements MarkerApi {
     object(ByteProto.INVOKE_METHOD_NAME, methodName);
   }
 
-  private void itemadd(int v0) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 0);
-
-    itemArray[itemIndex++] = v0;
-  }
-
-  private void itemadd(int v0, int v1) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 1);
-
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
-  }
-
-  private void itemadd(int v0, int v1, int v2) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
-
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
-    itemArray[itemIndex++] = v2;
-  }
-
-  private void itemadd(int v0, int v1, int v2, int v3) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 3);
-
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
-    itemArray[itemIndex++] = v2;
-    itemArray[itemIndex++] = v3;
-  }
-
   private JavaModel._Item itemret() {
     return JavaModel.ITEM;
   }
 
-  private void localadd(int value) {
-    localArray = IntArrays.growIfNecessary(localArray, localIndex + 0);
+  private void leveladd(int v0, int v1) {
+    levelArray = ObjectArrays.growIfNecessary(levelArray, level);
 
-    localArray[localIndex++] = value;
+    if (levelArray[level] == null) {
+      levelArray[level] = new int[64];
+    }
+
+    levelArray[level] = IntArrays.growIfNecessary(levelArray[level], levelIndex[level] + 1);
+    levelArray[level][levelIndex[level]++] = v0;
+    levelArray[level][levelIndex[level]++] = v1;
   }
 
-  private void localcopy(int count) {
-    if (count > 0) {
-      localIndex -= count;
-      int itemMax = itemIndex + count - 1;
-      itemArray = IntArrays.growIfNecessary(itemArray, itemMax);
-      System.arraycopy(localArray, localIndex, itemArray, itemIndex, count);
-      itemIndex += count;
+  private int levelget(int index) { return levelArray[level][index]; }
+
+  private int levelsearch(int index, int condition) {
+    int[] array = levelArray[level];
+    int length = levelIndex[level];
+
+    for (int i = index; i < length; i++) {
+      int value = array[i];
+
+      if (value == condition) {
+        // assuming codeArray was properly assembled
+        // there will always be a i+1 index
+        return i;
+      }
     }
+
+    throw new UnsupportedOperationException(
+      "Implement me :: could not find code (index=%d; condition=%d)"
+          .formatted(index, condition)
+    );
   }
 
   private void modifier(Keyword value) {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.MODIFIER, value.ordinal(), ByteProto.OBJECT_END);
   }
 
   private void operator(Operator2 operator) {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.ASSIGNMENT_OPERATOR, operator.ordinal(), ByteProto.OBJECT_END);
   }
@@ -1119,7 +1140,7 @@ class InternalApi extends InternalState implements MarkerApi {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    itemArray[1] = codeArray[0];
+    protoArray[1] = codeArray[0];
   }
 
   private void pass0Start() {
@@ -1133,24 +1154,66 @@ class InternalApi extends InternalState implements MarkerApi {
 
     localIndex = -1;
 
-    itemIndex = 0;
+    protoIndex = 0;
 
     protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.EOF);
   }
 
   private void primitive(Keyword value) {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(ByteProto.PRIMITIVE_TYPE, value.ordinal(), ByteProto.OBJECT_END);
   }
 
+  private void protoadd(int v0) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 0);
+    protoArray[protoIndex++] = v0;
+  }
+
+  private void protoadd(int v0, int v1) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+  }
+
+  private void protoadd(int v0, int v1, int v2) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+  }
+
+  private void protoadd(int v0, int v1, int v2, int v3) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 3);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
+  }
+
+  private void stackinc(int offset) { stackArray[stackIndex - offset]++; }
+
+  private int stackpeek(int offset) { return stackArray[stackIndex - offset]; }
+
   private int stackpop() { return stackArray[stackIndex--]; }
 
-  private void stackpush(int value) {
+  private void stackpush(int v0) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
 
-    stackArray[++stackIndex] = value;
+    stackArray[++stackIndex] = v0;
   }
+
+  private void stackpush(int v0, int v1, int v2, int v3, int v4) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 5);
+
+    stackArray[++stackIndex] = v0;
+    stackArray[++stackIndex] = v1;
+    stackArray[++stackIndex] = v2;
+    stackArray[++stackIndex] = v3;
+    stackArray[++stackIndex] = v4;
+  }
+
+  private void stackset(int offset, int value) { stackArray[stackIndex - offset] = value; }
 
   private void varName(String name) {
     JavaModel.checkVarName(name);

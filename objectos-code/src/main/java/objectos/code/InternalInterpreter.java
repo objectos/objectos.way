@@ -44,7 +44,7 @@ abstract class InternalInterpreter extends InternalCompiler {
   protected abstract void writeWhitespace(Whitespace value);
 
   final void interpret() {
-    codeIndex = itemIndex = localIndex = 0;
+    codeIndex = protoIndex = localIndex = 0;
 
     objectIndex = -1;
 
@@ -66,7 +66,7 @@ abstract class InternalInterpreter extends InternalCompiler {
 
     objectIndex = -1;
 
-    itemIndex = 0;
+    protoIndex = 0;
 
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 

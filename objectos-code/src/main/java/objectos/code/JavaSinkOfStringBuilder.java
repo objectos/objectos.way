@@ -115,11 +115,11 @@ class JavaSinkOfStringBuilder extends JavaSink {
     }
   }
 
-  private int level() { return itemIndex; }
+  private int level() { return protoIndex; }
 
-  private void levelDecrease() { itemIndex--; }
+  private void levelDecrease() { protoIndex--; }
 
-  private void levelIncrease() { itemIndex++; }
+  private void levelIncrease() { protoIndex++; }
 
   private void writeIndentation(int length) {
     for (int i = 0; i < length; i++) {

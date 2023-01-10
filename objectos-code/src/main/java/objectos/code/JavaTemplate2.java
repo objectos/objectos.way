@@ -180,17 +180,17 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final Include include(IncludeTarget target) {
     var api = api();
-    api.includestart();
+    api.lambdastart();
     target.execute(); // implicit null-check
-    api.includeend();
+    api.lambdaend();
     return JavaModel.INCLUDE;
   }
 
   protected final Include include(JavaTemplate2 template) {
     var api = api();
-    api.includestart();
+    api.lambdastart();
     template.execute(api);
-    api.includeend();
+    api.lambdaend();
     return JavaModel.INCLUDE;
   }
 

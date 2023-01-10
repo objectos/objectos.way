@@ -26,22 +26,28 @@ public class IncludeTest {
   - single statement
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke("test", include(this::body));
+          _class("TestCase01"); body(
+            include(this::body0)
+          );
         }
 
-        private void body() {
-          invoke("foo");
+        private void body0() {
+          _int(); id("a");
         }
       }.toString(),
 
       """
-      test(foo());
+      class TestCase01 {
+        int a;
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

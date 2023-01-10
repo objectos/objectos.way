@@ -28,10 +28,6 @@ abstract class InternalState {
 
   int codeIndex;
 
-  int[] itemArray = new int[256];
-
-  int itemIndex;
-
   int[] localArray = new int[64];
 
   int localIndex;
@@ -39,6 +35,10 @@ abstract class InternalState {
   Object[] objectArray = new Object[64];
 
   int objectIndex;
+
+  int[] protoArray = new int[256];
+
+  int protoIndex;
 
   int[] stackArray = new int[10];
 
@@ -49,7 +49,7 @@ abstract class InternalState {
 
     var start = codeIndex - length;
 
-    var mark = itemIndex;
+    var mark = protoIndex;
 
     protoAdd(type);
 
@@ -107,7 +107,7 @@ abstract class InternalState {
   }
 
   final void object(int type, Object value) {
-    elementAdd(itemIndex);
+    elementAdd(protoIndex);
 
     protoAdd(type, objectAdd(value), ByteProto.OBJECT_END);
   }
@@ -127,28 +127,28 @@ abstract class InternalState {
   }
 
   final void protoAdd(int v0) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex);
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex);
 
-    itemArray[itemIndex++] = v0;
+    protoArray[protoIndex++] = v0;
   }
 
   final void protoAdd(int v0, int v1) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 1);
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
 
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
   }
 
   final void protoAdd(int v0, int v1, int v2) {
-    itemArray = IntArrays.growIfNecessary(itemArray, itemIndex + 2);
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
 
-    itemArray[itemIndex++] = v0;
-    itemArray[itemIndex++] = v1;
-    itemArray[itemIndex++] = v2;
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
   }
 
   final void protopop() {
-    itemIndex = stackArray[--stackIndex];
+    protoIndex = stackArray[--stackIndex];
   }
 
 }
