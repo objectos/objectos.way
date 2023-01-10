@@ -18,6 +18,8 @@ package objectos.code;
 final class Fixture extends JavaTemplate2 {
 
   enum Kind {
+    CLASS,
+
     STATIC_BLOCK,
 
     VOID_METHOD;
@@ -54,6 +56,10 @@ final class Fixture extends JavaTemplate2 {
   private void bodyImpl() {
     // @formatter:off
     switch (kind) {
+      case CLASS -> {
+        include(subject);
+      }
+
       case STATIC_BLOCK -> {
         _static(); block(
           include(subject)

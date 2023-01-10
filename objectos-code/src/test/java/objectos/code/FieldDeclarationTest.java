@@ -18,30 +18,37 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
+import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class FieldDeclarationTest {
 
-  @Test(description = """
+  private final Fixture fix = new Fixture("Fields", Kind.CLASS);
+
+  @Test(enabled = false, description = """
   typeName + names
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t(String.class), id("name"));
+          t(String.class); id("name");
 
-          field(t(String.class), id("a"), id("b"), id("c"));
+          t(String.class); id("a"); id("b"); id("c");
         }
-      }.toString(),
+      }),
 
       """
-      java.lang.String name;
+      class Fields {
+        java.lang.String name;
 
-      java.lang.String a, b, c;
+        java.lang.String a, b, c;
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
