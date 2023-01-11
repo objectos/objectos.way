@@ -67,7 +67,7 @@ import objectos.code.JavaModel.LocalVariableDeclarationRef;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
-import objectos.code.JavaModel.NewLineRef;
+import objectos.code.JavaModel.NewLine;
 import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimaryExpression;
@@ -336,7 +336,7 @@ public abstract class JavaTemplate {
     return api().n(keyword, identifier);
   }
 
-  protected final NewLineRef nl() {
+  protected NewLine nl() {
     return api().nl();
   }
 

@@ -40,6 +40,7 @@ import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.MethodInvocationElement;
+import objectos.code.JavaModel.NewLine;
 import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
@@ -256,10 +257,87 @@ abstract class JavaTemplate2 extends JavaTemplate {
       String methodName,
       MethodInvocationElement e1, MethodInvocationElement e2) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
-
     var api = api();
     api.identifierext(methodName);
     return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6,
+      MethodInvocationElement e7) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self(), e7.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6,
+      MethodInvocationElement e7, MethodInvocationElement e8) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self(), e7.self(), e8.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6,
+      MethodInvocationElement e7, MethodInvocationElement e8, MethodInvocationElement e9) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self(), e7.self(), e8.self(), e9.self());
   }
 
   protected final ExpressionName n(String id1) {
@@ -268,6 +346,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
     var api = api();
     api.identifierext(id1);
     return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT);
+  }
+
+  @Override
+  protected final NewLine nl() {
+    return api().item(ByteProto.NEW_LINE);
   }
 
   @Override

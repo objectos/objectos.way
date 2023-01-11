@@ -17,7 +17,6 @@ package objectos.code;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import objectos.code2.Indentation;
 import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
@@ -30,7 +29,8 @@ class InternalCompiler extends InternalApi {
       _ARGS = 10, _DIMS = 11,
       _BODY = 12,
       _EXPRESSION = 13,
-      _PRIMARY = 14;
+      _PRIMARY = 14,
+      _NL = 15, _SLOT = 16;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -43,11 +43,9 @@ class InternalCompiler extends InternalApi {
   private static final int _VALUE = 66;
   private static final int _BASE = 68;
   private static final int _FIRST = 69;
-  private static final int _NL = 70;
   private static final int _NEXT = 71;
   private static final int _RECV = 72;
   private static final int _LPAR = 73;
-  private static final int _SLOT = 74;
 
   private static final int NULL = Integer.MIN_VALUE;
   private static final int FALSE = 0;
@@ -487,7 +485,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS_TYPE -> {
         switch (state) {
           case _START -> {
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           default -> stubState(context, state, item);
@@ -557,7 +555,7 @@ class InternalCompiler extends InternalApi {
     switch (item) {
       case ByteProto.PRIMITIVE_LITERAL -> {
         switch (state) {
-          case _START -> stateset(_BODY);
+          case _START -> stackset(_BODY);
 
           case _BODY -> commaAndSpace();
 
@@ -598,7 +596,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ARRAY_DIMENSION -> {
         switch (state) {
           case _TYPE -> {
-            stateset(_DIMS);
+            stackset(_DIMS);
           }
 
           case _DIMS -> {}
@@ -611,7 +609,7 @@ class InternalCompiler extends InternalApi {
            ByteProto.PARAMETERIZED_TYPE,
            ByteProto.PRIMITIVE_TYPE -> {
         switch (state) {
-          case _START -> stateset(_TYPE);
+          case _START -> stackset(_TYPE);
 
           default -> stubState(context, state, item);
         }
@@ -743,7 +741,7 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.NEW_LINE);
             codeadd(Indentation.EMIT);
-            stateset(_PRIMARY);
+            stackset(_PRIMARY);
           }
 
           case _BODY -> {
@@ -760,7 +758,7 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.NEW_LINE);
             codeadd(Indentation.EMIT);
-            stateset(_BODY);
+            stackset(_BODY);
           }
 
           case _BODY -> {
@@ -835,7 +833,7 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(_ANNOTATIONS);
+            stackset(_ANNOTATIONS);
           }
 
           default -> stubState(context, state, item);
@@ -848,7 +846,7 @@ class InternalCompiler extends InternalApi {
             codeadd(Whitespace.OPTIONAL);
             codeadd(Symbol.ASSIGNMENT);
             codeadd(Whitespace.OPTIONAL);
-            stateset(_INIT);
+            stackset(_INIT);
           }
 
           default -> stubState(context, state, item);
@@ -863,25 +861,25 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           case _ANNOTATIONS -> {
             codeadd(Whitespace.AFTER_ANNOTATION);
             codeadd(Indentation.EMIT);
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           case _MODIFIERS -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           case _NAME, _INIT -> {
             codeadd(Symbol.SEMICOLON);
             codeadd(Whitespace.BEFORE_NEXT_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           default -> stubState(context, state, item);
@@ -894,7 +892,7 @@ class InternalCompiler extends InternalApi {
             codeadd(Symbol.LEFT_PARENTHESIS);
             codeadd(Symbol.RIGHT_PARENTHESIS);
             codeadd(Whitespace.OPTIONAL);
-            stateset(_BODY);
+            stackset(_BODY);
           }
 
           default -> stubState(context, state, item);
@@ -906,7 +904,7 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(_BODY);
+            stackset(_BODY);
           }
 
           default -> stubState(context, state, item);
@@ -917,12 +915,12 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _TYPE -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_NAME);
+            stackset(_NAME);
           }
 
           case _NAME, _INIT -> {
             commaAndSpace();
-            stateset(_NAME);
+            stackset(_NAME);
           }
 
           default -> stubState(context, state, item);
@@ -934,7 +932,7 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(_MODIFIERS);
+            stackset(_MODIFIERS);
           }
 
           case _MODIFIERS -> {
@@ -945,7 +943,7 @@ class InternalCompiler extends InternalApi {
             codeadd(Symbol.SEMICOLON);
             codeadd(Whitespace.BEFORE_NEXT_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(_MODIFIERS);
+            stackset(_MODIFIERS);
           }
 
           default -> stubState(context, state, item);
@@ -958,7 +956,7 @@ class InternalCompiler extends InternalApi {
             codeadd(Whitespace.OPTIONAL);
             codeadd(Symbol.ASSIGNMENT);
             codeadd(Whitespace.OPTIONAL);
-            stateset(_INIT);
+            stackset(_INIT);
           }
 
           default -> stubState(context, state, item);
@@ -970,13 +968,13 @@ class InternalCompiler extends InternalApi {
           case _START -> {
             codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             codeadd(Indentation.EMIT);
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           case _ANNOTATIONS -> {
             codeadd(Whitespace.AFTER_ANNOTATION);
             codeadd(Indentation.EMIT);
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           default -> stubState(context, state, item);
@@ -1110,7 +1108,7 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _CLAUSE -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_CLAUSE_TYPE);
+            stackset(_CLAUSE_TYPE);
           }
 
           case _CLAUSE_TYPE -> {
@@ -1127,7 +1125,7 @@ class InternalCompiler extends InternalApi {
           case _START,
                _CLAUSE_TYPE -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_CLAUSE);
+            stackset(_CLAUSE);
           }
 
           default -> stubState(ctx, state, item);
@@ -1398,7 +1396,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ANNOTATION -> {
         switch (state) {
           case _START -> {
-            stateset(_ANNOTATIONS);
+            stackset(_ANNOTATIONS);
           }
 
           default -> stubState(ctx, state, item);
@@ -1409,12 +1407,12 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _START -> {
             codeadd(ByteCode.AUTO_IMPORTS0);
-            stateset(_IMPORTS);
+            stackset(_IMPORTS);
           }
 
           case _PACKAGE -> {
             codeadd(ByteCode.AUTO_IMPORTS1);
-            stateset(_IMPORTS);
+            stackset(_IMPORTS);
           }
 
           default -> stubState(ctx, state, item);
@@ -1424,22 +1422,22 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS -> {
         switch (state) {
           case _START -> {
-            stateset(_BODY);
+            stackset(_BODY);
           }
 
           case _ANNOTATIONS -> {
             codeadd(Whitespace.AFTER_ANNOTATION);
-            stateset(_BODY);
+            stackset(_BODY);
           }
 
           case _PACKAGE, _IMPORTS, _BODY -> {
             codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-            stateset(_BODY);
+            stackset(_BODY);
           }
 
           case _MODIFIERS -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_BODY);
+            stackset(_BODY);
           }
 
           default -> stubState(ctx, state, item);
@@ -1449,12 +1447,12 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> {
         switch (state) {
           case _START -> {
-            stateset(_MODIFIERS);
+            stackset(_MODIFIERS);
           }
 
           case _BODY -> {
             codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
-            stateset(_MODIFIERS);
+            stackset(_MODIFIERS);
           }
 
           default -> stubState(ctx, state, item);
@@ -1464,7 +1462,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.PACKAGE -> {
         switch (state) {
           case _START -> {
-            stateset(_PACKAGE);
+            stackset(_PACKAGE);
           }
 
           default -> stubState(ctx, state, item);
@@ -1865,7 +1863,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IDENTIFIER -> {
         switch (state) {
           case _START -> {
-            stateset(_NAME);
+            stackset(_NAME);
           }
 
           case _NAME -> {
@@ -2150,6 +2148,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
+      case ByteProto.NEW_LINE -> codeadd(Whitespace.NEW_LINE);
+
       case ByteProto.PACKAGE -> packageKeyword();
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
@@ -2414,9 +2414,14 @@ class InternalCompiler extends InternalApi {
 
   private void methodInvocation() {
     int proto = ByteProto.METHOD_INVOCATION;
-    stackpush(proto, _START);
+    stackpush(
+      NULL, // 2 = slot
+      proto,
+      _START
+    );
     element();
     var state = contextpop();
+    stackpop(); // slot
     switch (state) {
       case _NAME -> {
         codeadd(Symbol.LEFT_PARENTHESIS);
@@ -2496,7 +2501,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IDENTIFIER -> {
         switch (state) {
           case _START -> {
-            stateset(_NAME);
+            stackset(_NAME);
           }
 
           default -> stubState(context, state, item);
@@ -2509,12 +2514,46 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _NAME -> {
             codeadd(Symbol.LEFT_PARENTHESIS);
-            stateset(_ARGS);
+            stackset(_ARGS);
           }
 
           case _ARGS -> {
             commaAndSpace();
           }
+
+          case _NL -> {
+            codeadd(Indentation.EMIT);
+            stackset(_ARGS);
+          }
+
+          case _SLOT -> {
+            var slot = stackpeek(2);
+
+            codeArray[slot + 0] = ByteCode.SEPARATOR;
+            codeArray[slot + 1] = Symbol.COMMA.ordinal();
+
+            codeadd(Indentation.EMIT);
+            stackset(_ARGS);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.NEW_LINE -> {
+        switch (state) {
+          case _NAME -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            codeadd(Indentation.ENTER_PARENTHESIS);
+            stackset(_NL);
+          }
+
+          case _ARGS -> {
+            stackset(_SLOT);
+            stackset(2, nop1());
+          }
+
+          case _SLOT -> {}
 
           default -> stubState(context, state, item);
         }
@@ -2594,7 +2633,7 @@ class InternalCompiler extends InternalApi {
   private int nop1() {
     var result = codeIndex;
 
-    $codeadd(ByteCode.NOP1, 0);
+    codeadd(ByteCode.NOP1, 0);
 
     return result;
   }
@@ -2652,12 +2691,12 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS_TYPE -> {
         switch (state) {
           case _START -> {
-            stateset(_TYPE);
+            stackset(_TYPE);
           }
 
           case _TYPE -> {
             codeadd(Symbol.LEFT_ANGLE_BRACKET);
-            stateset(_ARGS);
+            stackset(_ARGS);
           }
 
           case _ARGS -> {
@@ -2752,7 +2791,7 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _START -> {
             codeadd(Whitespace.MANDATORY);
-            stateset(_EXPRESSION);
+            stackset(_EXPRESSION);
           }
 
           default -> stubState(context, state, item);
@@ -2763,7 +2802,7 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _START -> {
             codeadd(Whitespace.OPTIONAL);
-            stateset(_EXPRESSION);
+            stackset(_EXPRESSION);
           }
 
           default -> stubState(context, state, item);
@@ -2801,6 +2840,8 @@ class InternalCompiler extends InternalApi {
 
   private int stackpeek(int offset) { return localArray[localIndex - offset]; }
 
+  private int stackpop() { return localArray[localIndex--]; }
+
   private void stackpush(int v0, int v1) {
     localArray = IntArrays.growIfNecessary(localArray, localIndex + 2);
 
@@ -2808,7 +2849,17 @@ class InternalCompiler extends InternalApi {
     localArray[++localIndex] = v1;
   }
 
-  private void stateset(int value) { localArray[localIndex] = value; }
+  private void stackpush(int v0, int v1, int v2) {
+    localArray = IntArrays.growIfNecessary(localArray, localIndex + 3);
+
+    localArray[++localIndex] = v0;
+    localArray[++localIndex] = v1;
+    localArray[++localIndex] = v2;
+  }
+
+  private void stackset(int value) { localArray[localIndex] = value; }
+
+  private void stackset(int offset, int value) { localArray[localIndex - offset] = value; }
 
   private void stubItem(int ctx, int state, int item) {
     warn("no-op item '%s' @ '%s' (state=%d)".formatted(

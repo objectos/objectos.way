@@ -101,15 +101,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase04() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           invoke("m0", s("1"), invoke("m2"), s("3"));
         }
-      }.toString(),
+      }),
 
       """
-      m0("1", m2(), "3");
+      class Invoke {
+        void method() {
+          m0("1", m2(), "3");
+        }
+      }
       """
     );
   }
@@ -121,32 +125,22 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase05() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           invoke("m0", nl(), s("1"), nl(), nl(), invoke("m2"), nl(), nl(), s("3"), nl());
-
-          _class(id("A"),
-            method(id("foo"),
-              invoke("m0", nl(), s("1"), nl())
-            )
-          );
         }
-      }.toString(),
+      }),
 
       """
-      m0(
-        "1",
-
-        m2(),
-
-        "3"
-      );
-
-      class A {
-        void foo() {
+      class Invoke {
+        void method() {
           m0(
-            "1"
+            "1",
+
+            m2(),
+
+            "3"
           );
         }
       }
@@ -159,15 +153,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase06() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           invoke("test", n("field"));
         }
-      }.toString(),
+      }),
 
       """
-      test(field);
+      class Invoke {
+        void method() {
+          test(field);
+        }
+      }
       """
     );
   }

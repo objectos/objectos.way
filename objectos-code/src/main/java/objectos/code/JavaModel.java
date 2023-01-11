@@ -163,9 +163,6 @@ public final class JavaModel {
 
   public sealed interface MethodInvocationElement extends Element, Markable {}
 
-  public sealed interface NewLineRef
-      extends BlockElement, ChainedMethodInvocationElement, MethodInvocationElement {}
-
   public sealed interface QualifiedMethodInvocation
       extends ChainedMethodInvocationHead, MethodInvocation {}
 
@@ -231,6 +228,7 @@ public final class JavaModel {
       Identifier,
       ImplementsKeyword,
       IntegerLiteral,
+      NewLine,
       PackageKeyword,
       PrimitiveType,
       PrivateModifier,
@@ -325,6 +323,12 @@ public final class JavaModel {
 
   sealed interface MethodInvocation extends Expression, ExpressionStatement {}
 
+  sealed interface NewLine extends Element,
+      /* to remove */
+      BlockElement,
+      ChainedMethodInvocationElement,
+      MethodInvocationElement {}
+
   sealed interface PackageKeyword extends Element {}
 
   sealed interface ParameterizedType extends ReferenceType,
@@ -418,7 +422,7 @@ public final class JavaModel {
       InterfaceDeclaration,
       LocalVariableDeclarationRef,
       MethodDeclaration,
-      NewLineRef,
+      NewLine,
       ParameterizedType,
       PrimitiveType,
       PrivateModifier,

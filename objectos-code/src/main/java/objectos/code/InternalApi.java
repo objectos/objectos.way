@@ -70,7 +70,7 @@ import objectos.code.JavaModel.MarkerApi;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
-import objectos.code.JavaModel.NewLineRef;
+import objectos.code.JavaModel.NewLine;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
@@ -529,6 +529,121 @@ class InternalApi extends InternalState implements MarkerApi {
     return elemret();
   }
 
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6) {
+    elempre();
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elempre(e4);
+    elempre(e5);
+    elempre(e6);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
+    elemcntx(e4);
+    elemcntx(e5);
+    elemcntx(e6);
+    return elemret();
+  }
+
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7) {
+    elempre();
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elempre(e4);
+    elempre(e5);
+    elempre(e6);
+    elempre(e7);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
+    elemcntx(e4);
+    elemcntx(e5);
+    elemcntx(e6);
+    elemcntx(e7);
+    return elemret();
+  }
+
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7, Object e8) {
+    elempre();
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elempre(e4);
+    elempre(e5);
+    elempre(e6);
+    elempre(e7);
+    elempre(e8);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
+    elemcntx(e4);
+    elemcntx(e5);
+    elemcntx(e6);
+    elemcntx(e7);
+    elemcntx(e8);
+    return elemret();
+  }
+
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7, Object e8, Object e9) {
+    elempre();
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elempre(e4);
+    elempre(e5);
+    elempre(e6);
+    elempre(e7);
+    elempre(e8);
+    elempre(e9);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
+    elemcntx(e4);
+    elemcntx(e5);
+    elemcntx(e6);
+    elemcntx(e7);
+    elemcntx(e8);
+    elemcntx(e9);
+    return elemret();
+  }
+
+  public final JavaModel._Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7, Object e8, Object e9, Object e10) {
+    elempre();
+    elempre(e1);
+    elempre(e2);
+    elempre(e3);
+    elempre(e4);
+    elempre(e5);
+    elempre(e6);
+    elempre(e7);
+    elempre(e8);
+    elempre(e9);
+    elempre(e10);
+    elemcnt(proto);
+    elemcntx(e1);
+    elemcntx(e2);
+    elemcntx(e3);
+    elemcntx(e4);
+    elemcntx(e5);
+    elemcntx(e6);
+    elemcntx(e7);
+    elemcntx(e8);
+    elemcntx(e9);
+    elemcntx(e10);
+    return elemret();
+  }
+
   public final Ellipsis ellipsis() {
     elementAdd(protoIndex);
 
@@ -733,7 +848,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final NewLineRef nl() {
+  public final NewLine nl() {
     elementAdd(protoIndex);
 
     protoAdd(ByteProto.NEW_LINE, ByteProto.OBJECT_END);
