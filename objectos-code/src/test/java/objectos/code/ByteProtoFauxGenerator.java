@@ -108,11 +108,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("LOCAL_VARIABLE");
     value("RETURN_STATEMENT");
 
-    comment("expressions aux");
-
-    value("ARGUMENT_LIST");
-    value("INVOKE");
-
     comment("expressions");
 
     value("ARRAY_ACCESS_EXPRESSION");

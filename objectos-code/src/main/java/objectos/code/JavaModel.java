@@ -161,7 +161,7 @@ public final class JavaModel {
 
   public sealed interface MethodDeclarationElement extends Markable {}
 
-  public sealed interface MethodInvocationElement extends Markable {}
+  public sealed interface MethodInvocationElement extends Element, Markable {}
 
   public sealed interface NewLineRef
       extends BlockElement, ChainedMethodInvocationElement, MethodInvocationElement {}
@@ -188,17 +188,6 @@ public final class JavaModel {
       ChainedMethodInvocationElement,
       MethodInvocation {}
 
-  enum _Duo
-      implements
-      MethodInvocation {
-    INSTANCE;
-
-    @Override
-    public final void mark(MarkerApi api) {
-      throw new UnsupportedOperationException();
-    }
-  }
-
   enum _Elem
       implements
       ArrayInitializer,
@@ -207,6 +196,7 @@ public final class JavaModel {
       Block,
       Body,
       ExpressionName,
+      MethodInvocation,
       ParameterizedType {
     INSTANCE;
 
@@ -450,8 +440,6 @@ public final class JavaModel {
       api.markReference();
     }
   }
-
-  static final _Duo DUO = _Duo.INSTANCE;
 
   static final _Elem ELEM = _Elem.INSTANCE;
 

@@ -30,8 +30,7 @@ class InternalCompiler extends InternalApi {
       _ARGS = 10, _DIMS = 11,
       _BODY = 12,
       _EXPRESSION = 13,
-      _INVOKE = 14,
-      _PRIMARY = 15;
+      _PRIMARY = 14;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -507,26 +506,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void argumentList() {
-    codeadd(Symbol.LEFT_PARENTHESIS);
-    stackpush(ByteProto.ARGUMENT_LIST, _START);
-    element();
-    int state = contextpop();
-    switch (state) {
-      case _START, _ARGS -> {
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      case _SLOT -> {
-        codeadd(Indentation.EXIT_PARENTHESIS);
-        codeadd(Indentation.EMIT);
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      default -> stubPop(ByteProto.ARGUMENT_LIST, state);
-    }
-  }
-
   private void arrayAccessExpression(int child) {
     var state = $parentvalget(1);
 
@@ -759,22 +738,17 @@ class InternalCompiler extends InternalApi {
 
   private void block(int context, int state, int item) {
     switch (item) {
-      case ByteProto.ARGUMENT_LIST -> {
-        switch (state) {
-          case _INVOKE -> {
-            stateset(_PRIMARY);
-          }
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      case ByteProto.INVOKE -> {
+      case ByteProto.METHOD_INVOCATION -> {
         switch (state) {
           case _START -> {
             codeadd(Whitespace.NEW_LINE);
             codeadd(Indentation.EMIT);
-            stateset(_INVOKE);
+            stateset(_PRIMARY);
+          }
+
+          case _BODY -> {
+            codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
+            codeadd(Indentation.EMIT);
           }
 
           default -> stubState(context, state, item);
@@ -1663,6 +1637,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.EXPRESSION_NAME -> expressionName(context, state, item);
 
+      case ByteProto.METHOD_INVOCATION -> methodInvocation(context, state, item);
+
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(context, state, item);
 
       case ByteProto.RETURN_STATEMENT -> returnStatement(context, state, item);
@@ -2143,8 +2119,6 @@ class InternalCompiler extends InternalApi {
     switch (item) {
       case ByteProto.ANNOTATION -> annotation();
 
-      case ByteProto.ARGUMENT_LIST -> argumentList();
-
       case ByteProto.ARRAY_DIMENSION -> {
         codeadd(Symbol.LEFT_SQUARE_BRACKET);
         codeadd(Symbol.RIGHT_SQUARE_BRACKET);
@@ -2172,7 +2146,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.IMPLEMENTS -> codeadd(Keyword.IMPLEMENTS);
 
-      case ByteProto.INVOKE -> codeadd(ByteCode.IDENTIFIER, itemnxt());
+      case ByteProto.METHOD_INVOCATION -> methodInvocation();
 
       case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
@@ -2438,6 +2412,31 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void methodInvocation() {
+    int proto = ByteProto.METHOD_INVOCATION;
+    stackpush(proto, _START);
+    element();
+    var state = contextpop();
+    switch (state) {
+      case _NAME -> {
+        codeadd(Symbol.LEFT_PARENTHESIS);
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      case _ARGS -> {
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      case _SLOT -> {
+        codeadd(Indentation.EXIT_PARENTHESIS);
+        codeadd(Indentation.EMIT);
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      default -> stubPop(proto, state);
+    }
+  }
+
   private void methodInvocation(int child) {
     var state = $parentvalget(1);
 
@@ -2489,6 +2488,39 @@ class InternalCompiler extends InternalApi {
           $parentvalset(1, _ARG);
         }
       }
+    }
+  }
+
+  private void methodInvocation(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.IDENTIFIER -> {
+        switch (state) {
+          case _START -> {
+            stateset(_NAME);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.EXPRESSION_NAME,
+           ByteProto.METHOD_INVOCATION,
+           ByteProto.STRING_LITERAL -> {
+        switch (state) {
+          case _NAME -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            stateset(_ARGS);
+          }
+
+          case _ARGS -> {
+            commaAndSpace();
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
     }
   }
 
@@ -2650,8 +2682,6 @@ class InternalCompiler extends InternalApi {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
 
-      case ByteProto.ARGUMENT_LIST -> "Argument List";
-
       case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
 
       case ByteProto.ARRAY_TYPE -> "Array Type";
@@ -2677,8 +2707,6 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IDENTIFIER -> "Identifier";
 
       case ByteProto.IMPLEMENTS -> "Implements";
-
-      case ByteProto.INVOKE -> "Invoke";
 
       case ByteProto.METHOD_DECLARATION -> "Method Decl.";
 

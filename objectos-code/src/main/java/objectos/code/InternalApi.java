@@ -1003,6 +1003,18 @@ class InternalApi extends InternalState implements MarkerApi {
       protoadd(value);
 
       stackset(0, localIndex);
+    } else if (obj == JavaModel.EXT) {
+      int extIndex = stackpeek(1);
+
+      extIndex = levelsearch(extIndex, EXT);
+
+      extIndex++;
+
+      int value = levelget(extIndex);
+
+      protoadd(value);
+
+      stackset(1, extIndex);
     } else if (obj == JavaModel.INCLUDE) {
       int codeIndex = stackpeek(2);
 

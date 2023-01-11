@@ -54,15 +54,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           invoke("test", s("a"));
         }
-      }.toString(),
+      }),
 
       """
-      test("a");
+      class Invoke {
+        void method() {
+          test("a");
+        }
+      }
       """
     );
   }
@@ -73,15 +77,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           invoke("test", s("a"), s("b"));
         }
-      }.toString(),
+      }),
 
       """
-      test("a", "b");
+      class Invoke {
+        void method() {
+          test("a", "b");
+        }
+      }
       """
     );
   }

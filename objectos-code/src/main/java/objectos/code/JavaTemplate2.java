@@ -39,6 +39,7 @@ import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.MethodInvocation;
+import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
@@ -237,9 +238,28 @@ abstract class JavaTemplate2 extends JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
 
     var api = api();
-    api.item(ByteProto.INVOKE, api.object(methodName));
-    api.elem(ByteProto.ARGUMENT_LIST);
-    return JavaModel.DUO;
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT);
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self());
+  }
+
+  protected final MethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self());
   }
 
   protected final ExpressionName n(String id1) {

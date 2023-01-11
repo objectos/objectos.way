@@ -103,25 +103,20 @@ final class ByteProto {
   static final int LOCAL_VARIABLE = -47;
   static final int RETURN_STATEMENT = -48;
 
-  //expressions aux
-
-  static final int ARGUMENT_LIST = -49;
-  static final int INVOKE = -50;
-
   //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -51;
-  static final int ASSIGNMENT_EXPRESSION = -52;
-  static final int ASSIGNMENT_OPERATOR = -53;
-  static final int CHAINED_METHOD_INVOCATION = -54;
-  static final int CLASS_INSTANCE_CREATION0 = -55;
-  static final int EXPRESSION_NAME = -56;
-  static final int FIELD_ACCESS_EXPRESSION0 = -57;
-  static final int METHOD_INVOCATION = -58;
-  static final int METHOD_INVOCATION_QUALIFIED = -59;
-  static final int PRIMITIVE_LITERAL = -60;
-  static final int STRING_LITERAL = -61;
-  static final int THIS = -62;
+  static final int ARRAY_ACCESS_EXPRESSION = -49;
+  static final int ASSIGNMENT_EXPRESSION = -50;
+  static final int ASSIGNMENT_OPERATOR = -51;
+  static final int CHAINED_METHOD_INVOCATION = -52;
+  static final int CLASS_INSTANCE_CREATION0 = -53;
+  static final int EXPRESSION_NAME = -54;
+  static final int FIELD_ACCESS_EXPRESSION0 = -55;
+  static final int METHOD_INVOCATION = -56;
+  static final int METHOD_INVOCATION_QUALIFIED = -57;
+  static final int PRIMITIVE_LITERAL = -58;
+  static final int STRING_LITERAL = -59;
+  static final int THIS = -60;
 
   private ByteProto() {}
 
