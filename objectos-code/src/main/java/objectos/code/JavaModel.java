@@ -37,24 +37,10 @@ public final class JavaModel {
 
   public sealed interface ArrayAccessExpression extends Expression, LeftHandSide {}
 
-  public sealed interface ArrayDimension extends ArrayTypeElement {}
-
   public sealed interface ArrayInitializer
       extends ArrayInitializerElement, FieldDeclarationElement {}
 
   public sealed interface ArrayInitializerElement extends Markable {}
-
-  public sealed interface ArrayType
-      extends
-      AnyType,
-      ReferenceType,
-
-      FieldDeclarationElement,
-      MethodDeclarationElement {}
-
-  public sealed interface ArrayTypeComponent extends Markable {}
-
-  public sealed interface ArrayTypeElement extends Markable {}
 
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
@@ -174,22 +160,8 @@ public final class JavaModel {
   public sealed interface NewLineRef
       extends BlockElement, ChainedMethodInvocationElement, MethodInvocationElement {}
 
-  public sealed interface ParameterizedClassType
-      extends
-      AnyType,
-      ReferenceType {}
-
   public sealed interface QualifiedMethodInvocation
       extends ChainedMethodInvocationHead, MethodInvocation {}
-
-  public sealed interface ReferenceType
-      extends
-      AnyType,
-      ArrayTypeComponent,
-
-      FieldDeclarationElement,
-      FormalParameterElement,
-      MethodDeclarationElement {}
 
   public sealed interface Statement
       extends BlockStatement, ConstructorDeclarationElement, MethodDeclarationElement {}
@@ -209,10 +181,12 @@ public final class JavaModel {
 
   enum _Elem
       implements
+      ArrayType,
       At,
       Block,
       Body,
-      ExpressionName {
+      ExpressionName,
+      ParameterizedType {
     INSTANCE;
 
     @Override
@@ -237,6 +211,7 @@ public final class JavaModel {
   enum _Item
       implements
       AbstractModifier,
+      ArrayDimension,
       AutoImports,
       ClassKeyword,
       ClassType,
@@ -266,6 +241,24 @@ public final class JavaModel {
       ClassDeclarationElement,
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
+
+  sealed interface ArrayDimension extends ArrayTypeElement {}
+
+  sealed interface ArrayType extends BodyElement,
+      /* to remove */
+      AnyType,
+      ReferenceType,
+
+      FieldDeclarationElement,
+      MethodDeclarationElement {}
+
+  sealed interface ArrayTypeComponent extends
+      /* to remove */
+      Markable {}
+
+  sealed interface ArrayTypeElement extends
+      /* to remove */
+      Markable {}
 
   sealed interface At extends BodyElement {}
 
@@ -327,6 +320,10 @@ public final class JavaModel {
 
   sealed interface PackageKeyword extends Element {}
 
+  sealed interface ParameterizedType extends ReferenceType,
+      /* to remove */
+      AnyType {}
+
   sealed interface PrimaryExpression extends Expression {}
 
   sealed interface PrimitiveType extends BodyElement,
@@ -343,6 +340,14 @@ public final class JavaModel {
   sealed interface ProtectedModifier extends AccessModifier {}
 
   sealed interface PublicModifier extends AccessModifier {}
+
+  sealed interface ReferenceType extends ArrayTypeComponent,
+      /* to remove */
+      AnyType,
+
+      FieldDeclarationElement,
+      FormalParameterElement,
+      MethodDeclarationElement {}
 
   sealed interface ReturnKeyword extends BlockElement,
       /* to remove */
@@ -407,7 +412,7 @@ public final class JavaModel {
       LocalVariableDeclarationRef,
       MethodDeclaration,
       NewLineRef,
-      ParameterizedClassType,
+      ParameterizedType,
       PrimitiveType,
       PrivateModifier,
       ProtectedModifier,

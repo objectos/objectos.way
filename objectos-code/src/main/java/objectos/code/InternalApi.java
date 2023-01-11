@@ -71,7 +71,7 @@ import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLineRef;
-import objectos.code.JavaModel.ParameterizedClassType;
+import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
@@ -457,7 +457,7 @@ class InternalApi extends InternalState implements MarkerApi {
   public final ArrayDimension dim() {
     markStart();
 
-    element(ByteProto.DIM);
+    element(ByteProto.ARRAY_DIMENSION);
 
     return JavaModel.REF;
   }
@@ -815,7 +815,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return outer;
   }
 
-  public final ParameterizedClassType t(ClassType rawType, AnyType[] arguments) {
+  public final ParameterizedType t(ClassType rawType, AnyType[] arguments) {
     markStart();
 
     rawType.mark(this);

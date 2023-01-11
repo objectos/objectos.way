@@ -26,8 +26,9 @@ class InternalCompiler extends InternalApi {
       _ANNOTATIONS = 3, _MODIFIERS = 4,
       _CLAUSE = 5, _CLAUSE_TYPE = 6,
       _TYPE = 7, _NAME = 8, _INIT = 9,
-      _BODY = 10,
-      _EXPRESSION = 11;
+      _ARGS = 10, _DIMS = 11,
+      _BODY = 12,
+      _EXPRESSION = 13;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -550,13 +551,47 @@ class InternalCompiler extends InternalApi {
     $codeadd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
+  private void arrayType() {
+    stackpush(ByteProto.ARRAY_TYPE, _START);
+    element();
+    contextpop();
+  }
+
   private void arrayType(int child) {
     switch (child) {
-      case ByteProto.DIM -> {
+      case ByteProto.ARRAY_DIMENSION -> {
         $codeadd(Symbol.LEFT_SQUARE_BRACKET);
 
         $codeadd(Symbol.RIGHT_SQUARE_BRACKET);
       }
+    }
+  }
+
+  private void arrayType(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.ARRAY_DIMENSION -> {
+        switch (state) {
+          case _TYPE -> {
+            stateset(_DIMS);
+          }
+
+          case _DIMS -> {}
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.CLASS_TYPE,
+           ByteProto.PARAMETERIZED_TYPE,
+           ByteProto.PRIMITIVE_TYPE -> {
+        switch (state) {
+          case _START -> stateset(_TYPE);
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
     }
   }
 
@@ -1524,6 +1559,8 @@ class InternalCompiler extends InternalApi {
     switch (context) {
       case ByteProto.ANNOTATION -> annotation(context, state, item);
 
+      case ByteProto.ARRAY_TYPE -> arrayType(context, state, item);
+
       case ByteProto.BLOCK -> block(context, state, item);
 
       case ByteProto.BODY -> body(context, state, item);
@@ -1533,6 +1570,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
 
       case ByteProto.EXPRESSION_NAME -> expressionName(context, state, item);
+
+      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(context, state, item);
 
       case ByteProto.RETURN_STATEMENT -> returnStatement(context, state, item);
 
@@ -2012,6 +2051,13 @@ class InternalCompiler extends InternalApi {
     switch (item) {
       case ByteProto.ANNOTATION -> annotation();
 
+      case ByteProto.ARRAY_DIMENSION -> {
+        codeadd(Symbol.LEFT_SQUARE_BRACKET);
+        codeadd(Symbol.RIGHT_SQUARE_BRACKET);
+      }
+
+      case ByteProto.ARRAY_TYPE -> arrayType();
+
       case ByteProto.AUTO_IMPORTS -> {}
 
       case ByteProto.BLOCK -> block();
@@ -2033,6 +2079,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
       case ByteProto.PACKAGE -> packageKeyword();
+
+      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
 
       case ByteProto.PRIMITIVE_TYPE -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
@@ -2440,6 +2488,19 @@ class InternalCompiler extends InternalApi {
     codeadd(Symbol.SEMICOLON);
   }
 
+  private void parameterizedType() {
+    stackpush(ByteProto.PARAMETERIZED_TYPE, _START);
+    element();
+    var state = contextpop();
+    switch (state) {
+      case _ARGS -> {
+        codeadd(Symbol.RIGHT_ANGLE_BRACKET);
+      }
+
+      default -> stubPop(ByteProto.PARAMETERIZED_TYPE, state);
+    }
+  }
+
   private void parameterizedType(int child) {
     int count = $parentvalget(1);
 
@@ -2452,6 +2513,31 @@ class InternalCompiler extends InternalApi {
     }
 
     $parentvalinc(1);
+  }
+
+  private void parameterizedType(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.CLASS_TYPE -> {
+        switch (state) {
+          case _START -> {
+            stateset(_TYPE);
+          }
+
+          case _TYPE -> {
+            codeadd(Symbol.LEFT_ANGLE_BRACKET);
+            stateset(_ARGS);
+          }
+
+          case _ARGS -> {
+            commaAndSpace();
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
+    }
   }
 
   private void pop(int context) {

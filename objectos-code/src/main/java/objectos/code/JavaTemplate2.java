@@ -17,6 +17,10 @@ package objectos.code;
 
 import java.util.Objects;
 import objectos.code.JavaModel.AbstractModifier;
+import objectos.code.JavaModel.ArrayDimension;
+import objectos.code.JavaModel.ArrayType;
+import objectos.code.JavaModel.ArrayTypeComponent;
+import objectos.code.JavaModel.ArrayTypeElement;
 import objectos.code.JavaModel.At;
 import objectos.code.JavaModel.AutoImports;
 import objectos.code.JavaModel.Block;
@@ -32,10 +36,12 @@ import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.PackageKeyword;
+import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
+import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
@@ -171,6 +177,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
   protected void definition() {}
 
   @Override
+  protected final ArrayDimension dim() {
+    return api().item(ByteProto.ARRAY_DIMENSION);
+  }
+
+  @Override
   protected final Identifier id(String name) {
     JavaModel.checkIdentifier(name);
     var api = api();
@@ -211,9 +222,51 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api.item(ByteProto.STRING_LITERAL, api.object(string));
   }
 
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1);
+  }
+
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1, e2);
+  }
+
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2, ArrayTypeElement e3) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1, e2, e3);
+  }
+
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2, ArrayTypeElement e3, ArrayTypeElement e4) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1, e2, e3, e4);
+  }
+
   @Override
   protected final ClassType t(Class<?> type) {
     return api().classType(type);
+  }
+
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1) {
+    return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1);
+  }
+
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1, ReferenceType arg2) {
+    return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1, arg2);
+  }
+
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1, ReferenceType arg2, ReferenceType arg3) {
+    return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1, arg2, arg3);
   }
 
   @Override

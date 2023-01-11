@@ -113,18 +113,22 @@ public class FieldDeclarationTest {
   - array type
   """)
   public void testCase04() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t(t(Object.class), dim()), id("a"));
+          t(t(Object.class), dim()); id("a");
         }
-      }.toString(),
+      }),
 
       """
-      java.lang.Object[] a;
+      class Fields {
+        java.lang.Object[] a;
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -133,18 +137,22 @@ public class FieldDeclarationTest {
   - parameterized type
   """)
   public void testCase05() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t(t(Map.class), t(String.class), t(Integer.class)), id("map"));
+          t(t(Map.class), t(String.class), t(Integer.class)); id("map");
         }
-      }.toString(),
+      }),
 
       """
-      java.util.Map<java.lang.String, java.lang.Integer> map;
+      class Fields {
+        java.util.Map<java.lang.String, java.lang.Integer> map;
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

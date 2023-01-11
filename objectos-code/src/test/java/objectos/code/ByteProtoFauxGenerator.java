@@ -46,8 +46,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("type aux");
 
+    value("ARRAY_DIMENSION");
     value("ARRAY_INITIALIZER");
-    value("DIM");
     value("PACKAGE_NAME");
     value("SIMPLE_NAME");
 

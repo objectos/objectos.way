@@ -69,7 +69,7 @@ import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLineRef;
 import objectos.code.JavaModel.PackageKeyword;
-import objectos.code.JavaModel.ParameterizedClassType;
+import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimaryExpression;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
@@ -262,7 +262,7 @@ public abstract class JavaTemplate {
 
   protected abstract void definition();
 
-  protected final ArrayDimension dim() {
+  protected ArrayDimension dim() {
     return api().dim();
   }
 
@@ -358,7 +358,7 @@ public abstract class JavaTemplate {
     return api().s(value);
   }
 
-  protected final ArrayType t(ArrayTypeComponent type, ArrayTypeElement... elements) {
+  protected ArrayType t(ArrayTypeComponent type, ArrayTypeElement... elements) {
     return api().t(type, elements);
   }
 
@@ -366,7 +366,7 @@ public abstract class JavaTemplate {
     return api().t(value);
   }
 
-  protected final ParameterizedClassType t(
+  protected ParameterizedType t(
       ClassType rawType, AnyType... arguments) {
     return api().t(rawType, arguments);
   }

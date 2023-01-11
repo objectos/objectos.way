@@ -41,8 +41,8 @@ final class ByteProto {
 
   //type aux
 
-  static final int ARRAY_INITIALIZER = -15;
-  static final int DIM = -16;
+  static final int ARRAY_DIMENSION = -15;
+  static final int ARRAY_INITIALIZER = -16;
   static final int PACKAGE_NAME = -17;
   static final int SIMPLE_NAME = -18;
 
