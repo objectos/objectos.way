@@ -18,9 +18,12 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Collections;
+import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class MethodInvocationExpressionTest {
+
+  private final Fixture fix = new Fixture("Invoke", Kind.VOID_METHOD);
 
   @Test(description = """
   - unqualified
@@ -28,15 +31,19 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           invoke("test");
         }
-      }.toString(),
+      }),
 
       """
-      test();
+      class Invoke {
+        void method() {
+          test();
+        }
+      }
       """
     );
   }

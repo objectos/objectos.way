@@ -187,28 +187,4 @@ public class FieldDeclarationTest {
     // @formatter:on
   }
 
-  @Test(description = """
-  Field declarations TC07
-
-  - includes
-  """)
-  public void testCase07() {
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          field(_int(), id("a"), include(this::a));
-        }
-
-        private void a() {
-          invoke("a");
-        }
-      }.toString(),
-
-      """
-      int a = a();
-      """
-    );
-  }
-
 }

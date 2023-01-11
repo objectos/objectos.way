@@ -38,6 +38,7 @@ import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
+import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
@@ -231,6 +232,16 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return JavaModel.INCLUDE;
   }
 
+  protected final MethodInvocation invoke(
+      String methodName) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+
+    var api = api();
+    api.item(ByteProto.INVOKE, api.object(methodName));
+    api.elem(ByteProto.ARGUMENT_LIST);
+    return JavaModel.DUO;
+  }
+
   protected final ExpressionName n(String id1) {
     JavaModel.checkIdentifier(id1.toString()); // implicit null check
 
@@ -313,7 +324,7 @@ abstract class JavaTemplate2 extends JavaTemplate {
     v2 = true;
   }
 
-  private JavaModel._Item modifier(Keyword value) {
+  private JavaModel._Single modifier(Keyword value) {
     return api().item(ByteProto.MODIFIER, value.ordinal());
   }
 

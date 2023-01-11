@@ -627,7 +627,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final JavaModel._Item item(int v0) {
+  public final JavaModel._Single item(int v0) {
     leveladd(LOCAL, protoIndex);
 
     protoadd(v0);
@@ -635,7 +635,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return itemret();
   }
 
-  public final JavaModel._Item item(int v0, int v1) {
+  public final JavaModel._Single item(int v0, int v1) {
     leveladd(LOCAL, protoIndex);
 
     protoadd(v0, v1);
@@ -643,7 +643,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return itemret();
   }
 
-  public final JavaModel._Item item(int v0, int v1, int v2, int v3) {
+  public final JavaModel._Single item(int v0, int v1, int v2, int v3) {
     leveladd(LOCAL, protoIndex);
 
     protoadd(v0, v1, v2, v3);
@@ -991,7 +991,7 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   private void elemcntx(Object obj) {
-    if (obj == JavaModel.ITEM || obj == JavaModel.ELEM) {
+    if (obj == JavaModel.SINGLE || obj == JavaModel.ELEM) {
       int localIndex = stackpeek(0);
 
       localIndex = levelsearch(localIndex, LOCAL);
@@ -1086,8 +1086,8 @@ class InternalApi extends InternalState implements MarkerApi {
     object(ByteProto.INVOKE_METHOD_NAME, methodName);
   }
 
-  private JavaModel._Item itemret() {
-    return JavaModel.ITEM;
+  private JavaModel._Single itemret() {
+    return JavaModel.SINGLE;
   }
 
   private void leveladd(int v0, int v1) {

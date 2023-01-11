@@ -39,6 +39,10 @@ public final class JavaModel {
 
   public sealed interface ArrayInitializerElement extends Markable {}
 
+  public sealed interface ArrayTypeElement extends
+      /* to remove */
+      Markable {}
+
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
 
@@ -157,8 +161,6 @@ public final class JavaModel {
 
   public sealed interface MethodDeclarationElement extends Markable {}
 
-  public sealed interface MethodInvocation extends Expression, ExpressionStatement {}
-
   public sealed interface MethodInvocationElement extends Markable {}
 
   public sealed interface NewLineRef
@@ -180,8 +182,22 @@ public final class JavaModel {
 
   public sealed interface TypeVariable extends ReferenceType {}
 
-  public sealed interface UnqualifiedMethodInvocation
-      extends ChainedMethodInvocationHead, ChainedMethodInvocationElement, MethodInvocation {}
+  public sealed interface UnqualifiedMethodInvocation extends
+      /* to remove */
+      ChainedMethodInvocationHead,
+      ChainedMethodInvocationElement,
+      MethodInvocation {}
+
+  enum _Duo
+      implements
+      MethodInvocation {
+    INSTANCE;
+
+    @Override
+    public final void mark(MarkerApi api) {
+      throw new UnsupportedOperationException();
+    }
+  }
 
   enum _Elem
       implements
@@ -213,7 +229,7 @@ public final class JavaModel {
     }
   }
 
-  enum _Item
+  enum _Single
       implements
       AbstractModifier,
       ArrayDimension,
@@ -263,10 +279,6 @@ public final class JavaModel {
       MethodDeclarationElement {}
 
   sealed interface ArrayTypeComponent extends
-      /* to remove */
-      Markable {}
-
-  sealed interface ArrayTypeElement extends
       /* to remove */
       Markable {}
 
@@ -320,6 +332,8 @@ public final class JavaModel {
   sealed interface IntegerLiteral extends Literal {}
 
   sealed interface Literal extends PrimaryExpression {}
+
+  sealed interface MethodInvocation extends Expression, ExpressionStatement {}
 
   sealed interface PackageKeyword extends Element {}
 
@@ -437,15 +451,17 @@ public final class JavaModel {
     }
   }
 
+  static final _Duo DUO = _Duo.INSTANCE;
+
   static final _Elem ELEM = _Elem.INSTANCE;
 
   static final _Ext EXT = _Ext.INSTANCE;
 
-  static final _Item ITEM = _Item.INSTANCE;
+  static final _Include INCLUDE = _Include.INSTANCE;
+
+  static final _Single SINGLE = _Single.INSTANCE;
 
   static final Ref REF = new Ref();
-
-  static final _Include INCLUDE = _Include.INSTANCE;
 
   private JavaModel() {}
 

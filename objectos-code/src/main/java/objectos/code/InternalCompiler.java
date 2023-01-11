@@ -17,6 +17,7 @@ package objectos.code;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import objectos.code2.Indentation;
 import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
@@ -28,7 +29,9 @@ class InternalCompiler extends InternalApi {
       _TYPE = 7, _NAME = 8, _INIT = 9,
       _ARGS = 10, _DIMS = 11,
       _BODY = 12,
-      _EXPRESSION = 13;
+      _EXPRESSION = 13,
+      _INVOKE = 14,
+      _PRIMARY = 15;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -149,7 +152,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.METHOD_DECLARATION -> methodDeclaration();
 
-      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+      case ByteProto.METHOD_INVOCATION -> methodInvocation$();
 
       case ByteProto.METHOD_INVOCATION_QUALIFIED -> methodInvocationQualified();
 
@@ -504,6 +507,26 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void argumentList() {
+    codeadd(Symbol.LEFT_PARENTHESIS);
+    stackpush(ByteProto.ARGUMENT_LIST, _START);
+    element();
+    int state = contextpop();
+    switch (state) {
+      case _START, _ARGS -> {
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      case _SLOT -> {
+        codeadd(Indentation.EXIT_PARENTHESIS);
+        codeadd(Indentation.EMIT);
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      default -> stubPop(ByteProto.ARGUMENT_LIST, state);
+    }
+  }
+
   private void arrayAccessExpression(int child) {
     var state = $parentvalget(1);
 
@@ -702,6 +725,14 @@ class InternalCompiler extends InternalApi {
         codeadd(Symbol.RIGHT_CURLY_BRACKET);
       }
 
+      case _PRIMARY -> {
+        codeadd(Symbol.SEMICOLON);
+        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        codeadd(Indentation.EXIT_BLOCK);
+        codeadd(Indentation.EMIT);
+        codeadd(Symbol.RIGHT_CURLY_BRACKET);
+      }
+
       default -> stubPop(ByteProto.BLOCK, state);
     }
   }
@@ -728,6 +759,28 @@ class InternalCompiler extends InternalApi {
 
   private void block(int context, int state, int item) {
     switch (item) {
+      case ByteProto.ARGUMENT_LIST -> {
+        switch (state) {
+          case _INVOKE -> {
+            stateset(_PRIMARY);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.INVOKE -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.NEW_LINE);
+            codeadd(Indentation.EMIT);
+            stateset(_INVOKE);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.RETURN -> {
         switch (state) {
           case _START -> {
@@ -2090,6 +2143,8 @@ class InternalCompiler extends InternalApi {
     switch (item) {
       case ByteProto.ANNOTATION -> annotation();
 
+      case ByteProto.ARGUMENT_LIST -> argumentList();
+
       case ByteProto.ARRAY_DIMENSION -> {
         codeadd(Symbol.LEFT_SQUARE_BRACKET);
         codeadd(Symbol.RIGHT_SQUARE_BRACKET);
@@ -2116,6 +2171,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, itemnxt());
 
       case ByteProto.IMPLEMENTS -> codeadd(Keyword.IMPLEMENTS);
+
+      case ByteProto.INVOKE -> codeadd(ByteCode.IDENTIFIER, itemnxt());
 
       case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 
@@ -2381,24 +2438,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void methodInvocation() {
-    var proto = ByteProto.METHOD_INVOCATION;
-
-    $cloop1parent(proto);
-
-    var nameLocation = codeIndex;
-
-    $codeadd(ByteCode.NOP1, 0);
-
-    $parentpush(
-      0, // 4 = NL
-      nameLocation, // 3
-      NULL, // 2 = comma slot
-      _NAME, // 1 = state
-      proto
-    );
-  }
-
   private void methodInvocation(int child) {
     var state = $parentvalget(1);
 
@@ -2451,6 +2490,24 @@ class InternalCompiler extends InternalApi {
         }
       }
     }
+  }
+
+  private void methodInvocation$() {
+    var proto = ByteProto.METHOD_INVOCATION;
+
+    $cloop1parent(proto);
+
+    var nameLocation = codeIndex;
+
+    $codeadd(ByteCode.NOP1, 0);
+
+    $parentpush(
+      0, // 4 = NL
+      nameLocation, // 3
+      NULL, // 2 = comma slot
+      _NAME, // 1 = state
+      proto
+    );
   }
 
   private void methodInvocationBreak(int state) {
@@ -2593,6 +2650,8 @@ class InternalCompiler extends InternalApi {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
 
+      case ByteProto.ARGUMENT_LIST -> "Argument List";
+
       case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
 
       case ByteProto.ARRAY_TYPE -> "Array Type";
@@ -2618,6 +2677,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IDENTIFIER -> "Identifier";
 
       case ByteProto.IMPLEMENTS -> "Implements";
+
+      case ByteProto.INVOKE -> "Invoke";
 
       case ByteProto.METHOD_DECLARATION -> "Method Decl.";
 
