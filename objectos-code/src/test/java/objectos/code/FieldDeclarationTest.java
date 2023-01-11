@@ -55,48 +55,56 @@ public class FieldDeclarationTest {
   modifiers
   """)
   public void testCase02() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(_private(), t(String.class), id("a"));
+          _private(); t(String.class); id("a");
 
-          field(_private(), _final(), t(String.class), id("b"));
+          _private(); _final(); t(String.class); id("b");
 
-          field(_private(), _static(), _final(), t(String.class), id("c"));
+          _private(); _static(); _final(); t(String.class); id("c");
         }
-      }.toString(),
+      }),
 
       """
-      private java.lang.String a;
+      class Fields {
+        private java.lang.String a;
 
-      private final java.lang.String b;
+        private final java.lang.String b;
 
-      private static final java.lang.String c;
+        private static final java.lang.String c;
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
   init expression
   """)
   public void testCase03() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t(String.class), id("x"), s("init"));
+          t(String.class); id("x"); s("init");
 
-          field(t(String.class), id("a"), s("a"), id("b"), id("c"), s("c"));
+          t(String.class); id("a"); s("a"); id("b"); id("c"); s("c");
         }
-      }.toString(),
+      }),
 
       """
-      java.lang.String x = "init";
+      class Fields {
+        java.lang.String x = "init";
 
-      java.lang.String a = "a", b, c = "c";
+        java.lang.String a = "a", b, c = "c";
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

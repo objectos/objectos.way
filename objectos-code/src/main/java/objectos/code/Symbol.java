@@ -15,7 +15,9 @@
  */
 package objectos.code;
 
-public enum Separator {
+public enum Symbol {
+
+  // Separators
 
   LEFT_PARENTHESIS("("),
 
@@ -41,21 +43,32 @@ public enum Separator {
 
   DOUBLE_COLON("::"),
 
-  // these are JLS operators...
-  // but should be treated as separators in types.
+  /*
+  
+   Operators
+
+   =   >   <   !   ~   ?   :   ->
+   ==  >=  <=  !=  &&  ||  ++  --
+   +   -   *   /   &   |   ^   %   <<   >>   >>>
+   +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
+
+   */
+
   AMPERSAND("&"),
+
+  ASSIGNMENT("="),
 
   LEFT_ANGLE_BRACKET("<"),
 
   RIGHT_ANGLE_BRACKET(">");
 
-  private static final Separator[] VALUES = values();
+  private static final Symbol[] VALUES = values();
 
   private final String name;
 
-  private Separator(String name) { this.name = name; }
+  private Symbol(String name) { this.name = name; }
 
-  static Separator get(int index) {
+  static Symbol get(int index) {
     return VALUES[index];
   }
 

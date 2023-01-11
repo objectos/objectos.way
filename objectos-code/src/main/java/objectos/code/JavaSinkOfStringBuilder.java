@@ -81,14 +81,14 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected final void writeReservedKeyword(Keyword value) { out.append(value); }
 
   @Override
-  protected final void writeSeparator(Separator value) { out.append(value); }
-
-  @Override
   protected final void writeStringLiteral(String value) {
     out.append('"');
     out.append(value);
     out.append('"');
   }
+
+  @Override
+  protected final void writeSymbol(Symbol value) { out.append(value); }
 
   @Override
   protected final void writeWhitespace(Whitespace value) {

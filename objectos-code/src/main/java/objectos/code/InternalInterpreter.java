@@ -37,9 +37,9 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeReservedKeyword(Keyword value);
 
-  protected abstract void writeSeparator(Separator value);
-
   protected abstract void writeStringLiteral(String value);
+
+  protected abstract void writeSymbol(Symbol value);
 
   protected abstract void writeWhitespace(Whitespace value);
 
@@ -171,7 +171,7 @@ abstract class InternalInterpreter extends InternalCompiler {
 
     writeIdentifier(type);
 
-    writeSeparator(Separator.SEMICOLON);
+    writeSymbol(Symbol.SEMICOLON);
   }
 
   private void comment() {
@@ -241,9 +241,9 @@ abstract class InternalInterpreter extends InternalCompiler {
   private void separator() {
     var index = $codenxt();
 
-    var value = Separator.get(index);
+    var value = Symbol.get(index);
 
-    writeSeparator(value);
+    writeSymbol(value);
   }
 
   private void stringLiteral() {
