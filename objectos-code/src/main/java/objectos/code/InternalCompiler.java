@@ -28,9 +28,10 @@ class InternalCompiler extends InternalApi {
       _TYPE = 7, _NAME = 8, _INIT = 9,
       _ARGS = 10, _DIMS = 11,
       _BODY = 12,
-      _EXPRESSION = 13,
-      _PRIMARY = 14,
-      _NL = 15, _SLOT = 16;
+      _STATEMENT = 13,
+      _EXPRESSION = 14,
+      _PRIMARY = 15,
+      _NL = 16, _SLOT = 17;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -683,11 +684,16 @@ class InternalCompiler extends InternalApi {
     codeadd(Symbol.LEFT_CURLY_BRACKET);
     codeadd(Indentation.ENTER_BLOCK);
 
-    stackpush(ByteProto.BLOCK, _START);
+    stackpush(
+      FALSE, // 2=NL
+      ByteProto.BLOCK,
+      _START
+    );
 
     element();
 
     int state = contextpop();
+    stackpop();
     switch (state) {
       case _START -> {
         codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
@@ -695,7 +701,7 @@ class InternalCompiler extends InternalApi {
         codeadd(Symbol.RIGHT_CURLY_BRACKET);
       }
 
-      case _BODY -> {
+      case _STATEMENT -> {
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
         codeadd(Indentation.EMIT);
@@ -736,17 +742,86 @@ class InternalCompiler extends InternalApi {
 
   private void block(int context, int state, int item) {
     switch (item) {
+      case ByteProto.CLASS_TYPE -> {
+        switch (state) {
+          case _START -> {
+            blockBeforeFistStatement();
+            stackset(_TYPE);
+          }
+
+          case _PRIMARY -> {
+            codeadd(Symbol.SEMICOLON);
+            blockBeforeNextStatement();
+            stackset(_TYPE);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.END -> {
+        switch (state) {
+          case _PRIMARY -> {
+            stackset(_STATEMENT);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.EXPRESSION_NAME -> {
+        switch (state) {
+          case _START -> {
+            blockBeforeFistStatement();
+            stackset(_NAME);
+          }
+
+          case _STATEMENT -> {
+            blockBeforeNextStatement();
+            stackset(_NAME);
+          }
+
+          case _PRIMARY -> {
+            codeadd(Symbol.SEMICOLON);
+            blockBeforeNextStatement();
+            stackset(_NAME);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.METHOD_INVOCATION -> {
         switch (state) {
           case _START -> {
-            codeadd(Whitespace.NEW_LINE);
-            codeadd(Indentation.EMIT);
+            blockBeforeFistStatement();
             stackset(_PRIMARY);
           }
 
-          case _BODY -> {
-            codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
-            codeadd(Indentation.EMIT);
+          case _STATEMENT -> {
+            blockBeforeNextStatement();
+            stackset(_PRIMARY);
+          }
+
+          case _NAME, _PRIMARY, _TYPE -> {
+            codeadd(Symbol.DOT);
+            stackset(_PRIMARY);
+          }
+
+          case _NL -> {
+            codeadd(Indentation.CONTINUATION);
+            codeadd(Symbol.DOT);
+            stackset(_PRIMARY);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.NEW_LINE -> {
+        switch (state) {
+          case _PRIMARY -> {
+            stackset(_NL);
           }
 
           default -> stubState(context, state, item);
@@ -756,14 +831,12 @@ class InternalCompiler extends InternalApi {
       case ByteProto.RETURN -> {
         switch (state) {
           case _START -> {
-            codeadd(Whitespace.NEW_LINE);
-            codeadd(Indentation.EMIT);
-            stackset(_BODY);
+            blockBeforeFistStatement();
+            stackset(_STATEMENT);
           }
 
-          case _BODY -> {
-            codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
-            codeadd(Indentation.EMIT);
+          case _STATEMENT -> {
+            blockBeforeNextStatement();
           }
 
           default -> stubState(context, state, item);
@@ -772,6 +845,16 @@ class InternalCompiler extends InternalApi {
 
       default -> stubItem(context, state, item);
     }
+  }
+
+  private void blockBeforeFistStatement() {
+    codeadd(Whitespace.NEW_LINE);
+    codeadd(Indentation.EMIT);
+  }
+
+  private void blockBeforeNextStatement() {
+    codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
+    codeadd(Indentation.EMIT);
   }
 
   private void blockBreak(int state) {
@@ -1860,6 +1943,14 @@ class InternalCompiler extends InternalApi {
 
   private void expressionName(int context, int state, int item) {
     switch (item) {
+      case ByteProto.CLASS_TYPE -> {
+        switch (state) {
+          case _START -> stackset(_NAME);
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.IDENTIFIER -> {
         switch (state) {
           case _START -> {
@@ -2135,6 +2226,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS -> classKeyword();
 
       case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.END -> codeadd(Symbol.SEMICOLON);
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 

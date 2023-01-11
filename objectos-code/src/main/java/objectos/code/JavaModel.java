@@ -216,13 +216,14 @@ public final class JavaModel {
     }
   }
 
-  enum _Single
+  enum _Item
       implements
       AbstractModifier,
       ArrayDimension,
       AutoImports,
       ClassKeyword,
       ClassType,
+      End,
       ExtendsKeyword,
       FinalModifier,
       Identifier,
@@ -292,6 +293,8 @@ public final class JavaModel {
      */
     default Object self() { return this; }
   }
+
+  sealed interface End extends Element {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -451,7 +454,7 @@ public final class JavaModel {
 
   static final _Include INCLUDE = _Include.INSTANCE;
 
-  static final _Single SINGLE = _Single.INSTANCE;
+  static final _Item ITEM = _Item.INSTANCE;
 
   static final Ref REF = new Ref();
 

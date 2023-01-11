@@ -100,6 +100,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("statements aux");
 
+    value("END");
     value("RETURN");
 
     comment("statements");

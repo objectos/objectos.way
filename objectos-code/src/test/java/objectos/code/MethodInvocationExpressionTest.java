@@ -174,21 +174,27 @@ public class MethodInvocationExpressionTest {
   static methods
   """)
   public void testCase07() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke(t(Thread.class), "currentThread");
-          invoke(t(Collections.class), "sort", n("list"));
+          t(Thread.class); invoke("currentThread");
+
+          t(Collections.class); invoke("sort", n("list"));
         }
-      }.toString(),
+      }),
 
       """
-      java.lang.Thread.currentThread();
-
-      java.util.Collections.sort(list);
+      class Invoke {
+        void method() {
+          java.lang.Thread.currentThread();
+          java.util.Collections.sort(list);
+        }
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -197,27 +203,30 @@ public class MethodInvocationExpressionTest {
   - expression name
   """)
   public void testCase08() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke(n("a"), "x");
-          invoke(n("b"), "y", s("1"));
-          invoke(n("c"), "z", s("1"), s("2"));
-          invoke(n(t(Foo.class), "CTE"), "m");
+          n("a"); invoke("x");
+          n("b"); invoke("y", s("1"));
+          n("c"); invoke("z", s("1"), s("2"));
+          n(t(Foo.class), "CTE"); invoke("m");
         }
-      }.toString(),
+      }),
 
       """
-      a.x();
-
-      b.y("1");
-
-      c.z("1", "2");
-
-      objectos.code.Foo.CTE.m();
+      class Invoke {
+        void method() {
+          a.x();
+          b.y("1");
+          c.z("1", "2");
+          objectos.code.Foo.CTE.m();
+        }
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -226,33 +235,38 @@ public class MethodInvocationExpressionTest {
   - chain support
   """)
   public void testCase09() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          chain(invoke("a"), invoke("b"));
-          chain(invoke("a"), invoke("b"), invoke("c"));
-          chain(invoke(n("foo"), "a"), invoke("b"), invoke("c"));
-          chain(
-            invoke(n("list"), "add", s("1")), nl(),
-            invoke("add", s("2")), nl(),
-            invoke("build")
-          );
+          invoke("a"); invoke("b"); end();
+
+          invoke("a"); invoke("b"); invoke("c"); end();
+
+          n("foo"); invoke("a"); invoke("b"); invoke("c");
+
+          n("list");
+          invoke("add", s("1")); nl();
+          invoke("add", s("2")); nl();
+          invoke("build");
         }
-      }.toString(),
+      }),
 
       """
-      a().b();
-
-      a().b().c();
-
-      foo.a().b().c();
-
-      list.add("1")
-          .add("2")
-          .build();
+      class Invoke {
+        void method() {
+          a().b();
+          a().b().c();
+          foo.a().b().c();
+          list.add("1")
+              .add("2")
+              .build();
+        }
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

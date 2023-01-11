@@ -324,7 +324,7 @@ public abstract class JavaTemplate {
     throw new UnsupportedOperationException();
   }
 
-  protected final ExpressionName n(ClassType type, String... identifiers) {
+  protected ExpressionName n(ClassType type, String... identifiers) {
     return api().n(type, identifiers);
   }
 

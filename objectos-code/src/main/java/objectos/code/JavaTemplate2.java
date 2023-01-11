@@ -31,6 +31,7 @@ import objectos.code.JavaModel.Body;
 import objectos.code.JavaModel.BodyElement;
 import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
+import objectos.code.JavaModel.End;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.FinalModifier;
@@ -201,6 +202,10 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api().item(ByteProto.ARRAY_DIMENSION);
   }
 
+  protected final End end() {
+    return api().item(ByteProto.END);
+  }
+
   @Override
   protected final IntegerLiteral i(int value) {
     var s = Integer.toString(value);
@@ -340,6 +345,24 @@ abstract class JavaTemplate2 extends JavaTemplate {
       e4.self(), e5.self(), e6.self(), e7.self(), e8.self(), e9.self());
   }
 
+  protected final ExpressionName n(ClassType type, String id1) {
+    JavaModel.checkIdentifier(id1.toString());
+
+    var api = api();
+    api.identifierext(id1);
+    return api.elem(ByteProto.EXPRESSION_NAME, type, JavaModel.EXT);
+  }
+
+  protected final ExpressionName n(ClassType type, String id1, String id2) {
+    JavaModel.checkIdentifier(id1.toString());
+    JavaModel.checkIdentifier(id2.toString());
+
+    var api = api();
+    api.identifierext(id1);
+    api.identifierext(id2);
+    return api.elem(ByteProto.EXPRESSION_NAME, type, JavaModel.EXT, JavaModel.EXT);
+  }
+
   protected final ExpressionName n(String id1) {
     JavaModel.checkIdentifier(id1.toString()); // implicit null check
 
@@ -427,7 +450,7 @@ abstract class JavaTemplate2 extends JavaTemplate {
     v2 = true;
   }
 
-  private JavaModel._Single modifier(Keyword value) {
+  private JavaModel._Item modifier(Keyword value) {
     return api().item(ByteProto.MODIFIER, value.ordinal());
   }
 
