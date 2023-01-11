@@ -37,9 +37,6 @@ public final class JavaModel {
 
   public sealed interface ArrayAccessExpression extends Expression, LeftHandSide {}
 
-  public sealed interface ArrayInitializer
-      extends ArrayInitializerElement, FieldDeclarationElement {}
-
   public sealed interface ArrayInitializerElement extends Markable {}
 
   public sealed interface AssignmentExpression
@@ -93,6 +90,15 @@ public final class JavaModel {
       extends
       ConstructorDeclarationElement {}
 
+  public sealed interface Expression extends BlockElement,
+      /* to remove */
+      ArrayInitializerElement,
+      EnumConstantElement,
+      FieldDeclarationElement,
+      MethodInvocationElement {}
+
+  public sealed interface ExpressionName extends Expression, LeftHandSide {}
+
   public sealed interface ExpressionStatement
       extends Statement {}
 
@@ -124,8 +130,6 @@ public final class JavaModel {
 
   public sealed interface IfStatement
       extends Statement {}
-
-  public sealed interface IntegerLiteral extends Literal {}
 
   public sealed interface InterfaceDeclaration {}
 
@@ -181,6 +185,7 @@ public final class JavaModel {
 
   enum _Elem
       implements
+      ArrayInitializer,
       ArrayType,
       At,
       Block,
@@ -219,6 +224,7 @@ public final class JavaModel {
       FinalModifier,
       Identifier,
       ImplementsKeyword,
+      IntegerLiteral,
       PackageKeyword,
       PrimitiveType,
       PrivateModifier,
@@ -243,6 +249,10 @@ public final class JavaModel {
       MethodDeclarationElement {}
 
   sealed interface ArrayDimension extends ArrayTypeElement {}
+
+  sealed interface ArrayInitializer extends ArrayInitializerElement,
+      /* to remove */
+      FieldDeclarationElement {}
 
   sealed interface ArrayType extends BodyElement,
       /* to remove */
@@ -283,15 +293,6 @@ public final class JavaModel {
     default Object self() { return this; }
   }
 
-  sealed interface Expression extends BlockElement,
-      /* to remove */
-      ArrayInitializerElement,
-      EnumConstantElement,
-      FieldDeclarationElement,
-      MethodInvocationElement {}
-
-  sealed interface ExpressionName extends Expression, LeftHandSide {}
-
   sealed interface ExtendsKeyword extends BodyElement {}
 
   sealed interface Identifier extends BodyElement,
@@ -315,6 +316,8 @@ public final class JavaModel {
       FieldDeclarationElement,
       InterfaceDeclarationElement,
       MethodDeclarationElement, MethodInvocationElement {}
+
+  sealed interface IntegerLiteral extends Literal {}
 
   sealed interface Literal extends PrimaryExpression {}
 

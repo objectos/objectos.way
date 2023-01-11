@@ -531,6 +531,14 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void arrayInitializer() {
+    stackpush(ByteProto.ARRAY_INITIALIZER, _START);
+    codeadd(Symbol.LEFT_CURLY_BRACKET);
+    element();
+    codeadd(Symbol.RIGHT_CURLY_BRACKET);
+    contextpop();
+  }
+
   private void arrayInitializer(int child) {
     int count = $parentvalget(1);
 
@@ -541,6 +549,22 @@ class InternalCompiler extends InternalApi {
     }
 
     $parentvalinc(1);
+  }
+
+  private void arrayInitializer(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.PRIMITIVE_LITERAL -> {
+        switch (state) {
+          case _START -> stateset(_BODY);
+
+          case _BODY -> commaAndSpace();
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
+    }
   }
 
   private void arrayInitializerBreak(int count) {
@@ -785,6 +809,19 @@ class InternalCompiler extends InternalApi {
             codeadd(Whitespace.BEFORE_FIRST_MEMBER);
             codeadd(Indentation.EMIT);
             stateset(_ANNOTATIONS);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.ARRAY_INITIALIZER -> {
+        switch (state) {
+          case _NAME -> {
+            codeadd(Whitespace.OPTIONAL);
+            codeadd(Symbol.ASSIGNMENT);
+            codeadd(Whitespace.OPTIONAL);
+            stateset(_INIT);
           }
 
           default -> stubState(context, state, item);
@@ -1559,6 +1596,8 @@ class InternalCompiler extends InternalApi {
     switch (context) {
       case ByteProto.ANNOTATION -> annotation(context, state, item);
 
+      case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(context, state, item);
+
       case ByteProto.ARRAY_TYPE -> arrayType(context, state, item);
 
       case ByteProto.BLOCK -> block(context, state, item);
@@ -2056,6 +2095,8 @@ class InternalCompiler extends InternalApi {
         codeadd(Symbol.RIGHT_SQUARE_BRACKET);
       }
 
+      case ByteProto.ARRAY_INITIALIZER -> arrayInitializer();
+
       case ByteProto.ARRAY_TYPE -> arrayType();
 
       case ByteProto.AUTO_IMPORTS -> {}
@@ -2081,6 +2122,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.PACKAGE -> packageKeyword();
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
+
+      case ByteProto.PRIMITIVE_LITERAL -> codeadd(ByteCode.PRIMITIVE_LITERAL, itemnxt());
 
       case ByteProto.PRIMITIVE_TYPE -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
 

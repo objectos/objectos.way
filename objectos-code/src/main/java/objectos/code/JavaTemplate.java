@@ -216,7 +216,7 @@ public abstract class JavaTemplate {
     return api()._void();
   }
 
-  protected final ArrayInitializer a(ArrayInitializerElement... elements) {
+  protected ArrayInitializer a(ArrayInitializerElement... elements) {
     return api().a(elements);
   }
 
@@ -278,7 +278,7 @@ public abstract class JavaTemplate {
     return api().field(elements);
   }
 
-  protected final IntegerLiteral i(int value) {
+  protected IntegerLiteral i(int value) {
     return api().i(value);
   }
 

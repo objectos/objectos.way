@@ -161,24 +161,30 @@ public class FieldDeclarationTest {
   - array initializer
   """)
   public void testCase06() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t(_int(), dim()), id("a"), a());
-          field(t(_int(), dim()), id("b"), a(i(0)));
-          field(t(_int(), dim()), id("c"), a(i(0), i(1)));
+          t(_int(), dim()); id("a"); a();
+
+          t(_int(), dim()); id("b"); a(i(0));
+
+          t(_int(), dim()); id("c"); a(i(0), i(1));
         }
-      }.toString(),
+      }),
 
       """
-      int[] a = {};
+      class Fields {
+        int[] a = {};
 
-      int[] b = {0};
+        int[] b = {0};
 
-      int[] c = {0, 1};
+        int[] c = {0, 1};
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """

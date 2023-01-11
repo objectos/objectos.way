@@ -18,6 +18,8 @@ package objectos.code;
 import java.util.Objects;
 import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.ArrayDimension;
+import objectos.code.JavaModel.ArrayInitializer;
+import objectos.code.JavaModel.ArrayInitializerElement;
 import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
@@ -35,6 +37,7 @@ import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
+import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
@@ -122,6 +125,20 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api().item(ByteProto.VOID);
   }
 
+  protected final ArrayInitializer a() {
+    return api().elem(ByteProto.ARRAY_INITIALIZER);
+  }
+
+  protected final ArrayInitializer a(
+      ArrayInitializerElement e1) {
+    return api().elem(ByteProto.ARRAY_INITIALIZER, e1);
+  }
+
+  protected final ArrayInitializer a(
+      ArrayInitializerElement e1, ArrayInitializerElement e2) {
+    return api().elem(ByteProto.ARRAY_INITIALIZER, e1, e2);
+  }
+
   protected final At at(ClassType annotationType) {
     return api().elem(ByteProto.ANNOTATION, annotationType.self());
   }
@@ -179,6 +196,15 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final ArrayDimension dim() {
     return api().item(ByteProto.ARRAY_DIMENSION);
+  }
+
+  @Override
+  protected final IntegerLiteral i(int value) {
+    var s = Integer.toString(value);
+
+    var api = api();
+
+    return api.item(ByteProto.PRIMITIVE_LITERAL, api.object(s));
   }
 
   @Override
