@@ -25,7 +25,7 @@ public class FieldDeclarationTest {
 
   private final Fixture fix = new Fixture("Fields", Kind.CLASS);
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   typeName + names
   """)
   public void testCase01() {

@@ -1012,25 +1012,34 @@ class InternalApi extends InternalState implements MarkerApi {
 
       int level = levelget(codeIndex);
 
-      int[] array = levelArray[level];
-
-      int length = levelIndex[level];
-
-      for (int i = 0; i < length;) {
-        int code = array[i++];
-
-        if (code == LOCAL) {
-          protoadd(array[i++]);
-        } else {
-          throw new UnsupportedOperationException(
-            "Implement me :: code=" + code);
-        }
-      }
+      elemcntx0lambda(level);
 
       stackset(2, codeIndex);
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
+  }
+
+  private void elemcntx0lambda(int level) {
+    int[] array = levelArray[level];
+
+    int length = levelIndex[level];
+
+    for (int i = 0; i < length;) {
+      int code = array[i++];
+      int value = array[i++];
+
+      if (code == LOCAL) {
+        protoadd(value);
+      } else if (code == LAMBDA) {
+        elemcntx0lambda(value);
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: code=" + code);
+      }
+    }
+
+    levelIndex[level] = 0;
   }
 
   private void elempre() {
