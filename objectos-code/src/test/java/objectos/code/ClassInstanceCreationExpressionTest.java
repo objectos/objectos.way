@@ -17,9 +17,12 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class ClassInstanceCreationExpressionTest {
+
+  private final Fixture fix = new Fixture("New", Kind.VOID_METHOD);
 
   @Test(description = """
   Class Instance Creation Expressions TC01
@@ -28,21 +31,23 @@ public class ClassInstanceCreationExpressionTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _new(t(Foo.class));
-          _new(t(Foo.class), s("a"));
-          _new(t(Foo.class), s("a"), s("b"));
+          _new(t("objectos.code", "Foo"));
+          _new(t("objectos.code", "Foo"), s("a"));
+          _new(t("objectos.code", "Foo"), s("a"), s("b"));
         }
-      }.toString(),
+      }),
 
       """
-      new objectos.code.Foo();
-
-      new objectos.code.Foo("a");
-
-      new objectos.code.Foo("a", "b");
+      class New {
+        void method() {
+          new objectos.code.Foo();
+          new objectos.code.Foo("a");
+          new objectos.code.Foo("a", "b");
+        }
+      }
       """
     );
   }

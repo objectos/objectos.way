@@ -98,9 +98,11 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("INTERFACE_DECLARATION");
     value("EXTENDS_MANY");
 
-    comment("statements aux");
+    comment("stmt/exp aux");
 
+    value("ARGUMENT_LIST");
     value("END");
+    value("NEW");
     value("RETURN");
 
     comment("statements");
@@ -115,7 +117,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ASSIGNMENT_EXPRESSION");
     value("ASSIGNMENT_OPERATOR");
     value("CHAINED_METHOD_INVOCATION");
-    value("CLASS_INSTANCE_CREATION0");
+    value("CLASS_INSTANCE_CREATION");
     value("EXPRESSION_NAME");
     value("FIELD_ACCESS_EXPRESSION0");
     value("METHOD_INVOCATION");

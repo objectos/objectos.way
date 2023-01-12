@@ -61,16 +61,10 @@ public final class JavaModel {
 
   public sealed interface ClassDeclarationElement extends Markable {}
 
-  public sealed interface ClassInstanceCreationExpression
-      extends
-      ExpressionStatement,
-      PrimaryExpression {}
-
-  public sealed interface ClassType extends BodyElement,
+  public sealed interface ClassType extends BodyElement, ReferenceType,
+      /* to remove */
       AnyType,
-      ReferenceType,
       TypeParameterBound,
-
       FieldDeclarationElement,
       MethodDeclarationElement {}
 
@@ -100,8 +94,6 @@ public final class JavaModel {
       EnumConstantElement,
       FieldDeclarationElement,
       MethodInvocationElement {}
-
-  public sealed interface ExpressionName extends Expression, LeftHandSide {}
 
   public sealed interface ExpressionStatement
       extends Statement {}
@@ -192,6 +184,7 @@ public final class JavaModel {
       At,
       Block,
       Body,
+      ClassInstanceCreationExpression,
       ExpressionName,
       MethodInvocation,
       ParameterizedType {
@@ -229,6 +222,7 @@ public final class JavaModel {
       Identifier,
       ImplementsKeyword,
       IntegerLiteral,
+      NewKeyword,
       NewLine,
       PackageKeyword,
       PrimitiveType,
@@ -285,6 +279,8 @@ public final class JavaModel {
 
   sealed interface BodyElement extends Element {}
 
+  sealed interface ClassInstanceCreationExpression extends ExpressionStatement, PrimaryExpression {}
+
   sealed interface ClassKeyword extends BodyElement {}
 
   sealed interface Element {
@@ -295,6 +291,8 @@ public final class JavaModel {
   }
 
   sealed interface End extends Element {}
+
+  sealed interface ExpressionName extends Expression, LeftHandSide {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -325,6 +323,8 @@ public final class JavaModel {
   sealed interface Literal extends PrimaryExpression {}
 
   sealed interface MethodInvocation extends Expression, ExpressionStatement {}
+
+  sealed interface NewKeyword extends BlockElement {}
 
   sealed interface NewLine extends Element,
       /* to remove */

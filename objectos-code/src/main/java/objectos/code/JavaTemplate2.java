@@ -29,9 +29,11 @@ import objectos.code.JavaModel.Block;
 import objectos.code.JavaModel.BlockElement;
 import objectos.code.JavaModel.Body;
 import objectos.code.JavaModel.BodyElement;
+import objectos.code.JavaModel.ClassInstanceCreationExpression;
 import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.End;
+import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.FinalModifier;
@@ -87,6 +89,28 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final PrimitiveType _int() {
     return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
+  }
+
+  protected final ClassInstanceCreationExpression _new(ClassType type) {
+    return api().elem(
+      ByteProto.CLASS_INSTANCE_CREATION, type.self()
+    );
+  }
+
+  protected final ClassInstanceCreationExpression _new(ClassType type,
+      Expression arg1) {
+    return api().elem(
+      ByteProto.CLASS_INSTANCE_CREATION, type.self(),
+      arg1.self()
+    );
+  }
+
+  protected final ClassInstanceCreationExpression _new(ClassType type,
+      Expression arg1, Expression arg2) {
+    return api().elem(
+      ByteProto.CLASS_INSTANCE_CREATION, type.self(),
+      arg1.self(), arg2.self()
+    );
   }
 
   @Override

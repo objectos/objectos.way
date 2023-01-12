@@ -215,7 +215,7 @@ class InternalApi extends InternalState implements MarkerApi {
       arg.mark(this);
     }
 
-    element(ByteProto.CLASS_INSTANCE_CREATION0);
+    element(ByteProto.CLASS_INSTANCE_CREATION);
 
     return JavaModel.REF;
   }

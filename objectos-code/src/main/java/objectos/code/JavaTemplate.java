@@ -174,7 +174,7 @@ public abstract class JavaTemplate {
     return api()._interface(elements);
   }
 
-  protected final ClassInstanceCreationExpression _new(
+  protected ClassInstanceCreationExpression _new(
       ClassType type, Expression... arguments) {
     return api()._new(type, arguments);
   }
