@@ -54,6 +54,7 @@ import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
+import objectos.code.JavaModel.ThisKeyword;
 import objectos.code.JavaModel.VoidKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
@@ -146,6 +147,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final StaticModifier _static() {
     return modifier(Keyword.STATIC);
+  }
+
+  @Override
+  protected final ThisKeyword _this() {
+    return api().item(ByteProto.THIS);
   }
 
   @Override

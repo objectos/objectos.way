@@ -208,7 +208,7 @@ public abstract class JavaTemplate {
     return api()._super(arguments);
   }
 
-  protected final ThisKeyword _this() {
+  protected ThisKeyword _this() {
     return api()._this();
   }
 

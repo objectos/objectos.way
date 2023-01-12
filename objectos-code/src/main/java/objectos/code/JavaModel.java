@@ -163,9 +163,6 @@ public final class JavaModel {
   public sealed interface Statement
       extends BlockStatement, ConstructorDeclarationElement, MethodDeclarationElement {}
 
-  public sealed interface ThisKeyword
-      extends PrimaryExpression {}
-
   public sealed interface TypeParameter
       extends MethodDeclarationElement {}
 
@@ -234,6 +231,7 @@ public final class JavaModel {
       ReturnKeyword,
       StaticModifier,
       StringLiteral,
+      ThisKeyword,
       VoidKeyword {
     INSTANCE;
 
@@ -378,6 +376,8 @@ public final class JavaModel {
   sealed interface StringLiteral extends Literal,
       /* to remove */
       AnnotationElementValue {}
+
+  sealed interface ThisKeyword extends PrimaryExpression {}
 
   sealed interface VoidKeyword extends BodyElement,
       /* to remove */

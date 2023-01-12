@@ -2334,6 +2334,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.STRING_LITERAL -> codeadd(ByteCode.STRING_LITERAL, itemnxt());
 
+      case ByteProto.THIS -> codeadd(Keyword.THIS);
+
       case ByteProto.VOID -> codeadd(Keyword.VOID);
 
       default -> warn(
@@ -2985,6 +2987,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.STRING_LITERAL -> "String Literal";
 
+      case ByteProto.THIS -> "This";
+
       case ByteProto.VOID -> "Void";
 
       default -> Integer.toString(value);
@@ -3003,7 +3007,8 @@ class InternalCompiler extends InternalApi {
 
   private void returnStatement(int context, int state, int item) {
     switch (item) {
-      case ByteProto.EXPRESSION_NAME -> {
+      case ByteProto.EXPRESSION_NAME,
+           ByteProto.THIS -> {
         switch (state) {
           case _START -> {
             codeadd(Whitespace.MANDATORY);
