@@ -289,4 +289,32 @@ public class MethodInvocationExpressionTest {
     );
   }
 
+  @Test(description = """
+  Method Invocation Expresions TC11
+
+  - end() at argument list
+  """)
+  public void testCase11() {
+    // @formatter:off
+    assertEquals(
+      fix.ture(new JavaTemplate2() {
+        @Override
+        protected final void definition() {
+          invoke("test", invoke("a"), invoke("b")); end();
+          invoke("test", invoke("a"), end(), invoke("b")); end();
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          test(a().b());
+          test(a(), b());
+        }
+      }
+      """
+    );
+    // @formatter:on
+  }
+
 }

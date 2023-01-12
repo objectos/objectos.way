@@ -95,6 +95,8 @@ public final class JavaModel {
       FieldDeclarationElement,
       MethodInvocationElement {}
 
+  public sealed interface ExpressionName extends Expression, LeftHandSide {}
+
   public sealed interface ExpressionStatement
       extends Statement {}
 
@@ -290,9 +292,7 @@ public final class JavaModel {
     default Object self() { return this; }
   }
 
-  sealed interface End extends Element {}
-
-  sealed interface ExpressionName extends Expression, LeftHandSide {}
+  sealed interface End extends Element, MethodInvocationElement {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 

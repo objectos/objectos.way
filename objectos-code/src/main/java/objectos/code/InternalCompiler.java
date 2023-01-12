@@ -26,12 +26,15 @@ class InternalCompiler extends InternalApi {
       _ANNOTATIONS = 3, _MODIFIERS = 4,
       _CLAUSE = 5, _CLAUSE_TYPE = 6,
       _TYPE = 7, _NAME = 8, _INIT = 9,
-      _ARGS = 10, _DIMS = 11,
-      _BODY = 12,
-      _STATEMENT = 13,
-      _EXPRESSION = 14,
-      _PRIMARY = 15,
-      _NL = 16, _SLOT = 17;
+      _RECV = 10,
+      _ARGS = 11, _DIMS = 12,
+      _BODY = 13,
+      _STATEMENT = 14,
+      _EXPRESSION = 15,
+      _PRIMARY = 16,
+      _PRIMARY_NL = 17,
+      _PRIMARY_SLOT = 18,
+      _NL = 19, _SLOT = 20;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -45,7 +48,6 @@ class InternalCompiler extends InternalApi {
   private static final int _BASE = 68;
   private static final int _FIRST = 69;
   private static final int _NEXT = 71;
-  private static final int _RECV = 72;
   private static final int _LPAR = 73;
 
   private static final int NULL = Integer.MIN_VALUE;
@@ -779,6 +781,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.END -> {
         switch (state) {
           case _PRIMARY -> {
+            codeadd(Symbol.SEMICOLON);
             stackset(_STATEMENT);
           }
 
@@ -825,7 +828,7 @@ class InternalCompiler extends InternalApi {
             stackset(_PRIMARY);
           }
 
-          case _NL -> {
+          case _PRIMARY_NL -> {
             codeadd(Indentation.CONTINUATION);
             codeadd(Symbol.DOT);
             stackset(_PRIMARY);
@@ -838,7 +841,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.NEW_LINE -> {
         switch (state) {
           case _PRIMARY -> {
-            stackset(_NL);
+            stackset(_PRIMARY_NL);
           }
 
           default -> stubState(context, state, item);
@@ -2303,7 +2306,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS_TYPE -> classType();
 
-      case ByteProto.END -> codeadd(Symbol.SEMICOLON);
+      case ByteProto.END -> {}
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
@@ -2592,12 +2595,12 @@ class InternalCompiler extends InternalApi {
     var state = contextpop();
     stackpop(); // slot
     switch (state) {
-      case _NAME -> {
+      case _RECV -> {
         codeadd(Symbol.LEFT_PARENTHESIS);
         codeadd(Symbol.RIGHT_PARENTHESIS);
       }
 
-      case _ARGS -> {
+      case _ARGS, _PRIMARY -> {
         codeadd(Symbol.RIGHT_PARENTHESIS);
       }
 
@@ -2670,7 +2673,17 @@ class InternalCompiler extends InternalApi {
       case ByteProto.IDENTIFIER -> {
         switch (state) {
           case _START -> {
-            stackset(_NAME);
+            stackset(_RECV);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.END -> {
+        switch (state) {
+          case _PRIMARY -> {
+            stackset(_ARGS);
           }
 
           default -> stubState(context, state, item);
@@ -2678,15 +2691,14 @@ class InternalCompiler extends InternalApi {
       }
 
       case ByteProto.EXPRESSION_NAME,
-           ByteProto.METHOD_INVOCATION,
            ByteProto.STRING_LITERAL -> {
         switch (state) {
-          case _NAME -> {
+          case _RECV -> {
             codeadd(Symbol.LEFT_PARENTHESIS);
             stackset(_ARGS);
           }
 
-          case _ARGS -> {
+          case _ARGS, _PRIMARY -> {
             commaAndSpace();
           }
 
@@ -2695,14 +2707,40 @@ class InternalCompiler extends InternalApi {
             stackset(_ARGS);
           }
 
-          case _SLOT -> {
-            var slot = stackpeek(2);
-
-            codeArray[slot + 0] = ByteCode.SEPARATOR;
-            codeArray[slot + 1] = Symbol.COMMA.ordinal();
-
-            codeadd(Indentation.EMIT);
+          case _SLOT, _PRIMARY_SLOT -> {
+            slot();
             stackset(_ARGS);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.METHOD_INVOCATION -> {
+        switch (state) {
+          case _RECV -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            stackset(_PRIMARY);
+          }
+
+          case _ARGS -> {
+            commaAndSpace();
+            stackset(_PRIMARY);
+          }
+
+          case _PRIMARY -> {
+            codeadd(Symbol.DOT);
+            stackset(_PRIMARY);
+          }
+
+          case _NL -> {
+            codeadd(Indentation.EMIT);
+            stackset(_PRIMARY_NL);
+          }
+
+          case _SLOT -> {
+            slot();
+            stackset(_PRIMARY);
           }
 
           default -> stubState(context, state, item);
@@ -2711,7 +2749,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.NEW_LINE -> {
         switch (state) {
-          case _NAME -> {
+          case _RECV -> {
             codeadd(Symbol.LEFT_PARENTHESIS);
             codeadd(Indentation.ENTER_PARENTHESIS);
             stackset(_NL);
@@ -2722,7 +2760,12 @@ class InternalCompiler extends InternalApi {
             stackset(2, nop1());
           }
 
-          case _SLOT -> {}
+          case _PRIMARY -> {
+            stackset(_PRIMARY_SLOT);
+            stackset(2, nop1());
+          }
+
+          case _SLOT, _PRIMARY_SLOT -> {}
 
           default -> stubState(context, state, item);
         }
@@ -2910,6 +2953,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.COMPILATION_UNIT -> "Compilation Unit";
 
+      case ByteProto.END -> "End";
+
       case ByteProto.EXPRESSION_NAME -> "Expression Name";
 
       case ByteProto.EXTENDS -> "Extends";
@@ -3007,6 +3052,15 @@ class InternalCompiler extends InternalApi {
            ByteProto.CONSTRUCTOR_DECLARATION,
            ByteProto.METHOD_DECLARATION -> $codeadd(Symbol.SEMICOLON);
     }
+  }
+
+  private void slot() {
+    var slot = stackpeek(2);
+
+    codeArray[slot + 0] = ByteCode.SEPARATOR;
+    codeArray[slot + 1] = Symbol.COMMA.ordinal();
+
+    codeadd(Indentation.EMIT);
   }
 
   private int stackpeek(int offset) { return localArray[localIndex - offset]; }
