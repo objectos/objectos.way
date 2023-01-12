@@ -64,7 +64,7 @@ import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.InterfaceDeclaration;
 import objectos.code.JavaModel.InterfaceDeclarationElement;
 import objectos.code.JavaModel.LeftHandSide;
-import objectos.code.JavaModel.LocalVariableDeclarationRef;
+import objectos.code.JavaModel.LocalVariableDeclarationStatement;
 import objectos.code.JavaModel.Markable;
 import objectos.code.JavaModel.MarkerApi;
 import objectos.code.JavaModel.MethodDeclaration;
@@ -1027,7 +1027,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final LocalVariableDeclarationRef var(String name, Expression expression) {
+  public final LocalVariableDeclarationStatement var(String name, Expression expression) {
     varName(name);
 
     markStart();

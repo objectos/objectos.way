@@ -58,6 +58,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("CLASS");
     value("EXTENDS");
     value("IMPLEMENTS");
+    value("INTERFACE");
     value("PACKAGE");
 
     comment("declarations old");
@@ -100,10 +101,10 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("stmt/exp aux");
 
-    value("ARGUMENT_LIST");
     value("END");
     value("NEW");
     value("RETURN");
+    value("VAR");
 
     comment("statements");
 

@@ -135,7 +135,7 @@ public final class JavaModel {
 
   public sealed interface LeftHandSide extends Markable {}
 
-  public sealed interface LocalVariableDeclarationRef
+  public sealed interface LocalVariableDeclarationStatement
       extends BlockStatement, MethodDeclarationElement {}
 
   public sealed interface Markable {
@@ -221,6 +221,7 @@ public final class JavaModel {
       Identifier,
       ImplementsKeyword,
       IntegerLiteral,
+      InterfaceKeyword,
       NewKeyword,
       NewLine,
       PackageKeyword,
@@ -232,6 +233,7 @@ public final class JavaModel {
       StaticModifier,
       StringLiteral,
       ThisKeyword,
+      VarKeyword,
       VoidKeyword {
     INSTANCE;
 
@@ -318,6 +320,8 @@ public final class JavaModel {
 
   sealed interface IntegerLiteral extends Literal {}
 
+  sealed interface InterfaceKeyword extends BodyElement {}
+
   sealed interface Literal extends PrimaryExpression {}
 
   sealed interface MethodInvocation extends Expression, ExpressionStatement {}
@@ -379,6 +383,8 @@ public final class JavaModel {
 
   sealed interface ThisKeyword extends PrimaryExpression {}
 
+  sealed interface VarKeyword extends BlockElement {}
+
   sealed interface VoidKeyword extends BodyElement,
       /* to remove */
       MethodDeclarationElement {}
@@ -423,7 +429,7 @@ public final class JavaModel {
       ImplementsKeyword,
       IntegerLiteral,
       InterfaceDeclaration,
-      LocalVariableDeclarationRef,
+      LocalVariableDeclarationStatement,
       MethodDeclaration,
       NewLine,
       ParameterizedType,

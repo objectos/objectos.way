@@ -63,7 +63,7 @@ import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.InterfaceDeclaration;
 import objectos.code.JavaModel.InterfaceDeclarationElement;
 import objectos.code.JavaModel.LeftHandSide;
-import objectos.code.JavaModel.LocalVariableDeclarationRef;
+import objectos.code.JavaModel.LocalVariableDeclarationStatement;
 import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
@@ -387,7 +387,7 @@ public abstract class JavaTemplate {
     return api().tvar(name);
   }
 
-  protected final LocalVariableDeclarationRef var(String name, Expression expression) {
+  protected final LocalVariableDeclarationStatement var(String name, Expression expression) {
     return api().var(name, expression);
   }
 

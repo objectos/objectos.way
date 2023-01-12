@@ -30,11 +30,12 @@ public class InterfaceDeclarationTest {
   - identifier
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _interface(id("A"));
+          _interface("A"); body();
         }
       }.toString(),
 
@@ -42,6 +43,7 @@ public class InterfaceDeclarationTest {
       interface A {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -50,17 +52,20 @@ public class InterfaceDeclarationTest {
   - modifiers
   """)
   public void testCase02() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _interface(_public(), id("A"));
+          _public(); _interface("A"); body();
 
-          _interface(annotation(t(TypeAnnotation.class)), id("B"));
+          at(t(TypeAnnotation.class));
+          _interface("B"); body();
 
-          _interface(annotation(t(TypeAnnotation.class)), _protected(), id("C"));
+          at(t(TypeAnnotation.class));
+          _protected(); _interface("C"); body();
 
-          _interface(_private(), _static(), annotation(t(TypeAnnotation.class)), id("D"));
+          _private(); _static(); at(t(TypeAnnotation.class)); _interface("D"); body();
         }
       }.toString(),
 
@@ -76,6 +81,7 @@ public class InterfaceDeclarationTest {
       private static @objectos.code.TypeAnnotation interface D {}
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -84,30 +90,16 @@ public class InterfaceDeclarationTest {
   - extends clause
   """)
   public void testCase03() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _interface(id("A"), _extends(t(IfaceA.class)));
+          _interface("A"); _extends(); t(IfaceA.class); body();
 
-          _interface(id("B"), _extends(t(IfaceA.class), t(IfaceB.class)));
+          _interface("B"); _extends(); t(IfaceA.class); t(IfaceB.class); body();
 
-          _interface(
-            id("C"),
-            _extends(t(IfaceA.class), t(IfaceB.class)),
-            _extends(t(IfaceC.class))
-          );
-
-          _interface(
-            id("D"),
-            include(this::interfaceD)
-          );
-        }
-
-        private void interfaceD() {
-          _extends(t(IfaceA.class));
-          _extends(t(IfaceB.class));
-          _extends(t(IfaceC.class));
+          _interface("C"); _extends(); t(IfaceA.class); t(IfaceB.class); t(IfaceC.class); body();
         }
       }.toString(),
 
@@ -117,10 +109,9 @@ public class InterfaceDeclarationTest {
       interface B extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB {}
 
       interface C extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB, objectos.code.Types.IfaceC {}
-
-      interface D extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB, objectos.code.Types.IfaceC {}
       """
     );
+    // @formatter:on
   }
 
 }

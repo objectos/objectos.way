@@ -41,6 +41,7 @@ import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
+import objectos.code.JavaModel.InterfaceKeyword;
 import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLine;
@@ -55,6 +56,7 @@ import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.ThisKeyword;
+import objectos.code.JavaModel.VarKeyword;
 import objectos.code.JavaModel.VoidKeyword;
 
 abstract class JavaTemplate2 extends JavaTemplate {
@@ -90,6 +92,14 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final PrimitiveType _int() {
     return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
+  }
+
+  protected final InterfaceKeyword _interface(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(ByteProto.INTERFACE, api.object(name));
   }
 
   protected final ClassInstanceCreationExpression _new(ClassType type) {
@@ -152,6 +162,12 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final ThisKeyword _this() {
     return api().item(ByteProto.THIS);
+  }
+
+  protected final VarKeyword _var(String name) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    return api.item(ByteProto.VAR, api.object(name));
   }
 
   @Override
