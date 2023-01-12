@@ -275,18 +275,24 @@ public class MethodInvocationExpressionTest {
   - primary expressions
   """)
   public void testCase10() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke(_new(t(Thread.class)), "start");
+          _new(t(Thread.class)); invoke("start");
         }
-      }.toString(),
+      }),
 
       """
-      new java.lang.Thread().start();
+      class Invoke {
+        void method() {
+          new java.lang.Thread().start();
+        }
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
