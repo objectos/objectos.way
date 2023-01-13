@@ -422,6 +422,28 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT);
   }
 
+  protected final ExpressionName n(String id1, String id2) {
+    JavaModel.checkIdentifier(id1.toString()); // implicit null check
+    JavaModel.checkIdentifier(id2.toString()); // implicit null check
+
+    var api = api();
+    api.identifierext(id1);
+    api.identifierext(id2);
+    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT, JavaModel.EXT);
+  }
+
+  protected final ExpressionName n(String id1, String id2, String id3) {
+    JavaModel.checkIdentifier(id1.toString()); // implicit null check
+    JavaModel.checkIdentifier(id2.toString()); // implicit null check
+    JavaModel.checkIdentifier(id3.toString()); // implicit null check
+
+    var api = api();
+    api.identifierext(id1);
+    api.identifierext(id2);
+    api.identifierext(id3);
+    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT, JavaModel.EXT, JavaModel.EXT);
+  }
+
   @Override
   protected final NewLine nl() {
     return api().item(ByteProto.NEW_LINE);
