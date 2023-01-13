@@ -97,30 +97,31 @@ final class ByteProto {
   //stmt/exp aux
 
   static final int END = -46;
-  static final int NEW = -47;
-  static final int RETURN = -48;
-  static final int VAR = -49;
+  static final int GETS = -47;
+  static final int NEW = -48;
+  static final int RETURN = -49;
+  static final int VAR = -50;
 
   //statements
 
-  static final int BLOCK = -50;
-  static final int LOCAL_VARIABLE = -51;
-  static final int RETURN_STATEMENT = -52;
+  static final int BLOCK = -51;
+  static final int LOCAL_VARIABLE = -52;
+  static final int RETURN_STATEMENT = -53;
 
   //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -53;
-  static final int ASSIGNMENT_EXPRESSION = -54;
-  static final int ASSIGNMENT_OPERATOR = -55;
-  static final int CHAINED_METHOD_INVOCATION = -56;
-  static final int CLASS_INSTANCE_CREATION = -57;
-  static final int EXPRESSION_NAME = -58;
-  static final int FIELD_ACCESS_EXPRESSION0 = -59;
-  static final int METHOD_INVOCATION = -60;
-  static final int METHOD_INVOCATION_QUALIFIED = -61;
-  static final int PRIMITIVE_LITERAL = -62;
-  static final int STRING_LITERAL = -63;
-  static final int THIS = -64;
+  static final int ARRAY_ACCESS_EXPRESSION = -54;
+  static final int ASSIGNMENT_EXPRESSION = -55;
+  static final int ASSIGNMENT_OPERATOR = -56;
+  static final int CHAINED_METHOD_INVOCATION = -57;
+  static final int CLASS_INSTANCE_CREATION = -58;
+  static final int EXPRESSION_NAME = -59;
+  static final int FIELD_ACCESS_EXPRESSION0 = -60;
+  static final int METHOD_INVOCATION = -61;
+  static final int METHOD_INVOCATION_QUALIFIED = -62;
+  static final int PRIMITIVE_LITERAL = -63;
+  static final int STRING_LITERAL = -64;
+  static final int THIS = -65;
 
   private ByteProto() {}
 

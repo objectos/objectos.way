@@ -17,9 +17,12 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class FieldAccessExpressionTest {
+
+  private final Fixture fix = new Fixture("FieldAccess", Kind.VOID_METHOD);
 
   @Test(description = """
   Field Access Expressions TC01
@@ -27,18 +30,26 @@ public class FieldAccessExpressionTest {
   - Primary . Identifier
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          assign(n(_this(), "x"), n("y"));
+          _this(); id("x"); gets(); n("y");
+          invoke("x"); invoke("y"); id("z"); gets(); n("foo");
         }
-      }.toString(),
+      }),
 
       """
-      this.x = y;
+      class FieldAccess {
+        void method() {
+          this.x = y;
+          x().y().z = foo;
+        }
+      }
       """
     );
+    // @formatter:on
   }
 
 }

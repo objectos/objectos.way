@@ -23,6 +23,7 @@ import objectos.code.JavaModel.ArrayInitializerElement;
 import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
+import objectos.code.JavaModel.AssignmentOperator;
 import objectos.code.JavaModel.At;
 import objectos.code.JavaModel.AutoImports;
 import objectos.code.JavaModel.Block;
@@ -250,6 +251,10 @@ abstract class JavaTemplate2 extends JavaTemplate {
 
   protected final End end() {
     return api().item(ByteProto.END);
+  }
+
+  protected final AssignmentOperator gets() {
+    return api().item(ByteProto.GETS);
   }
 
   @Override

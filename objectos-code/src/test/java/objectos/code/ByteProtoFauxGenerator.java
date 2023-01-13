@@ -102,6 +102,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("stmt/exp aux");
 
     value("END");
+    value("GETS");
     value("NEW");
     value("RETURN");
     value("VAR");

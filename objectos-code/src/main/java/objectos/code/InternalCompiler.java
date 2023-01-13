@@ -35,8 +35,11 @@ class InternalCompiler extends InternalApi {
       _VAR = 16, _RETURN = 17,
       _EOS = 18,
 
-      _PRIMARY = 19, _PRIMARY_NL = 20, _PRIMARY_SLOT = 21,
-      _NL = 22, _SLOT = 23;
+      _FIELD_ACCESS = 19,
+      _LHS = 20,
+      _THIS = 21,
+      _PRIMARY = 22, _PRIMARY_NL = 23, _PRIMARY_SLOT = 24,
+      _NL = 25, _SLOT = 26;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -44,7 +47,6 @@ class InternalCompiler extends InternalApi {
   private static final int _CTES = 60;
   private static final int _PARAM = 61;
   private static final int _ARG = 62;
-  private static final int _LHS = 64;
   private static final int _RHS = 65;
   private static final int _VALUE = 66;
   private static final int _BASE = 68;
@@ -801,10 +803,37 @@ class InternalCompiler extends InternalApi {
             stackset(_EXP_NAME);
           }
 
+          case _LHS -> {
+            codeadd(Whitespace.OPTIONAL);
+            stackset(_EOS);
+          }
+
           case _PRIMARY -> {
             codeadd(Symbol.SEMICOLON);
             blockBeforeNextStatement();
             stackset(_EXP_NAME);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.GETS -> {
+        switch (state) {
+          case _FIELD_ACCESS -> {
+            codeadd(Whitespace.OPTIONAL);
+            stackset(_LHS);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.IDENTIFIER -> {
+        switch (state) {
+          case _PRIMARY, _THIS -> {
+            codeadd(Symbol.DOT);
+            stackset(_FIELD_ACCESS);
           }
 
           default -> stubState(context, state, item);
@@ -882,6 +911,11 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.THIS -> {
         switch (state) {
+          case _START -> {
+            blockBeforeFirstStatement();
+            stackset(_THIS);
+          }
+
           case _RETURN -> {
             codeadd(Whitespace.MANDATORY);
             stackset(_EOS);
@@ -2390,6 +2424,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
       case ByteProto.EXTENDS -> codeadd(Keyword.EXTENDS);
+
+      case ByteProto.GETS -> codeadd(Symbol.ASSIGNMENT);
 
       case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, itemnxt());
 

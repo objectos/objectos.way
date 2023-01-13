@@ -212,6 +212,7 @@ public final class JavaModel {
       implements
       AbstractModifier,
       ArrayDimension,
+      AssignmentOperator,
       AutoImports,
       ClassKeyword,
       ClassType,
@@ -266,6 +267,8 @@ public final class JavaModel {
   sealed interface ArrayTypeComponent extends
       /* to remove */
       Markable {}
+
+  sealed interface AssignmentOperator extends BlockElement {}
 
   sealed interface At extends BodyElement {}
 
