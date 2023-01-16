@@ -30,6 +30,7 @@ class StateFauxGenerator {
 
     state("ANNOTATIONS");
     state("ARGS");
+    state("ARRAY_ACCESS");
     state("BODY");
     state("CLAUSE");
     state("CLAUSE_TYPE");

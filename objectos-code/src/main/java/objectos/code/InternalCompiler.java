@@ -24,34 +24,35 @@ class InternalCompiler extends InternalApi {
   private static final int _START = 0,
       _ANNOTATIONS = 1,
       _ARGS = 2,
-      _BODY = 3,
-      _CLAUSE = 4,
-      _CLAUSE_TYPE = 5,
-      _CONSTRUCTOR = 6,
-      _DIMS = 7,
-      _EOS = 8,
-      _EXP_NAME = 9,
-      _FIELD_ACCESS = 10,
-      _IMPORTS = 11,
-      _INIT = 12,
-      _LHS = 13,
-      _METHOD = 14,
-      _MODIFIERS = 15,
-      _NAME = 16,
-      _NL = 17,
-      _PACKAGE = 18,
-      _PRIMARY = 19,
-      _PRIMARY_NL = 20,
-      _PRIMARY_SLOT = 21,
-      _RECV = 22,
-      _RETURN = 23,
-      _SLOT = 24,
-      _SUPER = 25,
-      _THIS = 26,
-      _TYPE = 27,
-      _TYPE_DECLARATION = 28,
-      _TYPE_PARAMETER = 29,
-      _VAR = 30;
+      _ARRAY_ACCESS = 3,
+      _BODY = 4,
+      _CLAUSE = 5,
+      _CLAUSE_TYPE = 6,
+      _CONSTRUCTOR = 7,
+      _DIMS = 8,
+      _EOS = 9,
+      _EXP_NAME = 10,
+      _FIELD_ACCESS = 11,
+      _IMPORTS = 12,
+      _INIT = 13,
+      _LHS = 14,
+      _METHOD = 15,
+      _MODIFIERS = 16,
+      _NAME = 17,
+      _NL = 18,
+      _PACKAGE = 19,
+      _PRIMARY = 20,
+      _PRIMARY_NL = 21,
+      _PRIMARY_SLOT = 22,
+      _RECV = 23,
+      _RETURN = 24,
+      _SLOT = 25,
+      _SUPER = 26,
+      _THIS = 27,
+      _TYPE = 28,
+      _TYPE_DECLARATION = 29,
+      _TYPE_PARAMETER = 30,
+      _VAR = 31;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -474,6 +475,10 @@ class InternalCompiler extends InternalApi {
     switch (state) {
       case _TYPE -> {}
 
+      case _VALUE -> {
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
       default -> stubPop(ByteProto.ANNOTATION, state);
     }
   }
@@ -515,6 +520,17 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.STRING_LITERAL -> {
+        switch (state) {
+          case _TYPE -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            stackset(_VALUE);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       default -> stubItem(context, state, item);
     }
   }
@@ -524,6 +540,34 @@ class InternalCompiler extends InternalApi {
       case _VALUE -> {
         $codeadd(Symbol.RIGHT_PARENTHESIS);
       }
+    }
+  }
+
+  private void arrayAccess() {
+    codeadd(Symbol.LEFT_SQUARE_BRACKET);
+
+    stackpush(ByteProto.ARRAY_ACCESS, _START);
+
+    element();
+
+    contextpop();
+
+    codeadd(Symbol.RIGHT_SQUARE_BRACKET);
+  }
+
+  private void arrayAccess(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.EXPRESSION_NAME -> {
+        switch (state) {
+          case _START -> {
+            stackset(_EXP_NAME);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
     }
   }
 
@@ -1931,39 +1975,6 @@ class InternalCompiler extends InternalApi {
     methodDeclaration(_CLAUSE);
   }
 
-  private void constructor(int context, int state, int item) {
-    switch (item) {
-      case ByteProto.IDENTIFIER -> {
-        switch (state) {
-          case _TYPE -> {
-            codeadd(Whitespace.MANDATORY);
-            stackset(_NAME);
-          }
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      case ByteProto.PRIMITIVE_TYPE -> {
-        switch (state) {
-          case _START -> {
-            codeadd(Symbol.LEFT_PARENTHESIS);
-            stackset(_TYPE);
-          }
-
-          case _NAME -> {
-            commaAndSpace();
-            stackset(_TYPE);
-          }
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      default -> stubItem(context, state, item);
-    }
-  }
-
   private void constructorDeclaration(int child) {
     var state = $parentvalget(1);
 
@@ -2092,14 +2103,25 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void constructorInvocation(Keyword keyword) {
+  private void constructorInvocation(int proto, Keyword keyword) {
     codeadd(keyword);
-    methodInvocation(_RECV);
+
+    stackpush(
+      NULL, // 2 = slot
+      proto,
+      _RECV
+    );
+
+    element();
+
+    methodInvocationPop(proto);
   }
 
   private void context(int context, int state, int item) {
     switch (context) {
       case ByteProto.ANNOTATION -> annotation(context, state, item);
+
+      case ByteProto.ARRAY_ACCESS -> arrayAccess(context, state, item);
 
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(context, state, item);
 
@@ -2113,8 +2135,6 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
 
-      case ByteProto.CONSTRUCTOR -> constructor(context, state, item);
-
       case ByteProto.EXPRESSION_NAME -> expressionName(context, state, item);
 
       case ByteProto.METHOD_DECLARATION -> methodDeclaration(context, state, item);
@@ -2122,6 +2142,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.METHOD_INVOCATION -> methodInvocation(context, state, item);
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(context, state, item);
+
+      case ByteProto.SUPER_INVOCATION -> methodInvocation(context, state, item);
 
       case ByteProto.TYPE_PARAMETER -> typeParameter(context, state, item);
 
@@ -2607,6 +2629,8 @@ class InternalCompiler extends InternalApi {
     switch (item) {
       case ByteProto.ANNOTATION -> annotation();
 
+      case ByteProto.ARRAY_ACCESS -> arrayAccess();
+
       case ByteProto.ARRAY_DIMENSION -> {
         codeadd(Symbol.LEFT_SQUARE_BRACKET);
         codeadd(Symbol.RIGHT_SQUARE_BRACKET);
@@ -2668,7 +2692,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.SUPER -> codeadd(Keyword.SUPER);
 
-      case ByteProto.SUPER_INVOCATION -> constructorInvocation(Keyword.SUPER);
+      case ByteProto.SUPER_INVOCATION -> constructorInvocation(item, Keyword.SUPER);
 
       case ByteProto.THIS -> codeadd(Keyword.THIS);
 
@@ -2995,39 +3019,22 @@ class InternalCompiler extends InternalApi {
         if (state != _MODIFIERS) {
           $codeadd(Whitespace.AFTER_ANNOTATION);
         }
-
       }
     }
   }
 
   private void methodInvocation(int initialState) {
     int proto = ByteProto.METHOD_INVOCATION;
+
     stackpush(
       NULL, // 2 = slot
       proto,
       initialState
     );
+
     element();
-    var state = contextpop();
-    stackpop(); // slot
-    switch (state) {
-      case _RECV -> {
-        codeadd(Symbol.LEFT_PARENTHESIS);
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
 
-      case _ARGS, _PRIMARY -> {
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      case _SLOT -> {
-        codeadd(Indentation.EXIT_PARENTHESIS);
-        codeadd(Indentation.EMIT);
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      default -> stubPop(proto, state);
-    }
+    methodInvocationPop(proto);
   }
 
   private void methodInvocation(int context, int state, int item) {
@@ -3036,6 +3043,16 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _START -> {
             stackset(_RECV);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.ARRAY_ACCESS -> {
+        switch (state) {
+          case _ARRAY_ACCESS, _EXP_NAME -> {
+            stackset(_ARRAY_ACCESS);
           }
 
           default -> stubState(context, state, item);
@@ -3052,26 +3069,26 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.EXPRESSION_NAME,
-           ByteProto.STRING_LITERAL -> {
+      case ByteProto.EXPRESSION_NAME -> {
         switch (state) {
           case _RECV -> {
             codeadd(Symbol.LEFT_PARENTHESIS);
-            stackset(_ARGS);
+            stackset(_EXP_NAME);
           }
 
-          case _ARGS, _PRIMARY -> {
+          case _ARGS, _ARRAY_ACCESS, _PRIMARY -> {
             commaAndSpace();
+            stackset(_EXP_NAME);
           }
 
           case _NL -> {
             codeadd(Indentation.EMIT);
-            stackset(_ARGS);
+            stackset(_EXP_NAME);
           }
 
           case _SLOT, _PRIMARY_SLOT -> {
             slot();
-            stackset(_ARGS);
+            stackset(_EXP_NAME);
           }
 
           default -> stubState(context, state, item);
@@ -3111,12 +3128,6 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.NEW_LINE -> {
         switch (state) {
-          case _RECV -> {
-            codeadd(Symbol.LEFT_PARENTHESIS);
-            codeadd(Indentation.ENTER_PARENTHESIS);
-            stackset(_NL);
-          }
-
           case _ARGS -> {
             stackset(_SLOT);
             stackset(2, nop1());
@@ -3127,7 +3138,39 @@ class InternalCompiler extends InternalApi {
             stackset(2, nop1());
           }
 
-          case _SLOT, _PRIMARY_SLOT -> {}
+          case _RECV -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            codeadd(Indentation.ENTER_PARENTHESIS);
+            stackset(_NL);
+          }
+
+          case _PRIMARY_SLOT, _SLOT -> {}
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.STRING_LITERAL -> {
+        switch (state) {
+          case _ARGS, _PRIMARY -> {
+            commaAndSpace();
+            stackset(_PRIMARY);
+          }
+
+          case _NL -> {
+            codeadd(Indentation.EMIT);
+            stackset(_PRIMARY);
+          }
+
+          case _PRIMARY_SLOT, _SLOT -> {
+            slot();
+            stackset(_PRIMARY);
+          }
+
+          case _RECV -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            stackset(_PRIMARY);
+          }
 
           default -> stubState(context, state, item);
         }
@@ -3244,6 +3287,29 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void methodInvocationPop(int proto) {
+    var state = contextpop();
+    stackpop(); // slot
+    switch (state) {
+      case _ARGS, _ARRAY_ACCESS, _EXP_NAME, _PRIMARY -> {
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      case _RECV -> {
+        codeadd(Symbol.LEFT_PARENTHESIS);
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      case _PRIMARY_SLOT, _SLOT -> {
+        codeadd(Indentation.EXIT_PARENTHESIS);
+        codeadd(Indentation.EMIT);
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      default -> stubPop(proto, state);
+    }
+  }
+
   private void methodInvocationQualified() {
     var proto = ByteProto.METHOD_INVOCATION_QUALIFIED;
 
@@ -3343,6 +3409,8 @@ class InternalCompiler extends InternalApi {
   private String protoname(int value) {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
+
+      case ByteProto.ARRAY_ACCESS -> "Array access";
 
       case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
 

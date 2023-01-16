@@ -26,13 +26,12 @@ public class AnnotationTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(
-            annotation(t(Foo.class), s("java")),
-            id("Test")
-          );
+          at(t("objectos.code", "Foo"), s("java"));
+          _class("Test");
+          body();
         }
       }.toString(),
 

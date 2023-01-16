@@ -88,7 +88,8 @@ public final class JavaModel {
       FieldDeclarationElement,
       MethodInvocationElement {}
 
-  public sealed interface ExpressionElement extends Element,
+  public sealed interface ExpressionElement extends
+      BlockElement, BodyElement, MethodInvocationElement,
       /* to remove */
       Markable {}
 
@@ -167,6 +168,7 @@ public final class JavaModel {
 
   enum _Elem
       implements
+      ArrayAccess,
       ArrayInitializer,
       ArrayType,
       At,
@@ -177,7 +179,7 @@ public final class JavaModel {
       ExplicitConstructorInvocation,
       ExpressionName,
       MethodDeclaration,
-      MethodInvocation,
+      UnqualifiedMethodInvocation,
       ParameterizedType,
       TypeParameter {
     INSTANCE;
@@ -246,6 +248,8 @@ public final class JavaModel {
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
+  sealed interface ArrayAccess extends ExpressionElement {}
+
   sealed interface ArrayDimension extends ArrayTypeElement {}
 
   sealed interface ArrayInitializer extends ArrayInitializerElement,
@@ -267,6 +271,8 @@ public final class JavaModel {
   sealed interface AssignmentOperator extends BlockElement {}
 
   sealed interface At extends BodyElement {}
+
+  sealed interface AtElement extends Element {}
 
   sealed interface AutoImports extends Element {}
 
@@ -330,7 +336,7 @@ public final class JavaModel {
 
   sealed interface InterfaceKeyword extends BodyElement {}
 
-  sealed interface Literal extends PrimaryExpression {}
+  sealed interface Literal extends AtElement, PrimaryExpression {}
 
   sealed interface MethodDeclaration extends BodyElement,
       /* to remove */

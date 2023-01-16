@@ -104,7 +104,7 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke("m0", s("1"), invoke("m2"), s("3"));
+          invoke("m0", s("1"), end(), invoke("m2"), s("3"));
         }
       }),
 
@@ -128,7 +128,11 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke("m0", nl(), s("1"), nl(), nl(), invoke("m2"), nl(), nl(), s("3"), nl());
+          invoke("m0", nl(),
+            s("1"), end(), nl(), nl(),
+            invoke("m2"), nl(), nl(),
+            s("3"), nl()
+          );
         }
       }),
 

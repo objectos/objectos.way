@@ -306,7 +306,7 @@ public abstract class JavaTemplate {
     return api().invoke(primary, methodName, elements);
   }
 
-  protected final UnqualifiedMethodInvocation invoke(
+  protected UnqualifiedMethodInvocation invoke(
       String methodName, MethodInvocationElement... elements) {
     return api().invoke(methodName, elements);
   }

@@ -17,30 +17,37 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class ArrayAccessExpressionTest {
+
+  private final Fixture fix = new Fixture("ArrayAccess", Kind.VOID_METHOD);
 
   @Test(description = """
   variable arity test
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          aget(n("a"), n("x"));
-          aget(n("a"), n("x"), n("y"));
-          aget(n("a"), n("x"), n("y"), n("z"));
+          invoke("foo",
+            n("a"), dim(n("x")),
+
+            n("a"), dim(n("x")), dim(n("y")),
+
+            n("a"), dim(n("x")), dim(n("y")), dim(n("z"))
+          );
         }
-      }.toString(),
+      }),
 
       """
-      a[x]
-
-      a[x][y]
-
-      a[x][y][z]
+      class ArrayAccess {
+        void method() {
+          foo(a[x], a[x][y], a[x][y][z]);
+        }
+      }
       """
     );
   }
