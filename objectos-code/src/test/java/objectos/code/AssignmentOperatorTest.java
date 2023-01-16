@@ -17,9 +17,12 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class AssignmentOperatorTest {
+
+  private final Fixture fix = new Fixture("Assign", Kind.VOID_METHOD);
 
   @Test(description = """
   Assignment Operators TC01
@@ -27,18 +30,28 @@ public class AssignmentOperatorTest {
   - implicit operator (default) should be the simple one
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
-          assign(n("a"), n("x"));
+          n("a"); gets(); n("x");
+          n("a"); gets(); invoke("x"); invoke("y");
+          n("a"); gets(); _new(t("test", "Foo"));
         }
-      }.toString(),
+      }),
 
       """
-      a = x;
+      class Assign {
+        void method() {
+          a = x;
+          a = x().y();
+          a = new test.Foo();
+        }
+      }
       """
     );
+    // @formatter:on
   }
 
 }

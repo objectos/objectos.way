@@ -823,6 +823,11 @@ class InternalCompiler extends InternalApi {
             blockBeforeFirstStatement(_PRIMARY);
           }
 
+          case _LHS -> {
+            codeadd(Whitespace.OPTIONAL);
+            stackset(_PRIMARY);
+          }
+
           case _PRIMARY -> {
             codeadd(Symbol.SEMICOLON);
             blockBeforeNextStatement();
@@ -898,7 +903,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.GETS -> {
         switch (state) {
-          case _FIELD_ACCESS -> {
+          case _EXP_NAME, _FIELD_ACCESS -> {
             codeadd(Whitespace.OPTIONAL);
             stackset(_LHS);
           }
@@ -931,6 +936,11 @@ class InternalCompiler extends InternalApi {
 
           case _EXP_NAME, _PRIMARY, _THIS, _TYPE -> {
             codeadd(Symbol.DOT);
+            stackset(_PRIMARY);
+          }
+
+          case _LHS -> {
+            codeadd(Whitespace.OPTIONAL);
             stackset(_PRIMARY);
           }
 
