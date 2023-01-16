@@ -254,7 +254,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.LOCAL_VARIABLE -> localVariableDeclaration(child);
 
-      case ByteProto.METHOD_DECLARATION -> methodDeclaration(child);
+      case ByteProto.METHOD_DECLARATION -> methodDeclaration$(child);
 
       case ByteProto.METHOD_INVOCATION, ByteProto.METHOD_INVOCATION_QUALIFIED
            -> methodInvocation$(child);
@@ -1926,24 +1926,9 @@ class InternalCompiler extends InternalApi {
       nameIndex = object("Constructor");
     }
 
-    int proto = ByteProto.CONSTRUCTOR;
-
     codeadd(ByteCode.IDENTIFIER, nameIndex);
-    stackpush(proto, _START);
-    element();
-    int state = contextpop();
-    switch (state) {
-      case _START -> {
-        codeadd(Symbol.LEFT_PARENTHESIS);
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
 
-      case _NAME -> {
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      default -> stubPop(proto, state);
-    }
+    methodDeclaration(_CLAUSE);
   }
 
   private void constructor(int context, int state, int item) {
@@ -2661,7 +2646,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.INTERFACE -> typeKeyword(Keyword.INTERFACE);
 
-      case ByteProto.METHOD_DECLARATION -> methodDeclaration();
+      case ByteProto.METHOD_DECLARATION -> methodDeclaration(_START);
 
       case ByteProto.METHOD_INVOCATION -> methodInvocation(_START);
 
@@ -2755,9 +2740,9 @@ class InternalCompiler extends InternalApi {
     $codeadd(Symbol.SEMICOLON);
   }
 
-  private void methodDeclaration() {
+  private void methodDeclaration(int initialState) {
     int proto = ByteProto.METHOD_DECLARATION;
-    stackpush(proto, _START);
+    stackpush(proto, initialState);
     element();
     int state = contextpop();
     switch (state) {
@@ -2774,7 +2759,68 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void methodDeclaration(int child) {
+  private void methodDeclaration(int context, int state, int item) {
+    switch (item) {
+      case ByteProto.ARRAY_TYPE,
+           ByteProto.CLASS_TYPE,
+           ByteProto.PARAMETERIZED_TYPE,
+           ByteProto.PRIMITIVE_TYPE,
+           ByteProto.TYPE_VARIABLE -> {
+        switch (state) {
+          case _CLAUSE -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            stackset(_TYPE);
+          }
+
+          case _NAME -> {
+            commaAndSpace();
+            stackset(_TYPE);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.ELLIPSIS -> {
+        switch (state) {
+          case _TYPE -> {}
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.IDENTIFIER -> {
+        switch (state) {
+          case _START -> {
+            stackset(_CLAUSE);
+          }
+
+          case _TYPE -> {
+            codeadd(Whitespace.MANDATORY);
+            stackset(_NAME);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      default -> stubItem(context, state, item);
+    }
+  }
+
+  private void methodDeclaration$() {
+    var proto = ByteProto.METHOD_DECLARATION;
+
+    $cloop1parent(proto);
+
+    $parentpush(
+      0, // 2 = is abstract?
+      _START, // 1 = state
+      proto
+    );
+  }
+
+  private void methodDeclaration$(int child) {
     var state = $parentvalget(1);
 
     if (child == ByteProto.MODIFIER) {
@@ -2900,67 +2946,6 @@ class InternalCompiler extends InternalApi {
         $codeadd(Indentation.EMIT);
       }
     }
-  }
-
-  private void methodDeclaration(int context, int state, int item) {
-    switch (item) {
-      case ByteProto.ARRAY_TYPE,
-           ByteProto.CLASS_TYPE,
-           ByteProto.PARAMETERIZED_TYPE,
-           ByteProto.PRIMITIVE_TYPE,
-           ByteProto.TYPE_VARIABLE -> {
-        switch (state) {
-          case _CLAUSE -> {
-            codeadd(Symbol.LEFT_PARENTHESIS);
-            stackset(_TYPE);
-          }
-
-          case _NAME -> {
-            commaAndSpace();
-            stackset(_TYPE);
-          }
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      case ByteProto.ELLIPSIS -> {
-        switch (state) {
-          case _TYPE -> {}
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      case ByteProto.IDENTIFIER -> {
-        switch (state) {
-          case _START -> {
-            stackset(_CLAUSE);
-          }
-
-          case _TYPE -> {
-            codeadd(Whitespace.MANDATORY);
-            stackset(_NAME);
-          }
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      default -> stubItem(context, state, item);
-    }
-  }
-
-  private void methodDeclaration$() {
-    var proto = ByteProto.METHOD_DECLARATION;
-
-    $cloop1parent(proto);
-
-    $parentpush(
-      0, // 2 = is abstract?
-      _START, // 1 = state
-      proto
-    );
   }
 
   private void methodDeclarationBreak(int state) {

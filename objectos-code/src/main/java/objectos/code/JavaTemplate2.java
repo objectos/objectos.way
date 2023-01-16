@@ -328,9 +328,42 @@ abstract class JavaTemplate2 extends JavaTemplate {
       e5.self());
   }
 
+  protected final ConstructorDeclaration constructor() {
+    return api().elem(ByteProto.CONSTRUCTOR);
+  }
+
+  protected final ConstructorDeclaration constructor(ParameterElement e1) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self());
+  }
+
   protected final ConstructorDeclaration constructor(ParameterElement... elements) {
     Objects.requireNonNull(elements, "elements == null");
     return api().elemmany(ByteProto.CONSTRUCTOR, elements);
+  }
+
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self());
+  }
+
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self());
+  }
+
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3, ParameterElement e4) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self());
+  }
+
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3, ParameterElement e4, ParameterElement e5) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self(), e5.self());
+  }
+
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3, ParameterElement e4, ParameterElement e5, ParameterElement e6) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(),
+      e3.self(), e4.self(), e5.self(), e6.self());
   }
 
   @Override
