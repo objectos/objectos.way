@@ -31,6 +31,7 @@ class StateFauxGenerator {
     state("ANNOTATIONS");
     state("ARGS");
     state("ARRAY_ACCESS");
+    state("BLOCK");
     state("BODY");
     state("CLAUSE");
     state("CLAUSE_TYPE");

@@ -17,9 +17,12 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class BlockTest {
+
+  private final Fixture fix = new Fixture("Blocks", Kind.VOID_METHOD);
 
   @Test(description = """
   Blocks TC01
@@ -28,15 +31,19 @@ public class BlockTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           block();
         }
-      }.toString(),
+      }),
 
       """
-      {}
+      class Blocks {
+        void method() {
+          {}
+        }
+      }
       """
     );
   }
@@ -48,27 +55,30 @@ public class BlockTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate() {
+      fix.ture(new JavaTemplate2() {
         @Override
         protected final void definition() {
           block(
             invoke("a")
           );
           block(
-            invoke("a"),
+            invoke("a"), end(),
             invoke("b")
           );
         }
-      }.toString(),
+      }),
 
       """
-      {
-        a();
-      }
-
-      {
-        a();
-        b();
+      class Blocks {
+        void method() {
+          {
+            a();
+          }
+          {
+            a();
+            b();
+          }
+        }
       }
       """
     );

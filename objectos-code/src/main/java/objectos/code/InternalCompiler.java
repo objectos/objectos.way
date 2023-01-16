@@ -25,34 +25,35 @@ class InternalCompiler extends InternalApi {
       _ANNOTATIONS = 1,
       _ARGS = 2,
       _ARRAY_ACCESS = 3,
-      _BODY = 4,
-      _CLAUSE = 5,
-      _CLAUSE_TYPE = 6,
-      _CONSTRUCTOR = 7,
-      _DIMS = 8,
-      _EOS = 9,
-      _EXP_NAME = 10,
-      _FIELD_ACCESS = 11,
-      _IMPORTS = 12,
-      _INIT = 13,
-      _LHS = 14,
-      _METHOD = 15,
-      _MODIFIERS = 16,
-      _NAME = 17,
-      _NL = 18,
-      _PACKAGE = 19,
-      _PRIMARY = 20,
-      _PRIMARY_NL = 21,
-      _PRIMARY_SLOT = 22,
-      _RECV = 23,
-      _RETURN = 24,
-      _SLOT = 25,
-      _SUPER = 26,
-      _THIS = 27,
-      _TYPE = 28,
-      _TYPE_DECLARATION = 29,
-      _TYPE_PARAMETER = 30,
-      _VAR = 31;
+      _BLOCK = 4,
+      _BODY = 5,
+      _CLAUSE = 6,
+      _CLAUSE_TYPE = 7,
+      _CONSTRUCTOR = 8,
+      _DIMS = 9,
+      _EOS = 10,
+      _EXP_NAME = 11,
+      _FIELD_ACCESS = 12,
+      _IMPORTS = 13,
+      _INIT = 14,
+      _LHS = 15,
+      _METHOD = 16,
+      _MODIFIERS = 17,
+      _NAME = 18,
+      _NL = 19,
+      _PACKAGE = 20,
+      _PRIMARY = 21,
+      _PRIMARY_NL = 22,
+      _PRIMARY_SLOT = 23,
+      _RECV = 24,
+      _RETURN = 25,
+      _SLOT = 26,
+      _SUPER = 27,
+      _THIS = 28,
+      _TYPE = 29,
+      _TYPE_DECLARATION = 30,
+      _TYPE_PARAMETER = 31,
+      _VAR = 32;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -773,6 +774,13 @@ class InternalCompiler extends InternalApi {
         codeadd(Symbol.RIGHT_CURLY_BRACKET);
       }
 
+      case _BLOCK -> {
+        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+        codeadd(Indentation.EXIT_BLOCK);
+        codeadd(Indentation.EMIT);
+        codeadd(Symbol.RIGHT_CURLY_BRACKET);
+      }
+
       case _EOS, _PRIMARY -> {
         codeadd(Symbol.SEMICOLON);
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
@@ -817,6 +825,21 @@ class InternalCompiler extends InternalApi {
 
   private void block(int context, int state, int item) {
     switch (item) {
+      case ByteProto.BLOCK -> {
+        switch (state) {
+          case _START -> {
+            blockBeforeFirstStatement(_BLOCK);
+          }
+
+          case _BLOCK -> {
+            blockBeforeNextStatement();
+            stackset(_BLOCK);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.CLASS_INSTANCE_CREATION -> {
         switch (state) {
           case _START -> {
