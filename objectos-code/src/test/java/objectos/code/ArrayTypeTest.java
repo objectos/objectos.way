@@ -28,21 +28,28 @@ public class ArrayTypeTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t(t(Object.class), dim()), id("a"));
-          field(t(t(Object.class), dim(), dim()), id("b"));
-          field(t(t(Object.class), dim(), dim(), dim()), id("c"));
+          _class("Arrays");
+          body(
+            t(t(Object.class), dim()), id("a"),
+
+            t(t(Object.class), dim(), dim()), id("b"),
+
+            t(t(Object.class), dim(), dim(), dim()), id("c")
+          );
         }
       }.toString(),
 
       """
-      java.lang.Object[] a;
+      class Arrays {
+        java.lang.Object[] a;
 
-      java.lang.Object[][] b;
+        java.lang.Object[][] b;
 
-      java.lang.Object[][][] c;
+        java.lang.Object[][][] c;
+      }
       """
     );
   }
@@ -54,21 +61,28 @@ public class ArrayTypeTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t(_int(), dim()), id("a"));
-          field(t(_double(), dim(), dim()), id("b"));
-          field(t(_boolean(), dim(), dim(), dim()), id("c"));
+          _class("Arrays");
+          body(
+            t(_int(), dim()), id("a"),
+
+            t(_double(), dim(), dim()), id("b"),
+
+            t(_boolean(), dim(), dim(), dim()), id("c")
+          );
         }
       }.toString(),
 
       """
-      int[] a;
+      class Arrays {
+        int[] a;
 
-      double[][] b;
+        double[][] b;
 
-      boolean[][][] c;
+        boolean[][][] c;
+      }
       """
     );
   }
