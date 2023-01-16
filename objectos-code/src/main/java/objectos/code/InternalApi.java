@@ -48,6 +48,7 @@ import objectos.code.JavaModel.EnumDeclaration;
 import objectos.code.JavaModel.EnumDeclarationElement;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
+import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsMany;
 import objectos.code.JavaModel.ExtendsSingle;
@@ -271,7 +272,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return JavaModel.REF;
   }
 
-  public final ExplicitConstructorInvocation _super(Expression[] arguments) {
+  public final ExplicitConstructorInvocation _super(ExpressionElement[] arguments) {
     markStart();
 
     for (var arg : arguments) {
@@ -641,6 +642,25 @@ class InternalApi extends InternalState implements MarkerApi {
     elemcntx(e8);
     elemcntx(e9);
     elemcntx(e10);
+    return elemret();
+  }
+
+  public final JavaModel._Elem elemmany(int proto, Object[] elements) {
+    elempre();
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      Check.notNull(element, "elements[", i, "] == null");
+      elempre(element);
+    }
+
+    elemcnt(proto);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      elemcntx(element);
+    }
+
     return elemret();
   }
 
@@ -1143,7 +1163,8 @@ class InternalApi extends InternalState implements MarkerApi {
 
       stackset(2, codeIndex);
     } else {
-      throw new UnsupportedOperationException("Implement me");
+      throw new UnsupportedOperationException(
+        "Implement me :: obj=" + obj);
     }
   }
 

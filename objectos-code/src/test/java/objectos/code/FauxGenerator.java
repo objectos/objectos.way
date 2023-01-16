@@ -19,7 +19,7 @@ import static java.lang.System.out;
 
 abstract class FauxGenerator {
 
-  private int value = -1;
+  int value = -1;
 
   public abstract void execute();
 

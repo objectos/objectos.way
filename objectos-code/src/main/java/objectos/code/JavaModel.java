@@ -33,7 +33,9 @@ public final class JavaModel {
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
-  public sealed interface AnyType extends Markable {}
+  public sealed interface AnyType extends ConstructorDeclarationElement,
+      /* to remove */
+      Markable {}
 
   public sealed interface ArrayAccessExpression extends Expression, LeftHandSide {}
 
@@ -68,10 +70,9 @@ public final class JavaModel {
       FieldDeclarationElement,
       MethodDeclarationElement {}
 
-  public sealed interface ConstructorDeclaration
-      extends ClassDeclarationElement, EnumDeclarationElement {}
-
-  public sealed interface ConstructorDeclarationElement extends Markable {}
+  public sealed interface ConstructorDeclarationElement extends Element,
+      /* to remove */
+      Markable {}
 
   public sealed interface Ellipsis extends FormalParameterElement {}
 
@@ -84,11 +85,7 @@ public final class JavaModel {
 
   public sealed interface EnumDeclarationElement extends Markable {}
 
-  public sealed interface ExplicitConstructorInvocation
-      extends
-      ConstructorDeclarationElement {}
-
-  public sealed interface Expression extends BlockElement,
+  public sealed interface Expression extends ExpressionElement, BlockElement,
       /* to remove */
       ArrayInitializerElement,
       EnumConstantElement,
@@ -184,6 +181,8 @@ public final class JavaModel {
       Block,
       Body,
       ClassInstanceCreationExpression,
+      ConstructorDeclaration,
+      ExplicitConstructorInvocation,
       ExpressionName,
       MethodInvocation,
       ParameterizedType {
@@ -233,6 +232,7 @@ public final class JavaModel {
       ReturnKeyword,
       StaticModifier,
       StringLiteral,
+      SuperKeyword,
       ThisKeyword,
       VarKeyword,
       VoidKeyword {
@@ -288,6 +288,10 @@ public final class JavaModel {
 
   sealed interface ClassKeyword extends BodyElement {}
 
+  sealed interface ConstructorDeclaration extends BodyElement,
+      /* to remove */
+      ClassDeclarationElement, EnumDeclarationElement {}
+
   sealed interface Element {
     /**
      * Triggers implicit null check.
@@ -295,11 +299,19 @@ public final class JavaModel {
     default Object self() { return this; }
   }
 
-  sealed interface End extends Element, MethodInvocationElement {}
+  sealed interface End extends BlockElement, Element, MethodInvocationElement {}
+
+  sealed interface ExplicitConstructorInvocation extends BlockElement,
+      /* to remove */
+      ConstructorDeclarationElement {}
+
+  sealed interface ExpressionElement extends Element,
+      /* to remove */
+      Markable {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
-  sealed interface Identifier extends BodyElement,
+  sealed interface Identifier extends BodyElement, BlockElement, ConstructorDeclarationElement,
       /* to remove */
       ClassDeclarationElement,
       EnumConstantElement,
@@ -345,9 +357,8 @@ public final class JavaModel {
 
   sealed interface PrimaryExpression extends Expression {}
 
-  sealed interface PrimitiveType extends BodyElement,
+  sealed interface PrimitiveType extends AnyType, BodyElement,
       /* to remove */
-      AnyType,
       ArrayTypeComponent,
 
       FieldDeclarationElement,
@@ -383,6 +394,8 @@ public final class JavaModel {
   sealed interface StringLiteral extends Literal,
       /* to remove */
       AnnotationElementValue {}
+
+  sealed interface SuperKeyword extends BlockElement {}
 
   sealed interface ThisKeyword extends PrimaryExpression {}
 

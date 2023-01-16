@@ -19,6 +19,7 @@ import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
 import objectos.code.JavaModel.AnyType;
+import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
 import objectos.code.JavaModel.ArrayInitializer;
@@ -204,7 +205,7 @@ public abstract class JavaTemplate {
     return api()._static();
   }
 
-  protected final ExplicitConstructorInvocation _super(Expression... arguments) {
+  protected ExplicitConstructorInvocation _super(ExpressionElement... arguments) {
     return api()._super(arguments);
   }
 
@@ -256,7 +257,7 @@ public abstract class JavaTemplate {
     return api().chain(first, more);
   }
 
-  protected final ConstructorDeclaration constructor(ConstructorDeclarationElement... elements) {
+  protected ConstructorDeclaration constructor(ConstructorDeclarationElement... elements) {
     return api().constructor(elements);
   }
 

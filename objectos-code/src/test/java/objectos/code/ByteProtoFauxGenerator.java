@@ -56,6 +56,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ANNOTATION");
     value("BODY");
     value("CLASS");
+    value("CONSTRUCTOR");
     value("EXTENDS");
     value("IMPLEMENTS");
     value("INTERFACE");
@@ -86,7 +87,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ELLIPSIS");
     value("CONSTRUCTOR_DECLARATION");
     value("THIS_INVOCATION");
-    value("SUPER_INVOCATION");
     value("QUALIFIED_SUPER_INVOCATION");
 
     comment("enum");
@@ -105,6 +105,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("GETS");
     value("NEW");
     value("RETURN");
+    value("SUPER");
     value("VAR");
 
     comment("statements");
@@ -112,6 +113,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("BLOCK");
     value("LOCAL_VARIABLE");
     value("RETURN_STATEMENT");
+    value("SUPER_INVOCATION");
 
     comment("expressions");
 

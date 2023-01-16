@@ -28,19 +28,28 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          _class(id("Test0"),
-            constructor(_public())
+          _class("Test0");
+          body(
+            _public(), constructor(), block()
           );
-          _class(id("Test1"),
-            constructor(_protected())
+
+          _class("Test1");
+          body(
+            _protected(), constructor(), block()
           );
-          _class(id("Test2"),
-            constructor()
+
+          _class("Test2");
+          body(
+            constructor(), block()
           );
-          constructor(_private());
+
+          _class("Test3");
+          body(
+            _private(), constructor(), block()
+          );
         }
       }.toString(),
 
@@ -57,7 +66,9 @@ public class ConstructorDeclarationTest {
         Test2() {}
       }
 
-      private Constructor() {}
+      class Test3 {
+        private Test3() {}
+      }
       """
     );
   }
@@ -69,23 +80,26 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          constructor(
-            param(_int(), id("a"))
-          );
-          constructor(
-            param(_int(), id("a")),
-            param(_int(), id("b"))
+          _class("Test");
+          body(
+            constructor(_int(), id("a")),
+            block(),
+
+            constructor(_int(), id("a"), _int(), id("b")),
+            block()
           );
         }
       }.toString(),
 
       """
-      Constructor(int a) {}
+      class Test {
+        Test(int a) {}
 
-      Constructor(int a, int b) {}
+        Test(int a, int b) {}
+      }
       """
     );
   }
@@ -97,30 +111,39 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          constructor(
-            param(_int(), id("a")),
-            assign(n(_this(), "a"), n("a"))
-          );
-          constructor(
-            param(_int(), id("a")),
-            param(_int(), id("b")),
-            assign(n(_this(), "a"), n("a")),
-            assign(n(_this(), "b"), n("b"))
+          _class("Test");
+          body(
+            constructor(
+              _int(), id("a")
+            ),
+            block(
+              _this(), id("a"), gets(), n("a")
+            ),
+            constructor(
+              _int(), id("a"),
+              _int(), id("b")
+            ),
+            block(
+              _this(), id("a"), gets(), n("a"),
+              _this(), id("b"), gets(), n("b")
+            )
           );
         }
       }.toString(),
 
       """
-      Constructor(int a) {
-        this.a = a;
-      }
+      class Test {
+        Test(int a) {
+          this.a = a;
+        }
 
-      Constructor(int a, int b) {
-        this.a = a;
-        this.b = b;
+        Test(int a, int b) {
+          this.a = a;
+          this.b = b;
+        }
       }
       """
     );
@@ -133,26 +156,64 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase04() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          constructor(_super());
-          constructor(_super(s("a")));
-          constructor(_super(s("a"), s("b")));
+          _class("Test");
+          body(
+            constructor(),
+            block(
+              _super()
+            ),
+
+            constructor(),
+            block(
+              _super(), end(),
+              invoke("a")
+            ),
+
+            constructor(),
+            block(
+              _super(),
+              _this(), invoke("a")
+            ),
+
+            constructor(_int(), id("a")),
+            block(
+              _super(n("a"))
+            ),
+
+            constructor(),
+            block(
+              _super(s("a"), s("b"))
+            )
+          );
         }
       }.toString(),
 
       """
-      Constructor() {
-        super();
-      }
+      class Test {
+        Test() {
+          super();
+        }
 
-      Constructor() {
-        super("a");
-      }
+        Test() {
+          super();
+          a();
+        }
 
-      Constructor() {
-        super("a", "b");
+        Test() {
+          super();
+          this.a();
+        }
+
+        Test(int a) {
+          super(a);
+        }
+
+        Test() {
+          super("a", "b");
+        }
       }
       """
     );

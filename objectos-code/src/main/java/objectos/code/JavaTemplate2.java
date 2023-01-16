@@ -33,8 +33,12 @@ import objectos.code.JavaModel.BodyElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
 import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
+import objectos.code.JavaModel.ConstructorDeclaration;
+import objectos.code.JavaModel.ConstructorDeclarationElement;
 import objectos.code.JavaModel.End;
+import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
+import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.FinalModifier;
@@ -56,6 +60,7 @@ import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
+import objectos.code.JavaModel.SuperKeyword;
 import objectos.code.JavaModel.ThisKeyword;
 import objectos.code.JavaModel.VarKeyword;
 import objectos.code.JavaModel.VoidKeyword;
@@ -160,6 +165,29 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return modifier(Keyword.STATIC);
   }
 
+  protected final SuperKeyword _super() {
+    return api().item(ByteProto.SUPER);
+  }
+
+  protected final ExplicitConstructorInvocation _super(ExpressionElement e1) {
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self());
+  }
+
+  @Override
+  protected final ExplicitConstructorInvocation _super(ExpressionElement... elements) {
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.SUPER_INVOCATION, many);
+  }
+
+  protected final ExplicitConstructorInvocation _super(ExpressionElement e1, ExpressionElement e2) {
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self());
+  }
+
+  protected final ExplicitConstructorInvocation _super(ExpressionElement e1, ExpressionElement e2,
+      ExpressionElement e3) {
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(), e3.self());
+  }
+
   @Override
   protected final ThisKeyword _this() {
     return api().item(ByteProto.THIS);
@@ -211,8 +239,46 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return api().elem(ByteProto.BLOCK, e1.self());
   }
 
+  @Override
+  protected final Block block(BlockElement... elements) {
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.BLOCK, many);
+  }
+
   protected final Block block(BlockElement e1, BlockElement e2) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5, BlockElement e6) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self(), e6.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5, BlockElement e6, BlockElement e7) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self(), e6.self(), e7.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5, BlockElement e6, BlockElement e7, BlockElement e8) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self(), e6.self(), e7.self(), e8.self());
   }
 
   protected final Body body() {
@@ -221,6 +287,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
 
   protected final Body body(BodyElement e1) {
     return api().elem(ByteProto.BODY, e1.self());
+  }
+
+  protected final Body body(BodyElement... elements) {
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.BODY, many);
   }
 
   protected final Body body(BodyElement e1, BodyElement e2) {
@@ -239,6 +310,12 @@ abstract class JavaTemplate2 extends JavaTemplate {
       BodyElement e5) {
     return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self(),
       e5.self());
+  }
+
+  @Override
+  protected final ConstructorDeclaration constructor(ConstructorDeclarationElement... elements) {
+    Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.CONSTRUCTOR, elements);
   }
 
   @Override

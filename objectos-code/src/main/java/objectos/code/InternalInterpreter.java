@@ -137,7 +137,7 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   private UnsupportedOperationException $uoe_code(int code) {
     return new UnsupportedOperationException(
-      "Implement me :: code = " + code);
+      "Implement me :: code = " + code + System.lineSeparator() + toString());
   }
 
   private void autoImportsRender(boolean initialNewLine) {
