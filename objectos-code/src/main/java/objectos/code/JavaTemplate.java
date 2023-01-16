@@ -19,7 +19,6 @@ import objectos.code.JavaModel.AbstractModifier;
 import objectos.code.JavaModel.AnnotationElementValue;
 import objectos.code.JavaModel.AnnotationInvocation;
 import objectos.code.JavaModel.AnyType;
-import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ArrayAccessExpression;
 import objectos.code.JavaModel.ArrayDimension;
 import objectos.code.JavaModel.ArrayInitializer;
@@ -47,6 +46,7 @@ import objectos.code.JavaModel.EnumDeclaration;
 import objectos.code.JavaModel.EnumDeclarationElement;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
+import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.ExtendsMany;
@@ -56,7 +56,6 @@ import objectos.code.JavaModel.FieldDeclaration;
 import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
-import objectos.code.JavaModel.FormalParameterElement;
 import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
@@ -70,6 +69,7 @@ import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLine;
 import objectos.code.JavaModel.PackageKeyword;
+import objectos.code.JavaModel.ParameterElement;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimaryExpression;
 import objectos.code.JavaModel.PrimitiveType;
@@ -119,7 +119,7 @@ public abstract class JavaTemplate {
     return api()._abstract();
   }
 
-  protected final PrimitiveType _boolean() {
+  protected PrimitiveType _boolean() {
     return api()._boolean();
   }
 
@@ -127,7 +127,7 @@ public abstract class JavaTemplate {
     return api()._class(elements);
   }
 
-  protected final PrimitiveType _double() {
+  protected PrimitiveType _double() {
     return api()._double();
   }
 
@@ -267,7 +267,7 @@ public abstract class JavaTemplate {
     return api().dim();
   }
 
-  protected final Ellipsis ellipsis() {
+  protected Ellipsis ellipsis() {
     return api().ellipsis();
   }
 
@@ -311,7 +311,7 @@ public abstract class JavaTemplate {
     return api().invoke(methodName, elements);
   }
 
-  protected final MethodDeclaration method(MethodDeclarationElement... elements) {
+  protected MethodDeclaration method(MethodDeclarationElement... elements) {
     return api().method(elements);
   }
 
@@ -346,13 +346,13 @@ public abstract class JavaTemplate {
     throw new UnsupportedOperationException();
   }
 
-  @Deprecated
-  protected final FormalParameter param(FormalParameterElement e1) {
-    throw new UnsupportedOperationException();
+  protected final FormalParameter param(ParameterElement... elements) {
+    return api().param(elements);
   }
 
-  protected final FormalParameter param(FormalParameterElement... elements) {
-    return api().param(elements);
+  @Deprecated
+  protected final FormalParameter param(ParameterElement e1) {
+    throw new UnsupportedOperationException();
   }
 
   protected StringLiteral s(String value) {
@@ -380,11 +380,11 @@ public abstract class JavaTemplate {
     return api().t(packageName, simpleNames);
   }
 
-  protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {
+  protected TypeParameter tparam(String name, TypeParameterBound... bounds) {
     return api().tparam(name, bounds);
   }
 
-  protected final TypeVariable tvar(String name) {
+  protected TypeVariable tvar(String name) {
     return api().tvar(name);
   }
 

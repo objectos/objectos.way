@@ -30,17 +30,20 @@ public class MethodDeclarationTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            _void(), id("test")
+          _class("Methods");
+          body(
+            _void(), method("test"), block()
           );
         }
       }.toString(),
 
       """
-      void test() {}
+      class Methods {
+        void test() {}
+      }
       """
     );
   }
@@ -51,19 +54,23 @@ public class MethodDeclarationTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            _void(), id("test"),
-            invoke("foo")
+          _class("Methods");
+          body(
+            _void(), method("test"), block(
+              invoke("foo")
+            )
           );
         }
       }.toString(),
 
       """
-      void test() {
-        foo();
+      class Methods {
+        void test() {
+          foo();
+        }
       }
       """
     );
@@ -76,19 +83,22 @@ public class MethodDeclarationTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            annotation(t(Override.class)),
-            _void(), id("test")
+          _class("Methods");
+          body(
+            at(t(Override.class)),
+            _void(), method("test"), block()
           );
         }
       }.toString(),
 
       """
-      @java.lang.Override
-      void test() {}
+      class Methods {
+        @java.lang.Override
+        void test() {}
+      }
       """
     );
   }
@@ -100,21 +110,26 @@ public class MethodDeclarationTest {
   """)
   public void testCase04() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(_final(), _void(), id("a"));
-          method(_public(), _final(), _void(), id("b"));
-          method(_protected(), _static(), _final(), _void(), id("c"));
+          _class("Methods");
+          body(
+            _final(), _void(), method("a"), block(),
+            _public(), _final(), _void(), method("b"), block(),
+            _protected(), _static(), _final(), _void(), method("c"), block()
+          );
         }
       }.toString(),
 
       """
-      final void a() {}
+      class Methods {
+        final void a() {}
 
-      public final void b() {}
+        public final void b() {}
 
-      protected static final void c() {}
+        protected static final void c() {}
+      }
       """
     );
   }
@@ -127,23 +142,27 @@ public class MethodDeclarationTest {
   """)
   public void testCase05() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            _void(), id("test"),
-            include(this::body)
+          _class("Methods");
+          body(
+            _void(), method("test"), block(
+              include(this::bodyImpl)
+            )
           );
         }
 
-        private void body() {
+        private void bodyImpl() {
           invoke("foo");
         }
       }.toString(),
 
       """
-      void test() {
-        foo();
+      class Methods {
+        void test() {
+          foo();
+        }
       }
       """
     );
@@ -154,19 +173,22 @@ public class MethodDeclarationTest {
   """)
   public void testCase06() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            annotation(t(Override.class)),
-            _final(), _void(), id("test")
+          _class("Methods");
+          body(
+            at(t(Override.class)),
+            _final(), _void(), method("test"), block()
           );
         }
       }.toString(),
 
       """
-      @java.lang.Override
-      final void test() {}
+      class Methods {
+        @java.lang.Override
+        final void test() {}
+      }
       """
     );
   }
@@ -178,72 +200,57 @@ public class MethodDeclarationTest {
   """)
   public void testCase07() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            _void(), id("test0"),
-            param(t(String.class), id("a"))
-          );
+          _class("Methods");
+          body(
+            _void(), method("test0", t(String.class), id("a")), block(),
 
-          method(
-            _void(), id("test1"),
-            param(t(String.class), id("a")),
-            param(t(String.class), id("b"))
-          );
+            _void(), method("test1", t(String.class), id("a"), t(String.class), id("b")), block(),
 
-          method(
-            _void(), id("test2"),
-            param(_int(), id("a")),
-            param(_double(), id("b")),
-            param(_boolean(), id("c"))
-          );
+            _void(), method(
+              "test2",
+              _int(), id("a"),
+              _double(), id("b"),
+              _boolean(), id("c")
+            ),
+            block(),
 
-          method(
-            _void(), id("test3"),
-            param(_int(), ellipsis(), id("a"))
-          );
+            _void(), method("test3", _int(), ellipsis(), id("a")), block(),
 
-          method(
-            _void(), id("test4"),
-            param(t(t(String.class), dim()), id("args"))
-          );
+            _void(), method("test4", t(t(String.class), dim()), id("args")), block(),
 
-          method(
-            _void(), id("test5"),
-            param(tvar("N"), id("n"))
-          );
+            _void(), method("test5", tvar("N"), id("n")), block(),
 
-          method(
-            _void(), id("test6"),
-            param(t(t(List.class), tvar("N")), id("list"))
-          );
+            _void(), method("test6", t(t(List.class), tvar("N")), id("list")), block(),
 
-          method(
-            t(String.class), id("test7"),
-            param(t(String.class), id("a")),
-            _return(n("a"))
+            t(String.class), method("test7", t(String.class), id("a")), block(
+              _return(), n("a")
+            )
           );
         }
       }.toString(),
 
       """
-      void test0(java.lang.String a) {}
+      class Methods {
+        void test0(java.lang.String a) {}
 
-      void test1(java.lang.String a, java.lang.String b) {}
+        void test1(java.lang.String a, java.lang.String b) {}
 
-      void test2(int a, double b, boolean c) {}
+        void test2(int a, double b, boolean c) {}
 
-      void test3(int... a) {}
+        void test3(int... a) {}
 
-      void test4(java.lang.String[] args) {}
+        void test4(java.lang.String[] args) {}
 
-      void test5(N n) {}
+        void test5(N n) {}
 
-      void test6(java.util.List<N> list) {}
+        void test6(java.util.List<N> list) {}
 
-      java.lang.String test7(java.lang.String a) {
-        return a;
+        java.lang.String test7(java.lang.String a) {
+          return a;
+        }
       }
       """
     );
@@ -255,41 +262,45 @@ public class MethodDeclarationTest {
   """)
   public void testCase08() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            _void(), id("test0"),
-            invoke("a")
-          );
-          method(
-            _void(), id("test1"),
-            invoke("a"),
-            invoke("b")
-          );
-          method(
-            _void(), id("test2"),
-            invoke("a"),
-            invoke("b"),
-            invoke("c")
+          _class("Methods");
+          body(
+            _void(), method("test0"), block(
+              invoke("a")
+            ),
+
+            _void(), method("test1"), block(
+              invoke("a"), end(),
+              invoke("b")
+            ),
+
+            _void(), method("test2"), block(
+              invoke("a"), end(),
+              invoke("b"), end(),
+              invoke("c")
+            )
           );
         }
       }.toString(),
 
       """
-      void test0() {
-        a();
-      }
+      class Methods {
+        void test0() {
+          a();
+        }
 
-      void test1() {
-        a();
-        b();
-      }
+        void test1() {
+          a();
+          b();
+        }
 
-      void test2() {
-        a();
-        b();
-        c();
+        void test2() {
+          a();
+          b();
+          c();
+        }
       }
       """
     );
@@ -302,42 +313,40 @@ public class MethodDeclarationTest {
   """)
   public void testCase09() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            _void(), id("test0")
-          );
-          method(
-            t(t(String.class), dim()), id("test1")
-          );
-          method(
-            _int(), id("test2")
-          );
-          method(
-            t(Integer.class), id("test3")
-          );
-          method(
-            tvar("E"), id("test4")
-          );
-          method(
-            t(t(Map.class), tvar("K"), tvar("V")), id("test5")
+          _class("Methods");
+          body(
+            _void(), method("test0"), block(),
+
+            t(t(String.class), dim()), method("test1"), block(),
+
+            _int(), method("test2"), block(),
+
+            t(Integer.class), method("test3"), block(),
+
+            tvar("E"), method("test4"), block(),
+
+            t(t(Map.class), tvar("K"), tvar("V")), method("test5"), block()
           );
         }
       }.toString(),
 
       """
-      void test0() {}
+      class Methods {
+        void test0() {}
 
-      java.lang.String[] test1() {}
+        java.lang.String[] test1() {}
 
-      int test2() {}
+        int test2() {}
 
-      java.lang.Integer test3() {}
+        java.lang.Integer test3() {}
 
-      E test4() {}
+        E test4() {}
 
-      java.util.Map<K, V> test5() {}
+        java.util.Map<K, V> test5() {}
+      }
       """
     );
   }
@@ -349,22 +358,24 @@ public class MethodDeclarationTest {
   """)
   public void testCase10() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            _abstract(), _void(), id("test0")
-          );
-          method(
-            _void(), id("test1")
+          _class("Methods");
+          body(
+            _abstract(), _void(), method("test0"),
+
+            _void(), method("test1"), block()
           );
         }
       }.toString(),
 
       """
-      abstract void test0();
+      class Methods {
+        abstract void test0();
 
-      void test1() {}
+        void test1() {}
+      }
       """
     );
   }
@@ -376,37 +387,43 @@ public class MethodDeclarationTest {
   """)
   public void testCase11() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          method(
-            tparam("T"), _void(), id("test0")
-          );
-          method(
-            _public(), tparam("T"), _void(), id("test1")
-          );
-          method(
-            tparam("E1"), tparam("E2"), _void(), id("test2")
-          );
-          method(
-            tparam("T", t(Object.class)), _void(), id("test3")
-          );
-          method(
-            tparam("T", t(Object.class), t(Serializable.class)), t(String.class), id("test4")
+          _class("Methods");
+          body(
+            tparam("T"),
+            _void(), method("test0"), block(),
+
+            _public(),
+            tparam("T"),
+            _void(), method("test1"), block(),
+
+            tparam("E1"),
+            tparam("E2"),
+            _void(), method("test2"), block(),
+
+            tparam("T", t(Object.class)),
+            _void(), method("test3"), block(),
+
+            tparam("T", t(Object.class), t(Serializable.class)),
+            t(String.class), method("test4"), block()
           );
         }
       }.toString(),
 
       """
-      <T> void test0() {}
+      class Methods {
+        <T> void test0() {}
 
-      public <T> void test1() {}
+        public <T> void test1() {}
 
-      <E1, E2> void test2() {}
+        <E1, E2> void test2() {}
 
-      <T extends java.lang.Object> void test3() {}
+        <T extends java.lang.Object> void test3() {}
 
-      <T extends java.lang.Object & java.io.Serializable> java.lang.String test4() {}
+        <T extends java.lang.Object & java.io.Serializable> java.lang.String test4() {}
+      }
       """
     );
   }

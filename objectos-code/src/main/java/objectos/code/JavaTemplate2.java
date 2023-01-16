@@ -34,7 +34,7 @@ import objectos.code.JavaModel.ClassInstanceCreationExpression;
 import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ConstructorDeclaration;
-import objectos.code.JavaModel.ConstructorDeclarationElement;
+import objectos.code.JavaModel.Ellipsis;
 import objectos.code.JavaModel.End;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
@@ -47,10 +47,12 @@ import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
 import objectos.code.JavaModel.InterfaceKeyword;
+import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodInvocation;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLine;
 import objectos.code.JavaModel.PackageKeyword;
+import objectos.code.JavaModel.ParameterElement;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
@@ -62,8 +64,12 @@ import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.SuperKeyword;
 import objectos.code.JavaModel.ThisKeyword;
+import objectos.code.JavaModel.TypeParameter;
+import objectos.code.JavaModel.TypeParameterBound;
+import objectos.code.JavaModel.TypeVariable;
 import objectos.code.JavaModel.VarKeyword;
 import objectos.code.JavaModel.VoidKeyword;
+import objectos.code.JavaModel._Item;
 
 abstract class JavaTemplate2 extends JavaTemplate {
 
@@ -72,12 +78,22 @@ abstract class JavaTemplate2 extends JavaTemplate {
     return modifier(Keyword.ABSTRACT);
   }
 
+  @Override
+  protected final PrimitiveType _boolean() {
+    return primitiveType(Keyword.BOOLEAN);
+  }
+
   protected final ClassKeyword _class(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
 
     var api = api();
 
     return api.item(ByteProto.CLASS, api.object(name));
+  }
+
+  @Override
+  protected final PrimitiveType _double() {
+    return primitiveType(Keyword.DOUBLE);
   }
 
   @Override
@@ -97,7 +113,7 @@ abstract class JavaTemplate2 extends JavaTemplate {
 
   @Override
   protected final PrimitiveType _int() {
-    return api().item(ByteProto.PRIMITIVE_TYPE, Keyword.INT.ordinal());
+    return primitiveType(Keyword.INT);
   }
 
   protected final InterfaceKeyword _interface(String name) {
@@ -312,8 +328,7 @@ abstract class JavaTemplate2 extends JavaTemplate {
       e5.self());
   }
 
-  @Override
-  protected final ConstructorDeclaration constructor(ConstructorDeclarationElement... elements) {
+  protected final ConstructorDeclaration constructor(ParameterElement... elements) {
     Objects.requireNonNull(elements, "elements == null");
     return api().elemmany(ByteProto.CONSTRUCTOR, elements);
   }
@@ -324,6 +339,11 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final ArrayDimension dim() {
     return api().item(ByteProto.ARRAY_DIMENSION);
+  }
+
+  @Override
+  protected final Ellipsis ellipsis() {
+    return api().item(ByteProto.ELLIPSIS);
   }
 
   protected final End end() {
@@ -473,6 +493,38 @@ abstract class JavaTemplate2 extends JavaTemplate {
       e4.self(), e5.self(), e6.self(), e7.self(), e8.self(), e9.self());
   }
 
+  protected final MethodDeclaration method(String methodName) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT);
+  }
+
+  protected final MethodDeclaration method(String methodName,
+      ParameterElement e1) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT, e1.self());
+  }
+
+  protected final MethodDeclaration method(String methodName,
+      ParameterElement... elements) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api.elemmany(ByteProto.METHOD_DECLARATION, JavaModel.EXT, many);
+  }
+
+  protected final MethodDeclaration method(String methodName,
+      ParameterElement e1, ParameterElement e2) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT, e1.self(), e2.self());
+  }
+
   protected final ExpressionName n(ClassType type, String id1) {
     JavaModel.checkIdentifier(id1.toString());
 
@@ -595,6 +647,54 @@ abstract class JavaTemplate2 extends JavaTemplate {
     );
   }
 
+  protected final TypeParameter tparam(String name) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT);
+  }
+
+  protected final TypeParameter tparam(String name, TypeParameterBound bound1) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT, bound1.self());
+  }
+
+  @Override
+  protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    Object[] many = Objects.requireNonNull(bounds, "bounds == null");
+    return api.elemmany(ByteProto.TYPE_PARAMETER, JavaModel.EXT, many);
+  }
+
+  protected final TypeParameter tparam(String name,
+      TypeParameterBound bound1, TypeParameterBound bound2) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT,
+      bound1.self(), bound2.self());
+  }
+
+  protected final TypeParameter tparam(String name,
+      TypeParameterBound bound1, TypeParameterBound bound2, TypeParameterBound bound3) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT,
+      bound1.self(), bound2.self(), bound3.self());
+  }
+
+  @Override
+  protected final TypeVariable tvar(String name) {
+    Objects.requireNonNull(name, "name == null");
+    var api = api();
+    return api.item(ByteProto.TYPE_VARIABLE, api.object(name));
+  }
+
   @Override
   final void onEval() {
     v2 = true;
@@ -602,6 +702,10 @@ abstract class JavaTemplate2 extends JavaTemplate {
 
   private JavaModel._Item modifier(Keyword value) {
     return api().item(ByteProto.MODIFIER, value.ordinal());
+  }
+
+  private _Item primitiveType(Keyword value) {
+    return api().item(ByteProto.PRIMITIVE_TYPE, value.ordinal());
   }
 
 }

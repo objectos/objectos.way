@@ -41,6 +41,7 @@ class StateFauxGenerator {
     state("IMPORTS");
     state("INIT");
     state("LHS");
+    state("METHOD");
     state("MODIFIERS");
     state("NAME");
     state("NL");
@@ -54,7 +55,8 @@ class StateFauxGenerator {
     state("SUPER");
     state("THIS");
     state("TYPE");
-    state("TYPE_DECL");
+    state("TYPE_DECLARATION");
+    state("TYPE_PARAMETER");
     statel("VAR");
   }
 

@@ -57,7 +57,6 @@ import objectos.code.JavaModel.FieldDeclaration;
 import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.FormalParameter;
-import objectos.code.JavaModel.FormalParameterElement;
 import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
@@ -72,6 +71,7 @@ import objectos.code.JavaModel.MethodDeclaration;
 import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLine;
+import objectos.code.JavaModel.ParameterElement;
 import objectos.code.JavaModel.ParameterizedType;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
@@ -645,6 +645,29 @@ class InternalApi extends InternalState implements MarkerApi {
     return elemret();
   }
 
+  public final JavaModel._Elem elemmany(int proto, Object first, Object[] elements) {
+    elempre();
+
+    elempre(first);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      Check.notNull(element, "elements[", i, "] == null");
+      elempre(element);
+    }
+
+    elemcnt(proto);
+
+    elemcntx(first);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      elemcntx(element);
+    }
+
+    return elemret();
+  }
+
   public final JavaModel._Elem elemmany(int proto, Object[] elements) {
     elempre();
 
@@ -886,7 +909,7 @@ class InternalApi extends InternalState implements MarkerApi {
     return result;
   }
 
-  public final FormalParameter param(FormalParameterElement[] elements) {
+  public final FormalParameter param(ParameterElement[] elements) {
     markStart();
 
     for (var element : elements) {

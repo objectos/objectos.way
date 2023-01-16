@@ -33,7 +33,7 @@ public final class JavaModel {
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
-  public sealed interface AnyType extends ConstructorDeclarationElement,
+  public sealed interface AnyType extends BodyElement, ParameterElement,
       /* to remove */
       Markable {}
 
@@ -70,11 +70,7 @@ public final class JavaModel {
       FieldDeclarationElement,
       MethodDeclarationElement {}
 
-  public sealed interface ConstructorDeclarationElement extends Element,
-      /* to remove */
-      Markable {}
-
-  public sealed interface Ellipsis extends FormalParameterElement {}
+  public sealed interface ConstructorDeclarationElement extends Markable {}
 
   public sealed interface EnumConstant
       extends EnumDeclarationElement {}
@@ -91,6 +87,10 @@ public final class JavaModel {
       EnumConstantElement,
       FieldDeclarationElement,
       MethodInvocationElement {}
+
+  public sealed interface ExpressionElement extends Element,
+      /* to remove */
+      Markable {}
 
   public sealed interface ExpressionName extends Expression, LeftHandSide {}
 
@@ -110,8 +110,8 @@ public final class JavaModel {
 
   public sealed interface FieldDeclarationElement extends Markable {}
 
-  public sealed interface FinalModifier
-      extends
+  public sealed interface FinalModifier extends BodyElement,
+      /* to remove */
       ClassDeclarationElement,
       FieldDeclarationElement,
       MethodDeclarationElement {}
@@ -120,8 +120,6 @@ public final class JavaModel {
       extends
       ConstructorDeclarationElement,
       MethodDeclarationElement {}
-
-  public sealed interface FormalParameterElement extends Markable {}
 
   public sealed interface IfStatement
       extends Statement {}
@@ -147,12 +145,11 @@ public final class JavaModel {
 
   }
 
-  public sealed interface MethodDeclaration
-      extends ClassDeclarationElement, EnumDeclarationElement {}
-
   public sealed interface MethodDeclarationElement extends Markable {}
 
   public sealed interface MethodInvocationElement extends Element, Markable {}
+
+  public sealed interface ParameterElement extends Element, Markable {}
 
   public sealed interface QualifiedMethodInvocation
       extends ChainedMethodInvocationHead, MethodInvocation {}
@@ -160,12 +157,7 @@ public final class JavaModel {
   public sealed interface Statement
       extends BlockStatement, ConstructorDeclarationElement, MethodDeclarationElement {}
 
-  public sealed interface TypeParameter
-      extends MethodDeclarationElement {}
-
-  public sealed interface TypeParameterBound extends Markable {}
-
-  public sealed interface TypeVariable extends ReferenceType {}
+  public sealed interface TypeParameterBound extends Element, Markable {}
 
   public sealed interface UnqualifiedMethodInvocation extends
       /* to remove */
@@ -184,8 +176,10 @@ public final class JavaModel {
       ConstructorDeclaration,
       ExplicitConstructorInvocation,
       ExpressionName,
+      MethodDeclaration,
       MethodInvocation,
-      ParameterizedType {
+      ParameterizedType,
+      TypeParameter {
     INSTANCE;
 
     @Override
@@ -215,6 +209,7 @@ public final class JavaModel {
       AutoImports,
       ClassKeyword,
       ClassType,
+      Ellipsis,
       End,
       ExtendsKeyword,
       FinalModifier,
@@ -234,6 +229,7 @@ public final class JavaModel {
       StringLiteral,
       SuperKeyword,
       ThisKeyword,
+      TypeVariable,
       VarKeyword,
       VoidKeyword {
     INSTANCE;
@@ -299,25 +295,22 @@ public final class JavaModel {
     default Object self() { return this; }
   }
 
+  sealed interface Ellipsis extends ParameterElement {}
+
   sealed interface End extends BlockElement, Element, MethodInvocationElement {}
 
   sealed interface ExplicitConstructorInvocation extends BlockElement,
       /* to remove */
       ConstructorDeclarationElement {}
 
-  sealed interface ExpressionElement extends Element,
-      /* to remove */
-      Markable {}
-
   sealed interface ExtendsKeyword extends BodyElement {}
 
-  sealed interface Identifier extends BodyElement, BlockElement, ConstructorDeclarationElement,
+  sealed interface Identifier extends BodyElement, BlockElement, ParameterElement,
       /* to remove */
       ClassDeclarationElement,
       EnumConstantElement,
       EnumDeclarationElement,
       FieldDeclarationElement,
-      FormalParameterElement,
       InterfaceDeclarationElement,
       MethodDeclarationElement {}
 
@@ -338,6 +331,10 @@ public final class JavaModel {
   sealed interface InterfaceKeyword extends BodyElement {}
 
   sealed interface Literal extends PrimaryExpression {}
+
+  sealed interface MethodDeclaration extends BodyElement,
+      /* to remove */
+      ClassDeclarationElement, EnumDeclarationElement {}
 
   sealed interface MethodInvocation extends Expression, ExpressionStatement {}
 
@@ -362,7 +359,6 @@ public final class JavaModel {
       ArrayTypeComponent,
 
       FieldDeclarationElement,
-      FormalParameterElement,
       MethodDeclarationElement {}
 
   sealed interface PrivateModifier extends AccessModifier {}
@@ -376,7 +372,6 @@ public final class JavaModel {
       AnyType,
 
       FieldDeclarationElement,
-      FormalParameterElement,
       MethodDeclarationElement {}
 
   sealed interface ReturnKeyword extends BlockElement,
@@ -398,6 +393,12 @@ public final class JavaModel {
   sealed interface SuperKeyword extends BlockElement {}
 
   sealed interface ThisKeyword extends PrimaryExpression {}
+
+  sealed interface TypeParameter extends BodyElement,
+      /* to remove */
+      MethodDeclarationElement {}
+
+  sealed interface TypeVariable extends ReferenceType {}
 
   sealed interface VarKeyword extends BlockElement {}
 
