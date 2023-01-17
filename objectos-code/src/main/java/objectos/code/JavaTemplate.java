@@ -46,6 +46,7 @@ import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
+import objectos.code.JavaModel.FieldName;
 import objectos.code.JavaModel.FinalModifier;
 import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
@@ -232,10 +233,8 @@ public abstract class JavaTemplate {
     return api().item(ByteProto.THIS);
   }
 
-  protected final VarKeyword _var(String name) {
-    JavaModel.checkVarName(name);
-    var api = api();
-    return api.item(ByteProto.VAR, api.object(name));
+  protected final VarKeyword _var() {
+    return api().item(ByteProto.VAR);
   }
 
   protected final VoidKeyword _void() {
@@ -441,6 +440,12 @@ public abstract class JavaTemplate {
     var api = api();
     api.identifierext(name);
     return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self(), e2.self(), e3.self());
+  }
+
+  protected final FieldName field(String name) {
+    JavaModel.checkIdentifier(name.toString()); // force implicit null-check
+    var api = api();
+    return api.item(ByteProto.FIELD_NAME, api.object(name));
   }
 
   protected final AssignmentOperator gets() {

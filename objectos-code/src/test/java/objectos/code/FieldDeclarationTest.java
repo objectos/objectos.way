@@ -34,9 +34,9 @@ public class FieldDeclarationTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          t(String.class); id("name");
+          t(String.class); field("name");
 
-          t(String.class); id("a"); id("b"); id("c");
+          t(String.class); field("a"); field("b"); field("c");
         }
       }),
 
@@ -60,11 +60,11 @@ public class FieldDeclarationTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _private(); t(String.class); id("a");
+          _private(); t(String.class); field("a");
 
-          _private(); _final(); t(String.class); id("b");
+          _private(); _final(); t(String.class); field("b");
 
-          _private(); _static(); _final(); t(String.class); id("c");
+          _private(); _static(); _final(); t(String.class); field("c");
         }
       }),
 
@@ -90,9 +90,11 @@ public class FieldDeclarationTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          t(String.class); id("x"); s("init");
+          t(String.class); field("x"); s("init");
 
-          t(String.class); id("a"); s("a"); id("b"); id("c"); s("c");
+          t(String.class); field("a"); s("a"); field("b"); field("c"); s("c");
+
+          t(String.class); field("d"); invoke("d0"); invoke("d1");
         }
       }),
 
@@ -101,6 +103,8 @@ public class FieldDeclarationTest {
         java.lang.String x = "init";
 
         java.lang.String a = "a", b, c = "c";
+
+        java.lang.String d = d0().d1();
       }
       """
     );
@@ -118,7 +122,7 @@ public class FieldDeclarationTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          t(t(Object.class), dim()); id("a");
+          t(t(Object.class), dim()); field("a");
         }
       }),
 
@@ -142,7 +146,7 @@ public class FieldDeclarationTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          t(t(Map.class), t(String.class), t(Integer.class)); id("map");
+          t(t(Map.class), t(String.class), t(Integer.class)); field("map");
         }
       }),
 
@@ -166,11 +170,11 @@ public class FieldDeclarationTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          t(_int(), dim()); id("a"); a();
+          t(_int(), dim()); field("a"); a();
 
-          t(_int(), dim()); id("b"); a(i(0));
+          t(_int(), dim()); field("b"); a(i(0));
 
-          t(_int(), dim()); id("c"); a(i(0), i(1));
+          t(_int(), dim()); field("c"); a(i(0), i(1));
         }
       }),
 

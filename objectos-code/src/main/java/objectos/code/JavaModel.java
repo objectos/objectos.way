@@ -228,6 +228,7 @@ public final class JavaModel {
       End,
       EnumKeyword,
       ExtendsKeyword,
+      FieldName,
       FinalModifier,
       Identifier,
       ImplementsKeyword,
@@ -316,7 +317,9 @@ public final class JavaModel {
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
-  sealed interface Identifier extends BodyElement, BlockElement, ParameterElement,
+  sealed interface FieldName extends BodyElement, BlockElement {}
+
+  sealed interface Identifier extends BlockElement, ParameterElement,
       /* to remove */
       ClassDeclarationElement,
       EnumConstantElement,
@@ -492,6 +495,14 @@ public final class JavaModel {
   static final Ref REF = new Ref();
 
   private JavaModel() {}
+
+  static void checkFieldName(String name) {
+    if (name.isEmpty()) {
+      throw new IllegalArgumentException("Field name must not be empty");
+    }
+
+    checkName(name, false, "an invalid field name");
+  }
 
   static void checkIdentifier(String s) {
     if (s.isEmpty()) {

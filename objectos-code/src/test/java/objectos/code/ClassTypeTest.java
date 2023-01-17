@@ -33,7 +33,7 @@ public class ClassTypeTest {
         protected final void definition() {
           _class("ClassType");
           body(
-            t("com.example", "Bar"), id("a")
+            t("com.example", "Bar"), field("a")
           );
         }
       }.toString(),
@@ -62,7 +62,7 @@ public class ClassTypeTest {
 
           _class("A");
           body(
-            t("com.example", "A", "B"), id("t01")
+            t("com.example", "A", "B"), field("t01")
           );
         }
       }.toString(),

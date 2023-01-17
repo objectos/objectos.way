@@ -38,23 +38,25 @@ class InternalCompiler extends InternalApi {
       _IMPORTS = 14,
       _INIT = 15,
       _LHS = 16,
-      _METHOD = 17,
-      _MODIFIERS = 18,
-      _NAME = 19,
-      _NL = 20,
-      _PACKAGE = 21,
-      _PRIMARY = 22,
-      _PRIMARY_NL = 23,
-      _PRIMARY_SLOT = 24,
-      _RECV = 25,
-      _RETURN = 26,
-      _SLOT = 27,
-      _SUPER = 28,
-      _THIS = 29,
-      _TYPE = 30,
-      _TYPE_DECLARATION = 31,
-      _TYPE_PARAMETER = 32,
-      _VAR = 33;
+      _LOCAL_VAR = 17,
+      _METHOD = 18,
+      _MODIFIERS = 19,
+      _NAME = 20,
+      _NL = 21,
+      _PACKAGE = 22,
+      _PRIMARY = 23,
+      _PRIMARY_INIT = 24,
+      _PRIMARY_NL = 25,
+      _PRIMARY_SLOT = 26,
+      _RECV = 27,
+      _RETURN = 28,
+      _SLOT = 29,
+      _SUPER = 30,
+      _THIS = 31,
+      _TYPE = 32,
+      _TYPE_DECLARATION = 33,
+      _TYPE_PARAMETER = 34,
+      _VAR = 35;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -786,7 +788,7 @@ class InternalCompiler extends InternalApi {
         codeadd(Symbol.RIGHT_CURLY_BRACKET);
       }
 
-      case _EOS, _PRIMARY -> {
+      case _EOS, _PRIMARY, _PRIMARY_INIT -> {
         codeadd(Symbol.SEMICOLON);
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
@@ -866,13 +868,14 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.CLASS_TYPE -> {
+      case ByteProto.CLASS_TYPE,
+           ByteProto.PRIMITIVE_TYPE -> {
         switch (state) {
           case _START -> {
             blockBeforeFirstStatement(_TYPE);
           }
 
-          case _PRIMARY -> {
+          case _INIT, _PRIMARY, _PRIMARY_INIT -> {
             codeadd(Symbol.SEMICOLON);
             blockBeforeNextStatement();
             stackset(_TYPE);
@@ -929,6 +932,17 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.FIELD_NAME -> {
+        switch (state) {
+          case _PRIMARY, _THIS -> {
+            codeadd(Symbol.DOT);
+            stackset(_FIELD_ACCESS);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.GETS -> {
         switch (state) {
           case _EXP_NAME, _FIELD_ACCESS -> {
@@ -942,9 +956,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.IDENTIFIER -> {
         switch (state) {
-          case _PRIMARY, _THIS -> {
-            codeadd(Symbol.DOT);
-            stackset(_FIELD_ACCESS);
+          case _TYPE, _VAR -> {
+            codeadd(Whitespace.MANDATORY);
+            stackset(_LOCAL_VAR);
           }
 
           default -> stubState(context, state, item);
@@ -972,14 +986,14 @@ class InternalCompiler extends InternalApi {
             stackset(_PRIMARY);
           }
 
+          case _LOCAL_VAR -> {
+            assignOperator();
+            stackset(_PRIMARY_INIT);
+          }
+
           case _PRIMARY_NL -> {
             codeadd(Indentation.CONTINUATION);
             codeadd(Symbol.DOT);
-            stackset(_PRIMARY);
-          }
-
-          case _VAR -> {
-            assignOperator();
             stackset(_PRIMARY);
           }
 
@@ -991,6 +1005,17 @@ class InternalCompiler extends InternalApi {
         switch (state) {
           case _PRIMARY -> {
             stackset(_PRIMARY_NL);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.PRIMITIVE_LITERAL -> {
+        switch (state) {
+          case _LOCAL_VAR -> {
+            assignOperator();
+            stackset(_INIT);
           }
 
           default -> stubState(context, state, item);
@@ -1009,14 +1034,14 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.STRING_LITERAL -> {
         switch (state) {
-          case _RETURN -> {
-            codeadd(Whitespace.OPTIONAL);
-            stackset(_EOS);
+          case _LOCAL_VAR -> {
+            assignOperator();
+            stackset(_PRIMARY_INIT);
           }
 
-          case _VAR -> {
-            assignOperator();
-            stackset(_EOS);
+          case _RETURN -> {
+            codeadd(Whitespace.OPTIONAL);
+            stackset(_PRIMARY);
           }
 
           default -> stubState(context, state, item);
@@ -1073,7 +1098,7 @@ class InternalCompiler extends InternalApi {
             blockBeforeFirstStatement(_VAR);
           }
 
-          case _EOS -> {
+          case _EOS, _INIT, _PRIMARY_INIT -> {
             blockEndOfStatement();
             stackset(_VAR);
           }
@@ -1142,7 +1167,7 @@ class InternalCompiler extends InternalApi {
         codeadd(Symbol.RIGHT_CURLY_BRACKET);
       }
 
-      case _ENUM_CONSTANTS, _INIT, _NAME -> {
+      case _ENUM_CONSTANTS, _INIT, _NAME, _PRIMARY_INIT -> {
         codeadd(Symbol.SEMICOLON);
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
@@ -1327,7 +1352,7 @@ class InternalCompiler extends InternalApi {
         }
       }
 
-      case ByteProto.IDENTIFIER -> {
+      case ByteProto.FIELD_NAME -> {
         switch (state) {
           case _TYPE -> {
             codeadd(Whitespace.MANDATORY);
@@ -1348,6 +1373,22 @@ class InternalCompiler extends InternalApi {
           case _TYPE -> {
             codeadd(Whitespace.MANDATORY);
             stackset(_METHOD);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
+      case ByteProto.METHOD_INVOCATION -> {
+        switch (state) {
+          case _NAME -> {
+            assignOperator();
+            stackset(_PRIMARY_INIT);
+          }
+
+          case _PRIMARY_INIT -> {
+            codeadd(Symbol.DOT);
+            stackset(_PRIMARY_INIT);
           }
 
           default -> stubState(context, state, item);
@@ -2001,7 +2042,7 @@ class InternalCompiler extends InternalApi {
             stackset(_MODIFIERS);
           }
 
-          case _BODY, _PACKAGE -> {
+          case _BODY, _IMPORTS, _PACKAGE -> {
             codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
             stackset(_MODIFIERS);
           }
@@ -2773,6 +2814,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.EXTENDS -> codeadd(Keyword.EXTENDS);
 
+      case ByteProto.FIELD_NAME -> codeadd(ByteCode.IDENTIFIER, protonxt());
+
       case ByteProto.GETS -> codeadd(Symbol.ASSIGNMENT);
 
       case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, protonxt());
@@ -2811,11 +2854,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.TYPE_VARIABLE -> codeadd(ByteCode.IDENTIFIER, protonxt());
 
-      case ByteProto.VAR -> {
-        codeadd(Keyword.VAR);
-        codeadd(Whitespace.MANDATORY);
-        codeadd(ByteCode.IDENTIFIER, protonxt());
-      }
+      case ByteProto.VAR -> codeadd(Keyword.VAR);
 
       case ByteProto.VOID -> codeadd(Keyword.VOID);
 
@@ -3554,6 +3593,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.EXPRESSION_NAME -> "Expression Name";
 
       case ByteProto.EXTENDS -> "Extends";
+
+      case ByteProto.FIELD_NAME -> "Field Name";
 
       case ByteProto.IDENTIFIER -> "Identifier";
 

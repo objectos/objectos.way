@@ -37,7 +37,7 @@ public class IncludeTest {
         }
 
         private void body0() {
-          _int(); id("a");
+          _int(); field("a");
         }
       }.toString(),
 
@@ -100,24 +100,24 @@ public class IncludeTest {
           body(
             include(this::body1),
 
-            _int(), id("d"),
+            _int(), field("d"),
 
             include(this::body2)
           );
         }
 
         private void body1() {
-          _int(); id("a");
+          _int(); field("a");
 
-          _int(); id("b");
+          _int(); field("b");
 
-          _int(); id("c");
+          _int(); field("c");
         }
 
         private void body2() {
-          _int(); id("e");
+          _int(); field("e");
 
-          _int(); id("f");
+          _int(); field("f");
         }
       }.toString(),
       """

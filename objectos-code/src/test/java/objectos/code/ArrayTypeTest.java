@@ -33,11 +33,11 @@ public class ArrayTypeTest {
         protected final void definition() {
           _class("Arrays");
           body(
-            t(t(Object.class), dim()), id("a"),
+            t(t(Object.class), dim()), field("a"),
 
-            t(t(Object.class), dim(), dim()), id("b"),
+            t(t(Object.class), dim(), dim()), field("b"),
 
-            t(t(Object.class), dim(), dim(), dim()), id("c")
+            t(t(Object.class), dim(), dim(), dim()), field("c")
           );
         }
       }.toString(),
@@ -66,11 +66,11 @@ public class ArrayTypeTest {
         protected final void definition() {
           _class("Arrays");
           body(
-            t(_int(), dim()), id("a"),
+            t(_int(), dim()), field("a"),
 
-            t(_double(), dim(), dim()), id("b"),
+            t(_double(), dim(), dim()), field("b"),
 
-            t(_boolean(), dim(), dim(), dim()), id("c")
+            t(_boolean(), dim(), dim(), dim()), field("c")
           );
         }
       }.toString(),

@@ -67,7 +67,7 @@ final class Fixture extends JavaTemplate {
       }
 
       case VOID_METHOD -> {
-        _void(); id("method"); block(
+        _void(); method("method"); block(
           include(subject)
         );
       }

@@ -221,7 +221,7 @@ public class CompilationUnitTest {
   @Test(description = """
   Compilation Unit TC08
 
-  - annotated class + import declarations
+  - import declarations + annotation
   """)
   public void testCase08() {
     assertEquals(
@@ -246,6 +246,36 @@ public class CompilationUnitTest {
 
       @TypeAnnotation
       class Test {}
+      """
+    );
+  }
+
+  @Test(description = """
+  Compilation Unit TC09
+
+  - import declarations + modifier
+  """)
+  public void testCase09() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _package("foo"),
+
+            autoImports(),
+
+            _public(), _class("Test"), _extends(), t("bar", "Super"), body()
+          );
+        }
+      }.toString(),
+
+      """
+      package foo;
+
+      import bar.Super;
+
+      public class Test extends Super {}
       """
     );
   }

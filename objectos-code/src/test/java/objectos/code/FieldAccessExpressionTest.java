@@ -35,8 +35,8 @@ public class FieldAccessExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _this(); id("x"); gets(); n("y");
-          invoke("x"); invoke("y"); id("z"); gets(); n("foo");
+          _this(); field("x"); gets(); n("y");
+          invoke("x"); invoke("y"); field("z"); gets(); n("foo");
         }
       }),
 

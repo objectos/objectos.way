@@ -205,10 +205,10 @@ public class EnumDeclarationTest {
 
             enumConstant("B", s("b")),
 
-            _private(), _final(), t(String.class), id("value"),
+            _private(), _final(), t(String.class), field("value"),
 
             _private(), constructor(t(String.class), id("value")), block(
-              _this(), id("value"), gets(), n("value")
+              _this(), field("value"), gets(), n("value")
             ),
 
             at(t(Override.class)),

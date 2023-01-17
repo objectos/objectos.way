@@ -44,12 +44,14 @@ class StateFauxGenerator {
     state("IMPORTS");
     state("INIT");
     state("LHS");
+    state("LOCAL_VAR");
     state("METHOD");
     state("MODIFIERS");
     state("NAME");
     state("NL");
     state("PACKAGE");
     state("PRIMARY");
+    state("PRIMARY_INIT");
     state("PRIMARY_NL");
     state("PRIMARY_SLOT");
     state("RECV");

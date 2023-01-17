@@ -81,7 +81,7 @@ public class ClassDeclarationTest {
         @Override
         protected final void definition() {
           _class("Subject"); body(
-            _void(), id("m0"), block()
+            _void(), field("m0"), block()
           );
         }
       }.toString(),
@@ -112,7 +112,7 @@ public class ClassDeclarationTest {
         }
 
         private void includeTest() {
-          _int(); id("a");
+          _int(); field("a");
         }
       }.toString(),
 
@@ -264,12 +264,12 @@ public class ClassDeclarationTest {
         protected final void definition() {
           _class("A"); _extends(); t(Thread.class); body(
             at(t(Override.class)),
-            _void(), id("foo"), block()
+            _void(), field("foo"), block()
           );
 
           _class("B"); _implements(); t(Serializable.class); body(
             at(t(Override.class)),
-            _void(), id("foo"), block()
+            _void(), field("foo"), block()
           );
         }
       }.toString(),
@@ -301,9 +301,9 @@ public class ClassDeclarationTest {
         @Override
         protected final void definition() {
           _class("A"); body(
-            _int(), id("value"),
+            _int(), field("value"),
 
-            _int(), id("value"), block(
+            _int(), field("value"), block(
               _return(), n("value")
             )
           );
