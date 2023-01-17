@@ -1242,14 +1242,20 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.BLOCK -> {
         switch (state) {
-          case _NAME -> {
-            codeadd(Symbol.LEFT_PARENTHESIS);
-            codeadd(Symbol.RIGHT_PARENTHESIS);
+          case _START -> {
+            codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            codeadd(Indentation.EMIT);
+            stackset(_BODY);
+          }
+
+          case _CONSTRUCTOR, _METHOD, _MODIFIERS -> {
             codeadd(Whitespace.OPTIONAL);
             stackset(_BODY);
           }
 
-          case _CONSTRUCTOR, _METHOD -> {
+          case _NAME -> {
+            codeadd(Symbol.LEFT_PARENTHESIS);
+            codeadd(Symbol.RIGHT_PARENTHESIS);
             codeadd(Whitespace.OPTIONAL);
             stackset(_BODY);
           }

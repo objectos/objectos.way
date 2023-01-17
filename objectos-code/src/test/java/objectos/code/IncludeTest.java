@@ -55,24 +55,35 @@ public class IncludeTest {
   - many statements
   """)
   public void testCase02() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke("test", include(this::body));
+          _class("Test");
+          body(
+            _static(), block(
+              invoke("test", include(this::body0))
+            )
+          );
         }
 
-        private void body() {
-          invoke("a");
-          invoke("b");
+        private void body0() {
+          invoke("a"); end();
+          invoke("b"); end();
           invoke("c");
         }
       }.toString(),
 
       """
-      test(a(), b(), c());
+      class Test {
+        static {
+          test(a(), b(), c());
+        }
+      }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -80,34 +91,52 @@ public class IncludeTest {
   - same level
   """)
   public void testCase03() {
+    // @formatter:off
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          invoke(
-            "test",
+          _class("Test");
+          body(
             include(this::body1),
-            invoke("d"),
+
+            _int(), id("d"),
+
             include(this::body2)
           );
         }
 
         private void body1() {
-          invoke("a");
-          invoke("b");
-          invoke("c");
+          _int(); id("a");
+
+          _int(); id("b");
+
+          _int(); id("c");
         }
 
         private void body2() {
-          invoke("e");
-          invoke("f");
+          _int(); id("e");
+
+          _int(); id("f");
         }
       }.toString(),
-
       """
-      test(a(), b(), c(), d(), e(), f());
+      class Test {
+        int a;
+
+        int b;
+
+        int c;
+
+        int d;
+
+        int e;
+
+        int f;
+      }
       """
     );
+    // @formatter:on
   }
 
 }

@@ -818,13 +818,35 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   public final void lambdaend() {
-    level--;
+    levelpop();
   }
 
   public final void lambdastart() {
-    leveladd(LAMBDA, level + 1);
-    level++;
-    levelIndex = IntArrays.growIfNecessary(levelIndex, level);
+    levelpush();
+
+    int nextLevel = -1;
+
+    for (int i = 0; i < levelIndex.length; i++) {
+      int length = levelIndex[i];
+
+      if (length == -1) {
+        nextLevel = i;
+
+        break;
+      }
+    }
+
+    if (nextLevel < 0) {
+      nextLevel = levelIndex.length;
+    }
+
+    levelIndex = IntArrays.growIfNecessary(levelIndex, nextLevel);
+
+    leveladd(LAMBDA, nextLevel);
+
+    level = nextLevel;
+
+    levelIndex[level] = 0;
   }
 
   @Override
@@ -1095,11 +1117,13 @@ class InternalApi extends InternalState implements MarkerApi {
   final void accept(JavaTemplate template) {
     autoImports.clear();
 
-    stackIndex = -1;
+    codeIndex = stackIndex = -1;
 
-    codeIndex = protoIndex = level = localIndex = objectIndex = 0;
+    level = objectIndex = protoIndex = 0;
 
-    Arrays.fill(levelIndex, 0);
+    Arrays.fill(levelIndex, -1);
+
+    levelIndex[0] = 0;
 
     template.execute(this);
 
@@ -1218,7 +1242,7 @@ class InternalApi extends InternalState implements MarkerApi {
       }
     }
 
-    levelIndex[level] = 0;
+    levelIndex[level] = -1;
   }
 
   private void elempre() {
@@ -1282,6 +1306,16 @@ class InternalApi extends InternalState implements MarkerApi {
   }
 
   private int levelget(int index) { return levelArray[level][index]; }
+
+  private void levelpop() {
+    level = codeArray[codeIndex--];
+  }
+
+  private void levelpush() {
+    codeIndex++;
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex);
+    codeArray[codeIndex] = level;
+  }
 
   private int levelsearch(int index, int condition) {
     int[] array = levelArray[level];
