@@ -37,6 +37,7 @@ class StateFauxGenerator {
     state("CLAUSE_TYPE");
     state("CONSTRUCTOR");
     state("DIMS");
+    state("ENUM_CONSTANTS");
     state("EOS");
     state("EXP_NAME");
     state("FIELD_ACCESS");

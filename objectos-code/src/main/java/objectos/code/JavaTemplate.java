@@ -271,7 +271,7 @@ public abstract class JavaTemplate {
     return api().ellipsis();
   }
 
-  protected final EnumConstant enumConstant(EnumConstantElement... elements) {
+  protected EnumConstant enumConstant(EnumConstantElement... elements) {
     return api().enumConstant(elements);
   }
 

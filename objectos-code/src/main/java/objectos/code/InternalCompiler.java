@@ -31,29 +31,30 @@ class InternalCompiler extends InternalApi {
       _CLAUSE_TYPE = 7,
       _CONSTRUCTOR = 8,
       _DIMS = 9,
-      _EOS = 10,
-      _EXP_NAME = 11,
-      _FIELD_ACCESS = 12,
-      _IMPORTS = 13,
-      _INIT = 14,
-      _LHS = 15,
-      _METHOD = 16,
-      _MODIFIERS = 17,
-      _NAME = 18,
-      _NL = 19,
-      _PACKAGE = 20,
-      _PRIMARY = 21,
-      _PRIMARY_NL = 22,
-      _PRIMARY_SLOT = 23,
-      _RECV = 24,
-      _RETURN = 25,
-      _SLOT = 26,
-      _SUPER = 27,
-      _THIS = 28,
-      _TYPE = 29,
-      _TYPE_DECLARATION = 30,
-      _TYPE_PARAMETER = 31,
-      _VAR = 32;
+      _ENUM_CONSTANTS = 10,
+      _EOS = 11,
+      _EXP_NAME = 12,
+      _FIELD_ACCESS = 13,
+      _IMPORTS = 14,
+      _INIT = 15,
+      _LHS = 16,
+      _METHOD = 17,
+      _MODIFIERS = 18,
+      _NAME = 19,
+      _NL = 20,
+      _PACKAGE = 21,
+      _PRIMARY = 22,
+      _PRIMARY_NL = 23,
+      _PRIMARY_SLOT = 24,
+      _RECV = 25,
+      _RETURN = 26,
+      _SLOT = 27,
+      _SUPER = 28,
+      _THIS = 29,
+      _TYPE = 30,
+      _TYPE_DECLARATION = 31,
+      _TYPE_PARAMETER = 32,
+      _VAR = 33;
 
   private static final int _EXTENDS = 54;
   private static final int _TPAR = 55;
@@ -1137,7 +1138,7 @@ class InternalCompiler extends InternalApi {
         codeadd(Symbol.RIGHT_CURLY_BRACKET);
       }
 
-      case _NAME, _INIT -> {
+      case _ENUM_CONSTANTS, _INIT, _NAME -> {
         codeadd(Symbol.SEMICOLON);
         codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
@@ -1165,6 +1166,8 @@ class InternalCompiler extends InternalApi {
             codeadd(Indentation.EMIT);
             stackset(_ANNOTATIONS);
           }
+
+          case _BODY -> bodyBeforeNextMember(_ANNOTATIONS);
 
           default -> stubState(context, state, item);
         }
@@ -1297,6 +1300,23 @@ class InternalCompiler extends InternalApi {
         }
       }
 
+      case ByteProto.ENUM_CONSTANT -> {
+        switch (state) {
+          case _START -> {
+            codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+            codeadd(Indentation.EMIT);
+            stackset(_ENUM_CONSTANTS);
+          }
+
+          case _ENUM_CONSTANTS -> {
+            codeadd(Symbol.COMMA);
+            bodyBeforeNextMember(_ENUM_CONSTANTS);
+          }
+
+          default -> stubState(context, state, item);
+        }
+      }
+
       case ByteProto.IDENTIFIER -> {
         switch (state) {
           case _TYPE -> {
@@ -1339,6 +1359,11 @@ class InternalCompiler extends InternalApi {
           }
 
           case _BODY -> bodyBeforeNextMember(_MODIFIERS);
+
+          case _ENUM_CONSTANTS -> {
+            codeadd(Symbol.SEMICOLON);
+            bodyBeforeNextMember(_MODIFIERS);
+          }
 
           case _MODIFIERS -> {
             codeadd(Whitespace.MANDATORY);
@@ -1896,6 +1921,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case ByteProto.CLASS,
+           ByteProto.ENUM,
            ByteProto.INTERFACE -> {
         switch (state) {
           case _START -> {
@@ -2168,6 +2194,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
 
+      case ByteProto.ENUM_CONSTANT -> methodInvocation(context, state, item);
+
       case ByteProto.EXPRESSION_NAME -> expressionName(context, state, item);
 
       case ByteProto.METHOD_DECLARATION -> methodDeclaration(context, state, item);
@@ -2209,6 +2237,30 @@ class InternalCompiler extends InternalApi {
       context(context, state, item);
 
       item(context, state, item);
+    }
+  }
+
+  private void enumConstant() {
+    int proto = ByteProto.ENUM_CONSTANT;
+    stackpush(proto, _START);
+
+    element();
+
+    int state = contextpop();
+    switch (state) {
+      case _ARGS, _ARRAY_ACCESS, _EXP_NAME, _PRIMARY -> {
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      case _RECV -> {}
+
+      case _PRIMARY_SLOT, _SLOT -> {
+        codeadd(Indentation.EXIT_PARENTHESIS);
+        codeadd(Indentation.EMIT);
+        codeadd(Symbol.RIGHT_PARENTHESIS);
+      }
+
+      default -> stubPop(proto, state);
     }
   }
 
@@ -2690,6 +2742,10 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ELLIPSIS -> codeadd(Symbol.ELLIPSIS);
 
       case ByteProto.END -> {}
+
+      case ByteProto.ENUM -> typeKeyword(Keyword.ENUM);
+
+      case ByteProto.ENUM_CONSTANT -> enumConstant();
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
@@ -3470,6 +3526,10 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ELLIPSIS -> "Ellipsis";
 
       case ByteProto.END -> "End";
+
+      case ByteProto.ENUM -> "Enum";
+
+      case ByteProto.ENUM_CONSTANT -> "Enum Constant";
 
       case ByteProto.EXPRESSION_NAME -> "Expression Name";
 

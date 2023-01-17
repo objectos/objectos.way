@@ -38,6 +38,8 @@ import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ConstructorDeclaration;
 import objectos.code.JavaModel.Ellipsis;
 import objectos.code.JavaModel.End;
+import objectos.code.JavaModel.EnumConstant;
+import objectos.code.JavaModel.EnumKeyword;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionElement;
@@ -96,6 +98,14 @@ abstract class JavaTemplate2 extends JavaTemplate {
   @Override
   protected final PrimitiveType _double() {
     return primitiveType(Keyword.DOUBLE);
+  }
+
+  protected final EnumKeyword _enum(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(ByteProto.ENUM, api.object(name));
   }
 
   @Override
@@ -395,6 +405,33 @@ abstract class JavaTemplate2 extends JavaTemplate {
 
   protected final End end() {
     return api().item(ByteProto.END);
+  }
+
+  protected final EnumConstant enumConstant(String name) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT);
+  }
+
+  protected final EnumConstant enumConstant(String name,
+      MethodInvocationElement e1) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self());
+  }
+
+  protected final EnumConstant enumConstant(String name,
+      MethodInvocationElement e1, MethodInvocationElement e2) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self(), e2.self());
+  }
+
+  protected final EnumConstant enumConstant(String name,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self(), e2.self(), e3.self());
   }
 
   protected final AssignmentOperator gets() {

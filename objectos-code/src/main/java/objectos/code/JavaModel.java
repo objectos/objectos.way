@@ -72,8 +72,9 @@ public final class JavaModel {
 
   public sealed interface ConstructorDeclarationElement extends Markable {}
 
-  public sealed interface EnumConstant
-      extends EnumDeclarationElement {}
+  public sealed interface EnumConstant extends BodyElement,
+      /* to remove */
+      EnumDeclarationElement {}
 
   public sealed interface EnumConstantElement extends Markable {}
 
@@ -176,6 +177,7 @@ public final class JavaModel {
       Body,
       ClassInstanceCreationExpression,
       ConstructorDeclaration,
+      EnumConstant,
       ExplicitConstructorInvocation,
       ExpressionName,
       MethodDeclaration,
@@ -213,6 +215,7 @@ public final class JavaModel {
       ClassType,
       Ellipsis,
       End,
+      EnumKeyword,
       ExtendsKeyword,
       FinalModifier,
       Identifier,
@@ -304,6 +307,8 @@ public final class JavaModel {
   sealed interface Ellipsis extends ParameterElement {}
 
   sealed interface End extends BlockElement, Element, MethodInvocationElement {}
+
+  sealed interface EnumKeyword extends BodyElement {}
 
   sealed interface ExplicitConstructorInvocation extends BlockElement,
       /* to remove */
