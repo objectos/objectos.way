@@ -704,6 +704,19 @@ abstract class JavaTemplate2 extends JavaTemplate {
     );
   }
 
+  protected final ClassType t(String packageName, String simpleName1, String simpleName2) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName1.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName2.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(
+      ByteProto.CLASS_TYPE, api.object(packageName),
+      2, api.object(simpleName1), api.object(simpleName2)
+    );
+  }
+
   protected final TypeParameter tparam(String name) {
     JavaModel.checkVarName(name);
     var api = api();

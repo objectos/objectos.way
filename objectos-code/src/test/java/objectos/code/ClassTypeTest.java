@@ -28,15 +28,20 @@ public class ClassTypeTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
-          field(t("com.example", "Bar"), id("a"));
+          _class("ClassType");
+          body(
+            t("com.example", "Bar"), id("a")
+          );
         }
       }.toString(),
 
       """
-      com.example.Bar a;
+      class ClassType {
+        com.example.Bar a;
+      }
       """
     );
   }
@@ -48,15 +53,16 @@ public class ClassTypeTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate() {
+      new JavaTemplate2() {
         @Override
         protected final void definition() {
           _package("com.example");
 
           autoImports();
 
-          _class(id("A"),
-            field(t("com.example", "A", "B"), id("t01"))
+          _class("A");
+          body(
+            t("com.example", "A", "B"), id("t01")
           );
         }
       }.toString(),

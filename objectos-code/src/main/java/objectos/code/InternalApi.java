@@ -809,6 +809,14 @@ class InternalApi extends InternalState implements MarkerApi {
     return itemret();
   }
 
+  public final JavaModel._Item item(int v0, int v1, int v2, int v3, int v4) {
+    leveladd(LOCAL, protoIndex);
+
+    protoadd(v0, v1, v2, v3, v4);
+
+    return itemret();
+  }
+
   public final void lambdaend() {
     level--;
   }
@@ -1369,6 +1377,15 @@ class InternalApi extends InternalState implements MarkerApi {
     protoArray[protoIndex++] = v1;
     protoArray[protoIndex++] = v2;
     protoArray[protoIndex++] = v3;
+  }
+
+  private void protoadd(int v0, int v1, int v2, int v3, int v4) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 4);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
+    protoArray[protoIndex++] = v4;
   }
 
   private void stackinc(int offset) { stackArray[stackIndex - offset]++; }
