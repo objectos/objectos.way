@@ -32,7 +32,7 @@ public class AssignmentOperatorTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           n("a"); gets(); n("x");

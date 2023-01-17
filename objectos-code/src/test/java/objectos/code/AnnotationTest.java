@@ -26,7 +26,7 @@ public class AnnotationTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           at(t("objectos.code", "Foo"), s("java"));

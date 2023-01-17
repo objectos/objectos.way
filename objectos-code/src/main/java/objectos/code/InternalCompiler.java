@@ -1890,7 +1890,7 @@ class InternalCompiler extends InternalApi {
             stackset(_ANNOTATIONS);
           }
 
-          case _BODY -> {
+          case _BODY, _IMPORTS -> {
             codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
             stackset(_ANNOTATIONS);
           }

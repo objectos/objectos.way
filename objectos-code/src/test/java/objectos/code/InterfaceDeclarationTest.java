@@ -32,7 +32,7 @@ public class InterfaceDeclarationTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _interface("A"); body();
@@ -54,7 +54,7 @@ public class InterfaceDeclarationTest {
   public void testCase02() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _public(); _interface("A"); body();
@@ -92,7 +92,7 @@ public class InterfaceDeclarationTest {
   public void testCase03() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _interface("A"); _extends(); t(IfaceA.class); body();

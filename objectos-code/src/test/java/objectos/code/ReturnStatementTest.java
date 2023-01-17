@@ -31,7 +31,7 @@ public class ReturnStatementTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           _return(); s("abc");

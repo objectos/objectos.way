@@ -27,7 +27,7 @@ public class EnumDeclarationTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _enum("Test1");
@@ -80,7 +80,7 @@ public class EnumDeclarationTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _enum("Test1");
@@ -112,7 +112,7 @@ public class EnumDeclarationTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _public();
@@ -131,7 +131,7 @@ public class EnumDeclarationTest {
     );
 
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           at(t(Deprecated.class));
@@ -157,7 +157,7 @@ public class EnumDeclarationTest {
   """)
   public void testCase04() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _enum("Test1");
@@ -197,7 +197,7 @@ public class EnumDeclarationTest {
   public void testCase05() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _public(); _enum("Test"); _implements(); t("test", "Iface"); body(

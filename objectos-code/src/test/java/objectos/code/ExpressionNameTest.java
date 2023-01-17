@@ -32,7 +32,7 @@ public class ExpressionNameTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", n("a")); end();
@@ -64,7 +64,7 @@ public class ExpressionNameTest {
   public void testCase02() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", n(t("test", "Suit"), "CLUBS")); end();

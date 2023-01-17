@@ -28,7 +28,7 @@ public class ClassDeclarationTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _final(); _class("Subject"); body();
@@ -51,7 +51,7 @@ public class ClassDeclarationTest {
   public void testCase02() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           at(t(Deprecated.class));
@@ -77,7 +77,7 @@ public class ClassDeclarationTest {
   public void testCase03() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Subject"); body(
@@ -103,7 +103,7 @@ public class ClassDeclarationTest {
   public void testCase04() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Test"); body(
@@ -133,7 +133,7 @@ public class ClassDeclarationTest {
   public void testCase05() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Level1"); body(
@@ -186,7 +186,7 @@ public class ClassDeclarationTest {
   public void testCase06() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _public(); _class("A"); body();
@@ -228,7 +228,7 @@ public class ClassDeclarationTest {
   public void testCase07() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("A"); _implements(); t(AutoCloseable.class); body();
@@ -259,7 +259,7 @@ public class ClassDeclarationTest {
   public void testCase08() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("A"); _extends(); t(Thread.class); body(
@@ -297,7 +297,7 @@ public class ClassDeclarationTest {
   public void testCase09() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("A"); body(

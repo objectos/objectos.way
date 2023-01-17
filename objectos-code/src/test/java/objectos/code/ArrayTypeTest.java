@@ -28,7 +28,7 @@ public class ArrayTypeTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Arrays");
@@ -61,7 +61,7 @@ public class ArrayTypeTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Arrays");

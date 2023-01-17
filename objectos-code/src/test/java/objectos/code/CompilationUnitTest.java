@@ -27,7 +27,7 @@ public class CompilationUnitTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Foo"); body();
@@ -49,7 +49,7 @@ public class CompilationUnitTest {
   public void testCase02() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _package("test");
@@ -75,7 +75,7 @@ public class CompilationUnitTest {
   public void testCase03() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           autoImports();
@@ -99,7 +99,7 @@ public class CompilationUnitTest {
   public void testCase04() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _package("test");
@@ -125,7 +125,7 @@ public class CompilationUnitTest {
   public void testCase05() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _package("test");
@@ -153,7 +153,7 @@ public class CompilationUnitTest {
   public void testCase06() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           autoImports();
@@ -188,7 +188,7 @@ public class CompilationUnitTest {
   public void testCase07() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _package("foo");
@@ -216,6 +216,38 @@ public class CompilationUnitTest {
       """
     );
     // @formatter:on
+  }
+
+  @Test(description = """
+  Compilation Unit TC08
+
+  - annotated class + import declarations
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _package("foo"),
+
+            autoImports(),
+
+            at(t("bar", "TypeAnnotation")),
+            _class("Test"), body()
+          );
+        }
+      }.toString(),
+
+      """
+      package foo;
+
+      import bar.TypeAnnotation;
+
+      @TypeAnnotation
+      class Test {}
+      """
+    );
   }
 
 }

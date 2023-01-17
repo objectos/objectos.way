@@ -29,7 +29,7 @@ public class ArrayAccessExpressionTest {
   """)
   public void testCase01() {
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("foo",

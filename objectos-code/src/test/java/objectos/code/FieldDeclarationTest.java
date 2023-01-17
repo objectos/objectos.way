@@ -31,7 +31,7 @@ public class FieldDeclarationTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           t(String.class); id("name");
@@ -57,7 +57,7 @@ public class FieldDeclarationTest {
   public void testCase02() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           _private(); t(String.class); id("a");
@@ -87,7 +87,7 @@ public class FieldDeclarationTest {
   public void testCase03() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           t(String.class); id("x"); s("init");
@@ -115,7 +115,7 @@ public class FieldDeclarationTest {
   public void testCase04() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           t(t(Object.class), dim()); id("a");
@@ -139,7 +139,7 @@ public class FieldDeclarationTest {
   public void testCase05() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           t(t(Map.class), t(String.class), t(Integer.class)); id("map");
@@ -163,7 +163,7 @@ public class FieldDeclarationTest {
   public void testCase06() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           t(_int(), dim()); id("a"); a();

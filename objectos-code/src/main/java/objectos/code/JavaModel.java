@@ -48,7 +48,11 @@ public final class JavaModel {
   public sealed interface AssignmentExpression
       extends Expression, ExpressionStatement {}
 
+  public sealed interface BlockElement extends Element, Markable {}
+
   public sealed interface BlockStatement extends BlockElement {}
+
+  public sealed interface BodyElement extends Element {}
 
   public sealed interface ChainedMethodInvocation extends MethodInvocation {}
 
@@ -63,7 +67,7 @@ public final class JavaModel {
 
   public sealed interface ClassDeclarationElement extends Markable {}
 
-  public sealed interface ClassType extends BodyElement, ReferenceType,
+  public sealed interface ClassType extends BlockElement, BodyElement, ReferenceType,
       /* to remove */
       AnyType,
       TypeParameterBound,
@@ -71,6 +75,13 @@ public final class JavaModel {
       MethodDeclarationElement {}
 
   public sealed interface ConstructorDeclarationElement extends Markable {}
+
+  public sealed interface Element {
+    /**
+     * Triggers implicit null check.
+     */
+    default Object self() { return this; }
+  }
 
   public sealed interface EnumConstant extends BodyElement,
       /* to remove */
@@ -283,11 +294,7 @@ public final class JavaModel {
       /* to remove */
       Statement {}
 
-  sealed interface BlockElement extends Element, Markable {}
-
   sealed interface Body extends BodyElement {}
-
-  sealed interface BodyElement extends Element {}
 
   sealed interface ClassInstanceCreationExpression extends ExpressionStatement, PrimaryExpression {}
 
@@ -296,13 +303,6 @@ public final class JavaModel {
   sealed interface ConstructorDeclaration extends BodyElement,
       /* to remove */
       ClassDeclarationElement, EnumDeclarationElement {}
-
-  sealed interface Element {
-    /**
-     * Triggers implicit null check.
-     */
-    default Object self() { return this; }
-  }
 
   sealed interface Ellipsis extends ParameterElement {}
 
@@ -351,9 +351,8 @@ public final class JavaModel {
 
   sealed interface NewKeyword extends BlockElement {}
 
-  sealed interface NewLine extends Element,
+  sealed interface NewLine extends BlockElement,
       /* to remove */
-      BlockElement,
       ChainedMethodInvocationElement,
       MethodInvocationElement {}
 

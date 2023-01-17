@@ -15,7 +15,7 @@
  */
 package objectos.code;
 
-final class Fixture extends JavaTemplate2 {
+final class Fixture extends JavaTemplate {
 
   enum Kind {
     CLASS,
@@ -29,14 +29,14 @@ final class Fixture extends JavaTemplate2 {
 
   private final Kind kind;
 
-  JavaTemplate2 subject;
+  JavaTemplate subject;
 
   public Fixture(String className, Kind kind) {
     this.className = className;
     this.kind = kind;
   }
 
-  public final String ture(JavaTemplate2 subject) {
+  public final String ture(JavaTemplate subject) {
     this.subject = subject;
 
     var result = toString();

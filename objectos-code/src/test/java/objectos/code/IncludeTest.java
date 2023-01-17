@@ -28,7 +28,7 @@ public class IncludeTest {
   public void testCase01() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("TestCase01"); body(
@@ -57,7 +57,7 @@ public class IncludeTest {
   public void testCase02() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Test");
@@ -93,7 +93,7 @@ public class IncludeTest {
   public void testCase03() {
     // @formatter:off
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Test");

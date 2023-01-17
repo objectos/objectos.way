@@ -64,7 +64,7 @@ public class JavaSinkTest {
   @Test
   public void testCase01() throws IOException {
     // @formatter:off
-    var tmpl = new JavaTemplate2() {
+    var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
         _package("a.b");
@@ -95,7 +95,7 @@ public class JavaSinkTest {
   @Test(dependsOnMethods = "testCase01")
   public void testCase02() {
     // @formatter:off
-    var tmpl = new JavaTemplate2() {
+    var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
         _package("a.b");
@@ -117,7 +117,7 @@ public class JavaSinkTest {
   @Test(dependsOnMethods = "testCase02")
   public void testCase03() throws IOException {
     // @formatter:off
-    var tmpl = new JavaTemplate2() {
+    var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
         _package("a.b");
@@ -155,7 +155,7 @@ public class JavaSinkTest {
   @Test
   public void testCase04() throws IOException {
     // @formatter:off
-    var tmpl = new JavaTemplate2() {
+    var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
         _package("test4");
@@ -190,7 +190,7 @@ public class JavaSinkTest {
   @Test
   public void testCase05() throws IOException {
     // @formatter:off
-    var tmpl = new JavaTemplate2() {
+    var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
         _package("test5");

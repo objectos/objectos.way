@@ -90,21 +90,11 @@ public abstract class JavaSink extends InternalInterpreter {
   public void eval(JavaTemplate template) {
     Check.notNull(template, "template == null");
 
-    template.onEval();
+    accept(template);
 
-    if (template.v2) {
-      accept(template);
+    compile();
 
-      compile();
-
-      interpret();
-    } else {
-      pass0(template);
-
-      pass1();
-
-      pass2();
-    }
+    interpret();
   }
 
   public void write(JavaTemplate template) throws IOException {

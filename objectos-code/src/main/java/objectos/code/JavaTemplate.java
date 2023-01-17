@@ -15,77 +15,66 @@
  */
 package objectos.code;
 
+import java.util.Objects;
 import objectos.code.JavaModel.AbstractModifier;
-import objectos.code.JavaModel.AnnotationElementValue;
-import objectos.code.JavaModel.AnnotationInvocation;
-import objectos.code.JavaModel.AnyType;
-import objectos.code.JavaModel.ArrayAccessExpression;
+import objectos.code.JavaModel.ArrayAccess;
 import objectos.code.JavaModel.ArrayDimension;
 import objectos.code.JavaModel.ArrayInitializer;
 import objectos.code.JavaModel.ArrayInitializerElement;
 import objectos.code.JavaModel.ArrayType;
 import objectos.code.JavaModel.ArrayTypeComponent;
 import objectos.code.JavaModel.ArrayTypeElement;
-import objectos.code.JavaModel.AssignmentExpression;
+import objectos.code.JavaModel.AssignmentOperator;
+import objectos.code.JavaModel.At;
+import objectos.code.JavaModel.AtElement;
 import objectos.code.JavaModel.AutoImports;
 import objectos.code.JavaModel.Block;
 import objectos.code.JavaModel.BlockElement;
-import objectos.code.JavaModel.ChainedMethodInvocation;
-import objectos.code.JavaModel.ChainedMethodInvocationElement;
-import objectos.code.JavaModel.ChainedMethodInvocationHead;
-import objectos.code.JavaModel.ClassDeclaration;
-import objectos.code.JavaModel.ClassDeclarationElement;
+import objectos.code.JavaModel.Body;
+import objectos.code.JavaModel.BodyElement;
 import objectos.code.JavaModel.ClassInstanceCreationExpression;
+import objectos.code.JavaModel.ClassKeyword;
 import objectos.code.JavaModel.ClassType;
 import objectos.code.JavaModel.ConstructorDeclaration;
-import objectos.code.JavaModel.ConstructorDeclarationElement;
+import objectos.code.JavaModel.Element;
 import objectos.code.JavaModel.Ellipsis;
+import objectos.code.JavaModel.End;
 import objectos.code.JavaModel.EnumConstant;
-import objectos.code.JavaModel.EnumConstantElement;
-import objectos.code.JavaModel.EnumDeclaration;
-import objectos.code.JavaModel.EnumDeclarationElement;
+import objectos.code.JavaModel.EnumKeyword;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
-import objectos.code.JavaModel.ExtendsMany;
-import objectos.code.JavaModel.ExtendsSingle;
-import objectos.code.JavaModel.FieldAccessExpression;
-import objectos.code.JavaModel.FieldDeclaration;
-import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
-import objectos.code.JavaModel.FormalParameter;
 import objectos.code.JavaModel.Identifier;
 import objectos.code.JavaModel.ImplementsKeyword;
 import objectos.code.JavaModel.Include;
 import objectos.code.JavaModel.IntegerLiteral;
-import objectos.code.JavaModel.InterfaceDeclaration;
-import objectos.code.JavaModel.InterfaceDeclarationElement;
-import objectos.code.JavaModel.LeftHandSide;
-import objectos.code.JavaModel.LocalVariableDeclarationStatement;
+import objectos.code.JavaModel.InterfaceKeyword;
 import objectos.code.JavaModel.MethodDeclaration;
-import objectos.code.JavaModel.MethodDeclarationElement;
 import objectos.code.JavaModel.MethodInvocationElement;
 import objectos.code.JavaModel.NewLine;
 import objectos.code.JavaModel.PackageKeyword;
 import objectos.code.JavaModel.ParameterElement;
 import objectos.code.JavaModel.ParameterizedType;
-import objectos.code.JavaModel.PrimaryExpression;
 import objectos.code.JavaModel.PrimitiveType;
 import objectos.code.JavaModel.PrivateModifier;
 import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
-import objectos.code.JavaModel.QualifiedMethodInvocation;
+import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnKeyword;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
+import objectos.code.JavaModel.SuperKeyword;
 import objectos.code.JavaModel.ThisKeyword;
 import objectos.code.JavaModel.TypeParameter;
 import objectos.code.JavaModel.TypeParameterBound;
 import objectos.code.JavaModel.TypeVariable;
 import objectos.code.JavaModel.UnqualifiedMethodInvocation;
+import objectos.code.JavaModel.VarKeyword;
 import objectos.code.JavaModel.VoidKeyword;
+import objectos.code.JavaModel._Item;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
@@ -96,8 +85,6 @@ public abstract class JavaTemplate {
   }
 
   private InternalApi api;
-
-  boolean v2;
 
   /**
    * Sole constructor.
@@ -115,281 +102,703 @@ public abstract class JavaTemplate {
     return out.toString();
   }
 
-  protected AbstractModifier _abstract() {
-    return api()._abstract();
+  protected final AbstractModifier _abstract() {
+    return modifier(Keyword.ABSTRACT);
   }
 
-  protected PrimitiveType _boolean() {
-    return api()._boolean();
+  protected final PrimitiveType _boolean() {
+    return primitiveType(Keyword.BOOLEAN);
   }
 
-  protected final ClassDeclaration _class(ClassDeclarationElement... elements) {
-    return api()._class(elements);
+  protected final ClassKeyword _class(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(ByteProto.CLASS, api.object(name));
+  }
+
+  protected final PrimitiveType _double() {
+    return primitiveType(Keyword.DOUBLE);
+  }
+
+  protected final EnumKeyword _enum(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(ByteProto.ENUM, api.object(name));
+  }
+
+  protected final ExtendsKeyword _extends() {
+    return api().item(ByteProto.EXTENDS);
+  }
+
+  protected final FinalModifier _final() {
+    return api().item(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
+  }
+
+  protected final ImplementsKeyword _implements() {
+    return api().item(ByteProto.IMPLEMENTS);
+  }
+
+  protected final PrimitiveType _int() {
+    return primitiveType(Keyword.INT);
+  }
+
+  protected final InterfaceKeyword _interface(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(ByteProto.INTERFACE, api.object(name));
+  }
+
+  protected final ClassInstanceCreationExpression _new(ClassType type) {
+    return api().elem(
+      ByteProto.CLASS_INSTANCE_CREATION, type.self()
+    );
+  }
+
+  protected final ClassInstanceCreationExpression _new(ClassType type,
+      Expression arg1) {
+    return api().elem(
+      ByteProto.CLASS_INSTANCE_CREATION, type.self(),
+      arg1.self()
+    );
+  }
+
+  protected final ClassInstanceCreationExpression _new(ClassType type,
+      Expression arg1, Expression arg2) {
+    return api().elem(
+      ByteProto.CLASS_INSTANCE_CREATION, type.self(),
+      arg1.self(), arg2.self()
+    );
+  }
+
+  protected final PackageKeyword _package(String packageName) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+
+    var api = api();
+
+    api.autoImports.packageName(packageName);
+
+    return api.item(ByteProto.PACKAGE, api.object(packageName));
+  }
+
+  protected final PrivateModifier _private() {
+    return modifier(Keyword.PRIVATE);
+  }
+
+  protected final ProtectedModifier _protected() {
+    return modifier(Keyword.PROTECTED);
+  }
+
+  protected final PublicModifier _public() {
+    return modifier(Keyword.PUBLIC);
+  }
+
+  protected final ReturnKeyword _return() {
+    return api().item(ByteProto.RETURN);
+  }
+
+  protected final StaticModifier _static() {
+    return modifier(Keyword.STATIC);
+  }
+
+  protected final SuperKeyword _super() {
+    return api().item(ByteProto.SUPER);
+  }
+
+  protected final ExplicitConstructorInvocation _super(ExpressionElement e1) {
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self());
+  }
+
+  protected final ExplicitConstructorInvocation _super(ExpressionElement... elements) {
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.SUPER_INVOCATION, many);
+  }
+
+  protected final ExplicitConstructorInvocation _super(ExpressionElement e1, ExpressionElement e2) {
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self());
+  }
+
+  protected final ExplicitConstructorInvocation _super(ExpressionElement e1, ExpressionElement e2,
+      ExpressionElement e3) {
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(), e3.self());
+  }
+
+  protected final ThisKeyword _this() {
+    return api().item(ByteProto.THIS);
+  }
+
+  protected final VarKeyword _var(String name) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    return api.item(ByteProto.VAR, api.object(name));
+  }
+
+  protected final VoidKeyword _void() {
+    return api().item(ByteProto.VOID);
+  }
+
+  protected final ArrayInitializer a() {
+    return api().elem(ByteProto.ARRAY_INITIALIZER);
   }
 
-  protected PrimitiveType _double() {
-    return api()._double();
+  protected final ArrayInitializer a(
+      ArrayInitializerElement e1) {
+    return api().elem(ByteProto.ARRAY_INITIALIZER, e1);
   }
 
-  protected final EnumDeclaration _enum(EnumDeclarationElement... elements) {
-    return api()._enum(elements);
+  protected final ArrayInitializer a(
+      ArrayInitializerElement e1, ArrayInitializerElement e2) {
+    return api().elem(ByteProto.ARRAY_INITIALIZER, e1, e2);
   }
 
-  protected ExtendsKeyword _extends() {
-    throw new UnsupportedOperationException();
+  protected final At at(ClassType annotationType) {
+    return api().elem(ByteProto.ANNOTATION, annotationType.self());
   }
 
-  protected final ExtendsMany _extends(ClassType... interfaces) {
-    return api()._extends(interfaces);
+  protected final At at(ClassType annotationType, AtElement e1) {
+    return api().elem(ByteProto.ANNOTATION, annotationType.self(), e1.self());
   }
 
-  protected final ExtendsSingle _extends(ClassType value) {
-    return api()._extends(value);
+  protected final AutoImports autoImports() {
+    var api = api();
+
+    api.autoImports.enable();
+
+    return api.item(ByteProto.AUTO_IMPORTS);
+  }
+
+  protected final Block block() {
+    return api().elem(ByteProto.BLOCK);
+  }
+
+  protected final Block block(BlockElement e1) {
+    return api().elem(ByteProto.BLOCK, e1.self());
+  }
+
+  protected final Block block(BlockElement... elements) {
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.BLOCK, many);
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5, BlockElement e6) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self(), e6.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5, BlockElement e6, BlockElement e7) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self(), e6.self(), e7.self());
+  }
+
+  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
+      BlockElement e5, BlockElement e6, BlockElement e7, BlockElement e8) {
+    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self(), e6.self(), e7.self(), e8.self());
+  }
+
+  protected final Body body() {
+    return api().elem(ByteProto.BODY);
+  }
+
+  protected final Body body(BodyElement e1) {
+    return api().elem(ByteProto.BODY, e1.self());
+  }
+
+  protected final Body body(BodyElement... elements) {
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.BODY, many);
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self());
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self());
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self());
+  }
+
+  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4,
+      BodyElement e5) {
+    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self(),
+      e5.self());
   }
 
-  protected FinalModifier _final() {
-    return api()._final();
+  protected final void code(Element... elements) {
+    // no-op
   }
 
-  protected ImplementsKeyword _implements() {
-    throw new UnsupportedOperationException();
+  protected final ConstructorDeclaration constructor() {
+    return api().elem(ByteProto.CONSTRUCTOR);
   }
 
-  protected final ImplementsKeyword _implements(ClassType type) {
-    return api()._implements(type);
+  protected final ConstructorDeclaration constructor(ParameterElement e1) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self());
   }
 
-  protected final ImplementsKeyword _implements(ClassType... interfaces) {
-    return api()._implements(interfaces);
+  protected final ConstructorDeclaration constructor(ParameterElement... elements) {
+    Objects.requireNonNull(elements, "elements == null");
+    return api().elemmany(ByteProto.CONSTRUCTOR, elements);
   }
 
-  protected final ImplementsKeyword _implements(ClassType type1, ClassType type2) {
-    return api()._implements(type1, type2);
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self());
   }
 
-  protected PrimitiveType _int() {
-    return api()._int();
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self());
   }
 
-  protected final InterfaceDeclaration _interface(InterfaceDeclarationElement... elements) {
-    return api()._interface(elements);
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3, ParameterElement e4) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self());
   }
 
-  protected ClassInstanceCreationExpression _new(
-      ClassType type, Expression... arguments) {
-    return api()._new(type, arguments);
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3, ParameterElement e4, ParameterElement e5) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self(), e5.self());
   }
 
-  protected PackageKeyword _package(String packageName) {
-    api()._package(packageName);
-    return null;
+  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
+      ParameterElement e3, ParameterElement e4, ParameterElement e5, ParameterElement e6) {
+    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(),
+      e3.self(), e4.self(), e5.self(), e6.self());
   }
 
-  protected PrivateModifier _private() {
-    return api()._private();
+  protected void definition() {}
+
+  protected final ArrayDimension dim() {
+    return api().item(ByteProto.ARRAY_DIMENSION);
+  }
+
+  protected final ArrayAccess dim(ExpressionElement e1) {
+    return api().elem(ByteProto.ARRAY_ACCESS, e1.self());
+  }
+
+  protected final ArrayAccess dim(ExpressionElement e1, ExpressionElement e2) {
+    return api().elem(ByteProto.ARRAY_ACCESS, e1.self(), e2.self());
+  }
+
+  protected final Ellipsis ellipsis() {
+    return api().item(ByteProto.ELLIPSIS);
   }
 
-  protected ProtectedModifier _protected() {
-    return api()._protected();
+  protected final End end() {
+    return api().item(ByteProto.END);
   }
 
-  protected PublicModifier _public() {
-    return api()._public();
+  protected final EnumConstant enumConstant(String name) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT);
   }
 
-  protected final ReturnKeyword _return(Expression expression) {
-    return api()._return(expression);
+  protected final EnumConstant enumConstant(String name,
+      MethodInvocationElement e1) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self());
   }
 
-  protected StaticModifier _static() {
-    return api()._static();
+  protected final EnumConstant enumConstant(String name,
+      MethodInvocationElement e1, MethodInvocationElement e2) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self(), e2.self());
   }
 
-  protected ExplicitConstructorInvocation _super(ExpressionElement... arguments) {
-    return api()._super(arguments);
+  protected final EnumConstant enumConstant(String name,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3) {
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self(), e2.self(), e3.self());
   }
 
-  protected ThisKeyword _this() {
-    return api()._this();
+  protected final AssignmentOperator gets() {
+    return api().item(ByteProto.GETS);
   }
+
+  protected final IntegerLiteral i(int value) {
+    var s = Integer.toString(value);
 
-  protected VoidKeyword _void() {
-    return api()._void();
+    var api = api();
+
+    return api.item(ByteProto.PRIMITIVE_LITERAL, api.object(s));
   }
 
-  protected ArrayInitializer a(ArrayInitializerElement... elements) {
-    return api().a(elements);
+  protected final Identifier id(String name) {
+    JavaModel.checkIdentifier(name);
+    var api = api();
+    return api.item(ByteProto.IDENTIFIER, api.object(name));
   }
 
-  protected final ArrayAccessExpression aget(ExpressionName reference, Expression... expressions) {
-    return api().aget(reference, expressions);
+  protected final Include include(IncludeTarget target) {
+    var api = api();
+    api.lambdastart();
+    target.execute(); // implicit null-check
+    api.lambdaend();
+    return JavaModel.INCLUDE;
   }
 
-  protected final AnnotationInvocation annotation(ClassType annotationType) {
-    return api().annotation(annotationType);
+  protected final Include include(JavaTemplate template) {
+    var api = api();
+    api.lambdastart();
+    template.execute(api);
+    api.lambdaend();
+    return JavaModel.INCLUDE;
   }
 
-  protected final AnnotationInvocation annotation(ClassType annotationType,
-      AnnotationElementValue value) {
-    return api().annotation(annotationType, value);
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT);
   }
+
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
 
-  protected final AssignmentExpression assign(LeftHandSide leftHandSide, Expression expression) {
-    return api().assign(leftHandSide, expression);
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self());
   }
 
-  protected AutoImports autoImports() {
-    api().autoImports();
-    return null;
+  protected final UnqualifiedMethodInvocation invoke(String methodName,
+      MethodInvocationElement... elements) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api.elemmany(ByteProto.METHOD_INVOCATION, JavaModel.EXT, many);
   }
 
-  protected Block block(BlockElement... elements) {
-    return api().block(elements);
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self());
   }
 
-  @Deprecated
-  protected final ChainedMethodInvocation chain(ChainedMethodInvocationHead invalid0) {
-    throw new UnsupportedOperationException();
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self());
   }
 
-  protected final ChainedMethodInvocation chain(
-      ChainedMethodInvocationHead first, ChainedMethodInvocationElement... more) {
-    return api().chain(first, more);
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self());
   }
 
-  protected ConstructorDeclaration constructor(ConstructorDeclarationElement... elements) {
-    return api().constructor(elements);
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self());
   }
 
-  protected abstract void definition();
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self());
+  }
 
-  protected ArrayDimension dim() {
-    return api().dim();
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6,
+      MethodInvocationElement e7) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self(), e7.self());
   }
 
-  protected Ellipsis ellipsis() {
-    return api().ellipsis();
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6,
+      MethodInvocationElement e7, MethodInvocationElement e8) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self(), e7.self(), e8.self());
   }
 
-  protected EnumConstant enumConstant(EnumConstantElement... elements) {
-    return api().enumConstant(elements);
+  protected final UnqualifiedMethodInvocation invoke(
+      String methodName,
+      MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3,
+      MethodInvocationElement e4, MethodInvocationElement e5, MethodInvocationElement e6,
+      MethodInvocationElement e7, MethodInvocationElement e8, MethodInvocationElement e9) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self(), e7.self(), e8.self(), e9.self());
   }
 
-  protected final FieldDeclaration field(FieldDeclarationElement... elements) {
-    return api().field(elements);
+  protected final MethodDeclaration method(String methodName) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT);
   }
 
-  protected IntegerLiteral i(int value) {
-    return api().i(value);
+  protected final MethodDeclaration method(String methodName,
+      ParameterElement e1) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT, e1.self());
   }
 
-  protected Identifier id(String name) {
-    return api().id(name);
+  protected final MethodDeclaration method(String methodName,
+      ParameterElement... elements) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api.elemmany(ByteProto.METHOD_DECLARATION, JavaModel.EXT, many);
   }
 
-  protected Include include(IncludeTarget target) {
-    return api().include(target);
+  protected final MethodDeclaration method(String methodName,
+      ParameterElement e1, ParameterElement e2) {
+    JavaModel.checkMethodName(methodName);
+    var api = api();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT, e1.self(), e2.self());
   }
+
+  protected final ExpressionName n(ClassType type, String id1) {
+    JavaModel.checkIdentifier(id1.toString());
 
-  protected final QualifiedMethodInvocation invoke(
-      ClassType typeName, String methodName, MethodInvocationElement... elements) {
-    return api().invoke(typeName, methodName, elements);
+    var api = api();
+    api.identifierext(id1);
+    return api.elem(ByteProto.EXPRESSION_NAME, type, JavaModel.EXT);
   }
 
-  protected final QualifiedMethodInvocation invoke(
-      ExpressionName expressionName, String methodName, MethodInvocationElement... elements) {
-    return api().invoke(expressionName, methodName, elements);
+  protected final ExpressionName n(ClassType type, String id1, String id2) {
+    JavaModel.checkIdentifier(id1.toString());
+    JavaModel.checkIdentifier(id2.toString());
+
+    var api = api();
+    api.identifierext(id1);
+    api.identifierext(id2);
+    return api.elem(ByteProto.EXPRESSION_NAME, type, JavaModel.EXT, JavaModel.EXT);
   }
+
+  protected final ExpressionName n(String id1) {
+    JavaModel.checkIdentifier(id1.toString()); // implicit null check
 
-  protected final QualifiedMethodInvocation invoke(
-      PrimaryExpression primary, String methodName, MethodInvocationElement... elements) {
-    return api().invoke(primary, methodName, elements);
+    var api = api();
+    api.identifierext(id1);
+    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT);
   }
 
-  protected UnqualifiedMethodInvocation invoke(
-      String methodName, MethodInvocationElement... elements) {
-    return api().invoke(methodName, elements);
+  protected final ExpressionName n(String id1, String id2) {
+    JavaModel.checkIdentifier(id1.toString()); // implicit null check
+    JavaModel.checkIdentifier(id2.toString()); // implicit null check
+
+    var api = api();
+    api.identifierext(id1);
+    api.identifierext(id2);
+    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT, JavaModel.EXT);
   }
+
+  protected final ExpressionName n(String id1, String id2, String id3) {
+    JavaModel.checkIdentifier(id1.toString()); // implicit null check
+    JavaModel.checkIdentifier(id2.toString()); // implicit null check
+    JavaModel.checkIdentifier(id3.toString()); // implicit null check
 
-  protected MethodDeclaration method(MethodDeclarationElement... elements) {
-    return api().method(elements);
+    var api = api();
+    api.identifierext(id1);
+    api.identifierext(id2);
+    api.identifierext(id3);
+    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT, JavaModel.EXT, JavaModel.EXT);
   }
 
-  @Deprecated
-  protected final ExpressionName n() {
-    throw new UnsupportedOperationException();
+  protected final NewLine nl() {
+    return api().item(ByteProto.NEW_LINE);
   }
+
+  protected final StringLiteral s(String string) {
+    Objects.requireNonNull(string, "string == null");
+
+    var api = api();
 
-  @Deprecated
-  protected final ExpressionName n(ClassType type) {
-    throw new UnsupportedOperationException();
+    return api.item(ByteProto.STRING_LITERAL, api.object(string));
   }
 
-  protected ExpressionName n(ClassType type, String... identifiers) {
-    return api().n(type, identifiers);
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1);
   }
 
-  protected final ExpressionName n(String... identifiers) {
-    return api().n(identifiers);
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1, e2);
   }
 
-  protected final FieldAccessExpression n(ThisKeyword keyword, String identifier) {
-    return api().n(keyword, identifier);
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2, ArrayTypeElement e3) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1, e2, e3);
   }
 
-  protected NewLine nl() {
-    return api().nl();
+  protected final ArrayType t(
+      ArrayTypeComponent type,
+      ArrayTypeElement e1, ArrayTypeElement e2, ArrayTypeElement e3, ArrayTypeElement e4) {
+    return api().elem(ByteProto.ARRAY_TYPE, type, e1, e2, e3, e4);
   }
 
-  @Deprecated
-  protected final FormalParameter param() {
-    throw new UnsupportedOperationException();
+  protected final ClassType t(Class<?> type) {
+    return api().classType(type);
   }
 
-  protected final FormalParameter param(ParameterElement... elements) {
-    return api().param(elements);
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1) {
+    return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1);
   }
 
-  @Deprecated
-  protected final FormalParameter param(ParameterElement e1) {
-    throw new UnsupportedOperationException();
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1, ReferenceType arg2) {
+    return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1, arg2);
   }
 
-  protected StringLiteral s(String value) {
-    return api().s(value);
+  protected final ParameterizedType t(
+      ClassType rawType,
+      ReferenceType arg1, ReferenceType arg2, ReferenceType arg3) {
+    return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1, arg2, arg3);
   }
 
-  protected ArrayType t(ArrayTypeComponent type, ArrayTypeElement... elements) {
-    return api().t(type, elements);
+  protected final ClassType t(String packageName, String simpleName) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
+
+    var api = api();
+
+    return api.item(
+      ByteProto.CLASS_TYPE, api.object(packageName),
+      1, api.object(simpleName)
+    );
   }
+
+  protected final ClassType t(String packageName, String simpleName1, String simpleName2) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName1.toString()); // implicit null check
+    JavaModel.checkSimpleName(simpleName2.toString()); // implicit null check
+
+    var api = api();
 
-  protected ClassType t(Class<?> value) {
-    return api().t(value);
+    return api.item(
+      ByteProto.CLASS_TYPE, api.object(packageName),
+      2, api.object(simpleName1), api.object(simpleName2)
+    );
   }
 
-  protected ParameterizedType t(
-      ClassType rawType, AnyType... arguments) {
-    return api().t(rawType, arguments);
+  protected final TypeParameter tparam(String name) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT);
   }
 
-  protected ClassType t(String packageName, String simpleName) {
-    return api().t(packageName, simpleName);
+  protected final TypeParameter tparam(String name, TypeParameterBound bound1) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT, bound1.self());
   }
 
-  protected final ClassType t(String packageName, String... simpleNames) {
-    return api().t(packageName, simpleNames);
+  protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    Object[] many = Objects.requireNonNull(bounds, "bounds == null");
+    return api.elemmany(ByteProto.TYPE_PARAMETER, JavaModel.EXT, many);
   }
 
-  protected TypeParameter tparam(String name, TypeParameterBound... bounds) {
-    return api().tparam(name, bounds);
+  protected final TypeParameter tparam(String name,
+      TypeParameterBound bound1, TypeParameterBound bound2) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT,
+      bound1.self(), bound2.self());
   }
 
-  protected TypeVariable tvar(String name) {
-    return api().tvar(name);
+  protected final TypeParameter tparam(String name,
+      TypeParameterBound bound1, TypeParameterBound bound2, TypeParameterBound bound3) {
+    JavaModel.checkVarName(name);
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT,
+      bound1.self(), bound2.self(), bound3.self());
   }
 
-  protected final LocalVariableDeclarationStatement var(String name, Expression expression) {
-    return api().var(name, expression);
+  protected final TypeVariable tvar(String name) {
+    Objects.requireNonNull(name, "name == null");
+    var api = api();
+    return api.item(ByteProto.TYPE_VARIABLE, api.object(name));
   }
 
   InternalApi api() {
@@ -417,6 +826,12 @@ public abstract class JavaTemplate {
     }
   }
 
-  void onEval() {}
+  private JavaModel._Item modifier(Keyword value) {
+    return api().item(ByteProto.MODIFIER, value.ordinal());
+  }
+
+  private _Item primitiveType(Keyword value) {
+    return api().item(ByteProto.PRIMITIVE_TYPE, value.ordinal());
+  }
 
 }

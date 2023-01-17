@@ -28,7 +28,7 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Test0");
@@ -80,7 +80,7 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Test");
@@ -111,7 +111,7 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Test");
@@ -156,7 +156,7 @@ public class ConstructorDeclarationTest {
   """)
   public void testCase04() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Test");

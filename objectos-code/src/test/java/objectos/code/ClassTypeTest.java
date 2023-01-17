@@ -28,7 +28,7 @@ public class ClassTypeTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("ClassType");
@@ -53,7 +53,7 @@ public class ClassTypeTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _package("com.example");

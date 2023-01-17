@@ -31,7 +31,7 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase01() {
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test");
@@ -54,7 +54,7 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase02() {
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", s("a"));
@@ -77,7 +77,7 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase03() {
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", s("a"), s("b"));
@@ -101,7 +101,7 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase04() {
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("m0", s("1"), end(), invoke("m2"), s("3"));
@@ -125,7 +125,7 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase05() {
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("m0", nl(),
@@ -157,7 +157,7 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase06() {
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", n("field"));
@@ -180,7 +180,7 @@ public class MethodInvocationExpressionTest {
   public void testCase07() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           t(Thread.class); invoke("currentThread");
@@ -209,7 +209,7 @@ public class MethodInvocationExpressionTest {
   public void testCase08() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           n("a"); invoke("x");
@@ -241,7 +241,7 @@ public class MethodInvocationExpressionTest {
   public void testCase09() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("a"); invoke("b"); end();
@@ -281,7 +281,7 @@ public class MethodInvocationExpressionTest {
   public void testCase10() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           _new(t(Thread.class)); invoke("start");
@@ -307,7 +307,7 @@ public class MethodInvocationExpressionTest {
   public void testCase11() {
     // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate2() {
+      fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
           invoke("test", invoke("a"), invoke("b")); end();

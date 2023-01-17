@@ -30,7 +30,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase01() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -54,7 +54,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase02() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -83,7 +83,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase03() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -110,7 +110,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase04() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -142,7 +142,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase05() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -173,7 +173,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase06() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -200,7 +200,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase07() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -262,7 +262,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase08() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -313,7 +313,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase09() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -358,7 +358,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase10() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");
@@ -387,7 +387,7 @@ public class MethodDeclarationTest {
   """)
   public void testCase11() {
     assertEquals(
-      new JavaTemplate2() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
           _class("Methods");

@@ -1154,14 +1154,6 @@ class InternalApi extends InternalState implements MarkerApi {
     protoIndex = self;
   }
 
-  final void pass0(JavaTemplate template) {
-    pass0Start();
-
-    template.execute(this);
-
-    pass0End();
-  }
-
   private void elemcnt(int value) {
     int itemCount = stackpop(),
         levelStart = levelIndex[level] - (itemCount * 2),
@@ -1347,38 +1339,6 @@ class InternalApi extends InternalState implements MarkerApi {
     elementAdd(protoIndex);
 
     protoAdd(ByteProto.ASSIGNMENT_OPERATOR, operator.ordinal(), ByteProto.OBJECT_END);
-  }
-
-  private void pass0End() {
-    markStart();
-
-    for (int i = 0; i < codeIndex; i++) {
-      markReference();
-    }
-
-    element(ByteProto.COMPILATION_UNIT);
-
-    if (codeIndex != 1) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    protoArray[1] = codeArray[0];
-  }
-
-  private void pass0Start() {
-    autoImports.clear();
-
-    codeIndex = 0;
-
-    objectIndex = 0;
-
-    stackIndex = -1;
-
-    localIndex = -1;
-
-    protoIndex = 0;
-
-    protoAdd(ByteProto.JMP, ByteProto.NULL, ByteProto.EOF);
   }
 
   private void primitive(Keyword value) {
