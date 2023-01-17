@@ -83,7 +83,11 @@ class InternalCompiler extends InternalApi {
     localIndex = -1;
 
     try {
-      stackpush(ByteProto.COMPILATION_UNIT, _START);
+      stackpush(
+        FALSE, // 2 = public found
+        ByteProto.COMPILATION_UNIT,
+        _START
+      );
       element();
     } catch (RuntimeException e) {
       codeadd(Whitespace.NEW_LINE);
@@ -1667,17 +1671,17 @@ class InternalCompiler extends InternalApi {
   }
 
   private void classType() {
-    var packageIndex = itemnxt();
+    var packageIndex = protonxt();
 
     var packageName = (String) objectget(packageIndex);
 
     autoImports.classTypePackageName(packageName);
 
-    var count = itemnxt();
+    var count = protonxt();
 
     switch (count) {
       case 1 -> {
-        var n1Index = itemnxt();
+        var n1Index = protonxt();
 
         var n1 = (String) objectget(n1Index);
 
@@ -1699,8 +1703,8 @@ class InternalCompiler extends InternalApi {
       }
 
       case 2 -> {
-        var n1Index = itemnxt();
-        var n2Index = itemnxt();
+        var n1Index = protonxt();
+        var n2Index = protonxt();
 
         var n1 = (String) objectget(n1Index);
         var n2 = (String) objectget(n2Index);
@@ -1951,6 +1955,12 @@ class InternalCompiler extends InternalApi {
 
           default -> stubState(context, state, item);
         }
+
+        int publicFound = stackpeek(2);
+        int index = protopeek();
+        var simpleName = (String) objectget(index);
+        autoImports.fileName(publicFound == TRUE, simpleName);
+        stackset(2, FALSE);
       }
 
       case ByteProto.CLASS_TYPE -> {
@@ -1991,7 +2001,7 @@ class InternalCompiler extends InternalApi {
             stackset(_MODIFIERS);
           }
 
-          case _BODY -> {
+          case _BODY, _PACKAGE -> {
             codeadd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
             stackset(_MODIFIERS);
           }
@@ -2002,6 +2012,12 @@ class InternalCompiler extends InternalApi {
           }
 
           default -> stubState(context, state, item);
+        }
+
+        int index = protopeek();
+        Keyword keyword = Keyword.get(index);
+        if (keyword == Keyword.PUBLIC) {
+          stackset(2, TRUE);
         }
       }
 
@@ -2227,7 +2243,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void element() {
-    int size = itemnxt();
+    int size = protonxt();
     int start = protoIndex;
     int max = start + size;
 
@@ -2238,7 +2254,7 @@ class InternalCompiler extends InternalApi {
 
       protoIndex = protoArray[i];
 
-      int item = itemnxt();
+      int item = protonxt();
 
       context(context, state, item);
 
@@ -2759,7 +2775,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.GETS -> codeadd(Symbol.ASSIGNMENT);
 
-      case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, itemnxt());
+      case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, protonxt());
 
       case ByteProto.IMPLEMENTS -> codeadd(Keyword.IMPLEMENTS);
 
@@ -2769,7 +2785,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.METHOD_INVOCATION -> methodInvocation(_START);
 
-      case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
+      case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, protonxt());
 
       case ByteProto.NEW_LINE -> codeadd(Whitespace.NEW_LINE);
 
@@ -2777,13 +2793,13 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
 
-      case ByteProto.PRIMITIVE_LITERAL -> codeadd(ByteCode.PRIMITIVE_LITERAL, itemnxt());
+      case ByteProto.PRIMITIVE_LITERAL -> codeadd(ByteCode.PRIMITIVE_LITERAL, protonxt());
 
-      case ByteProto.PRIMITIVE_TYPE -> codeadd(ByteCode.RESERVED_KEYWORD, itemnxt());
+      case ByteProto.PRIMITIVE_TYPE -> codeadd(ByteCode.RESERVED_KEYWORD, protonxt());
 
       case ByteProto.RETURN -> codeadd(Keyword.RETURN);
 
-      case ByteProto.STRING_LITERAL -> codeadd(ByteCode.STRING_LITERAL, itemnxt());
+      case ByteProto.STRING_LITERAL -> codeadd(ByteCode.STRING_LITERAL, protonxt());
 
       case ByteProto.SUPER -> codeadd(Keyword.SUPER);
 
@@ -2793,12 +2809,12 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.TYPE_PARAMETER -> typeParameter();
 
-      case ByteProto.TYPE_VARIABLE -> codeadd(ByteCode.IDENTIFIER, itemnxt());
+      case ByteProto.TYPE_VARIABLE -> codeadd(ByteCode.IDENTIFIER, protonxt());
 
       case ByteProto.VAR -> {
         codeadd(Keyword.VAR);
         codeadd(Whitespace.MANDATORY);
-        codeadd(ByteCode.IDENTIFIER, itemnxt());
+        codeadd(ByteCode.IDENTIFIER, protonxt());
       }
 
       case ByteProto.VOID -> codeadd(Keyword.VOID);
@@ -2808,8 +2824,6 @@ class InternalCompiler extends InternalApi {
       );
     }
   }
-
-  private int itemnxt() { return protoArray[protoIndex++]; }
 
   private void localVariableDeclaration() {
     var proto = ByteProto.LOCAL_VARIABLE;
@@ -3444,7 +3458,7 @@ class InternalCompiler extends InternalApi {
   private void packageKeyword() {
     codeadd(Keyword.PACKAGE);
     codeadd(Whitespace.MANDATORY);
-    codeadd(ByteCode.IDENTIFIER, itemnxt());
+    codeadd(ByteCode.IDENTIFIER, protonxt());
     codeadd(Symbol.SEMICOLON);
   }
 
@@ -3586,6 +3600,10 @@ class InternalCompiler extends InternalApi {
       default -> Integer.toString(value);
     };
   }
+
+  private int protonxt() { return protoArray[protoIndex++]; }
+
+  private int protopeek() { return protoArray[protoIndex]; }
 
   private void returnStatement(int child) {
     $codeadd(Keyword.RETURN);
@@ -3740,7 +3758,7 @@ class InternalCompiler extends InternalApi {
   private void typeKeyword(Keyword keyword) {
     codeadd(keyword);
     codeadd(Whitespace.MANDATORY);
-    int index = itemnxt();
+    int index = protonxt();
     codeadd(ByteCode.IDENTIFIER, index);
     constructorName = index;
   }

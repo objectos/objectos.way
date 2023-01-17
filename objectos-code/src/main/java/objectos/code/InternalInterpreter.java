@@ -56,7 +56,7 @@ abstract class InternalInterpreter extends InternalCompiler {
       code = $loop();
     } while (code != ByteCode.EOF);
 
-    writeCompilationUnitEnd(null, null);
+    writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
   }
 
   final void pass2() {
