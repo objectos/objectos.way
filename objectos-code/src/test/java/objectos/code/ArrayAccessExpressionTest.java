@@ -33,9 +33,9 @@ public class ArrayAccessExpressionTest {
         @Override
         protected final void definition() {
           invoke("foo",
-            n("a"), dim(n("x")),
+            n("a"), dim(n("x")), end(),
 
-            n("a"), dim(n("x")), dim(n("y")),
+            n("a"), dim(n("x")), dim(n("y")), end(),
 
             n("a"), dim(n("x")), dim(n("y")), dim(n("z"))
           );

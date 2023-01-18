@@ -57,70 +57,70 @@ final class ByteProto {
   static final int FIELD_NAME = -25;
   static final int IMPLEMENTS = -26;
   static final int INTERFACE = -27;
-  static final int PACKAGE = -28;
+  static final int NAME = -28;
+  static final int PACKAGE = -29;
 
   //declarations old
 
-  static final int COMPILATION_UNIT = -29;
-  static final int PACKAGE_DECLARATION = -30;
-  static final int AUTO_IMPORTS = -31;
-  static final int TYPE_PARAMETER = -32;
+  static final int COMPILATION_UNIT = -30;
+  static final int PACKAGE_DECLARATION = -31;
+  static final int AUTO_IMPORTS = -32;
+  static final int TYPE_PARAMETER = -33;
 
   //class
 
-  static final int CLASS_DECLARATION = -33;
-  static final int MODIFIER = -34;
-  static final int IDENTIFIER = -35;
-  static final int EXTENDS_SINGLE = -36;
+  static final int CLASS_DECLARATION = -34;
+  static final int MODIFIER = -35;
+  static final int IDENTIFIER = -36;
+  static final int EXTENDS_SINGLE = -37;
 
   //field
 
-  static final int FIELD_DECLARATION = -37;
+  static final int FIELD_DECLARATION = -38;
 
   //method/constructor
 
-  static final int METHOD_DECLARATION = -38;
-  static final int FORMAL_PARAMETER = -39;
-  static final int ELLIPSIS = -40;
-  static final int CONSTRUCTOR_DECLARATION = -41;
-  static final int THIS_INVOCATION = -42;
-  static final int QUALIFIED_SUPER_INVOCATION = -43;
+  static final int METHOD_DECLARATION = -39;
+  static final int FORMAL_PARAMETER = -40;
+  static final int ELLIPSIS = -41;
+  static final int CONSTRUCTOR_DECLARATION = -42;
+  static final int THIS_INVOCATION = -43;
+  static final int QUALIFIED_SUPER_INVOCATION = -44;
 
   //enum
 
-  static final int ENUM_DECLARATION = -44;
-  static final int ENUM_CONSTANT = -45;
+  static final int ENUM_DECLARATION = -45;
+  static final int ENUM_CONSTANT = -46;
 
   //interface
 
-  static final int INTERFACE_DECLARATION = -46;
-  static final int EXTENDS_MANY = -47;
+  static final int INTERFACE_DECLARATION = -47;
+  static final int EXTENDS_MANY = -48;
 
   //stmt/exp aux
 
-  static final int ARRAY_ACCESS = -48;
-  static final int END = -49;
-  static final int GETS = -50;
-  static final int NEW = -51;
-  static final int RETURN = -52;
-  static final int SUPER = -53;
-  static final int VAR = -54;
+  static final int ARRAY_ACCESS = -49;
+  static final int END = -50;
+  static final int GETS = -51;
+  static final int NEW = -52;
+  static final int RETURN = -53;
+  static final int SUPER = -54;
+  static final int VAR = -55;
 
   //statements
 
-  static final int BLOCK = -55;
-  static final int LOCAL_VARIABLE = -56;
-  static final int RETURN_STATEMENT = -57;
-  static final int SUPER_INVOCATION = -58;
+  static final int BLOCK = -56;
+  static final int LOCAL_VARIABLE = -57;
+  static final int RETURN_STATEMENT = -58;
+  static final int SUPER_INVOCATION = -59;
 
   //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -59;
-  static final int ASSIGNMENT_EXPRESSION = -60;
-  static final int ASSIGNMENT_OPERATOR = -61;
-  static final int CHAINED_METHOD_INVOCATION = -62;
-  static final int CLASS_INSTANCE_CREATION = -63;
-  static final int EXPRESSION_NAME = -64;
+  static final int ARRAY_ACCESS_EXPRESSION = -60;
+  static final int ASSIGNMENT_EXPRESSION = -61;
+  static final int ASSIGNMENT_OPERATOR = -62;
+  static final int CHAINED_METHOD_INVOCATION = -63;
+  static final int CLASS_INSTANCE_CREATION = -64;
   static final int FIELD_ACCESS_EXPRESSION0 = -65;
   static final int METHOD_INVOCATION = -66;
   static final int METHOD_INVOCATION_QUALIFIED = -67;

@@ -120,15 +120,15 @@ public class ConstructorDeclarationTest {
               _int(), id("a")
             ),
             block(
-              _this(), field("a"), gets(), n("a")
+              _this(), n("a"), gets(), n("a")
             ),
             constructor(
               _int(), id("a"),
               _int(), id("b")
             ),
             block(
-              _this(), field("a"), gets(), n("a"),
-              _this(), field("b"), gets(), n("b")
+              _this(), n("a"), gets(), n("a"),
+              _this(), n("b"), gets(), n("b")
             )
           );
         }

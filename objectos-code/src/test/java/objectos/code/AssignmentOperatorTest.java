@@ -35,8 +35,12 @@ public class AssignmentOperatorTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          n("a"); gets(); n("x");
-          n("a"); gets(); invoke("x"); invoke("y");
+          n("a"); gets(); n("x"); end();
+
+          n("a"); gets(); n("x"); n("y"); end();
+
+          n("a"); gets(); invoke("x"); invoke("y"); end();
+
           n("a"); gets(); _new(t("test", "Foo"));
         }
       }),
@@ -45,6 +49,7 @@ public class AssignmentOperatorTest {
       class Assign {
         void method() {
           a = x;
+          a = x.y;
           a = x().y();
           a = new test.Foo();
         }

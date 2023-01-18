@@ -212,10 +212,10 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          n("a"); invoke("x");
-          n("b"); invoke("y", s("1"));
+          n("a"); invoke("x"); end();
+          n("b"); invoke("y", s("1")); end();
           n("c"); invoke("z", s("1"), s("2"));
-          n(t(Foo.class), "CTE"); invoke("m");
+          t(Foo.class); n("CTE"); invoke("m");
         }
       }),
 
@@ -248,7 +248,7 @@ public class MethodInvocationExpressionTest {
 
           invoke("a"); invoke("b"); invoke("c"); end();
 
-          n("foo"); invoke("a"); invoke("b"); invoke("c");
+          n("foo"); invoke("a"); invoke("b"); invoke("c"); end();
 
           n("list");
           invoke("add", s("1")); nl();

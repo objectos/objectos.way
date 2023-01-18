@@ -62,6 +62,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("FIELD_NAME");
     value("IMPLEMENTS");
     value("INTERFACE");
+    value("NAME");
     value("PACKAGE");
 
     comment("declarations old");
@@ -125,7 +126,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ASSIGNMENT_OPERATOR");
     value("CHAINED_METHOD_INVOCATION");
     value("CLASS_INSTANCE_CREATION");
-    value("EXPRESSION_NAME");
     value("FIELD_ACCESS_EXPRESSION0");
     value("METHOD_INVOCATION");
     value("METHOD_INVOCATION_QUALIFIED");

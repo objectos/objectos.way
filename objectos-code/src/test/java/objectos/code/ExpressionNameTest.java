@@ -37,9 +37,9 @@ public class ExpressionNameTest {
         protected final void definition() {
           invoke("test", n("a")); end();
 
-          invoke("test", n("a", "b")); end();
+          invoke("test", n("a"), n("b")); end();
 
-          invoke("test", n("a", "b", "c"));
+          invoke("test", n("a"), n("b"), n("c"));
         }
       }),
 
@@ -67,9 +67,9 @@ public class ExpressionNameTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", n(t("test", "Suit"), "CLUBS")); end();
+          invoke("test", t("test", "Suit"), n("CLUBS")); end();
 
-          invoke("test", n(t("test", "Suit"), "CLUBS", "field"));
+          invoke("test", t("test", "Suit"), n("CLUBS"), n("field"));
         }
       }),
 

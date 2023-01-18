@@ -52,7 +52,6 @@ import objectos.code.JavaModel.ExpressionElement;
 import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsMany;
 import objectos.code.JavaModel.ExtendsSingle;
-import objectos.code.JavaModel.FieldAccessExpression;
 import objectos.code.JavaModel.FieldDeclaration;
 import objectos.code.JavaModel.FieldDeclarationElement;
 import objectos.code.JavaModel.FinalModifier;
@@ -867,56 +866,6 @@ class InternalApi extends InternalState implements MarkerApi {
     }
 
     element(ByteProto.METHOD_DECLARATION);
-
-    return JavaModel.REF;
-  }
-
-  public final ExpressionName n(ClassType type, String[] identifiers) {
-    Objects.requireNonNull(type, "type == null");
-
-    for (var identifier : identifiers) {
-      identifier$(identifier);
-    }
-
-    markStart();
-
-    markReference();
-
-    for (int i = 0; i < identifiers.length; i++) {
-      markReference();
-    }
-
-    element(ByteProto.EXPRESSION_NAME);
-
-    return JavaModel.REF;
-  }
-
-  public final ExpressionName n(String[] identifiers) {
-    for (var identifier : identifiers) {
-      identifier$(identifier);
-    }
-
-    markStart();
-
-    for (int i = 0; i < identifiers.length; i++) {
-      markReference();
-    }
-
-    element(ByteProto.EXPRESSION_NAME);
-
-    return JavaModel.REF;
-  }
-
-  public final FieldAccessExpression n(ThisKeyword keyword, String identifier) {
-    identifier$(identifier);
-
-    markStart();
-
-    markReference();
-
-    markReference();
-
-    element(ByteProto.FIELD_ACCESS_EXPRESSION0);
 
     return JavaModel.REF;
   }

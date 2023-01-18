@@ -44,7 +44,6 @@ import objectos.code.JavaModel.EnumKeyword;
 import objectos.code.JavaModel.ExplicitConstructorInvocation;
 import objectos.code.JavaModel.Expression;
 import objectos.code.JavaModel.ExpressionElement;
-import objectos.code.JavaModel.ExpressionName;
 import objectos.code.JavaModel.ExtendsKeyword;
 import objectos.code.JavaModel.FieldName;
 import objectos.code.JavaModel.FinalModifier;
@@ -65,6 +64,7 @@ import objectos.code.JavaModel.ProtectedModifier;
 import objectos.code.JavaModel.PublicModifier;
 import objectos.code.JavaModel.ReferenceType;
 import objectos.code.JavaModel.ReturnKeyword;
+import objectos.code.JavaModel.SomeName;
 import objectos.code.JavaModel.StaticModifier;
 import objectos.code.JavaModel.StringLiteral;
 import objectos.code.JavaModel.SuperKeyword;
@@ -629,52 +629,10 @@ public abstract class JavaTemplate {
     return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT, e1.self(), e2.self());
   }
 
-  protected final ExpressionName n(ClassType type, String id1) {
-    JavaModel.checkIdentifier(id1.toString());
-
+  protected final SomeName n(String name) {
+    JavaModel.checkSimpleName(name.toString());
     var api = api();
-    api.identifierext(id1);
-    return api.elem(ByteProto.EXPRESSION_NAME, type, JavaModel.EXT);
-  }
-
-  protected final ExpressionName n(ClassType type, String id1, String id2) {
-    JavaModel.checkIdentifier(id1.toString());
-    JavaModel.checkIdentifier(id2.toString());
-
-    var api = api();
-    api.identifierext(id1);
-    api.identifierext(id2);
-    return api.elem(ByteProto.EXPRESSION_NAME, type, JavaModel.EXT, JavaModel.EXT);
-  }
-
-  protected final ExpressionName n(String id1) {
-    JavaModel.checkIdentifier(id1.toString()); // implicit null check
-
-    var api = api();
-    api.identifierext(id1);
-    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT);
-  }
-
-  protected final ExpressionName n(String id1, String id2) {
-    JavaModel.checkIdentifier(id1.toString()); // implicit null check
-    JavaModel.checkIdentifier(id2.toString()); // implicit null check
-
-    var api = api();
-    api.identifierext(id1);
-    api.identifierext(id2);
-    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT, JavaModel.EXT);
-  }
-
-  protected final ExpressionName n(String id1, String id2, String id3) {
-    JavaModel.checkIdentifier(id1.toString()); // implicit null check
-    JavaModel.checkIdentifier(id2.toString()); // implicit null check
-    JavaModel.checkIdentifier(id3.toString()); // implicit null check
-
-    var api = api();
-    api.identifierext(id1);
-    api.identifierext(id2);
-    api.identifierext(id3);
-    return api.elem(ByteProto.EXPRESSION_NAME, JavaModel.EXT, JavaModel.EXT, JavaModel.EXT);
+    return api.item(ByteProto.NAME, api.object(name));
   }
 
   protected final NewLine nl() {
