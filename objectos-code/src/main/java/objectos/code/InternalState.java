@@ -15,9 +15,6 @@
  */
 package objectos.code;
 
-import objectos.util.IntArrays;
-import objectos.util.ObjectArrays;
-
 abstract class InternalState {
 
   final AutoImports autoImports = new AutoImports();
@@ -44,107 +41,8 @@ abstract class InternalState {
 
   int stackIndex;
 
-  final void element(int type) {
-    var length = localArray[localIndex--];
-
-    var start = codeIndex - length;
-
-    var mark = protoIndex;
-
-    protoAdd(type);
-
-    for (int i = start; i < codeIndex; i++) {
-      protoAdd(ByteProto.JMP, codeArray[i]);
-    }
-
-    protoAdd(ByteProto.BREAK);
-
-    codeIndex = start;
-
-    elementAdd(mark);
-  }
-
-  final void elementAdd(int value) {
-    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex);
-
-    codeArray[codeIndex++] = value;
-  }
-
-  final void lambdaCount() {
-    localArray[localIndex] += stackArray[stackIndex--];
-  }
-
-  final void lambdaEnd() {
-    var startCount = stackArray[stackIndex];
-
-    var diff = codeIndex - startCount;
-
-    stackArray[stackIndex] = diff;
-  }
-
-  final void lambdaStart() {
-    stackIndex++;
-
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex);
-
-    stackArray[stackIndex] = codeIndex;
-  }
-
-  final void markIncrement() {
-    localArray[localIndex]++;
-  }
-
-  final void markIncrement(int count) {
-    localArray[localIndex] += count;
-  }
-
-  final void markStart() {
-    localIndex++;
-
-    localArray = IntArrays.growIfNecessary(localArray, localIndex);
-
-    localArray[localIndex] = 0;
-  }
-
-  final void object(int type, Object value) {
-    elementAdd(protoIndex);
-
-    protoAdd(type, objectAdd(value), ByteProto.OBJECT_END);
-  }
-
-  final int objectAdd(Object value) {
-    int result = objectIndex;
-
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    objectArray[objectIndex++] = value;
-
-    return result;
-  }
-
   final Object objget(int index) {
     return objectArray[index];
-  }
-
-  final void protoAdd(int v0) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex);
-
-    protoArray[protoIndex++] = v0;
-  }
-
-  final void protoAdd(int v0, int v1) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
-
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-  }
-
-  final void protoAdd(int v0, int v1, int v2) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
-
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-    protoArray[protoIndex++] = v2;
   }
 
   final void protopop() {

@@ -62,7 +62,7 @@ public class BlockTest {
             invoke("a")
           );
           block(
-            invoke("a"), end(),
+            invoke("a"),
             invoke("b")
           );
         }

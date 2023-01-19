@@ -16,74 +16,266 @@
 package objectos.code;
 
 import java.util.Objects;
-import objectos.code.JavaModel.AbstractModifier;
-import objectos.code.JavaModel.ArrayAccess;
-import objectos.code.JavaModel.ArrayDimension;
-import objectos.code.JavaModel.ArrayInitializer;
-import objectos.code.JavaModel.ArrayInitializerElement;
-import objectos.code.JavaModel.ArrayType;
-import objectos.code.JavaModel.ArrayTypeComponent;
-import objectos.code.JavaModel.ArrayTypeElement;
-import objectos.code.JavaModel.AssignmentOperator;
-import objectos.code.JavaModel.At;
-import objectos.code.JavaModel.AtElement;
-import objectos.code.JavaModel.AutoImports;
-import objectos.code.JavaModel.Block;
-import objectos.code.JavaModel.BlockElement;
-import objectos.code.JavaModel.Body;
-import objectos.code.JavaModel.BodyElement;
-import objectos.code.JavaModel.ClassInstanceCreationExpression;
-import objectos.code.JavaModel.ClassKeyword;
-import objectos.code.JavaModel.ClassType;
-import objectos.code.JavaModel.ConstructorDeclaration;
-import objectos.code.JavaModel.Element;
-import objectos.code.JavaModel.Ellipsis;
-import objectos.code.JavaModel.End;
-import objectos.code.JavaModel.EnumConstant;
-import objectos.code.JavaModel.EnumKeyword;
-import objectos.code.JavaModel.ExplicitConstructorInvocation;
-import objectos.code.JavaModel.Expression;
-import objectos.code.JavaModel.ExpressionElement;
-import objectos.code.JavaModel.ExtendsKeyword;
-import objectos.code.JavaModel.FieldName;
-import objectos.code.JavaModel.FinalModifier;
-import objectos.code.JavaModel.Identifier;
-import objectos.code.JavaModel.ImplementsKeyword;
-import objectos.code.JavaModel.Include;
-import objectos.code.JavaModel.IntegerLiteral;
-import objectos.code.JavaModel.InterfaceKeyword;
-import objectos.code.JavaModel.MethodDeclaration;
-import objectos.code.JavaModel.MethodInvocationElement;
-import objectos.code.JavaModel.NewLine;
-import objectos.code.JavaModel.PackageKeyword;
-import objectos.code.JavaModel.ParameterElement;
-import objectos.code.JavaModel.ParameterizedType;
-import objectos.code.JavaModel.PrimitiveType;
-import objectos.code.JavaModel.PrivateModifier;
-import objectos.code.JavaModel.ProtectedModifier;
-import objectos.code.JavaModel.PublicModifier;
-import objectos.code.JavaModel.ReferenceType;
-import objectos.code.JavaModel.ReturnKeyword;
-import objectos.code.JavaModel.SomeName;
-import objectos.code.JavaModel.StaticModifier;
-import objectos.code.JavaModel.StringLiteral;
-import objectos.code.JavaModel.SuperKeyword;
-import objectos.code.JavaModel.ThisKeyword;
-import objectos.code.JavaModel.TypeParameter;
-import objectos.code.JavaModel.TypeParameterBound;
-import objectos.code.JavaModel.TypeVariable;
-import objectos.code.JavaModel.UnqualifiedMethodInvocation;
-import objectos.code.JavaModel.VarKeyword;
-import objectos.code.JavaModel.VoidKeyword;
-import objectos.code.JavaModel._Item;
 import objectos.lang.Check;
 
 public abstract class JavaTemplate {
+
+  protected sealed interface AnnotationElementValue {}
+
+  protected sealed interface AnyType extends BodyElement, ParameterElement {}
+
+  protected sealed interface ArrayInitializerElement {}
+
+  protected sealed interface ArrayTypeElement {}
+
+  protected sealed interface BlockElement extends Element {}
+
+  protected sealed interface BlockStatement extends BlockElement {}
+
+  protected sealed interface BodyElement extends Element {}
+
+  protected sealed interface ClassType
+      extends BlockElement, BodyElement, MethodInvocationElement, ReferenceType,
+      /* to remove */
+      AnyType,
+      TypeParameterBound {}
+
+  protected sealed interface Element {
+    /**
+     * Triggers implicit null check.
+     */
+    default Object self() { return this; }
+  }
+
+  protected sealed interface EnumConstant extends BodyElement {}
+
+  protected sealed interface EnumConstantElement {}
+
+  protected sealed interface Expression extends ExpressionElement, BlockElement {}
+
+  protected sealed interface ExpressionElement extends
+      ArrayInitializerElement, BlockElement, BodyElement, DimElement, MethodInvocationElement {}
+
+  protected sealed interface ExpressionStatement extends Statement {}
 
   @FunctionalInterface
   protected interface IncludeTarget {
     void execute();
   }
+
+  protected sealed interface LeftHandSide {}
+
+  protected sealed interface MethodInvocationElement extends Element {}
+
+  protected sealed interface ParameterElement extends Element {}
+
+  protected sealed interface Statement extends BlockStatement {}
+
+  protected sealed interface TypeParameterBound extends Element {}
+
+  protected sealed interface UnqualifiedMethodInvocation extends
+      MethodInvocation {}
+
+  final class _Elem extends _ElemOrItem implements
+      ArrayAccessExpression,
+      ArrayInitializer,
+      ArrayType,
+      At,
+      Block,
+      Body,
+      ClassInstanceCreationExpression,
+      ConstructorDeclaration,
+      EnumConstant,
+      ExplicitConstructorInvocation,
+      MethodDeclaration,
+      UnqualifiedMethodInvocation,
+      ParameterizedType,
+      TypeParameter {}
+
+  enum _Ext {
+    INSTANCE;
+  }
+
+  enum _Include implements Include {
+    INSTANCE;
+  }
+
+  final class _Item extends _ElemOrItem implements
+      AbstractModifier,
+      ArrayDimension,
+      AssignmentOperator,
+      AutoImports,
+      ClassKeyword,
+      ClassType,
+      Ellipsis,
+      End,
+      EnumKeyword,
+      ExpressionName,
+      ExtendsKeyword,
+      FieldName,
+      FinalModifier,
+      Identifier,
+      ImplementsKeyword,
+      IntegerLiteral,
+      InterfaceKeyword,
+      NewKeyword,
+      NewLine,
+      PackageKeyword,
+      PrimitiveType,
+      PrivateModifier,
+      ProtectedModifier,
+      PublicModifier,
+      ReturnKeyword,
+      StaticModifier,
+      StringLiteral,
+      SuperKeyword,
+      ThisKeyword,
+      TypeVariable,
+      VarKeyword,
+      VoidKeyword {}
+
+  sealed interface AbstractModifier extends BodyElement {}
+
+  sealed interface ArrayAccessExpression extends ArrayReferenceExpression {}
+
+  sealed interface ArrayDimension extends ArrayTypeElement {}
+
+  sealed interface ArrayInitializer extends ArrayInitializerElement {}
+
+  sealed interface ArrayReferenceExpression extends Expression {}
+
+  sealed interface ArrayType extends BodyElement,
+      AnyType,
+      ReferenceType {}
+
+  sealed interface ArrayTypeComponent {}
+
+  sealed interface AssignmentOperator extends BlockElement {}
+
+  sealed interface At extends BodyElement {}
+
+  sealed interface AtElement extends Element {}
+
+  sealed interface AutoImports extends Element {}
+
+  sealed interface Block extends BodyElement,
+      /* to remove */
+      Statement {}
+
+  sealed interface Body extends BodyElement {}
+
+  sealed interface ClassInstanceCreationExpression extends ExpressionStatement, PrimaryExpression {}
+
+  sealed interface ClassKeyword extends BodyElement {}
+
+  sealed interface ConstructorDeclaration extends BodyElement {}
+
+  sealed interface DimElement {}
+
+  sealed interface Ellipsis extends ParameterElement {}
+
+  sealed interface End extends BlockElement, Element, MethodInvocationElement {}
+
+  sealed interface EnumKeyword extends BodyElement {}
+
+  sealed interface ExplicitConstructorInvocation extends BlockElement {}
+
+  sealed interface ExpressionName extends
+      ArrayReferenceExpression, ExpressionNamePart, LeftHandSide {}
+
+  sealed interface ExpressionNamePart {
+    ExpressionName n(String name);
+  }
+
+  sealed interface ExtendsKeyword extends BodyElement {}
+
+  sealed interface FieldName extends BodyElement {}
+
+  sealed interface FinalModifier extends BodyElement {}
+
+  sealed interface Identifier extends BlockElement, ParameterElement,
+      /* to remove */
+      EnumConstantElement {}
+
+  sealed interface ImplementsKeyword extends BodyElement {}
+
+  sealed interface Include extends BlockElement, BodyElement, MethodInvocationElement {}
+
+  sealed interface IntegerLiteral extends Literal {}
+
+  sealed interface InterfaceKeyword extends BodyElement {}
+
+  sealed interface Literal extends AtElement, PrimaryExpression {}
+
+  sealed interface MethodDeclaration extends BodyElement {}
+
+  sealed interface MethodInvocation extends Expression, ExpressionStatement {}
+
+  sealed interface NewKeyword extends BlockElement {}
+
+  sealed interface NewLine extends BlockElement,
+      /* to remove */
+      MethodInvocationElement {}
+
+  sealed interface PackageKeyword extends Element {}
+
+  sealed interface ParameterizedType extends ReferenceType,
+      /* to remove */
+      AnyType {}
+
+  sealed interface PrimaryExpression extends Expression {}
+
+  sealed interface PrimitiveType extends AnyType, BodyElement,
+      /* to remove */
+      ArrayTypeComponent {}
+
+  sealed interface PrivateModifier extends AccessModifier {}
+
+  sealed interface ProtectedModifier extends AccessModifier {}
+
+  sealed interface PublicModifier extends AccessModifier {}
+
+  sealed interface ReferenceType extends ArrayTypeComponent,
+      /* to remove */
+      AnyType {}
+
+  sealed interface ReturnKeyword extends BlockElement,
+      /* to remove */
+      Statement {}
+
+  sealed interface StaticModifier extends BodyElement {}
+
+  sealed interface StringLiteral extends Literal,
+      /* to remove */
+      AnnotationElementValue {}
+
+  sealed interface SuperKeyword extends BlockElement {}
+
+  sealed interface ThisKeyword extends PrimaryExpression {}
+
+  sealed interface TypeParameter extends BodyElement {}
+
+  sealed interface TypeVariable extends ReferenceType {}
+
+  sealed interface VarKeyword extends BlockElement {}
+
+  sealed interface VoidKeyword extends BodyElement {}
+
+  private abstract class _ElemOrItem {
+    public final ExpressionName n(String name) {
+      return api().dot(JavaTemplate.this.n(name));
+    }
+  }
+
+  private sealed interface AccessModifier extends BodyElement {}
+
+  static final _Ext EXT = _Ext.INSTANCE;
+
+  static final _Include INCLUDE = _Include.INSTANCE;
+
+  final _Elem elem = new _Elem();
+
+  final _Item item = new _Item();
 
   private InternalApi api;
 
@@ -116,7 +308,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(ByteProto.CLASS, api.object(name));
+    return api.itemadd(ByteProto.CLASS, api.object(name));
   }
 
   protected final PrimitiveType _double() {
@@ -128,19 +320,19 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(ByteProto.ENUM, api.object(name));
+    return api.itemadd(ByteProto.ENUM, api.object(name));
   }
 
   protected final ExtendsKeyword _extends() {
-    return api().item(ByteProto.EXTENDS);
+    return api().itemadd(ByteProto.EXTENDS);
   }
 
   protected final FinalModifier _final() {
-    return api().item(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
+    return api().itemadd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
 
   protected final ImplementsKeyword _implements() {
-    return api().item(ByteProto.IMPLEMENTS);
+    return api().itemadd(ByteProto.IMPLEMENTS);
   }
 
   protected final PrimitiveType _int() {
@@ -152,7 +344,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(ByteProto.INTERFACE, api.object(name));
+    return api.itemadd(ByteProto.INTERFACE, api.object(name));
   }
 
   protected final ClassInstanceCreationExpression _new(ClassType type) {
@@ -184,7 +376,7 @@ public abstract class JavaTemplate {
 
     api.autoImports.packageName(packageName);
 
-    return api.item(ByteProto.PACKAGE, api.object(packageName));
+    return api.itemadd(ByteProto.PACKAGE, api.object(packageName));
   }
 
   protected final PrivateModifier _private() {
@@ -200,7 +392,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ReturnKeyword _return() {
-    return api().item(ByteProto.RETURN);
+    return api().itemadd(ByteProto.RETURN);
   }
 
   protected final StaticModifier _static() {
@@ -208,7 +400,7 @@ public abstract class JavaTemplate {
   }
 
   protected final SuperKeyword _super() {
-    return api().item(ByteProto.SUPER);
+    return api().itemadd(ByteProto.SUPER);
   }
 
   protected final ExplicitConstructorInvocation _super(ExpressionElement e1) {
@@ -230,15 +422,15 @@ public abstract class JavaTemplate {
   }
 
   protected final ThisKeyword _this() {
-    return api().item(ByteProto.THIS);
+    return api().itemadd(ByteProto.THIS);
   }
 
   protected final VarKeyword _var() {
-    return api().item(ByteProto.VAR);
+    return api().itemadd(ByteProto.VAR);
   }
 
   protected final VoidKeyword _void() {
-    return api().item(ByteProto.VOID);
+    return api().itemadd(ByteProto.VOID);
   }
 
   protected final ArrayInitializer a() {
@@ -255,6 +447,24 @@ public abstract class JavaTemplate {
     return api().elem(ByteProto.ARRAY_INITIALIZER, e1, e2);
   }
 
+  protected final ArrayAccessExpression aaccess(ArrayReferenceExpression reference,
+      Expression e1) {
+    return api().elem(ByteProto.ARRAY_ACCESS_EXPRESSION, reference.self(),
+      e1.self());
+  }
+
+  protected final ArrayAccessExpression aaccess(ArrayReferenceExpression reference,
+      Expression e1, Expression e2) {
+    return api().elem(ByteProto.ARRAY_ACCESS_EXPRESSION, reference.self(),
+      e1.self(), e2.self());
+  }
+
+  protected final ArrayAccessExpression aaccess(ArrayReferenceExpression reference,
+      Expression e1, Expression e2, Expression e3) {
+    return api().elem(ByteProto.ARRAY_ACCESS_EXPRESSION, reference.self(),
+      e1.self(), e2.self(), e3.self());
+  }
+
   protected final At at(ClassType annotationType) {
     return api().elem(ByteProto.ANNOTATION, annotationType.self());
   }
@@ -268,7 +478,7 @@ public abstract class JavaTemplate {
 
     api.autoImports.enable();
 
-    return api.item(ByteProto.AUTO_IMPORTS);
+    return api.itemadd(ByteProto.AUTO_IMPORTS);
   }
 
   protected final Block block() {
@@ -396,60 +606,48 @@ public abstract class JavaTemplate {
   protected void definition() {}
 
   protected final ArrayDimension dim() {
-    return api().item(ByteProto.ARRAY_DIMENSION);
-  }
-
-  protected final ArrayAccess dim(ExpressionElement e1) {
-    return api().elem(ByteProto.ARRAY_ACCESS, e1.self());
-  }
-
-  protected final ArrayAccess dim(ExpressionElement e1, ExpressionElement e2) {
-    return api().elem(ByteProto.ARRAY_ACCESS, e1.self(), e2.self());
+    return api().itemadd(ByteProto.ARRAY_DIMENSION);
   }
 
   protected final Ellipsis ellipsis() {
-    return api().item(ByteProto.ELLIPSIS);
-  }
-
-  protected final End end() {
-    return api().item(ByteProto.END);
+    return api().itemadd(ByteProto.ELLIPSIS);
   }
 
   protected final EnumConstant enumConstant(String name) {
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT);
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT);
   }
 
   protected final EnumConstant enumConstant(String name,
       MethodInvocationElement e1) {
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self());
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self());
   }
 
   protected final EnumConstant enumConstant(String name,
       MethodInvocationElement e1, MethodInvocationElement e2) {
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self(), e2.self());
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self());
   }
 
   protected final EnumConstant enumConstant(String name,
       MethodInvocationElement e1, MethodInvocationElement e2, MethodInvocationElement e3) {
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, JavaModel.EXT, e1.self(), e2.self(), e3.self());
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self(), e3.self());
   }
 
   protected final FieldName field(String name) {
     JavaModel.checkIdentifier(name.toString()); // force implicit null-check
     var api = api();
-    return api.item(ByteProto.FIELD_NAME, api.object(name));
+    return api.itemadd(ByteProto.FIELD_NAME, api.object(name));
   }
 
   protected final AssignmentOperator gets() {
-    return api().item(ByteProto.GETS);
+    return api().itemadd(ByteProto.GETS);
   }
 
   protected final IntegerLiteral i(int value) {
@@ -457,13 +655,13 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(ByteProto.PRIMITIVE_LITERAL, api.object(s));
+    return api.itemadd(ByteProto.PRIMITIVE_LITERAL, api.object(s));
   }
 
   protected final Identifier id(String name) {
     JavaModel.checkIdentifier(name);
     var api = api();
-    return api.item(ByteProto.IDENTIFIER, api.object(name));
+    return api.itemadd(ByteProto.IDENTIFIER, api.object(name));
   }
 
   protected final Include include(IncludeTarget target) {
@@ -471,7 +669,7 @@ public abstract class JavaTemplate {
     api.lambdastart();
     target.execute(); // implicit null-check
     api.lambdaend();
-    return JavaModel.INCLUDE;
+    return INCLUDE;
   }
 
   protected final Include include(JavaTemplate template) {
@@ -479,7 +677,7 @@ public abstract class JavaTemplate {
     api.lambdastart();
     template.execute(api);
     api.lambdaend();
-    return JavaModel.INCLUDE;
+    return INCLUDE;
   }
 
   protected final UnqualifiedMethodInvocation invoke(
@@ -488,7 +686,7 @@ public abstract class JavaTemplate {
 
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT);
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT);
   }
 
   protected final UnqualifiedMethodInvocation invoke(
@@ -498,7 +696,7 @@ public abstract class JavaTemplate {
 
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self());
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self());
   }
 
   protected final UnqualifiedMethodInvocation invoke(String methodName,
@@ -507,7 +705,7 @@ public abstract class JavaTemplate {
     var api = api();
     api.identifierext(methodName);
     Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api.elemmany(ByteProto.METHOD_INVOCATION, JavaModel.EXT, many);
+    return api.elemmany(ByteProto.METHOD_INVOCATION, EXT, many);
   }
 
   protected final UnqualifiedMethodInvocation invoke(
@@ -516,7 +714,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self());
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self());
   }
 
   protected final UnqualifiedMethodInvocation invoke(
@@ -525,7 +723,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self());
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self());
   }
 
   protected final UnqualifiedMethodInvocation invoke(
@@ -535,7 +733,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
       e4.self());
   }
 
@@ -546,7 +744,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self());
   }
 
@@ -557,7 +755,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self(), e6.self());
   }
 
@@ -569,7 +767,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self(), e6.self(), e7.self());
   }
 
@@ -581,7 +779,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self(), e6.self(), e7.self(), e8.self());
   }
 
@@ -593,7 +791,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, JavaModel.EXT, e1.self(), e2.self(), e3.self(),
+    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self(), e6.self(), e7.self(), e8.self(), e9.self());
   }
 
@@ -601,7 +799,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName);
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT);
+    return api.elem(ByteProto.METHOD, EXT);
   }
 
   protected final MethodDeclaration method(String methodName,
@@ -609,7 +807,7 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName);
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT, e1.self());
+    return api.elem(ByteProto.METHOD, EXT, e1.self());
   }
 
   protected final MethodDeclaration method(String methodName,
@@ -618,7 +816,7 @@ public abstract class JavaTemplate {
     var api = api();
     api.identifierext(methodName);
     Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api.elemmany(ByteProto.METHOD_DECLARATION, JavaModel.EXT, many);
+    return api.elemmany(ByteProto.METHOD, EXT, many);
   }
 
   protected final MethodDeclaration method(String methodName,
@@ -626,17 +824,17 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName);
     var api = api();
     api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_DECLARATION, JavaModel.EXT, e1.self(), e2.self());
+    return api.elem(ByteProto.METHOD, EXT, e1.self(), e2.self());
   }
 
-  protected final SomeName n(String name) {
+  protected final ExpressionName n(String name) {
     JavaModel.checkSimpleName(name.toString());
     var api = api();
-    return api.item(ByteProto.NAME, api.object(name));
+    return api.itemadd(ByteProto.EXPRESSION_NAME, api.object(name));
   }
 
   protected final NewLine nl() {
-    return api().item(ByteProto.NEW_LINE);
+    return api().itemadd(ByteProto.NEW_LINE);
   }
 
   protected final StringLiteral s(String string) {
@@ -644,7 +842,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(ByteProto.STRING_LITERAL, api.object(string));
+    return api.itemadd(ByteProto.STRING_LITERAL, api.object(string));
   }
 
   protected final ArrayType t(
@@ -699,7 +897,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(
+    return api.itemadd(
       ByteProto.CLASS_TYPE, api.object(packageName),
       1, api.object(simpleName)
     );
@@ -712,7 +910,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.item(
+    return api.itemadd(
       ByteProto.CLASS_TYPE, api.object(packageName),
       2, api.object(simpleName1), api.object(simpleName2)
     );
@@ -722,14 +920,14 @@ public abstract class JavaTemplate {
     JavaModel.checkVarName(name);
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT);
+    return api.elem(ByteProto.TYPE_PARAMETER, EXT);
   }
 
   protected final TypeParameter tparam(String name, TypeParameterBound bound1) {
     JavaModel.checkVarName(name);
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT, bound1.self());
+    return api.elem(ByteProto.TYPE_PARAMETER, EXT, bound1.self());
   }
 
   protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {
@@ -737,7 +935,7 @@ public abstract class JavaTemplate {
     var api = api();
     api.identifierext(name);
     Object[] many = Objects.requireNonNull(bounds, "bounds == null");
-    return api.elemmany(ByteProto.TYPE_PARAMETER, JavaModel.EXT, many);
+    return api.elemmany(ByteProto.TYPE_PARAMETER, EXT, many);
   }
 
   protected final TypeParameter tparam(String name,
@@ -745,7 +943,7 @@ public abstract class JavaTemplate {
     JavaModel.checkVarName(name);
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT,
+    return api.elem(ByteProto.TYPE_PARAMETER, EXT,
       bound1.self(), bound2.self());
   }
 
@@ -754,14 +952,14 @@ public abstract class JavaTemplate {
     JavaModel.checkVarName(name);
     var api = api();
     api.identifierext(name);
-    return api.elem(ByteProto.TYPE_PARAMETER, JavaModel.EXT,
+    return api.elem(ByteProto.TYPE_PARAMETER, EXT,
       bound1.self(), bound2.self(), bound3.self());
   }
 
   protected final TypeVariable tvar(String name) {
     Objects.requireNonNull(name, "name == null");
     var api = api();
-    return api.item(ByteProto.TYPE_VARIABLE, api.object(name));
+    return api.itemadd(ByteProto.TYPE_VARIABLE, api.object(name));
   }
 
   InternalApi api() {
@@ -789,12 +987,12 @@ public abstract class JavaTemplate {
     }
   }
 
-  private JavaModel._Item modifier(Keyword value) {
-    return api().item(ByteProto.MODIFIER, value.ordinal());
+  private _Item modifier(Keyword value) {
+    return api().itemadd(ByteProto.MODIFIER, value.ordinal());
   }
 
   private _Item primitiveType(Keyword value) {
-    return api().item(ByteProto.PRIMITIVE_TYPE, value.ordinal());
+    return api().itemadd(ByteProto.PRIMITIVE_TYPE, value.ordinal());
   }
 
 }

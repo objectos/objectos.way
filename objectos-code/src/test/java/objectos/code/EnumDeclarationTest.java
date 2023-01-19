@@ -90,7 +90,7 @@ public class EnumDeclarationTest {
 
           _enum("Test2");
           body(
-            enumConstant("ONE", s("abc"), end(), n("field"))
+            enumConstant("ONE", s("abc"), n("field"))
           );
         }
       }.toString(),
@@ -208,7 +208,7 @@ public class EnumDeclarationTest {
             _private(), _final(), t(String.class), field("value"),
 
             _private(), constructor(t(String.class), id("value")), block(
-              _this(), n("value"), gets(), n("value")
+              assign(_this().n("value"), n("value"))
             ),
 
             at(t(Override.class)),

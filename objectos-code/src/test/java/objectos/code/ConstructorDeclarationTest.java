@@ -120,15 +120,15 @@ public class ConstructorDeclarationTest {
               _int(), id("a")
             ),
             block(
-              _this(), n("a"), gets(), n("a")
+              assign(_this().n("a"), n("a"))
             ),
             constructor(
               _int(), id("a"),
               _int(), id("b")
             ),
             block(
-              _this(), n("a"), gets(), n("a"),
-              _this(), n("b"), gets(), n("b")
+              assign(_this().n("a"), n("a")),
+              assign(_this().n("b"), n("b"))
             )
           );
         }
@@ -168,14 +168,14 @@ public class ConstructorDeclarationTest {
 
             constructor(),
             block(
-              _super(), end(),
+              _super(),
               invoke("a")
             ),
 
             constructor(),
             block(
               _super(),
-              _this(), invoke("a")
+              _this().invoke("a")
             ),
 
             constructor(_int(), id("a")),

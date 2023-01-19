@@ -26,13 +26,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
   public final void execute() {
     comment("internal instructions");
 
-    value("JMP");
-    value("BREAK"); // rename 2 ELEMENT_END
-    value("OBJECT_END");
-    value("NEW_LINE");
-    value("EOF");
-    value("INVOKE_METHOD_NAME");
-    value("VAR_NAME");
+    value("AUTO_IMPORTS");
+    value("DOT");
 
     comment("types");
 
@@ -48,66 +43,32 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ARRAY_DIMENSION");
     value("ARRAY_INITIALIZER");
-    value("PACKAGE_NAME");
-    value("SIMPLE_NAME");
+    value("ELLIPSIS");
 
-    comment("declarations v2");
+    comment("declarations");
 
     value("ANNOTATION");
     value("BODY");
     value("CLASS");
+    value("COMPILATION_UNIT");
     value("CONSTRUCTOR");
     value("ENUM");
+    value("ENUM_CONSTANT");
     value("EXTENDS");
     value("FIELD_NAME");
+    value("IDENTIFIER");
     value("IMPLEMENTS");
     value("INTERFACE");
-    value("NAME");
-    value("PACKAGE");
-
-    comment("declarations old");
-
-    value("COMPILATION_UNIT");
-    value("PACKAGE_DECLARATION");
-    value("AUTO_IMPORTS");
-    value("TYPE_PARAMETER");
-
-    comment("class");
-
-    value("CLASS_DECLARATION");
+    value("METHOD");
     value("MODIFIER");
-    value("IDENTIFIER");
-    value("EXTENDS_SINGLE");
-
-    comment("field");
-
-    value("FIELD_DECLARATION");
-
-    comment("method/constructor");
-
-    value("METHOD_DECLARATION");
-    value("FORMAL_PARAMETER");
-    value("ELLIPSIS");
-    value("CONSTRUCTOR_DECLARATION");
-    value("THIS_INVOCATION");
-    value("QUALIFIED_SUPER_INVOCATION");
-
-    comment("enum");
-
-    value("ENUM_DECLARATION");
-    value("ENUM_CONSTANT");
-
-    comment("interface");
-
-    value("INTERFACE_DECLARATION");
-    value("EXTENDS_MANY");
+    value("PACKAGE");
+    value("TYPE_PARAMETER");
 
     comment("stmt/exp aux");
 
-    value("ARRAY_ACCESS");
-    value("END");
     value("GETS");
     value("NEW");
+    value("NEW_LINE");
     value("RETURN");
     value("SUPER");
     value("VAR");
@@ -126,6 +87,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ASSIGNMENT_OPERATOR");
     value("CHAINED_METHOD_INVOCATION");
     value("CLASS_INSTANCE_CREATION");
+    value("EXPRESSION_NAME");
     value("FIELD_ACCESS_EXPRESSION0");
     value("METHOD_INVOCATION");
     value("METHOD_INVOCATION_QUALIFIED");

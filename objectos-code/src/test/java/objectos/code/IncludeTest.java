@@ -69,8 +69,8 @@ public class IncludeTest {
         }
 
         private void body0() {
-          invoke("a"); end();
-          invoke("b"); end();
+          invoke("a");
+          invoke("b");
           invoke("c");
         }
       }.toString(),

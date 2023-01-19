@@ -30,18 +30,17 @@ public class AssignmentOperatorTest {
   - implicit operator (default) should be the simple one
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          n("a"); gets(); n("x"); end();
+          assign(n("a"), n("x"));
 
-          n("a"); gets(); n("x"); n("y"); end();
+          assign(n("a"), n("x", "y"));
 
-          n("a"); gets(); invoke("x"); invoke("y"); end();
+          assign(n("a"), invoke("x").invoke("y"));
 
-          n("a"); gets(); _new(t("test", "Foo"));
+          assign(n("a"), _new(t("test", "Foo"));
         }
       }),
 
@@ -56,7 +55,6 @@ public class AssignmentOperatorTest {
       }
       """
     );
-    // @formatter:on
   }
 
 }

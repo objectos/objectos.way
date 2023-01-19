@@ -104,7 +104,7 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("m0", s("1"), end(), invoke("m2"), s("3"));
+          invoke("m0", s("1"), invoke("m2"), s("3"));
         }
       }),
 
@@ -129,7 +129,7 @@ public class MethodInvocationExpressionTest {
         @Override
         protected final void definition() {
           invoke("m0", nl(),
-            s("1"), end(), nl(), nl(),
+            s("1"), nl(), nl(),
             invoke("m2"), nl(), nl(),
             s("3"), nl()
           );
@@ -212,10 +212,10 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          n("a"); invoke("x"); end();
-          n("b"); invoke("y", s("1")); end();
-          n("c"); invoke("z", s("1"), s("2"));
-          t(Foo.class); n("CTE"); invoke("m");
+          n("a").invoke("x");
+          n("b").invoke("y", s("1"));
+          n("c").invoke("z", s("1"), s("2"));
+          t(Foo.class).n("CTE").invoke("m");
         }
       }),
 
@@ -244,16 +244,15 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("a"); invoke("b"); end();
+          invoke("a").invoke("b");
 
-          invoke("a"); invoke("b"); invoke("c"); end();
+          invoke("a").invoke("b").invoke("c");
 
-          n("foo"); invoke("a"); invoke("b"); invoke("c"); end();
+          n("foo").invoke("a").invoke("b").invoke("c");
 
-          n("list");
-          invoke("add", s("1")); nl();
-          invoke("add", s("2")); nl();
-          invoke("build");
+          n("list").invoke("add", s("1")).nl()
+              .invoke("add", s("2")).nl()
+              .invoke("build");
         }
       }),
 
@@ -284,7 +283,7 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _new(t(Thread.class)); invoke("start");
+          _new(t(Thread.class)).invoke("start");
         }
       }),
 
@@ -310,8 +309,8 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", invoke("a"), invoke("b")); end();
-          invoke("test", invoke("a"), end(), invoke("b")); end();
+          invoke("test", invoke("a").invoke("b"));
+          invoke("test", invoke("a"), invoke("b"));
         }
       }),
 

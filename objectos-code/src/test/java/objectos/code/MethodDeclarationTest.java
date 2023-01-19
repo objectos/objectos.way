@@ -272,13 +272,13 @@ public class MethodDeclarationTest {
             ),
 
             _void(), method("test1"), block(
-              invoke("a"), end(),
+              invoke("a"),
               invoke("b")
             ),
 
             _void(), method("test2"), block(
-              invoke("a"), end(),
-              invoke("b"), end(),
+              invoke("a"),
+              invoke("b"),
               invoke("c")
             )
           );

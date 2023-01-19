@@ -30,14 +30,12 @@ class StateFauxGenerator {
 
     state("ANNOTATIONS");
     state("ARGS");
-    state("ASSIGNEE");
     state("BLOCK");
     state("BODY");
     state("CLAUSE");
     state("CLAUSE_TYPE");
     state("CONSTRUCTOR");
     state("DIMS");
-    state("END");
     state("ENUM_CONSTANTS");
     state("IMPORTS");
     state("INIT");
@@ -49,13 +47,10 @@ class StateFauxGenerator {
     state("NL");
     state("PACKAGE");
     state("PRIMITIVE");
-    state("RECV");
-    state("REFERENCE");
-    state("REFERENCE_NL");
-    state("REFERENCE_SLOT");
     state("RESERVED_DOT");
     state("RESERVED_SPACE");
     state("SLOT");
+    state("STATEMENT");
     state("TYPE");
     state("TYPE_DECLARATION");
     state("TYPE_PARAMETER");

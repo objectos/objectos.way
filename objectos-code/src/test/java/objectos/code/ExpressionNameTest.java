@@ -30,16 +30,15 @@ public class ExpressionNameTest {
   - identifiers
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", n("a")); end();
+          invoke("test", n("a"));
 
-          invoke("test", n("a"), n("b")); end();
+          invoke("test", n("a").n("b"));
 
-          invoke("test", n("a"), n("b"), n("c"));
+          invoke("test", n("a").n("b").n("c"));
         }
       }),
 
@@ -53,7 +52,6 @@ public class ExpressionNameTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -67,9 +65,9 @@ public class ExpressionNameTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", t("test", "Suit"), n("CLUBS")); end();
+          invoke("test", t("test", "Suit").n("CLUBS"));
 
-          invoke("test", t("test", "Suit"), n("CLUBS"), n("field"));
+          invoke("test", t("test", "Suit").n("CLUBS","field"));
         }
       }),
 
