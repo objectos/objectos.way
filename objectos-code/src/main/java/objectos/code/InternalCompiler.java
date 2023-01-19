@@ -23,7 +23,7 @@ class InternalCompiler extends InternalApi {
 
   @FunctionalInterface
   private interface JumpTarget {
-    void execute();
+    void execute(int proto);
   }
 
   private static final int _START = 0,
@@ -161,7 +161,7 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void arrayAccessExpression() {
+  private void arrayAccess(int proto) {
     jmp(this::expression);
 
     int count = protonxt();
@@ -170,26 +170,6 @@ class InternalCompiler extends InternalApi {
       codeadd(Symbol.LEFT_SQUARE_BRACKET);
       jmp(this::expression);
       codeadd(Symbol.RIGHT_SQUARE_BRACKET);
-    }
-  }
-
-  private void arrayAccessExpression(int context, int state, int item) {
-    switch (item) {
-      case ByteProto.EXPRESSION_NAME -> {
-        stackset(_ARGS);
-
-        switch (state) {
-          case _START -> stackset(_NAME);
-
-          case _ARGS -> righAndLeftSquareBracket();
-
-          case _NAME -> codeadd(Symbol.LEFT_SQUARE_BRACKET);
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      default -> stubItem(context, state, item);
     }
   }
 
@@ -740,7 +720,7 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void classType() {
+  private void classType(int proto) {
     var packageIndex = protonxt();
 
     var packageName = (String) objectget(packageIndex);
@@ -809,6 +789,14 @@ class InternalCompiler extends InternalApi {
         throw new UnsupportedOperationException(
           "Implement me :: count=" + count);
       }
+    }
+  }
+
+  private void classTypeOrExpression(int proto) {
+    switch (proto) {
+      case ByteProto.CLASS_TYPE -> classType(proto);
+
+      default -> expression(proto);
     }
   }
 
@@ -1026,8 +1014,6 @@ class InternalCompiler extends InternalApi {
     switch (context) {
       case ByteProto.ANNOTATION -> annotation(context, state, item);
 
-      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression(context, state, item);
-
       case ByteProto.ARRAY_INITIALIZER -> arrayInitializer(context, state, item);
 
       case ByteProto.ARRAY_TYPE -> arrayType(context, state, item);
@@ -1124,21 +1110,35 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void expression() {
-    int proto = protonxt();
-
+  private void expression(int proto) {
     switch (proto) {
-      case ByteProto.EXPRESSION_NAME -> codeadd(ByteCode.IDENTIFIER, protonxt());
+      case ByteProto.ARRAY_ACCESS -> arrayAccess(proto);
+
+      case ByteProto.EXPRESSION_NAME -> expressionName(proto);
+
+      case ByteProto.EXPRESSION_NAME_CHAIN -> expressionNameChain(proto);
 
       default -> warn("no-op expression '%s'".formatted(protoname(proto)));
     }
   }
 
+  private void expressionName(int proto) {
+    codeadd(ByteCode.IDENTIFIER, protonxt());
+  }
+
+  private void expressionNameChain(int proto) {
+    jmp(this::classTypeOrExpression);
+    codeadd(Symbol.DOT);
+    jmp(this::expressionName);
+  }
+
+  private void identifier(int proto) {
+    codeadd(ByteCode.IDENTIFIER, protonxt());
+  }
+
   private void item(int item) {
     switch (item) {
       case ByteProto.ANNOTATION -> annotation();
-
-      case ByteProto.ARRAY_ACCESS_EXPRESSION -> arrayAccessExpression();
 
       case ByteProto.ARRAY_DIMENSION -> {
         codeadd(Symbol.LEFT_SQUARE_BRACKET);
@@ -1159,11 +1159,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
 
-      case ByteProto.CLASS_TYPE -> classType();
-
       case ByteProto.CONSTRUCTOR -> constructor();
-
-      case ByteProto.DOT -> dot();
 
       case ByteProto.ELLIPSIS -> codeadd(Symbol.ELLIPSIS);
 
@@ -1185,7 +1181,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.METHOD -> methodDeclaration(_START);
 
-      case ByteProto.METHOD_INVOCATION -> methodInvocation(_START);
+      case ByteProto.METHOD_INVOCATION -> methodInvocation();
 
       case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, protonxt());
 
@@ -1227,7 +1223,8 @@ class InternalCompiler extends InternalApi {
     int location = protonxt();
     int returnTo = protoIndex;
     protoIndex = location;
-    target.execute();
+    int proto = protonxt();
+    target.execute(proto);
     protoIndex = returnTo;
   }
 
@@ -1299,18 +1296,24 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void methodInvocation(int initialState) {
-    int proto = ByteProto.METHOD_INVOCATION;
+  private void methodInvocation() {
+    jmp(this::identifier);
 
-    stackpush(
-      NULL, // 2 = slot
-      proto,
-      initialState
-    );
+    codeadd(Symbol.LEFT_PARENTHESIS);
 
-    element();
+    int count = protonxt();
 
-    methodInvocationPop(proto);
+    if (count > 0) {
+      jmp(this::expression);
+
+      for (int i = 1; i < count; i++) {
+        commaAndSpace();
+
+        jmp(this::expression);
+      }
+    }
+
+    codeadd(Symbol.RIGHT_PARENTHESIS);
   }
 
   private void methodInvocation(int context, int state, int item) {
@@ -1447,7 +1450,7 @@ class InternalCompiler extends InternalApi {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
 
-      case ByteProto.ARRAY_ACCESS_EXPRESSION -> "Array Access Expression";
+      case ByteProto.ARRAY_ACCESS -> "Array Access";
 
       case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
 
@@ -1461,15 +1464,13 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS -> "Class";
 
-      case ByteProto.CLASS_INSTANCE_CREATION -> "Class Instance Creation Expression";
+      case ByteProto.CLASS_INSTANCE_CREATION -> "Class Instance Creation";
 
       case ByteProto.CLASS_TYPE -> "Class Type";
 
       case ByteProto.COMPILATION_UNIT -> "Compilation Unit";
 
       case ByteProto.CONSTRUCTOR -> "Constructor";
-
-      case ByteProto.DOT -> "Dot";
 
       case ByteProto.ELLIPSIS -> "Ellipsis";
 
@@ -1478,6 +1479,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ENUM_CONSTANT -> "Enum Constant";
 
       case ByteProto.EXPRESSION_NAME -> "Expression Name";
+
+      case ByteProto.EXPRESSION_NAME_CHAIN -> "Expression Name (Chain)";
 
       case ByteProto.EXTENDS -> "Extends";
 

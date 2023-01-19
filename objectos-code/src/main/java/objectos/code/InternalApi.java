@@ -269,6 +269,95 @@ class InternalApi extends InternalState {
     return elemret();
   }
 
+  public final void elemargs() {
+    protoadd(0);
+  }
+
+  public final void elemargs(Object e1) {
+    protoadd(1);
+    elemitem(e1);
+  }
+
+  public final void elemargs(Object e1, Object e2) {
+    protoadd(2);
+    elemitem(e1);
+    elemitem(e2);
+  }
+
+  public final void elemargs(Object e1, Object e2, Object e3) {
+    protoadd(3);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+  }
+
+  public final void elemargs(Object e1, Object e2, Object e3, Object e4) {
+    protoadd(4);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+  }
+
+  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5) {
+    protoadd(5);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+  }
+
+  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6) {
+    protoadd(6);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+  }
+
+  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6, Object e7) {
+    protoadd(7);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+    elemitem(e7);
+  }
+
+  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6, Object e7, Object e8) {
+    protoadd(8);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+    elemitem(e7);
+    elemitem(e8);
+  }
+
+  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6, Object e7, Object e8, Object e9) {
+    protoadd(9);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+    elemitem(e7);
+    elemitem(e8);
+    elemitem(e9);
+  }
+
   public final _Item elemend() {
     /*localIndex = */stackpop();
     /*extIndex = */stackpop();
@@ -384,6 +473,14 @@ class InternalApi extends InternalState {
     protoadd(value);
   }
 
+  public final void elemstart(int proto) {
+    elemstart(proto, 0);
+  }
+
+  public final void elemstart(int proto, Object e1) {
+    elemstart(proto, 1);
+  }
+
   public final void elemstart(int proto, Object e1, Object e2) {
     elemstart(proto, 2);
   }
@@ -394,6 +491,36 @@ class InternalApi extends InternalState {
 
   public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4) {
     elemstart(proto, 4);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5) {
+    elemstart(proto, 5);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6) {
+    elemstart(proto, 6);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6, Object e7) {
+    elemstart(proto, 7);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6, Object e7, Object e8) {
+    elemstart(proto, 8);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
+      Object e6, Object e7, Object e8, Object e9) {
+    elemstart(proto, 9);
+  }
+
+  public final int identifier(String identifer) {
+    int self = protoIndex;
+    protoadd(ByteProto.IDENTIFIER, object(identifer));
+    return self;
   }
 
   public final void identifierext(String value) {
@@ -464,6 +591,13 @@ class InternalApi extends InternalState {
     levelIndex[level] = 0;
   }
 
+  public final int levelremove() {
+    int[] array = levelArray[level];
+    int value = array[--levelIndex[level]];
+    --levelIndex[level];
+    return value;
+  }
+
   public final int object(Object value) {
     objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
 
@@ -473,6 +607,8 @@ class InternalApi extends InternalState {
 
     return result;
   }
+
+  public final int protoget(int index) { return protoArray[index]; }
 
   final void accept(JavaTemplate template) {
     this.template = template;

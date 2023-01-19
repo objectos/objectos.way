@@ -27,7 +27,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("internal instructions");
 
     value("AUTO_IMPORTS");
-    value("DOT");
 
     comment("types");
 
@@ -81,11 +80,12 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("expressions");
 
-    value("ARRAY_ACCESS_EXPRESSION");
-    value("ASSIGNMENT_EXPRESSION");
+    value("ARRAY_ACCESS");
+    value("ASSIGNMENT");
     value("CLASS_INSTANCE_CREATION");
     value("EXPRESSION_NAME");
-    value("FIELD_ACCESS_EXPRESSION0");
+    value("EXPRESSION_NAME_CHAIN");
+    value("FIELD_ACCESS");
     value("METHOD_INVOCATION");
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");

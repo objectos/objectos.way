@@ -115,10 +115,16 @@ public abstract class JavaTemplate {
       TypeVariable,
       VarKeyword,
       VoidKeyword {
+
     @Override
     public final ExpressionName n(String name) {
-      return api().dot(JavaTemplate.this.n(name));
+      JavaTemplate.this.n(name);
+      var api = api();
+      int second = api.levelremove();
+      int first = api.levelremove();
+      return api.itemadd(ByteProto.EXPRESSION_NAME_CHAIN, first, second);
     }
+
   }
 
   sealed interface AbstractModifier extends BodyElement {}
@@ -417,12 +423,11 @@ public abstract class JavaTemplate {
       Expression e1) {
     var api = api();
     api.elemstart(
-      ByteProto.ARRAY_ACCESS_EXPRESSION, reference.self(),
+      ByteProto.ARRAY_ACCESS, reference.self(),
       e1.self()
     );
     api.elemitem(reference);
-    api.elemproto(1);
-    api.elemitem(e1);
+    api.elemargs(e1);
     return api.elemend();
   }
 
@@ -430,12 +435,11 @@ public abstract class JavaTemplate {
       Expression e1, Expression e2) {
     var api = api();
     api.elemstart(
-      ByteProto.ARRAY_ACCESS_EXPRESSION, reference.self(),
+      ByteProto.ARRAY_ACCESS, reference.self(),
       e1.self(), e2.self()
     );
     api.elemitem(reference);
-    api.elemproto(2);
-    api.elemitem(e1, e2);
+    api.elemargs(e1, e2);
     return api.elemend();
   }
 
@@ -443,12 +447,11 @@ public abstract class JavaTemplate {
       Expression e1, Expression e2, Expression e3) {
     var api = api();
     api.elemstart(
-      ByteProto.ARRAY_ACCESS_EXPRESSION, reference.self(),
+      ByteProto.ARRAY_ACCESS, reference.self(),
       e1.self(), e2.self(), e3.self()
     );
     api.elemitem(reference);
-    api.elemproto(3);
-    api.elemitem(e1, e2, e3);
+    api.elemargs(e1, e2, e3);
     return api.elemend();
   }
 
@@ -687,27 +690,25 @@ public abstract class JavaTemplate {
       String methodName) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT);
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION);
+    api.elemproto(name);
+    api.elemargs();
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
       String methodName,
       Expression e1) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
-
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self());
-  }
-
-  protected final MethodInvocation invoke(String methodName,
-      Expression... elements) {
-    JavaModel.checkMethodName(methodName.toString()); // implicit null check
-    var api = api();
-    api.identifierext(methodName);
-    Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api.elemmany(ByteProto.METHOD_INVOCATION, EXT, many);
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self());
+    api.elemproto(name);
+    api.elemproto(1);
+    api.elemitem(e1);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
@@ -715,8 +716,12 @@ public abstract class JavaTemplate {
       Expression e1, Expression e2) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
@@ -724,77 +729,98 @@ public abstract class JavaTemplate {
       Expression e1, Expression e2, Expression e3) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self(), e3.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2, e3);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3,
-      Expression e4) {
+      Expression e1, Expression e2, Expression e3, Expression e4) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
-      e4.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self(), e3.self(), e4.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2, e3, e4);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3,
-      Expression e4, Expression e5) {
+      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
-      e4.self(), e5.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self(), e3.self(), e4.self(), e5.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2, e3, e4, e5);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3,
-      Expression e4, Expression e5, Expression e6) {
+      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
+      Expression e6) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
-      e4.self(), e5.self(), e6.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+      e6.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2, e3, e4, e5, e6);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3,
-      Expression e4, Expression e5, Expression e6,
-      Expression e7) {
+      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
+      Expression e6, Expression e7) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
-      e4.self(), e5.self(), e6.self(), e7.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+      e6.self(), e7.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2, e3, e4, e5, e6, e7);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3,
-      Expression e4, Expression e5, Expression e6,
-      Expression e7, Expression e8) {
+      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
+      Expression e6, Expression e7, Expression e8) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
-      e4.self(), e5.self(), e6.self(), e7.self(), e8.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+      e6.self(), e7.self(), e8.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2, e3, e4, e5, e6, e7, e8);
+    return api.elemend();
   }
 
   protected final MethodInvocation invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3,
-      Expression e4, Expression e5, Expression e6,
-      Expression e7, Expression e8, Expression e9) {
+      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
+      Expression e6, Expression e7, Expression e8, Expression e9) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD_INVOCATION, EXT, e1.self(), e2.self(), e3.self(),
-      e4.self(), e5.self(), e6.self(), e7.self(), e8.self(), e9.self());
+    int name = api.identifier(methodName);
+    api.elemstart(ByteProto.METHOD_INVOCATION,
+      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+      e6.self(), e7.self(), e8.self(), e9.self());
+    api.elemproto(name);
+    api.elemargs(e1, e2, e3, e4, e5, e6, e7, e8, e9);
+    return api.elemend();
   }
 
   protected final MethodDeclaration method(String methodName) {

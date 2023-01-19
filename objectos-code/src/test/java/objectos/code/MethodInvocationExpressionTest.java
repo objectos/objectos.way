@@ -129,9 +129,9 @@ public class MethodInvocationExpressionTest {
         @Override
         protected final void definition() {
           invoke("m0",
-            nl().s("1").nl().nl(),
-            invoke("m2").nl().nl(),
-            s("3").nl()
+            nl().s("1"),
+            nl().nl().invoke("m2"),
+            nl().nl().s("3").nl()
           );
         }
       }),
