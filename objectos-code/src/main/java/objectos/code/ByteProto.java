@@ -61,34 +61,30 @@ final class ByteProto {
 
   //stmt/exp aux
 
-  static final int GETS = -29;
-  static final int NEW = -30;
-  static final int NEW_LINE = -31;
-  static final int RETURN = -32;
-  static final int SUPER = -33;
-  static final int VAR = -34;
+  static final int NEW = -29;
+  static final int NEW_LINE = -30;
+  static final int RETURN = -31;
+  static final int SUPER = -32;
+  static final int VAR = -33;
 
   //statements
 
-  static final int BLOCK = -35;
-  static final int LOCAL_VARIABLE = -36;
-  static final int RETURN_STATEMENT = -37;
-  static final int SUPER_INVOCATION = -38;
+  static final int BLOCK = -34;
+  static final int LOCAL_VARIABLE = -35;
+  static final int RETURN_STATEMENT = -36;
+  static final int SUPER_INVOCATION = -37;
 
   //expressions
 
-  static final int ARRAY_ACCESS_EXPRESSION = -39;
-  static final int ASSIGNMENT_EXPRESSION = -40;
-  static final int ASSIGNMENT_OPERATOR = -41;
-  static final int CHAINED_METHOD_INVOCATION = -42;
-  static final int CLASS_INSTANCE_CREATION = -43;
-  static final int EXPRESSION_NAME = -44;
-  static final int FIELD_ACCESS_EXPRESSION0 = -45;
-  static final int METHOD_INVOCATION = -46;
-  static final int METHOD_INVOCATION_QUALIFIED = -47;
-  static final int PRIMITIVE_LITERAL = -48;
-  static final int STRING_LITERAL = -49;
-  static final int THIS = -50;
+  static final int ARRAY_ACCESS_EXPRESSION = -38;
+  static final int ASSIGNMENT_EXPRESSION = -39;
+  static final int CLASS_INSTANCE_CREATION = -40;
+  static final int EXPRESSION_NAME = -41;
+  static final int FIELD_ACCESS_EXPRESSION0 = -42;
+  static final int METHOD_INVOCATION = -43;
+  static final int PRIMITIVE_LITERAL = -44;
+  static final int STRING_LITERAL = -45;
+  static final int THIS = -46;
 
   private ByteProto() {}
 
@@ -100,10 +96,8 @@ final class ByteProto {
   public static boolean isExpressionStatement(int proto) {
     return switch (proto) {
       case ASSIGNMENT_EXPRESSION,
-           CHAINED_METHOD_INVOCATION,
            CLASS_INSTANCE_CREATION,
-           METHOD_INVOCATION,
-           METHOD_INVOCATION_QUALIFIED -> true;
+           METHOD_INVOCATION -> true;
 
       default -> false;
     };

@@ -66,7 +66,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("stmt/exp aux");
 
-    value("GETS");
     value("NEW");
     value("NEW_LINE");
     value("RETURN");
@@ -84,13 +83,10 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ARRAY_ACCESS_EXPRESSION");
     value("ASSIGNMENT_EXPRESSION");
-    value("ASSIGNMENT_OPERATOR");
-    value("CHAINED_METHOD_INVOCATION");
     value("CLASS_INSTANCE_CREATION");
     value("EXPRESSION_NAME");
     value("FIELD_ACCESS_EXPRESSION0");
     value("METHOD_INVOCATION");
-    value("METHOD_INVOCATION_QUALIFIED");
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
     value("THIS");

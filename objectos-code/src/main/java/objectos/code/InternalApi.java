@@ -16,7 +16,6 @@
 package objectos.code;
 
 import java.util.Arrays;
-import objectos.code.JavaTemplate._Elem;
 import objectos.code.JavaTemplate._Item;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -88,57 +87,57 @@ class InternalApi extends InternalState {
     }
   }
 
-  public final _Elem elem(int proto) {
+  public final _Item elem(int proto) {
     elempre();
     elemcnt(proto);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1) {
+  public final _Item elem(int proto, Object e1) {
     elempre();
     elempre(e1);
     elemcnt(proto);
-    elemcntx(e1);
+    elemitem(e1);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2) {
+  public final _Item elem(int proto, Object e1, Object e2) {
     elempre();
     elempre(e1);
     elempre(e2);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
+    elemitem(e1);
+    elemitem(e2);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3) {
+  public final _Item elem(int proto, Object e1, Object e2, Object e3) {
     elempre();
     elempre(e1);
     elempre(e2);
     elempre(e3);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3, Object e4) {
+  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4) {
     elempre();
     elempre(e1);
     elempre(e2);
     elempre(e3);
     elempre(e4);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
-    elemcntx(e4);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5) {
     elempre();
     elempre(e1);
@@ -147,15 +146,15 @@ class InternalApi extends InternalState {
     elempre(e4);
     elempre(e5);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
-    elemcntx(e4);
-    elemcntx(e5);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6) {
     elempre();
     elempre(e1);
@@ -165,16 +164,16 @@ class InternalApi extends InternalState {
     elempre(e5);
     elempre(e6);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
-    elemcntx(e4);
-    elemcntx(e5);
-    elemcntx(e6);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7) {
     elempre();
     elempre(e1);
@@ -185,17 +184,17 @@ class InternalApi extends InternalState {
     elempre(e6);
     elempre(e7);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
-    elemcntx(e4);
-    elemcntx(e5);
-    elemcntx(e6);
-    elemcntx(e7);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+    elemitem(e7);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8) {
     elempre();
     elempre(e1);
@@ -207,18 +206,18 @@ class InternalApi extends InternalState {
     elempre(e7);
     elempre(e8);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
-    elemcntx(e4);
-    elemcntx(e5);
-    elemcntx(e6);
-    elemcntx(e7);
-    elemcntx(e8);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+    elemitem(e7);
+    elemitem(e8);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9) {
     elempre();
     elempre(e1);
@@ -231,19 +230,19 @@ class InternalApi extends InternalState {
     elempre(e8);
     elempre(e9);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
-    elemcntx(e4);
-    elemcntx(e5);
-    elemcntx(e6);
-    elemcntx(e7);
-    elemcntx(e8);
-    elemcntx(e9);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+    elemitem(e7);
+    elemitem(e8);
+    elemitem(e9);
     return elemret();
   }
 
-  public final _Elem elem(int proto, Object e1, Object e2, Object e3, Object e4,
+  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9, Object e10) {
     elempre();
     elempre(e1);
@@ -257,20 +256,89 @@ class InternalApi extends InternalState {
     elempre(e9);
     elempre(e10);
     elemcnt(proto);
-    elemcntx(e1);
-    elemcntx(e2);
-    elemcntx(e3);
-    elemcntx(e4);
-    elemcntx(e5);
-    elemcntx(e6);
-    elemcntx(e7);
-    elemcntx(e8);
-    elemcntx(e9);
-    elemcntx(e10);
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+    elemitem(e4);
+    elemitem(e5);
+    elemitem(e6);
+    elemitem(e7);
+    elemitem(e8);
+    elemitem(e9);
+    elemitem(e10);
     return elemret();
   }
 
-  public final _Elem elemmany(int proto, Object first, Object[] elements) {
+  public final _Item elemend() {
+    /*localIndex = */stackpop();
+    /*extIndex = */stackpop();
+    /*includeIndex = */stackpop();
+
+    int levelStart = stackpop(),
+        self = stackpop();
+
+    levelIndex[level] = levelStart;
+
+    leveladd(LOCAL, self);
+
+    return template.item;
+  }
+
+  public final void elemitem(Object obj) {
+    if (obj == template.item) {
+      int localIndex = stackpeek(0);
+
+      localIndex = levelsearch(localIndex, LOCAL);
+
+      localIndex++;
+
+      int value = levelget(localIndex);
+
+      protoadd(value);
+
+      stackset(0, localIndex);
+    } else if (obj == JavaTemplate.EXT) {
+      int extIndex = stackpeek(1);
+
+      extIndex = levelsearch(extIndex, EXT);
+
+      extIndex++;
+
+      int value = levelget(extIndex);
+
+      protoadd(value);
+
+      stackset(1, extIndex);
+    } else if (obj == JavaTemplate.INCLUDE) {
+      int codeIndex = stackpeek(2);
+
+      codeIndex = levelsearch(codeIndex, LAMBDA);
+
+      codeIndex++;
+
+      int level = levelget(codeIndex);
+
+      elemcntx0lambda(level);
+
+      stackset(2, codeIndex);
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: obj=" + obj);
+    }
+  }
+
+  public final void elemitem(Object e1, Object e2) {
+    elemitem(e1);
+    elemitem(e2);
+  }
+
+  public final void elemitem(Object e1, Object e2, Object e3) {
+    elemitem(e1);
+    elemitem(e2);
+    elemitem(e3);
+  }
+
+  public final _Item elemmany(int proto, Object first, Object[] elements) {
     elempre();
 
     elempre(first);
@@ -283,17 +351,17 @@ class InternalApi extends InternalState {
 
     elemcnt(proto);
 
-    elemcntx(first);
+    elemitem(first);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
-      elemcntx(element);
+      elemitem(element);
     }
 
     return elemret();
   }
 
-  public final _Elem elemmany(int proto, Object[] elements) {
+  public final _Item elemmany(int proto, Object[] elements) {
     elempre();
 
     for (int i = 0; i < elements.length; i++) {
@@ -306,10 +374,26 @@ class InternalApi extends InternalState {
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
-      elemcntx(element);
+      elemitem(element);
     }
 
     return elemret();
+  }
+
+  public final void elemproto(int value) {
+    protoadd(value);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2) {
+    elemstart(proto, 2);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2, Object e3) {
+    elemstart(proto, 3);
+  }
+
+  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4) {
+    elemstart(proto, 4);
   }
 
   public final void identifierext(String value) {
@@ -454,49 +538,6 @@ class InternalApi extends InternalState {
     protoadd(value, 0);
   }
 
-  private void elemcntx(Object obj) {
-    if (obj == template.item || obj == template.elem) {
-      int localIndex = stackpeek(0);
-
-      localIndex = levelsearch(localIndex, LOCAL);
-
-      localIndex++;
-
-      int value = levelget(localIndex);
-
-      protoadd(value);
-
-      stackset(0, localIndex);
-    } else if (obj == JavaTemplate.EXT) {
-      int extIndex = stackpeek(1);
-
-      extIndex = levelsearch(extIndex, EXT);
-
-      extIndex++;
-
-      int value = levelget(extIndex);
-
-      protoadd(value);
-
-      stackset(1, extIndex);
-    } else if (obj == JavaTemplate.INCLUDE) {
-      int codeIndex = stackpeek(2);
-
-      codeIndex = levelsearch(codeIndex, LAMBDA);
-
-      codeIndex++;
-
-      int level = levelget(codeIndex);
-
-      elemcntx0lambda(level);
-
-      stackset(2, codeIndex);
-    } else {
-      throw new UnsupportedOperationException(
-        "Implement me :: obj=" + obj);
-    }
-  }
-
   private void elemcntx0lambda(int level) {
     int[] array = levelArray[level];
 
@@ -527,7 +568,7 @@ class InternalApi extends InternalState {
     stackinc(0);
   }
 
-  private _Elem elemret() {
+  private _Item elemret() {
     /*localIndex = */stackpop();
     /*extIndex = */stackpop();
     /*includeIndex = */stackpop();
@@ -545,7 +586,24 @@ class InternalApi extends InternalState {
 
     leveladd(LOCAL, self);
 
-    return template.elem;
+    return template.item;
+  }
+
+  private void elemstart(int proto, int itemCount) {
+    int levelStart = levelIndex[level] - (itemCount * 2),
+        localIndex = levelStart,
+        extIndex = levelStart,
+        includeIndex = levelStart;
+
+    stackpush(
+      /*4*/protoIndex,
+      /*3*/levelStart,
+      /*2*/includeIndex,
+      /*1*/extIndex,
+      /*0*/localIndex
+    );
+
+    protoadd(proto);
   }
 
   private void leveladd(int v0, int v1) {

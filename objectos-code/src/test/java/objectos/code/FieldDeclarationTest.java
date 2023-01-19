@@ -170,11 +170,11 @@ public class FieldDeclarationTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          t(_int(), dim()); field("a"); a();
+          t(_int(), dim()); field("a"); ainit();
 
-          t(_int(), dim()); field("b"); a(i(0));
+          t(_int(), dim()); field("b"); ainit(i(0));
 
-          t(_int(), dim()); field("c"); a(i(0), i(1));
+          t(_int(), dim()); field("c"); ainit(i(0), i(1));
         }
       }),
 

@@ -33,11 +33,11 @@ public class ArrayAccessExpressionTest {
         @Override
         protected final void definition() {
           invoke("foo",
-            aaccess(n("a"), n("x")),
+            a(n("a"), n("x")),
 
-            aaccess(n("a"), n("x"), n("y")),
+            a(n("a"), n("x"), n("y")),
 
-            aaccess(n("a"), n("x"), n("y"), n("z"))
+            a(n("a"), n("x"), n("y"), n("z"))
           );
         }
       }),

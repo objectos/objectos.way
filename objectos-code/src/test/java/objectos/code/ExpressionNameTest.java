@@ -67,7 +67,7 @@ public class ExpressionNameTest {
         protected final void definition() {
           invoke("test", t("test", "Suit").n("CLUBS"));
 
-          invoke("test", t("test", "Suit").n("CLUBS","field"));
+          invoke("test", t("test", "Suit").n("CLUBS").n("field"));
         }
       }),
 

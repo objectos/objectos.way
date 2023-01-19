@@ -21,6 +21,11 @@ import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
 
+  @FunctionalInterface
+  private interface JumpTarget {
+    void execute();
+  }
+
   private static final int _START = 0,
       _ANNOTATIONS = 1,
       _ARGS = 2,
@@ -51,9 +56,9 @@ class InternalCompiler extends InternalApi {
       _VAR = 27;
 
   private static final int _VALUE = 66;
-
   private static final int NULL = Integer.MIN_VALUE;
   private static final int FALSE = 0;
+
   private static final int TRUE = 1;
 
   private int constructorName;
@@ -157,14 +162,14 @@ class InternalCompiler extends InternalApi {
   }
 
   private void arrayAccessExpression() {
-    int proto = ByteProto.ARRAY_ACCESS_EXPRESSION;
-    stackpush(proto, _START);
-    element();
-    int state = contextpop();
-    switch (state) {
-      case _ARGS -> codeadd(Symbol.RIGHT_SQUARE_BRACKET);
+    jmp(this::expression);
 
-      default -> stubPop(proto, state);
+    int count = protonxt();
+
+    for (int i = 0; i < count; i++) {
+      codeadd(Symbol.LEFT_SQUARE_BRACKET);
+      jmp(this::expression);
+      codeadd(Symbol.RIGHT_SQUARE_BRACKET);
     }
   }
 
@@ -1119,6 +1124,16 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void expression() {
+    int proto = protonxt();
+
+    switch (proto) {
+      case ByteProto.EXPRESSION_NAME -> codeadd(ByteCode.IDENTIFIER, protonxt());
+
+      default -> warn("no-op expression '%s'".formatted(protoname(proto)));
+    }
+  }
+
   private void item(int item) {
     switch (item) {
       case ByteProto.ANNOTATION -> annotation();
@@ -1161,8 +1176,6 @@ class InternalCompiler extends InternalApi {
       case ByteProto.EXTENDS -> codeadd(Keyword.EXTENDS);
 
       case ByteProto.FIELD_NAME -> codeadd(ByteCode.IDENTIFIER, protonxt());
-
-      case ByteProto.GETS -> codeadd(Symbol.ASSIGNMENT);
 
       case ByteProto.IDENTIFIER -> codeadd(ByteCode.IDENTIFIER, protonxt());
 
@@ -1208,6 +1221,14 @@ class InternalCompiler extends InternalApi {
         "no-op item '%s'".formatted(protoname(item))
       );
     }
+  }
+
+  private void jmp(JumpTarget target) {
+    int location = protonxt();
+    int returnTo = protoIndex;
+    protoIndex = location;
+    target.execute();
+    protoIndex = returnTo;
   }
 
   private void methodDeclaration(int initialState) {
@@ -1462,8 +1483,6 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.FIELD_NAME -> "Field Name";
 
-      case ByteProto.GETS -> "=";
-
       case ByteProto.IDENTIFIER -> "Identifier";
 
       case ByteProto.IMPLEMENTS -> "Implements";
@@ -1531,6 +1550,12 @@ class InternalCompiler extends InternalApi {
   private int stackpeek(int offset) { return localArray[localIndex - offset]; }
 
   private int stackpop() { return localArray[localIndex--]; }
+
+  private void stackpush(int v0) {
+    localArray = IntArrays.growIfNecessary(localArray, localIndex + 1);
+
+    localArray[++localIndex] = v0;
+  }
 
   private void stackpush(int v0, int v1) {
     localArray = IntArrays.growIfNecessary(localArray, localIndex + 2);
