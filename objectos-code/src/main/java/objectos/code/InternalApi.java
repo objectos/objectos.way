@@ -35,6 +35,12 @@ class InternalApi extends InternalState {
 
   private JavaTemplate template;
 
+  public final _Item chain(int proto) {
+    int second = levelremove();
+    int first = levelremove();
+    return itemadd(proto, first, second);
+  }
+
   public final _Item classType(Class<?> type) {
     var last = objectIndex;
 
@@ -517,12 +523,6 @@ class InternalApi extends InternalState {
     elemstart(proto, 9);
   }
 
-  public final int identifier(String identifer) {
-    int self = protoIndex;
-    protoadd(ByteProto.IDENTIFIER, object(identifer));
-    return self;
-  }
-
   public final void identifierext(String value) {
     leveladd(EXT, protoIndex);
 
@@ -606,6 +606,12 @@ class InternalApi extends InternalState {
     objectArray[objectIndex++] = value;
 
     return result;
+  }
+
+  public final int operator(Symbol symbol) {
+    int self = protoIndex;
+    protoadd(ByteProto.OPERATOR, symbol.ordinal());
+    return self;
   }
 
   public final int protoget(int index) { return protoArray[index]; }

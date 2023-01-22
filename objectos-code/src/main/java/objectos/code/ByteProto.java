@@ -58,33 +58,34 @@ final class ByteProto {
   static final int PACKAGE = -26;
   static final int TYPE_PARAMETER = -27;
 
-  //stmt/exp aux
+  //stmt/exp
 
-  static final int NEW = -28;
-  static final int NEW_LINE = -29;
-  static final int RETURN = -30;
-  static final int SUPER = -31;
-  static final int VAR = -32;
+  static final int ARRAY_ACCESS = -28;
+  static final int INVOKE = -29;
+  static final int NEW = -30;
+  static final int NEW_LINE = -31;
+  static final int OPERATOR = -32;
+  static final int RETURN = -33;
+  static final int SUPER = -34;
+  static final int VAR = -35;
 
   //statements
 
-  static final int BLOCK = -33;
-  static final int LOCAL_VARIABLE = -34;
-  static final int RETURN_STATEMENT = -35;
-  static final int SUPER_INVOCATION = -36;
+  static final int BLOCK = -36;
+  static final int LOCAL_VARIABLE = -37;
+  static final int RETURN_STATEMENT = -38;
+  static final int SUPER_INVOCATION = -39;
 
   //expressions
 
-  static final int ARRAY_ACCESS = -37;
-  static final int ASSIGNMENT = -38;
-  static final int CLASS_INSTANCE_CREATION = -39;
-  static final int EXPRESSION_NAME = -40;
-  static final int EXPRESSION_NAME_CHAIN = -41;
-  static final int FIELD_ACCESS = -42;
-  static final int METHOD_INVOCATION = -43;
-  static final int PRIMITIVE_LITERAL = -44;
-  static final int STRING_LITERAL = -45;
-  static final int THIS = -46;
+  static final int ASSIGNMENT = -40;
+  static final int CLASS_INSTANCE_CREATION = -41;
+  static final int EXPRESSION_NAME = -42;
+  static final int EXPRESSION_NAME_CHAIN = -43;
+  static final int FIELD_ACCESS = -44;
+  static final int PRIMITIVE_LITERAL = -45;
+  static final int STRING_LITERAL = -46;
+  static final int THIS = -47;
 
   private ByteProto() {}
 

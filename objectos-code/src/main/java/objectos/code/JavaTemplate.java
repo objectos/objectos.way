@@ -24,11 +24,7 @@ public abstract class JavaTemplate {
 
   protected sealed interface ArrayInitializerElement {}
 
-  protected sealed interface ArrayTypeElement {}
-
   protected sealed interface BlockElement extends Element {}
-
-  protected sealed interface BlockStatement extends BlockElement {}
 
   protected sealed interface BodyElement extends Element {}
 
@@ -43,21 +39,12 @@ public abstract class JavaTemplate {
 
   protected sealed interface EnumConstantElement {}
 
-  protected sealed interface Expression extends ExpressionElement, BlockElement {}
-
-  protected sealed interface ExpressionElement extends
-      ArrayInitializerElement, BlockElement, BodyElement, DimElement {}
-
-  protected sealed interface ExpressionStatement extends Statement {}
+  protected sealed interface Expression extends ExpressionPart, BlockElement {}
 
   @FunctionalInterface
   protected interface IncludeTarget {
     void execute();
   }
-
-  protected sealed interface ParameterElement extends Element {}
-
-  protected sealed interface Statement extends BlockStatement {}
 
   protected sealed interface TypeParameterBound extends Element {}
 
@@ -71,7 +58,7 @@ public abstract class JavaTemplate {
 
   final class _Item implements
       AbstractModifier,
-      ArrayAccessExpression,
+      ArrayAccess,
       ArrayDimension,
       ArrayInitializer,
       ArrayType,
@@ -97,7 +84,7 @@ public abstract class JavaTemplate {
       IntegerLiteral,
       InterfaceKeyword,
       MethodDeclaration,
-      MethodInvocation,
+      Invoke,
       NewKeyword,
       NewLine,
       PackageKeyword,
@@ -114,22 +101,13 @@ public abstract class JavaTemplate {
       TypeParameter,
       TypeVariable,
       VarKeyword,
-      VoidKeyword {
-
-    @Override
-    public final ExpressionName n(String name) {
-      JavaTemplate.this.n(name);
-      var api = api();
-      int second = api.levelremove();
-      int first = api.levelremove();
-      return api.itemadd(ByteProto.EXPRESSION_NAME_CHAIN, first, second);
-    }
-
-  }
+      VoidKeyword {}
 
   sealed interface AbstractModifier extends BodyElement {}
 
-  sealed interface ArrayAccessExpression extends ArrayReferenceExpression {}
+  sealed interface ArgsPart extends Element {}
+
+  sealed interface ArrayAccess extends ExpressionPart {}
 
   sealed interface ArrayDimension extends ArrayTypeElement {}
 
@@ -143,6 +121,8 @@ public abstract class JavaTemplate {
 
   sealed interface ArrayTypeComponent {}
 
+  sealed interface ArrayTypeElement {}
+
   sealed interface AssignmentExpression extends Expression {}
 
   sealed interface At extends BodyElement {}
@@ -151,22 +131,17 @@ public abstract class JavaTemplate {
 
   sealed interface AutoImports extends Element {}
 
-  sealed interface Block extends BodyElement,
-      /* to remove */
-      Statement {}
+  sealed interface Block extends BodyElement, StatementWithoutTrailingSubstatement {}
 
   sealed interface Body extends BodyElement {}
 
-  sealed interface ClassInstanceCreationExpression extends ExpressionStatement, PrimaryNoNewArray {}
+  sealed interface ClassInstanceCreationExpression {}
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassType extends
-      BlockElement, BodyElement, ExpressionNamePart, ReferenceType, TypeParameterBound {}
+  sealed interface ClassType extends BlockElement, BodyElement, ReferenceType, TypeParameterBound {}
 
   sealed interface ConstructorDeclaration extends BodyElement {}
-
-  sealed interface DimElement {}
 
   sealed interface Ellipsis extends ParameterElement {}
 
@@ -174,12 +149,9 @@ public abstract class JavaTemplate {
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends
-      ArrayReferenceExpression, ExpressionNamePart, LeftHandSide {}
+  sealed interface ExpressionName extends ArrayReferenceExpression, LeftHandSide {}
 
-  sealed interface ExpressionNamePart {
-    ExpressionName n(String name);
-  }
+  sealed interface ExpressionPart extends ArgsPart {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -199,13 +171,13 @@ public abstract class JavaTemplate {
 
   sealed interface InterfaceKeyword extends BodyElement {}
 
+  sealed interface Invoke extends ExpressionPart {}
+
   sealed interface LeftHandSide extends Element {}
 
-  sealed interface Literal extends AtElement, PrimaryNoNewArray {}
+  sealed interface Literal extends AtElement {}
 
   sealed interface MethodDeclaration extends BodyElement {}
-
-  sealed interface MethodInvocation extends Expression, ExpressionStatement {}
 
   sealed interface NewKeyword extends BlockElement {}
 
@@ -213,13 +185,11 @@ public abstract class JavaTemplate {
 
   sealed interface PackageKeyword extends Element {}
 
+  sealed interface ParameterElement extends Element {}
+
   sealed interface ParameterizedType extends ReferenceType,
       /* to remove */
       AnyType {}
-
-  sealed interface Primary extends Expression {}
-
-  sealed interface PrimaryNoNewArray extends Primary {}
 
   sealed interface PrimitiveType extends AnyType, BodyElement,
       /* to remove */
@@ -239,13 +209,17 @@ public abstract class JavaTemplate {
       /* to remove */
       Statement {}
 
+  sealed interface Statement extends Element {}
+
+  sealed interface StatementWithoutTrailingSubstatement extends Statement {}
+
   sealed interface StaticModifier extends BodyElement {}
 
   sealed interface StringLiteral extends Literal {}
 
   sealed interface SuperKeyword extends BlockElement {}
 
-  sealed interface ThisKeyword extends PrimaryNoNewArray {}
+  sealed interface ThisKeyword {}
 
   sealed interface TypeParameter extends BodyElement {}
 
@@ -389,21 +363,16 @@ public abstract class JavaTemplate {
     return api().itemadd(ByteProto.SUPER);
   }
 
-  protected final ExplicitConstructorInvocation _super(ExpressionElement e1) {
+  protected final ExplicitConstructorInvocation _super(Expression e1) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self());
   }
 
-  protected final ExplicitConstructorInvocation _super(ExpressionElement... elements) {
-    Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api().elemmany(ByteProto.SUPER_INVOCATION, many);
-  }
-
-  protected final ExplicitConstructorInvocation _super(ExpressionElement e1, ExpressionElement e2) {
+  protected final ExplicitConstructorInvocation _super(Expression e1, Expression e2) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self());
   }
 
-  protected final ExplicitConstructorInvocation _super(ExpressionElement e1, ExpressionElement e2,
-      ExpressionElement e3) {
+  protected final ExplicitConstructorInvocation _super(Expression e1, Expression e2,
+      Expression e3) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(), e3.self());
   }
 
@@ -417,42 +386,6 @@ public abstract class JavaTemplate {
 
   protected final VoidKeyword _void() {
     return api().itemadd(ByteProto.VOID);
-  }
-
-  protected final ArrayAccessExpression a(ArrayReferenceExpression reference,
-      Expression e1) {
-    var api = api();
-    api.elemstart(
-      ByteProto.ARRAY_ACCESS, reference.self(),
-      e1.self()
-    );
-    api.elemitem(reference);
-    api.elemargs(e1);
-    return api.elemend();
-  }
-
-  protected final ArrayAccessExpression a(ArrayReferenceExpression reference,
-      Expression e1, Expression e2) {
-    var api = api();
-    api.elemstart(
-      ByteProto.ARRAY_ACCESS, reference.self(),
-      e1.self(), e2.self()
-    );
-    api.elemitem(reference);
-    api.elemargs(e1, e2);
-    return api.elemend();
-  }
-
-  protected final ArrayAccessExpression a(ArrayReferenceExpression reference,
-      Expression e1, Expression e2, Expression e3) {
-    var api = api();
-    api.elemstart(
-      ByteProto.ARRAY_ACCESS, reference.self(),
-      e1.self(), e2.self(), e3.self()
-    );
-    api.elemitem(reference);
-    api.elemargs(e1, e2, e3);
-    return api.elemend();
   }
 
   protected final ArrayInitializer ainit() {
@@ -471,8 +404,12 @@ public abstract class JavaTemplate {
 
   protected final AssignmentExpression assign(LeftHandSide lhs, Expression expression) {
     var api = api();
-    api.identifierext(value);
-    return api.elem(ByteProto.ASSIGNMENT_EXPRESSION, lhs.self(), EXT, expression.self());
+    int op = api.operator(Symbol.ASSIGNMENT);
+    api.elemstart(ByteProto.ASSIGNMENT, lhs.self(), expression.self());
+    api.elemitem(lhs);
+    api.elemproto(op);
+    api.elemitem(expression);
+    return api.elemend();
   }
 
   protected final At at(ClassType annotationType) {
@@ -619,35 +556,58 @@ public abstract class JavaTemplate {
     return api().itemadd(ByteProto.ARRAY_DIMENSION);
   }
 
+  protected final ArrayAccess dim(ExpressionPart e1) {
+    return api().elem(ByteProto.ARRAY_ACCESS, e1.self());
+  }
+
   protected final Ellipsis ellipsis() {
     return api().itemadd(ByteProto.ELLIPSIS);
   }
 
   protected final EnumConstant enumConstant(String name) {
+    JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, EXT);
+    int id = api.identifier(name);
+    api.elemstart(ByteProto.ENUM_CONSTANT);
+    api.elemproto(id);
+    api.elemargs();
+    return api.elemend();
   }
 
   protected final EnumConstant enumConstant(String name,
       Expression e1) {
+    JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self());
+    int id = api.identifier(name);
+    api.elemstart(ByteProto.ENUM_CONSTANT,
+      e1.self());
+    api.elemproto(id);
+    api.elemargs(e1);
+    return api.elemend();
   }
 
   protected final EnumConstant enumConstant(String name,
       Expression e1, Expression e2) {
+    JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self());
+    int id = api.identifier(name);
+    api.elemstart(ByteProto.ENUM_CONSTANT,
+      e1.self(), e2.self());
+    api.elemproto(id);
+    api.elemargs(e1, e2);
+    return api.elemend();
   }
 
   protected final EnumConstant enumConstant(String name,
       Expression e1, Expression e2, Expression e3) {
+    JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self(), e3.self());
+    int id = api.identifier(name);
+    api.elemstart(ByteProto.ENUM_CONSTANT,
+      e1.self(), e2.self(), e3.self());
+    api.elemproto(id);
+    api.elemargs(e1, e2, e3);
+    return api.elemend();
   }
 
   protected final FieldName field(String name) {
@@ -686,141 +646,101 @@ public abstract class JavaTemplate {
     return INCLUDE;
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION);
-    api.elemproto(name);
-    api.elemargs();
-    return api.elemend();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT);
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1) {
+      ArgsPart e1) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self());
-    api.elemproto(name);
-    api.elemproto(1);
-    api.elemitem(e1);
-    return api.elemend();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self());
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2) {
+      ArgsPart e1, ArgsPart e2) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2);
-    return api.elemend();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self());
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self(), e3.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2, e3);
-    return api.elemend();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self());
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3, Expression e4) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self(), e3.self(), e4.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2, e3, e4);
-    return api.elemend();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self(), e4.self());
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self(), e3.self(), e4.self(), e5.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2, e3, e4, e5);
-    return api.elemend();
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self(), e4.self(), e5.self());
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
-      Expression e6) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
+      ArgsPart e6) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
       e6.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2, e3, e4, e5, e6);
-    return api.elemend();
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
-      Expression e6, Expression e7) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
+      ArgsPart e6, ArgsPart e7) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
       e6.self(), e7.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2, e3, e4, e5, e6, e7);
-    return api.elemend();
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
-      Expression e6, Expression e7, Expression e8) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
+      ArgsPart e6, ArgsPart e7, ArgsPart e8) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
       e6.self(), e7.self(), e8.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2, e3, e4, e5, e6, e7, e8);
-    return api.elemend();
   }
 
-  protected final MethodInvocation invoke(
+  protected final Invoke invoke(
       String methodName,
-      Expression e1, Expression e2, Expression e3, Expression e4, Expression e5,
-      Expression e6, Expression e7, Expression e8, Expression e9) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
+      ArgsPart e6, ArgsPart e7, ArgsPart e8, ArgsPart e9) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
-    int name = api.identifier(methodName);
-    api.elemstart(ByteProto.METHOD_INVOCATION,
-      e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
+    api.identifierext(methodName);
+    return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
       e6.self(), e7.self(), e8.self(), e9.self());
-    api.elemproto(name);
-    api.elemargs(e1, e2, e3, e4, e5, e6, e7, e8, e9);
-    return api.elemend();
   }
 
   protected final MethodDeclaration method(String methodName) {

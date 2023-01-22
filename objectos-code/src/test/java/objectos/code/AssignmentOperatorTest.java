@@ -34,13 +34,15 @@ public class AssignmentOperatorTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          assign(n("a"), n("x"));
+          code(
+            assign(n("a"), n("x")),
 
-          assign(n("a"), n("x", "y"));
+            assign(n("a"), n("x").n("y")),
 
-          assign(n("a"), invoke("x").invoke("y"));
+            assign(n("a"), invoke("x").invoke("y")),
 
-          assign(n("a"), _new(t("test", "Foo"));
+            assign(n("a"), _new(t("test", "Foo")))
+          );
         }
       }),
 

@@ -37,7 +37,7 @@ public enum Whitespace {
 
   BEFORE_NON_EMPTY_BLOCK_END,
 
-  BEFORE_EMPTY_BODY_END;
+  BEFORE_EMPTY_BLOCK_END;
 
   private static final Whitespace[] VALUES = values();
 

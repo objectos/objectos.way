@@ -183,9 +183,9 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          t(Thread.class); invoke("currentThread");
+          t(Thread.class).invoke("currentThread");
 
-          t(Collections.class); invoke("sort", n("list"));
+          t(Collections.class).invoke("sort", n("list"));
         }
       }),
 

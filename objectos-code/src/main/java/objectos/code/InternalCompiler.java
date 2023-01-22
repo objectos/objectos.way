@@ -54,9 +54,10 @@ class InternalCompiler extends InternalApi {
       _TYPE_DECLARATION = 25,
       _TYPE_PARAMETER = 26,
       _VAR = 27;
-
   private static final int _VALUE = 66;
+
   private static final int NULL = Integer.MIN_VALUE;
+
   private static final int FALSE = 0;
 
   private static final int TRUE = 1;
@@ -71,12 +72,7 @@ class InternalCompiler extends InternalApi {
     localIndex = -1;
 
     try {
-      stackpush(
-        FALSE, // 2 = public found
-        ByteProto.COMPILATION_UNIT,
-        _START
-      );
-      element();
+      compilationUnit();
     } catch (RuntimeException e) {
       codeadd(Whitespace.NEW_LINE);
       codeadd(Whitespace.NEW_LINE);
@@ -162,9 +158,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void arrayAccess(int proto) {
+    int count = protonxt();
+
     jmp(this::expression);
 
-    int count = protonxt();
+    count--;
 
     for (int i = 0; i < count; i++) {
       codeadd(Symbol.LEFT_SQUARE_BRACKET);
@@ -231,125 +229,80 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void assignment(int proto) {
+    jmp(this::expression);
+    codeadd(Whitespace.OPTIONAL);
+    jmp(this::operator);
+    codeadd(Whitespace.OPTIONAL);
+    jmp(this::expression);
+  }
+
   private void assignOperator() {
     codeadd(Whitespace.OPTIONAL);
     codeadd(Symbol.ASSIGNMENT);
     codeadd(Whitespace.OPTIONAL);
   }
 
+  private void between(int last, int current) {
+    switch (last) {
+      case _IDENTIFIER -> codeadd(Whitespace.MANDATORY);
+
+      case _LCURLY -> {
+        codeadd(Whitespace.BEFORE_FIRST_MEMBER);
+        codeadd(Indentation.EMIT);
+      }
+
+      case _START_OLINE -> codeadd(Indentation.EMIT);
+    }
+  }
+
   private void block() {
     codeadd(Symbol.LEFT_CURLY_BRACKET);
     codeadd(Indentation.ENTER_BLOCK);
 
-    stackpush(
-      FALSE, // 2=NL
-      ByteProto.BLOCK,
-      _START
-    );
+    int count = protonxt();
 
-    element();
+    if (count > 0) {
+      codeadd(Whitespace.NEW_LINE);
+      codeadd(Indentation.EMIT);
 
-    int state = contextpop();
-    stackpop();
-    switch (state) {
-      case _START -> {
-        codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
-        codeadd(Indentation.EXIT_BLOCK);
-        codeadd(Symbol.RIGHT_CURLY_BRACKET);
-      }
+      jmp(this::statement);
 
-      case _BLOCK -> {
-        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-        codeadd(Indentation.EXIT_BLOCK);
+      for (int i = 1; i < count; i++) {
+        codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
         codeadd(Indentation.EMIT);
-        codeadd(Symbol.RIGHT_CURLY_BRACKET);
+
+        jmp(this::statement);
       }
 
-      case _RESERVED_DOT -> {
-        codeadd(Symbol.LEFT_PARENTHESIS);
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-        codeadd(Symbol.SEMICOLON);
-        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-        codeadd(Indentation.EXIT_BLOCK);
-        codeadd(Indentation.EMIT);
-        codeadd(Symbol.RIGHT_CURLY_BRACKET);
-      }
-
-      case _STATEMENT -> {
-        codeadd(Symbol.SEMICOLON);
-        codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-        codeadd(Indentation.EXIT_BLOCK);
-        codeadd(Indentation.EMIT);
-        codeadd(Symbol.RIGHT_CURLY_BRACKET);
-      }
-
-      default -> stubPop(ByteProto.BLOCK, state);
+      codeadd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+      codeadd(Indentation.EXIT_BLOCK);
+      codeadd(Indentation.EMIT);
+    } else {
+      codeadd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+      codeadd(Indentation.EXIT_BLOCK);
     }
-  }
 
-  private void block(int context, int state, int item) {
-    switch (item) {
-      case ByteProto.METHOD_INVOCATION -> {
-        stackset(_STATEMENT);
-
-        switch (state) {
-          case _START -> blockBeforeFirstStatement();
-
-          case _STATEMENT -> blockEndOfStatement();
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      case ByteProto.RETURN -> {
-        stackset(_RESERVED_SPACE);
-
-        switch (state) {
-          case _START -> blockBeforeFirstStatement();
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      default -> stubItem(context, state, item);
-    }
-  }
-
-  private void blockBeforeFirstStatement() {
-    codeadd(Whitespace.NEW_LINE);
-    codeadd(Indentation.EMIT);
-  }
-
-  private void blockBeforeNextStatement() {
-    codeadd(Whitespace.BEFORE_NEXT_STATEMENT);
-    codeadd(Indentation.EMIT);
-  }
-
-  private void blockEndOfStatement() {
-    codeadd(Symbol.SEMICOLON);
-    blockBeforeNextStatement();
+    codeadd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
   private void body() {
     codeadd(Symbol.LEFT_CURLY_BRACKET);
+
     codeadd(Indentation.ENTER_BLOCK);
 
-    stackpush(
-      constructorName, // 2 = constructor name
-      ByteProto.BODY,
-      _START
-    );
+    stackpush(constructorName /*1*/, _START);
 
     constructorName = NULL;
 
-    element();
+    sub(this::bodySub);
 
-    int state = contextpop();
+    int state = stackpop();
     stackpop(); // constructor name
 
     switch (state) {
       case _START -> {
-        codeadd(Whitespace.BEFORE_EMPTY_BODY_END);
+        codeadd(Whitespace.BEFORE_EMPTY_BLOCK_END);
         codeadd(Indentation.EXIT_BLOCK);
         codeadd(Symbol.RIGHT_CURLY_BRACKET);
       }
@@ -371,9 +324,23 @@ class InternalCompiler extends InternalApi {
 
       default -> stubPop(ByteProto.BODY, state);
     }
+
+    stackset(_BODY);
   }
 
-  private void body(int context, int state, int item) {
+  private void bodyBeforeNextMember(int nextState) {
+    codeadd(Whitespace.BEFORE_NEXT_MEMBER);
+    codeadd(Indentation.EMIT);
+    stackset(nextState);
+  }
+
+  private void bodySub(int proto) {
+    switch (proto) {
+      case ByteProto.VOID -> voidKeyword();
+    }
+  }
+
+  private void bodyx(int context, int state, int item) {
     switch (item) {
       case ByteProto.ANNOTATION -> {
         switch (state) {
@@ -659,65 +626,40 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void bodyBeforeNextMember(int nextState) {
-    codeadd(Whitespace.BEFORE_NEXT_MEMBER);
-    codeadd(Indentation.EMIT);
-    stackset(nextState);
-  }
+  private void classInstanceCreation(int proto) {
+    int count = protonxt();
 
-  private void classInstanceCreation() {
     codeadd(Keyword.NEW);
 
-    int context = ByteProto.CLASS_INSTANCE_CREATION;
-    stackpush(context, _START);
+    codeadd(Whitespace.MANDATORY);
 
-    element();
+    jmp(this::classType);
 
-    int state = contextpop();
-    switch (state) {
-      case _TYPE -> {
-        codeadd(Symbol.LEFT_PARENTHESIS);
-        codeadd(Symbol.RIGHT_PARENTHESIS);
+    count--;
+
+    codeadd(Symbol.LEFT_PARENTHESIS);
+
+    if (count > 0) {
+      jmp(this::expression);
+
+      for (int i = 1; i < count; i++) {
+        commaAndSpace();
+
+        jmp(this::expression);
       }
-
-      case _ARGS -> {
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      default -> stubPop(context, state);
     }
+
+    codeadd(Symbol.RIGHT_PARENTHESIS);
   }
 
-  private void classInstanceCreation(int context, int state, int item) {
-    switch (item) {
-      case ByteProto.CLASS_TYPE -> {
-        switch (state) {
-          case _START -> {
-            codeadd(Whitespace.MANDATORY);
-            stackset(_TYPE);
-          }
+  private void classKeyword() {
+    codeadd(Keyword.CLASS);
 
-          default -> stubState(context, state, item);
-        }
-      }
+    codeadd(Whitespace.MANDATORY);
 
-      case ByteProto.STRING_LITERAL -> {
-        switch (state) {
-          case _TYPE -> {
-            codeadd(Symbol.LEFT_PARENTHESIS);
-            stackset(_ARGS);
-          }
+    codeadd(ByteCode.IDENTIFIER, protonxt());
 
-          case _ARGS -> {
-            commaAndSpace();
-          }
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      default -> stubItem(context, state, item);
-    }
+    stackset(_TYPE_DECLARATION);
   }
 
   private void classType(int proto) {
@@ -792,14 +734,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void classTypeOrExpression(int proto) {
-    switch (proto) {
-      case ByteProto.CLASS_TYPE -> classType(proto);
-
-      default -> expression(proto);
-    }
-  }
-
   private void codeadd(Indentation value) { codeadd(ByteCode.INDENTATION, value.ordinal()); }
 
   private void codeadd(int v0) {
@@ -826,7 +760,47 @@ class InternalCompiler extends InternalApi {
     $codeadd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
   }
 
-  private void compilationUnit(int context, int state, int item) {
+  private void compilationUnit() {
+    int size = protonxt();
+
+    if (size == 0) {
+      return;
+    }
+
+    int start = protoIndex;
+    int max = start + size;
+
+    stackpush(start, max);
+
+    while (hasMore()) {
+      typeDeclaration();
+
+      codeadd(Whitespace.BEFORE_NEXT_MEMBER);
+    }
+
+    stackpush(FALSE /*1 = public found*/, _START);
+
+    for (int i = protoIndex, max = i + size; i < max; i++) {
+      protoIndex = i;
+
+      jmp(sub);
+    }
+
+    sub(this::compilationUnitSub);
+
+    stackpop();
+    stackpop();
+  }
+
+  private void compilationUnitSub(int proto) {
+    switch (proto) {
+      case ByteProto.BODY -> { codeadd(Whitespace.OPTIONAL); body(); }
+
+      case ByteProto.CLASS -> classKeyword();
+    }
+  }
+
+  private void compilationUnitx(int context, int state, int item) {
     switch (item) {
       case ByteProto.ANNOTATION -> {
         switch (state) {
@@ -1018,23 +992,13 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.ARRAY_TYPE -> arrayType(context, state, item);
 
-      case ByteProto.BLOCK -> block(context, state, item);
+      case ByteProto.BODY -> bodyx(context, state, item);
 
-      case ByteProto.BODY -> body(context, state, item);
-
-      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation(context, state, item);
-
-      case ByteProto.COMPILATION_UNIT -> compilationUnit(context, state, item);
-
-      case ByteProto.ENUM_CONSTANT -> methodInvocation(context, state, item);
+      case ByteProto.COMPILATION_UNIT -> compilationUnitx(context, state, item);
 
       case ByteProto.METHOD -> methodDeclaration(context, state, item);
 
-      case ByteProto.METHOD_INVOCATION -> methodInvocation(context, state, item);
-
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType(context, state, item);
-
-      case ByteProto.SUPER_INVOCATION -> methodInvocation(context, state, item);
 
       case ByteProto.TYPE_PARAMETER -> typeParameter(context, state, item);
 
@@ -1048,22 +1012,6 @@ class InternalCompiler extends InternalApi {
     int state = localArray[localIndex];
     localIndex -= 2;
     return state;
-  }
-
-  private void dot() {
-    int value1 = protonxt();
-    int value2 = protonxt();
-    dotItem(value1);
-    codeadd(Symbol.DOT);
-    dotItem(value2);
-  }
-
-  private void dotItem(int value) {
-    protoIndex = value;
-
-    int item = protonxt();
-
-    item(item);
   }
 
   private void element() {
@@ -1087,26 +1035,12 @@ class InternalCompiler extends InternalApi {
   }
 
   private void enumConstant() {
-    int proto = ByteProto.ENUM_CONSTANT;
-    stackpush(proto, _START);
+    jmp(this::identifier);
 
-    element();
+    int count = protonxt();
 
-    int state = contextpop();
-    switch (state) {
-      case _ARGS, _ASSIGNEE, _REFERENCE -> {
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      case _RECV -> {}
-
-      case _REFERENCE_SLOT, _SLOT -> {
-        codeadd(Indentation.EXIT_PARENTHESIS);
-        codeadd(Indentation.EMIT);
-        codeadd(Symbol.RIGHT_PARENTHESIS);
-      }
-
-      default -> stubPop(proto, state);
+    if (count > 0) {
+      invocationArguments(count);
     }
   }
 
@@ -1114,9 +1048,21 @@ class InternalCompiler extends InternalApi {
     switch (proto) {
       case ByteProto.ARRAY_ACCESS -> arrayAccess(proto);
 
+      case ByteProto.ASSIGNMENT -> assignment(proto);
+
+      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation(proto);
+
       case ByteProto.EXPRESSION_NAME -> expressionName(proto);
 
       case ByteProto.EXPRESSION_NAME_CHAIN -> expressionNameChain(proto);
+
+      case ByteProto.METHOD_INVOCATION -> methodInvocation(proto);
+
+      case ByteProto.METHOD_INVOCATION_CHAIN -> methodInvocationChain(proto);
+
+      case ByteProto.STRING_LITERAL -> codeadd(ByteCode.STRING_LITERAL, protonxt());
+
+      case ByteProto.THIS -> thisKeyword();
 
       default -> warn("no-op expression '%s'".formatted(protoname(proto)));
     }
@@ -1127,13 +1073,37 @@ class InternalCompiler extends InternalApi {
   }
 
   private void expressionNameChain(int proto) {
-    jmp(this::classTypeOrExpression);
+    jmp(this::expressionNameQualifier);
     codeadd(Symbol.DOT);
     jmp(this::expressionName);
   }
 
+  private void expressionNameQualifier(int proto) {
+    switch (proto) {
+      case ByteProto.CLASS_TYPE -> classType(proto);
+
+      default -> expression(proto);
+    }
+  }
+
   private void identifier(int proto) {
     codeadd(ByteCode.IDENTIFIER, protonxt());
+  }
+
+  private void invocationArguments(int count) {
+    codeadd(Symbol.LEFT_PARENTHESIS);
+
+    if (count > 0) {
+      jmp(this::expression);
+
+      for (int i = 1; i < count; i++) {
+        commaAndSpace();
+
+        jmp(this::expression);
+      }
+    }
+
+    codeadd(Symbol.RIGHT_PARENTHESIS);
   }
 
   private void item(int item) {
@@ -1149,6 +1119,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.ARRAY_TYPE -> arrayType();
 
+      case ByteProto.ASSIGNMENT -> assignment(item);
+
       case ByteProto.AUTO_IMPORTS -> {}
 
       case ByteProto.BLOCK -> block();
@@ -1157,7 +1129,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS -> typeKeyword(Keyword.CLASS);
 
-      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
+      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation(item);
+
+      case ByteProto.CLASS_TYPE -> classType(item);
 
       case ByteProto.CONSTRUCTOR -> constructor();
 
@@ -1181,7 +1155,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.METHOD -> methodDeclaration(_START);
 
-      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+      case ByteProto.METHOD_INVOCATION -> methodInvocation(item);
 
       case ByteProto.MODIFIER -> codeadd(ByteCode.RESERVED_KEYWORD, protonxt());
 
@@ -1200,8 +1174,6 @@ class InternalCompiler extends InternalApi {
       case ByteProto.STRING_LITERAL -> codeadd(ByteCode.STRING_LITERAL, protonxt());
 
       case ByteProto.SUPER -> codeadd(Keyword.SUPER);
-
-      case ByteProto.SUPER_INVOCATION -> constructorInvocation(item, Keyword.SUPER);
 
       case ByteProto.THIS -> codeadd(Keyword.THIS);
 
@@ -1226,6 +1198,25 @@ class InternalCompiler extends InternalApi {
     int proto = protonxt();
     target.execute(proto);
     protoIndex = returnTo;
+  }
+
+  private int leftmostOf(int proto) {
+    return switch (proto) {
+      case ByteProto.BODY -> _LCURLY;
+
+      case ByteProto.CLASS,
+           ByteProto.VOID -> _KEYWORD;
+
+      case ByteProto.COMPILATION_UNIT -> _START_OLINE;
+
+      case ByteProto.METHOD -> _IDENTIFIER;
+
+      default -> {
+        warn("no-op leftmostOf '%s'".formatted(protoname(proto)));
+
+        yield _START_OLINE;
+      }
+    };
   }
 
   private void methodDeclaration(int initialState) {
@@ -1296,73 +1287,18 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void methodInvocation() {
+  private void methodInvocation(int proto) {
     jmp(this::identifier);
-
-    codeadd(Symbol.LEFT_PARENTHESIS);
 
     int count = protonxt();
 
-    if (count > 0) {
-      jmp(this::expression);
-
-      for (int i = 1; i < count; i++) {
-        commaAndSpace();
-
-        jmp(this::expression);
-      }
-    }
-
-    codeadd(Symbol.RIGHT_PARENTHESIS);
+    invocationArguments(count);
   }
 
-  private void methodInvocation(int context, int state, int item) {
-    switch (item) {
-      case ByteProto.ARRAY_ACCESS_EXPRESSION,
-           ByteProto.DOT,
-           ByteProto.EXPRESSION_NAME -> {
-        stackset(_ARGS);
-
-        switch (state) {
-          case _ARGS -> commaAndSpace();
-
-          case _NAME -> codeadd(Symbol.LEFT_PARENTHESIS);
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      case ByteProto.IDENTIFIER -> {
-        stackset(_NAME);
-
-        switch (state) {
-          case _START -> {}
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      case ByteProto.NEW_LINE -> {
-        switch (state) {
-          case _ARGS -> {
-            stackset(_SLOT);
-            stackset(2, nop1());
-          }
-
-          case _NAME -> {
-            stackset(_NL);
-            codeadd(Symbol.LEFT_PARENTHESIS);
-            codeadd(Indentation.ENTER_PARENTHESIS);
-          }
-
-          case _SLOT -> {}
-
-          default -> stubState(context, state, item);
-        }
-      }
-
-      default -> stubItem(context, state, item);
-    }
+  private void methodInvocationChain(int proto) {
+    jmp(this::methodInvocationQualifier);
+    codeadd(Symbol.DOT);
+    jmp(this::methodInvocation);
   }
 
   private void methodInvocationPop(int proto) {
@@ -1388,6 +1324,16 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void methodInvocationQualifier(int proto) {
+    switch (proto) {
+      case ByteProto.METHOD_INVOCATION -> methodInvocation(proto);
+
+      case ByteProto.THIS -> thisKeyword();
+
+      default -> warn("/* no-op method invocation qualifier '%s' */".formatted(protoname(proto)));
+    }
+  }
+
   private int nop1() {
     var result = codeIndex;
 
@@ -1398,6 +1344,10 @@ class InternalCompiler extends InternalApi {
 
   private Object objectget(int index) {
     return objectArray[index];
+  }
+
+  private void operator(int proto) {
+    codeadd(ByteCode.SEPARATOR, protonxt());
   }
 
   private void packageKeyword() {
@@ -1446,6 +1396,16 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void protoexe() {
+    int size = protonxt();
+
+    for (int i = protoIndex, max = i + size; i < max; i++) {
+      protoIndex = i;
+
+      jmp(this::protosub);
+    }
+  }
+
   private String protoname(int value) {
     return switch (value) {
       case ByteProto.ANNOTATION -> "Annotation";
@@ -1455,6 +1415,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
 
       case ByteProto.ARRAY_TYPE -> "Array Type";
+
+      case ByteProto.ASSIGNMENT -> "Assignment";
 
       case ByteProto.AUTO_IMPORTS -> "Auto Imports";
 
@@ -1492,9 +1454,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.INTERFACE -> "Interface";
 
-      case ByteProto.METHOD -> "Method";
+      case ByteProto.INVOKE -> "Invoke";
 
-      case ByteProto.METHOD_INVOCATION -> "Method Invocation";
+      case ByteProto.METHOD -> "Method";
 
       case ByteProto.MODIFIER -> "Modifier";
 
@@ -1535,6 +1497,32 @@ class InternalCompiler extends InternalApi {
   private int protonxt() { return protoArray[protoIndex++]; }
 
   private int protopeek() { return protoArray[protoIndex]; }
+
+  private void protosub(int proto) {
+    between(stackpeek(0), leftmostOf(proto));
+
+    switch (proto) {
+      case ByteProto.BODY -> body();
+
+      case ByteProto.CLASS -> classKeyword();
+
+      case ByteProto.VOID -> voidKeyword();
+
+      default -> warn(
+        "no-op proto '%s'".formatted(protoname(proto))
+      );
+    }
+  }
+
+  private void returnStatement() {
+    codeadd(Keyword.RETURN);
+
+    codeadd(Whitespace.MANDATORY);
+
+    jmp(this::expression);
+
+    codeadd(Symbol.SEMICOLON);
+  }
 
   private void righAndLeftSquareBracket() {
     codeadd(Symbol.RIGHT_SQUARE_BRACKET);
@@ -1579,6 +1567,23 @@ class InternalCompiler extends InternalApi {
 
   private void stackset(int offset, int value) { localArray[localIndex - offset] = value; }
 
+  private void statement(int proto) {
+    switch (proto) {
+      case ByteProto.BLOCK -> block();
+
+      case ByteProto.SUPER -> superKeyword();
+
+      case ByteProto.SUPER_INVOCATION -> superInvocation();
+
+      case ByteProto.RETURN -> returnStatement();
+
+      default -> {
+        expression(proto);
+        codeadd(Symbol.SEMICOLON);
+      }
+    }
+  }
+
   private void stubItem(int ctx, int state, int item) {
     warn("no-op item '%s' @ '%s' (state=%d)".formatted(
       protoname(item), protoname(ctx), state));
@@ -1592,6 +1597,37 @@ class InternalCompiler extends InternalApi {
   private void stubState(int ctx, int state, int item) {
     warn("no-op state @ '%s' (state=%d) item '%s'".formatted(
       protoname(ctx), state, protoname(item)));
+  }
+
+  private void sub(JumpTarget sub) {
+    int size = protonxt();
+
+    for (int i = protoIndex, max = i + size; i < max; i++) {
+      protoIndex = i;
+
+      jmp(sub);
+    }
+  }
+
+  private void superInvocation() {
+    codeadd(Keyword.SUPER);
+
+    int count = protonxt();
+
+    invocationArguments(count);
+
+    codeadd(Symbol.SEMICOLON);
+  }
+
+  private void superKeyword() {
+    codeadd(Keyword.SUPER);
+    codeadd(Symbol.LEFT_PARENTHESIS);
+    codeadd(Symbol.RIGHT_PARENTHESIS);
+    codeadd(Symbol.SEMICOLON);
+  }
+
+  private void thisKeyword() {
+    codeadd(Keyword.THIS);
   }
 
   private void typeKeyword(Keyword keyword) {
@@ -1643,6 +1679,12 @@ class InternalCompiler extends InternalApi {
 
       default -> stubItem(context, state, item);
     }
+  }
+
+  private void voidKeyword() {
+    codeadd(Keyword.VOID);
+
+    stackset(_TYPE);
   }
 
   private void warn(String msg) {

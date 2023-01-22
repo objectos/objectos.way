@@ -111,7 +111,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
       case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
 
-      case BEFORE_EMPTY_BODY_END -> {}
+      case BEFORE_EMPTY_BLOCK_END -> {}
     }
   }
 

@@ -32,12 +32,12 @@ public class ArrayAccessExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("foo",
-            a(n("a"), n("x")),
-
-            a(n("a"), n("x"), n("y")),
-
-            a(n("a"), n("x"), n("y"), n("z"))
+          code(
+            invoke("foo",
+              n("a"), dim(n("x")),
+              n("a"), dim(n("x")), dim(n("y")),
+              n("a"), dim(n("x")), dim(n("y")), dim(n("z"))
+            )
           );
         }
       }),
