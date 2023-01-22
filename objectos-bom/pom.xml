@@ -50,17 +50,6 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>objectos-code-annotations</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>objectos-code-tools</artifactId>
-				<version>${project.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
 				<artifactId>objectos-lang</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -71,6 +60,16 @@
 			</dependency>
 
 			<!-- incubator projects -->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code-annotations</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>code-boot</artifactId>
@@ -92,6 +91,12 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>code-testng</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>code-tools</artifactId>
 				<version>${project.version}</version>
 				<scope>test</scope>
 			</dependency>

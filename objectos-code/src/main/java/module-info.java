@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 module br.com.objectos.code {
-  exports br.com.objectos.code.java;
-  exports br.com.objectos.code.java.declaration;
-  exports br.com.objectos.code.java.element;
-  exports br.com.objectos.code.java.expression;
-  exports br.com.objectos.code.java.expression.production;
-  exports br.com.objectos.code.java.io;
-  exports br.com.objectos.code.java.statement;
-  exports br.com.objectos.code.java.type;
-  exports br.com.objectos.code.model;
-  exports br.com.objectos.code.model.element;
-  exports br.com.objectos.code.processing;
-  exports br.com.objectos.code.processing.type;
-  exports br.com.objectos.code.util;
   exports objectos.code;
 
   requires transitive objectos.util;
   requires transitive java.compiler;
 
-  requires br.com.objectos.code.annotations;
   requires objectos.lang;
 }

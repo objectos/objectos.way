@@ -85,14 +85,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>br.com.objectos</groupId>
-			<artifactId>objectos-code-annotations</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>br.com.objectos</groupId>
-			<artifactId>objectos-code-tools</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>br.com.objectos</groupId>
 			<artifactId>objectos-util</artifactId>
 		</dependency>
 

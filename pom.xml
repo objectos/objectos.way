@@ -68,8 +68,6 @@
 	<modules>
 		<module>objectos-bom</module>
 		<module>objectos-code</module>
-		<module>objectos-code-annotations</module>
-		<module>objectos-code-tools</module>
 		<module>objectos-lang</module>
 		<module>objectos-util</module>
 	</modules>
