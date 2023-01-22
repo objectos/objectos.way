@@ -94,16 +94,6 @@ final class ByteProto {
         && proto >= THIS;
   }
 
-  public static boolean isExpressionStatement(int proto) {
-    return switch (proto) {
-      case ASSIGNMENT,
-           CLASS_INSTANCE_CREATION,
-           METHOD_INVOCATION -> true;
-
-      default -> false;
-    };
-  }
-
   public static boolean isType(int proto) {
     return proto <= ARRAY_TYPE
         && proto >= TYPE_VARIABLE;

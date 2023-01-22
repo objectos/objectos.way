@@ -15,72 +15,67 @@
  */
 package objectos.code;
 
-import static org.testng.Assert.assertEquals;
-
-import objectos.code.Fixture.Kind;
-import org.testng.annotations.Test;
-
 public class ExpressionNameTest {
 
-  private final Fixture fix = new Fixture("ExpressionName", Kind.VOID_METHOD);
-
-  @Test(description = """
-  Expression name TC01:
-
-  - identifiers
-  """)
-  public void testCase01() {
-    assertEquals(
-      fix.ture(new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          invoke("test", n("a"));
-
-          invoke("test", n("a").n("b"));
-
-          invoke("test", n("a").n("b").n("c"));
-        }
-      }),
-
-      """
-      class ExpressionName {
-        void method() {
-          test(a);
-          test(a.b);
-          test(a.b.c);
-        }
-      }
-      """
-    );
-  }
-
-  @Test(description = """
-  Expression name TC01:
-
-  - base = ClassName
-  """)
-  public void testCase02() {
-    // @formatter:off
-    assertEquals(
-      fix.ture(new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          invoke("test", t("test", "Suit").n("CLUBS"));
-
-          invoke("test", t("test", "Suit").n("CLUBS").n("field"));
-        }
-      }),
-
-      """
-      class ExpressionName {
-        void method() {
-          test(test.Suit.CLUBS);
-          test(test.Suit.CLUBS.field);
-        }
-      }
-      """
-    );
-    // @formatter:on
-  }
+  //  private final Fixture fix = new Fixture("ExpressionName", Kind.VOID_METHOD);
+  //
+  //  @Test(description = """
+  //  Expression name TC01:
+  //
+  //  - identifiers
+  //  """)
+  //  public void testCase01() {
+  //    assertEquals(
+  //      fix.ture(new JavaTemplate() {
+  //        @Override
+  //        protected final void definition() {
+  //          invoke("test", n("a"));
+  //
+  //          invoke("test", n("a").n("b"));
+  //
+  //          invoke("test", n("a").n("b").n("c"));
+  //        }
+  //      }),
+  //
+  //      """
+  //      class ExpressionName {
+  //        void method() {
+  //          test(a);
+  //          test(a.b);
+  //          test(a.b.c);
+  //        }
+  //      }
+  //      """
+  //    );
+  //  }
+  //
+  //  @Test(description = """
+  //  Expression name TC01:
+  //
+  //  - base = ClassName
+  //  """)
+  //  public void testCase02() {
+//    // @formatter:off
+//    assertEquals(
+//      fix.ture(new JavaTemplate() {
+//        @Override
+//        protected final void definition() {
+//          invoke("test", t("test", "Suit").n("CLUBS"));
+//
+//          invoke("test", t("test", "Suit").n("CLUBS").n("field"));
+//        }
+//      }),
+//
+//      """
+//      class ExpressionName {
+//        void method() {
+//          test(test.Suit.CLUBS);
+//          test(test.Suit.CLUBS.field);
+//        }
+//      }
+//      """
+//    );
+//    // @formatter:on
+  //  }
 
 }

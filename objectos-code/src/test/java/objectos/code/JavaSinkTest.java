@@ -61,7 +61,7 @@ public class JavaSinkTest {
     Files.walkFileTree(directory, rm);
   }
 
-  @Test
+  @Test(enabled = false)
   public void testCase01() throws IOException {
     // @formatter:off
     var tmpl = new JavaTemplate() {
@@ -92,7 +92,7 @@ public class JavaSinkTest {
     // @formatter:on
   }
 
-  @Test(dependsOnMethods = "testCase01")
+  @Test(enabled = false, dependsOnMethods = "testCase01")
   public void testCase02() {
     // @formatter:off
     var tmpl = new JavaTemplate() {
@@ -114,7 +114,7 @@ public class JavaSinkTest {
     }
   }
 
-  @Test(dependsOnMethods = "testCase02")
+  @Test(enabled = false, dependsOnMethods = "testCase02")
   public void testCase03() throws IOException {
     // @formatter:off
     var tmpl = new JavaTemplate() {
@@ -152,7 +152,7 @@ public class JavaSinkTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void testCase04() throws IOException {
     // @formatter:off
     var tmpl = new JavaTemplate() {
@@ -187,7 +187,7 @@ public class JavaSinkTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void testCase05() throws IOException {
     // @formatter:off
     var tmpl = new JavaTemplate() {

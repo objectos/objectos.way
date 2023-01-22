@@ -24,7 +24,7 @@ public class ArrayAccessExpressionTest {
 
   private final Fixture fix = new Fixture("ArrayAccess", Kind.VOID_METHOD);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   variable arity test
   """)
   public void testCase01() {

@@ -77,22 +77,6 @@ class InternalApi extends InternalState {
     return template.item;
   }
 
-  public final _Item dot(Object o) {
-    if (o == template.item) {
-      int[] array = levelArray[level];
-      int second = array[--levelIndex[level]];
-      --levelIndex[level];
-      int first = array[--levelIndex[level]];
-      --levelIndex[level];
-      int self = protoIndex;
-      protoadd(ByteProto.DOT, first, second);
-      leveladd(LOCAL, self);
-      return template.item;
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
-  }
-
   public final _Item elem(int proto) {
     elempre();
     elemcnt(proto);

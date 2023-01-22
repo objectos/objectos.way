@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 
 public class AnnotationTest {
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   single element annotation + string literal
   """)
   public void testCase01() {

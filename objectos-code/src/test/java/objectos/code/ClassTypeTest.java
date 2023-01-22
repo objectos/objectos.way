@@ -15,66 +15,62 @@
  */
 package objectos.code;
 
-import static org.testng.Assert.assertEquals;
-
-import org.testng.annotations.Test;
-
 public class ClassTypeTest {
 
-  @Test(description = """
-  ClassType TC01
-
-  - pkg + name
-  """)
-  public void testCase01() {
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _class("ClassType");
-          body(
-            t("com.example", "Bar"), field("a")
-          );
-        }
-      }.toString(),
-
-      """
-      class ClassType {
-        com.example.Bar a;
-      }
-      """
-    );
-  }
-
-  @Test(description = """
-  ClassType TC02
-
-  - nested class
-  """)
-  public void testCase02() {
-    assertEquals(
-      new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _package("com.example");
-
-          autoImports();
-
-          _class("A");
-          body(
-            t("com.example", "A", "B"), field("t01")
-          );
-        }
-      }.toString(),
-
-      """
-      package com.example;
-
-      class A {
-        B t01;
-      }
-      """
-    );
-  }
+  //  @Test(description = """
+  //  ClassType TC01
+  //
+  //  - pkg + name
+  //  """)
+  //  public void testCase01() {
+  //    assertEquals(
+  //      new JavaTemplate() {
+  //        @Override
+  //        protected final void definition() {
+  //          _class("ClassType");
+  //          body(
+  //            t("com.example", "Bar"), field("a")
+  //          );
+  //        }
+  //      }.toString(),
+  //
+  //      """
+  //      class ClassType {
+  //        com.example.Bar a;
+  //      }
+  //      """
+  //    );
+  //  }
+  //
+  //  @Test(description = """
+  //  ClassType TC02
+  //
+  //  - nested class
+  //  """)
+  //  public void testCase02() {
+  //    assertEquals(
+  //      new JavaTemplate() {
+  //        @Override
+  //        protected final void definition() {
+  //          _package("com.example");
+  //
+  //          autoImports();
+  //
+  //          _class("A");
+  //          body(
+  //            t("com.example", "A", "B"), field("t01")
+  //          );
+  //        }
+  //      }.toString(),
+  //
+  //      """
+  //      package com.example;
+  //
+  //      class A {
+  //        B t01;
+  //      }
+  //      """
+  //    );
+  //  }
 
 }

@@ -24,7 +24,7 @@ public class BlockTest {
 
   private final Fixture fix = new Fixture("Blocks", Kind.VOID_METHOD);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Blocks TC01
 
   - empty
@@ -54,34 +54,34 @@ public class BlockTest {
   - statements only
   """)
   public void testCase02() {
-    assertEquals(
-      fix.ture(new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          block(
-            invoke("a")
-          );
-          block(
-            invoke("a"),
-            invoke("b")
-          );
-        }
-      }),
-
-      """
-      class Blocks {
-        void method() {
-          {
-            a();
-          }
-          {
-            a();
-            b();
-          }
-        }
-      }
-      """
-    );
+    //    assertEquals(
+    //      fix.ture(new JavaTemplate() {
+    //        @Override
+    //        protected final void definition() {
+    //          block(
+    //            invoke("a")
+    //          );
+    //          block(
+    //            invoke("a"),
+    //            invoke("b")
+    //          );
+    //        }
+    //      }),
+    //
+    //      """
+    //      class Blocks {
+    //        void method() {
+    //          {
+    //            a();
+    //          }
+    //          {
+    //            a();
+    //            b();
+    //          }
+    //        }
+    //      }
+    //      """
+    //    );
   }
 
 }

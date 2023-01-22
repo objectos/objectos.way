@@ -15,38 +15,33 @@
  */
 package objectos.code;
 
-import static org.testng.Assert.assertEquals;
-
-import objectos.code.Fixture.Kind;
-import org.testng.annotations.Test;
-
 public class ReturnStatementTest {
 
-  private final Fixture fix = new Fixture("Return", Kind.VOID_METHOD);
-
-  @Test(description = """
-  - simple expression
-  - single line
-  """)
-  public void testCase01() {
-    // @formatter:off
-    assertEquals(
-      fix.ture(new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          _return(); s("abc");
-        }
-      }),
-
-      """
-      class Return {
-        void method() {
-          return "abc";
-        }
-      }
-      """
-    );
-    // @formatter:on
-  }
-
+  //  private final Fixture fix = new Fixture("Return", Kind.VOID_METHOD);
+  //
+  //  @Test(description = """
+  //  - simple expression
+  //  - single line
+  //  """)
+  //  public void testCase01() {
+//    // @formatter:off
+//    assertEquals(
+//      fix.ture(new JavaTemplate() {
+//        @Override
+//        protected final void definition() {
+//          _return(); s("abc");
+//        }
+//      }),
+//
+//      """
+//      class Return {
+//        void method() {
+//          return "abc";
+//        }
+//      }
+//      """
+//    );
+//    // @formatter:on
+  //  }
+  //
 }

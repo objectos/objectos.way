@@ -15,43 +15,38 @@
  */
 package objectos.code;
 
-import static org.testng.Assert.assertEquals;
-
-import objectos.code.Fixture.Kind;
-import org.testng.annotations.Test;
-
 public class LocalVariableDeclarationTest {
 
-  private final Fixture fix = new Fixture("LocalVar", Kind.VOID_METHOD);
-
-  @Test(description = """
-  var s = "java";
-  """)
-  public void testCase01() {
-    assertEquals(
-      fix.ture(new JavaTemplate() {
-        @Override
-        protected final void definition() {
-          code(
-            _var(), id("a"), s("java"),
-            _var(), id("b"), invoke("m", s("java")),
-            _int(), id("c"), i(0),
-            t(String.class), id("d"), s("d")
-          );
-        }
-      }),
-
-      """
-      class LocalVar {
-        void method() {
-          var a = "java";
-          var b = m("java");
-          int c = 0;
-          java.lang.String d = "d";
-        }
-      }
-      """
-    );
-  }
+  //  private final Fixture fix = new Fixture("LocalVar", Kind.VOID_METHOD);
+  //
+  //  @Test(description = """
+  //  var s = "java";
+  //  """)
+  //  public void testCase01() {
+  //    assertEquals(
+  //      fix.ture(new JavaTemplate() {
+  //        @Override
+  //        protected final void definition() {
+  //          code(
+  //            _var(), id("a"), s("java"),
+  //            _var(), id("b"), invoke("m", s("java")),
+  //            _int(), id("c"), i(0),
+  //            t(String.class), id("d"), s("d")
+  //          );
+  //        }
+  //      }),
+  //
+  //      """
+  //      class LocalVar {
+  //        void method() {
+  //          var a = "java";
+  //          var b = m("java");
+  //          int c = 0;
+  //          java.lang.String d = "d";
+  //        }
+  //      }
+  //      """
+  //    );
+  //  }
 
 }

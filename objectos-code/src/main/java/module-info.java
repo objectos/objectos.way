@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module br.com.objectos.code {
+module objectos.code {
   exports objectos.code;
 
   requires transitive objectos.util;

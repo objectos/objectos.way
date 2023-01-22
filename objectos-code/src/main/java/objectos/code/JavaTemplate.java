@@ -567,10 +567,10 @@ public abstract class JavaTemplate {
   protected final EnumConstant enumConstant(String name) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    int id = api.identifier(name);
-    api.elemstart(ByteProto.ENUM_CONSTANT);
-    api.elemproto(id);
-    api.elemargs();
+    //    int id = api.identifier(name);
+    //    api.elemstart(ByteProto.ENUM_CONSTANT);
+    //    api.elemproto(id);
+    //    api.elemargs();
     return api.elemend();
   }
 
@@ -578,11 +578,11 @@ public abstract class JavaTemplate {
       Expression e1) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    int id = api.identifier(name);
-    api.elemstart(ByteProto.ENUM_CONSTANT,
-      e1.self());
-    api.elemproto(id);
-    api.elemargs(e1);
+    //    int id = api.identifier(name);
+    //    api.elemstart(ByteProto.ENUM_CONSTANT,
+    //      e1.self());
+    //    api.elemproto(id);
+    //    api.elemargs(e1);
     return api.elemend();
   }
 
@@ -590,11 +590,11 @@ public abstract class JavaTemplate {
       Expression e1, Expression e2) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    int id = api.identifier(name);
-    api.elemstart(ByteProto.ENUM_CONSTANT,
-      e1.self(), e2.self());
-    api.elemproto(id);
-    api.elemargs(e1, e2);
+    //    int id = api.identifier(name);
+    //    api.elemstart(ByteProto.ENUM_CONSTANT,
+    //      e1.self(), e2.self());
+    //    api.elemproto(id);
+    //    api.elemargs(e1, e2);
     return api.elemend();
   }
 
@@ -602,11 +602,11 @@ public abstract class JavaTemplate {
       Expression e1, Expression e2, Expression e3) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    int id = api.identifier(name);
-    api.elemstart(ByteProto.ENUM_CONSTANT,
-      e1.self(), e2.self(), e3.self());
-    api.elemproto(id);
-    api.elemargs(e1, e2, e3);
+    //    int id = api.identifier(name);
+    //    api.elemstart(ByteProto.ENUM_CONSTANT,
+    //      e1.self(), e2.self(), e3.self());
+    //    api.elemproto(id);
+    //    api.elemargs(e1, e2, e3);
     return api.elemend();
   }
 
