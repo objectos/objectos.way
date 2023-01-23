@@ -38,32 +38,32 @@ public class CompilationUnitTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  package test;
-  //
-  //  class Foo {}
-  //  """)
-  //  public void testCase02() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _package("test");
-//
-//          _class("Foo"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      package test;
-//
-//      class Foo {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
+
+  @Test(description = """
+    package test;
+
+    class Foo {}
+    """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _package("test"),
+
+            _class("Foo"), body()
+          );
+        }
+      }.toString(),
+
+      """
+      package test;
+
+      class Foo {}
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  import test.Bar;

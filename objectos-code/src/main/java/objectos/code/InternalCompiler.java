@@ -43,6 +43,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private static final int _START = 0,
+      _SEMICOLON = 1,
+
       _ANNOTATIONS = 1,
       _ARGS = 2,
       _BODY = 4,
@@ -72,6 +74,8 @@ class InternalCompiler extends InternalApi {
   private int constructorName;
 
   final void compile() {
+    code = 0;
+
     codeIndex = 0;
 
     constructorName = NULL;
@@ -79,6 +83,8 @@ class InternalCompiler extends InternalApi {
     localIndex = -1;
 
     try {
+      lastSet(_START);
+
       elemExecute(this::compilationUnit);
     } catch (RuntimeException e) {
       codeAdd(Whitespace.NEW_LINE);
@@ -750,16 +756,20 @@ class InternalCompiler extends InternalApi {
   }
 
   private void compilationUnit() {
-    var contents = false;
+    itemTry(this::packageDeclaration);
 
-    while (elemHasNext()) {
-      if (contents) {
-        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+    if (elemHasNext()) {
+      if (lastIs(_SEMICOLON)) {
+        codeAdd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
       }
 
       typeDeclaration();
 
-      contents = true;
+      while (elemHasNext()) {
+        codeAdd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+
+        typeDeclaration();
+      }
     }
   }
 
@@ -1188,6 +1198,26 @@ class InternalCompiler extends InternalApi {
     protoIndex = returnTo;
   }
 
+  private void itemTry(ItemAction action) {
+    if (elemHasNext()) {
+      int codeRollback = codeIndex;
+
+      int protoRollback = protoIndex;
+
+      try {
+        itemExecute(action);
+      } catch (CompilationException e) {
+        codeIndex = codeRollback;
+
+        protoIndex = protoRollback;
+      }
+    }
+  }
+
+  private boolean lastIs(int value) { return code == value; }
+
+  private void lastSet(int value) { code = value; }
+
   private void methodDeclaration(int initialState) {
     int proto = ByteProto.METHOD;
     stackpush(proto, initialState);
@@ -1264,11 +1294,26 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.SEPARATOR, protoNext());
   }
 
+  private void packageDeclaration(int proto) {
+    if (proto == ByteProto.PACKAGE) {
+      packageKeyword();
+    } else {
+      throw new CompilationException(
+        "Package declaration not found."
+      );
+    }
+  }
+
   private void packageKeyword() {
     codeAdd(Keyword.PACKAGE);
+
     codeAdd(Whitespace.MANDATORY);
+
     codeAdd(ByteCode.IDENTIFIER, protoNext());
+
     codeAdd(Symbol.SEMICOLON);
+
+    lastSet(_SEMICOLON);
   }
 
   private void parameterizedType() {
@@ -1314,7 +1359,8 @@ class InternalCompiler extends InternalApi {
     if (actual != expected) {
       throw new CompilationException(
         "ByteProto failed assertion: found '%s' but expected '%s'.".formatted(
-          protoName(actual), protoName(expected)));
+          protoName(actual), protoName(expected))
+      );
     }
   }
 
@@ -1497,6 +1543,10 @@ class InternalCompiler extends InternalApi {
   private void typeDeclaration() {
     if (elemHasNext(ByteProto.CLASS)) {
       classDeclaration();
+    } else {
+      throw new CompilationException(
+        "Type declaration not found."
+      );
     }
   }
 
