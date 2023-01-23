@@ -64,32 +64,32 @@ public class CompilationUnitTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  import test.Bar;
-  //
-  //  class Foo extends Bar {}
-  //  """)
-  //  public void testCase03() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          autoImports();
-//
-//          _class("Foo"); _extends(); t("test", "Bar"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      import test.Bar;
-//
-//      class Foo extends Bar {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
+
+  @Test(description = """
+    import test.Bar;
+
+    class Foo extends Bar {}
+    """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            autoImports(),
+
+            _class("Foo"), _extends(), t("test", "Bar"), body()
+          );
+        }
+      }.toString(),
+
+      """
+      import test.Bar;
+
+      class Foo extends Bar {}
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  autoImports() + java.lang
