@@ -15,27 +15,29 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
 public class CompilationUnitTest {
 
-  //  @Test(description = """
-  //  class Foo {}
-  //  """)
-  //  public void testCase01() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _class("Foo"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      class Foo {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
+  @Test(description = """
+    class Foo {}
+    """)
+  public void testCase01() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(_class("Foo"), body());
+        }
+      }.toString(),
+
+      """
+      class Foo {}
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  package test;

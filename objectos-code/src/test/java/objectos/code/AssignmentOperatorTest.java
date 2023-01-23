@@ -15,46 +15,43 @@
  */
 package objectos.code;
 
-import objectos.code.Fixture.Kind;
-import org.testng.annotations.Test;
-
 public class AssignmentOperatorTest {
 
-  private final Fixture fix = new Fixture("Assign", Kind.VOID_METHOD);
-
-  @Test(description = """
-  Assignment Operators TC01
-
-  - implicit operator (default) should be the simple one
-  """)
-  public void testCase01() {
-    //    assertEquals(
-    //      fix.ture(new JavaTemplate() {
-    //        @Override
-    //        protected final void definition() {
-    //          code(
-    //            assign(n("a"), n("x")),
-    //
-    //            assign(n("a"), n("x").n("y")),
-    //
-    //            assign(n("a"), invoke("x").invoke("y")),
-    //
-    //            assign(n("a"), _new(t("test", "Foo")))
-    //          );
-    //        }
-    //      }),
-    //
-    //      """
-    //      class Assign {
-    //        void method() {
-    //          a = x;
-    //          a = x.y;
-    //          a = x().y();
-    //          a = new test.Foo();
-    //        }
-    //      }
-    //      """
-    //    );
-  }
+  //  private final Fixture fix = new Fixture("Assign", Kind.VOID_METHOD);
+  //
+  //  @Test(description = """
+  //  Assignment Operators TC01
+  //
+  //  - implicit operator (default) should be the simple one
+  //  """)
+  //  public void testCase01() {
+  //        assertEquals(
+  //          fix.ture(new JavaTemplate() {
+  //            @Override
+  //            protected final void definition() {
+  //              code(
+  //                assign(n("a"), n("x")),
+  //    
+  //                assign(n("a"), n("x").n("y")),
+  //    
+  //                assign(n("a"), invoke("x").invoke("y")),
+  //    
+  //                assign(n("a"), _new(t("test", "Foo")))
+  //              );
+  //            }
+  //          }),
+  //    
+  //          """
+  //          class Assign {
+  //            void method() {
+  //              a = x;
+  //              a = x.y;
+  //              a = x().y();
+  //              a = new test.Foo();
+  //            }
+  //          }
+  //          """
+  //        );
+  //  }
 
 }

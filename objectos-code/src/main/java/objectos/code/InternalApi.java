@@ -598,7 +598,7 @@ class InternalApi extends InternalState {
     return self;
   }
 
-  public final int protoget(int index) { return protoArray[index]; }
+  public final int protoAt(int index) { return protoArray[index]; }
 
   final void accept(JavaTemplate template) {
     this.template = template;
