@@ -21,17 +21,37 @@ import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-class InternalApi extends InternalState {
+class InternalApi {
 
   private static final int LOCAL = -1;
   private static final int EXT = -2;
   private static final int LAMBDA = -3;
+
+  final AutoImports autoImports = new AutoImports();
+
+  int code;
+
+  int[] codeArray = new int[128];
+
+  int codeIndex;
 
   int[][] levelArray = new int[2][];
 
   int[] levelIndex = new int[2];
 
   int level;
+
+  Object[] objectArray = new Object[64];
+
+  int objectIndex;
+
+  int[] protoArray = new int[256];
+
+  int protoIndex;
+
+  int[] stackArray = new int[10];
+
+  int stackIndex;
 
   private JavaTemplate template;
 

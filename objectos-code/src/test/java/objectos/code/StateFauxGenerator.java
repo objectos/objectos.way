@@ -28,7 +28,7 @@ class StateFauxGenerator {
   public final void execute() {
     value = 1;
 
-    state("ANNOTATIONS");
+    state("CU_START");
     state("ARGS");
     state("BLOCK");
     state("BODY");

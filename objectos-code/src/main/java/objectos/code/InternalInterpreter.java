@@ -44,29 +44,9 @@ abstract class InternalInterpreter extends InternalCompiler {
   protected abstract void writeWhitespace(Whitespace value);
 
   final void interpret() {
-    codeIndex = protoIndex = localIndex = 0;
+    codeIndex = protoIndex = stackIndex = 0;
 
     objectIndex = -1;
-
-    writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
-
-    var code = 0;
-
-    do {
-      code = $loop();
-    } while (code != ByteCode.EOF);
-
-    writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
-  }
-
-  final void pass2() {
-    codeIndex = 0;
-
-    localIndex = 0;
-
-    objectIndex = -1;
-
-    protoIndex = 0;
 
     writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
 
@@ -148,7 +128,7 @@ abstract class InternalInterpreter extends InternalCompiler {
     }
 
     if (initialNewLine) {
-      writeWhitespace(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+      writeWhitespace(Whitespace.BEFORE_NEXT_MEMBER);
     }
 
     var iterator = types.iterator();

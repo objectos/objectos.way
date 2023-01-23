@@ -40,7 +40,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected void writeCompilationUnitStart(String packageName, String fileName) {
     out.setLength(0);
 
-    localIndex = out.length();
+    stackIndex = out.length();
   }
 
   @Override
@@ -93,25 +93,23 @@ class JavaSinkOfStringBuilder extends JavaSink {
   @Override
   protected final void writeWhitespace(Whitespace value) {
     switch (value) {
-      case MANDATORY, OPTIONAL -> out.append(' ');
-
-      case NEW_LINE -> writenl();
-
       case AFTER_ANNOTATION -> writenl();
+
+      case BEFORE_EMPTY_BLOCK_END -> {}
 
       case BEFORE_FIRST_MEMBER -> writenl();
 
-      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); }
+      case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
 
-      case BEFORE_NEXT_TOP_LEVEL_ITEM -> { writenl(); writenl(); }
+      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); }
 
       case BEFORE_NEXT_STATEMENT -> writenl();
 
-      case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
-
       case BEFORE_NON_EMPTY_BLOCK_END -> writenl();
 
-      case BEFORE_EMPTY_BLOCK_END -> {}
+      case MANDATORY, OPTIONAL -> out.append(' ');
+
+      case NEW_LINE -> writenl();
     }
   }
 
@@ -130,7 +128,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   private void writenl() {
     out.append(System.lineSeparator());
 
-    localIndex = out.length();
+    stackIndex = out.length();
   }
 
 }

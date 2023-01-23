@@ -32,30 +32,21 @@ class InternalCompiler extends InternalApi {
   }
 
   private static final int _START = 0,
-      _IDENTIFIER = 1,
-      _KEYWORD = 2,
-      _SEMICOLON = 3,
-
-      _BODY = 4,
-      _ENUM_CONSTANTS = 9,
-      _INIT = 11,
-      _NAME = 16;
-
-  private static final int NULL = Integer.MIN_VALUE;
-
-  private int constructorName;
+      _ANNOTATION = 1,
+      _IDENTIFIER = 2,
+      _KEYWORD = 3,
+      _RIGHT_CURLY_BRACKET = 4,
+      _SEMICOLON = 5;
 
   final void compile() {
     code = codeIndex = objectIndex = 0;
 
-    constructorName = NULL;
-
-    localIndex = -1;
+    stackIndex = -1;
 
     try {
       lastSet(_START);
 
-      elemExecute(this::compilationUnit);
+      elemExecute(this::compilationUnit, ByteProto.COMPILATION_UNIT);
     } catch (RuntimeException e) {
       codeAdd(Whitespace.NEW_LINE);
       codeAdd(Whitespace.NEW_LINE);
@@ -78,6 +69,22 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.EOF);
   }
 
+  private void annotation(int proto) {
+    switch (last()) {
+      case _SEMICOLON -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+    }
+
+    elemExecute(this::annotationAction, proto);
+
+    lastSet(_ANNOTATION);
+  }
+
+  private void annotationAction() {
+    codeAdd(Symbol.COMMERCIAL_AT);
+
+    itemExecute(this::classType);
+  }
+
   private void autoImports() {
     switch (last()) {
       default -> codeAdd(ByteCode.AUTO_IMPORTS0);
@@ -88,62 +95,34 @@ class InternalCompiler extends InternalApi {
     lastSet(_SEMICOLON);
   }
 
-  @SuppressWarnings("unused")
-  private void body() {
-    codeAdd(Symbol.LEFT_CURLY_BRACKET);
-
-    codeAdd(Indentation.ENTER_BLOCK);
-
-    stackpush(constructorName /*1*/, _START);
-
-    constructorName = NULL;
-
-    int state = stackpop();
-    stackpop(); // constructor name
-
-    switch (state) {
-      case _START -> {
-        codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
-        codeAdd(Indentation.EXIT_BLOCK);
-        codeAdd(Symbol.RIGHT_CURLY_BRACKET);
-      }
-
-      case _ENUM_CONSTANTS, _INIT, _NAME -> {
-        codeAdd(Symbol.SEMICOLON);
-        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-        codeAdd(Indentation.EXIT_BLOCK);
-        codeAdd(Indentation.EMIT);
-        codeAdd(Symbol.RIGHT_CURLY_BRACKET);
-      }
-
-      case _BODY -> {
-        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-        codeAdd(Indentation.EXIT_BLOCK);
-        codeAdd(Indentation.EMIT);
-        codeAdd(Symbol.RIGHT_CURLY_BRACKET);
-      }
-
-      default -> stubPop(ByteProto.BODY, state);
-    }
-
-    stackset(_BODY);
-  }
-
   private void body(int proto) {
     codeAdd(Whitespace.OPTIONAL);
 
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
-    elemExecute(this::bodyAction);
+    elemExecute(this::bodyAction, ByteProto.BODY);
 
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+    lastSet(_RIGHT_CURLY_BRACKET);
   }
 
   private void bodyAction() {}
 
   private void classDeclaration() {
     switch (last()) {
-      case _SEMICOLON -> codeAdd(Whitespace.BEFORE_NEXT_TOP_LEVEL_ITEM);
+      case _ANNOTATION -> {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+        codeAdd(Indentation.EMIT);
+      }
+
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+
+      case _RIGHT_CURLY_BRACKET,
+           _SEMICOLON -> {
+        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+        codeAdd(Indentation.EMIT);
+      }
     }
 
     itemExecute(this::classKeyword);
@@ -286,17 +265,21 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void elemExecute(ElementAction action) {
+  private void elemExecute(ElementAction action, int self) {
+    stackpush(self);
+
     if (elemStart()) {
       action.execute();
 
       stackpop(); // pop max
     }
+
+    stackpop(); // self
   }
 
   private boolean elemHasNext() {
     if (!compilationError()) {
-      int max = stackpeek(0);
+      int max = stackPeek(0);
 
       return protoIndex < max;
     } else {
@@ -400,6 +383,19 @@ class InternalCompiler extends InternalApi {
 
   private void lastSet(int value) { code = value; }
 
+  private void modifier(int proto) {
+    switch (last()) {
+      case _SEMICOLON -> {
+        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+        codeAdd(Indentation.EMIT);
+      }
+    }
+
+    codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
+
+    lastSet(_KEYWORD);
+  }
+
   private Object objectget(int index) {
     return objectArray[index];
   }
@@ -424,133 +420,34 @@ class InternalCompiler extends InternalApi {
     lastSet(_SEMICOLON);
   }
 
-  private String protoName(int value) {
-    return switch (value) {
-      case ByteProto.ANNOTATION -> "Annotation";
-
-      case ByteProto.ARRAY_ACCESS -> "Array Access";
-
-      case ByteProto.ARRAY_INITIALIZER -> "Array Init.";
-
-      case ByteProto.ARRAY_TYPE -> "Array Type";
-
-      case ByteProto.ASSIGNMENT -> "Assignment";
-
-      case ByteProto.AUTO_IMPORTS -> "Auto Imports";
-
-      case ByteProto.BLOCK -> "Block";
-
-      case ByteProto.BODY -> "Body";
-
-      case ByteProto.CLASS -> "Class";
-
-      case ByteProto.CLASS_INSTANCE_CREATION -> "Class Instance Creation";
-
-      case ByteProto.CLASS_TYPE -> "Class Type";
-
-      case ByteProto.COMPILATION_UNIT -> "Compilation Unit";
-
-      case ByteProto.CONSTRUCTOR -> "Constructor";
-
-      case ByteProto.ELLIPSIS -> "Ellipsis";
-
-      case ByteProto.ENUM -> "Enum";
-
-      case ByteProto.ENUM_CONSTANT -> "Enum Constant";
-
-      case ByteProto.EXPRESSION_NAME -> "Expression Name";
-
-      case ByteProto.EXPRESSION_NAME_CHAIN -> "Expression Name (Chain)";
-
-      case ByteProto.EXTENDS -> "Extends";
-
-      case ByteProto.FIELD_NAME -> "Field Name";
-
-      case ByteProto.IDENTIFIER -> "Identifier";
-
-      case ByteProto.IMPLEMENTS -> "Implements";
-
-      case ByteProto.INTERFACE -> "Interface";
-
-      case ByteProto.INVOKE -> "Invoke";
-
-      case ByteProto.METHOD -> "Method";
-
-      case ByteProto.MODIFIER -> "Modifier";
-
-      case ByteProto.NEW_LINE -> "NL";
-
-      case ByteProto.PACKAGE -> "Package";
-
-      case ByteProto.PARAMETERIZED_TYPE -> "Parameterized Type";
-
-      case ByteProto.PRIMITIVE_TYPE -> "Primitive Type";
-
-      case ByteProto.RETURN -> "Return";
-
-      case ByteProto.RETURN_STATEMENT -> "Return Stmt.";
-
-      case ByteProto.PRIMITIVE_LITERAL -> "Primitive Literal";
-
-      case ByteProto.STRING_LITERAL -> "String Literal";
-
-      case ByteProto.SUPER -> "Super Keyword";
-
-      case ByteProto.SUPER_INVOCATION -> "Super Invocation";
-
-      case ByteProto.THIS -> "This";
-
-      case ByteProto.TYPE_PARAMETER -> "Type Parameter";
-
-      case ByteProto.TYPE_VARIABLE -> "Type Variable";
-
-      case ByteProto.VAR -> "Var";
-
-      case ByteProto.VOID -> "Void";
-
-      default -> Integer.toString(value);
-    };
-  }
-
   private int protoNext() { return protoArray[protoIndex++]; }
 
   private int protoPeek() { return protoArray[protoIndex]; }
 
-  private int stackpeek(int offset) { return localArray[localIndex - offset]; }
+  private int stackPeek(int offset) { return stackArray[stackIndex - offset]; }
 
-  private int stackpop() { return localArray[localIndex--]; }
+  private int stackpop() { return stackArray[stackIndex--]; }
 
   private void stackpush(int v0) {
-    localArray = IntArrays.growIfNecessary(localArray, localIndex + 1);
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
 
-    localArray[++localIndex] = v0;
-  }
-
-  private void stackpush(int v0, int v1) {
-    localArray = IntArrays.growIfNecessary(localArray, localIndex + 2);
-
-    localArray[++localIndex] = v0;
-    localArray[++localIndex] = v1;
-  }
-
-  private void stackset(int value) { localArray[localIndex] = value; }
-
-  private void stubPop(int ctx, int state) {
-    warn("no-op pop @ '%s' (state=%d)".formatted(
-      protoName(ctx), state));
+    stackArray[++stackIndex] = v0;
   }
 
   private void typeDeclaration() {
+    while (elemHasNext(ByteProto.ANNOTATION)) {
+      itemExecute(this::annotation);
+    }
+
+    while (elemHasNext(ByteProto.MODIFIER)) {
+      itemExecute(this::modifier);
+    }
+
     if (elemHasNext(ByteProto.CLASS)) {
       classDeclaration();
     } else {
       compilationErrorSet();
     }
-  }
-
-  private void warn(String msg) {
-    codeAdd(Whitespace.NEW_LINE);
-    codeAdd(ByteCode.COMMENT, object(msg));
   }
 
 }
