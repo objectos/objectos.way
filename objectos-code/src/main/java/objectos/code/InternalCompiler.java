@@ -22,12 +22,12 @@ import objectos.util.IntArrays;
 class InternalCompiler extends InternalApi {
 
   @FunctionalInterface
-  private interface ElementAction {
+  private interface Action {
     void execute();
   }
 
   @FunctionalInterface
-  private interface ItemAction {
+  private interface ProtoAction {
     void execute(int proto);
   }
 
@@ -70,9 +70,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void annotation(int proto) {
-    switch (last()) {
-      case _SEMICOLON -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
-    }
+    codeAdd(Symbol.COMMERCIAL_AT);
 
     elemExecute(this::annotationAction, proto);
 
@@ -80,8 +78,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void annotationAction() {
-    codeAdd(Symbol.COMMERCIAL_AT);
-
     itemExecute(this::classType);
 
     if (elemHasNext()) {
@@ -129,28 +125,42 @@ class InternalCompiler extends InternalApi {
     lastSet(_RIGHT_CURLY_BRACKET);
   }
 
-  private void bodyAction() {}
+  private void bodyAction() {
+    if (elemHasNext()) {
+      codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
+      codeAdd(Indentation.ENTER_BLOCK);
+      codeAdd(Indentation.EMIT);
 
-  private void classDeclaration() {
-    switch (last()) {
-      case _ANNOTATION -> {
-        codeAdd(Whitespace.AFTER_ANNOTATION);
-        codeAdd(Indentation.EMIT);
-      }
+      itemExecute(this::bodyMember);
 
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-
-      case _RIGHT_CURLY_BRACKET,
-           _SEMICOLON -> {
+      while (elemHasNext()) {
         codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
         codeAdd(Indentation.EMIT);
+
+        itemExecute(this::bodyMember);
+      }
+    } else {
+      codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+    }
+  }
+
+  private void bodyMember(int proto) {
+    switch (proto) {
+      case ByteProto.CLASS_TYPE -> {
+
       }
     }
+  }
 
+  private void classDeclaration() {
     itemExecute(this::classKeyword);
 
     if (elemHasNext(ByteProto.EXTENDS)) {
+      codeAdd(Whitespace.MANDATORY);
+
       itemExecute(this::extendsKeyword);
+
+      codeAdd(Whitespace.MANDATORY);
 
       itemExecute(this::classType);
     }
@@ -169,10 +179,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void classType(int proto) {
-    switch (last()) {
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-    }
-
     var packageIndex = protoNext();
 
     var packageName = (String) objectget(packageIndex);
@@ -278,16 +284,26 @@ class InternalCompiler extends InternalApi {
   private void compilationErrorSet() { objectIndex = 1; }
 
   private void compilationUnit() {
-    itemTry(this::packageDeclaration);
+    itemTrx(this::packageDeclaration);
 
-    itemTry(this::importDeclarationList);
+    itemTrx(this::importDeclarationList);
 
-    while (elemHasNext()) {
+    if (elemHasNext()) {
+      if (lastNot(_START)) {
+        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+      }
+
       typeDeclaration();
+
+      while (elemHasNext()) {
+        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+
+        typeDeclaration();
+      }
     }
   }
 
-  private void elemExecute(ElementAction action, int self) {
+  private void elemExecute(Action action, int self) {
     stackpush(self);
 
     if (elemStart()) {
@@ -342,10 +358,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void extendsKeyword(int proto) {
-    switch (last()) {
-      case _IDENTIFIER -> codeAdd(Whitespace.MANDATORY);
-    }
-
     codeAdd(Keyword.EXTENDS);
 
     lastSet(_KEYWORD);
@@ -359,7 +371,7 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void itemExecute(ItemAction action) {
+  private void itemExecute(ProtoAction action) {
     int location = protoNext();
 
     int returnTo = protoIndex;
@@ -373,7 +385,7 @@ class InternalCompiler extends InternalApi {
     protoIndex = returnTo;
   }
 
-  private void itemExecute(ItemAction action, int condition) {
+  private void itemExecute(ProtoAction action, int condition) {
     int location = protoNext();
 
     int returnTo = protoIndex;
@@ -391,11 +403,13 @@ class InternalCompiler extends InternalApi {
     protoIndex = returnTo;
   }
 
-  private void itemTry(ItemAction action) {
+  private void itemTrx(ProtoAction action) {
     if (elemHasNext()) {
       int codeRollback = codeIndex;
 
       int protoRollback = protoIndex;
+
+      int lastRollback = last();
 
       itemExecute(action);
 
@@ -403,22 +417,21 @@ class InternalCompiler extends InternalApi {
         codeIndex = codeRollback;
 
         protoIndex = protoRollback;
+
+        lastSet(lastRollback);
       }
     }
   }
 
   private int last() { return code; }
 
+  private boolean lastIs(int value) { return last() == value; }
+
+  private boolean lastNot(int value) { return last() != value; }
+
   private void lastSet(int value) { code = value; }
 
   private void modifier(int proto) {
-    switch (last()) {
-      case _SEMICOLON -> {
-        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
-        codeAdd(Indentation.EMIT);
-      }
-    }
-
     codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
 
     lastSet(_KEYWORD);
@@ -471,11 +484,27 @@ class InternalCompiler extends InternalApi {
       itemExecute(this::annotation);
     }
 
-    while (elemHasNext(ByteProto.MODIFIER)) {
+    if (elemHasNext(ByteProto.MODIFIER)) {
+      if (lastIs(_ANNOTATION)) {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+      }
+
       itemExecute(this::modifier);
+
+      while (elemHasNext(ByteProto.MODIFIER)) {
+        codeAdd(Whitespace.MANDATORY);
+
+        itemExecute(this::modifier);
+      }
     }
 
     if (elemHasNext(ByteProto.CLASS)) {
+      switch (last()) {
+        case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+        case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+      }
+
       classDeclaration();
     } else {
       compilationErrorSet();

@@ -20,8 +20,6 @@ import objectos.lang.Check;
 
 public abstract class JavaTemplate {
 
-  protected sealed interface AnyType extends BodyElement, ParameterElement {}
-
   protected sealed interface ArrayInitializerElement {}
 
   protected sealed interface BlockElement extends Element {}
@@ -36,8 +34,6 @@ public abstract class JavaTemplate {
   }
 
   protected sealed interface EnumConstant extends BodyElement {}
-
-  protected sealed interface EnumConstantElement {}
 
   protected sealed interface Expression extends ExpressionPart, BlockElement {}
 
@@ -105,6 +101,8 @@ public abstract class JavaTemplate {
 
   sealed interface AbstractModifier extends BodyElement {}
 
+  sealed interface AnyType extends BodyElement, ParameterElement {}
+
   sealed interface ArgsPart extends Element {}
 
   sealed interface ArrayAccess extends ExpressionPart {}
@@ -139,7 +137,7 @@ public abstract class JavaTemplate {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassType extends BlockElement, BodyElement, ReferenceType, TypeParameterBound {}
+  sealed interface ClassType extends ReferenceType, TypeParameterBound {}
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 
@@ -159,9 +157,7 @@ public abstract class JavaTemplate {
 
   sealed interface FinalModifier extends BodyElement {}
 
-  sealed interface Identifier extends BlockElement, ParameterElement,
-      /* to remove */
-      EnumConstantElement {}
+  sealed interface Identifier extends BodyElement {}
 
   sealed interface ImplementsKeyword extends BodyElement {}
 

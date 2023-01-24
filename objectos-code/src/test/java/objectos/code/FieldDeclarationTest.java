@@ -15,35 +15,42 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
 public class FieldDeclarationTest {
 
-  //  private final Fixture fix = new Fixture("Fields", Kind.CLASS);
-  //
-  //  @Test(description = """
-  //  typeName + names
-  //  """)
-  //  public void testCase01() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          t(String.class); field("name");
-//
-//          t(String.class); field("a"); field("b"); field("c");
-//        }
-//      }),
-//
-//      """
-//      class Fields {
-//        java.lang.String name;
-//
-//        java.lang.String a, b, c;
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
+  @Test(enabled = false, description = """
+  typeName + names
+  """)
+  public void testCase01() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Fields");
+          body(
+            t(String.class), id("a"),
+
+            t(String.class), id("b"), id("c"),
+
+            t(String.class), id("d"), id("e"), id("f")
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        java.lang.String a;
+
+        java.lang.String b, c;
+
+        java.lang.String d, e, f;
+      }
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  modifiers
