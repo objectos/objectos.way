@@ -25,9 +25,7 @@ public enum Indentation {
 
   ENTER_PARENTHESIS,
 
-  EXIT_PARENTHESIS,
-
-  EMIT;
+  EXIT_PARENTHESIS;
 
   private static final Indentation[] VALUES = values();
 

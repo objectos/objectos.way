@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import objectos.util.IntArrays;
@@ -127,28 +128,33 @@ class InternalCompiler extends InternalApi {
 
   private void bodyAction() {
     if (elemHasNext()) {
-      codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
       codeAdd(Indentation.ENTER_BLOCK);
-      codeAdd(Indentation.EMIT);
+      codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
 
-      itemExecute(this::bodyMember);
+      bodyMember();
 
       while (elemHasNext()) {
         codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
-        codeAdd(Indentation.EMIT);
 
-        itemExecute(this::bodyMember);
+        bodyMember();
       }
+
+      codeAdd(Indentation.EXIT_BLOCK);
+      codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
     } else {
       codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
     }
   }
 
-  private void bodyMember(int proto) {
-    switch (proto) {
-      case ByteProto.CLASS_TYPE -> {
+  private void bodyMember() {
+    lastSet(_START);
 
-      }
+    if (elemHasNext(ByteProto::isType)) {
+      fieldOrMethodDeclaration();
+    } else if (elemHasNext(ByteProto.VOID)) {
+      throw new UnsupportedOperationException("Implement me");
+    } else {
+      compilationErrorSet();
     }
   }
 
@@ -337,6 +343,18 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private boolean elemHasNext(IntPredicate condition) {
+    if (elemHasNext()) {
+      int location = protoPeek();
+
+      int proto = protoAt(location);
+
+      return condition.test(proto);
+    } else {
+      return false;
+    }
+  }
+
   private boolean elemStart() {
     int size = protoNext();
 
@@ -361,6 +379,35 @@ class InternalCompiler extends InternalApi {
     codeAdd(Keyword.EXTENDS);
 
     lastSet(_KEYWORD);
+  }
+
+  private void fieldDeclarationVariableList() {
+    variableDeclarator();
+
+    while (elemHasNext(ByteProto.IDENTIFIER)) {
+      codeAdd(Symbol.COMMA);
+      codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+      variableDeclarator();
+    }
+
+    codeAdd(Symbol.SEMICOLON);
+
+    lastSet(_SEMICOLON);
+  }
+
+  private void fieldOrMethodDeclaration() {
+    itemExecute(this::type);
+
+    if (elemHasNext(ByteProto.IDENTIFIER)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      fieldDeclarationVariableList();
+    }
+  }
+
+  private void identifier(int proto) {
+    codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
 
   private void importDeclarationList(int proto) {
@@ -479,6 +526,12 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.STRING_LITERAL, protoNext());
   }
 
+  private void type(int proto) {
+    switch (proto) {
+      case ByteProto.CLASS_TYPE -> classType(proto);
+    }
+  }
+
   private void typeDeclaration() {
     while (elemHasNext(ByteProto.ANNOTATION)) {
       itemExecute(this::annotation);
@@ -508,6 +561,18 @@ class InternalCompiler extends InternalApi {
       classDeclaration();
     } else {
       compilationErrorSet();
+    }
+  }
+
+  private void variableDeclarator() {
+    itemExecute(this::identifier);
+
+    if (elemHasNext(ByteProto::isExpressionStart)) {
+      codeAdd(Whitespace.OPTIONAL);
+      codeAdd(Symbol.ASSIGNMENT);
+      codeAdd(Whitespace.OPTIONAL);
+
+      throw new UnsupportedOperationException("Implement me");
     }
   }
 

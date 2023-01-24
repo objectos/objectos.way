@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 
 public class FieldDeclarationTest {
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   typeName + names
   """)
   public void testCase01() {

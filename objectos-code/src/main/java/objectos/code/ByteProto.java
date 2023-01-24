@@ -89,9 +89,12 @@ final class ByteProto {
 
   private ByteProto() {}
 
-  public static boolean isExpression(int proto) {
-    return proto <= ARRAY_ACCESS
-        && proto >= THIS;
+  public static boolean isExpressionStart(int proto) {
+    return switch (proto) {
+      case STRING_LITERAL -> true;
+
+      default -> false;
+    };
   }
 
   public static boolean isType(int proto) {

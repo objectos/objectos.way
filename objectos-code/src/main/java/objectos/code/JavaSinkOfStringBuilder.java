@@ -59,8 +59,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
       case EXIT_PARENTHESIS -> levelDecrease();
 
-      case EMIT -> writeIndentation(level());
-
       default -> {}
     }
   }
@@ -97,11 +95,11 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
       case BEFORE_EMPTY_BLOCK_END -> {}
 
-      case BEFORE_FIRST_MEMBER -> writenl();
+      case BEFORE_FIRST_MEMBER -> { writenl(); writeIndentation(level()); }
 
       case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');
 
-      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); }
+      case BEFORE_NEXT_MEMBER -> { writenl(); writenl(); writeIndentation(level()); }
 
       case BEFORE_NEXT_STATEMENT -> writenl();
 
