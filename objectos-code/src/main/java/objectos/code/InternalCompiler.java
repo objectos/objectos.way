@@ -83,6 +83,28 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.COMMERCIAL_AT);
 
     itemExecute(this::classType);
+
+    if (elemHasNext()) {
+      codeAdd(Symbol.LEFT_PARENTHESIS);
+
+      lastSet(_START);
+
+      itemExecute(this::annotationItem);
+
+      while (elemHasNext()) {
+        itemExecute(this::annotationItem);
+      }
+
+      codeAdd(Symbol.RIGHT_PARENTHESIS);
+    }
+  }
+
+  private void annotationItem(int proto) {
+    switch (proto) {
+      case ByteProto.IDENTIFIER -> {/* TODO identifier */}
+
+      default -> expression(proto);
+    }
   }
 
   private void autoImports() {
@@ -313,6 +335,12 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void expression(int proto) {
+    switch (proto) {
+      case ByteProto.STRING_LITERAL -> stringLiteral(proto);
+    }
+  }
+
   private void extendsKeyword(int proto) {
     switch (last()) {
       case _IDENTIFIER -> codeAdd(Whitespace.MANDATORY);
@@ -432,6 +460,10 @@ class InternalCompiler extends InternalApi {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
 
     stackArray[++stackIndex] = v0;
+  }
+
+  private void stringLiteral(int proto) {
+    codeAdd(ByteCode.STRING_LITERAL, protoNext());
   }
 
   private void typeDeclaration() {
