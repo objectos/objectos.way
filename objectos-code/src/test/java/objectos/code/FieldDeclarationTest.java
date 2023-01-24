@@ -51,36 +51,37 @@ public class FieldDeclarationTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  modifiers
-  //  """)
-  //  public void testCase02() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _private(); t(String.class); field("a");
-//
-//          _private(); _final(); t(String.class); field("b");
-//
-//          _private(); _static(); _final(); t(String.class); field("c");
-//        }
-//      }),
-//
-//      """
-//      class Fields {
-//        private java.lang.String a;
-//
-//        private final java.lang.String b;
-//
-//        private static final java.lang.String c;
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
+
+  @Test(description = """
+  modifiers
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Fields");
+          body(
+            _private(), t(String.class), id("a"),
+
+            _private(), _final(), t(String.class), id("b"),
+
+            _private(), _static(), _final(), t(String.class), id("c")
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        private java.lang.String a;
+
+        private final java.lang.String b;
+
+        private static final java.lang.String c;
+      }
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  init expression

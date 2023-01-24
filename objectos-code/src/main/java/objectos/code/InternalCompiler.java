@@ -149,7 +149,13 @@ class InternalCompiler extends InternalApi {
   private void bodyMember() {
     lastSet(_START);
 
+    modifierList();
+
     if (elemHasNext(ByteProto::isType)) {
+      if (lastNot(_START)) {
+        codeAdd(Whitespace.MANDATORY);
+      }
+
       fieldOrMethodDeclaration();
     } else if (elemHasNext(ByteProto.VOID)) {
       throw new UnsupportedOperationException("Implement me");
@@ -484,6 +490,22 @@ class InternalCompiler extends InternalApi {
     lastSet(_KEYWORD);
   }
 
+  private void modifierList() {
+    if (elemHasNext(ByteProto.MODIFIER)) {
+      if (lastIs(_ANNOTATION)) {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+      }
+
+      itemExecute(this::modifier);
+
+      while (elemHasNext(ByteProto.MODIFIER)) {
+        codeAdd(Whitespace.MANDATORY);
+
+        itemExecute(this::modifier);
+      }
+    }
+  }
+
   private Object objectget(int index) {
     return objectArray[index];
   }
@@ -537,19 +559,7 @@ class InternalCompiler extends InternalApi {
       itemExecute(this::annotation);
     }
 
-    if (elemHasNext(ByteProto.MODIFIER)) {
-      if (lastIs(_ANNOTATION)) {
-        codeAdd(Whitespace.AFTER_ANNOTATION);
-      }
-
-      itemExecute(this::modifier);
-
-      while (elemHasNext(ByteProto.MODIFIER)) {
-        codeAdd(Whitespace.MANDATORY);
-
-        itemExecute(this::modifier);
-      }
-    }
+    modifierList();
 
     if (elemHasNext(ByteProto.CLASS)) {
       switch (last()) {

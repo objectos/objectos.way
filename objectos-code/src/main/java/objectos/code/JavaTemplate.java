@@ -73,7 +73,6 @@ public abstract class JavaTemplate {
       ExplicitConstructorInvocation,
       ExpressionName,
       ExtendsKeyword,
-      FieldName,
       FinalModifier,
       Identifier,
       ImplementsKeyword,
@@ -152,8 +151,6 @@ public abstract class JavaTemplate {
   sealed interface ExpressionPart extends ArgsPart {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
-
-  sealed interface FieldName extends BodyElement {}
 
   sealed interface FinalModifier extends BodyElement {}
 
@@ -604,12 +601,6 @@ public abstract class JavaTemplate {
     //    api.elemproto(id);
     //    api.elemargs(e1, e2, e3);
     return api.elemend();
-  }
-
-  protected final FieldName field(String name) {
-    JavaModel.checkIdentifier(name.toString()); // force implicit null-check
-    var api = api();
-    return api.itemadd(ByteProto.FIELD_NAME, api.object(name));
   }
 
   protected final IntegerLiteral i(int value) {
