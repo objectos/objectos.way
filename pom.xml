@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2022-2022 Objectos Software LTDA.
+    Copyright (C) 2022-2023 Objectos Software LTDA.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@
 		<maven.toolchains.jdk-vendor>openjdk</maven.toolchains.jdk-vendor>
 		<maven.toolchains.jdk-version>17</maven.toolchains.jdk-version>
 
-		<objectos.license.copyrightYears>${project.inceptionYear}-2022</objectos.license.copyrightYears>
+		<objectos.license.copyrightYears>${project.inceptionYear}-2023</objectos.license.copyrightYears>
 		<objectos.license.headerMain><![CDATA[
 Copyright (C) ${objectos.license.copyrightYears} Objectos Software LTDA.
 
