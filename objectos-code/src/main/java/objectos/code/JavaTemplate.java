@@ -376,7 +376,7 @@ public abstract class JavaTemplate {
   }
 
   protected final VoidKeyword _void() {
-    return api().itemAdd(ByteProto.VOID);
+    return api().itemAdd(ByteProto.VOID, ByteProto.NOOP);
   }
 
   protected final ArrayInitializer ainit() {

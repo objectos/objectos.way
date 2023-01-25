@@ -34,10 +34,10 @@ public class MethodDeclarationTest {
   //      }.toString(),
   //
   //      """
-  //      class Methods {
-  //        void test() {}
-  //      }
-  //      """
+  //        class Methods {
+  //          void test() {}
+  //        }
+  //        """
   //    );
   //  }
   //

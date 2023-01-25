@@ -68,8 +68,6 @@ class InternalCompiler extends InternalApi {
   private void annotation() {
     codeAdd(Symbol.COMMERCIAL_AT);
 
-    protoConsume(ByteProto.CLASS_TYPE);
-
     execute(this::classType);
 
     if (itemMore()) {
@@ -129,7 +127,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void arrayType() {
-    int item = itemNext();
+    int item = itemPeek();
 
     switch (item) {
       case ByteProto.CLASS_TYPE -> execute(this::classType);
@@ -152,6 +150,12 @@ class InternalCompiler extends InternalApi {
     }
 
     lastSet(_SEMICOLON);
+  }
+
+  private void block() {
+    codeAdd(Symbol.LEFT_CURLY_BRACKET);
+
+    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
   private void body() {
@@ -183,14 +187,46 @@ class InternalCompiler extends InternalApi {
 
     modifierList();
 
-    if (itemTest(ByteProto::isType)) {
-      if (lastNot(_START)) {
-        codeAdd(Whitespace.MANDATORY);
+    if (lastNot(_START)) {
+      codeAdd(Whitespace.MANDATORY);
+    }
+
+    int item = itemPeek();
+
+    switch (item) {
+      case ByteProto.ARRAY_TYPE -> {
+        execute(this::arrayType);
+
+        fieldOrMethodDeclaration();
       }
 
-      fieldOrMethodDeclaration();
-    } else {
-      errorRaise();
+      case ByteProto.CLASS_TYPE -> {
+        execute(this::classType);
+
+        fieldOrMethodDeclaration();
+      }
+
+      case ByteProto.PARAMETERIZED_TYPE -> {
+        execute(this::parameterizedType);
+
+        fieldOrMethodDeclaration();
+      }
+
+      case ByteProto.PRIMITIVE_TYPE -> {
+        execute(this::primitiveType);
+
+        fieldOrMethodDeclaration();
+      }
+
+      case ByteProto.VOID -> {
+        execute(this::voidKeyword);
+
+        methodDeclaration();
+      }
+
+      default -> errorRaise(
+        "invalid or no-op body member '%s'".formatted(protoName(item))
+      );
     }
   }
 
@@ -344,8 +380,6 @@ class InternalCompiler extends InternalApi {
       }
 
       case ByteProto.AUTO_IMPORTS -> {
-        protoConsume();
-
         execute(this::autoImports);
 
         importDeclarationList();
@@ -357,7 +391,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.END_ELEMENT -> {}
 
-      case ByteProto.PACKAGE -> { protoConsume(); ordinaryCompilationUnit(); }
+      case ByteProto.PACKAGE -> ordinaryCompilationUnit();
 
       default -> System.err.println(
         "compilationUnit: no-op proto '%s'".formatted(protoName(item)));
@@ -396,7 +430,9 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.COMMENT, object(message));
   }
 
-  private void execute(Action action) {
+  private int execute(Action action) {
+    int proto = protoNext();
+
     int location = protoNext();
 
     int returnTo = protoIndex;
@@ -406,6 +442,8 @@ class InternalCompiler extends InternalApi {
     action.execute();
 
     protoIndex = returnTo;
+
+    return proto;
   }
 
   private int executeSwitch(SwitchAction action) {
@@ -477,12 +515,24 @@ class InternalCompiler extends InternalApi {
   }
 
   private void fieldOrMethodDeclaration() {
-    executeSwitch(this::type);
+    int item = itemPeek();
 
-    if (itemIs(ByteProto.IDENTIFIER)) {
-      codeAdd(Whitespace.MANDATORY);
+    switch (item) {
+      case ByteProto.IDENTIFIER -> {
+        codeAdd(Whitespace.MANDATORY);
 
-      fieldDeclarationVariableList();
+        fieldDeclarationVariableList();
+      }
+
+      case ByteProto.METHOD -> {
+        codeAdd(Whitespace.MANDATORY);
+
+        methodDeclaration();
+      }
+
+      default -> errorRaise(
+        "found '%s' in field or method".formatted(protoName(item))
+      );
     }
   }
 
@@ -497,8 +547,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void invoke() {
-    protoConsume(ByteProto.IDENTIFIER);
-
     execute(this::identifier);
 
     codeAdd(Symbol.LEFT_PARENTHESIS);
@@ -520,15 +568,7 @@ class InternalCompiler extends InternalApi {
   private boolean itemIs(int condition) {
     consumeWs();
 
-    int proto = protoPeek();
-
-    if (proto == condition) {
-      protoIndex++;
-
-      return true;
-    } else {
-      return false;
-    }
+    return protoPeek() == condition;
   }
 
   private boolean itemMore() {
@@ -541,14 +581,9 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int itemNext() {
-    consumeWs();
-
-    return protoNext();
-  }
-
   private int itemPeek() {
     consumeWs();
+
     return protoPeek();
   }
 
@@ -567,6 +602,23 @@ class InternalCompiler extends InternalApi {
   private boolean lastNot(int value) { return last() != value; }
 
   private void lastSet(int value) { code = value; }
+
+  private void methodDeclaration() {
+    execute(this::identifier);
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    if (itemIs(ByteProto.BLOCK)) {
+      execute(this::block);
+    } else {
+      // assume abstract
+      codeAdd(Symbol.SEMICOLON);
+
+      lastSet(_SEMICOLON);
+    }
+  }
 
   private void modifier() {
     codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
@@ -615,8 +667,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void parameterizedType() {
-    protoConsume(ByteProto.CLASS_TYPE);
-
     execute(this::classType);
 
     codeAdd(Symbol.LEFT_ANGLE_BRACKET);
@@ -641,14 +691,6 @@ class InternalCompiler extends InternalApi {
 
   private void primitiveType() {
     codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
-  }
-
-  private void protoConsume() { protoIndex++; }
-
-  private void protoConsume(int expected) {
-    int proto = protoNext();
-
-    assert proto == expected;
   }
 
   private String protoName(int proto) {
@@ -744,6 +786,10 @@ class InternalCompiler extends InternalApi {
     } else {
       errorRaise();
     }
+  }
+
+  private void voidKeyword() {
+    codeAdd(Keyword.VOID);
   }
 
 }
