@@ -41,7 +41,7 @@ class InternalCompiler extends InternalApi {
       _SEMICOLON = 5;
 
   final void compile() {
-    code = codeIndex = objectIndex = 0;
+    code = codeIndex = objectIndex = stackIndex = 0;
 
     try {
       compilationUnit();
@@ -79,13 +79,13 @@ class InternalCompiler extends InternalApi {
 
       lastSet(_START);
 
-      executeSwitch(this::annotationItem);
+      annotationValuePair();
 
       while (itemMore()) {
         codeAdd(Symbol.COMMA);
         codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
-        executeSwitch(this::annotationItem);
+        annotationValuePair();
       }
 
       codeAdd(Symbol.RIGHT_PARENTHESIS);
@@ -94,12 +94,10 @@ class InternalCompiler extends InternalApi {
     lastSet(_ANNOTATION);
   }
 
-  private void annotationItem(int proto) {
-    switch (proto) {
-      case ByteProto.IDENTIFIER -> {/* TODO identifier */}
+  private void annotationValuePair() {
+    // check for value name
 
-      default -> expression(proto);
-    }
+    expression();
   }
 
   private void autoImports() {
@@ -286,14 +284,20 @@ class InternalCompiler extends InternalApi {
   private void codeAdd(Whitespace value) { codeAdd(ByteCode.WHITESPACE, value.ordinal()); }
 
   private boolean compilationError() {
-    var result = objectIndex == 1;
+    var result = stackIndex == 1;
 
-    objectIndex = 0;
+    stackIndex = 0;
 
     return result;
   }
 
-  private void compilationErrorSet() { objectIndex = 1; }
+  private void compilationErrorSet() { stackIndex = 1; }
+
+  private void compilationErrorSet(String message) {
+    compilationErrorSet();
+
+    codeAdd(ByteCode.COMMENT, object(message));
+  }
 
   private void compilationUnit() {
     lastSet(_START);
@@ -360,7 +364,7 @@ class InternalCompiler extends InternalApi {
     protoIndex = returnTo;
   }
 
-  private void executeSwitch(SwitchAction action) {
+  private int executeSwitch(SwitchAction action) {
     int proto = protoNext();
 
     int location = protoNext();
@@ -372,15 +376,36 @@ class InternalCompiler extends InternalApi {
     action.execute(proto);
 
     protoIndex = returnTo;
+
+    return proto;
   }
 
-  private void expression(int proto) {
+  private void expression() {
+    int part = executeSwitch(this::expressionBegin);
+
+    expressionDot(part);
+  }
+
+  private void expressionBegin(int proto) {
     switch (proto) {
+      case ByteProto.INVOKE -> invoke();
+
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
-      default -> System.err.println(
-        "no-op expression '%s'".formatted(protoName(proto))
+      default -> compilationErrorSet(
+        "no-op expression part '%s'".formatted(protoName(proto))
       );
+    }
+  }
+
+  private void expressionDot(int previous) {
+    switch (previous) {
+      case ByteProto.INVOKE -> {
+        if (itemTest(ByteProto::primaryDot)) {
+          codeAdd(Symbol.DOT);
+          expression();
+        }
+      }
     }
   }
 
@@ -425,18 +450,37 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void invoke() {
+    protoConsume(ByteProto.IDENTIFIER);
+
+    execute(this::identifier);
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    if (itemTest(ByteProto::isExpressionStart)) {
+      expression();
+
+      while (itemTest(ByteProto::isExpressionStart)) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        expression();
+      }
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
   private boolean itemIs(int condition) {
     consumeWs();
 
-    int rollback = protoIndex;
-
-    int proto = protoNext();
+    int proto = protoPeek();
 
     if (proto == condition) {
+      protoIndex++;
+
       return true;
     } else {
-      protoIndex = rollback;
-
       return false;
     }
   }
@@ -595,7 +639,7 @@ class InternalCompiler extends InternalApi {
       codeAdd(Symbol.ASSIGNMENT);
       codeAdd(Whitespace.OPTIONAL);
 
-      executeSwitch(this::expression);
+      expression();
     }
   }
 

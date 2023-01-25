@@ -82,36 +82,37 @@ public class FieldDeclarationTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  init expression
-  //  """)
-  //  public void testCase03() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          t(String.class); field("x"); s("init");
-//
-//          t(String.class); field("a"); s("a"); field("b"); field("c"); s("c");
-//
-//          t(String.class); field("d"); invoke("d0"); invoke("d1");
-//        }
-//      }),
-//
-//      """
-//      class Fields {
-//        java.lang.String x = "init";
-//
-//        java.lang.String a = "a", b, c = "c";
-//
-//        java.lang.String d = d0().d1();
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
+
+  @Test(description = """
+  init expression
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Fields");
+          body(
+            t(String.class), id("x"), s("init"),
+
+            t(String.class), id("a"), s("a"), id("b"), id("c"), s("c"),
+
+            t(String.class), id("d"), invoke("d0"), invoke("d1")
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        java.lang.String x = "init";
+
+        java.lang.String a = "a", b, c = "c";
+
+        java.lang.String d = d0().d1();
+      }
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  Field declarations TC05
