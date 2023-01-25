@@ -39,7 +39,7 @@ class InternalCompiler extends InternalApi {
       _SEMICOLON = 4;
 
   final void compile() {
-    code = codeIndex = objectIndex = stackIndex = 0;
+    code = codeIndex = stackIndex = 0;
 
     try {
       compilationUnit();
@@ -593,6 +593,27 @@ class InternalCompiler extends InternalApi {
     lastSet(_SEMICOLON);
   }
 
+  private void parameterizedType() {
+    protoConsume(ByteProto.CLASS_TYPE);
+
+    execute(this::classType);
+
+    codeAdd(Symbol.LEFT_ANGLE_BRACKET);
+
+    if (itemMore()) {
+      executeSwitch(this::type);
+
+      while (itemMore()) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        executeSwitch(this::type);
+      }
+    }
+
+    codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
+  }
+
   private void protoConsume() { protoIndex++; }
 
   private void protoConsume(int expected) {
@@ -645,6 +666,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ARRAY_TYPE -> arrayType();
 
       case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
 
       default -> errorRaise(
         "no-op type '%s'".formatted(protoName(proto))

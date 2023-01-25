@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Map;
 import org.testng.annotations.Test;
 
 public class FieldDeclarationTest {
@@ -139,30 +140,31 @@ public class FieldDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Field declarations TC05
-  //
-  //  - parameterized type
-  //  """)
-  //  public void testCase05() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          t(t(Map.class), t(String.class), t(Integer.class)); field("map");
-//        }
-//      }),
-//
-//      """
-//      class Fields {
-//        java.util.Map<java.lang.String, java.lang.Integer> map;
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Field declarations TC05
+
+  - parameterized type
+  """)
+  public void testCase05() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Fields");
+          body(
+            t(t(Map.class), t(String.class), t(Integer.class)), id("map")
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        java.util.Map<java.lang.String, java.lang.Integer> map;
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Field declarations TC06
   //
