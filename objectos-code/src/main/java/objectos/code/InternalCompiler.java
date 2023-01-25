@@ -221,7 +221,15 @@ class InternalCompiler extends InternalApi {
       case ByteProto.VOID -> {
         execute(this::voidKeyword);
 
-        methodDeclaration();
+        if (itemIs(ByteProto.METHOD)) {
+          codeAdd(Whitespace.MANDATORY);
+
+          methodDeclaration();
+        } else {
+          errorRaise(
+            "method declarator not found"
+          );
+        }
       }
 
       default -> errorRaise(
@@ -604,13 +612,11 @@ class InternalCompiler extends InternalApi {
   private void lastSet(int value) { code = value; }
 
   private void methodDeclaration() {
-    execute(this::identifier);
-
-    codeAdd(Symbol.LEFT_PARENTHESIS);
-
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
+    execute(this::methodDeclarator);
 
     if (itemIs(ByteProto.BLOCK)) {
+      codeAdd(Whitespace.OPTIONAL);
+
       execute(this::block);
     } else {
       // assume abstract
@@ -618,6 +624,14 @@ class InternalCompiler extends InternalApi {
 
       lastSet(_SEMICOLON);
     }
+  }
+
+  private void methodDeclarator() {
+    execute(this::identifier);
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
   }
 
   private void modifier() {

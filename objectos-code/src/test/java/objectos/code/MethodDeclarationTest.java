@@ -15,32 +15,36 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
 public class MethodDeclarationTest {
 
-  //  @Test(description = """
-  //  - void
-  //  - empty body
-  //  """)
-  //  public void testCase01() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _void(), method("test"), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //        class Methods {
-  //          void test() {}
-  //        }
-  //        """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  - void
+  - empty body
+  """)
+  public void testCase01() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _void(), method("test"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void test() {}
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  - void
   //  - single statement
