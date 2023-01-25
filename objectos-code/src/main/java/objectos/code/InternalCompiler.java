@@ -32,13 +32,11 @@ class InternalCompiler extends InternalApi {
     void execute(int proto);
   }
 
-  @SuppressWarnings("unused")
   private static final int _START = 0,
       _ANNOTATION = 1,
       _IDENTIFIER = 2,
       _KEYWORD = 3,
-      _RIGHT_CURLY_BRACKET = 4,
-      _SEMICOLON = 5;
+      _SEMICOLON = 4;
 
   final void compile() {
     code = codeIndex = objectIndex = stackIndex = 0;
@@ -100,6 +98,33 @@ class InternalCompiler extends InternalApi {
     expression();
   }
 
+  private void arrayDimension() {
+    if (itemIs(ByteProto.ARRAY_DIMENSION)) {
+      execute(this::arrayDimensionAction);
+    } else {
+      errorRaise("invalid array dimension");
+    }
+  }
+
+  private void arrayDimensionAction() {
+    codeAdd(Symbol.LEFT_SQUARE_BRACKET);
+    codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
+  }
+
+  private void arrayType() {
+    int item = itemNext();
+
+    switch (item) {
+      case ByteProto.CLASS_TYPE -> execute(this::classType);
+
+      default -> errorRaise("'%s' invalid array type".formatted(protoName(item)));
+    }
+
+    while (itemMore()) {
+      arrayDimension();
+    }
+  }
+
   private void autoImports() {
     switch (last()) {
       default -> codeAdd(ByteCode.AUTO_IMPORTS0);
@@ -146,7 +171,7 @@ class InternalCompiler extends InternalApi {
 
       fieldOrMethodDeclaration();
     } else {
-      compilationErrorSet();
+      errorSet();
     }
   }
 
@@ -174,7 +199,7 @@ class InternalCompiler extends InternalApi {
 
       execute(this::classType);
     } else {
-      compilationError();
+      error();
     }
   }
 
@@ -283,22 +308,6 @@ class InternalCompiler extends InternalApi {
 
   private void codeAdd(Whitespace value) { codeAdd(ByteCode.WHITESPACE, value.ordinal()); }
 
-  private boolean compilationError() {
-    var result = stackIndex == 1;
-
-    stackIndex = 0;
-
-    return result;
-  }
-
-  private void compilationErrorSet() { stackIndex = 1; }
-
-  private void compilationErrorSet(String message) {
-    compilationErrorSet();
-
-    codeAdd(ByteCode.COMMENT, object(message));
-  }
-
   private void compilationUnit() {
     lastSet(_START);
 
@@ -352,6 +361,22 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private boolean error() {
+    var result = stackIndex == 1;
+
+    stackIndex = 0;
+
+    return result;
+  }
+
+  private void errorRaise(String message) {
+    errorSet();
+
+    codeAdd(ByteCode.COMMENT, object(message));
+  }
+
+  private void errorSet() { stackIndex = 1; }
+
   private void execute(Action action) {
     int location = protoNext();
 
@@ -392,7 +417,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
-      default -> compilationErrorSet(
+      default -> errorRaise(
         "no-op expression part '%s'".formatted(protoName(proto))
       );
     }
@@ -486,13 +511,19 @@ class InternalCompiler extends InternalApi {
   }
 
   private boolean itemMore() {
-    if (!compilationError()) {
+    if (!error()) {
       consumeWs();
 
       return protoPeek() != ByteProto.END_ELEMENT;
     } else {
       return false;
     }
+  }
+
+  private int itemNext() {
+    consumeWs();
+
+    return protoNext();
   }
 
   private int itemPeek() {
@@ -572,7 +603,9 @@ class InternalCompiler extends InternalApi {
 
   private String protoName(int proto) {
     return switch (proto) {
-      case ByteProto.CLASS -> "Class";
+      case ByteProto.ARRAY_TYPE -> "Array Type";
+
+      case ByteProto.CLASS -> "Class Keyword";
 
       case ByteProto.INVOKE -> "Invoke";
 
@@ -609,7 +642,13 @@ class InternalCompiler extends InternalApi {
 
   private void type(int proto) {
     switch (proto) {
+      case ByteProto.ARRAY_TYPE -> arrayType();
+
       case ByteProto.CLASS_TYPE -> classType();
+
+      default -> errorRaise(
+        "no-op type '%s'".formatted(protoName(proto))
+      );
     }
   }
 
@@ -627,7 +666,7 @@ class InternalCompiler extends InternalApi {
 
       classDeclaration();
     } else {
-      compilationErrorSet();
+      errorSet();
     }
   }
 

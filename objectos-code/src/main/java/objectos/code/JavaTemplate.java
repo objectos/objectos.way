@@ -536,7 +536,7 @@ public abstract class JavaTemplate {
   protected void definition() {}
 
   protected final ArrayDimension dim() {
-    return api().itemAdd(ByteProto.ARRAY_DIMENSION);
+    return api().itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);
   }
 
   protected final ArrayAccess dim(ExpressionPart e1) {
@@ -544,7 +544,7 @@ public abstract class JavaTemplate {
   }
 
   protected final Ellipsis ellipsis() {
-    return api().itemAdd(ByteProto.ELLIPSIS);
+    return api().itemAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
   }
 
   protected final EnumConstant enumConstant(String name) {

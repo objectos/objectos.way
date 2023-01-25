@@ -113,31 +113,32 @@ public class FieldDeclarationTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  Field declarations TC05
-  //
-  //  - array type
-  //  """)
-  //  public void testCase04() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          t(t(Object.class), dim()); field("a");
-//        }
-//      }),
-//
-//      """
-//      class Fields {
-//        java.lang.Object[] a;
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+
+  @Test(description = """
+  Field declarations TC04
+
+  - array type
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Fields");
+          body(
+            t(t(Object.class), dim()), id("a")
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        java.lang.Object[] a;
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Field declarations TC05
   //
