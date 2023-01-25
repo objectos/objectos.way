@@ -27,6 +27,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("internal instructions");
 
     value("AUTO_IMPORTS");
+    value("END_ELEMENT");
+    value("NOOP");
 
     comment("types");
 
@@ -54,7 +56,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ENUM");
     value("ENUM_CONSTANT");
     value("EXTENDS");
-    value("FIELD_NAME");
     value("IDENTIFIER");
     value("IMPLEMENTS");
     value("INTERFACE");
@@ -63,23 +64,17 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PACKAGE");
     value("TYPE_PARAMETER");
 
-    comment("stmt/exp");
-
-    value("ARRAY_ACCESS");
-    value("INVOKE");
-    value("NEW");
-    value("NEW_LINE");
-    value("OPERATOR");
-    value("RETURN");
-    value("SUPER");
-    value("VAR");
-
     comment("statements");
 
     value("BLOCK");
     value("LOCAL_VARIABLE");
     value("RETURN_STATEMENT");
     value("SUPER_INVOCATION");
+
+    comment("expression start");
+
+    value("INVOKE");
+    value("STRING_LITERAL");
 
     comment("expressions");
 
@@ -89,7 +84,16 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("EXPRESSION_NAME_CHAIN");
     value("FIELD_ACCESS");
     value("PRIMITIVE_LITERAL");
-    value("STRING_LITERAL");
     value("THIS");
+
+    comment("stmt/exp");
+
+    value("ARRAY_ACCESS");
+    value("NEW");
+    value("NEW_LINE");
+    value("OPERATOR");
+    value("RETURN");
+    value("SUPER");
+    value("VAR");
   }
 }

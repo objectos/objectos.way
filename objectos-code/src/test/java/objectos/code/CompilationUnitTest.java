@@ -22,8 +22,24 @@ import org.testng.annotations.Test;
 public class CompilationUnitTest {
 
   @Test(description = """
-    class Foo {}
-    """)
+  empty
+  """)
+  public void testCase00() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {}
+      }.toString(),
+
+      """
+
+      """
+    );
+  }
+
+  @Test(description = """
+  class Foo {}
+  """)
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {

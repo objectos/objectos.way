@@ -148,7 +148,7 @@ public abstract class JavaTemplate {
 
   sealed interface ExpressionName extends ArrayReferenceExpression, LeftHandSide {}
 
-  sealed interface ExpressionPart extends ArgsPart {}
+  sealed interface ExpressionPart extends ArgsPart, BodyElement {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -168,7 +168,7 @@ public abstract class JavaTemplate {
 
   sealed interface LeftHandSide extends Element {}
 
-  sealed interface Literal extends AtElement {}
+  sealed interface Literal extends AtElement, ExpressionPart {}
 
   sealed interface MethodDeclaration extends BodyElement {}
 
@@ -258,10 +258,8 @@ public abstract class JavaTemplate {
 
   protected final ClassKeyword _class(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
-
     var api = api();
-
-    return api.itemadd(ByteProto.CLASS, api.object(name));
+    return api.itemAdd(ByteProto.CLASS, api.object(name));
   }
 
   protected final PrimitiveType _double() {
@@ -273,19 +271,19 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.itemadd(ByteProto.ENUM, api.object(name));
+    return api.itemAdd(ByteProto.ENUM, api.object(name));
   }
 
   protected final ExtendsKeyword _extends() {
-    return api().itemadd(ByteProto.EXTENDS);
+    return api().itemAdd(ByteProto.EXTENDS, ByteProto.NOOP);
   }
 
   protected final FinalModifier _final() {
-    return api().itemadd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
+    return api().itemAdd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
 
   protected final ImplementsKeyword _implements() {
-    return api().itemadd(ByteProto.IMPLEMENTS);
+    return api().itemAdd(ByteProto.IMPLEMENTS, ByteProto.NOOP);
   }
 
   protected final PrimitiveType _int() {
@@ -297,7 +295,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.itemadd(ByteProto.INTERFACE, api.object(name));
+    return api.itemAdd(ByteProto.INTERFACE, api.object(name));
   }
 
   protected final ClassInstanceCreationExpression _new(ClassType type) {
@@ -329,7 +327,7 @@ public abstract class JavaTemplate {
 
     api.autoImports.packageName(packageName);
 
-    return api.itemadd(ByteProto.PACKAGE, api.object(packageName));
+    return api.itemAdd(ByteProto.PACKAGE, api.object(packageName));
   }
 
   protected final PrivateModifier _private() {
@@ -345,7 +343,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ReturnKeyword _return() {
-    return api().itemadd(ByteProto.RETURN);
+    return api().itemAdd(ByteProto.RETURN);
   }
 
   protected final StaticModifier _static() {
@@ -353,7 +351,7 @@ public abstract class JavaTemplate {
   }
 
   protected final SuperKeyword _super() {
-    return api().itemadd(ByteProto.SUPER);
+    return api().itemAdd(ByteProto.SUPER);
   }
 
   protected final ExplicitConstructorInvocation _super(Expression e1) {
@@ -370,15 +368,15 @@ public abstract class JavaTemplate {
   }
 
   protected final ThisKeyword _this() {
-    return api().itemadd(ByteProto.THIS);
+    return api().itemAdd(ByteProto.THIS);
   }
 
   protected final VarKeyword _var() {
-    return api().itemadd(ByteProto.VAR);
+    return api().itemAdd(ByteProto.VAR);
   }
 
   protected final VoidKeyword _void() {
-    return api().itemadd(ByteProto.VOID);
+    return api().itemAdd(ByteProto.VOID);
   }
 
   protected final ArrayInitializer ainit() {
@@ -396,13 +394,7 @@ public abstract class JavaTemplate {
   }
 
   protected final AssignmentExpression assign(LeftHandSide lhs, Expression expression) {
-    var api = api();
-    int op = api.operator(Symbol.ASSIGNMENT);
-    api.elemstart(ByteProto.ASSIGNMENT, lhs.self(), expression.self());
-    api.elemitem(lhs);
-    api.elemproto(op);
-    api.elemitem(expression);
-    return api.elemend();
+    throw new UnsupportedOperationException("Implement me");
   }
 
   protected final At at(ClassType annotationType) {
@@ -415,10 +407,8 @@ public abstract class JavaTemplate {
 
   protected final AutoImports autoImports() {
     var api = api();
-
     api.autoImports.enable();
-
-    return api.itemadd(ByteProto.AUTO_IMPORTS);
+    return api.itemAdd(ByteProto.AUTO_IMPORTS, ByteProto.NOOP);
   }
 
   protected final Block block() {
@@ -431,7 +421,7 @@ public abstract class JavaTemplate {
 
   protected final Block block(BlockElement... elements) {
     Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api().elemmany(ByteProto.BLOCK, many);
+    return api().elemMany(ByteProto.BLOCK, many);
   }
 
   protected final Block block(BlockElement e1, BlockElement e2) {
@@ -480,7 +470,7 @@ public abstract class JavaTemplate {
 
   protected final Body body(BodyElement... elements) {
     Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api().elemmany(ByteProto.BODY, many);
+    return api().elemMany(ByteProto.BODY, many);
   }
 
   protected final Body body(BodyElement e1, BodyElement e2) {
@@ -515,7 +505,7 @@ public abstract class JavaTemplate {
 
   protected final ConstructorDeclaration constructor(ParameterElement... elements) {
     Objects.requireNonNull(elements, "elements == null");
-    return api().elemmany(ByteProto.CONSTRUCTOR, elements);
+    return api().elemMany(ByteProto.CONSTRUCTOR, elements);
   }
 
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2) {
@@ -546,7 +536,7 @@ public abstract class JavaTemplate {
   protected void definition() {}
 
   protected final ArrayDimension dim() {
-    return api().itemadd(ByteProto.ARRAY_DIMENSION);
+    return api().itemAdd(ByteProto.ARRAY_DIMENSION);
   }
 
   protected final ArrayAccess dim(ExpressionPart e1) {
@@ -554,7 +544,7 @@ public abstract class JavaTemplate {
   }
 
   protected final Ellipsis ellipsis() {
-    return api().itemadd(ByteProto.ELLIPSIS);
+    return api().itemAdd(ByteProto.ELLIPSIS);
   }
 
   protected final EnumConstant enumConstant(String name) {
@@ -608,13 +598,13 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.itemadd(ByteProto.PRIMITIVE_LITERAL, api.object(s));
+    return api.itemAdd(ByteProto.PRIMITIVE_LITERAL, api.object(s));
   }
 
   protected final Identifier id(String name) {
     JavaModel.checkIdentifier(name);
     var api = api();
-    return api.itemadd(ByteProto.IDENTIFIER, api.object(name));
+    return api.itemAdd(ByteProto.IDENTIFIER, api.object(name));
   }
 
   protected final Include include(IncludeTarget target) {
@@ -751,7 +741,7 @@ public abstract class JavaTemplate {
     var api = api();
     api.identifierext(methodName);
     Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api.elemmany(ByteProto.METHOD, EXT, many);
+    return api.elemMany(ByteProto.METHOD, EXT, many);
   }
 
   protected final MethodDeclaration method(String methodName,
@@ -765,11 +755,11 @@ public abstract class JavaTemplate {
   protected final ExpressionName n(String name) {
     JavaModel.checkSimpleName(name.toString());
     var api = api();
-    return api.itemadd(ByteProto.EXPRESSION_NAME, api.object(name));
+    return api.itemAdd(ByteProto.EXPRESSION_NAME, api.object(name));
   }
 
   protected final NewLine nl() {
-    return api().itemadd(ByteProto.NEW_LINE);
+    return api().itemAdd(ByteProto.NEW_LINE);
   }
 
   protected final StringLiteral s(String string) {
@@ -777,7 +767,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.itemadd(ByteProto.STRING_LITERAL, api.object(string));
+    return api.itemAdd(ByteProto.STRING_LITERAL, api.object(string));
   }
 
   protected final ArrayType t(
@@ -832,7 +822,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.itemadd(
+    return api.itemAdd(
       ByteProto.CLASS_TYPE, api.object(packageName),
       1, api.object(simpleName)
     );
@@ -845,7 +835,7 @@ public abstract class JavaTemplate {
 
     var api = api();
 
-    return api.itemadd(
+    return api.itemAdd(
       ByteProto.CLASS_TYPE, api.object(packageName),
       2, api.object(simpleName1), api.object(simpleName2)
     );
@@ -870,7 +860,7 @@ public abstract class JavaTemplate {
     var api = api();
     api.identifierext(name);
     Object[] many = Objects.requireNonNull(bounds, "bounds == null");
-    return api.elemmany(ByteProto.TYPE_PARAMETER, EXT, many);
+    return api.elemMany(ByteProto.TYPE_PARAMETER, EXT, many);
   }
 
   protected final TypeParameter tparam(String name,
@@ -894,7 +884,7 @@ public abstract class JavaTemplate {
   protected final TypeVariable tvar(String name) {
     Objects.requireNonNull(name, "name == null");
     var api = api();
-    return api.itemadd(ByteProto.TYPE_VARIABLE, api.object(name));
+    return api.itemAdd(ByteProto.TYPE_VARIABLE, api.object(name));
   }
 
   InternalApi api() {
@@ -923,11 +913,11 @@ public abstract class JavaTemplate {
   }
 
   private _Item modifier(Keyword value) {
-    return api().itemadd(ByteProto.MODIFIER, value.ordinal());
+    return api().itemAdd(ByteProto.MODIFIER, value.ordinal());
   }
 
   private _Item primitiveType(Keyword value) {
-    return api().itemadd(ByteProto.PRIMITIVE_TYPE, value.ordinal());
+    return api().itemAdd(ByteProto.PRIMITIVE_TYPE, value.ordinal());
   }
 
 }

@@ -58,7 +58,7 @@ class InternalApi {
   public final _Item chain(int proto) {
     int second = levelremove();
     int first = levelremove();
-    return itemadd(proto, first, second);
+    return itemAdd(proto, first, second);
   }
 
   public final _Item classType(Class<?> type) {
@@ -84,482 +84,432 @@ class InternalApi {
 
     var packageName = type.getPackageName();
 
-    leveladd(LOCAL, protoIndex);
+    levelAdd(LOCAL, protoIndex);
 
-    protoadd(ByteProto.CLASS_TYPE, object(packageName), names);
+    protoAdd(ByteProto.CLASS_TYPE, object(packageName), names);
 
     for (var index = first; index >= last; index--) {
       var simpleName = objectArray[index];
 
-      protoadd(object(simpleName));
+      protoAdd(object(simpleName));
     }
 
     return template.item;
   }
 
   public final _Item elem(int proto) {
-    elempre();
-    elemcnt(proto);
-    return elemret();
+    elemPre();
+    elemCnt(proto);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1) {
-    elempre();
-    elempre(e1);
-    elemcnt(proto);
-    elemitem(e1);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemCnt(proto);
+    elemItem(e1);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elempre(e4);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elempre(e4);
-    elempre(e5);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elempre(e4);
-    elempre(e5);
-    elempre(e6);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elempre(e4);
-    elempre(e5);
-    elempre(e6);
-    elempre(e7);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    elemitem(e7);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elempre(e4);
-    elempre(e5);
-    elempre(e6);
-    elempre(e7);
-    elempre(e8);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    elemitem(e7);
-    elemitem(e8);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemPre(e8);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elempre(e4);
-    elempre(e5);
-    elempre(e6);
-    elempre(e7);
-    elempre(e8);
-    elempre(e9);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    elemitem(e7);
-    elemitem(e8);
-    elemitem(e9);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemPre(e8);
+    elemPre(e9);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
+    elemItem(e9);
+    return elemRet();
   }
 
   public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9, Object e10) {
-    elempre();
-    elempre(e1);
-    elempre(e2);
-    elempre(e3);
-    elempre(e4);
-    elempre(e5);
-    elempre(e6);
-    elempre(e7);
-    elempre(e8);
-    elempre(e9);
-    elempre(e10);
-    elemcnt(proto);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    elemitem(e7);
-    elemitem(e8);
-    elemitem(e9);
-    elemitem(e10);
-    return elemret();
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemPre(e8);
+    elemPre(e9);
+    elemPre(e10);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
+    elemItem(e9);
+    elemItem(e10);
+    return elemRet();
   }
 
   public final void elemargs() {
-    protoadd(0);
+    protoAdd(0);
   }
 
   public final void elemargs(Object e1) {
-    protoadd(1);
-    elemitem(e1);
+    protoAdd(1);
+    elemItem(e1);
   }
 
   public final void elemargs(Object e1, Object e2) {
-    protoadd(2);
-    elemitem(e1);
-    elemitem(e2);
+    protoAdd(2);
+    elemItem(e1);
+    elemItem(e2);
   }
 
   public final void elemargs(Object e1, Object e2, Object e3) {
-    protoadd(3);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
+    protoAdd(3);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
   }
 
   public final void elemargs(Object e1, Object e2, Object e3, Object e4) {
-    protoadd(4);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
+    protoAdd(4);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
   }
 
   public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5) {
-    protoadd(5);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
+    protoAdd(5);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
   }
 
   public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
       Object e6) {
-    protoadd(6);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
+    protoAdd(6);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
   }
 
   public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
       Object e6, Object e7) {
-    protoadd(7);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    elemitem(e7);
+    protoAdd(7);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
   }
 
   public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
       Object e6, Object e7, Object e8) {
-    protoadd(8);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    elemitem(e7);
-    elemitem(e8);
+    protoAdd(8);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
   }
 
   public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
       Object e6, Object e7, Object e8, Object e9) {
-    protoadd(9);
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
-    elemitem(e4);
-    elemitem(e5);
-    elemitem(e6);
-    elemitem(e7);
-    elemitem(e8);
-    elemitem(e9);
+    protoAdd(9);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
+    elemItem(e9);
   }
 
   public final _Item elemend() {
-    /*localIndex = */stackpop();
-    /*extIndex = */stackpop();
-    /*includeIndex = */stackpop();
+    /*localIndex = */stackPop();
+    /*extIndex = */stackPop();
+    /*includeIndex = */stackPop();
 
-    int levelStart = stackpop(),
-        self = stackpop();
+    int levelStart = stackPop(),
+        self = stackPop();
 
     levelIndex[level] = levelStart;
 
-    leveladd(LOCAL, self);
+    levelAdd(LOCAL, self);
 
     return template.item;
   }
 
-  public final void elemitem(Object obj) {
+  public final void elemItem(Object obj) {
+    int offset;
+    int kind;
+
     if (obj == template.item) {
-      int localIndex = stackpeek(0);
+      offset = 0;
 
-      localIndex = levelsearch(localIndex, LOCAL);
-
-      localIndex++;
-
-      int value = levelget(localIndex);
-
-      protoadd(value);
-
-      stackset(0, localIndex);
+      kind = LOCAL;
     } else if (obj == JavaTemplate.EXT) {
-      int extIndex = stackpeek(1);
+      offset = 1;
 
-      extIndex = levelsearch(extIndex, EXT);
-
-      extIndex++;
-
-      int value = levelget(extIndex);
-
-      protoadd(value);
-
-      stackset(1, extIndex);
+      kind = EXT;
     } else if (obj == JavaTemplate.INCLUDE) {
-      int codeIndex = stackpeek(2);
+      offset = 2;
 
-      codeIndex = levelsearch(codeIndex, LAMBDA);
-
-      codeIndex++;
-
-      int level = levelget(codeIndex);
-
-      elemcntx0lambda(level);
-
-      stackset(2, codeIndex);
+      kind = LAMBDA;
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: obj=" + obj);
     }
+
+    int index = stackPeek(offset);
+
+    index = levelSearch(index, kind);
+
+    int levelValue = levelGet(index);
+
+    if (kind != LAMBDA) {
+      int proto = protoGet(levelValue++);
+
+      protoAdd(proto, levelValue);
+    } else {
+      elemcntx0lambda(levelValue);
+    }
+
+    stackset(offset, index);
   }
 
-  public final void elemitem(Object e1, Object e2) {
-    elemitem(e1);
-    elemitem(e2);
+  public final void elemItem(Object e1, Object e2) {
+    elemItem(e1);
+    elemItem(e2);
   }
 
-  public final void elemitem(Object e1, Object e2, Object e3) {
-    elemitem(e1);
-    elemitem(e2);
-    elemitem(e3);
+  public final void elemItem(Object e1, Object e2, Object e3) {
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
   }
 
-  public final _Item elemmany(int proto, Object first, Object[] elements) {
-    elempre();
+  public final _Item elemMany(int proto, Object first, Object[] elements) {
+    elemPre();
 
-    elempre(first);
+    elemPre(first);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
       Check.notNull(element, "elements[", i, "] == null");
-      elempre(element);
+      elemPre(element);
     }
 
-    elemcnt(proto);
+    elemCnt(proto);
 
-    elemitem(first);
+    elemItem(first);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
-      elemitem(element);
+      elemItem(element);
     }
 
-    return elemret();
+    return elemRet();
   }
 
-  public final _Item elemmany(int proto, Object[] elements) {
-    elempre();
+  public final _Item elemMany(int proto, Object[] elements) {
+    elemPre();
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
       Check.notNull(element, "elements[", i, "] == null");
-      elempre(element);
+      elemPre(element);
     }
 
-    elemcnt(proto);
+    elemCnt(proto);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
-      elemitem(element);
+      elemItem(element);
     }
 
-    return elemret();
+    return elemRet();
   }
 
   public final void elemproto(int value) {
-    protoadd(value);
-  }
-
-  public final void elemstart(int proto) {
-    elemstart(proto, 0);
-  }
-
-  public final void elemstart(int proto, Object e1) {
-    elemstart(proto, 1);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2) {
-    elemstart(proto, 2);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2, Object e3) {
-    elemstart(proto, 3);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4) {
-    elemstart(proto, 4);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5) {
-    elemstart(proto, 5);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6) {
-    elemstart(proto, 6);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6, Object e7) {
-    elemstart(proto, 7);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6, Object e7, Object e8) {
-    elemstart(proto, 8);
-  }
-
-  public final void elemstart(int proto, Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6, Object e7, Object e8, Object e9) {
-    elemstart(proto, 9);
+    protoAdd(value);
   }
 
   public final void identifierext(String value) {
-    leveladd(EXT, protoIndex);
-
-    protoadd(ByteProto.IDENTIFIER, object(value));
+    levelAdd(EXT, protoIndex);
+    protoAdd(ByteProto.IDENTIFIER, object(value));
   }
 
-  public final _Item itemadd(int v0) {
-    leveladd(LOCAL, protoIndex);
-    protoadd(v0);
+  public final _Item itemAdd(int v0) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0);
     return template.item;
   }
 
-  public final _Item itemadd(int v0, int v1) {
-    leveladd(LOCAL, protoIndex);
-    protoadd(v0, v1);
+  public final _Item itemAdd(int v0, int v1) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1);
     return template.item;
   }
 
-  public final _Item itemadd(int v0, int v1, int v2) {
-    leveladd(LOCAL, protoIndex);
-    protoadd(v0, v1, v2);
+  public final _Item itemAdd(int v0, int v1, int v2) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1, v2);
     return template.item;
   }
 
-  public final _Item itemadd(int v0, int v1, int v2, int v3) {
-    leveladd(LOCAL, protoIndex);
-    protoadd(v0, v1, v2, v3);
+  public final _Item itemAdd(int v0, int v1, int v2, int v3) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1, v2, v3);
     return template.item;
   }
 
-  public final _Item itemadd(int v0, int v1, int v2, int v3, int v4) {
-    leveladd(LOCAL, protoIndex);
-    protoadd(v0, v1, v2, v3, v4);
+  public final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1, v2, v3, v4);
     return template.item;
   }
 
@@ -588,7 +538,7 @@ class InternalApi {
 
     levelIndex = IntArrays.growIfNecessary(levelIndex, nextLevel);
 
-    leveladd(LAMBDA, nextLevel);
+    levelAdd(LAMBDA, nextLevel);
 
     level = nextLevel;
 
@@ -614,7 +564,7 @@ class InternalApi {
 
   public final int operator(Symbol symbol) {
     int self = protoIndex;
-    protoadd(ByteProto.OPERATOR, symbol.ordinal());
+    protoAdd(ByteProto.OPERATOR, symbol.ordinal());
     return self;
   }
 
@@ -644,21 +594,23 @@ class InternalApi {
 
       int length = levelIndex[level];
 
-      int count = length / 2;
-
-      protoadd(count);
-
       for (int i = 0; i < length;) {
-        int code = array[i++];
+        int kind = array[i++];
 
-        if (code == LOCAL) {
-          protoadd(array[i++]);
+        if (kind == LOCAL) {
+          int protoIndex = array[i++];
+
+          int proto = protoGet(protoIndex++);
+
+          protoAdd(proto, protoIndex);
         } else {
           throw new UnsupportedOperationException(
-            "Implement me :: code=" + code
+            "Implement me :: code=" + kind
           );
         }
       }
+
+      protoAdd(ByteProto.END_ELEMENT);
 
       protoIndex = self;
     } finally {
@@ -666,14 +618,14 @@ class InternalApi {
     }
   }
 
-  private void elemcnt(int value) {
-    int itemCount = stackpop(),
+  private void elemCnt(int value) {
+    int itemCount = stackPop(),
         levelStart = levelIndex[level] - (itemCount * 2),
         localIndex = levelStart,
         extIndex = levelStart,
         includeIndex = levelStart;
 
-    stackpush(
+    stackPush(
       /*4*/protoIndex,
       /*3*/levelStart,
       /*2*/includeIndex,
@@ -681,7 +633,7 @@ class InternalApi {
       /*0*/localIndex
     );
 
-    protoadd(value, 0);
+    protoAdd(value);
   }
 
   private void elemcntx0lambda(int level) {
@@ -694,7 +646,7 @@ class InternalApi {
       int value = array[i++];
 
       if (code == LOCAL) {
-        protoadd(value);
+        protoAdd(value);
       } else if (code == LAMBDA) {
         elemcntx0lambda(value);
       } else {
@@ -706,53 +658,32 @@ class InternalApi {
     levelIndex[level] = -1;
   }
 
-  private void elempre() {
+  private void elemPre() {
     stackpush(0);
   }
 
-  private void elempre(Object obj) {
+  private void elemPre(Object obj) {
     stackinc(0);
   }
 
-  private _Item elemret() {
-    /*localIndex = */stackpop();
-    /*extIndex = */stackpop();
-    /*includeIndex = */stackpop();
+  private _Item elemRet() {
+    /*localIndex = */stackPop();
+    /*extIndex = */stackPop();
+    /*includeIndex = */stackPop();
 
-    int levelStart = stackpop(),
-        self = stackpop();
+    int levelStart = stackPop(),
+        self = stackPop();
 
     levelIndex[level] = levelStart;
 
-    int itemStart = self + 2;
+    protoAdd(ByteProto.END_ELEMENT);
 
-    int count = protoIndex - itemStart;
-
-    protoArray[self + 1] = count;
-
-    leveladd(LOCAL, self);
+    levelAdd(LOCAL, self);
 
     return template.item;
   }
 
-  private void elemstart(int proto, int itemCount) {
-    int levelStart = levelIndex[level] - (itemCount * 2),
-        localIndex = levelStart,
-        extIndex = levelStart,
-        includeIndex = levelStart;
-
-    stackpush(
-      /*4*/protoIndex,
-      /*3*/levelStart,
-      /*2*/includeIndex,
-      /*1*/extIndex,
-      /*0*/localIndex
-    );
-
-    protoadd(proto);
-  }
-
-  private void leveladd(int v0, int v1) {
+  private void levelAdd(int v0, int v1) {
     levelArray = ObjectArrays.growIfNecessary(levelArray, level);
 
     if (levelArray[level] == null) {
@@ -764,7 +695,7 @@ class InternalApi {
     levelArray[level][levelIndex[level]++] = v1;
   }
 
-  private int levelget(int index) { return levelArray[level][index]; }
+  private int levelGet(int index) { return levelArray[level][index]; }
 
   private void levelpop() { level = codeArray[codeIndex--]; }
 
@@ -774,7 +705,7 @@ class InternalApi {
     codeArray[codeIndex] = level;
   }
 
-  private int levelsearch(int index, int condition) {
+  private int levelSearch(int index, int condition) {
     int[] array = levelArray[level];
     int length = levelIndex[level];
 
@@ -782,9 +713,9 @@ class InternalApi {
       int value = array[i];
 
       if (value == condition) {
-        // assuming codeArray was properly assembled
+        // assuming array was properly assembled
         // there will always be a i+1 index
-        return i;
+        return i + 1;
       }
     }
 
@@ -794,25 +725,25 @@ class InternalApi {
     );
   }
 
-  private void protoadd(int v0) {
+  private void protoAdd(int v0) {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 0);
     protoArray[protoIndex++] = v0;
   }
 
-  private void protoadd(int v0, int v1) {
+  private void protoAdd(int v0, int v1) {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
   }
 
-  private void protoadd(int v0, int v1, int v2) {
+  private void protoAdd(int v0, int v1, int v2) {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
     protoArray[protoIndex++] = v2;
   }
 
-  private void protoadd(int v0, int v1, int v2, int v3) {
+  private void protoAdd(int v0, int v1, int v2, int v3) {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 3);
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
@@ -820,7 +751,7 @@ class InternalApi {
     protoArray[protoIndex++] = v3;
   }
 
-  private void protoadd(int v0, int v1, int v2, int v3, int v4) {
+  private void protoAdd(int v0, int v1, int v2, int v3, int v4) {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 4);
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
@@ -829,11 +760,13 @@ class InternalApi {
     protoArray[protoIndex++] = v4;
   }
 
+  private int protoGet(int index) { return protoArray[index]; }
+
   private void stackinc(int offset) { stackArray[stackIndex - offset]++; }
 
-  private int stackpeek(int offset) { return stackArray[stackIndex - offset]; }
+  private int stackPeek(int offset) { return stackArray[stackIndex - offset]; }
 
-  private int stackpop() { return stackArray[stackIndex--]; }
+  private int stackPop() { return stackArray[stackIndex--]; }
 
   private void stackpush(int v0) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
@@ -841,7 +774,7 @@ class InternalApi {
     stackArray[++stackIndex] = v0;
   }
 
-  private void stackpush(int v0, int v1, int v2, int v3, int v4) {
+  private void stackPush(int v0, int v1, int v2, int v3, int v4) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 5);
 
     stackArray[++stackIndex] = v0;

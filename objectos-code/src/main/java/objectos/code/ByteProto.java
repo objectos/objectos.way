@@ -22,84 +22,97 @@ final class ByteProto {
   //internal instructions
 
   static final int AUTO_IMPORTS = -1;
+  static final int END_ELEMENT = -2;
+  static final int NOOP = -3;
 
   //types
 
-  static final int ARRAY_TYPE = -2;
-  static final int CLASS_TYPE = -3;
-  static final int NO_TYPE = -4;
-  static final int PARAMETERIZED_TYPE = -5;
-  static final int PRIMITIVE_TYPE = -6;
-  static final int TYPE_VARIABLE = -7;
-  static final int VOID = -8;
+  static final int ARRAY_TYPE = -4;
+  static final int CLASS_TYPE = -5;
+  static final int NO_TYPE = -6;
+  static final int PARAMETERIZED_TYPE = -7;
+  static final int PRIMITIVE_TYPE = -8;
+  static final int TYPE_VARIABLE = -9;
+  static final int VOID = -10;
 
   //type aux
 
-  static final int ARRAY_DIMENSION = -9;
-  static final int ARRAY_INITIALIZER = -10;
-  static final int ELLIPSIS = -11;
+  static final int ARRAY_DIMENSION = -11;
+  static final int ARRAY_INITIALIZER = -12;
+  static final int ELLIPSIS = -13;
 
   //declarations
 
-  static final int ANNOTATION = -12;
-  static final int BODY = -13;
-  static final int CLASS = -14;
-  static final int COMPILATION_UNIT = -15;
-  static final int CONSTRUCTOR = -16;
-  static final int ENUM = -17;
-  static final int ENUM_CONSTANT = -18;
-  static final int EXTENDS = -19;
-  static final int FIELD_NAME = -20;
-  static final int IDENTIFIER = -21;
-  static final int IMPLEMENTS = -22;
-  static final int INTERFACE = -23;
-  static final int METHOD = -24;
-  static final int MODIFIER = -25;
-  static final int PACKAGE = -26;
-  static final int TYPE_PARAMETER = -27;
-
-  //stmt/exp
-
-  static final int ARRAY_ACCESS = -28;
-  static final int INVOKE = -29;
-  static final int NEW = -30;
-  static final int NEW_LINE = -31;
-  static final int OPERATOR = -32;
-  static final int RETURN = -33;
-  static final int SUPER = -34;
-  static final int VAR = -35;
+  static final int ANNOTATION = -14;
+  static final int BODY = -15;
+  static final int CLASS = -16;
+  static final int COMPILATION_UNIT = -17;
+  static final int CONSTRUCTOR = -18;
+  static final int ENUM = -19;
+  static final int ENUM_CONSTANT = -20;
+  static final int EXTENDS = -21;
+  static final int IDENTIFIER = -22;
+  static final int IMPLEMENTS = -23;
+  static final int INTERFACE = -24;
+  static final int METHOD = -25;
+  static final int MODIFIER = -26;
+  static final int PACKAGE = -27;
+  static final int TYPE_PARAMETER = -28;
 
   //statements
 
-  static final int BLOCK = -36;
-  static final int LOCAL_VARIABLE = -37;
-  static final int RETURN_STATEMENT = -38;
-  static final int SUPER_INVOCATION = -39;
+  static final int BLOCK = -29;
+  static final int LOCAL_VARIABLE = -30;
+  static final int RETURN_STATEMENT = -31;
+  static final int SUPER_INVOCATION = -32;
+
+  //expression start
+
+  static final int INVOKE = -33;
+  static final int STRING_LITERAL = -34;
 
   //expressions
 
-  static final int ASSIGNMENT = -40;
-  static final int CLASS_INSTANCE_CREATION = -41;
-  static final int EXPRESSION_NAME = -42;
-  static final int EXPRESSION_NAME_CHAIN = -43;
-  static final int FIELD_ACCESS = -44;
-  static final int PRIMITIVE_LITERAL = -45;
-  static final int STRING_LITERAL = -46;
-  static final int THIS = -47;
+  static final int ASSIGNMENT = -35;
+  static final int CLASS_INSTANCE_CREATION = -36;
+  static final int EXPRESSION_NAME = -37;
+  static final int EXPRESSION_NAME_CHAIN = -38;
+  static final int FIELD_ACCESS = -39;
+  static final int PRIMITIVE_LITERAL = -40;
+  static final int THIS = -41;
+
+  //stmt/exp
+
+  static final int ARRAY_ACCESS = -42;
+  static final int NEW = -43;
+  static final int NEW_LINE = -44;
+  static final int OPERATOR = -45;
+  static final int RETURN = -46;
+  static final int SUPER = -47;
+  static final int VAR = -48;
 
   private ByteProto() {}
 
   public static boolean isExpressionStart(int proto) {
-    return switch (proto) {
-      case STRING_LITERAL -> true;
+    return proto <= INVOKE
+        && proto >= STRING_LITERAL;
+  }
 
-      default -> false;
-    };
+  public static boolean isImport(int proto) {
+    return proto == AUTO_IMPORTS;
   }
 
   public static boolean isType(int proto) {
     return proto <= ARRAY_TYPE
         && proto >= TYPE_VARIABLE;
+  }
+
+  public static boolean primaryDot(int proto) {
+    return switch (proto) {
+      case INVOKE -> true;
+
+      default -> false;
+    };
   }
 
 }

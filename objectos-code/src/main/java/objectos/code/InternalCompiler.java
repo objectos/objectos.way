@@ -28,10 +28,11 @@ class InternalCompiler extends InternalApi {
   }
 
   @FunctionalInterface
-  private interface ProtoAction {
+  private interface SwitchAction {
     void execute(int proto);
   }
 
+  @SuppressWarnings("unused")
   private static final int _START = 0,
       _ANNOTATION = 1,
       _IDENTIFIER = 2,
@@ -42,12 +43,8 @@ class InternalCompiler extends InternalApi {
   final void compile() {
     code = codeIndex = objectIndex = 0;
 
-    stackIndex = -1;
-
     try {
-      lastSet(_START);
-
-      elemExecute(this::compilationUnit, ByteProto.COMPILATION_UNIT);
+      compilationUnit();
     } catch (RuntimeException e) {
       codeAdd(Whitespace.NEW_LINE);
       codeAdd(Whitespace.NEW_LINE);
@@ -70,30 +67,31 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.EOF);
   }
 
-  private void annotation(int proto) {
+  private void annotation() {
     codeAdd(Symbol.COMMERCIAL_AT);
 
-    elemExecute(this::annotationAction, proto);
+    protoConsume(ByteProto.CLASS_TYPE);
 
-    lastSet(_ANNOTATION);
-  }
+    execute(this::classType);
 
-  private void annotationAction() {
-    itemExecute(this::classType);
-
-    if (elemHasNext()) {
+    if (itemMore()) {
       codeAdd(Symbol.LEFT_PARENTHESIS);
 
       lastSet(_START);
 
-      itemExecute(this::annotationItem);
+      executeSwitch(this::annotationItem);
 
-      while (elemHasNext()) {
-        itemExecute(this::annotationItem);
+      while (itemMore()) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        executeSwitch(this::annotationItem);
       }
 
       codeAdd(Symbol.RIGHT_PARENTHESIS);
     }
+
+    lastSet(_ANNOTATION);
   }
 
   private void annotationItem(int proto) {
@@ -114,26 +112,16 @@ class InternalCompiler extends InternalApi {
     lastSet(_SEMICOLON);
   }
 
-  private void body(int proto) {
-    codeAdd(Whitespace.OPTIONAL);
-
+  private void body() {
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
-    elemExecute(this::bodyAction, ByteProto.BODY);
-
-    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
-
-    lastSet(_RIGHT_CURLY_BRACKET);
-  }
-
-  private void bodyAction() {
-    if (elemHasNext()) {
+    if (itemMore()) {
       codeAdd(Indentation.ENTER_BLOCK);
       codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
 
       bodyMember();
 
-      while (elemHasNext()) {
+      while (itemMore()) {
         codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
 
         bodyMember();
@@ -144,6 +132,8 @@ class InternalCompiler extends InternalApi {
     } else {
       codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
     }
+
+    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
   private void bodyMember() {
@@ -151,36 +141,46 @@ class InternalCompiler extends InternalApi {
 
     modifierList();
 
-    if (elemHasNext(ByteProto::isType)) {
+    if (itemTest(ByteProto::isType)) {
       if (lastNot(_START)) {
         codeAdd(Whitespace.MANDATORY);
       }
 
       fieldOrMethodDeclaration();
-    } else if (elemHasNext(ByteProto.VOID)) {
-      throw new UnsupportedOperationException("Implement me");
     } else {
       compilationErrorSet();
     }
   }
 
   private void classDeclaration() {
-    itemExecute(this::classKeyword);
+    execute(this::classKeyword);
 
-    if (elemHasNext(ByteProto.EXTENDS)) {
-      codeAdd(Whitespace.MANDATORY);
-
-      itemExecute(this::extendsKeyword);
-
-      codeAdd(Whitespace.MANDATORY);
-
-      itemExecute(this::classType);
+    if (itemIs(ByteProto.EXTENDS)) {
+      classDeclarationExtends();
     }
 
-    itemExecute(this::body, ByteProto.BODY);
+    if (itemIs(ByteProto.BODY)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::body);
+    }
   }
 
-  private void classKeyword(int proto) {
+  private void classDeclarationExtends() {
+    codeAdd(Whitespace.MANDATORY);
+
+    execute(this::extendsKeyword);
+
+    if (itemIs(ByteProto.CLASS_TYPE)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      execute(this::classType);
+    } else {
+      compilationError();
+    }
+  }
+
+  private void classKeyword() {
     codeAdd(Keyword.CLASS);
 
     codeAdd(Whitespace.MANDATORY);
@@ -190,7 +190,7 @@ class InternalCompiler extends InternalApi {
     lastSet(_IDENTIFIER);
   }
 
-  private void classType(int proto) {
+  private void classType() {
     var packageIndex = protoNext();
 
     var packageName = (String) objectget(packageIndex);
@@ -296,92 +296,95 @@ class InternalCompiler extends InternalApi {
   private void compilationErrorSet() { objectIndex = 1; }
 
   private void compilationUnit() {
-    itemTrx(this::packageDeclaration);
+    lastSet(_START);
 
-    itemTrx(this::importDeclarationList);
+    int item = itemPeek();
 
-    if (elemHasNext()) {
-      if (lastNot(_START)) {
-        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+    switch (item) {
+      case ByteProto.ANNOTATION -> {
+        declarationAnnotationList();
+
+        if (itemIs(ByteProto.PACKAGE)) {
+          ordinaryCompilationUnit();
+        } else {
+          topLevelDeclarationList();
+        }
       }
 
-      typeDeclaration();
+      case ByteProto.AUTO_IMPORTS -> {
+        protoConsume();
 
-      while (elemHasNext()) {
-        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+        execute(this::autoImports);
 
-        typeDeclaration();
+        importDeclarationList();
+
+        topLevelDeclarationList();
+      }
+
+      case ByteProto.CLASS -> topLevelDeclarationList();
+
+      case ByteProto.END_ELEMENT -> {}
+
+      case ByteProto.PACKAGE -> { protoConsume(); ordinaryCompilationUnit(); }
+
+      default -> System.err.println(
+        "compilationUnit: no-op proto '%s'".formatted(protoName(item)));
+    }
+  }
+
+  private void consumeWs() {
+    // stub impl. for now...
+  }
+
+  private void declarationAnnotationList() {
+    if (itemIs(ByteProto.ANNOTATION)) {
+      execute(this::annotation);
+
+      while (itemIs(ByteProto.ANNOTATION)) {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+
+        execute(this::annotation);
       }
     }
   }
 
-  private void elemExecute(Action action, int self) {
-    stackpush(self);
+  private void execute(Action action) {
+    int location = protoNext();
 
-    if (elemStart()) {
-      action.execute();
+    int returnTo = protoIndex;
 
-      stackpop(); // pop max
-    }
+    protoIndex = location;
 
-    stackpop(); // self
+    action.execute();
+
+    protoIndex = returnTo;
   }
 
-  private boolean elemHasNext() {
-    if (!compilationError()) {
-      int max = stackPeek(0);
+  private void executeSwitch(SwitchAction action) {
+    int proto = protoNext();
 
-      return protoIndex < max;
-    } else {
-      return false;
-    }
-  }
+    int location = protoNext();
 
-  private boolean elemHasNext(int condition) {
-    if (elemHasNext()) {
-      int location = protoPeek();
+    int returnTo = protoIndex;
 
-      int proto = protoAt(location);
+    protoIndex = location;
 
-      return proto == condition;
-    } else {
-      return false;
-    }
-  }
+    action.execute(proto);
 
-  private boolean elemHasNext(IntPredicate condition) {
-    if (elemHasNext()) {
-      int location = protoPeek();
-
-      int proto = protoAt(location);
-
-      return condition.test(proto);
-    } else {
-      return false;
-    }
-  }
-
-  private boolean elemStart() {
-    int size = protoNext();
-
-    if (size > 0) {
-      int max = protoIndex + size;
-
-      stackpush(max);
-
-      return true;
-    } else {
-      return false;
-    }
+    protoIndex = returnTo;
   }
 
   private void expression(int proto) {
     switch (proto) {
-      case ByteProto.STRING_LITERAL -> stringLiteral(proto);
+      case ByteProto.STRING_LITERAL -> stringLiteral();
+
+      default -> System.err.println(
+        "no-op expression '%s'".formatted(protoName(proto))
+      );
     }
   }
 
-  private void extendsKeyword(int proto) {
+  private void extendsKeyword() {
     codeAdd(Keyword.EXTENDS);
 
     lastSet(_KEYWORD);
@@ -390,7 +393,7 @@ class InternalCompiler extends InternalApi {
   private void fieldDeclarationVariableList() {
     variableDeclarator();
 
-    while (elemHasNext(ByteProto.IDENTIFIER)) {
+    while (itemIs(ByteProto.IDENTIFIER)) {
       codeAdd(Symbol.COMMA);
       codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
@@ -403,77 +406,62 @@ class InternalCompiler extends InternalApi {
   }
 
   private void fieldOrMethodDeclaration() {
-    itemExecute(this::type);
+    executeSwitch(this::type);
 
-    if (elemHasNext(ByteProto.IDENTIFIER)) {
+    if (itemIs(ByteProto.IDENTIFIER)) {
       codeAdd(Whitespace.MANDATORY);
 
       fieldDeclarationVariableList();
     }
   }
 
-  private void identifier(int proto) {
+  private void identifier() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
 
-  private void importDeclarationList(int proto) {
-    switch (proto) {
-      case ByteProto.AUTO_IMPORTS -> autoImports();
-
-      default -> compilationErrorSet();
+  private void importDeclarationList() {
+    if (itemIs(ByteProto.AUTO_IMPORTS)) {
+      execute(this::autoImports);
     }
   }
 
-  private void itemExecute(ProtoAction action) {
-    int location = protoNext();
+  private boolean itemIs(int condition) {
+    consumeWs();
 
-    int returnTo = protoIndex;
-
-    protoIndex = location;
-
-    int proto = protoNext();
-
-    action.execute(proto);
-
-    protoIndex = returnTo;
-  }
-
-  private void itemExecute(ProtoAction action, int condition) {
-    int location = protoNext();
-
-    int returnTo = protoIndex;
-
-    protoIndex = location;
+    int rollback = protoIndex;
 
     int proto = protoNext();
 
     if (proto == condition) {
-      action.execute(proto);
+      return true;
     } else {
-      compilationErrorSet();
-    }
+      protoIndex = rollback;
 
-    protoIndex = returnTo;
+      return false;
+    }
   }
 
-  private void itemTrx(ProtoAction action) {
-    if (elemHasNext()) {
-      int codeRollback = codeIndex;
+  private boolean itemMore() {
+    if (!compilationError()) {
+      consumeWs();
 
-      int protoRollback = protoIndex;
-
-      int lastRollback = last();
-
-      itemExecute(action);
-
-      if (compilationError()) {
-        codeIndex = codeRollback;
-
-        protoIndex = protoRollback;
-
-        lastSet(lastRollback);
-      }
+      return protoPeek() != ByteProto.END_ELEMENT;
+    } else {
+      return false;
     }
+  }
+
+  private int itemPeek() {
+    consumeWs();
+    return protoPeek();
+  }
+
+  private boolean itemTest(IntPredicate predicate) {
+    consumeWs();
+
+    int proto = protoPeek();
+
+    return predicate.test(proto);
   }
 
   private int last() { return code; }
@@ -484,24 +472,24 @@ class InternalCompiler extends InternalApi {
 
   private void lastSet(int value) { code = value; }
 
-  private void modifier(int proto) {
+  private void modifier() {
     codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
 
     lastSet(_KEYWORD);
   }
 
   private void modifierList() {
-    if (elemHasNext(ByteProto.MODIFIER)) {
+    if (itemIs(ByteProto.MODIFIER)) {
       if (lastIs(_ANNOTATION)) {
         codeAdd(Whitespace.AFTER_ANNOTATION);
       }
 
-      itemExecute(this::modifier);
+      execute(this::modifier);
 
-      while (elemHasNext(ByteProto.MODIFIER)) {
+      while (itemIs(ByteProto.MODIFIER)) {
         codeAdd(Whitespace.MANDATORY);
 
-        itemExecute(this::modifier);
+        execute(this::modifier);
       }
     }
   }
@@ -510,12 +498,12 @@ class InternalCompiler extends InternalApi {
     return objectArray[index];
   }
 
-  private void packageDeclaration(int proto) {
-    switch (proto) {
-      case ByteProto.PACKAGE -> packageKeyword();
+  private void ordinaryCompilationUnit() {
+    execute(this::packageKeyword);
 
-      default -> compilationErrorSet();
-    }
+    importDeclarationList();
+
+    topLevelDeclarationList();
   }
 
   private void packageKeyword() {
@@ -530,38 +518,63 @@ class InternalCompiler extends InternalApi {
     lastSet(_SEMICOLON);
   }
 
+  private void protoConsume() { protoIndex++; }
+
+  private void protoConsume(int expected) {
+    int proto = protoNext();
+
+    assert proto == expected;
+  }
+
+  private String protoName(int proto) {
+    return switch (proto) {
+      case ByteProto.CLASS -> "Class";
+
+      case ByteProto.INVOKE -> "Invoke";
+
+      default -> Integer.toString(proto);
+    };
+  }
+
   private int protoNext() { return protoArray[protoIndex++]; }
 
   private int protoPeek() { return protoArray[protoIndex]; }
 
-  private int stackPeek(int offset) { return stackArray[stackIndex - offset]; }
-
-  private int stackpop() { return stackArray[stackIndex--]; }
-
-  private void stackpush(int v0) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-
-    stackArray[++stackIndex] = v0;
+  private void stringLiteral() {
+    codeAdd(ByteCode.STRING_LITERAL, protoNext());
   }
 
-  private void stringLiteral(int proto) {
-    codeAdd(ByteCode.STRING_LITERAL, protoNext());
+  private void topLevelDeclarationList() {
+    if (itemMore()) {
+      switch (last()) {
+        case _ANNOTATION,
+             _START -> {}
+
+        default -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+      }
+
+      typeDeclaration();
+
+      while (itemMore()) {
+        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+
+        typeDeclaration();
+      }
+    }
   }
 
   private void type(int proto) {
     switch (proto) {
-      case ByteProto.CLASS_TYPE -> classType(proto);
+      case ByteProto.CLASS_TYPE -> classType();
     }
   }
 
   private void typeDeclaration() {
-    while (elemHasNext(ByteProto.ANNOTATION)) {
-      itemExecute(this::annotation);
-    }
+    declarationAnnotationList();
 
     modifierList();
 
-    if (elemHasNext(ByteProto.CLASS)) {
+    if (itemIs(ByteProto.CLASS)) {
       switch (last()) {
         case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
 
@@ -575,14 +588,14 @@ class InternalCompiler extends InternalApi {
   }
 
   private void variableDeclarator() {
-    itemExecute(this::identifier);
+    execute(this::identifier);
 
-    if (elemHasNext(ByteProto::isExpressionStart)) {
+    if (itemTest(ByteProto::isExpressionStart)) {
       codeAdd(Whitespace.OPTIONAL);
       codeAdd(Symbol.ASSIGNMENT);
       codeAdd(Whitespace.OPTIONAL);
 
-      throw new UnsupportedOperationException("Implement me");
+      executeSwitch(this::expression);
     }
   }
 
