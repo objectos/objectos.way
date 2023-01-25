@@ -20,8 +20,6 @@ import objectos.lang.Check;
 
 public abstract class JavaTemplate {
 
-  protected sealed interface ArrayInitializerElement {}
-
   protected sealed interface BlockElement extends Element {}
 
   protected sealed interface BodyElement extends Element {}
@@ -43,6 +41,8 @@ public abstract class JavaTemplate {
   }
 
   protected sealed interface TypeParameterBound extends Element {}
+
+  protected sealed interface VariableInitializer {}
 
   enum _Ext {
     INSTANCE;
@@ -108,7 +108,7 @@ public abstract class JavaTemplate {
 
   sealed interface ArrayDimension extends ArrayTypeElement {}
 
-  sealed interface ArrayInitializer extends ArrayInitializerElement {}
+  sealed interface ArrayInitializer extends BodyElement, VariableInitializer {}
 
   sealed interface ArrayReferenceExpression extends Expression {}
 
@@ -148,7 +148,7 @@ public abstract class JavaTemplate {
 
   sealed interface ExpressionName extends ArrayReferenceExpression, LeftHandSide {}
 
-  sealed interface ExpressionPart extends ArgsPart, BodyElement {}
+  sealed interface ExpressionPart extends ArgsPart, BodyElement, VariableInitializer {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -384,12 +384,12 @@ public abstract class JavaTemplate {
   }
 
   protected final ArrayInitializer ainit(
-      ArrayInitializerElement e1) {
+      VariableInitializer e1) {
     return api().elem(ByteProto.ARRAY_INITIALIZER, e1);
   }
 
   protected final ArrayInitializer ainit(
-      ArrayInitializerElement e1, ArrayInitializerElement e2) {
+      VariableInitializer e1, VariableInitializer e2) {
     return api().elem(ByteProto.ARRAY_INITIALIZER, e1, e2);
   }
 

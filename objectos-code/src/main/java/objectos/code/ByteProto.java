@@ -69,16 +69,16 @@ final class ByteProto {
   //expression start
 
   static final int INVOKE = -33;
-  static final int STRING_LITERAL = -34;
+  static final int PRIMITIVE_LITERAL = -34;
+  static final int STRING_LITERAL = -35;
 
   //expressions
 
-  static final int ASSIGNMENT = -35;
-  static final int CLASS_INSTANCE_CREATION = -36;
-  static final int EXPRESSION_NAME = -37;
-  static final int EXPRESSION_NAME_CHAIN = -38;
-  static final int FIELD_ACCESS = -39;
-  static final int PRIMITIVE_LITERAL = -40;
+  static final int ASSIGNMENT = -36;
+  static final int CLASS_INSTANCE_CREATION = -37;
+  static final int EXPRESSION_NAME = -38;
+  static final int EXPRESSION_NAME_CHAIN = -39;
+  static final int FIELD_ACCESS = -40;
   static final int THIS = -41;
 
   //stmt/exp
@@ -105,6 +105,10 @@ final class ByteProto {
   public static boolean isType(int proto) {
     return proto <= ARRAY_TYPE
         && proto >= TYPE_VARIABLE;
+  }
+
+  public static boolean isVariableInitializer(int proto) {
+    return isExpressionStart(proto) || proto == ARRAY_INITIALIZER;
   }
 
   public static boolean primaryDot(int proto) {

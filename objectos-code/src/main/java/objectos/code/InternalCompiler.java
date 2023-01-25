@@ -111,11 +111,30 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
   }
 
+  private void arrayInitializer() {
+    codeAdd(Symbol.LEFT_CURLY_BRACKET);
+
+    if (itemMore()) {
+      variableInitializer();
+
+      while (itemMore()) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        variableInitializer();
+      }
+    }
+
+    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+  }
+
   private void arrayType() {
     int item = itemNext();
 
     switch (item) {
       case ByteProto.CLASS_TYPE -> execute(this::classType);
+
+      case ByteProto.PRIMITIVE_TYPE -> execute(this::primitiveType);
 
       default -> errorRaise("'%s' invalid array type".formatted(protoName(item)));
     }
@@ -171,7 +190,7 @@ class InternalCompiler extends InternalApi {
 
       fieldOrMethodDeclaration();
     } else {
-      errorSet();
+      errorRaise();
     }
   }
 
@@ -369,13 +388,13 @@ class InternalCompiler extends InternalApi {
     return result;
   }
 
+  private void errorRaise() { stackIndex = 1; }
+
   private void errorRaise(String message) {
-    errorSet();
+    errorRaise();
 
     codeAdd(ByteCode.COMMENT, object(message));
   }
-
-  private void errorSet() { stackIndex = 1; }
 
   private void execute(Action action) {
     int location = protoNext();
@@ -414,6 +433,8 @@ class InternalCompiler extends InternalApi {
   private void expressionBegin(int proto) {
     switch (proto) {
       case ByteProto.INVOKE -> invoke();
+
+      case ByteProto.PRIMITIVE_LITERAL -> primitiveLiteral();
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
@@ -614,6 +635,14 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
   }
 
+  private void primitiveLiteral() {
+    codeAdd(ByteCode.PRIMITIVE_LITERAL, protoNext());
+  }
+
+  private void primitiveType() {
+    codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
+  }
+
   private void protoConsume() { protoIndex++; }
 
   private void protoConsume(int expected) {
@@ -629,6 +658,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS -> "Class Keyword";
 
       case ByteProto.INVOKE -> "Invoke";
+
+      case ByteProto.PRIMITIVE_LITERAL -> "Primitive Literal";
 
       default -> Integer.toString(proto);
     };
@@ -689,19 +720,29 @@ class InternalCompiler extends InternalApi {
 
       classDeclaration();
     } else {
-      errorSet();
+      errorRaise();
     }
   }
 
   private void variableDeclarator() {
     execute(this::identifier);
 
-    if (itemTest(ByteProto::isExpressionStart)) {
+    if (itemTest(ByteProto::isVariableInitializer)) {
       codeAdd(Whitespace.OPTIONAL);
       codeAdd(Symbol.ASSIGNMENT);
       codeAdd(Whitespace.OPTIONAL);
 
+      variableInitializer();
+    }
+  }
+
+  private void variableInitializer() {
+    if (itemTest(ByteProto::isExpressionStart)) {
       expression();
+    } else if (itemIs(ByteProto.ARRAY_INITIALIZER)) {
+      execute(this::arrayInitializer);
+    } else {
+      errorRaise();
     }
   }
 

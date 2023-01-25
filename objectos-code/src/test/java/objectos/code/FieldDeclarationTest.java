@@ -165,36 +165,37 @@ public class FieldDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Field declarations TC06
-  //
-  //  - array initializer
-  //  """)
-  //  public void testCase06() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          t(_int(), dim()); field("a"); ainit();
-//
-//          t(_int(), dim()); field("b"); ainit(i(0));
-//
-//          t(_int(), dim()); field("c"); ainit(i(0), i(1));
-//        }
-//      }),
-//
-//      """
-//      class Fields {
-//        int[] a = {};
-//
-//        int[] b = {0};
-//
-//        int[] c = {0, 1};
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
+  @Test(description = """
+  Field declarations TC06
+
+  - array initializer
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Fields");
+          body(
+            t(_int(), dim()), id("a"), ainit(),
+
+            t(_int(), dim()), id("b"), ainit(i(0)),
+
+            t(_int(), dim()), id("c"), ainit(i(0), i(1))
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        int[] a = {};
+
+        int[] b = {0};
+
+        int[] c = {0, 1};
+      }
+      """
+    );
+  }
 
 }
