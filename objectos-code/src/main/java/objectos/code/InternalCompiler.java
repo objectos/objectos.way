@@ -155,7 +155,33 @@ class InternalCompiler extends InternalApi {
   private void block() {
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
+    if (itemMore()) {
+      codeAdd(Indentation.ENTER_BLOCK);
+      codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
+
+      blockStatement();
+
+      while (itemMore()) {
+        codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
+
+        blockStatement();
+      }
+
+      codeAdd(Indentation.EXIT_BLOCK);
+      codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+    } else {
+      codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+    }
+
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+  }
+
+  private void blockStatement() {
+    int start = itemPeek();
+    // TODO local class
+    // TODO local variable decl
+
+    statement0(start);
   }
 
   private void body() {
@@ -724,6 +750,25 @@ class InternalCompiler extends InternalApi {
   private int protoNext() { return protoArray[protoIndex++]; }
 
   private int protoPeek() { return protoArray[protoIndex]; }
+
+  @SuppressWarnings("unused")
+  private void statement() {
+    int start = itemPeek();
+
+    statement0(start);
+  }
+
+  private void statement0(int start) {
+    switch (start) {
+      case ByteProto.INVOKE -> statementPrimary();
+    }
+
+    codeAdd(Symbol.SEMICOLON);
+  }
+
+  private void statementPrimary() {
+    expression();
+  }
 
   private void stringLiteral() {
     codeAdd(ByteCode.STRING_LITERAL, protoNext());

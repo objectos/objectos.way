@@ -45,33 +45,33 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  - void
-  //  - single statement
-  //  """)
-  //  public void testCase02() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _void(), method("test"), block(
-  //              invoke("foo")
-  //            )
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        void test() {
-  //          foo();
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
+  @Test(description = """
+  - void
+  - single statement
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _void(), method("test"), block(
+              invoke("foo")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void test() {
+          foo();
+        }
+      }
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  - single annotation

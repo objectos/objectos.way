@@ -148,7 +148,8 @@ public abstract class JavaTemplate {
 
   sealed interface ExpressionName extends ArrayReferenceExpression, LeftHandSide {}
 
-  sealed interface ExpressionPart extends ArgsPart, BodyElement, VariableInitializer {}
+  sealed interface ExpressionPart
+      extends ArgsPart, BlockElement, BodyElement, VariableInitializer {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -533,7 +534,7 @@ public abstract class JavaTemplate {
       e3.self(), e4.self(), e5.self(), e6.self());
   }
 
-  protected void definition() {}
+  protected abstract void definition();
 
   protected final ArrayDimension dim() {
     return api().itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);
