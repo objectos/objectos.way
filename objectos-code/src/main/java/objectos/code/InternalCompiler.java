@@ -250,6 +250,12 @@ class InternalCompiler extends InternalApi {
         fieldOrMethodDeclaration();
       }
 
+      case ByteProto.TYPE_VARIABLE -> {
+        execute(this::typeVariable);
+
+        fieldOrMethodDeclaration();
+      }
+
       case ByteProto.VOID -> {
         execute(this::voidKeyword);
 

@@ -18,6 +18,7 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import java.util.Map;
 import org.testng.annotations.Test;
 
 public class MethodDeclarationTest {
@@ -300,51 +301,51 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method declarations TC09
-  //
-  //  - method return type
-  //  """)
-  //  public void testCase09() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _void(), method("test0"), block(),
-  //
-  //            t(t(String.class), dim()), method("test1"), block(),
-  //
-  //            _int(), method("test2"), block(),
-  //
-  //            t(Integer.class), method("test3"), block(),
-  //
-  //            tvar("E"), method("test4"), block(),
-  //
-  //            t(t(Map.class), tvar("K"), tvar("V")), method("test5"), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        void test0() {}
-  //
-  //        java.lang.String[] test1() {}
-  //
-  //        int test2() {}
-  //
-  //        java.lang.Integer test3() {}
-  //
-  //        E test4() {}
-  //
-  //        java.util.Map<K, V> test5() {}
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  Method declarations TC09
+
+  - method return type
+  """)
+  public void testCase09() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _void(), method("test0"), block(),
+
+            t(t(String.class), dim()), method("test1"), block(),
+
+            _int(), method("test2"), block(),
+
+            t(Integer.class), method("test3"), block(),
+
+            tvar("E"), method("test4"), block(),
+
+            t(t(Map.class), tvar("K"), tvar("V")), method("test5"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void test0() {}
+
+        java.lang.String[] test1() {}
+
+        int test2() {}
+
+        java.lang.Integer test3() {}
+
+        E test4() {}
+
+        java.util.Map<K, V> test5() {}
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method declarations TC10
   //
