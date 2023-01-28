@@ -155,7 +155,7 @@ public abstract class JavaTemplate {
 
   sealed interface FinalModifier extends BodyElement {}
 
-  sealed interface Identifier extends BodyElement {}
+  sealed interface Identifier extends BodyElement, ParameterElement {}
 
   sealed interface ImplementsKeyword extends BodyElement {}
 
@@ -195,9 +195,7 @@ public abstract class JavaTemplate {
 
   sealed interface PublicModifier extends AccessModifier {}
 
-  sealed interface ReferenceType extends ArrayTypeComponent,
-      /* to remove */
-      AnyType {}
+  sealed interface ReferenceType extends AnyType, ArrayTypeComponent {}
 
   sealed interface ReturnKeyword extends BlockElement,
       /* to remove */
@@ -344,7 +342,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ReturnKeyword _return() {
-    return api().itemAdd(ByteProto.RETURN);
+    return api().itemAdd(ByteProto.RETURN, ByteProto.NOOP);
   }
 
   protected final StaticModifier _static() {

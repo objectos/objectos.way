@@ -576,6 +576,26 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void formalParameter() {
+    if (itemTest(ByteProto::isType)) {
+      executeSwitch(this::type);
+    } else {
+      errorRaise("invalid formal parameter");
+
+      return;
+    }
+
+    if (itemIs(ByteProto.IDENTIFIER)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      execute(this::identifier);
+    } else {
+      errorRaise("invalid formal parameter");
+
+      return;
+    }
+  }
+
   private void identifier() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
@@ -660,6 +680,17 @@ class InternalCompiler extends InternalApi {
     execute(this::identifier);
 
     codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    if (itemMore()) {
+      formalParameter();
+
+      while (itemMore()) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        formalParameter();
+      }
+    }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
   }
@@ -755,6 +786,18 @@ class InternalCompiler extends InternalApi {
 
   private int protoPeek() { return protoArray[protoIndex]; }
 
+  private void returnKeyword() {
+    codeAdd(Keyword.RETURN);
+  }
+
+  private void returnStatement() {
+    execute(this::returnKeyword);
+
+    codeAdd(Whitespace.MANDATORY);
+
+    expression();
+  }
+
   @SuppressWarnings("unused")
   private void statement() {
     int start = itemPeek();
@@ -765,6 +808,8 @@ class InternalCompiler extends InternalApi {
   private void statement0(int start) {
     switch (start) {
       case ByteProto.INVOKE -> statementPrimary();
+
+      case ByteProto.RETURN -> returnStatement();
     }
 
     codeAdd(Symbol.SEMICOLON);
