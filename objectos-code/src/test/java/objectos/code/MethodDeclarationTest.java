@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
 import org.testng.annotations.Test;
 
 public class MethodDeclarationTest {
@@ -190,68 +191,64 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method declarations TC07
-  //
-  //  - parameters
-  //  """)
-  //  public void testCase07() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _void(), method("test0", t(String.class), id("a")), block(),
-  //
-  //            _void(), method("test1", t(String.class), id("a"), t(String.class), id("b")), block(),
-  //
-  //            _void(), method(
-  //              "test2",
-  //              _int(), id("a"),
-  //              _double(), id("b"),
-  //              _boolean(), id("c")
-  //            ),
-  //            block(),
-  //
-  //            _void(), method("test3", _int(), ellipsis(), id("a")), block(),
-  //
-  //            _void(), method("test4", t(t(String.class), dim()), id("args")), block(),
-  //
-  //            _void(), method("test5", tvar("N"), id("n")), block(),
-  //
-  //            _void(), method("test6", t(t(List.class), tvar("N")), id("list")), block(),
-  //
-  //            t(String.class), method("test7", t(String.class), id("a")), block(
-  //              _return(), n("a")
-  //            )
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        void test0(java.lang.String a) {}
-  //
-  //        void test1(java.lang.String a, java.lang.String b) {}
-  //
-  //        void test2(int a, double b, boolean c) {}
-  //
-  //        void test3(int... a) {}
-  //
-  //        void test4(java.lang.String[] args) {}
-  //
-  //        void test5(N n) {}
-  //
-  //        void test6(java.util.List<N> list) {}
-  //
-  //        java.lang.String test7(java.lang.String a) {
-  //          return a;
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
+  @Test(description = """
+  Method declarations TC07
+
+  - parameters
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _void(), method("test0", t(String.class), id("a")), block(),
+
+            _void(), method("test1", t(String.class), id("a"), t(String.class), id("b")), block(),
+
+            _void(), method(
+              "test2",
+              _int(), id("a"),
+              _double(), id("b"),
+              _boolean(), id("c")
+            ),
+            block(),
+
+            _void(), method("test3", _int(), ellipsis(), id("a")), block(),
+
+            _void(), method("test4", t(t(String.class), dim()), id("args")), block(),
+
+            _void(), method("test5", tvar("N"), id("n")), block(),
+
+            _void(), method("test6", t(t(List.class), tvar("N")), id("list")), block(),
+
+            t(String.class), method("test7", t(String.class), id("a")), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void test0(java.lang.String a) {}
+
+        void test1(java.lang.String a, java.lang.String b) {}
+
+        void test2(int a, double b, boolean c) {}
+
+        void test3(int... a) {}
+
+        void test4(java.lang.String[] args) {}
+
+        void test5(N n) {}
+
+        void test6(java.util.List<N> list) {}
+
+        java.lang.String test7(java.lang.String a) {}
+      }
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  Method declarations TC08

@@ -454,6 +454,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void ellipsis() {
+    codeAdd(Symbol.ELLIPSIS);
+  }
+
   private boolean error() {
     var result = stackIndex == 1;
 
@@ -583,6 +587,10 @@ class InternalCompiler extends InternalApi {
       errorRaise("invalid formal parameter");
 
       return;
+    }
+
+    if (itemIs(ByteProto.ELLIPSIS)) {
+      execute(this::ellipsis);
     }
 
     if (itemIs(ByteProto.IDENTIFIER)) {
@@ -850,6 +858,10 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
 
+      case ByteProto.PRIMITIVE_TYPE -> primitiveType();
+
+      case ByteProto.TYPE_VARIABLE -> typeVariable();
+
       default -> errorRaise(
         "no-op type '%s'".formatted(protoName(proto))
       );
@@ -872,6 +884,10 @@ class InternalCompiler extends InternalApi {
     } else {
       errorRaise();
     }
+  }
+
+  private void typeVariable() {
+    codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
 
   private void variableDeclarator() {
