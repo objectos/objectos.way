@@ -72,34 +72,34 @@ public class MethodDeclarationTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  - single annotation
-  //  - void
-  //  - empty body
-  //  """)
-  //  public void testCase03() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            at(t(Override.class)),
-  //            _void(), method("test"), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        @java.lang.Override
-  //        void test() {}
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+
+  @Test(description = """
+  - single annotation
+  - void
+  - empty body
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            at(t(Override.class)),
+            _void(), method("test"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        @java.lang.Override
+        void test() {}
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method declarations TC04
   //

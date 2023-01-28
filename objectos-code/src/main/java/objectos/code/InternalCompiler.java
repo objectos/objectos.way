@@ -211,13 +211,19 @@ class InternalCompiler extends InternalApi {
   private void bodyMember() {
     lastSet(_START);
 
+    declarationAnnotationList();
+
     modifierList();
 
-    if (lastNot(_START)) {
-      codeAdd(Whitespace.MANDATORY);
-    }
-
     int item = itemPeek();
+
+    switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+      case _START -> {}
+
+      default -> codeAdd(Whitespace.MANDATORY);
+    }
 
     switch (item) {
       case ByteProto.ARRAY_TYPE -> {
@@ -632,8 +638,6 @@ class InternalCompiler extends InternalApi {
   private int last() { return code; }
 
   private boolean lastIs(int value) { return last() == value; }
-
-  private boolean lastNot(int value) { return last() != value; }
 
   private void lastSet(int value) { code = value; }
 

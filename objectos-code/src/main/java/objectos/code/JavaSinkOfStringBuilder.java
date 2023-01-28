@@ -91,7 +91,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   @Override
   protected final void writeWhitespace(Whitespace value) {
     switch (value) {
-      case AFTER_ANNOTATION -> writenl();
+      case AFTER_ANNOTATION -> { writenl(); writeIndentation(level()); }
 
       case BEFORE_EMPTY_BLOCK_END -> {}
 
