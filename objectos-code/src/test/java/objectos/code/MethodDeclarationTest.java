@@ -100,37 +100,37 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method declarations TC04
-  //
-  //  - modifiers
-  //  """)
-  //  public void testCase04() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _final(), _void(), method("a"), block(),
-  //            _public(), _final(), _void(), method("b"), block(),
-  //            _protected(), _static(), _final(), _void(), method("c"), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        final void a() {}
-  //
-  //        public final void b() {}
-  //
-  //        protected static final void c() {}
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  Method declarations TC04
+
+  - modifiers
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _final(), _void(), method("a"), block(),
+            _public(), _final(), _void(), method("b"), block(),
+            _protected(), _static(), _final(), _void(), method("c"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        final void a() {}
+
+        public final void b() {}
+
+        protected static final void c() {}
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Add include support:
   //
