@@ -165,31 +165,31 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  annotation + modifier
-  //  """)
-  //  public void testCase06() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            at(t(Override.class)),
-  //            _final(), _void(), method("test"), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        @java.lang.Override
-  //        final void test() {}
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  annotation + modifier
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            at(t(Override.class)),
+            _final(), _void(), method("test"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        @java.lang.Override
+        final void test() {}
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method declarations TC07
   //
