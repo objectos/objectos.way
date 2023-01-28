@@ -346,35 +346,35 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method declarations TC10
-  //
-  //  - abstract method vs method w/ empty body
-  //  """)
-  //  public void testCase10() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _abstract(), _void(), method("test0"),
-  //
-  //            _void(), method("test1"), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        abstract void test0();
-  //
-  //        void test1() {}
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  Method declarations TC10
+
+  - abstract method vs method w/ empty body
+  """)
+  public void testCase10() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _abstract(), _void(), method("test0"),
+
+            _void(), method("test1"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        abstract void test0();
+
+        void test1() {}
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method declarations TC11
   //
