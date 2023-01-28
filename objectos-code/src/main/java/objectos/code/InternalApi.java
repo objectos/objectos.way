@@ -415,7 +415,7 @@ class InternalApi {
 
       protoAdd(proto, levelValue);
     } else {
-      elemcntx0lambda(levelValue);
+      elemCntx0lambda(levelValue);
     }
 
     stackset(offset, index);
@@ -636,19 +636,22 @@ class InternalApi {
     protoAdd(value);
   }
 
-  private void elemcntx0lambda(int level) {
+  private void elemCntx0lambda(int level) {
     int[] array = levelArray[level];
 
     int length = levelIndex[level];
 
     for (int i = 0; i < length;) {
       int code = array[i++];
-      int value = array[i++];
+
+      int levelValue = array[i++];
 
       if (code == LOCAL) {
-        protoAdd(value);
+        int proto = protoGet(levelValue++);
+
+        protoAdd(proto, levelValue);
       } else if (code == LAMBDA) {
-        elemcntx0lambda(value);
+        elemCntx0lambda(levelValue);
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: code=" + code);

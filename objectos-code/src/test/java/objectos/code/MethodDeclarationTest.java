@@ -131,40 +131,40 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Add include support:
-  //
-  //  - single include
-  //  - single statement
-  //  """)
-  //  public void testCase05() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _void(), method("test"), block(
-  //              include(this::bodyImpl)
-  //            )
-  //          );
-  //        }
-  //
-  //        private void bodyImpl() {
-  //          invoke("foo");
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        void test() {
-  //          foo();
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  Add include support:
+
+  - single include
+  - single statement
+  """)
+  public void testCase05() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _void(), method("test"), block(
+              include(this::bodyImpl)
+            )
+          );
+        }
+
+        private void bodyImpl() {
+          invoke("foo");
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void test() {
+          foo();
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  annotation + modifier
   //  """)
