@@ -226,34 +226,20 @@ class InternalCompiler extends InternalApi {
     }
 
     switch (item) {
-      case ByteProto.ARRAY_TYPE -> {
-        execute(this::arrayType);
+      case ByteProto.ARRAY_TYPE,
+           ByteProto.CLASS_TYPE,
+           ByteProto.PARAMETERIZED_TYPE,
+           ByteProto.PRIMITIVE_TYPE,
+           ByteProto.TYPE_VARIABLE -> {
+        executeSwitch(this::type);
 
         fieldOrMethodDeclaration();
       }
 
-      case ByteProto.CLASS_TYPE -> {
-        execute(this::classType);
+      case ByteProto.TYPE_PARAMETER -> {
+        typeParameterList();
 
-        fieldOrMethodDeclaration();
-      }
-
-      case ByteProto.PARAMETERIZED_TYPE -> {
-        execute(this::parameterizedType);
-
-        fieldOrMethodDeclaration();
-      }
-
-      case ByteProto.PRIMITIVE_TYPE -> {
-        execute(this::primitiveType);
-
-        fieldOrMethodDeclaration();
-      }
-
-      case ByteProto.TYPE_VARIABLE -> {
-        execute(this::typeVariable);
-
-        fieldOrMethodDeclaration();
+        methodDeclarationAfterTypeParameterList();
       }
 
       case ByteProto.VOID -> {
@@ -698,6 +684,40 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void methodDeclarationAfterTypeParameterList() {
+    int returnType = itemPeek();
+
+    if (ByteProto.isType(returnType)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      executeSwitch(this::type);
+    } else if (returnType == ByteProto.VOID) {
+      codeAdd(Whitespace.MANDATORY);
+
+      execute(this::voidKeyword);
+    } else {
+      errorRaise(
+        "Method declaration: expected 'Return Type' but found '%s'".formatted(protoName(returnType))
+      );
+
+      return;
+    }
+
+    if (itemIs(ByteProto.METHOD)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      methodDeclaration();
+    } else {
+      int next = itemPeek();
+
+      errorRaise(
+        "Method declaration: expected 'Declarator' but found '%s'".formatted(protoName(next))
+      );
+
+      return;
+    }
+  }
+
   private void methodDeclarator() {
     execute(this::identifier);
 
@@ -802,6 +822,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PRIMITIVE_LITERAL -> "Primitive Literal";
 
+      case ByteProto.TYPE_PARAMETER -> "Type Parameter";
+
       default -> Integer.toString(proto);
     };
   }
@@ -900,6 +922,41 @@ class InternalCompiler extends InternalApi {
     } else {
       errorRaise();
     }
+  }
+
+  private void typeParameter() {
+    execute(this::identifier);
+
+    if (itemMore()) {
+      codeAdd(Whitespace.MANDATORY);
+      codeAdd(Keyword.EXTENDS);
+      codeAdd(Whitespace.MANDATORY);
+
+      executeSwitch(this::type);
+
+      while (itemMore()) {
+        codeAdd(Whitespace.OPTIONAL);
+        codeAdd(Symbol.AMPERSAND);
+        codeAdd(Whitespace.OPTIONAL);
+
+        executeSwitch(this::type);
+      }
+    }
+  }
+
+  private void typeParameterList() {
+    codeAdd(Symbol.LEFT_ANGLE_BRACKET);
+
+    execute(this::typeParameter);
+
+    while (itemIs(ByteProto.TYPE_PARAMETER)) {
+      codeAdd(Symbol.COMMA);
+      codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+      execute(this::typeParameter);
+    }
+
+    codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
   }
 
   private void typeVariable() {

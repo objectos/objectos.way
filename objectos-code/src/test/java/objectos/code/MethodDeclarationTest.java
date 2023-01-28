@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import org.testng.annotations.Test;
@@ -375,52 +376,52 @@ public class MethodDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method declarations TC11
-  //
-  //  - type parameters
-  //  """)
-  //  public void testCase11() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            tparam("T"),
-  //            _void(), method("test0"), block(),
-  //
-  //            _public(),
-  //            tparam("T"),
-  //            _void(), method("test1"), block(),
-  //
-  //            tparam("E1"),
-  //            tparam("E2"),
-  //            _void(), method("test2"), block(),
-  //
-  //            tparam("T", t(Object.class)),
-  //            _void(), method("test3"), block(),
-  //
-  //            tparam("T", t(Object.class), t(Serializable.class)),
-  //            t(String.class), method("test4"), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        <T> void test0() {}
-  //
-  //        public <T> void test1() {}
-  //
-  //        <E1, E2> void test2() {}
-  //
-  //        <T extends java.lang.Object> void test3() {}
-  //
-  //        <T extends java.lang.Object & java.io.Serializable> java.lang.String test4() {}
-  //      }
-  //      """
-  //    );
-  //  }
+  @Test(description = """
+  Method declarations TC11
+
+  - type parameters
+  """)
+  public void testCase11() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            tparam("T"),
+            _void(), method("test0"), block(),
+
+            _public(),
+            tparam("T"),
+            _void(), method("test1"), block(),
+
+            tparam("E1"),
+            tparam("E2"),
+            _void(), method("test2"), block(),
+
+            tparam("T", t(Object.class)),
+            _void(), method("test3"), block(),
+
+            tparam("T", t(Object.class), t(Serializable.class)),
+            t(String.class), method("test4"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        <T> void test0() {}
+
+        public <T> void test1() {}
+
+        <E1, E2> void test2() {}
+
+        <T extends java.lang.Object> void test3() {}
+
+        <T extends java.lang.Object & java.io.Serializable> java.lang.String test4() {}
+      }
+      """
+    );
+  }
 
 }
