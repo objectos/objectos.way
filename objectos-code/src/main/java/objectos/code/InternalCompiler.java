@@ -509,7 +509,15 @@ class InternalCompiler extends InternalApi {
   private void expression() {
     int part = executeSwitch(this::expressionBegin);
 
-    expressionDot(part);
+    if (itemIs(ByteProto.END)) {
+      execute(this::noop);
+
+      while (itemIs(ByteProto.END)) {
+        execute(this::noop);
+      }
+    } else {
+      expressionDot(part);
+    }
   }
 
   private void expressionBegin(int proto) {
@@ -724,6 +732,8 @@ class InternalCompiler extends InternalApi {
       }
     }
   }
+
+  private void noop() {}
 
   private Object objectget(int index) {
     return objectArray[index];

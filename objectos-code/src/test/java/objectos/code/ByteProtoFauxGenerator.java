@@ -27,6 +27,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("internal instructions");
 
     value("AUTO_IMPORTS");
+    value("END");
     value("END_ELEMENT");
     value("NOOP");
 

@@ -68,6 +68,7 @@ public abstract class JavaTemplate {
       ClassType,
       ConstructorDeclaration,
       Ellipsis,
+      End,
       EnumConstant,
       EnumKeyword,
       ExplicitConstructorInvocation,
@@ -141,6 +142,8 @@ public abstract class JavaTemplate {
   sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface Ellipsis extends ParameterElement {}
+
+  sealed interface End extends BlockElement {}
 
   sealed interface EnumKeyword extends BodyElement {}
 
@@ -544,6 +547,10 @@ public abstract class JavaTemplate {
 
   protected final Ellipsis ellipsis() {
     return api().itemAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
+  }
+
+  protected final End end() {
+    return api().itemAdd(ByteProto.END, ByteProto.NOOP);
   }
 
   protected final EnumConstant enumConstant(String name) {

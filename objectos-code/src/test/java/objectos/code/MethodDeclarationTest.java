@@ -249,57 +249,57 @@ public class MethodDeclarationTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  Method declarations TC08
-  //  - multiple statements
-  //  """)
-  //  public void testCase08() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Methods");
-  //          body(
-  //            _void(), method("test0"), block(
-  //              invoke("a")
-  //            ),
-  //
-  //            _void(), method("test1"), block(
-  //              invoke("a"),
-  //              invoke("b")
-  //            ),
-  //
-  //            _void(), method("test2"), block(
-  //              invoke("a"),
-  //              invoke("b"),
-  //              invoke("c")
-  //            )
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Methods {
-  //        void test0() {
-  //          a();
-  //        }
-  //
-  //        void test1() {
-  //          a();
-  //          b();
-  //        }
-  //
-  //        void test2() {
-  //          a();
-  //          b();
-  //          c();
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+
+  @Test(description = """
+  Method declarations TC08
+  - multiple statements
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _void(), method("test0"), block(
+              invoke("a")
+            ),
+
+            _void(), method("test1"), block(
+              invoke("a"), end(),
+              invoke("b")
+            ),
+
+            _void(), method("test2"), block(
+              invoke("a"), end(),
+              invoke("b"), end(),
+              invoke("c")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void test0() {
+          a();
+        }
+
+        void test1() {
+          a();
+          b();
+        }
+
+        void test2() {
+          a();
+          b();
+          c();
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method declarations TC09
   //
