@@ -15,78 +15,83 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import objectos.code.Fixture.Kind;
+import org.testng.annotations.Test;
+
 public class MethodInvocationExpressionTest {
 
-  //  private final Fixture fix = new Fixture("Invoke", Kind.VOID_METHOD);
-  //
-  //  @Test(description = """
-  //  - unqualified
-  //  - no args
-  //  """)
-  //  public void testCase01() {
-  //    assertEquals(
-  //      fix.ture(new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          invoke("test");
-  //        }
-  //      }),
-  //
-  //      """
-  //      class Invoke {
-  //        void method() {
-  //          test();
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
-  //
-  //  @Test(description = """
-  //  - unqualified
-  //  - single argument
-  //  """)
-  //  public void testCase02() {
-  //    assertEquals(
-  //      fix.ture(new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          invoke("test", s("a"));
-  //        }
-  //      }),
-  //
-  //      """
-  //      class Invoke {
-  //        void method() {
-  //          test("a");
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
-  //
-  //  @Test(description = """
-  //  - unqualified
-  //  - two arguments
-  //  """)
-  //  public void testCase03() {
-  //    assertEquals(
-  //      fix.ture(new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          invoke("test", s("a"), s("b"));
-  //        }
-  //      }),
-  //
-  //      """
-  //      class Invoke {
-  //        void method() {
-  //          test("a", "b");
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
+  private final Fixture fix = new Fixture("Invoke", Kind.VOID_METHOD);
+
+  @Test(description = """
+  - unqualified
+  - no args
+  """)
+  public void testCase01() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test");
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          test();
+        }
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  - unqualified
+  - single argument
+  """)
+  public void testCase02() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", s("a"));
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          test("a");
+        }
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  - unqualified
+  - two arguments
+  """)
+  public void testCase03() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", s("a"), s("b"));
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          test("a", "b");
+        }
+      }
+      """
+    );
+  }
   //
   //  @Test(description = """
   //  - unqualified
