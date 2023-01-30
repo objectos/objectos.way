@@ -41,31 +41,31 @@ public class ClassDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  single annotation on class
-  //
-  //  @java.lang.Deprecated
-  //  class Subject {}
-  //  """)
-  //  public void testCase02() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          at(t(Deprecated.class));
-//          _class("Subject"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      @java.lang.Deprecated
-//      class Subject {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  single annotation on class
+
+  @java.lang.Deprecated
+  class Subject {}
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            at(t(Deprecated.class)),
+            _class("Subject"), body()
+          );
+        }
+      }.toString(),
+
+      """
+      @java.lang.Deprecated
+      class Subject {}
+      """
+    );
+  }
+
   //  @Test(description = """
   //  single method
   //
