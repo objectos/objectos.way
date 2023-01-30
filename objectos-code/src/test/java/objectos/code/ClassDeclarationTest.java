@@ -176,48 +176,48 @@ public class ClassDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Class declarations TC06
-  //
-  //  - class modifiers
-  //  """)
-  //  public void testCase06() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _public(); _class("A"); body();
-//
-//          _protected(); _class("B"); body();
-//
-//          _private(); _class("C"); body();
-//
-//          _static(); _class("D"); body();
-//
-//          _abstract(); _class("E"); body();
-//
-//          _final(); _class("F"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      public class A {}
-//
-//      protected class B {}
-//
-//      private class C {}
-//
-//      static class D {}
-//
-//      abstract class E {}
-//
-//      final class F {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Class declarations TC06
+
+  - class modifiers
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _public(), _class("A"), body(),
+
+            _protected(), _class("B"), body(),
+
+            _private(), _class("C"), body(),
+
+            _static(), _class("D"), body(),
+
+            _abstract(), _class("E"), body(),
+
+            _final(), _class("F"), body()
+          );
+        }
+      }.toString(),
+
+      """
+      public class A {}
+
+      protected class B {}
+
+      private class C {}
+
+      static class D {}
+
+      abstract class E {}
+
+      final class F {}
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Class declarations TC07
   //
