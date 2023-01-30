@@ -66,64 +66,63 @@ public class ClassDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  single method
-  //
-  //  class Subject {
-  //    void m0() {}
-  //  }
-  //  """)
-  //  public void testCase03() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _class("Subject"); body(
-//            _void(), field("m0"), block()
-//          );
-//        }
-//      }.toString(),
-//
-//      """
-//      class Subject {
-//        void m0() {}
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
-  //  @Test(description = """
-  //  Class declarations TC04
-  //
-  //  - allow includes
-  //  """)
-  //  public void testCase04() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _class("Test"); body(
-//            include(this::includeTest)
-//          );
-//        }
-//
-//        private void includeTest() {
-//          _int(); field("a");
-//        }
-//      }.toString(),
-//
-//      """
-//      class Test {
-//        int a;
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  single method
+
+  class Subject {
+    void m0() {}
+  }
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Subject");
+          body(
+            _void(), method("m0"), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Subject {
+        void m0() {}
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  Class declarations TC04
+
+  - allow includes
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Test");
+          body(
+            include(this::includeTest)
+          );
+        }
+
+        private void includeTest() {
+          _int();
+          id("a");
+        }
+      }.toString(),
+
+      """
+      class Test {
+        int a;
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Class declarations TC05
   //
