@@ -72,13 +72,13 @@ final class ByteProto {
   static final int INVOKE = -34;
   static final int PRIMITIVE_LITERAL = -35;
   static final int STRING_LITERAL = -36;
+  static final int THIS = -37;
 
   //expressions
 
-  static final int ASSIGNMENT = -37;
-  static final int CLASS_INSTANCE_CREATION = -38;
-  static final int FIELD_ACCESS = -39;
-  static final int THIS = -40;
+  static final int ASSIGNMENT = -38;
+  static final int CLASS_INSTANCE_CREATION = -39;
+  static final int FIELD_ACCESS = -40;
 
   //stmt/exp
 
@@ -98,7 +98,7 @@ final class ByteProto {
 
   public static boolean isExpressionStart(int proto) {
     return proto <= EXPRESSION_NAME
-        && proto >= STRING_LITERAL;
+        && proto >= THIS;
   }
 
   public static boolean isImport(int proto) {

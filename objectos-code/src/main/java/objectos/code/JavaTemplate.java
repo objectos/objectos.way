@@ -214,7 +214,7 @@ public abstract class JavaTemplate {
 
   sealed interface SuperKeyword extends BlockElement {}
 
-  sealed interface ThisKeyword {}
+  sealed interface ThisKeyword extends ExpressionPart {}
 
   sealed interface TypeParameter extends BodyElement {}
 
@@ -370,7 +370,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ThisKeyword _this() {
-    return api().itemAdd(ByteProto.THIS);
+    return api().itemAdd(ByteProto.THIS, ByteProto.NOOP);
   }
 
   protected final VarKeyword _var() {

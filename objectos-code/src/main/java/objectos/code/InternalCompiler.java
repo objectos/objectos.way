@@ -570,6 +570,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
 
+      case ByteProto.THIS -> thisKeyword();
+
       default -> errorRaise(
         "no-op expression part '%s'".formatted(protoName(proto))
       );
@@ -952,6 +954,10 @@ class InternalCompiler extends InternalApi {
 
   private void stringLiteral() {
     codeAdd(ByteCode.STRING_LITERAL, protoNext());
+  }
+
+  private void thisKeyword() {
+    codeAdd(Keyword.THIS);
   }
 
   private void topLevelDeclarationList() {

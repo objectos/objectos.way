@@ -77,13 +77,13 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("INVOKE");
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
+    value("THIS");
 
     comment("expressions");
 
     value("ASSIGNMENT");
     value("CLASS_INSTANCE_CREATION");
     value("FIELD_ACCESS");
-    value("THIS");
 
     comment("stmt/exp");
 
