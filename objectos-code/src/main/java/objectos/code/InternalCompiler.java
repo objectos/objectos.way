@@ -236,6 +236,8 @@ class InternalCompiler extends InternalApi {
         fieldOrMethodDeclaration();
       }
 
+      case ByteProto.CLASS -> classDeclaration();
+
       case ByteProto.TYPE_PARAMETER -> {
         typeParameterList();
 

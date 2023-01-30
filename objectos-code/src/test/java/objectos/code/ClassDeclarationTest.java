@@ -123,59 +123,59 @@ public class ClassDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Class declarations TC05
-  //
-  //  - nested class declaration
-  //  """)
-  //  public void testCase05() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _class("Level1"); body(
-//            _class("A"), body()
-//          );
-//
-//          _class("Level2"); body(
-//            _class("A"), body(
-//              _class("B"), body()
-//            )
-//          );
-//
-//          _class("Level3"); body(
-//            _class("A"), body(
-//              _class("B"), body(
-//                _class("C"), body()
-//              )
-//            )
-//          );
-//        }
-//      }.toString(),
-//      """
-//      class Level1 {
-//        class A {}
-//      }
-//
-//      class Level2 {
-//        class A {
-//          class B {}
-//        }
-//      }
-//
-//      class Level3 {
-//        class A {
-//          class B {
-//            class C {}
-//          }
-//        }
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Class declarations TC05
+
+  - nested class declaration
+  """)
+  public void testCase05() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _class("Level1"), body(
+              _class("A"), body()
+            ),
+
+            _class("Level2"), body(
+              _class("A"), body(
+                _class("B"), body()
+              )
+            ),
+
+            _class("Level3"), body(
+              _class("A"), body(
+                _class("B"), body(
+                  _class("C"), body()
+                )
+              )
+            )
+          );
+        }
+      }.toString(),
+      """
+      class Level1 {
+        class A {}
+      }
+
+      class Level2 {
+        class A {
+          class B {}
+        }
+      }
+
+      class Level3 {
+        class A {
+          class B {
+            class C {}
+          }
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Class declarations TC06
   //
