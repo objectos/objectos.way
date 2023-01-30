@@ -628,7 +628,8 @@ class InternalCompiler extends InternalApi {
   private void expressionDot(int previous) {
     switch (previous) {
       case ByteProto.EXPRESSION_NAME,
-           ByteProto.INVOKE -> {
+           ByteProto.INVOKE,
+           ByteProto.THIS -> {
         if (itemTest(ByteProto::primaryDot)) {
           codeAdd(Symbol.DOT);
 
@@ -982,7 +983,8 @@ class InternalCompiler extends InternalApi {
     switch (start) {
       case ByteProto.CLASS_INSTANCE_CREATION,
            ByteProto.EXPRESSION_NAME,
-           ByteProto.INVOKE -> statementPrimary();
+           ByteProto.INVOKE,
+           ByteProto.THIS -> statementPrimary();
 
       case ByteProto.RETURN -> returnStatement();
 

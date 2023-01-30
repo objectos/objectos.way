@@ -102,51 +102,45 @@ public class ConstructorDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Constructor declarations TC03:
-  //
-  //  - body
-  //  """)
-  //  public void testCase03() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Test");
-  //          body(
-  //            constructor(
-  //              _int(), id("a")
-  //            ),
-  //            block(
-  //              assign(_this().n("a"), n("a"))
-  //            ),
-  //            constructor(
-  //              _int(), id("a"),
-  //              _int(), id("b")
-  //            ),
-  //            block(
-  //              assign(_this().n("a"), n("a")),
-  //              assign(_this().n("b"), n("b"))
-  //            )
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //          class Test {
-  //            Test(int a) {
-  //              this.a = a;
-  //            }
-  //
-  //            Test(int a, int b) {
-  //              this.a = a;
-  //              this.b = b;
-  //            }
-  //          }
-  //          """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  Constructor declarations TC03:
+
+  - body
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Test");
+          body(
+            constructor(_int(), id("a")), block(
+              _this(), n("a"), gets(), n("a")
+            ),
+
+            constructor(_int(), id("a"), _int(), id("b")), block(
+              _this(), n("a"), gets(), n("a"),
+              _this(), n("b"), gets(), n("b")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Test {
+        Test(int a) {
+          this.a = a;
+        }
+
+        Test(int a, int b) {
+          this.a = a;
+          this.b = b;
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Constructor declarations TC04:
   //
