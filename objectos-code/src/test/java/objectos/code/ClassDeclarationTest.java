@@ -15,28 +15,32 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
 public class ClassDeclarationTest {
 
-  //  @Test(description = """
-  //  final class Subject {}
-  //  """)
-  //  public void testCase01() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _final(); _class("Subject"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      final class Subject {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  final class Subject {}
+  """)
+  public void testCase01() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _final(), _class("Subject"), body()
+          );
+        }
+      }.toString(),
+
+      """
+      final class Subject {}
+      """
+    );
+  }
+
   //  @Test(description = """
   //  single annotation on class
   //

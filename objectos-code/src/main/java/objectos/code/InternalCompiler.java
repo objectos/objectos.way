@@ -419,14 +419,16 @@ class InternalCompiler extends InternalApi {
         topLevelDeclarationList();
       }
 
-      case ByteProto.CLASS -> topLevelDeclarationList();
+      case ByteProto.CLASS,
+           ByteProto.MODIFIER -> topLevelDeclarationList();
 
       case ByteProto.END_ELEMENT -> {}
 
       case ByteProto.PACKAGE -> ordinaryCompilationUnit();
 
-      default -> System.err.println(
-        "compilationUnit: no-op proto '%s'".formatted(protoName(item)));
+      default -> errorRaise(
+        "compilationUnit: no-op proto '%s'".formatted(protoName(item))
+      );
     }
   }
 
@@ -819,6 +821,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS -> "Class Keyword";
 
       case ByteProto.INVOKE -> "Invoke";
+
+      case ByteProto.MODIFIER -> "Modifier";
 
       case ByteProto.PRIMITIVE_LITERAL -> "Primitive Literal";
 
