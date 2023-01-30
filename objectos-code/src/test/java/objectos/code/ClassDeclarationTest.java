@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.Serializable;
 import org.testng.annotations.Test;
 
 public class ClassDeclarationTest {
@@ -218,37 +219,37 @@ public class ClassDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Class declarations TC07
-  //
-  //  - implements clause
-  //  """)
-  //  public void testCase07() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _class("A"); _implements(); t(AutoCloseable.class); body();
-//
-//          _class("B"); _implements(); t(AutoCloseable.class); t(Serializable.class); body();
-//
-//          _class("C"); _extends(); t("objectos.code", "Foo");
-//          _implements(); t(AutoCloseable.class); t(Serializable.class); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      class A implements java.lang.AutoCloseable {}
-//
-//      class B implements java.lang.AutoCloseable, java.io.Serializable {}
-//
-//      class C extends objectos.code.Foo implements java.lang.AutoCloseable, java.io.Serializable {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Class declarations TC07
+
+  - implements clause
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _class("A"), _implements(), t(AutoCloseable.class), body(),
+
+            _class("B"), _implements(), t(AutoCloseable.class), t(Serializable.class), body(),
+
+            _class("C"), _extends(), t("objectos.code", "Foo"),
+            _implements(), t(AutoCloseable.class), t(Serializable.class), body()
+          );
+        }
+      }.toString(),
+
+      """
+      class A implements java.lang.AutoCloseable {}
+
+      class B implements java.lang.AutoCloseable, java.io.Serializable {}
+
+      class C extends objectos.code.Foo implements java.lang.AutoCloseable, java.io.Serializable {}
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Class declarations TC08
   //

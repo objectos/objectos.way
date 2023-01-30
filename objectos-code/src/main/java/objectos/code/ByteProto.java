@@ -93,6 +93,10 @@ final class ByteProto {
 
   private ByteProto() {}
 
+  public static boolean isClassOrParameterizedType(int proto) {
+    return proto == CLASS_TYPE || proto == PARAMETERIZED_TYPE;
+  }
+
   public static boolean isExpressionStart(int proto) {
     return proto <= INVOKE
         && proto >= STRING_LITERAL;

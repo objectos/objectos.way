@@ -271,6 +271,10 @@ class InternalCompiler extends InternalApi {
       classDeclarationExtends();
     }
 
+    if (itemIs(ByteProto.IMPLEMENTS)) {
+      implementsClause();
+    }
+
     if (itemIs(ByteProto.BODY)) {
       codeAdd(Whitespace.OPTIONAL);
 
@@ -610,6 +614,31 @@ class InternalCompiler extends InternalApi {
 
   private void identifier() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
+  }
+
+  private void implementsClause() {
+    codeAdd(Whitespace.MANDATORY);
+
+    execute(this::implementsKeyword);
+
+    lastSet(_KEYWORD);
+
+    if (itemTest(ByteProto::isClassOrParameterizedType)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      executeSwitch(this::type);
+
+      while (itemTest(ByteProto::isClassOrParameterizedType)) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        executeSwitch(this::type);
+      }
+    }
+  }
+
+  private void implementsKeyword() {
+    codeAdd(Keyword.IMPLEMENTS);
   }
 
   private void importDeclarationList() {
