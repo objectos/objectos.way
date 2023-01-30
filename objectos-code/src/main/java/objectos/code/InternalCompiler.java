@@ -628,6 +628,7 @@ class InternalCompiler extends InternalApi {
     switch (previous) {
       case ByteProto.EXPRESSION_NAME,
            ByteProto.INVOKE,
+           ByteProto.STRING_LITERAL,
            ByteProto.THIS -> {
         if (itemTest(ByteProto::primaryDot)) {
           codeAdd(Symbol.DOT);

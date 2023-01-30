@@ -65,7 +65,7 @@ public abstract class JavaTemplate {
       ClassType,
       ConstructorDeclaration,
       Ellipsis,
-      Semicolon,
+      End,
       EnumConstant,
       EnumKeyword,
       ExplicitConstructorInvocation,
@@ -135,6 +135,8 @@ public abstract class JavaTemplate {
 
   sealed interface Ellipsis extends ParameterElement {}
 
+  sealed interface End extends ArgsPart, BlockElement {}
+
   sealed interface EnumKeyword extends BodyElement {}
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
@@ -187,8 +189,6 @@ public abstract class JavaTemplate {
   sealed interface ReferenceType extends AnyType, ArrayTypeComponent {}
 
   sealed interface ReturnKeyword extends BlockElement {}
-
-  sealed interface Semicolon extends BlockElement {}
 
   sealed interface SimpleAssigmentOperator extends ExpressionPart {}
 
@@ -533,7 +533,7 @@ public abstract class JavaTemplate {
     return api().itemAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
   }
 
-  protected final Semicolon end() {
+  protected final End end() {
     return stop();
   }
 

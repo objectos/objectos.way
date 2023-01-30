@@ -92,31 +92,31 @@ public class MethodInvocationExpressionTest {
       """
     );
   }
-  //
-  //  @Test(description = """
-  //  - unqualified
-  //  - three args
-  //  - one arg is a nested invocation
-  //  """)
-  //  public void testCase04() {
-  //    assertEquals(
-  //      fix.ture(new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          invoke("m0", s("1"), invoke("m2"), s("3"));
-  //        }
-  //      }),
-  //
-  //      """
-  //      class Invoke {
-  //        void method() {
-  //          m0("1", m2(), "3");
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+
+  @Test(description = """
+  - unqualified
+  - three args
+  - one arg is a nested invocation
+  """)
+  public void testCase04() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("m0", s("1"), end(), invoke("m2"), s("3"));
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          m0("1", m2(), "3");
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  - unqualified
   //  - three args
