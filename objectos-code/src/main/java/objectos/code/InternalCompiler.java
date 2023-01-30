@@ -988,6 +988,10 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.RETURN -> returnStatement();
 
+      case ByteProto.SUPER -> superInvocationWithKeyword();
+
+      case ByteProto.SUPER_INVOCATION -> superInvocation();
+
       default -> errorRaise(
         "no-op statement start '%s'".formatted(protoName(start))
       );
@@ -1016,6 +1020,24 @@ class InternalCompiler extends InternalApi {
 
   private void stringLiteral() {
     codeAdd(ByteCode.STRING_LITERAL, protoNext());
+  }
+
+  private void superInvocation() {
+    superKeyword();
+
+    execute(this::argumentList);
+  }
+
+  private void superInvocationWithKeyword() {
+    execute(this::superKeyword);
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
+  private void superKeyword() {
+    codeAdd(Keyword.SUPER);
   }
 
   private void thisKeyword() {

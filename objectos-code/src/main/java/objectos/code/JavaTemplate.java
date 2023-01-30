@@ -33,8 +33,6 @@ public abstract class JavaTemplate {
 
   protected sealed interface EnumConstant extends BodyElement {}
 
-  protected sealed interface Expression extends ExpressionPart, BlockElement {}
-
   @FunctionalInterface
   protected interface IncludeTarget {
     void execute();
@@ -111,8 +109,6 @@ public abstract class JavaTemplate {
 
   sealed interface ArrayInitializer extends BodyElement, VariableInitializer {}
 
-  sealed interface ArrayReferenceExpression extends Expression {}
-
   sealed interface ArrayType extends BodyElement, ReferenceType {}
 
   sealed interface ArrayTypeComponent {}
@@ -143,7 +139,7 @@ public abstract class JavaTemplate {
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends ArrayReferenceExpression, LeftHandSide {}
+  sealed interface ExpressionName extends ExpressionPart {}
 
   sealed interface ExpressionPart
       extends ArgsPart, BlockElement, BodyElement, VariableInitializer {}
@@ -163,8 +159,6 @@ public abstract class JavaTemplate {
   sealed interface InterfaceKeyword extends BodyElement {}
 
   sealed interface Invoke extends ExpressionPart {}
-
-  sealed interface LeftHandSide extends Element {}
 
   sealed interface Literal extends AtElement, ExpressionPart {}
 
@@ -347,19 +341,19 @@ public abstract class JavaTemplate {
   }
 
   protected final SuperKeyword _super() {
-    return api().itemAdd(ByteProto.SUPER);
+    return api().itemAdd(ByteProto.SUPER, ByteProto.NOOP);
   }
 
-  protected final ExplicitConstructorInvocation _super(Expression e1) {
+  protected final ExplicitConstructorInvocation _super(ArgsPart e1) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self());
   }
 
-  protected final ExplicitConstructorInvocation _super(Expression e1, Expression e2) {
+  protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self());
   }
 
-  protected final ExplicitConstructorInvocation _super(Expression e1, Expression e2,
-      Expression e3) {
+  protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2,
+      ArgsPart e3) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(), e3.self());
   }
 
@@ -554,7 +548,7 @@ public abstract class JavaTemplate {
   }
 
   protected final EnumConstant enumConstant(String name,
-      Expression e1) {
+      ArgsPart e1) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
     //    int id = api.identifier(name);
@@ -566,7 +560,7 @@ public abstract class JavaTemplate {
   }
 
   protected final EnumConstant enumConstant(String name,
-      Expression e1, Expression e2) {
+      ArgsPart e1, ArgsPart e2) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
     //    int id = api.identifier(name);
@@ -578,7 +572,7 @@ public abstract class JavaTemplate {
   }
 
   protected final EnumConstant enumConstant(String name,
-      Expression e1, Expression e2, Expression e3) {
+      ArgsPart e1, ArgsPart e2, ArgsPart e3) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
     //    int id = api.identifier(name);

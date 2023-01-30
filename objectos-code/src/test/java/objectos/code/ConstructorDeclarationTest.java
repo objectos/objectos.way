@@ -141,74 +141,69 @@ public class ConstructorDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Constructor declarations TC04:
-  //
-  //  - super invocations
-  //  """)
-  //  public void testCase04() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Test");
-  //          body(
-  //            constructor(),
-  //            block(
-  //              _super()
-  //            ),
-  //
-  //            constructor(),
-  //            block(
-  //              _super(),
-  //              invoke("a")
-  //            ),
-  //
-  //            constructor(),
-  //            block(
-  //              _super(),
-  //              _this().invoke("a")
-  //            ),
-  //
-  //            constructor(_int(), id("a")),
-  //            block(
-  //              _super(n("a"))
-  //            ),
-  //
-  //            constructor(),
-  //            block(
-  //              _super(s("a"), s("b"))
-  //            )
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Test {
-  //        Test() {
-  //          super();
-  //        }
-  //
-  //        Test() {
-  //          super();
-  //          a();
-  //        }
-  //
-  //        Test() {
-  //          super();
-  //          this.a();
-  //        }
-  //
-  //        Test(int a) {
-  //          super(a);
-  //        }
-  //
-  //        Test() {
-  //          super("a", "b");
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
+  @Test(description = """
+  Constructor declarations TC04:
+
+  - super invocations
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(_class("Test"), body(
+            constructor(), block(
+              _super()
+            ),
+
+            constructor(), block(
+              _super(),
+              invoke("a")
+            ),
+
+            constructor(), block(
+              _super(),
+              _this(), invoke("a")
+            ),
+
+            constructor(_int(), id("a")), block(
+              _super(n("a"))
+            ),
+
+            constructor(), block(
+              _super(s("a"), s("b"))
+            )
+          )
+          );
+        }
+      }.toString(),
+
+      """
+      class Test {
+        Test() {
+          super();
+        }
+
+        Test() {
+          super();
+          a();
+        }
+
+        Test() {
+          super();
+          this.a();
+        }
+
+        Test(int a) {
+          super(a);
+        }
+
+        Test() {
+          super("a", "b");
+        }
+      }
+      """
+    );
+  }
 
 }
