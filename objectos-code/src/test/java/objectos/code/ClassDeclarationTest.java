@@ -250,44 +250,44 @@ public class ClassDeclarationTest {
     );
   }
 
-  //  @Test(description = """
-  //  Class declarations TC08
-  //
-  //  - annotated method
-  //  """)
-  //  public void testCase08() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _class("A"); _extends(); t(Thread.class); body(
-//            at(t(Override.class)),
-//            _void(), field("foo"), block()
-//          );
-//
-//          _class("B"); _implements(); t(Serializable.class); body(
-//            at(t(Override.class)),
-//            _void(), field("foo"), block()
-//          );
-//        }
-//      }.toString(),
-//
-//      """
-//      class A extends java.lang.Thread {
-//        @java.lang.Override
-//        void foo() {}
-//      }
-//
-//      class B implements java.io.Serializable {
-//        @java.lang.Override
-//        void foo() {}
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Class declarations TC08
+
+  - annotated method
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _class("A"), _extends(), t(Thread.class), body(
+              at(t(Override.class)),
+              _void(), method("foo"), block()
+            ),
+
+            _class("B"), _implements(), t(Serializable.class), body(
+              at(t(Override.class)),
+              _void(), method("foo"), block()
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class A extends java.lang.Thread {
+        @java.lang.Override
+        void foo() {}
+      }
+
+      class B implements java.io.Serializable {
+        @java.lang.Override
+        void foo() {}
+      }
+      """
+    );
+  }
+
   //  @Test(enabled = false, description = """
   //  Class declarations TC09
   //

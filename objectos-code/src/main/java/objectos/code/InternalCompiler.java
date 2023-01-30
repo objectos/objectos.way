@@ -206,6 +206,8 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+    lastSet(_START);
   }
 
   private void bodyMember() {
