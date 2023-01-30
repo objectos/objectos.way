@@ -58,7 +58,6 @@ public abstract class JavaTemplate {
       ArrayDimension,
       ArrayInitializer,
       ArrayType,
-      AssignmentExpression,
       At,
       AutoImports,
       Block,
@@ -68,7 +67,7 @@ public abstract class JavaTemplate {
       ClassType,
       ConstructorDeclaration,
       Ellipsis,
-      End,
+      Semicolon,
       EnumConstant,
       EnumKeyword,
       ExplicitConstructorInvocation,
@@ -90,6 +89,7 @@ public abstract class JavaTemplate {
       ProtectedModifier,
       PublicModifier,
       ReturnKeyword,
+      SimpleAssigmentOperator,
       StaticModifier,
       StringLiteral,
       SuperKeyword,
@@ -113,15 +113,11 @@ public abstract class JavaTemplate {
 
   sealed interface ArrayReferenceExpression extends Expression {}
 
-  sealed interface ArrayType extends BodyElement,
-      AnyType,
-      ReferenceType {}
+  sealed interface ArrayType extends BodyElement, ReferenceType {}
 
   sealed interface ArrayTypeComponent {}
 
   sealed interface ArrayTypeElement {}
-
-  sealed interface AssignmentExpression extends Expression {}
 
   sealed interface At extends BodyElement {}
 
@@ -142,8 +138,6 @@ public abstract class JavaTemplate {
   sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface Ellipsis extends ParameterElement {}
-
-  sealed interface End extends BlockElement {}
 
   sealed interface EnumKeyword extends BodyElement {}
 
@@ -184,9 +178,7 @@ public abstract class JavaTemplate {
 
   sealed interface ParameterElement extends Element {}
 
-  sealed interface ParameterizedType extends ReferenceType,
-      /* to remove */
-      AnyType {}
+  sealed interface ParameterizedType extends ReferenceType {}
 
   sealed interface PrimitiveType extends AnyType, BodyElement,
       /* to remove */
@@ -200,9 +192,11 @@ public abstract class JavaTemplate {
 
   sealed interface ReferenceType extends AnyType, ArrayTypeComponent {}
 
-  sealed interface ReturnKeyword extends BlockElement,
-      /* to remove */
-      Statement {}
+  sealed interface ReturnKeyword extends BlockElement {}
+
+  sealed interface Semicolon extends BlockElement {}
+
+  sealed interface SimpleAssigmentOperator extends ExpressionPart {}
 
   sealed interface Statement extends Element {}
 
@@ -395,10 +389,6 @@ public abstract class JavaTemplate {
     return api().elem(ByteProto.ARRAY_INITIALIZER, e1, e2);
   }
 
-  protected final AssignmentExpression assign(LeftHandSide lhs, Expression expression) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
   protected final At at(ClassType annotationType) {
     return api().elem(ByteProto.ANNOTATION, annotationType.self());
   }
@@ -549,8 +539,8 @@ public abstract class JavaTemplate {
     return api().itemAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
   }
 
-  protected final End end() {
-    return api().itemAdd(ByteProto.END, ByteProto.NOOP);
+  protected final Semicolon end() {
+    return stop();
   }
 
   protected final EnumConstant enumConstant(String name) {
@@ -597,6 +587,10 @@ public abstract class JavaTemplate {
     //    api.elemproto(id);
     //    api.elemargs(e1, e2, e3);
     return api.elemend();
+  }
+
+  protected final SimpleAssigmentOperator gets() {
+    return api().itemAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
   }
 
   protected final IntegerLiteral i(int value) {
@@ -924,6 +918,10 @@ public abstract class JavaTemplate {
 
   private _Item primitiveType(Keyword value) {
     return api().itemAdd(ByteProto.PRIMITIVE_TYPE, value.ordinal());
+  }
+
+  private _Item stop() {
+    return api().itemAdd(ByteProto.STOP, ByteProto.NOOP);
   }
 
 }

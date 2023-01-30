@@ -22,9 +22,9 @@ final class ByteProto {
   //internal instructions
 
   static final int AUTO_IMPORTS = -1;
-  static final int END = -2;
-  static final int END_ELEMENT = -3;
-  static final int NOOP = -4;
+  static final int END_ELEMENT = -2;
+  static final int NOOP = -3;
+  static final int STOP = -4;
 
   //types
 
@@ -77,7 +77,7 @@ final class ByteProto {
 
   //expression part
 
-  static final int ASSIGNMENT = -39;
+  static final int ASSIGNMENT_OPERATOR = -39;
   static final int FIELD_ACCESS = -40;
 
   //stmt/exp
@@ -116,7 +116,8 @@ final class ByteProto {
 
   public static boolean primaryDot(int proto) {
     return switch (proto) {
-      case INVOKE -> true;
+      case EXPRESSION_NAME,
+           INVOKE -> true;
 
       default -> false;
     };

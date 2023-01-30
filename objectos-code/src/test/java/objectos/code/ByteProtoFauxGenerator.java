@@ -27,9 +27,9 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("internal instructions");
 
     value("AUTO_IMPORTS");
-    value("END");
     value("END_ELEMENT");
     value("NOOP");
+    value("STOP");
 
     comment("types");
 
@@ -82,7 +82,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("expression part");
 
-    value("ASSIGNMENT");
+    value("ASSIGNMENT_OPERATOR");
     value("FIELD_ACCESS");
 
     comment("stmt/exp");

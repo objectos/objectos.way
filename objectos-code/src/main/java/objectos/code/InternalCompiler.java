@@ -163,6 +163,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void assigmentOperator() {
+    codeAdd(ByteCode.OPERATOR, protoNext());
+  }
+
   private void autoImports() {
     switch (last()) {
       default -> codeAdd(ByteCode.AUTO_IMPORTS0);
@@ -576,14 +580,28 @@ class InternalCompiler extends InternalApi {
   private void expression() {
     int part = executeSwitch(this::expressionBegin);
 
-    if (itemIs(ByteProto.END)) {
-      execute(this::noop);
+    if (stop()) {
+      return;
+    }
 
-      while (itemIs(ByteProto.END)) {
-        execute(this::noop);
+    expressionDot(part);
+
+    if (stop()) {
+      return;
+    }
+
+    if (itemIs(ByteProto.ASSIGNMENT_OPERATOR)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::assigmentOperator);
+
+      if (itemTest(ByteProto::isExpressionStart)) {
+        codeAdd(Whitespace.OPTIONAL);
+
+        expression();
+      } else {
+        errorRaise("expected expression after assigment operator");
       }
-    } else {
-      expressionDot(part);
     }
   }
 
@@ -609,9 +627,11 @@ class InternalCompiler extends InternalApi {
 
   private void expressionDot(int previous) {
     switch (previous) {
-      case ByteProto.INVOKE -> {
+      case ByteProto.EXPRESSION_NAME,
+           ByteProto.INVOKE -> {
         if (itemTest(ByteProto::primaryDot)) {
           codeAdd(Symbol.DOT);
+
           expression();
         }
       }
@@ -961,6 +981,7 @@ class InternalCompiler extends InternalApi {
   private void statement0(int start) {
     switch (start) {
       case ByteProto.CLASS_INSTANCE_CREATION,
+           ByteProto.EXPRESSION_NAME,
            ByteProto.INVOKE -> statementPrimary();
 
       case ByteProto.RETURN -> returnStatement();
@@ -975,6 +996,20 @@ class InternalCompiler extends InternalApi {
 
   private void statementPrimary() {
     expression();
+  }
+
+  private boolean stop() {
+    if (itemIs(ByteProto.STOP)) {
+      execute(this::noop);
+
+      while (itemIs(ByteProto.STOP)) {
+        execute(this::noop);
+      }
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   private void stringLiteral() {

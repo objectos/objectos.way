@@ -189,9 +189,9 @@ abstract class InternalInterpreter extends InternalCompiler {
   private void operator() {
     var index = $codenxt();
 
-    var value = Operator2.get(index);
+    var value = Symbol.get(index);
 
-    writeOperator(value);
+    writeSymbol(value);
   }
 
   private void primitiveLiteral() {
