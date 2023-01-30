@@ -73,16 +73,16 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("expression start");
 
+    value("CLASS_INSTANCE_CREATION");
     value("EXPRESSION_NAME");
     value("INVOKE");
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
     value("THIS");
 
-    comment("expressions");
+    comment("expression part");
 
     value("ASSIGNMENT");
-    value("CLASS_INSTANCE_CREATION");
     value("FIELD_ACCESS");
 
     comment("stmt/exp");

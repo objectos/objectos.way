@@ -133,7 +133,7 @@ public abstract class JavaTemplate {
 
   sealed interface Body extends BodyElement {}
 
-  sealed interface ClassInstanceCreationExpression {}
+  sealed interface ClassInstanceCreationExpression extends ExpressionPart {}
 
   sealed interface ClassKeyword extends BodyElement {}
 
@@ -307,7 +307,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassInstanceCreationExpression _new(ClassType type,
-      Expression arg1) {
+      ArgsPart arg1) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self(),
       arg1.self()
@@ -315,7 +315,7 @@ public abstract class JavaTemplate {
   }
 
   protected final ClassInstanceCreationExpression _new(ClassType type,
-      Expression arg1, Expression arg2) {
+      ArgsPart arg1, ArgsPart arg2) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self(),
       arg1.self(), arg2.self()

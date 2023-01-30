@@ -100,6 +100,23 @@ class InternalCompiler extends InternalApi {
     expression();
   }
 
+  private void argumentList() {
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    if (itemTest(ByteProto::isExpressionStart)) {
+      expression();
+
+      while (itemTest(ByteProto::isExpressionStart)) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        expression();
+      }
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
   private void arrayDimension() {
     if (itemIs(ByteProto.ARRAY_DIMENSION)) {
       execute(this::arrayDimensionAction);
@@ -302,6 +319,16 @@ class InternalCompiler extends InternalApi {
     } else {
       error();
     }
+  }
+
+  private void classInstanceCreation() {
+    codeAdd(Keyword.NEW);
+
+    codeAdd(Whitespace.MANDATORY);
+
+    executeSwitch(this::type);
+
+    argumentList();
   }
 
   private void classKeyword() {
@@ -562,6 +589,8 @@ class InternalCompiler extends InternalApi {
 
   private void expressionBegin(int proto) {
     switch (proto) {
+      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
+
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
       case ByteProto.INVOKE -> invoke();
@@ -715,26 +744,17 @@ class InternalCompiler extends InternalApi {
   private void invoke() {
     execute(this::identifier);
 
-    codeAdd(Symbol.LEFT_PARENTHESIS);
-
-    if (itemTest(ByteProto::isExpressionStart)) {
-      expression();
-
-      while (itemTest(ByteProto::isExpressionStart)) {
-        codeAdd(Symbol.COMMA);
-        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
-
-        expression();
-      }
-    }
-
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
+    argumentList();
   }
 
   private boolean itemIs(int condition) {
-    consumeWs();
+    if (!error()) {
+      consumeWs();
 
-    return protoPeek() == condition;
+      return protoPeek() == condition;
+    } else {
+      return false;
+    }
   }
 
   private boolean itemMore() {
@@ -940,9 +960,14 @@ class InternalCompiler extends InternalApi {
 
   private void statement0(int start) {
     switch (start) {
-      case ByteProto.INVOKE -> statementPrimary();
+      case ByteProto.CLASS_INSTANCE_CREATION,
+           ByteProto.INVOKE -> statementPrimary();
 
       case ByteProto.RETURN -> returnStatement();
+
+      default -> errorRaise(
+        "no-op statement start '%s'".formatted(protoName(start))
+      );
     }
 
     codeAdd(Symbol.SEMICOLON);
