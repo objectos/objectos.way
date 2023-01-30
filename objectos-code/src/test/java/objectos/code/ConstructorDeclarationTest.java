@@ -54,56 +54,54 @@ public class ConstructorDeclarationTest {
       }.toString(),
 
       """
-        class Test0 {
-          public Test0() {}
-        }
+      class Test0 {
+        public Test0() {}
+      }
 
-        class Test1 {
-          protected Test1() {}
-        }
+      class Test1 {
+        protected Test1() {}
+      }
 
-        class Test2 {
-          Test2() {}
-        }
+      class Test2 {
+        Test2() {}
+      }
 
-        class Test3 {
-          private Test3() {}
-        }
-        """
+      class Test3 {
+        private Test3() {}
+      }
+      """
     );
   }
-  //
-  //  @Test(description = """
-  //  Constructor declarations TC02:
-  //
-  //  - parameters
-  //  """)
-  //  public void testCase02() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Test");
-  //          body(
-  //            constructor(_int(), id("a")),
-  //            block(),
-  //
-  //            constructor(_int(), id("a"), _int(), id("b")),
-  //            block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Test {
-  //        Test(int a) {}
-  //
-  //        Test(int a, int b) {}
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+
+  @Test(description = """
+  Constructor declarations TC02:
+
+  - parameters
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Test");
+          body(
+            constructor(_int(), id("a")), block(),
+
+            constructor(_int(), id("a"), _int(), id("b")), block()
+          );
+        }
+      }.toString(),
+
+      """
+      class Test {
+        Test(int a) {}
+
+        Test(int a, int b) {}
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Constructor declarations TC03:
   //
