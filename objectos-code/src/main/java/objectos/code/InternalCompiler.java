@@ -524,6 +524,8 @@ class InternalCompiler extends InternalApi {
 
   private void expressionBegin(int proto) {
     switch (proto) {
+      case ByteProto.EXPRESSION_NAME -> expressionName();
+
       case ByteProto.INVOKE -> invoke();
 
       case ByteProto.PRIMITIVE_LITERAL -> primitiveLiteral();
@@ -545,6 +547,10 @@ class InternalCompiler extends InternalApi {
         }
       }
     }
+  }
+
+  private void expressionName() {
+    codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
 
   private void extendsKeyword() {

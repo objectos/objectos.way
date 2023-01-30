@@ -68,28 +68,27 @@ final class ByteProto {
 
   //expression start
 
-  static final int INVOKE = -33;
-  static final int PRIMITIVE_LITERAL = -34;
-  static final int STRING_LITERAL = -35;
+  static final int EXPRESSION_NAME = -33;
+  static final int INVOKE = -34;
+  static final int PRIMITIVE_LITERAL = -35;
+  static final int STRING_LITERAL = -36;
 
   //expressions
 
-  static final int ASSIGNMENT = -36;
-  static final int CLASS_INSTANCE_CREATION = -37;
-  static final int EXPRESSION_NAME = -38;
-  static final int EXPRESSION_NAME_CHAIN = -39;
-  static final int FIELD_ACCESS = -40;
-  static final int THIS = -41;
+  static final int ASSIGNMENT = -37;
+  static final int CLASS_INSTANCE_CREATION = -38;
+  static final int FIELD_ACCESS = -39;
+  static final int THIS = -40;
 
   //stmt/exp
 
-  static final int ARRAY_ACCESS = -42;
-  static final int NEW = -43;
-  static final int NEW_LINE = -44;
-  static final int OPERATOR = -45;
-  static final int RETURN = -46;
-  static final int SUPER = -47;
-  static final int VAR = -48;
+  static final int ARRAY_ACCESS = -41;
+  static final int NEW = -42;
+  static final int NEW_LINE = -43;
+  static final int OPERATOR = -44;
+  static final int RETURN = -45;
+  static final int SUPER = -46;
+  static final int VAR = -47;
 
   private ByteProto() {}
 
@@ -98,7 +97,7 @@ final class ByteProto {
   }
 
   public static boolean isExpressionStart(int proto) {
-    return proto <= INVOKE
+    return proto <= EXPRESSION_NAME
         && proto >= STRING_LITERAL;
   }
 

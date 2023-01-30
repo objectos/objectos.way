@@ -288,38 +288,37 @@ public class ClassDeclarationTest {
     );
   }
 
-  //  @Test(enabled = false, description = """
-  //  Class declarations TC09
-  //
-  //  - more than one member
-  //  """)
-  //  public void testCase09() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _class("A"); body(
-//            _int(), field("value"),
-//
-//            _int(), field("value"), block(
-//              _return(), n("value")
-//            )
-//          );
-//        }
-//      }.toString(),
-//
-//      """
-//      class A {
-//        int value;
-//
-//        int value() {
-//          return value;
-//        }
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
+  @Test(description = """
+  Class declarations TC09
+
+  - more than one member
+  """)
+  public void testCase09() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("A");
+          body(
+            _int(), id("value"),
+
+            _int(), method("value"), block(
+              _return(), n("value")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class A {
+        int value;
+
+        int value() {
+          return value;
+        }
+      }
+      """
+    );
+  }
 
 }
