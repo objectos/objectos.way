@@ -29,8 +29,6 @@ class InternalApi {
 
   final AutoImports autoImports = new AutoImports();
 
-  int code;
-
   int[] codeArray = new int[128];
 
   int codeIndex;

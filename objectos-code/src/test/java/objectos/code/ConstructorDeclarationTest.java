@@ -15,59 +15,63 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
 public class ConstructorDeclarationTest {
 
-  //  @Test(description = """
-  //  Constructor declarations TC01:
-  //
-  //  - modifiers
-  //  """)
-  //  public void testCase01() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _class("Test0");
-  //          body(
-  //            _public(), constructor(), block()
-  //          );
-  //
-  //          _class("Test1");
-  //          body(
-  //            _protected(), constructor(), block()
-  //          );
-  //
-  //          _class("Test2");
-  //          body(
-  //            constructor(), block()
-  //          );
-  //
-  //          _class("Test3");
-  //          body(
-  //            _private(), constructor(), block()
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      class Test0 {
-  //        public Test0() {}
-  //      }
-  //
-  //      class Test1 {
-  //        protected Test1() {}
-  //      }
-  //
-  //      class Test2 {
-  //        Test2() {}
-  //      }
-  //
-  //      class Test3 {
-  //        private Test3() {}
-  //      }
-  //      """
-  //    );
-  //  }
+  @Test(description = """
+  Constructor declarations TC01:
+
+  - modifiers
+  """)
+  public void testCase01() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Test0");
+          body(
+            _public(), constructor(), block()
+          );
+
+          _class("Test1");
+          body(
+            _protected(), constructor(), block()
+          );
+
+          _class("Test2");
+          body(
+            constructor(), block()
+          );
+
+          _class("Test3");
+          body(
+            _private(), constructor(), block()
+          );
+        }
+      }.toString(),
+
+      """
+        class Test0 {
+          public Test0() {}
+        }
+
+        class Test1 {
+          protected Test1() {}
+        }
+
+        class Test2 {
+          Test2() {}
+        }
+
+        class Test3 {
+          private Test3() {}
+        }
+        """
+    );
+  }
   //
   //  @Test(description = """
   //  Constructor declarations TC02:

@@ -32,6 +32,8 @@ class InternalCompiler extends InternalApi {
     void execute(int proto);
   }
 
+  private static final int NULL = Integer.MIN_VALUE;
+
   private static final int _START = 0,
       _ANNOTATION = 1,
       _IDENTIFIER = 2,
@@ -39,7 +41,9 @@ class InternalCompiler extends InternalApi {
       _SEMICOLON = 4;
 
   final void compile() {
-    code = codeIndex = stackIndex = 0;
+    codeIndex = level = stackIndex = 0;
+
+    levelIndex[0] = NULL;
 
     try {
       compilationUnit();
@@ -240,6 +244,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS -> classDeclaration();
 
+      case ByteProto.CONSTRUCTOR -> constructorDeclaration();
+
       case ByteProto.TYPE_PARAMETER -> {
         typeParameterList();
 
@@ -303,7 +309,11 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Whitespace.MANDATORY);
 
-    codeAdd(ByteCode.IDENTIFIER, protoNext());
+    int proto = protoNext();
+
+    codeAdd(ByteCode.IDENTIFIER, proto);
+
+    constructorName(proto);
 
     lastSet(_IDENTIFIER);
   }
@@ -439,6 +449,34 @@ class InternalCompiler extends InternalApi {
       );
     }
   }
+
+  private void constructorDeclaration() {
+    execute(this::constructorDeclarator);
+
+    if (itemIs(ByteProto.BLOCK)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::block);
+    } else {
+      errorRaise("Constructor without a block() declaration");
+    }
+  }
+
+  private void constructorDeclarator() {
+    int name = constructorName();
+
+    if (name == NULL) {
+      name = object("Constructor");
+    }
+
+    codeAdd(ByteCode.IDENTIFIER, name);
+
+    formalParameterList();
+  }
+
+  private int constructorName() { return levelIndex[0]; }
+
+  private void constructorName(int value) { levelIndex[0] = value; }
 
   private void consumeWs() {
     // stub impl. for now...
@@ -620,6 +658,23 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void formalParameterList() {
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    if (itemMore()) {
+      formalParameter();
+
+      while (itemMore()) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        formalParameter();
+      }
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
   private void identifier() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
@@ -704,11 +759,11 @@ class InternalCompiler extends InternalApi {
     return predicate.test(proto);
   }
 
-  private int last() { return code; }
+  private int last() { return level; }
 
   private boolean lastIs(int value) { return last() == value; }
 
-  private void lastSet(int value) { code = value; }
+  private void lastSet(int value) { level = value; }
 
   private void methodDeclaration() {
     execute(this::methodDeclarator);
@@ -762,20 +817,7 @@ class InternalCompiler extends InternalApi {
   private void methodDeclarator() {
     execute(this::identifier);
 
-    codeAdd(Symbol.LEFT_PARENTHESIS);
-
-    if (itemMore()) {
-      formalParameter();
-
-      while (itemMore()) {
-        codeAdd(Symbol.COMMA);
-        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
-
-        formalParameter();
-      }
-    }
-
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
+    formalParameterList();
   }
 
   private void modifier() {
@@ -913,6 +955,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private void topLevelDeclarationList() {
+    constructorName(NULL);
+
     if (itemMore()) {
       switch (last()) {
         case _ANNOTATION,
