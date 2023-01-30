@@ -43,7 +43,10 @@ class InternalCompiler extends InternalApi {
   final void compile() {
     codeIndex = level = stackIndex = 0;
 
-    levelIndex[0] = NULL;
+    // simpleName
+    stackArray[0] = NULL;
+    // public found
+    stackArray[1] = NULL;
 
     try {
       compilationUnit();
@@ -344,7 +347,7 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(ByteCode.IDENTIFIER, proto);
 
-    constructorName(proto);
+    simpleName(proto);
 
     lastSet(_IDENTIFIER);
   }
@@ -494,7 +497,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void constructorDeclarator() {
-    int name = constructorName();
+    int name = simpleName();
 
     if (name == NULL) {
       name = object("Constructor");
@@ -504,10 +507,6 @@ class InternalCompiler extends InternalApi {
 
     formalParameterList();
   }
-
-  private int constructorName() { return levelIndex[0]; }
-
-  private void constructorName(int value) { levelIndex[0] = value; }
 
   private void consumeWs() {
     // stub impl. for now...
@@ -864,12 +863,20 @@ class InternalCompiler extends InternalApi {
   }
 
   private void modifier() {
-    codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
+    int proto = protoNext();
+
+    if (proto == Keyword.PUBLIC.ordinal()) {
+      publicFound(1);
+    }
+
+    codeAdd(ByteCode.RESERVED_KEYWORD, proto);
 
     lastSet(_KEYWORD);
   }
 
   private void modifierList() {
+    publicFound(NULL);
+
     if (itemIs(ByteProto.MODIFIER)) {
       if (lastIs(_ANNOTATION)) {
         codeAdd(Whitespace.AFTER_ANNOTATION);
@@ -960,6 +967,10 @@ class InternalCompiler extends InternalApi {
 
   private int protoPeek() { return protoArray[protoIndex]; }
 
+  private int publicFound() { return stackArray[1]; }
+
+  private void publicFound(int value) { stackArray[1] = value; }
+
   private void returnKeyword() {
     codeAdd(Keyword.RETURN);
   }
@@ -971,6 +982,10 @@ class InternalCompiler extends InternalApi {
 
     expression();
   }
+
+  private int simpleName() { return stackArray[0]; }
+
+  private void simpleName(int value) { stackArray[0] = value; }
 
   @SuppressWarnings("unused")
   private void statement() {
@@ -1044,8 +1059,34 @@ class InternalCompiler extends InternalApi {
     codeAdd(Keyword.THIS);
   }
 
+  private void topLevelDeclaration() {
+    declarationAnnotationList();
+
+    modifierList();
+
+    if (itemIs(ByteProto.CLASS)) {
+      switch (last()) {
+        case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+        case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+      }
+
+      classDeclaration();
+    } else {
+      errorRaise();
+    }
+
+    var publicFound = publicFound() != NULL;
+
+    var simpleNameIndex = simpleName();
+
+    var simpleName = (String) objectget(simpleNameIndex);
+
+    autoImports.fileName(publicFound, simpleName);
+  }
+
   private void topLevelDeclarationList() {
-    constructorName(NULL);
+    simpleName(NULL);
 
     if (itemMore()) {
       switch (last()) {
@@ -1055,12 +1096,12 @@ class InternalCompiler extends InternalApi {
         default -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
       }
 
-      typeDeclaration();
+      topLevelDeclaration();
 
       while (itemMore()) {
         codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
 
-        typeDeclaration();
+        topLevelDeclaration();
       }
     }
   }
@@ -1080,24 +1121,6 @@ class InternalCompiler extends InternalApi {
       default -> errorRaise(
         "no-op type '%s'".formatted(protoName(proto))
       );
-    }
-  }
-
-  private void typeDeclaration() {
-    declarationAnnotationList();
-
-    modifierList();
-
-    if (itemIs(ByteProto.CLASS)) {
-      switch (last()) {
-        case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-        case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-      }
-
-      classDeclaration();
-    } else {
-      errorRaise();
     }
   }
 
