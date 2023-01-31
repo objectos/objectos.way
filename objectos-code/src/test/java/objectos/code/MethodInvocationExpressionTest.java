@@ -201,38 +201,38 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method Invocation Expresions TC08
-  //
-  //  - expression name
-  //  """)
-  //  public void testCase08() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          n("a").invoke("x");
-//          n("b").invoke("y", s("1"));
-//          n("c").invoke("z", s("1"), s("2"));
-//          t(Foo.class).n("CTE").invoke("m");
-//        }
-//      }),
-//
-//      """
-//      class Invoke {
-//        void method() {
-//          a.x();
-//          b.y("1");
-//          c.z("1", "2");
-//          objectos.code.Foo.CTE.m();
-//        }
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Method Invocation Expresions TC08
+
+  - expression name
+  """)
+  public void testCase08() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            n("a"), invoke("x"), end(),
+            n("b"), invoke("y", s("1")), end(),
+            n("c"), invoke("z", s("1"), s("2")), end(),
+            t(Foo.class), n("CTE"), invoke("m")
+          );
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          a.x();
+          b.y("1");
+          c.z("1", "2");
+          objectos.code.Foo.CTE.m();
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method Invocation Expresions TC09
   //
