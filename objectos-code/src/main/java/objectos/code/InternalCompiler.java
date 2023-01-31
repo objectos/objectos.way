@@ -910,6 +910,8 @@ class InternalCompiler extends InternalApi {
     } else {
       errorRaise("invalid local var: variable name not found");
     }
+
+    codeAdd(Symbol.SEMICOLON);
   }
 
   private void varKeyword() {
@@ -1096,6 +1098,8 @@ class InternalCompiler extends InternalApi {
     codeAdd(Whitespace.MANDATORY);
 
     expression();
+
+    codeAdd(Symbol.SEMICOLON);
   }
 
   private int simpleName() { return stackArray[0]; }
@@ -1132,16 +1136,24 @@ class InternalCompiler extends InternalApi {
            ByteProto.PRIMITIVE_TYPE,
            ByteProto.TYPE_VARIABLE -> localVariableDeclaration();
 
+      case ByteProto.BLOCK -> execute(this::block);
+
       case ByteProto.CLASS_INSTANCE_CREATION,
            ByteProto.EXPRESSION_NAME,
            ByteProto.INVOKE,
-           ByteProto.THIS -> statementPrimary();
+           ByteProto.THIS -> {
+        statementPrimary();
+
+        codeAdd(Symbol.SEMICOLON);
+      }
 
       case ByteProto.CLASS_TYPE -> {
         int next = itemPeekAhead();
 
         if (next != ByteProto.IDENTIFIER) {
           statementPrimary();
+
+          codeAdd(Symbol.SEMICOLON);
         } else {
           localVariableDeclaration();
         }
@@ -1159,8 +1171,6 @@ class InternalCompiler extends InternalApi {
         "no-op statement start '%s'".formatted(protoName(start))
       );
     }
-
-    codeAdd(Symbol.SEMICOLON);
   }
 
   private void statementPrimary() {
@@ -1189,6 +1199,8 @@ class InternalCompiler extends InternalApi {
     superKeyword();
 
     execute(this::argumentList);
+
+    codeAdd(Symbol.SEMICOLON);
   }
 
   private void superInvocationWithKeyword() {
@@ -1197,6 +1209,8 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.LEFT_PARENTHESIS);
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    codeAdd(Symbol.SEMICOLON);
   }
 
   private void superKeyword() {

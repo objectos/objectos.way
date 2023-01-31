@@ -24,7 +24,7 @@ public class BlockTest {
 
   private final Fixture fix = new Fixture("Blocks", Kind.VOID_METHOD);
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Blocks TC01
 
   - empty
