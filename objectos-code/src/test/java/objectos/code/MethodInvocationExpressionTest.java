@@ -117,40 +117,40 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  //  @Test(description = """
-  //  - unqualified
-  //  - three args
-  //  - explicit new lines
-  //  """)
-  //  public void testCase05() {
-  //    assertEquals(
-  //      fix.ture(new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          invoke("m0",
-  //            nl().s("1"),
-  //            nl().nl().invoke("m2"),
-  //            nl().nl().s("3").nl()
-  //          );
-  //        }
-  //      }),
-  //
-  //      """
-  //      class Invoke {
-  //        void method() {
-  //          m0(
-  //            "1",
-  //
-  //            m2(),
-  //
-  //            "3"
-  //          );
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  - unqualified
+  - three args
+  - explicit new lines
+  """)
+  public void testCase05() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("m0", nl(),
+            s("1"), end(), nl(), nl(),
+            invoke("m2"), end(), nl(), nl(),
+            s("3"), nl()
+          );
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          m0(
+            "1",
+
+            m2(),
+
+            "3"
+          );
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  - allow expression names
   //  """)

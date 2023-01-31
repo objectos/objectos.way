@@ -38,7 +38,8 @@ class InternalCompiler extends InternalApi {
       _ANNOTATION = 1,
       _IDENTIFIER = 2,
       _KEYWORD = 3,
-      _SEMICOLON = 4;
+      _NEW_LINE = 4,
+      _SEMICOLON = 5;
 
   final void compile() {
     codeIndex = level = stackIndex = 0;
@@ -47,6 +48,8 @@ class InternalCompiler extends InternalApi {
     stackArray[0] = NULL;
     // public found
     stackArray[1] = NULL;
+    // comma slot
+    stackArray[2] = NULL;
 
     try {
       compilationUnit();
@@ -105,16 +108,36 @@ class InternalCompiler extends InternalApi {
 
   private void argumentList() {
     codeAdd(Symbol.LEFT_PARENTHESIS);
+    codeAdd(Indentation.ENTER_PARENTHESIS);
 
     if (itemTest(ByteProto::isExpressionStart)) {
+      if (lastIs(_NEW_LINE)) {
+        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+      }
+
+      lastSet(_START);
+
       expression();
 
       while (itemTest(ByteProto::isExpressionStart)) {
-        codeAdd(Symbol.COMMA);
-        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+        slotComma();
+
+        var ws = lastIs(_NEW_LINE)
+            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
+            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
+
+        codeAdd(ws);
+
+        lastSet(_START);
 
         expression();
       }
+    }
+
+    codeAdd(Indentation.EXIT_PARENTHESIS);
+
+    if (lastIs(_NEW_LINE)) {
+      codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
     }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
@@ -509,7 +532,9 @@ class InternalCompiler extends InternalApi {
   }
 
   private void consumeWs() {
-    // stub impl. for now...
+    while (protoPeek() == ByteProto.NEW_LINE) {
+      execute(this::newLine);
+    }
   }
 
   private void declarationAnnotationList() {
@@ -579,17 +604,21 @@ class InternalCompiler extends InternalApi {
   private void expression() {
     int part = executeSwitch(this::expressionBegin);
 
+    slot();
+
     if (stop()) {
       return;
     }
 
     expressionDot(part);
 
+    slot();
+
     if (stop()) {
       return;
     }
 
-    if (itemIs(ByteProto.ASSIGNMENT_OPERATOR)) {
+    while (itemIs(ByteProto.ASSIGNMENT_OPERATOR)) {
       codeAdd(Whitespace.OPTIONAL);
 
       execute(this::assigmentOperator);
@@ -893,6 +922,12 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void newLine() {
+    codeAdd(Whitespace.NEW_LINE);
+
+    lastSet(_NEW_LINE);
+  }
+
   private void noop() {}
 
   private Object objectget(int index) {
@@ -987,6 +1022,22 @@ class InternalCompiler extends InternalApi {
   private int simpleName() { return stackArray[0]; }
 
   private void simpleName(int value) { stackArray[0] = value; }
+
+  private void slot() {
+    stackArray[2] = codeIndex;
+
+    codeAdd(ByteCode.NOP1);
+
+    codeAdd(-1);
+  }
+
+  private void slotComma() {
+    int index = stackArray[2];
+
+    codeArray[index + 0] = ByteCode.SEPARATOR;
+
+    codeArray[index + 1] = Symbol.COMMA.ordinal();
+  }
 
   @SuppressWarnings("unused")
   private void statement() {

@@ -95,6 +95,8 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
       case BEFORE_EMPTY_BLOCK_END -> {}
 
+      case BEFORE_FIRST_LINE_CONTENT -> { writeIndentation(level()); }
+
       case BEFORE_FIRST_MEMBER -> { writenl(); writeIndentation(level()); }
 
       case BEFORE_NEXT_COMMA_SEPARATED_ITEM -> out.append(' ');

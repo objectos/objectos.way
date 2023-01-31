@@ -168,7 +168,7 @@ public abstract class JavaTemplate {
 
   sealed interface NewKeyword extends BlockElement {}
 
-  sealed interface NewLine extends BlockElement {}
+  sealed interface NewLine extends ArgsPart, BlockElement {}
 
   sealed interface PackageKeyword extends Element {}
 
@@ -636,6 +636,16 @@ public abstract class JavaTemplate {
 
   protected final Invoke invoke(
       String methodName,
+      ArgsPart... elements) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    var api = api();
+    api.identifierext(methodName);
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api.elemMany(ByteProto.INVOKE, EXT, many);
+  }
+
+  protected final Invoke invoke(
+      String methodName,
       ArgsPart e1, ArgsPart e2) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
@@ -753,7 +763,7 @@ public abstract class JavaTemplate {
   }
 
   protected final NewLine nl() {
-    return api().itemAdd(ByteProto.NEW_LINE);
+    return api().itemAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
   }
 
   protected final StringLiteral s(String string) {
