@@ -187,7 +187,7 @@ public class JavaSinkTest {
     );
   }
 
-  @Test(enabled = false)
+  @Test
   public void testCase05() throws IOException {
     // @formatter:off
     var tmpl = new JavaTemplate() {
