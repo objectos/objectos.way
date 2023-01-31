@@ -54,34 +54,35 @@ public class BlockTest {
   - statements only
   """)
   public void testCase02() {
-    //    assertEquals(
-    //      fix.ture(new JavaTemplate() {
-    //        @Override
-    //        protected final void definition() {
-    //          block(
-    //            invoke("a")
-    //          );
-    //          block(
-    //            invoke("a"),
-    //            invoke("b")
-    //          );
-    //        }
-    //      }),
-    //
-    //      """
-    //      class Blocks {
-    //        void method() {
-    //          {
-    //            a();
-    //          }
-    //          {
-    //            a();
-    //            b();
-    //          }
-    //        }
-    //      }
-    //      """
-    //    );
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          block(
+            invoke("a")
+          );
+          block(
+            invoke("a"), end(),
+
+            invoke("b")
+          );
+        }
+      }),
+
+      """
+      class Blocks {
+        void method() {
+          {
+            a();
+          }
+          {
+            a();
+            b();
+          }
+        }
+      }
+      """
+    );
   }
 
 }
