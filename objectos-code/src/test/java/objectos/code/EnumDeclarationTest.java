@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.Serializable;
 import org.testng.annotations.Test;
 
 public class EnumDeclarationTest {
@@ -105,88 +106,72 @@ public class EnumDeclarationTest {
     // @formatter:on
   }
 
-  //  @Test(description = """
-  //  modifiers (class level)
-  //  """)
-  //  public void testCase03() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _public();
-  //          _enum("Test");
-  //          body(
-  //            enumConstant("ONE")
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      public enum Test {
-  //        ONE;
-  //      }
-  //      """
-  //    );
-  //
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          at(t(Deprecated.class));
-  //          _public();
-  //          _enum("Test");
-  //          body(
-  //            enumConstant("ONE")
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      @java.lang.Deprecated
-  //      public enum Test {
-  //        ONE;
-  //      }
-  //      """
-  //    );
-  //  }
-  //
-  //  @Test(description = """
-  //  implements cause
-  //  """)
-  //  public void testCase04() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _enum("Test1");
-  //          _implements();
-  //          t(Serializable.class);
-  //          body(
-  //            enumConstant("ONE")
-  //          );
-  //
-  //          _enum("Test2");
-  //          _implements();
-  //          t(AutoCloseable.class);
-  //          t(Serializable.class);
-  //          body(
-  //            enumConstant("ONE")
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      enum Test1 implements java.io.Serializable {
-  //        ONE;
-  //      }
-  //
-  //      enum Test2 implements java.lang.AutoCloseable, java.io.Serializable {
-  //        ONE;
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  modifiers (class level)
+  """)
+  public void testCase03() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _public(); _enum("Test"); body(
+            enumConstant("ONE")
+          );
+
+          at(t(Deprecated.class));
+          _public(); _enum("Test"); body(
+            enumConstant("ONE")
+          );
+        }
+      }.toString(),
+
+      """
+      public enum Test {
+        ONE;
+      }
+
+      @java.lang.Deprecated
+      public enum Test {
+        ONE;
+      }
+      """
+    );
+    // @formatter:on
+  }
+
+  @Test(description = """
+  implements cause
+  """)
+  public void testCase04() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum("Test1"); _implements(); t(Serializable.class); body(
+            enumConstant("ONE")
+          );
+
+          _enum("Test2"); _implements(); t(AutoCloseable.class); t(Serializable.class); body(
+            enumConstant("ONE")
+          );
+        }
+      }.toString(),
+
+      """
+      enum Test1 implements java.io.Serializable {
+        ONE;
+      }
+
+      enum Test2 implements java.lang.AutoCloseable, java.io.Serializable {
+        ONE;
+      }
+      """
+    );
+    // @formatter:on
+  }
+
   //  @Test(description = """
   //  Enum class declarations TC05
   //
