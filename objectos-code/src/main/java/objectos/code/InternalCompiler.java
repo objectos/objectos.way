@@ -106,11 +106,16 @@ class InternalCompiler extends InternalApi {
     expression();
   }
 
+  private boolean isArgumentStart(int proto) {
+    return ByteProto.isExpressionStart(proto)
+        || proto == ByteProto.CLASS_TYPE;
+  }
+
   private void argumentList() {
     codeAdd(Symbol.LEFT_PARENTHESIS);
     codeAdd(Indentation.ENTER_PARENTHESIS);
 
-    if (itemTest(ByteProto::isExpressionStart)) {
+    if (itemTest(this::isArgumentStart)) {
       if (lastIs(_NEW_LINE)) {
         codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
       }
@@ -119,7 +124,7 @@ class InternalCompiler extends InternalApi {
 
       expression();
 
-      while (itemTest(ByteProto::isExpressionStart)) {
+      while (itemTest(this::isArgumentStart)) {
         slotComma();
 
         var ws = lastIs(_NEW_LINE)

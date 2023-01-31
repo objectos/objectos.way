@@ -129,7 +129,7 @@ public abstract class JavaTemplate {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassType extends ReferenceType, TypeParameterBound {}
+  sealed interface ClassType extends ArgsPart, ReferenceType, TypeParameterBound {}
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 
