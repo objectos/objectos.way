@@ -576,6 +576,10 @@ class InternalCompiler extends InternalApi {
   private void enumConstant() {
     execute(this::identifier);
 
+    if (itemMore()) {
+      argumentList();
+    }
+
     slot();
 
     lastSet(_ENUM_CONSTANT);

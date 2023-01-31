@@ -73,38 +73,38 @@ public class EnumDeclarationTest {
     // @formatter:on
   }
 
-  //  @Test(description = """
-  //  constants + args
-  //  """)
-  //  public void testCase02() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _enum("Test1");
-  //          body(
-  //            enumConstant("ONE", s("abc"))
-  //          );
-  //
-  //          _enum("Test2");
-  //          body(
-  //            enumConstant("ONE", s("abc"), n("field"))
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      enum Test1 {
-  //        ONE("abc");
-  //      }
-  //
-  //      enum Test2 {
-  //        ONE("abc", field);
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  constants + args
+  """)
+  public void testCase02() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum("Test1"); body(
+            enumConstant("ONE", s("abc"))
+          );
+
+          _enum("Test2"); body(
+            enumConstant("ONE", s("abc"), end(), n("field"))
+          );
+        }
+      }.toString(),
+
+      """
+      enum Test1 {
+        ONE("abc");
+      }
+
+      enum Test2 {
+        ONE("abc", field);
+      }
+      """
+    );
+    // @formatter:on
+  }
+
   //  @Test(description = """
   //  modifiers (class level)
   //  """)

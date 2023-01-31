@@ -31,8 +31,6 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeName(String name);
 
-  protected abstract void writeOperator(Operator2 operator);
-
   protected abstract void writeRaw(String value);
 
   protected abstract void writeReservedKeyword(Keyword value);

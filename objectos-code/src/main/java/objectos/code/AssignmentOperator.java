@@ -15,7 +15,7 @@
  */
 package objectos.code;
 
-public enum AssignmentOperator implements Operator {
+enum AssignmentOperator {
 
   SIMPLE("="),
 

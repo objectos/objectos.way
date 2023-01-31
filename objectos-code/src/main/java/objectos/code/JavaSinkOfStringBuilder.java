@@ -70,9 +70,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected final void writeName(String name) { out.append(name); }
 
   @Override
-  protected final void writeOperator(Operator2 operator) { out.append(operator); }
-
-  @Override
   protected final void writeRaw(String value) { out.append(value); }
 
   @Override

@@ -544,36 +544,24 @@ public abstract class JavaTemplate {
       ArgsPart e1) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    //    int id = api.identifier(name);
-    //    api.elemstart(ByteProto.ENUM_CONSTANT,
-    //      e1.self());
-    //    api.elemproto(id);
-    //    api.elemargs(e1);
-    return api.elemend();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self());
   }
 
   protected final EnumConstant enumConstant(String name,
       ArgsPart e1, ArgsPart e2) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    //    int id = api.identifier(name);
-    //    api.elemstart(ByteProto.ENUM_CONSTANT,
-    //      e1.self(), e2.self());
-    //    api.elemproto(id);
-    //    api.elemargs(e1, e2);
-    return api.elemend();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self());
   }
 
   protected final EnumConstant enumConstant(String name,
       ArgsPart e1, ArgsPart e2, ArgsPart e3) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    //    int id = api.identifier(name);
-    //    api.elemstart(ByteProto.ENUM_CONSTANT,
-    //      e1.self(), e2.self(), e3.self());
-    //    api.elemproto(id);
-    //    api.elemargs(e1, e2, e3);
-    return api.elemend();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self(), e3.self());
   }
 
   protected final SimpleAssigmentOperator gets() {
