@@ -118,13 +118,4 @@ final class ByteProto {
     return proto == NEW_LINE;
   }
 
-  public static boolean primaryDot(int proto) {
-    return switch (proto) {
-      case EXPRESSION_NAME,
-           INVOKE -> true;
-
-      default -> false;
-    };
-  }
-
 }

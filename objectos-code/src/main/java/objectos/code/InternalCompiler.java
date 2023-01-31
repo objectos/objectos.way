@@ -610,7 +610,7 @@ class InternalCompiler extends InternalApi {
       return;
     }
 
-    expressionDot(part);
+    expressionNext(part);
 
     slot();
 
@@ -655,7 +655,7 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void expressionDot(int previous) {
+  private void expressionNext(int previous) {
     switch (previous) {
       case ByteProto.CLASS_INSTANCE_CREATION,
            ByteProto.CLASS_TYPE,
@@ -663,19 +663,40 @@ class InternalCompiler extends InternalApi {
            ByteProto.INVOKE,
            ByteProto.STRING_LITERAL,
            ByteProto.THIS -> {
-        if (itemTest(ByteProto::primaryDot)) {
-          if (lastIs(_NEW_LINE)) {
-            codeAdd(Indentation.CONTINUATION);
+        int next = itemPeek();
 
-            lastSet(_START);
+        switch (next) {
+          case ByteProto.EXPRESSION_NAME,
+               ByteProto.INVOKE -> {
+            if (lastIs(_NEW_LINE)) {
+              codeAdd(Indentation.CONTINUATION);
+
+              lastSet(_START);
+            }
+
+            codeAdd(Symbol.DOT);
+
+            expression();
           }
 
-          codeAdd(Symbol.DOT);
+          case ByteProto.ARRAY_ACCESS -> {
+            execute(this::arrayAccess);
 
-          expression();
+            while (itemIs(ByteProto.ARRAY_ACCESS)) {
+              execute(this::arrayAccess);
+            }
+          }
         }
       }
     }
+  }
+
+  private void arrayAccess() {
+    codeAdd(Symbol.LEFT_SQUARE_BRACKET);
+
+    expression();
+
+    codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
   }
 
   private void expressionName() {
