@@ -31,8 +31,6 @@ public abstract class JavaTemplate {
     default Object self() { return this; }
   }
 
-  protected sealed interface EnumConstant extends BodyElement {}
-
   @FunctionalInterface
   protected interface IncludeTarget {
     void execute();
@@ -136,6 +134,8 @@ public abstract class JavaTemplate {
   sealed interface Ellipsis extends ParameterElement {}
 
   sealed interface End extends ArgsPart, BlockElement {}
+
+  sealed interface EnumConstant extends BodyElement {}
 
   sealed interface EnumKeyword extends BodyElement {}
 
@@ -258,9 +258,7 @@ public abstract class JavaTemplate {
 
   protected final EnumKeyword _enum(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
-
     var api = api();
-
     return api.itemAdd(ByteProto.ENUM, api.object(name));
   }
 
@@ -538,11 +536,8 @@ public abstract class JavaTemplate {
   protected final EnumConstant enumConstant(String name) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
-    //    int id = api.identifier(name);
-    //    api.elemstart(ByteProto.ENUM_CONSTANT);
-    //    api.elemproto(id);
-    //    api.elemargs();
-    return api.elemend();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT);
   }
 
   protected final EnumConstant enumConstant(String name,

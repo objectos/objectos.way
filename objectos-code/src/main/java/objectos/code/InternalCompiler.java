@@ -36,10 +36,11 @@ class InternalCompiler extends InternalApi {
 
   private static final int _START = 0,
       _ANNOTATION = 1,
-      _IDENTIFIER = 2,
-      _KEYWORD = 3,
-      _NEW_LINE = 4,
-      _SEMICOLON = 5;
+      _ENUM_CONSTANT = 2,
+      _IDENTIFIER = 3,
+      _KEYWORD = 4,
+      _NEW_LINE = 5,
+      _SEMICOLON = 6;
 
   final void compile() {
     codeIndex = level = stackIndex = 0;
@@ -211,6 +212,13 @@ class InternalCompiler extends InternalApi {
     lastSet(_SEMICOLON);
   }
 
+  private void beforeTopLevelTypeDeclaration() {
+    switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+    }
+  }
+
   private void block() {
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
@@ -233,6 +241,8 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+    lastSet(_START);
   }
 
   private void blockStatement() {
@@ -258,6 +268,10 @@ class InternalCompiler extends InternalApi {
         bodyMember();
       }
 
+      if (lastIs(_ENUM_CONSTANT)) {
+        slotSemicolon();
+      }
+
       codeAdd(Indentation.EXIT_BLOCK);
       codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
     } else {
@@ -270,8 +284,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void bodyMember() {
-    lastSet(_START);
-
     declarationAnnotationList();
 
     modifierList();
@@ -281,9 +293,15 @@ class InternalCompiler extends InternalApi {
     switch (last()) {
       case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
 
-      case _START -> {}
+      case _ENUM_CONSTANT -> {
+        if (item == ByteProto.ENUM_CONSTANT) {
+          slotComma();
+        } else {
+          slotSemicolon();
+        }
+      }
 
-      default -> codeAdd(Whitespace.MANDATORY);
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
     }
 
     switch (item) {
@@ -300,6 +318,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS -> classDeclaration();
 
       case ByteProto.CONSTRUCTOR -> constructorDeclaration();
+
+      case ByteProto.ENUM_CONSTANT -> execute(this::enumConstant);
 
       case ByteProto.TYPE_PARAMETER -> {
         typeParameterList();
@@ -357,10 +377,6 @@ class InternalCompiler extends InternalApi {
     } else {
       error();
     }
-  }
-
-  private boolean isClassOrParameterizedType(int proto) {
-    return proto == ByteProto.CLASS_TYPE || proto == ByteProto.PARAMETERIZED_TYPE;
   }
 
   private void classInstanceCreation() {
@@ -497,6 +513,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case ByteProto.CLASS,
+           ByteProto.ENUM,
            ByteProto.INTERFACE,
            ByteProto.MODIFIER -> topLevelDeclarationList();
 
@@ -554,6 +571,32 @@ class InternalCompiler extends InternalApi {
 
   private void ellipsis() {
     codeAdd(Symbol.ELLIPSIS);
+  }
+
+  private void enumConstant() {
+    execute(this::identifier);
+
+    slot();
+
+    lastSet(_ENUM_CONSTANT);
+  }
+
+  private void enumDeclaration() {
+    execute(this::enumKeyword);
+
+    if (itemIs(ByteProto.IMPLEMENTS)) {
+      implementsClause();
+    }
+
+    if (itemIs(ByteProto.BODY)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::body);
+    }
+  }
+
+  private void enumKeyword() {
+    typeKeyword(Keyword.ENUM);
   }
 
   private boolean error() {
@@ -865,6 +908,10 @@ class InternalCompiler extends InternalApi {
         || proto == ByteProto.CLASS_TYPE;
   }
 
+  private boolean isClassOrParameterizedType(int proto) {
+    return proto == ByteProto.CLASS_TYPE || proto == ByteProto.PARAMETERIZED_TYPE;
+  }
+
   private boolean isModifierOrAnnotation(int proto) {
     return proto == ByteProto.MODIFIER || proto == ByteProto.ANNOTATION;
   }
@@ -1171,6 +1218,14 @@ class InternalCompiler extends InternalApi {
     codeArray[index + 1] = Symbol.COMMA.ordinal();
   }
 
+  private void slotSemicolon() {
+    int index = stackArray[2];
+
+    codeArray[index + 0] = ByteCode.SEPARATOR;
+
+    codeArray[index + 1] = Symbol.SEMICOLON.ordinal();
+  }
+
   @SuppressWarnings("unused")
   private void statement() {
     int start = itemPeek();
@@ -1279,19 +1334,19 @@ class InternalCompiler extends InternalApi {
 
     switch (next) {
       case ByteProto.CLASS -> {
-        switch (last()) {
-          case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-          case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-        }
+        beforeTopLevelTypeDeclaration();
 
         classDeclaration();
       }
 
+      case ByteProto.ENUM -> {
+        beforeTopLevelTypeDeclaration();
+
+        enumDeclaration();
+      }
+
       case ByteProto.INTERFACE -> {
-        switch (last()) {
-          case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-          case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-        }
+        beforeTopLevelTypeDeclaration();
 
         interfaceDeclaration();
       }

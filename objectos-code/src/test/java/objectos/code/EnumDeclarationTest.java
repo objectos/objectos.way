@@ -15,61 +15,64 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
 public class EnumDeclarationTest {
 
-  //  @Test(description = """
-  //  constants
-  //  """)
-  //  public void testCase01() {
-  //    assertEquals(
-  //      new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          _enum("Test1");
-  //          body(
-  //            enumConstant("ONE")
-  //          );
-  //
-  //          _enum("Test2");
-  //          body(
-  //            enumConstant("ONE"),
-  //
-  //            enumConstant("TWO")
-  //          );
-  //
-  //          _enum("Test3");
-  //          body(
-  //            enumConstant("ONE"),
-  //
-  //            enumConstant("TWO"),
-  //
-  //            enumConstant("THREE")
-  //          );
-  //        }
-  //      }.toString(),
-  //
-  //      """
-  //      enum Test1 {
-  //        ONE;
-  //      }
-  //
-  //      enum Test2 {
-  //        ONE,
-  //
-  //        TWO;
-  //      }
-  //
-  //      enum Test3 {
-  //        ONE,
-  //
-  //        TWO,
-  //
-  //        THREE;
-  //      }
-  //      """
-  //    );
-  //  }
-  //
+  @Test(description = """
+  constants
+  """)
+  public void testCase01() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _enum("Test1"); body(
+            enumConstant("ONE")
+          );
+
+          _enum("Test2"); body(
+            enumConstant("ONE"),
+
+            enumConstant("TWO")
+          );
+
+          _enum("Test3"); body(
+            enumConstant("ONE"),
+
+            enumConstant("TWO"),
+
+            enumConstant("THREE")
+          );
+        }
+      }.toString(),
+
+      """
+      enum Test1 {
+        ONE;
+      }
+
+      enum Test2 {
+        ONE,
+
+        TWO;
+      }
+
+      enum Test3 {
+        ONE,
+
+        TWO,
+
+        THREE;
+      }
+      """
+    );
+    // @formatter:on
+  }
+
   //  @Test(description = """
   //  constants + args
   //  """)
