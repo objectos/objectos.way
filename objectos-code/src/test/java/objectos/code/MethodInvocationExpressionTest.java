@@ -233,45 +233,45 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method Invocation Expresions TC09
-  //
-  //  - chain support
-  //  """)
-  //  public void testCase09() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          invoke("a").invoke("b");
-//
-//          invoke("a").invoke("b").invoke("c");
-//
-//          n("foo").invoke("a").invoke("b").invoke("c");
-//
-//          n("list").invoke("add", s("1")).nl()
-//              .invoke("add", s("2")).nl()
-//              .invoke("build");
-//        }
-//      }),
-//
-//      """
-//      class Invoke {
-//        void method() {
-//          a().b();
-//          a().b().c();
-//          foo.a().b().c();
-//          list.add("1")
-//              .add("2")
-//              .build();
-//        }
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Method Invocation Expresions TC09
+
+  - chain support
+  """)
+  public void testCase09() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            invoke("a"), invoke("b"), end(),
+
+            invoke("a"), invoke("b"), invoke("c"), end(),
+
+            n("foo"), invoke("a"), invoke("b"), invoke("c"), end(),
+
+            n("list"), invoke("add", s("1")), nl(),
+            invoke("add", s("2")), nl(),
+            invoke("build")
+          );
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          a().b();
+          a().b().c();
+          foo.a().b().c();
+          list.add("1")
+              .add("2")
+              .build();
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method Invocation Expresions TC10
   //

@@ -663,6 +663,12 @@ class InternalCompiler extends InternalApi {
            ByteProto.STRING_LITERAL,
            ByteProto.THIS -> {
         if (itemTest(ByteProto::primaryDot)) {
+          if (lastIs(_NEW_LINE)) {
+            codeAdd(Indentation.CONTINUATION);
+
+            lastSet(_START);
+          }
+
           codeAdd(Symbol.DOT);
 
           expression();
