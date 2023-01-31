@@ -838,6 +838,10 @@ class InternalCompiler extends InternalApi {
         || proto == ByteProto.CLASS_TYPE;
   }
 
+  private boolean isModifierOrAnnotation(int proto) {
+    return proto == ByteProto.MODIFIER || proto == ByteProto.ANNOTATION;
+  }
+
   private boolean itemIs(int condition) {
     if (!error()) {
       consumeWs();
@@ -1001,12 +1005,22 @@ class InternalCompiler extends InternalApi {
 
       execute(this::modifier);
 
-      while (itemIs(ByteProto.MODIFIER)) {
+      while (itemTest(this::isModifierOrAnnotation)) {
         codeAdd(Whitespace.MANDATORY);
 
-        execute(this::modifier);
+        executeSwitch(this::modifierOrAnnotation);
       }
     }
+  }
+
+  private void modifierOrAnnotation(int proto) {
+    switch (proto) {
+      case ByteProto.ANNOTATION -> annotation();
+
+      case ByteProto.MODIFIER -> modifier();
+    }
+
+    lastSet(_KEYWORD);
   }
 
   private void newLine() {

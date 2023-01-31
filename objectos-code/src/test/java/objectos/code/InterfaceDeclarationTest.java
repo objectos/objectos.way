@@ -27,12 +27,12 @@ public class InterfaceDeclarationTest {
   - identifier
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _interface("A");
-          body();
+          _interface("A"); body();
         }
       }.toString(),
 
@@ -40,46 +40,47 @@ public class InterfaceDeclarationTest {
       interface A {}
       """
     );
+    // @formatter:on
   }
 
-  //  @Test(description = """
-  //  Interface declaration TC02
-  //
-  //  - modifiers
-  //  """)
-  //  public void testCase02() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _public(); _interface("A"); body();
-//
-//          at(t(TypeAnnotation.class));
-//          _interface("B"); body();
-//
-//          at(t(TypeAnnotation.class));
-//          _protected(); _interface("C"); body();
-//
-//          _private(); _static(); at(t(TypeAnnotation.class)); _interface("D"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      public interface A {}
-//
-//      @objectos.code.TypeAnnotation
-//      interface B {}
-//
-//      @objectos.code.TypeAnnotation
-//      protected interface C {}
-//
-//      private static @objectos.code.TypeAnnotation interface D {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Interface declaration TC02
+
+  - modifiers
+  """)
+  public void testCase02() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _public(); _interface("A"); body();
+
+          at(t(TypeAnnotation.class));
+          _interface("B"); body();
+
+          at(t(TypeAnnotation.class));
+          _protected(); _interface("C"); body();
+
+          _private(); _static(); at(t(TypeAnnotation.class)); _interface("D"); body();
+        }
+      }.toString(),
+
+      """
+      public interface A {}
+
+      @objectos.code.TypeAnnotation
+      interface B {}
+
+      @objectos.code.TypeAnnotation
+      protected interface C {}
+
+      private static @objectos.code.TypeAnnotation interface D {}
+      """
+    );
+    // @formatter:on
+  }
+
   //  @Test(description = """
   //  Interface declaration TC03
   //
