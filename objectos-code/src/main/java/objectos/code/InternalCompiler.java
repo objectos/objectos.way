@@ -657,7 +657,8 @@ class InternalCompiler extends InternalApi {
 
   private void expressionDot(int previous) {
     switch (previous) {
-      case ByteProto.CLASS_TYPE,
+      case ByteProto.CLASS_INSTANCE_CREATION,
+           ByteProto.CLASS_TYPE,
            ByteProto.EXPRESSION_NAME,
            ByteProto.INVOKE,
            ByteProto.STRING_LITERAL,

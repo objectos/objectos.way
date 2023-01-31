@@ -272,58 +272,59 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  //  @Test(description = """
-  //  Method Invocation Expresions TC10
-  //
-  //  - primary expressions
-  //  """)
-  //  public void testCase10() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _new(t(Thread.class)).invoke("start");
-//        }
-//      }),
-//
-//      """
-//      class Invoke {
-//        void method() {
-//          new java.lang.Thread().start();
-//        }
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
-  //  @Test(description = """
-  //  Method Invocation Expresions TC11
-  //
-  //  - end() at argument list
-  //  """)
-  //  public void testCase11() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          invoke("test", invoke("a").invoke("b"));
-//          invoke("test", invoke("a"), invoke("b"));
-//        }
-//      }),
-//
-//      """
-//      class Invoke {
-//        void method() {
-//          test(a().b());
-//          test(a(), b());
-//        }
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
+  @Test(description = """
+  Method Invocation Expresions TC10
+
+  - primary expressions
+  """)
+  public void testCase10() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            _new(t(Thread.class)), invoke("start")
+          );
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          new java.lang.Thread().start();
+        }
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  Method Invocation Expresions TC11
+
+  - end() at argument list
+  """)
+  public void testCase11() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            invoke("test", invoke("a"), invoke("b")), end(),
+
+            invoke("test", invoke("a"), end(), invoke("b"))
+          );
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          test(a().b());
+          test(a(), b());
+        }
+      }
+      """
+    );
+  }
 
 }
