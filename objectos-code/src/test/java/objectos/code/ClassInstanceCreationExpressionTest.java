@@ -30,17 +30,16 @@ public class ClassInstanceCreationExpressionTest {
   - new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            _new(t("objectos.code", "Foo")), end(),
+          _new(t("objectos.code", "Foo"));
 
-            _new(t("objectos.code", "Foo"), s("a")), end(),
+          _new(t("objectos.code", "Foo"), s("a"));
 
-            _new(t("objectos.code", "Foo"), s("a"), s("b"))
-          );
+          _new(t("objectos.code", "Foo"), s("a"), s("b"));
         }
       }),
 
@@ -54,6 +53,7 @@ public class ClassInstanceCreationExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
 }
