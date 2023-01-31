@@ -833,6 +833,20 @@ class InternalCompiler extends InternalApi {
     return protoPeek();
   }
 
+  private int itemPeekAhead() {
+    for (int i = protoIndex + 2; i < protoArray.length; i += 2) {
+      int proto = protoArray[i];
+
+      if (ByteProto.isWhitespace(proto)) {
+        continue;
+      }
+
+      return proto;
+    }
+
+    return ByteProto.NOOP;
+  }
+
   private boolean itemTest(IntPredicate predicate) {
     consumeWs();
 
@@ -846,6 +860,40 @@ class InternalCompiler extends InternalApi {
   private boolean lastIs(int value) { return last() == value; }
 
   private void lastSet(int value) { level = value; }
+
+  private void localVariableDeclaration() {
+    int type = itemPeek();
+
+    if (ByteProto.isType(type)) {
+      executeSwitch(this::type);
+    } else if (type == ByteProto.VAR) {
+      execute(this::varKeyword);
+    } else {
+      errorRaise(
+        "invalid local var: expected var or type but found '%s'"
+            .formatted(protoName(type))
+      );
+    }
+
+    if (itemIs(ByteProto.IDENTIFIER)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      variableDeclarator();
+
+      while (itemIs(ByteProto.IDENTIFIER)) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        variableDeclarator();
+      }
+    } else {
+      errorRaise("invalid local var: variable name not found");
+    }
+  }
+
+  private void varKeyword() {
+    codeAdd(Keyword.VAR);
+  }
 
   private void methodDeclaration() {
     execute(this::methodDeclarator);
@@ -1058,6 +1106,11 @@ class InternalCompiler extends InternalApi {
 
   private void statement0(int start) {
     switch (start) {
+      case ByteProto.ARRAY_TYPE,
+           ByteProto.PARAMETERIZED_TYPE,
+           ByteProto.PRIMITIVE_TYPE,
+           ByteProto.TYPE_VARIABLE -> localVariableDeclaration();
+
       case ByteProto.CLASS_INSTANCE_CREATION,
            ByteProto.EXPRESSION_NAME,
            ByteProto.INVOKE,
@@ -1069,7 +1122,7 @@ class InternalCompiler extends InternalApi {
         if (next != ByteProto.IDENTIFIER) {
           statementPrimary();
         } else {
-          localVariableDeclaration(start);
+          localVariableDeclaration();
         }
       }
 
@@ -1079,30 +1132,14 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.SUPER_INVOCATION -> superInvocation();
 
+      case ByteProto.VAR -> localVariableDeclaration();
+
       default -> errorRaise(
         "no-op statement start '%s'".formatted(protoName(start))
       );
     }
 
     codeAdd(Symbol.SEMICOLON);
-  }
-
-  private int itemPeekAhead() {
-    for (int i = protoIndex + 2; i < protoArray.length; i += 2) {
-      int proto = protoArray[i];
-
-      if (ByteProto.isWhitespace(proto)) {
-        continue;
-      }
-
-      return proto;
-    }
-
-    return ByteProto.NOOP;
-  }
-
-  private void localVariableDeclaration(int start) {
-    errorRaise("no-op local variable declaration");
   }
 
   private void statementPrimary() {

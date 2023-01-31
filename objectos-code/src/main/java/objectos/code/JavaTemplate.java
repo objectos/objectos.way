@@ -362,7 +362,7 @@ public abstract class JavaTemplate {
   }
 
   protected final VarKeyword _var() {
-    return api().itemAdd(ByteProto.VAR);
+    return api().itemAdd(ByteProto.VAR, ByteProto.NOOP);
   }
 
   protected final VoidKeyword _void() {
@@ -589,9 +589,7 @@ public abstract class JavaTemplate {
 
   protected final IntegerLiteral i(int value) {
     var s = Integer.toString(value);
-
     var api = api();
-
     return api.itemAdd(ByteProto.PRIMITIVE_LITERAL, api.object(s));
   }
 
