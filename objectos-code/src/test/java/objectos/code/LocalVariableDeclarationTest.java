@@ -28,16 +28,18 @@ public class LocalVariableDeclarationTest {
   var s = "java";
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            _var(), id("a"), s("java"),
-            _var(), id("b"), invoke("m", s("java")),
-            _int(), id("c"), i(0),
-            t(String.class), id("d"), s("d")
-          );
+          _var(); id("a"); s("java");
+
+          _var(); id("b"); invoke("m", s("java"));
+
+          _int(); id("c"); i(0);
+
+          t(String.class); id("d"); s("d");
         }
       }),
 
@@ -52,6 +54,7 @@ public class LocalVariableDeclarationTest {
       }
       """
     );
+    // @formatter:on
   }
 
 }

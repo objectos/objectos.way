@@ -25,13 +25,13 @@ public class AnnotationTest {
   single element annotation + string literal
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
           at(t("objectos.code", "Foo"), s("java"));
-          _class("Test");
-          body();
+          _class("Test"); body();
         }
       }.toString(),
 
@@ -40,6 +40,7 @@ public class AnnotationTest {
       class Test {}
       """
     );
+    // @formatter:on
   }
 
 }

@@ -178,15 +178,14 @@ public class MethodInvocationExpressionTest {
   static methods
   """)
   public void testCase07() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            t(Thread.class), invoke("currentThread"),
+          t(Thread.class); invoke("currentThread");
 
-            t(Collections.class), invoke("sort", n("list"))
-          );
+          t(Collections.class); invoke("sort", n("list"));
         }
       }),
 
@@ -199,6 +198,7 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -207,16 +207,18 @@ public class MethodInvocationExpressionTest {
   - expression name
   """)
   public void testCase08() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            n("a"), invoke("x"), end(),
-            n("b"), invoke("y", s("1")), end(),
-            n("c"), invoke("z", s("1"), s("2")), end(),
-            t(Foo.class), n("CTE"), invoke("m")
-          );
+          n("a"); invoke("x"); end();
+
+          n("b"); invoke("y", s("1")); end();
+
+          n("c"); invoke("z", s("1"), s("2")); end();
+
+          t(Foo.class); n("CTE"); invoke("m");
         }
       }),
 
@@ -231,6 +233,7 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -239,21 +242,20 @@ public class MethodInvocationExpressionTest {
   - chain support
   """)
   public void testCase09() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            invoke("a"), invoke("b"), end(),
+          invoke("a"); invoke("b"); end();
 
-            invoke("a"), invoke("b"), invoke("c"), end(),
+          invoke("a"); invoke("b"); invoke("c"); end();
 
-            n("foo"), invoke("a"), invoke("b"), invoke("c"), end(),
+          n("foo"); invoke("a"); invoke("b"); invoke("c"); end();
 
-            n("list"), invoke("add", s("1")), nl(),
-            invoke("add", s("2")), nl(),
-            invoke("build")
-          );
+          n("list"); invoke("add", s("1")); nl();
+          invoke("add", s("2")); nl();
+          invoke("build");
         }
       }),
 
@@ -270,6 +272,7 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -278,13 +281,12 @@ public class MethodInvocationExpressionTest {
   - primary expressions
   """)
   public void testCase10() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            _new(t(Thread.class)), invoke("start")
-          );
+          _new(t(Thread.class)); invoke("start");
         }
       }),
 
@@ -296,6 +298,7 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -304,15 +307,14 @@ public class MethodInvocationExpressionTest {
   - end() at argument list
   """)
   public void testCase11() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            invoke("test", invoke("a"), invoke("b")), end(),
+          invoke("test", invoke("a"), invoke("b")); end();
 
-            invoke("test", invoke("a"), end(), invoke("b"))
-          );
+          invoke("test", invoke("a"), end(), invoke("b"));
         }
       }),
 
@@ -325,6 +327,7 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
 }
