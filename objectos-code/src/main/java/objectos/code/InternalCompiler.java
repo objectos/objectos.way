@@ -106,11 +106,6 @@ class InternalCompiler extends InternalApi {
     expression();
   }
 
-  private boolean isArgumentStart(int proto) {
-    return ByteProto.isExpressionStart(proto)
-        || proto == ByteProto.CLASS_TYPE;
-  }
-
   private void argumentList() {
     codeAdd(Symbol.LEFT_PARENTHESIS);
     codeAdd(Indentation.ENTER_PARENTHESIS);
@@ -146,6 +141,14 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
+  private void arrayAccess() {
+    codeAdd(Symbol.LEFT_SQUARE_BRACKET);
+
+    expression();
+
+    codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
   }
 
   private void arrayDimension() {
@@ -367,17 +370,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void classKeyword() {
-    codeAdd(Keyword.CLASS);
-
-    codeAdd(Whitespace.MANDATORY);
-
-    int proto = protoNext();
-
-    codeAdd(ByteCode.IDENTIFIER, proto);
-
-    simpleName(proto);
-
-    lastSet(_IDENTIFIER);
+    typeKeyword(Keyword.CLASS);
   }
 
   private void classType() {
@@ -500,6 +493,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case ByteProto.CLASS,
+           ByteProto.INTERFACE,
            ByteProto.MODIFIER -> topLevelDeclarationList();
 
       case ByteProto.END_ELEMENT -> {}
@@ -660,6 +654,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void expressionName() {
+    codeAdd(ByteCode.IDENTIFIER, protoNext());
+  }
+
   private void expressionNext(int previous) {
     switch (previous) {
       case ByteProto.CLASS_INSTANCE_CREATION,
@@ -694,18 +692,6 @@ class InternalCompiler extends InternalApi {
         }
       }
     }
-  }
-
-  private void arrayAccess() {
-    codeAdd(Symbol.LEFT_SQUARE_BRACKET);
-
-    expression();
-
-    codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
-  }
-
-  private void expressionName() {
-    codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
 
   private void extendsKeyword() {
@@ -827,10 +813,29 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void interfaceDeclaration() {
+    execute(this::interfaceKeyword);
+
+    if (itemIs(ByteProto.BODY)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::body);
+    }
+  }
+
+  private void interfaceKeyword() {
+    typeKeyword(Keyword.INTERFACE);
+  }
+
   private void invoke() {
     execute(this::identifier);
 
     argumentList();
+  }
+
+  private boolean isArgumentStart(int proto) {
+    return ByteProto.isExpressionStart(proto)
+        || proto == ByteProto.CLASS_TYPE;
   }
 
   private boolean itemIs(int condition) {
@@ -917,10 +922,6 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.SEMICOLON);
-  }
-
-  private void varKeyword() {
-    codeAdd(Keyword.VAR);
   }
 
   private void methodDeclaration() {
@@ -1072,6 +1073,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ARRAY_TYPE -> "Array Type";
 
       case ByteProto.CLASS -> "Class Keyword";
+
+      case ByteProto.INTERFACE -> "Interface";
 
       case ByteProto.INVOKE -> "Invoke";
 
@@ -1231,16 +1234,30 @@ class InternalCompiler extends InternalApi {
 
     modifierList();
 
-    if (itemIs(ByteProto.CLASS)) {
-      switch (last()) {
-        case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+    int next = itemPeek();
 
-        case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+    switch (next) {
+      case ByteProto.CLASS -> {
+        switch (last()) {
+          case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+          case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+        }
+
+        classDeclaration();
       }
 
-      classDeclaration();
-    } else {
-      errorRaise();
+      case ByteProto.INTERFACE -> {
+        switch (last()) {
+          case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+          case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+        }
+
+        interfaceDeclaration();
+      }
+
+      default -> errorRaise(
+        "no-op top level declaration '%s'".formatted(protoName(next))
+      );
     }
 
     var publicFound = publicFound() != NULL;
@@ -1289,6 +1306,20 @@ class InternalCompiler extends InternalApi {
         "no-op type '%s'".formatted(protoName(proto))
       );
     }
+  }
+
+  private void typeKeyword(Keyword keyword) {
+    codeAdd(keyword);
+
+    codeAdd(Whitespace.MANDATORY);
+
+    int proto = protoNext();
+
+    codeAdd(ByteCode.IDENTIFIER, proto);
+
+    simpleName(proto);
+
+    lastSet(_IDENTIFIER);
   }
 
   private void typeParameter() {
@@ -1350,6 +1381,10 @@ class InternalCompiler extends InternalApi {
     } else {
       errorRaise();
     }
+  }
+
+  private void varKeyword() {
+    codeAdd(Keyword.VAR);
   }
 
   private void voidKeyword() {

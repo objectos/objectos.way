@@ -282,9 +282,7 @@ public abstract class JavaTemplate {
 
   protected final InterfaceKeyword _interface(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
-
     var api = api();
-
     return api.itemAdd(ByteProto.INTERFACE, api.object(name));
   }
 

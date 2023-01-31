@@ -15,30 +15,33 @@
  */
 package objectos.code;
 
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
 public class InterfaceDeclarationTest {
 
-  //  @Test(description = """
-  //  Interface declaration TC01
-  //
-  //  - identifier
-  //  """)
-  //  public void testCase01() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _interface("A"); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      interface A {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  Interface declaration TC01
+
+  - identifier
+  """)
+  public void testCase01() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _interface("A");
+          body();
+        }
+      }.toString(),
+
+      """
+      interface A {}
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Interface declaration TC02
   //
