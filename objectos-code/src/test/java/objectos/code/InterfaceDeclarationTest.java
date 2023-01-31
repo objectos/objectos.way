@@ -17,6 +17,9 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.Types.IfaceA;
+import objectos.code.Types.IfaceB;
+import objectos.code.Types.IfaceC;
 import org.testng.annotations.Test;
 
 public class InterfaceDeclarationTest {
@@ -81,34 +84,34 @@ public class InterfaceDeclarationTest {
     // @formatter:on
   }
 
-  //  @Test(description = """
-  //  Interface declaration TC03
-  //
-  //  - extends clause
-  //  """)
-  //  public void testCase03() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _interface("A"); _extends(); t(IfaceA.class); body();
-//
-//          _interface("B"); _extends(); t(IfaceA.class); t(IfaceB.class); body();
-//
-//          _interface("C"); _extends(); t(IfaceA.class); t(IfaceB.class); t(IfaceC.class); body();
-//        }
-//      }.toString(),
-//
-//      """
-//      interface A extends objectos.code.Types.IfaceA {}
-//
-//      interface B extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB {}
-//
-//      interface C extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB, objectos.code.Types.IfaceC {}
-//      """
-//    );
-//    // @formatter:on
-  //  }
+  @Test(description = """
+  Interface declaration TC03
+
+  - extends clause
+  """)
+  public void testCase03() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _interface("A"); _extends(); t(IfaceA.class); body();
+
+          _interface("B"); _extends(); t(IfaceA.class); t(IfaceB.class); body();
+
+          _interface("C"); _extends(); t(IfaceA.class); t(IfaceB.class); t(IfaceC.class); body();
+        }
+      }.toString(),
+
+      """
+      interface A extends objectos.code.Types.IfaceA {}
+
+      interface B extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB {}
+
+      interface C extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB, objectos.code.Types.IfaceC {}
+      """
+    );
+    // @formatter:on
+  }
 
 }

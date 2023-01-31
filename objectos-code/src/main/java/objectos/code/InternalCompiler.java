@@ -350,13 +350,17 @@ class InternalCompiler extends InternalApi {
 
     execute(this::extendsKeyword);
 
-    if (itemIs(ByteProto.CLASS_TYPE)) {
+    if (itemTest(this::isClassOrParameterizedType)) {
       codeAdd(Whitespace.MANDATORY);
 
-      execute(this::classType);
+      executeSwitch(this::type);
     } else {
       error();
     }
+  }
+
+  private boolean isClassOrParameterizedType(int proto) {
+    return proto == ByteProto.CLASS_TYPE || proto == ByteProto.PARAMETERIZED_TYPE;
   }
 
   private void classInstanceCreation() {
@@ -816,10 +820,33 @@ class InternalCompiler extends InternalApi {
   private void interfaceDeclaration() {
     execute(this::interfaceKeyword);
 
+    if (itemIs(ByteProto.EXTENDS)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      interfaceDeclarationExtends();
+    }
+
     if (itemIs(ByteProto.BODY)) {
       codeAdd(Whitespace.OPTIONAL);
 
       execute(this::body);
+    }
+  }
+
+  private void interfaceDeclarationExtends() {
+    execute(this::extendsKeyword);
+
+    if (itemTest(this::isClassOrParameterizedType)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      executeSwitch(this::type);
+
+      while (itemTest(this::isClassOrParameterizedType)) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        executeSwitch(this::type);
+      }
     }
   }
 
