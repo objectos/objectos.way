@@ -637,6 +637,8 @@ class InternalCompiler extends InternalApi {
     switch (proto) {
       case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
 
+      case ByteProto.CLASS_TYPE -> classType();
+
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
       case ByteProto.INVOKE -> invoke();
@@ -655,7 +657,8 @@ class InternalCompiler extends InternalApi {
 
   private void expressionDot(int previous) {
     switch (previous) {
-      case ByteProto.EXPRESSION_NAME,
+      case ByteProto.CLASS_TYPE,
+           ByteProto.EXPRESSION_NAME,
            ByteProto.INVOKE,
            ByteProto.STRING_LITERAL,
            ByteProto.THIS -> {
@@ -1053,6 +1056,16 @@ class InternalCompiler extends InternalApi {
            ByteProto.INVOKE,
            ByteProto.THIS -> statementPrimary();
 
+      case ByteProto.CLASS_TYPE -> {
+        int next = itemPeekAhead();
+
+        if (next != ByteProto.IDENTIFIER) {
+          statementPrimary();
+        } else {
+          localVariableDeclaration(start);
+        }
+      }
+
       case ByteProto.RETURN -> returnStatement();
 
       case ByteProto.SUPER -> superInvocationWithKeyword();
@@ -1065,6 +1078,24 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.SEMICOLON);
+  }
+
+  private int itemPeekAhead() {
+    for (int i = protoIndex + 2; i < protoArray.length; i += 2) {
+      int proto = protoArray[i];
+
+      if (ByteProto.isWhitespace(proto)) {
+        continue;
+      }
+
+      return proto;
+    }
+
+    return ByteProto.NOOP;
+  }
+
+  private void localVariableDeclaration(int start) {
+    errorRaise("no-op local variable declaration");
   }
 
   private void statementPrimary() {

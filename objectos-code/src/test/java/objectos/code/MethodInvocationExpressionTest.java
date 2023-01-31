@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Collections;
 import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
@@ -151,55 +152,55 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  //  @Test(description = """
-  //  - allow expression names
-  //  """)
-  //  public void testCase06() {
-  //    assertEquals(
-  //      fix.ture(new JavaTemplate() {
-  //        @Override
-  //        protected final void definition() {
-  //          invoke("test", n("field"));
-  //        }
-  //      }),
-  //
-  //      """
-  //      class Invoke {
-  //        void method() {
-  //          test(field);
-  //        }
-  //      }
-  //      """
-  //    );
-  //  }
-  //
-  //  @Test(description = """
-  //  static methods
-  //  """)
-  //  public void testCase07() {
-//    // @formatter:off
-//    assertEquals(
-//      fix.ture(new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          t(Thread.class).invoke("currentThread");
-//
-//          t(Collections.class).invoke("sort", n("list"));
-//        }
-//      }),
-//
-//      """
-//      class Invoke {
-//        void method() {
-//          java.lang.Thread.currentThread();
-//          java.util.Collections.sort(list);
-//        }
-//      }
-//      """
-//    );
-//    // @formatter:on
-  //  }
-  //
+  @Test(description = """
+  - allow expression names
+  """)
+  public void testCase06() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke("test", n("field"));
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          test(field);
+        }
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  static methods
+  """)
+  public void testCase07() {
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          code(
+            t(Thread.class), invoke("currentThread"),
+
+            t(Collections.class), invoke("sort", n("list"))
+          );
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          java.lang.Thread.currentThread();
+          java.util.Collections.sort(list);
+        }
+      }
+      """
+    );
+  }
+
   //  @Test(description = """
   //  Method Invocation Expresions TC08
   //

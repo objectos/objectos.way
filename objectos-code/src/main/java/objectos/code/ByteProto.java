@@ -114,6 +114,10 @@ final class ByteProto {
     return isExpressionStart(proto) || proto == ARRAY_INITIALIZER;
   }
 
+  public static boolean isWhitespace(int proto) {
+    return proto == NEW_LINE;
+  }
+
   public static boolean primaryDot(int proto) {
     return switch (proto) {
       case EXPRESSION_NAME,
