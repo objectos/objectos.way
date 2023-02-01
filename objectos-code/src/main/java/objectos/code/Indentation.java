@@ -15,16 +15,54 @@
  */
 package objectos.code;
 
+/**
+ * An instruction that may be used by a {@link JavaSink} instance to increase
+ * and decrease indentation level during a code generation.
+ *
+ * @since 0.4
+ */
 public enum Indentation {
 
+  /**
+   * Indicates that a construct continues in the following line.
+   *
+   * <p>
+   * For example, in the following chained method invocation expressions:
+   *
+   * <pre>
+   * builder()
+   *     .name("Foo bar")
+   *     .value(123)
+   *     .build();</pre>
+   *
+   * <p>
+   * This instruction would appear immediately before each of dot {@code .}
+   * character.
+   */
   CONTINUATION,
 
+  /**
+   * Indicates that the source code generation has entered a body or block
+   * construct. In other words, generation will occur inside curly brackets.
+   */
   ENTER_BLOCK,
 
+  /**
+   * Indicates that the source code generation has exited a body or block
+   * construct.
+   */
   EXIT_BLOCK,
 
+  /**
+   * Indicates that the source code generation has entered a parenthesized
+   * construct.
+   */
   ENTER_PARENTHESIS,
 
+  /**
+   * Indicates that the source code generation has exited a parenthesized
+   * construct.
+   */
   EXIT_PARENTHESIS;
 
   private static final Indentation[] VALUES = values();

@@ -32,7 +32,8 @@ public enum Whitespace {
    * private final String name;</pre>
    *
    * <p>
-   * Every keyword and identifier must be separated by whitespace.
+   * This instruction would appear immediately after the {@code private},
+   * {@code final} and {@code String} words.
    */
   MANDATORY,
 
