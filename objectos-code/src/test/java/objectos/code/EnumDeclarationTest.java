@@ -172,55 +172,56 @@ public class EnumDeclarationTest {
     // @formatter:on
   }
 
-  //  @Test(description = """
-  //  Enum class declarations TC05
-  //
-  //  - enum
-  //  """)
-  //  public void testCase05() {
-//    // @formatter:off
-//    assertEquals(
-//      new JavaTemplate() {
-//        @Override
-//        protected final void definition() {
-//          _public(); _enum("Test"); _implements(); t("test", "Iface"); body(
-//            enumConstant("A", s("a")),
-//
-//            enumConstant("B", s("b")),
-//
-//            _private(), _final(), t(String.class), field("value"),
-//
-//            _private(), constructor(t(String.class), id("value")), block(
-//              assign(_this().n("value"), n("value"))
-//            ),
-//
-//            at(t(Override.class)),
-//            _public(), _final(), t(String.class), method("toString"), block(
-//              _return(), n("value")
-//            )
-//          );
-//        }
-//      }.toString(),
-//      """
-//      public enum Test implements test.Iface {
-//        A("a"),
-//
-//        B("b");
-//
-//        private final java.lang.String value;
-//
-//        private Test(java.lang.String value) {
-//          this.value = value;
-//        }
-//
-//        @java.lang.Override
-//        public final java.lang.String toString() {
-//          return value;
-//        }
-//      }
-//      """
-//      // @formatter:on
-  //    );
-  //  }
+  @Test(description = """
+  Enum class declarations TC05
+
+  - enum
+  """)
+  public void testCase05() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _public(); _enum("Test"); _implements(); t("test", "Iface"); body(
+            enumConstant("A", s("a")),
+
+            enumConstant("B", s("b")),
+
+            _private(), _final(), t(String.class), id("value"),
+
+            _private(), constructor(t(String.class), id("value")), block(
+              _this(), n("value"), gets(), n("value")
+            ),
+
+            at(t(Override.class)),
+            _public(), _final(), t(String.class), method("toString"), block(
+              _return(), n("value")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      public enum Test implements test.Iface {
+        A("a"),
+
+        B("b");
+
+        private final java.lang.String value;
+
+        private Test(java.lang.String value) {
+          this.value = value;
+        }
+
+        @java.lang.Override
+        public final java.lang.String toString() {
+          return value;
+        }
+      }
+      """
+      // @formatter:on
+    );
+  }
 
 }

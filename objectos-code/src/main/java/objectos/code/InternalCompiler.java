@@ -284,22 +284,24 @@ class InternalCompiler extends InternalApi {
   }
 
   private void bodyMember() {
+    var wasEnumConstant = lastIs(_ENUM_CONSTANT);
+
     declarationAnnotationList();
 
     modifierList();
 
     int item = itemPeek();
 
+    if (wasEnumConstant) {
+      if (item == ByteProto.ENUM_CONSTANT) {
+        slotComma();
+      } else {
+        slotSemicolon();
+      }
+    }
+
     switch (last()) {
       case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-      case _ENUM_CONSTANT -> {
-        if (item == ByteProto.ENUM_CONSTANT) {
-          slotComma();
-        } else {
-          slotSemicolon();
-        }
-      }
 
       case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
     }
