@@ -30,15 +30,14 @@ public class FieldAccessExpressionTest {
   - Primary . Identifier
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(
-            _this(), n("x"), gets(), n("y"), end(),
+          _this(); n("x"); gets(); n("y"); end();
 
-            invoke("x"), invoke("y"), n("z"), gets(), n("foo")
-          );
+          invoke("x"); invoke("y"); n("z"); gets(); n("foo");
         }
       }),
 
@@ -51,6 +50,7 @@ public class FieldAccessExpressionTest {
       }
       """
     );
+    // @formatter:on
   }
 
 }

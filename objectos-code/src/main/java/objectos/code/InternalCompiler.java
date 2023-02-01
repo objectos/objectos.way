@@ -317,6 +317,8 @@ class InternalCompiler extends InternalApi {
         fieldOrMethodDeclaration();
       }
 
+      case ByteProto.BLOCK -> execute(this::block);
+
       case ByteProto.CLASS -> classDeclaration();
 
       case ByteProto.CONSTRUCTOR -> constructorDeclaration();

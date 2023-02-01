@@ -27,12 +27,12 @@ public class ClassTypeTest {
   - pkg + name
   """)
   public void testCase01() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("ClassType");
-          body(
+          _class("ClassType"); body(
             t("com.example", "Bar"), id("a")
           );
         }
@@ -44,6 +44,7 @@ public class ClassTypeTest {
       }
       """
     );
+    // @formatter:on
   }
 
   @Test(description = """
@@ -52,6 +53,7 @@ public class ClassTypeTest {
   - nested class
   """)
   public void testCase02() {
+    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
@@ -60,8 +62,7 @@ public class ClassTypeTest {
 
           autoImports();
 
-          _class("A");
-          body(
+          _class("A"); body(
             t("com.example", "A", "B"), id("t01")
           );
         }
@@ -75,6 +76,7 @@ public class ClassTypeTest {
       }
       """
     );
+    // @formatter:on
   }
 
 }
