@@ -51,66 +51,10 @@ abstract class InternalInterpreter extends InternalCompiler {
     var code = 0;
 
     do {
-      code = $loop();
+      code = loop();
     } while (code != ByteCode.EOF);
 
     writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
-  }
-
-  private int $codenxt() { return codeArray[codeIndex++]; }
-
-  private int $loop() {
-    var code = $codenxt();
-
-    switch (code) {
-      case ByteCode.AUTO_IMPORTS0 -> autoImportsRender(false);
-
-      case ByteCode.AUTO_IMPORTS1 -> autoImportsRender(true);
-
-      case ByteCode.COMMENT -> comment();
-
-      case ByteCode.CONSTRUCTOR_NAME -> {
-        var name = "Constructor";
-
-        if (objectIndex >= 0) {
-          name = (String) objectArray[objectIndex];
-        }
-
-        writeIdentifier(name);
-
-        objectIndex = -1;
-      }
-
-      case ByteCode.CONSTRUCTOR_NAME_STORE -> objectIndex = $codenxt();
-
-      case ByteCode.EOF -> {}
-
-      case ByteCode.IDENTIFIER -> identifier();
-
-      case ByteCode.INDENTATION -> indentation();
-
-      case ByteCode.NAME -> name();
-
-      case ByteCode.NOP1 -> $codenxt();
-
-      case ByteCode.OPERATOR -> operator();
-
-      case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();
-
-      case ByteCode.RAW -> raw();
-
-      case ByteCode.RESERVED_KEYWORD -> reservedKeyword();
-
-      case ByteCode.SEPARATOR -> separator();
-
-      case ByteCode.STRING_LITERAL -> stringLiteral();
-
-      case ByteCode.WHITESPACE -> whitespace();
-
-      default -> throw $uoe_code(code);
-    }
-
-    return code;
   }
 
   private UnsupportedOperationException $uoe_code(int code) {
@@ -152,8 +96,10 @@ abstract class InternalInterpreter extends InternalCompiler {
     writeSymbol(Symbol.SEMICOLON);
   }
 
+  private int codeNext() { return codeArray[codeIndex++]; }
+
   private void comment() {
-    var index = $codenxt();
+    var index = codeNext();
 
     var value = (String) objectArray[index];
 
@@ -161,7 +107,7 @@ abstract class InternalInterpreter extends InternalCompiler {
   }
 
   private void identifier() {
-    var index = $codenxt();
+    var index = codeNext();
 
     var name = (String) objectArray[index];
 
@@ -169,31 +115,59 @@ abstract class InternalInterpreter extends InternalCompiler {
   }
 
   private void indentation() {
-    var index = $codenxt();
+    var index = codeNext();
 
     var value = Indentation.get(index);
 
     writeIndentation(value);
   }
 
-  private void name() {
-    var index = $codenxt();
+  private void keyword() {
+    var index = codeNext();
 
-    var name = (String) objectArray[index];
+    var value = Keyword.get(index);
 
-    writeName(name);
+    writeReservedKeyword(value);
   }
 
-  private void operator() {
-    var index = $codenxt();
+  private int loop() {
+    var code = codeNext();
 
-    var value = Symbol.get(index);
+    switch (code) {
+      case ByteCode.AUTO_IMPORTS0 -> autoImportsRender(false);
 
-    writeSymbol(value);
+      case ByteCode.AUTO_IMPORTS1 -> autoImportsRender(true);
+
+      case ByteCode.COMMENT -> comment();
+
+      case ByteCode.EOF -> {}
+
+      case ByteCode.IDENTIFIER -> identifier();
+
+      case ByteCode.INDENTATION -> indentation();
+
+      case ByteCode.KEYWORD -> keyword();
+
+      case ByteCode.NOP1 -> codeNext();
+
+      case ByteCode.PRIMITIVE_LITERAL -> primitiveLiteral();
+
+      case ByteCode.RAW -> raw();
+
+      case ByteCode.STRING_LITERAL -> stringLiteral();
+
+      case ByteCode.SYMBOL -> symbol();
+
+      case ByteCode.WHITESPACE -> whitespace();
+
+      default -> throw $uoe_code(code);
+    }
+
+    return code;
   }
 
   private void primitiveLiteral() {
-    var index = $codenxt();
+    var index = codeNext();
 
     var value = (String) objectArray[index];
 
@@ -201,39 +175,31 @@ abstract class InternalInterpreter extends InternalCompiler {
   }
 
   private void raw() {
-    var index = $codenxt();
+    var index = codeNext();
 
     var value = (String) objectArray[index];
 
     writeRaw(value);
   }
 
-  private void reservedKeyword() {
-    var index = $codenxt();
-
-    var value = Keyword.get(index);
-
-    writeReservedKeyword(value);
-  }
-
-  private void separator() {
-    var index = $codenxt();
-
-    var value = Symbol.get(index);
-
-    writeSymbol(value);
-  }
-
   private void stringLiteral() {
-    var index = $codenxt();
+    var index = codeNext();
 
     var value = (String) objectArray[index];
 
     writeStringLiteral(value);
   }
 
+  private void symbol() {
+    var index = codeNext();
+
+    var value = Symbol.get(index);
+
+    writeSymbol(value);
+  }
+
   private void whitespace() {
-    var index = $codenxt();
+    var index = codeNext();
 
     var value = Whitespace.get(index);
 

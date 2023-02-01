@@ -199,7 +199,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void assigmentOperator() {
-    codeAdd(ByteCode.OPERATOR, protoNext());
+    codeAdd(ByteCode.SYMBOL, protoNext());
   }
 
   private void autoImports() {
@@ -486,9 +486,9 @@ class InternalCompiler extends InternalApi {
     codeArray[codeIndex++] = v1;
   }
 
-  private void codeAdd(Keyword value) { codeAdd(ByteCode.RESERVED_KEYWORD, value.ordinal()); }
+  private void codeAdd(Keyword value) { codeAdd(ByteCode.KEYWORD, value.ordinal()); }
 
-  private void codeAdd(Symbol value) { codeAdd(ByteCode.SEPARATOR, value.ordinal()); }
+  private void codeAdd(Symbol value) { codeAdd(ByteCode.SYMBOL, value.ordinal()); }
 
   private void codeAdd(Whitespace value) { codeAdd(ByteCode.WHITESPACE, value.ordinal()); }
 
@@ -1072,7 +1072,7 @@ class InternalCompiler extends InternalApi {
       publicFound(1);
     }
 
-    codeAdd(ByteCode.RESERVED_KEYWORD, proto);
+    codeAdd(ByteCode.KEYWORD, proto);
 
     lastSet(_KEYWORD);
   }
@@ -1161,7 +1161,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void primitiveType() {
-    codeAdd(ByteCode.RESERVED_KEYWORD, protoNext());
+    codeAdd(ByteCode.KEYWORD, protoNext());
   }
 
   private String protoName(int proto) {
@@ -1221,7 +1221,7 @@ class InternalCompiler extends InternalApi {
   private void slotComma() {
     int index = stackArray[2];
 
-    codeArray[index + 0] = ByteCode.SEPARATOR;
+    codeArray[index + 0] = ByteCode.SYMBOL;
 
     codeArray[index + 1] = Symbol.COMMA.ordinal();
   }
@@ -1229,7 +1229,7 @@ class InternalCompiler extends InternalApi {
   private void slotSemicolon() {
     int index = stackArray[2];
 
-    codeArray[index + 0] = ByteCode.SEPARATOR;
+    codeArray[index + 0] = ByteCode.SYMBOL;
 
     codeArray[index + 1] = Symbol.SEMICOLON.ordinal();
   }
