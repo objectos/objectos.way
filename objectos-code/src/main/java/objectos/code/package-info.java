@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 /**
- * Defines the Objectos Code API.
+ * Provides the API for generating Java source code using the Java programming
+ * language.
+ *
+ * <h2>Null Pointers</h2>
+ *
+ * <p>
+ * Unless otherwise specified, methods in this package will throw a
+ * {@link NullPointerException} if given a {@code null} argument.
  *
  * @since 0.4
  */
-module objectos.code {
-  exports objectos.code;
-
-  requires objectos.lang;
-  requires objectos.util;
-}
+package objectos.code;

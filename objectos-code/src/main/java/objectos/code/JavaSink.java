@@ -87,7 +87,11 @@ public abstract class JavaSink extends InternalInterpreter {
     return Option.SKIP_EXISTING;
   }
 
-  public void eval(JavaTemplate template) {
+  public void write(JavaTemplate template) throws IOException {
+    eval(template);
+  }
+
+  final void eval(JavaTemplate template) {
     Check.notNull(template, "template == null");
 
     accept(template);
@@ -95,10 +99,6 @@ public abstract class JavaSink extends InternalInterpreter {
     compile();
 
     interpret();
-  }
-
-  public void write(JavaTemplate template) throws IOException {
-    eval(template);
   }
 
 }

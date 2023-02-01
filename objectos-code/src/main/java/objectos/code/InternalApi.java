@@ -53,521 +53,6 @@ class InternalApi {
 
   private JavaTemplate template;
 
-  public final _Item chain(int proto) {
-    int second = levelremove();
-    int first = levelremove();
-    return itemAdd(proto, first, second);
-  }
-
-  public final _Item classType(Class<?> type) {
-    var last = objectIndex;
-
-    while (true) {
-      var simpleName = type.getSimpleName(); // implicit null-check
-
-      object(simpleName);
-
-      var outer = type.getEnclosingClass();
-
-      if (outer == null) {
-        break;
-      } else {
-        type = outer;
-      }
-    }
-
-    var first = objectIndex - 1;
-
-    var names = objectIndex - last;
-
-    var packageName = type.getPackageName();
-
-    levelAdd(LOCAL, protoIndex);
-
-    protoAdd(ByteProto.CLASS_TYPE, object(packageName), names);
-
-    for (var index = first; index >= last; index--) {
-      var simpleName = objectArray[index];
-
-      protoAdd(object(simpleName));
-    }
-
-    return template.item;
-  }
-
-  public final _Item elem(int proto) {
-    elemPre();
-    elemCnt(proto);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1) {
-    elemPre();
-    elemPre(e1);
-    elemCnt(proto);
-    elemItem(e1);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
-      Object e5) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
-      Object e5, Object e6) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
-      Object e5, Object e6, Object e7) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    elemItem(e7);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
-      Object e5, Object e6, Object e7, Object e8) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemPre(e8);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    elemItem(e7);
-    elemItem(e8);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
-      Object e5, Object e6, Object e7, Object e8, Object e9) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemPre(e8);
-    elemPre(e9);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    elemItem(e7);
-    elemItem(e8);
-    elemItem(e9);
-    return elemRet();
-  }
-
-  public final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
-      Object e5, Object e6, Object e7, Object e8, Object e9, Object e10) {
-    elemPre();
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemPre(e8);
-    elemPre(e9);
-    elemPre(e10);
-    elemCnt(proto);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    elemItem(e7);
-    elemItem(e8);
-    elemItem(e9);
-    elemItem(e10);
-    return elemRet();
-  }
-
-  public final void elemargs() {
-    protoAdd(0);
-  }
-
-  public final void elemargs(Object e1) {
-    protoAdd(1);
-    elemItem(e1);
-  }
-
-  public final void elemargs(Object e1, Object e2) {
-    protoAdd(2);
-    elemItem(e1);
-    elemItem(e2);
-  }
-
-  public final void elemargs(Object e1, Object e2, Object e3) {
-    protoAdd(3);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-  }
-
-  public final void elemargs(Object e1, Object e2, Object e3, Object e4) {
-    protoAdd(4);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-  }
-
-  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5) {
-    protoAdd(5);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-  }
-
-  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6) {
-    protoAdd(6);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-  }
-
-  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6, Object e7) {
-    protoAdd(7);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    elemItem(e7);
-  }
-
-  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6, Object e7, Object e8) {
-    protoAdd(8);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    elemItem(e7);
-    elemItem(e8);
-  }
-
-  public final void elemargs(Object e1, Object e2, Object e3, Object e4, Object e5,
-      Object e6, Object e7, Object e8, Object e9) {
-    protoAdd(9);
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-    elemItem(e4);
-    elemItem(e5);
-    elemItem(e6);
-    elemItem(e7);
-    elemItem(e8);
-    elemItem(e9);
-  }
-
-  public final _Item elemend() {
-    /*localIndex = */stackPop();
-    /*extIndex = */stackPop();
-    /*includeIndex = */stackPop();
-
-    int levelStart = stackPop(),
-        self = stackPop();
-
-    levelIndex[level] = levelStart;
-
-    levelAdd(LOCAL, self);
-
-    return template.item;
-  }
-
-  public final void elemItem(Object obj) {
-    int offset;
-    int kind;
-
-    if (obj == template.item) {
-      offset = 0;
-
-      kind = LOCAL;
-    } else if (obj == JavaTemplate.EXT) {
-      offset = 1;
-
-      kind = EXT;
-    } else if (obj == JavaTemplate.INCLUDE) {
-      offset = 2;
-
-      kind = LAMBDA;
-    } else {
-      throw new UnsupportedOperationException(
-        "Implement me :: obj=" + obj);
-    }
-
-    int index = stackPeek(offset);
-
-    index = levelSearch(index, kind);
-
-    int levelValue = levelGet(index);
-
-    if (kind != LAMBDA) {
-      int proto = protoGet(levelValue++);
-
-      protoAdd(proto, levelValue);
-    } else {
-      elemCntx0lambda(levelValue);
-    }
-
-    stackset(offset, index);
-  }
-
-  public final void elemItem(Object e1, Object e2) {
-    elemItem(e1);
-    elemItem(e2);
-  }
-
-  public final void elemItem(Object e1, Object e2, Object e3) {
-    elemItem(e1);
-    elemItem(e2);
-    elemItem(e3);
-  }
-
-  public final _Item elemMany(int proto, Object first, Object[] elements) {
-    elemPre();
-
-    elemPre(first);
-
-    for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
-      Check.notNull(element, "elements[", i, "] == null");
-      elemPre(element);
-    }
-
-    elemCnt(proto);
-
-    elemItem(first);
-
-    for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
-      elemItem(element);
-    }
-
-    return elemRet();
-  }
-
-  public final _Item elemMany(int proto, Object[] elements) {
-    elemPre();
-
-    for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
-      Check.notNull(element, "elements[", i, "] == null");
-      elemPre(element);
-    }
-
-    elemCnt(proto);
-
-    for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
-      elemItem(element);
-    }
-
-    return elemRet();
-  }
-
-  public final void elemproto(int value) {
-    protoAdd(value);
-  }
-
-  public final void identifierext(String value) {
-    levelAdd(EXT, protoIndex);
-    protoAdd(ByteProto.IDENTIFIER, object(value));
-  }
-
-  public final _Item itemAdd(int v0) {
-    levelAdd(LOCAL, protoIndex);
-    protoAdd(v0);
-    return template.item;
-  }
-
-  public final _Item itemAdd(int v0, int v1) {
-    levelAdd(LOCAL, protoIndex);
-    protoAdd(v0, v1);
-    return template.item;
-  }
-
-  public final _Item itemAdd(int v0, int v1, int v2) {
-    levelAdd(LOCAL, protoIndex);
-    protoAdd(v0, v1, v2);
-    return template.item;
-  }
-
-  public final _Item itemAdd(int v0, int v1, int v2, int v3) {
-    levelAdd(LOCAL, protoIndex);
-    protoAdd(v0, v1, v2, v3);
-    return template.item;
-  }
-
-  public final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
-    levelAdd(LOCAL, protoIndex);
-    protoAdd(v0, v1, v2, v3, v4);
-    return template.item;
-  }
-
-  public final void lambdaend() {
-    levelpop();
-  }
-
-  public final void lambdastart() {
-    levelpush();
-
-    int nextLevel = -1;
-
-    for (int i = 0; i < levelIndex.length; i++) {
-      int length = levelIndex[i];
-
-      if (length == -1) {
-        nextLevel = i;
-
-        break;
-      }
-    }
-
-    if (nextLevel < 0) {
-      nextLevel = levelIndex.length;
-    }
-
-    levelIndex = IntArrays.growIfNecessary(levelIndex, nextLevel);
-
-    levelAdd(LAMBDA, nextLevel);
-
-    level = nextLevel;
-
-    levelIndex[level] = 0;
-  }
-
-  public final int levelremove() {
-    int[] array = levelArray[level];
-    int value = array[--levelIndex[level]];
-    --levelIndex[level];
-    return value;
-  }
-
-  public final int object(Object value) {
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    var result = objectIndex;
-
-    objectArray[objectIndex++] = value;
-
-    return result;
-  }
-
-  public final int operator(Symbol symbol) {
-    int self = protoIndex;
-    protoAdd(ByteProto.OPERATOR, symbol.ordinal());
-    return self;
-  }
-
-  public final int protoAt(int index) { return protoArray[index]; }
-
   final void accept(JavaTemplate template) {
     this.template = template;
 
@@ -616,6 +101,343 @@ class InternalApi {
     }
   }
 
+  final _Item classType(Class<?> type) {
+    var last = objectIndex;
+
+    while (true) {
+      var simpleName = type.getSimpleName(); // implicit null-check
+
+      object(simpleName);
+
+      var outer = type.getEnclosingClass();
+
+      if (outer == null) {
+        break;
+      } else {
+        type = outer;
+      }
+    }
+
+    var first = objectIndex - 1;
+
+    var names = objectIndex - last;
+
+    var packageName = type.getPackageName();
+
+    levelAdd(LOCAL, protoIndex);
+
+    protoAdd(ByteProto.CLASS_TYPE, object(packageName), names);
+
+    for (var index = first; index >= last; index--) {
+      var simpleName = objectArray[index];
+
+      protoAdd(object(simpleName));
+    }
+
+    return template.item;
+  }
+
+  final _Item elem(int proto) {
+    elemPre();
+    elemCnt(proto);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1) {
+    elemPre();
+    elemPre(e1);
+    elemCnt(proto);
+    elemItem(e1);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7, Object e8) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemPre(e8);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7, Object e8, Object e9) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemPre(e8);
+    elemPre(e9);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
+    elemItem(e9);
+    return elemRet();
+  }
+
+  final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
+      Object e5, Object e6, Object e7, Object e8, Object e9, Object e10) {
+    elemPre();
+    elemPre(e1);
+    elemPre(e2);
+    elemPre(e3);
+    elemPre(e4);
+    elemPre(e5);
+    elemPre(e6);
+    elemPre(e7);
+    elemPre(e8);
+    elemPre(e9);
+    elemPre(e10);
+    elemCnt(proto);
+    elemItem(e1);
+    elemItem(e2);
+    elemItem(e3);
+    elemItem(e4);
+    elemItem(e5);
+    elemItem(e6);
+    elemItem(e7);
+    elemItem(e8);
+    elemItem(e9);
+    elemItem(e10);
+    return elemRet();
+  }
+
+  final _Item elemMany(int proto, Object first, Object[] elements) {
+    elemPre();
+
+    elemPre(first);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      Check.notNull(element, "elements[", i, "] == null");
+      elemPre(element);
+    }
+
+    elemCnt(proto);
+
+    elemItem(first);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      elemItem(element);
+    }
+
+    return elemRet();
+  }
+
+  final _Item elemMany(int proto, Object[] elements) {
+    elemPre();
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      Check.notNull(element, "elements[", i, "] == null");
+      elemPre(element);
+    }
+
+    elemCnt(proto);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      elemItem(element);
+    }
+
+    return elemRet();
+  }
+
+  final void identifierext(String value) {
+    levelAdd(EXT, protoIndex);
+    protoAdd(ByteProto.IDENTIFIER, object(value));
+  }
+
+  final _Item itemAdd(int v0) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0);
+    return template.item;
+  }
+
+  final _Item itemAdd(int v0, int v1) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1);
+    return template.item;
+  }
+
+  final _Item itemAdd(int v0, int v1, int v2) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1, v2);
+    return template.item;
+  }
+
+  final _Item itemAdd(int v0, int v1, int v2, int v3) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1, v2, v3);
+    return template.item;
+  }
+
+  final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
+    levelAdd(LOCAL, protoIndex);
+    protoAdd(v0, v1, v2, v3, v4);
+    return template.item;
+  }
+
+  final void lambdaend() {
+    levelpop();
+  }
+
+  final void lambdastart() {
+    levelpush();
+
+    int nextLevel = -1;
+
+    for (int i = 0; i < levelIndex.length; i++) {
+      int length = levelIndex[i];
+
+      if (length == -1) {
+        nextLevel = i;
+
+        break;
+      }
+    }
+
+    if (nextLevel < 0) {
+      nextLevel = levelIndex.length;
+    }
+
+    levelIndex = IntArrays.growIfNecessary(levelIndex, nextLevel);
+
+    levelAdd(LAMBDA, nextLevel);
+
+    level = nextLevel;
+
+    levelIndex[level] = 0;
+  }
+
+  final int object(Object value) {
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    var result = objectIndex;
+
+    objectArray[objectIndex++] = value;
+
+    return result;
+  }
+
   private void elemCnt(int value) {
     int itemCount = stackPop(),
         levelStart = levelIndex[level] - (itemCount * 2),
@@ -657,6 +479,44 @@ class InternalApi {
     }
 
     levelIndex[level] = -1;
+  }
+
+  private void elemItem(Object obj) {
+    int offset;
+    int kind;
+
+    if (obj == template.item) {
+      offset = 0;
+
+      kind = LOCAL;
+    } else if (obj == JavaTemplate.EXT) {
+      offset = 1;
+
+      kind = EXT;
+    } else if (obj == JavaTemplate.INCLUDE) {
+      offset = 2;
+
+      kind = LAMBDA;
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: obj=" + obj);
+    }
+
+    int index = stackPeek(offset);
+
+    index = levelSearch(index, kind);
+
+    int levelValue = levelGet(index);
+
+    if (kind != LAMBDA) {
+      int proto = protoGet(levelValue++);
+
+      protoAdd(proto, levelValue);
+    } else {
+      elemCntx0lambda(levelValue);
+    }
+
+    stackset(offset, index);
   }
 
   private void elemPre() {

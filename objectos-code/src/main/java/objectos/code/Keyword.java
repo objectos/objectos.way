@@ -17,50 +17,122 @@ package objectos.code;
 
 import java.util.Locale;
 
+/**
+ * Represents the reserved and contextual keywords of the Java programming
+ * language.
+ *
+ * @since 0.4
+ */
 public enum Keyword {
 
+  /**
+   * The reserved keyword {@code abstract}.
+   */
   ABSTRACT,
 
+  /**
+   * The reserved keyword {@code boolean}.
+   */
   BOOLEAN,
 
+  /**
+   * The reserved keyword {@code class}.
+   */
   CLASS,
 
+  /**
+   * The reserved keyword {@code double}.
+   */
   DOUBLE,
 
+  /**
+   * The reserved keyword {@code enum}.
+   */
   ENUM,
 
+  /**
+   * The reserved keyword {@code extends}.
+   */
   EXTENDS,
 
+  /**
+   * The reserved keyword {@code final}.
+   */
   FINAL,
 
+  /**
+   * The reserved keyword {@code implements}.
+   */
   IMPLEMENTS,
 
+  /**
+   * The reserved keyword {@code import}.
+   */
   IMPORT,
 
+  /**
+   * The reserved keyword {@code import}.
+   */
   INT,
 
+  /**
+   * The reserved keyword {@code interface}.
+   */
   INTERFACE,
 
+  /**
+   * The reserved keyword {@code new}.
+   */
   NEW,
 
+  /**
+   * The reserved keyword {@code package}.
+   */
   PACKAGE,
 
+  /**
+   * The reserved keyword {@code private}.
+   */
   PRIVATE,
 
+  /**
+   * The reserved keyword {@code protected}.
+   */
   PROTECTED,
 
+  /**
+   * The reserved keyword {@code public}.
+   */
   PUBLIC,
 
+  /**
+   * The reserved keyword {@code return}.
+   */
   RETURN,
 
+  /**
+   * The reserved keyword {@code static}.
+   */
   STATIC,
 
+  /**
+   * The reserved keyword {@code super}.
+   */
   SUPER,
 
+  /**
+   * The reserved keyword {@code this}.
+   */
   THIS,
 
+  /**
+   * The contextual keyword {@code var}.
+   */
   VAR,
 
+  /**
+   * The reserved keyword {@code void}.
+   */
   VOID;
 
   private static final Keyword[] VALUES = values();
@@ -71,6 +143,12 @@ public enum Keyword {
     return VALUES[index];
   }
 
+  /**
+   * Returns the name of the keyword in the proper case to be used in a Java
+   * program.
+   *
+   * @return the keywords's name
+   */
   @Override
   public final String toString() { return toString; }
 
