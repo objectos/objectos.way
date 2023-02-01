@@ -18,8 +18,7 @@ package objectos.code;
 import java.util.Locale;
 
 /**
- * Represents the reserved and contextual keywords of the Java programming
- * language.
+ * The reserved and contextual keywords of the Java programming language.
  *
  * @since 0.4
  */

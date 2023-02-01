@@ -15,51 +15,105 @@
  */
 package objectos.code;
 
+/**
+ * The symbols used as separators and operators in the Java programming
+ * language.
+ *
+ * @since 0.4
+ */
 public enum Symbol {
 
   // Separators
 
+  /**
+   * The separator {@code (}
+   */
   LEFT_PARENTHESIS("("),
 
+  /**
+   * The separator {@code )}
+   */
   RIGHT_PARENTHESIS(")"),
 
+  /**
+   * The separator <code>{</code>
+   */
   LEFT_CURLY_BRACKET("{"),
 
+  /**
+   * The separator <code>}</code>
+   */
   RIGHT_CURLY_BRACKET("}"),
 
+  /**
+   * The separator {@code [}
+   */
   LEFT_SQUARE_BRACKET("["),
 
+  /**
+   * The separator {@code ]}
+   */
   RIGHT_SQUARE_BRACKET("]"),
 
+  /**
+   * The separator {@code ;}
+   */
   SEMICOLON(";"),
 
+  /**
+   * The separator {@code ,}
+   */
   COMMA(","),
 
+  /**
+   * The separator {@code .}
+   */
   DOT("."),
 
+  /**
+   * The separator {@code ...}
+   */
   ELLIPSIS("..."),
 
+  /**
+   * The separator <code>@</code>
+   */
   COMMERCIAL_AT("@"),
 
+  /**
+   * The separator {@code ::}
+   */
   DOUBLE_COLON("::"),
 
   /*
-  
-   Operators
 
+   Operators
+  
    =   >   <   !   ~   ?   :   ->
    ==  >=  <=  !=  &&  ||  ++  --
    +   -   *   /   &   |   ^   %   <<   >>   >>>
    +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
-
+  
    */
 
+  /**
+   * The operator {@code &}
+   */
   AMPERSAND("&"),
 
+  /**
+   * The operator {@code =}
+   */
   ASSIGNMENT("="),
 
+  /**
+   * The operator {@code <}
+   */
   LEFT_ANGLE_BRACKET("<"),
 
+  /**
+   * The operator {@code >}
+   */
   RIGHT_ANGLE_BRACKET(">");
 
   private static final Symbol[] VALUES = values();
@@ -72,6 +126,12 @@ public enum Symbol {
     return VALUES[index];
   }
 
+  /**
+   * Returns the string representation of the symbol so it can be used in a Java
+   * program.
+   *
+   * @return the symbol's string representation
+   */
   @Override
   public final String toString() { return name; }
 

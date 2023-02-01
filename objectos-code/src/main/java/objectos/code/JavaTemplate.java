@@ -31,15 +31,6 @@ public abstract class JavaTemplate {
     default Object self() { return this; }
   }
 
-  @FunctionalInterface
-  protected interface IncludeTarget {
-    void execute();
-  }
-
-  protected sealed interface TypeParameterBound extends Element {}
-
-  protected sealed interface VariableInitializer {}
-
   enum _Ext {
     INSTANCE;
   }
@@ -156,6 +147,11 @@ public abstract class JavaTemplate {
 
   sealed interface Include extends ArgsPart, BlockElement, BodyElement {}
 
+  @FunctionalInterface
+  interface IncludeTarget {
+    void execute();
+  }
+
   sealed interface IntegerLiteral extends Literal {}
 
   sealed interface InterfaceKeyword extends BodyElement {}
@@ -206,7 +202,11 @@ public abstract class JavaTemplate {
 
   sealed interface TypeParameter extends BodyElement {}
 
+  sealed interface TypeParameterBound extends Element {}
+
   sealed interface TypeVariable extends ReferenceType {}
+
+  sealed interface VariableInitializer {}
 
   sealed interface VarKeyword extends BlockElement {}
 
