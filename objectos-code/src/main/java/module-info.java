@@ -16,8 +16,6 @@
 module objectos.code {
   exports objectos.code;
 
-  requires transitive objectos.util;
-  requires transitive java.compiler;
-
   requires objectos.lang;
+  requires objectos.util;
 }
