@@ -20,8 +20,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.lang.Check;
 
+/**
+ * The {@link JavaSink} class is responsible for evaluating a
+ * {@link JavaTemplate} and generating the corresponding Java code.
+ *
+ * <p>
+ * Instances of this class are not thread-safe.
+ *
+ * @since 0.4
+ */
 public abstract class JavaSink extends InternalInterpreter {
 
+  /**
+   * Represents an option for configuring a {@link JavaSink} instance.
+   */
   public sealed abstract static class Option {
 
     private static final class OverwriteExisting extends Option {
@@ -51,6 +63,32 @@ public abstract class JavaSink extends InternalInterpreter {
    */
   protected JavaSink() {}
 
+  /**
+   * Returns a {@link JavaSink} instance for generating Java source files at the
+   * specified directory.
+   *
+   * <p>
+   * When provided with a {@link JavaTemplate} instance, the returned
+   * {@link JavaSink} will:
+   *
+   * <ul>
+   * <li>create the required subdirectories to represent the template's package
+   * hierarchy; and
+   * <li>fail with an {@link IOException} if the file it is trying to generate
+   * already exists. In other words, it will not overwrite any existing file; it
+   * will fail with the exception instead.
+   * </ul>
+   *
+   * @param directory
+   *        the pathname of the directory where the files are to be generated.
+   *
+   * @return a {@link JavaSink} instance for generating Java source files.
+   *
+   * @throws IllegalArgumentException
+   *         if the specified pathname represented by {@code directory} does not
+   *         exist, exists but it is not a directory or if it cannot be
+   *         determined whether it is a directory or not.
+   */
   public static JavaSink ofDirectory(Path directory) {
     Check.argument(
       Files.isDirectory(directory),
@@ -60,6 +98,35 @@ public abstract class JavaSink extends InternalInterpreter {
     return new JavaSinkOfDirectory(directory);
   }
 
+  /**
+   * Returns a {@link JavaSink} instance for generating Java source files at the
+   * specified directory with the specified option.
+   *
+   * <p>
+   * The {@code option} parameter can be used to modify this sink behavior when
+   * the file it will generate already exists:
+   *
+   * <ul>
+   * <li>the {@link JavaSink#overwriteExisting()} will cause this sink to
+   * truncate and overwrite any existing file; and
+   * <li>the {@link JavaSink#skipExisting()} will cause to silently skip the
+   * existing file. As opposed to the default behavior which is to throw an
+   * {@link IOException}.
+   * </ul>
+   *
+   * @param directory
+   *        the pathname of the directory where the files are to be generated.
+   * @param option
+   *        the option to configure the returned sink instance
+   *
+   * @return a configured {@link JavaSink} instance for generating Java source
+   *         files.
+   *
+   * @throws IllegalArgumentException
+   *         if the specified pathname represented by {@code directory} does not
+   *         exist, exists but it is not a directory or if it cannot be
+   *         determined whether it is a directory or not.
+   */
   public static JavaSink ofDirectory(Path directory, Option option) {
     Check.argument(
       Files.isDirectory(directory),
@@ -68,21 +135,48 @@ public abstract class JavaSink extends InternalInterpreter {
 
     var sink = new JavaSinkOfDirectory(directory);
 
-    option.acceptOfDirectory(sink);
+    option.acceptOfDirectory(sink); // implicit null-check
 
     return sink;
   }
 
+  /**
+   * Returns a {@link JavaSink} instance which will append the generated source
+   * code to the specified {@link StringBuilder} instance.
+   *
+   * <p>
+   * In other words, the returned instance will begin writing at the current
+   * position of the {@code StringBuilder}.
+   *
+   * @param output
+   *        generated Java source code will be appended to the end of this
+   *        {@code StringBuilder} instance
+   *
+   * @return a {@link JavaSink} instance for appending Java source code to the
+   *         specified {@code StringBuilder} instance.
+   */
   public static JavaSink ofStringBuilder(StringBuilder output) {
     Check.notNull(output, "output == null");
 
     return new JavaSinkOfStringBuilder(output);
   }
 
+  /**
+   * Configures a {@link JavaSink#ofDirectory(Path, Option) directory sink}
+   * instance to overwrite any existing Java file.
+   *
+   * @return the option to overwrite any existing file
+   */
   public static Option overwriteExisting() {
     return Option.OVERWRITE_EXISTING;
   }
 
+  /**
+   * Configures a {@link JavaSink#ofDirectory(Path, Option) directory sink}
+   * instance to silently skip any existing Java file.
+   *
+   * @return the option to silently skip any existing file
+   */
   public static Option skipExisting() {
     return Option.SKIP_EXISTING;
   }

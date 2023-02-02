@@ -27,13 +27,13 @@ abstract class InternalInterpreter extends InternalCompiler {
 
   protected abstract void writeIndentation(Indentation value);
 
+  protected abstract void writeKeyword(Keyword value);
+
   protected abstract void writeLiteral(String value);
 
   protected abstract void writeName(String name);
 
   protected abstract void writeRaw(String value);
-
-  protected abstract void writeReservedKeyword(Keyword value);
 
   protected abstract void writeStringLiteral(String value);
 
@@ -87,7 +87,7 @@ abstract class InternalInterpreter extends InternalCompiler {
   }
 
   private void autoImportsRenderItem(String type) {
-    writeReservedKeyword(Keyword.IMPORT);
+    writeKeyword(Keyword.IMPORT);
 
     writeWhitespace(Whitespace.MANDATORY);
 
@@ -127,7 +127,7 @@ abstract class InternalInterpreter extends InternalCompiler {
 
     var value = Keyword.get(index);
 
-    writeReservedKeyword(value);
+    writeKeyword(value);
   }
 
   private int loop() {

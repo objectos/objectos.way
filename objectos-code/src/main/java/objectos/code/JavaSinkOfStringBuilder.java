@@ -73,7 +73,7 @@ class JavaSinkOfStringBuilder extends JavaSink {
   protected final void writeRaw(String value) { out.append(value); }
 
   @Override
-  protected final void writeReservedKeyword(Keyword value) { out.append(value); }
+  protected final void writeKeyword(Keyword value) { out.append(value); }
 
   @Override
   protected final void writeStringLiteral(String value) {
