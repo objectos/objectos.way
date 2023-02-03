@@ -126,7 +126,7 @@ public abstract class JavaTemplate {
 
   sealed interface AbstractModifier extends BodyElement {}
 
-  sealed interface AnyType extends BodyElement, ParameterElement {}
+  sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
   sealed interface ArgsPart extends Element {}
 
