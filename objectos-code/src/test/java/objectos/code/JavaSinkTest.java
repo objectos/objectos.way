@@ -220,4 +220,45 @@ public class JavaSinkTest {
     );
   }
 
+  @Test
+  public void testCase06() throws IOException {
+    // @formatter:off
+    var tmpl = new JavaTemplate() {
+      @Override
+      protected final void definition() {
+        _package("test6");
+
+        _public(); _class("Test"); body(
+          _public(), _static(), _class("A"), body(),
+
+          _public(), _static(), _class("B"), body()
+        );
+      }
+    };
+    // @formatter:on
+
+    sink.write(tmpl);
+
+    var path = Path.of("test6", "Test.java");
+
+    var file = directory.resolve(path);
+
+    assertTrue(Files.isRegularFile(file));
+
+    var result = Files.readString(file);
+
+    assertEquals(
+      result,
+      """
+      package test6;
+
+      public class Test {
+        public static class A {}
+
+        public static class B {}
+      }
+      """
+    );
+  }
+
 }

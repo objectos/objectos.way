@@ -1365,6 +1365,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private void topLevelDeclaration() {
+    simpleName(NULL);
+
     declarationAnnotationList();
 
     modifierList();
@@ -1405,8 +1407,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void topLevelDeclarationList() {
-    simpleName(NULL);
-
     if (itemMore()) {
       switch (last()) {
         case _ANNOTATION,
@@ -1452,7 +1452,11 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(ByteCode.IDENTIFIER, proto);
 
-    simpleName(proto);
+    int simpleName = simpleName();
+
+    if (simpleName == NULL) {
+      simpleName(proto);
+    }
 
     lastSet(_IDENTIFIER);
   }
