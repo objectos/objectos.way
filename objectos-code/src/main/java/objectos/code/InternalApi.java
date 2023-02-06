@@ -419,6 +419,7 @@ class InternalApi {
       nextLevel = levelIndex.length;
     }
 
+    levelArray = ObjectArrays.growIfNecessary(levelArray, nextLevel);
     levelIndex = IntArrays.growIfNecessary(levelIndex, nextLevel);
 
     levelAdd(LAMBDA, nextLevel);

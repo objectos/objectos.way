@@ -140,4 +140,53 @@ public class IncludeTest {
     // @formatter:on
   }
 
+  @Test(description = """
+  Include TC04
+
+  ArrayIndexOutOfBounds when included template adds no instructions
+  """)
+  public void testCase04() {
+    // @formatter:off
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Test");
+          body(
+            include(this::level1A),
+            include(this::level1B)
+          );
+        }
+
+        private void level1A() {
+          _int(); id("field");
+        }
+
+        private void level1B() {
+          _void(); method("m", include(this::level2A)); block(
+            invoke("foo", include(this::level2B))
+          );
+        }
+
+        private void level2A() {
+          // empty
+        }
+
+        private void level2B() {
+          s("level 2B");
+        }
+      }.toString(),
+      """
+      class Test {
+        int field;
+
+        void m() {
+          foo("level 2B");
+        }
+      }
+      """
+    );
+    // @formatter:on
+  }
+
 }
