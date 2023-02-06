@@ -330,4 +330,39 @@ public class MethodInvocationExpressionTest {
     // @formatter:on
   }
 
+  @Test(description = """
+  Method Invocation Expresions TC12
+
+  - comma location after expression name
+  """)
+  public void testCase12() {
+    // @formatter:off
+    assertEquals(
+      fix.ture(new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          invoke(
+            "property", nl(),
+
+            t("com.example", "A"), n("B"), nl(),
+
+            s("some text"), nl()
+          );
+        }
+      }),
+
+      """
+      class Invoke {
+        void method() {
+          property(
+            com.example.A.B,
+            "some text"
+          );
+        }
+      }
+      """
+    );
+    // @formatter:on
+  }
+
 }

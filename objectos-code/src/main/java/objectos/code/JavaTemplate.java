@@ -27,6 +27,14 @@ import objectos.lang.Check;
 public abstract class JavaTemplate {
 
   /**
+   * An {@link Element} that can be used with the instructions that take
+   * arguments.
+   *
+   * @see JavaTemplate#invoke(String, ArgsPart...)
+   */
+  protected sealed interface ArgsPart extends Element {}
+
+  /**
    * An {@link Element} that can be used with the
    * {@link JavaTemplate#block(BlockElement...)} method.
    */
@@ -127,8 +135,6 @@ public abstract class JavaTemplate {
   sealed interface AbstractModifier extends BodyElement {}
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
-
-  sealed interface ArgsPart extends Element {}
 
   sealed interface ArrayAccess extends ExpressionPart {}
 

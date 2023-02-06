@@ -664,9 +664,41 @@ class InternalCompiler extends InternalApi {
       return;
     }
 
-    expressionNext(part);
+    switch (part) {
+      case ByteProto.CLASS_INSTANCE_CREATION,
+           ByteProto.CLASS_TYPE,
+           ByteProto.EXPRESSION_NAME,
+           ByteProto.INVOKE,
+           ByteProto.STRING_LITERAL,
+           ByteProto.THIS -> {
+        int next = itemPeek();
 
-    slot();
+        switch (next) {
+          case ByteProto.EXPRESSION_NAME,
+               ByteProto.INVOKE -> {
+            if (lastIs(_NEW_LINE)) {
+              codeAdd(Indentation.CONTINUATION);
+
+              lastSet(_START);
+            }
+
+            codeAdd(Symbol.DOT);
+
+            expression();
+          }
+
+          case ByteProto.ARRAY_ACCESS -> {
+            execute(this::arrayAccess);
+
+            while (itemIs(ByteProto.ARRAY_ACCESS)) {
+              execute(this::arrayAccess);
+            }
+
+            slot();
+          }
+        }
+      }
+    }
 
     if (stop()) {
       return;
@@ -711,42 +743,6 @@ class InternalCompiler extends InternalApi {
 
   private void expressionName() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
-  }
-
-  private void expressionNext(int previous) {
-    switch (previous) {
-      case ByteProto.CLASS_INSTANCE_CREATION,
-           ByteProto.CLASS_TYPE,
-           ByteProto.EXPRESSION_NAME,
-           ByteProto.INVOKE,
-           ByteProto.STRING_LITERAL,
-           ByteProto.THIS -> {
-        int next = itemPeek();
-
-        switch (next) {
-          case ByteProto.EXPRESSION_NAME,
-               ByteProto.INVOKE -> {
-            if (lastIs(_NEW_LINE)) {
-              codeAdd(Indentation.CONTINUATION);
-
-              lastSet(_START);
-            }
-
-            codeAdd(Symbol.DOT);
-
-            expression();
-          }
-
-          case ByteProto.ARRAY_ACCESS -> {
-            execute(this::arrayAccess);
-
-            while (itemIs(ByteProto.ARRAY_ACCESS)) {
-              execute(this::arrayAccess);
-            }
-          }
-        }
-      }
-    }
   }
 
   private void extendsKeyword() {
