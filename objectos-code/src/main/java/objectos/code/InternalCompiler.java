@@ -51,6 +51,8 @@ class InternalCompiler extends InternalApi {
     stackArray[1] = NULL;
     // comma slot
     stackArray[2] = NULL;
+    // topLevel
+    stackArray[3] = NULL;
 
     try {
       compilationUnit();
@@ -300,6 +302,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private void bodyMember() {
+    topLevel(NULL);
+
     var wasEnumConstant = lastIs(_ENUM_CONSTANT);
 
     declarationAnnotationList();
@@ -1364,8 +1368,12 @@ class InternalCompiler extends InternalApi {
     codeAdd(Keyword.THIS);
   }
 
+  private int topLevel() { return stackArray[3]; }
+
+  private void topLevel(int value) { stackArray[3] = value; }
+
   private void topLevelDeclaration() {
-    simpleName(NULL);
+    topLevel(1);
 
     declarationAnnotationList();
 
@@ -1396,17 +1404,11 @@ class InternalCompiler extends InternalApi {
         "no-op top level declaration '%s'".formatted(protoName(next))
       );
     }
-
-    var publicFound = publicFound() != NULL;
-
-    var simpleNameIndex = simpleName();
-
-    var simpleName = (String) objectget(simpleNameIndex);
-
-    autoImports.fileName(publicFound, simpleName);
   }
 
   private void topLevelDeclarationList() {
+    simpleName(NULL);
+
     if (itemMore()) {
       switch (last()) {
         case _ANNOTATION,
@@ -1452,10 +1454,16 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(ByteCode.IDENTIFIER, proto);
 
-    int simpleName = simpleName();
+    simpleName(proto);
 
-    if (simpleName == NULL) {
-      simpleName(proto);
+    var topLevel = topLevel() != NULL;
+
+    if (topLevel) {
+      var publicFound = publicFound() != NULL;
+
+      var fileName = (String) objectget(proto);
+
+      autoImports.fileName(publicFound, fileName);
     }
 
     lastSet(_IDENTIFIER);

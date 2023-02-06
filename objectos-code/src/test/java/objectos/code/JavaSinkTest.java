@@ -229,9 +229,13 @@ public class JavaSinkTest {
         _package("test6");
 
         _public(); _class("Test"); body(
-          _public(), _static(), _class("A"), body(),
+          _public(), _static(), _class("A"), body(
+            constructor(), block()
+          ),
 
-          _public(), _static(), _class("B"), body()
+          _public(), _static(), _class("B"), body(
+            constructor(), block()
+          )
         );
       }
     };
@@ -253,9 +257,13 @@ public class JavaSinkTest {
       package test6;
 
       public class Test {
-        public static class A {}
+        public static class A {
+          A() {}
+        }
 
-        public static class B {}
+        public static class B {
+          B() {}
+        }
       }
       """
     );
