@@ -194,7 +194,7 @@ public abstract class JavaTemplate {
 
   sealed interface FinalModifier extends BodyElement {}
 
-  sealed interface Identifier extends BodyElement, ParameterElement {}
+  sealed interface Identifier extends BlockElement, BodyElement, ParameterElement {}
 
   sealed interface ImplementsKeyword extends BodyElement {}
 
@@ -469,7 +469,17 @@ public abstract class JavaTemplate {
    */
   protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2,
       ArgsPart e3) {
-    return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(), e3.self());
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(),
+      e3.self());
+  }
+
+  /**
+   * TODO
+   */
+  protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2,
+      ArgsPart e3, ArgsPart e4) {
+    return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(),
+      e3.self(), e4.self());
   }
 
   /**
