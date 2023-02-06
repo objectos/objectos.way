@@ -916,8 +916,27 @@ class InternalCompiler extends InternalApi {
     return proto == ByteProto.CLASS_TYPE || proto == ByteProto.PARAMETERIZED_TYPE;
   }
 
+  private boolean isExpressionStartOrClassType(int proto) {
+    return ByteProto.isExpressionStart(proto)
+        || proto == ByteProto.CLASS_TYPE;
+  }
+
   private boolean isModifierOrAnnotation(int proto) {
     return proto == ByteProto.MODIFIER || proto == ByteProto.ANNOTATION;
+  }
+
+  private boolean isVariableInitializerOrClassType(int proto) {
+    if (ByteProto.isExpressionStart(proto) || proto == ByteProto.ARRAY_INITIALIZER) {
+      return true;
+    }
+
+    if (proto == ByteProto.CLASS_TYPE) {
+      int next = itemPeekAhead();
+
+      return next != ByteProto.IDENTIFIER;
+    }
+
+    return false;
   }
 
   private boolean itemIs(int condition) {
@@ -1464,7 +1483,7 @@ class InternalCompiler extends InternalApi {
   private void variableDeclarator() {
     execute(this::identifier);
 
-    if (itemTest(ByteProto::isVariableInitializer)) {
+    if (itemTest(this::isVariableInitializerOrClassType)) {
       codeAdd(Whitespace.OPTIONAL);
       codeAdd(Symbol.ASSIGNMENT);
       codeAdd(Whitespace.OPTIONAL);
@@ -1474,7 +1493,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void variableInitializer() {
-    if (itemTest(ByteProto::isExpressionStart)) {
+    if (itemTest(this::isExpressionStartOrClassType)) {
       expression();
     } else if (itemIs(ByteProto.ARRAY_INITIALIZER)) {
       execute(this::arrayInitializer);

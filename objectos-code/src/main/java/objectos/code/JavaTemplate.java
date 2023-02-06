@@ -817,6 +817,17 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  protected final EnumConstant enumConstant(String name,
+      ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4) {
+    JavaModel.checkIdentifier(name.toString()); // implicit null check
+    var api = api();
+    api.identifierext(name);
+    return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self(), e3.self(), e4.self());
+  }
+
+  /**
+   * TODO
+   */
   protected final SimpleAssigmentOperator gets() {
     return api().itemAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
   }

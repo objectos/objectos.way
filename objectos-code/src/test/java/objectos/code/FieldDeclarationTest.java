@@ -198,4 +198,33 @@ public class FieldDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Field declarations TC07
+
+  - init with static method invocation
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Fields");
+          body(
+            t(_int(), dim()), id("a"), t("test", "Foo"), invoke("a"),
+
+            t(_int(), dim()), id("b"), t("test", "Foo"), n("b")
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        int[] a = test.Foo.a();
+
+        int[] b = test.Foo.b;
+      }
+      """
+    );
+  }
+
 }

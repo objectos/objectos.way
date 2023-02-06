@@ -110,10 +110,6 @@ final class ByteProto {
         && proto >= TYPE_VARIABLE;
   }
 
-  public static boolean isVariableInitializer(int proto) {
-    return isExpressionStart(proto) || proto == ARRAY_INITIALIZER;
-  }
-
   public static boolean isWhitespace(int proto) {
     return proto == NEW_LINE;
   }
