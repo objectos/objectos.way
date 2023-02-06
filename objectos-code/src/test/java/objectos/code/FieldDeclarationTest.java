@@ -181,8 +181,18 @@ public class FieldDeclarationTest {
 
             t(_int(), dim()), id("b"), ainit(i(0)),
 
-            t(_int(), dim()), id("c"), ainit(i(0), i(1))
+            t(_int(), dim()), id("c"), ainit(i(0), i(1)),
+
+            t(_int(), dim()), id("d"), ainit(include(this::many))
           );
+        }
+
+        private void many() {
+          nl();
+
+          for (int i = 0; i < 3; i++) {
+            code(i(i), nl());
+          }
         }
       }.toString(),
 
@@ -193,6 +203,12 @@ public class FieldDeclarationTest {
         int[] b = {0};
 
         int[] c = {0, 1};
+
+        int[] d = {
+          0,
+          1,
+          2
+        };
       }
       """
     );

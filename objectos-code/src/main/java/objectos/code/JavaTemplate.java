@@ -198,7 +198,8 @@ public abstract class JavaTemplate {
 
   sealed interface ImplementsKeyword extends BodyElement {}
 
-  sealed interface Include extends ArgsPart, BlockElement, BodyElement, ParameterElement {}
+  sealed interface Include
+      extends ArgsPart, BlockElement, BodyElement, ParameterElement, VariableInitializer {}
 
   sealed interface IntegerLiteral extends Literal {}
 

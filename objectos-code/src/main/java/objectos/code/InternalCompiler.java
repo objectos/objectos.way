@@ -167,16 +167,32 @@ class InternalCompiler extends InternalApi {
 
   private void arrayInitializer() {
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
+    codeAdd(Indentation.ENTER_BLOCK);
 
     if (itemMore()) {
+      if (lastIs(_NEW_LINE)) {
+        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+      }
+
       variableInitializer();
 
       while (itemMore()) {
-        codeAdd(Symbol.COMMA);
-        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+        slotComma();
+
+        var ws = lastIs(_NEW_LINE)
+            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
+            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
+
+        codeAdd(ws);
 
         variableInitializer();
       }
+    }
+
+    codeAdd(Indentation.EXIT_BLOCK);
+
+    if (lastIs(_NEW_LINE)) {
+      codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
     }
 
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
