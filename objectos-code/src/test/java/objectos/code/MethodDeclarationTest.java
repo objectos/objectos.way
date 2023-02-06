@@ -424,4 +424,34 @@ public class MethodDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Method declarations TC12
+
+  - include parameters
+  """)
+  public void testCase12() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            _abstract(), _void(), method("test0", include(this::params))
+          );
+        }
+
+        private void params() {
+          code(_int(), id("a"));
+          code(t(String.class), id("b"));
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        abstract void test0(int a, java.lang.String b);
+      }
+      """
+    );
+  }
+
 }

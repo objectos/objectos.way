@@ -77,6 +77,15 @@ public abstract class JavaTemplate {
 
   }
 
+  /**
+   * An {@link Element} that can be used with constructs that can declare formal
+   * parameters.
+   *
+   * @see JavaTemplate#constructor(ParameterElement...)
+   * @see JavaTemplate#method(String, ParameterElement...)
+   */
+  protected sealed interface ParameterElement extends Element {}
+
   enum _Ext {
     INSTANCE;
   }
@@ -189,7 +198,7 @@ public abstract class JavaTemplate {
 
   sealed interface ImplementsKeyword extends BodyElement {}
 
-  sealed interface Include extends ArgsPart, BlockElement, BodyElement {}
+  sealed interface Include extends ArgsPart, BlockElement, BodyElement, ParameterElement {}
 
   sealed interface IntegerLiteral extends Literal {}
 
@@ -206,8 +215,6 @@ public abstract class JavaTemplate {
   sealed interface NewLine extends ArgsPart, BlockElement {}
 
   sealed interface PackageKeyword extends Element {}
-
-  sealed interface ParameterElement extends Element {}
 
   sealed interface ParameterizedType extends ReferenceType {}
 
