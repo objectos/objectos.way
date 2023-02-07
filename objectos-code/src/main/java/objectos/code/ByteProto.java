@@ -83,6 +83,7 @@ final class ByteProto {
 
   static final int ARRAY_ACCESS = -43;
   static final int ASSIGNMENT_OPERATOR = -44;
+  static final int EQUALITY_OPERATOR = -45;
 
   private ByteProto() {}
 
@@ -95,13 +96,18 @@ final class ByteProto {
         && proto >= THIS;
   }
 
+  public static boolean isImport(int proto) {
+    return proto == AUTO_IMPORTS;
+  }
+
+  public static boolean isOperator(int proto) {
+    return proto <= ASSIGNMENT_OPERATOR
+        && proto >= EQUALITY_OPERATOR;
+  }
+
   public static boolean isStatementStart(int proto) {
     return proto <= BLOCK
         && proto >= VAR;
-  }
-
-  public static boolean isImport(int proto) {
-    return proto == AUTO_IMPORTS;
   }
 
   public static boolean isType(int proto) {

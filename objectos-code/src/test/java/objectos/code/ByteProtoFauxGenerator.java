@@ -88,5 +88,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ARRAY_ACCESS");
     value("ASSIGNMENT_OPERATOR");
+    value("EQUALITY_OPERATOR");
   }
 }

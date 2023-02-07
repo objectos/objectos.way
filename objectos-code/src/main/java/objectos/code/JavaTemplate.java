@@ -112,6 +112,7 @@ public abstract class JavaTemplate {
       End,
       EnumConstant,
       EnumKeyword,
+      EqualityOperator,
       ExplicitConstructorInvocation,
       ExpressionName,
       ExtendsKeyword,
@@ -183,6 +184,8 @@ public abstract class JavaTemplate {
   sealed interface EnumConstant extends BodyElement {}
 
   sealed interface EnumKeyword extends BodyElement {}
+
+  sealed interface EqualityOperator extends ExpressionPart {}
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
@@ -292,6 +295,17 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * The {@code ==} (equal to) operator.
+   *
+   * @return the {@code ==} (equal to) operator
+   *
+   * @since 0.4.1
+   */
+  protected final EqualityOperator equalTo() {
+    return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.EQUAL_TO.ordinal());
+  }
+
+  /**
    * TODO
    */
   protected final AbstractModifier _abstract() {
@@ -303,6 +317,45 @@ public abstract class JavaTemplate {
    */
   protected final PrimitiveType _boolean() {
     return primitiveType(Keyword.BOOLEAN);
+  }
+
+  /**
+   * TODO
+   */
+  protected final ClassKeyword _class(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+    var api = api();
+    return api.itemAdd(ByteProto.CLASS, api.object(name));
+  }
+
+  /**
+   * TODO
+   */
+  protected final PrimitiveType _double() {
+    return primitiveType(Keyword.DOUBLE);
+  }
+
+  /**
+   * TODO
+   */
+  protected final EnumKeyword _enum(String name) {
+    JavaModel.checkSimpleName(name.toString()); // implicit null check
+    var api = api();
+    return api.itemAdd(ByteProto.ENUM, api.object(name));
+  }
+
+  /**
+   * TODO
+   */
+  protected final ExtendsKeyword _extends() {
+    return api().itemAdd(ByteProto.EXTENDS, ByteProto.NOOP);
+  }
+
+  /**
+   * TODO
+   */
+  protected final FinalModifier _final() {
+    return api().itemAdd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
 
   /**
@@ -363,45 +416,6 @@ public abstract class JavaTemplate {
       ExpressionPart e4, ExpressionPart e5, ExpressionPart e6) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self(), e6.self());
-  }
-
-  /**
-   * TODO
-   */
-  protected final ClassKeyword _class(String name) {
-    JavaModel.checkSimpleName(name.toString()); // implicit null check
-    var api = api();
-    return api.itemAdd(ByteProto.CLASS, api.object(name));
-  }
-
-  /**
-   * TODO
-   */
-  protected final PrimitiveType _double() {
-    return primitiveType(Keyword.DOUBLE);
-  }
-
-  /**
-   * TODO
-   */
-  protected final EnumKeyword _enum(String name) {
-    JavaModel.checkSimpleName(name.toString()); // implicit null check
-    var api = api();
-    return api.itemAdd(ByteProto.ENUM, api.object(name));
-  }
-
-  /**
-   * TODO
-   */
-  protected final ExtendsKeyword _extends() {
-    return api().itemAdd(ByteProto.EXTENDS, ByteProto.NOOP);
-  }
-
-  /**
-   * TODO
-   */
-  protected final FinalModifier _final() {
-    return api().itemAdd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
 
   /**

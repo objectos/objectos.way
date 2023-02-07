@@ -216,10 +216,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void assigmentOperator() {
-    codeAdd(ByteCode.SYMBOL, protoNext());
-  }
-
   private void autoImports() {
     switch (last()) {
       default -> codeAdd(ByteCode.AUTO_IMPORTS0);
@@ -724,17 +720,17 @@ class InternalCompiler extends InternalApi {
       return;
     }
 
-    while (itemIs(ByteProto.ASSIGNMENT_OPERATOR)) {
+    while (itemTest(ByteProto::isOperator)) {
       codeAdd(Whitespace.OPTIONAL);
 
-      execute(this::assigmentOperator);
+      execute(this::operator);
 
       if (itemTest(ByteProto::isExpressionStart)) {
         codeAdd(Whitespace.OPTIONAL);
 
         expression();
       } else {
-        errorRaise("expected expression after assigment operator");
+        errorRaise("expected expression after operator");
       }
     }
   }
@@ -1182,6 +1178,10 @@ class InternalCompiler extends InternalApi {
 
   private Object objectget(int index) {
     return objectArray[index];
+  }
+
+  private void operator() {
+    codeAdd(ByteCode.SYMBOL, protoNext());
   }
 
   private void ordinaryCompilationUnit() {

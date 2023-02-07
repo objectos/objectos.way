@@ -107,6 +107,20 @@ public enum Symbol {
   ASSIGNMENT("="),
 
   /**
+   * The operator {@code ==}
+   *
+   * @since 0.4.1
+   */
+  EQUAL_TO("=="),
+
+  /**
+   * The operator {@code !=}
+   *
+   * @since 0.4.1
+   */
+  NOT_EQUAL_TO("!="),
+
+  /**
    * The operator {@code <}
    */
   LEFT_ANGLE_BRACKET("<"),
