@@ -306,6 +306,17 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * The {@code !=} (not equal to) operator.
+   *
+   * @return the {@code !=} (not equal to) operator
+   *
+   * @since 0.4.1
+   */
+  protected final EqualityOperator notEqualTo() {
+    return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.NOT_EQUAL_TO.ordinal());
+  }
+
+  /**
    * TODO
    */
   protected final AbstractModifier _abstract() {

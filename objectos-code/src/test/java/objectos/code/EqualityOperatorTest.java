@@ -50,4 +50,33 @@ public class EqualityOperatorTest {
     );
   }
 
+  @Test(description = """
+  Equality operators TC02
+
+  - notEqualTo
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("EqualityOperator");
+          body(
+            _void(), method("test"), block(
+              invoke("foo", n("x"), notEqualTo(), n("y"))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class EqualityOperator {
+        void test() {
+          foo(x != y);
+        }
+      }
+      """
+    );
+  }
+
 }
