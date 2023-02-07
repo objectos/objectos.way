@@ -28,6 +28,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("AUTO_IMPORTS");
     value("END_ELEMENT");
+    value("NEW_LINE");
     value("NOOP");
     value("STOP");
 
@@ -65,11 +66,14 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PACKAGE");
     value("TYPE_PARAMETER");
 
-    comment("statements");
+    comment("statement start");
 
     value("BLOCK");
-    value("LOCAL_VARIABLE");
+    value("IF_CONDITION");
+    value("RETURN");
+    value("SUPER");
     value("SUPER_INVOCATION");
+    value("VAR");
 
     comment("expression start");
 
@@ -82,17 +86,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("expression part");
 
-    value("ASSIGNMENT_OPERATOR");
-    value("FIELD_ACCESS");
-
-    comment("stmt/exp");
-
     value("ARRAY_ACCESS");
-    value("NEW");
-    value("NEW_LINE");
-    value("OPERATOR");
-    value("RETURN");
-    value("SUPER");
-    value("VAR");
+    value("ASSIGNMENT_OPERATOR");
   }
 }

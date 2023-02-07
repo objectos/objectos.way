@@ -117,6 +117,7 @@ public abstract class JavaTemplate {
       ExtendsKeyword,
       FinalModifier,
       Identifier,
+      IfCondition,
       ImplementsKeyword,
       IntegerLiteral,
       InterfaceKeyword,
@@ -163,7 +164,7 @@ public abstract class JavaTemplate {
 
   sealed interface AutoImports extends Element {}
 
-  sealed interface Block extends BodyElement, StatementWithoutTrailingSubstatement {}
+  sealed interface Block extends BlockElement, BodyElement {}
 
   sealed interface Body extends BodyElement {}
 
@@ -196,10 +197,13 @@ public abstract class JavaTemplate {
 
   sealed interface Identifier extends BlockElement, BodyElement, ParameterElement {}
 
+  sealed interface IfCondition extends BlockElement {}
+
   sealed interface ImplementsKeyword extends BodyElement {}
 
   sealed interface Include
-      extends ArgsPart, BlockElement, BodyElement, ParameterElement, VariableInitializer {}
+      extends
+      ArgsPart, BlockElement, BodyElement, ExpressionPart, ParameterElement, VariableInitializer {}
 
   sealed interface IntegerLiteral extends Literal {}
 
@@ -234,10 +238,6 @@ public abstract class JavaTemplate {
   sealed interface ReturnKeyword extends BlockElement {}
 
   sealed interface SimpleAssigmentOperator extends ExpressionPart {}
-
-  sealed interface Statement extends Element {}
-
-  sealed interface StatementWithoutTrailingSubstatement extends Statement {}
 
   sealed interface StaticModifier extends BodyElement {}
 
@@ -303,6 +303,66 @@ public abstract class JavaTemplate {
    */
   protected final PrimitiveType _boolean() {
     return primitiveType(Keyword.BOOLEAN);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.1
+   */
+  protected final IfCondition _if(ExpressionPart e1) {
+    return api().elem(ByteProto.IF_CONDITION, e1.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.1
+   */
+  protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2) {
+    return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.1
+   */
+  protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3) {
+    return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.1
+   */
+  protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3,
+      ExpressionPart e4) {
+    return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
+      e4.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.1
+   */
+  protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3,
+      ExpressionPart e4, ExpressionPart e5) {
+    return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.1
+   */
+  protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3,
+      ExpressionPart e4, ExpressionPart e5, ExpressionPart e6) {
+    return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
+      e4.self(), e5.self(), e6.self());
   }
 
   /**

@@ -853,6 +853,38 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
 
+  private void ifCondition() {
+    codeAdd(Keyword.IF);
+
+    codeAdd(Whitespace.OPTIONAL);
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    expression();
+
+    if (itemMore()) {
+      int proto = itemPeek();
+
+      errorRaise(
+        "expected expression end but found '%s'".formatted(protoName(proto))
+      );
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
+  private void ifStatement() {
+    execute(this::ifCondition);
+
+    if (itemTest(ByteProto::isStatementStart)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      statement();
+    } else {
+      errorRaise("no statement after if condition");
+    }
+  }
+
   private void implementsClause() {
     codeAdd(Whitespace.MANDATORY);
 
@@ -1205,6 +1237,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CLASS -> "Class Keyword";
 
+      case ByteProto.IF_CONDITION -> "If Condition";
+
       case ByteProto.INTERFACE -> "Interface";
 
       case ByteProto.INVOKE -> "Invoke";
@@ -1269,7 +1303,6 @@ class InternalCompiler extends InternalApi {
     codeArray[index + 1] = Symbol.SEMICOLON.ordinal();
   }
 
-  @SuppressWarnings("unused")
   private void statement() {
     int start = itemPeek();
 
@@ -1305,6 +1338,8 @@ class InternalCompiler extends InternalApi {
           localVariableDeclaration();
         }
       }
+
+      case ByteProto.IF_CONDITION -> ifStatement();
 
       case ByteProto.RETURN -> returnStatement();
 

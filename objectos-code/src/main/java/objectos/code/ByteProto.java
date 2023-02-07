@@ -23,72 +23,66 @@ final class ByteProto {
 
   static final int AUTO_IMPORTS = -1;
   static final int END_ELEMENT = -2;
-  static final int NOOP = -3;
-  static final int STOP = -4;
+  static final int NEW_LINE = -3;
+  static final int NOOP = -4;
+  static final int STOP = -5;
 
   //types
 
-  static final int ARRAY_TYPE = -5;
-  static final int CLASS_TYPE = -6;
-  static final int NO_TYPE = -7;
-  static final int PARAMETERIZED_TYPE = -8;
-  static final int PRIMITIVE_TYPE = -9;
-  static final int TYPE_VARIABLE = -10;
-  static final int VOID = -11;
+  static final int ARRAY_TYPE = -6;
+  static final int CLASS_TYPE = -7;
+  static final int NO_TYPE = -8;
+  static final int PARAMETERIZED_TYPE = -9;
+  static final int PRIMITIVE_TYPE = -10;
+  static final int TYPE_VARIABLE = -11;
+  static final int VOID = -12;
 
   //type aux
 
-  static final int ARRAY_DIMENSION = -12;
-  static final int ARRAY_INITIALIZER = -13;
-  static final int ELLIPSIS = -14;
+  static final int ARRAY_DIMENSION = -13;
+  static final int ARRAY_INITIALIZER = -14;
+  static final int ELLIPSIS = -15;
 
   //declarations
 
-  static final int ANNOTATION = -15;
-  static final int BODY = -16;
-  static final int CLASS = -17;
-  static final int COMPILATION_UNIT = -18;
-  static final int CONSTRUCTOR = -19;
-  static final int ENUM = -20;
-  static final int ENUM_CONSTANT = -21;
-  static final int EXTENDS = -22;
-  static final int IDENTIFIER = -23;
-  static final int IMPLEMENTS = -24;
-  static final int INTERFACE = -25;
-  static final int METHOD = -26;
-  static final int MODIFIER = -27;
-  static final int PACKAGE = -28;
-  static final int TYPE_PARAMETER = -29;
+  static final int ANNOTATION = -16;
+  static final int BODY = -17;
+  static final int CLASS = -18;
+  static final int COMPILATION_UNIT = -19;
+  static final int CONSTRUCTOR = -20;
+  static final int ENUM = -21;
+  static final int ENUM_CONSTANT = -22;
+  static final int EXTENDS = -23;
+  static final int IDENTIFIER = -24;
+  static final int IMPLEMENTS = -25;
+  static final int INTERFACE = -26;
+  static final int METHOD = -27;
+  static final int MODIFIER = -28;
+  static final int PACKAGE = -29;
+  static final int TYPE_PARAMETER = -30;
 
-  //statements
+  //statement start
 
-  static final int BLOCK = -30;
-  static final int LOCAL_VARIABLE = -31;
-  static final int SUPER_INVOCATION = -32;
+  static final int BLOCK = -31;
+  static final int IF_CONDITION = -32;
+  static final int RETURN = -33;
+  static final int SUPER = -34;
+  static final int SUPER_INVOCATION = -35;
+  static final int VAR = -36;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -33;
-  static final int EXPRESSION_NAME = -34;
-  static final int INVOKE = -35;
-  static final int PRIMITIVE_LITERAL = -36;
-  static final int STRING_LITERAL = -37;
-  static final int THIS = -38;
+  static final int CLASS_INSTANCE_CREATION = -37;
+  static final int EXPRESSION_NAME = -38;
+  static final int INVOKE = -39;
+  static final int PRIMITIVE_LITERAL = -40;
+  static final int STRING_LITERAL = -41;
+  static final int THIS = -42;
 
   //expression part
 
-  static final int ASSIGNMENT_OPERATOR = -39;
-  static final int FIELD_ACCESS = -40;
-
-  //stmt/exp
-
-  static final int ARRAY_ACCESS = -41;
-  static final int NEW = -42;
-  static final int NEW_LINE = -43;
-  static final int OPERATOR = -44;
-  static final int RETURN = -45;
-  static final int SUPER = -46;
-  static final int VAR = -47;
+  static final int ARRAY_ACCESS = -43;
+  static final int ASSIGNMENT_OPERATOR = -44;
 
   private ByteProto() {}
 
@@ -99,6 +93,11 @@ final class ByteProto {
   public static boolean isExpressionStart(int proto) {
     return proto <= CLASS_INSTANCE_CREATION
         && proto >= THIS;
+  }
+
+  public static boolean isStatementStart(int proto) {
+    return proto <= BLOCK
+        && proto >= VAR;
   }
 
   public static boolean isImport(int proto) {

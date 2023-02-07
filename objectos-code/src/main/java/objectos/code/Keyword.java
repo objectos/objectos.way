@@ -60,6 +60,13 @@ public enum Keyword {
   FINAL,
 
   /**
+   * The reserved keyword {@code if}.
+   *
+   * @since 0.4.1
+   */
+  IF,
+
+  /**
    * The reserved keyword {@code implements}.
    */
   IMPLEMENTS,
