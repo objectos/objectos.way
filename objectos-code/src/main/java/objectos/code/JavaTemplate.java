@@ -138,6 +138,7 @@ public abstract class JavaTemplate {
       StringLiteral,
       SuperKeyword,
       ThisKeyword,
+      ThrowKeyword,
       TypeParameter,
       TypeVariable,
       VarKeyword,
@@ -250,6 +251,8 @@ public abstract class JavaTemplate {
 
   sealed interface ThisKeyword extends ExpressionPart {}
 
+  sealed interface ThrowKeyword extends BlockElement {}
+
   sealed interface TypeParameter extends BodyElement {}
 
   sealed interface TypeParameterBound extends Element {}
@@ -292,28 +295,6 @@ public abstract class JavaTemplate {
     sink.eval(this);
 
     return out.toString();
-  }
-
-  /**
-   * The {@code ==} (equal to) operator.
-   *
-   * @return the {@code ==} (equal to) operator
-   *
-   * @since 0.4.1
-   */
-  protected final EqualityOperator equalTo() {
-    return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.EQUAL_TO.ordinal());
-  }
-
-  /**
-   * The {@code !=} (not equal to) operator.
-   *
-   * @return the {@code !=} (not equal to) operator
-   *
-   * @since 0.4.1
-   */
-  protected final EqualityOperator notEqualTo() {
-    return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.NOT_EQUAL_TO.ordinal());
   }
 
   /**
@@ -572,6 +553,29 @@ public abstract class JavaTemplate {
    */
   protected final ThisKeyword _this() {
     return api().itemAdd(ByteProto.THIS, ByteProto.NOOP);
+  }
+
+  /**
+   * Begins a {@code throw} statement by emitting the {@code throw} keyword.
+   *
+   * <p>
+   * A typical use is:
+   *
+   * <pre>
+   * _throw(); _new(t(IOException.class));</pre>
+   *
+   * <p>
+   * Which generates the following Java code:
+   *
+   * <pre>
+   * throw new java.io.IOException();</pre>
+   *
+   * @return the {@code throw} keyword
+   *
+   * @since 0.4.1
+   */
+  protected final ThrowKeyword _throw() {
+    return api().itemAdd(ByteProto.THROW, ByteProto.NOOP);
   }
 
   /**
@@ -922,6 +926,17 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * The {@code ==} (equal to) operator.
+   *
+   * @return the {@code ==} (equal to) operator
+   *
+   * @since 0.4.1
+   */
+  protected final EqualityOperator equalTo() {
+    return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.EQUAL_TO.ordinal());
+  }
+
+  /**
    * TODO
    */
   protected final SimpleAssigmentOperator gets() {
@@ -1166,6 +1181,17 @@ public abstract class JavaTemplate {
    */
   protected final NewLine nl() {
     return api().itemAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
+  }
+
+  /**
+   * The {@code !=} (not equal to) operator.
+   *
+   * @return the {@code !=} (not equal to) operator
+   *
+   * @since 0.4.1
+   */
+  protected final EqualityOperator notEqualTo() {
+    return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.NOT_EQUAL_TO.ordinal());
   }
 
   /**

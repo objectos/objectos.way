@@ -1268,11 +1268,15 @@ class InternalCompiler extends InternalApi {
   private void returnStatement() {
     execute(this::returnKeyword);
 
-    codeAdd(Whitespace.MANDATORY);
+    if (itemTest(ByteProto::isExpressionStart)) {
+      codeAdd(Whitespace.MANDATORY);
 
-    expression();
+      expression();
 
-    codeAdd(Symbol.SEMICOLON);
+      codeAdd(Symbol.SEMICOLON);
+    } else {
+      errorRaise("expected start of expression");
+    }
   }
 
   private int simpleName() { return stackArray[0]; }
@@ -1347,6 +1351,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.SUPER_INVOCATION -> superInvocation();
 
+      case ByteProto.THROW -> throwStatement();
+
       case ByteProto.VAR -> localVariableDeclaration();
 
       default -> errorRaise(
@@ -1401,6 +1407,24 @@ class InternalCompiler extends InternalApi {
 
   private void thisKeyword() {
     codeAdd(Keyword.THIS);
+  }
+
+  private void throwKeyword() {
+    codeAdd(Keyword.THROW);
+  }
+
+  private void throwStatement() {
+    execute(this::throwKeyword);
+
+    if (itemTest(ByteProto::isExpressionStart)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      expression();
+
+      codeAdd(Symbol.SEMICOLON);
+    } else {
+      errorRaise("expected start of expression");
+    }
   }
 
   private int topLevel() { return stackArray[3]; }

@@ -132,6 +132,13 @@ public enum Keyword {
   THIS,
 
   /**
+   * The reserved keyword {@code throw}.
+   *
+   * @since 0.4.1
+   */
+  THROW,
+
+  /**
    * The contextual keyword {@code var}.
    */
   VAR,

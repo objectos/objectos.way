@@ -68,22 +68,23 @@ final class ByteProto {
   static final int RETURN = -33;
   static final int SUPER = -34;
   static final int SUPER_INVOCATION = -35;
-  static final int VAR = -36;
+  static final int THROW = -36;
+  static final int VAR = -37;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -37;
-  static final int EXPRESSION_NAME = -38;
-  static final int INVOKE = -39;
-  static final int PRIMITIVE_LITERAL = -40;
-  static final int STRING_LITERAL = -41;
-  static final int THIS = -42;
+  static final int CLASS_INSTANCE_CREATION = -38;
+  static final int EXPRESSION_NAME = -39;
+  static final int INVOKE = -40;
+  static final int PRIMITIVE_LITERAL = -41;
+  static final int STRING_LITERAL = -42;
+  static final int THIS = -43;
 
   //expression part
 
-  static final int ARRAY_ACCESS = -43;
-  static final int ASSIGNMENT_OPERATOR = -44;
-  static final int EQUALITY_OPERATOR = -45;
+  static final int ARRAY_ACCESS = -44;
+  static final int ASSIGNMENT_OPERATOR = -45;
+  static final int EQUALITY_OPERATOR = -46;
 
   private ByteProto() {}
 

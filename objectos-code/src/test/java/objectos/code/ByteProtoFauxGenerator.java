@@ -73,6 +73,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("RETURN");
     value("SUPER");
     value("SUPER_INVOCATION");
+    value("THROW");
     value("VAR");
 
     comment("expression start");
