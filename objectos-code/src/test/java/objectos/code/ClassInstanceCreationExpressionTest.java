@@ -17,12 +17,10 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.code.Fixture.Kind;
+import java.util.HashMap;
 import org.testng.annotations.Test;
 
 public class ClassInstanceCreationExpressionTest {
-
-  private final Fixture fix = new Fixture("New", Kind.VOID_METHOD);
 
   @Test(description = """
   Class Instance Creation Expressions TC01
@@ -30,22 +28,26 @@ public class ClassInstanceCreationExpressionTest {
   - new ClassOrInterfaceTypeToInstantiate ( [ArgumentList] )
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          _new(t("objectos.code", "Foo"));
+          _class("New");
+          body(
+            _void(), method("test"), block(
+              _new(t("objectos.code", "Foo")),
 
-          _new(t("objectos.code", "Foo"), s("a"));
+              _new(t("objectos.code", "Foo"), s("a")),
 
-          _new(t("objectos.code", "Foo"), s("a"), s("b"));
+              _new(t("objectos.code", "Foo"), s("a"), s("b"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class New {
-        void method() {
+        void test() {
           new objectos.code.Foo();
           new objectos.code.Foo("a");
           new objectos.code.Foo("a", "b");
@@ -53,7 +55,35 @@ public class ClassInstanceCreationExpressionTest {
       }
       """
     );
-    // @formatter:on
+  }
+
+  @Test(description = """
+  Class Instance Creation Expressions TC03
+
+  - parameterized type
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("New");
+          body(
+            _void(), method("test"), block(
+              _new(t(t(HashMap.class), t(String.class), t(Integer.class)))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class New {
+        void test() {
+          new java.util.HashMap<java.lang.String, java.lang.Integer>();
+        }
+      }
+      """
+    );
   }
 
 }

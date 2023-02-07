@@ -175,7 +175,10 @@ public abstract class JavaTemplate {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassType extends ArgsPart, ReferenceType, TypeParameterBound {}
+  sealed interface ClassOrParameterizedType extends Element {}
+
+  sealed interface ClassType
+      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {}
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 
@@ -224,11 +227,11 @@ public abstract class JavaTemplate {
 
   sealed interface NewLine extends ArgsPart, BlockElement {}
 
-  sealed interface NullLiteral extends BlockElement {}
+  sealed interface NullLiteral extends ExpressionPart {}
 
   sealed interface PackageKeyword extends Element {}
 
-  sealed interface ParameterizedType extends ReferenceType {}
+  sealed interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
 
   sealed interface PrimitiveType extends AnyType, BodyElement,
       /* to remove */
@@ -347,29 +350,6 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * The {@code null} literal.
-   *
-   * <p>
-   * Typical uses are:
-   *
-   * <pre>
-   * // each of the following Objectos Code:
-   * _if(n("x"), equalTo(), _null());
-   * _return(); _null();
-   *
-   * // generates the following Java code:
-   * if (x == null);
-   * return null;</pre>
-   *
-   * @return the {@code null} literal
-   *
-   * @since 0.4.1
-   */
-  protected final NullLiteral _null() {
-    return api().itemAdd(ByteProto.NULL_LITERAL, ByteProto.NOOP);
-  }
-
-  /**
    * TODO
    */
   protected final FinalModifier _final() {
@@ -462,7 +442,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ClassInstanceCreationExpression _new(ClassType type) {
+  protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self()
     );
@@ -471,7 +451,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ClassInstanceCreationExpression _new(ClassType type,
+  protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type,
       ArgsPart arg1) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self(),
@@ -482,12 +462,35 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ClassInstanceCreationExpression _new(ClassType type,
+  protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type,
       ArgsPart arg1, ArgsPart arg2) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self(),
       arg1.self(), arg2.self()
     );
+  }
+
+  /**
+   * The {@code null} literal.
+   *
+   * <p>
+   * Typical uses are:
+   *
+   * <pre>
+   * // each of the following Objectos Code:
+   * _if(n("x"), equalTo(), _null());
+   * _return(); _null();
+   *
+   * // generates the following Java code:
+   * if (x == null);
+   * return null;</pre>
+   *
+   * @return the {@code null} literal
+   *
+   * @since 0.4.1
+   */
+  protected final NullLiteral _null() {
+    return api().itemAdd(ByteProto.NULL_LITERAL, ByteProto.NOOP);
   }
 
   /**
