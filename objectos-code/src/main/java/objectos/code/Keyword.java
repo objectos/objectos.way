@@ -92,6 +92,13 @@ public enum Keyword {
   NEW,
 
   /**
+   * The reserved keyword {@code null}.
+   *
+   * @since 0.4.1
+   */
+  NULL,
+
+  /**
    * The reserved keyword {@code package}.
    */
   PACKAGE,

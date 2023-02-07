@@ -126,6 +126,7 @@ public abstract class JavaTemplate {
       Invoke,
       NewKeyword,
       NewLine,
+      NullLiteral,
       PackageKeyword,
       ParameterizedType,
       PrimitiveType,
@@ -222,6 +223,8 @@ public abstract class JavaTemplate {
   sealed interface NewKeyword extends BlockElement {}
 
   sealed interface NewLine extends ArgsPart, BlockElement {}
+
+  sealed interface NullLiteral extends BlockElement {}
 
   sealed interface PackageKeyword extends Element {}
 
@@ -341,6 +344,29 @@ public abstract class JavaTemplate {
    */
   protected final ExtendsKeyword _extends() {
     return api().itemAdd(ByteProto.EXTENDS, ByteProto.NOOP);
+  }
+
+  /**
+   * The {@code null} literal.
+   *
+   * <p>
+   * Typical uses are:
+   *
+   * <pre>
+   * // each of the following Objectos Code:
+   * _if(n("x"), equalTo(), _null());
+   * _return(); _null();
+   *
+   * // generates the following Java code:
+   * if (x == null);
+   * return null;</pre>
+   *
+   * @return the {@code null} literal
+   *
+   * @since 0.4.1
+   */
+  protected final NullLiteral _null() {
+    return api().itemAdd(ByteProto.NULL_LITERAL, ByteProto.NOOP);
   }
 
   /**

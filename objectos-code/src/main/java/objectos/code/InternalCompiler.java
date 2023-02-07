@@ -745,6 +745,8 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.INVOKE -> invoke();
 
+      case ByteProto.NULL_LITERAL -> nullLiteral();
+
       case ByteProto.PRIMITIVE_LITERAL -> primitiveLiteral();
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
@@ -755,6 +757,10 @@ class InternalCompiler extends InternalApi {
         "no-op expression part '%s'".formatted(protoName(proto))
       );
     }
+  }
+
+  private void nullLiteral() {
+    codeAdd(Keyword.NULL);
   }
 
   private void expressionName() {

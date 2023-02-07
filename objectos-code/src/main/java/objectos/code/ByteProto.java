@@ -17,8 +17,6 @@ package objectos.code;
 
 final class ByteProto {
 
-  static final int NULL = Integer.MIN_VALUE;
-
   //internal instructions
 
   static final int AUTO_IMPORTS = -1;
@@ -76,15 +74,16 @@ final class ByteProto {
   static final int CLASS_INSTANCE_CREATION = -38;
   static final int EXPRESSION_NAME = -39;
   static final int INVOKE = -40;
-  static final int PRIMITIVE_LITERAL = -41;
-  static final int STRING_LITERAL = -42;
-  static final int THIS = -43;
+  static final int NULL_LITERAL = -41;
+  static final int PRIMITIVE_LITERAL = -42;
+  static final int STRING_LITERAL = -43;
+  static final int THIS = -44;
 
   //expression part
 
-  static final int ARRAY_ACCESS = -44;
-  static final int ASSIGNMENT_OPERATOR = -45;
-  static final int EQUALITY_OPERATOR = -46;
+  static final int ARRAY_ACCESS = -45;
+  static final int ASSIGNMENT_OPERATOR = -46;
+  static final int EQUALITY_OPERATOR = -47;
 
   private ByteProto() {}
 
