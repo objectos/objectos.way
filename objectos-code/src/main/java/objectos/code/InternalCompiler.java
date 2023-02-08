@@ -339,7 +339,11 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CONSTRUCTOR -> constructorDeclaration();
 
+      case ByteProto.ENUM -> enumDeclaration();
+
       case ByteProto.ENUM_CONSTANT -> execute(this::enumConstant);
+
+      case ByteProto.INTERFACE -> interfaceDeclaration();
 
       case ByteProto.TYPE_PARAMETER -> {
         typeParameterList();

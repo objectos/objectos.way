@@ -324,4 +324,37 @@ public class ClassDeclarationTest {
     // @formatter:on
   }
 
+  @Test(description = """
+  Class declarations TC10
+
+  - nested interface declaration
+  """)
+  public void testCase10() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("A");
+          body(
+            _interface("X"), body(),
+
+            _enum("Y"), body(
+              enumConstant("INSTANCE")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class A {
+        interface X {}
+
+        enum Y {
+          INSTANCE;
+        }
+      }
+      """
+    );
+  }
+
 }
