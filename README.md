@@ -1,6 +1,6 @@
 # Objectos
 
-Objectos is a collection of open-source Java libraries.
+Objectos is a suite of open-source Java libraries.
 
 Documentation for the current release:
 
