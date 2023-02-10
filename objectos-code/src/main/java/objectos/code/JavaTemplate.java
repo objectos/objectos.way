@@ -304,14 +304,18 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code abstract} modifier.
+   *
+   * @return the {@code abstract} modifier
    */
   protected final AbstractModifier _abstract() {
     return modifier(Keyword.ABSTRACT);
   }
 
   /**
-   * TODO
+   * The {@code boolean} primitive type.
+   *
+   * @return the {@code boolean} primitive type
    */
   protected final PrimitiveType _boolean() {
     return primitiveType(Keyword.BOOLEAN);
@@ -327,7 +331,9 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code double} primitive type.
+   *
+   * @return the {@code double} primitive type
    */
   protected final PrimitiveType _double() {
     return primitiveType(Keyword.DOUBLE);
@@ -350,14 +356,32 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code final} modifier.
+   *
+   * @return the {@code final} modifier
    */
   protected final FinalModifier _final() {
     return api().itemAdd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
 
   /**
-   * TODO
+   * The {@code if ( Expression )} clause with an expression made of 1 part.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * _if(n("condition"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (condition);</pre>
+   *
+   * @param e1 the first part of the expression
+   *
+   * @return the {@code if ( Expression )} clause
    *
    * @since 0.4.1
    */
@@ -366,7 +390,24 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code if ( Expression )} clause with an expression made of 2 parts.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * _if(n("x"), n("valid"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (x.valid);</pre>
+   *
+   * @param e1 the first part of the expression
+   * @param e2 the second part of the expression
+   *
+   * @return the {@code if ( Expression )} clause
    *
    * @since 0.4.1
    */
@@ -375,7 +416,25 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code if ( Expression )} clause with an expression made of 3 parts.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * _if(n("x"), equalTo(), n("y"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (x == y);</pre>
+   *
+   * @param e1 the first part of the expression
+   * @param e2 the second part of the expression
+   * @param e3 the third part of the expression
+   *
+   * @return the {@code if ( Expression )} clause
    *
    * @since 0.4.1
    */
@@ -384,7 +443,26 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code if ( Expression )} clause with an expression made of 4 parts.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * _if(n("x"), n("y"), notEqualTo(), _null())</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (x.y != null);</pre>
+   *
+   * @param e1 the first part of the expression
+   * @param e2 the second part of the expression
+   * @param e3 the third part of the expression
+   * @param e4 the fourth part of the expression
+   *
+   * @return the {@code if ( Expression )} clause
    *
    * @since 0.4.1
    */
@@ -395,7 +473,27 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code if ( Expression )} clause with an expression made of 5 parts.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * _if(n("a"), n("b"), equalTo(), n("c"), n("d"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (a.b == c.d);</pre>
+   *
+   * @param e1 the first part of the expression
+   * @param e2 the second part of the expression
+   * @param e3 the third part of the expression
+   * @param e4 the fourth part of the expression
+   * @param e5 the fifth part of the expression
+   *
+   * @return the {@code if ( Expression )} clause
    *
    * @since 0.4.1
    */
@@ -406,7 +504,28 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code if ( Expression )} clause with an expression made of 6 parts.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * _if(n("a"), dim(i(0)), dim(i(1)), dim(i(3)), equalTo(), n("x"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (a[0][1][3] == x);</pre>
+   *
+   * @param e1 the first part of the expression
+   * @param e2 the second part of the expression
+   * @param e3 the third part of the expression
+   * @param e4 the fourth part of the expression
+   * @param e5 the fifth part of the expression
+   * @param e6 the sixth part of the expression
+   *
+   * @return the {@code if ( Expression )} clause
    *
    * @since 0.4.1
    */
@@ -424,7 +543,9 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code int} primitive type.
+   *
+   * @return the {@code int} primitive type
    */
   protected final PrimitiveType _int() {
     return primitiveType(Keyword.INT);
@@ -504,21 +625,27 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code private} modifier.
+   *
+   * @return the {@code private} modifier
    */
   protected final PrivateModifier _private() {
     return modifier(Keyword.PRIVATE);
   }
 
   /**
-   * TODO
+   * The {@code protected} modifier.
+   *
+   * @return the {@code protected} modifier
    */
   protected final ProtectedModifier _protected() {
     return modifier(Keyword.PROTECTED);
   }
 
   /**
-   * TODO
+   * The {@code public} modifier.
+   *
+   * @return the {@code public} modifier
    */
   protected final PublicModifier _public() {
     return modifier(Keyword.PUBLIC);
@@ -532,7 +659,9 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The {@code static} modifier.
+   *
+   * @return the {@code static} modifier
    */
   protected final StaticModifier _static() {
     return modifier(Keyword.STATIC);
@@ -966,7 +1095,21 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The simple assignment operator {@code =}.
+   *
+   * <p>
+   * The following Objectos Code example:
+   *
+   * <pre>
+   * _this(), n("x"), gets(), n("x")</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * this.x = x;</pre>
+   *
+   * @return the simple assignment operator {@code =}
    */
   protected final SimpleAssigmentOperator gets() {
     return api().itemAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
