@@ -193,7 +193,9 @@ public abstract class JavaTemplate {
   sealed interface ClassOrParameterizedType extends Element {}
 
   sealed interface ClassType
-      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {}
+      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {
+    ExpressionName n(String name);
+  }
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 

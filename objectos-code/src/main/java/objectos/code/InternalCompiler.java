@@ -489,6 +489,8 @@ class InternalCompiler extends InternalApi {
     }
 
     lastSet(_IDENTIFIER);
+
+    dotIfPossible();
   }
 
   private void codeAdd(Indentation value) { codeAdd(ByteCode.INDENTATION, value.ordinal()); }
@@ -593,8 +595,27 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void dot() {
+    // skip ByteProto.DOT
+    protoIndex++;
+
+    codeAdd(Symbol.DOT);
+
+    expressionBegin(protoNext());
+  }
+
+  private void dotIfPossible() {
+    while (protoPeek() == ByteProto.DOT) {
+      dot();
+    }
+  }
+
   private void ellipsis() {
     codeAdd(Symbol.ELLIPSIS);
+  }
+
+  private void elseKeyword() {
+    codeAdd(Keyword.ELSE);
   }
 
   private void enumConstant() {
@@ -739,15 +760,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void dot() {
-    // skip ByteProto.DOT
-    protoIndex++;
-
-    codeAdd(Symbol.DOT);
-
-    expressionBegin(protoNext());
-  }
-
   private void expressionBegin(int proto) {
     switch (proto) {
       case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
@@ -772,16 +784,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void nullLiteral() {
-    codeAdd(Keyword.NULL);
-  }
-
   private void expressionName() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
 
-    while (protoPeek() == ByteProto.DOT) {
-      dot();
-    }
+    dotIfPossible();
   }
 
   private void extendsKeyword() {
@@ -916,10 +922,6 @@ class InternalCompiler extends InternalApi {
         errorRaise("no statement after the `else` keyword");
       }
     }
-  }
-
-  private void elseKeyword() {
-    codeAdd(Keyword.ELSE);
   }
 
   private void implementsClause() {
@@ -1216,6 +1218,10 @@ class InternalCompiler extends InternalApi {
   }
 
   private void noop() {}
+
+  private void nullLiteral() {
+    codeAdd(Keyword.NULL);
+  }
 
   private Object objectget(int index) {
     return objectArray[index];

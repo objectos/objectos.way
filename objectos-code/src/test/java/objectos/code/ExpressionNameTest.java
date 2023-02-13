@@ -69,9 +69,9 @@ public class ExpressionNameTest {
           _class("ExpressionName");
           body(
             _void(), method("method"), block(
-              invoke("test", t("test", "Suit"), n("CLUBS")), end(),
+              invoke("test", t("test", "Suit").n("CLUBS")), end(),
 
-              invoke("test", t("test", "Suit"), n("CLUBS").n("field"))
+              invoke("test", t("test", "Suit").n("CLUBS").n("field"))
             )
           );
         }
