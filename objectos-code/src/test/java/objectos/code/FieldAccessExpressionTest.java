@@ -17,12 +17,9 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class FieldAccessExpressionTest {
-
-  private final Fixture fix = new Fixture("FieldAccess", Kind.VOID_METHOD);
 
   @Test(description = """
   Field Access Expressions TC01
@@ -30,27 +27,39 @@ public class FieldAccessExpressionTest {
   - Primary . Identifier
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          _this(); n("x"); gets(); n("y"); end();
+          _class("FieldAccess");
+          body(
+            _void(), method("method"), block(
+              _this().n("x"), gets(), n("y"), end(),
 
-          invoke("x"); invoke("y"); n("z"); gets(); n("foo");
+              invoke("x"), invoke("y").n("z"), gets(), n("foo"), end(),
+
+              n("comparator"), gets(), s("abc").n("CASE_INSENSITIVE_ORDER"), end(),
+
+              n("a"), gets(), _new(t("test", "Foo")).n("field"), end(),
+
+              n("b"), gets(), n("array"), dim(i(0)).n("field")
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class FieldAccess {
         void method() {
           this.x = y;
           x().y().z = foo;
+          comparator = "abc".CASE_INSENSITIVE_ORDER;
+          a = new test.Foo().field;
+          b = array[0].field;
         }
       }
       """
     );
-    // @formatter:on
   }
 
 }

@@ -152,6 +152,11 @@ class InternalCompiler extends InternalApi {
     expression();
 
     codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
+
+    // ByteProto.END_ELEMENT;
+    protoNext();
+
+    dotIfPossible();
   }
 
   private void arrayDimension() {
@@ -411,6 +416,11 @@ class InternalCompiler extends InternalApi {
     executeSwitch(this::type);
 
     argumentList();
+
+    // ByteProto.END_ELEMENT
+    protoNext();
+
+    dotIfPossible();
   }
 
   private void classKeyword() {
@@ -996,6 +1006,11 @@ class InternalCompiler extends InternalApi {
     execute(this::identifier);
 
     argumentList();
+
+    // ByteProto.END_ELEMENT
+    protoNext();
+
+    dotIfPossible();
   }
 
   private boolean isArgumentStart(int proto) {
@@ -1434,6 +1449,8 @@ class InternalCompiler extends InternalApi {
 
   private void stringLiteral() {
     codeAdd(ByteCode.STRING_LITERAL, protoNext());
+
+    dotIfPossible();
   }
 
   private void superInvocation() {
@@ -1460,6 +1477,11 @@ class InternalCompiler extends InternalApi {
 
   private void thisKeyword() {
     codeAdd(Keyword.THIS);
+
+    // ByteProto.NOP
+    protoNext();
+
+    dotIfPossible();
   }
 
   private void throwKeyword() {

@@ -164,7 +164,7 @@ public abstract class JavaTemplate {
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
-  sealed interface ArrayAccess extends ExpressionPart {}
+  sealed interface ArrayAccess extends PrimaryNoNewArray {}
 
   sealed interface ArrayDimension extends ArrayTypeElement {}
 
@@ -186,7 +186,7 @@ public abstract class JavaTemplate {
 
   sealed interface Body extends BodyElement {}
 
-  sealed interface ClassInstanceCreationExpression extends ExpressionPart {}
+  sealed interface ClassInstanceCreationExpression extends PrimaryNoNewArray {}
 
   sealed interface ClassKeyword extends BodyElement {}
 
@@ -213,9 +213,7 @@ public abstract class JavaTemplate {
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends ExpressionPart {
-    ExpressionName n(String name);
-  }
+  sealed interface ExpressionName extends PrimaryNoNewArray {}
 
   sealed interface ExpressionPart
       extends ArgsPart, BlockElement, BodyElement, VariableInitializer {}
@@ -238,7 +236,7 @@ public abstract class JavaTemplate {
 
   sealed interface InterfaceKeyword extends BodyElement {}
 
-  sealed interface Invoke extends ExpressionPart {}
+  sealed interface Invoke extends PrimaryNoNewArray {}
 
   sealed interface Literal extends AtElement, ExpressionPart {}
 
@@ -272,11 +270,11 @@ public abstract class JavaTemplate {
 
   sealed interface StaticModifier extends BodyElement {}
 
-  sealed interface StringLiteral extends Literal {}
+  sealed interface StringLiteral extends Literal, PrimaryNoNewArray {}
 
   sealed interface SuperKeyword extends BlockElement {}
 
-  sealed interface ThisKeyword extends ExpressionPart {}
+  sealed interface ThisKeyword extends PrimaryNoNewArray {}
 
   sealed interface ThrowKeyword extends BlockElement {}
 
@@ -293,6 +291,12 @@ public abstract class JavaTemplate {
   sealed interface VoidKeyword extends BodyElement {}
 
   private sealed interface AccessModifier extends BodyElement {}
+
+  private sealed interface Primary extends ExpressionPart {
+    ExpressionName n(String name);
+  }
+
+  private sealed interface PrimaryNoNewArray extends Primary {}
 
   static final _Ext EXT = _Ext.INSTANCE;
 
