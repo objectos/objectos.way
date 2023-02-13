@@ -94,7 +94,7 @@ public abstract class JavaTemplate {
     INSTANCE;
   }
 
-  final class _Item implements
+  static final class _Item implements
       AbstractModifier,
       ArrayAccess,
       ArrayDimension,
@@ -136,6 +136,7 @@ public abstract class JavaTemplate {
       PublicModifier,
       ReturnKeyword,
       SimpleAssigmentOperator,
+      Statement,
       StaticModifier,
       StringLiteral,
       SuperKeyword,
@@ -144,7 +145,20 @@ public abstract class JavaTemplate {
       TypeParameter,
       TypeVariable,
       VarKeyword,
-      VoidKeyword {}
+      VoidKeyword {
+
+    private final InternalApi api;
+
+    _Item(InternalApi api) { this.api = api; }
+
+    @Override
+    public final ExpressionName n(String name) {
+      JavaModel.checkSimpleName(name.toString());
+      api.protoAdd(ByteProto.DOT, ByteProto.EXPRESSION_NAME, api.object(name));
+      return this;
+    }
+
+  }
 
   sealed interface AbstractModifier extends BodyElement {}
 
@@ -197,7 +211,9 @@ public abstract class JavaTemplate {
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends ExpressionPart {}
+  sealed interface ExpressionName extends ExpressionPart {
+    ExpressionName n(String name);
+  }
 
   sealed interface ExpressionPart
       extends ArgsPart, BlockElement, BodyElement, VariableInitializer {}
@@ -236,9 +252,7 @@ public abstract class JavaTemplate {
 
   sealed interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
 
-  sealed interface PrimitiveType extends AnyType, BodyElement,
-      /* to remove */
-      ArrayTypeComponent {}
+  sealed interface PrimitiveType extends AnyType, ArrayTypeComponent, BodyElement {}
 
   sealed interface PrivateModifier extends AccessModifier {}
 
@@ -251,6 +265,8 @@ public abstract class JavaTemplate {
   sealed interface ReturnKeyword extends BlockElement {}
 
   sealed interface SimpleAssigmentOperator extends ExpressionPart {}
+
+  sealed interface Statement extends BlockElement {}
 
   sealed interface StaticModifier extends BodyElement {}
 
@@ -279,8 +295,6 @@ public abstract class JavaTemplate {
   static final _Ext EXT = _Ext.INSTANCE;
 
   static final _Include INCLUDE = _Include.INSTANCE;
-
-  final _Item item = new _Item();
 
   private InternalApi api;
 
@@ -340,6 +354,37 @@ public abstract class JavaTemplate {
    */
   protected final PrimitiveType _double() {
     return primitiveType(Keyword.DOUBLE);
+  }
+
+  /**
+   * Begins the {@code else} clause of an {@code if-then-else} statement.
+   *
+   * <p>
+   * The following Objectos code:
+   *
+   * <pre>
+   * _if(n("size"), equalTo(), i(0)), block(
+   *   invoke("whenEmpty")
+   * ), _else(), block(
+   *   invoke("whenNotEmpty")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (size == 0) {
+   *   whenEmpty();
+   * } else {
+   *   whenNotEmpty();
+   * }</pre>
+   *
+   * @return the {@code else} keyword
+   *
+   * @since 0.4.2
+   */
+  protected final ElseKeyword _else() {
+    return api().itemAdd(ByteProto.ELSE, ByteProto.NOOP);
   }
 
   /**
@@ -536,37 +581,6 @@ public abstract class JavaTemplate {
       ExpressionPart e4, ExpressionPart e5, ExpressionPart e6) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self(), e6.self());
-  }
-
-  /**
-   * Begins the {@code else} clause of an {@code if-then-else} statement.
-   *
-   * <p>
-   * The following Objectos code:
-   *
-   * <pre>
-   * _if(n("size"), equalTo(), i(0)), block(
-   *   invoke("whenEmpty")
-   * ), _else(), block(
-   *   invoke("whenNotEmpty")
-   * )</pre>
-   *
-   * <p>
-   * Generates the following Java code:
-   *
-   * <pre>
-   * if (size == 0) {
-   *   whenEmpty();
-   * } else {
-   *   whenNotEmpty();
-   * }</pre>
-   *
-   * @return the {@code else} keyword
-   *
-   * @since 0.4.2
-   */
-  protected final ElseKeyword _else() {
-    return api().itemAdd(ByteProto.ELSE, ByteProto.NOOP);
   }
 
   /**

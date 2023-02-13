@@ -51,54 +51,52 @@ class InternalApi {
 
   int stackIndex;
 
-  private JavaTemplate template;
+  private final _Item item;
+
+  public InternalApi() {
+    item = new JavaTemplate._Item(this);
+  }
 
   final void accept(JavaTemplate template) {
-    this.template = template;
+    autoImports.clear();
 
-    try {
-      autoImports.clear();
+    codeIndex = stackIndex = -1;
 
-      codeIndex = stackIndex = -1;
+    level = objectIndex = protoIndex = 0;
 
-      level = objectIndex = protoIndex = 0;
+    Arrays.fill(levelIndex, -1);
 
-      Arrays.fill(levelIndex, -1);
+    levelIndex[0] = 0;
 
-      levelIndex[0] = 0;
+    template.execute(this);
 
-      template.execute(this);
+    assert level == 0;
 
-      assert level == 0;
+    int self = protoIndex;
 
-      int self = protoIndex;
+    int[] array = levelArray[level];
 
-      int[] array = levelArray[level];
+    int length = levelIndex[level];
 
-      int length = levelIndex[level];
+    for (int i = 0; i < length;) {
+      int kind = array[i++];
 
-      for (int i = 0; i < length;) {
-        int kind = array[i++];
+      if (kind == LOCAL) {
+        int protoIndex = array[i++];
 
-        if (kind == LOCAL) {
-          int protoIndex = array[i++];
+        int proto = protoGet(protoIndex++);
 
-          int proto = protoGet(protoIndex++);
-
-          protoAdd(proto, protoIndex);
-        } else {
-          throw new UnsupportedOperationException(
-            "Implement me :: code=" + kind
-          );
-        }
+        protoAdd(proto, protoIndex);
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: code=" + kind
+        );
       }
-
-      protoAdd(ByteProto.END_ELEMENT);
-
-      protoIndex = self;
-    } finally {
-      this.template = null;
     }
+
+    protoAdd(ByteProto.END_ELEMENT);
+
+    protoIndex = self;
   }
 
   final _Item classType(Class<?> type) {
@@ -134,7 +132,7 @@ class InternalApi {
       protoAdd(object(simpleName));
     }
 
-    return template.item;
+    return item;
   }
 
   final _Item elem(int proto) {
@@ -369,31 +367,31 @@ class InternalApi {
   final _Item itemAdd(int v0) {
     levelAdd(LOCAL, protoIndex);
     protoAdd(v0);
-    return template.item;
+    return item;
   }
 
   final _Item itemAdd(int v0, int v1) {
     levelAdd(LOCAL, protoIndex);
     protoAdd(v0, v1);
-    return template.item;
+    return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2) {
     levelAdd(LOCAL, protoIndex);
     protoAdd(v0, v1, v2);
-    return template.item;
+    return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3) {
     levelAdd(LOCAL, protoIndex);
     protoAdd(v0, v1, v2, v3);
-    return template.item;
+    return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
     levelAdd(LOCAL, protoIndex);
     protoAdd(v0, v1, v2, v3, v4);
-    return template.item;
+    return item;
   }
 
   final void lambdaend() {
@@ -437,6 +435,13 @@ class InternalApi {
     objectArray[objectIndex++] = value;
 
     return result;
+  }
+
+  final void protoAdd(int v0, int v1, int v2) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
   }
 
   private void elemCnt(int value) {
@@ -486,7 +491,7 @@ class InternalApi {
     int offset;
     int kind;
 
-    if (obj == template.item) {
+    if (obj == item) {
       offset = 0;
 
       kind = LOCAL;
@@ -542,7 +547,7 @@ class InternalApi {
 
     levelAdd(LOCAL, self);
 
-    return template.item;
+    return item;
   }
 
   private void levelAdd(int v0, int v1) {
@@ -596,13 +601,6 @@ class InternalApi {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
-  }
-
-  private void protoAdd(int v0, int v1, int v2) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 2);
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-    protoArray[protoIndex++] = v2;
   }
 
   private void protoAdd(int v0, int v1, int v2, int v3) {

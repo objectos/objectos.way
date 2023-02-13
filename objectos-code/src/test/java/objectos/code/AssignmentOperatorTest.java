@@ -37,7 +37,7 @@ public class AssignmentOperatorTest {
         protected final void definition() {
           n("a"); gets(); n("x"); end();
 
-          n("a"); gets(); n("x"); n("y"); end();
+          n("a"); gets(); n("x").n("y"); end();
 
           n("a"); gets(); invoke("x"); invoke("y"); end();
 

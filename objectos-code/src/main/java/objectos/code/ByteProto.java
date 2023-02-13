@@ -87,7 +87,8 @@ final class ByteProto {
 
   static final int ARRAY_ACCESS = -46;
   static final int ASSIGNMENT_OPERATOR = -47;
-  static final int EQUALITY_OPERATOR = -48;
+  static final int DOT = -48;
+  static final int EQUALITY_OPERATOR = -49;
 
   private ByteProto() {}
 

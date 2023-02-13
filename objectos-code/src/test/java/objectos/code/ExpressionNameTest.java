@@ -17,12 +17,9 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class ExpressionNameTest {
-
-  private final Fixture fix = new Fixture("ExpressionName", Kind.VOID_METHOD);
 
   @Test(description = """
   Expression name TC01:
@@ -31,18 +28,21 @@ public class ExpressionNameTest {
   """)
   public void testCase01() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", n("a"));
-          end();
+          _class("ExpressionName");
+          body(
+            _void(), method("method"), block(
+              invoke("test", n("a")), end(),
 
-          invoke("test", n("a"), n("b"));
-          end();
+              invoke("test", n("a").n("b")), end(),
 
-          invoke("test", n("a"), n("b"), n("c"));
+              invoke("test", n("a").n("b").n("c"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class ExpressionName {
@@ -57,21 +57,25 @@ public class ExpressionNameTest {
   }
 
   @Test(description = """
-  Expression name TC01:
+  Expression name TC02:
 
   - base = ClassName
   """)
   public void testCase02() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", t("test", "Suit"), n("CLUBS"));
-          end();
+          _class("ExpressionName");
+          body(
+            _void(), method("method"), block(
+              invoke("test", t("test", "Suit"), n("CLUBS")), end(),
 
-          invoke("test", t("test", "Suit"), n("CLUBS"), n("field"));
+              invoke("test", t("test", "Suit"), n("CLUBS").n("field"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class ExpressionName {

@@ -739,6 +739,15 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void dot() {
+    // skip ByteProto.DOT
+    protoIndex++;
+
+    codeAdd(Symbol.DOT);
+
+    expressionBegin(protoNext());
+  }
+
   private void expressionBegin(int proto) {
     switch (proto) {
       case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
@@ -769,6 +778,10 @@ class InternalCompiler extends InternalApi {
 
   private void expressionName() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
+
+    while (protoPeek() == ByteProto.DOT) {
+      dot();
+    }
   }
 
   private void extendsKeyword() {
@@ -1283,7 +1296,13 @@ class InternalCompiler extends InternalApi {
 
   private int protoNext() { return protoArray[protoIndex++]; }
 
-  private int protoPeek() { return protoArray[protoIndex]; }
+  private int protoPeek() {
+    if (protoIndex >= protoArray.length) {
+      return ByteProto.NOOP;
+    } else {
+      return protoArray[protoIndex];
+    }
+  }
 
   private int publicFound() { return stackArray[1]; }
 
