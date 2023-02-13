@@ -45,6 +45,11 @@ public enum Keyword {
   DOUBLE,
 
   /**
+   * The reserved keyword {@code else}.
+   */
+  ELSE,
+
+  /**
    * The reserved keyword {@code enum}.
    */
   ENUM,

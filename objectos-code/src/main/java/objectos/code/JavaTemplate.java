@@ -109,6 +109,7 @@ public abstract class JavaTemplate {
       ClassType,
       ConstructorDeclaration,
       Ellipsis,
+      ElseKeyword,
       End,
       EnumConstant,
       EnumKeyword,
@@ -183,6 +184,8 @@ public abstract class JavaTemplate {
   sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface Ellipsis extends ParameterElement {}
+
+  sealed interface ElseKeyword extends BlockElement {}
 
   sealed interface End extends ArgsPart, BlockElement {}
 
@@ -533,6 +536,37 @@ public abstract class JavaTemplate {
       ExpressionPart e4, ExpressionPart e5, ExpressionPart e6) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
       e4.self(), e5.self(), e6.self());
+  }
+
+  /**
+   * Begins the {@code else} clause of an {@code if-then-else} statement.
+   *
+   * <p>
+   * The following Objectos code:
+   *
+   * <pre>
+   * _if(n("size"), equalTo(), i(0)), block(
+   *   invoke("whenEmpty")
+   * ), _else(), block(
+   *   invoke("whenNotEmpty")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (size == 0) {
+   *   whenEmpty();
+   * } else {
+   *   whenNotEmpty();
+   * }</pre>
+   *
+   * @return the {@code else} keyword
+   *
+   * @since 0.4.2
+   */
+  protected final ElseKeyword _else() {
+    return api().itemAdd(ByteProto.ELSE, ByteProto.NOOP);
   }
 
   /**

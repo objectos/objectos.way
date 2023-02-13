@@ -76,6 +76,10 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("THROW");
     value("VAR");
 
+    comment("statement part");
+
+    value("ELSE");
+
     comment("expression start");
 
     value("CLASS_INSTANCE_CREATION");

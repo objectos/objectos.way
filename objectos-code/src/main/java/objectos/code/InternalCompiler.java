@@ -889,6 +889,24 @@ class InternalCompiler extends InternalApi {
     } else {
       errorRaise("no statement after if condition");
     }
+
+    if (itemIs(ByteProto.ELSE)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::elseKeyword);
+
+      if (itemTest(ByteProto::isStatementStart)) {
+        codeAdd(Whitespace.MANDATORY);
+
+        statement();
+      } else {
+        errorRaise("no statement after the `else` keyword");
+      }
+    }
+  }
+
+  private void elseKeyword() {
+    codeAdd(Keyword.ELSE);
   }
 
   private void implementsClause() {

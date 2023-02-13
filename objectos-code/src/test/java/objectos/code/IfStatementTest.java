@@ -54,4 +54,41 @@ public class IfStatementTest {
     );
   }
 
+  @Test(description = """
+  The if statement TC02
+
+  - The _else() instruction
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("IfStatement");
+          body(
+            _void(), method("test"), block(
+              _if(invoke("condition")), block(
+                invoke("ifTrue")
+              ), _else(), block(
+                invoke("ifFalse")
+              )
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class IfStatement {
+        void test() {
+          if (condition()) {
+            ifTrue();
+          } else {
+            ifFalse();
+          }
+        }
+      }
+      """
+    );
+  }
+
 }
