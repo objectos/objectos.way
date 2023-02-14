@@ -1181,22 +1181,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void modifiers() {
-    int size = protoNext();
-
-    if (size > 0) {
-      codeAdd(ByteCode.KEYWORD, protoNext());
-
-      for (int i = 1; i < size; i++) {
-        codeAdd(Whitespace.MANDATORY);
-
-        codeAdd(ByteCode.KEYWORD, protoNext());
-      }
-    }
-
-    lastSet(_KEYWORD);
-  }
-
   private void methodDeclarationNew() {
     if (itemIs(ByteProto.ANNOTATION)) {
       execute(this::annotation);
@@ -1220,15 +1204,15 @@ class InternalCompiler extends InternalApi {
       throw new UnsupportedOperationException("Implement me");
     }
 
+    switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+    }
+
     if (itemIs(ByteProto.RETURN_TYPE)) {
-      throw new UnsupportedOperationException("Implement me");
+      execute(this::returnType);
     } else {
-      switch (last()) {
-        case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-        case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-      }
-
       voidKeyword();
     }
 
@@ -1294,6 +1278,22 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ANNOTATION -> annotation();
 
       case ByteProto.MODIFIER -> modifier();
+    }
+
+    lastSet(_KEYWORD);
+  }
+
+  private void modifiers() {
+    int size = protoNext();
+
+    if (size > 0) {
+      codeAdd(ByteCode.KEYWORD, protoNext());
+
+      for (int i = 1; i < size; i++) {
+        codeAdd(Whitespace.MANDATORY);
+
+        codeAdd(ByteCode.KEYWORD, protoNext());
+      }
     }
 
     lastSet(_KEYWORD);
@@ -1418,6 +1418,10 @@ class InternalCompiler extends InternalApi {
     } else {
       errorRaise("expected start of expression");
     }
+  }
+
+  private void returnType() {
+    executeSwitch(this::type);
   }
 
   private int simpleName() { return stackArray[0]; }

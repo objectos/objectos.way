@@ -357,17 +357,34 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _void(), method("test0"), block(),
+            method(
+              name("test0")
+            ),
 
-            t(t(String.class), dim()), method("test1"), block(),
+            method(
+              returnType(t(t(String.class), dim())),
+              name("test1")
+            ),
 
-            _int(), method("test2"), block(),
+            method(
+              returnType(_int()),
+              name("test2")
+            ),
 
-            t(Integer.class), method("test3"), block(),
+            method(
+              returnType(t(Integer.class)),
+              name("test3")
+            ),
 
-            tvar("E"), method("test4"), block(),
+            method(
+              returnType(tvar("E")),
+              name("test4")
+            ),
 
-            t(t(Map.class), tvar("K"), tvar("V")), method("test5"), block()
+            method(
+              returnType(t(t(Map.class), tvar("K"), tvar("V"))),
+              name("test5")
+            )
           );
         }
       }.toString(),

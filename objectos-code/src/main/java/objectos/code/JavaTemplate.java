@@ -157,6 +157,7 @@ public abstract class JavaTemplate {
       ProtectedModifier,
       PublicModifier,
       ReturnKeyword,
+      ReturnType,
       SimpleAssigmentOperator,
       Statement,
       StaticModifier,
@@ -310,6 +311,8 @@ public abstract class JavaTemplate {
   sealed interface ReferenceType extends AnyType, ArrayTypeComponent {}
 
   sealed interface ReturnKeyword extends BlockElement {}
+
+  sealed interface ReturnType extends MethodDeclarationElement {}
 
   sealed interface SimpleAssigmentOperator extends ExpressionPart {}
 
@@ -1594,6 +1597,21 @@ public abstract class JavaTemplate {
    */
   protected final EqualityOperator notEqualTo() {
     return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.NOT_EQUAL_TO.ordinal());
+  }
+
+  /**
+   * Sets the specified {@code type} as the return type of the immediately
+   * enclosing method declaration.
+   *
+   * @param type
+   *        the value to be set as the return type
+   *
+   * @return the return type instruction
+   *
+   * @since 0.4.2
+   */
+  protected final ReturnType returnType(AnyType type) {
+    return api().elem(ByteProto.RETURN_TYPE, type.self());
   }
 
   /**
