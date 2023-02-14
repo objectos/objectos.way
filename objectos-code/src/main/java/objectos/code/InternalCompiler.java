@@ -1199,10 +1199,20 @@ class InternalCompiler extends InternalApi {
 
   private void methodDeclarationNew() {
     if (itemIs(ByteProto.ANNOTATION)) {
-      throw new UnsupportedOperationException("Implement me");
+      execute(this::annotation);
+
+      while (itemIs(ByteProto.ANNOTATION)) {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+
+        execute(this::annotation);
+      }
     }
 
     if (itemIs(ByteProto.MODIFIERS)) {
+      if (lastIs(_ANNOTATION)) {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+      }
+
       execute(this::modifiers);
     }
 
@@ -1213,8 +1223,10 @@ class InternalCompiler extends InternalApi {
     if (itemIs(ByteProto.RETURN_TYPE)) {
       throw new UnsupportedOperationException("Implement me");
     } else {
-      if (lastIs(_KEYWORD)) {
-        codeAdd(Whitespace.MANDATORY);
+      switch (last()) {
+        case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+        case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
       }
 
       voidKeyword();

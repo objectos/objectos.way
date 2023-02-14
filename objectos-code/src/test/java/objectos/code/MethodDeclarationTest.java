@@ -115,8 +115,10 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            at(t(Override.class)),
-            _void(), method("test"), block()
+            method(
+              annotation(t(Override.class)),
+              name("test")
+            )
           );
         }
       }.toString(),
@@ -216,8 +218,11 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            at(t(Override.class)),
-            _final(), _void(), method("test"), block()
+            method(
+              annotation(t(Override.class)),
+              modifiers(FINAL),
+              name("test")
+            )
           );
         }
       }.toString(),

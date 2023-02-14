@@ -113,6 +113,7 @@ public abstract class JavaTemplate {
 
   static final class _Item implements
       AbstractModifier,
+      Annotation,
       ArrayAccess,
       ArrayDimension,
       ArrayInitializer,
@@ -197,6 +198,8 @@ public abstract class JavaTemplate {
   }
 
   sealed interface AbstractModifier extends BodyElement {}
+
+  sealed interface Annotation extends MethodDeclarationElement {}
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
@@ -919,6 +922,24 @@ public abstract class JavaTemplate {
   protected final ArrayInitializer ainit(
       VariableInitializer e1, VariableInitializer e2) {
     return api().elem(ByteProto.ARRAY_INITIALIZER, e1, e2);
+  }
+
+  /**
+   * Adds an annotation to the immediately enclosing declaration or type usage.
+   *
+   * @param annotationType
+   *        the type of the annotation
+   * @param contents
+   *        the contents of this annotation
+   *
+   * @return an annotation
+   *
+   * @since 0.4.2
+   */
+  protected final Annotation annotation(ClassType annotationType, AtElement... contents) {
+    var api = api();
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api.elemMany(ByteProto.ANNOTATION, annotationType.self(), many);
   }
 
   /**
