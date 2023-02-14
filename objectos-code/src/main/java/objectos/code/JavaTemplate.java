@@ -47,6 +47,12 @@ public abstract class JavaTemplate {
   protected sealed interface BodyElement extends Element {}
 
   /**
+   * An {@link Element} that can be used with the
+   * {@link JavaTemplate#method(MethodDeclarationElement...)} method.
+   */
+  protected sealed interface MethodDeclarationElement extends Element {}
+
+  /**
    * Represents an element that can be part of a template.
    */
   protected sealed interface Element {
@@ -124,6 +130,8 @@ public abstract class JavaTemplate {
       IntegerLiteral,
       InterfaceKeyword,
       MethodDeclaration,
+      MethodDeclarationElement,
+      MethodDeclarator,
       Invoke,
       NewKeyword,
       NewLine,
@@ -258,6 +266,8 @@ public abstract class JavaTemplate {
   sealed interface Literal extends AtElement, ExpressionPart {}
 
   sealed interface MethodDeclaration extends BodyElement {}
+
+  sealed interface MethodDeclarator extends BodyElement {}
 
   sealed interface NewKeyword extends BlockElement {}
 
@@ -1375,9 +1385,27 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * Emits a method declaration.
+   *
+   * <p>
+   * TODO
+   *
+   * @param elements
+   *        the contents of this method declaration
+   *
+   * @return a method declaration
+   *
+   * @since 0.4.2
+   */
+  protected final MethodDeclaration method(MethodDeclarationElement... elements) {
+    Object[] many = Objects.requireNonNull(elements, "elements == null");
+    return api().elemMany(ByteProto.METHOD_DECLARATION, many);
+  }
+
+  /**
    * TODO
    */
-  protected final MethodDeclaration method(String methodName) {
+  protected final MethodDeclarator method(String methodName) {
     JavaModel.checkMethodName(methodName);
     var api = api();
     api.identifierext(methodName);
@@ -1387,7 +1415,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final MethodDeclaration method(String methodName,
+  protected final MethodDeclarator method(String methodName,
       ParameterElement e1) {
     JavaModel.checkMethodName(methodName);
     var api = api();
@@ -1398,7 +1426,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final MethodDeclaration method(String methodName,
+  protected final MethodDeclarator method(String methodName,
       ParameterElement... elements) {
     JavaModel.checkMethodName(methodName);
     var api = api();
@@ -1410,7 +1438,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final MethodDeclaration method(String methodName,
+  protected final MethodDeclarator method(String methodName,
       ParameterElement e1, ParameterElement e2) {
     JavaModel.checkMethodName(methodName);
     var api = api();

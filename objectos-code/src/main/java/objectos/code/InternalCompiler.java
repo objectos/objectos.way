@@ -300,6 +300,12 @@ class InternalCompiler extends InternalApi {
   private void bodyMember() {
     topLevel(NULL);
 
+    if (itemIs(ByteProto.METHOD_DECLARATION)) {
+      execute(this::methodDeclarationNew);
+
+      return;
+    }
+
     var wasEnumConstant = lastIs(_ENUM_CONSTANT);
 
     declarationAnnotationList();
@@ -1169,6 +1175,42 @@ class InternalCompiler extends InternalApi {
 
       return;
     }
+  }
+
+  private void methodDeclarationNew() {
+    if (itemIs(ByteProto.ANNOTATION)) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (itemIs(ByteProto.MODIFIER)) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (itemIs(ByteProto.TYPE_PARAMETER)) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (itemIs(ByteProto.RETURN_TYPE)) {
+      throw new UnsupportedOperationException("Implement me");
+    } else {
+      voidKeyword();
+    }
+
+    if (itemIs(ByteProto.NAME)) {
+      throw new UnsupportedOperationException("Implement me");
+    } else {
+      codeAdd(Whitespace.MANDATORY);
+
+      codeAdd(ByteCode.IDENTIFIER, object("unnamed"));
+    }
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    codeAdd(Whitespace.OPTIONAL);
+
+    codeAdd(Symbol.LEFT_CURLY_BRACKET);
+    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
   private void methodDeclarator() {

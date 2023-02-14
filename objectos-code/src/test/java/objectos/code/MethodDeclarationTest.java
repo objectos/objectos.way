@@ -25,6 +25,31 @@ import org.testng.annotations.Test;
 public class MethodDeclarationTest {
 
   @Test(description = """
+  Method declaration TC00
+
+  method() invoked with no args
+  """)
+  public void testCase00() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            method()
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void unnamed() {}
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   - void
   - empty body
   """)
