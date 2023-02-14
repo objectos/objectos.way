@@ -142,9 +142,20 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _final(), _void(), method("a"), block(),
-            _public(), _final(), _void(), method("b"), block(),
-            _protected(), _static(), _final(), _void(), method("c"), block()
+            method(
+              modifiers(FINAL),
+              name("a")
+            ),
+
+            method(
+              modifiers(PUBLIC, FINAL),
+              name("b")
+            ),
+
+            method(
+              modifiers(PROTECTED, STATIC, FINAL),
+              name("c")
+            )
           );
         }
       }.toString(),

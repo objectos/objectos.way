@@ -84,6 +84,17 @@ public abstract class JavaTemplate {
   protected sealed interface MethodDeclarationElement extends Element {}
 
   /**
+   * Represents a modifier of the Java language.
+   *
+   * @since 0.4.2
+   */
+  protected static final class Modifier {
+    final int value;
+
+    private Modifier(Keyword keyword) { this.value = keyword.ordinal(); }
+  }
+
+  /**
    * An {@link Element} that can be used with constructs that can declare formal
    * parameters.
    *
@@ -133,6 +144,7 @@ public abstract class JavaTemplate {
       MethodDeclaration,
       MethodDeclarationElement,
       MethodDeclarator,
+      ModifiersElement,
       Invoke,
       NewKeyword,
       NewLine,
@@ -272,6 +284,8 @@ public abstract class JavaTemplate {
 
   sealed interface MethodDeclarator extends BodyElement {}
 
+  sealed interface ModifiersElement extends MethodDeclarationElement {}
+
   sealed interface NewKeyword extends BlockElement {}
 
   sealed interface NewLine extends ArgsPart, BlockElement {}
@@ -335,6 +349,48 @@ public abstract class JavaTemplate {
   }
 
   private sealed interface PrimaryNoNewArray extends CanArrayAccess, Primary {}
+
+  /**
+   * The {@code public} modifier.
+   *
+   * @since 0.4.2
+   */
+  protected static final Modifier PUBLIC = new Modifier(Keyword.PUBLIC);
+
+  /**
+   * The {@code protected} modifier.
+   *
+   * @since 0.4.2
+   */
+  protected static final Modifier PROTECTED = new Modifier(Keyword.PROTECTED);
+
+  /**
+   * The {@code private} modifier.
+   *
+   * @since 0.4.2
+   */
+  protected static final Modifier PRIVATE = new Modifier(Keyword.PRIVATE);
+
+  /**
+   * The {@code abstract} modifier.
+   *
+   * @since 0.4.2
+   */
+  protected static final Modifier ABSTRACT = new Modifier(Keyword.ABSTRACT);
+
+  /**
+   * The {@code static} modifier.
+   *
+   * @since 0.4.2
+   */
+  protected static final Modifier STATIC = new Modifier(Keyword.STATIC);
+
+  /**
+   * The {@code final} modifier.
+   *
+   * @since 0.4.2
+   */
+  protected static final Modifier FINAL = new Modifier(Keyword.FINAL);
 
   static final _Ext EXT = _Ext.INSTANCE;
 
@@ -1450,6 +1506,30 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * Adds the specified {@code modifiers} to the immediately enclosing
+   * declaration. Modifiers are included in the order they are declared.
+   * A particular modifier will be emitted as many times as it was declared;
+   * in other words, the method <em>does not</em> filter out duplicates.
+   *
+   * @param modifiers
+   *        the modifiers to be added to the enclosing declaration
+   *
+   * @return an element that adds the specified modifiers to the enclosing
+   *         declaration
+   *
+   * @since 0.4.2
+   */
+  protected final ModifiersElement modifiers(Modifier... modifiers) {
+    var api = api();
+    api.itemStart();
+    api.protoAdd(ByteProto.MODIFIERS, modifiers.length); // implicit null-check
+    for (var modifier : modifiers) {
+      api.protoAdd(modifier.value);// implicit null-check
+    }
+    return api.itemEnd();
+  }
+
+  /**
    * TODO
    */
   protected final ExpressionName n(String name) {
@@ -1459,7 +1539,7 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Sets the name of a declaration to the specified value.
+   * Sets the specified {@code name} to the immediately enclosing declaration.
    *
    * <p>
    * TODO

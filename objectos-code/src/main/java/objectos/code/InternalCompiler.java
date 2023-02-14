@@ -1181,13 +1181,29 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void modifiers() {
+    int size = protoNext();
+
+    if (size > 0) {
+      codeAdd(ByteCode.KEYWORD, protoNext());
+
+      for (int i = 1; i < size; i++) {
+        codeAdd(Whitespace.MANDATORY);
+
+        codeAdd(ByteCode.KEYWORD, protoNext());
+      }
+    }
+
+    lastSet(_KEYWORD);
+  }
+
   private void methodDeclarationNew() {
     if (itemIs(ByteProto.ANNOTATION)) {
       throw new UnsupportedOperationException("Implement me");
     }
 
-    if (itemIs(ByteProto.MODIFIER)) {
-      throw new UnsupportedOperationException("Implement me");
+    if (itemIs(ByteProto.MODIFIERS)) {
+      execute(this::modifiers);
     }
 
     if (itemIs(ByteProto.TYPE_PARAMETER)) {
@@ -1197,6 +1213,10 @@ class InternalCompiler extends InternalApi {
     if (itemIs(ByteProto.RETURN_TYPE)) {
       throw new UnsupportedOperationException("Implement me");
     } else {
+      if (lastIs(_KEYWORD)) {
+        codeAdd(Whitespace.MANDATORY);
+      }
+
       voidKeyword();
     }
 
@@ -1217,6 +1237,8 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+    lastSet(_START);
   }
 
   private void methodDeclarator() {

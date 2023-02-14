@@ -122,7 +122,7 @@ class InternalApi {
 
     var packageName = type.getPackageName();
 
-    levelAdd(LOCAL, protoIndex);
+    itemStart();
 
     protoAdd(ByteProto.CLASS_TYPE, object(packageName), names);
 
@@ -365,33 +365,39 @@ class InternalApi {
   }
 
   final _Item itemAdd(int v0) {
-    levelAdd(LOCAL, protoIndex);
+    itemStart();
     protoAdd(v0);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1) {
-    levelAdd(LOCAL, protoIndex);
+    itemStart();
     protoAdd(v0, v1);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2) {
-    levelAdd(LOCAL, protoIndex);
+    itemStart();
     protoAdd(v0, v1, v2);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3) {
-    levelAdd(LOCAL, protoIndex);
+    itemStart();
     protoAdd(v0, v1, v2, v3);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
-    levelAdd(LOCAL, protoIndex);
+    itemStart();
     protoAdd(v0, v1, v2, v3, v4);
     return item;
+  }
+
+  final _Item itemEnd() { return item; }
+
+  final void itemStart() {
+    levelAdd(LOCAL, protoIndex);
   }
 
   final _Item joinWith(int proto) {
@@ -457,6 +463,17 @@ class InternalApi {
     objectArray[objectIndex++] = value;
 
     return result;
+  }
+
+  final void protoAdd(int v0) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 0);
+    protoArray[protoIndex++] = v0;
+  }
+
+  final void protoAdd(int v0, int v1) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
   }
 
   final void protoAdd(int v0, int v1, int v2) {
@@ -612,17 +629,6 @@ class InternalApi {
       "Implement me :: could not find code (index=%d; condition=%d)"
           .formatted(index, condition)
     );
-  }
-
-  private void protoAdd(int v0) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 0);
-    protoArray[protoIndex++] = v0;
-  }
-
-  private void protoAdd(int v0, int v1) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
   }
 
   private void protoAdd(int v0, int v1, int v2, int v3) {
