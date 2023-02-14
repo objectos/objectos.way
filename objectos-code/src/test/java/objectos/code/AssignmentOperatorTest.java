@@ -39,7 +39,7 @@ public class AssignmentOperatorTest {
 
           n("a"); gets(); n("x").n("y"); end();
 
-          n("a"); gets(); invoke("x"); invoke("y"); end();
+          n("a"); gets(); invoke("x").invoke("y"); end();
 
           n("a"); gets(); _new(t("test", "Foo"));
         }

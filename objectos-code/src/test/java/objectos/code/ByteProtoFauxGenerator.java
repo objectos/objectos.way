@@ -83,6 +83,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("expression start");
 
     value("CLASS_INSTANCE_CREATION");
+    value("DOT");
     value("EXPRESSION_NAME");
     value("INVOKE");
     value("NULL_LITERAL");
@@ -94,7 +95,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ARRAY_ACCESS");
     value("ASSIGNMENT_OPERATOR");
-    value("DOT");
     value("EQUALITY_OPERATOR");
   }
 }

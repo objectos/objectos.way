@@ -152,10 +152,19 @@ public abstract class JavaTemplate {
     _Item(InternalApi api) { this.api = api; }
 
     @Override
+    public final Invoke invoke(String methodName, ArgsPart... arguments) {
+      JavaModel.checkMethodName(methodName.toString()); // implicit null check
+      api.identifierext(methodName);
+      Object[] many = Objects.requireNonNull(arguments, "arguments == null");
+      api.elemMany(ByteProto.INVOKE, EXT, many);
+      return api.dotAdd();
+    }
+
+    @Override
     public final ExpressionName n(String name) {
       JavaModel.checkSimpleName(name.toString());
-      api.protoAdd(ByteProto.DOT, ByteProto.EXPRESSION_NAME, api.object(name));
-      return this;
+      api.itemAdd(ByteProto.EXPRESSION_NAME, api.object(name));
+      return api.dotAdd();
     }
 
   }
@@ -213,7 +222,9 @@ public abstract class JavaTemplate {
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends PrimaryNoNewArray {}
+  sealed interface ExpressionName extends CanInvoke, ExpressionPart {
+    ExpressionName n(String name);
+  }
 
   sealed interface ExpressionPart
       extends ArgsPart, BlockElement, BodyElement, VariableInitializer {}
@@ -292,7 +303,11 @@ public abstract class JavaTemplate {
 
   private sealed interface AccessModifier extends BodyElement {}
 
-  private sealed interface Primary extends ExpressionPart {
+  private sealed interface CanInvoke {
+    Invoke invoke(String methodName, ArgsPart... arguments);
+  }
+
+  private sealed interface Primary extends CanInvoke, ExpressionPart {
     ExpressionName n(String name);
   }
 

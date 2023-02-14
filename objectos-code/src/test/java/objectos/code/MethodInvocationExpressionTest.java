@@ -247,11 +247,11 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("a"); invoke("b"); end();
+          invoke("a").invoke("b"); end();
 
-          invoke("a"); invoke("b"); invoke("c"); end();
+          invoke("a").invoke("b").invoke("c"); end();
 
-          n("foo"); invoke("a"); invoke("b"); invoke("c"); end();
+          n("foo").invoke("a").invoke("b").invoke("c"); end();
 
           n("list"); invoke("add", s("1")); nl();
           invoke("add", s("2")); nl();
@@ -286,7 +286,7 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _new(t(Thread.class)); invoke("start");
+          _new(t(Thread.class)).invoke("start");
         }
       }),
 
@@ -312,7 +312,7 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", invoke("a"), invoke("b")); end();
+          invoke("test", invoke("a").invoke("b")); end();
 
           invoke("test", invoke("a"), end(), invoke("b"));
         }
@@ -344,7 +344,7 @@ public class MethodInvocationExpressionTest {
           invoke(
             "property", nl(),
 
-            t("com.example", "A"), n("B"), nl(),
+            t("com.example", "A").n("B"), nl(),
 
             s("some text"), nl()
           );

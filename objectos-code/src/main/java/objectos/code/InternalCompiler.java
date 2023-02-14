@@ -152,11 +152,6 @@ class InternalCompiler extends InternalApi {
     expression();
 
     codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
-
-    // ByteProto.END_ELEMENT;
-    protoNext();
-
-    dotIfPossible();
   }
 
   private void arrayDimension() {
@@ -416,11 +411,6 @@ class InternalCompiler extends InternalApi {
     executeSwitch(this::type);
 
     argumentList();
-
-    // ByteProto.END_ELEMENT
-    protoNext();
-
-    dotIfPossible();
   }
 
   private void classKeyword() {
@@ -499,8 +489,6 @@ class InternalCompiler extends InternalApi {
     }
 
     lastSet(_IDENTIFIER);
-
-    dotIfPossible();
   }
 
   private void codeAdd(Indentation value) { codeAdd(ByteCode.INDENTATION, value.ordinal()); }
@@ -606,18 +594,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void dot() {
-    // skip ByteProto.DOT
-    protoIndex++;
+    executeSwitch(this::expressionBegin);
 
     codeAdd(Symbol.DOT);
 
-    expressionBegin(protoNext());
-  }
-
-  private void dotIfPossible() {
-    while (protoPeek() == ByteProto.DOT) {
-      dot();
-    }
+    executeSwitch(this::expressionBegin);
   }
 
   private void ellipsis() {
@@ -747,6 +728,12 @@ class InternalCompiler extends InternalApi {
 
             slot();
           }
+
+          case ByteProto.DOT -> {
+            execute(this::dot);
+
+            slot();
+          }
         }
       }
     }
@@ -772,9 +759,13 @@ class InternalCompiler extends InternalApi {
 
   private void expressionBegin(int proto) {
     switch (proto) {
+      case ByteProto.ARRAY_ACCESS -> arrayAccess();
+
       case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
 
       case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.DOT -> dot();
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
@@ -796,8 +787,6 @@ class InternalCompiler extends InternalApi {
 
   private void expressionName() {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
-
-    dotIfPossible();
   }
 
   private void extendsKeyword() {
@@ -1006,11 +995,6 @@ class InternalCompiler extends InternalApi {
     execute(this::identifier);
 
     argumentList();
-
-    // ByteProto.END_ELEMENT
-    protoNext();
-
-    dotIfPossible();
   }
 
   private boolean isArgumentStart(int proto) {
@@ -1391,6 +1375,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.BLOCK -> execute(this::block);
 
       case ByteProto.CLASS_INSTANCE_CREATION,
+           ByteProto.DOT,
            ByteProto.EXPRESSION_NAME,
            ByteProto.INVOKE,
            ByteProto.THIS -> {
@@ -1449,8 +1434,6 @@ class InternalCompiler extends InternalApi {
 
   private void stringLiteral() {
     codeAdd(ByteCode.STRING_LITERAL, protoNext());
-
-    dotIfPossible();
   }
 
   private void superInvocation() {
@@ -1477,11 +1460,6 @@ class InternalCompiler extends InternalApi {
 
   private void thisKeyword() {
     codeAdd(Keyword.THIS);
-
-    // ByteProto.NOP
-    protoNext();
-
-    dotIfPossible();
   }
 
   private void throwKeyword() {

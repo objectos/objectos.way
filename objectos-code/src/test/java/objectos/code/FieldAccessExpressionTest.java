@@ -36,7 +36,7 @@ public class FieldAccessExpressionTest {
             _void(), method("method"), block(
               _this().n("x"), gets(), n("y"), end(),
 
-              invoke("x"), invoke("y").n("z"), gets(), n("foo"), end(),
+              invoke("x").invoke("y").n("z"), gets(), n("foo"), end(),
 
               n("comparator"), gets(), s("abc").n("CASE_INSENSITIVE_ORDER"), end(),
 
