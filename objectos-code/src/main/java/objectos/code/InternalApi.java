@@ -135,18 +135,6 @@ class InternalApi {
     return item;
   }
 
-  final _Item dotAdd() {
-    int[] array = levelArray[level];
-
-    int second = array[--levelIndex[level]];
-    --levelIndex[level];
-
-    int first = array[--levelIndex[level]];
-    --levelIndex[level];
-
-    return itemAdd(ByteProto.DOT, protoGet(first++), first, protoGet(second++), second);
-  }
-
   final _Item elem(int proto) {
     elemPre();
     elemCnt(proto);
@@ -404,6 +392,18 @@ class InternalApi {
     levelAdd(LOCAL, protoIndex);
     protoAdd(v0, v1, v2, v3, v4);
     return item;
+  }
+
+  final _Item joinWith(int proto) {
+    int[] array = levelArray[level];
+
+    int second = array[--levelIndex[level]];
+    --levelIndex[level];
+
+    int first = array[--levelIndex[level]];
+    --levelIndex[level];
+
+    return itemAdd(proto, protoGet(first++), first, protoGet(second++), second);
   }
 
   final void lambdaend() {

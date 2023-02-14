@@ -593,6 +593,11 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void dim() {
+    executeSwitch(this::expressionBegin);
+    executeSwitch(this::expressionBegin);
+  }
+
   private void dot() {
     executeSwitch(this::expressionBegin);
 
@@ -764,6 +769,8 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
 
       case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.DIM -> dim();
 
       case ByteProto.DOT -> dot();
 

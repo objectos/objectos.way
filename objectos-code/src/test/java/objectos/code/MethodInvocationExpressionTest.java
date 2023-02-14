@@ -253,9 +253,7 @@ public class MethodInvocationExpressionTest {
 
           n("foo").invoke("a").invoke("b").invoke("c"); end();
 
-          n("list"); invoke("add", s("1")); nl();
-          invoke("add", s("2")); nl();
-          invoke("build");
+          n("list").invoke("add", s("1")).invoke("add", s("2")).invoke("build");
         }
       }),
 
@@ -265,9 +263,7 @@ public class MethodInvocationExpressionTest {
           a().b();
           a().b().c();
           foo.a().b().c();
-          list.add("1")
-              .add("2")
-              .build();
+          list.add("1").add("2").build();
         }
       }
       """

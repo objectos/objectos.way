@@ -42,7 +42,7 @@ public class FieldAccessExpressionTest {
 
               n("a"), gets(), _new(t("test", "Foo")).n("field"), end(),
 
-              n("b"), gets(), n("array"), dim(i(0)).n("field")
+              n("b"), gets(), n("array").dim(i(0)).n("field")
             )
           );
         }

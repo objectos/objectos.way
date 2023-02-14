@@ -152,19 +152,25 @@ public abstract class JavaTemplate {
     _Item(InternalApi api) { this.api = api; }
 
     @Override
+    public final ArrayAccess dim(ExpressionPart e1) {
+      api.elem(ByteProto.ARRAY_ACCESS, e1.self());
+      return api.joinWith(ByteProto.DIM);
+    }
+
+    @Override
     public final Invoke invoke(String methodName, ArgsPart... arguments) {
       JavaModel.checkMethodName(methodName.toString()); // implicit null check
       api.identifierext(methodName);
       Object[] many = Objects.requireNonNull(arguments, "arguments == null");
       api.elemMany(ByteProto.INVOKE, EXT, many);
-      return api.dotAdd();
+      return api.joinWith(ByteProto.DOT);
     }
 
     @Override
     public final ExpressionName n(String name) {
       JavaModel.checkSimpleName(name.toString());
       api.itemAdd(ByteProto.EXPRESSION_NAME, api.object(name));
-      return api.dotAdd();
+      return api.joinWith(ByteProto.DOT);
     }
 
   }
@@ -222,7 +228,7 @@ public abstract class JavaTemplate {
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends CanInvoke, ExpressionPart {
+  sealed interface ExpressionName extends CanArrayAccess, CanInvoke, ExpressionPart {
     ExpressionName n(String name);
   }
 
@@ -303,6 +309,10 @@ public abstract class JavaTemplate {
 
   private sealed interface AccessModifier extends BodyElement {}
 
+  private sealed interface CanArrayAccess {
+    ArrayAccess dim(ExpressionPart e1);
+  }
+
   private sealed interface CanInvoke {
     Invoke invoke(String methodName, ArgsPart... arguments);
   }
@@ -311,7 +321,7 @@ public abstract class JavaTemplate {
     ExpressionName n(String name);
   }
 
-  private sealed interface PrimaryNoNewArray extends Primary {}
+  private sealed interface PrimaryNoNewArray extends CanArrayAccess, Primary {}
 
   static final _Ext EXT = _Ext.INSTANCE;
 
