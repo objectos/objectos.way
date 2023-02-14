@@ -60,7 +60,9 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _void(), method("test"), block()
+            method(
+              name("test")
+            )
           );
         }
       }.toString(),

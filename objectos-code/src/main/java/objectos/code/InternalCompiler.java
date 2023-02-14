@@ -599,6 +599,10 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void declarationName() {
+    codeAdd(ByteCode.IDENTIFIER, protoNext());
+  }
+
   private void dim() {
     executeSwitch(this::expressionBegin);
     executeSwitch(this::expressionBegin);
@@ -1196,8 +1200,10 @@ class InternalCompiler extends InternalApi {
       voidKeyword();
     }
 
-    if (itemIs(ByteProto.NAME)) {
-      throw new UnsupportedOperationException("Implement me");
+    if (itemIs(ByteProto.DECLARATION_NAME)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      execute(this::declarationName);
     } else {
       codeAdd(Whitespace.MANDATORY);
 

@@ -47,12 +47,6 @@ public abstract class JavaTemplate {
   protected sealed interface BodyElement extends Element {}
 
   /**
-   * An {@link Element} that can be used with the
-   * {@link JavaTemplate#method(MethodDeclarationElement...)} method.
-   */
-  protected sealed interface MethodDeclarationElement extends Element {}
-
-  /**
    * Represents an element that can be part of a template.
    */
   protected sealed interface Element {
@@ -82,6 +76,12 @@ public abstract class JavaTemplate {
     void execute();
 
   }
+
+  /**
+   * An {@link Element} that can be used with the
+   * {@link JavaTemplate#method(MethodDeclarationElement...)} method.
+   */
+  protected sealed interface MethodDeclarationElement extends Element {}
 
   /**
    * An {@link Element} that can be used with constructs that can declare formal
@@ -114,6 +114,7 @@ public abstract class JavaTemplate {
       ClassKeyword,
       ClassType,
       ConstructorDeclaration,
+      DeclarationName,
       Ellipsis,
       ElseKeyword,
       End,
@@ -221,6 +222,8 @@ public abstract class JavaTemplate {
   }
 
   sealed interface ConstructorDeclaration extends BodyElement {}
+
+  sealed interface DeclarationName extends MethodDeclarationElement {}
 
   sealed interface Ellipsis extends ParameterElement {}
 
@@ -1453,6 +1456,25 @@ public abstract class JavaTemplate {
     JavaModel.checkSimpleName(name.toString());
     var api = api();
     return api.itemAdd(ByteProto.EXPRESSION_NAME, api.object(name));
+  }
+
+  /**
+   * Sets the name of a declaration to the specified value.
+   *
+   * <p>
+   * TODO
+   *
+   * @param name
+   *        the value to be used as the declaration name
+   *
+   * @return the declaration name
+   *
+   * @since 0.4.2
+   */
+  protected final DeclarationName name(String name) {
+    JavaModel.checkIdentifier(name);
+    var api = api();
+    return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(name));
   }
 
   /**
