@@ -340,6 +340,31 @@ class InternalApi {
     return elemRet();
   }
 
+  final _Item elemMany(int proto, Object first, Object second, Object[] elements) {
+    elemPre();
+
+    elemPre(first);
+    elemPre(second);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      Check.notNull(element, "elements[", i, "] == null");
+      elemPre(element);
+    }
+
+    elemCnt(proto);
+
+    elemItem(first);
+    elemItem(second);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      elemItem(element);
+    }
+
+    return elemRet();
+  }
+
   final _Item elemMany(int proto, Object[] elements) {
     elemPre();
 

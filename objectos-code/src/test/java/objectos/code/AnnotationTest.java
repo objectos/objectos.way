@@ -43,4 +43,32 @@ public class AnnotationTest {
     // @formatter:on
   }
 
+  @Test(description = """
+  Annotation TC02:
+
+  annotation(Override.class)
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Annotation");
+          body(
+            method(
+              annotation(Override.class)
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Annotation {
+        @java.lang.Override
+        void unnamed() {}
+      }
+      """
+    );
+  }
+
 }

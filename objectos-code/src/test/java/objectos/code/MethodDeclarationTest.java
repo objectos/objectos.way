@@ -116,7 +116,7 @@ public class MethodDeclarationTest {
           _class("Methods");
           body(
             method(
-              annotation(t(Override.class)),
+              annotation(Override.class),
               name("test")
             )
           );
@@ -219,7 +219,7 @@ public class MethodDeclarationTest {
           _class("Methods");
           body(
             method(
-              annotation(t(Override.class)),
+              annotation(Override.class),
               modifiers(FINAL),
               name("test")
             )

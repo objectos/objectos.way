@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import java.lang.annotation.Annotation;
 import java.util.Objects;
 import objectos.lang.Check;
 
@@ -27,41 +28,24 @@ import objectos.lang.Check;
 public abstract class JavaTemplate {
 
   /**
-   * An {@link Element} that can be used with the instructions that take
+   * An {@link Instruction} that can be used with the instructions that take
    * arguments.
    *
    * @see JavaTemplate#invoke(String, ArgsPart...)
    */
-  protected sealed interface ArgsPart extends Element {}
+  protected sealed interface ArgsPart extends Instruction {}
 
   /**
-   * An {@link Element} that can be used with the
+   * An {@link Instruction} that can be used with the
    * {@link JavaTemplate#block(BlockElement...)} method.
    */
-  protected sealed interface BlockElement extends Element {}
+  protected sealed interface BlockElement extends Instruction {}
 
   /**
-   * An {@link Element} that can be used with the
+   * An {@link Instruction} that can be used with the
    * {@link JavaTemplate#body(BodyElement...)} method.
    */
-  protected sealed interface BodyElement extends Element {}
-
-  /**
-   * Represents an element that can be part of a template.
-   */
-  protected sealed interface Element {
-
-    /**
-     * Returns itself.
-     *
-     * <p>
-     * Its sole purpose is to trigger an implicit null check.
-     *
-     * @return this instance
-     */
-    default Object self() { return this; }
-
-  }
+  protected sealed interface BodyElement extends Instruction {}
 
   /**
    * Represents a sub-template to be included as part of the enclosing template.
@@ -78,10 +62,30 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * An {@link Element} that can be used with the
+   * Represents an instruction that generates part of the output of a template.
+   *
+   * <p>
+   * Unless noted references to a particular instruction MUST NOT be reused.
+   */
+  protected sealed interface Instruction {
+
+    /**
+     * Returns itself.
+     *
+     * <p>
+     * Its sole purpose is to trigger an implicit null check.
+     *
+     * @return this instance
+     */
+    default Object self() { return this; }
+
+  }
+
+  /**
+   * An {@link Instruction} that can be used with the
    * {@link JavaTemplate#method(MethodDeclarationElement...)} method.
    */
-  protected sealed interface MethodDeclarationElement extends Element {}
+  protected sealed interface MethodDeclarationElement extends Instruction {}
 
   /**
    * Represents a modifier of the Java language.
@@ -95,13 +99,14 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * An {@link Element} that can be used with constructs that can declare formal
+   * An {@link Instruction} that can be used with constructs that can declare
+   * formal
    * parameters.
    *
    * @see JavaTemplate#constructor(ParameterElement...)
    * @see JavaTemplate#method(String, ParameterElement...)
    */
-  protected sealed interface ParameterElement extends Element {}
+  protected sealed interface ParameterElement extends Instruction {}
 
   enum _Ext {
     INSTANCE;
@@ -113,7 +118,7 @@ public abstract class JavaTemplate {
 
   static final class _Item implements
       AbstractModifier,
-      Annotation,
+      AnnotationInst,
       ArrayAccess,
       ArrayDimension,
       ArrayInitializer,
@@ -151,6 +156,7 @@ public abstract class JavaTemplate {
       NewLine,
       NullLiteral,
       PackageKeyword,
+      Parameter,
       ParameterizedType,
       PrimitiveType,
       PrivateModifier,
@@ -200,7 +206,7 @@ public abstract class JavaTemplate {
 
   sealed interface AbstractModifier extends BodyElement {}
 
-  sealed interface Annotation extends MethodDeclarationElement {}
+  sealed interface AnnotationInst extends MethodDeclarationElement {}
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
@@ -218,9 +224,9 @@ public abstract class JavaTemplate {
 
   sealed interface At extends BodyElement {}
 
-  sealed interface AtElement extends Element {}
+  sealed interface AtElement extends Instruction {}
 
-  sealed interface AutoImports extends Element {}
+  sealed interface AutoImports extends Instruction {}
 
   sealed interface Block extends BlockElement, BodyElement {}
 
@@ -230,7 +236,7 @@ public abstract class JavaTemplate {
 
   sealed interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassOrParameterizedType extends Element {}
+  sealed interface ClassOrParameterizedType extends Instruction {}
 
   sealed interface ClassType
       extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {
@@ -296,7 +302,9 @@ public abstract class JavaTemplate {
 
   sealed interface NullLiteral extends ExpressionPart {}
 
-  sealed interface PackageKeyword extends Element {}
+  sealed interface PackageKeyword extends Instruction {}
+
+  sealed interface Parameter extends MethodDeclarationElement {}
 
   sealed interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
 
@@ -330,7 +338,7 @@ public abstract class JavaTemplate {
 
   sealed interface TypeParameter extends BodyElement {}
 
-  sealed interface TypeParameterBound extends Element {}
+  sealed interface TypeParameterBound extends Instruction {}
 
   sealed interface TypeVariable extends ReferenceType {}
 
@@ -928,21 +936,19 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Adds an annotation to the immediately enclosing declaration or type usage.
+   * Adds an annotation to the receiving declaration or type usage.
    *
    * @param annotationType
    *        the type of the annotation
-   * @param contents
-   *        the contents of this annotation
    *
-   * @return an annotation
+   * @return the annotation instruction
    *
    * @since 0.4.2
    */
-  protected final Annotation annotation(ClassType annotationType, AtElement... contents) {
+  protected final AnnotationInst annotation(Class<? extends Annotation> annotationType) {
+    Objects.requireNonNull(annotationType, "annotationType == null");
     var api = api();
-    Object[] many = Objects.requireNonNull(contents, "contents == null");
-    return api.elemMany(ByteProto.ANNOTATION, annotationType.self(), many);
+    return api.elem(ByteProto.ANNOTATION, api.classType(annotationType));
   }
 
   /**
@@ -1102,7 +1108,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final void code(Element... elements) {
+  protected final void code(Instruction... elements) {
     // no-op
   }
 
