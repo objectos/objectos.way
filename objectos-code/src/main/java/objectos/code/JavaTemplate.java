@@ -1606,8 +1606,33 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Sets the specified {@code type} as the return type of the immediately
-   * enclosing method declaration.
+   * Sets the specified {@code type} as the return type of the receiving method
+   * declaration.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * // class or interface
+   * method(returnType(Integer.class), name("a"))
+   * // array type
+   * method(returnType(String[].class), name("b"))
+   * // primitive type
+   * method(returnType(int.class), name("c"))
+   * // void
+   * method(returnType(void.class), name("d"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * java.lang.Integer a() {}
+   *
+   * java.lang.String[] b() {}
+   *
+   * int c() {}
+   *
+   * void d() {}</pre>
    *
    * @param type
    *        the value to be set as the return type
@@ -1616,8 +1641,10 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected final ReturnType returnType(AnyType type) {
-    return api().elem(ByteProto.RETURN_TYPE, type.self());
+  protected final ReturnType returnType(Class<?> type) {
+    Objects.requireNonNull(type, "type == null");
+    var api = api();
+    return api.elem(ByteProto.RETURN_TYPE, typeName(type));
   }
 
   /**
@@ -1817,6 +1844,30 @@ public abstract class JavaTemplate {
     }
   }
 
+  private Object arrayTypeName(Class<?> type) {
+    int dimCount = 1;
+
+    Class<?> componentType = type.getComponentType();
+
+    for (;;) {
+      Class<?> next = componentType.getComponentType();
+
+      if (next == null) {
+        break;
+      }
+
+      dimCount++;
+
+      componentType = next;
+    }
+
+    t(componentType);
+    for (int i = 0; i < dimCount; i++) {
+      dim();
+    }
+    return api.arrayTypeName(dimCount);
+  }
+
   private _Item modifier(Keyword value) {
     return api().itemAdd(ByteProto.MODIFIER, value.ordinal());
   }
@@ -1827,6 +1878,24 @@ public abstract class JavaTemplate {
 
   private _Item stop() {
     return api().itemAdd(ByteProto.STOP, ByteProto.NOOP);
+  }
+
+  private Object typeName(Class<?> type) {
+    if (type == void.class) {
+      return _void();
+    } else if (type == boolean.class) {
+      return _boolean();
+    } else if (type == double.class) {
+      return _double();
+    } else if (type == int.class) {
+      return _int();
+    } else if (type.isPrimitive()) {
+      throw new UnsupportedOperationException("Implement me");
+    } else if (type.isArray()) {
+      return arrayTypeName(type);
+    } else {
+      return t(type);
+    }
   }
 
 }

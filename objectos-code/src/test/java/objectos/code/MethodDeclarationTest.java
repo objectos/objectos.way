@@ -362,29 +362,23 @@ public class MethodDeclarationTest {
             ),
 
             method(
-              returnType(t(t(String.class), dim())),
+              returnType(String[].class),
               name("test1")
             ),
 
             method(
-              returnType(_int()),
+              returnType(int.class),
               name("test2")
             ),
 
             method(
-              returnType(t(Integer.class)),
+              returnType(Integer.class),
               name("test3")
             ),
 
-            method(
-              returnType(tvar("E")),
-              name("test4")
-            ),
+            tvar("E"), method("test4"), block(),
 
-            method(
-              returnType(t(t(Map.class), tvar("K"), tvar("V"))),
-              name("test5")
-            )
+            t(t(Map.class), tvar("K"), tvar("V")), method("test5"), block()
           );
         }
       }.toString(),

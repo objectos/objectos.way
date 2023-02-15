@@ -99,6 +99,26 @@ class InternalApi {
     protoIndex = self;
   }
 
+  final _Item arrayTypeName(int dimCount) {
+    elemPre();
+
+    elemPre(item);
+
+    for (int i = 0; i < dimCount; i++) {
+      elemPre(item);
+    }
+
+    elemCnt(ByteProto.ARRAY_TYPE);
+
+    elemItem(item);
+
+    for (int i = 0; i < dimCount; i++) {
+      elemItem(item);
+    }
+
+    return elemRet();
+  }
+
   final _Item classType(Class<?> type) {
     var last = objectIndex;
 
@@ -317,29 +337,6 @@ class InternalApi {
     return elemRet();
   }
 
-  final _Item elemMany(int proto, Object first, Object[] elements) {
-    elemPre();
-
-    elemPre(first);
-
-    for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
-      Check.notNull(element, "elements[", i, "] == null");
-      elemPre(element);
-    }
-
-    elemCnt(proto);
-
-    elemItem(first);
-
-    for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
-      elemItem(element);
-    }
-
-    return elemRet();
-  }
-
   final _Item elemMany(int proto, Object first, Object second, Object[] elements) {
     elemPre();
 
@@ -356,6 +353,29 @@ class InternalApi {
 
     elemItem(first);
     elemItem(second);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      elemItem(element);
+    }
+
+    return elemRet();
+  }
+
+  final _Item elemMany(int proto, Object first, Object[] elements) {
+    elemPre();
+
+    elemPre(first);
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+      Check.notNull(element, "elements[", i, "] == null");
+      elemPre(element);
+    }
+
+    elemCnt(proto);
+
+    elemItem(first);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
