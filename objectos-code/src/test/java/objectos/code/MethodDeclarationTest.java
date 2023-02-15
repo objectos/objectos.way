@@ -248,7 +248,10 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _void(), method("test0", t(String.class), id("a")), block(),
+            method(
+              name("test0"),
+              parameter(String.class, "a")
+            ),
 
             _void(), method("test1", t(String.class), id("a"), t(String.class), id("b")), block(),
 

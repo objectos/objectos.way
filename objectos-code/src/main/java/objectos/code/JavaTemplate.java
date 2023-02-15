@@ -1876,6 +1876,67 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
+   * @since 0.4.2
+   */
+  protected final Parameter parameter(Class<?> type, String name) {
+    JavaModel.checkIdentifier(name.toString());
+    var api = api();
+    Object typeName = typeName(type);
+    api.identifierext(name);
+    return api.elem(ByteProto.PARAMETER, typeName, EXT);
+  }
+
+  /**
+   * Sets the specified {@code type} as the return type of the receiving method
+   * declaration.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * // class or interface
+   * method(returnType(Integer.class), name("a"))
+   * // array type
+   * method(returnType(String[].class), name("b"))
+   * // primitive type
+   * method(returnType(int.class), name("c"))
+   * // void
+   * method(returnType(void.class), name("d"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * java.lang.Integer a() {}
+   *
+   * java.lang.String[] b() {}
+   *
+   * int c() {}
+   *
+   * void d() {}</pre>
+   *
+   * <p>
+   * Use the {@link #returnType(TypeName)} method if the return type cannot be
+   * represented by a class literal.
+   *
+   * @param type
+   *        the value to be set as the return type
+   *
+   * @return the return type instruction
+   *
+   * @see #returnType(TypeName)
+   *
+   * @since 0.4.2
+   */
+  protected final ReturnType returnType(Class<?> type) {
+    Objects.requireNonNull(type, "type == null");
+    var api = api();
+    return api.elem(ByteProto.RETURN_TYPE, typeName(type));
+  }
+
+  /**
    * Sets the specified {@code type} as the return type of the receiving method
    * declaration.
    *
@@ -1927,54 +1988,6 @@ public abstract class JavaTemplate {
    */
   protected final ReturnType returnType(TypeName type) {
     return api.elem(ByteProto.RETURN_TYPE, type.self());
-  }
-
-  /**
-   * Sets the specified {@code type} as the return type of the receiving method
-   * declaration.
-   *
-   * <p>
-   * The following Objectos Code:
-   *
-   * <pre>
-   * // class or interface
-   * method(returnType(Integer.class), name("a"))
-   * // array type
-   * method(returnType(String[].class), name("b"))
-   * // primitive type
-   * method(returnType(int.class), name("c"))
-   * // void
-   * method(returnType(void.class), name("d"))</pre>
-   *
-   * <p>
-   * Generates the following Java code:
-   *
-   * <pre>
-   * java.lang.Integer a() {}
-   *
-   * java.lang.String[] b() {}
-   *
-   * int c() {}
-   *
-   * void d() {}</pre>
-   *
-   * <p>
-   * Use the {@link #returnType(AnyType)} method if the return type cannot be
-   * represented by a class literal.
-   *
-   * @param type
-   *        the value to be set as the return type
-   *
-   * @return the return type instruction
-   *
-   * @see #returnType(AnyType)
-   *
-   * @since 0.4.2
-   */
-  protected final ReturnType returnType(Class<?> type) {
-    Objects.requireNonNull(type, "type == null");
-    var api = api();
-    return api.elem(ByteProto.RETURN_TYPE, typeName(type));
   }
 
   /**

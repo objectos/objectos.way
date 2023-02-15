@@ -1230,8 +1230,7 @@ class InternalCompiler extends InternalApi {
       codeAdd(ByteCode.IDENTIFIER, object("unnamed"));
     }
 
-    codeAdd(Symbol.LEFT_PARENTHESIS);
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
+    parameterList();
 
     codeAdd(Whitespace.OPTIONAL);
 
@@ -1343,6 +1342,24 @@ class InternalCompiler extends InternalApi {
     lastSet(_SEMICOLON);
   }
 
+  private void parameter() {
+    if (itemTest(ByteProto::isType)) {
+      executeSwitch(this::type);
+    } else {
+      int proto = itemPeek();
+
+      var name = protoName(proto);
+
+      errorRaise("parameter: expected 'Type' but found '%s'".formatted(name));
+    }
+
+    if (itemIs(ByteProto.IDENTIFIER)) {
+      codeAdd(Whitespace.MANDATORY);
+
+      execute(this::identifier);
+    }
+  }
+
   private void parameterizedType() {
     execute(this::classType);
 
@@ -1360,6 +1377,16 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
+  }
+
+  private void parameterList() {
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    if (itemIs(ByteProto.PARAMETER)) {
+      execute(this::parameter);
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
   }
 
   private void primitiveLiteral() {
