@@ -33,9 +33,9 @@ class InternalApi {
 
   int codeIndex;
 
-  int[][] levelArray = new int[2][];
+  int[][] levelArray = new int[4][];
 
-  int[] levelIndex = new int[2];
+  int[] levelIndex = new int[4];
 
   int level;
 
@@ -500,6 +500,12 @@ class InternalApi {
     return value;
   }
 
+  final void localToExternal() {
+    int[] array = levelArray[level];
+
+    array[levelIndex[level] - 2] = EXT;
+  }
+
   final int object(Object value) {
     objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
 
@@ -579,7 +585,7 @@ class InternalApi {
       offset = 0;
 
       kind = LOCAL;
-    } else if (obj == JavaTemplate.EXT) {
+    } else if (obj == JavaTemplate.EXT || obj instanceof JavaTemplate.External) {
       offset = 1;
 
       kind = EXT;
@@ -615,6 +621,10 @@ class InternalApi {
 
   private void elemPre(Object obj) {
     stackinc(0);
+
+    if (obj instanceof JavaTemplate.External ext) {
+      ext.execute(this);
+    }
   }
 
   private _Item elemRet() {

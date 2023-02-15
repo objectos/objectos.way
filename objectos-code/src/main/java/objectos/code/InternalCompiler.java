@@ -1192,6 +1192,8 @@ class InternalCompiler extends InternalApi {
       }
     }
 
+    modifierList();
+
     if (itemIs(ByteProto.MODIFIERS)) {
       if (lastIs(_ANNOTATION)) {
         codeAdd(Whitespace.AFTER_ANNOTATION);
@@ -1212,6 +1214,8 @@ class InternalCompiler extends InternalApi {
 
     if (itemIs(ByteProto.RETURN_TYPE)) {
       execute(this::returnType);
+    } else if (itemTest(ByteProto::isType)) {
+      executeSwitch(this::type);
     } else {
       voidKeyword();
     }

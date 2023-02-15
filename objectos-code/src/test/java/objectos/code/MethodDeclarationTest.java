@@ -376,9 +376,15 @@ public class MethodDeclarationTest {
               name("test3")
             ),
 
-            tvar("E"), method("test4"), block(),
+            method(
+              returnType(tvar("E")),
+              name("test4")
+            ),
 
-            t(t(Map.class), tvar("K"), tvar("V")), method("test5"), block()
+            method(
+              returnType(t(t(Map.class), tvar("K"), tvar("V"))),
+              name("test5")
+            )
           );
         }
       }.toString(),
@@ -503,6 +509,35 @@ public class MethodDeclarationTest {
       """
       class Methods {
         abstract void test0(int a, java.lang.String b);
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  Method declarations TC13
+
+  - shorthand variant
+  """)
+  public void testCase13() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName String$ = classType(String.class);
+
+        @Override
+        protected final void definition() {
+          _class("Methods");
+          body(
+            method(
+              PUBLIC, String$, name("a")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        public java.lang.String a() {}
       }
       """
     );
