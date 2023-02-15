@@ -16,6 +16,7 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.Objects;
 import objectos.lang.Check;
 
@@ -51,7 +52,51 @@ public abstract class JavaTemplate {
    * @since 0.4.2
    */
   protected static abstract sealed class ClassTypeName extends ReferenceTypeName {
-    protected static ClassTypeName of(Class<?> type) {
+
+    private static final class OfClass extends ClassTypeName {
+      private final Class<?> value;
+
+      public OfClass(Class<?> value) {
+        this.value = value;
+      }
+
+      @Override
+      final void execute(InternalApi api) {
+        api.classType(value);
+        api.localToExternal();
+      }
+    }
+
+    private static final class OfNames extends ClassTypeName {
+      private final String packageName;
+
+      private final String simpleName;
+
+      private final String[] nested;
+
+      OfNames(String packageName, String simpleName, String[] nested) {
+        this.packageName = packageName;
+        this.simpleName = simpleName;
+        this.nested = nested;
+      }
+
+      @Override
+      final void execute(InternalApi api) {
+        int count = 1; // simple name
+        count += nested.length;
+
+        api.extStart();
+        api.protoAdd(ByteProto.CLASS_TYPE, api.object(packageName));
+        api.protoAdd(count, api.object(simpleName));
+        for (var n : nested) {
+          api.protoAdd(api.object(n));
+        }
+      }
+    }
+
+    ClassTypeName() {}
+
+    static ClassTypeName of(Class<?> type) {
       Check.argument(!type.isPrimitive(), """
       A `ClassTypeName` cannot be used to represent a primitive type.
 
@@ -71,23 +116,23 @@ public abstract class JavaTemplate {
       return new OfClass(type);
     }
 
-    protected static ClassTypeName of(String packageName, String simpleName, String... nested) {
-      throw new UnsupportedOperationException("Implement me");
-    }
+    static ClassTypeName of(String packageName, String simpleName, String... nested) {
+      JavaModel.checkPackageName(packageName.toString());
+      JavaModel.checkSimpleName(simpleName.toString());
 
-    private static final class OfClass extends ClassTypeName {
-      private final Class<?> value;
+      for (int i = 0; i < nested.length; i++) {
+        var nestedName = nested[i];
 
-      public OfClass(Class<?> value) {
-        this.value = value;
+        if (nestedName == null) {
+          throw new NullPointerException("nested[" + i + "] == null");
+        }
+
+        JavaModel.checkSimpleName(nestedName);
       }
 
-      @Override
-      final void execute(InternalApi api) {
-        api.classType(value);
-        api.localToExternal();
-      }
+      return new OfNames(packageName, simpleName, Arrays.copyOf(nested, nested.length));
     }
+
   }
 
   /**
@@ -142,8 +187,8 @@ public abstract class JavaTemplate {
 
     @Override
     final void execute(InternalApi api) {
-      api.itemAdd(ByteProto.MODIFIER, value);
-      api.localToExternal();
+      api.extStart();
+      api.protoAdd(ByteProto.MODIFIER, value);
     }
   }
 
@@ -160,6 +205,80 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.2
    */
+  protected static final class ParameterizedTypeName extends ReferenceTypeName {
+    private final ClassTypeName raw;
+
+    private final ReferenceTypeName first;
+
+    private final ReferenceTypeName[] rest;
+
+    ParameterizedTypeName(ClassTypeName raw,
+                          ReferenceTypeName first,
+                          ReferenceTypeName[] rest) {
+      this.raw = raw;
+      this.first = first;
+      this.rest = rest;
+    }
+
+    static ParameterizedTypeName of(
+        ClassTypeName raw, ReferenceTypeName first, ReferenceTypeName... rest) {
+      Objects.requireNonNull(raw, "raw == null");
+      Objects.requireNonNull(first, "first == null");
+
+      for (int i = 0; i < rest.length; i++) {
+        var e = rest[i];
+
+        if (e == null) {
+          throw new NullPointerException("rest[" + i + "] == null");
+        }
+      }
+
+      return new ParameterizedTypeName(raw, first, Arrays.copyOf(rest, rest.length));
+    }
+
+    @Override
+    final void execute(InternalApi api) {
+      Object[] many = rest;
+      api.elemMany(ByteProto.PARAMETERIZED_TYPE, raw, first, many);
+      api.localToExternal();
+    }
+  }
+
+  /**
+   * @since 0.4.2
+   */
+  protected static final class PrimitiveTypeName extends TypeName {
+    /**
+     * The {@code boolean} primitive type.
+     */
+    public static final PrimitiveTypeName BOOLEAN = new PrimitiveTypeName(Keyword.BOOLEAN);
+
+    /**
+     * The {@code double} primitive type.
+     */
+    public static final PrimitiveTypeName DOUBLE = new PrimitiveTypeName(Keyword.DOUBLE);
+
+    /**
+     * The {@code int} primitive type.
+     */
+    public static final PrimitiveTypeName INT = new PrimitiveTypeName(Keyword.INT);
+
+    private final int value;
+
+    private PrimitiveTypeName(Keyword keyword) {
+      value = keyword.ordinal();
+    }
+
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.PRIMITIVE_TYPE, value);
+    }
+  }
+
+  /**
+   * @since 0.4.2
+   */
   protected abstract static sealed class ReferenceTypeName extends TypeName {
     ReferenceTypeName() {}
   }
@@ -172,10 +291,26 @@ public abstract class JavaTemplate {
     TypeName() {}
   }
 
-  abstract static sealed class External {
-    External() {}
+  /**
+   * @since 0.4.2
+   */
+  protected static final class TypeVariableName extends ReferenceTypeName {
+    private final String name;
 
-    abstract void execute(InternalApi api);
+    TypeVariableName(String name) {
+      this.name = name;
+    }
+
+    static TypeVariableName of(String name) {
+      JavaModel.checkVarName(name.toString());
+      return new TypeVariableName(name);
+    }
+
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.TYPE_VARIABLE, api.object(name));
+    }
   }
 
   enum _Ext {
@@ -340,6 +475,12 @@ public abstract class JavaTemplate {
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
+  abstract static sealed class External {
+    External() {}
+
+    abstract void execute(InternalApi api);
+  }
+
   sealed interface FinalModifier extends BodyElement {}
 
   sealed interface Identifier extends BlockElement, BodyElement, ParameterElement {}
@@ -476,6 +617,27 @@ public abstract class JavaTemplate {
    */
   protected static final Modifier FINAL = new Modifier(Keyword.FINAL);
 
+  /**
+   * The {@code boolean} primitive type.
+   *
+   * @since 0.4.2
+   */
+  protected static final PrimitiveTypeName BOOLEAN = PrimitiveTypeName.BOOLEAN;
+
+  /**
+   * The {@code double} primitive type.
+   *
+   * @since 0.4.2
+   */
+  protected static final PrimitiveTypeName DOUBLE = PrimitiveTypeName.DOUBLE;
+
+  /**
+   * The {@code int} primitive type.
+   *
+   * @since 0.4.2
+   */
+  protected static final PrimitiveTypeName INT = PrimitiveTypeName.INT;
+
   static final _Ext EXT = _Ext.INSTANCE;
 
   static final _Include INCLUDE = _Include.INSTANCE;
@@ -488,10 +650,41 @@ public abstract class JavaTemplate {
   protected JavaTemplate() {}
 
   /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected static ClassTypeName classType(Class<?> type) {
     return ClassTypeName.of(type);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.2
+   */
+  protected static ClassTypeName classType(
+      String packageName, String simpleName, String... nested) {
+    return ClassTypeName.of(packageName, simpleName, nested);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.2
+   */
+  protected static ParameterizedTypeName parameterizedType(
+      ClassTypeName raw, ReferenceTypeName first, ReferenceTypeName... rest) {
+    return ParameterizedTypeName.of(raw, first, rest);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.2
+   */
+  protected static TypeVariableName typeVariable(String name) {
+    return TypeVariableName.of(name);
   }
 
   /**
@@ -1628,7 +1821,7 @@ public abstract class JavaTemplate {
    */
   protected final ModifiersElement modifiers(Modifier... modifiers) {
     var api = api();
-    api.itemStart();
+    api.localStart();
     api.protoAdd(ByteProto.MODIFIERS, modifiers.length); // implicit null-check
     for (var modifier : modifiers) {
       api.protoAdd(modifier.value);// implicit null-check
@@ -1713,7 +1906,7 @@ public abstract class JavaTemplate {
    * Generates the following Java code:
    *
    * <pre>
-   * java.util.List<java.lang.String> a() {}
+   * java.util.List&lt;java.lang.String&gt; a() {}
    *
    * E b() {}
    *
@@ -1968,7 +2161,7 @@ public abstract class JavaTemplate {
    * TODO
    */
   protected final TypeVariable tvar(String name) {
-    Objects.requireNonNull(name, "name == null");
+    JavaModel.checkVarName(name.toString());
     var api = api();
     return api.itemAdd(ByteProto.TYPE_VARIABLE, api.object(name));
   }

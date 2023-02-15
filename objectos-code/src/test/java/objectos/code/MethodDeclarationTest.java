@@ -524,12 +524,39 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         static final ClassTypeName String$ = classType(String.class);
 
+        static final ClassTypeName Foo$ = classType("com.example", "Foo");
+
+        static final ParameterizedTypeName Map$ = parameterizedType(
+          classType(Map.class),
+          classType(Integer.class),
+          classType(String.class)
+        );
+
+        static final TypeVariableName E$ = typeVariable("E");
+
         @Override
         protected final void definition() {
           _class("Methods");
           body(
             method(
-              PUBLIC, String$, name("a")
+              PUBLIC, FINAL, String$, name("a")
+            ),
+
+            method(
+              PRIVATE, Foo$, name("foo")
+            ),
+
+            method(
+              annotation(Override.class),
+              PUBLIC, INT, name("hashCode")
+            ),
+
+            method(
+              PUBLIC, STATIC, Map$, name("b")
+            ),
+
+            method(
+              E$, name("e")
             )
           );
         }
@@ -537,7 +564,16 @@ public class MethodDeclarationTest {
 
       """
       class Methods {
-        public java.lang.String a() {}
+        public final java.lang.String a() {}
+
+        private com.example.Foo foo() {}
+
+        @java.lang.Override
+        public int hashCode() {}
+
+        public static java.util.Map<java.lang.Integer, java.lang.String> b() {}
+
+        E e() {}
       }
       """
     );

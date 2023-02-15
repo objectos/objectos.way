@@ -142,7 +142,7 @@ class InternalApi {
 
     var packageName = type.getPackageName();
 
-    itemStart();
+    localStart();
 
     protoAdd(ByteProto.CLASS_TYPE, object(packageName), names);
 
@@ -404,46 +404,46 @@ class InternalApi {
     return elemRet();
   }
 
+  final void extStart() {
+    levelAdd(EXT, protoIndex);
+  }
+
   final void identifierext(String value) {
     levelAdd(EXT, protoIndex);
     protoAdd(ByteProto.IDENTIFIER, object(value));
   }
 
   final _Item itemAdd(int v0) {
-    itemStart();
+    localStart();
     protoAdd(v0);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1) {
-    itemStart();
+    localStart();
     protoAdd(v0, v1);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2) {
-    itemStart();
+    localStart();
     protoAdd(v0, v1, v2);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3) {
-    itemStart();
+    localStart();
     protoAdd(v0, v1, v2, v3);
     return item;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
-    itemStart();
+    localStart();
     protoAdd(v0, v1, v2, v3, v4);
     return item;
   }
 
   final _Item itemEnd() { return item; }
-
-  final void itemStart() {
-    levelAdd(LOCAL, protoIndex);
-  }
 
   final _Item joinWith(int proto) {
     int[] array = levelArray[level];
@@ -498,6 +498,10 @@ class InternalApi {
     --levelIndex[level];
 
     return value;
+  }
+
+  final void localStart() {
+    levelAdd(LOCAL, protoIndex);
   }
 
   final void localToExternal() {
