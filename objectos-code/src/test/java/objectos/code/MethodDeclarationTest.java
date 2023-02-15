@@ -353,6 +353,12 @@ public class MethodDeclarationTest {
   public void testCase09() {
     assertEquals(
       new JavaTemplate() {
+        static final TypeVariableName E$ = typeVariable("E");
+
+        static final ParameterizedTypeName MapKV = parameterizedType(
+          classType(Map.class), typeVariable("K"), typeVariable("V")
+        );
+
         @Override
         protected final void definition() {
           _class("Methods");
@@ -367,7 +373,7 @@ public class MethodDeclarationTest {
             ),
 
             method(
-              returnType(int.class),
+              returnType(INT),
               name("test2")
             ),
 
@@ -377,12 +383,12 @@ public class MethodDeclarationTest {
             ),
 
             method(
-              returnType(tvar("E")),
+              returnType(E$),
               name("test4")
             ),
 
             method(
-              returnType(t(t(Map.class), tvar("K"), tvar("V"))),
+              returnType(MapKV),
               name("test5")
             )
           );

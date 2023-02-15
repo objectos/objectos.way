@@ -1896,11 +1896,17 @@ public abstract class JavaTemplate {
    *
    * <pre>
    * // parameterized type
-   * method(returnType(t(t(List.class), t(String.class)), name("a"))
-   * // parameterized type
-   * method(returnType(tvar("E")), name("b"))
+   * method(
+   *   returnType(
+   *     parameterizedType(
+   *       classType(List.class),
+   *       classType(String.class)
+   *     )
+   *   ), name("a"))
+   * // type variable
+   * method(returnType(typeVariable("E")), name("b"))
    * // generated type
-   * method(returnType(t("com.example", "Generated")), name("c"))</pre>
+   * method(returnType(classType("com.example", "Generated")), name("c"))</pre>
    *
    * <p>
    * Generates the following Java code:
@@ -1919,7 +1925,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected final ReturnType returnType(AnyType type) {
+  protected final ReturnType returnType(TypeName type) {
     return api.elem(ByteProto.RETURN_TYPE, type.self());
   }
 
