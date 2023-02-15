@@ -589,7 +589,8 @@ class InternalApi {
       offset = 0;
 
       kind = LOCAL;
-    } else if (obj == JavaTemplate.EXT || obj instanceof JavaTemplate.External) {
+    } else if (
+      obj == JavaTemplate.EXT || obj instanceof JavaTemplate.External || obj instanceof String) {
       offset = 1;
 
       kind = EXT;
@@ -628,6 +629,8 @@ class InternalApi {
 
     if (obj instanceof JavaTemplate.External ext) {
       ext.execute(this);
+    } else if (obj instanceof String s) {
+      identifierext(s);
     }
   }
 

@@ -1889,6 +1889,17 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
+   * @since 0.4.2
+   */
+  protected final Parameter parameter(TypeName type, String name) {
+    JavaModel.checkIdentifier(name.toString());
+    var api = api();
+    return api.elem(ByteProto.PARAMETER, type, name);
+  }
+
+  /**
    * Sets the specified {@code type} as the return type of the receiving method
    * declaration.
    *

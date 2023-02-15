@@ -1384,6 +1384,13 @@ class InternalCompiler extends InternalApi {
 
     if (itemIs(ByteProto.PARAMETER)) {
       execute(this::parameter);
+
+      while (itemIs(ByteProto.PARAMETER)) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        execute(this::parameter);
+      }
     }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);

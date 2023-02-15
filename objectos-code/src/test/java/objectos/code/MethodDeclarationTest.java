@@ -244,6 +244,14 @@ public class MethodDeclarationTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName String$ = classType(String.class);
+
+        static final TypeVariableName N$ = typeVariable("N");
+
+        static final ParameterizedTypeName ListN = parameterizedType(
+          classType(List.class), N$
+        );
+
         @Override
         protected final void definition() {
           _class("Methods");
@@ -253,25 +261,41 @@ public class MethodDeclarationTest {
               parameter(String.class, "a")
             ),
 
-            _void(), method("test1", t(String.class), id("a"), t(String.class), id("b")), block(),
-
-            _void(), method(
-              "test2",
-              _int(), id("a"),
-              _double(), id("b"),
-              _boolean(), id("c")
+            method(
+              name("test1"),
+              parameter(String$, "a"),
+              parameter(String$, "b")
             ),
-            block(),
+
+            method(
+              name("test2"),
+              parameter(INT, "a"),
+              parameter(DOUBLE, "b"),
+              parameter(BOOLEAN, "c")
+            ),
 
             _void(), method("test3", _int(), ellipsis(), id("a")), block(),
 
-            _void(), method("test4", t(t(String.class), dim()), id("args")), block(),
+            method(
+              name("test4"),
+              parameter(String[].class, "args")
+            ),
 
-            _void(), method("test5", tvar("N"), id("n")), block(),
+            method(
+              name("test5"),
+              parameter(N$, "n")
+            ),
 
-            _void(), method("test6", t(t(List.class), tvar("N")), id("list")), block(),
+            method(
+              name("test6"),
+              parameter(ListN, "list")
+            ),
 
-            t(String.class), method("test7", t(String.class), id("a")), block()
+            method(
+              returnType(String$),
+              name("test7"),
+              parameter(String$, "a")
+            )
           );
         }
       }.toString(),
