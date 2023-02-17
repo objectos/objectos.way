@@ -49,6 +49,8 @@ public abstract class JavaTemplate {
   protected sealed interface BodyElement extends Instruction {}
 
   /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected static abstract sealed class ClassTypeName extends ReferenceTypeName {
@@ -136,13 +138,14 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Represents a sub-template to be included as part of the enclosing template.
+   * Represents a partial template to be included as part of the enclosing
+   * template.
    */
   @FunctionalInterface
   protected interface IncludeTarget {
 
     /**
-     * Includes all instructions from this sub-template into the including
+     * Includes all instructions from this partial template into the including
      * template.
      */
     void execute();
@@ -203,6 +206,8 @@ public abstract class JavaTemplate {
   protected sealed interface ParameterElement extends Instruction {}
 
   /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected static final class ParameterizedTypeName extends ReferenceTypeName {
@@ -245,6 +250,8 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected static final class PrimitiveTypeName extends TypeName {
@@ -277,6 +284,8 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected abstract static sealed class ReferenceTypeName extends TypeName {
@@ -284,6 +293,8 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected abstract static sealed class TypeName
@@ -292,6 +303,8 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected static final class TypeVariableName extends ReferenceTypeName {
@@ -1206,7 +1219,23 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Adds an annotation to the receiving declaration or type usage.
+   * Adds an annotation to a declaration or to a type usage.
+   *
+   * <p>
+   * The following Objectos Code method declaration:
+   *
+   * <pre>
+   * method(
+   *   at(Override.class),
+   *   PUBLIC, INT, name("hashCode")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * &#064;java.lang.Override
+   * public int hashCode() {}</pre>
    *
    * @param annotationType
    *        the type of the annotation
@@ -1236,7 +1265,16 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * Instructs this template to automatically add import declarations for the
+   * types declared.
+   *
+   * <p>
+   * The imports declarations will be inserted at the relative
+   * location this instruction is invoked. In other words, this instruction must
+   * be called <em>after</em> the package declaration instruction (if any) and
+   * <em>before</em> any top level declaration (if any).
+   *
+   * @return the {@code autoImports} instruction
    */
   protected final AutoImports autoImports() {
     var api = api();
@@ -1744,20 +1782,73 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Emits a method declaration.
+   * Adds a method declaration to a class or interface declaration.
    *
    * <p>
-   * TODO
+   * The following Objectos Code method declaration:
    *
-   * @param elements
+   * <pre>
+   * method(
+   *   annotation(Override.class),
+   *   modifiers(PUBLIC, FINAL),
+   *   returnType(String.class),
+   *   name("toString"),
+   *
+   *   RETURN, s("Objectos Code")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * &#064;java.lang.Override
+   * public final java.lang.String toString() {
+   *   return "Objectos Code";
+   * }</pre>
+   *
+   * <p>
+   * This method also accepts a shorthand form.
+   * The following produces the same result as the previous form:
+   *
+   * <pre>
+   * static final ClassTypeName String$ = classType(String.class);
+   *
+   * method(
+   *   annotation(Override.class),
+   *   PUBLIC, FINAL, String$, name("toString"),
+   *   RETURN, s("Objectos Code")
+   * )</pre>
+   *
+   * <p>
+   * If the method's return type is not explicitly defined, then it is assumed
+   * that the method does not return a value. In other other words, the keyword
+   * {@code void} will be added.
+   *
+   * <p>
+   * If the method's name is not explicitly defined, then the method will be
+   * named {@code unnamed}.
+   *
+   * <p>
+   * Therefore, if this method is invoked without arguments, like so:
+   *
+   * <pre>
+   * method()</pre>
+   *
+   * <p>
+   * Then the following Java code will be generated:
+   *
+   * <pre>
+   * void unnamed() {}</pre>
+   *
+   * @param contents
    *        the contents of this method declaration
    *
    * @return a method declaration
    *
    * @since 0.4.2
    */
-  protected final MethodDeclaration method(MethodDeclarationElement... elements) {
-    Object[] many = Objects.requireNonNull(elements, "elements == null");
+  protected final MethodDeclaration method(MethodDeclarationElement... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.METHOD_DECLARATION, many);
   }
 
@@ -1806,10 +1897,26 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Adds the specified {@code modifiers} to the immediately enclosing
-   * declaration. Modifiers are included in the order they are declared.
-   * A particular modifier will be emitted as many times as it was declared;
-   * in other words, the method <em>does not</em> filter out duplicates.
+   * Adds the specified {@code modifiers} to a declaration. Modifiers are
+   * included in the order they are declared. A particular modifier will be
+   * emitted as many times as it was declared; in other words, the method
+   * <em>does not</em> filter out duplicates.
+   *
+   * <p>
+   * The following Objectos Code method declaration:
+   *
+   * <pre>
+   * method(
+   *   modifiers(PUBLIC, STATIC),
+   *   returnType(INT),
+   *   name("value")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * public static int value() {}</pre>
    *
    * @param modifiers
    *        the modifiers to be added to the enclosing declaration
@@ -1839,15 +1946,30 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Sets the specified {@code name} to the immediately enclosing declaration.
+   * Sets the {@code name} of a declaration. If the declaration is a method
+   * then this instruction sets the method's name. If the declaration is a field
+   * then this instruction sets the field's name. And so on.
    *
    * <p>
-   * TODO
+   * The following Objectos Code method declaration:
+   *
+   * <pre>
+   * method(name("example"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * void example() {}</pre>
    *
    * @param name
    *        the value to be used as the declaration name
    *
    * @return the declaration name
+   *
+   * @throws IllegalArgumentException
+   *         if {@code name} contains characters that are not allowed for an
+   *         identifier
    *
    * @since 0.4.2
    */
@@ -1909,10 +2031,13 @@ public abstract class JavaTemplate {
    * <pre>
    * // class or interface
    * method(returnType(Integer.class), name("a"))
+   *
    * // array type
    * method(returnType(String[].class), name("b"))
+   *
    * // primitive type
    * method(returnType(int.class), name("c"))
+   *
    * // void
    * method(returnType(void.class), name("d"))</pre>
    *
@@ -1975,8 +2100,10 @@ public abstract class JavaTemplate {
    *       classType(String.class)
    *     )
    *   ), name("a"))
+   *
    * // type variable
    * method(returnType(typeVariable("E")), name("b"))
+   *
    * // generated type
    * method(returnType(classType("com.example", "Generated")), name("c"))</pre>
    *
