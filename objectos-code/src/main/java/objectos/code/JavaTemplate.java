@@ -174,16 +174,16 @@ public abstract class JavaTemplate {
 
   /**
    * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#method(MethodDeclarationElement...)} method.
+   * {@link JavaTemplate#method(MethodDeclarationInstruction...)} method.
    */
-  protected sealed interface MethodDeclarationElement extends Instruction {}
+  protected sealed interface MethodDeclarationInstruction extends Instruction {}
 
   /**
    * Represents a modifier of the Java language.
    *
    * @since 0.4.2
    */
-  protected static final class Modifier extends External implements MethodDeclarationElement {
+  protected static final class Modifier extends External implements MethodDeclarationInstruction {
     final int value;
 
     private Modifier(Keyword keyword) { this.value = keyword.ordinal(); }
@@ -197,8 +197,7 @@ public abstract class JavaTemplate {
 
   /**
    * An {@link Instruction} that can be used with constructs that can declare
-   * formal
-   * parameters.
+   * formal parameters.
    *
    * @see JavaTemplate#constructor(ParameterElement...)
    * @see JavaTemplate#method(String, ParameterElement...)
@@ -297,8 +296,10 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected abstract static sealed class TypeName
-      extends External implements MethodDeclarationElement {
+  protected abstract static sealed class TypeName extends External
+      implements
+      MethodDeclarationInstruction,
+      TypeParameterInstruction {
     TypeName() {}
   }
 
@@ -366,7 +367,7 @@ public abstract class JavaTemplate {
       IntegerLiteral,
       InterfaceKeyword,
       MethodDeclaration,
-      MethodDeclarationElement,
+      MethodDeclarationInstruction,
       MethodDeclarator,
       ModifiersElement,
       Invoke,
@@ -390,6 +391,7 @@ public abstract class JavaTemplate {
       ThisKeyword,
       ThrowKeyword,
       TypeParameter,
+      TypeParameterOld,
       TypeVariable,
       VarKeyword,
       VoidKeyword {
@@ -424,7 +426,7 @@ public abstract class JavaTemplate {
 
   sealed interface AbstractModifier extends BodyElement {}
 
-  sealed interface AnnotationInst extends MethodDeclarationElement {}
+  sealed interface AnnotationInst extends MethodDeclarationInstruction {}
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
@@ -463,7 +465,7 @@ public abstract class JavaTemplate {
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 
-  sealed interface DeclarationName extends MethodDeclarationElement {}
+  sealed interface DeclarationName extends MethodDeclarationInstruction {}
 
   sealed interface Ellipsis extends ParameterElement {}
 
@@ -518,7 +520,7 @@ public abstract class JavaTemplate {
 
   sealed interface MethodDeclarator extends BodyElement {}
 
-  sealed interface ModifiersElement extends MethodDeclarationElement {}
+  sealed interface ModifiersElement extends MethodDeclarationInstruction {}
 
   sealed interface NewKeyword extends BlockElement {}
 
@@ -528,7 +530,7 @@ public abstract class JavaTemplate {
 
   sealed interface PackageKeyword extends Instruction {}
 
-  sealed interface Parameter extends MethodDeclarationElement {}
+  sealed interface Parameter extends MethodDeclarationInstruction {}
 
   sealed interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
 
@@ -544,7 +546,7 @@ public abstract class JavaTemplate {
 
   sealed interface ReturnKeyword extends BlockElement {}
 
-  sealed interface ReturnType extends MethodDeclarationElement {}
+  sealed interface ReturnType extends MethodDeclarationInstruction {}
 
   sealed interface SimpleAssigmentOperator extends ExpressionPart {}
 
@@ -560,9 +562,15 @@ public abstract class JavaTemplate {
 
   sealed interface ThrowKeyword extends BlockElement {}
 
-  sealed interface TypeParameter extends BodyElement {}
+  sealed interface TypeParameter extends MethodDeclarationInstruction {}
 
+  @Deprecated
+  sealed interface TypeParameterOld extends BodyElement {}
+
+  @Deprecated
   sealed interface TypeParameterBound extends Instruction {}
+
+  sealed interface TypeParameterInstruction extends Instruction {}
 
   sealed interface TypeVariable extends ReferenceType {}
 
@@ -1847,7 +1855,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected final MethodDeclaration method(MethodDeclarationElement... contents) {
+  protected final MethodDeclaration method(MethodDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.METHOD_DECLARATION, many);
   }
@@ -1968,8 +1976,8 @@ public abstract class JavaTemplate {
    * @return the declaration name
    *
    * @throws IllegalArgumentException
-   *         if {@code name} contains characters that are not allowed for an
-   *         identifier
+   *         if {@code name} contains characters that are not allowed to be part
+   *         of an identifier
    *
    * @since 0.4.2
    */
@@ -2260,9 +2268,50 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * Adds a single type parameter to a declaration.
+   *
+   * <p>
+   * The following Objectos Code method declaration:
+   *
+   * <pre>
+   * static final ClassTypeName OBJECT = classType(Object.class);
+   *
+   * static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+   *
+   * method(
+   *   PUBLIC, typeParameter("T", OBJECT, SERIALIZABLE), name("example")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java method declaration:
+   *
+   * <pre>
+   * public <T extends java.lang.Object & java.io.Serializable> void example() {}</pre>
+   *
+   * @param name
+   *        the type parameter's name
+   * @param bounds
+   *        the bounds of this type parameter
+   *
+   * @return a type parameter instruction
+   *
+   * @throws IllegalArgumentException
+   *         if {@code name} contains characters that are not allowed to be part
+   *         of an identifier
+   *
+   * @since 0.4.3.1
+   */
+  protected final TypeParameter typeParameter(String name, TypeParameterInstruction... bounds) {
+    JavaModel.checkVarName(name.toString());
+    Object[] many = Objects.requireNonNull(bounds, "bounds == null");
+    return api().elemMany(ByteProto.TYPE_PARAMETER, name, many);
+  }
+
+  /**
    * TODO
    */
-  protected final TypeParameter tparam(String name) {
+  @Deprecated(since = "0.4.3.1", forRemoval = true)
+  protected final TypeParameterOld tparam(String name) {
     JavaModel.checkVarName(name);
     var api = api();
     api.identifierext(name);
@@ -2272,7 +2321,8 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final TypeParameter tparam(String name, TypeParameterBound bound1) {
+  @Deprecated(since = "0.4.3.1", forRemoval = true)
+  protected final TypeParameterOld tparam(String name, TypeParameterBound bound1) {
     JavaModel.checkVarName(name);
     var api = api();
     api.identifierext(name);
@@ -2282,7 +2332,8 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final TypeParameter tparam(String name, TypeParameterBound... bounds) {
+  @Deprecated(since = "0.4.3.1", forRemoval = true)
+  protected final TypeParameterOld tparam(String name, TypeParameterBound... bounds) {
     JavaModel.checkVarName(name);
     var api = api();
     api.identifierext(name);
@@ -2293,7 +2344,8 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final TypeParameter tparam(String name,
+  @Deprecated(since = "0.4.3.1", forRemoval = true)
+  protected final TypeParameterOld tparam(String name,
       TypeParameterBound bound1, TypeParameterBound bound2) {
     JavaModel.checkVarName(name);
     var api = api();
@@ -2305,7 +2357,8 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final TypeParameter tparam(String name,
+  @Deprecated(since = "0.4.3.1", forRemoval = true)
+  protected final TypeParameterOld tparam(String name,
       TypeParameterBound bound1, TypeParameterBound bound2, TypeParameterBound bound3) {
     JavaModel.checkVarName(name);
     var api = api();

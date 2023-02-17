@@ -244,12 +244,12 @@ public class MethodDeclarationTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName String$ = classType(String.class);
+        static final ClassTypeName STRING = classType(String.class);
 
-        static final TypeVariableName N$ = typeVariable("N");
+        static final TypeVariableName N = typeVariable("N");
 
-        static final ParameterizedTypeName ListN = parameterizedType(
-          classType(List.class), N$
+        static final ParameterizedTypeName LIST_N = parameterizedType(
+          classType(List.class), N
         );
 
         @Override
@@ -263,8 +263,8 @@ public class MethodDeclarationTest {
 
             method(
               name("test1"),
-              parameter(String$, "a"),
-              parameter(String$, "b")
+              parameter(STRING, "a"),
+              parameter(STRING, "b")
             ),
 
             method(
@@ -283,18 +283,18 @@ public class MethodDeclarationTest {
 
             method(
               name("test5"),
-              parameter(N$, "n")
+              parameter(N, "n")
             ),
 
             method(
               name("test6"),
-              parameter(ListN, "list")
+              parameter(LIST_N, "list")
             ),
 
             method(
-              returnType(String$),
+              returnType(STRING),
               name("test7"),
-              parameter(String$, "a")
+              parameter(STRING, "a")
             )
           );
         }
@@ -477,26 +477,40 @@ public class MethodDeclarationTest {
   public void testCase11() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName OBJECT = classType(Object.class);
+
+        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+
+        static final ClassTypeName STRING = classType(String.class);
+
         @Override
         protected final void definition() {
           _class("Methods");
           body(
-            tparam("T"),
-            _void(), method("test0"), block(),
+            method(
+              typeParameter("T"), name("test0")
+            ),
 
-            _public(),
-            tparam("T"),
-            _void(), method("test1"), block(),
+            method(
+              PUBLIC, typeParameter("T"), name("test1")
+            ),
 
-            tparam("E1"),
-            tparam("E2"),
-            _void(), method("test2"), block(),
+            method(
+              typeParameter("E1"),
+              typeParameter("E2"),
+              name("test2")
+            ),
 
-            tparam("T", t(Object.class)),
-            _void(), method("test3"), block(),
+            method(
+              typeParameter("T", OBJECT),
+              name("test3")
+            ),
 
-            tparam("T", t(Object.class), t(Serializable.class)),
-            t(String.class), method("test4"), block()
+            method(
+              typeParameter("T", OBJECT, SERIALIZABLE),
+              returnType(STRING),
+              name("test4")
+            )
           );
         }
       }.toString(),

@@ -40,7 +40,8 @@ class InternalCompiler extends InternalApi {
       _IDENTIFIER = 3,
       _KEYWORD = 4,
       _NEW_LINE = 5,
-      _SEMICOLON = 6;
+      _SEMICOLON = 6,
+      _SYMBOL = 7;
 
   final void compile() {
     codeIndex = level = stackIndex = 0;
@@ -1203,13 +1204,20 @@ class InternalCompiler extends InternalApi {
     }
 
     if (itemIs(ByteProto.TYPE_PARAMETER)) {
-      throw new UnsupportedOperationException("Implement me");
+      switch (last()) {
+        case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+        case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+      }
+
+      typeParameterList();
     }
 
     switch (last()) {
       case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
 
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+      case _KEYWORD,
+           _SYMBOL -> codeAdd(Whitespace.MANDATORY);
     }
 
     if (itemIs(ByteProto.RETURN_TYPE)) {
@@ -1394,6 +1402,8 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    lastSet(_SYMBOL);
   }
 
   private void primitiveLiteral() {
@@ -1745,6 +1755,8 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
+
+    lastSet(_SYMBOL);
   }
 
   private void typeVariable() {
