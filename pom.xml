@@ -22,7 +22,7 @@
 
 	<groupId>br.com.objectos</groupId>
 	<artifactId>objectos</artifactId>
-	<version>0.4.2-SNAPSHOT</version>
+	<version>0.4.3</version>
 	<packaging>pom</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
