@@ -1348,7 +1348,7 @@ class InternalCompiler extends InternalApi {
     if (notNull(result)) {
       elemExe(result, this::methodResult);
     } else {
-      voidKeyword();
+      methodResultVoid();
     }
 
     if (notNull(name)) {
@@ -1396,6 +1396,18 @@ class InternalCompiler extends InternalApi {
 
       default -> type(proto);
     }
+  }
+
+  private void methodResultVoid() {
+    switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+
+      case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
+    }
+
+    voidKeyword();
   }
 
   private void modifier() {
@@ -2042,14 +2054,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void voidKeyword() {
-    switch (last()) {
-      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-
-      case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
-    }
-
     codeAdd(Keyword.VOID);
 
     lastSet(_KEYWORD);
