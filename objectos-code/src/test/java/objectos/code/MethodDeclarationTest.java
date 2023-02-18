@@ -452,9 +452,13 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _abstract(), _void(), method("test0"),
+            method(
+              ABSTRACT, VOID, name("test0")
+            ),
 
-            _void(), method("test1"), block()
+            method(
+              VOID, name("test1")
+            )
           );
         }
       }.toString(),

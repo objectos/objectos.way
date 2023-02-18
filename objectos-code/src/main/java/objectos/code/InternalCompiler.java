@@ -55,12 +55,14 @@ class InternalCompiler extends InternalApi {
     levelIndex[2] = NULL;
     // topLevel
     levelIndex[3] = NULL;
-    // error
     var arr = levelArray[0];
     if (arr == null) {
-      arr = new int[1];
+      arr = new int[2];
     }
+    // error
     arr[0] = 0;
+    // abstract found
+    arr[1] = NULL;
 
     // do not change
     // compileIndex;
@@ -90,6 +92,12 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(ByteCode.EOF);
+  }
+
+  private boolean abstractFound() { return levelArray[0][1] != NULL; }
+
+  private void abstractFound(int value) {
+    levelArray[0][1] = value;
   }
 
   private void annotation() {
@@ -1323,6 +1331,8 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.TYPE_PARAMETER -> compileList(typeParameters, value);
 
+        case ByteProto.VOID -> compileSet(result, value);
+
         default -> {
           throw new UnsupportedOperationException(
             "Implement me :: " + protoName(proto)
@@ -1336,6 +1346,8 @@ class InternalCompiler extends InternalApi {
     if (notNull(annotations)) {
       elemExe(annotations, this::declarationAnnotationList0);
     }
+
+    abstractFound(NULL);
 
     if (notNull(modifiers)) {
       elemExe(modifiers, this::declarationModifierList);
@@ -1370,20 +1382,26 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
 
-    codeAdd(Whitespace.OPTIONAL);
+    if (abstractFound()) {
+      codeAdd(Symbol.SEMICOLON);
+    } else {
+      codeAdd(Whitespace.OPTIONAL);
 
-    codeAdd(Symbol.LEFT_CURLY_BRACKET);
+      codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
-    if (notNull(statements)) {
-      throw new UnsupportedOperationException(
-        "Implement me :: statements");
+      if (notNull(statements)) {
+        throw new UnsupportedOperationException(
+          "Implement me :: statements");
+      }
+
+      codeAdd(Symbol.RIGHT_CURLY_BRACKET);
     }
-
-    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
   private void methodResult() {
     switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
       case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
 
       case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
@@ -1393,6 +1411,8 @@ class InternalCompiler extends InternalApi {
 
     switch (proto) {
       case ByteProto.RETURN_TYPE -> returnType();
+
+      case ByteProto.VOID -> voidKeyword();
 
       default -> type(proto);
     }
@@ -1413,8 +1433,14 @@ class InternalCompiler extends InternalApi {
   private void modifier() {
     int proto = protoNext();
 
-    if (proto == Keyword.PUBLIC.ordinal()) {
-      publicFound(1);
+    var keyword = Keyword.get(proto);
+
+    switch (keyword) {
+      case ABSTRACT -> abstractFound(1);
+
+      case PUBLIC -> publicFound(1);
+
+      default -> {}
     }
 
     codeAdd(ByteCode.KEYWORD, proto);
@@ -1454,12 +1480,12 @@ class InternalCompiler extends InternalApi {
     int size = protoNext();
 
     if (size > 0) {
-      codeAdd(ByteCode.KEYWORD, protoNext());
+      modifier();
 
       for (int i = 1; i < size; i++) {
         codeAdd(Whitespace.MANDATORY);
 
-        codeAdd(ByteCode.KEYWORD, protoNext());
+        modifier();
       }
     }
 

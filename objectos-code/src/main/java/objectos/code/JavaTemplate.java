@@ -248,6 +248,16 @@ public abstract class JavaTemplate {
     }
   }
 
+  protected static final MethodDeclarationInstruction VOID = new VoidKeyword();
+
+  private static final class VoidKeyword extends External implements MethodDeclarationInstruction {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.VOID, ByteProto.NOOP);
+    }
+  }
+
   /**
    * TODO
    *
@@ -394,7 +404,7 @@ public abstract class JavaTemplate {
       TypeParameterOld,
       TypeVariable,
       VarKeyword,
-      VoidKeyword {
+      OldVoidKeyword {
 
     private final InternalApi api;
 
@@ -528,6 +538,9 @@ public abstract class JavaTemplate {
 
   sealed interface NullLiteral extends ExpressionPart {}
 
+  @Deprecated
+  sealed interface OldVoidKeyword extends BodyElement {}
+
   sealed interface PackageKeyword extends Instruction {}
 
   sealed interface Parameter extends MethodDeclarationInstruction {}
@@ -565,20 +578,18 @@ public abstract class JavaTemplate {
   sealed interface TypeParameter extends MethodDeclarationInstruction {}
 
   @Deprecated
-  sealed interface TypeParameterOld extends BodyElement {}
-
-  @Deprecated
   sealed interface TypeParameterBound extends Instruction {}
 
   sealed interface TypeParameterInstruction extends Instruction {}
+
+  @Deprecated
+  sealed interface TypeParameterOld extends BodyElement {}
 
   sealed interface TypeVariable extends ReferenceType {}
 
   sealed interface VariableInitializer {}
 
   sealed interface VarKeyword extends BlockElement {}
-
-  sealed interface VoidKeyword extends BodyElement {}
 
   private sealed interface AccessModifier extends BodyElement {}
 
@@ -1199,7 +1210,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final VoidKeyword _void() {
+  protected final OldVoidKeyword _void() {
     return api().itemAdd(ByteProto.VOID, ByteProto.NOOP);
   }
 
@@ -2265,46 +2276,6 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Adds a single type parameter to a declaration.
-   *
-   * <p>
-   * The following Objectos Code method declaration:
-   *
-   * <pre>
-   * static final ClassTypeName OBJECT = classType(Object.class);
-   *
-   * static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
-   *
-   * method(
-   *   PUBLIC, typeParameter("T", OBJECT, SERIALIZABLE), name("example")
-   * )</pre>
-   *
-   * <p>
-   * Generates the following Java method declaration:
-   *
-   * <pre>
-   * public <T extends java.lang.Object & java.io.Serializable> void example() {}</pre>
-   *
-   * @param name
-   *        the type parameter's name
-   * @param bounds
-   *        the bounds of this type parameter
-   *
-   * @return a type parameter instruction
-   *
-   * @throws IllegalArgumentException
-   *         if {@code name} contains characters that are not allowed to be part
-   *         of an identifier
-   *
-   * @since 0.4.3.1
-   */
-  protected final TypeParameter typeParameter(String name, TypeParameterInstruction... bounds) {
-    JavaModel.checkVarName(name.toString());
-    Object[] many = Objects.requireNonNull(bounds, "bounds == null");
-    return api().elemMany(ByteProto.TYPE_PARAMETER, name, many);
-  }
-
-  /**
    * TODO
    */
   @Deprecated(since = "0.4.3.1", forRemoval = true)
@@ -2371,6 +2342,46 @@ public abstract class JavaTemplate {
     JavaModel.checkVarName(name.toString());
     var api = api();
     return api.itemAdd(ByteProto.TYPE_VARIABLE, api.object(name));
+  }
+
+  /**
+   * Adds a single type parameter to a declaration.
+   *
+   * <p>
+   * The following Objectos Code method declaration:
+   *
+   * <pre>
+   * static final ClassTypeName OBJECT = classType(Object.class);
+   *
+   * static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+   *
+   * method(
+   *   PUBLIC, typeParameter("T", OBJECT, SERIALIZABLE), name("example")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java method declaration:
+   *
+   * <pre>
+   * public &lt;T extends java.lang.Object &amp; java.io.Serializable&gt; void example() {}</pre>
+   *
+   * @param name
+   *        the type parameter's name
+   * @param bounds
+   *        the bounds of this type parameter
+   *
+   * @return a type parameter instruction
+   *
+   * @throws IllegalArgumentException
+   *         if {@code name} contains characters that are not allowed to be part
+   *         of an identifier
+   *
+   * @since 0.4.3.1
+   */
+  protected final TypeParameter typeParameter(String name, TypeParameterInstruction... bounds) {
+    JavaModel.checkVarName(name.toString());
+    Object[] many = Objects.requireNonNull(bounds, "bounds == null");
+    return api().elemMany(ByteProto.TYPE_PARAMETER, name, many);
   }
 
   InternalApi api() {
