@@ -278,11 +278,13 @@ public class ClassDeclarationTest {
       """
       class A extends java.lang.Thread {
         @java.lang.Override
+      \040\040
         void foo() {}
       }
 
       class B implements java.io.Serializable {
         @java.lang.Override
+      \040\040
         void foo() {}
       }
       """

@@ -68,6 +68,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("MODIFIERS");
     value("PACKAGE");
     value("PARAMETER");
+    value("PARAMETER_SHORT");
     value("RETURN_TYPE");
     value("TYPE_PARAMETER");
 

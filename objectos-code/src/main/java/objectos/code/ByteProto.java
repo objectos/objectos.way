@@ -61,45 +61,47 @@ final class ByteProto {
   static final int MODIFIERS = -31;
   static final int PACKAGE = -32;
   static final int PARAMETER = -33;
-  static final int RETURN_TYPE = -34;
-  static final int TYPE_PARAMETER = -35;
+  static final int PARAMETER_SHORT = -34;
+  static final int RETURN_TYPE = -35;
+  static final int TYPE_PARAMETER = -36;
 
   //statement start
 
-  static final int BLOCK = -36;
-  static final int IF_CONDITION = -37;
-  static final int RETURN = -38;
-  static final int SUPER = -39;
-  static final int SUPER_INVOCATION = -40;
-  static final int THROW = -41;
-  static final int VAR = -42;
+  static final int BLOCK = -37;
+  static final int IF_CONDITION = -38;
+  static final int RETURN = -39;
+  static final int SUPER = -40;
+  static final int SUPER_INVOCATION = -41;
+  static final int THROW = -42;
+  static final int VAR = -43;
 
   //statement part
 
-  static final int ELSE = -43;
+  static final int ELSE = -44;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -44;
-  static final int DIM = -45;
-  static final int DOT = -46;
-  static final int EXPRESSION_NAME = -47;
-  static final int INVOKE = -48;
-  static final int NULL_LITERAL = -49;
-  static final int PRIMITIVE_LITERAL = -50;
-  static final int STRING_LITERAL = -51;
-  static final int THIS = -52;
+  static final int CLASS_INSTANCE_CREATION = -45;
+  static final int DIM = -46;
+  static final int DOT = -47;
+  static final int EXPRESSION_NAME = -48;
+  static final int INVOKE = -49;
+  static final int NULL_LITERAL = -50;
+  static final int PRIMITIVE_LITERAL = -51;
+  static final int STRING_LITERAL = -52;
+  static final int THIS = -53;
 
   //expression part
 
-  static final int ARRAY_ACCESS = -53;
-  static final int ASSIGNMENT_OPERATOR = -54;
-  static final int EQUALITY_OPERATOR = -55;
+  static final int ARRAY_ACCESS = -54;
+  static final int ASSIGNMENT_OPERATOR = -55;
+  static final int EQUALITY_OPERATOR = -56;
 
   private ByteProto() {}
 
   public static boolean isClassOrParameterizedType(int proto) {
-    return proto == CLASS_TYPE || proto == PARAMETERIZED_TYPE;
+    return proto == CLASS_TYPE
+        || proto == PARAMETERIZED_TYPE;
   }
 
   public static boolean isExpressionStart(int proto) {
@@ -109,6 +111,16 @@ final class ByteProto {
 
   public static boolean isImport(int proto) {
     return proto == AUTO_IMPORTS;
+  }
+
+  public static boolean isModifier(int proto) {
+    return proto == MODIFIER
+        || proto == MODIFIERS;
+  }
+
+  public static boolean isFormalParameter(int proto) {
+    return proto == PARAMETER
+        || proto == PARAMETER_SHORT;
   }
 
   public static boolean isOperator(int proto) {

@@ -2012,10 +2012,8 @@ public abstract class JavaTemplate {
    */
   protected final Parameter parameter(Class<?> type, String name) {
     JavaModel.checkIdentifier(name.toString());
-    var api = api();
     Object typeName = typeName(type);
-    api.identifierext(name);
-    return api.elem(ByteProto.PARAMETER, typeName, EXT);
+    return api().elem(ByteProto.PARAMETER_SHORT, typeName, name);
   }
 
   /**
@@ -2025,8 +2023,7 @@ public abstract class JavaTemplate {
    */
   protected final Parameter parameter(TypeName type, String name) {
     JavaModel.checkIdentifier(name.toString());
-    var api = api();
-    return api.elem(ByteProto.PARAMETER, type, name);
+    return api().elem(ByteProto.PARAMETER_SHORT, type, name);
   }
 
   /**

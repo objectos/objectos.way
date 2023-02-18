@@ -461,7 +461,7 @@ public class MethodDeclarationTest {
 
       """
       class Methods {
-        abstract void test0();
+        abstract  void test0();
 
         void test1() {}
       }
@@ -555,7 +555,7 @@ public class MethodDeclarationTest {
 
       """
       class Methods {
-        abstract void test0(int a, java.lang.String b);
+        abstract  void test0(int a, java.lang.String b);
       }
       """
     );

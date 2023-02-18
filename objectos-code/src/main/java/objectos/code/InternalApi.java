@@ -33,6 +33,8 @@ class InternalApi {
 
   int codeIndex;
 
+  int compileIndex;
+
   int[][] levelArray = new int[4][];
 
   int[] levelIndex = new int[4];
@@ -95,6 +97,8 @@ class InternalApi {
     }
 
     protoAdd(ByteProto.END_ELEMENT);
+
+    compileIndex = protoIndex;
 
     protoIndex = self;
   }
