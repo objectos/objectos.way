@@ -380,9 +380,9 @@ public class MethodDeclarationTest {
   public void testCase09() {
     assertEquals(
       new JavaTemplate() {
-        static final TypeVariableName E$ = typeVariable("E");
+        static final TypeVariableName E = typeVariable("E");
 
-        static final ParameterizedTypeName MapKV = parameterizedType(
+        static final ParameterizedTypeName MAP_KV = parameterizedType(
           classType(Map.class), typeVariable("K"), typeVariable("V")
         );
 
@@ -410,12 +410,12 @@ public class MethodDeclarationTest {
             ),
 
             method(
-              returnType(E$),
+              returnType(E),
               name("test4")
             ),
 
             method(
-              returnType(MapKV),
+              returnType(MAP_KV),
               name("test5")
             )
           );
@@ -573,28 +573,28 @@ public class MethodDeclarationTest {
   public void testCase13() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName String$ = classType(String.class);
+        static final ClassTypeName STRING = classType(String.class);
 
-        static final ClassTypeName Foo$ = classType("com.example", "Foo");
+        static final ClassTypeName FOO = classType("com.example", "Foo");
 
-        static final ParameterizedTypeName Map$ = parameterizedType(
+        static final ParameterizedTypeName MAP_I_S = parameterizedType(
           classType(Map.class),
           classType(Integer.class),
           classType(String.class)
         );
 
-        static final TypeVariableName E$ = typeVariable("E");
+        static final TypeVariableName E = typeVariable("E");
 
         @Override
         protected final void definition() {
           _class("Methods");
           body(
             method(
-              PUBLIC, FINAL, String$, name("a")
+              PUBLIC, FINAL, STRING, name("a")
             ),
 
             method(
-              PRIVATE, Foo$, name("foo")
+              PRIVATE, FOO, name("foo")
             ),
 
             method(
@@ -603,11 +603,11 @@ public class MethodDeclarationTest {
             ),
 
             method(
-              PUBLIC, STATIC, Map$, name("b")
+              PUBLIC, STATIC, MAP_I_S, name("b")
             ),
 
             method(
-              E$, name("e")
+              E, name("e")
             )
           );
         }

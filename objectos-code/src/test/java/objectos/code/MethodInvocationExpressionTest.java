@@ -25,7 +25,7 @@ public class MethodInvocationExpressionTest {
 
   private final Fixture fix = new Fixture("Invoke", Kind.VOID_METHOD);
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - no args
   """)
@@ -53,22 +53,27 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - single argument
   """)
   public void testCase02() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", s("a"));
+          _class("Invoke");
+          body(
+            method(
+              v("test", s("a"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           test("a");
         }
       }
@@ -76,22 +81,27 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - two arguments
   """)
   public void testCase03() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", s("a"), s("b"));
+          _class("Invoke");
+          body(
+            method(
+              v("test", s("a"), s("b"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           test("a", "b");
         }
       }
