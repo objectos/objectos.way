@@ -92,7 +92,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("DIM");
     value("DOT");
     value("EXPRESSION_NAME");
-    value("INVOKE");
+    value("INVOKE"); // deprecated
+    value("METHOD_INVOCATION");
     value("NULL_LITERAL");
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");

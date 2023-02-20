@@ -86,16 +86,17 @@ final class ByteProto {
   static final int DOT = -47;
   static final int EXPRESSION_NAME = -48;
   static final int INVOKE = -49;
-  static final int NULL_LITERAL = -50;
-  static final int PRIMITIVE_LITERAL = -51;
-  static final int STRING_LITERAL = -52;
-  static final int THIS = -53;
+  static final int METHOD_INVOCATION = -50;
+  static final int NULL_LITERAL = -51;
+  static final int PRIMITIVE_LITERAL = -52;
+  static final int STRING_LITERAL = -53;
+  static final int THIS = -54;
 
   //expression part
 
-  static final int ARRAY_ACCESS = -54;
-  static final int ASSIGNMENT_OPERATOR = -55;
-  static final int EQUALITY_OPERATOR = -56;
+  static final int ARRAY_ACCESS = -55;
+  static final int ASSIGNMENT_OPERATOR = -56;
+  static final int EQUALITY_OPERATOR = -57;
 
   private ByteProto() {}
 

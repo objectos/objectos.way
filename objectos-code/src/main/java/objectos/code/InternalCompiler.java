@@ -30,7 +30,7 @@ class InternalCompiler extends InternalApi {
 
   @FunctionalInterface
   private interface SwitchAction {
-    void execute(int proto);
+    void oldExpressionBegin(int proto);
   }
 
   private static final int NULL = Integer.MIN_VALUE;
@@ -128,23 +128,23 @@ class InternalCompiler extends InternalApi {
   private void annotationValuePair() {
     // check for value name
 
-    expression();
+    oldExpression();
   }
 
   private void argumentList() {
     codeAdd(Symbol.LEFT_PARENTHESIS);
     codeAdd(Indentation.ENTER_PARENTHESIS);
 
-    if (itemTest(this::isArgumentStart)) {
+    if (elemMore()) {
       if (lastIs(_NEW_LINE)) {
         codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
       }
 
       lastSet(_START);
 
-      expression();
+      executeSwitch(this::expression);
 
-      while (itemTest(this::isArgumentStart)) {
+      while (elemMore()) {
         slotComma();
 
         var ws = lastIs(_NEW_LINE)
@@ -155,7 +155,7 @@ class InternalCompiler extends InternalApi {
 
         lastSet(_START);
 
-        expression();
+        executeSwitch(this::expression);
       }
     }
 
@@ -171,7 +171,7 @@ class InternalCompiler extends InternalApi {
   private void arrayAccess() {
     codeAdd(Symbol.LEFT_SQUARE_BRACKET);
 
-    expression();
+    oldExpression();
 
     codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
   }
@@ -438,7 +438,7 @@ class InternalCompiler extends InternalApi {
 
     executeSwitch(this::type);
 
-    argumentList();
+    oldArgumentList();
   }
 
   private void classKeyword() {
@@ -697,17 +697,17 @@ class InternalCompiler extends InternalApi {
   }
 
   private void dim() {
-    executeSwitch(this::expressionBegin);
+    executeSwitch(this::oldExpressionBegin);
 
-    executeSwitch(this::expressionBegin);
+    executeSwitch(this::oldExpressionBegin);
   }
 
   private void dot() {
-    executeSwitch(this::expressionBegin);
+    executeSwitch(this::oldExpressionBegin);
 
     codeAdd(Symbol.DOT);
 
-    executeSwitch(this::expressionBegin);
+    executeSwitch(this::oldExpressionBegin);
   }
 
   private void elemExe(int offset, Action action) {
@@ -718,6 +718,16 @@ class InternalCompiler extends InternalApi {
     action.execute();
 
     protoIndex = returnTo;
+  }
+
+  private boolean elemMore() {
+    if (!error() && protoMore()) {
+      int proto = protoPeek();
+
+      return proto != ByteProto.END_ELEMENT;
+    } else {
+      return false;
+    }
   }
 
   private void ellipsis() {
@@ -732,7 +742,7 @@ class InternalCompiler extends InternalApi {
     execute(this::identifier);
 
     if (itemMore()) {
-      argumentList();
+      oldArgumentList();
     }
 
     slot();
@@ -799,109 +809,19 @@ class InternalCompiler extends InternalApi {
 
     protoIndex = location;
 
-    action.execute(proto);
+    action.oldExpressionBegin(proto);
 
     protoIndex = returnTo;
 
     return proto;
   }
 
-  private void expression() {
-    int part = executeSwitch(this::expressionBegin);
-
-    slot();
-
-    if (stop()) {
-      return;
-    }
-
-    switch (part) {
-      case ByteProto.CLASS_INSTANCE_CREATION,
-           ByteProto.CLASS_TYPE,
-           ByteProto.EXPRESSION_NAME,
-           ByteProto.INVOKE,
-           ByteProto.STRING_LITERAL,
-           ByteProto.THIS -> {
-        int next = itemPeek();
-
-        switch (next) {
-          case ByteProto.EXPRESSION_NAME,
-               ByteProto.INVOKE -> {
-            if (lastIs(_NEW_LINE)) {
-              codeAdd(Indentation.CONTINUATION);
-
-              lastSet(_START);
-            }
-
-            codeAdd(Symbol.DOT);
-
-            expression();
-          }
-
-          case ByteProto.ARRAY_ACCESS -> {
-            execute(this::arrayAccess);
-
-            while (itemIs(ByteProto.ARRAY_ACCESS)) {
-              execute(this::arrayAccess);
-            }
-
-            slot();
-          }
-
-          case ByteProto.DOT -> {
-            execute(this::dot);
-
-            slot();
-          }
-        }
-      }
-    }
-
-    if (stop()) {
-      return;
-    }
-
-    while (itemTest(ByteProto::isOperator)) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      execute(this::operator);
-
-      if (itemTest(ByteProto::isExpressionStart)) {
-        codeAdd(Whitespace.OPTIONAL);
-
-        expression();
-      } else {
-        errorRaise("expected expression after operator");
-      }
-    }
-  }
-
-  private void expressionBegin(int proto) {
+  private void expression(int proto) {
     switch (proto) {
-      case ByteProto.ARRAY_ACCESS -> arrayAccess();
-
-      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
-
-      case ByteProto.CLASS_TYPE -> classType();
-
-      case ByteProto.DIM -> dim();
-
-      case ByteProto.DOT -> dot();
-
-      case ByteProto.EXPRESSION_NAME -> expressionName();
-
-      case ByteProto.INVOKE -> invoke();
-
-      case ByteProto.NULL_LITERAL -> nullLiteral();
-
-      case ByteProto.PRIMITIVE_LITERAL -> primitiveLiteral();
-
-      case ByteProto.STRING_LITERAL -> stringLiteral();
-
-      case ByteProto.THIS -> thisKeyword();
+      case ByteProto.METHOD_INVOCATION -> methodInvocation();
 
       default -> errorRaise(
-        "no-op expression part '%s'".formatted(protoName(proto))
+        "no-op expression start '%s'".formatted(protoName(proto))
       );
     }
   }
@@ -989,7 +909,7 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.LEFT_PARENTHESIS);
 
-    expression();
+    oldExpression();
 
     if (itemMore()) {
       int proto = itemPeek();
@@ -1099,7 +1019,7 @@ class InternalCompiler extends InternalApi {
   private void invoke() {
     execute(this::identifier);
 
-    argumentList();
+    oldArgumentList();
   }
 
   private boolean isArgumentStart(int proto) {
@@ -1222,6 +1142,12 @@ class InternalCompiler extends InternalApi {
     return proto == value;
   }
 
+  private boolean listMore() {
+    int listElement = protoPeek();
+
+    return listElement != NULL;
+  }
+
   private int listSwitch(SwitchAction action) {
     int listElement = protoNext();
 
@@ -1231,7 +1157,7 @@ class InternalCompiler extends InternalApi {
 
     int proto = protoNext();
 
-    action.execute(proto);
+    action.oldExpressionBegin(proto);
 
     protoIndex = returnTo;
 
@@ -1289,6 +1215,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void methodDeclaration() {
+    // compilation phase
     int start = compileIndex;
 
     int annotations = 0,
@@ -1333,14 +1260,11 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.VOID -> compileSet(result, value);
 
-        default -> {
-          throw new UnsupportedOperationException(
-            "Implement me :: " + protoName(proto)
-          );
-        }
+        default -> compileList(statements, value);
       }
     }
 
+    // interpretation phase
     protoIndex = start;
 
     if (notNull(annotations)) {
@@ -1390,12 +1314,24 @@ class InternalCompiler extends InternalApi {
       codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
       if (notNull(statements)) {
-        throw new UnsupportedOperationException(
-          "Implement me :: statements");
+        codeAdd(Indentation.ENTER_BLOCK);
+
+        elemExe(statements, this::statements);
+
+        codeAdd(Indentation.EXIT_BLOCK);
+        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+      } else {
+        codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
       }
 
       codeAdd(Symbol.RIGHT_CURLY_BRACKET);
     }
+  }
+
+  private void methodInvocation() {
+    execute(this::identifier);
+
+    argumentList();
   }
 
   private void methodResult() {
@@ -1510,6 +1446,143 @@ class InternalCompiler extends InternalApi {
 
   private Object objectget(int index) {
     return objectArray[index];
+  }
+
+  private void oldArgumentList() {
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+    codeAdd(Indentation.ENTER_PARENTHESIS);
+
+    if (itemTest(this::isArgumentStart)) {
+      if (lastIs(_NEW_LINE)) {
+        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+      }
+
+      lastSet(_START);
+
+      oldExpression();
+
+      while (itemTest(this::isArgumentStart)) {
+        slotComma();
+
+        var ws = lastIs(_NEW_LINE)
+            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
+            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
+
+        codeAdd(ws);
+
+        lastSet(_START);
+
+        oldExpression();
+      }
+    }
+
+    codeAdd(Indentation.EXIT_PARENTHESIS);
+
+    if (lastIs(_NEW_LINE)) {
+      codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
+  private void oldExpression() {
+    int part = executeSwitch(this::oldExpressionBegin);
+
+    slot();
+
+    if (stop()) {
+      return;
+    }
+
+    switch (part) {
+      case ByteProto.CLASS_INSTANCE_CREATION,
+           ByteProto.CLASS_TYPE,
+           ByteProto.EXPRESSION_NAME,
+           ByteProto.INVOKE,
+           ByteProto.STRING_LITERAL,
+           ByteProto.THIS -> {
+        int next = itemPeek();
+
+        switch (next) {
+          case ByteProto.EXPRESSION_NAME,
+               ByteProto.INVOKE -> {
+            if (lastIs(_NEW_LINE)) {
+              codeAdd(Indentation.CONTINUATION);
+
+              lastSet(_START);
+            }
+
+            codeAdd(Symbol.DOT);
+
+            oldExpression();
+          }
+
+          case ByteProto.ARRAY_ACCESS -> {
+            execute(this::arrayAccess);
+
+            while (itemIs(ByteProto.ARRAY_ACCESS)) {
+              execute(this::arrayAccess);
+            }
+
+            slot();
+          }
+
+          case ByteProto.DOT -> {
+            execute(this::dot);
+
+            slot();
+          }
+        }
+      }
+    }
+
+    if (stop()) {
+      return;
+    }
+
+    while (itemTest(ByteProto::isOperator)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::operator);
+
+      if (itemTest(ByteProto::isExpressionStart)) {
+        codeAdd(Whitespace.OPTIONAL);
+
+        oldExpression();
+      } else {
+        errorRaise("expected expression after operator");
+      }
+    }
+  }
+
+  private void oldExpressionBegin(int proto) {
+    switch (proto) {
+      case ByteProto.ARRAY_ACCESS -> arrayAccess();
+
+      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
+
+      case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.DIM -> dim();
+
+      case ByteProto.DOT -> dot();
+
+      case ByteProto.EXPRESSION_NAME -> expressionName();
+
+      case ByteProto.INVOKE -> invoke();
+
+      case ByteProto.NULL_LITERAL -> nullLiteral();
+
+      case ByteProto.PRIMITIVE_LITERAL -> primitiveLiteral();
+
+      case ByteProto.STRING_LITERAL -> stringLiteral();
+
+      case ByteProto.THIS -> thisKeyword();
+
+      default -> errorRaise(
+        "no-op expression part '%s'".formatted(protoName(proto))
+      );
+    }
   }
 
   private void oldFormalParameter() {
@@ -1700,7 +1773,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.INTERFACE -> "Interface";
 
-      case ByteProto.INVOKE -> "Invoke";
+      case ByteProto.INVOKE -> "Method invocation";
+
+      case ByteProto.METHOD_INVOCATION -> "Method invocation";
 
       case ByteProto.MODIFIER -> "Modifier";
 
@@ -1738,7 +1813,7 @@ class InternalCompiler extends InternalApi {
     if (itemTest(ByteProto::isExpressionStart)) {
       codeAdd(Whitespace.MANDATORY);
 
-      expression();
+      oldExpression();
 
       codeAdd(Symbol.SEMICOLON);
     } else {
@@ -1782,6 +1857,16 @@ class InternalCompiler extends InternalApi {
     int start = itemPeek();
 
     statement0(start);
+  }
+
+  private void statement(int proto) {
+    switch (proto) {
+      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+
+      default -> errorRaise(
+        "no-op or invalid statement '%s'".formatted(protoName(proto))
+      );
+    }
   }
 
   private void statement0(int start) {
@@ -1834,7 +1919,17 @@ class InternalCompiler extends InternalApi {
   }
 
   private void statementPrimary() {
-    expression();
+    oldExpression();
+  }
+
+  private void statements() {
+    while (listMore()) {
+      codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
+
+      listSwitch(this::statement);
+
+      codeAdd(Symbol.SEMICOLON);
+    }
   }
 
   private boolean stop() {
@@ -1858,7 +1953,7 @@ class InternalCompiler extends InternalApi {
   private void superInvocation() {
     superKeyword();
 
-    execute(this::argumentList);
+    execute(this::oldArgumentList);
 
     codeAdd(Symbol.SEMICOLON);
   }
@@ -1891,7 +1986,7 @@ class InternalCompiler extends InternalApi {
     if (itemTest(ByteProto::isExpressionStart)) {
       codeAdd(Whitespace.MANDATORY);
 
-      expression();
+      oldExpression();
 
       codeAdd(Symbol.SEMICOLON);
     } else {
@@ -2067,7 +2162,7 @@ class InternalCompiler extends InternalApi {
 
   private void variableInitializer() {
     if (itemTest(this::isExpressionStartOrClassType)) {
-      expression();
+      oldExpression();
     } else if (itemIs(ByteProto.ARRAY_INITIALIZER)) {
       execute(this::arrayInitializer);
     } else {

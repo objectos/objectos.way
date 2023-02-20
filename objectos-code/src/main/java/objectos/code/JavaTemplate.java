@@ -248,16 +248,6 @@ public abstract class JavaTemplate {
     }
   }
 
-  protected static final MethodDeclarationInstruction VOID = new VoidKeyword();
-
-  private static final class VoidKeyword extends External implements MethodDeclarationInstruction {
-    @Override
-    final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.VOID, ByteProto.NOOP);
-    }
-  }
-
   /**
    * TODO
    *
@@ -380,7 +370,7 @@ public abstract class JavaTemplate {
       MethodDeclarationInstruction,
       MethodDeclarator,
       ModifiersElement,
-      Invoke,
+      MethodInvocation,
       NewKeyword,
       NewLine,
       NullLiteral,
@@ -417,7 +407,7 @@ public abstract class JavaTemplate {
     }
 
     @Override
-    public final Invoke invoke(String methodName, ArgsPart... arguments) {
+    public final MethodInvocation invoke(String methodName, ArgsPart... arguments) {
       JavaModel.checkMethodName(methodName.toString()); // implicit null check
       api.identifierext(methodName);
       Object[] many = Objects.requireNonNull(arguments, "arguments == null");
@@ -522,13 +512,13 @@ public abstract class JavaTemplate {
 
   sealed interface InterfaceKeyword extends BodyElement {}
 
-  sealed interface Invoke extends PrimaryNoNewArray {}
-
   sealed interface Literal extends AtElement, ExpressionPart {}
 
   sealed interface MethodDeclaration extends BodyElement {}
 
   sealed interface MethodDeclarator extends BodyElement {}
+
+  sealed interface MethodInvocation extends PrimaryNoNewArray {}
 
   sealed interface ModifiersElement extends MethodDeclarationInstruction {}
 
@@ -598,14 +588,24 @@ public abstract class JavaTemplate {
   }
 
   private sealed interface CanInvoke {
-    Invoke invoke(String methodName, ArgsPart... arguments);
+    MethodInvocation invoke(String methodName, ArgsPart... arguments);
   }
 
-  private sealed interface Primary extends CanInvoke, ExpressionPart {
+  private sealed interface Primary extends CanInvoke, ExpressionPart, MethodDeclarationInstruction {
     ExpressionName n(String name);
   }
 
   private sealed interface PrimaryNoNewArray extends CanArrayAccess, Primary {}
+
+  private static final class VoidKeyword extends External implements MethodDeclarationInstruction {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.VOID, ByteProto.NOOP);
+    }
+  }
+
+  protected static final MethodDeclarationInstruction VOID = new VoidKeyword();
 
   /**
    * The {@code public} modifier.
@@ -1663,7 +1663,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
@@ -1674,7 +1674,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
@@ -1686,7 +1686,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart... elements) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
@@ -1699,7 +1699,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
@@ -1711,7 +1711,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
@@ -1723,7 +1723,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
@@ -1735,7 +1735,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
@@ -1747,7 +1747,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
       ArgsPart e6) {
@@ -1761,7 +1761,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
       ArgsPart e6, ArgsPart e7) {
@@ -1775,7 +1775,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
       ArgsPart e6, ArgsPart e7, ArgsPart e8) {
@@ -1789,7 +1789,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final Invoke invoke(
+  protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
       ArgsPart e6, ArgsPart e7, ArgsPart e8, ArgsPart e9) {
@@ -2382,6 +2382,17 @@ public abstract class JavaTemplate {
     JavaModel.checkVarName(name.toString());
     Object[] many = Objects.requireNonNull(bounds, "bounds == null");
     return api().elemMany(ByteProto.TYPE_PARAMETER, name, many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected final MethodInvocation v(String methodName, ArgsPart... arguments) {
+    JavaModel.checkMethodName(methodName.toString()); // implicit null check
+    Object[] many = Objects.requireNonNull(arguments, "arguments == null");
+    return api.elemMany(ByteProto.METHOD_INVOCATION, methodName, many);
   }
 
   InternalApi api() {

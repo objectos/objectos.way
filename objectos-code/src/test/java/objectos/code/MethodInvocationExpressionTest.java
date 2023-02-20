@@ -31,16 +31,21 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase01() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test");
+          _class("Invoke");
+          body(
+            method(
+              v("test")
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           test();
         }
       }
