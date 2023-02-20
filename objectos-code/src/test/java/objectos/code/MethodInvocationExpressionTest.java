@@ -238,30 +238,36 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Method Invocation Expresions TC08
 
   - expression name
   """)
   public void testCase08() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
+        static final ClassTypeName FOO = classType(Foo.class);
+
         @Override
         protected final void definition() {
-          n("a"); invoke("x"); end();
+          _class("Invoke");
+          body(
+            method(
+              n("a").v("x"),
 
-          n("b"); invoke("y", s("1")); end();
+              n("b").v("y", s("1")),
 
-          n("c"); invoke("z", s("1"), s("2")); end();
+              n("c").v("z", s("1"), s("2")),
 
-          t(Foo.class); n("CTE"); invoke("m");
+              t(FOO).n("CTE").v("m")
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           a.x();
           b.y("1");
           c.z("1", "2");
@@ -270,33 +276,36 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
-    // @formatter:on
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Method Invocation Expresions TC09
 
   - chain support
   """)
   public void testCase09() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("a").invoke("b"); end();
+          _class("Invoke");
+          body(
+            method(
+              v("a").v("b"),
 
-          invoke("a").invoke("b").invoke("c"); end();
+              v("a").v("b").v("c"),
 
-          n("foo").invoke("a").invoke("b").invoke("c"); end();
+              n("foo").v("a").v("b").v("c"),
 
-          n("list").invoke("add", s("1")).invoke("add", s("2")).invoke("build");
+              n("list").v("add", s("1")).v("add", s("2")).v("build")
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           a().b();
           a().b().c();
           foo.a().b().c();
@@ -305,7 +314,6 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(enabled = false, description = """
@@ -334,59 +342,65 @@ public class MethodInvocationExpressionTest {
     // @formatter:on
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Method Invocation Expresions TC11
 
   - end() at argument list
   """)
   public void testCase11() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", invoke("a").invoke("b")); end();
+          _class("Invoke");
+          body(
+            method(
+              v("test", v("a").v("b")),
 
-          invoke("test", invoke("a"), end(), invoke("b"));
+              v("test", v("a"), v("b"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           test(a().b());
           test(a(), b());
         }
       }
       """
     );
-    // @formatter:on
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Method Invocation Expresions TC12
 
   - comma location after expression name
   """)
   public void testCase12() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
+        static final ClassTypeName A = classType("com.example", "A");
+
         @Override
         protected final void definition() {
-          invoke(
-            "property", nl(),
-
-            t("com.example", "A").n("B"), nl(),
-
-            s("some text"), nl()
+          _class("Invoke");
+          body(
+            method(
+              v("property", nl(),
+                t(A).n("B"), nl(),
+                s("some text"), nl()
+              )
+            )
           );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           property(
             com.example.A.B,
             "some text"
@@ -395,7 +409,6 @@ public class MethodInvocationExpressionTest {
       }
       """
     );
-    // @formatter:on
   }
 
 }
