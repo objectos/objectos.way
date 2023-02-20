@@ -476,6 +476,8 @@ public abstract class JavaTemplate {
   sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface ClassTypeInstruction {
+    ExpressionName n(String name);
+
     MethodInvocation v(String methodName, ArgsPart... arguments);
   }
 
@@ -602,7 +604,10 @@ public abstract class JavaTemplate {
   }
 
   private sealed interface CanInvoke {
+    @Deprecated
     MethodInvocation invoke(String methodName, ArgsPart... arguments);
+
+    MethodInvocation v(String methodName, ArgsPart... arguments);
   }
 
   private sealed interface Primary extends CanInvoke, ExpressionPart, MethodDeclarationInstruction {
