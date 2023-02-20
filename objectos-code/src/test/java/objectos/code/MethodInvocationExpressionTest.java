@@ -138,27 +138,32 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - unqualified
   - three args
   - explicit new lines
   """)
   public void testCase05() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("m0", nl(),
-            s("1"), end(), nl(), nl(),
-            invoke("m2"), end(), nl(), nl(),
-            s("3"), nl()
+          _class("Invoke");
+          body(
+            method(
+              v("m0", nl(),
+                s("1"), nl(), nl(),
+                v("m2"), nl(), nl(),
+                s("3"), nl()
+              )
+            )
           );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           m0(
             "1",
 

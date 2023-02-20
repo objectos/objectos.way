@@ -138,18 +138,39 @@ class InternalCompiler extends InternalApi {
     oldExpression();
   }
 
+  private void argumentItem() {
+    lastSet(_START);
+
+    executeSwitch(this::expression);
+
+    slot();
+
+    consumeWs();
+  }
+
   private void argumentList() {
     codeAdd(Symbol.LEFT_PARENTHESIS);
     codeAdd(Indentation.ENTER_PARENTHESIS);
 
+    consumeWs();
+
     if (elemMore()) {
-      executeSwitch(this::expression);
+      if (lastIs(_NEW_LINE)) {
+        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+      }
+
+      argumentItem();
 
       while (elemMore()) {
-        codeAdd(Symbol.COMMA);
-        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+        slotComma();
 
-        executeSwitch(this::expression);
+        var ws = lastIs(_NEW_LINE)
+            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
+            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
+
+        codeAdd(ws);
+
+        argumentItem();
       }
     }
 
