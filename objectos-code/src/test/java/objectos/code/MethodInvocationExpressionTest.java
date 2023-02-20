@@ -177,21 +177,26 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - allow expression names
   """)
   public void testCase06() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("test", n("field"));
+          _class("Invoke");
+          body(
+            method(
+              v("test", n("field"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           test(field);
         }
       }

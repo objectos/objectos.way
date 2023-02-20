@@ -795,6 +795,8 @@ class InternalCompiler extends InternalApi {
 
   private void expression(int proto) {
     switch (proto) {
+      case ByteProto.EXPRESSION_NAME -> expressionName();
+
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
 
       case ByteProto.STRING_LITERAL -> stringLiteral();
