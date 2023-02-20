@@ -143,24 +143,11 @@ class InternalCompiler extends InternalApi {
     codeAdd(Indentation.ENTER_PARENTHESIS);
 
     if (elemMore()) {
-      if (lastIs(_NEW_LINE)) {
-        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
-      }
-
-      lastSet(_START);
-
       executeSwitch(this::expression);
 
       while (elemMore()) {
-        slotComma();
-
-        var ws = lastIs(_NEW_LINE)
-            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
-            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
-
-        codeAdd(ws);
-
-        lastSet(_START);
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
         executeSwitch(this::expression);
       }
@@ -265,13 +252,13 @@ class InternalCompiler extends InternalApi {
   private void block() {
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
-    if (itemMore()) {
+    if (elemMore()) {
       codeAdd(Indentation.ENTER_BLOCK);
       codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
 
       blockStatement();
 
-      while (itemMore()) {
+      while (elemMore()) {
         codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
 
         blockStatement();
@@ -368,7 +355,7 @@ class InternalCompiler extends InternalApi {
         fieldOrMethodDeclaration();
       }
 
-      case ByteProto.BLOCK -> execute(this::block);
+      case ByteProto.BLOCK -> execute(this::oldBlock);
 
       case ByteProto.CLASS -> classDeclaration();
 
@@ -592,7 +579,7 @@ class InternalCompiler extends InternalApi {
     if (itemIs(ByteProto.BLOCK)) {
       codeAdd(Whitespace.OPTIONAL);
 
-      execute(this::block);
+      execute(this::oldBlock);
     } else {
       errorRaise("Constructor without a block() declaration");
     }
@@ -781,6 +768,10 @@ class InternalCompiler extends InternalApi {
     return proto;
   }
 
+  private void expression() {
+    executeSwitch(this::expression);
+  }
+
   private void expression(int proto) {
     switch (proto) {
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
@@ -878,7 +869,7 @@ class InternalCompiler extends InternalApi {
     if (itemTest(ByteProto::isStatementStart)) {
       codeAdd(Whitespace.OPTIONAL);
 
-      statement();
+      oldStatement();
     } else {
       errorRaise("no statement after if condition");
     }
@@ -891,7 +882,7 @@ class InternalCompiler extends InternalApi {
       if (itemTest(ByteProto::isStatementStart)) {
         codeAdd(Whitespace.MANDATORY);
 
-        statement();
+        oldStatement();
       } else {
         errorRaise("no statement after the `else` keyword");
       }
@@ -1090,11 +1081,6 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.SEMICOLON);
   }
 
-  private void typeParameterListEnd() {
-    codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
-    lastSet(_SYMBOL);
-  }
-
   private void methodDeclaration() {
     enum State {
       START,
@@ -1105,7 +1091,9 @@ class InternalCompiler extends InternalApi {
 
       NAME,
 
-      PARAMETER;
+      PARAMETER,
+
+      BODY;
     }
 
     abstractFound(NULL);
@@ -1192,6 +1180,8 @@ class InternalCompiler extends InternalApi {
               codeAdd(Symbol.COMMA);
               codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
             }
+
+            case BODY -> { /* not possible? */ }
           }
 
           state = State.PARAMETER;
@@ -1250,15 +1240,30 @@ class InternalCompiler extends InternalApi {
           execute(this::methodResultVoid);
         }
 
-        default -> { break loop; }
+        default -> {
+          switch (state) {
+            case START -> {
+              methodResultVoid();
+              unnamed();
+              codeAdd(Symbol.LEFT_PARENTHESIS);
+              codeAdd(Symbol.RIGHT_PARENTHESIS);
+              codeAdd(Whitespace.OPTIONAL);
+            }
+
+            default -> {}
+          }
+
+          state = State.BODY;
+
+          break loop;
+        }
       }
     }
 
     switch (state) {
       case START:
         methodResultVoid();
-        codeAdd(Whitespace.MANDATORY);
-        codeAdd(ByteCode.IDENTIFIER, object("unnamed"));
+        unnamed();
         // fall-through
 
       case NAME:
@@ -1276,6 +1281,10 @@ class InternalCompiler extends InternalApi {
           codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
           codeAdd(Symbol.RIGHT_CURLY_BRACKET);
         }
+        break;
+
+      case BODY:
+        block();
         break;
 
       default:
@@ -1401,6 +1410,40 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
+  private void oldBlock() {
+    codeAdd(Symbol.LEFT_CURLY_BRACKET);
+
+    if (itemMore()) {
+      codeAdd(Indentation.ENTER_BLOCK);
+      codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
+
+      oldBlockStatement();
+
+      while (itemMore()) {
+        codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
+
+        oldBlockStatement();
+      }
+
+      codeAdd(Indentation.EXIT_BLOCK);
+      codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+    } else {
+      codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+    }
+
+    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+    lastSet(_START);
+  }
+
+  private void oldBlockStatement() {
+    int start = itemPeek();
+    // TODO local class
+    // TODO local variable decl
+
+    oldStatement0(start);
   }
 
   private void oldExpression() {
@@ -1550,7 +1593,7 @@ class InternalCompiler extends InternalApi {
     if (itemIs(ByteProto.BLOCK)) {
       codeAdd(Whitespace.OPTIONAL);
 
-      execute(this::block);
+      execute(this::oldBlock);
     } else {
       // assume abstract
       codeAdd(Symbol.SEMICOLON);
@@ -1597,6 +1640,83 @@ class InternalCompiler extends InternalApi {
     execute(this::identifier);
 
     oldFormalParameterList();
+  }
+
+  private void oldStatement() {
+    int start = itemPeek();
+
+    oldStatement0(start);
+  }
+
+  private void oldStatement0(int start) {
+    switch (start) {
+      case ByteProto.ARRAY_TYPE,
+           ByteProto.PARAMETERIZED_TYPE,
+           ByteProto.PRIMITIVE_TYPE,
+           ByteProto.TYPE_VARIABLE -> localVariableDeclaration();
+
+      case ByteProto.BLOCK -> execute(this::oldBlock);
+
+      case ByteProto.CLASS_INSTANCE_CREATION,
+           ByteProto.DOT,
+           ByteProto.EXPRESSION_NAME,
+           ByteProto.INVOKE,
+           ByteProto.THIS -> {
+        oldStatementPrimary();
+
+        codeAdd(Symbol.SEMICOLON);
+      }
+
+      case ByteProto.CLASS_TYPE -> {
+        int next = itemPeekAhead();
+
+        if (next != ByteProto.IDENTIFIER) {
+          oldStatementPrimary();
+
+          codeAdd(Symbol.SEMICOLON);
+        } else {
+          localVariableDeclaration();
+        }
+      }
+
+      case ByteProto.IF_CONDITION -> ifStatement();
+
+      case ByteProto.RETURN -> returnStatement();
+
+      case ByteProto.SUPER -> superInvocationWithKeyword();
+
+      case ByteProto.SUPER_INVOCATION -> superInvocation();
+
+      case ByteProto.THROW -> throwStatement();
+
+      case ByteProto.VAR -> localVariableDeclaration();
+
+      default -> errorRaise(
+        "no-op statement start '%s'".formatted(protoName(start))
+      );
+    }
+  }
+
+  private void oldStatementPrimary() {
+    oldExpression();
+  }
+
+  private void oldType(int proto) {
+    switch (proto) {
+      case ByteProto.ARRAY_TYPE -> arrayType();
+
+      case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
+
+      case ByteProto.PRIMITIVE_TYPE -> primitiveType();
+
+      case ByteProto.TYPE_VARIABLE -> typeVariable();
+
+      default -> errorRaise(
+        "no-op type '%s'".formatted(protoName(proto))
+      );
+    }
   }
 
   private void oldTypeParameterList() {
@@ -1771,63 +1891,18 @@ class InternalCompiler extends InternalApi {
     codeArray[index + 1] = Symbol.SEMICOLON.ordinal();
   }
 
-  private void statement() {
-    int start = itemPeek();
-
-    statement0(start);
-  }
-
   private void statement0(int start) {
     switch (start) {
-      case ByteProto.ARRAY_TYPE,
-           ByteProto.PARAMETERIZED_TYPE,
-           ByteProto.PRIMITIVE_TYPE,
-           ByteProto.TYPE_VARIABLE -> localVariableDeclaration();
-
-      case ByteProto.BLOCK -> execute(this::block);
-
-      case ByteProto.CLASS_INSTANCE_CREATION,
-           ByteProto.DOT,
-           ByteProto.EXPRESSION_NAME,
-           ByteProto.INVOKE,
-           ByteProto.THIS -> {
-        statementPrimary();
+      case ByteProto.METHOD_INVOCATION -> {
+        expression();
 
         codeAdd(Symbol.SEMICOLON);
       }
-
-      case ByteProto.CLASS_TYPE -> {
-        int next = itemPeekAhead();
-
-        if (next != ByteProto.IDENTIFIER) {
-          statementPrimary();
-
-          codeAdd(Symbol.SEMICOLON);
-        } else {
-          localVariableDeclaration();
-        }
-      }
-
-      case ByteProto.IF_CONDITION -> ifStatement();
-
-      case ByteProto.RETURN -> returnStatement();
-
-      case ByteProto.SUPER -> superInvocationWithKeyword();
-
-      case ByteProto.SUPER_INVOCATION -> superInvocation();
-
-      case ByteProto.THROW -> throwStatement();
-
-      case ByteProto.VAR -> localVariableDeclaration();
 
       default -> errorRaise(
         "no-op statement start '%s'".formatted(protoName(start))
       );
     }
-  }
-
-  private void statementPrimary() {
-    oldExpression();
   }
 
   private boolean stop() {
@@ -1977,24 +2052,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void oldType(int proto) {
-    switch (proto) {
-      case ByteProto.ARRAY_TYPE -> arrayType();
-
-      case ByteProto.CLASS_TYPE -> classType();
-
-      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
-
-      case ByteProto.PRIMITIVE_TYPE -> primitiveType();
-
-      case ByteProto.TYPE_VARIABLE -> typeVariable();
-
-      default -> errorRaise(
-        "no-op type '%s'".formatted(protoName(proto))
-      );
-    }
-  }
-
   private void typeKeyword(Keyword keyword) {
     codeAdd(keyword);
 
@@ -2037,6 +2094,11 @@ class InternalCompiler extends InternalApi {
         executeSwitch(this::oldType);
       }
     }
+  }
+
+  private void typeParameterListEnd() {
+    codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
+    lastSet(_SYMBOL);
   }
 
   private void typeVariable() {

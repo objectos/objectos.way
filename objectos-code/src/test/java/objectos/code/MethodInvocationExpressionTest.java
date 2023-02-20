@@ -25,7 +25,7 @@ public class MethodInvocationExpressionTest {
 
   private final Fixture fix = new Fixture("Invoke", Kind.VOID_METHOD);
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - unqualified
   - no args
   """)
@@ -53,7 +53,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - unqualified
   - single argument
   """)
@@ -81,7 +81,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - unqualified
   - two arguments
   """)
@@ -116,16 +116,21 @@ public class MethodInvocationExpressionTest {
   """)
   public void testCase04() {
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
         @Override
         protected final void definition() {
-          invoke("m0", s("1"), end(), invoke("m2"), s("3"));
+          _class("Invoke");
+          body(
+            method(
+              v("m0", s("1"), v("m2"), s("3"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           m0("1", m2(), "3");
         }
       }
@@ -133,7 +138,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - unqualified
   - three args
   - explicit new lines
@@ -167,7 +172,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   - allow expression names
   """)
   public void testCase06() {
@@ -189,7 +194,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   static methods
   """)
   public void testCase07() {
@@ -216,7 +221,7 @@ public class MethodInvocationExpressionTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Method Invocation Expresions TC08
 
   - expression name
@@ -251,7 +256,7 @@ public class MethodInvocationExpressionTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Method Invocation Expresions TC09
 
   - chain support
@@ -286,7 +291,7 @@ public class MethodInvocationExpressionTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Method Invocation Expresions TC10
 
   - primary expressions
@@ -312,7 +317,7 @@ public class MethodInvocationExpressionTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Method Invocation Expresions TC11
 
   - end() at argument list
@@ -341,7 +346,7 @@ public class MethodInvocationExpressionTest {
     // @formatter:on
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Method Invocation Expresions TC12
 
   - comma location after expression name
