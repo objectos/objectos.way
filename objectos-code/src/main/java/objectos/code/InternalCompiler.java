@@ -686,11 +686,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void dot() {
-    executeSwitch(this::oldExpressionBegin);
+    executeSwitch(this::expression);
 
     codeAdd(Symbol.DOT);
 
-    executeSwitch(this::oldExpressionBegin);
+    executeSwitch(this::expression);
   }
 
   private boolean elemMore() {
@@ -795,6 +795,10 @@ class InternalCompiler extends InternalApi {
 
   private void expression(int proto) {
     switch (proto) {
+      case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.DOT -> dot();
+
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
       case ByteProto.METHOD_INVOCATION -> methodInvocation();
@@ -1469,6 +1473,14 @@ class InternalCompiler extends InternalApi {
     oldStatement0(start);
   }
 
+  private void oldDot() {
+    executeSwitch(this::oldExpressionBegin);
+
+    codeAdd(Symbol.DOT);
+
+    executeSwitch(this::oldExpressionBegin);
+  }
+
   private void oldExpression() {
     int part = executeSwitch(this::oldExpressionBegin);
 
@@ -1512,7 +1524,7 @@ class InternalCompiler extends InternalApi {
           }
 
           case ByteProto.DOT -> {
-            execute(this::dot);
+            execute(this::oldDot);
 
             slot();
           }
@@ -1549,7 +1561,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.DIM -> dim();
 
-      case ByteProto.DOT -> dot();
+      case ByteProto.DOT -> oldDot();
 
       case ByteProto.EXPRESSION_NAME -> expressionName();
 
@@ -1916,7 +1928,8 @@ class InternalCompiler extends InternalApi {
 
   private void statement0(int start) {
     switch (start) {
-      case ByteProto.METHOD_INVOCATION -> {
+      case ByteProto.DOT,
+           ByteProto.METHOD_INVOCATION -> {
         expression();
 
         codeAdd(Symbol.SEMICOLON);

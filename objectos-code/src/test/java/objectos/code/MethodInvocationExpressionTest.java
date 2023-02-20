@@ -204,31 +204,38 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   static methods
   """)
   public void testCase07() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
+        static final ClassTypeName COLLECTIONS = classType(Collections.class);
+
+        static final ClassTypeName THREAD = classType(Thread.class);
+
         @Override
         protected final void definition() {
-          t(Thread.class); invoke("currentThread");
+          _class("Invoke");
+          body(
+            method(
+              t(THREAD).v("currentThread"),
 
-          t(Collections.class); invoke("sort", n("list"));
+              t(COLLECTIONS).v("sort", n("list"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           java.lang.Thread.currentThread();
           java.util.Collections.sort(list);
         }
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(enabled = false, description = """

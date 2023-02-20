@@ -374,6 +374,7 @@ public abstract class JavaTemplate {
       NewKeyword,
       NewLine,
       NullLiteral,
+      OldClassTypeInstruction,
       PackageKeyword,
       Parameter,
       ParameterizedType,
@@ -422,6 +423,14 @@ public abstract class JavaTemplate {
       return api.joinWith(ByteProto.DOT);
     }
 
+    @Override
+    public final MethodInvocation v(String methodName, ArgsPart... arguments) {
+      JavaModel.checkMethodName(methodName.toString()); // implicit null check
+      Object[] many = Objects.requireNonNull(arguments, "arguments == null");
+      api.elemMany(ByteProto.METHOD_INVOCATION, methodName, many);
+      return api.joinWith(ByteProto.DOT);
+    }
+
   }
 
   sealed interface AbstractModifier extends BodyElement {}
@@ -458,12 +467,17 @@ public abstract class JavaTemplate {
 
   sealed interface ClassOrParameterizedType extends Instruction {}
 
-  sealed interface ClassTypeInstruction
+  @Deprecated
+  sealed interface OldClassTypeInstruction
       extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {
     ExpressionName n(String name);
   }
 
   sealed interface ConstructorDeclaration extends BodyElement {}
+
+  sealed interface ClassTypeInstruction {
+    MethodInvocation v(String methodName, ArgsPart... arguments);
+  }
 
   sealed interface DeclarationName extends MethodDeclarationInstruction {}
 
@@ -1272,14 +1286,14 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final At at(ClassTypeInstruction annotationType) {
+  protected final At at(OldClassTypeInstruction annotationType) {
     return api().elem(ByteProto.ANNOTATION, annotationType.self());
   }
 
   /**
    * TODO
    */
-  protected final At at(ClassTypeInstruction annotationType, AtElement e1) {
+  protected final At at(OldClassTypeInstruction annotationType, AtElement e1) {
     return api().elem(ByteProto.ANNOTATION, annotationType.self(), e1.self());
   }
 
@@ -2194,7 +2208,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ClassTypeInstruction t(Class<?> type) {
+  protected final OldClassTypeInstruction t(Class<?> type) {
     Check.argument(!type.isPrimitive(), """
     The `t(Class<?>)` instruction must not be used represent a primitive type.
 
@@ -2222,9 +2236,20 @@ public abstract class JavaTemplate {
 
   /**
    * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected final ClassTypeInstruction t(ClassTypeName type) {
+    var api = api();
+    type.execute(api);
+    return api.itemEnd();
+  }
+
+  /**
+   * TODO
    */
   protected final ParameterizedType t(
-      ClassTypeInstruction rawType,
+      OldClassTypeInstruction rawType,
       ReferenceType arg1) {
     return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1);
   }
@@ -2233,7 +2258,7 @@ public abstract class JavaTemplate {
    * TODO
    */
   protected final ParameterizedType t(
-      ClassTypeInstruction rawType,
+      OldClassTypeInstruction rawType,
       ReferenceType arg1, ReferenceType arg2) {
     return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1, arg2);
   }
@@ -2242,7 +2267,7 @@ public abstract class JavaTemplate {
    * TODO
    */
   protected final ParameterizedType t(
-      ClassTypeInstruction rawType,
+      OldClassTypeInstruction rawType,
       ReferenceType arg1, ReferenceType arg2, ReferenceType arg3) {
     return api().elem(ByteProto.PARAMETERIZED_TYPE, rawType, arg1, arg2, arg3);
   }
@@ -2250,7 +2275,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ClassTypeInstruction t(String packageName, String simpleName) {
+  protected final OldClassTypeInstruction t(String packageName, String simpleName) {
     JavaModel.checkPackageName(packageName.toString()); // implicit null check
     JavaModel.checkSimpleName(simpleName.toString()); // implicit null check
     var api = api();
@@ -2263,7 +2288,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ClassTypeInstruction t(String packageName, String simpleName1,
+  protected final OldClassTypeInstruction t(String packageName, String simpleName1,
       String simpleName2) {
     JavaModel.checkPackageName(packageName.toString()); // implicit null check
     JavaModel.checkSimpleName(simpleName1.toString()); // implicit null check
