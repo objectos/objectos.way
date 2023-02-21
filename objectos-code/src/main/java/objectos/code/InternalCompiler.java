@@ -42,7 +42,7 @@ class InternalCompiler extends InternalApi {
       _SYMBOL = 7;
 
   final void compile() {
-    codeIndex = level = stackIndex = 0;
+    codeIndex = stackIndex = 0;
 
     // simpleName
     levelArray[0] = NULL;
@@ -56,12 +56,11 @@ class InternalCompiler extends InternalApi {
     levelArray[4] = 0;
     // abstract found
     levelArray[5] = NULL;
+    // last
+    levelArray[6] = NULL;
 
     // do not change
-    // compileIndex;
     // objectIndex;
-
-    stackArray = IntArrays.growIfNecessary(stackArray, 15);
 
     try {
       compilationUnit();
@@ -1095,11 +1094,11 @@ class InternalCompiler extends InternalApi {
     return predicate.test(proto);
   }
 
-  private int last() { return level; }
+  private int last() { return levelArray[6]; }
 
   private boolean lastIs(int value) { return last() == value; }
 
-  private void lastSet(int value) { level = value; }
+  private void lastSet(int value) { levelArray[6] = value; }
 
   private void localVariableDeclaration() {
     int type = itemPeek();

@@ -39,8 +39,6 @@ class InternalApi {
 
   int levelIndex;
 
-  int level;
-
   Object[] objectArray = new Object[64];
 
   int objectIndex;
@@ -64,11 +62,9 @@ class InternalApi {
 
     codeIndex = stackIndex = -1;
 
-    level = levelIndex = objectIndex = protoIndex = 0;
+    levelIndex = objectIndex = protoIndex = 0;
 
     template.execute(this);
-
-    assert level == 0;
 
     int self = protoIndex;
 
