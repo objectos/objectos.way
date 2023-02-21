@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 
 public class FieldAccessExpressionTest {
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Field Access Expressions TC01
 
   - Primary . Identifier
@@ -36,15 +36,15 @@ public class FieldAccessExpressionTest {
           _class("FieldAccess");
           body(
             method(
-              _this().n("x"), gets(), n("y"),
+              p(THIS, n("x"), gets(), n("y")),
 
-              v("x").v("y").n("z"), gets(), n("foo"),
+              p(v("x"), v("y"), n("z"), gets(), n("foo")),
 
-              n("comparator"), gets(), s("abc").n("CASE_INSENSITIVE_ORDER"),
+              p(n("comparator"), gets(), s("abc"), n("CASE_INSENSITIVE_ORDER")),
 
-              n("a"), gets(), NEW, t(FOO).n("field"),
+              p(n("a"), gets(), NEW, FOO, n("field")),
 
-              n("b"), gets(), n("array").dim(i(0)).n("field")
+              p(n("b"), gets(), n("array"), dim(i(0)), n("field"))
             )
           );
         }
@@ -52,7 +52,7 @@ public class FieldAccessExpressionTest {
 
       """
       class FieldAccess {
-        void method() {
+        void unnamed() {
           this.x = y;
           x().y().z = foo;
           comparator = "abc".CASE_INSENSITIVE_ORDER;

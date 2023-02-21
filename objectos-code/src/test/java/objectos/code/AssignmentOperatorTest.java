@@ -36,13 +36,13 @@ public class AssignmentOperatorTest {
           _class("Assign");
           body(
             method(
-              n("a"), gets(), n("x"),
+              p(n("a"), gets(), n("x")),
 
-              n("a"), gets(), n("x").n("y"),
+              p(n("a"), gets(), n("x"), n("y")),
 
-              n("a"), gets(), v("x").v("y"),
+              p(n("a"), gets(), v("x"), v("y")),
 
-              n("a"), gets(), NEW, t(FOO)
+              p(n("a"), gets(), NEW, FOO)
             )
           );
         }

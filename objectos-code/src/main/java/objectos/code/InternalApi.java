@@ -47,12 +47,6 @@ class InternalApi {
 
   int stackIndex;
 
-  private _Item[] items = new _Item[4];
-
-  public InternalApi() {
-    items[1] = new JavaTemplate._Item(this, 1);
-  }
-
   final void accept(JavaTemplate template) {
     autoImports.clear();
 
@@ -88,10 +82,10 @@ class InternalApi {
   final _Item arrayTypeName(int dimCount) {
     elemCnt(ByteProto.ARRAY_TYPE, 1 + dimCount);
 
-    elemItem(items[1]);
+    elemItem(JavaTemplate.ITEM);
 
     for (int i = 0; i < dimCount; i++) {
-      elemItem(items[1]);
+      elemItem(JavaTemplate.ITEM);
     }
 
     return elemRet();
@@ -130,7 +124,7 @@ class InternalApi {
       protoAdd(object(simpleName));
     }
 
-    return items[1];
+    return JavaTemplate.ITEM;
   }
 
   final _Item elem(int proto) {
@@ -398,47 +392,35 @@ class InternalApi {
   final _Item itemAdd(int v0) {
     localStart();
     protoAdd(v0);
-    return items[1];
+    return JavaTemplate.ITEM;
   }
 
   final _Item itemAdd(int v0, int v1) {
     localStart();
     protoAdd(v0, v1);
-    return items[1];
+    return JavaTemplate.ITEM;
   }
 
   final _Item itemAdd(int v0, int v1, int v2) {
     localStart();
     protoAdd(v0, v1, v2);
-    return items[1];
+    return JavaTemplate.ITEM;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3) {
     localStart();
     protoAdd(v0, v1, v2, v3);
-    return items[1];
+    return JavaTemplate.ITEM;
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
     localStart();
     protoAdd(v0, v1, v2, v3, v4);
-    return items[1];
+    return JavaTemplate.ITEM;
   }
 
   final _Item itemEnd() {
-    return items[1];
-  }
-
-  final JavaTemplate._Item itemEnd(int count) {
-    if (count == items.length) {
-      items = ObjectArrays.growIfNecessary(items, count);
-    }
-
-    if (items[count] == null) {
-      items[count] = new _Item(this, count);
-    }
-
-    return items[count];
+    return JavaTemplate.ITEM;
   }
 
   final void lambdaend() {
@@ -490,6 +472,13 @@ class InternalApi {
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
     protoArray[protoIndex++] = v2;
+  }
+
+  final int stackPop() { return stackArray[stackIndex--]; }
+
+  final void stackPush(int v0) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
+    stackArray[++stackIndex] = v0;
   }
 
   private void elemCnt(int value, int itemCount) {
@@ -563,13 +552,10 @@ class InternalApi {
   }
 
   private void elemItem(Object obj) {
-    int count = 1;
     int offset;
     int kind;
 
     if (obj instanceof JavaTemplate._Item item) {
-      count = item.count;
-
       offset = 0;
 
       kind = LOCAL;
@@ -587,31 +573,27 @@ class InternalApi {
         "Implement me :: obj=" + obj);
     }
 
-    for (int i = 0; i < count; i++) {
-      int index = stackPeek(offset);
+    int index = stackPeek(offset);
 
-      index = levelSearch(index, kind);
+    index = levelSearch(index, kind);
 
-      if (kind != LAMBDA) {
-        int levelValue = levelGet(index);
+    if (kind != LAMBDA) {
+      int levelValue = levelGet(index);
 
-        int proto = protoGet(levelValue++);
+      int proto = protoGet(levelValue++);
 
-        protoAdd(proto, levelValue);
-      } else {
-        elemCntx0lambda(index);
-      }
-
-      stackset(offset, index);
+      protoAdd(proto, levelValue);
+    } else {
+      elemCntx0lambda(index);
     }
+
+    stackset(offset, index);
   }
 
   private int elemPre(Object obj) {
     int count = 1;
 
-    if (obj instanceof JavaTemplate._Item item) {
-      count = item.count;
-    } else if (obj instanceof JavaTemplate.External ext) {
+    if (obj instanceof JavaTemplate.External ext) {
       ext.execute(this);
     } else if (obj instanceof String s) {
       identifierext(s);
@@ -634,7 +616,7 @@ class InternalApi {
 
     levelAdd(LOCAL, self);
 
-    return items[1];
+    return JavaTemplate.ITEM;
   }
 
   private void levelAdd(int v0, int v1) {
@@ -684,13 +666,6 @@ class InternalApi {
   private int protoGet(int index) { return protoArray[index]; }
 
   private int stackPeek(int offset) { return stackArray[stackIndex - offset]; }
-
-  private int stackPop() { return stackArray[stackIndex--]; }
-
-  private void stackPush(int v0) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-    stackArray[++stackIndex] = v0;
-  }
 
   private void stackPush(int v0, int v1, int v2, int v3, int v4) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 5);

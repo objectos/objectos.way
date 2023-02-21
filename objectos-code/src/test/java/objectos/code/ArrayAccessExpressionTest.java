@@ -32,10 +32,11 @@ public class ArrayAccessExpressionTest {
           _class("ArrayAccess");
           body(
             method(
-              v("foo",
-                n("a").dim(n("x")),
-                n("a").dim(n("x")).dim(n("y")),
-                n("a").dim(n("x")).dim(n("y")).dim(n("z"))
+              p(
+                v("foo"),
+                arg(n("a"), dim(n("x"))),
+                arg(n("a"), dim(n("x")), dim(n("y"))),
+                arg(n("a"), dim(n("x")), dim(n("y")), dim(n("z")))
               )
             )
           );

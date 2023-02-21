@@ -54,7 +54,8 @@ public abstract class JavaTemplate {
    * @since 0.4.2
    */
   protected static abstract sealed class ClassTypeName
-      extends ReferenceTypeName implements ClassOrParameterizedType {
+      extends ReferenceTypeName
+      implements ExpressionPart {
 
     private static final class OfClass extends ClassTypeName {
       private final Class<?> value;
@@ -139,6 +140,28 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected static final class Ellipsis extends External {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
+    }
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected sealed interface ExpressionPart
+      extends ArgsPart, BlockElement, BodyElement, StatementPart,
+      VariableInitializer {}
+
+  /**
    * Represents a partial template to be included as part of the enclosing
    * template.
    */
@@ -211,7 +234,7 @@ public abstract class JavaTemplate {
    * @since 0.4.2
    */
   protected static final class ParameterizedTypeName
-      extends ReferenceTypeName implements ClassOrParameterizedType {
+      extends ReferenceTypeName implements ExpressionPart {
     private final ClassTypeName raw;
 
     private final ReferenceTypeName first;
@@ -296,12 +319,18 @@ public abstract class JavaTemplate {
   /**
    * TODO
    *
+   * @since 0.4.3.1
+   */
+  protected sealed interface StatementPart extends Instruction {}
+
+  /**
+   * TODO
+   *
    * @since 0.4.2
    */
-  protected abstract static sealed class TypeName extends External
-      implements
-      MethodDeclarationInstruction,
-      TypeParameterInstruction {
+  protected abstract static sealed class TypeName
+      extends External
+      implements MethodDeclarationInstruction, TypeParameterInstruction {
     TypeName() {}
   }
 
@@ -337,9 +366,11 @@ public abstract class JavaTemplate {
     INSTANCE;
   }
 
-  static final class _Item implements
+  enum _Item
+      implements
       AbstractModifier,
       AnnotationInst,
+      Argument,
       ArrayAccess,
       ArrayDimension,
       ArrayInitializer,
@@ -354,7 +385,7 @@ public abstract class JavaTemplate {
       ClassTypeWithArgs,
       ConstructorDeclaration,
       DeclarationName,
-      Ellipsis,
+      OldEllipsis,
       ElseKeyword,
       End,
       EnumConstant,
@@ -374,9 +405,9 @@ public abstract class JavaTemplate {
       MethodDeclarator,
       ModifiersElement,
       MethodInvocation,
-      NewKeyword,
-      NewLine,
-      NullLiteral,
+      OldNewKeyword,
+      OldNewLine,
+      OldNullLiteral,
       OldClassTypeInstruction,
       PackageKeyword,
       Parameter,
@@ -389,51 +420,19 @@ public abstract class JavaTemplate {
       ReturnType,
       SimpleAssigmentOperator,
       Statement,
+      OldStatement,
       StaticModifier,
       StringLiteral,
       SuperKeyword,
-      ThisKeyword,
-      ThrowKeyword,
+      OldThisKeyword,
+      OldThrowKeyword,
       TypeParameter,
       TypeParameterOld,
       TypeVariable,
       VarKeyword,
       OldVoidKeyword {
 
-    private final InternalApi api;
-
-    final int count;
-
-    _Item(InternalApi api, int count) {
-      this.api = api;
-      this.count = count;
-    }
-
-    @Override
-    public final ArrayAccess dim(ExpressionPart e1) {
-      api.elem(ByteProto.ARRAY_ACCESS, e1.self());
-      return api.itemEnd(count + 1);
-    }
-
-    @Override
-    public final MethodInvocation invoke(String methodName, ArgsPart... arguments) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final ExpressionName n(String name) {
-      JavaModel.checkSimpleName(name.toString());
-      api.itemAdd(ByteProto.EXPRESSION_NAME_DOT, api.object(name));
-      return api.itemEnd(count + 1);
-    }
-
-    @Override
-    public final MethodInvocation v(String methodName, ArgsPart... arguments) {
-      JavaModel.checkMethodName(methodName.toString()); // implicit null check
-      Object[] many = Objects.requireNonNull(arguments, "arguments == null");
-      api.elemMany(ByteProto.METHOD_INVOCATION_DOT, methodName, many);
-      return api.itemEnd(count + 1);
-    }
+    INSTANCE;
 
   }
 
@@ -443,7 +442,9 @@ public abstract class JavaTemplate {
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
-  sealed interface ArrayAccess extends PrimaryNoNewArray {}
+  sealed interface Argument extends ExpressionPart {}
+
+  sealed interface ArrayAccess extends ExpressionPart {}
 
   sealed interface ArrayDimension extends ArrayTypeElement {}
 
@@ -471,19 +472,13 @@ public abstract class JavaTemplate {
 
   sealed interface ClassOrParameterizedType extends Instruction {}
 
-  sealed interface ClassTypeInstruction extends MethodDeclarationInstruction {
-    ExpressionName n(String name);
-
-    MethodInvocation v(String methodName, ArgsPart... arguments);
-  }
+  sealed interface ClassTypeInstruction extends MethodDeclarationInstruction {}
 
   sealed interface ClassTypeWithArgs extends ClassTypeInstruction {}
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface DeclarationName extends MethodDeclarationInstruction {}
-
-  sealed interface Ellipsis extends ParameterElement {}
 
   sealed interface ElseKeyword extends BlockElement {}
 
@@ -497,17 +492,11 @@ public abstract class JavaTemplate {
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends CanArrayAccess, CanInvoke, ExpressionPart {
-    ExpressionName n(String name);
-  }
-
-  sealed interface ExpressionPart
-      extends ArgsPart, BlockElement, BodyElement, MethodDeclarationInstruction,
-      VariableInitializer {}
+  sealed interface ExpressionName extends ExpressionPart {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
-  abstract static sealed class External {
+  abstract static sealed class External implements Instruction {
     External() {}
 
     abstract void execute(InternalApi api);
@@ -539,20 +528,32 @@ public abstract class JavaTemplate {
 
   sealed interface ModifiersElement extends MethodDeclarationInstruction {}
 
-  sealed interface NewKeyword extends BlockElement {}
-
-  sealed interface NewLine extends ArgsPart, BlockElement {}
-
-  sealed interface NullLiteral extends ExpressionPart {}
-
   @Deprecated
   sealed interface OldClassTypeInstruction
-      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {
-    ExpressionName n(String name);
-  }
+      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {}
+
+  @Deprecated
+  sealed interface OldEllipsis extends ParameterElement {}
+
+  @Deprecated
+  sealed interface OldNewKeyword extends BlockElement {}
+
+  @Deprecated
+  sealed interface OldNewLine extends ArgsPart, BlockElement {}
+
+  @Deprecated
+  sealed interface OldNullLiteral extends ExpressionPart {}
 
   @Deprecated
   sealed interface OldReturnKeyword extends BlockElement {}
+
+  sealed interface OldStatement extends BlockElement {}
+
+  @Deprecated
+  sealed interface OldThisKeyword extends PrimaryNoNewArray {}
+
+  @Deprecated
+  sealed interface OldThrowKeyword extends BlockElement {}
 
   @Deprecated
   sealed interface OldVoidKeyword extends BodyElement {}
@@ -577,17 +578,13 @@ public abstract class JavaTemplate {
 
   sealed interface SimpleAssigmentOperator extends ExpressionPart {}
 
-  sealed interface Statement extends BlockElement {}
+  sealed interface Statement extends MethodDeclarationInstruction {}
 
   sealed interface StaticModifier extends BodyElement {}
 
   sealed interface StringLiteral extends Literal, PrimaryNoNewArray {}
 
   sealed interface SuperKeyword extends BlockElement {}
-
-  sealed interface ThisKeyword extends PrimaryNoNewArray {}
-
-  sealed interface ThrowKeyword extends BlockElement {}
 
   sealed interface TypeParameter extends MethodDeclarationInstruction {}
 
@@ -607,18 +604,7 @@ public abstract class JavaTemplate {
 
   private sealed interface AccessModifier extends BodyElement {}
 
-  private sealed interface CanArrayAccess {
-    ArrayAccess dim(ExpressionPart e1);
-  }
-
-  private sealed interface CanInvoke {
-    @Deprecated
-    MethodInvocation invoke(String methodName, ArgsPart... arguments);
-
-    MethodInvocation v(String methodName, ArgsPart... arguments);
-  }
-
-  private static final class NewKeyword1 extends External implements MethodDeclarationInstruction {
+  private static final class NewKeyword extends External implements ExpressionPart {
     @Override
     final void execute(InternalApi api) {
       api.extStart();
@@ -626,14 +612,18 @@ public abstract class JavaTemplate {
     }
   }
 
-  private sealed interface Primary extends CanInvoke, ExpressionPart, MethodDeclarationInstruction {
-    ExpressionName n(String name);
+  /**
+   * @since 0.4.3.1
+   */
+  private static final class NewLine extends External implements ExpressionPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
+    }
   }
 
-  private sealed interface PrimaryNoNewArray extends CanArrayAccess, Primary {}
-
-  private static final class NullLiteral1
-      extends External implements MethodDeclarationInstruction {
+  private static final class NullLiteral extends External implements ExpressionPart {
     @Override
     final void execute(InternalApi api) {
       api.extStart();
@@ -641,8 +631,11 @@ public abstract class JavaTemplate {
     }
   }
 
-  private static final class ReturnKeyword
-      extends External implements MethodDeclarationInstruction {
+  private sealed interface Primary extends ExpressionPart {}
+
+  private sealed interface PrimaryNoNewArray extends Primary {}
+
+  private static final class ReturnKeyword extends External implements StatementPart {
     @Override
     final void execute(InternalApi api) {
       api.extStart();
@@ -650,12 +643,19 @@ public abstract class JavaTemplate {
     }
   }
 
-  private static final class ThisKeyword1
-      extends External implements MethodDeclarationInstruction {
+  private static final class ThisKeyword extends External implements ExpressionPart {
     @Override
     final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.THIS, ByteProto.NOOP);
+    }
+  }
+
+  private static final class ThrowKeyword extends External implements StatementPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.THROW, ByteProto.NOOP);
     }
   }
 
@@ -668,25 +668,46 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * The ellipsis instruction.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final Ellipsis ELLIPSIS = new Ellipsis();
+
+  /**
+   * The new line instruction.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final ExpressionPart NL = new NewLine();
+
+  /**
    * The {@code new} keyword.
    *
    * @since 0.4.3.1
    */
-  protected static final MethodDeclarationInstruction NEW = new NewKeyword1();
+  protected static final ExpressionPart NEW = new NewKeyword();
 
   /**
    * The {@code return} keyword.
    *
    * @since 0.4.3.1
    */
-  protected static final MethodDeclarationInstruction RETURN = new ReturnKeyword();
+  protected static final StatementPart RETURN = new ReturnKeyword();
 
   /**
    * The {@code this} keyword.
    *
    * @since 0.4.3.1
    */
-  protected static final MethodDeclarationInstruction THIS = new ThisKeyword1();
+  protected static final ExpressionPart THIS = new ThisKeyword();
+
+  /**
+   * The {@code throw} keyword.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final StatementPart THROW = new ThrowKeyword();
 
   /**
    * The {@code void} keyword.
@@ -700,7 +721,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected static final MethodDeclarationInstruction NULL = new NullLiteral1();
+  protected static final ExpressionPart NULL = new NullLiteral();
 
   /**
    * The {@code public} modifier.
@@ -768,6 +789,8 @@ public abstract class JavaTemplate {
   static final _Ext EXT = _Ext.INSTANCE;
 
   static final _Include INCLUDE = _Include.INSTANCE;
+
+  static final _Item ITEM = _Item.INSTANCE;
 
   private InternalApi api;
 
@@ -1169,7 +1192,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
-  protected final NullLiteral _null() {
+  protected final OldNullLiteral _null() {
     return api().itemAdd(ByteProto.NULL_LITERAL, ByteProto.NOOP);
   }
 
@@ -1268,7 +1291,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ThisKeyword _this() {
+  protected final OldThisKeyword _this() {
     return api().itemAdd(ByteProto.THIS, ByteProto.NOOP);
   }
 
@@ -1291,7 +1314,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
-  protected final ThrowKeyword _throw() {
+  protected final OldThrowKeyword _throw() {
     return api().itemAdd(ByteProto.THROW, ByteProto.NOOP);
   }
 
@@ -1362,6 +1385,16 @@ public abstract class JavaTemplate {
     Objects.requireNonNull(annotationType, "annotationType == null");
     var api = api();
     return api.elem(ByteProto.ANNOTATION, api.classType(annotationType));
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected final Argument arg(ExpressionPart... parts) {
+    Object[] many = Objects.requireNonNull(parts, "parts == null");
+    return api().elemMany(ByteProto.ARGUMENT, many);
   }
 
   /**
@@ -1611,14 +1644,15 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ArrayAccess dim(ExpressionPart e1) {
-    return api().elem(ByteProto.ARRAY_ACCESS, e1.self());
+  protected final ArrayAccess dim(ExpressionPart... parts) {
+    Object[] many = Objects.requireNonNull(parts, "parts == null");
+    return api().elemMany(ByteProto.ARRAY_ACCESS, many);
   }
 
   /**
    * TODO
    */
-  protected final Ellipsis ellipsis() {
+  protected final OldEllipsis ellipsis() {
     return api().itemAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
   }
 
@@ -1896,6 +1930,15 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected final MethodDeclaration method(IncludeTarget target) {
+    return api().elem(ByteProto.METHOD_DECLARATION, include(target));
+  }
+
+  /**
    * Adds a method declaration to a class or interface declaration.
    *
    * <p>
@@ -2096,7 +2139,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final NewLine nl() {
+  protected final OldNewLine nl() {
     return api().itemAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
   }
 
@@ -2114,12 +2157,43 @@ public abstract class JavaTemplate {
   /**
    * TODO
    *
+   * @since 0.4.3.1
+   */
+  protected final Statement p(StatementPart... parts) {
+    Object[] many = Objects.requireNonNull(parts, "parts == null");
+    return api().elemMany(ByteProto.STATEMENT, many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected final Parameter parameter(Class<?> type, Ellipsis ellipsis, String name) {
+    JavaModel.checkIdentifier(name.toString());
+    Object typeName = typeName(type);
+    return api().elem(ByteProto.PARAMETER_SHORT, typeName, ellipsis.self(), name);
+  }
+
+  /**
+   * TODO
+   *
    * @since 0.4.2
    */
   protected final Parameter parameter(Class<?> type, String name) {
     JavaModel.checkIdentifier(name.toString());
     Object typeName = typeName(type);
     return api().elem(ByteProto.PARAMETER_SHORT, typeName, name);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected final Parameter parameter(TypeName type, Ellipsis ellipsis, String name) {
+    JavaModel.checkIdentifier(name.toString());
+    return api().elem(ByteProto.PARAMETER_SHORT, type.self(), ellipsis.self(), name);
   }
 
   /**
@@ -2317,25 +2391,6 @@ public abstract class JavaTemplate {
 
   /**
    * TODO
-   *
-   * @since 0.4.3.1
-   */
-  protected final ClassTypeInstruction t(ClassOrParameterizedType type) {
-    return api().elem(ByteProto.T, type.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.3.1
-   */
-  protected final ClassTypeInstruction t(ClassOrParameterizedType type, ArgsPart... arguments) {
-    Object[] many = Objects.requireNonNull(arguments, "arguments == null");
-    return api.elemMany(ByteProto.T_WITH_ARGS, type.self(), many);
-  }
-
-  /**
-   * TODO
    */
   protected final ParameterizedType t(
       OldClassTypeInstruction rawType,
@@ -2503,10 +2558,10 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected final MethodInvocation v(String methodName, ArgsPart... arguments) {
+  protected final MethodInvocation v(String methodName) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
-    Object[] many = Objects.requireNonNull(arguments, "arguments == null");
-    return api.elemMany(ByteProto.METHOD_INVOCATION, methodName, many);
+    var api = api();
+    return api.itemAdd(ByteProto.V, api.object(methodName));
   }
 
   InternalApi api() {

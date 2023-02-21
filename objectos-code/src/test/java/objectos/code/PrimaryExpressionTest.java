@@ -34,7 +34,7 @@ public class PrimaryExpressionTest {
           _class("Primary");
           body(
             method(
-              RETURN, THIS
+              p(RETURN, THIS)
             )
           );
         }
@@ -63,7 +63,7 @@ public class PrimaryExpressionTest {
           _class("Primary");
           body(
             method(
-              RETURN, NULL
+              p(RETURN, NULL)
             )
           );
         }

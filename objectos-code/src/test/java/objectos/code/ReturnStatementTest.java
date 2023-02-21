@@ -33,7 +33,7 @@ public class ReturnStatementTest {
           _class("Return");
           body(
             method(
-              RETURN, s("abc")
+              p(RETURN, s("abc"))
             )
           );
         }

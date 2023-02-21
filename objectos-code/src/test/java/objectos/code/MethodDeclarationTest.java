@@ -86,8 +86,8 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _void(), method("test"), block(
-              invoke("foo")
+            method(
+              p(v("foo"))
             )
           );
         }
@@ -95,7 +95,7 @@ public class MethodDeclarationTest {
 
       """
       class Methods {
-        void test() {
+        void unnamed() {
           foo();
         }
       }
@@ -187,20 +187,18 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _void(), method("test"), block(
-              include(this::bodyImpl)
-            )
+            method(this::bodyImpl)
           );
         }
 
         private void bodyImpl() {
-          invoke("foo");
+          p(v("foo"));
         }
       }.toString(),
 
       """
       class Methods {
-        void test() {
+        void unnamed() {
           foo();
         }
       }
@@ -274,7 +272,10 @@ public class MethodDeclarationTest {
               parameter(BOOLEAN, "c")
             ),
 
-            _void(), method("test3", _int(), ellipsis(), id("a")), block(),
+            method(
+              name("test3"),
+              parameter(INT, ELLIPSIS, "a")
+            ),
 
             method(
               name("test4"),
@@ -333,19 +334,22 @@ public class MethodDeclarationTest {
         protected final void definition() {
           _class("Methods");
           body(
-            _void(), method("test0"), block(
-              invoke("a")
+            method(
+              VOID, name("test0"),
+              p(v("a"))
             ),
 
-            _void(), method("test1"), block(
-              invoke("a"), end(),
-              invoke("b")
+            method(
+              VOID, name("test1"),
+              p(v("a")),
+              p(v("b"))
             ),
 
-            _void(), method("test2"), block(
-              invoke("a"), end(),
-              invoke("b"), end(),
-              invoke("c")
+            method(
+              VOID, name("test2"),
+              p(v("a")),
+              p(v("b")),
+              p(v("c"))
             )
           );
         }
@@ -543,17 +547,21 @@ public class MethodDeclarationTest {
   public void testCase12() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName STRING = classType(String.class);
+
         @Override
         protected final void definition() {
           _class("Methods");
           body(
-            _abstract(), _void(), method("test0", include(this::params))
+            method(this::params)
           );
         }
 
         private void params() {
-          code(_int(), id("a"));
-          code(t(String.class), id("b"));
+          modifiers(ABSTRACT);
+          name("test0");
+          parameter(INT, "a");
+          parameter(STRING, "b");
         }
       }.toString(),
 

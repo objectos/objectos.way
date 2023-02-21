@@ -30,12 +30,14 @@ public class ThrowStatementTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName IO_EXCEPTION = classType(IOException.class);
+
         @Override
         protected final void definition() {
           _class("Throw");
           body(
-            _void(), method("test"), block(
-              _throw(), _new(t(IOException.class))
+            method(
+              p(THROW, NEW, IO_EXCEPTION)
             )
           );
         }
@@ -43,7 +45,7 @@ public class ThrowStatementTest {
 
       """
       class Throw {
-        void test() {
+        void unnamed() {
           throw new java.io.IOException();
         }
       }

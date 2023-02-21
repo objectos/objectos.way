@@ -34,7 +34,7 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("test")
+              p(v("test"))
             )
           );
         }
@@ -62,7 +62,7 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("test", s("a"))
+              p(v("test"), arg(s("a")))
             )
           );
         }
@@ -90,7 +90,7 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("test", s("a"), s("b"))
+              p(v("test"), arg(s("a")), arg(s("b")))
             )
           );
         }
@@ -119,7 +119,7 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("m0", s("1"), v("m2"), s("3"))
+              p(v("m0"), arg(s("1")), arg(v("m2")), arg(s("3")))
             )
           );
         }
@@ -148,10 +148,11 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("m0", nl(),
-                s("1"), nl(), nl(),
-                v("m2"), nl(), nl(),
-                s("3"), nl()
+              p(
+                v("m0"), NL,
+                arg(s("1")), NL, NL,
+                arg(v("m2")), NL, NL,
+                arg(s("3"), NL)
               )
             )
           );
@@ -185,7 +186,7 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("test", n("field"))
+              p(v("test"), arg(n("field")))
             )
           );
         }
@@ -216,9 +217,9 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              t(THREAD).v("currentThread"),
+              p(THREAD, v("currentThread")),
 
-              t(COLLECTIONS).v("sort", n("list"))
+              p(COLLECTIONS, v("sort"), arg(n("list")))
             )
           );
         }
@@ -250,13 +251,13 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              n("a").v("x"),
+              p(n("a"), v("x")),
 
-              n("b").v("y", s("1")),
+              p(n("b"), v("y"), arg(s("1"))),
 
-              n("c").v("z", s("1"), s("2")),
+              p(n("c"), v("z"), arg(s("1")), arg(s("2"))),
 
-              t(FOO).n("CTE").v("m")
+              p(FOO, n("CTE"), v("m"))
             )
           );
         }
@@ -288,13 +289,13 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("a").v("b"),
+              p(v("a"), v("b")),
 
-              v("a").v("b").v("c"),
+              p(v("a"), v("b"), v("c")),
 
-              n("foo").v("a").v("b").v("c"),
+              p(n("foo"), v("a"), v("b"), v("c")),
 
-              n("list").v("add", s("1")).v("add", s("2")).v("build")
+              p(n("list"), v("add"), arg(s("1")), v("add"), arg(s("2")), v("build"))
             )
           );
         }
@@ -328,9 +329,9 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              NEW, t(THREAD).v("start"),
+              p(NEW, THREAD, v("start")),
 
-              NEW, t(THREAD, s("foo")).v("start")
+              p(NEW, THREAD, arg(s("foo")), v("start"))
             )
           );
         }
@@ -360,9 +361,9 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("test", v("a").v("b")),
+              p(v("test"), arg(v("a"), v("b"))),
 
-              v("test", v("a"), v("b"))
+              p(v("test"), arg(v("a")), arg(v("b")))
             )
           );
         }
@@ -394,9 +395,10 @@ public class MethodInvocationExpressionTest {
           _class("Invoke");
           body(
             method(
-              v("property", nl(),
-                t(A).n("B"), nl(),
-                s("some text"), nl()
+              p(
+                v("property"), NL,
+                arg(A, n("B")), NL,
+                arg(s("some text"), NL)
               )
             )
           );

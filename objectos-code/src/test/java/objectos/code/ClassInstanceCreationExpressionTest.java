@@ -37,11 +37,9 @@ public class ClassInstanceCreationExpressionTest {
           _class("New");
           body(
             method(
-              NEW, t(FOO),
-
-              NEW, t(FOO, s("a")),
-
-              NEW, t(FOO, s("a"), s("b"))
+              p(NEW, FOO),
+              p(NEW, FOO, arg(s("a"))),
+              p(NEW, FOO, arg(s("a")), arg(s("b")))
             )
           );
         }
@@ -78,7 +76,7 @@ public class ClassInstanceCreationExpressionTest {
           _class("New");
           body(
             method(
-              NEW, t(HASHMAP)
+              p(NEW, HASHMAP)
             )
           );
         }

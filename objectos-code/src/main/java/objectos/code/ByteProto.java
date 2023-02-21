@@ -63,59 +63,47 @@ final class ByteProto {
   static final int PARAMETER = -33;
   static final int PARAMETER_SHORT = -34;
   static final int RETURN_TYPE = -35;
-  static final int TYPE_PARAMETER = -36;
+  static final int STATEMENT = -36;
+  static final int TYPE_PARAMETER = -37;
 
   //statement start
 
-  static final int BLOCK = -37;
-  static final int IF_CONDITION = -38;
-  static final int RETURN = -39;
-  static final int SUPER = -40;
-  static final int SUPER_INVOCATION = -41;
-  static final int THROW = -42;
-  static final int VAR = -43;
+  static final int BLOCK = -38;
+  static final int IF_CONDITION = -39;
+  static final int RETURN = -40;
+  static final int SUPER = -41;
+  static final int SUPER_INVOCATION = -42;
+  static final int THROW = -43;
+  static final int VAR = -44;
 
   //statement part
 
-  static final int ELSE = -44;
+  static final int ELSE = -45;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -45;
-  static final int EXPRESSION_NAME = -46;
-  static final int INVOKE = -47;
-  static final int METHOD_INVOCATION = -48;
+  static final int CLASS_INSTANCE_CREATION = -46;
+  static final int EXPRESSION_NAME = -47;
+  static final int INVOKE = -48;
   static final int NEW = -49;
   static final int NULL_LITERAL = -50;
   static final int PRIMITIVE_LITERAL = -51;
   static final int STRING_LITERAL = -52;
-  static final int T = -53;
-  static final int THIS = -54;
+  static final int THIS = -53;
+  static final int V = -54;
 
   //expression part
 
-  static final int ARRAY_ACCESS = -55;
-  static final int ASSIGNMENT_OPERATOR = -56;
-  static final int EQUALITY_OPERATOR = -57;
-  static final int EXPRESSION_NAME_DOT = -58;
-  static final int METHOD_INVOCATION_DOT = -59;
-  static final int T_WITH_ARGS = -60;
+  static final int ARGUMENT = -55;
+  static final int ARRAY_ACCESS = -56;
+  static final int ASSIGNMENT_OPERATOR = -57;
+  static final int EQUALITY_OPERATOR = -58;
 
   private ByteProto() {}
 
   public static boolean isClassOrParameterizedType(int proto) {
     return proto == CLASS_TYPE
         || proto == PARAMETERIZED_TYPE;
-  }
-
-  public static boolean isConnecting(int proto) {
-    return switch (proto) {
-      case ARRAY_ACCESS,
-           EXPRESSION_NAME_DOT,
-           METHOD_INVOCATION_DOT -> true;
-
-      default -> false;
-    };
   }
 
   public static boolean isExpressionStart(int proto) {
