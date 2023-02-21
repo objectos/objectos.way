@@ -141,7 +141,7 @@ class InternalCompiler extends InternalApi {
   private void argumentItem() {
     lastSet(_START);
 
-    executeSwitch(this::expression);
+    expression();
 
     slot();
 
@@ -297,11 +297,15 @@ class InternalCompiler extends InternalApi {
   }
 
   private void blockStatement() {
-    int start = itemPeek();
-    // TODO local class
-    // TODO local variable decl
+    int proto = protoPeek();
 
-    statement0(start);
+    switch (proto) {
+      // local class
+
+      // local variable
+
+      default -> statement0(proto);
+    }
   }
 
   private void body() {
@@ -447,13 +451,30 @@ class InternalCompiler extends InternalApi {
   }
 
   private void classInstanceCreation() {
-    codeAdd(Keyword.NEW);
+    execute(this::newKeyword);
 
-    codeAdd(Whitespace.MANDATORY);
+    int proto = protoPeek();
 
-    executeSwitch(this::oldType);
+    switch (proto) {
+      case ByteProto.CLASS_TYPE -> {
+        preType();
+        execute(this::classType);
+        codeAdd(Symbol.LEFT_PARENTHESIS);
+        codeAdd(Symbol.RIGHT_PARENTHESIS);
+      }
 
-    oldArgumentList();
+      case ByteProto.CLASS_TYPE_WITH_ARGS -> {
+        preType();
+        execute(this::classTypeWithArgs);
+      }
+
+      case ByteProto.PARAMETERIZED_TYPE -> {
+        preType();
+        execute(this::parameterizedType);
+        codeAdd(Symbol.LEFT_PARENTHESIS);
+        codeAdd(Symbol.RIGHT_PARENTHESIS);
+      }
+    }
   }
 
   private void classKeyword() {
@@ -532,6 +553,12 @@ class InternalCompiler extends InternalApi {
     }
 
     lastSet(_IDENTIFIER);
+  }
+
+  private void classTypeWithArgs() {
+    executeSwitch(this::type);
+
+    argumentList();
   }
 
   private void codeAdd(Indentation value) { codeAdd(ByteCode.INDENTATION, value.ordinal()); }
@@ -686,11 +713,17 @@ class InternalCompiler extends InternalApi {
   }
 
   private void dot() {
-    executeSwitch(this::expression);
+    int proto = protoPeek();
+
+    if (proto == ByteProto.CLASS_TYPE) {
+      execute(this::classType);
+    } else {
+      expression();
+    }
 
     codeAdd(Symbol.DOT);
 
-    executeSwitch(this::expression);
+    expression();
   }
 
   private boolean elemMore() {
@@ -790,20 +823,18 @@ class InternalCompiler extends InternalApi {
   }
 
   private void expression() {
-    executeSwitch(this::expression);
-  }
+    int proto = protoPeek();
 
-  private void expression(int proto) {
     switch (proto) {
-      case ByteProto.CLASS_TYPE -> classType();
+      case ByteProto.DOT -> execute(this::dot);
 
-      case ByteProto.DOT -> dot();
+      case ByteProto.EXPRESSION_NAME -> execute(this::expressionName);
 
-      case ByteProto.EXPRESSION_NAME -> expressionName();
+      case ByteProto.METHOD_INVOCATION -> execute(this::methodInvocation);
 
-      case ByteProto.METHOD_INVOCATION -> methodInvocation();
+      case ByteProto.NEW -> classInstanceCreation();
 
-      case ByteProto.STRING_LITERAL -> stringLiteral();
+      case ByteProto.STRING_LITERAL -> execute(this::stringLiteral);
 
       default -> errorRaise(
         "no-op expression start '%s'".formatted(protoName(proto))
@@ -1154,6 +1185,7 @@ class InternalCompiler extends InternalApi {
 
           state = State.RESULT;
 
+          preType();
           executeSwitch(this::type);
         }
 
@@ -1329,13 +1361,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void methodResultVoid() {
-    switch (last()) {
-      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-
-      case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
-    }
+    preType();
 
     voidKeyword();
   }
@@ -1382,6 +1408,12 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.MODIFIER -> modifier();
     }
+
+    lastSet(_KEYWORD);
+  }
+
+  private void newKeyword() {
+    codeAdd(Keyword.NEW);
 
     lastSet(_KEYWORD);
   }
@@ -1473,6 +1505,16 @@ class InternalCompiler extends InternalApi {
     oldStatement0(start);
   }
 
+  private void oldClassInstanceCreation() {
+    codeAdd(Keyword.NEW);
+
+    codeAdd(Whitespace.MANDATORY);
+
+    executeSwitch(this::oldType);
+
+    oldArgumentList();
+  }
+
   private void oldDot() {
     executeSwitch(this::oldExpressionBegin);
 
@@ -1555,7 +1597,7 @@ class InternalCompiler extends InternalApi {
     switch (proto) {
       case ByteProto.ARRAY_ACCESS -> arrayAccess();
 
-      case ByteProto.CLASS_INSTANCE_CREATION -> classInstanceCreation();
+      case ByteProto.CLASS_INSTANCE_CREATION -> oldClassInstanceCreation();
 
       case ByteProto.CLASS_TYPE -> classType();
 
@@ -1814,6 +1856,16 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
   }
 
+  private void preType() {
+    switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+
+      case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
+    }
+  }
+
   private void primitiveLiteral() {
     codeAdd(ByteCode.PRIMITIVE_LITERAL, protoNext());
   }
@@ -1891,11 +1943,9 @@ class InternalCompiler extends InternalApi {
   }
 
   private void returnType() {
-    switch (last()) {
-      case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
-    }
+    preType();
 
-    executeSwitch(this::oldType);
+    executeSwitch(this::type);
   }
 
   private int simpleName() { return levelIndex[0]; }
@@ -1929,7 +1979,8 @@ class InternalCompiler extends InternalApi {
   private void statement0(int start) {
     switch (start) {
       case ByteProto.DOT,
-           ByteProto.METHOD_INVOCATION -> {
+           ByteProto.METHOD_INVOCATION,
+           ByteProto.NEW -> {
         expression();
 
         codeAdd(Symbol.SEMICOLON);
@@ -2063,14 +2114,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void type(int proto) {
-    switch (last()) {
-      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-
-      case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
-    }
-
     switch (proto) {
       case ByteProto.ARRAY_TYPE -> arrayType();
 

@@ -53,7 +53,8 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static abstract sealed class ClassTypeName extends ReferenceTypeName {
+  protected static abstract sealed class ClassTypeName
+      extends ReferenceTypeName implements ClassOrParameterizedType {
 
     private static final class OfClass extends ClassTypeName {
       private final Class<?> value;
@@ -209,7 +210,8 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static final class ParameterizedTypeName extends ReferenceTypeName {
+  protected static final class ParameterizedTypeName
+      extends ReferenceTypeName implements ClassOrParameterizedType {
     private final ClassTypeName raw;
 
     private final ReferenceTypeName first;
@@ -349,6 +351,7 @@ public abstract class JavaTemplate {
       ClassInstanceCreationExpression,
       ClassKeyword,
       ClassTypeInstruction,
+      ClassTypeWithArgs,
       ConstructorDeclaration,
       DeclarationName,
       Ellipsis,
@@ -467,19 +470,15 @@ public abstract class JavaTemplate {
 
   sealed interface ClassOrParameterizedType extends Instruction {}
 
-  @Deprecated
-  sealed interface OldClassTypeInstruction
-      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {
-    ExpressionName n(String name);
-  }
-
-  sealed interface ConstructorDeclaration extends BodyElement {}
-
-  sealed interface ClassTypeInstruction {
+  sealed interface ClassTypeInstruction extends MethodDeclarationInstruction {
     ExpressionName n(String name);
 
     MethodInvocation v(String methodName, ArgsPart... arguments);
   }
+
+  sealed interface ClassTypeWithArgs extends ClassTypeInstruction {}
+
+  sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface DeclarationName extends MethodDeclarationInstruction {}
 
@@ -543,6 +542,12 @@ public abstract class JavaTemplate {
   sealed interface NewLine extends ArgsPart, BlockElement {}
 
   sealed interface NullLiteral extends ExpressionPart {}
+
+  @Deprecated
+  sealed interface OldClassTypeInstruction
+      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {
+    ExpressionName n(String name);
+  }
 
   @Deprecated
   sealed interface OldVoidKeyword extends BodyElement {}
@@ -610,6 +615,14 @@ public abstract class JavaTemplate {
     MethodInvocation v(String methodName, ArgsPart... arguments);
   }
 
+  private static final class NewKeyword1 extends External implements MethodDeclarationInstruction {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.NEW, ByteProto.NOOP);
+    }
+  }
+
   private sealed interface Primary extends CanInvoke, ExpressionPart, MethodDeclarationInstruction {
     ExpressionName n(String name);
   }
@@ -624,6 +637,18 @@ public abstract class JavaTemplate {
     }
   }
 
+  /**
+   * The {@code new} keyword.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final MethodDeclarationInstruction NEW = new NewKeyword1();
+
+  /**
+   * The {@code void} keyword.
+   *
+   * @since 0.4.3.1
+   */
   protected static final MethodDeclarationInstruction VOID = new VoidKeyword();
 
   /**
@@ -2244,10 +2269,22 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected final ClassTypeInstruction t(ClassTypeName type) {
+  protected final ClassTypeInstruction t(ClassOrParameterizedType type) {
     var api = api();
-    type.execute(api);
+    var external = (External) type;
+    external.execute(api);
+    api.externalToLocal();
     return api.itemEnd();
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.3.1
+   */
+  protected final ClassTypeInstruction t(ClassOrParameterizedType type, ArgsPart... arguments) {
+    Object[] many = Objects.requireNonNull(arguments, "arguments == null");
+    return api.elemMany(ByteProto.CLASS_TYPE_WITH_ARGS, type.self(), many);
   }
 
   /**

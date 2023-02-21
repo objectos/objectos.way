@@ -94,6 +94,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("EXPRESSION_NAME");
     value("INVOKE"); // deprecated
     value("METHOD_INVOCATION");
+    value("NEW");
     value("NULL_LITERAL");
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
@@ -103,6 +104,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("ARRAY_ACCESS");
     value("ASSIGNMENT_OPERATOR");
+    value("CLASS_TYPE_WITH_ARGS");
     value("EQUALITY_OPERATOR");
   }
 }

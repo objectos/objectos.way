@@ -327,7 +327,7 @@ public class MethodInvocationExpressionTest {
       fix.ture(new JavaTemplate() {
         @Override
         protected final void definition() {
-          _new(t(Thread.class)).invoke("start");
+          _new(t(Thread.class)).v("start");
         }
       }),
 

@@ -736,4 +736,10 @@ class InternalApi {
 
   private void stackset(int offset, int value) { stackArray[stackIndex - offset] = value; }
 
+  final void externalToLocal() {
+    int[] array = levelArray[level];
+
+    array[levelIndex[level] - 2] = LOCAL;
+  }
+
 }

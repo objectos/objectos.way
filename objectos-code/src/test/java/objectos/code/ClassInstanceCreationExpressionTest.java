@@ -30,16 +30,18 @@ public class ClassInstanceCreationExpressionTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName FOO = classType("objectos.code", "Foo");
+
         @Override
         protected final void definition() {
           _class("New");
           body(
-            _void(), method("test"), block(
-              _new(t("objectos.code", "Foo")),
+            method(
+              NEW, t(FOO),
 
-              _new(t("objectos.code", "Foo"), s("a")),
+              NEW, t(FOO, s("a")),
 
-              _new(t("objectos.code", "Foo"), s("a"), s("b"))
+              NEW, t(FOO, s("a"), s("b"))
             )
           );
         }
@@ -47,7 +49,7 @@ public class ClassInstanceCreationExpressionTest {
 
       """
       class New {
-        void test() {
+        void unnamed() {
           new objectos.code.Foo();
           new objectos.code.Foo("a");
           new objectos.code.Foo("a", "b");
@@ -58,19 +60,25 @@ public class ClassInstanceCreationExpressionTest {
   }
 
   @Test(description = """
-  Class Instance Creation Expressions TC03
+  Class Instance Creation Expressions TC02
 
   - parameterized type
   """)
-  public void testCase03() {
+  public void testCase02() {
     assertEquals(
       new JavaTemplate() {
+        static final ParameterizedTypeName HASHMAP = parameterizedType(
+          classType(HashMap.class),
+          classType(String.class),
+          classType(Integer.class)
+        );
+
         @Override
         protected final void definition() {
           _class("New");
           body(
-            _void(), method("test"), block(
-              _new(t(t(HashMap.class), t(String.class), t(Integer.class)))
+            method(
+              NEW, t(HASHMAP)
             )
           );
         }
@@ -78,7 +86,7 @@ public class ClassInstanceCreationExpressionTest {
 
       """
       class New {
-        void test() {
+        void unnamed() {
           new java.util.HashMap<java.lang.String, java.lang.Integer>();
         }
       }
