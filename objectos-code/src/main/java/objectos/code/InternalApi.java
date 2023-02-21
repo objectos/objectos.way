@@ -35,10 +35,6 @@ class InternalApi {
 
   int codeIndex;
 
-  int[] levelArray = new int[64];
-
-  int levelIndex;
-
   Object[] objectArray = new Object[64];
 
   int objectIndex;
@@ -60,19 +56,19 @@ class InternalApi {
   final void accept(JavaTemplate template) {
     autoImports.clear();
 
-    codeIndex = stackIndex = -1;
+    stackIndex = -1;
 
-    levelIndex = objectIndex = protoIndex = 0;
+    codeIndex = objectIndex = protoIndex = 0;
 
     template.execute(this);
 
     int self = protoIndex;
 
-    for (int i = 0; i < levelIndex;) {
-      int kind = levelArray[i++];
+    for (int i = 0; i < codeIndex;) {
+      int kind = codeArray[i++];
 
       if (kind == LOCAL) {
-        int protoIndex = levelArray[i++];
+        int protoIndex = codeArray[i++];
 
         int proto = protoGet(protoIndex++);
 
@@ -417,11 +413,11 @@ class InternalApi {
   final _Item itemEnd() { return item; }
 
   final _Item joinWith(int proto) {
-    int second = levelArray[--levelIndex];
-    --levelIndex;
+    int second = codeArray[--codeIndex];
+    --codeIndex;
 
-    int first = levelArray[--levelIndex];
-    --levelIndex;
+    int first = codeArray[--codeIndex];
+    --codeIndex;
 
     return itemAdd(proto, protoGet(first++), first, protoGet(second++), second);
   }
@@ -431,12 +427,12 @@ class InternalApi {
 
     levelAdd(LTAIL, headIndex);
 
-    levelArray[headIndex + 1] = levelIndex;
+    codeArray[headIndex + 1] = codeIndex;
   }
 
   final void lambdastart() {
     // push lambda head
-    stackPush(levelIndex);
+    stackPush(codeIndex);
 
     levelAdd(LAMBDA, NULL);
   }
@@ -446,7 +442,7 @@ class InternalApi {
   }
 
   final void localToExternal() {
-    levelArray[levelIndex - 2] = EXT;
+    codeArray[codeIndex - 2] = EXT;
   }
 
   final int object(Object value) {
@@ -480,17 +476,17 @@ class InternalApi {
   private void elemCnt(int value, int itemCount) {
     int seenCount = 0;
 
-    int index = levelIndex;
+    int index = codeIndex;
 
     while (seenCount < itemCount) {
       index -= 2;
 
-      int item = levelArray[index];
+      int item = codeArray[index];
 
       if (item == LOCAL || item == EXT) {
         seenCount++;
       } else if (item == LTAIL) {
-        int headIndex = levelArray[index + 1];
+        int headIndex = codeArray[index + 1];
 
         index = headIndex;
 
@@ -523,15 +519,15 @@ class InternalApi {
 
     // index is at tail index
     // max is at lambda tail
-    int max = levelArray[index] - 2;
+    int max = codeArray[index] - 2;
 
     for (int i = start; i < max;) {
-      int code = levelArray[i];
+      int code = codeArray[i];
 
       if (code == LOCAL) {
         i++;
 
-        int levelValue = levelArray[i++];
+        int levelValue = codeArray[i++];
 
         int proto = protoGet(levelValue++);
 
@@ -539,7 +535,7 @@ class InternalApi {
       } else if (code == LAMBDA) {
         elemCntx0lambda(i);
 
-        i = levelArray[i + 1];
+        i = codeArray[i + 1];
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: code=" + code);
@@ -602,7 +598,7 @@ class InternalApi {
     int levelStart = stackPop(),
         self = stackPop();
 
-    levelIndex = levelStart;
+    codeIndex = levelStart;
 
     protoAdd(ByteProto.END_ELEMENT);
 
@@ -612,19 +608,19 @@ class InternalApi {
   }
 
   private void levelAdd(int v0, int v1) {
-    levelArray = IntArrays.growIfNecessary(levelArray, levelIndex + 1);
-    levelArray[levelIndex++] = v0;
-    levelArray[levelIndex++] = v1;
+    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex + 1);
+    codeArray[codeIndex++] = v0;
+    codeArray[codeIndex++] = v1;
   }
 
-  private int levelGet(int index) { return levelArray[index]; }
+  private int levelGet(int index) { return codeArray[index]; }
 
   private int levelSearch(int index, int condition) {
-    for (int i = index; i < levelIndex;) {
-      int value = levelArray[i++];
+    for (int i = index; i < codeIndex;) {
+      int value = codeArray[i++];
 
       if (value == LAMBDA && condition != LAMBDA) {
-        i = levelArray[i];
+        i = codeArray[i];
       } else if (value == condition) {
         // assuming array was properly assembled
         // there will always be a i+1 index
@@ -678,7 +674,7 @@ class InternalApi {
   private void stackset(int offset, int value) { stackArray[stackIndex - offset] = value; }
 
   final void externalToLocal() {
-    levelArray[levelIndex - 2] = LOCAL;
+    codeArray[codeIndex - 2] = LOCAL;
   }
 
 }

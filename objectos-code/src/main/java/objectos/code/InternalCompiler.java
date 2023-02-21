@@ -45,19 +45,19 @@ class InternalCompiler extends InternalApi {
     codeIndex = stackIndex = 0;
 
     // simpleName
-    levelArray[0] = NULL;
+    stackArray[0] = NULL;
     // public found
-    levelArray[1] = NULL;
+    stackArray[1] = NULL;
     // comma slot
-    levelArray[2] = NULL;
+    stackArray[2] = NULL;
     // topLevel
-    levelArray[3] = NULL;
+    stackArray[3] = NULL;
     // error
-    levelArray[4] = 0;
+    stackArray[4] = 0;
     // abstract found
-    levelArray[5] = NULL;
+    stackArray[5] = NULL;
     // last
-    levelArray[6] = NULL;
+    stackArray[6] = NULL;
 
     // do not change
     // objectIndex;
@@ -94,10 +94,10 @@ class InternalCompiler extends InternalApi {
     );
   }
 
-  private boolean abstractFound() { return levelArray[5] != NULL; }
+  private boolean abstractFound() { return stackArray[5] != NULL; }
 
   private void abstractFound(int value) {
-    levelArray[5] = value;
+    stackArray[5] = value;
   }
 
   private void annotation() {
@@ -768,14 +768,14 @@ class InternalCompiler extends InternalApi {
   }
 
   private boolean error() {
-    var result = levelArray[4] == 1;
+    var result = stackArray[4] == 1;
 
-    levelArray[4] = 0;
+    stackArray[4] = 0;
 
     return result;
   }
 
-  private void errorRaise() { levelArray[4] = 1; }
+  private void errorRaise() { stackArray[4] = 1; }
 
   private void errorRaise(String message) {
     errorRaise();
@@ -1094,11 +1094,11 @@ class InternalCompiler extends InternalApi {
     return predicate.test(proto);
   }
 
-  private int last() { return levelArray[6]; }
+  private int last() { return stackArray[6]; }
 
   private boolean lastIs(int value) { return last() == value; }
 
-  private void lastSet(int value) { levelArray[6] = value; }
+  private void lastSet(int value) { stackArray[6] = value; }
 
   private void localVariableDeclaration() {
     int type = itemPeek();
@@ -1913,9 +1913,9 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int publicFound() { return levelArray[1]; }
+  private int publicFound() { return stackArray[1]; }
 
-  private void publicFound(int value) { levelArray[1] = value; }
+  private void publicFound(int value) { stackArray[1] = value; }
 
   private void returnKeyword() {
     codeAdd(Keyword.RETURN);
@@ -1941,12 +1941,12 @@ class InternalCompiler extends InternalApi {
     executeSwitch(this::type);
   }
 
-  private int simpleName() { return levelArray[0]; }
+  private int simpleName() { return stackArray[0]; }
 
-  private void simpleName(int value) { levelArray[0] = value; }
+  private void simpleName(int value) { stackArray[0] = value; }
 
   private void slot() {
-    levelArray[2] = codeIndex;
+    stackArray[2] = codeIndex;
 
     codeAdd(ByteCode.NOP1);
 
@@ -1954,7 +1954,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void slotComma() {
-    int index = levelArray[2];
+    int index = stackArray[2];
 
     codeArray[index + 0] = ByteCode.SYMBOL;
 
@@ -1962,7 +1962,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void slotSemicolon() {
-    int index = levelArray[2];
+    int index = stackArray[2];
 
     codeArray[index + 0] = ByteCode.SYMBOL;
 
@@ -2047,9 +2047,9 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int topLevel() { return levelArray[3]; }
+  private int topLevel() { return stackArray[3]; }
 
-  private void topLevel(int value) { levelArray[3] = value; }
+  private void topLevel(int value) { stackArray[3] = value; }
 
   private void topLevelDeclaration() {
     topLevel(1);
