@@ -18,12 +18,9 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Collections;
-import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class MethodInvocationExpressionTest {
-
-  private final Fixture fix = new Fixture("Invoke", Kind.VOID_METHOD);
 
   @Test(description = """
   - unqualified
@@ -322,24 +319,32 @@ public class MethodInvocationExpressionTest {
   - primary expressions
   """)
   public void testCase10() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
+        static final ClassTypeName THREAD = classType(Thread.class);
+
         @Override
         protected final void definition() {
-          _new(t(Thread.class)).v("start");
+          _class("Invoke");
+          body(
+            method(
+              NEW, t(THREAD).v("start"),
+
+              NEW, t(THREAD, s("foo")).v("start")
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class Invoke {
         void method() {
           new java.lang.Thread().start();
+          new java.lang.Thread("Foo").start();
         }
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """

@@ -15,7 +15,6 @@
  */
 package objectos.code;
 
-import java.util.Arrays;
 import objectos.code.JavaTemplate._Item;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -23,9 +22,12 @@ import objectos.util.ObjectArrays;
 
 class InternalApi {
 
+  static final int NULL = Integer.MIN_VALUE;
+
   private static final int LOCAL = -1;
   private static final int EXT = -2;
   private static final int LAMBDA = -3;
+  private static final int LTAIL = -4;
 
   final AutoImports autoImports = new AutoImports();
 
@@ -33,9 +35,9 @@ class InternalApi {
 
   int codeIndex;
 
-  int[][] levelArray = new int[4][];
+  int[] levelArray = new int[64];
 
-  int[] levelIndex = new int[4];
+  int levelIndex;
 
   int level;
 
@@ -62,11 +64,7 @@ class InternalApi {
 
     codeIndex = stackIndex = -1;
 
-    level = objectIndex = protoIndex = 0;
-
-    Arrays.fill(levelIndex, -1);
-
-    levelIndex[0] = 0;
+    level = levelIndex = objectIndex = protoIndex = 0;
 
     template.execute(this);
 
@@ -74,15 +72,11 @@ class InternalApi {
 
     int self = protoIndex;
 
-    int[] array = levelArray[level];
-
-    int length = levelIndex[level];
-
-    for (int i = 0; i < length;) {
-      int kind = array[i++];
+    for (int i = 0; i < levelIndex;) {
+      int kind = levelArray[i++];
 
       if (kind == LOCAL) {
-        int protoIndex = array[i++];
+        int protoIndex = levelArray[i++];
 
         int proto = protoGet(protoIndex++);
 
@@ -100,15 +94,13 @@ class InternalApi {
   }
 
   final _Item arrayTypeName(int dimCount) {
-    elemPre();
-
     elemPre(item);
 
     for (int i = 0; i < dimCount; i++) {
       elemPre(item);
     }
 
-    elemCnt(ByteProto.ARRAY_TYPE);
+    elemCnt(ByteProto.ARRAY_TYPE, 1 + dimCount);
 
     elemItem(item);
 
@@ -156,35 +148,31 @@ class InternalApi {
   }
 
   final _Item elem(int proto) {
-    elemPre();
-    elemCnt(proto);
+    elemCnt(proto, 0);
     return elemRet();
   }
 
   final _Item elem(int proto, Object e1) {
-    elemPre();
     elemPre(e1);
-    elemCnt(proto);
+    elemCnt(proto, 1);
     elemItem(e1);
     return elemRet();
   }
 
   final _Item elem(int proto, Object e1, Object e2) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
-    elemCnt(proto);
+    elemCnt(proto, 2);
     elemItem(e1);
     elemItem(e2);
     return elemRet();
   }
 
   final _Item elem(int proto, Object e1, Object e2, Object e3) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
-    elemCnt(proto);
+    elemCnt(proto, 3);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -192,12 +180,11 @@ class InternalApi {
   }
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
     elemPre(e4);
-    elemCnt(proto);
+    elemCnt(proto, 4);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -207,13 +194,12 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
     elemPre(e4);
     elemPre(e5);
-    elemCnt(proto);
+    elemCnt(proto, 5);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -224,14 +210,13 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
     elemPre(e4);
     elemPre(e5);
     elemPre(e6);
-    elemCnt(proto);
+    elemCnt(proto, 6);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -243,7 +228,6 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
@@ -251,7 +235,7 @@ class InternalApi {
     elemPre(e5);
     elemPre(e6);
     elemPre(e7);
-    elemCnt(proto);
+    elemCnt(proto, 7);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -264,7 +248,6 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
@@ -273,7 +256,7 @@ class InternalApi {
     elemPre(e6);
     elemPre(e7);
     elemPre(e8);
-    elemCnt(proto);
+    elemCnt(proto, 8);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -287,7 +270,6 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
@@ -297,7 +279,7 @@ class InternalApi {
     elemPre(e7);
     elemPre(e8);
     elemPre(e9);
-    elemCnt(proto);
+    elemCnt(proto, 9);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -312,7 +294,6 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9, Object e10) {
-    elemPre();
     elemPre(e1);
     elemPre(e2);
     elemPre(e3);
@@ -323,7 +304,7 @@ class InternalApi {
     elemPre(e8);
     elemPre(e9);
     elemPre(e10);
-    elemCnt(proto);
+    elemCnt(proto, 10);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -338,8 +319,6 @@ class InternalApi {
   }
 
   final _Item elemMany(int proto, Object first, Object second, Object[] elements) {
-    elemPre();
-
     elemPre(first);
     elemPre(second);
 
@@ -349,7 +328,7 @@ class InternalApi {
       elemPre(element);
     }
 
-    elemCnt(proto);
+    elemCnt(proto, 2 + elements.length);
 
     elemItem(first);
     elemItem(second);
@@ -363,8 +342,6 @@ class InternalApi {
   }
 
   final _Item elemMany(int proto, Object first, Object[] elements) {
-    elemPre();
-
     elemPre(first);
 
     for (int i = 0; i < elements.length; i++) {
@@ -373,7 +350,7 @@ class InternalApi {
       elemPre(element);
     }
 
-    elemCnt(proto);
+    elemCnt(proto, 1 + elements.length);
 
     elemItem(first);
 
@@ -386,15 +363,13 @@ class InternalApi {
   }
 
   final _Item elemMany(int proto, Object[] elements) {
-    elemPre();
-
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
       Check.notNull(element, "elements[", i, "] == null");
       elemPre(element);
     }
 
-    elemCnt(proto);
+    elemCnt(proto, elements.length);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
@@ -446,58 +421,28 @@ class InternalApi {
   final _Item itemEnd() { return item; }
 
   final _Item joinWith(int proto) {
-    int[] array = levelArray[level];
+    int second = levelArray[--levelIndex];
+    --levelIndex;
 
-    int second = array[--levelIndex[level]];
-    --levelIndex[level];
-
-    int first = array[--levelIndex[level]];
-    --levelIndex[level];
+    int first = levelArray[--levelIndex];
+    --levelIndex;
 
     return itemAdd(proto, protoGet(first++), first, protoGet(second++), second);
   }
 
   final void lambdaend() {
-    levelpop();
+    int headIndex = stackPop();
+
+    levelAdd(LTAIL, headIndex);
+
+    levelArray[headIndex + 1] = levelIndex;
   }
 
   final void lambdastart() {
-    levelpush();
+    // push lambda head
+    stackPush(levelIndex);
 
-    int nextLevel = -1;
-
-    for (int i = 0; i < levelIndex.length; i++) {
-      int length = levelIndex[i];
-
-      if (length == -1) {
-        nextLevel = i;
-
-        break;
-      }
-    }
-
-    if (nextLevel < 0) {
-      nextLevel = levelIndex.length;
-    }
-
-    levelArray = ObjectArrays.growIfNecessary(levelArray, nextLevel);
-    levelIndex = IntArrays.growIfNecessary(levelIndex, nextLevel);
-
-    levelAdd(LAMBDA, nextLevel);
-
-    level = nextLevel;
-
-    levelIndex[level] = 0;
-  }
-
-  final int levelRemove() {
-    int[] array = levelArray[level];
-
-    int value = array[--levelIndex[level]];
-
-    --levelIndex[level];
-
-    return value;
+    levelAdd(LAMBDA, NULL);
   }
 
   final void localStart() {
@@ -505,9 +450,7 @@ class InternalApi {
   }
 
   final void localToExternal() {
-    int[] array = levelArray[level];
-
-    array[levelIndex[level] - 2] = EXT;
+    levelArray[levelIndex - 2] = EXT;
   }
 
   final int object(Object value) {
@@ -538,9 +481,30 @@ class InternalApi {
     protoArray[protoIndex++] = v2;
   }
 
-  private void elemCnt(int value) {
-    int itemCount = stackPop(),
-        levelStart = levelIndex[level] - (itemCount * 2),
+  private void elemCnt(int value, int itemCount) {
+    int seenCount = 0;
+
+    int index = levelIndex;
+
+    while (seenCount < itemCount) {
+      index -= 2;
+
+      int item = levelArray[index];
+
+      if (item == LOCAL || item == EXT) {
+        seenCount++;
+      } else if (item == LTAIL) {
+        int headIndex = levelArray[index + 1];
+
+        index = headIndex;
+
+        seenCount++;
+      } else {
+        throw new UnsupportedOperationException("Implement me :: item=" + item);
+      }
+    }
+
+    int levelStart = index,
         localIndex = levelStart,
         extIndex = levelStart,
         includeIndex = levelStart;
@@ -556,29 +520,35 @@ class InternalApi {
     protoAdd(value);
   }
 
-  private void elemCntx0lambda(int level) {
-    int[] array = levelArray[level];
+  private void elemCntx0lambda(int index) {
+    // index is at tail index
+    // start is first instruction after LAMBDA
+    int start = index + 1;
 
-    int length = levelIndex[level];
+    // index is at tail index
+    // max is at lambda tail
+    int max = levelArray[index] - 2;
 
-    for (int i = 0; i < length;) {
-      int code = array[i++];
-
-      int levelValue = array[i++];
+    for (int i = start; i < max;) {
+      int code = levelArray[i];
 
       if (code == LOCAL) {
+        i++;
+
+        int levelValue = levelArray[i++];
+
         int proto = protoGet(levelValue++);
 
         protoAdd(proto, levelValue);
       } else if (code == LAMBDA) {
-        elemCntx0lambda(levelValue);
+        elemCntx0lambda(i);
+
+        i = levelArray[i + 1];
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: code=" + code);
       }
     }
-
-    levelIndex[level] = -1;
   }
 
   private void elemItem(Object obj) {
@@ -607,26 +577,20 @@ class InternalApi {
 
     index = levelSearch(index, kind);
 
-    int levelValue = levelGet(index);
-
     if (kind != LAMBDA) {
+      int levelValue = levelGet(index);
+
       int proto = protoGet(levelValue++);
 
       protoAdd(proto, levelValue);
     } else {
-      elemCntx0lambda(levelValue);
+      elemCntx0lambda(index);
     }
 
     stackset(offset, index);
   }
 
-  private void elemPre() {
-    stackpush(0);
-  }
-
   private void elemPre(Object obj) {
-    stackinc(0);
-
     if (obj instanceof JavaTemplate.External ext) {
       ext.execute(this);
     } else if (obj instanceof String s) {
@@ -642,7 +606,7 @@ class InternalApi {
     int levelStart = stackPop(),
         self = stackPop();
 
-    levelIndex[level] = levelStart;
+    levelIndex = levelStart;
 
     protoAdd(ByteProto.END_ELEMENT);
 
@@ -652,38 +616,23 @@ class InternalApi {
   }
 
   private void levelAdd(int v0, int v1) {
-    levelArray = ObjectArrays.growIfNecessary(levelArray, level);
-
-    if (levelArray[level] == null) {
-      levelArray[level] = new int[64];
-    }
-
-    levelArray[level] = IntArrays.growIfNecessary(levelArray[level], levelIndex[level] + 1);
-    levelArray[level][levelIndex[level]++] = v0;
-    levelArray[level][levelIndex[level]++] = v1;
+    levelArray = IntArrays.growIfNecessary(levelArray, levelIndex + 1);
+    levelArray[levelIndex++] = v0;
+    levelArray[levelIndex++] = v1;
   }
 
-  private int levelGet(int index) { return levelArray[level][index]; }
-
-  private void levelpop() { level = codeArray[codeIndex--]; }
-
-  private void levelpush() {
-    codeIndex++;
-    codeArray = IntArrays.growIfNecessary(codeArray, codeIndex);
-    codeArray[codeIndex] = level;
-  }
+  private int levelGet(int index) { return levelArray[index]; }
 
   private int levelSearch(int index, int condition) {
-    int[] array = levelArray[level];
-    int length = levelIndex[level];
+    for (int i = index; i < levelIndex;) {
+      int value = levelArray[i++];
 
-    for (int i = index; i < length; i++) {
-      int value = array[i];
-
-      if (value == condition) {
+      if (value == LAMBDA && condition != LAMBDA) {
+        i = levelArray[i];
+      } else if (value == condition) {
         // assuming array was properly assembled
         // there will always be a i+1 index
-        return i + 1;
+        return i;
       }
     }
 
@@ -712,21 +661,17 @@ class InternalApi {
 
   private int protoGet(int index) { return protoArray[index]; }
 
-  private void stackinc(int offset) { stackArray[stackIndex - offset]++; }
-
   private int stackPeek(int offset) { return stackArray[stackIndex - offset]; }
 
   private int stackPop() { return stackArray[stackIndex--]; }
 
-  private void stackpush(int v0) {
+  private void stackPush(int v0) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-
     stackArray[++stackIndex] = v0;
   }
 
   private void stackPush(int v0, int v1, int v2, int v3, int v4) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 5);
-
     stackArray[++stackIndex] = v0;
     stackArray[++stackIndex] = v1;
     stackArray[++stackIndex] = v2;
@@ -737,9 +682,7 @@ class InternalApi {
   private void stackset(int offset, int value) { stackArray[stackIndex - offset] = value; }
 
   final void externalToLocal() {
-    int[] array = levelArray[level];
-
-    array[levelIndex[level] - 2] = LOCAL;
+    levelArray[levelIndex - 2] = LOCAL;
   }
 
 }

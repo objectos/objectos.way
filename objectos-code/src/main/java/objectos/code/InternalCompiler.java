@@ -32,8 +32,6 @@ class InternalCompiler extends InternalApi {
     void execute(int proto);
   }
 
-  private static final int NULL = Integer.MIN_VALUE;
-
   private static final int _START = 0,
       _ANNOTATION = 1,
       _ENUM_CONSTANT = 2,
@@ -47,21 +45,17 @@ class InternalCompiler extends InternalApi {
     codeIndex = level = stackIndex = 0;
 
     // simpleName
-    levelIndex[0] = NULL;
+    levelArray[0] = NULL;
     // public found
-    levelIndex[1] = NULL;
+    levelArray[1] = NULL;
     // comma slot
-    levelIndex[2] = NULL;
+    levelArray[2] = NULL;
     // topLevel
-    levelIndex[3] = NULL;
-    var arr = levelArray[0];
-    if (arr == null) {
-      arr = new int[2];
-    }
+    levelArray[3] = NULL;
     // error
-    arr[0] = 0;
+    levelArray[4] = 0;
     // abstract found
-    arr[1] = NULL;
+    levelArray[5] = NULL;
 
     // do not change
     // compileIndex;
@@ -101,10 +95,10 @@ class InternalCompiler extends InternalApi {
     );
   }
 
-  private boolean abstractFound() { return levelArray[0][1] != NULL; }
+  private boolean abstractFound() { return levelArray[5] != NULL; }
 
   private void abstractFound(int value) {
-    levelArray[0][1] = value;
+    levelArray[5] = value;
   }
 
   private void annotation() {
@@ -775,14 +769,14 @@ class InternalCompiler extends InternalApi {
   }
 
   private boolean error() {
-    var result = levelArray[0][0] == 1;
+    var result = levelArray[4] == 1;
 
-    levelArray[0][0] = 0;
+    levelArray[4] = 0;
 
     return result;
   }
 
-  private void errorRaise() { levelArray[0][0] = 1; }
+  private void errorRaise() { levelArray[4] = 1; }
 
   private void errorRaise(String message) {
     errorRaise();
@@ -1920,9 +1914,9 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int publicFound() { return levelIndex[1]; }
+  private int publicFound() { return levelArray[1]; }
 
-  private void publicFound(int value) { levelIndex[1] = value; }
+  private void publicFound(int value) { levelArray[1] = value; }
 
   private void returnKeyword() {
     codeAdd(Keyword.RETURN);
@@ -1948,12 +1942,12 @@ class InternalCompiler extends InternalApi {
     executeSwitch(this::type);
   }
 
-  private int simpleName() { return levelIndex[0]; }
+  private int simpleName() { return levelArray[0]; }
 
-  private void simpleName(int value) { levelIndex[0] = value; }
+  private void simpleName(int value) { levelArray[0] = value; }
 
   private void slot() {
-    levelIndex[2] = codeIndex;
+    levelArray[2] = codeIndex;
 
     codeAdd(ByteCode.NOP1);
 
@@ -1961,7 +1955,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void slotComma() {
-    int index = levelIndex[2];
+    int index = levelArray[2];
 
     codeArray[index + 0] = ByteCode.SYMBOL;
 
@@ -1969,7 +1963,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void slotSemicolon() {
-    int index = levelIndex[2];
+    int index = levelArray[2];
 
     codeArray[index + 0] = ByteCode.SYMBOL;
 
@@ -2054,9 +2048,9 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int topLevel() { return levelIndex[3]; }
+  private int topLevel() { return levelArray[3]; }
 
-  private void topLevel(int value) { levelIndex[3] = value; }
+  private void topLevel(int value) { levelArray[3] = value; }
 
   private void topLevelDeclaration() {
     topLevel(1);
