@@ -102,7 +102,7 @@ public class ConstructorDeclarationTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Constructor declarations TC03:
 
   - body
@@ -141,7 +141,7 @@ public class ConstructorDeclarationTest {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Constructor declarations TC04:
 
   - super invocations

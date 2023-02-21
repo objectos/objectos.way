@@ -33,8 +33,8 @@ public class PrimaryExpressionTest {
         protected final void definition() {
           _class("Primary");
           body(
-            _void(), method("test"), block(
-              _return(), _this()
+            method(
+              RETURN, THIS
             )
           );
         }
@@ -42,7 +42,7 @@ public class PrimaryExpressionTest {
 
       """
       class Primary {
-        void test() {
+        void unnamed() {
           return this;
         }
       }
@@ -62,8 +62,8 @@ public class PrimaryExpressionTest {
         protected final void definition() {
           _class("Primary");
           body(
-            _void(), method("test"), block(
-              _return(), _null()
+            method(
+              RETURN, NULL
             )
           );
         }
@@ -71,7 +71,7 @@ public class PrimaryExpressionTest {
 
       """
       class Primary {
-        void test() {
+        void unnamed() {
           return null;
         }
       }

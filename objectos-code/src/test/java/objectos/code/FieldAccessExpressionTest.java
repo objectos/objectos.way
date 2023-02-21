@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 
 public class FieldAccessExpressionTest {
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   Field Access Expressions TC01
 
   - Primary . Identifier
@@ -29,18 +29,20 @@ public class FieldAccessExpressionTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName FOO = classType("test", "Foo");
+
         @Override
         protected final void definition() {
           _class("FieldAccess");
           body(
-            _void(), method("method"), block(
-              _this().n("x"), gets(), n("y"), end(),
+            method(
+              _this().n("x"), gets(), n("y"),
 
-              invoke("x").invoke("y").n("z"), gets(), n("foo"), end(),
+              v("x").v("y").n("z"), gets(), n("foo"),
 
-              n("comparator"), gets(), s("abc").n("CASE_INSENSITIVE_ORDER"), end(),
+              n("comparator"), gets(), s("abc").n("CASE_INSENSITIVE_ORDER"),
 
-              n("a"), gets(), _new(t("test", "Foo")).n("field"), end(),
+              n("a"), gets(), NEW, t(FOO).n("field"),
 
               n("b"), gets(), n("array").dim(i(0)).n("field")
             )

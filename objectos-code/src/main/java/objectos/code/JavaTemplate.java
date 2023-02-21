@@ -385,7 +385,7 @@ public abstract class JavaTemplate {
       PrivateModifier,
       ProtectedModifier,
       PublicModifier,
-      ReturnKeyword,
+      OldReturnKeyword,
       ReturnType,
       SimpleAssigmentOperator,
       Statement,
@@ -402,36 +402,37 @@ public abstract class JavaTemplate {
 
     private final InternalApi api;
 
-    _Item(InternalApi api) { this.api = api; }
+    final int count;
+
+    _Item(InternalApi api, int count) {
+      this.api = api;
+      this.count = count;
+    }
 
     @Override
     public final ArrayAccess dim(ExpressionPart e1) {
       api.elem(ByteProto.ARRAY_ACCESS, e1.self());
-      return api.joinWith(ByteProto.DIM);
+      return api.itemEnd(count + 1);
     }
 
     @Override
     public final MethodInvocation invoke(String methodName, ArgsPart... arguments) {
-      JavaModel.checkMethodName(methodName.toString()); // implicit null check
-      api.identifierext(methodName);
-      Object[] many = Objects.requireNonNull(arguments, "arguments == null");
-      api.elemMany(ByteProto.INVOKE, EXT, many);
-      return api.joinWith(ByteProto.DOT);
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public final ExpressionName n(String name) {
       JavaModel.checkSimpleName(name.toString());
-      api.itemAdd(ByteProto.EXPRESSION_NAME, api.object(name));
-      return api.joinWith(ByteProto.DOT);
+      api.itemAdd(ByteProto.EXPRESSION_NAME_DOT, api.object(name));
+      return api.itemEnd(count + 1);
     }
 
     @Override
     public final MethodInvocation v(String methodName, ArgsPart... arguments) {
       JavaModel.checkMethodName(methodName.toString()); // implicit null check
       Object[] many = Objects.requireNonNull(arguments, "arguments == null");
-      api.elemMany(ByteProto.METHOD_INVOCATION, methodName, many);
-      return api.joinWith(ByteProto.DOT);
+      api.elemMany(ByteProto.METHOD_INVOCATION_DOT, methodName, many);
+      return api.itemEnd(count + 1);
     }
 
   }
@@ -501,7 +502,8 @@ public abstract class JavaTemplate {
   }
 
   sealed interface ExpressionPart
-      extends ArgsPart, BlockElement, BodyElement, VariableInitializer {}
+      extends ArgsPart, BlockElement, BodyElement, MethodDeclarationInstruction,
+      VariableInitializer {}
 
   sealed interface ExtendsKeyword extends BodyElement {}
 
@@ -550,6 +552,9 @@ public abstract class JavaTemplate {
   }
 
   @Deprecated
+  sealed interface OldReturnKeyword extends BlockElement {}
+
+  @Deprecated
   sealed interface OldVoidKeyword extends BodyElement {}
 
   sealed interface PackageKeyword extends Instruction {}
@@ -567,8 +572,6 @@ public abstract class JavaTemplate {
   sealed interface PublicModifier extends AccessModifier {}
 
   sealed interface ReferenceType extends AnyType, ArrayTypeComponent {}
-
-  sealed interface ReturnKeyword extends BlockElement {}
 
   sealed interface ReturnType extends MethodDeclarationInstruction {}
 
@@ -629,6 +632,33 @@ public abstract class JavaTemplate {
 
   private sealed interface PrimaryNoNewArray extends CanArrayAccess, Primary {}
 
+  private static final class NullLiteral1
+      extends External implements MethodDeclarationInstruction {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.NULL_LITERAL, ByteProto.NOOP);
+    }
+  }
+
+  private static final class ReturnKeyword
+      extends External implements MethodDeclarationInstruction {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.RETURN, ByteProto.NOOP);
+    }
+  }
+
+  private static final class ThisKeyword1
+      extends External implements MethodDeclarationInstruction {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.THIS, ByteProto.NOOP);
+    }
+  }
+
   private static final class VoidKeyword extends External implements MethodDeclarationInstruction {
     @Override
     final void execute(InternalApi api) {
@@ -645,11 +675,32 @@ public abstract class JavaTemplate {
   protected static final MethodDeclarationInstruction NEW = new NewKeyword1();
 
   /**
+   * The {@code return} keyword.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final MethodDeclarationInstruction RETURN = new ReturnKeyword();
+
+  /**
+   * The {@code this} keyword.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final MethodDeclarationInstruction THIS = new ThisKeyword1();
+
+  /**
    * The {@code void} keyword.
    *
    * @since 0.4.3.1
    */
   protected static final MethodDeclarationInstruction VOID = new VoidKeyword();
+
+  /**
+   * The {@code null} literal.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final MethodDeclarationInstruction NULL = new NullLiteral1();
 
   /**
    * The {@code public} modifier.
@@ -1162,7 +1213,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final ReturnKeyword _return() {
+  protected final OldReturnKeyword _return() {
     return api().itemAdd(ByteProto.RETURN, ByteProto.NOOP);
   }
 
@@ -2270,11 +2321,7 @@ public abstract class JavaTemplate {
    * @since 0.4.3.1
    */
   protected final ClassTypeInstruction t(ClassOrParameterizedType type) {
-    var api = api();
-    var external = (External) type;
-    external.execute(api);
-    api.externalToLocal();
-    return api.itemEnd();
+    return api().elem(ByteProto.T, type.self());
   }
 
   /**
@@ -2284,7 +2331,7 @@ public abstract class JavaTemplate {
    */
   protected final ClassTypeInstruction t(ClassOrParameterizedType type, ArgsPart... arguments) {
     Object[] many = Objects.requireNonNull(arguments, "arguments == null");
-    return api.elemMany(ByteProto.CLASS_TYPE_WITH_ARGS, type.self(), many);
+    return api.elemMany(ByteProto.T_WITH_ARGS, type.self(), many);
   }
 
   /**

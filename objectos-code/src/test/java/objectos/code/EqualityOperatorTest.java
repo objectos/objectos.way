@@ -33,8 +33,8 @@ public class EqualityOperatorTest {
         protected final void definition() {
           _class("EqualityOperator");
           body(
-            _void(), method("test"), block(
-              invoke("foo", n("x"), equalTo(), n("y"))
+            method(
+              v("foo", n("x"), equalTo(), n("y"))
             )
           );
         }
@@ -42,7 +42,7 @@ public class EqualityOperatorTest {
 
       """
       class EqualityOperator {
-        void test() {
+        void unnamed() {
           foo(x == y);
         }
       }
@@ -62,8 +62,8 @@ public class EqualityOperatorTest {
         protected final void definition() {
           _class("EqualityOperator");
           body(
-            _void(), method("test"), block(
-              invoke("foo", n("x"), notEqualTo(), n("y"))
+            method(
+              v("foo", n("x"), notEqualTo(), n("y"))
             )
           );
         }
@@ -71,7 +71,7 @@ public class EqualityOperatorTest {
 
       """
       class EqualityOperator {
-        void test() {
+        void unnamed() {
           foo(x != y);
         }
       }

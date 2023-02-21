@@ -33,12 +33,12 @@ public class ExpressionNameTest {
         protected final void definition() {
           _class("ExpressionName");
           body(
-            _void(), method("method"), block(
-              invoke("test", n("a")), end(),
+            method(
+              v("test", n("a")),
 
-              invoke("test", n("a").n("b")), end(),
+              v("test", n("a").n("b")),
 
-              invoke("test", n("a").n("b").n("c"))
+              v("test", n("a").n("b").n("c"))
             )
           );
         }
@@ -46,7 +46,7 @@ public class ExpressionNameTest {
 
       """
       class ExpressionName {
-        void method() {
+        void unnamed() {
           test(a);
           test(a.b);
           test(a.b.c);
@@ -64,14 +64,16 @@ public class ExpressionNameTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName SUIT = classType("test", "Suit");
+
         @Override
         protected final void definition() {
           _class("ExpressionName");
           body(
-            _void(), method("method"), block(
-              invoke("test", t("test", "Suit").n("CLUBS")), end(),
+            method(
+              v("test", t(SUIT).n("CLUBS")),
 
-              invoke("test", t("test", "Suit").n("CLUBS").n("field"))
+              v("test", t(SUIT).n("CLUBS").n("field"))
             )
           );
         }
@@ -79,7 +81,7 @@ public class ExpressionNameTest {
 
       """
       class ExpressionName {
-        void method() {
+        void unnamed() {
           test(test.Suit.CLUBS);
           test(test.Suit.CLUBS.field);
         }

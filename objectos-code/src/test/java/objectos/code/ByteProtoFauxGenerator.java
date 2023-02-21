@@ -89,8 +89,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("expression start");
 
     value("CLASS_INSTANCE_CREATION");
-    value("DIM");
-    value("DOT");
     value("EXPRESSION_NAME");
     value("INVOKE"); // deprecated
     value("METHOD_INVOCATION");
@@ -98,13 +96,16 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("NULL_LITERAL");
     value("PRIMITIVE_LITERAL");
     value("STRING_LITERAL");
+    value("T");
     value("THIS");
 
     comment("expression part");
 
     value("ARRAY_ACCESS");
     value("ASSIGNMENT_OPERATOR");
-    value("CLASS_TYPE_WITH_ARGS");
     value("EQUALITY_OPERATOR");
+    value("EXPRESSION_NAME_DOT");
+    value("METHOD_INVOCATION_DOT");
+    value("T_WITH_ARGS");
   }
 }

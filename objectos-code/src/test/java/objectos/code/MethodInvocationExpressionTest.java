@@ -313,7 +313,7 @@ public class MethodInvocationExpressionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Method Invocation Expresions TC10
 
   - primary expressions
@@ -338,9 +338,9 @@ public class MethodInvocationExpressionTest {
 
       """
       class Invoke {
-        void method() {
+        void unnamed() {
           new java.lang.Thread().start();
-          new java.lang.Thread("Foo").start();
+          new java.lang.Thread("foo").start();
         }
       }
       """

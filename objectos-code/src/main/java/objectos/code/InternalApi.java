@@ -47,10 +47,10 @@ class InternalApi {
 
   int stackIndex;
 
-  private final _Item item;
+  private _Item[] items = new _Item[4];
 
   public InternalApi() {
-    item = new JavaTemplate._Item(this);
+    items[1] = new JavaTemplate._Item(this, 1);
   }
 
   final void accept(JavaTemplate template) {
@@ -86,18 +86,12 @@ class InternalApi {
   }
 
   final _Item arrayTypeName(int dimCount) {
-    elemPre(item);
-
-    for (int i = 0; i < dimCount; i++) {
-      elemPre(item);
-    }
-
     elemCnt(ByteProto.ARRAY_TYPE, 1 + dimCount);
 
-    elemItem(item);
+    elemItem(items[1]);
 
     for (int i = 0; i < dimCount; i++) {
-      elemItem(item);
+      elemItem(items[1]);
     }
 
     return elemRet();
@@ -136,35 +130,39 @@ class InternalApi {
       protoAdd(object(simpleName));
     }
 
-    return item;
+    return items[1];
   }
 
   final _Item elem(int proto) {
-    elemCnt(proto, 0);
+    int count = 0;
+    elemCnt(proto, count);
     return elemRet();
   }
 
   final _Item elem(int proto, Object e1) {
-    elemPre(e1);
-    elemCnt(proto, 1);
+    int count = 0;
+    count += elemPre(e1);
+    elemCnt(proto, count);
     elemItem(e1);
     return elemRet();
   }
 
   final _Item elem(int proto, Object e1, Object e2) {
-    elemPre(e1);
-    elemPre(e2);
-    elemCnt(proto, 2);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     return elemRet();
   }
 
   final _Item elem(int proto, Object e1, Object e2, Object e3) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemCnt(proto, 3);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -172,11 +170,12 @@ class InternalApi {
   }
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemCnt(proto, 4);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    count += elemPre(e4);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -186,12 +185,13 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemCnt(proto, 5);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    count += elemPre(e4);
+    count += elemPre(e5);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -202,13 +202,14 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemCnt(proto, 6);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    count += elemPre(e4);
+    count += elemPre(e5);
+    count += elemPre(e6);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -220,14 +221,15 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemCnt(proto, 7);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    count += elemPre(e4);
+    count += elemPre(e5);
+    count += elemPre(e6);
+    count += elemPre(e7);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -240,15 +242,16 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemPre(e8);
-    elemCnt(proto, 8);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    count += elemPre(e4);
+    count += elemPre(e5);
+    count += elemPre(e6);
+    count += elemPre(e7);
+    count += elemPre(e8);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -262,16 +265,17 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemPre(e8);
-    elemPre(e9);
-    elemCnt(proto, 9);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    count += elemPre(e4);
+    count += elemPre(e5);
+    count += elemPre(e6);
+    count += elemPre(e7);
+    count += elemPre(e8);
+    count += elemPre(e9);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -286,17 +290,18 @@ class InternalApi {
 
   final _Item elem(int proto, Object e1, Object e2, Object e3, Object e4,
       Object e5, Object e6, Object e7, Object e8, Object e9, Object e10) {
-    elemPre(e1);
-    elemPre(e2);
-    elemPre(e3);
-    elemPre(e4);
-    elemPre(e5);
-    elemPre(e6);
-    elemPre(e7);
-    elemPre(e8);
-    elemPre(e9);
-    elemPre(e10);
-    elemCnt(proto, 10);
+    int count = 0;
+    count += elemPre(e1);
+    count += elemPre(e2);
+    count += elemPre(e3);
+    count += elemPre(e4);
+    count += elemPre(e5);
+    count += elemPre(e6);
+    count += elemPre(e7);
+    count += elemPre(e8);
+    count += elemPre(e9);
+    count += elemPre(e10);
+    elemCnt(proto, count);
     elemItem(e1);
     elemItem(e2);
     elemItem(e3);
@@ -311,16 +316,18 @@ class InternalApi {
   }
 
   final _Item elemMany(int proto, Object first, Object second, Object[] elements) {
-    elemPre(first);
-    elemPre(second);
+    int count = 0;
+
+    count += elemPre(first);
+    count += elemPre(second);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
       Check.notNull(element, "elements[", i, "] == null");
-      elemPre(element);
+      count += elemPre(element);
     }
 
-    elemCnt(proto, 2 + elements.length);
+    elemCnt(proto, count);
 
     elemItem(first);
     elemItem(second);
@@ -334,15 +341,17 @@ class InternalApi {
   }
 
   final _Item elemMany(int proto, Object first, Object[] elements) {
-    elemPre(first);
+    int count = 0;
+
+    count += elemPre(first);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
       Check.notNull(element, "elements[", i, "] == null");
-      elemPre(element);
+      count += elemPre(element);
     }
 
-    elemCnt(proto, 1 + elements.length);
+    elemCnt(proto, count);
 
     elemItem(first);
 
@@ -355,13 +364,15 @@ class InternalApi {
   }
 
   final _Item elemMany(int proto, Object[] elements) {
+    int count = 0;
+
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
       Check.notNull(element, "elements[", i, "] == null");
-      elemPre(element);
+      count += elemPre(element);
     }
 
-    elemCnt(proto, elements.length);
+    elemCnt(proto, count);
 
     for (int i = 0; i < elements.length; i++) {
       var element = elements[i];
@@ -369,6 +380,10 @@ class InternalApi {
     }
 
     return elemRet();
+  }
+
+  final void externalToLocal() {
+    codeArray[codeIndex - 2] = LOCAL;
   }
 
   final void extStart() {
@@ -383,43 +398,47 @@ class InternalApi {
   final _Item itemAdd(int v0) {
     localStart();
     protoAdd(v0);
-    return item;
+    return items[1];
   }
 
   final _Item itemAdd(int v0, int v1) {
     localStart();
     protoAdd(v0, v1);
-    return item;
+    return items[1];
   }
 
   final _Item itemAdd(int v0, int v1, int v2) {
     localStart();
     protoAdd(v0, v1, v2);
-    return item;
+    return items[1];
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3) {
     localStart();
     protoAdd(v0, v1, v2, v3);
-    return item;
+    return items[1];
   }
 
   final _Item itemAdd(int v0, int v1, int v2, int v3, int v4) {
     localStart();
     protoAdd(v0, v1, v2, v3, v4);
-    return item;
+    return items[1];
   }
 
-  final _Item itemEnd() { return item; }
+  final _Item itemEnd() {
+    return items[1];
+  }
 
-  final _Item joinWith(int proto) {
-    int second = codeArray[--codeIndex];
-    --codeIndex;
+  final JavaTemplate._Item itemEnd(int count) {
+    if (count == items.length) {
+      items = ObjectArrays.growIfNecessary(items, count);
+    }
 
-    int first = codeArray[--codeIndex];
-    --codeIndex;
+    if (items[count] == null) {
+      items[count] = new _Item(this, count);
+    }
 
-    return itemAdd(proto, protoGet(first++), first, protoGet(second++), second);
+    return items[count];
   }
 
   final void lambdaend() {
@@ -544,10 +563,13 @@ class InternalApi {
   }
 
   private void elemItem(Object obj) {
+    int count = 1;
     int offset;
     int kind;
 
-    if (obj == item) {
+    if (obj instanceof JavaTemplate._Item item) {
+      count = item.count;
+
       offset = 0;
 
       kind = LOCAL;
@@ -565,29 +587,37 @@ class InternalApi {
         "Implement me :: obj=" + obj);
     }
 
-    int index = stackPeek(offset);
+    for (int i = 0; i < count; i++) {
+      int index = stackPeek(offset);
 
-    index = levelSearch(index, kind);
+      index = levelSearch(index, kind);
 
-    if (kind != LAMBDA) {
-      int levelValue = levelGet(index);
+      if (kind != LAMBDA) {
+        int levelValue = levelGet(index);
 
-      int proto = protoGet(levelValue++);
+        int proto = protoGet(levelValue++);
 
-      protoAdd(proto, levelValue);
-    } else {
-      elemCntx0lambda(index);
+        protoAdd(proto, levelValue);
+      } else {
+        elemCntx0lambda(index);
+      }
+
+      stackset(offset, index);
     }
-
-    stackset(offset, index);
   }
 
-  private void elemPre(Object obj) {
-    if (obj instanceof JavaTemplate.External ext) {
+  private int elemPre(Object obj) {
+    int count = 1;
+
+    if (obj instanceof JavaTemplate._Item item) {
+      count = item.count;
+    } else if (obj instanceof JavaTemplate.External ext) {
       ext.execute(this);
     } else if (obj instanceof String s) {
       identifierext(s);
     }
+
+    return count;
   }
 
   private _Item elemRet() {
@@ -604,7 +634,7 @@ class InternalApi {
 
     levelAdd(LOCAL, self);
 
-    return item;
+    return items[1];
   }
 
   private void levelAdd(int v0, int v1) {
@@ -672,9 +702,5 @@ class InternalApi {
   }
 
   private void stackset(int offset, int value) { stackArray[stackIndex - offset] = value; }
-
-  final void externalToLocal() {
-    codeArray[codeIndex - 2] = LOCAL;
-  }
 
 }

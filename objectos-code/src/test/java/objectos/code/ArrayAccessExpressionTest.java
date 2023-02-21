@@ -31,8 +31,8 @@ public class ArrayAccessExpressionTest {
         protected final void definition() {
           _class("ArrayAccess");
           body(
-            _void(), method("method"), block(
-              invoke("foo",
+            method(
+              v("foo",
                 n("a").dim(n("x")),
                 n("a").dim(n("x")).dim(n("y")),
                 n("a").dim(n("x")).dim(n("y")).dim(n("z"))
@@ -44,7 +44,7 @@ public class ArrayAccessExpressionTest {
 
       """
       class ArrayAccess {
-        void method() {
+        void unnamed() {
           foo(a[x], a[x][y], a[x][y][z]);
         }
       }

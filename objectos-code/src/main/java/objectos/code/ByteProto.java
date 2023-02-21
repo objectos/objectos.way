@@ -82,23 +82,24 @@ final class ByteProto {
   //expression start
 
   static final int CLASS_INSTANCE_CREATION = -45;
-  static final int DIM = -46;
-  static final int DOT = -47;
-  static final int EXPRESSION_NAME = -48;
-  static final int INVOKE = -49;
-  static final int METHOD_INVOCATION = -50;
-  static final int NEW = -51;
-  static final int NULL_LITERAL = -52;
-  static final int PRIMITIVE_LITERAL = -53;
-  static final int STRING_LITERAL = -54;
-  static final int THIS = -55;
+  static final int EXPRESSION_NAME = -46;
+  static final int INVOKE = -47;
+  static final int METHOD_INVOCATION = -48;
+  static final int NEW = -49;
+  static final int NULL_LITERAL = -50;
+  static final int PRIMITIVE_LITERAL = -51;
+  static final int STRING_LITERAL = -52;
+  static final int T = -53;
+  static final int THIS = -54;
 
   //expression part
 
-  static final int ARRAY_ACCESS = -56;
-  static final int ASSIGNMENT_OPERATOR = -57;
-  static final int CLASS_TYPE_WITH_ARGS = -58;
-  static final int EQUALITY_OPERATOR = -59;
+  static final int ARRAY_ACCESS = -55;
+  static final int ASSIGNMENT_OPERATOR = -56;
+  static final int EQUALITY_OPERATOR = -57;
+  static final int EXPRESSION_NAME_DOT = -58;
+  static final int METHOD_INVOCATION_DOT = -59;
+  static final int T_WITH_ARGS = -60;
 
   private ByteProto() {}
 
@@ -107,9 +108,24 @@ final class ByteProto {
         || proto == PARAMETERIZED_TYPE;
   }
 
+  public static boolean isConnecting(int proto) {
+    return switch (proto) {
+      case ARRAY_ACCESS,
+           EXPRESSION_NAME_DOT,
+           METHOD_INVOCATION_DOT -> true;
+
+      default -> false;
+    };
+  }
+
   public static boolean isExpressionStart(int proto) {
     return proto <= CLASS_INSTANCE_CREATION
         && proto >= THIS;
+  }
+
+  public static boolean isFormalParameter(int proto) {
+    return proto == PARAMETER
+        || proto == PARAMETER_SHORT;
   }
 
   public static boolean isImport(int proto) {
@@ -119,11 +135,6 @@ final class ByteProto {
   public static boolean isModifier(int proto) {
     return proto == MODIFIER
         || proto == MODIFIERS;
-  }
-
-  public static boolean isFormalParameter(int proto) {
-    return proto == PARAMETER
-        || proto == PARAMETER_SHORT;
   }
 
   public static boolean isOperator(int proto) {
