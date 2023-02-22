@@ -248,20 +248,20 @@ class InternalCompiler extends InternalApi {
     last(_START);
 
     if (itemMore()) {
-      if (lastIs(_NEW_LINE)) {
-        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
-      }
+      //      if (lastIs(_NEW_LINE)) {
+      //        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+      //      }
 
       variableInitializer();
 
       while (itemMore()) {
         slotComma();
 
-        var ws = lastIs(_NEW_LINE)
-            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
-            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
-
-        codeAdd(ws);
+        //        var ws = lastIs(_NEW_LINE)
+        //            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
+        //            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
+        //
+        //        codeAdd(ws);
 
         variableInitializer();
       }
@@ -1529,6 +1529,8 @@ class InternalCompiler extends InternalApi {
   private void oldArrayAccess() {
     codeAdd(Symbol.LEFT_SQUARE_BRACKET);
 
+    last(_START);
+
     oldExpression();
 
     codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
@@ -1569,9 +1571,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void oldClassInstanceCreation() {
+    preKeyword();
+
     codeAdd(Keyword.NEW);
 
-    codeAdd(Whitespace.MANDATORY);
+    last(_KEYWORD);
 
     executeSwitch(this::oldType);
 
@@ -1722,12 +1726,8 @@ class InternalCompiler extends InternalApi {
     int returnType = itemPeek();
 
     if (ByteProto.isType(returnType)) {
-      codeAdd(Whitespace.MANDATORY);
-
       executeSwitch(this::oldType);
     } else if (returnType == ByteProto.VOID) {
-      codeAdd(Whitespace.MANDATORY);
-
       execute(this::voidKeyword);
     } else {
       errorRaise(
@@ -1738,8 +1738,6 @@ class InternalCompiler extends InternalApi {
     }
 
     if (itemIs(ByteProto.METHOD)) {
-      codeAdd(Whitespace.MANDATORY);
-
       oldMethodDeclaration();
     } else {
       int next = itemPeek();
@@ -1851,13 +1849,19 @@ class InternalCompiler extends InternalApi {
   }
 
   private void oldTypeParameterList() {
+    if (lastIs(_KEYWORD)) {
+      codeAdd(Whitespace.OPTIONAL);
+    }
+
+    last(_START);
+
     codeAdd(Symbol.LEFT_ANGLE_BRACKET);
 
     execute(this::typeParameter);
 
     while (itemIs(ByteProto.TYPE_PARAMETER)) {
       codeAdd(Symbol.COMMA);
-      codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+      last(_COMMA);
 
       execute(this::typeParameter);
     }
