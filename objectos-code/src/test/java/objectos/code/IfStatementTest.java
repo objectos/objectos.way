@@ -33,10 +33,10 @@ public class IfStatementTest {
         protected final void definition() {
           _class("IfStatement");
           body(
-            _void(), method("test"), block(
-              _if(invoke("condition")), block(
-                invoke("foo")
-              )
+            method(
+              p(IF, arg(v("condition")), block(
+                p(v("foo"))
+              ))
             )
           );
         }
@@ -44,7 +44,7 @@ public class IfStatementTest {
 
       """
       class IfStatement {
-        void test() {
+        void unnamed() {
           if (condition()) {
             foo();
           }
@@ -66,12 +66,12 @@ public class IfStatementTest {
         protected final void definition() {
           _class("IfStatement");
           body(
-            _void(), method("test"), block(
-              _if(invoke("condition")), block(
-                invoke("ifTrue")
-              ), _else(), block(
-                invoke("ifFalse")
-              )
+            method(
+              p(IF, arg(v("condition")), block(
+                p(v("ifTrue"))
+              ), ELSE, block(
+                p(v("ifFalse"))
+              ))
             )
           );
         }
@@ -79,7 +79,7 @@ public class IfStatementTest {
 
       """
       class IfStatement {
-        void test() {
+        void unnamed() {
           if (condition()) {
             ifTrue();
           } else {

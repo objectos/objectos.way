@@ -386,7 +386,7 @@ public abstract class JavaTemplate {
       ConstructorDeclaration,
       DeclarationName,
       OldEllipsis,
-      ElseKeyword,
+      OldElseKeyword,
       End,
       EnumConstant,
       EnumKeyword,
@@ -462,7 +462,7 @@ public abstract class JavaTemplate {
 
   sealed interface AutoImports extends Instruction {}
 
-  sealed interface Block extends BlockElement, BodyElement {}
+  sealed interface Block extends BlockElement, BodyElement, StatementPart {}
 
   sealed interface Body extends BodyElement {}
 
@@ -479,8 +479,6 @@ public abstract class JavaTemplate {
   sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface DeclarationName extends MethodDeclarationInstruction, StatementPart {}
-
-  sealed interface ElseKeyword extends BlockElement {}
 
   sealed interface End extends ArgsPart, BlockElement {}
 
@@ -532,6 +530,9 @@ public abstract class JavaTemplate {
 
   @Deprecated
   sealed interface OldEllipsis extends ParameterElement {}
+
+  @Deprecated
+  sealed interface OldElseKeyword extends BlockElement {}
 
   @Deprecated
   sealed interface OldEqualityOperator extends ExpressionPart {}
@@ -621,6 +622,45 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.3.1
    */
+  private static final class EqualityOperator extends External implements ExpressionPart {
+    private final int value;
+
+    EqualityOperator(Symbol symbol) {
+      value = symbol.ordinal();
+    }
+
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.EQUALITY_OPERATOR, value);
+    }
+  }
+
+  /**
+   * @since 0.4.3.1
+   */
+  private static final class IfKeyword extends External implements StatementPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.IF, ByteProto.NOOP);
+    }
+  }
+
+  /**
+   * @since 0.4.3.1
+   */
+  private static final class ElseKeyword extends External implements StatementPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.ELSE, ByteProto.NOOP);
+    }
+  }
+
+  /**
+   * @since 0.4.3.1
+   */
   private static final class NewKeyword extends External implements ExpressionPart {
     @Override
     final void execute(InternalApi api) {
@@ -660,23 +700,6 @@ public abstract class JavaTemplate {
     final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.RETURN, ByteProto.NOOP);
-    }
-  }
-
-  /**
-   * @since 0.4.3.1
-   */
-  private static final class EqualityOperator extends External implements ExpressionPart {
-    private final int value;
-
-    EqualityOperator(Symbol symbol) {
-      value = symbol.ordinal();
-    }
-
-    @Override
-    final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.EQUALITY_OPERATOR, value);
     }
   }
 
@@ -737,6 +760,57 @@ public abstract class JavaTemplate {
    * @since 0.4.3.1
    */
   protected static final ExpressionPart NL = new NewLine();
+
+  /**
+   * The {@code else} keyword. Use it as part of a `if-then-else` Java
+   * statement.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * p(IF, arg(n("condition")), block(
+   *   p(v("whenTrue"))
+   * ), ELSE, block(
+   *   p(v("whenFalse"))
+   * ))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (condition) {
+   *   whenTrue();
+   * } else {
+   *   whenFalse();
+   * }</pre>
+   *
+   * @since 0.4.3.1
+   */
+  protected static final StatementPart ELSE = new ElseKeyword();
+
+  /**
+   * The {@code if} keyword. It is used to start a Java `if` statement.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * p(IF, arg(n("condition")), block(
+   *   p(v("whenTrue"))
+   * ))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * if (condition) {
+   *   whenTrue();
+   * }</pre>
+   *
+   * @since 0.4.3.1
+   */
+  protected static final StatementPart IF = new IfKeyword();
 
   /**
    * The {@code new} keyword.
@@ -851,16 +925,12 @@ public abstract class JavaTemplate {
   /**
    * The {@code ==} (equal to) operator.
    *
-   * @return the {@code ==} (equal to) operator
-   *
    * @since 0.4.3.1
    */
   protected static final ExpressionPart EQ = new EqualityOperator(Symbol.EQUAL_TO);
 
   /**
    * The {@code !=} (not equal to) operator.
-   *
-   * @return the {@code !=} (not equal to) operator
    *
    * @since 0.4.3.1
    */
@@ -1018,7 +1088,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected final ElseKeyword _else() {
+  protected final OldElseKeyword _else() {
     return api().itemAdd(ByteProto.ELSE, ByteProto.NOOP);
   }
 
@@ -1546,9 +1616,11 @@ public abstract class JavaTemplate {
 
   /**
    * TODO
+   *
+   * @since 0.4.3.1
    */
-  protected final Block block(BlockElement... elements) {
-    Object[] many = Objects.requireNonNull(elements, "elements == null");
+  protected final Block block(Statement... statements) {
+    Object[] many = Objects.requireNonNull(statements, "statements == null");
     return api().elemMany(ByteProto.BLOCK, many);
   }
 

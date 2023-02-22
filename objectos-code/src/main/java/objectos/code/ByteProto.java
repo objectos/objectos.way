@@ -78,28 +78,34 @@ final class ByteProto {
 
   //statement part
 
-  static final int ELSE = -45;
+  static final int IF = -45;
+  static final int ELSE = -46;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -46;
-  static final int EXPRESSION_NAME = -47;
-  static final int INVOKE = -48;
-  static final int NEW = -49;
-  static final int NULL_LITERAL = -50;
-  static final int PRIMITIVE_LITERAL = -51;
-  static final int STRING_LITERAL = -52;
-  static final int THIS = -53;
-  static final int V = -54;
+  static final int CLASS_INSTANCE_CREATION = -47;
+  static final int EXPRESSION_NAME = -48;
+  static final int INVOKE = -49;
+  static final int NEW = -50;
+  static final int NULL_LITERAL = -51;
+  static final int PRIMITIVE_LITERAL = -52;
+  static final int STRING_LITERAL = -53;
+  static final int THIS = -54;
+  static final int V = -55;
 
   //expression part
 
-  static final int ARGUMENT = -55;
-  static final int ARRAY_ACCESS = -56;
-  static final int ASSIGNMENT_OPERATOR = -57;
-  static final int EQUALITY_OPERATOR = -58;
+  static final int ARGUMENT = -56;
+  static final int ARRAY_ACCESS = -57;
+  static final int ASSIGNMENT_OPERATOR = -58;
+  static final int EQUALITY_OPERATOR = -59;
 
   private ByteProto() {}
+
+  public static boolean isBlockOrStatement(int proto) {
+    return proto == BLOCK
+        || proto == STATEMENT;
+  }
 
   public static boolean isClassOrParameterizedType(int proto) {
     return proto == CLASS_TYPE
