@@ -584,7 +584,7 @@ public abstract class JavaTemplate {
 
   sealed interface ReturnType extends MethodDeclarationInstruction {}
 
-  sealed interface Statement extends MethodDeclarationInstruction {}
+  sealed interface Statement extends BlockElement, MethodDeclarationInstruction {}
 
   sealed interface StaticModifier extends BodyElement {}
 
@@ -1619,7 +1619,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected final Block block(Statement... statements) {
+  protected final Block block(BlockElement... statements) {
     Object[] many = Objects.requireNonNull(statements, "statements == null");
     return api().elemMany(ByteProto.BLOCK, many);
   }
