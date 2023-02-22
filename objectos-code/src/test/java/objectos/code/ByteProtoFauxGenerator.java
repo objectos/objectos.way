@@ -30,7 +30,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("END_ELEMENT");
     value("NEW_LINE");
     value("NOOP");
-    value("STOP");
+    value("STOP"); // deprecated
 
     comment("types");
 

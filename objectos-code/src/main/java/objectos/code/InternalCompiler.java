@@ -62,6 +62,7 @@ class InternalCompiler extends InternalApi {
     // last
     stackArray[6] = NULL;
 
+    stackIndex = 7;
     // do not change
     // objectIndex;
 
@@ -104,22 +105,20 @@ class InternalCompiler extends InternalApi {
   }
 
   private void annotation() {
-    codeAdd(Symbol.COMMERCIAL_AT);
-
     last(_START);
+
+    codeAdd(Symbol.COMMERCIAL_AT);
 
     execute(this::classType);
 
-    if (itemMore()) {
+    if (elemMore()) {
       codeAdd(Symbol.LEFT_PARENTHESIS);
-
       last(_START);
 
       annotationValuePair();
 
       while (itemMore()) {
-        codeAdd(Symbol.COMMA);
-        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+        comma();
 
         annotationValuePair();
       }
@@ -309,15 +308,14 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
+    last(_START);
+
     if (protoIs(ByteProto.STATEMENT)) {
       codeAdd(Indentation.ENTER_BLOCK);
-      codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
 
       execute(this::blockStatement);
 
       while (elemMore()) {
-        codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
-
         execute(this::blockStatement);
       }
 
@@ -333,6 +331,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void blockStatement() {
+    switch (last()) {
+      case _SEMICOLON,
+           _START -> codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
+    }
+
     last(_START);
 
     lang();
@@ -387,9 +390,9 @@ class InternalCompiler extends InternalApi {
 
     last(_START);
 
-    declarationAnnotationList();
+    oldDeclarationAnnotationList();
 
-    modifierList();
+    oldModifierList();
 
     int item = itemPeek();
 
@@ -595,6 +598,12 @@ class InternalCompiler extends InternalApi {
 
   private void codeAdd(Whitespace value) { codeAdd(ByteCode.WHITESPACE, value.ordinal()); }
 
+  private void comma() {
+    codeAdd(Symbol.COMMA);
+
+    last(_COMMA);
+  }
+
   private void compilationUnit() {
     last(_START);
 
@@ -602,7 +611,7 @@ class InternalCompiler extends InternalApi {
 
     switch (item) {
       case ByteProto.ANNOTATION -> {
-        declarationAnnotationList();
+        oldDeclarationAnnotationList();
 
         if (itemIs(ByteProto.PACKAGE)) {
           ordinaryCompilationUnit();
@@ -664,50 +673,6 @@ class InternalCompiler extends InternalApi {
     while (protoMore() && protoPeek() == ByteProto.NEW_LINE) {
       execute(this::newLine);
     }
-  }
-
-  private void declarationAnnotationList() {
-    if (itemIs(ByteProto.ANNOTATION)) {
-      execute(this::annotation);
-
-      while (itemIs(ByteProto.ANNOTATION)) {
-        codeAdd(Whitespace.AFTER_ANNOTATION);
-
-        execute(this::annotation);
-      }
-    }
-  }
-
-  private void declarationModifier() {
-    switch (last()) {
-      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-    }
-
-    modifier();
-  }
-
-  private void declarationModifiers() {
-    switch (last()) {
-      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
-    }
-
-    int size = protoNext();
-
-    if (size > 0) {
-      modifier();
-
-      for (int i = 1; i < size; i++) {
-        codeAdd(Whitespace.MANDATORY);
-
-        modifier();
-      }
-    }
-
-    last(_KEYWORD);
   }
 
   private void declarationName() {
@@ -877,26 +842,6 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
 
     last(_IDENTIFIER);
-  }
-
-  private void oldIfCondition() {
-    codeAdd(Keyword.IF);
-
-    codeAdd(Whitespace.OPTIONAL);
-
-    codeAdd(Symbol.LEFT_PARENTHESIS);
-
-    oldExpression();
-
-    if (itemMore()) {
-      int proto = itemPeek();
-
-      errorRaise(
-        "expected expression end but found '%s'".formatted(protoName(proto))
-      );
-    }
-
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
   }
 
   private void ifKeyword() {
@@ -1183,6 +1128,81 @@ class InternalCompiler extends InternalApi {
 
   private boolean lastIs(int value) { return last() == value; }
 
+  private int listAdd(int list) {
+    if (list == NULL) {
+      list = stackIndex;
+      stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 3);
+      stackArray[stackIndex++] = NULL;
+    } else {
+      int jmpLocation = stackArray[list];
+      stackArray[jmpLocation] = stackIndex;
+      stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
+    }
+
+    int proto = protoNext();
+    int value = protoNext();
+
+    stackArray[stackIndex++] = proto;
+    stackArray[stackIndex++] = value;
+    int tail = stackIndex;
+    stackArray[stackIndex++] = NULL;
+    stackArray[list] = tail;
+
+    return list;
+  }
+
+  private void listExecute(Action action) {
+    stackIndex++;
+
+    int location = stackArray[stackIndex++];
+
+    protoIndex = location;
+
+    action.execute();
+
+    int maybeNext = stackArray[stackIndex];
+
+    if (maybeNext != NULL) {
+      stackIndex = maybeNext;
+    }
+  }
+
+  private void listExecute(int offset, Action action) {
+    stackIndex = offset + 1;
+
+    while (listMore()) {
+      listExecute(action);
+    }
+  }
+
+  private boolean listMore() {
+    return stackArray[stackIndex] != NULL;
+  }
+
+  private void listSwitch(int offset, SwitchAction action) {
+    stackIndex = offset + 1;
+
+    while (listMore()) {
+      listSwitch(action);
+    }
+  }
+
+  private void listSwitch(SwitchAction action) {
+    int proto = stackArray[stackIndex++];
+
+    int location = stackArray[stackIndex++];
+
+    protoIndex = location;
+
+    action.execute(proto);
+
+    int maybeNext = stackArray[stackIndex];
+
+    if (maybeNext != NULL) {
+      stackIndex = maybeNext;
+    }
+  }
+
   private void localVariableDeclaration() {
     int type = itemPeek();
 
@@ -1226,233 +1246,151 @@ class InternalCompiler extends InternalApi {
   }
 
   private void methodDeclaration() {
-    enum State {
-      START,
-
-      TYPE_PARAMETER,
-
-      RESULT,
-
-      NAME,
-
-      PARAMETER,
-
-      BODY;
-    }
-
-    last(_START);
+    int start = stackIndex;
 
     abstractFound(NULL);
 
-    var state = State.START;
+    last(_START);
 
-    loop: while (protoMore()) {
+    int annotations = NULL,
+        modifiers = NULL,
+        typeParameters = NULL,
+        result = NULL,
+        name = NULL,
+        //receiverParameter = NULL,
+        parameters = NULL,
+        statements = NULL;
+
+    while (protoMore()) {
       int proto = protoPeek();
 
-      switch (proto) {
-        case ByteProto.ANNOTATION -> {
-          switch (last()) {
-            case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-          }
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
 
-          execute(this::annotation);
-        }
+      switch (proto) {
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
 
         case ByteProto.ARRAY_TYPE,
              ByteProto.CLASS_TYPE,
              ByteProto.PARAMETERIZED_TYPE,
              ByteProto.PRIMITIVE_TYPE,
-             ByteProto.TYPE_VARIABLE -> {
-          switch (state) {
-            case TYPE_PARAMETER -> {
-              typeParameterListEnd();
-            }
+             ByteProto.TYPE_VARIABLE -> result = singleSet(result);
 
-            default -> {}
-          }
+        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
 
-          state = State.RESULT;
+        case ByteProto.MODIFIER,
+             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
 
-          executeSwitch(this::type);
-        }
+        case ByteProto.PARAMETER_SHORT -> parameters = listAdd(parameters);
 
-        case ByteProto.DECLARATION_NAME -> {
-          switch (state) {
-            case START -> methodResultVoid();
+        case ByteProto.RETURN_TYPE -> result = singleSet(result);
 
-            case TYPE_PARAMETER -> {
-              typeParameterListEnd();
-              methodResultVoid();
-            }
+        case ByteProto.STATEMENT -> statements = listAdd(statements);
 
-            default -> {}
-          }
+        case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
 
-          execute(this::declarationName);
-
-          state = State.NAME;
-        }
-
-        case ByteProto.END_ELEMENT -> { break loop; }
-
-        case ByteProto.MODIFIER -> execute(this::declarationModifier);
-
-        case ByteProto.MODIFIERS -> execute(this::declarationModifiers);
-
-        case ByteProto.PARAMETER_SHORT -> {
-          switch (state) {
-            case START -> {
-              methodResultVoid();
-              unnamed();
-              codeAdd(Symbol.LEFT_PARENTHESIS);
-            }
-
-            case TYPE_PARAMETER -> {
-              typeParameterListEnd();
-              unnamed();
-              codeAdd(Symbol.LEFT_PARENTHESIS);
-            }
-
-            case RESULT -> {
-              unnamed();
-              codeAdd(Symbol.LEFT_PARENTHESIS);
-            }
-
-            case NAME -> {
-              codeAdd(Symbol.LEFT_PARENTHESIS);
-            }
-
-            case PARAMETER -> {
-              codeAdd(Symbol.COMMA);
-              codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
-            }
-
-            case BODY -> { /* not possible? */ }
-          }
-
-          state = State.PARAMETER;
-
-          execute(this::parameterShort);
-        }
-
-        case ByteProto.RETURN_TYPE -> {
-          switch (state) {
-            case TYPE_PARAMETER -> {
-              typeParameterListEnd();
-            }
-
-            default -> {}
-          }
-
-          state = State.RESULT;
-
-          execute(this::returnType);
-        }
-
-        case ByteProto.TYPE_PARAMETER -> {
-          switch (state) {
-            default:
-              switch (last()) {
-                case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-
-                case _KEYWORD -> codeAdd(Whitespace.OPTIONAL);
-              }
-
-              codeAdd(Symbol.LEFT_ANGLE_BRACKET);
-              last(_START);
-              break;
-
-            case TYPE_PARAMETER:
-              codeAdd(Symbol.COMMA);
-              last(_COMMA);
-              break;
-          }
-
-          state = State.TYPE_PARAMETER;
-
-          execute(this::typeParameter);
-        }
-
-        case ByteProto.VOID -> {
-          switch (state) {
-            case TYPE_PARAMETER -> {
-              typeParameterListEnd();
-            }
-
-            default -> {}
-          }
-
-          state = State.RESULT;
-
-          execute(this::methodResultVoid);
-        }
+        case ByteProto.VOID -> result = singleSet(result);
 
         default -> {
-          switch (state) {
-            case START -> {
-              methodResultVoid();
-              unnamed();
-              codeAdd(Symbol.LEFT_PARENTHESIS);
-              codeAdd(Symbol.RIGHT_PARENTHESIS);
-              last(_SYMBOL);
-            }
-
-            case NAME -> {
-              codeAdd(Symbol.LEFT_PARENTHESIS);
-              codeAdd(Symbol.RIGHT_PARENTHESIS);
-              last(_SYMBOL);
-            }
-
-            default -> {}
-          }
-
-          state = State.BODY;
-
-          break loop;
+          throw new UnsupportedOperationException(
+            "Implement me :: " + protoName(proto)
+          );
         }
       }
     }
 
-    switch (state) {
-      case START:
-        methodResultVoid();
-        unnamed();
-        // fall-through
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
+    }
 
-      case NAME:
-        codeAdd(Symbol.LEFT_PARENTHESIS);
-        // fall-through
+    if (modifiers != NULL) {
+      listSwitch(modifiers, this::modifierSwitcher);
+    }
 
-      case PARAMETER:
-        codeAdd(Symbol.RIGHT_PARENTHESIS);
+    if (typeParameters != NULL) {
+      listExecute(typeParameters, this::typeParameter);
 
-        if (abstractFound()) {
-          codeAdd(Symbol.SEMICOLON);
-        } else {
-          codeAdd(Whitespace.OPTIONAL);
-          codeAdd(Symbol.LEFT_CURLY_BRACKET);
-          codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
-          codeAdd(Symbol.RIGHT_CURLY_BRACKET);
-        }
-        break;
+      typeParameterListEnd();
+    }
 
-      case BODY:
-        block();
-        break;
+    if (result != NULL) {
+      singleSwitch(result, this::methodResult);
+    } else {
+      voidKeyword();
+    }
 
-      default:
-        errorRaise(
-          "no-op final state 'Method declaration': %s".formatted(state)
-        );
-        break;
+    if (name != NULL) {
+      singleExecute(name, this::declarationName);
+    } else {
+      unnamed();
+    }
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    if (parameters != NULL) {
+      last(_START);
+
+      listSwitch(parameters, this::parameterSwitcher);
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    if (!abstractFound()) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      codeAdd(Symbol.LEFT_CURLY_BRACKET);
+
+      if (statements != NULL) {
+        codeAdd(Indentation.ENTER_BLOCK);
+        codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
+
+        listExecute(statements, this::blockStatement);
+
+        codeAdd(Indentation.EXIT_BLOCK);
+
+        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+      } else {
+        codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+      }
+
+      codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+    } else {
+      codeAdd(Symbol.SEMICOLON);
+    }
+
+    stackIndex = start;
+  }
+
+  private void methodResult(int proto) {
+    switch (proto) {
+      case ByteProto.ARRAY_TYPE -> arrayType();
+
+      case ByteProto.CLASS_TYPE -> classType();
+
+      case ByteProto.PARAMETERIZED_TYPE -> parameterizedType();
+
+      case ByteProto.PRIMITIVE_TYPE -> primitiveType();
+
+      case ByteProto.RETURN_TYPE -> returnType();
+
+      case ByteProto.TYPE_VARIABLE -> typeVariable();
+
+      case ByteProto.VOID -> voidKeyword();
+
+      default -> errorRaise(
+        "no-op method result '%s'".formatted(protoName(proto))
+      );
     }
   }
 
-  private void methodResultVoid() {
-    voidKeyword();
-  }
-
   private void modifier() {
+    switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+    }
+
     int proto = protoNext();
 
     var keyword = Keyword.get(proto);
@@ -1470,32 +1408,20 @@ class InternalCompiler extends InternalApi {
     last(_KEYWORD);
   }
 
-  private void modifierList() {
-    publicFound(NULL);
+  private void modifiers() {
+    int size = protoNext();
 
-    if (itemIs(ByteProto.MODIFIER)) {
-      if (lastIs(_ANNOTATION)) {
-        codeAdd(Whitespace.AFTER_ANNOTATION);
-      }
-
-      execute(this::modifier);
-
-      while (itemTest(this::isModifierOrAnnotation)) {
-        codeAdd(Whitespace.MANDATORY);
-
-        executeSwitch(this::modifierOrAnnotation);
-      }
+    for (int i = 0; i < size; i++) {
+      modifier();
     }
   }
 
-  private void modifierOrAnnotation(int proto) {
+  private void modifierSwitcher(int proto) {
     switch (proto) {
-      case ByteProto.ANNOTATION -> annotation();
-
       case ByteProto.MODIFIER -> modifier();
-    }
 
-    last(_KEYWORD);
+      case ByteProto.MODIFIERS -> modifiers();
+    }
   }
 
   private void newKeyword() {
@@ -1524,6 +1450,33 @@ class InternalCompiler extends InternalApi {
 
   private Object objectget(int index) {
     return objectArray[index];
+  }
+
+  private void oldAnnotation() {
+    codeAdd(Symbol.COMMERCIAL_AT);
+
+    last(_START);
+
+    execute(this::classType);
+
+    if (itemMore()) {
+      codeAdd(Symbol.LEFT_PARENTHESIS);
+
+      last(_START);
+
+      annotationValuePair();
+
+      while (itemMore()) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        annotationValuePair();
+      }
+
+      codeAdd(Symbol.RIGHT_PARENTHESIS);
+    }
+
+    last(_ANNOTATION);
   }
 
   private void oldArgumentList() {
@@ -1611,6 +1564,18 @@ class InternalCompiler extends InternalApi {
     executeSwitch(this::oldType);
 
     oldArgumentList();
+  }
+
+  private void oldDeclarationAnnotationList() {
+    if (itemIs(ByteProto.ANNOTATION)) {
+      execute(this::oldAnnotation);
+
+      while (itemIs(ByteProto.ANNOTATION)) {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+
+        execute(this::oldAnnotation);
+      }
+    }
   }
 
   private void oldExpression() {
@@ -1738,6 +1703,26 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.RIGHT_PARENTHESIS);
   }
 
+  private void oldIfCondition() {
+    codeAdd(Keyword.IF);
+
+    codeAdd(Whitespace.OPTIONAL);
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    oldExpression();
+
+    if (itemMore()) {
+      int proto = itemPeek();
+
+      errorRaise(
+        "expected expression end but found '%s'".formatted(protoName(proto))
+      );
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
   private void oldMethodDeclaration() {
     execute(this::oldMethodDeclarator);
 
@@ -1785,6 +1770,52 @@ class InternalCompiler extends InternalApi {
     execute(this::identifier);
 
     oldFormalParameterList();
+  }
+
+  private void oldModifier() {
+    int proto = protoNext();
+
+    var keyword = Keyword.get(proto);
+
+    switch (keyword) {
+      case ABSTRACT -> abstractFound(1);
+
+      case PUBLIC -> publicFound(1);
+
+      default -> {}
+    }
+
+    codeAdd(ByteCode.KEYWORD, proto);
+
+    last(_KEYWORD);
+  }
+
+  private void oldModifierList() {
+    publicFound(NULL);
+
+    if (itemIs(ByteProto.MODIFIER)) {
+      if (lastIs(_ANNOTATION)) {
+        codeAdd(Whitespace.AFTER_ANNOTATION);
+      }
+
+      execute(this::oldModifier);
+
+      while (itemTest(this::isModifierOrAnnotation)) {
+        codeAdd(Whitespace.MANDATORY);
+
+        executeSwitch(this::oldModifierOrAnnotation);
+      }
+    }
+  }
+
+  private void oldModifierOrAnnotation(int proto) {
+    switch (proto) {
+      case ByteProto.ANNOTATION -> oldAnnotation();
+
+      case ByteProto.MODIFIER -> oldModifier();
+    }
+
+    last(_KEYWORD);
   }
 
   private void oldReturnStatement() {
@@ -1879,6 +1910,26 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void oldTypeParameter() {
+    execute(this::identifier);
+
+    if (itemMore()) {
+      codeAdd(Whitespace.MANDATORY);
+      codeAdd(Keyword.EXTENDS);
+      codeAdd(Whitespace.MANDATORY);
+
+      executeSwitch(this::oldType);
+
+      while (itemMore()) {
+        codeAdd(Whitespace.OPTIONAL);
+        codeAdd(Symbol.AMPERSAND);
+        codeAdd(Whitespace.OPTIONAL);
+
+        executeSwitch(this::oldType);
+      }
+    }
+  }
+
   private void oldTypeParameterList() {
     if (lastIs(_KEYWORD)) {
       codeAdd(Whitespace.OPTIONAL);
@@ -1888,13 +1939,13 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.LEFT_ANGLE_BRACKET);
 
-    execute(this::typeParameter);
+    execute(this::oldTypeParameter);
 
     while (itemIs(ByteProto.TYPE_PARAMETER)) {
       codeAdd(Symbol.COMMA);
       last(_COMMA);
 
-      execute(this::typeParameter);
+      execute(this::oldTypeParameter);
     }
 
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
@@ -1954,11 +2005,25 @@ class InternalCompiler extends InternalApi {
   private void parameterShort() {
     executeSwitch(this::parameterType);
 
-    if (itemIs(ByteProto.ELLIPSIS)) {
+    if (protoIs(ByteProto.ELLIPSIS)) {
       execute(this::ellipsis);
     }
 
     execute(this::identifier);
+  }
+
+  private void parameterSwitcher(int proto) {
+    switch (last()) {
+      case _IDENTIFIER -> comma();
+    }
+
+    switch (proto) {
+      case ByteProto.PARAMETER_SHORT -> parameterShort();
+
+      default -> errorRaise(
+        "no-op formal parameter '%s'".formatted(protoName(proto))
+      );
+    }
   }
 
   private void parameterType(int proto) {
@@ -2006,7 +2071,8 @@ class InternalCompiler extends InternalApi {
 
   private void preSymbol() {
     switch (last()) {
-      case _IDENTIFIER -> codeAdd(Whitespace.OPTIONAL);
+      case _IDENTIFIER,
+           _KEYWORD -> codeAdd(Whitespace.OPTIONAL);
     }
   }
 
@@ -2126,6 +2192,51 @@ class InternalCompiler extends InternalApi {
 
   private void simpleName(int value) { stackArray[0] = value; }
 
+  private void singleExecute(int offset, Action action) {
+    int location = stackArray[offset + 1];
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
+
+    action.execute();
+
+    protoIndex = returnTo;
+  }
+
+  private int singleSet(int property) {
+    int proto = protoNext();
+    int value = protoNext();
+
+    if (property == NULL) {
+      property = stackIndex;
+      stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
+      stackArray[stackIndex++] = proto;
+      stackArray[stackIndex++] = value;
+    } else {
+      stackArray[property + 0] = proto;
+      stackArray[property + 1] = value;
+    }
+
+    return property;
+  }
+
+  private void singleSwitch(int offset, SwitchAction action) {
+    stackIndex = offset;
+
+    int proto = stackArray[stackIndex++];
+
+    int location = stackArray[stackIndex++];
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
+
+    action.execute(proto);
+
+    protoIndex = returnTo;
+  }
+
   private void slot() {
     stackArray[2] = codeIndex;
 
@@ -2202,6 +2313,14 @@ class InternalCompiler extends InternalApi {
     codeAdd(Keyword.SUPER);
   }
 
+  private void symbol(Symbol symbol) {
+    preSymbol();
+
+    codeAdd(symbol);
+
+    last(_SYMBOL);
+  }
+
   private void thisKeyword() {
     preKeyword();
 
@@ -2237,9 +2356,9 @@ class InternalCompiler extends InternalApi {
   private void topLevelDeclaration() {
     topLevel(1);
 
-    declarationAnnotationList();
+    oldDeclarationAnnotationList();
 
-    modifierList();
+    oldModifierList();
 
     int next = itemPeek();
 
@@ -2332,27 +2451,39 @@ class InternalCompiler extends InternalApi {
   }
 
   private void typeParameter() {
+    switch (last()) {
+      case _KEYWORD -> {
+        codeAdd(Whitespace.OPTIONAL);
+        codeAdd(Symbol.LEFT_ANGLE_BRACKET);
+        last(_START);
+      }
+
+      case _IDENTIFIER -> comma();
+
+      case _START -> {
+        codeAdd(Symbol.LEFT_ANGLE_BRACKET);
+        last(_START);
+      }
+    }
+
     execute(this::identifier);
 
-    if (itemMore()) {
-      codeAdd(Whitespace.MANDATORY);
-      codeAdd(Keyword.EXTENDS);
-      codeAdd(Whitespace.MANDATORY);
+    if (elemMore()) {
+      extendsKeyword();
 
-      executeSwitch(this::oldType);
+      executeSwitch(this::type);
 
-      while (itemMore()) {
-        codeAdd(Whitespace.OPTIONAL);
-        codeAdd(Symbol.AMPERSAND);
-        codeAdd(Whitespace.OPTIONAL);
+      while (elemMore()) {
+        symbol(Symbol.AMPERSAND);
 
-        executeSwitch(this::oldType);
+        executeSwitch(this::type);
       }
     }
   }
 
   private void typeParameterListEnd() {
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
+
     last(_SYMBOL);
   }
 
