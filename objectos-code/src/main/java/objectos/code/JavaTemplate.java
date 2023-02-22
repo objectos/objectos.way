@@ -418,7 +418,7 @@ public abstract class JavaTemplate {
       PublicModifier,
       OldReturnKeyword,
       ReturnType,
-      SimpleAssigmentOperator,
+      OldSimpleAssigmentOperator,
       Statement,
       OldStatement,
       StaticModifier,
@@ -547,6 +547,9 @@ public abstract class JavaTemplate {
   @Deprecated
   sealed interface OldReturnKeyword extends BlockElement {}
 
+  @Deprecated
+  sealed interface OldSimpleAssigmentOperator extends ExpressionPart {}
+
   sealed interface OldStatement extends BlockElement {}
 
   @Deprecated
@@ -578,8 +581,6 @@ public abstract class JavaTemplate {
   sealed interface ReferenceType extends AnyType, ArrayTypeComponent {}
 
   sealed interface ReturnType extends MethodDeclarationInstruction {}
-
-  sealed interface SimpleAssigmentOperator extends ExpressionPart {}
 
   sealed interface Statement extends MethodDeclarationInstruction {}
 
@@ -638,6 +639,17 @@ public abstract class JavaTemplate {
   private sealed interface Primary extends ExpressionPart {}
 
   private sealed interface PrimaryNoNewArray extends Primary {}
+
+  /**
+   * @since 0.4.3.1
+   */
+  private static final class SimpleAssignmentOperator extends External implements ExpressionPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
+    }
+  }
 
   /**
    * @since 0.4.3.1
@@ -798,6 +810,25 @@ public abstract class JavaTemplate {
    * @since 0.4.2
    */
   protected static final Modifier FINAL = new Modifier(Keyword.FINAL);
+
+  /**
+   * The simple assignment operator {@code =}.
+   *
+   * <p>
+   * The following Objectos Code example:
+   *
+   * <pre>
+   * p(THIS, n("x"), IS, n("x"))</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * this.x = x;</pre>
+   *
+   * @since 0.4.3.1
+   */
+  protected static final ExpressionPart IS = new SimpleAssignmentOperator();
 
   /**
    * The {@code boolean} primitive type.
@@ -1779,7 +1810,8 @@ public abstract class JavaTemplate {
    *
    * @return the simple assignment operator {@code =}
    */
-  protected final SimpleAssigmentOperator gets() {
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
+  protected final OldSimpleAssigmentOperator gets() {
     return api().itemAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
   }
 

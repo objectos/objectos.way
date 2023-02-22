@@ -36,15 +36,15 @@ public class FieldAccessExpressionTest {
           _class("FieldAccess");
           body(
             method(
-              p(THIS, n("x"), gets(), n("y")),
+              p(THIS, n("x"), IS, n("y")),
 
-              p(v("x"), v("y"), n("z"), gets(), n("foo")),
+              p(v("x"), v("y"), n("z"), IS, n("foo")),
 
-              p(n("comparator"), gets(), s("abc"), n("CASE_INSENSITIVE_ORDER")),
+              p(n("comparator"), IS, s("abc"), n("CASE_INSENSITIVE_ORDER")),
 
-              p(n("a"), gets(), NEW, FOO, n("field")),
+              p(n("a"), IS, NEW, FOO, n("field")),
 
-              p(n("b"), gets(), n("array"), dim(i(0)), n("field"))
+              p(n("b"), IS, n("array"), dim(i(0)), n("field"))
             )
           );
         }

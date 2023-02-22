@@ -181,6 +181,7 @@ public class EnumDeclarationTest {
     // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        @SuppressWarnings("removal")
         @Override
         protected final void definition() {
           _public(); _enum("Test"); _implements(); t("test", "Iface"); body(
