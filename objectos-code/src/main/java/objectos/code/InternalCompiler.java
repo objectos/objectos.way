@@ -425,7 +425,13 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.ENUM_CONSTANT -> execute(this::enumConstant);
 
-      case ByteProto.INTERFACE -> interfaceDeclaration();
+      case ByteProto.INTERFACE -> {
+        if (lastIs(_KEYWORD)) {
+          codeAdd(Whitespace.MANDATORY);
+        }
+
+        interfaceDeclaration();
+      }
 
       case ByteProto.TYPE_PARAMETER -> {
         oldTypeParameterList();
@@ -2173,8 +2179,6 @@ class InternalCompiler extends InternalApi {
     execute(this::throwKeyword);
 
     if (itemTest(ByteProto::isExpressionStart)) {
-      codeAdd(Whitespace.MANDATORY);
-
       oldExpression();
 
       codeAdd(Symbol.SEMICOLON);
