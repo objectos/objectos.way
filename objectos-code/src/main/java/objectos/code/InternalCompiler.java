@@ -248,20 +248,10 @@ class InternalCompiler extends InternalApi {
     last(_START);
 
     if (itemMore()) {
-      //      if (lastIs(_NEW_LINE)) {
-      //        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
-      //      }
-
       variableInitializer();
 
       while (itemMore()) {
         slotComma();
-
-        //        var ws = lastIs(_NEW_LINE)
-        //            ? Whitespace.BEFORE_FIRST_LINE_CONTENT
-        //            : Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM;
-        //
-        //        codeAdd(ws);
 
         variableInitializer();
       }
@@ -1993,7 +1983,11 @@ class InternalCompiler extends InternalApi {
 
   private void primitiveLiteral() {
     switch (last()) {
+      case _COMMA -> codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
       case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+
+      case _NEW_LINE -> codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
 
       case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
     }

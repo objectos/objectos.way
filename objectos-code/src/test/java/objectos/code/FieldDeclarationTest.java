@@ -202,7 +202,7 @@ public class FieldDeclarationTest {
 
         int[] b = {0};
 
-        int[] c = {0, 1};
+        int[] c = {0,1};
 
         int[] d = {
           0,
