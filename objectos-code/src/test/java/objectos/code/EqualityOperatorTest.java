@@ -34,7 +34,7 @@ public class EqualityOperatorTest {
           _class("EqualityOperator");
           body(
             method(
-              p(v("foo"), arg(n("x"), equalTo(), n("y")))
+              p(v("foo"), arg(n("x"), EQ, n("y")))
             )
           );
         }
@@ -63,7 +63,7 @@ public class EqualityOperatorTest {
           _class("EqualityOperator");
           body(
             method(
-              p(v("foo"), arg(n("x"), notEqualTo(), n("y")))
+              p(v("foo"), arg(n("x"), NE, n("y")))
             )
           );
         }

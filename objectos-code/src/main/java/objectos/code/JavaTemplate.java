@@ -390,7 +390,7 @@ public abstract class JavaTemplate {
       End,
       EnumConstant,
       EnumKeyword,
-      EqualityOperator,
+      OldEqualityOperator,
       ExplicitConstructorInvocation,
       ExpressionName,
       ExtendsKeyword,
@@ -488,8 +488,6 @@ public abstract class JavaTemplate {
 
   sealed interface EnumKeyword extends BodyElement {}
 
-  sealed interface EqualityOperator extends ExpressionPart {}
-
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
 
   sealed interface ExpressionName extends ExpressionPart {}
@@ -534,6 +532,9 @@ public abstract class JavaTemplate {
 
   @Deprecated
   sealed interface OldEllipsis extends ParameterElement {}
+
+  @Deprecated
+  sealed interface OldEqualityOperator extends ExpressionPart {}
 
   @Deprecated
   sealed interface OldNewKeyword extends BlockElement {}
@@ -609,6 +610,17 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.3.1
    */
+  private static final class AssignmentOperator extends External implements ExpressionPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
+    }
+  }
+
+  /**
+   * @since 0.4.3.1
+   */
   private static final class NewKeyword extends External implements ExpressionPart {
     @Override
     final void execute(InternalApi api) {
@@ -643,22 +655,28 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.3.1
    */
-  private static final class SimpleAssignmentOperator extends External implements ExpressionPart {
+  private static final class ReturnKeyword extends External implements StatementPart {
     @Override
     final void execute(InternalApi api) {
       api.extStart();
-      api.protoAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
+      api.protoAdd(ByteProto.RETURN, ByteProto.NOOP);
     }
   }
 
   /**
    * @since 0.4.3.1
    */
-  private static final class ReturnKeyword extends External implements StatementPart {
+  private static final class EqualityOperator extends External implements ExpressionPart {
+    private final int value;
+
+    EqualityOperator(Symbol symbol) {
+      value = symbol.ordinal();
+    }
+
     @Override
     final void execute(InternalApi api) {
       api.extStart();
-      api.protoAdd(ByteProto.RETURN, ByteProto.NOOP);
+      api.protoAdd(ByteProto.EQUALITY_OPERATOR, value);
     }
   }
 
@@ -828,7 +846,25 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected static final ExpressionPart IS = new SimpleAssignmentOperator();
+  protected static final ExpressionPart IS = new AssignmentOperator();
+
+  /**
+   * The {@code ==} (equal to) operator.
+   *
+   * @return the {@code ==} (equal to) operator
+   *
+   * @since 0.4.3.1
+   */
+  protected static final ExpressionPart EQ = new EqualityOperator(Symbol.EQUAL_TO);
+
+  /**
+   * The {@code !=} (not equal to) operator.
+   *
+   * @return the {@code !=} (not equal to) operator
+   *
+   * @since 0.4.3.1
+   */
+  protected static final ExpressionPart NE = new EqualityOperator(Symbol.NOT_EQUAL_TO);
 
   /**
    * The {@code boolean} primitive type.
@@ -1789,7 +1825,8 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
-  protected final EqualityOperator equalTo() {
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
+  protected final OldEqualityOperator equalTo() {
     return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.EQUAL_TO.ordinal());
   }
 
@@ -2230,7 +2267,8 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
-  protected final EqualityOperator notEqualTo() {
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
+  protected final OldEqualityOperator notEqualTo() {
     return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.NOT_EQUAL_TO.ordinal());
   }
 
