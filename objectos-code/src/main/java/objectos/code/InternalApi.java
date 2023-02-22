@@ -474,13 +474,6 @@ class InternalApi {
     protoArray[protoIndex++] = v2;
   }
 
-  final int stackPop() { return stackArray[stackIndex--]; }
-
-  final void stackPush(int v0) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-    stackArray[++stackIndex] = v0;
-  }
-
   private void elemCnt(int value, int itemCount) {
     int seenCount = 0;
 
@@ -666,6 +659,13 @@ class InternalApi {
   private int protoGet(int index) { return protoArray[index]; }
 
   private int stackPeek(int offset) { return stackArray[stackIndex - offset]; }
+
+  private int stackPop() { return stackArray[stackIndex--]; }
+
+  private void stackPush(int v0) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
+    stackArray[++stackIndex] = v0;
+  }
 
   private void stackPush(int v0, int v1, int v2, int v3, int v4) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 5);

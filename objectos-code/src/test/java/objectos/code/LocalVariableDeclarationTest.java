@@ -17,35 +17,38 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
 public class LocalVariableDeclarationTest {
-
-  private final Fixture fix = new Fixture("LocalVar", Kind.VOID_METHOD);
 
   @Test(description = """
   var s = "java";
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
-      fix.ture(new JavaTemplate() {
+      new JavaTemplate() {
+        static final ClassTypeName STRING = classType(String.class);
+
         @Override
         protected final void definition() {
-          _var(); id("a"); s("java");
+          _class("LocalVar");
+          body(
+            method(
+              p(VAR, name("a"), s("java")),
 
-          _var(); id("b"); invoke("m", s("java"));
+              p(VAR, name("b"), v("m"), arg(s("java"))),
 
-          _int(); id("c"); i(0);
+              p(INT, name("c"), i(0)),
 
-          t(String.class); id("d"); s("d");
+              p(STRING, name("d"), s("d"))
+            )
+          );
         }
-      }),
+      }.toString(),
 
       """
       class LocalVar {
-        void method() {
+        void unnamed() {
           var a = "java";
           var b = m("java");
           int c = 0;
@@ -54,7 +57,6 @@ public class LocalVariableDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
 }

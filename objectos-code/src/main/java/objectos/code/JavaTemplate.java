@@ -278,7 +278,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static final class PrimitiveTypeName extends TypeName {
+  protected static final class PrimitiveTypeName extends TypeName implements StatementPart {
     /**
      * The {@code boolean} primitive type.
      */
@@ -429,7 +429,7 @@ public abstract class JavaTemplate {
       TypeParameter,
       TypeParameterOld,
       TypeVariable,
-      VarKeyword,
+      OldVarKeyword,
       OldVoidKeyword {
 
     INSTANCE;
@@ -478,7 +478,7 @@ public abstract class JavaTemplate {
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 
-  sealed interface DeclarationName extends MethodDeclarationInstruction {}
+  sealed interface DeclarationName extends MethodDeclarationInstruction, StatementPart {}
 
   sealed interface ElseKeyword extends BlockElement {}
 
@@ -556,6 +556,9 @@ public abstract class JavaTemplate {
   sealed interface OldThrowKeyword extends BlockElement {}
 
   @Deprecated
+  sealed interface OldVarKeyword extends BlockElement {}
+
+  @Deprecated
   sealed interface OldVoidKeyword extends BodyElement {}
 
   sealed interface PackageKeyword extends Instruction {}
@@ -600,10 +603,11 @@ public abstract class JavaTemplate {
 
   sealed interface VariableInitializer {}
 
-  sealed interface VarKeyword extends BlockElement {}
-
   private sealed interface AccessModifier extends BodyElement {}
 
+  /**
+   * @since 0.4.3.1
+   */
   private static final class NewKeyword extends External implements ExpressionPart {
     @Override
     final void execute(InternalApi api) {
@@ -635,6 +639,9 @@ public abstract class JavaTemplate {
 
   private sealed interface PrimaryNoNewArray extends Primary {}
 
+  /**
+   * @since 0.4.3.1
+   */
   private static final class ReturnKeyword extends External implements StatementPart {
     @Override
     final void execute(InternalApi api) {
@@ -643,6 +650,9 @@ public abstract class JavaTemplate {
     }
   }
 
+  /**
+   * @since 0.4.3.1
+   */
   private static final class ThisKeyword extends External implements ExpressionPart {
     @Override
     final void execute(InternalApi api) {
@@ -651,6 +661,9 @@ public abstract class JavaTemplate {
     }
   }
 
+  /**
+   * @since 0.4.3.1
+   */
   private static final class ThrowKeyword extends External implements StatementPart {
     @Override
     final void execute(InternalApi api) {
@@ -659,6 +672,20 @@ public abstract class JavaTemplate {
     }
   }
 
+  /**
+   * @since 0.4.3.1
+   */
+  private static final class VarKeyword extends External implements StatementPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.VAR, ByteProto.NOOP);
+    }
+  }
+
+  /**
+   * @since 0.4.3.1
+   */
   private static final class VoidKeyword extends External implements MethodDeclarationInstruction {
     @Override
     final void execute(InternalApi api) {
@@ -708,6 +735,13 @@ public abstract class JavaTemplate {
    * @since 0.4.3.1
    */
   protected static final StatementPart THROW = new ThrowKeyword();
+
+  /**
+   * The {@code var} keyword.
+   *
+   * @since 0.4.3.1
+   */
+  protected static final StatementPart VAR = new VarKeyword();
 
   /**
    * The {@code void} keyword.
@@ -1321,7 +1355,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected final VarKeyword _var() {
+  protected final OldVarKeyword _var() {
     return api().itemAdd(ByteProto.VAR, ByteProto.NOOP);
   }
 
@@ -2103,21 +2137,35 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * Sets the {@code name} of a declaration. If the declaration is a method
-   * then this instruction sets the method's name. If the declaration is a field
-   * then this instruction sets the field's name. And so on.
+   * Sets the {@code name} of a declaration. This instruction can set the name
+   * of the following declarations:
+   *
+   * <ul>
+   * <li>method declaration; and</li>
+   * <li>local variable declaration.</li>
+   * </ul>
    *
    * <p>
    * The following Objectos Code method declaration:
    *
    * <pre>
-   * method(name("example"))</pre>
+   * static final ClassTypeName STRING =
+   *     classType(String.class);
+   *
+   * method(
+   *   name("example"),
+   *   p(VAR, name("i"), i(0)),
+   *   p(STRING, name("s"), s("hello"))
+   * )</pre>
    *
    * <p>
    * Generates the following Java code:
    *
    * <pre>
-   * void example() {}</pre>
+   * void example() {
+   *   var i = 0;
+   *   java.lang.String s = "hello";
+   * }</pre>
    *
    * @param name
    *        the value to be used as the declaration name

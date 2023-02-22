@@ -43,11 +43,6 @@ class InternalCompiler extends InternalApi {
       _SEMICOLON = 8,
       _SYMBOL = 9;
 
-  private static final int _LANG = -1,
-      _ARGS = -2,
-      _ARGS_NEXT = -3,
-      _NEW = -4;
-
   final void compile() {
     codeIndex = 0;
 
@@ -65,10 +60,6 @@ class InternalCompiler extends InternalApi {
     stackArray[5] = NULL;
     // last
     stackArray[6] = NULL;
-    // counter
-    stackArray[7] = 0;
-
-    stackIndex = 7;
 
     // do not change
     // objectIndex;
@@ -144,18 +135,6 @@ class InternalCompiler extends InternalApi {
     oldExpression();
   }
 
-  private void argument() {
-    int top = stackPop();
-
-    if (top != _ARGS) {
-      argumentComma();
-    }
-
-    stackPush(_ARGS_NEXT);
-
-    lang();
-  }
-
   private void argumentComma() {
     int nl = 0;
 
@@ -208,8 +187,6 @@ class InternalCompiler extends InternalApi {
     codeAdd(Indentation.ENTER_PARENTHESIS);
 
     last(_START);
-
-    stackPush(_ARGS);
   }
 
   private void arrayAccess() {
@@ -652,7 +629,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void consumeWs() {
-    while (protoPeek() == ByteProto.NEW_LINE) {
+    while (protoMore() && protoPeek() == ByteProto.NEW_LINE) {
       execute(this::newLine);
     }
   }
@@ -1067,10 +1044,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void lang() {
-    int counter = stackArray[7]++;
-
-    stackPush(counter, _LANG);
-
     while (elemMore()) {
       int proto = protoPeek();
 
@@ -1079,74 +1052,99 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.ARGUMENT -> execute(this::argument);
 
-        case ByteProto.ASSIGNMENT_OPERATOR -> langExe(this::operator);
+        case ByteProto.ASSIGNMENT_OPERATOR -> execute(this::operator);
 
-        case ByteProto.CLASS_TYPE -> langNew(this::classType);
+        case ByteProto.CLASS_TYPE -> {
+          execute(this::classType);
+          maybeLocalVariable();
+        }
 
-        case ByteProto.EQUALITY_OPERATOR -> langExe(this::operator);
+        case ByteProto.DECLARATION_NAME -> execute(this::declarationName);
 
-        case ByteProto.EXPRESSION_NAME -> langExe(this::expressionName);
+        case ByteProto.EQUALITY_OPERATOR -> execute(this::operator);
 
-        case ByteProto.NEW -> langExe(this::newKeyword);
+        case ByteProto.EXPRESSION_NAME -> execute(this::expressionName);
+
+        case ByteProto.NEW -> {
+          execute(this::newKeyword);
+          consumeWs();
+          if (protoTest(ByteProto::isClassOrParameterizedType)) {
+            executeSwitch(this::type);
+            argumentList();
+          }
+        }
 
         case ByteProto.NEW_LINE -> execute(this::newLine);
 
-        case ByteProto.NULL_LITERAL -> langExe(this::nullLiteral);
+        case ByteProto.NULL_LITERAL -> execute(this::nullLiteral);
 
-        case ByteProto.PARAMETERIZED_TYPE -> langNew(this::parameterizedType);
+        case ByteProto.PARAMETERIZED_TYPE -> execute(this::parameterizedType);
 
-        case ByteProto.PRIMITIVE_LITERAL -> langExe(this::primitiveLiteral);
+        case ByteProto.PRIMITIVE_LITERAL -> execute(this::primitiveLiteral);
 
-        case ByteProto.RETURN -> langExe(this::returnKeyword);
+        case ByteProto.PRIMITIVE_TYPE -> {
+          execute(this::primitiveType);
+          maybeLocalVariable();
+        }
 
-        case ByteProto.STRING_LITERAL -> langExe(this::stringLiteral);
+        case ByteProto.RETURN -> execute(this::returnKeyword);
 
-        case ByteProto.THIS -> langExe(this::thisKeyword);
+        case ByteProto.STRING_LITERAL -> execute(this::stringLiteral);
 
-        case ByteProto.THROW -> langExe(this::throwKeyword);
+        case ByteProto.THIS -> execute(this::thisKeyword);
 
-        case ByteProto.V -> langExe(this::v);
+        case ByteProto.THROW -> execute(this::throwKeyword);
+
+        case ByteProto.V -> {
+          execute(this::v);
+          argumentList();
+        }
+
+        case ByteProto.VAR -> {
+          execute(this::varKeyword);
+          maybeLocalVariable();
+        }
 
         default -> errorRaise(
           "no-op statement part '%s'".formatted(protoName(proto))
         );
       }
     }
-
-    int top = stackPop();
-
-    while (top != _LANG) {
-      argumentEnd();
-
-      top = stackPop();
-    }
-
-    assert stackPop() == counter;
   }
 
-  private void langExe(Action action) {
-    int top = stackPop();
-
-    switch (top) {
-      case _ARGS, _ARGS_NEXT -> argumentEnd();
-
-      case _NEW -> {}
-
-      default -> stackPush(top);
-    }
-
-    execute(action);
+  private void argument() {
+    lang();
   }
 
-  private void langNew(Action action) {
-    execute(action);
+  private void argumentList() {
+    argumentStart();
 
-    int top = stackPop();
+    consumeWs();
 
-    switch (top) {
-      case _NEW -> argumentStart();
+    if (protoIs(ByteProto.ARGUMENT)) {
+      execute(this::argument);
 
-      default -> stackPush(top);
+      consumeWs();
+
+      while (protoIs(ByteProto.ARGUMENT)) {
+        argumentComma();
+
+        execute(this::argument);
+
+        consumeWs();
+      }
+    }
+
+    argumentEnd();
+  }
+
+  private void maybeLocalVariable() {
+    if (itemIs(ByteProto.DECLARATION_NAME)) {
+      execute(this::declarationName);
+
+      codeAdd(Whitespace.OPTIONAL);
+      codeAdd(Symbol.ASSIGNMENT);
+      last(_SYMBOL);
     }
   }
 
@@ -1467,8 +1465,6 @@ class InternalCompiler extends InternalApi {
     codeAdd(Keyword.NEW);
 
     last(_KEYWORD);
-
-    stackPush(_NEW);
   }
 
   private void newLine() {
@@ -2010,7 +2006,23 @@ class InternalCompiler extends InternalApi {
   }
 
   private boolean protoIs(int value) {
-    return protoPeek() == value;
+    if (protoMore()) {
+      int proto = protoPeek();
+
+      return proto == value;
+    } else {
+      return false;
+    }
+  }
+
+  private boolean protoTest(IntPredicate predicate) {
+    if (protoMore()) {
+      int proto = protoPeek();
+
+      return predicate.test(proto);
+    } else {
+      return false;
+    }
   }
 
   private boolean protoMore() {
@@ -2052,11 +2064,7 @@ class InternalCompiler extends InternalApi {
   private int protoNext() { return protoArray[protoIndex++]; }
 
   private int protoPeek() {
-    if (protoIndex < protoArray.length) {
-      return protoArray[protoIndex];
-    } else {
-      return ByteProto.NOOP;
-    }
+    return protoArray[protoIndex];
   }
 
   private int publicFound() { return stackArray[1]; }
@@ -2099,12 +2107,6 @@ class InternalCompiler extends InternalApi {
     codeArray[index + 0] = ByteCode.SYMBOL;
 
     codeArray[index + 1] = Symbol.SEMICOLON.ordinal();
-  }
-
-  private void stackPush(int v0, int v1) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
-    stackArray[++stackIndex] = v0;
-    stackArray[++stackIndex] = v1;
   }
 
   private boolean stop() {
@@ -2333,8 +2335,6 @@ class InternalCompiler extends InternalApi {
     preDot();
 
     codeAdd(ByteCode.IDENTIFIER, protoNext());
-
-    argumentStart();
   }
 
   private void variableDeclarator() {
