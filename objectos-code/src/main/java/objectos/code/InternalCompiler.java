@@ -402,10 +402,6 @@ class InternalCompiler extends InternalApi {
       }
     }
 
-    switch (last()) {
-      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
-    }
-
     switch (item) {
       case ByteProto.ARRAY_TYPE,
            ByteProto.CLASS_TYPE,
@@ -1211,6 +1207,8 @@ class InternalCompiler extends InternalApi {
       BODY;
     }
 
+    last(_START);
+
     abstractFound(NULL);
 
     var state = State.START;
@@ -1418,8 +1416,6 @@ class InternalCompiler extends InternalApi {
   }
 
   private void methodResultVoid() {
-    preType();
-
     voidKeyword();
   }
 
@@ -2316,7 +2312,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void typeVariable() {
+    preType();
+
     codeAdd(ByteCode.IDENTIFIER, protoNext());
+
+    last(_IDENTIFIER);
   }
 
   private void unnamed() {
@@ -2366,6 +2366,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private void voidKeyword() {
+    preType();
+
     codeAdd(Keyword.VOID);
 
     last(_KEYWORD);
