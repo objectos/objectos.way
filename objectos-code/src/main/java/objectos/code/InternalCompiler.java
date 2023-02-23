@@ -2069,7 +2069,8 @@ class InternalCompiler extends InternalApi {
   private void preSymbol() {
     switch (last()) {
       case _IDENTIFIER,
-           _KEYWORD -> codeAdd(Whitespace.OPTIONAL);
+           _KEYWORD,
+           _PRIMARY -> codeAdd(Whitespace.OPTIONAL);
     }
   }
 
