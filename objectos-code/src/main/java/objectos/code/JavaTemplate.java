@@ -34,22 +34,34 @@ public abstract class JavaTemplate {
    *
    * @see JavaTemplate#invoke(String, ArgsPart...)
    */
+  @Deprecated
   protected sealed interface ArgsPart extends Instruction {}
 
   /**
    * An {@link Instruction} that can be used with the
    * {@link JavaTemplate#block(BlockElement...)} method.
    */
+  @Deprecated
   protected sealed interface BlockElement extends Instruction {}
 
   /**
    * An {@link Instruction} that can be used with the
    * {@link JavaTemplate#body(BodyElement...)} method.
    */
+  @Deprecated
   protected sealed interface BodyElement extends Instruction {}
 
   /**
-   * TODO
+   * Represents the fully qualified name of a class or interface type in a Java
+   * program.
+   *
+   * <p>
+   * To create instances of this class use one of provided factory methods:
+   *
+   * <ul>
+   * <li>{@link JavaTemplate#classType(Class)}</li>
+   * <li>{@link JavaTemplate#classType(String, String, String...)}</li>
+   * </ul>
    *
    * @since 0.4.2
    */
@@ -140,7 +152,24 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * The ellipsis ({@code ...}) separator. It is used to indicate that the last
+   * formal parameter of a constructor or method as being a variable arity
+   * parameter.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * method(
+   *   PUBLIC, VOID, name("varargs"),
+   *   param(INT, ELLIPSIS, values)
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * public void varargs(int... values) {}</pre>
    *
    * @since 0.4.3.1
    */
@@ -153,7 +182,10 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * An {@link Instruction} that can be used with the
+   * {@link JavaTemplate#arg(ExpressionPart...)} method.
+   *
+   * @see JavaTemplate#arg(ExpressionPart...)
    *
    * @since 0.4.3.1
    */
@@ -971,7 +1003,51 @@ public abstract class JavaTemplate {
   protected JavaTemplate() {}
 
   /**
-   * TODO
+   * Creates a new {@code ClassTypeName} from the provided {@code Class}
+   * instance.
+   *
+   * <p>
+   * A {@link ClassTypeName} instance can only represent a class or an interface
+   * type. Therefore, this method throws a {@link IllegalArgumentException} when
+   * the specified {@code type}:
+   *
+   * <ul>
+   * <li>represents a primitive type;</li>
+   * <li>represents an array type; or</li>
+   * <li>is the {@code void.class} literal.</li>
+   * </ul>
+   *
+   * <p>
+   * This method is typically used to initialize a static field:
+   *
+   * <pre>
+   * static final ClassTypeName STRING = classType(String.class);</pre>
+   *
+   * <p>
+   * Which then can be used:
+   *
+   * <pre>
+   * method(
+   *   PUBLIC, STRING, name("toString"),
+   *   p(RETURN, s("Objectos Code"))
+   * )</pre>
+   *
+   * <p>
+   * And, in turn, it generates:
+   *
+   * <pre>
+   * public String toString() {
+   *   return "Objectos Code";
+   * }</pre>
+   *
+   * @param type
+   *        the {@code Class} object whose name will be used in a Java program
+   *
+   * @return a newly constructed {@code ClassTypeName} instance
+   *
+   * @throws IllegalArgumentException
+   *         if {@code type} represents either a primitive type, an array type,
+   *         or void.
    *
    * @since 0.4.2
    */
@@ -980,7 +1056,33 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * Creates a new {@code ClassTypeName} from the provided names.
+   *
+   * <p>
+   * The following code illustrates how to create names using the method:
+   *
+   * <pre>
+   * // creates the name for the java.lang.String type
+   * static final ClassTypeName STRING =
+   *     classType("java.lang", "String");
+   *
+   * // creates the name for the java.util.Map.Entry nested type
+   * static final ClassTypeName BAR =
+   *     classType("java.util", "Map", "Entry");</pre>
+   *
+   * @param packageName
+   *        the name of the package
+   * @param simpleName
+   *        the name of the top level type
+   * @param nested
+   *        the additional names that make up the name of this nested type
+   *
+   * @return a newly constructed {@code ClassTypeName} instance
+   *
+   * @throws IllegalArgumentException
+   *         if any name in {@code packageName} is not a valid identifier, if
+   *         {@code simpleName} is not a valid identifier or if any name in
+   *         {@code nested} is not a valid identifier
    *
    * @since 0.4.2
    */
@@ -1030,6 +1132,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code abstract} modifier
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final AbstractModifier _abstract() {
     return modifier(Keyword.ABSTRACT);
   }
@@ -1039,6 +1142,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code boolean} primitive type
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final PrimitiveType _boolean() {
     return primitiveType(Keyword.BOOLEAN);
   }
@@ -1046,6 +1150,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassKeyword _class(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
     var api = api();
@@ -1057,6 +1162,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code double} primitive type
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final PrimitiveType _double() {
     return primitiveType(Keyword.DOUBLE);
   }
@@ -1088,6 +1194,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldElseKeyword _else() {
     return api().itemAdd(ByteProto.ELSE, ByteProto.NOOP);
   }
@@ -1095,6 +1202,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final EnumKeyword _enum(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
     var api = api();
@@ -1104,6 +1212,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExtendsKeyword _extends() {
     return api().itemAdd(ByteProto.EXTENDS, ByteProto.NOOP);
   }
@@ -1113,6 +1222,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code final} modifier
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final FinalModifier _final() {
     return api().itemAdd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
@@ -1138,6 +1248,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final IfCondition _if(ExpressionPart e1) {
     return api().elem(ByteProto.IF_CONDITION, e1.self());
   }
@@ -1164,6 +1275,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self());
   }
@@ -1191,6 +1303,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self());
   }
@@ -1219,6 +1332,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3,
       ExpressionPart e4) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
@@ -1250,6 +1364,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3,
       ExpressionPart e4, ExpressionPart e5) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
@@ -1282,6 +1397,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final IfCondition _if(ExpressionPart e1, ExpressionPart e2, ExpressionPart e3,
       ExpressionPart e4, ExpressionPart e5, ExpressionPart e6) {
     return api().elem(ByteProto.IF_CONDITION, e1.self(), e2.self(), e3.self(),
@@ -1291,6 +1407,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ImplementsKeyword _implements() {
     return api().itemAdd(ByteProto.IMPLEMENTS, ByteProto.NOOP);
   }
@@ -1300,6 +1417,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code int} primitive type
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final PrimitiveType _int() {
     return primitiveType(Keyword.INT);
   }
@@ -1307,6 +1425,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final InterfaceKeyword _interface(String name) {
     JavaModel.checkSimpleName(name.toString()); // implicit null check
     var api = api();
@@ -1316,6 +1435,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self()
@@ -1325,6 +1445,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type,
       ArgsPart arg1) {
     return api().elem(
@@ -1336,6 +1457,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type,
       ArgsPart arg1, ArgsPart arg2) {
     return api().elem(
@@ -1363,6 +1485,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldNullLiteral _null() {
     return api().itemAdd(ByteProto.NULL_LITERAL, ByteProto.NOOP);
   }
@@ -1370,6 +1493,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final PackageKeyword _package(String packageName) {
     JavaModel.checkPackageName(packageName.toString()); // implicit null check
     var api = api();
@@ -1382,6 +1506,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code private} modifier
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final PrivateModifier _private() {
     return modifier(Keyword.PRIVATE);
   }
@@ -1391,6 +1516,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code protected} modifier
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ProtectedModifier _protected() {
     return modifier(Keyword.PROTECTED);
   }
@@ -1400,6 +1526,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code public} modifier
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final PublicModifier _public() {
     return modifier(Keyword.PUBLIC);
   }
@@ -1407,6 +1534,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldReturnKeyword _return() {
     return api().itemAdd(ByteProto.RETURN, ByteProto.NOOP);
   }
@@ -1416,6 +1544,7 @@ public abstract class JavaTemplate {
    *
    * @return the {@code static} modifier
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final StaticModifier _static() {
     return modifier(Keyword.STATIC);
   }
@@ -1423,6 +1552,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final SuperKeyword _super() {
     return api().itemAdd(ByteProto.SUPER, ByteProto.NOOP);
   }
@@ -1430,6 +1560,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self());
   }
@@ -1437,6 +1568,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self());
   }
@@ -1444,6 +1576,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2,
       ArgsPart e3) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(),
@@ -1453,6 +1586,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2,
       ArgsPart e3, ArgsPart e4) {
     return api().elem(ByteProto.SUPER_INVOCATION, e1.self(), e1.self(),
@@ -1462,6 +1596,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldThisKeyword _this() {
     return api().itemAdd(ByteProto.THIS, ByteProto.NOOP);
   }
@@ -1485,6 +1620,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.1
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldThrowKeyword _throw() {
     return api().itemAdd(ByteProto.THROW, ByteProto.NOOP);
   }
@@ -1492,6 +1628,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldVarKeyword _var() {
     return api().itemAdd(ByteProto.VAR, ByteProto.NOOP);
   }
@@ -1499,6 +1636,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldVoidKeyword _void() {
     return api().itemAdd(ByteProto.VOID, ByteProto.NOOP);
   }
@@ -1571,6 +1709,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final At at(OldClassTypeInstruction annotationType) {
     return api().elem(ByteProto.ANNOTATION, annotationType.self());
   }
@@ -1578,6 +1717,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final At at(OldClassTypeInstruction annotationType, AtElement e1) {
     return api().elem(ByteProto.ANNOTATION, annotationType.self(), e1.self());
   }
@@ -1603,6 +1743,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block() {
     return api().elem(ByteProto.BLOCK);
   }
@@ -1610,6 +1751,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1) {
     return api().elem(ByteProto.BLOCK, e1.self());
   }
@@ -1627,6 +1769,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1, BlockElement e2) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self());
   }
@@ -1634,6 +1777,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self());
   }
@@ -1641,6 +1785,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self());
   }
@@ -1648,6 +1793,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
       BlockElement e5) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
@@ -1657,6 +1803,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
       BlockElement e5, BlockElement e6) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
@@ -1666,6 +1813,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
       BlockElement e5, BlockElement e6, BlockElement e7) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
@@ -1675,6 +1823,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
       BlockElement e5, BlockElement e6, BlockElement e7, BlockElement e8) {
     return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
@@ -1684,6 +1833,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Body body() {
     return api().elem(ByteProto.BODY);
   }
@@ -1691,6 +1841,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Body body(BodyElement e1) {
     return api().elem(ByteProto.BODY, e1.self());
   }
@@ -1698,6 +1849,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Body body(BodyElement... elements) {
     Object[] many = Objects.requireNonNull(elements, "elements == null");
     return api().elemMany(ByteProto.BODY, many);
@@ -1706,6 +1858,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Body body(BodyElement e1, BodyElement e2) {
     return api().elem(ByteProto.BODY, e1.self(), e2.self());
   }
@@ -1713,6 +1866,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3) {
     return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self());
   }
@@ -1720,6 +1874,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4) {
     return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self());
   }
@@ -1727,6 +1882,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4,
       BodyElement e5) {
     return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self(),
@@ -1743,6 +1899,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor() {
     return api().elem(ByteProto.CONSTRUCTOR);
   }
@@ -1750,6 +1907,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self());
   }
@@ -1757,6 +1915,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement... elements) {
     Objects.requireNonNull(elements, "elements == null");
     return api().elemMany(ByteProto.CONSTRUCTOR, elements);
@@ -1765,6 +1924,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self());
   }
@@ -1772,6 +1932,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
       ParameterElement e3) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self());
@@ -1780,6 +1941,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
       ParameterElement e3, ParameterElement e4) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self());
@@ -1788,6 +1950,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
       ParameterElement e3, ParameterElement e4, ParameterElement e5) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self(), e5.self());
@@ -1796,6 +1959,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
       ParameterElement e3, ParameterElement e4, ParameterElement e5, ParameterElement e6) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(),
@@ -1825,6 +1989,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldEllipsis ellipsis() {
     return api().itemAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
   }
@@ -1832,6 +1997,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final End end() {
     return stop();
   }
@@ -1967,6 +2133,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName) {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
@@ -1978,6 +2145,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1) {
@@ -1990,6 +2158,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart... elements) {
@@ -2003,6 +2172,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2) {
@@ -2015,6 +2185,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3) {
@@ -2027,6 +2198,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4) {
@@ -2039,6 +2211,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5) {
@@ -2051,6 +2224,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
@@ -2065,6 +2239,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
@@ -2079,6 +2254,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
@@ -2093,6 +2269,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodInvocation invoke(
       String methodName,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4, ArgsPart e5,
@@ -2105,7 +2282,33 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds a method declaration with the contents given by the specified
+   * {@code target}.
+   *
+   * <p>
+   * This method is typically invoked with a method reference:
+   *
+   * <pre>
+   * method(this::methodContents)</pre>
+   *
+   * <p>
+   * Where {@code methodContents} is a private method in your template class:
+   *
+   * <pre>
+   * private void methodContents() {
+   *   modifiers(PUBLIC);
+   *   if (shouldBeFinal()) {
+   *     modifiers(FINAL);
+   *   }
+   *   returnType(VOID);
+   *   name("maybeFinal");
+   * }</pre>
+   *
+   * @param target
+   *        code to be executed containing the contents of this method
+   *        declaration
+   *
+   * @return a method declaration
    *
    * @since 0.4.3.1
    */
@@ -2126,7 +2329,7 @@ public abstract class JavaTemplate {
    *   returnType(String.class),
    *   name("toString"),
    *
-   *   RETURN, s("Objectos Code")
+   *   p(RETURN, s("Objectos Code"))
    * )</pre>
    *
    * <p>
@@ -2143,12 +2346,12 @@ public abstract class JavaTemplate {
    * The following produces the same result as the previous form:
    *
    * <pre>
-   * static final ClassTypeName String$ = classType(String.class);
+   * static final ClassTypeName STRING = classType(String.class);
    *
    * method(
    *   annotation(Override.class),
-   *   PUBLIC, FINAL, String$, name("toString"),
-   *   RETURN, s("Objectos Code")
+   *   PUBLIC, FINAL, STRING, name("toString"),
+   *   p(RETURN, s("Objectos Code"))
    * )</pre>
    *
    * <p>
@@ -2187,6 +2390,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodDeclarator method(String methodName) {
     JavaModel.checkMethodName(methodName);
     var api = api();
@@ -2197,6 +2401,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodDeclarator method(String methodName,
       ParameterElement e1) {
     JavaModel.checkMethodName(methodName);
@@ -2208,6 +2413,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodDeclarator method(String methodName,
       ParameterElement... elements) {
     JavaModel.checkMethodName(methodName);
@@ -2220,6 +2426,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final MethodDeclarator method(String methodName,
       ParameterElement e1, ParameterElement e2) {
     JavaModel.checkMethodName(methodName);
@@ -2328,6 +2535,7 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldNewLine nl() {
     return api().itemAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
   }
@@ -2355,7 +2563,29 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds a variable arity formal parameter declaration.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * parameter(int.class, ELLIPSIS, "values")</pre>
+   *
+   * <p>
+   * Generates the following Java parameter declaration:
+   *
+   * <pre>
+   * int... values</pre>
+   *
+   * @param type
+   *        the type of this parameter
+   * @param ellipsis
+   *        the ellipsis separator. Must be the {@link JavaTemplate#ELLIPSIS}
+   *        constant
+   * @param name
+   *        the name of this parameter
+   *
+   * @return a formal parameter declaration
    *
    * @since 0.4.3.1
    */
@@ -2366,7 +2596,27 @@ public abstract class JavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds a formal parameter declaration with the specified {@code type} and
+   * {@code name}.
+   *
+   * <p>
+   * The following Objectos Code:
+   *
+   * <pre>
+   * parameter(String.class, "name")</pre>
+   *
+   * <p>
+   * Generates the following Java parameter declaration:
+   *
+   * <pre>
+   * java.lang.String name</pre>
+   *
+   * @param type
+   *        the type of this parameter
+   * @param name
+   *        the name of this parameter
+   *
+   * @return a formal parameter declaration
    *
    * @since 0.4.2
    */
