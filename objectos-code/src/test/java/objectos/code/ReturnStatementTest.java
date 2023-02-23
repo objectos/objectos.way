@@ -49,4 +49,31 @@ public class ReturnStatementTest {
     );
   }
 
+  @Test(description = """
+  return sb.toString()
+  """)
+  public void testCase02() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("Return");
+          body(
+            method(
+              p(RETURN, n("sb"), v("toString"))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Return {
+        void unnamed() {
+          return sb.toString();
+        }
+      }
+      """
+    );
+  }
+
 }

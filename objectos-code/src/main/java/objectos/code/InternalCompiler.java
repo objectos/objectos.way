@@ -2039,6 +2039,8 @@ class InternalCompiler extends InternalApi {
       case _IDENTIFIER,
            _PRIMARY -> codeAdd(Symbol.DOT);
 
+      case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+
       case _NEW_LINE -> codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
 
       case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
