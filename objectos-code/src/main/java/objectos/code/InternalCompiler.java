@@ -1822,8 +1822,6 @@ class InternalCompiler extends InternalApi {
     execute(this::returnKeyword);
 
     if (itemTest(ByteProto::isExpressionStart)) {
-      codeAdd(Whitespace.MANDATORY);
-
       oldExpression();
 
       codeAdd(Symbol.SEMICOLON);
@@ -2181,6 +2179,8 @@ class InternalCompiler extends InternalApi {
   private void publicFound(int value) { stackArray[1] = value; }
 
   private void returnKeyword() {
+    preKeyword();
+
     codeAdd(Keyword.RETURN);
 
     last(_KEYWORD);
