@@ -331,10 +331,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void blockStatement() {
-    switch (last()) {
-      case _SEMICOLON,
-           _START -> codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
-    }
+    codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
 
     last(_START);
 
@@ -1343,7 +1340,6 @@ class InternalCompiler extends InternalApi {
 
       if (statements != NULL) {
         codeAdd(Indentation.ENTER_BLOCK);
-        codeAdd(Whitespace.BEFORE_NEXT_STATEMENT);
 
         listExecute(statements, this::blockStatement);
 
@@ -2063,7 +2059,8 @@ class InternalCompiler extends InternalApi {
       case _BLOCK -> codeAdd(Whitespace.OPTIONAL);
 
       case _IDENTIFIER,
-           _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+           _KEYWORD,
+           _PRIMARY -> codeAdd(Whitespace.MANDATORY);
 
       case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
     }

@@ -91,4 +91,39 @@ public class IfStatementTest {
     );
   }
 
+  @Test(description = """
+  The if statement TC03
+
+  - statement after if block
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          _class("IfStatement");
+          body(
+            method(
+              p(IF, arg(v("condition")), block(
+                p(v("ifTrue"))
+              )),
+              p(RETURN, n("foo"))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class IfStatement {
+        void unnamed() {
+          if (condition()) {
+            ifTrue();
+          }
+          return foo;
+        }
+      }
+      """
+    );
+  }
+
 }
