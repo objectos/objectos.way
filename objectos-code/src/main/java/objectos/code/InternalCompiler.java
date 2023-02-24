@@ -377,6 +377,12 @@ class InternalCompiler extends InternalApi {
   private void bodyMember() {
     topLevel(NULL);
 
+    if (itemIs(ByteProto.CONSTRUCTOR_DECLARATION)) {
+      execute(this::constructorDeclaration);
+
+      return;
+    }
+
     if (itemIs(ByteProto.METHOD_DECLARATION)) {
       execute(this::methodDeclaration);
 
@@ -428,7 +434,7 @@ class InternalCompiler extends InternalApi {
         classDeclaration();
       }
 
-      case ByteProto.CONSTRUCTOR -> constructorDeclaration();
+      case ByteProto.CONSTRUCTOR -> oldConstructorDeclaration();
 
       case ByteProto.ENUM -> enumDeclaration();
 
@@ -641,15 +647,98 @@ class InternalCompiler extends InternalApi {
   }
 
   private void constructorDeclaration() {
-    execute(this::constructorDeclarator);
+    int start = stackIndex;
 
-    if (itemIs(ByteProto.BLOCK)) {
+    last(_START);
+
+    int annotations = NULL,
+        modifiers = NULL,
+        typeParameters = NULL,
+        //receiverParameter = NULL,
+        parameters = NULL,
+        statements = NULL;
+
+    while (protoMore()) {
+      int proto = protoPeek();
+
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
+
+        case ByteProto.MODIFIER,
+             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+
+        case ByteProto.PARAMETER_SHORT -> parameters = listAdd(parameters);
+
+        case ByteProto.STATEMENT -> statements = listAdd(statements);
+
+        case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: " + protoName(proto)
+          );
+        }
+      }
+    }
+
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
+    }
+
+    if (modifiers != NULL) {
+      listSwitch(modifiers, this::modifierSwitcher);
+    }
+
+    if (typeParameters != NULL) {
+      listExecute(typeParameters, this::typeParameter);
+
+      typeParameterListEnd();
+    }
+
+    int name = simpleName();
+    if (name == NULL) {
+      name = object("Constructor");
+    }
+    preIdentifier();
+    codeAdd(ByteCode.IDENTIFIER, name);
+
+    codeAdd(Symbol.LEFT_PARENTHESIS);
+
+    if (parameters != NULL) {
+      last(_START);
+
+      listSwitch(parameters, this::parameterSwitcher);
+    }
+
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    if (!abstractFound()) {
       codeAdd(Whitespace.OPTIONAL);
 
-      execute(this::oldBlock);
+      codeAdd(Symbol.LEFT_CURLY_BRACKET);
+
+      if (statements != NULL) {
+        codeAdd(Indentation.ENTER_BLOCK);
+
+        listExecute(statements, this::blockStatement);
+
+        codeAdd(Indentation.EXIT_BLOCK);
+
+        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+      } else {
+        codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+      }
+
+      codeAdd(Symbol.RIGHT_CURLY_BRACKET);
     } else {
-      errorRaise("Constructor without a block() declaration");
+      codeAdd(Symbol.SEMICOLON);
     }
+
+    stackIndex = start;
   }
 
   private void constructorDeclarator() {
@@ -1560,6 +1649,18 @@ class InternalCompiler extends InternalApi {
     executeSwitch(this::oldType);
 
     oldArgumentList();
+  }
+
+  private void oldConstructorDeclaration() {
+    execute(this::constructorDeclarator);
+
+    if (itemIs(ByteProto.BLOCK)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::oldBlock);
+    } else {
+      errorRaise("Constructor without a block() declaration");
+    }
   }
 
   private void oldDeclarationAnnotationList() {

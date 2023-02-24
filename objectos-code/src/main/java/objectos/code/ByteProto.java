@@ -48,57 +48,58 @@ final class ByteProto {
   static final int CLASS = -18;
   static final int COMPILATION_UNIT = -19;
   static final int CONSTRUCTOR = -20;
-  static final int DECLARATION_NAME = -21;
-  static final int ENUM = -22;
-  static final int ENUM_CONSTANT = -23;
-  static final int EXTENDS = -24;
-  static final int IDENTIFIER = -25;
-  static final int IMPLEMENTS = -26;
-  static final int INTERFACE = -27;
-  static final int METHOD = -28;
-  static final int METHOD_DECLARATION = -29;
-  static final int MODIFIER = -30;
-  static final int MODIFIERS = -31;
-  static final int PACKAGE = -32;
-  static final int PARAMETER = -33;
-  static final int PARAMETER_SHORT = -34;
-  static final int RETURN_TYPE = -35;
-  static final int STATEMENT = -36;
-  static final int TYPE_PARAMETER = -37;
+  static final int CONSTRUCTOR_DECLARATION = -21;
+  static final int DECLARATION_NAME = -22;
+  static final int ENUM = -23;
+  static final int ENUM_CONSTANT = -24;
+  static final int EXTENDS = -25;
+  static final int IDENTIFIER = -26;
+  static final int IMPLEMENTS = -27;
+  static final int INTERFACE = -28;
+  static final int METHOD = -29;
+  static final int METHOD_DECLARATION = -30;
+  static final int MODIFIER = -31;
+  static final int MODIFIERS = -32;
+  static final int PACKAGE = -33;
+  static final int PARAMETER = -34;
+  static final int PARAMETER_SHORT = -35;
+  static final int RETURN_TYPE = -36;
+  static final int STATEMENT = -37;
+  static final int TYPE_PARAMETER = -38;
 
   //statement start
 
-  static final int BLOCK = -38;
-  static final int IF_CONDITION = -39;
-  static final int RETURN = -40;
-  static final int SUPER = -41;
-  static final int SUPER_INVOCATION = -42;
-  static final int THROW = -43;
-  static final int VAR = -44;
+  static final int BLOCK = -39;
+  static final int IF_CONDITION = -40;
+  static final int RETURN = -41;
+  static final int SUPER = -42;
+  static final int SUPER_INVOCATION = -43;
+  static final int THROW = -44;
+  static final int VAR = -45;
 
   //statement part
 
-  static final int IF = -45;
-  static final int ELSE = -46;
+  static final int IF = -46;
+  static final int ELSE = -47;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -47;
-  static final int EXPRESSION_NAME = -48;
-  static final int INVOKE = -49;
-  static final int NEW = -50;
-  static final int NULL_LITERAL = -51;
-  static final int PRIMITIVE_LITERAL = -52;
-  static final int STRING_LITERAL = -53;
-  static final int THIS = -54;
-  static final int V = -55;
+  static final int CLASS_INSTANCE_CREATION = -48;
+  static final int EXPRESSION_NAME = -49;
+  static final int INVOKE = -50;
+  static final int NEW = -51;
+  static final int NULL_LITERAL = -52;
+  static final int PRIMITIVE_LITERAL = -53;
+  static final int STRING_LITERAL = -54;
+  static final int THIS = -55;
+  static final int V = -56;
 
   //expression part
 
-  static final int ARGUMENT = -56;
-  static final int ARRAY_ACCESS = -57;
-  static final int ASSIGNMENT_OPERATOR = -58;
-  static final int EQUALITY_OPERATOR = -59;
+  static final int ARGUMENT = -57;
+  static final int ARRAY_ACCESS = -58;
+  static final int ASSIGNMENT_OPERATOR = -59;
+  static final int EQUALITY_OPERATOR = -60;
 
   private ByteProto() {}
 

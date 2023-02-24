@@ -152,6 +152,15 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * An {@link Instruction} that can be used with the
+   * {@link JavaTemplate#constructor(ConstructorDeclarationInstruction...)}
+   * method.
+   *
+   * @since 0.4.4
+   */
+  protected sealed interface ConstructorDeclarationInstruction extends Instruction {}
+
+  /**
    * The ellipsis ({@code ...}) separator. It is used to indicate that the last
    * formal parameter of a constructor or method as being a variable arity
    * parameter.
@@ -231,6 +240,8 @@ public abstract class JavaTemplate {
   /**
    * An {@link Instruction} that can be used with the
    * {@link JavaTemplate#method(MethodDeclarationInstruction...)} method.
+   *
+   * @since 0.4.2
    */
   protected sealed interface MethodDeclarationInstruction extends Instruction {}
 
@@ -239,7 +250,10 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static final class Modifier extends External implements MethodDeclarationInstruction {
+  protected static final class Modifier extends External
+      implements
+      ConstructorDeclarationInstruction,
+      MethodDeclarationInstruction {
     final int value;
 
     private Modifier(Keyword keyword) { this.value = keyword.ordinal(); }
@@ -416,6 +430,7 @@ public abstract class JavaTemplate {
       ClassTypeInstruction,
       ClassTypeWithArgs,
       ConstructorDeclaration,
+      ConstructorDeclarationInstruction,
       DeclarationName,
       OldEllipsis,
       OldElseKeyword,
@@ -554,7 +569,8 @@ public abstract class JavaTemplate {
 
   sealed interface MethodInvocation extends PrimaryNoNewArray {}
 
-  sealed interface ModifiersElement extends MethodDeclarationInstruction {}
+  sealed interface ModifiersElement
+      extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
   @Deprecated
   sealed interface OldClassTypeInstruction
@@ -600,7 +616,8 @@ public abstract class JavaTemplate {
 
   sealed interface PackageKeyword extends Instruction {}
 
-  sealed interface Parameter extends MethodDeclarationInstruction {}
+  sealed interface Parameter
+      extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
   sealed interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
 
@@ -616,7 +633,8 @@ public abstract class JavaTemplate {
 
   sealed interface ReturnType extends MethodDeclarationInstruction {}
 
-  sealed interface Statement extends BlockElement, MethodDeclarationInstruction {}
+  sealed interface Statement
+      extends BlockElement, ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
   sealed interface StaticModifier extends BodyElement {}
 
@@ -654,6 +672,17 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.3.1
    */
+  private static final class ElseKeyword extends External implements StatementPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.ELSE, ByteProto.NOOP);
+    }
+  }
+
+  /**
+   * @since 0.4.3.1
+   */
   private static final class EqualityOperator extends External implements ExpressionPart {
     private final int value;
 
@@ -676,17 +705,6 @@ public abstract class JavaTemplate {
     final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.IF, ByteProto.NOOP);
-    }
-  }
-
-  /**
-   * @since 0.4.3.1
-   */
-  private static final class ElseKeyword extends External implements StatementPart {
-    @Override
-    final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.ELSE, ByteProto.NOOP);
     }
   }
 
@@ -1902,6 +1920,17 @@ public abstract class JavaTemplate {
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor() {
     return api().elem(ByteProto.CONSTRUCTOR);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final ConstructorDeclaration constructor(
+      ConstructorDeclarationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.CONSTRUCTOR_DECLARATION, many);
   }
 
   /**

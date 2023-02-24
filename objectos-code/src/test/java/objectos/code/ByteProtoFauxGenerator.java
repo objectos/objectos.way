@@ -54,7 +54,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("BODY");
     value("CLASS");
     value("COMPILATION_UNIT");
-    value("CONSTRUCTOR");
+    value("CONSTRUCTOR"); // deprecated
+    value("CONSTRUCTOR_DECLARATION");
     value("DECLARATION_NAME");
     value("ENUM");
     value("ENUM_CONSTANT");
@@ -62,7 +63,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("IDENTIFIER");
     value("IMPLEMENTS");
     value("INTERFACE");
-    value("METHOD");
+    value("METHOD"); // deprecated
     value("METHOD_DECLARATION");
     value("MODIFIER");
     value("MODIFIERS");

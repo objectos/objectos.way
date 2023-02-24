@@ -33,22 +33,30 @@ public class ConstructorDeclarationTest {
         protected final void definition() {
           _class("Test0");
           body(
-            _public(), constructor(), block()
+            constructor(
+              modifiers(PUBLIC)
+            )
           );
 
           _class("Test1");
           body(
-            _protected(), constructor(), block()
+            constructor(
+              modifiers(PROTECTED)
+            )
           );
 
           _class("Test2");
           body(
-            constructor(), block()
+            constructor(
+              modifiers()
+            )
           );
 
           _class("Test3");
           body(
-            _private(), constructor(), block()
+            constructor(
+              modifiers(PRIVATE)
+            )
           );
         }
       }.toString(),
@@ -85,9 +93,14 @@ public class ConstructorDeclarationTest {
         protected final void definition() {
           _class("Test");
           body(
-            constructor(_int(), id("a")), block(),
+            constructor(
+              parameter(INT, "a")
+            ),
 
-            constructor(_int(), id("a"), _int(), id("b")), block()
+            constructor(
+              parameter(INT, "a"),
+              parameter(INT, "b")
+            )
           );
         }
       }.toString(),
@@ -102,7 +115,7 @@ public class ConstructorDeclarationTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Constructor declarations TC03:
 
   - body
@@ -114,13 +127,16 @@ public class ConstructorDeclarationTest {
         protected final void definition() {
           _class("Test");
           body(
-            constructor(_int(), id("a")), block(
-              //_this().n("a"), gets(), n("a")
+            constructor(
+              parameter(INT, "a"),
+              p(THIS, n("a"), IS, n("a"))
             ),
 
-            constructor(_int(), id("a"), _int(), id("b")), block(
-              //              _this().n("a"), gets(), n("a"), end(),
-          //              _this().n("b"), gets(), n("b")
+            constructor(
+              parameter(INT, "a"),
+              parameter(INT, "b"),
+              p(THIS, n("a"), IS, n("a")),
+              p(THIS, n("b"), IS, n("b"))
             )
           );
         }
