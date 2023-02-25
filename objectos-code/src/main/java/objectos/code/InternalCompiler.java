@@ -1186,6 +1186,19 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.STRING_LITERAL -> execute(this::stringLiteral);
 
+        case ByteProto.SUPER -> {
+          execute(this::superKeyword);
+
+          consumeWs();
+
+          if (protoIs(ByteProto.END_ELEMENT)) {
+            codeAdd(Symbol.LEFT_PARENTHESIS);
+            codeAdd(Symbol.RIGHT_PARENTHESIS);
+          } else if (protoIs(ByteProto.ARGUMENT)) {
+            argumentList();
+          }
+        }
+
         case ByteProto.THIS -> execute(this::thisKeyword);
 
         case ByteProto.THROW -> execute(this::throwKeyword);
@@ -2411,7 +2424,11 @@ class InternalCompiler extends InternalApi {
   }
 
   private void superKeyword() {
+    preKeyword();
+
     codeAdd(Keyword.SUPER);
+
+    last(_KEYWORD);
   }
 
   private void symbol(Symbol symbol) {

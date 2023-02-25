@@ -470,7 +470,7 @@ public abstract class JavaTemplate {
       OldStatement,
       StaticModifier,
       StringLiteral,
-      SuperKeyword,
+      OldSuperKeyword,
       OldThisKeyword,
       OldThrowKeyword,
       TypeParameter,
@@ -603,6 +603,9 @@ public abstract class JavaTemplate {
   sealed interface OldStatement extends BlockElement {}
 
   @Deprecated
+  sealed interface OldSuperKeyword extends BlockElement {}
+
+  @Deprecated
   sealed interface OldThisKeyword extends PrimaryNoNewArray {}
 
   @Deprecated
@@ -639,8 +642,6 @@ public abstract class JavaTemplate {
   sealed interface StaticModifier extends BodyElement {}
 
   sealed interface StringLiteral extends Literal, PrimaryNoNewArray {}
-
-  sealed interface SuperKeyword extends BlockElement {}
 
   sealed interface TypeParameter extends MethodDeclarationInstruction {}
 
@@ -750,6 +751,17 @@ public abstract class JavaTemplate {
     final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.RETURN, ByteProto.NOOP);
+    }
+  }
+
+  /**
+   * @since 0.4.4
+   */
+  private static final class SuperKeyword extends External implements ExpressionPart {
+    @Override
+    final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.SUPER, ByteProto.NOOP);
     }
   }
 
@@ -875,6 +887,13 @@ public abstract class JavaTemplate {
    * @since 0.4.3.1
    */
   protected static final StatementPart RETURN = new ReturnKeyword();
+
+  /**
+   * The {@code super} keyword.
+   *
+   * @since 0.4.4
+   */
+  protected static final ExpressionPart SUPER = new SuperKeyword();
 
   /**
    * The {@code this} keyword.
@@ -1571,7 +1590,7 @@ public abstract class JavaTemplate {
    * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final SuperKeyword _super() {
+  protected final OldSuperKeyword _super() {
     return api().itemAdd(ByteProto.SUPER, ByteProto.NOOP);
   }
 

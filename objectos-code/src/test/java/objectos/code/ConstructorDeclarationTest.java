@@ -157,7 +157,7 @@ public class ConstructorDeclarationTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   Constructor declarations TC04:
 
   - super invocations
@@ -168,26 +168,27 @@ public class ConstructorDeclarationTest {
         @Override
         protected final void definition() {
           code(_class("Test"), body(
-            constructor(), block(
-              _super()
+            constructor(
+              p(SUPER)
             ),
 
-            constructor(), block(
-              _super(),
-              invoke("a")
+            constructor(
+              p(SUPER),
+              p(v("a"))
             ),
 
-            constructor(), block(
-              //              _super(),
-          //              _this().invoke("a")
+            constructor(
+              p(SUPER),
+              p(THIS, v("a"))
             ),
 
-            constructor(_int(), id("a")), block(
-              _super(n("a"))
+            constructor(
+              parameter(INT, "a"),
+              p(SUPER, arg(n("a")))
             ),
 
-            constructor(), block(
-              _super(s("a"), s("b"))
+            constructor(
+              p(SUPER, arg(s("a")), arg(s("b")))
             )
           )
           );
