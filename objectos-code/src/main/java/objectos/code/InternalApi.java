@@ -76,6 +76,8 @@ class InternalApi {
 
     protoAdd(ByteProto.END_ELEMENT);
 
+    stackIndex = protoIndex;
+
     protoIndex = self;
   }
 

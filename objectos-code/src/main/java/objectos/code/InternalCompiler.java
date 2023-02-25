@@ -44,6 +44,10 @@ class InternalCompiler extends InternalApi {
       _SEMICOLON = 9,
       _SYMBOL = 10;
 
+  private static final int _VAR_START = 0,
+      _VAR_NAME = 1,
+      _VAR_INIT = 2;
+
   final void compile() {
     codeIndex = 0;
 
@@ -61,10 +65,12 @@ class InternalCompiler extends InternalApi {
     stackArray[5] = NULL;
     // last
     stackArray[6] = NULL;
+    // var state
+    stackArray[7] = NULL;
 
-    stackIndex = 7;
     // do not change
-    // objectIndex;
+    // - objectIndex
+    // - stackIndex
 
     try {
       compilationUnit();
@@ -249,12 +255,12 @@ class InternalCompiler extends InternalApi {
     last(_START);
 
     if (itemMore()) {
-      variableInitializer();
+      oldVariableInitializer();
 
       while (itemMore()) {
         slotComma();
 
-        variableInitializer();
+        oldVariableInitializer();
       }
     }
 
@@ -376,6 +382,12 @@ class InternalCompiler extends InternalApi {
 
   private void bodyMember() {
     topLevel(NULL);
+
+    if (itemIs(ByteProto.FIELD_DECLARATION)) {
+      execute(this::fieldDeclaration);
+
+      return;
+    }
 
     if (itemIs(ByteProto.CONSTRUCTOR_DECLARATION)) {
       execute(this::constructorDeclaration);
@@ -889,19 +901,94 @@ class InternalCompiler extends InternalApi {
     last(_KEYWORD);
   }
 
-  private void fieldDeclarationVariableList() {
-    variableDeclarator();
+  private void fieldDeclaration() {
+    int start = stackIndex;
 
-    while (itemIs(ByteProto.IDENTIFIER)) {
-      codeAdd(Symbol.COMMA);
-      last(_COMMA);
+    last(_START);
 
-      variableDeclarator();
+    int annotations = NULL,
+        modifiers = NULL,
+        type = NULL,
+        declarators = NULL;
+
+    while (protoMore()) {
+      int proto = protoPeek();
+
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
+
+        case ByteProto.ARRAY_TYPE,
+             ByteProto.CLASS_TYPE,
+             ByteProto.PARAMETERIZED_TYPE,
+             ByteProto.PRIMITIVE_TYPE,
+             ByteProto.TYPE_VARIABLE -> type = singleSet(type);
+
+        case ByteProto.DECLARATION_NAME -> declarators = listAdd(declarators);
+
+        case ByteProto.MODIFIER,
+             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+
+        default -> declarators = listAdd(declarators);
+      }
+    }
+
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
+    }
+
+    if (modifiers != NULL) {
+      listSwitch(modifiers, this::modifierSwitcher);
+    }
+
+    if (type != NULL) {
+      singleSwitch(type, this::type);
+    }
+
+    if (declarators != NULL) {
+      varState(_VAR_START);
+
+      listLazySwitch(declarators, this::fieldDeclarationVariableList);
     }
 
     codeAdd(Symbol.SEMICOLON);
 
-    last(_SEMICOLON);
+    stackIndex = start;
+  }
+
+  private void fieldDeclarationVariableList(int proto) {
+    if (proto == ByteProto.DECLARATION_NAME) {
+      switch (varState()) {
+        case _VAR_START -> {}
+
+        case _VAR_NAME, _VAR_INIT -> comma();
+
+        default -> errorRaise("no-op var state: " + varState());
+      }
+
+      execute(this::declarationName);
+
+      varState(_VAR_NAME);
+    } else {
+      switch (varState()) {
+        case _VAR_NAME -> {
+          preSymbol();
+          codeAdd(Symbol.ASSIGNMENT);
+          last(_SYMBOL);
+
+          varState(_VAR_INIT);
+        }
+
+        case _VAR_INIT -> {}
+
+        default -> errorRaise("no-op var state: " + varState());
+      }
+
+      langItem(proto);
+    }
   }
 
   private void fieldOrMethodDeclaration() {
@@ -909,7 +996,7 @@ class InternalCompiler extends InternalApi {
 
     switch (item) {
       case ByteProto.IDENTIFIER -> {
-        fieldDeclarationVariableList();
+        oldFieldDeclarationVariableList();
       }
 
       case ByteProto.METHOD -> {
@@ -1122,102 +1209,106 @@ class InternalCompiler extends InternalApi {
     while (elemMore()) {
       int proto = protoPeek();
 
-      switch (proto) {
-        case ByteProto.ARRAY_ACCESS -> execute(this::arrayAccess);
+      langItem(proto);
+    }
+  }
 
-        case ByteProto.ARGUMENT -> execute(this::argument);
+  private void langItem(int proto) {
+    switch (proto) {
+      case ByteProto.ARRAY_ACCESS -> execute(this::arrayAccess);
 
-        case ByteProto.ASSIGNMENT_OPERATOR -> execute(this::operator);
+      case ByteProto.ARGUMENT -> execute(this::argument);
 
-        case ByteProto.BLOCK -> execute(this::block);
+      case ByteProto.ASSIGNMENT_OPERATOR -> execute(this::operator);
 
-        case ByteProto.CLASS_TYPE -> {
-          execute(this::classType);
-          maybeLocalVariable();
-        }
+      case ByteProto.BLOCK -> execute(this::block);
 
-        case ByteProto.DECLARATION_NAME -> execute(this::declarationName);
+      case ByteProto.CLASS_TYPE -> {
+        execute(this::classType);
+        maybeLocalVariable();
+      }
 
-        case ByteProto.ELSE -> execute(this::elseKeyword);
+      case ByteProto.DECLARATION_NAME -> execute(this::declarationName);
 
-        case ByteProto.EQUALITY_OPERATOR -> execute(this::operator);
+      case ByteProto.ELSE -> execute(this::elseKeyword);
 
-        case ByteProto.EXPRESSION_NAME -> execute(this::expressionName);
+      case ByteProto.EQUALITY_OPERATOR -> execute(this::operator);
 
-        case ByteProto.IF -> {
-          execute(this::ifKeyword);
+      case ByteProto.EXPRESSION_NAME -> execute(this::expressionName);
+
+      case ByteProto.IF -> {
+        execute(this::ifKeyword);
+        consumeWs();
+
+        if (protoIs(ByteProto.ARGUMENT)) {
+          codeAdd(Whitespace.OPTIONAL);
+          argumentStart();
           consumeWs();
-
-          if (protoIs(ByteProto.ARGUMENT)) {
-            codeAdd(Whitespace.OPTIONAL);
-            argumentStart();
-            consumeWs();
-            execute(this::argument);
-            consumeWs();
-            argumentEnd();
-            last(_SYMBOL);
-          }
-        }
-
-        case ByteProto.NEW -> {
-          execute(this::newKeyword);
+          execute(this::argument);
           consumeWs();
-          if (protoTest(ByteProto::isClassOrParameterizedType)) {
-            executeSwitch(this::type);
-            argumentList();
-            last(_PRIMARY);
-          }
+          argumentEnd();
+          last(_SYMBOL);
         }
+      }
 
-        case ByteProto.NEW_LINE -> execute(this::newLine);
-
-        case ByteProto.NULL_LITERAL -> execute(this::nullLiteral);
-
-        case ByteProto.PARAMETERIZED_TYPE -> execute(this::parameterizedType);
-
-        case ByteProto.PRIMITIVE_LITERAL -> execute(this::primitiveLiteral);
-
-        case ByteProto.PRIMITIVE_TYPE -> {
-          execute(this::primitiveType);
-          maybeLocalVariable();
-        }
-
-        case ByteProto.RETURN -> execute(this::returnKeyword);
-
-        case ByteProto.STRING_LITERAL -> execute(this::stringLiteral);
-
-        case ByteProto.SUPER -> {
-          execute(this::superKeyword);
-
-          consumeWs();
-
-          if (protoIs(ByteProto.END_ELEMENT)) {
-            codeAdd(Symbol.LEFT_PARENTHESIS);
-            codeAdd(Symbol.RIGHT_PARENTHESIS);
-          } else if (protoIs(ByteProto.ARGUMENT)) {
-            argumentList();
-          }
-        }
-
-        case ByteProto.THIS -> execute(this::thisKeyword);
-
-        case ByteProto.THROW -> execute(this::throwKeyword);
-
-        case ByteProto.V -> {
-          execute(this::v);
+      case ByteProto.NEW -> {
+        execute(this::newKeyword);
+        consumeWs();
+        if (protoTest(ByteProto::isClassOrParameterizedType)) {
+          executeSwitch(this::type);
           argumentList();
           last(_PRIMARY);
         }
-
-        case ByteProto.VAR -> {
-          execute(this::varKeyword);
-          maybeLocalVariable();
-        }
-
-        default -> errorRaise(
-          "no-op statement part '%s'".formatted(protoName(proto))
-        );
       }
+
+      case ByteProto.NEW_LINE -> execute(this::newLine);
+
+      case ByteProto.NULL_LITERAL -> execute(this::nullLiteral);
+
+      case ByteProto.PARAMETERIZED_TYPE -> execute(this::parameterizedType);
+
+      case ByteProto.PRIMITIVE_LITERAL -> execute(this::primitiveLiteral);
+
+      case ByteProto.PRIMITIVE_TYPE -> {
+        execute(this::primitiveType);
+        maybeLocalVariable();
+      }
+
+      case ByteProto.RETURN -> execute(this::returnKeyword);
+
+      case ByteProto.STRING_LITERAL -> execute(this::stringLiteral);
+
+      case ByteProto.SUPER -> {
+        execute(this::superKeyword);
+
+        consumeWs();
+
+        if (protoIs(ByteProto.END_ELEMENT)) {
+          codeAdd(Symbol.LEFT_PARENTHESIS);
+          codeAdd(Symbol.RIGHT_PARENTHESIS);
+        } else if (protoIs(ByteProto.ARGUMENT)) {
+          argumentList();
+        }
+      }
+
+      case ByteProto.THIS -> execute(this::thisKeyword);
+
+      case ByteProto.THROW -> execute(this::throwKeyword);
+
+      case ByteProto.V -> {
+        execute(this::v);
+        argumentList();
+        last(_PRIMARY);
+      }
+
+      case ByteProto.VAR -> {
+        execute(this::varKeyword);
+        maybeLocalVariable();
+      }
+
+      default -> errorRaise(
+        "no-op statement part '%s'".formatted(protoName(proto))
+      );
     }
   }
 
@@ -1230,56 +1321,80 @@ class InternalCompiler extends InternalApi {
   private int listAdd(int list) {
     if (list == NULL) {
       list = stackIndex;
-      stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 3);
-      stackArray[stackIndex++] = NULL;
+      protoArray = IntArrays.growIfNecessary(protoArray, stackIndex + 3);
+      protoArray[stackIndex++] = NULL;
     } else {
-      int jmpLocation = stackArray[list];
-      stackArray[jmpLocation] = stackIndex;
-      stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
+      int jmpLocation = protoArray[list];
+      protoArray[jmpLocation] = stackIndex;
+      protoArray = IntArrays.growIfNecessary(protoArray, stackIndex + 2);
     }
 
     int proto = protoNext();
     int value = protoNext();
 
-    stackArray[stackIndex++] = proto;
-    stackArray[stackIndex++] = value;
+    protoArray[stackIndex++] = proto;
+    protoArray[stackIndex++] = value;
     int tail = stackIndex;
-    stackArray[stackIndex++] = NULL;
-    stackArray[list] = tail;
+    protoArray[stackIndex++] = NULL;
+    protoArray[list] = tail;
 
     return list;
   }
 
   private void listExecute(Action action) {
-    stackIndex++;
+    protoNext();
 
-    int location = stackArray[stackIndex++];
+    int location = protoNext();
+
+    int returnTo = protoIndex;
 
     protoIndex = location;
 
     action.execute();
 
-    int maybeNext = stackArray[stackIndex];
+    protoIndex = returnTo;
+
+    int maybeNext = protoArray[protoIndex];
 
     if (maybeNext != NULL) {
-      stackIndex = maybeNext;
+      protoIndex = maybeNext;
     }
   }
 
   private void listExecute(int offset, Action action) {
-    stackIndex = offset + 1;
+    protoIndex = offset + 1;
 
     while (listMore()) {
       listExecute(action);
     }
   }
 
+  private void listLazySwitch(int offset, SwitchAction action) {
+    protoIndex = offset + 1;
+
+    while (listMore()) {
+      listLazySwitch(action);
+    }
+  }
+
+  private void listLazySwitch(SwitchAction action) {
+    int proto = protoPeek();
+
+    action.execute(proto);
+
+    int maybeNext = protoArray[protoIndex];
+
+    if (maybeNext != NULL) {
+      protoIndex = maybeNext;
+    }
+  }
+
   private boolean listMore() {
-    return stackArray[stackIndex] != NULL;
+    return protoArray[protoIndex] != NULL;
   }
 
   private void listSwitch(int offset, SwitchAction action) {
-    stackIndex = offset + 1;
+    protoIndex = offset + 1;
 
     while (listMore()) {
       listSwitch(action);
@@ -1287,18 +1402,22 @@ class InternalCompiler extends InternalApi {
   }
 
   private void listSwitch(SwitchAction action) {
-    int proto = stackArray[stackIndex++];
+    int proto = protoNext();
 
-    int location = stackArray[stackIndex++];
+    int location = protoNext();
+
+    int returnTo = protoIndex;
 
     protoIndex = location;
 
     action.execute(proto);
 
-    int maybeNext = stackArray[stackIndex];
+    protoIndex = returnTo;
+
+    int maybeNext = protoArray[protoIndex];
 
     if (maybeNext != NULL) {
-      stackIndex = maybeNext;
+      protoIndex = maybeNext;
     }
   }
 
@@ -1319,13 +1438,13 @@ class InternalCompiler extends InternalApi {
     }
 
     if (itemIs(ByteProto.IDENTIFIER)) {
-      variableDeclarator();
+      oldVariableDeclarator();
 
       while (itemIs(ByteProto.IDENTIFIER)) {
         codeAdd(Symbol.COMMA);
         codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
-        variableDeclarator();
+        oldVariableDeclarator();
       }
     } else {
       errorRaise("invalid local var: variable name not found");
@@ -1335,7 +1454,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void maybeLocalVariable() {
-    if (itemIs(ByteProto.DECLARATION_NAME)) {
+    if (protoIs(ByteProto.DECLARATION_NAME)) {
       execute(this::declarationName);
 
       codeAdd(Whitespace.OPTIONAL);
@@ -1772,6 +1891,21 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void oldFieldDeclarationVariableList() {
+    oldVariableDeclarator();
+
+    while (itemIs(ByteProto.IDENTIFIER)) {
+      codeAdd(Symbol.COMMA);
+      last(_COMMA);
+
+      oldVariableDeclarator();
+    }
+
+    codeAdd(Symbol.SEMICOLON);
+
+    last(_SEMICOLON);
+  }
+
   private void oldFormalParameter() {
     if (itemTest(ByteProto::isType)) {
       executeSwitch(this::oldType);
@@ -2061,6 +2195,28 @@ class InternalCompiler extends InternalApi {
     last(_SYMBOL);
   }
 
+  private void oldVariableDeclarator() {
+    execute(this::identifier);
+
+    if (itemTest(this::isVariableInitializerOrClassType)) {
+      preSymbol();
+      codeAdd(Symbol.ASSIGNMENT);
+      last(_SYMBOL);
+
+      oldVariableInitializer();
+    }
+  }
+
+  private void oldVariableInitializer() {
+    if (itemTest(this::isExpressionStartOrClassType)) {
+      oldExpression();
+    } else if (itemIs(ByteProto.ARRAY_INITIALIZER)) {
+      execute(this::arrayInitializer);
+    } else {
+      errorRaise();
+    }
+  }
+
   private void operator() {
     preSymbol();
 
@@ -2307,7 +2463,7 @@ class InternalCompiler extends InternalApi {
   private void simpleName(int value) { stackArray[0] = value; }
 
   private void singleExecute(int offset, Action action) {
-    int location = stackArray[offset + 1];
+    int location = protoArray[offset + 1];
 
     int returnTo = protoIndex;
 
@@ -2324,23 +2480,23 @@ class InternalCompiler extends InternalApi {
 
     if (property == NULL) {
       property = stackIndex;
-      stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-      stackArray[stackIndex++] = proto;
-      stackArray[stackIndex++] = value;
+      protoArray = IntArrays.growIfNecessary(protoArray, stackIndex + 1);
+      protoArray[stackIndex++] = proto;
+      protoArray[stackIndex++] = value;
     } else {
-      stackArray[property + 0] = proto;
-      stackArray[property + 1] = value;
+      protoArray[property + 0] = proto;
+      protoArray[property + 1] = value;
     }
 
     return property;
   }
 
   private void singleSwitch(int offset, SwitchAction action) {
-    stackIndex = offset;
+    protoIndex = offset;
 
-    int proto = stackArray[stackIndex++];
+    int proto = protoArray[protoIndex++];
 
-    int location = stackArray[stackIndex++];
+    int location = protoArray[protoIndex++];
 
     int returnTo = protoIndex;
 
@@ -2627,34 +2783,20 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.IDENTIFIER, protoNext());
   }
 
-  private void variableDeclarator() {
-    execute(this::identifier);
-
-    if (itemTest(this::isVariableInitializerOrClassType)) {
-      preSymbol();
-      codeAdd(Symbol.ASSIGNMENT);
-      last(_SYMBOL);
-
-      variableInitializer();
-    }
-  }
-
-  private void variableInitializer() {
-    if (itemTest(this::isExpressionStartOrClassType)) {
-      oldExpression();
-    } else if (itemIs(ByteProto.ARRAY_INITIALIZER)) {
-      execute(this::arrayInitializer);
-    } else {
-      errorRaise();
-    }
-  }
-
   private void varKeyword() {
     preKeyword();
 
     codeAdd(Keyword.VAR);
 
     last(_KEYWORD);
+  }
+
+  private int varState() {
+    return stackArray[7];
+  }
+
+  private void varState(int value) {
+    stackArray[7] = value;
   }
 
   private void voidKeyword() {

@@ -253,6 +253,7 @@ public abstract class JavaTemplate {
   protected static final class Modifier extends External
       implements
       ConstructorDeclarationInstruction,
+      FieldDeclarationInstruction,
       MethodDeclarationInstruction {
     final int value;
 
@@ -376,7 +377,10 @@ public abstract class JavaTemplate {
    */
   protected abstract static sealed class TypeName
       extends External
-      implements MethodDeclarationInstruction, TypeParameterInstruction {
+      implements
+      FieldDeclarationInstruction,
+      MethodDeclarationInstruction,
+      TypeParameterInstruction {
     TypeName() {}
   }
 
@@ -441,6 +445,8 @@ public abstract class JavaTemplate {
       ExplicitConstructorInvocation,
       ExpressionName,
       ExtendsKeyword,
+      FieldDeclaration,
+      FieldDeclarationInstruction,
       FinalModifier,
       Identifier,
       IfCondition,
@@ -525,7 +531,8 @@ public abstract class JavaTemplate {
 
   sealed interface ConstructorDeclaration extends BodyElement {}
 
-  sealed interface DeclarationName extends MethodDeclarationInstruction, StatementPart {}
+  sealed interface DeclarationName
+      extends FieldDeclarationInstruction, MethodDeclarationInstruction, StatementPart {}
 
   sealed interface End extends ArgsPart, BlockElement {}
 
@@ -544,6 +551,10 @@ public abstract class JavaTemplate {
 
     abstract void execute(InternalApi api);
   }
+
+  sealed interface FieldDeclaration extends BodyElement {}
+
+  sealed interface FieldDeclarationInstruction extends Instruction {}
 
   sealed interface FinalModifier extends BodyElement {}
 
@@ -655,7 +666,7 @@ public abstract class JavaTemplate {
 
   sealed interface TypeVariable extends ReferenceType {}
 
-  sealed interface VariableInitializer {}
+  sealed interface VariableInitializer extends FieldDeclarationInstruction {}
 
   private sealed interface AccessModifier extends BodyElement {}
 
@@ -2114,6 +2125,16 @@ public abstract class JavaTemplate {
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldEqualityOperator equalTo() {
     return api().itemAdd(ByteProto.EQUALITY_OPERATOR, Symbol.EQUAL_TO.ordinal());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final FieldDeclaration field(FieldDeclarationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.FIELD_DECLARATION, many);
   }
 
   /**

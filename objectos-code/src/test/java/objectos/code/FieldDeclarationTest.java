@@ -28,15 +28,17 @@ public class FieldDeclarationTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName STRING = classType(String.class);
+
         @Override
         protected final void definition() {
           _class("Fields");
           body(
-            t(String.class), id("a"),
+            field(STRING, name("a")),
 
-            t(String.class), id("b"), id("c"),
+            field(STRING, name("b"), name("c")),
 
-            t(String.class), id("d"), id("e"), id("f")
+            field(STRING, name("d"), name("e"), name("f"))
           );
         }
       }.toString(),
@@ -59,15 +61,17 @@ public class FieldDeclarationTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName STRING = classType(String.class);
+
         @Override
         protected final void definition() {
           _class("Fields");
           body(
-            _private(), t(String.class), id("a"),
+            field(PRIVATE, STRING, name("a")),
 
-            _private(), _final(), t(String.class), id("b"),
+            field(PRIVATE, FINAL, STRING, name("b")),
 
-            _private(), _static(), _final(), t(String.class), id("c")
+            field(PRIVATE, STATIC, FINAL, STRING, name("c"))
           );
         }
       }.toString(),
@@ -90,15 +94,21 @@ public class FieldDeclarationTest {
   public void testCase03() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName STRING = classType(String.class);
+
         @Override
         protected final void definition() {
           _class("Fields");
           body(
-            t(String.class), id("x"), s("init"),
+            field(STRING, name("x"), s("init")),
 
-            t(String.class), id("a"), s("a"), id("b"), id("c"), s("c"),
+            field(STRING,
+              name("a"), s("a"),
+              name("b"),
+              name("c"), s("c")
+            ),
 
-            t(String.class), id("d"), invoke("d0"), invoke("d1")
+            field(STRING, name("d"), v("d0"), v("d1"))
           );
         }
       }.toString(),

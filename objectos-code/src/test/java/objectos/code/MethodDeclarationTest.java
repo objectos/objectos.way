@@ -588,7 +588,7 @@ public class MethodDeclarationTest {
         static final ParameterizedTypeName MAP_I_S = parameterizedType(
           classType(Map.class),
           classType(Integer.class),
-          classType(String.class)
+          STRING
         );
 
         static final TypeVariableName E = typeVariable("E");

@@ -60,6 +60,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ENUM");
     value("ENUM_CONSTANT");
     value("EXTENDS");
+    value("FIELD_DECLARATION");
     value("IDENTIFIER");
     value("IMPLEMENTS");
     value("INTERFACE");
