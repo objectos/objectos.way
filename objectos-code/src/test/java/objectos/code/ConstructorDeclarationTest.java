@@ -31,29 +31,29 @@ public class ConstructorDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Test0");
-          body(
+          classDeclaration(
+            name("Test0"),
             constructor(
               modifiers(PUBLIC)
             )
           );
 
-          _class("Test1");
-          body(
+          classDeclaration(
+            name("Test1"),
             constructor(
               modifiers(PROTECTED)
             )
           );
 
-          _class("Test2");
-          body(
+          classDeclaration(
+            name("Test2"),
             constructor(
               modifiers()
             )
           );
 
-          _class("Test3");
-          body(
+          classDeclaration(
+            name("Test3"),
             constructor(
               modifiers(PRIVATE)
             )
@@ -91,8 +91,8 @@ public class ConstructorDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Test");
-          body(
+          classDeclaration(
+            name("Test"),
             constructor(
               parameter(INT, "a")
             ),
@@ -125,8 +125,8 @@ public class ConstructorDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Test");
-          body(
+          classDeclaration(
+            name("Test"),
             constructor(
               parameter(INT, "a"),
               p(THIS, n("a"), IS, n("a"))
@@ -167,7 +167,8 @@ public class ConstructorDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          code(_class("Test"), body(
+          classDeclaration(
+            name("Test"),
             constructor(
               p(SUPER)
             ),
@@ -190,7 +191,6 @@ public class ConstructorDeclarationTest {
             constructor(
               p(SUPER, arg(s("a")), arg(s("b")))
             )
-          )
           );
         }
       }.toString(),

@@ -34,8 +34,8 @@ public class ClassInstanceCreationExpressionTest {
 
         @Override
         protected final void definition() {
-          _class("New");
-          body(
+          classDeclaration(
+            name("New"),
             method(
               p(NEW, FOO),
               p(NEW, FOO, arg(s("a"))),
@@ -73,8 +73,8 @@ public class ClassInstanceCreationExpressionTest {
 
         @Override
         protected final void definition() {
-          _class("New");
-          body(
+          classDeclaration(
+            name("New"),
             method(
               p(NEW, HASHMAP)
             )

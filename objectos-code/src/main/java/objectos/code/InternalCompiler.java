@@ -518,6 +518,8 @@ class InternalCompiler extends InternalApi {
     switch (proto) {
       case ByteProto.CLASS_DECLARATION -> classDeclaration();
 
+      case ByteProto.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
+
       case ByteProto.FIELD_DECLARATION -> fieldDeclaration();
 
       case ByteProto.METHOD_DECLARATION -> methodDeclaration();
@@ -553,6 +555,8 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.CLASS_DECLARATION -> body = listAdd(body);
 
+        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listAdd(body);
+
         case ByteProto.DECLARATION_NAME -> name = singleSet(name);
 
         case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
@@ -587,7 +591,7 @@ class InternalCompiler extends InternalApi {
     keyword(Keyword.CLASS);
 
     if (name != NULL) {
-      singleExecute(name, this::declarationName);
+      singleExecute(name, this::typeDeclarationName);
     } else {
       unnamedType();
     }
@@ -848,29 +852,7 @@ class InternalCompiler extends InternalApi {
       listSwitch(parameters, this::parameterSwitcher);
     }
 
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
-
-    if (!abstractFound()) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      codeAdd(Symbol.LEFT_CURLY_BRACKET);
-
-      if (statements != NULL) {
-        codeAdd(Indentation.ENTER_BLOCK);
-
-        listExecute(statements, this::blockStatement);
-
-        codeAdd(Indentation.EXIT_BLOCK);
-
-        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-      } else {
-        codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
-      }
-
-      codeAdd(Symbol.RIGHT_CURLY_BRACKET);
-    } else {
-      codeAdd(Symbol.SEMICOLON);
-    }
+    executableBody(statements);
 
     stackIndex = start;
   }
@@ -1674,6 +1656,12 @@ class InternalCompiler extends InternalApi {
       listSwitch(parameters, this::parameterSwitcher);
     }
 
+    executableBody(statements);
+
+    stackIndex = start;
+  }
+
+  private void executableBody(int statements) {
     codeAdd(Symbol.RIGHT_PARENTHESIS);
 
     if (!abstractFound()) {
@@ -1699,8 +1687,6 @@ class InternalCompiler extends InternalApi {
     } else {
       semicolon();
     }
-
-    stackIndex = start;
   }
 
   private void methodResult(int proto) {
@@ -2524,7 +2510,8 @@ class InternalCompiler extends InternalApi {
 
       case _IDENTIFIER,
            _KEYWORD,
-           _PRIMARY -> codeAdd(Whitespace.MANDATORY);
+           _PRIMARY,
+           _TYPE -> codeAdd(Whitespace.MANDATORY);
 
       case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
     }
@@ -2903,15 +2890,19 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void typeKeyword(Keyword keyword) {
-    codeAdd(keyword);
-
-    codeAdd(Whitespace.MANDATORY);
-
+  private void typeDeclarationName() {
     int proto = protoNext();
+
+    typeDeclarationNameValue(proto);
+
+    preIdentifier();
 
     codeAdd(ByteCode.IDENTIFIER, proto);
 
+    last(_IDENTIFIER);
+  }
+
+  private void typeDeclarationNameValue(int proto) {
     simpleName(proto);
 
     var topLevel = topLevel() != NULL;
@@ -2923,6 +2914,18 @@ class InternalCompiler extends InternalApi {
 
       autoImports.fileName(publicFound, fileName);
     }
+  }
+
+  private void typeKeyword(Keyword keyword) {
+    codeAdd(keyword);
+
+    codeAdd(Whitespace.MANDATORY);
+
+    int proto = protoNext();
+
+    codeAdd(ByteCode.IDENTIFIER, proto);
+
+    typeDeclarationNameValue(proto);
 
     last(_IDENTIFIER);
   }
@@ -2985,7 +2988,11 @@ class InternalCompiler extends InternalApi {
       codeAdd(Whitespace.MANDATORY);
     }
 
-    codeAdd(ByteCode.IDENTIFIER, object("Unnamed"));
+    int proto = object("Unnamed");
+
+    typeDeclarationNameValue(proto);
+
+    codeAdd(ByteCode.IDENTIFIER, proto);
   }
 
   private void v() {

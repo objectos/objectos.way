@@ -609,7 +609,7 @@ public abstract class JavaTemplate {
 
   sealed interface ClassTypeWithArgs extends ClassTypeInstruction {}
 
-  sealed interface ConstructorDeclaration extends BodyElement {}
+  sealed interface ConstructorDeclaration extends BodyElement, ClassDeclarationInstruction {}
 
   sealed interface DeclarationName
       extends
