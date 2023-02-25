@@ -31,8 +31,8 @@ public class EqualityOperatorTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("EqualityOperator");
-          body(
+          classDeclaration(
+            name("EqualityOperator"),
             method(
               p(v("foo"), arg(n("x"), EQ, n("y")))
             )
@@ -60,8 +60,8 @@ public class EqualityOperatorTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("EqualityOperator");
-          body(
+          classDeclaration(
+            name("EqualityOperator"),
             method(
               p(v("foo"), arg(n("x"), NE, n("y")))
             )

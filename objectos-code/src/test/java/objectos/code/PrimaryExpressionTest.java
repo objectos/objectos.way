@@ -31,8 +31,9 @@ public class PrimaryExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Primary");
-          body(
+          classDeclaration(
+            name("Primary"),
+
             method(
               p(RETURN, THIS)
             )
@@ -60,8 +61,9 @@ public class PrimaryExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Primary");
-          body(
+          classDeclaration(
+            name("Primary"),
+
             method(
               p(RETURN, NULL)
             )

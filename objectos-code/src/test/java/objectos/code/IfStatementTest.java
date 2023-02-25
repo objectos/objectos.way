@@ -31,8 +31,9 @@ public class IfStatementTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("IfStatement");
-          body(
+          classDeclaration(
+            name("IfStatement"),
+
             method(
               p(IF, arg(v("condition")), block(
                 p(v("foo"))
@@ -64,8 +65,9 @@ public class IfStatementTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("IfStatement");
-          body(
+          classDeclaration(
+            name("IfStatement"),
+
             method(
               p(IF, arg(v("condition")), block(
                 p(v("ifTrue"))
@@ -101,8 +103,9 @@ public class IfStatementTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("IfStatement");
-          body(
+          classDeclaration(
+            name("IfStatement"),
+
             method(
               p(IF, arg(v("condition")), block(
                 p(v("ifTrue"))

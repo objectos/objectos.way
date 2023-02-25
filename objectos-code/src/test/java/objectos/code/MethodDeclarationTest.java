@@ -34,8 +34,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method()
           );
         }
@@ -58,8 +59,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               name("test")
             )
@@ -84,8 +86,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               p(v("foo"))
             )
@@ -113,8 +116,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               annotation(Override.class),
               name("test")
@@ -142,8 +146,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               modifiers(FINAL),
               name("a")
@@ -185,8 +190,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(this::bodyImpl)
           );
         }
@@ -214,8 +220,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               annotation(Override.class),
               modifiers(FINAL),
@@ -252,8 +259,9 @@ public class MethodDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               name("test0"),
               parameter(String.class, "a")
@@ -332,8 +340,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               VOID, name("test0"),
               p(v("a"))
@@ -392,8 +401,9 @@ public class MethodDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               name("test0")
             ),
@@ -454,8 +464,9 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               ABSTRACT, VOID, name("test0")
             ),
@@ -493,8 +504,9 @@ public class MethodDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               typeParameter("T"), name("test0")
             ),
@@ -551,8 +563,9 @@ public class MethodDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(this::params)
           );
         }
@@ -595,8 +608,9 @@ public class MethodDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Methods");
-          body(
+          classDeclaration(
+            name("Methods"),
+
             method(
               PUBLIC, FINAL, STRING, name("a")
             ),

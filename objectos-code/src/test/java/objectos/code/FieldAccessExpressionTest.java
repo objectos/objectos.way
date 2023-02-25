@@ -33,8 +33,8 @@ public class FieldAccessExpressionTest {
 
         @Override
         protected final void definition() {
-          _class("FieldAccess");
-          body(
+          classDeclaration(
+            name("FieldAccess"),
             method(
               p(THIS, n("x"), IS, n("y")),
 

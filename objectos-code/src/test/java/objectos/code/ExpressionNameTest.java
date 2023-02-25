@@ -31,8 +31,8 @@ public class ExpressionNameTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("ExpressionName");
-          body(
+          classDeclaration(
+            name("ExpressionName"),
             method(
               p(v("test"), arg(n("a"))),
 
@@ -68,8 +68,8 @@ public class ExpressionNameTest {
 
         @Override
         protected final void definition() {
-          _class("ExpressionName");
-          body(
+          classDeclaration(
+            name("ExpressionName"),
             method(
               p(v("test"), arg(SUIT, n("CLUBS"))),
 

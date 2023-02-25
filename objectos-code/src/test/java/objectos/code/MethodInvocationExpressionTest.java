@@ -31,8 +31,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(v("test"))
             )
@@ -59,8 +60,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(v("test"), arg(s("a")))
             )
@@ -87,8 +89,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(v("test"), arg(s("a")), arg(s("b")))
             )
@@ -116,8 +119,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(v("m0"), arg(s("1")), arg(v("m2")), arg(s("3")))
             )
@@ -145,8 +149,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(
                 v("m0"), NL,
@@ -183,8 +188,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(v("test"), arg(n("field")))
             )
@@ -214,8 +220,9 @@ public class MethodInvocationExpressionTest {
 
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(THREAD, v("currentThread")),
 
@@ -248,8 +255,9 @@ public class MethodInvocationExpressionTest {
 
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(n("a"), v("x")),
 
@@ -286,8 +294,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(v("a"), v("b")),
 
@@ -326,8 +335,9 @@ public class MethodInvocationExpressionTest {
 
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(NEW, THREAD, v("start")),
 
@@ -358,8 +368,9 @@ public class MethodInvocationExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(v("test"), arg(v("a"), v("b"))),
 
@@ -392,8 +403,9 @@ public class MethodInvocationExpressionTest {
 
         @Override
         protected final void definition() {
-          _class("Invoke");
-          body(
+          classDeclaration(
+            name("Invoke"),
+
             method(
               p(
                 v("property"), NL,

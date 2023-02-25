@@ -30,8 +30,9 @@ public class ReturnStatementTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Return");
-          body(
+          classDeclaration(
+            name("Return"),
+
             method(
               p(RETURN, s("abc"))
             )
@@ -57,8 +58,9 @@ public class ReturnStatementTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Return");
-          body(
+          classDeclaration(
+            name("Return"),
+
             method(
               p(RETURN, n("sb"), v("toString"))
             )

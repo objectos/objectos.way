@@ -34,8 +34,9 @@ public class ThrowStatementTest {
 
         @Override
         protected final void definition() {
-          _class("Throw");
-          body(
+          classDeclaration(
+            name("Throw"),
+
             method(
               p(THROW, NEW, IO_EXCEPTION)
             )

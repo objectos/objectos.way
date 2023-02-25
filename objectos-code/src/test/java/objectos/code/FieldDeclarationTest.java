@@ -32,8 +32,9 @@ public class FieldDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Fields");
-          body(
+          classDeclaration(
+            name("Fields"),
+
             field(STRING, name("a")),
 
             field(STRING, name("b"), name("c")),
@@ -65,8 +66,9 @@ public class FieldDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Fields");
-          body(
+          classDeclaration(
+            name("Fields"),
+
             field(PRIVATE, STRING, name("a")),
 
             field(PRIVATE, FINAL, STRING, name("b")),
@@ -98,8 +100,9 @@ public class FieldDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Fields");
-          body(
+          classDeclaration(
+            name("Fields"),
+
             field(STRING, name("x"), s("init")),
 
             field(STRING,
@@ -137,8 +140,9 @@ public class FieldDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Fields");
-          body(
+          classDeclaration(
+            name("Fields"),
+
             field(OBJECT_ARRAY, name("a"))
           );
         }
@@ -166,8 +170,9 @@ public class FieldDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Fields");
-          body(
+          classDeclaration(
+            name("Fields"),
+
             field(MAP, name("map"))
           );
         }
@@ -193,8 +198,9 @@ public class FieldDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Fields");
-          body(
+          classDeclaration(
+            name("Fields"),
+
             field(INT_ARRAY, name("a"), arrayInitializer()),
 
             field(INT_ARRAY, name("b"), arrayInitializer(), value(i(0))),
@@ -254,8 +260,9 @@ public class FieldDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("Fields");
-          body(
+          classDeclaration(
+            name("Fields"),
+
             field(INT_ARRAY, name("a"), FOO, v("a")),
 
             field(INT_ARRAY, name("b"), FOO, n("b"))

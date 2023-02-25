@@ -31,8 +31,9 @@ public class LocalVariableDeclarationTest {
 
         @Override
         protected final void definition() {
-          _class("LocalVar");
-          body(
+          classDeclaration(
+            name("LocalVar"),
+
             method(
               p(VAR, name("a"), s("java")),
 
