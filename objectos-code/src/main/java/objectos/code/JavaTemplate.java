@@ -38,26 +38,11 @@ public abstract class JavaTemplate {
   protected sealed interface ArgsPart extends Instruction {}
 
   /**
-   * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#block(BlockElement...)} method.
-   */
-  @Deprecated
-  protected sealed interface BlockElement extends Instruction {}
-
-  /**
-   * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#body(BodyElement...)} method.
-   */
-  @Deprecated
-  protected sealed interface BodyElement extends Instruction {}
-
-  /**
    * TODO
    *
    * @since 0.4.4
    */
-  protected static abstract sealed class ArrayTypeName
-      extends ReferenceTypeName {
+  protected static abstract sealed class ArrayTypeName extends ReferenceTypeName {
 
     private static final class OfClass extends ArrayTypeName {
       private final Class<?> value;
@@ -73,7 +58,32 @@ public abstract class JavaTemplate {
       }
     }
 
+    private static final class OfTypeName extends ArrayTypeName {
+
+      private final TypeName type;
+
+      private final int count;
+
+      OfTypeName(TypeName type, int count) {
+        this.type = type;
+        this.count = count;
+      }
+
+      @Override
+      final void execute(InternalApi api) {
+        api.arrayTypeName(type, count);
+        api.localToExternal();
+      }
+
+    }
+
     ArrayTypeName() {}
+
+    public static ArrayTypeName of(ArrayTypeComponent type, int count) {
+      var typeName = (TypeName) type.self();
+      Check.argument(count > 0, "count must be greater than 0 (zero)");
+      return new OfTypeName(typeName, count);
+    }
 
     static ArrayTypeName of(Class<?> type) {
       Check.argument(type.isArray(), """
@@ -84,6 +94,20 @@ public abstract class JavaTemplate {
     }
 
   }
+
+  /**
+   * An {@link Instruction} that can be used with the
+   * {@link JavaTemplate#block(BlockElement...)} method.
+   */
+  @Deprecated
+  protected sealed interface BlockElement extends Instruction {}
+
+  /**
+   * An {@link Instruction} that can be used with the
+   * {@link JavaTemplate#body(BodyElement...)} method.
+   */
+  @Deprecated
+  protected sealed interface BodyElement extends Instruction {}
 
   /**
    * Represents the fully qualified name of a class or interface type in a Java
@@ -101,7 +125,7 @@ public abstract class JavaTemplate {
    */
   protected static abstract sealed class ClassTypeName
       extends ReferenceTypeName
-      implements ExpressionPart {
+      implements ArrayTypeComponent, ExpressionPart {
 
     private static final class OfClass extends ClassTypeName {
       private final Class<?> value;
@@ -359,7 +383,8 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static final class PrimitiveTypeName extends TypeName implements StatementPart {
+  protected static final class PrimitiveTypeName extends TypeName
+      implements ArrayTypeComponent, StatementPart {
     /**
      * The {@code boolean} primitive type.
      */
@@ -423,7 +448,8 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static final class TypeVariableName extends ReferenceTypeName {
+  protected static final class TypeVariableName extends ReferenceTypeName
+      implements ArrayTypeComponent {
     private final String name;
 
     TypeVariableName(String name) {
@@ -458,6 +484,7 @@ public abstract class JavaTemplate {
       ArrayAccess,
       ArrayDimension,
       ArrayInitializer,
+      ArrayInitializerValue,
       ArrayType,
       At,
       AutoImports,
@@ -537,9 +564,11 @@ public abstract class JavaTemplate {
 
   sealed interface ArrayInitializer extends BodyElement, VariableInitializer {}
 
+  sealed interface ArrayInitializerValue extends VariableInitializer {}
+
   sealed interface ArrayType extends BodyElement, ReferenceType {}
 
-  sealed interface ArrayTypeComponent {}
+  sealed interface ArrayTypeComponent extends Instruction {}
 
   sealed interface ArrayTypeElement {}
 
@@ -1083,6 +1112,20 @@ public abstract class JavaTemplate {
    * Sole constructor.
    */
   protected JavaTemplate() {}
+
+  /**
+   * TODO
+   *
+   * @param type
+   *        the type of the components of this array
+   *
+   * @return a newly constructed {@code ArrayTypeName} instance
+   *
+   * @since 0.4.2
+   */
+  protected static ArrayTypeName arrayType(ArrayTypeComponent type) {
+    return ArrayTypeName.of(type, 1);
+  }
 
   /**
    * TODO
@@ -1807,6 +1850,13 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * @since 0.4.4
+   */
+  protected final ArrayInitializer arrayInitializer() {
+    return api().itemAdd(ByteProto.ARRAY_INITIALIZER, ByteProto.NOOP);
+  }
+
+  /**
    * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
@@ -1994,6 +2044,19 @@ public abstract class JavaTemplate {
    */
   protected final void code(Instruction... elements) {
     // no-op
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final void consume(Instruction instruction) {
+    if (instruction instanceof External external) {
+      var api = api();
+      external.execute(api);
+      api.externalToLocal();
+    }
   }
 
   /**
@@ -2187,6 +2250,15 @@ public abstract class JavaTemplate {
   protected final FieldDeclaration field(FieldDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.FIELD_DECLARATION, many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final FieldDeclaration field(IncludeTarget target) {
+    return api().elem(ByteProto.FIELD_DECLARATION, include(target));
   }
 
   /**
@@ -3123,6 +3195,16 @@ public abstract class JavaTemplate {
     JavaModel.checkMethodName(methodName.toString()); // implicit null check
     var api = api();
     return api.itemAdd(ByteProto.V, api.object(methodName));
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final ArrayInitializerValue value(ExpressionPart... parts) {
+    Object[] many = Objects.requireNonNull(parts, "parts == null");
+    return api().elemMany(ByteProto.VALUE, many);
   }
 
   InternalApi api() {

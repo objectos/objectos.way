@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+import objectos.code.JavaTemplate.TypeName;
 import objectos.code.JavaTemplate._Item;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -117,6 +118,24 @@ class InternalApi {
     }
 
     return elemRet();
+  }
+
+  final void arrayTypeName(TypeName type, int count) {
+    type.execute(this);
+
+    for (int i = 0; i < count; i++) {
+      itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);
+    }
+
+    elemCnt(ByteProto.ARRAY_TYPE, 1 + count);
+
+    elemItem(JavaTemplate.EXT);
+
+    for (int i = 0; i < count; i++) {
+      elemItem(JavaTemplate.ITEM);
+    }
+
+    elemRet();
   }
 
   final _Item classType(Class<?> type) {

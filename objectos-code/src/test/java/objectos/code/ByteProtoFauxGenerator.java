@@ -47,6 +47,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ARRAY_DIMENSION");
     value("ARRAY_INITIALIZER");
     value("ELLIPSIS");
+    value("VALUE");
 
     comment("declarations");
 

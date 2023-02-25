@@ -189,25 +189,35 @@ public class FieldDeclarationTest {
   public void testCase06() {
     assertEquals(
       new JavaTemplate() {
+        static final ArrayTypeName INT_ARRAY = arrayType(INT);
+
         @Override
         protected final void definition() {
           _class("Fields");
           body(
-            t(_int(), dim()), id("a"), ainit(),
+            field(INT_ARRAY, name("a"), arrayInitializer()),
 
-            t(_int(), dim()), id("b"), ainit(i(0)),
+            field(INT_ARRAY, name("b"), arrayInitializer(), value(i(0))),
 
-            t(_int(), dim()), id("c"), ainit(i(0), i(1)),
+            field(INT_ARRAY, name("c"), arrayInitializer(), value(i(0)), value(i(1))),
 
-            t(_int(), dim()), id("d"), ainit(include(this::many))
+            field(this::many)
           );
         }
 
         private void many() {
-          nl();
+          consume(INT_ARRAY);
+
+          name("d");
+
+          arrayInitializer();
+
+          consume(NL);
 
           for (int i = 0; i < 3; i++) {
-            code(i(i), nl());
+            value(i(i));
+
+            consume(NL);
           }
         }
       }.toString(),
@@ -218,7 +228,7 @@ public class FieldDeclarationTest {
 
         int[] b = {0};
 
-        int[] c = {0,1};
+        int[] c = {0, 1};
 
         int[] d = {
           0,
@@ -238,22 +248,26 @@ public class FieldDeclarationTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
+        static final ArrayTypeName INT_ARRAY = arrayType(INT);
+
+        static final ClassTypeName FOO = classType("com.example", "Foo");
+
         @Override
         protected final void definition() {
           _class("Fields");
           body(
-            t(_int(), dim()), id("a"), t("test", "Foo"), invoke("a"),
+            field(INT_ARRAY, name("a"), FOO, v("a")),
 
-            t(_int(), dim()), id("b"), t("test", "Foo"), n("b")
+            field(INT_ARRAY, name("b"), FOO, n("b"))
           );
         }
       }.toString(),
 
       """
       class Fields {
-        int[] a = test.Foo.a();
+        int[] a = com.example.Foo.a();
 
-        int[] b = test.Foo.b;
+        int[] b = com.example.Foo.b;
       }
       """
     );

@@ -44,10 +44,6 @@ class InternalCompiler extends InternalApi {
       _SEMICOLON = 9,
       _SYMBOL = 10;
 
-  private static final int _VAR_START = 0,
-      _VAR_NAME = 1,
-      _VAR_INIT = 2;
-
   final void compile() {
     codeIndex = 0;
 
@@ -65,8 +61,6 @@ class InternalCompiler extends InternalApi {
     stackArray[5] = NULL;
     // last
     stackArray[6] = NULL;
-    // var state
-    stackArray[7] = NULL;
 
     // do not change
     // - objectIndex
@@ -245,31 +239,36 @@ class InternalCompiler extends InternalApi {
   }
 
   private void arrayInitializer() {
-    if (lastIs(_SYMBOL)) {
-      codeAdd(Whitespace.OPTIONAL);
+    switch (last()) {
+      case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
     }
+  }
 
+  private void arrayInitializerValueList() {
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
     codeAdd(Indentation.ENTER_BLOCK);
-
     last(_START);
 
-    if (itemMore()) {
-      oldVariableInitializer();
+    consumeWs();
 
-      while (itemMore()) {
-        slotComma();
+    if (protoIs(ByteProto.VALUE)) {
+      execute(this::argument);
 
-        oldVariableInitializer();
+      consumeWs();
+
+      while (protoIs(ByteProto.VALUE)) {
+        argumentComma();
+
+        execute(this::argument);
+
+        consumeWs();
       }
     }
 
     codeAdd(Indentation.EXIT_BLOCK);
-
     if (lastIs(_NEW_LINE)) {
       codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
     }
-
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
@@ -911,12 +910,8 @@ class InternalCompiler extends InternalApi {
         type = NULL,
         declarators = NULL;
 
-    while (protoMore()) {
+    loop: while (protoMore()) {
       int proto = protoPeek();
-
-      if (proto == ByteProto.END_ELEMENT) {
-        break;
-      }
 
       switch (proto) {
         case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
@@ -927,12 +922,16 @@ class InternalCompiler extends InternalApi {
              ByteProto.PRIMITIVE_TYPE,
              ByteProto.TYPE_VARIABLE -> type = singleSet(type);
 
-        case ByteProto.DECLARATION_NAME -> declarators = listAdd(declarators);
-
         case ByteProto.MODIFIER,
              ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
 
-        default -> declarators = listAdd(declarators);
+        default -> {
+          if (proto != ByteProto.END_ELEMENT) {
+            declarators = protoIndex;
+          }
+
+          break loop;
+        }
       }
     }
 
@@ -949,9 +948,9 @@ class InternalCompiler extends InternalApi {
     }
 
     if (declarators != NULL) {
-      varState(_VAR_START);
+      protoIndex = declarators;
 
-      listLazySwitch(declarators, this::fieldDeclarationVariableList);
+      fieldDeclarationVariableList();
     }
 
     codeAdd(Symbol.SEMICOLON);
@@ -959,35 +958,49 @@ class InternalCompiler extends InternalApi {
     stackIndex = start;
   }
 
-  private void fieldDeclarationVariableList(int proto) {
-    if (proto == ByteProto.DECLARATION_NAME) {
-      switch (varState()) {
-        case _VAR_START -> {}
-
-        case _VAR_NAME, _VAR_INIT -> comma();
-
-        default -> errorRaise("no-op var state: " + varState());
-      }
-
+  private void fieldDeclarationVariableItem() {
+    if (protoIs(ByteProto.DECLARATION_NAME)) {
       execute(this::declarationName);
-
-      varState(_VAR_NAME);
     } else {
-      switch (varState()) {
-        case _VAR_NAME -> {
-          preSymbol();
-          codeAdd(Symbol.ASSIGNMENT);
-          last(_SYMBOL);
+      unnamed();
+    }
 
-          varState(_VAR_INIT);
-        }
+    int proto = protoPeek();
 
-        case _VAR_INIT -> {}
+    if (proto == ByteProto.END_ELEMENT) {
+      return;
+    }
 
-        default -> errorRaise("no-op var state: " + varState());
+    if (proto == ByteProto.DECLARATION_NAME) {
+      return;
+    }
+
+    preSymbol();
+    codeAdd(Symbol.ASSIGNMENT);
+    last(_SYMBOL);
+
+    langItem(proto);
+
+    while (elemMore()) {
+      proto = protoPeek();
+
+      if (proto == ByteProto.DECLARATION_NAME) {
+        return;
       }
 
       langItem(proto);
+    }
+  }
+
+  private void fieldDeclarationVariableList() {
+    if (elemMore()) {
+      fieldDeclarationVariableItem();
+
+      while (elemMore()) {
+        comma();
+
+        fieldDeclarationVariableItem();
+      }
     }
   }
 
@@ -1217,6 +1230,11 @@ class InternalCompiler extends InternalApi {
     switch (proto) {
       case ByteProto.ARRAY_ACCESS -> execute(this::arrayAccess);
 
+      case ByteProto.ARRAY_INITIALIZER -> {
+        execute(this::arrayInitializer);
+        arrayInitializerValueList();
+      }
+
       case ByteProto.ARGUMENT -> execute(this::argument);
 
       case ByteProto.ASSIGNMENT_OPERATOR -> execute(this::operator);
@@ -1366,26 +1384,6 @@ class InternalCompiler extends InternalApi {
 
     while (listMore()) {
       listExecute(action);
-    }
-  }
-
-  private void listLazySwitch(int offset, SwitchAction action) {
-    protoIndex = offset + 1;
-
-    while (listMore()) {
-      listLazySwitch(action);
-    }
-  }
-
-  private void listLazySwitch(SwitchAction action) {
-    int proto = protoPeek();
-
-    action.execute(proto);
-
-    int maybeNext = protoArray[protoIndex];
-
-    if (maybeNext != NULL) {
-      protoIndex = maybeNext;
     }
   }
 
@@ -1735,6 +1733,35 @@ class InternalCompiler extends InternalApi {
     oldExpression();
 
     codeAdd(Symbol.RIGHT_SQUARE_BRACKET);
+  }
+
+  private void oldArrayInitializer() {
+    if (lastIs(_SYMBOL)) {
+      codeAdd(Whitespace.OPTIONAL);
+    }
+
+    codeAdd(Symbol.LEFT_CURLY_BRACKET);
+    codeAdd(Indentation.ENTER_BLOCK);
+
+    last(_START);
+
+    if (itemMore()) {
+      oldVariableInitializer();
+
+      while (itemMore()) {
+        slotComma();
+
+        oldVariableInitializer();
+      }
+    }
+
+    codeAdd(Indentation.EXIT_BLOCK);
+
+    if (lastIs(_NEW_LINE)) {
+      codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+    }
+
+    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
   }
 
   private void oldBlock() {
@@ -2211,7 +2238,7 @@ class InternalCompiler extends InternalApi {
     if (itemTest(this::isExpressionStartOrClassType)) {
       oldExpression();
     } else if (itemIs(ByteProto.ARRAY_INITIALIZER)) {
-      execute(this::arrayInitializer);
+      execute(this::oldArrayInitializer);
     } else {
       errorRaise();
     }
@@ -2789,14 +2816,6 @@ class InternalCompiler extends InternalApi {
     codeAdd(Keyword.VAR);
 
     last(_KEYWORD);
-  }
-
-  private int varState() {
-    return stackArray[7];
-  }
-
-  private void varState(int value) {
-    stackArray[7] = value;
   }
 
   private void voidKeyword() {
