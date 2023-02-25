@@ -81,6 +81,32 @@ class InternalApi {
     protoIndex = self;
   }
 
+  final void arrayTypeName(Class<?> type) {
+    int dimCount = 1;
+
+    var componentType = type.getComponentType();
+
+    for (;;) {
+      var next = componentType.getComponentType();
+
+      if (next == null) {
+        break;
+      }
+
+      dimCount++;
+
+      componentType = next;
+    }
+
+    classType(componentType);
+
+    for (int i = 0; i < dimCount; i++) {
+      itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);
+    }
+
+    arrayTypeName(dimCount);
+  }
+
   final _Item arrayTypeName(int dimCount) {
     elemCnt(ByteProto.ARRAY_TYPE, 1 + dimCount);
 

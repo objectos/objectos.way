@@ -52,6 +52,40 @@ public abstract class JavaTemplate {
   protected sealed interface BodyElement extends Instruction {}
 
   /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected static abstract sealed class ArrayTypeName
+      extends ReferenceTypeName {
+
+    private static final class OfClass extends ArrayTypeName {
+      private final Class<?> value;
+
+      public OfClass(Class<?> value) {
+        this.value = value;
+      }
+
+      @Override
+      final void execute(InternalApi api) {
+        api.arrayTypeName(value);
+        api.localToExternal();
+      }
+    }
+
+    ArrayTypeName() {}
+
+    static ArrayTypeName of(Class<?> type) {
+      Check.argument(type.isArray(), """
+      A `ArrayTypeName` can only be used to represent array types.
+      """);
+
+      return new OfClass(type);
+    }
+
+  }
+
+  /**
    * Represents the fully qualified name of a class or interface type in a Java
    * program.
    *
@@ -1049,6 +1083,24 @@ public abstract class JavaTemplate {
    * Sole constructor.
    */
   protected JavaTemplate() {}
+
+  /**
+   * TODO
+   *
+   * @param type
+   *        the {@code Class} representing an array type whose name will be used
+   *        in a Java program
+   *
+   * @return a newly constructed {@code ArrayTypeName} instance
+   *
+   * @throws IllegalArgumentException
+   *         if {@code type} does not represent an array.
+   *
+   * @since 0.4.2
+   */
+  protected static ArrayTypeName arrayType(Class<?> type) {
+    return ArrayTypeName.of(type);
+  }
 
   /**
    * Creates a new {@code ClassTypeName} from the provided {@code Class}

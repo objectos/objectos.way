@@ -133,11 +133,13 @@ public class FieldDeclarationTest {
   public void testCase04() {
     assertEquals(
       new JavaTemplate() {
+        static final ArrayTypeName OBJECT_ARRAY = arrayType(Object[].class);
+
         @Override
         protected final void definition() {
           _class("Fields");
           body(
-            t(t(Object.class), dim()), id("a")
+            field(OBJECT_ARRAY, name("a"))
           );
         }
       }.toString(),
@@ -158,11 +160,15 @@ public class FieldDeclarationTest {
   public void testCase05() {
     assertEquals(
       new JavaTemplate() {
+        static final ParameterizedTypeName MAP = parameterizedType(
+          classType(Map.class), classType(String.class), classType(Integer.class)
+        );
+
         @Override
         protected final void definition() {
           _class("Fields");
           body(
-            t(t(Map.class), t(String.class), t(Integer.class)), id("map")
+            field(MAP, name("map"))
           );
         }
       }.toString(),
