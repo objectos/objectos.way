@@ -26,12 +26,13 @@ public class ClassDeclarationTest {
   final class Subject {}
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _final(); _class("Subject"); body();
+          classDeclaration(
+            FINAL, name("Subject")
+          );
         }
       }.toString(),
 
@@ -39,7 +40,6 @@ public class ClassDeclarationTest {
       final class Subject {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -49,13 +49,14 @@ public class ClassDeclarationTest {
   class Subject {}
   """)
   public void testCase02() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          at(t(Deprecated.class));
-          _class("Subject"); body();
+          classDeclaration(
+            annotation(Deprecated.class),
+            name("Subject")
+          );
         }
       }.toString(),
 
@@ -64,7 +65,6 @@ public class ClassDeclarationTest {
       class Subject {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -75,13 +75,16 @@ public class ClassDeclarationTest {
   }
   """)
   public void testCase03() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Subject"); body(
-            _void(), method("m0"), block()
+          classDeclaration(
+            name("Subject"),
+
+            method(
+              name("m0")
+            )
           );
         }
       }.toString(),
@@ -92,7 +95,6 @@ public class ClassDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -101,18 +103,17 @@ public class ClassDeclarationTest {
   - allow includes
   """)
   public void testCase04() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Test"); body(
-            include(this::includeTest)
-          );
+          classDeclaration(this::includeTest);
         }
 
         private void includeTest() {
-          _int(); id("a");
+          name("Test");
+
+          field(INT, name("a"));
         }
       }.toString(),
 
@@ -122,7 +123,6 @@ public class ClassDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """

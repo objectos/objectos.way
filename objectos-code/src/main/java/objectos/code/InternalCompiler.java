@@ -379,6 +379,28 @@ class InternalCompiler extends InternalApi {
     last(_START);
   }
 
+  private void body(int offset) {
+    preSymbol();
+
+    codeAdd(Symbol.LEFT_CURLY_BRACKET);
+
+    if (offset != NULL) {
+      codeAdd(Indentation.ENTER_BLOCK);
+
+      last(_SYMBOL);
+
+      listSwitch(offset, this::bodyMember);
+
+      codeAdd(Indentation.EXIT_BLOCK);
+
+      codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+    } else {
+      codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+    }
+
+    codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+  }
+
   private void bodyMember() {
     topLevel(NULL);
 
@@ -442,7 +464,7 @@ class InternalCompiler extends InternalApi {
           codeAdd(Whitespace.MANDATORY);
         }
 
-        classDeclaration();
+        oldClassDeclaration();
       }
 
       case ByteProto.CONSTRUCTOR -> oldConstructorDeclaration();
@@ -483,22 +505,85 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void bodyMember(int proto) {
+    switch (last()) {
+      case _SYMBOL -> codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
+
+      case _START -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+    }
+
+    switch (proto) {
+      case ByteProto.FIELD_DECLARATION -> fieldDeclaration();
+
+      case ByteProto.METHOD_DECLARATION -> methodDeclaration();
+
+      default -> errorRaise(
+        "no-op body member '%s'".formatted(protoName(proto))
+      );
+    }
+  }
+
   private void classDeclaration() {
-    execute(this::classKeyword);
+    int start = stackIndex;
 
-    if (itemIs(ByteProto.EXTENDS)) {
-      classDeclarationExtends();
+    last(_START);
+
+    int annotations = NULL,
+        modifiers = NULL,
+        typeParameters = NULL,
+        name = NULL,
+        body = NULL;
+
+    while (protoMore()) {
+      int proto = protoPeek();
+
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
+
+        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
+
+        case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.MODIFIER,
+             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+
+        case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: " + protoName(proto)
+          );
+        }
+      }
     }
 
-    if (itemIs(ByteProto.IMPLEMENTS)) {
-      implementsClause();
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
     }
 
-    if (itemIs(ByteProto.BODY)) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      execute(this::body);
+    if (modifiers != NULL) {
+      listSwitch(modifiers, this::modifierSwitcher);
     }
+
+    preKeyword();
+    codeAdd(Keyword.CLASS);
+    last(_KEYWORD);
+
+    if (name != NULL) {
+      singleExecute(name, this::declarationName);
+    } else {
+      unnamedType();
+    }
+
+    body(body);
+
+    stackIndex = start;
   }
 
   private void classDeclarationExtends() {
@@ -509,10 +594,6 @@ class InternalCompiler extends InternalApi {
     } else {
       error();
     }
-  }
-
-  private void classKeyword() {
-    typeKeyword(Keyword.CLASS);
   }
 
   private void classType() {
@@ -643,6 +724,7 @@ class InternalCompiler extends InternalApi {
       }
 
       case ByteProto.CLASS,
+           ByteProto.CLASS_DECLARATION,
            ByteProto.ENUM,
            ByteProto.INTERFACE,
            ByteProto.MODIFIER -> topLevelDeclarationList();
@@ -1798,6 +1880,24 @@ class InternalCompiler extends InternalApi {
     oldStatement0(start);
   }
 
+  private void oldClassDeclaration() {
+    execute(this::oldClassKeyword);
+
+    if (itemIs(ByteProto.EXTENDS)) {
+      classDeclarationExtends();
+    }
+
+    if (itemIs(ByteProto.IMPLEMENTS)) {
+      implementsClause();
+    }
+
+    if (itemIs(ByteProto.BODY)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::body);
+    }
+  }
+
   private void oldClassInstanceCreation() {
     preKeyword();
 
@@ -1808,6 +1908,10 @@ class InternalCompiler extends InternalApi {
     executeSwitch(this::oldType);
 
     oldArgumentList();
+  }
+
+  private void oldClassKeyword() {
+    typeKeyword(Keyword.CLASS);
   }
 
   private void oldConstructorDeclaration() {
@@ -2353,6 +2457,8 @@ class InternalCompiler extends InternalApi {
 
   private void preKeyword() {
     switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
       case _BLOCK -> codeAdd(Whitespace.OPTIONAL);
 
       case _IDENTIFIER,
@@ -2667,8 +2773,10 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS -> {
         beforeTopLevelTypeDeclaration();
 
-        classDeclaration();
+        oldClassDeclaration();
       }
+
+      case ByteProto.CLASS_DECLARATION -> execute(this::classDeclaration);
 
       case ByteProto.ENUM -> {
         beforeTopLevelTypeDeclaration();
@@ -2802,6 +2910,14 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(ByteCode.IDENTIFIER, object("unnamed"));
+  }
+
+  private void unnamedType() {
+    if (lastIs(_KEYWORD)) {
+      codeAdd(Whitespace.MANDATORY);
+    }
+
+    codeAdd(ByteCode.IDENTIFIER, object("Unnamed"));
   }
 
   private void v() {

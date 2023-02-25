@@ -310,6 +310,7 @@ public abstract class JavaTemplate {
    */
   protected static final class Modifier extends External
       implements
+      ClassDeclarationInstruction,
       ConstructorDeclarationInstruction,
       FieldDeclarationInstruction,
       MethodDeclarationInstruction {
@@ -490,6 +491,7 @@ public abstract class JavaTemplate {
       AutoImports,
       Block,
       Body,
+      ClassDeclaration,
       ClassInstanceCreationExpression,
       ClassKeyword,
       ClassTypeInstruction,
@@ -552,7 +554,10 @@ public abstract class JavaTemplate {
 
   sealed interface AbstractModifier extends BodyElement {}
 
-  sealed interface AnnotationInst extends MethodDeclarationInstruction {}
+  sealed interface AnnotationInst
+      extends
+      ClassDeclarationInstruction,
+      MethodDeclarationInstruction {}
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
@@ -582,6 +587,16 @@ public abstract class JavaTemplate {
 
   sealed interface Body extends BodyElement {}
 
+  /**
+   * @since 0.4.4
+   */
+  sealed interface ClassDeclaration {}
+
+  /**
+   * @since 0.4.4
+   */
+  sealed interface ClassDeclarationInstruction extends Instruction {}
+
   sealed interface ClassInstanceCreationExpression extends PrimaryNoNewArray {}
 
   sealed interface ClassKeyword extends BodyElement {}
@@ -595,7 +610,11 @@ public abstract class JavaTemplate {
   sealed interface ConstructorDeclaration extends BodyElement {}
 
   sealed interface DeclarationName
-      extends FieldDeclarationInstruction, MethodDeclarationInstruction, StatementPart {}
+      extends
+      ClassDeclarationInstruction,
+      FieldDeclarationInstruction,
+      MethodDeclarationInstruction,
+      StatementPart {}
 
   sealed interface End extends ArgsPart, BlockElement {}
 
@@ -637,7 +656,10 @@ public abstract class JavaTemplate {
 
   sealed interface Literal extends AtElement, ExpressionPart {}
 
-  sealed interface MethodDeclaration extends BodyElement {}
+  sealed interface MethodDeclaration
+      extends
+      BodyElement,
+      ClassDeclarationInstruction {}
 
   sealed interface MethodDeclarator extends BodyElement {}
 
@@ -2041,9 +2063,12 @@ public abstract class JavaTemplate {
 
   /**
    * TODO
+   *
+   * @since 0.4.4
    */
-  protected final void code(Instruction... elements) {
-    // no-op
+  protected final ClassDeclaration classDeclaration(ClassDeclarationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.CLASS_DECLARATION, many);
   }
 
   /**
@@ -2051,12 +2076,15 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final void consume(Instruction instruction) {
-    if (instruction instanceof External external) {
-      var api = api();
-      external.execute(api);
-      api.externalToLocal();
-    }
+  protected final ClassDeclaration classDeclaration(IncludeTarget target) {
+    return api().elem(ByteProto.CLASS_DECLARATION, include(target));
+  }
+
+  /**
+   * TODO
+   */
+  protected final void code(Instruction... elements) {
+    // no-op
   }
 
   /**
@@ -2138,6 +2166,19 @@ public abstract class JavaTemplate {
       ParameterElement e3, ParameterElement e4, ParameterElement e5, ParameterElement e6) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(),
       e3.self(), e4.self(), e5.self(), e6.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final void consume(Instruction instruction) {
+    if (instruction instanceof External external) {
+      var api = api();
+      external.execute(api);
+      api.externalToLocal();
+    }
   }
 
   /**
