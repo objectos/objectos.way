@@ -42,7 +42,8 @@ class InternalCompiler extends InternalApi {
       _NEW_LINE = 7,
       _PRIMARY = 8,
       _SEMICOLON = 9,
-      _SYMBOL = 10;
+      _SYMBOL = 10,
+      _TYPE = 11;
 
   final void compile() {
     codeIndex = 0;
@@ -286,6 +287,8 @@ class InternalCompiler extends InternalApi {
     while (itemMore()) {
       arrayDimension();
     }
+
+    last(_TYPE);
   }
 
   private void autoImports() {
@@ -387,7 +390,7 @@ class InternalCompiler extends InternalApi {
     if (offset != NULL) {
       codeAdd(Indentation.ENTER_BLOCK);
 
-      last(_SYMBOL);
+      last(_START);
 
       listSwitch(offset, this::bodyMember);
 
@@ -507,12 +510,14 @@ class InternalCompiler extends InternalApi {
 
   private void bodyMember(int proto) {
     switch (last()) {
-      case _SYMBOL -> codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
+      case _START -> codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
 
-      case _START -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+      case _SYMBOL -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
     }
 
     switch (proto) {
+      case ByteProto.CLASS_DECLARATION -> classDeclaration();
+
       case ByteProto.FIELD_DECLARATION -> fieldDeclaration();
 
       case ByteProto.METHOD_DECLARATION -> methodDeclaration();
@@ -532,6 +537,8 @@ class InternalCompiler extends InternalApi {
         modifiers = NULL,
         typeParameters = NULL,
         name = NULL,
+        extendsClause = NULL,
+        implementsClause = NULL,
         body = NULL;
 
     while (protoMore()) {
@@ -544,9 +551,15 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
 
+        case ByteProto.CLASS_DECLARATION -> body = listAdd(body);
+
         case ByteProto.DECLARATION_NAME -> name = singleSet(name);
 
+        case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
+
         case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.IMPLEMENTS_CLAUSE -> implementsClause = listAdd(implementsClause);
 
         case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
 
@@ -571,14 +584,24 @@ class InternalCompiler extends InternalApi {
       listSwitch(modifiers, this::modifierSwitcher);
     }
 
-    preKeyword();
-    codeAdd(Keyword.CLASS);
-    last(_KEYWORD);
+    keyword(Keyword.CLASS);
 
     if (name != NULL) {
       singleExecute(name, this::declarationName);
     } else {
       unnamedType();
+    }
+
+    if (extendsClause != NULL) {
+      last(_IDENTIFIER);
+
+      listExecute(extendsClause, this::extendsClause);
+    }
+
+    if (implementsClause != NULL) {
+      last(_IDENTIFIER);
+
+      listExecute(implementsClause, this::implementsClause);
     }
 
     body(body);
@@ -669,7 +692,25 @@ class InternalCompiler extends InternalApi {
       }
     }
 
-    last(_IDENTIFIER);
+    last(_TYPE);
+  }
+
+  private void clause(Keyword keyword) {
+    if (elemMore()) {
+      switch (last()) {
+        case _IDENTIFIER -> keyword(keyword);
+
+        case _TYPE -> comma();
+      }
+
+      executeSwitch(this::type);
+
+      while (elemMore()) {
+        comma();
+
+        executeSwitch(this::type);
+      }
+    }
   }
 
   private void codeAdd(Indentation value) { codeAdd(ByteCode.INDENTATION, value.ordinal()); }
@@ -904,7 +945,7 @@ class InternalCompiler extends InternalApi {
     execute(this::enumKeyword);
 
     if (itemIs(ByteProto.IMPLEMENTS)) {
-      implementsClause();
+      oldImplementsClause();
     }
 
     if (itemIs(ByteProto.BODY)) {
@@ -974,6 +1015,10 @@ class InternalCompiler extends InternalApi {
     last(_IDENTIFIER);
   }
 
+  private void extendsClause() {
+    clause(Keyword.EXTENDS);
+  }
+
   private void extendsKeyword() {
     preKeyword();
 
@@ -1035,7 +1080,7 @@ class InternalCompiler extends InternalApi {
       fieldDeclarationVariableList();
     }
 
-    codeAdd(Symbol.SEMICOLON);
+    semicolon();
 
     stackIndex = start;
   }
@@ -1147,18 +1192,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void implementsClause() {
-    execute(this::implementsKeyword);
-
-    if (itemTest(ByteProto::isClassOrParameterizedType)) {
-      executeSwitch(this::oldType);
-
-      while (itemTest(ByteProto::isClassOrParameterizedType)) {
-        codeAdd(Symbol.COMMA);
-        last(_COMMA);
-
-        executeSwitch(this::oldType);
-      }
-    }
+    clause(Keyword.IMPLEMENTS);
   }
 
   private void implementsKeyword() {
@@ -1298,6 +1332,14 @@ class InternalCompiler extends InternalApi {
     int proto = protoPeek();
 
     return predicate.test(proto);
+  }
+
+  private void keyword(Keyword value) {
+    preKeyword();
+
+    codeAdd(value);
+
+    last(_KEYWORD);
   }
 
   private void lang() {
@@ -1652,8 +1694,10 @@ class InternalCompiler extends InternalApi {
       }
 
       codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+      last(_SYMBOL);
     } else {
-      codeAdd(Symbol.SEMICOLON);
+      semicolon();
     }
 
     stackIndex = start;
@@ -1888,7 +1932,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (itemIs(ByteProto.IMPLEMENTS)) {
-      implementsClause();
+      oldImplementsClause();
     }
 
     if (itemIs(ByteProto.BODY)) {
@@ -2096,6 +2140,21 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
+  }
+
+  private void oldImplementsClause() {
+    execute(this::implementsKeyword);
+
+    if (itemTest(ByteProto::isClassOrParameterizedType)) {
+      executeSwitch(this::oldType);
+
+      while (itemTest(ByteProto::isClassOrParameterizedType)) {
+        codeAdd(Symbol.COMMA);
+        last(_COMMA);
+
+        executeSwitch(this::oldType);
+      }
+    }
   }
 
   private void oldMethodDeclaration() {
@@ -2394,7 +2453,7 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
 
-    last(_SYMBOL);
+    last(_TYPE);
   }
 
   private void parameterShort() {
@@ -2432,7 +2491,8 @@ class InternalCompiler extends InternalApi {
       case _COMMA -> codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
       case _IDENTIFIER,
-           _PRIMARY -> codeAdd(Symbol.DOT);
+           _PRIMARY,
+           _TYPE -> codeAdd(Symbol.DOT);
 
       case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
 
@@ -2447,7 +2507,8 @@ class InternalCompiler extends InternalApi {
       case _COMMA -> codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
       case _IDENTIFIER,
-           _KEYWORD -> codeAdd(Whitespace.MANDATORY);
+           _KEYWORD,
+           _TYPE -> codeAdd(Whitespace.MANDATORY);
 
       case _NEW_LINE -> codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
 
@@ -2473,7 +2534,8 @@ class InternalCompiler extends InternalApi {
     switch (last()) {
       case _IDENTIFIER,
            _KEYWORD,
-           _PRIMARY -> codeAdd(Whitespace.OPTIONAL);
+           _PRIMARY,
+           _TYPE -> codeAdd(Whitespace.OPTIONAL);
     }
   }
 
@@ -2510,7 +2572,7 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(ByteCode.KEYWORD, protoNext());
 
-    last(_KEYWORD);
+    last(_TYPE);
   }
 
   private boolean protoIs(int value) {
@@ -2589,6 +2651,12 @@ class InternalCompiler extends InternalApi {
 
   private void returnType() {
     executeSwitch(this::type);
+  }
+
+  private void semicolon() {
+    codeAdd(Symbol.SEMICOLON);
+
+    last(_SYMBOL);
   }
 
   private int simpleName() { return stackArray[0]; }
@@ -2901,7 +2969,7 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(ByteCode.IDENTIFIER, protoNext());
 
-    last(_IDENTIFIER);
+    last(_TYPE);
   }
 
   private void unnamed() {

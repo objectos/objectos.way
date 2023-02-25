@@ -131,25 +131,42 @@ public class ClassDeclarationTest {
   - nested class declaration
   """)
   public void testCase05() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Level1"); body(
-            _class("A"), body()
-          );
+          classDeclaration(
+            name("Level1"),
 
-          _class("Level2"); body(
-            _class("A"), body(
-              _class("B"), body()
+            classDeclaration(
+              name("A")
             )
           );
 
-          _class("Level3"); body(
-            _class("A"), body(
-              _class("B"), body(
-                _class("C"), body()
+          classDeclaration(
+            name("Level2"),
+
+            classDeclaration(
+              name("A"),
+
+              classDeclaration(
+                name("B")
+              )
+            )
+          );
+
+          classDeclaration(
+            name("Level3"),
+
+            classDeclaration(
+              name("A"),
+
+              classDeclaration(
+                name("B"),
+
+                classDeclaration(
+                  name("C")
+                )
               )
             )
           );
@@ -176,7 +193,6 @@ public class ClassDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -185,22 +201,33 @@ public class ClassDeclarationTest {
   - class modifiers
   """)
   public void testCase06() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _public(); _class("A"); body();
+          classDeclaration(
+            PUBLIC, name("A")
+          );
 
-          _protected(); _class("B"); body();
+          classDeclaration(
+            PROTECTED, name("B")
+          );
 
-          _private(); _class("C"); body();
+          classDeclaration(
+            PRIVATE, name("C")
+          );
 
-          _static(); _class("D"); body();
+          classDeclaration(
+            STATIC, name("D")
+          );
 
-          _abstract(); _class("E"); body();
+          classDeclaration(
+            ABSTRACT, name("E")
+          );
 
-          _final(); _class("F"); body();
+          classDeclaration(
+            FINAL, name("F")
+          );
         }
       }.toString(),
 
@@ -218,7 +245,6 @@ public class ClassDeclarationTest {
       final class F {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -227,17 +253,31 @@ public class ClassDeclarationTest {
   - implements clause
   """)
   public void testCase07() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName AUTO_CLOSEABLE = classType(AutoCloseable.class);
+
+        static final ClassTypeName FOO = classType("com.example", "Foo");
+
+        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+
         @Override
         protected final void definition() {
-          _class("A"); _implements(); t(AutoCloseable.class); body();
+          classDeclaration(
+            name("A"),
+            implementsClause(AUTO_CLOSEABLE)
+          );
 
-          _class("B"); _implements(); t(AutoCloseable.class); t(Serializable.class); body();
+          classDeclaration(
+            name("B"),
+            implementsClause(AUTO_CLOSEABLE, SERIALIZABLE)
+          );
 
-          _class("C"); _extends(); t("objectos.code", "Foo");
-          _implements(); t(AutoCloseable.class); t(Serializable.class); body();
+          classDeclaration(
+            name("C"),
+            extendsClause(FOO),
+            implementsClause(AUTO_CLOSEABLE, SERIALIZABLE)
+          );
         }
       }.toString(),
 
@@ -246,10 +286,9 @@ public class ClassDeclarationTest {
 
       class B implements java.lang.AutoCloseable, java.io.Serializable {}
 
-      class C extends objectos.code.Foo implements java.lang.AutoCloseable, java.io.Serializable {}
+      class C extends com.example.Foo implements java.lang.AutoCloseable, java.io.Serializable {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -258,19 +297,30 @@ public class ClassDeclarationTest {
   - annotated method
   """)
   public void testCase08() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+
+        static final ClassTypeName THREAD = classType(Thread.class);
+
         @Override
         protected final void definition() {
-          _class("A"); _extends(); t(Thread.class); body(
-            at(t(Override.class)),
-            _void(), method("foo"), block()
+          classDeclaration(
+            name("A"),
+            extendsClause(THREAD),
+            method(
+              annotation(Override.class),
+              VOID, name("foo")
+            )
           );
 
-          _class("B"); _implements(); t(Serializable.class); body(
-            at(t(Override.class)),
-            _void(), method("foo"), block()
+          classDeclaration(
+            name("B"),
+            implementsClause(SERIALIZABLE),
+            method(
+              annotation(Override.class),
+              VOID, name("foo")
+            )
           );
         }
       }.toString(),
@@ -287,7 +337,6 @@ public class ClassDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -296,16 +345,18 @@ public class ClassDeclarationTest {
   - more than one member
   """)
   public void testCase09() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("A"); body(
-            _int(), id("value"),
+          classDeclaration(
+            name("A"),
 
-            _int(), method("value"), block(
-              _return(), n("value")
+            field(INT, name("value")),
+
+            method(
+              INT, name("value"),
+              p(RETURN, n("value"))
             )
           );
         }
@@ -321,7 +372,6 @@ public class ClassDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """

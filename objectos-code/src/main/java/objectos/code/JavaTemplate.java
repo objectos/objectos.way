@@ -125,7 +125,7 @@ public abstract class JavaTemplate {
    */
   protected static abstract sealed class ClassTypeName
       extends ReferenceTypeName
-      implements ArrayTypeComponent, ExpressionPart {
+      implements ArrayTypeComponent, ClassOrParameterizedType, ExpressionPart {
 
     private static final class OfClass extends ClassTypeName {
       private final Class<?> value;
@@ -340,7 +340,7 @@ public abstract class JavaTemplate {
    * @since 0.4.2
    */
   protected static final class ParameterizedTypeName
-      extends ReferenceTypeName implements ExpressionPart {
+      extends ReferenceTypeName implements ClassOrParameterizedType, ExpressionPart {
     private final ClassTypeName raw;
 
     private final ReferenceTypeName first;
@@ -507,12 +507,14 @@ public abstract class JavaTemplate {
       OldEqualityOperator,
       ExplicitConstructorInvocation,
       ExpressionName,
+      ExtendsClause,
       ExtendsKeyword,
       FieldDeclaration,
       FieldDeclarationInstruction,
       FinalModifier,
       Identifier,
       IfCondition,
+      ImplementsClause,
       ImplementsKeyword,
       IntegerLiteral,
       InterfaceKeyword,
@@ -590,7 +592,7 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.4
    */
-  sealed interface ClassDeclaration {}
+  sealed interface ClassDeclaration extends ClassDeclarationInstruction {}
 
   /**
    * @since 0.4.4
@@ -626,6 +628,12 @@ public abstract class JavaTemplate {
 
   sealed interface ExpressionName extends ExpressionPart {}
 
+  /**
+   * @since 0.4.4
+   */
+  sealed interface ExtendsClause extends ClassDeclarationInstruction {}
+
+  @Deprecated
   sealed interface ExtendsKeyword extends BodyElement {}
 
   abstract static sealed class External implements Instruction {
@@ -634,7 +642,7 @@ public abstract class JavaTemplate {
     abstract void execute(InternalApi api);
   }
 
-  sealed interface FieldDeclaration extends BodyElement {}
+  sealed interface FieldDeclaration extends BodyElement, ClassDeclarationInstruction {}
 
   sealed interface FieldDeclarationInstruction extends Instruction {}
 
@@ -644,6 +652,12 @@ public abstract class JavaTemplate {
 
   sealed interface IfCondition extends BlockElement {}
 
+  /**
+   * @since 0.4.4
+   */
+  sealed interface ImplementsClause extends ClassDeclarationInstruction {}
+
+  @Deprecated
   sealed interface ImplementsKeyword extends BodyElement {}
 
   sealed interface Include
@@ -2288,6 +2302,16 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.4
    */
+  protected final ExtendsClause extendsClause(ClassOrParameterizedType... types) {
+    Object[] many = Objects.requireNonNull(types, "types == null");
+    return api().elemMany(ByteProto.EXTENDS_CLAUSE, many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
   protected final FieldDeclaration field(FieldDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.FIELD_DECLARATION, many);
@@ -2340,6 +2364,16 @@ public abstract class JavaTemplate {
     JavaModel.checkIdentifier(name);
     var api = api();
     return api.itemAdd(ByteProto.IDENTIFIER, api.object(name));
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final ImplementsClause implementsClause(ClassOrParameterizedType... types) {
+    Object[] many = Objects.requireNonNull(types, "types == null");
+    return api().elemMany(ByteProto.IMPLEMENTS_CLAUSE, many);
   }
 
   /**
