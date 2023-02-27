@@ -2457,6 +2457,15 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.4
    */
+  protected final InterfaceDeclaration interfaceDeclaration(IncludeTarget target) {
+    return api().elem(ByteProto.INTERFACE_DECLARATION, include(target));
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
   protected final EnumDeclaration enumDeclaration(EnumDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.ENUM_DECLARATION, many);

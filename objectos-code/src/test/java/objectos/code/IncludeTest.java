@@ -26,18 +26,17 @@ public class IncludeTest {
   - single statement
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("TestCase01"); body(
-            include(this::body0)
-          );
+          classDeclaration(this::tc01);
         }
 
-        private void body0() {
-          _int(); id("a");
+        private void tc01() {
+          name("TestCase01");
+
+          field(INT, name("a"));
         }
       }.toString(),
 
@@ -47,7 +46,6 @@ public class IncludeTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -55,36 +53,36 @@ public class IncludeTest {
   - many statements
   """)
   public void testCase02() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Test"); body(
-            _static(), block(
-              invoke("test", include(this::body0))
-            )
-          );
+          classDeclaration(this::tc01);
         }
 
-        private void body0() {
-          invoke("a"); end();
+        private void tc01() {
+          name("Test");
 
-          invoke("b"); end();
-
-          invoke("c");
+          method(
+            name("foo"),
+            p(
+              v("test"),
+              arg(v("a")),
+              arg(v("b")),
+              arg(v("c"))
+            )
+          );
         }
       }.toString(),
 
       """
       class Test {
-        static {
+        void foo() {
           test(a(), b(), c());
         }
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -92,43 +90,45 @@ public class IncludeTest {
   - same level
   """)
   public void testCase03() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Test");
-          body(
-            include(this::body1),
+          classDeclaration(this::tc01);
 
-            _int(), id("d"),
+          classDeclaration(name("Foo"));
 
-            include(this::body2)
-          );
+          interfaceDeclaration(this::tc02);
         }
 
-        private void body1() {
-          _int(); id("a");
+        private void tc01() {
+          name("Test01");
 
-          _int(); id("b");
-
-          _int(); id("c");
+          field(INT, name("a"));
+          field(INT, name("b"));
+          field(INT, name("c"));
         }
 
-        private void body2() {
-          _int(); id("e");
+        private void tc02() {
+          name("Test02");
 
-          _int(); id("f");
+          field(INT, name("d"));
+          field(INT, name("e"));
+          field(INT, name("f"));
         }
       }.toString(),
       """
-      class Test {
+      class Test01 {
         int a;
 
         int b;
 
         int c;
+      }
 
+      class Foo {}
+
+      interface Test02 {
         int d;
 
         int e;
@@ -137,7 +137,6 @@ public class IncludeTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -146,26 +145,26 @@ public class IncludeTest {
   ArrayIndexOutOfBounds when included template adds no instructions
   """)
   public void testCase04() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Test");
-          body(
-            include(this::level1A),
-            include(this::level1B)
-          );
+          classDeclaration(this::level1A);
+          classDeclaration(this::level1B);
         }
 
         private void level1A() {
-          _int(); id("field");
+          name("L1A");
+
+          field(INT, name("field"));
         }
 
         private void level1B() {
-          _void(); method("m", include(this::level2A)); block(
-            invoke("foo", include(this::level2B))
-          );
+          name("L1B");
+
+          method(this::level2A);
+
+          method(this::level2B);
         }
 
         private void level2A() {
@@ -173,20 +172,25 @@ public class IncludeTest {
         }
 
         private void level2B() {
-          s("level 2B");
+          name("l2B");
+
+          p(v("foo"), arg(s("level 2B")));
         }
       }.toString(),
       """
-      class Test {
+      class L1A {
         int field;
+      }
 
-        void m() {
+      class L1B {
+        void unnamed() {}
+
+        void l2B() {
           foo("level 2B");
         }
       }
       """
     );
-    // @formatter:on
   }
 
 }
