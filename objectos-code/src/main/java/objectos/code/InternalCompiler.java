@@ -420,6 +420,8 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+    last(_SYMBOL);
   }
 
   private void bodyMember() {
@@ -527,6 +529,8 @@ class InternalCompiler extends InternalApi {
   }
 
   private void bodyMember(int proto) {
+    topLevel(NULL);
+
     switch (last()) {
       case _START -> codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
 
@@ -538,7 +542,11 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CONSTRUCTOR_DECLARATION -> constructorDeclaration();
 
+      case ByteProto.ENUM_DECLARATION -> enumDeclaration();
+
       case ByteProto.FIELD_DECLARATION -> fieldDeclaration();
+
+      case ByteProto.INTERFACE_DECLARATION -> interfaceDeclaration();
 
       case ByteProto.METHOD_DECLARATION -> methodDeclaration();
 
@@ -2899,11 +2907,15 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.ENUM_CONSTANT -> enumConstants = listAdd(enumConstants);
 
+        case ByteProto.ENUM_DECLARATION -> body = listAdd(body);
+
         case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
 
         case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
 
         case ByteProto.IMPLEMENTS_CLAUSE -> implementsClause = listAdd(implementsClause);
+
+        case ByteProto.INTERFACE_DECLARATION -> body = listAdd(body);
 
         case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
 

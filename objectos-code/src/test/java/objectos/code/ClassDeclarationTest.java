@@ -384,11 +384,16 @@ public class ClassDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("A");
-          body(
-            _interface("X"), body(),
+          classDeclaration(
+            name("A"),
 
-            _enum("Y"), body(
+            interfaceDeclaration(
+              name("X")
+            ),
+
+            enumDeclaration(
+              name("Y"),
+
               enumConstant("INSTANCE")
             )
           );
