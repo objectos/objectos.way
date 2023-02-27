@@ -30,12 +30,13 @@ public class InterfaceDeclarationTest {
   - identifier
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _interface("A"); body();
+          interfaceDeclaration(
+            name("A")
+          );
         }
       }.toString(),
 
@@ -43,7 +44,6 @@ public class InterfaceDeclarationTest {
       interface A {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -52,20 +52,28 @@ public class InterfaceDeclarationTest {
   - modifiers
   """)
   public void testCase02() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _public(); _interface("A"); body();
+          interfaceDeclaration(
+            PUBLIC, name("A")
+          );
 
-          at(t(TypeAnnotation.class));
-          _interface("B"); body();
+          interfaceDeclaration(
+            annotation(TypeAnnotation.class),
+            name("B")
+          );
 
-          at(t(TypeAnnotation.class));
-          _protected(); _interface("C"); body();
+          interfaceDeclaration(
+            annotation(TypeAnnotation.class),
+            PROTECTED, name("C")
+          );
 
-          _private(); _static(); at(t(TypeAnnotation.class)); _interface("D"); body();
+          interfaceDeclaration(
+            annotation(TypeAnnotation.class),
+            PRIVATE, STATIC, name("D")
+          );
         }
       }.toString(),
 
@@ -78,10 +86,10 @@ public class InterfaceDeclarationTest {
       @objectos.code.TypeAnnotation
       protected interface C {}
 
-      private static @objectos.code.TypeAnnotation interface D {}
+      @objectos.code.TypeAnnotation
+      private static interface D {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -90,16 +98,25 @@ public class InterfaceDeclarationTest {
   - extends clause
   """)
   public void testCase03() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName IFACE_A = classType(IfaceA.class);
+        static final ClassTypeName IFACE_B = classType(IfaceB.class);
+        static final ClassTypeName IFACE_C = classType(IfaceC.class);
+
         @Override
         protected final void definition() {
-          _interface("A"); _extends(); t(IfaceA.class); body();
+          interfaceDeclaration(
+            name("A"), extendsClause(IFACE_A)
+          );
 
-          _interface("B"); _extends(); t(IfaceA.class); t(IfaceB.class); body();
+          interfaceDeclaration(
+            name("B"), extendsClause(IFACE_A, IFACE_B)
+          );
 
-          _interface("C"); _extends(); t(IfaceA.class); t(IfaceB.class); t(IfaceC.class); body();
+          interfaceDeclaration(
+            name("C"), extendsClause(IFACE_A, IFACE_B, IFACE_C)
+          );
         }
       }.toString(),
 
@@ -111,7 +128,6 @@ public class InterfaceDeclarationTest {
       interface C extends objectos.code.Types.IfaceA, objectos.code.Types.IfaceB, objectos.code.Types.IfaceC {}
       """
     );
-    // @formatter:on
   }
 
 }

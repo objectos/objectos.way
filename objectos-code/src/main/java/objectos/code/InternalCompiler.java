@@ -481,7 +481,7 @@ class InternalCompiler extends InternalApi {
           codeAdd(Whitespace.MANDATORY);
         }
 
-        interfaceDeclaration();
+        oldInterfaceDeclaration();
       }
 
       case ByteProto.TYPE_PARAMETER -> {
@@ -772,6 +772,7 @@ class InternalCompiler extends InternalApi {
            ByteProto.CLASS_DECLARATION,
            ByteProto.ENUM,
            ByteProto.INTERFACE,
+           ByteProto.INTERFACE_DECLARATION,
            ByteProto.MODIFIER -> topLevelDeclarationList();
 
       case ByteProto.END_ELEMENT -> {}
@@ -955,6 +956,34 @@ class InternalCompiler extends InternalApi {
     errorRaise();
 
     codeAdd(ByteCode.COMMENT, object(message));
+  }
+
+  private void executableBody(int statements) {
+    codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    if (!abstractFound()) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      codeAdd(Symbol.LEFT_CURLY_BRACKET);
+
+      if (statements != NULL) {
+        codeAdd(Indentation.ENTER_BLOCK);
+
+        listExecute(statements, this::blockStatement);
+
+        codeAdd(Indentation.EXIT_BLOCK);
+
+        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
+      } else {
+        codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
+      }
+
+      codeAdd(Symbol.RIGHT_CURLY_BRACKET);
+
+      last(_SYMBOL);
+    } else {
+      semicolon();
+    }
   }
 
   private int execute(Action action) {
@@ -1192,17 +1221,77 @@ class InternalCompiler extends InternalApi {
   }
 
   private void interfaceDeclaration() {
-    execute(this::interfaceKeyword);
+    int start = stackIndex;
 
-    if (itemIs(ByteProto.EXTENDS)) {
-      interfaceDeclarationExtends();
+    last(_START);
+
+    int annotations = NULL,
+        modifiers = NULL,
+        typeParameters = NULL,
+        name = NULL,
+        extendsClause = NULL,
+        body = NULL;
+
+    while (protoMore()) {
+      int proto = protoPeek();
+
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
+
+        case ByteProto.CLASS_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
+
+        case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
+
+        case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.MODIFIER,
+             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+
+        case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: " + protoName(proto)
+          );
+        }
+      }
     }
 
-    if (itemIs(ByteProto.BODY)) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      execute(this::body);
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
     }
+
+    if (modifiers != NULL) {
+      listSwitch(modifiers, this::modifierSwitcher);
+    }
+
+    keyword(Keyword.INTERFACE);
+
+    if (name != NULL) {
+      singleExecute(name, this::typeDeclarationName);
+    } else {
+      unnamedType();
+    }
+
+    if (extendsClause != NULL) {
+      last(_IDENTIFIER);
+
+      listExecute(extendsClause, this::extendsClause);
+    }
+
+    body(body);
+
+    stackIndex = start;
   }
 
   private void interfaceDeclarationExtends() {
@@ -1661,34 +1750,6 @@ class InternalCompiler extends InternalApi {
     stackIndex = start;
   }
 
-  private void executableBody(int statements) {
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
-
-    if (!abstractFound()) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      codeAdd(Symbol.LEFT_CURLY_BRACKET);
-
-      if (statements != NULL) {
-        codeAdd(Indentation.ENTER_BLOCK);
-
-        listExecute(statements, this::blockStatement);
-
-        codeAdd(Indentation.EXIT_BLOCK);
-
-        codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
-      } else {
-        codeAdd(Whitespace.BEFORE_EMPTY_BLOCK_END);
-      }
-
-      codeAdd(Symbol.RIGHT_CURLY_BRACKET);
-
-      last(_SYMBOL);
-    } else {
-      semicolon();
-    }
-  }
-
   private void methodResult(int proto) {
     switch (proto) {
       case ByteProto.ARRAY_TYPE -> arrayType();
@@ -2140,6 +2201,20 @@ class InternalCompiler extends InternalApi {
 
         executeSwitch(this::oldType);
       }
+    }
+  }
+
+  private void oldInterfaceDeclaration() {
+    execute(this::interfaceKeyword);
+
+    if (itemIs(ByteProto.EXTENDS)) {
+      interfaceDeclarationExtends();
+    }
+
+    if (itemIs(ByteProto.BODY)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::body);
     }
   }
 
@@ -2842,8 +2917,10 @@ class InternalCompiler extends InternalApi {
       case ByteProto.INTERFACE -> {
         beforeTopLevelTypeDeclaration();
 
-        interfaceDeclaration();
+        oldInterfaceDeclaration();
       }
+
+      case ByteProto.INTERFACE_DECLARATION -> execute(this::interfaceDeclaration);
 
       default -> errorRaise(
         "no-op top level declaration '%s'".formatted(protoName(next))

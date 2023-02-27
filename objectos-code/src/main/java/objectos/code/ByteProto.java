@@ -61,50 +61,51 @@ final class ByteProto {
   static final int IMPLEMENTS = -31;
   static final int IMPLEMENTS_CLAUSE = -32;
   static final int INTERFACE = -33;
-  static final int METHOD = -34;
-  static final int METHOD_DECLARATION = -35;
-  static final int MODIFIER = -36;
-  static final int MODIFIERS = -37;
-  static final int PACKAGE = -38;
-  static final int PARAMETER = -39;
-  static final int PARAMETER_SHORT = -40;
-  static final int RETURN_TYPE = -41;
-  static final int STATEMENT = -42;
-  static final int TYPE_PARAMETER = -43;
+  static final int INTERFACE_DECLARATION = -34;
+  static final int METHOD = -35;
+  static final int METHOD_DECLARATION = -36;
+  static final int MODIFIER = -37;
+  static final int MODIFIERS = -38;
+  static final int PACKAGE = -39;
+  static final int PARAMETER = -40;
+  static final int PARAMETER_SHORT = -41;
+  static final int RETURN_TYPE = -42;
+  static final int STATEMENT = -43;
+  static final int TYPE_PARAMETER = -44;
 
   //statement start
 
-  static final int BLOCK = -44;
-  static final int IF_CONDITION = -45;
-  static final int RETURN = -46;
-  static final int SUPER = -47;
-  static final int SUPER_INVOCATION = -48;
-  static final int THROW = -49;
-  static final int VAR = -50;
+  static final int BLOCK = -45;
+  static final int IF_CONDITION = -46;
+  static final int RETURN = -47;
+  static final int SUPER = -48;
+  static final int SUPER_INVOCATION = -49;
+  static final int THROW = -50;
+  static final int VAR = -51;
 
   //statement part
 
-  static final int IF = -51;
-  static final int ELSE = -52;
+  static final int IF = -52;
+  static final int ELSE = -53;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -53;
-  static final int EXPRESSION_NAME = -54;
-  static final int INVOKE = -55;
-  static final int NEW = -56;
-  static final int NULL_LITERAL = -57;
-  static final int PRIMITIVE_LITERAL = -58;
-  static final int STRING_LITERAL = -59;
-  static final int THIS = -60;
-  static final int V = -61;
+  static final int CLASS_INSTANCE_CREATION = -54;
+  static final int EXPRESSION_NAME = -55;
+  static final int INVOKE = -56;
+  static final int NEW = -57;
+  static final int NULL_LITERAL = -58;
+  static final int PRIMITIVE_LITERAL = -59;
+  static final int STRING_LITERAL = -60;
+  static final int THIS = -61;
+  static final int V = -62;
 
   //expression part
 
-  static final int ARGUMENT = -62;
-  static final int ARRAY_ACCESS = -63;
-  static final int ASSIGNMENT_OPERATOR = -64;
-  static final int EQUALITY_OPERATOR = -65;
+  static final int ARGUMENT = -63;
+  static final int ARRAY_ACCESS = -64;
+  static final int ASSIGNMENT_OPERATOR = -65;
+  static final int EQUALITY_OPERATOR = -66;
 
   private ByteProto() {}
 

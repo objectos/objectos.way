@@ -313,6 +313,7 @@ public abstract class JavaTemplate {
       ClassDeclarationInstruction,
       ConstructorDeclarationInstruction,
       FieldDeclarationInstruction,
+      InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {
     final int value;
 
@@ -517,6 +518,7 @@ public abstract class JavaTemplate {
       ImplementsClause,
       ImplementsKeyword,
       IntegerLiteral,
+      InterfaceDeclaration,
       InterfaceKeyword,
       MethodDeclaration,
       MethodDeclarationInstruction,
@@ -559,6 +561,7 @@ public abstract class JavaTemplate {
   sealed interface AnnotationInst
       extends
       ClassDeclarationInstruction,
+      InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {}
 
   sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
@@ -615,6 +618,7 @@ public abstract class JavaTemplate {
       extends
       ClassDeclarationInstruction,
       FieldDeclarationInstruction,
+      InterfaceDeclarationInstruction,
       MethodDeclarationInstruction,
       StatementPart {}
 
@@ -631,7 +635,8 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.4
    */
-  sealed interface ExtendsClause extends ClassDeclarationInstruction {}
+  sealed interface ExtendsClause
+      extends ClassDeclarationInstruction, InterfaceDeclarationInstruction {}
 
   @Deprecated
   sealed interface ExtendsKeyword extends BodyElement {}
@@ -666,6 +671,17 @@ public abstract class JavaTemplate {
 
   sealed interface IntegerLiteral extends Literal {}
 
+  /**
+   * @since 0.4.4
+   */
+  sealed interface InterfaceDeclaration extends ClassDeclarationInstruction {}
+
+  /**
+   * @since 0.4.4
+   */
+  sealed interface InterfaceDeclarationInstruction extends Instruction {}
+
+  @Deprecated
   sealed interface InterfaceKeyword extends BodyElement {}
 
   sealed interface Literal extends AtElement, ExpressionPart {}
@@ -2092,6 +2108,17 @@ public abstract class JavaTemplate {
    */
   protected final ClassDeclaration classDeclaration(IncludeTarget target) {
     return api().elem(ByteProto.CLASS_DECLARATION, include(target));
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final InterfaceDeclaration interfaceDeclaration(
+      InterfaceDeclarationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.INTERFACE_DECLARATION, many);
   }
 
   /**
