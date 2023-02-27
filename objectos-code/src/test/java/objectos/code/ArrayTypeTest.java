@@ -27,12 +27,12 @@ public class ArrayTypeTest {
   - reference types
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Arrays"); body(
+          _class("Arrays");
+          body(
             t(t(Object.class), dim()), id("a"),
 
             t(t(Object.class), dim(), dim()), id("b"),
@@ -47,12 +47,10 @@ public class ArrayTypeTest {
         java.lang.Object[] a;
 
         java.lang.Object[][] b;
-
         java.lang.Object[][][] c;
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -61,12 +59,12 @@ public class ArrayTypeTest {
   - primitive types
   """)
   public void testCase02() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Arrays"); body(
+          _class("Arrays");
+          body(
             t(_int(), dim()), id("a"),
 
             t(_double(), dim(), dim()), id("b"),
@@ -86,7 +84,6 @@ public class ArrayTypeTest {
       }
       """
     );
-    // @formatter:on
   }
 
 }

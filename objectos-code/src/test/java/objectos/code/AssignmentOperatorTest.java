@@ -33,8 +33,9 @@ public class AssignmentOperatorTest {
 
         @Override
         protected final void definition() {
-          _class("Assign");
-          body(
+          classDeclaration(
+            name("Assign"),
+
             method(
               p(n("a"), IS, n("x")),
 

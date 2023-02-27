@@ -29,8 +29,9 @@ public class ArrayAccessExpressionTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("ArrayAccess");
-          body(
+          classDeclaration(
+            name("ArrayAccess"),
+
             method(
               p(
                 v("foo"),
