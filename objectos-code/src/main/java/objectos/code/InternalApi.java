@@ -636,8 +636,6 @@ class InternalApi {
     if (obj instanceof JavaTemplate.External ext) {
       ext.execute(this);
     } else if (obj instanceof String s) {
-      JavaModel.checkIdentifier(s);
-
       identifierext(s);
     }
 

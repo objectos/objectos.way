@@ -63,16 +63,16 @@ public class JavaSinkTest {
 
   @Test
   public void testCase01() throws IOException {
-    // @formatter:off
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _package("a.b");
+        packageDeclaration("a.b");
 
-        _public(); _class("Test"); body();
+        classDeclaration(
+          PUBLIC, name("Test")
+        );
       }
     };
-    // @formatter:on
 
     sink.write(tmpl);
 
@@ -94,16 +94,16 @@ public class JavaSinkTest {
 
   @Test(dependsOnMethods = "testCase01")
   public void testCase02() {
-    // @formatter:off
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _package("a.b");
+        packageDeclaration("a.b");
 
-        _public(); _class("Test"); body();
+        classDeclaration(
+          PUBLIC, name("Test")
+        );
       }
     };
-    // @formatter:on
 
     try {
       sink.write(tmpl);
@@ -116,18 +116,20 @@ public class JavaSinkTest {
 
   @Test(dependsOnMethods = "testCase02")
   public void testCase03() throws IOException {
-    // @formatter:off
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _package("a.b");
+        packageDeclaration("a.b");
 
-        _public(); _class("Test"); body(
-          _private(), constructor(), block()
+        classDeclaration(
+          PUBLIC, name("Test"),
+
+          constructor(
+            PRIVATE
+          )
         );
       }
     };
-    // @formatter:on
 
     var path = Path.of("a", "b", "Test.java");
 
@@ -154,18 +156,18 @@ public class JavaSinkTest {
 
   @Test
   public void testCase04() throws IOException {
-    // @formatter:off
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _package("test4");
+        packageDeclaration("test4");
 
-        _public(); _enum("Test"); body(
+        enumDeclaration(
+          PUBLIC, name("Test"),
+
           enumConstant("INSTANCE")
         );
       }
     };
-    // @formatter:on
 
     sink.write(tmpl);
 
@@ -189,16 +191,16 @@ public class JavaSinkTest {
 
   @Test
   public void testCase05() throws IOException {
-    // @formatter:off
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _package("test5");
+        packageDeclaration("test5");
 
-        _public(); _interface("Test"); body();
+        interfaceDeclaration(
+          PUBLIC, name("Test")
+        );
       }
     };
-    // @formatter:on
 
     sink.write(tmpl);
 
@@ -222,24 +224,32 @@ public class JavaSinkTest {
 
   @Test
   public void testCase06() throws IOException {
-    // @formatter:off
     var tmpl = new JavaTemplate() {
       @Override
       protected final void definition() {
-        _package("test6");
+        packageDeclaration("test6");
 
-        _public(); _class("Test"); body(
-          _public(), _static(), _class("A"), body(
-            constructor(), block()
+        classDeclaration(
+          PUBLIC, name("Test"),
+
+          classDeclaration(
+            PUBLIC, STATIC, name("A"),
+
+            constructor(
+              PUBLIC
+            )
           ),
 
-          _public(), _static(), _class("B"), body(
-            constructor(), block()
+          classDeclaration(
+            PUBLIC, STATIC, name("B"),
+
+            constructor(
+              PRIVATE
+            )
           )
         );
       }
     };
-    // @formatter:on
 
     sink.write(tmpl);
 
@@ -258,11 +268,11 @@ public class JavaSinkTest {
 
       public class Test {
         public static class A {
-          A() {}
+          public A() {}
         }
 
         public static class B {
-          B() {}
+          private B() {}
         }
       }
       """

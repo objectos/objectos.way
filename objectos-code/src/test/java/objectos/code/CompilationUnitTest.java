@@ -63,14 +63,15 @@ public class CompilationUnitTest {
   class Foo {}
   """)
   public void testCase02() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _package("test");
+          packageDeclaration("test");
 
-          _class("Foo"); body();
+          classDeclaration(
+            name("Foo")
+          );
         }
       }.toString(),
 
@@ -80,7 +81,6 @@ public class CompilationUnitTest {
       class Foo {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -89,40 +89,48 @@ public class CompilationUnitTest {
   class Foo extends Bar {}
   """)
   public void testCase03() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName BAR = classType("com.example", "Bar");
+
         @Override
         protected final void definition() {
           autoImports();
 
-          _class("Foo"); _extends(); t("test", "Bar"); body();
+          classDeclaration(
+            name("Foo"),
+            extendsClause(BAR)
+          );
         }
       }.toString(),
 
       """
-      import test.Bar;
+      import com.example.Bar;
 
       class Foo extends Bar {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
   autoImports() + java.lang
   """)
   public void testCase04() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName THREAD = classType(Thread.class);
+
         @Override
         protected final void definition() {
-          _package("test");
+          packageDeclaration("test");
 
           autoImports();
 
-          _class("Test"); _extends(); t(Thread.class); body();
+          classDeclaration(
+            name("Test"),
+
+            extendsClause(THREAD)
+          );
         }
       }.toString(),
 
@@ -132,23 +140,26 @@ public class CompilationUnitTest {
       class Test extends Thread {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
   autoImports() + same package
   """)
   public void testCase05() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName BAR = classType("test", "Bar");
+
         @Override
         protected final void definition() {
-          _package("test");
+          packageDeclaration("test");
 
           autoImports();
 
-          _class("Test"); _extends(); t("test", "Bar"); body();
+          classDeclaration(
+            name("Test"),
+            extendsClause(BAR)
+          );
         }
       }.toString(),
 
@@ -158,7 +169,6 @@ public class CompilationUnitTest {
       class Test extends Bar {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -167,16 +177,30 @@ public class CompilationUnitTest {
   - multiple import declarations
   """)
   public void testCase06() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName A = classType("test", "A");
+        static final ClassTypeName B = classType("test", "B");
+        static final ClassTypeName C = classType("test", "C");
+
         @Override
         protected final void definition() {
           autoImports();
 
-          _class("Test0"); _extends(); t("test", "A"); body();
-          _class("Test1"); _extends(); t("test", "B"); body();
-          _class("Test2"); _extends(); t("test", "C"); body();
+          classDeclaration(
+            name("Test0"),
+            extendsClause(A)
+          );
+
+          classDeclaration(
+            name("Test1"),
+            extendsClause(B)
+          );
+
+          classDeclaration(
+            name("Test2"),
+            extendsClause(C)
+          );
         }
       }.toString(),
 
@@ -192,7 +216,6 @@ public class CompilationUnitTest {
       class Test2 extends C {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -202,18 +225,32 @@ public class CompilationUnitTest {
   - multiple import declarations
   """)
   public void testCase07() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName A = classType("test", "A");
+        static final ClassTypeName B = classType("test", "B");
+        static final ClassTypeName C = classType("test", "C");
+
         @Override
         protected final void definition() {
-          _package("foo");
+          packageDeclaration("foo");
 
           autoImports();
 
-          _class("Test0"); _extends(); t("test", "A"); body();
-          _class("Test1"); _extends(); t("test", "B"); body();
-          _class("Test2"); _extends(); t("test", "C"); body();
+          classDeclaration(
+            name("Test0"),
+            extendsClause(A)
+          );
+
+          classDeclaration(
+            name("Test1"),
+            extendsClause(B)
+          );
+
+          classDeclaration(
+            name("Test2"),
+            extendsClause(C)
+          );
         }
       }.toString(),
 
@@ -231,7 +268,6 @@ public class CompilationUnitTest {
       class Test2 extends C {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -240,17 +276,20 @@ public class CompilationUnitTest {
   - import declarations + annotation
   """)
   public void testCase08() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName TYPE_ANNOTATION = classType("bar", "TypeAnnotation");
+
         @Override
         protected final void definition() {
-          _package("foo");
+          packageDeclaration("foo");
 
           autoImports();
 
-          at(t("bar", "TypeAnnotation"));
-          _class("Test"); body();
+          classDeclaration(
+            annotation(TYPE_ANNOTATION),
+            name("Test")
+          );
         }
       }.toString(),
 
@@ -263,7 +302,6 @@ public class CompilationUnitTest {
       class Test {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -272,16 +310,18 @@ public class CompilationUnitTest {
   - import declarations + modifier
   """)
   public void testCase09() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _package("foo");
+          packageDeclaration("foo");
 
           autoImports();
 
-          _public(); _class("Test"); _extends(); t("bar", "Super"); body();
+          classDeclaration(
+            PUBLIC, name("Test"),
+            extendsClause(classType("bar", "Super"))
+          );
         }
       }.toString(),
 
@@ -293,7 +333,6 @@ public class CompilationUnitTest {
       public class Test extends Super {}
       """
     );
-    // @formatter:on
   }
 
 }

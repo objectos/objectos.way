@@ -47,6 +47,7 @@ public class ArrayTypeTest {
         java.lang.Object[] a;
 
         java.lang.Object[][] b;
+
         java.lang.Object[][][] c;
       }
       """

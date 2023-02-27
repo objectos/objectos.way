@@ -41,9 +41,8 @@ class InternalCompiler extends InternalApi {
       _KEYWORD = 6,
       _NEW_LINE = 7,
       _PRIMARY = 8,
-      _SEMICOLON = 9,
-      _SYMBOL = 10,
-      _TYPE = 11;
+      _SYMBOL = 9,
+      _TYPE = 10;
 
   final void compile() {
     codeIndex = 0;
@@ -294,10 +293,10 @@ class InternalCompiler extends InternalApi {
     switch (last()) {
       default -> codeAdd(ByteCode.AUTO_IMPORTS0);
 
-      case _SEMICOLON -> codeAdd(ByteCode.AUTO_IMPORTS1);
+      case _SYMBOL -> codeAdd(ByteCode.AUTO_IMPORTS1);
     }
 
-    last(_SEMICOLON);
+    last(_SYMBOL);
   }
 
   private void beforeTopLevelTypeDeclaration() {
@@ -347,7 +346,7 @@ class InternalCompiler extends InternalApi {
     if (!lastIs(_BLOCK)) {
       codeAdd(Symbol.SEMICOLON);
 
-      last(_SEMICOLON);
+      last(_SYMBOL);
     }
   }
 
@@ -693,43 +692,80 @@ class InternalCompiler extends InternalApi {
   private void compilationUnit() {
     last(_START);
 
-    int item = itemPeek();
+    while (elemMore()) {
+      int proto = protoPeek();
 
-    switch (item) {
-      case ByteProto.ANNOTATION -> {
-        oldDeclarationAnnotationList();
+      switch (proto) {
+        case ByteProto.ANNOTATION -> {
+          oldDeclarationAnnotationList();
 
-        if (itemIs(ByteProto.PACKAGE)) {
-          ordinaryCompilationUnit();
-        } else {
+          if (itemIs(ByteProto.PACKAGE)) {
+            ordinaryCompilationUnit();
+          } else {
+            topLevelDeclarationList();
+          }
+        }
+
+        case ByteProto.AUTO_IMPORTS -> {
+          execute(this::autoImports);
+
+          importDeclarationList();
+
           topLevelDeclarationList();
         }
+
+        case ByteProto.CLASS,
+             ByteProto.ENUM,
+             ByteProto.INTERFACE,
+             ByteProto.MODIFIER -> topLevelDeclarationList();
+
+        case ByteProto.CLASS_DECLARATION -> {
+          preTopLevel();
+
+          execute(this::classDeclaration);
+        }
+
+        case ByteProto.END_ELEMENT -> {}
+
+        case ByteProto.ENUM_DECLARATION -> {
+          preTopLevel();
+
+          execute(this::enumDeclaration);
+        }
+
+        case ByteProto.INTERFACE_DECLARATION -> {
+          preTopLevel();
+
+          execute(this::interfaceDeclaration);
+        }
+
+        case ByteProto.PACKAGE -> ordinaryCompilationUnit();
+
+        case ByteProto.PACKAGE_DECLARATION -> {
+          execute(this::packageDeclaration);
+        }
+
+        default -> errorRaise(
+          "no-op item @ compilation unit '%s'".formatted(protoName(proto))
+        );
       }
-
-      case ByteProto.AUTO_IMPORTS -> {
-        execute(this::autoImports);
-
-        importDeclarationList();
-
-        topLevelDeclarationList();
-      }
-
-      case ByteProto.CLASS,
-           ByteProto.CLASS_DECLARATION,
-           ByteProto.ENUM,
-           ByteProto.ENUM_DECLARATION,
-           ByteProto.INTERFACE,
-           ByteProto.INTERFACE_DECLARATION,
-           ByteProto.MODIFIER -> topLevelDeclarationList();
-
-      case ByteProto.END_ELEMENT -> {}
-
-      case ByteProto.PACKAGE -> ordinaryCompilationUnit();
-
-      default -> errorRaise(
-        "compilationUnit: no-op proto '%s'".formatted(protoName(item))
-      );
     }
+  }
+
+  private void preTopLevel() {
+    switch (last()) {
+      case _SYMBOL -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+    }
+
+    simpleName(NULL);
+
+    topLevel(1);
+  }
+
+  private void packageDeclaration() {
+    execute(this::packageKeyword);
+
+    last(_SYMBOL);
   }
 
   private void constructorDeclaration() {
@@ -2036,7 +2072,7 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.SEMICOLON);
 
-    last(_SEMICOLON);
+    last(_SYMBOL);
   }
 
   private void oldFormalParameter() {
@@ -2140,7 +2176,7 @@ class InternalCompiler extends InternalApi {
       // assume abstract
       codeAdd(Symbol.SEMICOLON);
 
-      last(_SEMICOLON);
+      last(_SYMBOL);
     }
   }
 
@@ -2404,7 +2440,7 @@ class InternalCompiler extends InternalApi {
 
     codeAdd(Symbol.SEMICOLON);
 
-    last(_SEMICOLON);
+    last(_SYMBOL);
   }
 
   private void parameterizedType() {

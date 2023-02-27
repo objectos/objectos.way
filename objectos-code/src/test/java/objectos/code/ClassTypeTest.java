@@ -59,7 +59,7 @@ public class ClassTypeTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _package("com.example");
+          packageDeclaration("com.example");
 
           autoImports();
 

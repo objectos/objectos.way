@@ -69,45 +69,46 @@ final class ByteProto {
   static final int MODIFIER = -39;
   static final int MODIFIERS = -40;
   static final int PACKAGE = -41;
-  static final int PARAMETER = -42;
-  static final int PARAMETER_SHORT = -43;
-  static final int RETURN_TYPE = -44;
-  static final int STATEMENT = -45;
-  static final int TYPE_PARAMETER = -46;
+  static final int PACKAGE_DECLARATION = -42;
+  static final int PARAMETER = -43;
+  static final int PARAMETER_SHORT = -44;
+  static final int RETURN_TYPE = -45;
+  static final int STATEMENT = -46;
+  static final int TYPE_PARAMETER = -47;
 
   //statement start
 
-  static final int BLOCK = -47;
-  static final int IF_CONDITION = -48;
-  static final int RETURN = -49;
-  static final int SUPER = -50;
-  static final int SUPER_INVOCATION = -51;
-  static final int THROW = -52;
-  static final int VAR = -53;
+  static final int BLOCK = -48;
+  static final int IF_CONDITION = -49;
+  static final int RETURN = -50;
+  static final int SUPER = -51;
+  static final int SUPER_INVOCATION = -52;
+  static final int THROW = -53;
+  static final int VAR = -54;
 
   //statement part
 
-  static final int IF = -54;
-  static final int ELSE = -55;
+  static final int IF = -55;
+  static final int ELSE = -56;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -56;
-  static final int EXPRESSION_NAME = -57;
-  static final int INVOKE = -58;
-  static final int NEW = -59;
-  static final int NULL_LITERAL = -60;
-  static final int PRIMITIVE_LITERAL = -61;
-  static final int STRING_LITERAL = -62;
-  static final int THIS = -63;
-  static final int V = -64;
+  static final int CLASS_INSTANCE_CREATION = -57;
+  static final int EXPRESSION_NAME = -58;
+  static final int INVOKE = -59;
+  static final int NEW = -60;
+  static final int NULL_LITERAL = -61;
+  static final int PRIMITIVE_LITERAL = -62;
+  static final int STRING_LITERAL = -63;
+  static final int THIS = -64;
+  static final int V = -65;
 
   //expression part
 
-  static final int ARGUMENT = -65;
-  static final int ARRAY_ACCESS = -66;
-  static final int ASSIGNMENT_OPERATOR = -67;
-  static final int EQUALITY_OPERATOR = -68;
+  static final int ARGUMENT = -66;
+  static final int ARRAY_ACCESS = -67;
+  static final int ASSIGNMENT_OPERATOR = -68;
+  static final int EQUALITY_OPERATOR = -69;
 
   private ByteProto() {}
 

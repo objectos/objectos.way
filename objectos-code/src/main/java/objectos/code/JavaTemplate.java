@@ -29,6 +29,14 @@ import objectos.lang.Check;
 public abstract class JavaTemplate {
 
   /**
+   * An {@link Instruction} that can be used with the various {@code annotation}
+   * methods.
+   *
+   * @since 0.4.4
+   */
+  protected sealed interface AnnotationInstruction extends Instruction {}
+
+  /**
    * An {@link Instruction} that can be used with the instructions that take
    * arguments.
    *
@@ -563,11 +571,6 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.4
    */
-  sealed interface AnnotationInstruction extends Instruction {}
-
-  /**
-   * @since 0.4.4
-   */
   sealed interface AnyDeclarationInstruction
       extends
       ClassDeclarationInstruction,
@@ -780,6 +783,7 @@ public abstract class JavaTemplate {
   @Deprecated
   sealed interface OldVoidKeyword extends BodyElement {}
 
+  @Deprecated
   sealed interface PackageKeyword extends Instruction {}
 
   sealed interface Parameter
@@ -1731,6 +1735,18 @@ public abstract class JavaTemplate {
     var api = api();
     api.autoImports.packageName(packageName);
     return api.itemAdd(ByteProto.PACKAGE, api.object(packageName));
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final void packageDeclaration(String packageName) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    var api = api();
+    api.autoImports.packageName(packageName);
+    api.elem(ByteProto.PACKAGE_DECLARATION, packageName);
   }
 
   /**
