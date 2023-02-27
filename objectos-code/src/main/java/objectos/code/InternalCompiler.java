@@ -382,18 +382,36 @@ class InternalCompiler extends InternalApi {
     last(_START);
   }
 
-  private void body(int offset) {
+  private void body(int enumConstants, int members) {
     preSymbol();
 
     codeAdd(Symbol.LEFT_CURLY_BRACKET);
 
-    if (offset != NULL) {
+    last(_START);
+
+    var empty = true;
+
+    if (enumConstants != NULL) {
+      empty = false;
+
       codeAdd(Indentation.ENTER_BLOCK);
 
-      last(_START);
+      listExecute(enumConstants, this::enumConstant);
 
-      listSwitch(offset, this::bodyMember);
+      semicolon();
+    }
 
+    if (members != NULL) {
+      if (empty) {
+        empty = false;
+
+        codeAdd(Indentation.ENTER_BLOCK);
+      }
+
+      listSwitch(members, this::bodyMember);
+    }
+
+    if (!empty) {
       codeAdd(Indentation.EXIT_BLOCK);
 
       codeAdd(Whitespace.BEFORE_NON_EMPTY_BLOCK_END);
@@ -472,9 +490,9 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.CONSTRUCTOR -> oldConstructorDeclaration();
 
-      case ByteProto.ENUM -> enumDeclaration();
+      case ByteProto.ENUM -> oldEnumDeclaration();
 
-      case ByteProto.ENUM_CONSTANT -> execute(this::enumConstant);
+      case ByteProto.ENUM_CONSTANT -> execute(this::oldEnumConstant);
 
       case ByteProto.INTERFACE -> {
         if (lastIs(_KEYWORD)) {
@@ -531,86 +549,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void classDeclaration() {
-    int start = stackIndex;
-
-    last(_START);
-
-    int annotations = NULL,
-        modifiers = NULL,
-        typeParameters = NULL,
-        name = NULL,
-        extendsClause = NULL,
-        implementsClause = NULL,
-        body = NULL;
-
-    while (protoMore()) {
-      int proto = protoPeek();
-
-      if (proto == ByteProto.END_ELEMENT) {
-        break;
-      }
-
-      switch (proto) {
-        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
-
-        case ByteProto.CLASS_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
-
-        case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
-
-        case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.IMPLEMENTS_CLAUSE -> implementsClause = listAdd(implementsClause);
-
-        case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.MODIFIER,
-             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
-
-        case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
-
-        default -> {
-          throw new UnsupportedOperationException(
-            "Implement me :: " + protoName(proto)
-          );
-        }
-      }
-    }
-
-    if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
-    }
-
-    if (modifiers != NULL) {
-      listSwitch(modifiers, this::modifierSwitcher);
-    }
-
-    keyword(Keyword.CLASS);
-
-    if (name != NULL) {
-      singleExecute(name, this::typeDeclarationName);
-    } else {
-      unnamedType();
-    }
-
-    if (extendsClause != NULL) {
-      last(_IDENTIFIER);
-
-      listExecute(extendsClause, this::extendsClause);
-    }
-
-    if (implementsClause != NULL) {
-      last(_IDENTIFIER);
-
-      listExecute(implementsClause, this::implementsClause);
-    }
-
-    body(body);
-
-    stackIndex = start;
+    typeDeclaration(Keyword.CLASS);
   }
 
   private void classDeclarationExtends() {
@@ -771,6 +710,7 @@ class InternalCompiler extends InternalApi {
       case ByteProto.CLASS,
            ByteProto.CLASS_DECLARATION,
            ByteProto.ENUM,
+           ByteProto.ENUM_DECLARATION,
            ByteProto.INTERFACE,
            ByteProto.INTERFACE_DECLARATION,
            ByteProto.MODIFIER -> topLevelDeclarationList();
@@ -911,31 +851,31 @@ class InternalCompiler extends InternalApi {
   }
 
   private void enumConstant() {
-    last(_START);
+    switch (last()) {
+      case _ENUM_CONSTANT -> {
+        codeAdd(Symbol.COMMA);
 
-    execute(this::identifier);
+        codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
 
-    if (itemMore()) {
-      oldArgumentList();
+        last(_START);
+      }
+
+      case _START -> codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
+
+      case _SYMBOL -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
     }
 
-    slot();
+    execute(this::declarationName);
+
+    if (elemMore()) {
+      argumentList();
+    }
 
     last(_ENUM_CONSTANT);
   }
 
   private void enumDeclaration() {
-    execute(this::enumKeyword);
-
-    if (itemIs(ByteProto.IMPLEMENTS)) {
-      oldImplementsClause();
-    }
-
-    if (itemIs(ByteProto.BODY)) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      execute(this::body);
-    }
+    typeDeclaration(Keyword.ENUM);
   }
 
   private void enumKeyword() {
@@ -1221,77 +1161,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void interfaceDeclaration() {
-    int start = stackIndex;
-
-    last(_START);
-
-    int annotations = NULL,
-        modifiers = NULL,
-        typeParameters = NULL,
-        name = NULL,
-        extendsClause = NULL,
-        body = NULL;
-
-    while (protoMore()) {
-      int proto = protoPeek();
-
-      if (proto == ByteProto.END_ELEMENT) {
-        break;
-      }
-
-      switch (proto) {
-        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
-
-        case ByteProto.CLASS_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
-
-        case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
-
-        case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
-
-        case ByteProto.MODIFIER,
-             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
-
-        case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
-
-        default -> {
-          throw new UnsupportedOperationException(
-            "Implement me :: " + protoName(proto)
-          );
-        }
-      }
-    }
-
-    if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
-    }
-
-    if (modifiers != NULL) {
-      listSwitch(modifiers, this::modifierSwitcher);
-    }
-
-    keyword(Keyword.INTERFACE);
-
-    if (name != NULL) {
-      singleExecute(name, this::typeDeclarationName);
-    } else {
-      unnamedType();
-    }
-
-    if (extendsClause != NULL) {
-      last(_IDENTIFIER);
-
-      listExecute(extendsClause, this::extendsClause);
-    }
-
-    body(body);
-
-    stackIndex = start;
+    typeDeclaration(Keyword.INTERFACE);
   }
 
   private void interfaceDeclarationExtends() {
@@ -2026,6 +1896,34 @@ class InternalCompiler extends InternalApi {
 
         execute(this::oldAnnotation);
       }
+    }
+  }
+
+  private void oldEnumConstant() {
+    last(_START);
+
+    execute(this::identifier);
+
+    if (itemMore()) {
+      oldArgumentList();
+    }
+
+    slot();
+
+    last(_ENUM_CONSTANT);
+  }
+
+  private void oldEnumDeclaration() {
+    execute(this::enumKeyword);
+
+    if (itemIs(ByteProto.IMPLEMENTS)) {
+      oldImplementsClause();
+    }
+
+    if (itemIs(ByteProto.BODY)) {
+      codeAdd(Whitespace.OPTIONAL);
+
+      execute(this::body);
     }
   }
 
@@ -2911,8 +2809,10 @@ class InternalCompiler extends InternalApi {
       case ByteProto.ENUM -> {
         beforeTopLevelTypeDeclaration();
 
-        enumDeclaration();
+        oldEnumDeclaration();
       }
+
+      case ByteProto.ENUM_DECLARATION -> execute(this::enumDeclaration);
 
       case ByteProto.INTERFACE -> {
         beforeTopLevelTypeDeclaration();
@@ -2965,6 +2865,92 @@ class InternalCompiler extends InternalApi {
         "no-op type '%s'".formatted(protoName(proto))
       );
     }
+  }
+
+  private void typeDeclaration(Keyword keyword) {
+    int start = stackIndex;
+
+    last(_START);
+
+    int annotations = NULL,
+        modifiers = NULL,
+        typeParameters = NULL,
+        name = NULL,
+        extendsClause = NULL,
+        implementsClause = NULL,
+        enumConstants = NULL,
+        body = NULL;
+
+    while (protoMore()) {
+      int proto = protoPeek();
+
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
+
+        case ByteProto.CLASS_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.CONSTRUCTOR_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
+
+        case ByteProto.ENUM_CONSTANT -> enumConstants = listAdd(enumConstants);
+
+        case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
+
+        case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.IMPLEMENTS_CLAUSE -> implementsClause = listAdd(implementsClause);
+
+        case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
+
+        case ByteProto.MODIFIER,
+             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+
+        case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: " + protoName(proto)
+          );
+        }
+      }
+    }
+
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
+    }
+
+    if (modifiers != NULL) {
+      listSwitch(modifiers, this::modifierSwitcher);
+    }
+
+    keyword(keyword);
+
+    if (name != NULL) {
+      singleExecute(name, this::typeDeclarationName);
+    } else {
+      unnamedType();
+    }
+
+    if (extendsClause != NULL) {
+      last(_IDENTIFIER);
+
+      listExecute(extendsClause, this::extendsClause);
+    }
+
+    if (implementsClause != NULL) {
+      last(_IDENTIFIER);
+
+      listExecute(implementsClause, this::implementsClause);
+    }
+
+    body(enumConstants, body);
+
+    stackIndex = start;
   }
 
   private void typeDeclarationName() {

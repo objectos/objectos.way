@@ -312,6 +312,7 @@ public abstract class JavaTemplate {
       implements
       ClassDeclarationInstruction,
       ConstructorDeclarationInstruction,
+      EnumDeclarationInstruction,
       FieldDeclarationInstruction,
       InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {
@@ -504,6 +505,7 @@ public abstract class JavaTemplate {
       OldElseKeyword,
       End,
       EnumConstant,
+      EnumDeclaration,
       EnumKeyword,
       OldEqualityOperator,
       ExplicitConstructorInvocation,
@@ -561,6 +563,7 @@ public abstract class JavaTemplate {
   sealed interface AnnotationInst
       extends
       ClassDeclarationInstruction,
+      EnumDeclarationInstruction,
       InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {}
 
@@ -612,11 +615,16 @@ public abstract class JavaTemplate {
 
   sealed interface ClassTypeWithArgs extends ClassTypeInstruction {}
 
-  sealed interface ConstructorDeclaration extends BodyElement, ClassDeclarationInstruction {}
+  sealed interface ConstructorDeclaration
+      extends
+      BodyElement,
+      ClassDeclarationInstruction,
+      EnumDeclarationInstruction {}
 
   sealed interface DeclarationName
       extends
       ClassDeclarationInstruction,
+      EnumDeclarationInstruction,
       FieldDeclarationInstruction,
       InterfaceDeclarationInstruction,
       MethodDeclarationInstruction,
@@ -624,8 +632,19 @@ public abstract class JavaTemplate {
 
   sealed interface End extends ArgsPart, BlockElement {}
 
-  sealed interface EnumConstant extends BodyElement {}
+  sealed interface EnumConstant extends BodyElement, EnumDeclarationInstruction {}
 
+  /**
+   * @since 0.4.4
+   */
+  sealed interface EnumDeclaration extends ClassDeclarationInstruction {}
+
+  /**
+   * @since 0.4.4
+   */
+  sealed interface EnumDeclarationInstruction extends Instruction {}
+
+  @Deprecated
   sealed interface EnumKeyword extends BodyElement {}
 
   sealed interface ExplicitConstructorInvocation extends BlockElement {}
@@ -647,7 +666,12 @@ public abstract class JavaTemplate {
     abstract void execute(InternalApi api);
   }
 
-  sealed interface FieldDeclaration extends BodyElement, ClassDeclarationInstruction {}
+  sealed interface FieldDeclaration
+      extends
+      BodyElement,
+      ClassDeclarationInstruction,
+      EnumDeclarationInstruction,
+      InterfaceDeclarationInstruction {}
 
   sealed interface FieldDeclarationInstruction extends Instruction {}
 
@@ -660,7 +684,10 @@ public abstract class JavaTemplate {
   /**
    * @since 0.4.4
    */
-  sealed interface ImplementsClause extends ClassDeclarationInstruction {}
+  sealed interface ImplementsClause
+      extends
+      ClassDeclarationInstruction,
+      EnumDeclarationInstruction {}
 
   @Deprecated
   sealed interface ImplementsKeyword extends BodyElement {}
@@ -689,7 +716,9 @@ public abstract class JavaTemplate {
   sealed interface MethodDeclaration
       extends
       BodyElement,
-      ClassDeclarationInstruction {}
+      ClassDeclarationInstruction,
+      EnumDeclarationInstruction,
+      InterfaceDeclarationInstruction {}
 
   sealed interface MethodDeclarator extends BodyElement {}
 
@@ -2112,17 +2141,6 @@ public abstract class JavaTemplate {
 
   /**
    * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final InterfaceDeclaration interfaceDeclaration(
-      InterfaceDeclarationInstruction... contents) {
-    Object[] many = Objects.requireNonNull(contents, "contents == null");
-    return api().elemMany(ByteProto.INTERFACE_DECLARATION, many);
-  }
-
-  /**
-   * TODO
    */
   protected final void code(Instruction... elements) {
     // no-op
@@ -2263,9 +2281,7 @@ public abstract class JavaTemplate {
    */
   protected final EnumConstant enumConstant(String name) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
-    var api = api();
-    api.identifierext(name);
-    return api.elem(ByteProto.ENUM_CONSTANT, EXT);
+    return api().elem(ByteProto.ENUM_CONSTANT, name(name));
   }
 
   /**
@@ -2423,6 +2439,27 @@ public abstract class JavaTemplate {
     template.execute(api);
     api.lambdaend();
     return INCLUDE;
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final InterfaceDeclaration interfaceDeclaration(
+      InterfaceDeclarationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.INTERFACE_DECLARATION, many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final EnumDeclaration enumDeclaration(EnumDeclarationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.ENUM_DECLARATION, many);
   }
 
   /**

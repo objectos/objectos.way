@@ -26,22 +26,27 @@ public class EnumDeclarationTest {
   constants
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _enum("Test1"); body(
+          enumDeclaration(
+            name("Test1"),
+
             enumConstant("ONE")
           );
 
-          _enum("Test2"); body(
+          enumDeclaration(
+            name("Test2"),
+
             enumConstant("ONE"),
 
             enumConstant("TWO")
           );
 
-          _enum("Test3"); body(
+          enumDeclaration(
+            name("Test3"),
+
             enumConstant("ONE"),
 
             enumConstant("TWO"),
@@ -71,24 +76,33 @@ public class EnumDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
   constants + args
   """)
   public void testCase02() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _enum("Test1"); body(
-            enumConstant("ONE", s("abc"))
+          enumDeclaration(
+            name("Test1"),
+
+            enumConstant(
+              "ONE",
+              arg(s("abc"))
+            )
           );
 
-          _enum("Test2"); body(
-            enumConstant("ONE", s("abc"), end(), n("field"))
+          enumDeclaration(
+            name("Test2"),
+
+            enumConstant(
+              "ONE",
+              arg(s("abc")),
+              arg(n("field"))
+            )
           );
         }
       }.toString(),
@@ -103,24 +117,26 @@ public class EnumDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
   modifiers (class level)
   """)
   public void testCase03() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _public(); _enum("Test"); body(
+          enumDeclaration(
+            PUBLIC, name("Test"),
+
             enumConstant("ONE")
           );
 
-          at(t(Deprecated.class));
-          _public(); _enum("Test"); body(
+          enumDeclaration(
+            annotation(Deprecated.class),
+            PUBLIC, name("Test"),
+
             enumConstant("ONE")
           );
         }
@@ -137,23 +153,31 @@ public class EnumDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
   implements cause
   """)
   public void testCase04() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName AUTO_CLOSEABLE = classType(AutoCloseable.class);
+
+        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+
         @Override
         protected final void definition() {
-          _enum("Test1"); _implements(); t(Serializable.class); body(
+          enumDeclaration(
+            name("Test1"),
+            implementsClause(SERIALIZABLE),
+
             enumConstant("ONE")
           );
 
-          _enum("Test2"); _implements(); t(AutoCloseable.class); t(Serializable.class); body(
+          enumDeclaration(
+            name("Test2"),
+            implementsClause(AUTO_CLOSEABLE, SERIALIZABLE),
+
             enumConstant("ONE")
           );
         }
@@ -169,7 +193,6 @@ public class EnumDeclarationTest {
       }
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -178,33 +201,49 @@ public class EnumDeclarationTest {
   - enum
   """)
   public void testCase05() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
-        @SuppressWarnings("removal")
+        static final ClassTypeName IFACE = classType("com.example", "Iface");
+
+        static final ClassTypeName STRING = classType(String.class);
+
         @Override
         protected final void definition() {
-          _public(); _enum("Test"); _implements(); t("test", "Iface"); body(
-            enumConstant("A", s("a")),
+          enumDeclaration(
+            PUBLIC, name("Test"),
+            implementsClause(IFACE),
 
-            enumConstant("B", s("b")),
-
-            _private(), _final(), t(String.class), id("value"),
-
-            _private(), constructor(t(String.class), id("value")), block(
-              _this(), n("value"), gets(), n("value")
+            enumConstant(
+              "A",
+              arg(s("a"))
             ),
 
-            at(t(Override.class)),
-            _public(), _final(), t(String.class), method("toString"), block(
-              _return(), n("value")
+            enumConstant(
+              "B",
+              arg(s("b"))
+            ),
+
+            field(
+              PRIVATE, FINAL, STRING, name("value")
+            ),
+
+            constructor(
+              PRIVATE, parameter(STRING, "value"),
+
+              p(THIS, n("value"), IS, n("value"))
+            ),
+
+            method(
+              annotation(Override.class),
+              PUBLIC, FINAL, STRING, name("toString"),
+              p(RETURN, n("value"))
             )
           );
         }
       }.toString(),
 
       """
-      public enum Test implements test.Iface {
+      public enum Test implements com.example.Iface {
         A("a"),
 
         B("b");
@@ -221,7 +260,6 @@ public class EnumDeclarationTest {
         }
       }
       """
-      // @formatter:on
     );
   }
 
