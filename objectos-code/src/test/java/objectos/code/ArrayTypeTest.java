@@ -29,15 +29,20 @@ public class ArrayTypeTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName OBJECT = classType(Object.class);
+
+        static final ArrayTypeName OBJECT1 = arrayType(OBJECT, 1);
+        static final ArrayTypeName OBJECT2 = arrayType(OBJECT, 2);
+        static final ArrayTypeName OBJECT3 = arrayType(OBJECT, 3);
+
         @Override
         protected final void definition() {
-          _class("Arrays");
-          body(
-            t(t(Object.class), dim()), id("a"),
+          classDeclaration(
+            name("Arrays"),
 
-            t(t(Object.class), dim(), dim()), id("b"),
-
-            t(t(Object.class), dim(), dim(), dim()), id("c")
+            field(OBJECT1, name("a")),
+            field(OBJECT2, name("b")),
+            field(OBJECT3, name("c"))
           );
         }
       }.toString(),
@@ -62,15 +67,18 @@ public class ArrayTypeTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
+        static final ArrayTypeName INT1 = arrayType(INT, 1);
+        static final ArrayTypeName DOUBLE2 = arrayType(DOUBLE, 2);
+        static final ArrayTypeName BOOL3 = arrayType(BOOLEAN, 3);
+
         @Override
         protected final void definition() {
-          _class("Arrays");
-          body(
-            t(_int(), dim()), id("a"),
+          classDeclaration(
+            name("Arrays"),
 
-            t(_double(), dim(), dim()), id("b"),
-
-            t(_boolean(), dim(), dim(), dim()), id("c")
+            field(INT1, name("a")),
+            field(DOUBLE2, name("b")),
+            field(BOOL3, name("c"))
           );
         }
       }.toString(),

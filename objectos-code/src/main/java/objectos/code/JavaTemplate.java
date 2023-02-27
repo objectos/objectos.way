@@ -1224,6 +1224,20 @@ public abstract class JavaTemplate {
    * TODO
    *
    * @param type
+   *        the type of the components of this array
+   *
+   * @return a newly constructed {@code ArrayTypeName} instance
+   *
+   * @since 0.4.4
+   */
+  protected static ArrayTypeName arrayType(ArrayTypeComponent type, int count) {
+    return ArrayTypeName.of(type, count);
+  }
+
+  /**
+   * TODO
+   *
+   * @param type
    *        the {@code Class} representing an array type whose name will be used
    *        in a Java program
    *
