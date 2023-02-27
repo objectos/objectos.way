@@ -45,68 +45,69 @@ final class ByteProto {
   //declarations
 
   static final int ANNOTATION = -17;
-  static final int BODY = -18;
-  static final int CLASS = -19;
-  static final int CLASS_DECLARATION = -20;
-  static final int COMPILATION_UNIT = -21;
-  static final int CONSTRUCTOR = -22;
-  static final int CONSTRUCTOR_DECLARATION = -23;
-  static final int DECLARATION_NAME = -24;
-  static final int ENUM = -25;
-  static final int ENUM_CONSTANT = -26;
-  static final int ENUM_DECLARATION = -27;
-  static final int EXTENDS = -28;
-  static final int EXTENDS_CLAUSE = -29;
-  static final int FIELD_DECLARATION = -30;
-  static final int IDENTIFIER = -31;
-  static final int IMPLEMENTS = -32;
-  static final int IMPLEMENTS_CLAUSE = -33;
-  static final int INTERFACE = -34;
-  static final int INTERFACE_DECLARATION = -35;
-  static final int METHOD = -36;
-  static final int METHOD_DECLARATION = -37;
-  static final int MODIFIER = -38;
-  static final int MODIFIERS = -39;
-  static final int PACKAGE = -40;
-  static final int PARAMETER = -41;
-  static final int PARAMETER_SHORT = -42;
-  static final int RETURN_TYPE = -43;
-  static final int STATEMENT = -44;
-  static final int TYPE_PARAMETER = -45;
+  static final int ANNOTATION_VALUE = -18;
+  static final int BODY = -19;
+  static final int CLASS = -20;
+  static final int CLASS_DECLARATION = -21;
+  static final int COMPILATION_UNIT = -22;
+  static final int CONSTRUCTOR = -23;
+  static final int CONSTRUCTOR_DECLARATION = -24;
+  static final int DECLARATION_NAME = -25;
+  static final int ENUM = -26;
+  static final int ENUM_CONSTANT = -27;
+  static final int ENUM_DECLARATION = -28;
+  static final int EXTENDS = -29;
+  static final int EXTENDS_CLAUSE = -30;
+  static final int FIELD_DECLARATION = -31;
+  static final int IDENTIFIER = -32;
+  static final int IMPLEMENTS = -33;
+  static final int IMPLEMENTS_CLAUSE = -34;
+  static final int INTERFACE = -35;
+  static final int INTERFACE_DECLARATION = -36;
+  static final int METHOD = -37;
+  static final int METHOD_DECLARATION = -38;
+  static final int MODIFIER = -39;
+  static final int MODIFIERS = -40;
+  static final int PACKAGE = -41;
+  static final int PARAMETER = -42;
+  static final int PARAMETER_SHORT = -43;
+  static final int RETURN_TYPE = -44;
+  static final int STATEMENT = -45;
+  static final int TYPE_PARAMETER = -46;
 
   //statement start
 
-  static final int BLOCK = -46;
-  static final int IF_CONDITION = -47;
-  static final int RETURN = -48;
-  static final int SUPER = -49;
-  static final int SUPER_INVOCATION = -50;
-  static final int THROW = -51;
-  static final int VAR = -52;
+  static final int BLOCK = -47;
+  static final int IF_CONDITION = -48;
+  static final int RETURN = -49;
+  static final int SUPER = -50;
+  static final int SUPER_INVOCATION = -51;
+  static final int THROW = -52;
+  static final int VAR = -53;
 
   //statement part
 
-  static final int IF = -53;
-  static final int ELSE = -54;
+  static final int IF = -54;
+  static final int ELSE = -55;
 
   //expression start
 
-  static final int CLASS_INSTANCE_CREATION = -55;
-  static final int EXPRESSION_NAME = -56;
-  static final int INVOKE = -57;
-  static final int NEW = -58;
-  static final int NULL_LITERAL = -59;
-  static final int PRIMITIVE_LITERAL = -60;
-  static final int STRING_LITERAL = -61;
-  static final int THIS = -62;
-  static final int V = -63;
+  static final int CLASS_INSTANCE_CREATION = -56;
+  static final int EXPRESSION_NAME = -57;
+  static final int INVOKE = -58;
+  static final int NEW = -59;
+  static final int NULL_LITERAL = -60;
+  static final int PRIMITIVE_LITERAL = -61;
+  static final int STRING_LITERAL = -62;
+  static final int THIS = -63;
+  static final int V = -64;
 
   //expression part
 
-  static final int ARGUMENT = -64;
-  static final int ARRAY_ACCESS = -65;
-  static final int ASSIGNMENT_OPERATOR = -66;
-  static final int EQUALITY_OPERATOR = -67;
+  static final int ARGUMENT = -65;
+  static final int ARRAY_ACCESS = -66;
+  static final int ASSIGNMENT_OPERATOR = -67;
+  static final int EQUALITY_OPERATOR = -68;
 
   private ByteProto() {}
 

@@ -482,7 +482,7 @@ public abstract class JavaTemplate {
   enum _Item
       implements
       AbstractModifier,
-      AnnotationInst,
+      AnyDeclarationInstruction,
       Argument,
       ArrayAccess,
       ArrayDimension,
@@ -560,7 +560,15 @@ public abstract class JavaTemplate {
 
   sealed interface AbstractModifier extends BodyElement {}
 
-  sealed interface AnnotationInst
+  /**
+   * @since 0.4.4
+   */
+  sealed interface AnnotationInstruction extends Instruction {}
+
+  /**
+   * @since 0.4.4
+   */
+  sealed interface AnyDeclarationInstruction
       extends
       ClassDeclarationInstruction,
       EnumDeclarationInstruction,
@@ -577,7 +585,7 @@ public abstract class JavaTemplate {
 
   sealed interface ArrayInitializer extends BodyElement, VariableInitializer {}
 
-  sealed interface ArrayInitializerValue extends VariableInitializer {}
+  sealed interface ArrayInitializerValue extends AnnotationInstruction, VariableInitializer {}
 
   sealed interface ArrayType extends BodyElement, ReferenceType {}
 
@@ -1914,10 +1922,33 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected final AnnotationInst annotation(Class<? extends Annotation> annotationType) {
+  protected final AnyDeclarationInstruction annotation(
+      Class<? extends Annotation> annotationType, AnnotationInstruction... contents) {
     Objects.requireNonNull(annotationType, "annotationType == null");
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
     var api = api();
-    return api.elem(ByteProto.ANNOTATION, api.classType(annotationType));
+    return api.elemMany(ByteProto.ANNOTATION, api.classType(annotationType), many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final AnyDeclarationInstruction annotation(
+      ClassTypeName annotationType, AnnotationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.ANNOTATION, annotationType.self(), many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final AnnotationInstruction annotationValue(ExpressionPart... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.ANNOTATION_VALUE, many);
   }
 
   /**
@@ -2329,6 +2360,16 @@ public abstract class JavaTemplate {
   }
 
   /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final EnumDeclaration enumDeclaration(EnumDeclarationInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.ENUM_DECLARATION, many);
+  }
+
+  /**
    * The {@code ==} (equal to) operator.
    *
    * @return the {@code ==} (equal to) operator
@@ -2446,17 +2487,6 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final InterfaceDeclaration interfaceDeclaration(
-      InterfaceDeclarationInstruction... contents) {
-    Object[] many = Objects.requireNonNull(contents, "contents == null");
-    return api().elemMany(ByteProto.INTERFACE_DECLARATION, many);
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
   protected final InterfaceDeclaration interfaceDeclaration(IncludeTarget target) {
     return api().elem(ByteProto.INTERFACE_DECLARATION, include(target));
   }
@@ -2466,9 +2496,10 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final EnumDeclaration enumDeclaration(EnumDeclarationInstruction... contents) {
+  protected final InterfaceDeclaration interfaceDeclaration(
+      InterfaceDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
-    return api().elemMany(ByteProto.ENUM_DECLARATION, many);
+    return api().elemMany(ByteProto.INTERFACE_DECLARATION, many);
   }
 
   /**

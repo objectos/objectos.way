@@ -106,22 +106,21 @@ class InternalCompiler extends InternalApi {
   }
 
   private void annotation() {
-    last(_START);
-
     codeAdd(Symbol.COMMERCIAL_AT);
 
     execute(this::classType);
 
     if (elemMore()) {
       codeAdd(Symbol.LEFT_PARENTHESIS);
+
       last(_START);
 
-      annotationValuePair();
+      execute(this::annotationValue);
 
-      while (itemMore()) {
+      while (elemMore()) {
         comma();
 
-        annotationValuePair();
+        execute(this::annotationValue);
       }
 
       codeAdd(Symbol.RIGHT_PARENTHESIS);
@@ -130,10 +129,10 @@ class InternalCompiler extends InternalApi {
     last(_ANNOTATION);
   }
 
-  private void annotationValuePair() {
-    // check for value name
+  private void annotationValue() {
+    // TODO name
 
-    oldExpression();
+    lang();
   }
 
   private void argument() {
@@ -1730,19 +1729,25 @@ class InternalCompiler extends InternalApi {
 
       last(_START);
 
-      annotationValuePair();
+      oldAnnotationValuePair();
 
       while (itemMore()) {
         codeAdd(Symbol.COMMA);
         codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
-        annotationValuePair();
+        oldAnnotationValuePair();
       }
 
       codeAdd(Symbol.RIGHT_PARENTHESIS);
     }
 
     last(_ANNOTATION);
+  }
+
+  private void oldAnnotationValuePair() {
+    // check for value name
+
+    oldExpression();
   }
 
   private void oldArgumentList() {

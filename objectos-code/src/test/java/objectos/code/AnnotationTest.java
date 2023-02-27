@@ -25,22 +25,27 @@ public class AnnotationTest {
   single element annotation + string literal
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName FOO = classType("com.example", "Foo");
+
         @Override
         protected final void definition() {
-          at(t("objectos.code", "Foo"), s("java"));
-          _class("Test"); body();
+          classDeclaration(
+            annotation(
+              FOO,
+              annotationValue(s("java"))
+            ),
+            name("Test")
+          );
         }
       }.toString(),
 
       """
-      @objectos.code.Foo("java")
+      @com.example.Foo("java")
       class Test {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """
@@ -51,12 +56,15 @@ public class AnnotationTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName OVERRIDE = classType(Override.class);
+
         @Override
         protected final void definition() {
-          _class("Annotation");
-          body(
+          classDeclaration(
+            name("Annotation"),
+
             method(
-              annotation(Override.class)
+              annotation(OVERRIDE)
             )
           );
         }

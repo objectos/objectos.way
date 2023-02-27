@@ -41,12 +41,13 @@ public class CompilationUnitTest {
   class Foo {}
   """)
   public void testCase01() {
-    // @formatter:off
     assertEquals(
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          _class("Foo"); body();
+          classDeclaration(
+            name("Foo")
+          );
         }
       }.toString(),
 
@@ -54,7 +55,6 @@ public class CompilationUnitTest {
       class Foo {}
       """
     );
-    // @formatter:on
   }
 
   @Test(description = """

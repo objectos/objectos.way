@@ -52,6 +52,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("declarations");
 
     value("ANNOTATION");
+    value("ANNOTATION_VALUE");
     value("BODY");
     value("CLASS"); // deprecated
     value("CLASS_DECLARATION");
