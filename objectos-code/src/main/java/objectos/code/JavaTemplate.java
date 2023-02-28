@@ -30,7 +30,6 @@ import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.BlockElement;
 import objectos.code.tmpl.BodyElement;
 import objectos.code.tmpl.ClassDeclarationInstruction;
-import objectos.code.tmpl.ClassOrInterfaceDeclarationInstruction;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.EnumDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
@@ -40,6 +39,7 @@ import objectos.code.tmpl.Instruction;
 import objectos.code.tmpl.InterfaceDeclarationInstruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
 import objectos.code.tmpl.StatementPart;
+import objectos.code.tmpl.TypeDeclarationInstruction;
 import objectos.code.tmpl.TypeName;
 import objectos.code.tmpl.VariableInitializer;
 import objectos.lang.Check;
@@ -149,7 +149,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ClassDeclaration,
       ClassInstanceCreationExpression,
       ClassKeyword,
-      ClassOrInterfaceDeclarationInstruction,
       ClassTypeInstruction,
       ClassTypeWithArgs,
       ConstructorDeclaration,
@@ -202,6 +201,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       OldSuperKeyword,
       OldThisKeyword,
       OldThrowKeyword,
+      TypeDeclarationInstruction,
       TypeParameter,
       TypeParameterOld,
       TypeVariable,
@@ -329,7 +329,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   interface Include
       extends
-      ArgsPart, BlockElement, BodyElement, ExpressionPart, ParameterElement, VariableInitializer {}
+      ArgsPart, BlockElement, BodyElement, ExpressionPart, ParameterElement, VariableInitializer,
+      InterfaceDeclarationInstruction {}
 
   interface IntegerLiteral extends Literal {}
 
@@ -2424,7 +2425,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final ClassOrInterfaceDeclarationInstruction name(ClassTypeName name) {
+  protected final TypeDeclarationInstruction name(ClassTypeName name) {
     var simpleName = name.simpleName(); // implicit null-check
     var api = api();
     return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(simpleName));

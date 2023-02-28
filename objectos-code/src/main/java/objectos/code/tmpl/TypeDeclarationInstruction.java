@@ -17,7 +17,7 @@ package objectos.code.tmpl;
 
 import objectos.code.JavaTemplate;
 
-public sealed interface ClassOrInterfaceDeclarationInstruction
+public sealed interface TypeDeclarationInstruction
     extends
     ClassDeclarationInstruction,
     EnumDeclarationInstruction,
