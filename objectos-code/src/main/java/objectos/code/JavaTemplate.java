@@ -172,7 +172,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       MethodDeclaration,
       MethodDeclarationInstruction,
       MethodDeclarator,
-      ModifiersElement,
       MethodInvocation,
       OldNewKeyword,
       OldNewLine,
@@ -186,7 +185,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ProtectedModifier,
       PublicModifier,
       OldReturnKeyword,
-      ReturnType,
       OldSimpleAssigmentOperator,
       Statement,
       OldStatement,
@@ -344,9 +342,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   interface MethodInvocation extends PrimaryNoNewArray {}
 
-  interface ModifiersElement
-      extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
-
   @Deprecated
   interface OldClassTypeInstruction
       extends ArgsPart, OldClassOrParameterizedType, ReferenceType, TypeParameterBound {}
@@ -412,8 +407,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface PublicModifier extends AccessModifier {}
 
   interface ReferenceType extends AnyType, ArrayTypeComponent {}
-
-  interface ReturnType extends MethodDeclarationInstruction {}
 
   interface Statement
       extends BlockElement, ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
@@ -2221,46 +2214,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * Adds the specified {@code modifiers} to a declaration. Modifiers are
-   * included in the order they are declared. A particular modifier will be
-   * emitted as many times as it was declared; in other words, the method
-   * <em>does not</em> filter out duplicates.
-   *
-   * <p>
-   * The following Objectos Code method declaration:
-   *
-   * <pre>
-   * method(
-   *   modifiers(PUBLIC, STATIC),
-   *   returnType(INT),
-   *   name("value")
-   * )</pre>
-   *
-   * <p>
-   * Generates the following Java code:
-   *
-   * <pre>
-   * public static int value() {}</pre>
-   *
-   * @param modifiers
-   *        the modifiers to be added to the enclosing declaration
-   *
-   * @return an element that adds the specified modifiers to the enclosing
-   *         declaration
-   *
-   * @since 0.4.2
-   */
-  protected final ModifiersElement modifiers(Modifier... modifiers) {
-    var api = api();
-    api.localStart();
-    api.protoAdd(ByteProto.MODIFIERS, modifiers.length); // implicit null-check
-    for (var modifier : modifiers) {
-      api.protoAdd(modifier.value);// implicit null-check
-    }
-    return api.itemEnd();
-  }
-
-  /**
    * TODO
    */
   protected final ExpressionName n(String name) {
@@ -2473,113 +2426,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   protected final Parameter parameter(TypeName type, String name) {
     JavaModel.checkIdentifier(name.toString());
     return api().elem(ByteProto.PARAMETER_SHORT, type, name);
-  }
-
-  /**
-   * Sets the specified {@code type} as the return type of the receiving method
-   * declaration.
-   *
-   * <p>
-   * The following Objectos Code:
-   *
-   * <pre>
-   * // class or interface
-   * method(returnType(Integer.class), name("a"))
-   *
-   * // array type
-   * method(returnType(String[].class), name("b"))
-   *
-   * // primitive type
-   * method(returnType(int.class), name("c"))
-   *
-   * // void
-   * method(returnType(void.class), name("d"))</pre>
-   *
-   * <p>
-   * Generates the following Java code:
-   *
-   * <pre>
-   * java.lang.Integer a() {}
-   *
-   * java.lang.String[] b() {}
-   *
-   * int c() {}
-   *
-   * void d() {}</pre>
-   *
-   * <p>
-   * Use the {@link #returnType(TypeName)} method if the return type cannot be
-   * represented by a class literal.
-   *
-   * @param type
-   *        the value to be set as the return type
-   *
-   * @return the return type instruction
-   *
-   * @see #returnType(TypeName)
-   *
-   * @since 0.4.2
-   */
-  protected final ReturnType returnType(Class<?> type) {
-    Objects.requireNonNull(type, "type == null");
-    var api = api();
-    return api.elem(ByteProto.RETURN_TYPE, typeName(type));
-  }
-
-  /**
-   * Sets the specified {@code type} as the return type of the receiving method
-   * declaration.
-   *
-   * <p>
-   * This method must be used when the return type cannot be represented by a
-   * class literal:
-   *
-   * <ul>
-   * <li>the return type is a parameterized type;</li>
-   * <li>the return type is a type variable;</li>
-   * <li>the return type is a generated type; or</li>
-   * <li>the return type will be only available to the generated code but is not
-   * available to the code responsible for generating the code.</li>
-   * </ul>
-   *
-   * <p>
-   * The following Objectos Code:
-   *
-   * <pre>
-   * // parameterized type
-   * method(
-   *   returnType(
-   *     parameterizedType(
-   *       classType(List.class),
-   *       classType(String.class)
-   *     )
-   *   ), name("a"))
-   *
-   * // type variable
-   * method(returnType(typeVariable("E")), name("b"))
-   *
-   * // generated type
-   * method(returnType(classType("com.example", "Generated")), name("c"))</pre>
-   *
-   * <p>
-   * Generates the following Java code:
-   *
-   * <pre>
-   * java.util.List&lt;java.lang.String&gt; a() {}
-   *
-   * E b() {}
-   *
-   * com.example.Generated c() {}</pre>
-   *
-   * @param type
-   *        the value to be set as the return type
-   *
-   * @return the return type instruction
-   *
-   * @since 0.4.2
-   */
-  protected final ReturnType returnType(TypeName type) {
-    return api().elem(ByteProto.RETURN_TYPE, type.self());
   }
 
   /**

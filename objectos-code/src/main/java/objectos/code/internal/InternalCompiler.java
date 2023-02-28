@@ -792,8 +792,7 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
 
-        case ByteProto.MODIFIER,
-             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
 
         case ByteProto.PARAMETER_SHORT -> parameters = listAdd(parameters);
 
@@ -814,7 +813,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (modifiers != NULL) {
-      listSwitch(modifiers, this::modifierSwitcher);
+      listExecute(modifiers, this::modifier);
     }
 
     if (typeParameters != NULL) {
@@ -1045,8 +1044,7 @@ class InternalCompiler extends InternalApi {
              ByteProto.PRIMITIVE_TYPE,
              ByteProto.TYPE_VARIABLE -> type = singleSet(type);
 
-        case ByteProto.MODIFIER,
-             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
 
         default -> {
           if (proto != ByteProto.END_ELEMENT) {
@@ -1063,7 +1061,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (modifiers != NULL) {
-      listSwitch(modifiers, this::modifierSwitcher);
+      listExecute(modifiers, this::modifier);
     }
 
     if (type != NULL) {
@@ -1605,12 +1603,9 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.DECLARATION_NAME -> name = singleSet(name);
 
-        case ByteProto.MODIFIER,
-             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
 
         case ByteProto.PARAMETER_SHORT -> parameters = listAdd(parameters);
-
-        case ByteProto.RETURN_TYPE -> result = singleSet(result);
 
         case ByteProto.STATEMENT -> statements = listAdd(statements);
 
@@ -1631,7 +1626,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (modifiers != NULL) {
-      listSwitch(modifiers, this::modifierSwitcher);
+      listExecute(modifiers, this::modifier);
     }
 
     if (typeParameters != NULL) {
@@ -1675,8 +1670,6 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.PRIMITIVE_TYPE -> primitiveType();
 
-      case ByteProto.RETURN_TYPE -> returnType();
-
       case ByteProto.TYPE_VARIABLE -> typeVariable();
 
       case ByteProto.VOID -> voidKeyword();
@@ -1709,22 +1702,6 @@ class InternalCompiler extends InternalApi {
     codeAdd(ByteCode.KEYWORD, proto);
 
     last(_KEYWORD);
-  }
-
-  private void modifiers() {
-    int size = protoNext();
-
-    for (int i = 0; i < size; i++) {
-      modifier();
-    }
-  }
-
-  private void modifierSwitcher(int proto) {
-    switch (proto) {
-      case ByteProto.MODIFIER -> modifier();
-
-      case ByteProto.MODIFIERS -> modifiers();
-    }
   }
 
   private void newKeyword() {
@@ -2660,10 +2637,6 @@ class InternalCompiler extends InternalApi {
     last(_KEYWORD);
   }
 
-  private void returnType() {
-    executeSwitch(this::type);
-  }
-
   private void semicolon() {
     codeAdd(Symbol.SEMICOLON);
 
@@ -2962,8 +2935,7 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
 
-        case ByteProto.MODIFIER,
-             ByteProto.MODIFIERS -> modifiers = listAdd(modifiers);
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
 
         case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
 
@@ -2980,7 +2952,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (modifiers != NULL) {
-      listSwitch(modifiers, this::modifierSwitcher);
+      listExecute(modifiers, this::modifier);
     }
 
     keyword(keyword);

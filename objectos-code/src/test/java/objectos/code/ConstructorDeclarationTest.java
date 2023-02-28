@@ -33,30 +33,22 @@ public class ConstructorDeclarationTest {
         protected final void definition() {
           classDeclaration(
             name("Test0"),
-            constructor(
-              modifiers(PUBLIC)
-            )
+            constructor(PUBLIC)
           );
 
           classDeclaration(
             name("Test1"),
-            constructor(
-              modifiers(PROTECTED)
-            )
+            constructor(PROTECTED)
           );
 
           classDeclaration(
             name("Test2"),
-            constructor(
-              modifiers()
-            )
+            constructor(new ConstructorDeclarationInstruction[] {})
           );
 
           classDeclaration(
             name("Test3"),
-            constructor(
-              modifiers(PRIVATE)
-            )
+            constructor(PRIVATE)
           );
         }
       }.toString(),

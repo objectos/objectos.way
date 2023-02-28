@@ -150,18 +150,15 @@ public class MethodDeclarationTest {
             name("Methods"),
 
             method(
-              modifiers(FINAL),
-              name("a")
+              FINAL, name("a")
             ),
 
             method(
-              modifiers(PUBLIC, FINAL),
-              name("b")
+              PUBLIC, FINAL, name("b")
             ),
 
             method(
-              modifiers(PROTECTED, STATIC, FINAL),
-              name("c")
+              PROTECTED, STATIC, FINAL, name("c")
             )
           );
         }
@@ -225,8 +222,7 @@ public class MethodDeclarationTest {
 
             method(
               annotation(Override.class),
-              modifiers(FINAL),
-              name("test")
+              FINAL, name("test")
             )
           );
         }
@@ -301,8 +297,7 @@ public class MethodDeclarationTest {
             ),
 
             method(
-              returnType(STRING),
-              name("test7"),
+              STRING, name("test7"),
               parameter(STRING, "a")
             )
           );
@@ -409,28 +404,24 @@ public class MethodDeclarationTest {
             ),
 
             method(
-              returnType(String[].class),
+              ArrayTypeName.of(String[].class),
               name("test1")
             ),
 
             method(
-              returnType(INT),
-              name("test2")
+              INT, name("test2")
             ),
 
             method(
-              returnType(Integer.class),
-              name("test3")
+              ClassTypeName.of(Integer.class), name("test3")
             ),
 
             method(
-              returnType(E),
-              name("test4")
+              E, name("test4")
             ),
 
             method(
-              returnType(MAP_KV),
-              name("test5")
+              MAP_KV, name("test5")
             )
           );
         }
@@ -528,8 +519,7 @@ public class MethodDeclarationTest {
 
             method(
               typeParameter("T", OBJECT, SERIALIZABLE),
-              returnType(STRING),
-              name("test4")
+              STRING, name("test4")
             )
           );
         }

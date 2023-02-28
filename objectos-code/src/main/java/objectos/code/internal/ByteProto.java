@@ -67,48 +67,46 @@ public final class ByteProto {
   public static final int METHOD = -37;
   public static final int METHOD_DECLARATION = -38;
   public static final int MODIFIER = -39;
-  public static final int MODIFIERS = -40;
-  public static final int PACKAGE = -41;
-  public static final int PACKAGE_DECLARATION = -42;
-  public static final int PARAMETER = -43;
-  public static final int PARAMETER_SHORT = -44;
-  public static final int RETURN_TYPE = -45;
-  public static final int STATEMENT = -46;
-  public static final int TYPE_PARAMETER = -47;
+  public static final int PACKAGE = -40;
+  public static final int PACKAGE_DECLARATION = -41;
+  public static final int PARAMETER = -42;
+  public static final int PARAMETER_SHORT = -43;
+  public static final int STATEMENT = -44;
+  public static final int TYPE_PARAMETER = -45;
 
   //statement start
 
-  public static final int BLOCK = -48;
-  public static final int IF_CONDITION = -49;
-  public static final int RETURN = -50;
-  public static final int SUPER = -51;
-  public static final int SUPER_INVOCATION = -52;
-  public static final int THROW = -53;
-  public static final int VAR = -54;
+  public static final int BLOCK = -46;
+  public static final int IF_CONDITION = -47;
+  public static final int RETURN = -48;
+  public static final int SUPER = -49;
+  public static final int SUPER_INVOCATION = -50;
+  public static final int THROW = -51;
+  public static final int VAR = -52;
 
   //statement part
 
-  public static final int IF = -55;
-  public static final int ELSE = -56;
+  public static final int IF = -53;
+  public static final int ELSE = -54;
 
   //expression start
 
-  public static final int CLASS_INSTANCE_CREATION = -57;
-  public static final int EXPRESSION_NAME = -58;
-  public static final int INVOKE = -59;
-  public static final int NEW = -60;
-  public static final int NULL_LITERAL = -61;
-  public static final int PRIMITIVE_LITERAL = -62;
-  public static final int STRING_LITERAL = -63;
-  public static final int THIS = -64;
-  public static final int V = -65;
+  public static final int CLASS_INSTANCE_CREATION = -55;
+  public static final int EXPRESSION_NAME = -56;
+  public static final int INVOKE = -57;
+  public static final int NEW = -58;
+  public static final int NULL_LITERAL = -59;
+  public static final int PRIMITIVE_LITERAL = -60;
+  public static final int STRING_LITERAL = -61;
+  public static final int THIS = -62;
+  public static final int V = -63;
 
   //expression part
 
-  public static final int ARGUMENT = -66;
-  public static final int ARRAY_ACCESS = -67;
-  public static final int ASSIGNMENT_OPERATOR = -68;
-  public static final int EQUALITY_OPERATOR = -69;
+  public static final int ARGUMENT = -64;
+  public static final int ARRAY_ACCESS = -65;
+  public static final int ASSIGNMENT_OPERATOR = -66;
+  public static final int EQUALITY_OPERATOR = -67;
 
   private ByteProto() {}
 
@@ -134,11 +132,6 @@ public final class ByteProto {
 
   public static boolean isImport(int proto) {
     return proto == AUTO_IMPORTS;
-  }
-
-  public static boolean isModifier(int proto) {
-    return proto == MODIFIER
-        || proto == MODIFIERS;
   }
 
   public static boolean isOperator(int proto) {
