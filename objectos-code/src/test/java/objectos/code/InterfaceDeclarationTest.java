@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 import objectos.code.Types.IfaceA;
 import objectos.code.Types.IfaceB;
 import objectos.code.Types.IfaceC;
-import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class InterfaceDeclarationTest {

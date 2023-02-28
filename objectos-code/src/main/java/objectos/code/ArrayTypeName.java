@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.type;
+package objectos.code;
 
 import objectos.code.internal.ArrayTypeNameImpl;
 import objectos.code.tmpl.ArrayTypeComponent;
+import objectos.code.tmpl.ReferenceTypeName;
 
 /**
  * TODO

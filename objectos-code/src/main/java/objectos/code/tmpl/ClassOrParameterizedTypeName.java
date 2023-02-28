@@ -13,24 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.type;
+package objectos.code.tmpl;
 
-import objectos.code.internal.TypeVariableNameImpl;
-import objectos.code.tmpl.ArrayTypeComponent;
+import objectos.code.ClassTypeName;
+import objectos.code.ParameterizedTypeName;
 
-/**
- * TODO
- *
- * @since 0.4.2
- */
-public sealed interface TypeVariableName
-    extends ReferenceTypeName, ArrayTypeComponent permits TypeVariableNameImpl {
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  static TypeVariableName of(String name) {
-    return TypeVariableNameImpl.of(name);
-  }
-}
+public sealed interface ClassOrParameterizedTypeName
+    extends ReferenceTypeName permits ClassTypeName, ParameterizedTypeName {}

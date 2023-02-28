@@ -20,9 +20,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import objectos.code.type.ClassTypeName;
-import objectos.code.type.ParameterizedTypeName;
-import objectos.code.type.TypeVariableName;
 import org.testng.annotations.Test;
 
 public class MethodDeclarationTest {

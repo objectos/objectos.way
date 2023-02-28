@@ -18,9 +18,6 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
-import objectos.code.type.ArrayTypeName;
-import objectos.code.type.ClassTypeName;
-import objectos.code.type.ParameterizedTypeName;
 import org.testng.annotations.Test;
 
 public class FieldDeclarationTest {

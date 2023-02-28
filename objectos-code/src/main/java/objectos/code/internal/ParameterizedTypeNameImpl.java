@@ -17,9 +17,9 @@ package objectos.code.internal;
 
 import java.util.Arrays;
 import java.util.Objects;
-import objectos.code.type.ClassTypeName;
-import objectos.code.type.ParameterizedTypeName;
-import objectos.code.type.ReferenceTypeName;
+import objectos.code.ClassTypeName;
+import objectos.code.ParameterizedTypeName;
+import objectos.code.tmpl.ReferenceTypeName;
 
 /**
  * TODO

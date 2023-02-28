@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.type;
+package objectos.code;
 
 import objectos.code.internal.Keyword;
 import objectos.code.internal.PrimitiveTypeNameImpl;
 import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.StatementPart;
+import objectos.code.tmpl.TypeName;
 
 /**
  * TODO

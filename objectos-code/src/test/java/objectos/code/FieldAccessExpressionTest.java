@@ -17,7 +17,6 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class FieldAccessExpressionTest {

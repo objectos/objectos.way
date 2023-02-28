@@ -17,7 +17,7 @@ package objectos.code.internal;
 
 import objectos.code.JavaTemplate;
 import objectos.code.JavaTemplate._Item;
-import objectos.code.type.TypeName;
+import objectos.code.tmpl.TypeName;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;

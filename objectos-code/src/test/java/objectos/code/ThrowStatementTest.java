@@ -18,7 +18,6 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class ThrowStatementTest {

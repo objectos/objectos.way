@@ -15,7 +15,7 @@
  */
 package objectos.code.internal;
 
-import objectos.code.type.PrimitiveTypeName;
+import objectos.code.PrimitiveTypeName;
 
 /**
  * TODO

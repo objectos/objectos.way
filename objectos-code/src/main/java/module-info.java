@@ -21,7 +21,6 @@
 module objectos.code {
   exports objectos.code;
   exports objectos.code.tmpl;
-  exports objectos.code.type;
 
   requires objectos.lang;
   requires objectos.util;

@@ -15,9 +15,9 @@
  */
 package objectos.code.internal;
 
+import objectos.code.ArrayTypeName;
 import objectos.code.tmpl.ArrayTypeComponent;
-import objectos.code.type.ArrayTypeName;
-import objectos.code.type.TypeName;
+import objectos.code.tmpl.TypeName;
 import objectos.lang.Check;
 
 /**

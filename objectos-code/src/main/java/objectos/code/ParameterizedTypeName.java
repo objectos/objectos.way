@@ -13,12 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.type;
+package objectos.code;
+
+import objectos.code.internal.ParameterizedTypeNameImpl;
+import objectos.code.tmpl.ClassOrParameterizedTypeName;
+import objectos.code.tmpl.ExpressionPart;
+import objectos.code.tmpl.ReferenceTypeName;
 
 /**
  * TODO
  *
  * @since 0.4.2
  */
-public sealed interface ReferenceTypeName
-    extends TypeName permits ArrayTypeName, ClassOrParameterizedTypeName, TypeVariableName {}
+public sealed interface ParameterizedTypeName
+    extends ClassOrParameterizedTypeName, ExpressionPart permits ParameterizedTypeNameImpl {
+  /**
+   * TODO
+   */
+  static ParameterizedTypeName of(
+      ClassTypeName raw, ReferenceTypeName first, ReferenceTypeName... rest) {
+    return ParameterizedTypeNameImpl.of(raw, first, rest);
+  }
+}

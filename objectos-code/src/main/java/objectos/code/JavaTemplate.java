@@ -29,17 +29,15 @@ import objectos.code.tmpl.ArgsPart;
 import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.BlockElement;
 import objectos.code.tmpl.BodyElement;
+import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.ExpressionPart;
 import objectos.code.tmpl.FieldDeclarationInstruction;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.Instruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
 import objectos.code.tmpl.StatementPart;
+import objectos.code.tmpl.TypeName;
 import objectos.code.tmpl.VariableInitializer;
-import objectos.code.type.ClassOrParameterizedTypeName;
-import objectos.code.type.ClassTypeName;
-import objectos.code.type.PrimitiveTypeName;
-import objectos.code.type.TypeName;
 import objectos.lang.Check;
 
 /**

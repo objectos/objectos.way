@@ -16,8 +16,8 @@
 package objectos.code.internal;
 
 import java.util.Arrays;
+import objectos.code.ClassTypeName;
 import objectos.code.JavaTemplate;
-import objectos.code.type.ClassTypeName;
 import objectos.lang.Check;
 
 /**

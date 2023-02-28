@@ -15,7 +15,7 @@
  */
 package objectos.code.internal;
 
-import objectos.code.type.TypeVariableName;
+import objectos.code.TypeVariableName;
 
 /**
  * TODO

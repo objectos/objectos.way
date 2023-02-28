@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.type;
+package objectos.code;
 
-import objectos.code.tmpl.FieldDeclarationInstruction;
-import objectos.code.tmpl.MethodDeclarationInstruction;
+import objectos.code.internal.TypeVariableNameImpl;
+import objectos.code.tmpl.ArrayTypeComponent;
+import objectos.code.tmpl.ReferenceTypeName;
 
 /**
  * TODO
  *
  * @since 0.4.2
  */
-public sealed interface TypeName
-    extends FieldDeclarationInstruction,
-    MethodDeclarationInstruction permits PrimitiveTypeName, ReferenceTypeName {}
+public sealed interface TypeVariableName
+    extends ReferenceTypeName, ArrayTypeComponent permits TypeVariableNameImpl {
+  /**
+   * TODO
+   *
+   * @since 0.4.2
+   */
+  static TypeVariableName of(String name) {
+    return TypeVariableNameImpl.of(name);
+  }
+}
