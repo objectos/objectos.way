@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.tmpl;
+
 /**
- * Provides the non-exported implementation.
+ * TODO
  *
- * @since 0.4.4
+ * @since 0.4.3.1
  */
-package objectos.code.internal;
+public interface StatementPart extends Instruction {}

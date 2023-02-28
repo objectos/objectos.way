@@ -13,9 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.tmpl;
+
+import objectos.code.JavaTemplate;
+
 /**
- * Provides the non-exported implementation.
+ * An {@link Instruction} that can be used with the
+ * {@link JavaTemplate#arg(ExpressionPart...)} method.
  *
- * @since 0.4.4
+ * @see JavaTemplate#arg(ExpressionPart...)
+ *
+ * @since 0.4.3.1
  */
-package objectos.code.internal;
+public interface ExpressionPart
+    extends ArgsPart, BlockElement, BodyElement, StatementPart,
+    VariableInitializer {}

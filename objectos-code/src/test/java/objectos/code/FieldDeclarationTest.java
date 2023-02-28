@@ -18,6 +18,9 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Map;
+import objectos.code.type.ArrayTypeName;
+import objectos.code.type.ClassTypeName;
+import objectos.code.type.ParameterizedTypeName;
 import org.testng.annotations.Test;
 
 public class FieldDeclarationTest {
@@ -28,7 +31,7 @@ public class FieldDeclarationTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
         @Override
         protected final void definition() {
@@ -62,7 +65,7 @@ public class FieldDeclarationTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
         @Override
         protected final void definition() {
@@ -96,7 +99,7 @@ public class FieldDeclarationTest {
   public void testCase03() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
         @Override
         protected final void definition() {
@@ -136,7 +139,7 @@ public class FieldDeclarationTest {
   public void testCase04() {
     assertEquals(
       new JavaTemplate() {
-        static final ArrayTypeName OBJECT_ARRAY = arrayType(Object[].class);
+        static final ArrayTypeName OBJECT_ARRAY = ArrayTypeName.of(Object[].class);
 
         @Override
         protected final void definition() {
@@ -164,8 +167,10 @@ public class FieldDeclarationTest {
   public void testCase05() {
     assertEquals(
       new JavaTemplate() {
-        static final ParameterizedTypeName MAP = parameterizedType(
-          classType(Map.class), classType(String.class), classType(Integer.class)
+        static final ParameterizedTypeName MAP = ParameterizedTypeName.of(
+          ClassTypeName.of(Map.class),
+          ClassTypeName.of(String.class),
+          ClassTypeName.of(Integer.class)
         );
 
         @Override
@@ -194,7 +199,7 @@ public class FieldDeclarationTest {
   public void testCase06() {
     assertEquals(
       new JavaTemplate() {
-        static final ArrayTypeName INT_ARRAY = arrayType(INT);
+        static final ArrayTypeName INT_ARRAY = ArrayTypeName.of(INT);
 
         @Override
         protected final void definition() {
@@ -254,9 +259,9 @@ public class FieldDeclarationTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
-        static final ArrayTypeName INT_ARRAY = arrayType(INT);
+        static final ArrayTypeName INT_ARRAY = ArrayTypeName.of(INT);
 
-        static final ClassTypeName FOO = classType("com.example", "Foo");
+        static final ClassTypeName FOO = ClassTypeName.of("com.example", "Foo");
 
         @Override
         protected final void definition() {

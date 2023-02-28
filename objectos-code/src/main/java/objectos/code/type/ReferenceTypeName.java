@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.type;
+
 /**
- * Provides the non-exported implementation.
+ * TODO
  *
- * @since 0.4.4
+ * @since 0.4.2
  */
-package objectos.code.internal;
+public sealed interface ReferenceTypeName
+    extends TypeName permits ArrayTypeName, ClassOrParameterizedTypeName, TypeVariableName {}

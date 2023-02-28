@@ -17,6 +17,8 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.type.ArrayTypeName;
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class ArrayTypeTest {
@@ -29,11 +31,11 @@ public class ArrayTypeTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName OBJECT = classType(Object.class);
+        static final ClassTypeName OBJECT = ClassTypeName.of(Object.class);
 
-        static final ArrayTypeName OBJECT1 = arrayType(OBJECT, 1);
-        static final ArrayTypeName OBJECT2 = arrayType(OBJECT, 2);
-        static final ArrayTypeName OBJECT3 = arrayType(OBJECT, 3);
+        static final ArrayTypeName OBJECT1 = ArrayTypeName.of(OBJECT, 1);
+        static final ArrayTypeName OBJECT2 = ArrayTypeName.of(OBJECT, 2);
+        static final ArrayTypeName OBJECT3 = ArrayTypeName.of(OBJECT, 3);
 
         @Override
         protected final void definition() {
@@ -67,9 +69,9 @@ public class ArrayTypeTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
-        static final ArrayTypeName INT1 = arrayType(INT, 1);
-        static final ArrayTypeName DOUBLE2 = arrayType(DOUBLE, 2);
-        static final ArrayTypeName BOOL3 = arrayType(BOOLEAN, 3);
+        static final ArrayTypeName INT1 = ArrayTypeName.of(INT, 1);
+        static final ArrayTypeName DOUBLE2 = ArrayTypeName.of(DOUBLE, 2);
+        static final ArrayTypeName BOOL3 = ArrayTypeName.of(BOOLEAN, 3);
 
         @Override
         protected final void definition() {

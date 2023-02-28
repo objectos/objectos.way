@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides the non-exported implementation.
- *
- * @since 0.4.4
- */
-package objectos.code.internal;
+package objectos.code.type;
+
+public sealed interface ClassOrParameterizedTypeName
+    extends ReferenceTypeName permits ClassTypeName, ParameterizedTypeName {}

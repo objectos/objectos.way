@@ -13,9 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.tmpl;
+
 /**
- * Provides the non-exported implementation.
+ * Represents an instruction that generates part of the output of a template.
  *
- * @since 0.4.4
+ * <p>
+ * Unless noted references to a particular instruction MUST NOT be reused.
  */
-package objectos.code.internal;
+public interface Instruction {
+
+  /**
+   * Returns itself.
+   *
+   * <p>
+   * Its sole purpose is to trigger an implicit null check.
+   *
+   * @return this instance
+   */
+  default Object self() { return this; }
+
+}

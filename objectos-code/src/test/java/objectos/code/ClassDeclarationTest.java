@@ -18,6 +18,7 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.io.Serializable;
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class ClassDeclarationTest {
@@ -255,11 +256,11 @@ public class ClassDeclarationTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName AUTO_CLOSEABLE = classType(AutoCloseable.class);
+        static final ClassTypeName AUTO_CLOSEABLE = ClassTypeName.of(AutoCloseable.class);
 
-        static final ClassTypeName FOO = classType("com.example", "Foo");
+        static final ClassTypeName FOO = ClassTypeName.of("com.example", "Foo");
 
-        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+        static final ClassTypeName SERIALIZABLE = ClassTypeName.of(Serializable.class);
 
         @Override
         protected final void definition() {
@@ -299,9 +300,9 @@ public class ClassDeclarationTest {
   public void testCase08() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+        static final ClassTypeName SERIALIZABLE = ClassTypeName.of(Serializable.class);
 
-        static final ClassTypeName THREAD = classType(Thread.class);
+        static final ClassTypeName THREAD = ClassTypeName.of(Thread.class);
 
         @Override
         protected final void definition() {

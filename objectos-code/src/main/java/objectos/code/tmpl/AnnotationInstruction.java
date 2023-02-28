@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.tmpl;
+
 /**
- * Provides the non-exported implementation.
+ * An {@link Instruction} that can be used with the various {@code annotation}
+ * methods.
  *
  * @since 0.4.4
  */
-package objectos.code.internal;
+public interface AnnotationInstruction extends Instruction {}

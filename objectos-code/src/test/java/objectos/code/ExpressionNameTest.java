@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class ExpressionNameTest {
@@ -64,7 +65,7 @@ public class ExpressionNameTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName SUIT = classType("test", "Suit");
+        static final ClassTypeName SUIT = ClassTypeName.of("test", "Suit");
 
         @Override
         protected final void definition() {

@@ -13,9 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.tmpl;
+
 /**
- * Provides the non-exported implementation.
- *
- * @since 0.4.4
+ * Represents a partial template to be included as part of the enclosing
+ * template.
  */
-package objectos.code.internal;
+@FunctionalInterface
+public interface IncludeTarget {
+
+  /**
+   * Includes all instructions from this partial template into the including
+   * template.
+   */
+  void execute();
+
+}

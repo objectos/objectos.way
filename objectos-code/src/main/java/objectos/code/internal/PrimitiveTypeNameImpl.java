@@ -13,9 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides the non-exported implementation.
- *
- * @since 0.4.4
- */
 package objectos.code.internal;
+
+import objectos.code.Keyword;
+import objectos.code.type.PrimitiveTypeName;
+
+/**
+ * TODO
+ *
+ * @since 0.4.2
+ */
+public final class PrimitiveTypeNameImpl extends External implements PrimitiveTypeName {
+  private final int value;
+
+  public PrimitiveTypeNameImpl(Keyword keyword) {
+    value = keyword.ordinal();
+  }
+
+  @Override
+  public final void execute(InternalApi api) {
+    api.extStart();
+    api.protoAdd(ByteProto.PRIMITIVE_TYPE, value);
+  }
+}

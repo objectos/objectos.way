@@ -16,8 +16,8 @@
 package objectos.code.internal;
 
 import objectos.code.JavaTemplate;
-import objectos.code.JavaTemplate.TypeName;
 import objectos.code.JavaTemplate._Item;
+import objectos.code.type.TypeName;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
@@ -382,7 +382,10 @@ public class InternalApi {
   }
 
   public final void arrayTypeName(TypeName type, int count) {
-    type.execute(this);
+    // cast is safe: TypeName is sealed
+    var ext = (External) type;
+
+    ext.execute(this);
 
     for (int i = 0; i < count; i++) {
       itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);

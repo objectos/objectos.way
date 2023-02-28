@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.tmpl;
+
 /**
- * Provides the non-exported implementation.
+ * An {@link Instruction} that can be used with the instructions that take
+ * arguments.
  *
- * @since 0.4.4
+ * @see JavaTemplate#invoke(String, ArgsPart...)
  */
-package objectos.code.internal;
+@Deprecated
+public interface ArgsPart extends Instruction {}

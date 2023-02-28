@@ -13,21 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
-final class JavaModel {
+public final class JavaModel {
 
   private JavaModel() {}
 
-  static void checkFieldName(String name) {
-    if (name.isEmpty()) {
-      throw new IllegalArgumentException("Field name must not be empty");
-    }
-
-    checkName(name, false, "an invalid field name");
-  }
-
-  static void checkIdentifier(String s) {
+  public static void checkIdentifier(String s) {
     if (s.isEmpty()) {
       throw new IllegalArgumentException("Identifier must not be empty");
     }
@@ -35,7 +27,7 @@ final class JavaModel {
     checkName(s, false, "an invalid identifier");
   }
 
-  static void checkMethodName(String methodName) {
+  public static void checkMethodName(String methodName) {
     if (methodName.isEmpty()) {
       throw new IllegalArgumentException("Method name must not be empty");
     }
@@ -43,11 +35,11 @@ final class JavaModel {
     checkName(methodName, false, "an invalid method name");
   }
 
-  static void checkPackageName(String s) {
+  public static void checkPackageName(String s) {
     checkName(s, true, "an invalid package name");
   }
 
-  static void checkSimpleName(String s) {
+  public static void checkSimpleName(String s) {
     if (s.isEmpty()) {
       throw new IllegalArgumentException("A simple name must not be empty");
     }
@@ -55,12 +47,20 @@ final class JavaModel {
     checkName(s, false, "an invalid simple name");
   }
 
-  static void checkVarName(String name) {
+  public static void checkVarName(String name) {
     if (name.isEmpty()) {
       throw new IllegalArgumentException("Local variable name must not be empty");
     }
 
     checkName(name, false, "an invalid local variable name");
+  }
+
+  static void checkFieldName(String name) {
+    if (name.isEmpty()) {
+      throw new IllegalArgumentException("Field name must not be empty");
+    }
+
+    checkName(name, false, "an invalid field name");
   }
 
   private static void checkName(String s, boolean allowDots, String message) {

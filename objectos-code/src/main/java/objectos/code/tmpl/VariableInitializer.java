@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides the non-exported implementation.
- *
- * @since 0.4.4
- */
-package objectos.code.internal;
+package objectos.code.tmpl;
+
+public interface VariableInitializer extends FieldDeclarationInstruction {}

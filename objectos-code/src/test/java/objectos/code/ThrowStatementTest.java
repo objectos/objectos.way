@@ -18,6 +18,7 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class ThrowStatementTest {
@@ -30,7 +31,7 @@ public class ThrowStatementTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName IO_EXCEPTION = classType(IOException.class);
+        static final ClassTypeName IO_EXCEPTION = ClassTypeName.of(IOException.class);
 
         @Override
         protected final void definition() {

@@ -13,9 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.type;
+
+import objectos.code.tmpl.FieldDeclarationInstruction;
+import objectos.code.tmpl.MethodDeclarationInstruction;
+
 /**
- * Provides the non-exported implementation.
+ * TODO
  *
- * @since 0.4.4
+ * @since 0.4.2
  */
-package objectos.code.internal;
+public sealed interface TypeName
+    extends FieldDeclarationInstruction,
+    MethodDeclarationInstruction permits PrimitiveTypeName, ReferenceTypeName {}

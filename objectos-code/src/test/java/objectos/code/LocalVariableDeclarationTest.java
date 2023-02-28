@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class LocalVariableDeclarationTest {
@@ -27,7 +28,7 @@ public class LocalVariableDeclarationTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
         @Override
         protected final void definition() {

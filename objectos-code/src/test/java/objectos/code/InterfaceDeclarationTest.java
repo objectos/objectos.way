@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.code.Types.IfaceA;
 import objectos.code.Types.IfaceB;
 import objectos.code.Types.IfaceC;
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class InterfaceDeclarationTest {
@@ -100,9 +101,9 @@ public class InterfaceDeclarationTest {
   public void testCase03() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName IFACE_A = classType(IfaceA.class);
-        static final ClassTypeName IFACE_B = classType(IfaceB.class);
-        static final ClassTypeName IFACE_C = classType(IfaceC.class);
+        static final ClassTypeName IFACE_A = ClassTypeName.of(IfaceA.class);
+        static final ClassTypeName IFACE_B = ClassTypeName.of(IfaceB.class);
+        static final ClassTypeName IFACE_C = ClassTypeName.of(IfaceC.class);
 
         @Override
         protected final void definition() {

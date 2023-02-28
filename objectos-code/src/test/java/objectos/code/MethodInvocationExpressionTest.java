@@ -18,6 +18,7 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Collections;
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class MethodInvocationExpressionTest {
@@ -214,9 +215,9 @@ public class MethodInvocationExpressionTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName COLLECTIONS = classType(Collections.class);
+        static final ClassTypeName COLLECTIONS = ClassTypeName.of(Collections.class);
 
-        static final ClassTypeName THREAD = classType(Thread.class);
+        static final ClassTypeName THREAD = ClassTypeName.of(Thread.class);
 
         @Override
         protected final void definition() {
@@ -251,7 +252,7 @@ public class MethodInvocationExpressionTest {
   public void testCase08() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName FOO = classType(Foo.class);
+        static final ClassTypeName FOO = ClassTypeName.of(Foo.class);
 
         @Override
         protected final void definition() {
@@ -331,7 +332,7 @@ public class MethodInvocationExpressionTest {
   public void testCase10() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName THREAD = classType(Thread.class);
+        static final ClassTypeName THREAD = ClassTypeName.of(Thread.class);
 
         @Override
         protected final void definition() {
@@ -399,7 +400,7 @@ public class MethodInvocationExpressionTest {
   public void testCase12() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName A = classType("com.example", "A");
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
 
         @Override
         protected final void definition() {

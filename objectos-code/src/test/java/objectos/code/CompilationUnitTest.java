@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class CompilationUnitTest {
@@ -91,7 +92,7 @@ public class CompilationUnitTest {
   public void testCase03() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName BAR = classType("com.example", "Bar");
+        static final ClassTypeName BAR = ClassTypeName.of("com.example", "Bar");
 
         @Override
         protected final void definition() {
@@ -118,7 +119,7 @@ public class CompilationUnitTest {
   public void testCase04() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName THREAD = classType(Thread.class);
+        static final ClassTypeName THREAD = ClassTypeName.of(Thread.class);
 
         @Override
         protected final void definition() {
@@ -148,7 +149,7 @@ public class CompilationUnitTest {
   public void testCase05() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName BAR = classType("test", "Bar");
+        static final ClassTypeName BAR = ClassTypeName.of("test", "Bar");
 
         @Override
         protected final void definition() {
@@ -179,9 +180,9 @@ public class CompilationUnitTest {
   public void testCase06() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName A = classType("test", "A");
-        static final ClassTypeName B = classType("test", "B");
-        static final ClassTypeName C = classType("test", "C");
+        static final ClassTypeName A = ClassTypeName.of("test", "A");
+        static final ClassTypeName B = ClassTypeName.of("test", "B");
+        static final ClassTypeName C = ClassTypeName.of("test", "C");
 
         @Override
         protected final void definition() {
@@ -227,9 +228,9 @@ public class CompilationUnitTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName A = classType("test", "A");
-        static final ClassTypeName B = classType("test", "B");
-        static final ClassTypeName C = classType("test", "C");
+        static final ClassTypeName A = ClassTypeName.of("test", "A");
+        static final ClassTypeName B = ClassTypeName.of("test", "B");
+        static final ClassTypeName C = ClassTypeName.of("test", "C");
 
         @Override
         protected final void definition() {
@@ -278,7 +279,7 @@ public class CompilationUnitTest {
   public void testCase08() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName TYPE_ANNOTATION = classType("bar", "TypeAnnotation");
+        static final ClassTypeName TYPE_ANNOTATION = ClassTypeName.of("bar", "TypeAnnotation");
 
         @Override
         protected final void definition() {
@@ -320,7 +321,7 @@ public class CompilationUnitTest {
 
           classDeclaration(
             PUBLIC, name("Test"),
-            extendsClause(classType("bar", "Super"))
+            extendsClause(ClassTypeName.of("bar", "Super"))
           );
         }
       }.toString(),

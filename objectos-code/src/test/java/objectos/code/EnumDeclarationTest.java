@@ -18,6 +18,7 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.io.Serializable;
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class EnumDeclarationTest {
@@ -161,9 +162,9 @@ public class EnumDeclarationTest {
   public void testCase04() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName AUTO_CLOSEABLE = classType(AutoCloseable.class);
+        static final ClassTypeName AUTO_CLOSEABLE = ClassTypeName.of(AutoCloseable.class);
 
-        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+        static final ClassTypeName SERIALIZABLE = ClassTypeName.of(Serializable.class);
 
         @Override
         protected final void definition() {
@@ -203,9 +204,9 @@ public class EnumDeclarationTest {
   public void testCase05() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName IFACE = classType("com.example", "Iface");
+        static final ClassTypeName IFACE = ClassTypeName.of("com.example", "Iface");
 
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
         @Override
         protected final void definition() {

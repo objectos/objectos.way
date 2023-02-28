@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
+import objectos.code.internal.JavaModel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

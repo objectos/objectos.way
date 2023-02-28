@@ -13,9 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Provides the non-exported implementation.
- *
- * @since 0.4.4
- */
 package objectos.code.internal;
+
+import objectos.code.type.TypeVariableName;
+
+/**
+ * TODO
+ *
+ * @since 0.4.2
+ */
+public final class TypeVariableNameImpl extends External implements TypeVariableName {
+  private final String name;
+
+  TypeVariableNameImpl(String name) {
+    this.name = name;
+  }
+
+  public static TypeVariableNameImpl of(String name) {
+    JavaModel.checkVarName(name.toString());
+    return new TypeVariableNameImpl(name);
+  }
+
+  @Override
+  public final void execute(InternalApi api) {
+    api.extStart();
+    api.protoAdd(ByteProto.TYPE_VARIABLE, api.object(name));
+  }
+}

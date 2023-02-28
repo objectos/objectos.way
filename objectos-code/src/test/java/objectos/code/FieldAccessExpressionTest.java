@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class FieldAccessExpressionTest {
@@ -29,7 +30,7 @@ public class FieldAccessExpressionTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName FOO = classType("test", "Foo");
+        static final ClassTypeName FOO = ClassTypeName.of("test", "Foo");
 
         @Override
         protected final void definition() {

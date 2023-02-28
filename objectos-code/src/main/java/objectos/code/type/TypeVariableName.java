@@ -13,9 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.code.type;
+
+import objectos.code.internal.TypeVariableNameImpl;
+import objectos.code.tmpl.ArrayTypeComponent;
+
 /**
- * Provides the non-exported implementation.
+ * TODO
  *
- * @since 0.4.4
+ * @since 0.4.2
  */
-package objectos.code.internal;
+public sealed interface TypeVariableName
+    extends ReferenceTypeName, ArrayTypeComponent permits TypeVariableNameImpl {
+  /**
+   * TODO
+   *
+   * @since 0.4.2
+   */
+  static TypeVariableName of(String name) {
+    return TypeVariableNameImpl.of(name);
+  }
+}

@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class ClassTypeTest {
@@ -35,7 +36,7 @@ public class ClassTypeTest {
             name("ClassType"),
 
             field(
-              classType("com.example", "Bar"), name("a")
+              ClassTypeName.of("com.example", "Bar"), name("a")
             )
           );
         }
@@ -67,7 +68,7 @@ public class ClassTypeTest {
             name("A"),
 
             field(
-              classType("com.example", "A", "B"), name("t01")
+              ClassTypeName.of("com.example", "A", "B"), name("t01")
             )
           );
         }

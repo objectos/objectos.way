@@ -20,6 +20,9 @@ import static org.testng.Assert.assertEquals;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import objectos.code.type.ClassTypeName;
+import objectos.code.type.ParameterizedTypeName;
+import objectos.code.type.TypeVariableName;
 import org.testng.annotations.Test;
 
 public class MethodDeclarationTest {
@@ -249,12 +252,12 @@ public class MethodDeclarationTest {
   public void testCase07() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
-        static final TypeVariableName N = typeVariable("N");
+        static final TypeVariableName N = TypeVariableName.of("N");
 
-        static final ParameterizedTypeName LIST_N = parameterizedType(
-          classType(List.class), N
+        static final ParameterizedTypeName LIST_N = ParameterizedTypeName.of(
+          ClassTypeName.of(List.class), N
         );
 
         @Override
@@ -393,10 +396,10 @@ public class MethodDeclarationTest {
   public void testCase09() {
     assertEquals(
       new JavaTemplate() {
-        static final TypeVariableName E = typeVariable("E");
+        static final TypeVariableName E = TypeVariableName.of("E");
 
-        static final ParameterizedTypeName MAP_KV = parameterizedType(
-          classType(Map.class), typeVariable("K"), typeVariable("V")
+        static final ParameterizedTypeName MAP_KV = ParameterizedTypeName.of(
+          ClassTypeName.of(Map.class), TypeVariableName.of("K"), TypeVariableName.of("V")
         );
 
         @Override
@@ -496,11 +499,11 @@ public class MethodDeclarationTest {
   public void testCase11() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName OBJECT = classType(Object.class);
+        static final ClassTypeName OBJECT = ClassTypeName.of(Object.class);
 
-        static final ClassTypeName SERIALIZABLE = classType(Serializable.class);
+        static final ClassTypeName SERIALIZABLE = ClassTypeName.of(Serializable.class);
 
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
         @Override
         protected final void definition() {
@@ -559,7 +562,7 @@ public class MethodDeclarationTest {
   public void testCase12() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
         @Override
         protected final void definition() {
@@ -594,17 +597,17 @@ public class MethodDeclarationTest {
   public void testCase13() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName STRING = classType(String.class);
+        static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
-        static final ClassTypeName FOO = classType("com.example", "Foo");
+        static final ClassTypeName FOO = ClassTypeName.of("com.example", "Foo");
 
-        static final ParameterizedTypeName MAP_I_S = parameterizedType(
-          classType(Map.class),
-          classType(Integer.class),
+        static final ParameterizedTypeName MAP_I_S = ParameterizedTypeName.of(
+          ClassTypeName.of(Map.class),
+          ClassTypeName.of(Integer.class),
           STRING
         );
 
-        static final TypeVariableName E = typeVariable("E");
+        static final TypeVariableName E = TypeVariableName.of("E");
 
         @Override
         protected final void definition() {

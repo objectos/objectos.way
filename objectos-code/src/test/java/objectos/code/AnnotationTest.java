@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.type.ClassTypeName;
 import org.testng.annotations.Test;
 
 public class AnnotationTest {
@@ -27,7 +28,7 @@ public class AnnotationTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName FOO = classType("com.example", "Foo");
+        static final ClassTypeName FOO = ClassTypeName.of("com.example", "Foo");
 
         @Override
         protected final void definition() {
@@ -56,7 +57,7 @@ public class AnnotationTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName OVERRIDE = classType(Override.class);
+        static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
 
         @Override
         protected final void definition() {

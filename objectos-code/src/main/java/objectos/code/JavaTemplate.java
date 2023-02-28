@@ -16,12 +16,28 @@
 package objectos.code;
 
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.Objects;
 import objectos.code.internal.ByteProto;
 import objectos.code.internal.External;
 import objectos.code.internal.InternalApi;
 import objectos.code.internal.InternalJavaTemplate;
+import objectos.code.internal.JavaModel;
+import objectos.code.tmpl.AnnotationInstruction;
+import objectos.code.tmpl.ArgsPart;
+import objectos.code.tmpl.ArrayTypeComponent;
+import objectos.code.tmpl.BlockElement;
+import objectos.code.tmpl.BodyElement;
+import objectos.code.tmpl.ExpressionPart;
+import objectos.code.tmpl.FieldDeclarationInstruction;
+import objectos.code.tmpl.IncludeTarget;
+import objectos.code.tmpl.Instruction;
+import objectos.code.tmpl.MethodDeclarationInstruction;
+import objectos.code.tmpl.StatementPart;
+import objectos.code.tmpl.VariableInitializer;
+import objectos.code.type.ClassOrParameterizedTypeName;
+import objectos.code.type.ClassTypeName;
+import objectos.code.type.PrimitiveTypeName;
+import objectos.code.type.TypeName;
 import objectos.lang.Check;
 
 /**
@@ -31,195 +47,6 @@ import objectos.lang.Check;
  * @since 0.4
  */
 public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
-
-  /**
-   * An {@link Instruction} that can be used with the various {@code annotation}
-   * methods.
-   *
-   * @since 0.4.4
-   */
-  protected interface AnnotationInstruction extends Instruction {}
-
-  /**
-   * An {@link Instruction} that can be used with the instructions that take
-   * arguments.
-   *
-   * @see JavaTemplate#invoke(String, ArgsPart...)
-   */
-  @Deprecated
-  protected interface ArgsPart extends Instruction {}
-
-  /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
-  protected static abstract class ArrayTypeName extends ReferenceTypeName {
-
-    private static final class OfClass extends ArrayTypeName {
-      private final Class<?> value;
-
-      public OfClass(Class<?> value) {
-        this.value = value;
-      }
-
-      @Override
-      public final void execute(InternalApi api) {
-        api.arrayTypeName(value);
-        api.localToExternal();
-      }
-    }
-
-    private static final class OfTypeName extends ArrayTypeName {
-
-      private final TypeName type;
-
-      private final int count;
-
-      OfTypeName(TypeName type, int count) {
-        this.type = type;
-        this.count = count;
-      }
-
-      @Override
-      public final void execute(InternalApi api) {
-        api.arrayTypeName(type, count);
-        api.localToExternal();
-      }
-
-    }
-
-    ArrayTypeName() {}
-
-    public static ArrayTypeName of(ArrayTypeComponent type, int count) {
-      var typeName = (TypeName) type.self();
-      Check.argument(count > 0, "count must be greater than 0 (zero)");
-      return new OfTypeName(typeName, count);
-    }
-
-    static ArrayTypeName of(Class<?> type) {
-      Check.argument(type.isArray(), """
-      A `ArrayTypeName` can only be used to represent array types.
-      """);
-
-      return new OfClass(type);
-    }
-
-  }
-
-  /**
-   * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#block(BlockElement...)} method.
-   */
-  @Deprecated
-  protected interface BlockElement extends Instruction {}
-
-  /**
-   * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#body(BodyElement...)} method.
-   */
-  @Deprecated
-  protected interface BodyElement extends Instruction {}
-
-  /**
-   * Represents the fully qualified name of a class or interface type in a Java
-   * program.
-   *
-   * <p>
-   * To create instances of this class use one of provided factory methods:
-   *
-   * <ul>
-   * <li>{@link JavaTemplate#classType(Class)}</li>
-   * <li>{@link JavaTemplate#classType(String, String, String...)}</li>
-   * </ul>
-   *
-   * @since 0.4.2
-   */
-  protected static abstract class ClassTypeName
-      extends ReferenceTypeName
-      implements ArrayTypeComponent, ClassOrParameterizedType, ExpressionPart {
-
-    private static final class OfClass extends ClassTypeName {
-      private final Class<?> value;
-
-      public OfClass(Class<?> value) {
-        this.value = value;
-      }
-
-      @Override
-      public final void execute(InternalApi api) {
-        api.classType(value);
-        api.localToExternal();
-      }
-    }
-
-    private static final class OfNames extends ClassTypeName {
-      private final String packageName;
-
-      private final String simpleName;
-
-      private final String[] nested;
-
-      OfNames(String packageName, String simpleName, String[] nested) {
-        this.packageName = packageName;
-        this.simpleName = simpleName;
-        this.nested = nested;
-      }
-
-      @Override
-      public final void execute(InternalApi api) {
-        int count = 1; // simple name
-        count += nested.length;
-
-        api.extStart();
-        api.protoAdd(ByteProto.CLASS_TYPE, api.object(packageName));
-        api.protoAdd(count, api.object(simpleName));
-        for (var n : nested) {
-          api.protoAdd(api.object(n));
-        }
-      }
-    }
-
-    ClassTypeName() {}
-
-    static ClassTypeName of(Class<?> type) {
-      Check.argument(!type.isPrimitive(), """
-      A `ClassTypeName` cannot be used to represent a primitive type.
-
-      Use a `PrimitiveTypeName` instead.
-      """);
-
-      Check.argument(type != void.class, """
-      A `ClassTypeName` cannot be used to represent the no-type (void).
-      """);
-
-      Check.argument(!type.isArray(), """
-      A `ClassTypeName` cannot be used to represent array types.
-
-      Use a `ArrayTypeName` instead.
-      """);
-
-      return new OfClass(type);
-    }
-
-    static ClassTypeName of(String packageName, String simpleName, String... nested) {
-      JavaModel.checkPackageName(packageName.toString());
-      JavaModel.checkSimpleName(simpleName.toString());
-
-      for (int i = 0; i < nested.length; i++) {
-        var nestedName = nested[i];
-
-        if (nestedName == null) {
-          throw new NullPointerException("nested[" + i + "] == null");
-        }
-
-        JavaModel.checkSimpleName(nestedName);
-      }
-
-      return new OfNames(packageName, simpleName, Arrays.copyOf(nested, nested.length));
-    }
-
-  }
 
   /**
    * An {@link Instruction} that can be used with the
@@ -261,61 +88,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#arg(ExpressionPart...)} method.
-   *
-   * @see JavaTemplate#arg(ExpressionPart...)
-   *
-   * @since 0.4.3.1
-   */
-  protected interface ExpressionPart
-      extends ArgsPart, BlockElement, BodyElement, StatementPart,
-      VariableInitializer {}
-
-  /**
-   * Represents a partial template to be included as part of the enclosing
-   * template.
-   */
-  @FunctionalInterface
-  protected interface IncludeTarget {
-
-    /**
-     * Includes all instructions from this partial template into the including
-     * template.
-     */
-    void execute();
-
-  }
-
-  /**
-   * Represents an instruction that generates part of the output of a template.
-   *
-   * <p>
-   * Unless noted references to a particular instruction MUST NOT be reused.
-   */
-  public interface Instruction {
-
-    /**
-     * Returns itself.
-     *
-     * <p>
-     * Its sole purpose is to trigger an implicit null check.
-     *
-     * @return this instance
-     */
-    default Object self() { return this; }
-
-  }
-
-  /**
-   * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#method(MethodDeclarationInstruction...)} method.
-   *
-   * @since 0.4.2
-   */
-  protected interface MethodDeclarationInstruction extends Instruction {}
-
-  /**
    * Represents a modifier of the Java language.
    *
    * @since 0.4.2
@@ -347,141 +119,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @see JavaTemplate#method(String, ParameterElement...)
    */
   protected interface ParameterElement extends Instruction {}
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  protected static final class ParameterizedTypeName
-      extends ReferenceTypeName implements ClassOrParameterizedType, ExpressionPart {
-    private final ClassTypeName raw;
-
-    private final ReferenceTypeName first;
-
-    private final ReferenceTypeName[] rest;
-
-    ParameterizedTypeName(ClassTypeName raw,
-                          ReferenceTypeName first,
-                          ReferenceTypeName[] rest) {
-      this.raw = raw;
-      this.first = first;
-      this.rest = rest;
-    }
-
-    static ParameterizedTypeName of(
-        ClassTypeName raw, ReferenceTypeName first, ReferenceTypeName... rest) {
-      Objects.requireNonNull(raw, "raw == null");
-      Objects.requireNonNull(first, "first == null");
-
-      for (int i = 0; i < rest.length; i++) {
-        var e = rest[i];
-
-        if (e == null) {
-          throw new NullPointerException("rest[" + i + "] == null");
-        }
-      }
-
-      return new ParameterizedTypeName(raw, first, Arrays.copyOf(rest, rest.length));
-    }
-
-    @Override
-    public final void execute(InternalApi api) {
-      Object[] many = rest;
-      api.elemMany(ByteProto.PARAMETERIZED_TYPE, raw, first, many);
-      api.localToExternal();
-    }
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  protected static final class PrimitiveTypeName extends TypeName
-      implements ArrayTypeComponent, StatementPart {
-    /**
-     * The {@code boolean} primitive type.
-     */
-    public static final PrimitiveTypeName BOOLEAN = new PrimitiveTypeName(Keyword.BOOLEAN);
-
-    /**
-     * The {@code double} primitive type.
-     */
-    public static final PrimitiveTypeName DOUBLE = new PrimitiveTypeName(Keyword.DOUBLE);
-
-    /**
-     * The {@code int} primitive type.
-     */
-    public static final PrimitiveTypeName INT = new PrimitiveTypeName(Keyword.INT);
-
-    private final int value;
-
-    private PrimitiveTypeName(Keyword keyword) {
-      value = keyword.ordinal();
-    }
-
-    @Override
-    public final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.PRIMITIVE_TYPE, value);
-    }
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  protected abstract static class ReferenceTypeName extends TypeName {
-    ReferenceTypeName() {}
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.3.1
-   */
-  protected interface StatementPart extends Instruction {}
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  public abstract static class TypeName
-      extends External
-      implements
-      FieldDeclarationInstruction,
-      MethodDeclarationInstruction,
-      TypeParameterInstruction {
-    TypeName() {}
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  protected static final class TypeVariableName extends ReferenceTypeName
-      implements ArrayTypeComponent {
-    private final String name;
-
-    TypeVariableName(String name) {
-      this.name = name;
-    }
-
-    static TypeVariableName of(String name) {
-      JavaModel.checkVarName(name.toString());
-      return new TypeVariableName(name);
-    }
-
-    @Override
-    public final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.TYPE_VARIABLE, api.object(name));
-    }
-  }
 
   public enum _Ext {
     INSTANCE;
@@ -596,8 +233,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   interface ArrayType extends BodyElement, ReferenceType {}
 
-  interface ArrayTypeComponent extends Instruction {}
-
   interface ArrayTypeElement {}
 
   interface At extends BodyElement {}
@@ -623,8 +258,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface ClassInstanceCreationExpression extends PrimaryNoNewArray {}
 
   interface ClassKeyword extends BodyElement {}
-
-  interface ClassOrParameterizedType extends Instruction {}
 
   interface ClassTypeInstruction extends MethodDeclarationInstruction {}
 
@@ -682,8 +315,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       EnumDeclarationInstruction,
       InterfaceDeclarationInstruction {}
 
-  interface FieldDeclarationInstruction extends Instruction {}
-
   interface FinalModifier extends BodyElement {}
 
   interface Identifier extends BlockElement, BodyElement, ParameterElement {}
@@ -738,7 +369,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   @Deprecated
   interface OldClassTypeInstruction
-      extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {}
+      extends ArgsPart, OldClassOrParameterizedType, ReferenceType, TypeParameterBound {}
 
   @Deprecated
   interface OldEllipsis extends ParameterElement {}
@@ -787,7 +418,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface Parameter
       extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
-  interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
+  interface ParameterizedType extends OldClassOrParameterizedType, ReferenceType {}
+
+  @Deprecated
+  interface OldClassOrParameterizedType extends Instruction {}
 
   interface PrimitiveType extends AnyType, ArrayTypeComponent, BodyElement {}
 
@@ -813,14 +447,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   @Deprecated
   interface TypeParameterBound extends Instruction {}
 
-  interface TypeParameterInstruction extends Instruction {}
-
   @Deprecated
   interface TypeParameterOld extends BodyElement {}
 
   interface TypeVariable extends ReferenceType {}
-
-  interface VariableInitializer extends FieldDeclarationInstruction {}
 
   private interface AccessModifier extends BodyElement {}
 
@@ -1201,160 +831,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   protected JavaTemplate() {}
 
   /**
-   * TODO
-   *
-   * @param type
-   *        the type of the components of this array
-   *
-   * @return a newly constructed {@code ArrayTypeName} instance
-   *
-   * @since 0.4.2
-   */
-  protected static ArrayTypeName arrayType(ArrayTypeComponent type) {
-    return ArrayTypeName.of(type, 1);
-  }
-
-  /**
-   * TODO
-   *
-   * @param type
-   *        the type of the components of this array
-   *
-   * @return a newly constructed {@code ArrayTypeName} instance
-   *
-   * @since 0.4.4
-   */
-  protected static ArrayTypeName arrayType(ArrayTypeComponent type, int count) {
-    return ArrayTypeName.of(type, count);
-  }
-
-  /**
-   * TODO
-   *
-   * @param type
-   *        the {@code Class} representing an array type whose name will be used
-   *        in a Java program
-   *
-   * @return a newly constructed {@code ArrayTypeName} instance
-   *
-   * @throws IllegalArgumentException
-   *         if {@code type} does not represent an array.
-   *
-   * @since 0.4.2
-   */
-  protected static ArrayTypeName arrayType(Class<?> type) {
-    return ArrayTypeName.of(type);
-  }
-
-  /**
-   * Creates a new {@code ClassTypeName} from the provided {@code Class}
-   * instance.
-   *
-   * <p>
-   * A {@link ClassTypeName} instance can only represent a class or an interface
-   * type. Therefore, this method throws a {@link IllegalArgumentException} when
-   * the specified {@code type}:
-   *
-   * <ul>
-   * <li>represents a primitive type;</li>
-   * <li>represents an array type; or</li>
-   * <li>is the {@code void.class} literal.</li>
-   * </ul>
-   *
-   * <p>
-   * This method is typically used to initialize a static field:
-   *
-   * <pre>
-   * static final ClassTypeName STRING = classType(String.class);</pre>
-   *
-   * <p>
-   * Which then can be used:
-   *
-   * <pre>
-   * method(
-   *   PUBLIC, STRING, name("toString"),
-   *   p(RETURN, s("Objectos Code"))
-   * )</pre>
-   *
-   * <p>
-   * And, in turn, it generates:
-   *
-   * <pre>
-   * public String toString() {
-   *   return "Objectos Code";
-   * }</pre>
-   *
-   * @param type
-   *        the {@code Class} object whose name will be used in a Java program
-   *
-   * @return a newly constructed {@code ClassTypeName} instance
-   *
-   * @throws IllegalArgumentException
-   *         if {@code type} represents either a primitive type, an array type,
-   *         or void.
-   *
-   * @since 0.4.2
-   */
-  protected static ClassTypeName classType(Class<?> type) {
-    return ClassTypeName.of(type);
-  }
-
-  /**
-   * Creates a new {@code ClassTypeName} from the provided names.
-   *
-   * <p>
-   * The following code illustrates how to create names using the method:
-   *
-   * <pre>
-   * // creates the name for the java.lang.String type
-   * static final ClassTypeName STRING =
-   *     classType("java.lang", "String");
-   *
-   * // creates the name for the java.util.Map.Entry nested type
-   * static final ClassTypeName BAR =
-   *     classType("java.util", "Map", "Entry");</pre>
-   *
-   * @param packageName
-   *        the name of the package
-   * @param simpleName
-   *        the name of the top level type
-   * @param nested
-   *        the additional names that make up the name of this nested type
-   *
-   * @return a newly constructed {@code ClassTypeName} instance
-   *
-   * @throws IllegalArgumentException
-   *         if any name in {@code packageName} is not a valid identifier, if
-   *         {@code simpleName} is not a valid identifier or if any name in
-   *         {@code nested} is not a valid identifier
-   *
-   * @since 0.4.2
-   */
-  protected static ClassTypeName classType(
-      String packageName, String simpleName, String... nested) {
-    return ClassTypeName.of(packageName, simpleName, nested);
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  protected static ParameterizedTypeName parameterizedType(
-      ClassTypeName raw, ReferenceTypeName first, ReferenceTypeName... rest) {
-    return ParameterizedTypeName.of(raw, first, rest);
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  protected static TypeVariableName typeVariable(String name) {
-    return TypeVariableName.of(name);
-  }
-
-  /**
    * Returns the Java source code generated by this template using the default
    * formatting.
    *
@@ -1680,7 +1156,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type) {
+  protected final ClassInstanceCreationExpression _new(OldClassOrParameterizedType type) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self()
     );
@@ -1690,7 +1166,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type,
+  protected final ClassInstanceCreationExpression _new(OldClassOrParameterizedType type,
       ArgsPart arg1) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self(),
@@ -1702,7 +1178,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ClassInstanceCreationExpression _new(ClassOrParameterizedType type,
+  protected final ClassInstanceCreationExpression _new(OldClassOrParameterizedType type,
       ArgsPart arg1, ArgsPart arg2) {
     return api().elem(
       ByteProto.CLASS_INSTANCE_CREATION, type.self(),
@@ -2405,7 +1881,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final ExtendsClause extendsClause(ClassOrParameterizedType... types) {
+  protected final ExtendsClause extendsClause(ClassOrParameterizedTypeName... types) {
     Object[] many = Objects.requireNonNull(types, "types == null");
     return api().elemMany(ByteProto.EXTENDS_CLAUSE, many);
   }
@@ -2474,7 +1950,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final ImplementsClause implementsClause(ClassOrParameterizedType... types) {
+  protected final ImplementsClause implementsClause(ClassOrParameterizedTypeName... types) {
     Object[] many = Objects.requireNonNull(types, "types == null");
     return api().elemMany(ByteProto.IMPLEMENTS_CLAUSE, many);
   }
@@ -3378,7 +2854,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected final TypeParameter typeParameter(String name, TypeParameterInstruction... bounds) {
+  protected final TypeParameter typeParameter(String name, TypeName... bounds) {
     JavaModel.checkVarName(name.toString());
     Object[] many = Objects.requireNonNull(bounds, "bounds == null");
     return api().elemMany(ByteProto.TYPE_PARAMETER, name, many);

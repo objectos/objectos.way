@@ -18,6 +18,8 @@ package objectos.code;
 import static org.testng.Assert.assertEquals;
 
 import java.util.HashMap;
+import objectos.code.type.ClassTypeName;
+import objectos.code.type.ParameterizedTypeName;
 import org.testng.annotations.Test;
 
 public class ClassInstanceCreationExpressionTest {
@@ -30,7 +32,7 @@ public class ClassInstanceCreationExpressionTest {
   public void testCase01() {
     assertEquals(
       new JavaTemplate() {
-        static final ClassTypeName FOO = classType("objectos.code", "Foo");
+        static final ClassTypeName FOO = ClassTypeName.of("objectos.code", "Foo");
 
         @Override
         protected final void definition() {
@@ -65,10 +67,10 @@ public class ClassInstanceCreationExpressionTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
-        static final ParameterizedTypeName HASHMAP = parameterizedType(
-          classType(HashMap.class),
-          classType(String.class),
-          classType(Integer.class)
+        static final ParameterizedTypeName HASHMAP = ParameterizedTypeName.of(
+          ClassTypeName.of(HashMap.class),
+          ClassTypeName.of(String.class),
+          ClassTypeName.of(Integer.class)
         );
 
         @Override
