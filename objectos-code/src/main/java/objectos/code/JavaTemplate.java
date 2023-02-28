@@ -1857,6 +1857,15 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final EnumDeclaration enumDeclaration(IncludeTarget target) {
+    return api().elem(ByteProto.ENUM_DECLARATION, include(target));
+  }
+
+  /**
    * The {@code ==} (equal to) operator.
    *
    * @return the {@code ==} (equal to) operator
