@@ -22,6 +22,8 @@ import objectos.code.internal.External;
 import objectos.code.internal.InternalApi;
 import objectos.code.internal.InternalJavaTemplate;
 import objectos.code.internal.JavaModel;
+import objectos.code.internal.Keyword;
+import objectos.code.internal.Symbol;
 import objectos.code.tmpl.AnnotationInstruction;
 import objectos.code.tmpl.ArgsPart;
 import objectos.code.tmpl.ArrayTypeComponent;

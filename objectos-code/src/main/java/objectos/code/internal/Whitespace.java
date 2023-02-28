@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
 /**
  * Represents instructions to emit whitespace in the generated Java source code.
@@ -175,7 +175,7 @@ public enum Whitespace {
 
   private static final Whitespace[] VALUES = values();
 
-  public static Whitespace get(int index) {
+  static Whitespace get(int index) {
     return VALUES[index];
   }
 

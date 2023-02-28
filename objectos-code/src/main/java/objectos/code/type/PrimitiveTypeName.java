@@ -15,7 +15,7 @@
  */
 package objectos.code.type;
 
-import objectos.code.Keyword;
+import objectos.code.internal.Keyword;
 import objectos.code.internal.PrimitiveTypeNameImpl;
 import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.StatementPart;

@@ -15,7 +15,6 @@
  */
 package objectos.code.internal;
 
-import objectos.code.Keyword;
 import objectos.code.type.PrimitiveTypeName;
 
 /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
 import java.util.Locale;
 
@@ -164,7 +164,7 @@ public enum Keyword {
 
   private final String toString = name().toLowerCase(Locale.US);
 
-  public static Keyword get(int index) {
+  static Keyword get(int index) {
     return VALUES[index];
   }
 

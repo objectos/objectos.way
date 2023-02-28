@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
 /**
  * The symbols used as separators and operators in the Java programming
@@ -86,14 +86,14 @@ public enum Symbol {
   DOUBLE_COLON("::"),
 
   /*
-  
-   Operators
 
+   Operators
+  
    =   >   <   !   ~   ?   :   ->
    ==  >=  <=  !=  &&  ||  ++  --
    +   -   *   /   &   |   ^   %   <<   >>   >>>
    +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
-
+  
    */
 
   /**
@@ -136,7 +136,7 @@ public enum Symbol {
 
   private Symbol(String name) { this.name = name; }
 
-  public static Symbol get(int index) {
+  static Symbol get(int index) {
     return VALUES[index];
   }
 

@@ -15,11 +15,7 @@
  */
 package objectos.code.internal;
 
-import objectos.code.Indentation;
 import objectos.code.JavaSink;
-import objectos.code.Keyword;
-import objectos.code.Symbol;
-import objectos.code.Whitespace;
 
 public class JavaSinkOfStringBuilder extends JavaSink {
 

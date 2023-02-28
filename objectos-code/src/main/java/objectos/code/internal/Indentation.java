@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
+
+import objectos.code.JavaSink;
 
 /**
  * An instruction that may be used by a {@link JavaSink} instance to increase
@@ -67,7 +69,7 @@ public enum Indentation {
 
   private static final Indentation[] VALUES = values();
 
-  public static Indentation get(int index) {
+  static Indentation get(int index) {
     return VALUES[index];
   }
 

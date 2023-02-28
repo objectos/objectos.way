@@ -15,11 +15,6 @@
  */
 package objectos.code.internal;
 
-import objectos.code.Indentation;
-import objectos.code.Keyword;
-import objectos.code.Symbol;
-import objectos.code.Whitespace;
-
 public abstract class InternalInterpreter extends InternalCompiler {
 
   protected final void interpret() {
