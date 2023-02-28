@@ -35,10 +35,12 @@ import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.EnumDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
 import objectos.code.tmpl.FieldDeclarationInstruction;
+import objectos.code.tmpl.Include;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.Instruction;
 import objectos.code.tmpl.InterfaceDeclarationInstruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
+import objectos.code.tmpl.ParameterElement;
 import objectos.code.tmpl.StatementPart;
 import objectos.code.tmpl.TypeDeclarationInstruction;
 import objectos.code.tmpl.TypeName;
@@ -115,15 +117,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       api.protoAdd(ByteProto.MODIFIER, value);
     }
   }
-
-  /**
-   * An {@link Instruction} that can be used with constructs that can declare
-   * formal parameters.
-   *
-   * @see JavaTemplate#constructor(ParameterElement...)
-   * @see JavaTemplate#method(String, ParameterElement...)
-   */
-  protected interface ParameterElement extends Instruction {}
 
   public enum _Ext {
     INSTANCE;
@@ -327,11 +320,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   @Deprecated
   interface ImplementsKeyword extends BodyElement {}
-
-  interface Include
-      extends
-      ArgsPart, BlockElement, BodyElement, ExpressionPart, ParameterElement, VariableInitializer,
-      InterfaceDeclarationInstruction {}
 
   interface IntegerLiteral extends Literal {}
 
@@ -1655,15 +1643,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final ClassDeclaration classDeclaration(IncludeTarget target) {
-    return api().elem(ByteProto.CLASS_DECLARATION, include(target));
-  }
-
-  /**
-   * TODO
    */
   protected final void code(Instruction... elements) {
     // no-op
@@ -1857,15 +1836,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final EnumDeclaration enumDeclaration(IncludeTarget target) {
-    return api().elem(ByteProto.ENUM_DECLARATION, include(target));
-  }
-
-  /**
    * The {@code ==} (equal to) operator.
    *
    * @return the {@code ==} (equal to) operator
@@ -1895,15 +1865,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   protected final FieldDeclaration field(FieldDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.FIELD_DECLARATION, many);
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final FieldDeclaration field(IncludeTarget target) {
-    return api().elem(ByteProto.FIELD_DECLARATION, include(target));
   }
 
   /**
@@ -1976,15 +1937,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
     template.execute(api);
     api.lambdaend();
     return INCLUDE;
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final InterfaceDeclaration interfaceDeclaration(IncludeTarget target) {
-    return api().elem(ByteProto.INTERFACE_DECLARATION, include(target));
   }
 
   /**
@@ -2147,41 +2099,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
     api.identifierext(methodName);
     return api.elem(ByteProto.INVOKE, EXT, e1.self(), e2.self(), e3.self(), e4.self(), e5.self(),
       e6.self(), e7.self(), e8.self(), e9.self());
-  }
-
-  /**
-   * Adds a method declaration with the contents given by the specified
-   * {@code target}.
-   *
-   * <p>
-   * This method is typically invoked with a method reference:
-   *
-   * <pre>
-   * method(this::methodContents)</pre>
-   *
-   * <p>
-   * Where {@code methodContents} is a private method in your template class:
-   *
-   * <pre>
-   * private void methodContents() {
-   *   modifiers(PUBLIC);
-   *   if (shouldBeFinal()) {
-   *     modifiers(FINAL);
-   *   }
-   *   returnType(VOID);
-   *   name("maybeFinal");
-   * }</pre>
-   *
-   * @param target
-   *        code to be executed containing the contents of this method
-   *        declaration
-   *
-   * @return a method declaration
-   *
-   * @since 0.4.3.1
-   */
-  protected final MethodDeclaration method(IncludeTarget target) {
-    return api().elem(ByteProto.METHOD_DECLARATION, include(target));
   }
 
   /**

@@ -209,17 +209,11 @@ public class FieldDeclarationTest {
 
             field(INT_ARRAY, name("c"), arrayInitializer(), value(i(0)), value(i(1))),
 
-            field(this::many)
+            field(INT_ARRAY, name("d"), arrayInitializer(), include(this::many))
           );
         }
 
         private void many() {
-          consume(INT_ARRAY);
-
-          name("d");
-
-          arrayInitializer();
-
           consume(NL);
 
           for (int i = 0; i < 3; i++) {

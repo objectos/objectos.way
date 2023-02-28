@@ -30,12 +30,14 @@ public class IncludeTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          classDeclaration(this::tc01);
+          classDeclaration(
+            name("TestCase01"),
+
+            include(this::tc01)
+          );
         }
 
         private void tc01() {
-          name("TestCase01");
-
           field(INT, name("a"));
         }
       }.toString(),
@@ -57,11 +59,14 @@ public class IncludeTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          classDeclaration(this::tc01);
+          classDeclaration(
+            name("Test"),
+
+            include(this::tc01)
+          );
         }
 
         private void tc01() {
-          name("Test");
 
           method(
             name("foo"),
@@ -94,23 +99,28 @@ public class IncludeTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          classDeclaration(this::tc01);
+          classDeclaration(
+            name("Test01"),
+
+            include(this::tc01)
+          );
 
           classDeclaration(name("Foo"));
 
-          interfaceDeclaration(this::tc02);
+          interfaceDeclaration(
+            name("Test02"),
+
+            include(this::tc02)
+          );
         }
 
         private void tc01() {
-          name("Test01");
-
           field(INT, name("a"));
           field(INT, name("b"));
           field(INT, name("c"));
         }
 
         private void tc02() {
-          name("Test02");
 
           field(INT, name("d"));
           field(INT, name("e"));
@@ -149,22 +159,32 @@ public class IncludeTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          classDeclaration(this::level1A);
-          classDeclaration(this::level1B);
+          classDeclaration(
+            name("L1A"),
+
+            include(this::level1A)
+          );
+
+          classDeclaration(
+            name("L1B"),
+
+            include(this::level1B)
+          );
         }
 
         private void level1A() {
-          name("L1A");
-
           field(INT, name("field"));
         }
 
         private void level1B() {
-          name("L1B");
+          method(
+            include(this::level2A)
+          );
 
-          method(this::level2A);
-
-          method(this::level2B);
+          method(
+            name("l2B"),
+            include(this::level2B)
+          );
         }
 
         private void level2A() {
@@ -172,8 +192,6 @@ public class IncludeTest {
         }
 
         private void level2B() {
-          name("l2B");
-
           p(v("foo"), arg(s("level 2B")));
         }
       }.toString(),

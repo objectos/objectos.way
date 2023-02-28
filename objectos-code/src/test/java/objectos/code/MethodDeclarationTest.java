@@ -193,7 +193,7 @@ public class MethodDeclarationTest {
           classDeclaration(
             name("Methods"),
 
-            method(this::bodyImpl)
+            method(include(this::bodyImpl))
           );
         }
 
@@ -566,13 +566,14 @@ public class MethodDeclarationTest {
           classDeclaration(
             name("Methods"),
 
-            method(this::params)
+            method(
+              ABSTRACT, name("test0"),
+              include(this::params)
+            )
           );
         }
 
         private void params() {
-          modifiers(ABSTRACT);
-          name("test0");
           parameter(INT, "a");
           parameter(STRING, "b");
         }

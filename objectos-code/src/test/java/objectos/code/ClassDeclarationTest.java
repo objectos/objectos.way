@@ -107,12 +107,14 @@ public class ClassDeclarationTest {
       new JavaTemplate() {
         @Override
         protected final void definition() {
-          classDeclaration(this::includeTest);
+          classDeclaration(
+            name("Test"),
+
+            include(this::includeTest)
+          );
         }
 
         private void includeTest() {
-          name("Test");
-
           field(INT, name("a"));
         }
       }.toString(),
