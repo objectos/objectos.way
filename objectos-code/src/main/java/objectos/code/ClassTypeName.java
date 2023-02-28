@@ -123,13 +123,4 @@ public sealed interface ClassTypeName
     return ClassTypeNameImpl.of(packageName, simpleName, nested);
   }
 
-  /**
-   * Returns the simple name.
-   *
-   * @return the simple name
-   *
-   * @since 0.4.4
-   */
-  String simpleName();
-
 }

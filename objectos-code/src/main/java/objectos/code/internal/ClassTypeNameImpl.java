@@ -130,4 +130,13 @@ public sealed abstract class ClassTypeNameImpl extends External implements Class
     return new OfNames(packageName, simpleName, Arrays.copyOf(nested, nested.length));
   }
 
+  /**
+   * Returns the simple name.
+   *
+   * @return the simple name
+   *
+   * @since 0.4.4
+   */
+  public abstract String simpleName();
+
 }

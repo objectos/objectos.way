@@ -18,6 +18,7 @@ package objectos.code;
 import java.lang.annotation.Annotation;
 import java.util.Objects;
 import objectos.code.internal.ByteProto;
+import objectos.code.internal.ClassTypeNameImpl;
 import objectos.code.internal.External;
 import objectos.code.internal.InternalApi;
 import objectos.code.internal.InternalJavaTemplate;
@@ -2426,7 +2427,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @since 0.4.4
    */
   protected final TypeDeclarationInstruction name(ClassTypeName name) {
-    var simpleName = name.simpleName(); // implicit null-check
+    // cast is safe: ClassTypeName is sealed
+    var impl = (ClassTypeNameImpl) name;
+    // `impl` implicit null-check
+    var simpleName = impl.simpleName();
     var api = api();
     return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(simpleName));
   }
