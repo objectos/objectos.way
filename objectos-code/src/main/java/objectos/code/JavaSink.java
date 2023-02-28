@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import objectos.code.internal.InternalInterpreter;
+import objectos.code.internal.JavaSinkOfDirectory;
+import objectos.code.internal.JavaSinkOfStringBuilder;
+import objectos.code.internal.JavaSinkOption;
 import objectos.lang.Check;
 
 /**
@@ -35,27 +38,15 @@ public abstract class JavaSink extends InternalInterpreter {
   /**
    * Represents an option for configuring a {@link JavaSink} instance.
    */
-  public sealed abstract static class Option {
+  public abstract static sealed class Option permits JavaSinkOption {
 
-    private static final class OverwriteExisting extends Option {
-      @Override
-      final void acceptOfDirectory(JavaSinkOfDirectory sink) {
-        sink.overwriteExising = true;
-      }
-    }
-
-    private static final class SkipExisting extends Option {
-      @Override
-      final void acceptOfDirectory(JavaSinkOfDirectory sink) {
-        sink.skipExising = true;
-      }
-    }
-
-    static final Option OVERWRITE_EXISTING = new OverwriteExisting();
-
-    static final Option SKIP_EXISTING = new SkipExisting();
-
-    abstract void acceptOfDirectory(JavaSinkOfDirectory sink);
+    /**
+     * Configures the provided {@code JavaSink} instance.
+     *
+     * @param sink
+     *        the {@code JavaSink} instance to configure
+     */
+    protected abstract void acceptOfDirectory(JavaSinkOfDirectory sink);
 
   }
 
@@ -169,7 +160,7 @@ public abstract class JavaSink extends InternalInterpreter {
    * @return the option to overwrite any existing file
    */
   public static Option overwriteExisting() {
-    return Option.OVERWRITE_EXISTING;
+    return JavaSinkOption.OVERWRITE_EXISTING;
   }
 
   /**
@@ -179,14 +170,14 @@ public abstract class JavaSink extends InternalInterpreter {
    * @return the option to silently skip any existing file
    */
   public static Option skipExisting() {
-    return Option.SKIP_EXISTING;
+    return JavaSinkOption.SKIP_EXISTING;
   }
 
   public void write(JavaTemplate template) throws IOException {
     eval(template);
   }
 
-  final void eval(JavaTemplate template) {
+  protected final void eval(JavaTemplate template) {
     Check.notNull(template, "template == null");
 
     accept(template);

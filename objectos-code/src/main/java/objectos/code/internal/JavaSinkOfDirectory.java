@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -21,8 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import objectos.code.JavaTemplate;
 
-class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
+public class JavaSinkOfDirectory extends JavaSinkOfStringBuilder {
 
   private static final OpenOption[] DEFAULT = {StandardOpenOption.CREATE_NEW};
 

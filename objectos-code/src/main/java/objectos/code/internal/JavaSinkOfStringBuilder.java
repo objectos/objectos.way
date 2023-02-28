@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
-class JavaSinkOfStringBuilder extends JavaSink {
+import objectos.code.Indentation;
+import objectos.code.JavaSink;
+import objectos.code.Keyword;
+import objectos.code.Symbol;
+import objectos.code.Whitespace;
+
+public class JavaSinkOfStringBuilder extends JavaSink {
 
   private final StringBuilder out;
 
