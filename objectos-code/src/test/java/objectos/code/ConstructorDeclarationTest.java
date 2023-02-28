@@ -223,4 +223,34 @@ public class ConstructorDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Constructor declarations TC05:
+
+  - abstract class + constructor
+  """)
+  public void testCase05() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            ABSTRACT, name("Test"),
+            constructor(
+              parameter(INT, "value"),
+              p(THIS, n("value"), IS, n("value"))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      abstract class Test {
+        Test(int value) {
+          this.value = value;
+        }
+      }
+      """
+    );
+  }
+
 }

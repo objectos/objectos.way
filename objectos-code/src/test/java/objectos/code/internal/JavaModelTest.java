@@ -15,7 +15,6 @@
  */
 package objectos.code.internal;
 
-import objectos.code.internal.JavaModel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

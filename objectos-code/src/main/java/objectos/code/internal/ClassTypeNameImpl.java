@@ -18,7 +18,7 @@ package objectos.code.internal;
 import java.util.Arrays;
 import objectos.code.ClassTypeName;
 import objectos.code.JavaTemplate;
-import objectos.lang.Check;
+import objectos.util.ObjectArrays;
 
 /**
  * Represents the fully qualified name of a class or interface type in a Java
@@ -34,100 +34,74 @@ import objectos.lang.Check;
  *
  * @since 0.4.2
  */
-public sealed abstract class ClassTypeNameImpl extends External implements ClassTypeName {
+public final class ClassTypeNameImpl extends External implements ClassTypeName {
 
-  private static final class OfClass extends ClassTypeNameImpl {
-    private final Class<?> value;
+  private final String packageName;
 
-    public OfClass(Class<?> value) {
-      this.value = value;
-    }
+  private final String[] names;
 
-    @Override
-    public final void execute(InternalApi api) {
-      api.classType(value);
-      api.localToExternal();
-    }
-
-    @Override
-    public final String simpleName() {
-      return value.getSimpleName();
-    }
+  ClassTypeNameImpl(String packageName, String[] names) {
+    this.packageName = packageName;
+    this.names = names;
   }
-
-  private static final class OfNames extends ClassTypeNameImpl {
-    private final String packageName;
-
-    private final String simpleName;
-
-    private final String[] nested;
-
-    OfNames(String packageName, String simpleName, String[] nested) {
-      this.packageName = packageName;
-      this.simpleName = simpleName;
-      this.nested = nested;
-    }
-
-    @Override
-    public final void execute(InternalApi api) {
-      int count = 1; // simple name
-      count += nested.length;
-
-      api.extStart();
-      api.protoAdd(ByteProto.CLASS_TYPE, api.object(packageName));
-      api.protoAdd(count, api.object(simpleName));
-      for (var n : nested) {
-        api.protoAdd(api.object(n));
-      }
-    }
-
-    @Override
-    public final String simpleName() {
-      if (nested.length > 0) {
-        return nested[nested.length - 1];
-      } else {
-        return simpleName;
-      }
-    }
-  }
-
-  ClassTypeNameImpl() {}
 
   public static ClassTypeNameImpl of(Class<?> type) {
-    Check.argument(!type.isPrimitive(), """
-    A `ClassTypeName` cannot be used to represent a primitive type.
+    String[] reversed = new String[4];
 
-    Use a `PrimitiveTypeName` instead.
-    """);
+    int size = 0;
 
-    Check.argument(type != void.class, """
-    A `ClassTypeName` cannot be used to represent the no-type (void).
-    """);
+    while (true) {
+      var simpleName = type.getSimpleName(); // implicit null-check
 
-    Check.argument(!type.isArray(), """
-    A `ClassTypeName` cannot be used to represent array types.
+      reversed = ObjectArrays.growIfNecessary(reversed, size);
 
-    Use a `ArrayTypeName` instead.
-    """);
+      reversed[size++] = simpleName;
 
-    return new OfClass(type);
+      var outer = type.getEnclosingClass();
+
+      if (outer == null) {
+        break;
+      } else {
+        type = outer;
+      }
+    }
+
+    String[] names = new String[size];
+
+    for (int i = 0; i < size; i++) {
+      names[i] = reversed[size - 1 - i];
+    }
+
+    var packageName = type.getPackageName();
+
+    return new ClassTypeNameImpl(packageName, names);
+  }
+
+  public static ClassTypeName of(ClassTypeName enclosing, String simpleName) {
+    // cast is safe: ClassTypeName is sealed
+    var impl = (ClassTypeNameImpl) enclosing;
+
+    return impl.nestedClass(simpleName);
   }
 
   public static ClassTypeNameImpl of(String packageName, String simpleName, String... nested) {
-    JavaModel.checkPackageName(packageName.toString());
-    JavaModel.checkSimpleName(simpleName.toString());
+    var names = new String[nested.length + 1];
 
-    for (int i = 0; i < nested.length; i++) {
-      var nestedName = nested[i];
+    names[0] = simpleName;
 
-      if (nestedName == null) {
-        throw new NullPointerException("nested[" + i + "] == null");
-      }
+    System.arraycopy(nested, 0, names, 1, nested.length);
 
-      JavaModel.checkSimpleName(nestedName);
+    return new ClassTypeNameImpl(packageName, names);
+  }
+
+  @Override
+  public final void execute(InternalApi api) {
+    api.extStart();
+    api.protoAdd(ByteProto.CLASS_TYPE, api.object(packageName));
+    api.protoAdd(names.length);
+    for (var name : names) {
+      api.protoAdd(api.object(name));
     }
-
-    return new OfNames(packageName, simpleName, Arrays.copyOf(nested, nested.length));
   }
 
   /**
@@ -137,6 +111,16 @@ public sealed abstract class ClassTypeNameImpl extends External implements Class
    *
    * @since 0.4.4
    */
-  public abstract String simpleName();
+  public final String simpleName() {
+    return names[names.length - 1];
+  }
+
+  private ClassTypeName nestedClass(String simpleName) {
+    String[] copy = Arrays.copyOf(names, names.length + 1);
+
+    copy[copy.length - 1] = simpleName;
+
+    return new ClassTypeNameImpl(packageName, copy);
+  }
 
 }

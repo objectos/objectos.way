@@ -120,4 +120,35 @@ public class ClassTypeNameTest {
     );
   }
 
+  @Test(description = """
+  ClassType TC04
+
+  - create a nested name from another ClassTypeName
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+
+        static final ClassTypeName B = ClassTypeName.of(A, "B");
+
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            field(A, name("a")),
+            field(B, name("b"))
+          );
+        }
+      }.toString(),
+
+      """
+      class Unnamed {
+        com.example.A a;
+
+        com.example.A.B b;
+      }
+      """
+    );
+  }
+
 }

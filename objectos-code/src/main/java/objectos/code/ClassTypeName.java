@@ -15,10 +15,13 @@
  */
 package objectos.code;
 
+import java.util.Objects;
 import objectos.code.internal.ClassTypeNameImpl;
+import objectos.code.internal.JavaModel;
 import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.ExpressionPart;
+import objectos.lang.Check;
 
 /**
  * Represents the fully qualified name of a class or interface type in a Java
@@ -57,7 +60,7 @@ public sealed interface ClassTypeName
    * This method is typically used to initialize a static field:
    *
    * <pre>
-   * static final ClassTypeName STRING = classType(String.class);</pre>
+   * static final ClassTypeName STRING = ClassTypeName.of(String.class);</pre>
    *
    * <p>
    * Which then can be used:
@@ -86,6 +89,22 @@ public sealed interface ClassTypeName
    *         or void.
    */
   static ClassTypeName of(Class<?> type) {
+    Check.argument(!type.isPrimitive(), """
+    A `ClassTypeName` cannot be used to represent a primitive type.
+
+    Use a `PrimitiveTypeName` instead.
+    """);
+
+    Check.argument(type != void.class, """
+    A `ClassTypeName` cannot be used to represent the no-type (void).
+    """);
+
+    Check.argument(!type.isArray(), """
+    A `ClassTypeName` cannot be used to represent array types.
+
+    Use a `ArrayTypeName` instead.
+    """);
+
     return ClassTypeNameImpl.of(type);
   }
 
@@ -98,11 +117,11 @@ public sealed interface ClassTypeName
    * <pre>
    * // creates the name for the java.lang.String type
    * static final ClassTypeName STRING =
-   *     classType("java.lang", "String");
+   *     ClassTypeName.of("java.lang", "String");
    *
    * // creates the name for the java.util.Map.Entry nested type
-   * static final ClassTypeName BAR =
-   *     classType("java.util", "Map", "Entry");</pre>
+   * static final ClassTypeName ENTRY =
+   *     ClassTypeName.of("java.util", "Map", "Entry");</pre>
    *
    * @param packageName
    *        the name of the package
@@ -120,7 +139,62 @@ public sealed interface ClassTypeName
    */
   static ClassTypeName of(
       String packageName, String simpleName, String... nested) {
+    JavaModel.checkPackageName(packageName.toString());
+    JavaModel.checkSimpleName(simpleName.toString());
+
+    for (int i = 0; i < nested.length; i++) {
+      var nestedName = nested[i];
+
+      if (nestedName == null) {
+        throw new NullPointerException("nested[" + i + "] == null");
+      }
+
+      JavaModel.checkSimpleName(nestedName);
+    }
+
     return ClassTypeNameImpl.of(packageName, simpleName, nested);
   }
+
+  /**
+   * Creates a new {@code ClassTypeName} by nesting the provided
+   * {@code simpleName} into the provided {@code enclosing} name.
+   *
+   * <p>
+   * The following code illustrates how to create names using the method:
+   *
+   * <pre>
+   * // creates the name for the java.util.Map type
+   * static final ClassTypeName MAP =
+   *     ClassTypeName.of("java.util", "Map");
+   *
+   * // creates the name for the java.util.Map.Entry nested type
+   * static final ClassTypeName ENTRY =
+   *     ClassTypeName.of(MAP, "Entry");</pre>
+   *
+   * @param enclosing
+   *        the enclosing class name
+   * @param simpleName
+   *        the name to be immediately nested into {@code enclosing}
+   *
+   * @return a newly constructed {@code ClassTypeName} instance
+   *
+   * @throws IllegalArgumentException
+   *         if {@code simpleName} is not a valid identifier
+   */
+  static ClassTypeName of(ClassTypeName enclosing, String simpleName) {
+    Objects.requireNonNull(enclosing, "enclosing == null");
+    JavaModel.checkSimpleName(simpleName.toString());
+
+    return ClassTypeNameImpl.of(enclosing, simpleName);
+  }
+
+  /**
+   * Returns the simple name.
+   *
+   * @return the simple name
+   *
+   * @since 0.4.4
+   */
+  String simpleName();
 
 }

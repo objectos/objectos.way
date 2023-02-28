@@ -771,6 +771,8 @@ class InternalCompiler extends InternalApi {
   private void constructorDeclaration() {
     int start = stackIndex;
 
+    abstractFound(NULL);
+
     last(_START);
 
     int annotations = NULL,
