@@ -48,6 +48,11 @@ public sealed abstract class ClassTypeNameImpl extends External implements Class
       api.classType(value);
       api.localToExternal();
     }
+
+    @Override
+    public final String simpleName() {
+      return value.getSimpleName();
+    }
   }
 
   private static final class OfNames extends ClassTypeNameImpl {
@@ -73,6 +78,15 @@ public sealed abstract class ClassTypeNameImpl extends External implements Class
       api.protoAdd(count, api.object(simpleName));
       for (var n : nested) {
         api.protoAdd(api.object(n));
+      }
+    }
+
+    @Override
+    public final String simpleName() {
+      if (nested.length > 0) {
+        return nested[nested.length - 1];
+      } else {
+        return simpleName;
       }
     }
   }

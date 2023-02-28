@@ -17,9 +17,10 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Map;
 import org.testng.annotations.Test;
 
-public class ClassTypeTest {
+public class ClassTypeNameTest {
 
   @Test(description = """
   ClassType TC01
@@ -79,6 +80,42 @@ public class ClassTypeTest {
       class A {
         B t01;
       }
+      """
+    );
+  }
+
+  @Test(description = """
+  ClassType TC03
+
+  - name class decl
+  - name iface decl
+  - name enum decl
+  """)
+  public void testCase03() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B = ClassTypeName.of("com.example", "A", "B");
+        static final ClassTypeName C = ClassTypeName.of("", "C");
+        static final ClassTypeName ENTRY = ClassTypeName.of(Map.Entry.class);
+
+        @Override
+        protected final void definition() {
+          classDeclaration(name(A));
+          enumDeclaration(name(B));
+          interfaceDeclaration(name(C));
+          classDeclaration(name(ENTRY));
+        }
+      }.toString(),
+
+      """
+      class A {}
+
+      enum B {}
+
+      interface C {}
+
+      class Entry {}
       """
     );
   }

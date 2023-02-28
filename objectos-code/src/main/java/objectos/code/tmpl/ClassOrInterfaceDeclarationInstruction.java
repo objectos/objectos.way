@@ -17,11 +17,8 @@ package objectos.code.tmpl;
 
 import objectos.code.JavaTemplate;
 
-/**
- * An {@link Instruction} that can be used with the instructions that take
- * arguments.
- *
- * @see JavaTemplate#invoke(String, ArgsPart...)
- */
-@Deprecated
-public interface ArgsPart extends Instruction {}
+public sealed interface ClassOrInterfaceDeclarationInstruction
+    extends
+    ClassDeclarationInstruction,
+    EnumDeclarationInstruction,
+    InterfaceDeclarationInstruction permits JavaTemplate._Item {}

@@ -29,11 +29,15 @@ import objectos.code.tmpl.ArgsPart;
 import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.BlockElement;
 import objectos.code.tmpl.BodyElement;
+import objectos.code.tmpl.ClassDeclarationInstruction;
+import objectos.code.tmpl.ClassOrInterfaceDeclarationInstruction;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
+import objectos.code.tmpl.EnumDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
 import objectos.code.tmpl.FieldDeclarationInstruction;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.Instruction;
+import objectos.code.tmpl.InterfaceDeclarationInstruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
 import objectos.code.tmpl.StatementPart;
 import objectos.code.tmpl.TypeName;
@@ -145,6 +149,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ClassDeclaration,
       ClassInstanceCreationExpression,
       ClassKeyword,
+      ClassOrInterfaceDeclarationInstruction,
       ClassTypeInstruction,
       ClassTypeWithArgs,
       ConstructorDeclaration,
@@ -250,11 +255,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    */
   interface ClassDeclaration extends ClassDeclarationInstruction {}
 
-  /**
-   * @since 0.4.4
-   */
-  interface ClassDeclarationInstruction extends Instruction {}
-
   interface ClassInstanceCreationExpression extends PrimaryNoNewArray {}
 
   interface ClassKeyword extends BodyElement {}
@@ -286,11 +286,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @since 0.4.4
    */
   interface EnumDeclaration extends ClassDeclarationInstruction {}
-
-  /**
-   * @since 0.4.4
-   */
-  interface EnumDeclarationInstruction extends Instruction {}
 
   @Deprecated
   interface EnumKeyword extends BodyElement {}
@@ -342,11 +337,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @since 0.4.4
    */
   interface InterfaceDeclaration extends ClassDeclarationInstruction {}
-
-  /**
-   * @since 0.4.4
-   */
-  interface InterfaceDeclarationInstruction extends Instruction {}
 
   @Deprecated
   interface InterfaceKeyword extends BodyElement {}
@@ -2356,6 +2346,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * of the following declarations:
    *
    * <ul>
+   * <li>class declaration;</li>
+   * <li>enum declaration;</li>
+   * <li>field declaration;</li>
+   * <li>interface declaration;</li>
    * <li>method declaration; and</li>
    * <li>local variable declaration.</li>
    * </ul>
@@ -2365,7 +2359,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * <pre>
    * static final ClassTypeName STRING =
-   *     classType(String.class);
+   *     ClassTypeName.of(String.class);
    *
    * method(
    *   name("example"),
@@ -2397,6 +2391,43 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
     JavaModel.checkIdentifier(name);
     var api = api();
     return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(name));
+  }
+
+  /**
+   * Sets the name of a class or an interface declaration.
+   * More specifically, this instruction will use the rightmost name of the
+   * specified fully qualified name as the simple name of a class or interface
+   * declaration. All other names, i.e the package name and any enclosing name,
+   * are ignored.
+   *
+   * <p>
+   * The following Objectos Code class declaration:
+   *
+   * <pre>
+   * static final ClassTypeName INNER =
+   *     ClassTypeName.of("com.example", "Outer", "Inner");
+   *
+   * class(
+   *   name(INNER)
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * class Inner {}</pre>
+   *
+   * @param name
+   *        the {@code ClassTypeName} whose simple name will be used
+   *
+   * @return the instruction to set the name of a class or interface declaration
+   *
+   * @since 0.4.4
+   */
+  protected final ClassOrInterfaceDeclarationInstruction name(ClassTypeName name) {
+    var simpleName = name.simpleName(); // implicit null-check
+    var api = api();
+    return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(simpleName));
   }
 
   /**

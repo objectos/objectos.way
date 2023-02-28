@@ -28,8 +28,8 @@ import objectos.code.tmpl.ExpressionPart;
  * To create instances of this class use one of provided factory methods:
  *
  * <ul>
- * <li>{@link JavaTemplate#classType(Class)}</li>
- * <li>{@link JavaTemplate#classType(String, String, String...)}</li>
+ * <li>{@link ClassTypeName#of(Class)}</li>
+ * <li>{@link ClassTypeName#of(String, String, String...)}</li>
  * </ul>
  *
  * @since 0.4.2
@@ -122,5 +122,14 @@ public sealed interface ClassTypeName
       String packageName, String simpleName, String... nested) {
     return ClassTypeNameImpl.of(packageName, simpleName, nested);
   }
+
+  /**
+   * Returns the simple name.
+   *
+   * @return the simple name
+   *
+   * @since 0.4.4
+   */
+  String simpleName();
 
 }
