@@ -75,7 +75,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * <pre>
    * method(
    *   PUBLIC, VOID, name("varargs"),
-   *   param(INT, ELLIPSIS, values)
+   *   parameter(INT, ELLIPSIS, "values")
    * )</pre>
    *
    * <p>

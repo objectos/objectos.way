@@ -67,7 +67,6 @@ public class IncludeTest {
         }
 
         private void tc01() {
-
           method(
             name("foo"),
             p(
