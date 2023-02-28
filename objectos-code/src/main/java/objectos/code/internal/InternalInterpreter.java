@@ -13,9 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
-abstract class InternalInterpreter extends InternalCompiler {
+import objectos.code.Indentation;
+import objectos.code.Keyword;
+import objectos.code.Symbol;
+import objectos.code.Whitespace;
+
+public abstract class InternalInterpreter extends InternalCompiler {
+
+  protected final void interpret() {
+    codeIndex = protoIndex = stackIndex = 0;
+
+    objectIndex = -1;
+
+    writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
+
+    var code = 0;
+
+    do {
+      code = loop();
+    } while (code != ByteCode.EOF);
+
+    writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
+  }
+
+  protected final int level() { return protoIndex; }
+
+  protected final void levelDecrease() { protoIndex--; }
+
+  protected final void levelIncrease() { protoIndex++; }
 
   protected abstract void writeComment(String value);
 
@@ -40,22 +67,6 @@ abstract class InternalInterpreter extends InternalCompiler {
   protected abstract void writeSymbol(Symbol value);
 
   protected abstract void writeWhitespace(Whitespace value);
-
-  final void interpret() {
-    codeIndex = protoIndex = stackIndex = 0;
-
-    objectIndex = -1;
-
-    writeCompilationUnitStart(autoImports.packageName, autoImports.fileName);
-
-    var code = 0;
-
-    do {
-      code = loop();
-    } while (code != ByteCode.EOF);
-
-    writeCompilationUnitEnd(autoImports.packageName, autoImports.fileName);
-  }
 
   private UnsupportedOperationException $uoe_code(int code) {
     return new UnsupportedOperationException(

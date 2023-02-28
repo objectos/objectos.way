@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
-import static java.lang.System.out;
+final class ByteCode {
 
-abstract class FauxGenerator {
+  static final int AUTO_IMPORTS0 = -1;
+  static final int AUTO_IMPORTS1 = -2;
+  static final int COMMENT = -3;
+  static final int EOF = -4;
+  static final int IDENTIFIER = -5;
+  static final int INDENTATION = -6;
+  static final int KEYWORD = -7;
+  static final int NOP = -8;
+  static final int NOP1 = -9;
+  static final int PRIMITIVE_LITERAL = -10;
+  static final int RAW = -11;
+  static final int STRING_LITERAL = -12;
+  static final int SYMBOL = -13;
+  static final int WHITESPACE = -14;
 
-  int value = -1;
-
-  public abstract void execute();
-
-  final void comment(String string) {
-    out.println();
-    out.println("// " + string);
-    out.println();
-  }
-
-  final void value(String string) {
-    out.println("static final int " + string + " = " + value-- + ";");
-  }
+  private ByteCode() {}
 
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
 public class ByteProtoFauxGenerator extends FauxGenerator {
   public static void main(String[] args) {

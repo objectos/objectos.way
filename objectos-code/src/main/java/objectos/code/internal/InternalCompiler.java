@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code;
+package objectos.code.internal;
 
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import objectos.code.Indentation;
+import objectos.code.Keyword;
+import objectos.code.Symbol;
+import objectos.code.Whitespace;
 import objectos.util.IntArrays;
 
 class InternalCompiler extends InternalApi {
@@ -44,7 +48,7 @@ class InternalCompiler extends InternalApi {
       _SYMBOL = 9,
       _TYPE = 10;
 
-  final void compile() {
+  protected final void compile() {
     codeIndex = 0;
 
     // simpleName

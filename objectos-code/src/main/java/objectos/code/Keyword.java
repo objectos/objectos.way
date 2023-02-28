@@ -164,7 +164,7 @@ public enum Keyword {
 
   private final String toString = name().toLowerCase(Locale.US);
 
-  static Keyword get(int index) {
+  public static Keyword get(int index) {
     return VALUES[index];
   }
 

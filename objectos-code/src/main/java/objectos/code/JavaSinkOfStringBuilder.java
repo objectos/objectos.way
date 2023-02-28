@@ -19,10 +19,14 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
   private final StringBuilder out;
 
-  public JavaSinkOfStringBuilder(StringBuilder out) { this.out = out; }
+  public JavaSinkOfStringBuilder(StringBuilder out) {
+    this.out = out;
+  }
 
   @Override
-  public final String toString() { return out.toString(); }
+  public final String toString() {
+    return out.toString();
+  }
 
   @Override
   protected final void writeComment(String value) {
@@ -39,8 +43,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
   @Override
   protected void writeCompilationUnitStart(String packageName, String fileName) {
     out.setLength(0);
-
-    stackIndex = out.length();
   }
 
   @Override
@@ -110,12 +112,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
     }
   }
 
-  private int level() { return protoIndex; }
-
-  private void levelDecrease() { protoIndex--; }
-
-  private void levelIncrease() { protoIndex++; }
-
   private void writeIndentation(int length) {
     for (int i = 0; i < length; i++) {
       out.append("  ");
@@ -124,8 +120,6 @@ class JavaSinkOfStringBuilder extends JavaSink {
 
   private void writenl() {
     out.append(System.lineSeparator());
-
-    stackIndex = out.length();
   }
 
 }

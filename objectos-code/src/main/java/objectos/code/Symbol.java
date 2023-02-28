@@ -86,14 +86,14 @@ public enum Symbol {
   DOUBLE_COLON("::"),
 
   /*
-
-   Operators
   
+   Operators
+
    =   >   <   !   ~   ?   :   ->
    ==  >=  <=  !=  &&  ||  ++  --
    +   -   *   /   &   |   ^   %   <<   >>   >>>
    +=  -=  *=  /=  &=  |=  ^=  %=  <<=  >>=  >>>=
-  
+
    */
 
   /**
@@ -136,7 +136,7 @@ public enum Symbol {
 
   private Symbol(String name) { this.name = name; }
 
-  static Symbol get(int index) {
+  public static Symbol get(int index) {
     return VALUES[index];
   }
 

@@ -175,7 +175,7 @@ public enum Whitespace {
 
   private static final Whitespace[] VALUES = values();
 
-  static Whitespace get(int index) {
+  public static Whitespace get(int index) {
     return VALUES[index];
   }
 

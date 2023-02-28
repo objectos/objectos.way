@@ -18,6 +18,10 @@ package objectos.code;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Objects;
+import objectos.code.internal.ByteProto;
+import objectos.code.internal.External;
+import objectos.code.internal.InternalApi;
+import objectos.code.internal.InternalJavaTemplate;
 import objectos.lang.Check;
 
 /**
@@ -26,7 +30,7 @@ import objectos.lang.Check;
  *
  * @since 0.4
  */
-public abstract class JavaTemplate {
+public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * An {@link Instruction} that can be used with the various {@code annotation}
@@ -34,7 +38,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.4
    */
-  protected sealed interface AnnotationInstruction extends Instruction {}
+  protected interface AnnotationInstruction extends Instruction {}
 
   /**
    * An {@link Instruction} that can be used with the instructions that take
@@ -43,14 +47,14 @@ public abstract class JavaTemplate {
    * @see JavaTemplate#invoke(String, ArgsPart...)
    */
   @Deprecated
-  protected sealed interface ArgsPart extends Instruction {}
+  protected interface ArgsPart extends Instruction {}
 
   /**
    * TODO
    *
    * @since 0.4.4
    */
-  protected static abstract sealed class ArrayTypeName extends ReferenceTypeName {
+  protected static abstract class ArrayTypeName extends ReferenceTypeName {
 
     private static final class OfClass extends ArrayTypeName {
       private final Class<?> value;
@@ -60,7 +64,7 @@ public abstract class JavaTemplate {
       }
 
       @Override
-      final void execute(InternalApi api) {
+      public final void execute(InternalApi api) {
         api.arrayTypeName(value);
         api.localToExternal();
       }
@@ -78,7 +82,7 @@ public abstract class JavaTemplate {
       }
 
       @Override
-      final void execute(InternalApi api) {
+      public final void execute(InternalApi api) {
         api.arrayTypeName(type, count);
         api.localToExternal();
       }
@@ -108,14 +112,14 @@ public abstract class JavaTemplate {
    * {@link JavaTemplate#block(BlockElement...)} method.
    */
   @Deprecated
-  protected sealed interface BlockElement extends Instruction {}
+  protected interface BlockElement extends Instruction {}
 
   /**
    * An {@link Instruction} that can be used with the
    * {@link JavaTemplate#body(BodyElement...)} method.
    */
   @Deprecated
-  protected sealed interface BodyElement extends Instruction {}
+  protected interface BodyElement extends Instruction {}
 
   /**
    * Represents the fully qualified name of a class or interface type in a Java
@@ -131,7 +135,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static abstract sealed class ClassTypeName
+  protected static abstract class ClassTypeName
       extends ReferenceTypeName
       implements ArrayTypeComponent, ClassOrParameterizedType, ExpressionPart {
 
@@ -143,7 +147,7 @@ public abstract class JavaTemplate {
       }
 
       @Override
-      final void execute(InternalApi api) {
+      public final void execute(InternalApi api) {
         api.classType(value);
         api.localToExternal();
       }
@@ -163,7 +167,7 @@ public abstract class JavaTemplate {
       }
 
       @Override
-      final void execute(InternalApi api) {
+      public final void execute(InternalApi api) {
         int count = 1; // simple name
         count += nested.length;
 
@@ -224,7 +228,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.4
    */
-  protected sealed interface ConstructorDeclarationInstruction extends Instruction {}
+  protected interface ConstructorDeclarationInstruction extends Instruction {}
 
   /**
    * The ellipsis ({@code ...}) separator. It is used to indicate that the last
@@ -250,7 +254,7 @@ public abstract class JavaTemplate {
    */
   protected static final class Ellipsis extends External {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
     }
@@ -264,7 +268,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected sealed interface ExpressionPart
+  protected interface ExpressionPart
       extends ArgsPart, BlockElement, BodyElement, StatementPart,
       VariableInitializer {}
 
@@ -289,7 +293,7 @@ public abstract class JavaTemplate {
    * <p>
    * Unless noted references to a particular instruction MUST NOT be reused.
    */
-  protected sealed interface Instruction {
+  public interface Instruction {
 
     /**
      * Returns itself.
@@ -309,7 +313,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected sealed interface MethodDeclarationInstruction extends Instruction {}
+  protected interface MethodDeclarationInstruction extends Instruction {}
 
   /**
    * Represents a modifier of the Java language.
@@ -329,7 +333,7 @@ public abstract class JavaTemplate {
     private Modifier(Keyword keyword) { this.value = keyword.ordinal(); }
 
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.MODIFIER, value);
     }
@@ -342,7 +346,7 @@ public abstract class JavaTemplate {
    * @see JavaTemplate#constructor(ParameterElement...)
    * @see JavaTemplate#method(String, ParameterElement...)
    */
-  protected sealed interface ParameterElement extends Instruction {}
+  protected interface ParameterElement extends Instruction {}
 
   /**
    * TODO
@@ -382,7 +386,7 @@ public abstract class JavaTemplate {
     }
 
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       Object[] many = rest;
       api.elemMany(ByteProto.PARAMETERIZED_TYPE, raw, first, many);
       api.localToExternal();
@@ -418,7 +422,7 @@ public abstract class JavaTemplate {
     }
 
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.PRIMITIVE_TYPE, value);
     }
@@ -429,7 +433,7 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.2
    */
-  protected abstract static sealed class ReferenceTypeName extends TypeName {
+  protected abstract static class ReferenceTypeName extends TypeName {
     ReferenceTypeName() {}
   }
 
@@ -438,14 +442,14 @@ public abstract class JavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected sealed interface StatementPart extends Instruction {}
+  protected interface StatementPart extends Instruction {}
 
   /**
    * TODO
    *
    * @since 0.4.2
    */
-  protected abstract static sealed class TypeName
+  public abstract static class TypeName
       extends External
       implements
       FieldDeclarationInstruction,
@@ -473,21 +477,21 @@ public abstract class JavaTemplate {
     }
 
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.TYPE_VARIABLE, api.object(name));
     }
   }
 
-  enum _Ext {
+  public enum _Ext {
     INSTANCE;
   }
 
-  enum _Include implements Include {
+  public enum _Include implements Include {
     INSTANCE;
   }
 
-  enum _Item
+  public enum _Item
       implements
       AbstractModifier,
       AnyDeclarationInstruction,
@@ -566,73 +570,73 @@ public abstract class JavaTemplate {
 
   }
 
-  sealed interface AbstractModifier extends BodyElement {}
+  interface AbstractModifier extends BodyElement {}
 
   /**
    * @since 0.4.4
    */
-  sealed interface AnyDeclarationInstruction
+  interface AnyDeclarationInstruction
       extends
       ClassDeclarationInstruction,
       EnumDeclarationInstruction,
       InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {}
 
-  sealed interface AnyType extends BodyElement, BlockElement, ParameterElement {}
+  interface AnyType extends BodyElement, BlockElement, ParameterElement {}
 
-  sealed interface Argument extends ExpressionPart {}
+  interface Argument extends ExpressionPart {}
 
-  sealed interface ArrayAccess extends ExpressionPart {}
+  interface ArrayAccess extends ExpressionPart {}
 
-  sealed interface ArrayDimension extends ArrayTypeElement {}
+  interface ArrayDimension extends ArrayTypeElement {}
 
-  sealed interface ArrayInitializer extends BodyElement, VariableInitializer {}
+  interface ArrayInitializer extends BodyElement, VariableInitializer {}
 
-  sealed interface ArrayInitializerValue extends AnnotationInstruction, VariableInitializer {}
+  interface ArrayInitializerValue extends AnnotationInstruction, VariableInitializer {}
 
-  sealed interface ArrayType extends BodyElement, ReferenceType {}
+  interface ArrayType extends BodyElement, ReferenceType {}
 
-  sealed interface ArrayTypeComponent extends Instruction {}
+  interface ArrayTypeComponent extends Instruction {}
 
-  sealed interface ArrayTypeElement {}
+  interface ArrayTypeElement {}
 
-  sealed interface At extends BodyElement {}
+  interface At extends BodyElement {}
 
-  sealed interface AtElement extends Instruction {}
+  interface AtElement extends Instruction {}
 
-  sealed interface AutoImports extends Instruction {}
+  interface AutoImports extends Instruction {}
 
-  sealed interface Block extends BlockElement, BodyElement, StatementPart {}
+  interface Block extends BlockElement, BodyElement, StatementPart {}
 
-  sealed interface Body extends BodyElement {}
-
-  /**
-   * @since 0.4.4
-   */
-  sealed interface ClassDeclaration extends ClassDeclarationInstruction {}
+  interface Body extends BodyElement {}
 
   /**
    * @since 0.4.4
    */
-  sealed interface ClassDeclarationInstruction extends Instruction {}
+  interface ClassDeclaration extends ClassDeclarationInstruction {}
 
-  sealed interface ClassInstanceCreationExpression extends PrimaryNoNewArray {}
+  /**
+   * @since 0.4.4
+   */
+  interface ClassDeclarationInstruction extends Instruction {}
 
-  sealed interface ClassKeyword extends BodyElement {}
+  interface ClassInstanceCreationExpression extends PrimaryNoNewArray {}
 
-  sealed interface ClassOrParameterizedType extends Instruction {}
+  interface ClassKeyword extends BodyElement {}
 
-  sealed interface ClassTypeInstruction extends MethodDeclarationInstruction {}
+  interface ClassOrParameterizedType extends Instruction {}
 
-  sealed interface ClassTypeWithArgs extends ClassTypeInstruction {}
+  interface ClassTypeInstruction extends MethodDeclarationInstruction {}
 
-  sealed interface ConstructorDeclaration
+  interface ClassTypeWithArgs extends ClassTypeInstruction {}
+
+  interface ConstructorDeclaration
       extends
       BodyElement,
       ClassDeclarationInstruction,
       EnumDeclarationInstruction {}
 
-  sealed interface DeclarationName
+  interface DeclarationName
       extends
       ClassDeclarationInstruction,
       EnumDeclarationInstruction,
@@ -641,197 +645,191 @@ public abstract class JavaTemplate {
       MethodDeclarationInstruction,
       StatementPart {}
 
-  sealed interface End extends ArgsPart, BlockElement {}
+  interface End extends ArgsPart, BlockElement {}
 
-  sealed interface EnumConstant extends BodyElement, EnumDeclarationInstruction {}
-
-  /**
-   * @since 0.4.4
-   */
-  sealed interface EnumDeclaration extends ClassDeclarationInstruction {}
+  interface EnumConstant extends BodyElement, EnumDeclarationInstruction {}
 
   /**
    * @since 0.4.4
    */
-  sealed interface EnumDeclarationInstruction extends Instruction {}
+  interface EnumDeclaration extends ClassDeclarationInstruction {}
+
+  /**
+   * @since 0.4.4
+   */
+  interface EnumDeclarationInstruction extends Instruction {}
 
   @Deprecated
-  sealed interface EnumKeyword extends BodyElement {}
+  interface EnumKeyword extends BodyElement {}
 
-  sealed interface ExplicitConstructorInvocation extends BlockElement {}
+  interface ExplicitConstructorInvocation extends BlockElement {}
 
-  sealed interface ExpressionName extends ExpressionPart {}
+  interface ExpressionName extends ExpressionPart {}
 
   /**
    * @since 0.4.4
    */
-  sealed interface ExtendsClause
+  interface ExtendsClause
       extends ClassDeclarationInstruction, InterfaceDeclarationInstruction {}
 
   @Deprecated
-  sealed interface ExtendsKeyword extends BodyElement {}
+  interface ExtendsKeyword extends BodyElement {}
 
-  abstract static sealed class External implements Instruction {
-    External() {}
-
-    abstract void execute(InternalApi api);
-  }
-
-  sealed interface FieldDeclaration
+  interface FieldDeclaration
       extends
       BodyElement,
       ClassDeclarationInstruction,
       EnumDeclarationInstruction,
       InterfaceDeclarationInstruction {}
 
-  sealed interface FieldDeclarationInstruction extends Instruction {}
+  interface FieldDeclarationInstruction extends Instruction {}
 
-  sealed interface FinalModifier extends BodyElement {}
+  interface FinalModifier extends BodyElement {}
 
-  sealed interface Identifier extends BlockElement, BodyElement, ParameterElement {}
+  interface Identifier extends BlockElement, BodyElement, ParameterElement {}
 
-  sealed interface IfCondition extends BlockElement {}
+  interface IfCondition extends BlockElement {}
 
   /**
    * @since 0.4.4
    */
-  sealed interface ImplementsClause
+  interface ImplementsClause
       extends
       ClassDeclarationInstruction,
       EnumDeclarationInstruction {}
 
   @Deprecated
-  sealed interface ImplementsKeyword extends BodyElement {}
+  interface ImplementsKeyword extends BodyElement {}
 
-  sealed interface Include
+  interface Include
       extends
       ArgsPart, BlockElement, BodyElement, ExpressionPart, ParameterElement, VariableInitializer {}
 
-  sealed interface IntegerLiteral extends Literal {}
+  interface IntegerLiteral extends Literal {}
 
   /**
    * @since 0.4.4
    */
-  sealed interface InterfaceDeclaration extends ClassDeclarationInstruction {}
+  interface InterfaceDeclaration extends ClassDeclarationInstruction {}
 
   /**
    * @since 0.4.4
    */
-  sealed interface InterfaceDeclarationInstruction extends Instruction {}
+  interface InterfaceDeclarationInstruction extends Instruction {}
 
   @Deprecated
-  sealed interface InterfaceKeyword extends BodyElement {}
+  interface InterfaceKeyword extends BodyElement {}
 
-  sealed interface Literal extends AtElement, ExpressionPart {}
+  interface Literal extends AtElement, ExpressionPart {}
 
-  sealed interface MethodDeclaration
+  interface MethodDeclaration
       extends
       BodyElement,
       ClassDeclarationInstruction,
       EnumDeclarationInstruction,
       InterfaceDeclarationInstruction {}
 
-  sealed interface MethodDeclarator extends BodyElement {}
+  interface MethodDeclarator extends BodyElement {}
 
-  sealed interface MethodInvocation extends PrimaryNoNewArray {}
+  interface MethodInvocation extends PrimaryNoNewArray {}
 
-  sealed interface ModifiersElement
+  interface ModifiersElement
       extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
   @Deprecated
-  sealed interface OldClassTypeInstruction
+  interface OldClassTypeInstruction
       extends ArgsPart, ClassOrParameterizedType, ReferenceType, TypeParameterBound {}
 
   @Deprecated
-  sealed interface OldEllipsis extends ParameterElement {}
+  interface OldEllipsis extends ParameterElement {}
 
   @Deprecated
-  sealed interface OldElseKeyword extends BlockElement {}
+  interface OldElseKeyword extends BlockElement {}
 
   @Deprecated
-  sealed interface OldEqualityOperator extends ExpressionPart {}
+  interface OldEqualityOperator extends ExpressionPart {}
 
   @Deprecated
-  sealed interface OldNewKeyword extends BlockElement {}
+  interface OldNewKeyword extends BlockElement {}
 
   @Deprecated
-  sealed interface OldNewLine extends ArgsPart, BlockElement {}
+  interface OldNewLine extends ArgsPart, BlockElement {}
 
   @Deprecated
-  sealed interface OldNullLiteral extends ExpressionPart {}
+  interface OldNullLiteral extends ExpressionPart {}
 
   @Deprecated
-  sealed interface OldReturnKeyword extends BlockElement {}
+  interface OldReturnKeyword extends BlockElement {}
 
   @Deprecated
-  sealed interface OldSimpleAssigmentOperator extends ExpressionPart {}
+  interface OldSimpleAssigmentOperator extends ExpressionPart {}
 
-  sealed interface OldStatement extends BlockElement {}
-
-  @Deprecated
-  sealed interface OldSuperKeyword extends BlockElement {}
+  interface OldStatement extends BlockElement {}
 
   @Deprecated
-  sealed interface OldThisKeyword extends PrimaryNoNewArray {}
+  interface OldSuperKeyword extends BlockElement {}
 
   @Deprecated
-  sealed interface OldThrowKeyword extends BlockElement {}
+  interface OldThisKeyword extends PrimaryNoNewArray {}
 
   @Deprecated
-  sealed interface OldVarKeyword extends BlockElement {}
+  interface OldThrowKeyword extends BlockElement {}
 
   @Deprecated
-  sealed interface OldVoidKeyword extends BodyElement {}
+  interface OldVarKeyword extends BlockElement {}
 
   @Deprecated
-  sealed interface PackageKeyword extends Instruction {}
+  interface OldVoidKeyword extends BodyElement {}
 
-  sealed interface Parameter
+  @Deprecated
+  interface PackageKeyword extends Instruction {}
+
+  interface Parameter
       extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
-  sealed interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
+  interface ParameterizedType extends ClassOrParameterizedType, ReferenceType {}
 
-  sealed interface PrimitiveType extends AnyType, ArrayTypeComponent, BodyElement {}
+  interface PrimitiveType extends AnyType, ArrayTypeComponent, BodyElement {}
 
-  sealed interface PrivateModifier extends AccessModifier {}
+  interface PrivateModifier extends AccessModifier {}
 
-  sealed interface ProtectedModifier extends AccessModifier {}
+  interface ProtectedModifier extends AccessModifier {}
 
-  sealed interface PublicModifier extends AccessModifier {}
+  interface PublicModifier extends AccessModifier {}
 
-  sealed interface ReferenceType extends AnyType, ArrayTypeComponent {}
+  interface ReferenceType extends AnyType, ArrayTypeComponent {}
 
-  sealed interface ReturnType extends MethodDeclarationInstruction {}
+  interface ReturnType extends MethodDeclarationInstruction {}
 
-  sealed interface Statement
+  interface Statement
       extends BlockElement, ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
-  sealed interface StaticModifier extends BodyElement {}
+  interface StaticModifier extends BodyElement {}
 
-  sealed interface StringLiteral extends Literal, PrimaryNoNewArray {}
+  interface StringLiteral extends Literal, PrimaryNoNewArray {}
 
-  sealed interface TypeParameter extends MethodDeclarationInstruction {}
-
-  @Deprecated
-  sealed interface TypeParameterBound extends Instruction {}
-
-  sealed interface TypeParameterInstruction extends Instruction {}
+  interface TypeParameter extends MethodDeclarationInstruction {}
 
   @Deprecated
-  sealed interface TypeParameterOld extends BodyElement {}
+  interface TypeParameterBound extends Instruction {}
 
-  sealed interface TypeVariable extends ReferenceType {}
+  interface TypeParameterInstruction extends Instruction {}
 
-  sealed interface VariableInitializer extends FieldDeclarationInstruction {}
+  @Deprecated
+  interface TypeParameterOld extends BodyElement {}
 
-  private sealed interface AccessModifier extends BodyElement {}
+  interface TypeVariable extends ReferenceType {}
+
+  interface VariableInitializer extends FieldDeclarationInstruction {}
+
+  private interface AccessModifier extends BodyElement {}
 
   /**
    * @since 0.4.3.1
    */
   private static final class AssignmentOperator extends External implements ExpressionPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.ASSIGNMENT_OPERATOR, Symbol.ASSIGNMENT.ordinal());
     }
@@ -842,7 +840,7 @@ public abstract class JavaTemplate {
    */
   private static final class ElseKeyword extends External implements StatementPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.ELSE, ByteProto.NOOP);
     }
@@ -859,7 +857,7 @@ public abstract class JavaTemplate {
     }
 
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.EQUALITY_OPERATOR, value);
     }
@@ -870,7 +868,7 @@ public abstract class JavaTemplate {
    */
   private static final class IfKeyword extends External implements StatementPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.IF, ByteProto.NOOP);
     }
@@ -881,7 +879,7 @@ public abstract class JavaTemplate {
    */
   private static final class NewKeyword extends External implements ExpressionPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.NEW, ByteProto.NOOP);
     }
@@ -892,7 +890,7 @@ public abstract class JavaTemplate {
    */
   private static final class NewLine extends External implements ExpressionPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
     }
@@ -900,22 +898,22 @@ public abstract class JavaTemplate {
 
   private static final class NullLiteral extends External implements ExpressionPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.NULL_LITERAL, ByteProto.NOOP);
     }
   }
 
-  private sealed interface Primary extends ExpressionPart {}
+  private interface Primary extends ExpressionPart {}
 
-  private sealed interface PrimaryNoNewArray extends Primary {}
+  private interface PrimaryNoNewArray extends Primary {}
 
   /**
    * @since 0.4.3.1
    */
   private static final class ReturnKeyword extends External implements StatementPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.RETURN, ByteProto.NOOP);
     }
@@ -926,7 +924,7 @@ public abstract class JavaTemplate {
    */
   private static final class SuperKeyword extends External implements ExpressionPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.SUPER, ByteProto.NOOP);
     }
@@ -937,7 +935,7 @@ public abstract class JavaTemplate {
    */
   private static final class ThisKeyword extends External implements ExpressionPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.THIS, ByteProto.NOOP);
     }
@@ -948,7 +946,7 @@ public abstract class JavaTemplate {
    */
   private static final class ThrowKeyword extends External implements StatementPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.THROW, ByteProto.NOOP);
     }
@@ -959,7 +957,7 @@ public abstract class JavaTemplate {
    */
   private static final class VarKeyword extends External implements StatementPart {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.VAR, ByteProto.NOOP);
     }
@@ -970,7 +968,7 @@ public abstract class JavaTemplate {
    */
   private static final class VoidKeyword extends External implements MethodDeclarationInstruction {
     @Override
-    final void execute(InternalApi api) {
+    public final void execute(InternalApi api) {
       api.extStart();
       api.protoAdd(ByteProto.VOID, ByteProto.NOOP);
     }
@@ -1193,13 +1191,9 @@ public abstract class JavaTemplate {
    */
   protected static final PrimitiveTypeName INT = PrimitiveTypeName.INT;
 
-  static final _Ext EXT = _Ext.INSTANCE;
+  public static final _Ext EXT = _Ext.INSTANCE;
 
-  static final _Include INCLUDE = _Include.INSTANCE;
-
-  static final _Item ITEM = _Item.INSTANCE;
-
-  private InternalApi api;
+  public static final _Include INCLUDE = _Include.INSTANCE;
 
   /**
    * Sole constructor.
@@ -2304,11 +2298,6 @@ public abstract class JavaTemplate {
   /**
    * TODO
    */
-  protected abstract void definition();
-
-  /**
-   * TODO
-   */
   protected final ArrayDimension dim() {
     return api().itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);
   }
@@ -3152,7 +3141,7 @@ public abstract class JavaTemplate {
    * @since 0.4.2
    */
   protected final ReturnType returnType(TypeName type) {
-    return api.elem(ByteProto.RETURN_TYPE, type.self());
+    return api().elem(ByteProto.RETURN_TYPE, type.self());
   }
 
   /**
@@ -3416,31 +3405,6 @@ public abstract class JavaTemplate {
     return api().elemMany(ByteProto.VALUE, many);
   }
 
-  InternalApi api() {
-    Check.state(api != null, """
-    An InternalApi instance was not set.
-
-    Are you trying to execute the method directly?
-    Please not that this method should only be invoked inside a definition() method.
-    """);
-
-    return api;
-  }
-
-  final void execute(InternalApi api) {
-    Check.state(this.api == null, """
-    Another evaluation is already in progress.
-    """);
-
-    this.api = api;
-
-    try {
-      definition();
-    } finally {
-      this.api = null;
-    }
-  }
-
   private Object arrayTypeName(Class<?> type) {
     int dimCount = 1;
 
@@ -3462,7 +3426,7 @@ public abstract class JavaTemplate {
     for (int i = 0; i < dimCount; i++) {
       dim();
     }
-    return api.arrayTypeName(dimCount);
+    return api().arrayTypeName(dimCount);
   }
 
   private _Item modifier(Keyword value) {

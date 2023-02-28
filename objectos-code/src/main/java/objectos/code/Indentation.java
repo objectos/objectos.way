@@ -67,7 +67,7 @@ public enum Indentation {
 
   private static final Indentation[] VALUES = values();
 
-  static Indentation get(int index) {
+  public static Indentation get(int index) {
     return VALUES[index];
   }
 
