@@ -228,7 +228,7 @@ public class EnumDeclarationTest {
             ),
 
             constructor(
-              PRIVATE, parameter(STRING, "value"),
+              PRIVATE, parameter(STRING, name("value")),
 
               p(THIS, n("value"), IS, n("value"))
             ),

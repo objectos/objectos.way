@@ -70,7 +70,7 @@ public final class ByteProto {
   public static final int PACKAGE = -40;
   public static final int PACKAGE_DECLARATION = -41;
   public static final int PARAMETER = -42;
-  public static final int PARAMETER_SHORT = -43;
+  public static final int PARAMETER_DECLARATION = -43;
   public static final int STATEMENT = -44;
   public static final int TYPE_PARAMETER = -45;
 
@@ -123,11 +123,6 @@ public final class ByteProto {
   public static boolean isExpressionStart(int proto) {
     return proto <= CLASS_INSTANCE_CREATION
         && proto >= THIS;
-  }
-
-  public static boolean isFormalParameter(int proto) {
-    return proto == PARAMETER
-        || proto == PARAMETER_SHORT;
   }
 
   public static boolean isImport(int proto) {

@@ -794,7 +794,7 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
 
-        case ByteProto.PARAMETER_SHORT -> parameters = listAdd(parameters);
+        case ByteProto.PARAMETER_DECLARATION -> parameters = listAdd(parameters);
 
         case ByteProto.STATEMENT -> statements = listAdd(statements);
 
@@ -834,7 +834,7 @@ class InternalCompiler extends InternalApi {
     if (parameters != NULL) {
       last(_START);
 
-      listSwitch(parameters, this::parameterSwitcher);
+      listExecute(parameters, this::parameterDeclaration);
     }
 
     executableBody(statements);
@@ -1605,7 +1605,7 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
 
-        case ByteProto.PARAMETER_SHORT -> parameters = listAdd(parameters);
+        case ByteProto.PARAMETER_DECLARATION -> parameters = listAdd(parameters);
 
         case ByteProto.STATEMENT -> statements = listAdd(statements);
 
@@ -1652,7 +1652,7 @@ class InternalCompiler extends InternalApi {
     if (parameters != NULL) {
       last(_START);
 
-      listSwitch(parameters, this::parameterSwitcher);
+      listExecute(parameters, this::parameterDeclaration);
     }
 
     executableBody(statements);
@@ -2443,34 +2443,75 @@ class InternalCompiler extends InternalApi {
     last(_TYPE);
   }
 
-  private void parameterShort() {
-    executeSwitch(this::parameterType);
-
-    if (protoIs(ByteProto.ELLIPSIS)) {
-      execute(this::ellipsis);
-    }
-
-    execute(this::identifier);
-  }
-
-  private void parameterSwitcher(int proto) {
+  private void parameterDeclaration() {
     switch (last()) {
       case _IDENTIFIER -> comma();
     }
 
-    switch (proto) {
-      case ByteProto.PARAMETER_SHORT -> parameterShort();
+    int annotations = NULL,
+        modifiers = NULL,
+        type = NULL,
+        name = NULL;
 
-      default -> errorRaise(
-        "no-op formal parameter '%s'".formatted(protoName(proto))
-      );
+    var varargs = false;
+
+    while (protoMore()) {
+      int proto = protoPeek();
+
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
+
+      switch (proto) {
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
+
+        case ByteProto.ARRAY_TYPE,
+             ByteProto.CLASS_TYPE,
+             ByteProto.PARAMETERIZED_TYPE,
+             ByteProto.PRIMITIVE_TYPE,
+             ByteProto.TYPE_VARIABLE -> type = singleSet(type);
+
+        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
+
+        case ByteProto.ELLIPSIS -> {
+          varargs = true;
+          protoNext();
+          protoNext();
+        }
+
+        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: " + protoName(proto)
+          );
+        }
+      }
     }
-  }
 
-  private void parameterType(int proto) {
-    type(proto);
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
+    }
 
-    last(_KEYWORD);
+    if (modifiers != NULL) {
+      listExecute(modifiers, this::modifier);
+    }
+
+    if (type != NULL) {
+      singleSwitch(type, this::type);
+    } else {
+      voidKeyword();
+    }
+
+    if (varargs) {
+      ellipsis();
+    }
+
+    if (name != NULL) {
+      singleExecute(name, this::declarationName);
+    } else {
+      unnamed();
+    }
   }
 
   private void preDot() {

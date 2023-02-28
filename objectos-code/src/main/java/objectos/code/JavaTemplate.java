@@ -24,6 +24,7 @@ import objectos.code.internal.InternalApi;
 import objectos.code.internal.InternalJavaTemplate;
 import objectos.code.internal.JavaModel;
 import objectos.code.internal.Keyword;
+import objectos.code.internal.ParameterInstructionImpl;
 import objectos.code.internal.Symbol;
 import objectos.code.tmpl.AnnotationInstruction;
 import objectos.code.tmpl.ArgsPart;
@@ -32,7 +33,10 @@ import objectos.code.tmpl.BlockElement;
 import objectos.code.tmpl.BodyElement;
 import objectos.code.tmpl.ClassDeclarationInstruction;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
+import objectos.code.tmpl.ConstructorDeclarationInstruction;
+import objectos.code.tmpl.DeclarationName;
 import objectos.code.tmpl.EnumDeclarationInstruction;
+import objectos.code.tmpl.ExecuteDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
 import objectos.code.tmpl.FieldDeclarationInstruction;
 import objectos.code.tmpl.Include;
@@ -41,6 +45,7 @@ import objectos.code.tmpl.Instruction;
 import objectos.code.tmpl.InterfaceDeclarationInstruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
 import objectos.code.tmpl.ParameterElement;
+import objectos.code.tmpl.ParameterInstruction;
 import objectos.code.tmpl.StatementPart;
 import objectos.code.tmpl.TypeDeclarationInstruction;
 import objectos.code.tmpl.TypeName;
@@ -54,45 +59,6 @@ import objectos.lang.Check;
  * @since 0.4
  */
 public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
-
-  /**
-   * An {@link Instruction} that can be used with the
-   * {@link JavaTemplate#constructor(ConstructorDeclarationInstruction...)}
-   * method.
-   *
-   * @since 0.4.4
-   */
-  protected interface ConstructorDeclarationInstruction extends Instruction {}
-
-  /**
-   * The ellipsis ({@code ...}) separator. It is used to indicate that the last
-   * formal parameter of a constructor or method as being a variable arity
-   * parameter.
-   *
-   * <p>
-   * The following Objectos Code:
-   *
-   * <pre>
-   * method(
-   *   PUBLIC, VOID, name("varargs"),
-   *   parameter(INT, ELLIPSIS, "values")
-   * )</pre>
-   *
-   * <p>
-   * Generates the following Java code:
-   *
-   * <pre>
-   * public void varargs(int... values) {}</pre>
-   *
-   * @since 0.4.3.1
-   */
-  protected static final class Ellipsis extends External {
-    @Override
-    public final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
-    }
-  }
 
   /**
    * Represents a modifier of the Java language.
@@ -178,7 +144,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       OldNullLiteral,
       OldClassTypeInstruction,
       PackageKeyword,
-      Parameter,
+      ExecuteDeclarationInstruction,
+      ParameterInstruction,
       ParameterizedType,
       PrimitiveType,
       PrivateModifier,
@@ -260,15 +227,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       BodyElement,
       ClassDeclarationInstruction,
       EnumDeclarationInstruction {}
-
-  interface DeclarationName
-      extends
-      ClassDeclarationInstruction,
-      EnumDeclarationInstruction,
-      FieldDeclarationInstruction,
-      InterfaceDeclarationInstruction,
-      MethodDeclarationInstruction,
-      StatementPart {}
 
   interface End extends ArgsPart, BlockElement {}
 
@@ -389,9 +347,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   @Deprecated
   interface PackageKeyword extends Instruction {}
-
-  interface Parameter
-      extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
   interface ParameterizedType extends OldClassOrParameterizedType, ReferenceType {}
 
@@ -582,7 +537,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected static final Ellipsis ELLIPSIS = new Ellipsis();
+  protected static final ParameterInstruction ELLIPSIS = ParameterInstructionImpl.ELLIPSIS;
 
   /**
    * The new line instruction.
@@ -2345,87 +2300,13 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * Adds a variable arity formal parameter declaration.
-   *
-   * <p>
-   * The following Objectos Code:
-   *
-   * <pre>
-   * parameter(int.class, ELLIPSIS, "values")</pre>
-   *
-   * <p>
-   * Generates the following Java parameter declaration:
-   *
-   * <pre>
-   * int... values</pre>
-   *
-   * @param type
-   *        the type of this parameter
-   * @param ellipsis
-   *        the ellipsis separator. Must be the {@link JavaTemplate#ELLIPSIS}
-   *        constant
-   * @param name
-   *        the name of this parameter
-   *
-   * @return a formal parameter declaration
-   *
-   * @since 0.4.3.1
-   */
-  protected final Parameter parameter(Class<?> type, Ellipsis ellipsis, String name) {
-    JavaModel.checkIdentifier(name.toString());
-    Object typeName = typeName(type);
-    return api().elem(ByteProto.PARAMETER_SHORT, typeName, ellipsis.self(), name);
-  }
-
-  /**
-   * Adds a formal parameter declaration with the specified {@code type} and
-   * {@code name}.
-   *
-   * <p>
-   * The following Objectos Code:
-   *
-   * <pre>
-   * parameter(String.class, "name")</pre>
-   *
-   * <p>
-   * Generates the following Java parameter declaration:
-   *
-   * <pre>
-   * java.lang.String name</pre>
-   *
-   * @param type
-   *        the type of this parameter
-   * @param name
-   *        the name of this parameter
-   *
-   * @return a formal parameter declaration
-   *
-   * @since 0.4.2
-   */
-  protected final Parameter parameter(Class<?> type, String name) {
-    JavaModel.checkIdentifier(name.toString());
-    Object typeName = typeName(type);
-    return api().elem(ByteProto.PARAMETER_SHORT, typeName, name);
-  }
-
-  /**
    * TODO
    *
-   * @since 0.4.3.1
+   * @since 0.4.4
    */
-  protected final Parameter parameter(TypeName type, Ellipsis ellipsis, String name) {
-    JavaModel.checkIdentifier(name.toString());
-    return api().elem(ByteProto.PARAMETER_SHORT, type.self(), ellipsis.self(), name);
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.2
-   */
-  protected final Parameter parameter(TypeName type, String name) {
-    JavaModel.checkIdentifier(name.toString());
-    return api().elem(ByteProto.PARAMETER_SHORT, type, name);
+  protected final ExecuteDeclarationInstruction parameter(ParameterInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.PARAMETER_DECLARATION, many);
   }
 
   /**

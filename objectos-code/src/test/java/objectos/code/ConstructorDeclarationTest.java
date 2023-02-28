@@ -17,6 +17,7 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.code.tmpl.ConstructorDeclarationInstruction;
 import org.testng.annotations.Test;
 
 public class ConstructorDeclarationTest {
@@ -86,12 +87,12 @@ public class ConstructorDeclarationTest {
           classDeclaration(
             name("Test"),
             constructor(
-              parameter(INT, "a")
+              parameter(INT, name("a"))
             ),
 
             constructor(
-              parameter(INT, "a"),
-              parameter(INT, "b")
+              parameter(INT, name("a")),
+              parameter(INT, name("b"))
             )
           );
         }
@@ -120,13 +121,13 @@ public class ConstructorDeclarationTest {
           classDeclaration(
             name("Test"),
             constructor(
-              parameter(INT, "a"),
+              parameter(INT, name("a")),
               p(THIS, n("a"), IS, n("a"))
             ),
 
             constructor(
-              parameter(INT, "a"),
-              parameter(INT, "b"),
+              parameter(INT, name("a")),
+              parameter(INT, name("b")),
               p(THIS, n("a"), IS, n("a")),
               p(THIS, n("b"), IS, n("b"))
             )
@@ -176,7 +177,7 @@ public class ConstructorDeclarationTest {
             ),
 
             constructor(
-              parameter(INT, "a"),
+              parameter(INT, name("a")),
               p(SUPER, arg(n("a")))
             ),
 
@@ -228,7 +229,7 @@ public class ConstructorDeclarationTest {
           classDeclaration(
             ABSTRACT, name("Test"),
             constructor(
-              parameter(INT, "value"),
+              parameter(INT, name("value")),
               p(THIS, n("value"), IS, n("value"))
             )
           );

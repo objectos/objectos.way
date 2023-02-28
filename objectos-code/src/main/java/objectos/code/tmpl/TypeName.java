@@ -23,5 +23,7 @@ import objectos.code.PrimitiveTypeName;
  * @since 0.4.2
  */
 public sealed interface TypeName
-    extends FieldDeclarationInstruction,
+    extends
+    FieldDeclarationInstruction,
+    ParameterInstruction,
     MethodDeclarationInstruction permits PrimitiveTypeName, ReferenceTypeName {}

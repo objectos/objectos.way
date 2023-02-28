@@ -247,6 +247,8 @@ public class MethodDeclarationTest {
       new JavaTemplate() {
         static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
+        static final ArrayTypeName STRINGA = ArrayTypeName.of(STRING);
+
         static final TypeVariableName N = TypeVariableName.of("N");
 
         static final ParameterizedTypeName LIST_N = ParameterizedTypeName.of(
@@ -260,45 +262,45 @@ public class MethodDeclarationTest {
 
             method(
               name("test0"),
-              parameter(String.class, "a")
+              parameter(STRING, name("a"))
             ),
 
             method(
               name("test1"),
-              parameter(STRING, "a"),
-              parameter(STRING, "b")
+              parameter(STRING, name("a")),
+              parameter(STRING, name("b"))
             ),
 
             method(
               name("test2"),
-              parameter(INT, "a"),
-              parameter(DOUBLE, "b"),
-              parameter(BOOLEAN, "c")
+              parameter(INT, name("a")),
+              parameter(DOUBLE, name("b")),
+              parameter(BOOLEAN, name("c"))
             ),
 
             method(
               name("test3"),
-              parameter(INT, ELLIPSIS, "a")
+              parameter(INT, ELLIPSIS, name("a"))
             ),
 
             method(
               name("test4"),
-              parameter(String[].class, "args")
+              parameter(STRINGA, name("args"))
             ),
 
             method(
               name("test5"),
-              parameter(N, "n")
+              parameter(N, name("n"))
             ),
 
             method(
               name("test6"),
-              parameter(LIST_N, "list")
+              parameter(LIST_N, name("list"))
             ),
 
             method(
               STRING, name("test7"),
-              parameter(STRING, "a")
+              parameter(STRING, name("a"))
             )
           );
         }
@@ -564,8 +566,8 @@ public class MethodDeclarationTest {
         }
 
         private void params() {
-          parameter(INT, "a");
-          parameter(STRING, "b");
+          parameter(INT, name("a"));
+          parameter(STRING, name("b"));
         }
       }.toString(),
 
