@@ -19,7 +19,6 @@ import objectos.code.JavaTemplate;
 
 /**
  * An {@link Instruction} that can be used with the
- * {@link JavaTemplate#block(BlockElement...)} method.
+ * {@link JavaTemplate#block(BlockInstruction...)} method.
  */
-@Deprecated
-public interface BlockElement extends Instruction {}
+public interface BlockInstruction extends ExecutableDeclarationInstruction {}

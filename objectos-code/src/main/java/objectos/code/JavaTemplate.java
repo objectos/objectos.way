@@ -30,7 +30,7 @@ import objectos.code.tmpl.AnnotationInstruction;
 import objectos.code.tmpl.ArgsPart;
 import objectos.code.tmpl.Argument;
 import objectos.code.tmpl.ArrayTypeComponent;
-import objectos.code.tmpl.BlockElement;
+import objectos.code.tmpl.BlockInstruction;
 import objectos.code.tmpl.BodyElement;
 import objectos.code.tmpl.ClassDeclarationInstruction;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
@@ -38,7 +38,7 @@ import objectos.code.tmpl.ConstructorDeclarationInstruction;
 import objectos.code.tmpl.DeclarationName;
 import objectos.code.tmpl.EnumConstantInstruction;
 import objectos.code.tmpl.EnumDeclarationInstruction;
-import objectos.code.tmpl.ExecuteDeclarationInstruction;
+import objectos.code.tmpl.ExecutableDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
 import objectos.code.tmpl.FieldDeclarationInstruction;
 import objectos.code.tmpl.Include;
@@ -123,7 +123,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       OldNullLiteral,
       OldClassTypeInstruction,
       PackageKeyword,
-      ExecuteDeclarationInstruction,
+      ExecutableDeclarationInstruction,
       ParameterInstruction,
       ParameterizedType,
       PrimitiveType,
@@ -132,7 +132,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       PublicModifier,
       OldReturnKeyword,
       OldSimpleAssigmentOperator,
-      Statement,
       OldStatement,
       StaticModifier,
       StringLiteral,
@@ -186,7 +185,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {}
 
-  interface AnyType extends BodyElement, BlockElement, ParameterElement {}
+  interface AnyType extends BodyElement, BlockInstruction, ParameterElement {}
 
   interface ArrayAccess extends ExpressionPart {}
 
@@ -206,7 +205,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   interface AutoImports extends Instruction {}
 
-  interface Block extends BlockElement, BodyElement, StatementPart {}
+  interface Block extends BlockInstruction, BodyElement, StatementPart {}
 
   interface Body extends BodyElement {}
 
@@ -229,7 +228,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ClassDeclarationInstruction,
       EnumDeclarationInstruction {}
 
-  interface End extends ArgsPart, BlockElement {}
+  interface End extends ArgsPart, BlockInstruction {}
 
   interface EnumConstant extends BodyElement, EnumDeclarationInstruction {}
 
@@ -241,7 +240,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   @Deprecated
   interface EnumKeyword extends BodyElement {}
 
-  interface ExplicitConstructorInvocation extends BlockElement {}
+  interface ExplicitConstructorInvocation extends BlockInstruction {}
 
   interface ExpressionName extends ExpressionPart {}
 
@@ -263,9 +262,9 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   interface FinalModifier extends BodyElement {}
 
-  interface Identifier extends BlockElement, BodyElement, ParameterElement {}
+  interface Identifier extends BlockInstruction, BodyElement, ParameterElement {}
 
-  interface IfCondition extends BlockElement {}
+  interface IfCondition extends BlockInstruction {}
 
   /**
    * @since 0.4.4
@@ -312,39 +311,39 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface OldEllipsis extends ParameterElement {}
 
   @Deprecated
-  interface OldElseKeyword extends BlockElement {}
+  interface OldElseKeyword extends BlockInstruction {}
 
   @Deprecated
   interface OldEqualityOperator extends ExpressionPart {}
 
   @Deprecated
-  interface OldNewKeyword extends BlockElement {}
+  interface OldNewKeyword extends BlockInstruction {}
 
   @Deprecated
-  interface OldNewLine extends ArgsPart, BlockElement {}
+  interface OldNewLine extends ArgsPart, BlockInstruction {}
 
   @Deprecated
   interface OldNullLiteral extends ExpressionPart {}
 
   @Deprecated
-  interface OldReturnKeyword extends BlockElement {}
+  interface OldReturnKeyword extends BlockInstruction {}
 
   @Deprecated
   interface OldSimpleAssigmentOperator extends ExpressionPart {}
 
-  interface OldStatement extends BlockElement {}
+  interface OldStatement extends BlockInstruction {}
 
   @Deprecated
-  interface OldSuperKeyword extends BlockElement {}
+  interface OldSuperKeyword extends BlockInstruction {}
 
   @Deprecated
   interface OldThisKeyword extends PrimaryNoNewArray {}
 
   @Deprecated
-  interface OldThrowKeyword extends BlockElement {}
+  interface OldThrowKeyword extends BlockInstruction {}
 
   @Deprecated
-  interface OldVarKeyword extends BlockElement {}
+  interface OldVarKeyword extends BlockInstruction {}
 
   @Deprecated
   interface OldVoidKeyword extends BodyElement {}
@@ -363,9 +362,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface PublicModifier extends AccessModifier {}
 
   interface ReferenceType extends AnyType, ArrayTypeComponent {}
-
-  interface Statement
-      extends BlockElement, ConstructorDeclarationInstruction, MethodDeclarationInstruction {}
 
   interface StaticModifier extends BodyElement {}
 
@@ -1379,6 +1375,16 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final StatementPart condition(ExpressionPart... parts) {
+    Object[] many = Objects.requireNonNull(parts, "parts == null");
+    return api().elemMany(ByteProto.CONDITION, many);
+  }
+
+  /**
    * @since 0.4.4
    */
   protected final ArrayInitializer arrayInitializer() {
@@ -1421,108 +1427,12 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block() {
-    return api().elem(ByteProto.BLOCK);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1) {
-    return api().elem(ByteProto.BLOCK, e1.self());
-  }
-
-  /**
-   * TODO
    *
    * @since 0.4.3.1
    */
-  protected final Block block(BlockElement... statements) {
-    Object[] many = Objects.requireNonNull(statements, "statements == null");
+  protected final Block block(BlockInstruction... instructions) {
+    Object[] many = Objects.requireNonNull(instructions, "statements == null");
     return api().elemMany(ByteProto.BLOCK, many);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1, BlockElement e2) {
-    return api().elem(ByteProto.BLOCK, e1.self(), e2.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3) {
-    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4) {
-    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
-      BlockElement e5) {
-    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
-      e5.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
-      BlockElement e5, BlockElement e6) {
-    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
-      e5.self(), e6.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
-      BlockElement e5, BlockElement e6, BlockElement e7) {
-    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
-      e5.self(), e6.self(), e7.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Block block(BlockElement e1, BlockElement e2, BlockElement e3, BlockElement e4,
-      BlockElement e5, BlockElement e6, BlockElement e7, BlockElement e8) {
-    return api().elem(ByteProto.BLOCK, e1.self(), e2.self(), e3.self(), e4.self(),
-      e5.self(), e6.self(), e7.self(), e8.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Body body() {
-    return api().elem(ByteProto.BODY);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Body body(BodyElement e1) {
-    return api().elem(ByteProto.BODY, e1.self());
   }
 
   /**
@@ -1532,40 +1442,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   protected final Body body(BodyElement... elements) {
     Object[] many = Objects.requireNonNull(elements, "elements == null");
     return api().elemMany(ByteProto.BODY, many);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Body body(BodyElement e1, BodyElement e2) {
-    return api().elem(ByteProto.BODY, e1.self(), e2.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3) {
-    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4) {
-    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final Body body(BodyElement e1, BodyElement e2, BodyElement e3, BodyElement e4,
-      BodyElement e5) {
-    return api().elem(ByteProto.BODY, e1.self(), e2.self(), e3.self(), e4.self(),
-      e5.self());
   }
 
   /**
@@ -2298,7 +2174,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected final Statement p(StatementPart... parts) {
+  protected final BlockInstruction p(StatementPart... parts) {
     Object[] many = Objects.requireNonNull(parts, "parts == null");
     return api().elemMany(ByteProto.STATEMENT, many);
   }
@@ -2320,7 +2196,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final ExecuteDeclarationInstruction parameter(ParameterInstruction... contents) {
+  protected final ExecutableDeclarationInstruction parameter(ParameterInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.PARAMETER_DECLARATION, many);
   }

@@ -1388,6 +1388,8 @@ class InternalCompiler extends InternalApi {
         maybeLocalVariable();
       }
 
+      case ByteProto.CONDITION -> execute(this::arg);
+
       case ByteProto.DECLARATION_NAME -> execute(this::declarationName);
 
       case ByteProto.ELSE -> execute(this::elseKeyword);
@@ -1400,7 +1402,7 @@ class InternalCompiler extends InternalApi {
         execute(this::ifKeyword);
         consumeWs();
 
-        if (protoIs(ByteProto.ARGUMENT)) {
+        if (protoIs(ByteProto.CONDITION)) {
           codeAdd(Whitespace.OPTIONAL);
           argumentStart();
           consumeWs();

@@ -27,5 +27,5 @@ import objectos.code.JavaTemplate;
  */
 @SuppressWarnings("deprecation")
 public interface ExpressionPart
-    extends ArgsPart, BlockElement, BodyElement, StatementPart,
+    extends ArgsPart, BlockInstruction, BodyElement, StatementPart,
     VariableInitializer {}

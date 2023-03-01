@@ -93,6 +93,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("statement part");
 
+    value("CONDITION");
     value("IF");
     value("ELSE");
 

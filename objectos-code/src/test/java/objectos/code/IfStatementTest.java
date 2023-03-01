@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-@SuppressWarnings("removal")
 public class IfStatementTest {
 
   @Test(description = """
@@ -36,7 +35,7 @@ public class IfStatementTest {
             name("IfStatement"),
 
             method(
-              p(IF, argument(v("condition")), block(
+              p(IF, condition(v("condition")), block(
                 p(v("foo"))
               ))
             )
@@ -70,7 +69,7 @@ public class IfStatementTest {
             name("IfStatement"),
 
             method(
-              p(IF, argument(v("condition")), block(
+              p(IF, condition(v("condition")), block(
                 p(v("ifTrue"))
               ), ELSE, block(
                 p(v("ifFalse"))
@@ -108,7 +107,7 @@ public class IfStatementTest {
             name("IfStatement"),
 
             method(
-              p(IF, argument(v("condition")), block(
+              p(IF, condition(v("condition")), block(
                 p(v("ifTrue"))
               )),
               p(RETURN, n("foo"))

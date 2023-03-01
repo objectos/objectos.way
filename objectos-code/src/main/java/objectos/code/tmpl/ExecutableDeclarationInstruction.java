@@ -20,5 +20,5 @@ package objectos.code.tmpl;
  *
  * @since 0.4.4
  */
-public interface ExecuteDeclarationInstruction
+public interface ExecutableDeclarationInstruction
     extends ConstructorDeclarationInstruction, MethodDeclarationInstruction {}

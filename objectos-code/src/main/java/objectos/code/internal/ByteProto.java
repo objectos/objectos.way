@@ -86,27 +86,28 @@ public final class ByteProto {
 
   //statement part
 
-  public static final int IF = -53;
-  public static final int ELSE = -54;
+  public static final int CONDITION = -53;
+  public static final int IF = -54;
+  public static final int ELSE = -55;
 
   //expression start
 
-  public static final int CLASS_INSTANCE_CREATION = -55;
-  public static final int EXPRESSION_NAME = -56;
-  public static final int INVOKE = -57;
-  public static final int NEW = -58;
-  public static final int NULL_LITERAL = -59;
-  public static final int PRIMITIVE_LITERAL = -60;
-  public static final int STRING_LITERAL = -61;
-  public static final int THIS = -62;
-  public static final int V = -63;
+  public static final int CLASS_INSTANCE_CREATION = -56;
+  public static final int EXPRESSION_NAME = -57;
+  public static final int INVOKE = -58;
+  public static final int NEW = -59;
+  public static final int NULL_LITERAL = -60;
+  public static final int PRIMITIVE_LITERAL = -61;
+  public static final int STRING_LITERAL = -62;
+  public static final int THIS = -63;
+  public static final int V = -64;
 
   //expression part
 
-  public static final int ARGUMENT = -64;
-  public static final int ARRAY_ACCESS = -65;
-  public static final int ASSIGNMENT_OPERATOR = -66;
-  public static final int EQUALITY_OPERATOR = -67;
+  public static final int ARGUMENT = -65;
+  public static final int ARRAY_ACCESS = -66;
+  public static final int ASSIGNMENT_OPERATOR = -67;
+  public static final int EQUALITY_OPERATOR = -68;
 
   private ByteProto() {}
 
