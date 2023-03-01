@@ -335,4 +335,28 @@ public class CompilationUnitTest {
     );
   }
 
+  @Test(description = """
+  Compilation Unit TC10
+
+  - autoImports and no pkg declaration
+  """)
+  public void testCase10() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          autoImports();
+
+          classDeclaration(
+            name("Test")
+          );
+        }
+      }.toString(),
+
+      """
+      class Test {}
+      """
+    );
+  }
+
 }

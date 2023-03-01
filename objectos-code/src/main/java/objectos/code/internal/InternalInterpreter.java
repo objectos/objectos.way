@@ -90,6 +90,10 @@ public abstract class InternalInterpreter extends InternalCompiler {
         autoImportsRenderItem(iterator.next());
       }
     }
+
+    if (topLevel() != NULL && !initialNewLine) {
+      writeWhitespace(Whitespace.BEFORE_NEXT_MEMBER);
+    }
   }
 
   private void autoImportsRenderItem(String type) {

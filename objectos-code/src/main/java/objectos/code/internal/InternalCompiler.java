@@ -98,6 +98,10 @@ class InternalCompiler extends InternalApi {
     );
   }
 
+  final int topLevel() { return stackArray[3]; }
+
+  final void topLevel(int value) { stackArray[3] = value; }
+
   private boolean abstractFound() { return stackArray[5] != NULL; }
 
   private void abstractFound(int value) {
@@ -160,6 +164,14 @@ class InternalCompiler extends InternalApi {
     argumentEnd();
   }
 
+  private void argument() {
+    if (!lastIs(_START)) {
+      argumentComma();
+    }
+
+    lang();
+  }
+
   private void argumentComma() {
     int nl = 0;
 
@@ -202,14 +214,6 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(Symbol.RIGHT_PARENTHESIS);
-  }
-
-  private void argument() {
-    if (!lastIs(_START)) {
-      argumentComma();
-    }
-
-    lang();
   }
 
   private void argumentList(int offset) {
@@ -311,8 +315,6 @@ class InternalCompiler extends InternalApi {
 
       case _SYMBOL -> codeAdd(ByteCode.AUTO_IMPORTS1);
     }
-
-    last(_SYMBOL);
   }
 
   private void beforeTopLevelTypeDeclaration() {
@@ -2448,8 +2450,6 @@ class InternalCompiler extends InternalApi {
 
   private void packageDeclaration() {
     execute(this::packageKeyword);
-
-    last(_SYMBOL);
   }
 
   private void packageKeyword() {
@@ -2900,10 +2900,6 @@ class InternalCompiler extends InternalApi {
       errorRaise("expected start of expression");
     }
   }
-
-  private int topLevel() { return stackArray[3]; }
-
-  private void topLevel(int value) { stackArray[3] = value; }
 
   private void topLevelDeclaration() {
     topLevel(1);
