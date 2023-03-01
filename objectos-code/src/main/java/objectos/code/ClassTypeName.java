@@ -33,7 +33,7 @@ import objectos.lang.Check;
  * <ul>
  * <li>{@link ClassTypeName#of(Class)}</li>
  * <li>{@link ClassTypeName#of(String, String, String...)}</li>
- * <li>{@link ClassTypeName#of(ClassTypeName, String)</li>
+ * <li>{@link ClassTypeName#of(ClassTypeName, String)}</li>
  * </ul>
  *
  * @since 0.4.2
