@@ -37,7 +37,7 @@ public class LocalVariableDeclarationTest {
             method(
               p(VAR, name("a"), s("java")),
 
-              p(VAR, name("b"), v("m"), arg(s("java"))),
+              p(VAR, name("b"), v("m"), argument(s("java"))),
 
               p(INT, name("c"), i(0)),
 

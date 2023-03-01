@@ -19,12 +19,13 @@ import objectos.code.JavaTemplate;
 
 /**
  * An {@link Instruction} that can be used with the
- * {@link JavaTemplate#arg(ExpressionPart...)} method.
+ * {@link JavaTemplate#argument(ExpressionPart...)} method.
  *
- * @see JavaTemplate#arg(ExpressionPart...)
+ * @see JavaTemplate#argument(ExpressionPart...)
  *
  * @since 0.4.3.1
  */
+@SuppressWarnings("deprecation")
 public interface ExpressionPart
     extends ArgsPart, BlockElement, BodyElement, StatementPart,
     VariableInitializer {}

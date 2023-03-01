@@ -71,9 +71,9 @@ public class IncludeTest {
             name("foo"),
             p(
               v("test"),
-              arg(v("a")),
-              arg(v("b")),
-              arg(v("c"))
+              argument(v("a")),
+              argument(v("b")),
+              argument(v("c"))
             )
           );
         }
@@ -191,7 +191,7 @@ public class IncludeTest {
         }
 
         private void level2B() {
-          p(v("foo"), arg(s("level 2B")));
+          p(v("foo"), argument(s("level 2B")));
         }
       }.toString(),
       """

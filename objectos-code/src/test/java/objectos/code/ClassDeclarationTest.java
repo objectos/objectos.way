@@ -396,7 +396,9 @@ public class ClassDeclarationTest {
             enumDeclaration(
               name("Y"),
 
-              enumConstant("INSTANCE")
+              enumConstant(
+                name("INSTANCE")
+              )
             )
           );
         }

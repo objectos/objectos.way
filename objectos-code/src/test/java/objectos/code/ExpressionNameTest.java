@@ -34,11 +34,11 @@ public class ExpressionNameTest {
           classDeclaration(
             name("ExpressionName"),
             method(
-              p(v("test"), arg(n("a"))),
+              p(v("test"), argument(n("a"))),
 
-              p(v("test"), arg(n("a"), n("b"))),
+              p(v("test"), argument(n("a"), n("b"))),
 
-              p(v("test"), arg(n("a"), n("b"), n("c")))
+              p(v("test"), argument(n("a"), n("b"), n("c")))
             )
           );
         }
@@ -71,9 +71,9 @@ public class ExpressionNameTest {
           classDeclaration(
             name("ExpressionName"),
             method(
-              p(v("test"), arg(SUIT, n("CLUBS"))),
+              p(v("test"), argument(SUIT, n("CLUBS"))),
 
-              p(v("test"), arg(SUIT, n("CLUBS"), n("field")))
+              p(v("test"), argument(SUIT, n("CLUBS"), n("field")))
             )
           );
         }

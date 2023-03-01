@@ -38,8 +38,8 @@ public class ClassInstanceCreationExpressionTest {
             name("New"),
             method(
               p(NEW, FOO),
-              p(NEW, FOO, arg(s("a"))),
-              p(NEW, FOO, arg(s("a")), arg(s("b")))
+              p(NEW, FOO, argument(s("a"))),
+              p(NEW, FOO, argument(s("a")), argument(s("b")))
             )
           );
         }

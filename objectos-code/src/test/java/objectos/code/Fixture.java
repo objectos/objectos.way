@@ -15,6 +15,7 @@
  */
 package objectos.code;
 
+@SuppressWarnings("removal")
 final class Fixture extends JavaTemplate {
 
   enum Kind {

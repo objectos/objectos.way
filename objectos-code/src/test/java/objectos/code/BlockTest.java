@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.code.Fixture.Kind;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("removal")
 public class BlockTest {
 
   private final Fixture fix = new Fixture("Blocks", Kind.VOID_METHOD);

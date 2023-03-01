@@ -28,6 +28,7 @@ import objectos.code.internal.ParameterInstructionImpl;
 import objectos.code.internal.Symbol;
 import objectos.code.tmpl.AnnotationInstruction;
 import objectos.code.tmpl.ArgsPart;
+import objectos.code.tmpl.Argument;
 import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.BlockElement;
 import objectos.code.tmpl.BodyElement;
@@ -35,6 +36,7 @@ import objectos.code.tmpl.ClassDeclarationInstruction;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.ConstructorDeclarationInstruction;
 import objectos.code.tmpl.DeclarationName;
+import objectos.code.tmpl.EnumConstantInstruction;
 import objectos.code.tmpl.EnumDeclarationInstruction;
 import objectos.code.tmpl.ExecuteDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
@@ -58,31 +60,8 @@ import objectos.lang.Check;
  *
  * @since 0.4
  */
+@SuppressWarnings("deprecation")
 public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
-
-  /**
-   * Represents a modifier of the Java language.
-   *
-   * @since 0.4.2
-   */
-  protected static final class Modifier extends External
-      implements
-      ClassDeclarationInstruction,
-      ConstructorDeclarationInstruction,
-      EnumDeclarationInstruction,
-      FieldDeclarationInstruction,
-      InterfaceDeclarationInstruction,
-      MethodDeclarationInstruction {
-    final int value;
-
-    private Modifier(Keyword keyword) { this.value = keyword.ordinal(); }
-
-    @Override
-    public final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.MODIFIER, value);
-    }
-  }
 
   public enum _Ext {
     INSTANCE;
@@ -171,6 +150,30 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   }
 
+  /**
+   * Represents a modifier of the Java language.
+   *
+   * @since 0.4.2
+   */
+  protected static final class Modifier extends External
+      implements
+      ClassDeclarationInstruction,
+      ConstructorDeclarationInstruction,
+      EnumDeclarationInstruction,
+      FieldDeclarationInstruction,
+      InterfaceDeclarationInstruction,
+      MethodDeclarationInstruction {
+    final int value;
+
+    private Modifier(Keyword keyword) { this.value = keyword.ordinal(); }
+
+    @Override
+    public final void execute(InternalApi api) {
+      api.extStart();
+      api.protoAdd(ByteProto.MODIFIER, value);
+    }
+  }
+
   interface AbstractModifier extends BodyElement {}
 
   /**
@@ -184,8 +187,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       MethodDeclarationInstruction {}
 
   interface AnyType extends BodyElement, BlockElement, ParameterElement {}
-
-  interface Argument extends ExpressionPart {}
 
   interface ArrayAccess extends ExpressionPart {}
 
@@ -301,6 +302,9 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface MethodInvocation extends PrimaryNoNewArray {}
 
   @Deprecated
+  interface OldClassOrParameterizedType extends Instruction {}
+
+  @Deprecated
   interface OldClassTypeInstruction
       extends ArgsPart, OldClassOrParameterizedType, ReferenceType, TypeParameterBound {}
 
@@ -349,9 +353,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface PackageKeyword extends Instruction {}
 
   interface ParameterizedType extends OldClassOrParameterizedType, ReferenceType {}
-
-  @Deprecated
-  interface OldClassOrParameterizedType extends Instruction {}
 
   interface PrimitiveType extends AnyType, ArrayTypeComponent, BodyElement {}
 
@@ -1150,18 +1151,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final void packageDeclaration(String packageName) {
-    JavaModel.checkPackageName(packageName.toString()); // implicit null check
-    var api = api();
-    api.autoImports.packageName(packageName);
-    api.elem(ByteProto.PACKAGE_DECLARATION, packageName);
-  }
-
-  /**
    * The {@code private} modifier.
    *
    * @return the {@code private} modifier
@@ -1384,7 +1373,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected final Argument arg(ExpressionPart... parts) {
+  protected final Argument argument(ExpressionPart... parts) {
     Object[] many = Objects.requireNonNull(parts, "parts == null");
     return api().elemMany(ByteProto.ARGUMENT, many);
   }
@@ -1724,6 +1713,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final EnumConstant enumConstant(String name) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     return api().elem(ByteProto.ENUM_CONSTANT, name(name));
@@ -1732,6 +1722,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final EnumConstant enumConstant(String name,
       ArgsPart e1) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
@@ -1743,6 +1734,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final EnumConstant enumConstant(String name,
       ArgsPart e1, ArgsPart e2) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
@@ -1754,6 +1746,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final EnumConstant enumConstant(String name,
       ArgsPart e1, ArgsPart e2, ArgsPart e3) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
@@ -1765,12 +1758,23 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * TODO
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final EnumConstant enumConstant(String name,
       ArgsPart e1, ArgsPart e2, ArgsPart e3, ArgsPart e4) {
     JavaModel.checkIdentifier(name.toString()); // implicit null check
     var api = api();
     api.identifierext(name);
     return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self(), e3.self(), e4.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final EnumConstant enumConstant(EnumConstantInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.ENUM_CONSTANT, many);
   }
 
   /**
@@ -2178,6 +2182,46 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
+   * Sets the name of a class or an interface declaration.
+   * More specifically, this instruction will use the rightmost name of the
+   * specified fully qualified name as the simple name of a class or interface
+   * declaration. All other names, i.e the package name and any enclosing name,
+   * are ignored.
+   *
+   * <p>
+   * The following Objectos Code class declaration:
+   *
+   * <pre>
+   * static final ClassTypeName INNER =
+   *     ClassTypeName.of("com.example", "Outer", "Inner");
+   *
+   * class(
+   *   name(INNER)
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * class Inner {}</pre>
+   *
+   * @param name
+   *        the {@code ClassTypeName} whose simple name will be used
+   *
+   * @return the instruction to set the name of a class or interface declaration
+   *
+   * @since 0.4.4
+   */
+  protected final TypeDeclarationInstruction name(ClassTypeName name) {
+    // cast is safe: ClassTypeName is sealed
+    var impl = (ClassTypeNameImpl) name;
+    // `impl` implicit null-check
+    var simpleName = impl.simpleName();
+    var api = api();
+    return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(simpleName));
+  }
+
+  /**
    * Sets the {@code name} of a declaration. This instruction can set the name
    * of the following declarations:
    *
@@ -2230,46 +2274,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * Sets the name of a class or an interface declaration.
-   * More specifically, this instruction will use the rightmost name of the
-   * specified fully qualified name as the simple name of a class or interface
-   * declaration. All other names, i.e the package name and any enclosing name,
-   * are ignored.
-   *
-   * <p>
-   * The following Objectos Code class declaration:
-   *
-   * <pre>
-   * static final ClassTypeName INNER =
-   *     ClassTypeName.of("com.example", "Outer", "Inner");
-   *
-   * class(
-   *   name(INNER)
-   * )</pre>
-   *
-   * <p>
-   * Generates the following Java code:
-   *
-   * <pre>
-   * class Inner {}</pre>
-   *
-   * @param name
-   *        the {@code ClassTypeName} whose simple name will be used
-   *
-   * @return the instruction to set the name of a class or interface declaration
-   *
-   * @since 0.4.4
-   */
-  protected final TypeDeclarationInstruction name(ClassTypeName name) {
-    // cast is safe: ClassTypeName is sealed
-    var impl = (ClassTypeNameImpl) name;
-    // `impl` implicit null-check
-    var simpleName = impl.simpleName();
-    var api = api();
-    return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(simpleName));
-  }
-
-  /**
    * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
@@ -2297,6 +2301,18 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   protected final Statement p(StatementPart... parts) {
     Object[] many = Objects.requireNonNull(parts, "parts == null");
     return api().elemMany(ByteProto.STATEMENT, many);
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final void packageDeclaration(String packageName) {
+    JavaModel.checkPackageName(packageName.toString()); // implicit null check
+    var api = api();
+    api.autoImports.packageName(packageName);
+    api.elem(ByteProto.PACKAGE_DECLARATION, packageName);
   }
 
   /**
@@ -2570,30 +2586,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
     return api().elemMany(ByteProto.VALUE, many);
   }
 
-  private Object arrayTypeName(Class<?> type) {
-    int dimCount = 1;
-
-    Class<?> componentType = type.getComponentType();
-
-    for (;;) {
-      Class<?> next = componentType.getComponentType();
-
-      if (next == null) {
-        break;
-      }
-
-      dimCount++;
-
-      componentType = next;
-    }
-
-    t(componentType);
-    for (int i = 0; i < dimCount; i++) {
-      dim();
-    }
-    return api().arrayTypeName(dimCount);
-  }
-
   private _Item modifier(Keyword value) {
     return api().itemAdd(ByteProto.MODIFIER, value.ordinal());
   }
@@ -2604,24 +2596,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   private _Item stop() {
     return api().itemAdd(ByteProto.STOP, ByteProto.NOOP);
-  }
-
-  private Object typeName(Class<?> type) {
-    if (type == void.class) {
-      return _void();
-    } else if (type == boolean.class) {
-      return _boolean();
-    } else if (type == double.class) {
-      return _double();
-    } else if (type == int.class) {
-      return _int();
-    } else if (type.isPrimitive()) {
-      throw new UnsupportedOperationException("Implement me");
-    } else if (type.isArray()) {
-      return arrayTypeName(type);
-    } else {
-      return t(type);
-    }
   }
 
 }

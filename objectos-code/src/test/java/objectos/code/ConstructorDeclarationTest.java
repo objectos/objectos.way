@@ -178,11 +178,11 @@ public class ConstructorDeclarationTest {
 
             constructor(
               parameter(INT, name("a")),
-              p(SUPER, arg(n("a")))
+              p(SUPER, argument(n("a")))
             ),
 
             constructor(
-              p(SUPER, arg(s("a")), arg(s("b")))
+              p(SUPER, argument(s("a")), argument(s("b")))
             )
           );
         }

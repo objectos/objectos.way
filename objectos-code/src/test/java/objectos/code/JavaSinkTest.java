@@ -164,7 +164,9 @@ public class JavaSinkTest {
         enumDeclaration(
           PUBLIC, name("Test"),
 
-          enumConstant("INSTANCE")
+          enumConstant(
+            name("INSTANCE")
+          )
         );
       }
     };

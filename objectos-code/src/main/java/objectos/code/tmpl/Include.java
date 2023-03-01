@@ -20,6 +20,7 @@ package objectos.code.tmpl;
  *
  * @since 0.4
  */
+@SuppressWarnings("deprecation")
 public interface Include
     extends
     ArgsPart, BlockElement, BodyElement, ExpressionPart, ParameterElement, VariableInitializer,

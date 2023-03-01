@@ -35,9 +35,9 @@ public class ArrayAccessExpressionTest {
             method(
               p(
                 v("foo"),
-                arg(n("a"), dim(n("x"))),
-                arg(n("a"), dim(n("x")), dim(n("y"))),
-                arg(n("a"), dim(n("x")), dim(n("y")), dim(n("z")))
+                argument(n("a"), dim(n("x"))),
+                argument(n("a"), dim(n("x")), dim(n("y"))),
+                argument(n("a"), dim(n("x")), dim(n("y")), dim(n("z")))
               )
             )
           );

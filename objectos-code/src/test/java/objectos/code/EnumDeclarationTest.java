@@ -33,25 +33,25 @@ public class EnumDeclarationTest {
           enumDeclaration(
             name("Test1"),
 
-            enumConstant("ONE")
+            enumConstant(name("ONE"))
           );
 
           enumDeclaration(
             name("Test2"),
 
-            enumConstant("ONE"),
+            enumConstant(name("ONE")),
 
-            enumConstant("TWO")
+            enumConstant(name("TWO"))
           );
 
           enumDeclaration(
             name("Test3"),
 
-            enumConstant("ONE"),
+            enumConstant(name("ONE")),
 
-            enumConstant("TWO"),
+            enumConstant(name("TWO")),
 
-            enumConstant("THREE")
+            enumConstant(name("THREE"))
           );
         }
       }.toString(),
@@ -90,8 +90,8 @@ public class EnumDeclarationTest {
             name("Test1"),
 
             enumConstant(
-              "ONE",
-              arg(s("abc"))
+              name("ONE"),
+              argument(s("abc"))
             )
           );
 
@@ -99,9 +99,9 @@ public class EnumDeclarationTest {
             name("Test2"),
 
             enumConstant(
-              "ONE",
-              arg(s("abc")),
-              arg(n("field"))
+              name("ONE"),
+              argument(s("abc")),
+              argument(n("field"))
             )
           );
         }
@@ -130,14 +130,14 @@ public class EnumDeclarationTest {
           enumDeclaration(
             PUBLIC, name("Test"),
 
-            enumConstant("ONE")
+            enumConstant(name("ONE"))
           );
 
           enumDeclaration(
             annotation(Deprecated.class),
             PUBLIC, name("Test"),
 
-            enumConstant("ONE")
+            enumConstant(name("ONE"))
           );
         }
       }.toString(),
@@ -171,14 +171,14 @@ public class EnumDeclarationTest {
             name("Test1"),
             implementsClause(SERIALIZABLE),
 
-            enumConstant("ONE")
+            enumConstant(name("ONE"))
           );
 
           enumDeclaration(
             name("Test2"),
             implementsClause(AUTO_CLOSEABLE, SERIALIZABLE),
 
-            enumConstant("ONE")
+            enumConstant(name("ONE"))
           );
         }
       }.toString(),
@@ -214,13 +214,13 @@ public class EnumDeclarationTest {
             implementsClause(IFACE),
 
             enumConstant(
-              "A",
-              arg(s("a"))
+              name("A"),
+              argument(s("a"))
             ),
 
             enumConstant(
-              "B",
-              arg(s("b"))
+              name("B"),
+              argument(s("b"))
             ),
 
             field(

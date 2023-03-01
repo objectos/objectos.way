@@ -64,7 +64,7 @@ public class MethodInvocationExpressionTest {
             name("Invoke"),
 
             method(
-              p(v("test"), arg(s("a")))
+              p(v("test"), argument(s("a")))
             )
           );
         }
@@ -93,7 +93,7 @@ public class MethodInvocationExpressionTest {
             name("Invoke"),
 
             method(
-              p(v("test"), arg(s("a")), arg(s("b")))
+              p(v("test"), argument(s("a")), argument(s("b")))
             )
           );
         }
@@ -123,7 +123,7 @@ public class MethodInvocationExpressionTest {
             name("Invoke"),
 
             method(
-              p(v("m0"), arg(s("1")), arg(v("m2")), arg(s("3")))
+              p(v("m0"), argument(s("1")), argument(v("m2")), argument(s("3")))
             )
           );
         }
@@ -155,9 +155,9 @@ public class MethodInvocationExpressionTest {
             method(
               p(
                 v("m0"), NL,
-                arg(s("1")), NL, NL,
-                arg(v("m2")), NL, NL,
-                arg(s("3"), NL)
+                argument(s("1")), NL, NL,
+                argument(v("m2")), NL, NL,
+                argument(s("3"), NL)
               )
             )
           );
@@ -192,7 +192,7 @@ public class MethodInvocationExpressionTest {
             name("Invoke"),
 
             method(
-              p(v("test"), arg(n("field")))
+              p(v("test"), argument(n("field")))
             )
           );
         }
@@ -226,7 +226,7 @@ public class MethodInvocationExpressionTest {
             method(
               p(THREAD, v("currentThread")),
 
-              p(COLLECTIONS, v("sort"), arg(n("list")))
+              p(COLLECTIONS, v("sort"), argument(n("list")))
             )
           );
         }
@@ -261,9 +261,9 @@ public class MethodInvocationExpressionTest {
             method(
               p(n("a"), v("x")),
 
-              p(n("b"), v("y"), arg(s("1"))),
+              p(n("b"), v("y"), argument(s("1"))),
 
-              p(n("c"), v("z"), arg(s("1")), arg(s("2"))),
+              p(n("c"), v("z"), argument(s("1")), argument(s("2"))),
 
               p(FOO, n("CTE"), v("m"))
             )
@@ -304,7 +304,7 @@ public class MethodInvocationExpressionTest {
 
               p(n("foo"), v("a"), v("b"), v("c")),
 
-              p(n("list"), v("add"), arg(s("1")), v("add"), arg(s("2")), v("build"))
+              p(n("list"), v("add"), argument(s("1")), v("add"), argument(s("2")), v("build"))
             )
           );
         }
@@ -341,7 +341,7 @@ public class MethodInvocationExpressionTest {
             method(
               p(NEW, THREAD, v("start")),
 
-              p(NEW, THREAD, arg(s("foo")), v("start"))
+              p(NEW, THREAD, argument(s("foo")), v("start"))
             )
           );
         }
@@ -372,9 +372,9 @@ public class MethodInvocationExpressionTest {
             name("Invoke"),
 
             method(
-              p(v("test"), arg(v("a"), v("b"))),
+              p(v("test"), argument(v("a"), v("b"))),
 
-              p(v("test"), arg(v("a")), arg(v("b")))
+              p(v("test"), argument(v("a")), argument(v("b")))
             )
           );
         }
@@ -409,8 +409,8 @@ public class MethodInvocationExpressionTest {
             method(
               p(
                 v("property"), NL,
-                arg(A, n("B")), NL,
-                arg(s("some text"), NL)
+                argument(A, n("B")), NL,
+                argument(s("some text"), NL)
               )
             )
           );
