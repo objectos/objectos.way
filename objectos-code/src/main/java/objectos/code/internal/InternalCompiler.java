@@ -134,8 +134,30 @@ class InternalCompiler extends InternalApi {
     lang();
   }
 
-  private void argument() {
+  private void arg() {
     lang();
+  }
+
+  private void argList() {
+    argumentStart();
+
+    consumeWs();
+
+    if (protoIs(ByteProto.ARGUMENT)) {
+      execute(this::arg);
+
+      consumeWs();
+
+      while (protoIs(ByteProto.ARGUMENT)) {
+        argumentComma();
+
+        execute(this::arg);
+
+        consumeWs();
+      }
+    }
+
+    argumentEnd();
   }
 
   private void argumentComma() {
@@ -182,24 +204,18 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.RIGHT_PARENTHESIS);
   }
 
-  private void argumentList() {
+  private void argument() {
+    if (!lastIs(_START)) {
+      argumentComma();
+    }
+
+    lang();
+  }
+
+  private void argumentList(int offset) {
     argumentStart();
 
-    consumeWs();
-
-    if (protoIs(ByteProto.ARGUMENT)) {
-      execute(this::argument);
-
-      consumeWs();
-
-      while (protoIs(ByteProto.ARGUMENT)) {
-        argumentComma();
-
-        execute(this::argument);
-
-        consumeWs();
-      }
-    }
+    listExecute(offset, this::argument);
 
     argumentEnd();
   }
@@ -251,14 +267,14 @@ class InternalCompiler extends InternalApi {
     consumeWs();
 
     if (protoIs(ByteProto.VALUE)) {
-      execute(this::argument);
+      execute(this::arg);
 
       consumeWs();
 
       while (protoIs(ByteProto.VALUE)) {
         argumentComma();
 
-        execute(this::argument);
+        execute(this::arg);
 
         consumeWs();
       }
@@ -752,22 +768,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void preTopLevel() {
-    switch (last()) {
-      case _SYMBOL -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
-    }
-
-    simpleName(NULL);
-
-    topLevel(1);
-  }
-
-  private void packageDeclaration() {
-    execute(this::packageKeyword);
-
-    last(_SYMBOL);
-  }
-
   private void constructorDeclaration() {
     int start = stackIndex;
 
@@ -909,10 +909,44 @@ class InternalCompiler extends InternalApi {
       case _SYMBOL -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
     }
 
-    execute(this::declarationName);
+    int annotations = NULL,
+        name = NULL,
+        arguments = NULL;
 
-    if (elemMore()) {
-      argumentList();
+    while (protoMore()) {
+      int proto = protoPeek();
+
+      if (proto == ByteProto.END_ELEMENT) {
+        break;
+      }
+
+      switch (proto) {
+        case ByteProto.ARGUMENT -> arguments = listAdd(arguments);
+
+        case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
+
+        case ByteProto.DECLARATION_NAME -> name = singleSet(name);
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: " + protoName(proto)
+          );
+        }
+      }
+    }
+
+    if (annotations != NULL) {
+      listExecute(annotations, this::annotation);
+    }
+
+    if (name != NULL) {
+      singleExecute(name, this::declarationName);
+    } else {
+      unnamedConstant();
+    }
+
+    if (arguments != NULL) {
+      argumentList(arguments);
     }
 
     last(_ENUM_CONSTANT);
@@ -1343,7 +1377,7 @@ class InternalCompiler extends InternalApi {
         arrayInitializerValueList();
       }
 
-      case ByteProto.ARGUMENT -> execute(this::argument);
+      case ByteProto.ARGUMENT -> execute(this::arg);
 
       case ByteProto.ASSIGNMENT_OPERATOR -> execute(this::operator);
 
@@ -1370,7 +1404,7 @@ class InternalCompiler extends InternalApi {
           codeAdd(Whitespace.OPTIONAL);
           argumentStart();
           consumeWs();
-          execute(this::argument);
+          execute(this::arg);
           consumeWs();
           argumentEnd();
           last(_SYMBOL);
@@ -1382,7 +1416,7 @@ class InternalCompiler extends InternalApi {
         consumeWs();
         if (protoTest(ByteProto::isClassOrParameterizedType)) {
           executeSwitch(this::type);
-          argumentList();
+          argList();
           last(_PRIMARY);
         }
       }
@@ -1413,7 +1447,7 @@ class InternalCompiler extends InternalApi {
           codeAdd(Symbol.LEFT_PARENTHESIS);
           codeAdd(Symbol.RIGHT_PARENTHESIS);
         } else if (protoIs(ByteProto.ARGUMENT)) {
-          argumentList();
+          argList();
         }
       }
 
@@ -1423,7 +1457,7 @@ class InternalCompiler extends InternalApi {
 
       case ByteProto.V -> {
         execute(this::v);
-        argumentList();
+        argList();
         last(_PRIMARY);
       }
 
@@ -2410,6 +2444,12 @@ class InternalCompiler extends InternalApi {
     topLevelDeclarationList();
   }
 
+  private void packageDeclaration() {
+    execute(this::packageKeyword);
+
+    last(_SYMBOL);
+  }
+
   private void packageKeyword() {
     codeAdd(Keyword.PACKAGE);
 
@@ -2420,27 +2460,6 @@ class InternalCompiler extends InternalApi {
     codeAdd(Symbol.SEMICOLON);
 
     last(_SYMBOL);
-  }
-
-  private void parameterizedType() {
-    execute(this::classType);
-
-    codeAdd(Symbol.LEFT_ANGLE_BRACKET);
-
-    if (itemMore()) {
-      executeSwitch(this::type);
-
-      while (itemMore()) {
-        codeAdd(Symbol.COMMA);
-        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
-
-        executeSwitch(this::type);
-      }
-    }
-
-    codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
-
-    last(_TYPE);
   }
 
   private void parameterDeclaration() {
@@ -2514,6 +2533,27 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private void parameterizedType() {
+    execute(this::classType);
+
+    codeAdd(Symbol.LEFT_ANGLE_BRACKET);
+
+    if (itemMore()) {
+      executeSwitch(this::type);
+
+      while (itemMore()) {
+        codeAdd(Symbol.COMMA);
+        codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
+
+        executeSwitch(this::type);
+      }
+    }
+
+    codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
+
+    last(_TYPE);
+  }
+
   private void preDot() {
     switch (last()) {
       case _COMMA -> codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
@@ -2566,6 +2606,16 @@ class InternalCompiler extends InternalApi {
            _PRIMARY,
            _TYPE -> codeAdd(Whitespace.OPTIONAL);
     }
+  }
+
+  private void preTopLevel() {
+    switch (last()) {
+      case _SYMBOL -> codeAdd(Whitespace.BEFORE_NEXT_MEMBER);
+    }
+
+    simpleName(NULL);
+
+    topLevel(1);
   }
 
   private void preType() {
@@ -3112,6 +3162,14 @@ class InternalCompiler extends InternalApi {
     }
 
     codeAdd(ByteCode.IDENTIFIER, object("unnamed"));
+  }
+
+  private void unnamedConstant() {
+    if (lastIs(_KEYWORD)) {
+      codeAdd(Whitespace.MANDATORY);
+    }
+
+    codeAdd(ByteCode.IDENTIFIER, object("UNNAMED"));
   }
 
   private void unnamedType() {

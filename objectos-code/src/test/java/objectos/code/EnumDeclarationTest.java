@@ -263,4 +263,30 @@ public class EnumDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Enum class declarations TC06
+
+  - empty enum constant
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          enumDeclaration(
+            PUBLIC, name("Test"),
+
+            enumConstant()
+          );
+        }
+      }.toString(),
+
+      """
+      public enum Test {
+        UNNAMED;
+      }
+      """
+    );
+  }
+
 }
