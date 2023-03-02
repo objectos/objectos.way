@@ -457,4 +457,33 @@ public class ClassDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Class declarations TC12
+
+  - extendsClause: last one wins
+  """)
+  public void testCase12() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B = ClassTypeName.of("com.example", "B");
+        static final ClassTypeName C = ClassTypeName.of("com.example", "C");
+
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            name("Foo"),
+            extendsClause(A),
+            extendsClause(B),
+            extendsClause(C)
+          );
+        }
+      }.toString(),
+
+      """
+      class Foo extends com.example.C {}
+      """
+    );
+  }
+
 }

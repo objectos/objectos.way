@@ -3011,7 +3011,13 @@ class InternalCompiler extends InternalApi {
 
         case ByteProto.ENUM_DECLARATION -> body = listAdd(body);
 
-        case ByteProto.EXTENDS_CLAUSE -> extendsClause = listAdd(extendsClause);
+        case ByteProto.EXTENDS_CLAUSE -> {
+          if (keyword == Keyword.CLASS) {
+            extendsClause = singleSet(extendsClause);
+          } else {
+            extendsClause = listAdd(extendsClause);
+          }
+        }
 
         case ByteProto.FIELD_DECLARATION -> body = listAdd(body);
 
@@ -3056,7 +3062,11 @@ class InternalCompiler extends InternalApi {
     if (extendsClause != NULL) {
       last(_IDENTIFIER);
 
-      listExecute(extendsClause, this::extendsClause);
+      if (keyword == Keyword.CLASS) {
+        singleExecute(extendsClause, this::extendsClause);
+      } else {
+        listExecute(extendsClause, this::extendsClause);
+      }
     }
 
     if (implementsClause != NULL) {
