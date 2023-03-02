@@ -819,9 +819,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (typeParameters != NULL) {
-      listExecute(typeParameters, this::typeParameter);
-
-      typeParameterListEnd();
+      typeParameterList(typeParameters);
     }
 
     int name = simpleName();
@@ -1668,9 +1666,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (typeParameters != NULL) {
-      listExecute(typeParameters, this::typeParameter);
-
-      typeParameterListEnd();
+      typeParameterList(typeParameters);
     }
 
     if (result != NULL) {
@@ -2606,6 +2602,7 @@ class InternalCompiler extends InternalApi {
       case _IDENTIFIER,
            _KEYWORD,
            _PRIMARY,
+           _SYMBOL,
            _TYPE -> codeAdd(Whitespace.OPTIONAL);
     }
   }
@@ -3052,6 +3049,10 @@ class InternalCompiler extends InternalApi {
       unnamedType();
     }
 
+    if (typeParameters != NULL) {
+      typeParameterList(typeParameters);
+    }
+
     if (extendsClause != NULL) {
       last(_IDENTIFIER);
 
@@ -3111,18 +3112,8 @@ class InternalCompiler extends InternalApi {
 
   private void typeParameter() {
     switch (last()) {
-      case _KEYWORD -> {
-        codeAdd(Whitespace.OPTIONAL);
-        codeAdd(Symbol.LEFT_ANGLE_BRACKET);
-        last(_START);
-      }
-
-      case _IDENTIFIER -> comma();
-
-      case _START -> {
-        codeAdd(Symbol.LEFT_ANGLE_BRACKET);
-        last(_START);
-      }
+      case _IDENTIFIER,
+           _TYPE -> comma();
     }
 
     execute(this::identifier);
@@ -3140,7 +3131,17 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void typeParameterListEnd() {
+  private void typeParameterList(int typeParameters) {
+    switch (last()) {
+      case _KEYWORD -> codeAdd(Whitespace.OPTIONAL);
+    }
+
+    codeAdd(Symbol.LEFT_ANGLE_BRACKET);
+
+    last(_START);
+
+    listExecute(typeParameters, this::typeParameter);
+
     codeAdd(Symbol.RIGHT_ANGLE_BRACKET);
 
     last(_SYMBOL);

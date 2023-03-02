@@ -51,6 +51,7 @@ import objectos.code.tmpl.ParameterInstruction;
 import objectos.code.tmpl.StatementPart;
 import objectos.code.tmpl.TypeDeclarationInstruction;
 import objectos.code.tmpl.TypeName;
+import objectos.code.tmpl.TypeParameter;
 import objectos.code.tmpl.VariableInitializer;
 import objectos.lang.Check;
 
@@ -366,8 +367,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface StaticModifier extends BodyElement {}
 
   interface StringLiteral extends Literal, PrimaryNoNewArray {}
-
-  interface TypeParameter extends MethodDeclarationInstruction {}
 
   @Deprecated
   interface TypeParameterBound extends Instruction {}

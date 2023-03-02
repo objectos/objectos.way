@@ -416,4 +416,45 @@ public class ClassDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Class declarations TC11
+
+  - class type parameters
+  """)
+  public void testCase11() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName CHARSEQ = ClassTypeName.of(CharSequence.class);
+
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            name("A"),
+            typeParameter("T")
+          );
+
+          classDeclaration(
+            name("B"),
+            typeParameter("T1"),
+            typeParameter("T2")
+          );
+
+          classDeclaration(
+            name("C"),
+            typeParameter("X", CHARSEQ),
+            typeParameter("Y")
+          );
+        }
+      }.toString(),
+
+      """
+      class A<T> {}
+
+      class B<T1, T2> {}
+
+      class C<X extends java.lang.CharSequence, Y> {}
+      """
+    );
+  }
+
 }
