@@ -33,6 +33,7 @@ import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.BlockInstruction;
 import objectos.code.tmpl.BodyElement;
 import objectos.code.tmpl.ClassDeclarationInstruction;
+import objectos.code.tmpl.ClassOrInterfaceDeclarationInstruction;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.ConstructorDeclarationInstruction;
 import objectos.code.tmpl.DeclarationName;
@@ -103,7 +104,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       OldEqualityOperator,
       ExplicitConstructorInvocation,
       ExpressionName,
-      ExtendsClause,
+      ClassOrInterfaceDeclarationInstruction,
       ExtendsKeyword,
       FieldDeclaration,
       FieldDeclarationInstruction,
@@ -244,12 +245,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   interface ExplicitConstructorInvocation extends BlockInstruction {}
 
   interface ExpressionName extends ExpressionPart {}
-
-  /**
-   * @since 0.4.4
-   */
-  interface ExtendsClause
-      extends ClassDeclarationInstruction, InterfaceDeclarationInstruction {}
 
   @Deprecated
   interface ExtendsKeyword extends BodyElement {}
@@ -1672,7 +1667,18 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final ExtendsClause extendsClause(ClassOrParameterizedTypeName... types) {
+  protected final ClassOrInterfaceDeclarationInstruction
+      extendsClause(ClassOrParameterizedTypeName type) {
+    return api().elem(ByteProto.EXTENDS_CLAUSE, type.self());
+  }
+
+  /**
+   * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final InterfaceDeclarationInstruction
+      extendsClause(ClassOrParameterizedTypeName... types) {
     Object[] many = Objects.requireNonNull(types, "types == null");
     return api().elemMany(ByteProto.EXTENDS_CLAUSE, many);
   }
