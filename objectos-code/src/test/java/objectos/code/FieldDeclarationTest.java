@@ -214,12 +214,10 @@ public class FieldDeclarationTest {
         }
 
         private void many() {
-          consume(NL);
+          code(NL);
 
           for (int i = 0; i < 3; i++) {
-            value(i(i));
-
-            consume(NL);
+            code(value(i(i)), NL);
           }
         }
       }.toString(),

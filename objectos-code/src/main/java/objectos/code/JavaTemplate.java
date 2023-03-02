@@ -1457,8 +1457,14 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * TODO
    */
-  protected final void code(Instruction... elements) {
-    // no-op
+  protected final void code(Instruction... instructions) {
+    for (var instruction : instructions) {
+      if (instruction instanceof External external) {
+        var api = api();
+        external.execute(api);
+        api.externalToLocal();
+      }
+    }
   }
 
   /**
@@ -1540,19 +1546,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ParameterElement e3, ParameterElement e4, ParameterElement e5, ParameterElement e6) {
     return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(),
       e3.self(), e4.self(), e5.self(), e6.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final void consume(Instruction instruction) {
-    if (instruction instanceof External external) {
-      var api = api();
-      external.execute(api);
-      api.externalToLocal();
-    }
   }
 
   /**
