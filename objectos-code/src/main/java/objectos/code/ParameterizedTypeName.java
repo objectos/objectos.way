@@ -21,14 +21,50 @@ import objectos.code.tmpl.ExpressionPart;
 import objectos.code.tmpl.ReferenceTypeName;
 
 /**
- * TODO
+ * Represents the name of a parameterized type in a Java program.
  *
  * @since 0.4.2
  */
 public sealed interface ParameterizedTypeName
     extends ClassOrParameterizedTypeName, ExpressionPart permits ParameterizedTypeNameImpl {
   /**
-   * TODO
+   * Creates a new {@code ParameterizedTypeName} of the generic type {@code raw}
+   * whose type arguments are given by {@code first} and {@code rest} in order.
+   *
+   * <p>
+   * Typical usage:
+   *
+   * <pre>
+   * // List&lt;Path&gt;
+   * ParameterizedTypeName.of(
+   *   ClassTypeName.of(List.class),
+   *   ClassTypeName.of(Path.class)
+   * )
+   *
+   * // Map&lt;String, E&gt;
+   * ParameterizedTypeName.of(
+   *   ClassTypeName.of(Map.class),
+   *   ClassTypeName.of(String.class),
+   *   TypeVariableName.of("E")
+   * )
+   *
+   * // Future&lt;List&lt;LocalDate&gt;&gt;
+   * ParameterizedTypeName.of(
+   *   ClassTypeName.of(Future.class),
+   *   ParameterizedTypeName.of(
+   *     ClassTypeName.of(List.class),
+   *     ClassTypeName.of(LocalDate.class)
+   *   )
+   * )</pre>
+   *
+   * @param raw
+   *        the generic type
+   * @param first
+   *        the first type argument
+   * @param rest
+   *        the remaining type arguments
+   *
+   * @return a newly constructed {@code ParameterizedTypeName} instance
    */
   static ParameterizedTypeName of(
       ClassTypeName raw, ReferenceTypeName first, ReferenceTypeName... rest) {

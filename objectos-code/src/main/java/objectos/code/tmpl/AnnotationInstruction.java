@@ -15,9 +15,20 @@
  */
 package objectos.code.tmpl;
 
+import objectos.code.ClassTypeName;
+import objectos.code.JavaTemplate;
+
 /**
- * An {@link Instruction} that can be used with the various {@code annotation}
+ * An {@link Instruction} that can be used with one of the {@code annotation}
  * methods.
+ *
+ * <p>
+ * The methods are:
+ *
+ * <ul>
+ * <li>{@link JavaTemplate#annotation(Class, AnnotationInstruction...)}</li>
+ * <li>{@link JavaTemplate#annotation(ClassTypeName, AnnotationInstruction...)}</li>
+ * </ul>
  *
  * @since 0.4.4
  */

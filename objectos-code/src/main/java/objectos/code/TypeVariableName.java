@@ -20,14 +20,63 @@ import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.ReferenceTypeName;
 
 /**
- * TODO
+ * Represents the name of a type variable in a Java program.
+ *
+ * <p>
+ * The following Objectos Code class declaration:
+ *
+ * <pre>
+ * static final TypeVariableName E
+ *     = TypeVariableName.of("E");
+ *
+ * classDeclaration(
+ *   PUBLIC, name("Box"), typeParameter("E"),
+ *
+ *   field(PRIVATE, FINAL, E, name("value")),
+ *
+ *   constructor(
+ *     PUBLIC,
+ *     parameter(E, name("value"),
+ *     p(THIS, n("value"), IS, n("value"))
+ *   ),
+ *
+ *   method(
+ *     PUBLIC, E, name("get"),
+ *     p(RETURN, n("value"))
+ *   )
+ * );</pre>
+ *
+ * <p>
+ * Generates:
+ *
+ * <pre>
+ * public class Box&lt;E&gt; {
+ *   private final E value;
+ *
+ *   public Box(E value) {
+ *     this.value = value;
+ *   }
+ *
+ *   public E get() {
+ *     return value;
+ *   }
+ * }</pre>
  *
  * @since 0.4.2
  */
 public sealed interface TypeVariableName
     extends ReferenceTypeName, ArrayTypeComponent permits TypeVariableNameImpl {
   /**
-   * TODO
+   * Creates a new {@code TypeVariableName} instance with the specified
+   * {@code name}.
+   *
+   * @param name
+   *        the name of this type variable
+   *
+   * @return a newly constructed {@code TypeVariableName} instance
+   *
+   * @throws IllegalArgumentException
+   *         if {@code name} contains an invalid character for a Java identifier
    *
    * @since 0.4.2
    */

@@ -740,9 +740,9 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    */
   protected static final PrimitiveTypeName INT = PrimitiveTypeName.INT;
 
-  public static final _Ext EXT = _Ext.INSTANCE;
+  private static final _Ext EXT = _Ext.INSTANCE;
 
-  public static final _Include INCLUDE = _Include.INSTANCE;
+  private static final _Include INCLUDE = _Include.INSTANCE;
 
   /**
    * Sole constructor.
@@ -788,6 +788,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param name Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassKeyword _class(String name) {
@@ -840,6 +844,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param name Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final EnumKeyword _enum(String name) {
@@ -850,6 +858,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExtendsKeyword _extends() {
@@ -1045,6 +1055,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ImplementsKeyword _implements() {
@@ -1063,6 +1075,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param name Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final InterfaceKeyword _interface(String name) {
@@ -1073,6 +1089,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param type Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassInstanceCreationExpression _new(OldClassOrParameterizedType type) {
@@ -1083,6 +1103,11 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param type Do not use!
+   * @param arg1 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassInstanceCreationExpression _new(OldClassOrParameterizedType type,
@@ -1095,6 +1120,12 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param type Do not use!
+   * @param arg1 Do not use!
+   * @param arg2 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ClassInstanceCreationExpression _new(OldClassOrParameterizedType type,
@@ -1131,6 +1162,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param packageName Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final PackageKeyword _package(String packageName) {
@@ -1172,6 +1207,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldReturnKeyword _return() {
@@ -1190,6 +1227,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldSuperKeyword _super() {
@@ -1198,6 +1237,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1) {
@@ -1206,6 +1249,11 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2) {
@@ -1214,6 +1262,12 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   * @param e3 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2,
@@ -1224,6 +1278,13 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   * @param e3 Do not use!
+   * @param e4 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ExplicitConstructorInvocation _super(ArgsPart e1, ArgsPart e2,
@@ -1234,6 +1295,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final OldThisKeyword _this() {
@@ -1282,14 +1345,22 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @return Do not use!
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final ArrayInitializer ainit() {
     return api().elem(ByteProto.ARRAY_INITIALIZER);
   }
 
   /**
    * TODO
+   *
+   * @param e1 do not use!
+   *
+   * @return Do not use!
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final ArrayInitializer ainit(
       VariableInitializer e1) {
     return api().elem(ByteProto.ARRAY_INITIALIZER, e1);
@@ -1297,7 +1368,13 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 do not use!
+   * @param e2 do not use!
+   *
+   * @return Do not use!
    */
+  @Deprecated(forRemoval = true, since = "0.4.4")
   protected final ArrayInitializer ainit(
       VariableInitializer e1, VariableInitializer e2) {
     return api().elem(ByteProto.ARRAY_INITIALIZER, e1, e2);
@@ -1311,7 +1388,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * <pre>
    * method(
-   *   at(Override.class),
+   *   annotation(Override.class),
    *   PUBLIC, INT, name("hashCode")
    * )</pre>
    *
@@ -1324,6 +1401,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @param annotationType
    *        the type of the annotation
+   * @param contents
+   *        the element-value pairs of this annotation
    *
    * @return the annotation instruction
    *
@@ -1338,7 +1417,33 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds an annotation to a declaration or to a type usage.
+   *
+   * <p>
+   * The following Objectos Code method declaration:
+   *
+   * <pre>
+   * static final ClassTypeName OVERRIDE
+   *     = ClassTypeName.of(Override.class);
+   *
+   * method(
+   *   annotation(OVERRIDE),
+   *   PUBLIC, INT, name("hashCode")
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java code:
+   *
+   * <pre>
+   * &#064;java.lang.Override
+   * public int hashCode() {}</pre>
+   *
+   * @param annotationType
+   *        the type of the annotation
+   * @param contents
+   *        the element-value pairs of this annotation
+   *
+   * @return the annotation instruction
    *
    * @since 0.4.4
    */
@@ -1349,7 +1454,30 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds a single element-value or element-value pair to an annotation.
+   *
+   * <p>
+   * The following Objectos Code annotation:
+   *
+   * <pre>
+   * static final ClassTypeName DESCRIPTION
+   *     = ClassTypeName.of("com.example", "Description");
+   *
+   * annotation(
+   *   DESCRIPTION,
+   *   annotationValue(s("The `annotationValue` instruction"))
+   * )</pre>
+   *
+   * <p>
+   * Generates the following Java annotation:
+   *
+   * <pre>
+   * &#064;com.example.Description("The `annotationValue` instruction")</pre>
+   *
+   * @param contents
+   *        the parts of this element-value or element-value pair
+   *
+   * @return the element-value instruction
    *
    * @since 0.4.4
    */
@@ -1359,22 +1487,61 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds an expression as the argument to a constructor or method invocation.
+   *
+   * <p>
+   * The following Objectos Code method expression statement:
+   *
+   * <pre>
+   * p(v("put"), argument(i(1)), argument(s("One")))</pre>
+   *
+   * <p>
+   * Generates:
+   *
+   * <pre>
+   * put(1, "One");</pre>
+   *
+   * @param contents
+   *        the parts of the expression
+   *
+   * @return an argument instruction
    *
    * @since 0.4.3.1
    */
-  protected final Argument argument(ExpressionPart... parts) {
-    Object[] many = Objects.requireNonNull(parts, "parts == null");
+  protected final Argument argument(ExpressionPart... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.ARGUMENT, many);
   }
 
   /**
-   * TODO
+   * Adds the parenthesized expression that is part of a {@code if},
+   * {@code while} and {@code do-while} statement.
+   *
+   * <p>
+   * The following Objectos Code statement:
+   *
+   * <pre>
+   * p(IF, condition(n("active")), block(
+   *   p(v("execute"))
+   * ))</pre>
+   *
+   * <p>
+   * Generates:
+   *
+   * <pre>
+   * if (active) {
+   *   execute();
+   * }</pre>
+   *
+   * @param contents
+   *        the parts of the expression
+   *
+   * @return a condition instruction
    *
    * @since 0.4.4
    */
-  protected final StatementPart condition(ExpressionPart... parts) {
-    Object[] many = Objects.requireNonNull(parts, "parts == null");
+  protected final StatementPart condition(ExpressionPart... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.CONDITION, many);
   }
 
@@ -1439,7 +1606,13 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds a class declaration to a compilation unit or as a member of an
+   * enclosing type.
+   *
+   * @param contents
+   *        the contents of this class declaration
+   *
+   * @return a class declaration instruction
    *
    * @since 0.4.4
    */
@@ -1449,7 +1622,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
+   * Consumes the provided {@code instructions} if necessary.
+   *
+   * @param instructions
+   *        the instructions to be consumed
    */
   protected final void code(Instruction... instructions) {
     for (var instruction : instructions) {
@@ -1463,6 +1639,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor() {
@@ -1470,7 +1648,12 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
+   * Adds a constructor declaration.
+   *
+   * @param contents
+   *        the contents of this constructor
+   *
+   * @return a constructor declaration instruction
    *
    * @since 0.4.4
    */
@@ -1482,6 +1665,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1) {
@@ -1490,6 +1677,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param elements Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement... elements) {
@@ -1499,6 +1690,11 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2) {
@@ -1507,6 +1703,12 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   * @param e3 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
@@ -1516,6 +1718,13 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   * @param e3 Do not use!
+   * @param e4 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
@@ -1525,6 +1734,14 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   * @param e3 Do not use!
+   * @param e4 Do not use!
+   * @param e5 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
@@ -1534,6 +1751,15 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @param e1 Do not use!
+   * @param e2 Do not use!
+   * @param e3 Do not use!
+   * @param e4 Do not use!
+   * @param e5 Do not use!
+   * @param e6 Do not use!
+   *
+   * @return Do not use!
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,

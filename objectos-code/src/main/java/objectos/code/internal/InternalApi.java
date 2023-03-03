@@ -16,6 +16,8 @@
 package objectos.code.internal;
 
 import objectos.code.JavaTemplate;
+import objectos.code.JavaTemplate._Ext;
+import objectos.code.JavaTemplate._Include;
 import objectos.code.JavaTemplate._Item;
 import objectos.code.tmpl.TypeName;
 import objectos.lang.Check;
@@ -393,7 +395,7 @@ public class InternalApi {
 
     elemCnt(ByteProto.ARRAY_TYPE, 1 + count);
 
-    elemItem(JavaTemplate.EXT);
+    elemItem(_Ext.INSTANCE);
 
     for (int i = 0; i < count; i++) {
       elemItem(_Item.INSTANCE);
@@ -604,11 +606,11 @@ public class InternalApi {
 
       kind = LOCAL;
     } else if (
-      obj == JavaTemplate.EXT || obj instanceof External || obj instanceof String) {
+      obj == _Ext.INSTANCE || obj instanceof External || obj instanceof String) {
       offset = 1;
 
       kind = EXT;
-    } else if (obj == JavaTemplate.INCLUDE) {
+    } else if (obj == _Include.INSTANCE) {
       offset = 2;
 
       kind = LAMBDA;

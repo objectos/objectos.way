@@ -20,7 +20,7 @@ import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.ReferenceTypeName;
 
 /**
- * TODO
+ * Represents name of an array type in a Java program.
  *
  * @since 0.4.2
  */

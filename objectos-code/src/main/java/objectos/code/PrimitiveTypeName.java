@@ -22,7 +22,7 @@ import objectos.code.tmpl.StatementPart;
 import objectos.code.tmpl.TypeName;
 
 /**
- * TODO
+ * Represents the name of a primitive type in a Java program.
  *
  * @since 0.4.2
  */
