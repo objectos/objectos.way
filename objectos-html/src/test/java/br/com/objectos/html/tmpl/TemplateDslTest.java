@@ -15,22 +15,21 @@
  */
 package br.com.objectos.html.tmpl;
 
-import static br.com.objectos.html.element.StandardElementName.A;
-import static br.com.objectos.html.element.StandardElementName.BODY;
-import static br.com.objectos.html.element.StandardElementName.DIV;
-import static br.com.objectos.html.element.StandardElementName.HEAD;
-import static br.com.objectos.html.element.StandardElementName.HTML;
-import static br.com.objectos.html.element.StandardElementName.META;
-import static br.com.objectos.html.element.StandardElementName.NAV;
-import static br.com.objectos.html.element.StandardElementName.P;
-import static br.com.objectos.html.element.StandardElementName.SECTION;
 import static objectos.html.tmpl.StandardAttributeName.CHARSET;
 import static objectos.html.tmpl.StandardAttributeName.CLASS;
 import static objectos.html.tmpl.StandardAttributeName.ID;
 import static objectos.html.tmpl.StandardAttributeName.LANG;
+import static objectos.html.tmpl.StandardElementName.A;
+import static objectos.html.tmpl.StandardElementName.BODY;
+import static objectos.html.tmpl.StandardElementName.DIV;
+import static objectos.html.tmpl.StandardElementName.HEAD;
+import static objectos.html.tmpl.StandardElementName.HTML;
+import static objectos.html.tmpl.StandardElementName.META;
+import static objectos.html.tmpl.StandardElementName.NAV;
+import static objectos.html.tmpl.StandardElementName.P;
+import static objectos.html.tmpl.StandardElementName.SECTION;
 import static org.testng.Assert.assertEquals;
 
-import br.com.objectos.html.element.StandardElementName;
 import br.com.objectos.html.ex.TestCase00;
 import br.com.objectos.html.ex.TestCase01;
 import br.com.objectos.html.ex.TestCase03;
@@ -45,6 +44,7 @@ import br.com.objectos.html.ex.TestCase20;
 import br.com.objectos.html.ex.TestCase21;
 import br.com.objectos.html.ex.TestCase26;
 import java.util.Arrays;
+import objectos.html.tmpl.StandardElementName;
 import org.testng.annotations.Test;
 
 public class TemplateDslTest {

@@ -37,7 +37,7 @@ public class StandardElementNameStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.element;
+      package objectos.html.tmpl;
 
       import objectos.html.spi.Marker;
       import objectos.html.spi.Renderer;

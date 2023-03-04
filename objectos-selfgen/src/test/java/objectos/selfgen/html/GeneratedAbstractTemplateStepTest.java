@@ -48,12 +48,12 @@ public class GeneratedAbstractTemplateStepTest {
       """
       package br.com.objectos.html.tmpl;
 
-      import br.com.objectos.html.element.ElementName;
-      import br.com.objectos.html.element.StandardElementName;
       import objectos.html.tmpl.DivValue;
+      import objectos.html.tmpl.ElementName;
       import objectos.html.tmpl.FormValue;
       import objectos.html.tmpl.MetaValue;
       import objectos.html.tmpl.StandardAttributeName;
+      import objectos.html.tmpl.StandardElementName;
       import objectos.html.tmpl.Value;
 
       abstract class GeneratedAbstractTemplate {
@@ -109,11 +109,11 @@ public class GeneratedAbstractTemplateStepTest {
       """
       package br.com.objectos.html.tmpl;
 
-      import br.com.objectos.html.element.ElementName;
-      import br.com.objectos.html.element.StandardElementName;
+      import objectos.html.tmpl.ElementName;
       import objectos.html.tmpl.StandardAttributeName;
       import objectos.html.tmpl.StandardAttributeName.B;
       import objectos.html.tmpl.StandardAttributeName.S;
+      import objectos.html.tmpl.StandardElementName;
       import objectos.html.tmpl.Value;
 
       abstract class GeneratedAbstractTemplate {

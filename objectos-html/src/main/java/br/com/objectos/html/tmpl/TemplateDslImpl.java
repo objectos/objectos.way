@@ -15,10 +15,10 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.element.ElementKind;
-import br.com.objectos.html.element.ElementName;
 import java.util.Arrays;
 import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.ElementKind;
+import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;

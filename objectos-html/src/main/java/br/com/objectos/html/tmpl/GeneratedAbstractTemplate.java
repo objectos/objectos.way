@@ -15,8 +15,6 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.element.ElementName;
-import br.com.objectos.html.element.StandardElementName;
 import objectos.html.tmpl.AValue;
 import objectos.html.tmpl.AbbrValue;
 import objectos.html.tmpl.ArticleValue;
@@ -33,6 +31,7 @@ import objectos.html.tmpl.DetailsValue;
 import objectos.html.tmpl.DivValue;
 import objectos.html.tmpl.DlValue;
 import objectos.html.tmpl.DtValue;
+import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.EmValue;
 import objectos.html.tmpl.FieldsetValue;
 import objectos.html.tmpl.FigureValue;
@@ -221,6 +220,7 @@ import objectos.html.tmpl.StandardAttributeName.WordSpacing;
 import objectos.html.tmpl.StandardAttributeName.Wrap;
 import objectos.html.tmpl.StandardAttributeName.WritingMode;
 import objectos.html.tmpl.StandardAttributeName.Xmlns;
+import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.StrongValue;
 import objectos.html.tmpl.StyleValue;
 import objectos.html.tmpl.SubValue;

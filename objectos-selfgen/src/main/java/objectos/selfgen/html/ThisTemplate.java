@@ -41,13 +41,11 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STD_ATTR_NAME = ClassTypeName.of(HTML_TMPL, "StandardAttributeName");
 
-  static final String elem = "br.com.objectos.html.element";
+  static final ClassTypeName ELEMENT_KIND = ClassTypeName.of(HTML_TMPL, "ElementKind");
 
-  static final ClassTypeName ELEMENT_KIND = ClassTypeName.of(elem, "ElementKind");
+  static final ClassTypeName ELEMENT_NAME = ClassTypeName.of(HTML_TMPL, "ElementName");
 
-  static final ClassTypeName ELEMENT_NAME = ClassTypeName.of(elem, "ElementName");
-
-  static final ClassTypeName STD_ELEMENT_NAME = ClassTypeName.of(elem, "StandardElementName");
+  static final ClassTypeName STD_ELEMENT_NAME = ClassTypeName.of(HTML_TMPL, "StandardElementName");
 
   private static final String spi_tmpl = "objectos.html.spi";
 

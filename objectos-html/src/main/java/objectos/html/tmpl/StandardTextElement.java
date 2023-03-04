@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.element;
+package objectos.html.tmpl;
 
-import objectos.html.tmpl.NonVoidElementValue;
+import objectos.html.spi.Marker;
+import objectos.html.spi.Renderer;
 
-public interface ElementName extends NonVoidElementValue {
+public enum StandardTextElement implements NonVoidElementValue {
 
-  int getCode();
+  INSTANCE;
 
-  ElementKind getKind();
+  @Override
+  public final void mark(Marker dsl) {
+    dsl.markText();
+  }
 
-  String getName();
+  @Override
+  public final void render(Renderer renderer) {
+    // noop
+  }
 
 }

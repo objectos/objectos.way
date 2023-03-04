@@ -15,8 +15,8 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.element.ElementName;
 import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.ElementName;
 import objectos.util.UnmodifiableList;
 
 public class SimpleCompiledTemplateVisitor implements CompiledTemplateVisitor {

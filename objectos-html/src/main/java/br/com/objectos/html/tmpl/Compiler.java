@@ -15,8 +15,8 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.element.StandardElementName;
 import java.util.Arrays;
+import objectos.html.tmpl.StandardElementName;
 import objectos.util.IntArrays;
 
 class Compiler {

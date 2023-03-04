@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.element;
+package objectos.html.tmpl;
 
 /**
  * https://html.spec.whatwg.org/multipage/syntax.html#elements-2

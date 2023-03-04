@@ -21,7 +21,7 @@ final class StandardElementNameStep extends ThisTemplate {
 
   @Override
   protected final void definition() {
-    packageDeclaration(elem);
+    packageDeclaration(HTML_TMPL);
 
     autoImports();
 

@@ -15,10 +15,10 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.element.ElementName;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.Value;
 
 public interface TemplateDsl extends Marker, Renderer {
