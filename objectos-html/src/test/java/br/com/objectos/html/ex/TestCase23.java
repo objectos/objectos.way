@@ -15,10 +15,10 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.ElementName;
 
-public class TestCase23 extends AbstractTemplate {
+public class TestCase23 extends HtmlTemplate {
 
   private final int count;
 

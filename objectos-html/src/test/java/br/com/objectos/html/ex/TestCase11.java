@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Nested fragments.
  */
-public class TestCase11 extends AbstractTemplate {
+public class TestCase11 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

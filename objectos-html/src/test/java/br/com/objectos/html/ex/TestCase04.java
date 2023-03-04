@@ -15,13 +15,13 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Single html element with an attribute and child.
  * Attribute is defined (in Java) after the element.
  */
-public class TestCase04 extends AbstractTemplate {
+public class TestCase04 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

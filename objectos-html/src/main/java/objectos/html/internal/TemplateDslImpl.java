@@ -16,7 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
-import objectos.html.AbstractFragment;
+import objectos.html.HtmlFragment;
 import objectos.html.AttributeOrElement;
 import objectos.html.CompiledTemplate;
 import objectos.html.Lambda;
@@ -184,7 +184,7 @@ public final class TemplateDslImpl implements TemplateDsl {
   }
 
   @Override
-  public final void addFragment(AbstractFragment fragment) {
+  public final void addFragment(HtmlFragment fragment) {
     Check.notNull(fragment, "fragment == null");
 
     int returnLevel;

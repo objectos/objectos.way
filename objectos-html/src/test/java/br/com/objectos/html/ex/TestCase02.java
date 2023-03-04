@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Single html element with two attributes
  */
-public class TestCase02 extends AbstractTemplate {
+public class TestCase02 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

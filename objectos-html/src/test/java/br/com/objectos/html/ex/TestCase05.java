@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Nest depth=2 and a self closing tag (meta).
  */
-public class TestCase05 extends AbstractTemplate {
+public class TestCase05 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

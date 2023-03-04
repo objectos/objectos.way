@@ -44,7 +44,7 @@ import br.com.objectos.html.ex.TestCase20;
 import br.com.objectos.html.ex.TestCase21;
 import br.com.objectos.html.ex.TestCase26;
 import java.util.Arrays;
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 import objectos.html.AttributeOrElement;
 import objectos.html.CompiledTemplate;
 import objectos.html.tmpl.StandardElementName;
@@ -494,7 +494,7 @@ public class TemplateDslTest {
     );
   }
 
-  private TemplateDslImpl dsl(AbstractTemplate tmpl) {
+  private TemplateDslImpl dsl(HtmlTemplate tmpl) {
     var dsl = new TemplateDslImpl();
 
     tmpl.acceptTemplateDsl(dsl);

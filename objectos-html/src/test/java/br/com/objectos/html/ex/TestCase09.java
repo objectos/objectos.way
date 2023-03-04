@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Siblings at root. Also doctype.
  */
-public class TestCase09 extends AbstractTemplate {
+public class TestCase09 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

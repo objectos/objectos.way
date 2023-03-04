@@ -15,9 +15,9 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
-public class TestCase17 extends AbstractTemplate {
+public class TestCase17 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

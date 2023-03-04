@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * A link element having its attributes come from another object.
  */
-public class TestCase13 extends AbstractTemplate {
+public class TestCase13 extends HtmlTemplate {
 
   private final Sitemap sitemap = new Sitemap();
 

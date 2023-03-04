@@ -21,7 +21,7 @@ import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.lang.Check;
 
-public abstract class AbstractTemplate extends FragmentOrTemplate implements Template {
+public abstract class HtmlTemplate extends FragmentOrTemplate implements Template {
 
   @Override
   public final void acceptTemplateDsl(TemplateDsl dsl) {

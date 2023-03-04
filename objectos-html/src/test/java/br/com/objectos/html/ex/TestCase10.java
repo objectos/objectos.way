@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Test fragment inclusion.
  */
-public class TestCase10 extends AbstractTemplate {
+public class TestCase10 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

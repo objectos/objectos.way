@@ -35,7 +35,7 @@ public interface TemplateDsl extends Marker, Renderer {
 
   void addElement(ElementName name, Value... values);
 
-  void addFragment(AbstractFragment fragment);
+  void addFragment(HtmlFragment fragment);
 
   void addLambda(Lambda lambda);
 

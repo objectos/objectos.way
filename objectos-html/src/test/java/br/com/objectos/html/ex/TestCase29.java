@@ -15,14 +15,14 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Allow svg elements such as the objectos logo.
  *
  * @since 0.5
  */
-public class TestCase29 extends AbstractTemplate {
+public class TestCase29 extends HtmlTemplate {
 
   /*
   

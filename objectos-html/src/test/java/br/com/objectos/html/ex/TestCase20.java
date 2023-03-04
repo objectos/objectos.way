@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 import objectos.html.Template;
 
-public class TestCase20 extends AbstractTemplate {
+public class TestCase20 extends HtmlTemplate {
 
-  private final Template nav = new AbstractTemplate() {
+  private final Template nav = new HtmlTemplate() {
     @Override
     protected final void definition() {
       nav(
@@ -29,7 +29,7 @@ public class TestCase20 extends AbstractTemplate {
     }
   };
 
-  private final Template hero = new AbstractTemplate() {
+  private final Template hero = new HtmlTemplate() {
     @Override
     protected final void definition() {
       section(

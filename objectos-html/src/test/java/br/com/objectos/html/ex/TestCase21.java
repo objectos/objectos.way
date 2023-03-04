@@ -15,10 +15,10 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.AnyElementValue;
 
-public class TestCase21 extends AbstractTemplate {
+public class TestCase21 extends HtmlTemplate {
 
   private final AnyElementValue first = new TestClassSelector("first");
 

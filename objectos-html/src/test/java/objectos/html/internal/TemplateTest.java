@@ -18,7 +18,7 @@ package objectos.html.internal;
 import static org.testng.Assert.assertEquals;
 
 import br.com.objectos.html.ex.Sitemap;
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 import objectos.html.Template;
 import org.testng.annotations.Test;
 
@@ -53,7 +53,7 @@ public class TemplateTest {
   @Test
   public void t() {
     testMinified(
-        new AbstractTemplate() {
+        new HtmlTemplate() {
           @Override
           protected final void definition() {
             p(t("0"));
@@ -86,7 +86,7 @@ public class TemplateTest {
   @Test
   public void tags() {
     testMinified(
-        new AbstractTemplate() {
+        new HtmlTemplate() {
           @Override
           protected final void definition() {
             span("x");

@@ -21,7 +21,7 @@ import objectos.html.spi.Renderer;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.lang.Check;
 
-public abstract class AbstractFragment extends FragmentOrTemplate implements NonVoidElementValue {
+public abstract class HtmlFragment extends FragmentOrTemplate implements NonVoidElementValue {
 
   @Override
   public final void acceptTemplateDsl(TemplateDsl dsl) {

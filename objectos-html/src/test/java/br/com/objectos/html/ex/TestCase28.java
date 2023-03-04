@@ -15,14 +15,14 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Allow svg elements such as the tabler icon set.
  *
  * @since 0.5
  */
-public class TestCase28 extends AbstractTemplate {
+public class TestCase28 extends HtmlTemplate {
 
   /*
 

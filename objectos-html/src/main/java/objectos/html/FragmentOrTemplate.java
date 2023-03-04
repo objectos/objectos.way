@@ -379,7 +379,7 @@ abstract class FragmentOrTemplate extends GeneratedAbstractTemplate {
     return dsl;
   }
 
-  protected final AbstractFragment f(AbstractFragment fragment) {
+  protected final HtmlFragment f(HtmlFragment fragment) {
     dsl.addFragment(fragment);
 
     return fragment;

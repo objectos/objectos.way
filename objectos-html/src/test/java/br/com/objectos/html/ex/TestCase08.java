@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.ex;
 
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
 /**
  * Siblings + single attribute.
  */
-public class TestCase08 extends AbstractTemplate {
+public class TestCase08 extends HtmlTemplate {
 
   @Override
   protected final void definition() {

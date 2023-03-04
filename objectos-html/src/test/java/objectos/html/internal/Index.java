@@ -16,9 +16,9 @@
 package objectos.html.internal;
 
 import br.com.objectos.html.ex.Sitemap;
-import objectos.html.AbstractTemplate;
+import objectos.html.HtmlTemplate;
 
-class Index extends AbstractTemplate {
+class Index extends HtmlTemplate {
 
   @SuppressWarnings("unused")
   private final Sitemap sitemap;
