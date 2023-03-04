@@ -52,27 +52,9 @@
 						<classpath />
 						<argument>objectos.selfgen.HtmlSpec</argument>
 						<argument>html</argument>
-						<argument>${project.basedir}/src/boot/java</argument>
+						<argument>${project.basedir}/src/main/java</argument>
 					</arguments>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>add-source-boot</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/boot/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
