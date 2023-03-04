@@ -15,4 +15,4 @@
  */
 package br.com.objectos.html.spi.type;
 
-public interface AnyElementValue {}
+public interface AnyElementValue extends AValue, AbbrValue, ArticleValue, BValue, BlockquoteValue, BodyValue, BrValue, ButtonValue, ClipPathValue, CodeValue, DdValue, DefsValue, DetailsValue, DivValue, DlValue, DtValue, EmValue, FieldsetValue, FigureValue, FooterValue, FormValue, GValue, H1Value, H2Value, H3Value, H4Value, H5Value, H6Value, HeadValue, HeaderValue, HgroupValue, HrValue, HtmlValue, ImgValue, InputValue, KbdValue, LabelValue, LegendValue, LiValue, LinkValue, MainValue, MenuValue, MetaValue, NavValue, OlValue, OptgroupValue, OptionValue, PValue, PathValue, PreValue, ProgressValue, SampValue, ScriptValue, SectionValue, SelectValue, SmallValue, SpanValue, StrongValue, StyleValue, SubValue, SummaryValue, SupValue, SvgValue, TableValue, TbodyValue, TdValue, TemplateValue, TextareaValue, ThValue, TheadValue, TitleValue, TrValue, UlValue {}

@@ -52,6 +52,8 @@ public abstract class HtmlSelfGen {
       JavaSink.overwriteExisting()
     );
 
+    prepare();
+
     switch (moduleName) {
       case "html" -> {
         write(sink, new GeneratedAbstractTemplateStep());
