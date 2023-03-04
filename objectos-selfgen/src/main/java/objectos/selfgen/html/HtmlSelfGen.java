@@ -56,19 +56,17 @@ public abstract class HtmlSelfGen {
 
     switch (moduleName) {
       case "html" -> {
-        write(sink, new GeneratedAbstractTemplateStep());
-
-        write(sink, new StandardAttributeNameStep());
-
-        write(sink, new StandardElementNameStep());
-      }
-
-      case "spi" -> {
         write(sink, new AnyElementValueStep());
 
         write(sink, new ElementValueIfaceStep());
 
+        write(sink, new GeneratedAbstractTemplateStep());
+
         write(sink, new NonVoidElementValueStep());
+
+        write(sink, new StandardAttributeNameStep());
+
+        write(sink, new StandardElementNameStep());
       }
 
       default -> throw new IllegalArgumentException("Unknown module: " + moduleName);

@@ -18,5 +18,4 @@
  */
 module objectos.html.spi {
   exports br.com.objectos.html.spi.tmpl;
-  exports br.com.objectos.html.spi.type;
 }
