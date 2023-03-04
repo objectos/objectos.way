@@ -25,14 +25,14 @@ public class NonVoidElementValueStepTest {
   public void execute() {
     var template = new NonVoidElementValueStep();
 
-    template.spec = new AbstractHtmlSpec() {
+    template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
         element("div");
         element("meta").noEndTag();
         element("span");
       }
-    }.toSpecDsl();
+    }.prepare();
 
     assertEquals(
       template.toString(),

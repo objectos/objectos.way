@@ -15,12 +15,15 @@
  */
 package objectos.selfgen.html;
 
-public abstract class AbstractHtmlBootTest {
+public abstract class AbstractSelfGenHtmlTest {
 
-  SpecDsl specDsl;
+  HtmlSelfGen specDsl;
 
-  protected final SpecDsl specDsl() {
-    return specDsl = new SpecDsl();
+  protected final HtmlSelfGen specDsl() {
+    return specDsl = new HtmlSelfGen() {
+      @Override
+      protected void definition() {}
+    };
   }
 
   final AttributeSpec attributeSpec(String name) {

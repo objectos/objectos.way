@@ -21,7 +21,7 @@ import objectos.util.UnmodifiableList;
 import objectos.util.UnmodifiableSet;
 import org.testng.annotations.Test;
 
-public class AttributeSpecTest extends AbstractHtmlBootTest {
+public class AttributeSpecTest extends AbstractSelfGenHtmlTest {
 
   @Test
   public void classAttribute() {
@@ -55,7 +55,7 @@ public class AttributeSpecTest extends AbstractHtmlBootTest {
 
   @Test
   public void hrefAttribute() {
-    SpecDsl dsl = specDsl();
+    var dsl = specDsl();
 
     dsl.element("a")
         .attribute("href")

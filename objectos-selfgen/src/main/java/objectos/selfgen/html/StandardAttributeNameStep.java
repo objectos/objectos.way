@@ -18,7 +18,7 @@ package objectos.selfgen.html;
 import objectos.code.ArrayTypeName;
 import objectos.code.ParameterizedTypeName;
 
-public final class StandardAttributeNameStep extends ThisTemplate {
+final class StandardAttributeNameStep extends ThisTemplate {
 
   private static final ParameterizedTypeName MAP = ParameterizedTypeName.of(
     UNMODIFIABLE_MAP, STRING, STD_ATTR_NAME

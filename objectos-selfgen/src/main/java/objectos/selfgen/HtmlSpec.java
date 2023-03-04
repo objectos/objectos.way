@@ -16,58 +16,19 @@
 package objectos.selfgen;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Set;
-import objectos.code.JavaSink;
-import objectos.selfgen.html.AbstractHtmlSpec;
-import objectos.selfgen.html.AnyElementValueStep;
 import objectos.selfgen.html.CategorySpec;
-import objectos.selfgen.html.ElementValueIfaceStep;
-import objectos.selfgen.html.GeneratedAbstractTemplateStep;
-import objectos.selfgen.html.NonVoidElementValueStep;
-import objectos.selfgen.html.StandardAttributeNameStep;
-import objectos.selfgen.html.StandardElementNameStep;
+import objectos.selfgen.html.HtmlSelfGen;
 import objectos.util.UnmodifiableSet;
 
-public final class HtmlSpec extends AbstractHtmlSpec {
+public final class HtmlSpec extends HtmlSelfGen {
 
   private HtmlSpec() {}
 
   public static void main(String[] args) throws IOException {
-    var moduleName = args[0];
-
-    var srcDir = args[1];
-
-    var directory = Path.of(srcDir);
-
-    var sink = JavaSink.ofDirectory(
-      directory,
-      JavaSink.overwriteExisting()
-    );
-
     var spec = new HtmlSpec();
 
-    var dsl = spec.toSpecDsl();
-
-    switch (moduleName) {
-      case "html" -> {
-        dsl.write(sink, new GeneratedAbstractTemplateStep());
-
-        dsl.write(sink, new StandardAttributeNameStep());
-
-        dsl.write(sink, new StandardElementNameStep());
-      }
-
-      case "spi" -> {
-        dsl.write(sink, new AnyElementValueStep());
-
-        dsl.write(sink, new ElementValueIfaceStep());
-
-        dsl.write(sink, new NonVoidElementValueStep());
-      }
-
-      default -> throw new IllegalArgumentException("Unknown module: " + moduleName);
-    }
+    spec.execute(args);
   }
 
   @Override

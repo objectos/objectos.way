@@ -15,7 +15,7 @@
  */
 package objectos.selfgen.html;
 
-public final class AnyElementValueStep extends ThisTemplate {
+final class AnyElementValueStep extends ThisTemplate {
 
   @Override
   protected final void definition() {

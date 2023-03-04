@@ -16,36 +16,87 @@
 package objectos.selfgen.html;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import objectos.code.JavaSink;
 
-public class SpecDsl {
+public abstract class HtmlSelfGen {
 
   private List<AttributeSpec> attributes;
 
   private final Map<String, AttributeSpec> attributeMap = new TreeMap<>();
+
   private final Map<String, CategorySpec> categoryMap = new TreeMap<>();
+
   private final Map<String, ElementSpec> elementMap = new TreeMap<>();
 
-  private final TemplateSpec template;
-  private final TextSpec text;
+  private final RootElementSpec rootElement = new RootElementSpec(this);
 
-  public SpecDsl() {
-    template = new TemplateSpec(this);
-    text = new TextSpec(this);
-  }
+  private final TemplateSpec template = new TemplateSpec();
 
-  public final void prepare() {
-    for (ElementSpec element : elementMap.values()) {
-      element.prepare();
+  private final TextSpec text = new TextSpec();
+
+  protected HtmlSelfGen() {}
+
+  public final void execute(String[] args) throws IOException {
+    var moduleName = args[0];
+
+    var srcDir = args[1];
+
+    var directory = Path.of(srcDir);
+
+    var sink = JavaSink.ofDirectory(
+      directory,
+      JavaSink.overwriteExisting()
+    );
+
+    switch (moduleName) {
+      case "html" -> {
+        write(sink, new GeneratedAbstractTemplateStep());
+
+        write(sink, new StandardAttributeNameStep());
+
+        write(sink, new StandardElementNameStep());
+      }
+
+      case "spi" -> {
+        write(sink, new AnyElementValueStep());
+
+        write(sink, new ElementValueIfaceStep());
+
+        write(sink, new NonVoidElementValueStep());
+      }
+
+      default -> throw new IllegalArgumentException("Unknown module: " + moduleName);
     }
   }
 
-  public final SpecDsl with(Spec spec) {
-    spec.acceptSpecDsl(this);
-    return this;
+  protected final CategorySpec category(String name) {
+    return categoryMap.computeIfAbsent(name, this::category0);
+  }
+
+  protected abstract void definition();
+
+  protected final ElementSpec el(String name) {
+    return element(name);
+  }
+
+  protected final ElementSpec element(String name) {
+    return elementMap.computeIfAbsent(name, this::element0);
+  }
+
+  protected final RootElementSpec rootElement() {
+    return rootElement;
+  }
+
+  protected final TemplateSpec template() {
+    return template;
+  }
+
+  protected final TextSpec text() {
+    return text;
   }
 
   final List<AttributeSpec> attributes() {
@@ -60,16 +111,9 @@ public class SpecDsl {
     return attributeMap.get(name);
   }
 
-  final CategorySpec category(String name) {
-    return categoryMap.computeIfAbsent(name, this::category0);
-  }
-
-  final ElementSpec element(String name) {
-    return elementMap.computeIfAbsent(name, this::element0);
-  }
-
   final ElementAttributeSpec elementAttribute(ElementSpec parent, String name) {
-    AttributeSpec attr = attributeMap.computeIfAbsent(name, this::elementAttribute0);
+    var attr = attributeMap.computeIfAbsent(name, this::elementAttribute0);
+
     return attr.toElementAttributeSpec(parent);
   }
 
@@ -81,21 +125,22 @@ public class SpecDsl {
     if (attributeMap.containsKey(name)) {
       throw new IllegalArgumentException(name + " global attribute already defined!");
     }
-    AttributeSpec attr = AttributeSpec.global(name);
+
+    var attr = AttributeSpec.global(name);
+
     attributeMap.put(name, attr);
+
     return attr;
   }
 
-  final RootElementSpec rootElement() {
-    return new RootElementSpec(this);
-  }
+  final HtmlSelfGen prepare() {
+    definition();
 
-  final TemplateSpec template() {
-    return template;
-  }
+    for (ElementSpec element : elementMap.values()) {
+      element.prepare();
+    }
 
-  final TextSpec text() {
-    return text;
+    return this;
   }
 
   private CategorySpec category0(String name) {
@@ -110,7 +155,7 @@ public class SpecDsl {
     return new ElementAttributeSpec(name);
   }
 
-  public final void write(JavaSink sink, ThisTemplate template) throws IOException {
+  private void write(JavaSink sink, ThisTemplate template) throws IOException {
     template.write(sink, this);
   }
 

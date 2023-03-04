@@ -28,7 +28,7 @@ public class GeneratedAbstractTemplateStepTest {
   for each element, it should generate attribute overloads.
   """)
   public void execute() {
-    template.spec = new AbstractHtmlSpec() {
+    template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
         template()
@@ -40,7 +40,7 @@ public class GeneratedAbstractTemplateStepTest {
         element("form");
         element("meta").noEndTag();
       }
-    }.toSpecDsl();
+    }.prepare();
 
     assertEquals(
       template.toString(),
@@ -87,7 +87,7 @@ public class GeneratedAbstractTemplateStepTest {
 
   @Test(description = "it should generate methods for each attribute.")
   public void executeAttributes() {
-    template.spec = new AbstractHtmlSpec() {
+    template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
         template()
@@ -101,7 +101,7 @@ public class GeneratedAbstractTemplateStepTest {
             .attribute("t").as("title")
             .attributeEnd();
       }
-    }.toSpecDsl();
+    }.prepare();
 
     assertEquals(
       template.toString(),

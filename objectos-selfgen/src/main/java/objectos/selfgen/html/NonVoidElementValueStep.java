@@ -15,7 +15,7 @@
  */
 package objectos.selfgen.html;
 
-public final class NonVoidElementValueStep extends ThisTemplate {
+final class NonVoidElementValueStep extends ThisTemplate {
 
   @Override
   protected final void definition() {

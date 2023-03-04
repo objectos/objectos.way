@@ -24,7 +24,7 @@ public final class TextSpec implements Child, Name {
 
   private final Set<ElementSpec> parentSet = new TreeSet<>();
 
-  TextSpec(SpecDsl dsl) {
+  TextSpec() {
     className = Object.class.toString();
   }
 

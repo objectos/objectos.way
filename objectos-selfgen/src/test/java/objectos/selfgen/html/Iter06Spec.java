@@ -15,7 +15,7 @@
  */
 package objectos.selfgen.html;
 
-class Iter06Spec extends AbstractHtmlSpec {
+class Iter06Spec extends HtmlSelfGen {
 
   static final Iter06Spec INSTANCE = new Iter06Spec();
 

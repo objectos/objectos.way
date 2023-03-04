@@ -23,13 +23,13 @@ public class ElementValueIfaceStepTest {
 
   @Test(description = "it should generate an interface for each element defined")
   public void execute() {
-    var spec = new AbstractHtmlSpec() {
+    var spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
         element("div");
         element("span");
       }
-    }.toSpecDsl();
+    }.prepare();
 
     var elements = spec.elements().iterator();
 

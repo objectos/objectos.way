@@ -18,12 +18,12 @@ package objectos.selfgen.html;
 import java.io.IOException;
 import objectos.code.JavaSink;
 
-public final class ElementValueIfaceStep extends ThisTemplate {
+final class ElementValueIfaceStep extends ThisTemplate {
 
   ElementSpec element;
 
   @Override
-  public void write(JavaSink sink, SpecDsl spec) throws IOException {
+  public void write(JavaSink sink, HtmlSelfGen spec) throws IOException {
     for (var element : spec.elements()) {
       this.element = element;
 

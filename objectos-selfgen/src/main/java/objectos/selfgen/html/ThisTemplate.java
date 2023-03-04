@@ -63,9 +63,9 @@ public abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName VALUE = ClassTypeName.of(spi_type, "Value");
 
-  SpecDsl spec;
+  HtmlSelfGen spec;
 
-  public void write(JavaSink sink, SpecDsl spec) throws IOException {
+  public void write(JavaSink sink, HtmlSelfGen spec) throws IOException {
     this.spec = spec;
 
     sink.write(this);

@@ -20,18 +20,15 @@ import objectos.util.GrowableSet;
 
 public final class TemplateSpec {
 
-  @SuppressWarnings("unused")
-  private final SpecDsl dsl;
   private int maxArity = 5;
+
   private int maxLevel = 5;
 
   private final GrowableSet<String> skipAttribute = new GrowableSet<>();
 
   private final GrowableSet<String> skipText = new GrowableSet<>();
 
-  TemplateSpec(SpecDsl dsl) {
-    this.dsl = dsl;
-  }
+  TemplateSpec() {}
 
   public final int getMaxArity() {
     return maxArity;

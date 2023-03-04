@@ -18,7 +18,7 @@ package objectos.selfgen.html;
 import objectos.code.ArrayTypeName;
 import objectos.code.TypeVariableName;
 
-public final class GeneratedAbstractTemplateStep extends ThisTemplate {
+final class GeneratedAbstractTemplateStep extends ThisTemplate {
 
   private static final TypeVariableName N = TypeVariableName.of("N");
 

@@ -31,7 +31,7 @@ public final class ElementSpec
 
   private ContentModel childSpec = ContentModel.start();
 
-  private final SpecDsl dsl;
+  private final HtmlSelfGen dsl;
 
   private boolean hasEndTag = true;
 
@@ -43,8 +43,9 @@ public final class ElementSpec
 
   public final String constantName;
 
-  ElementSpec(SpecDsl dsl, String name) {
+  ElementSpec(HtmlSelfGen dsl, String name) {
     this.dsl = dsl;
+
     this.name = name;
 
     className = ClassTypeName.of(ThisTemplate.spi_type, valueSimpleName());

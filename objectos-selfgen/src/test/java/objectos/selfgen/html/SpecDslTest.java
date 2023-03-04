@@ -21,11 +21,11 @@ import objectos.util.GrowableList;
 import objectos.util.UnmodifiableList;
 import org.testng.annotations.Test;
 
-public class SpecDslTest extends AbstractHtmlBootTest {
+public class SpecDslTest extends AbstractSelfGenHtmlTest {
 
   @Test
   public void category_createCategoryAndAddElements() {
-    SpecDsl dsl = specDsl();
+    var dsl = specDsl();
     CategorySpec flow = dsl.category("flow");
     assertEquals(flow.name(), "flow");
 
@@ -46,7 +46,7 @@ public class SpecDslTest extends AbstractHtmlBootTest {
 
   @Test
   public void element_addCategoryAsContentModel() {
-    SpecDsl dsl = specDsl();
+    var dsl = specDsl();
     CategorySpec flow = dsl.category("flow");
     ElementSpec div = dsl.element("div")
         .category(flow)
@@ -62,7 +62,7 @@ public class SpecDslTest extends AbstractHtmlBootTest {
 
   @Test
   public void element_formCanHaveFlowContentExceptForForms() {
-    SpecDsl dsl = specDsl();
+    var dsl = specDsl();
     CategorySpec flow = dsl.category("flow");
     ElementSpec div = dsl.element("div")
         .category(flow)
@@ -81,7 +81,7 @@ public class SpecDslTest extends AbstractHtmlBootTest {
 
   @Test
   public void text_withCategory() {
-    SpecDsl dsl = specDsl();
+    var dsl = specDsl();
     CategorySpec flow = dsl.category("flow");
     ElementSpec div = dsl.element("div")
         .category(flow)

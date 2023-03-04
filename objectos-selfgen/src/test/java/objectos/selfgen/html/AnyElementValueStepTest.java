@@ -25,7 +25,7 @@ public class AnyElementValueStepTest {
 
   @Test(description = "it should generate an interface for each distinct element defined")
   public void execute() {
-    template.spec = new AbstractHtmlSpec() {
+    template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
         rootElement()
@@ -39,7 +39,7 @@ public class AnyElementValueStepTest {
         element("title")
             .attribute("name");
       }
-    }.toSpecDsl();
+    }.prepare();
 
     assertEquals(
       template.toString(),

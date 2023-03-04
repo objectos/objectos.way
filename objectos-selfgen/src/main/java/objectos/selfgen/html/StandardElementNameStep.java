@@ -17,7 +17,7 @@ package objectos.selfgen.html;
 
 import objectos.code.ArrayTypeName;
 
-public final class StandardElementNameStep extends ThisTemplate {
+final class StandardElementNameStep extends ThisTemplate {
 
   @Override
   protected final void definition() {

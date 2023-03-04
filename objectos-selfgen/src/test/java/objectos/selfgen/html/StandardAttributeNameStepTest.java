@@ -19,13 +19,13 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class StandardAttributeNameStepTest extends AbstractHtmlBootTest {
+public class StandardAttributeNameStepTest {
 
   @Test(description = "it should generate an class for each distinct attribute defined")
   public void execute() {
     var template = new StandardAttributeNameStep();
 
-    template.spec = new AbstractHtmlSpec() {
+    template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
         rootElement()
@@ -36,7 +36,7 @@ public class StandardAttributeNameStepTest extends AbstractHtmlBootTest {
             .attribute("charset")
             .noEndTag();
       }
-    }.toSpecDsl();
+    }.prepare();
 
     assertEquals(
       template.toString(),

@@ -25,13 +25,13 @@ public class StandardElementNameStepTest {
   public void execute() {
     var template = new StandardElementNameStep();
 
-    template.spec = new AbstractHtmlSpec() {
+    template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
         element("div");
         element("meta").noEndTag();
       }
-    }.toSpecDsl();
+    }.prepare();
 
     assertEquals(
       template.toString(),

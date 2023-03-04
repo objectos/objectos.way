@@ -17,11 +17,11 @@ package objectos.selfgen.html;
 
 public final class RootElementSpec implements AttributeDsl<RootElementSpec> {
 
-  private final SpecDsl dsl;
+  private final HtmlSelfGen dsl;
 
   private AttributeSpec attribute;
 
-  RootElementSpec(SpecDsl dsl) {
+  RootElementSpec(HtmlSelfGen dsl) {
     this.dsl = dsl;
   }
 
