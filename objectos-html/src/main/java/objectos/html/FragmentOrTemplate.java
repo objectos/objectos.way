@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html;
 
 import br.com.objectos.html.writer.SimpleTemplateWriter;
 import objectos.html.spi.Marker;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -35,7 +35,7 @@ public enum AttributeOrElement implements AnyElementValue {
     );
 
     @Override
-    final boolean isAttributeOf(StandardElementName element) {
+    public final boolean isAttributeOf(StandardElementName element) {
       return attribute.contains(element);
     }
   },
@@ -46,14 +46,14 @@ public enum AttributeOrElement implements AnyElementValue {
     );
 
     @Override
-    final boolean isAttributeOf(StandardElementName element) {
+    public final boolean isAttributeOf(StandardElementName element) {
       return attribute.contains(element);
     }
   },
 
   TITLE(StandardAttributeName.TITLE, StandardElementName.TITLE) {
     @Override
-    final boolean isAttributeOf(StandardElementName element) {
+    public final boolean isAttributeOf(StandardElementName element) {
       return !element.equals(StandardElementName.HEAD);
     }
   };
@@ -61,6 +61,7 @@ public enum AttributeOrElement implements AnyElementValue {
   private static final AttributeOrElement[] ALL = AttributeOrElement.values();
 
   private final int attributeByteCode;
+
   private final int elementByteCode;
 
   private AttributeOrElement(StandardAttributeName attribute, StandardElementName element) {
@@ -68,9 +69,23 @@ public enum AttributeOrElement implements AnyElementValue {
     this.elementByteCode = element.getCode();
   }
 
-  static AttributeOrElement get(int code) {
+  public static AttributeOrElement get(int code) {
     return ALL[code];
   }
+
+  public final int attributeByteCode() {
+    return attributeByteCode;
+  }
+
+  public final int code() {
+    return ordinal();
+  }
+
+  public final int elementByteCode() {
+    return elementByteCode;
+  }
+
+  public abstract boolean isAttributeOf(StandardElementName element);
 
   @Override
   public final void mark(Marker marker) {
@@ -81,19 +96,5 @@ public enum AttributeOrElement implements AnyElementValue {
   public final void render(Renderer renderer) {
     // noop
   }
-
-  final int attributeByteCode() {
-    return attributeByteCode;
-  }
-
-  final int code() {
-    return ordinal();
-  }
-
-  final int elementByteCode() {
-    return elementByteCode;
-  }
-
-  abstract boolean isAttributeOf(StandardElementName element);
 
 }

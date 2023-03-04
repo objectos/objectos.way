@@ -15,7 +15,7 @@
  */
 package br.com.objectos.html.ex;
 
-import br.com.objectos.html.tmpl.AbstractTemplate;
+import objectos.html.AbstractTemplate;
 
 /**
  * Allow svg elements such as the objectos logo.

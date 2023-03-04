@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html;
+
+import objectos.html.internal.Interpreter;
 
 public class CompiledTemplate {
 
   private final char[] buffer;
+
   private final int[] codes;
 
-  CompiledTemplate(char[] buffer, int[] codes) {
+  public CompiledTemplate(char[] buffer, int[] codes) {
     this.buffer = buffer;
     this.codes = codes;
   }
@@ -32,20 +35,20 @@ public class CompiledTemplate {
     interpreter.execute();
   }
 
-  final int[] codes() {
+  public final int[] codes() {
     return codes;
+  }
+
+  public final String getBuffer(int index, int length) {
+    return new String(buffer, index, length);
+  }
+
+  public final int getCode(int index) {
+    return codes[index];
   }
 
   final int codesLength() {
     return codes.length;
-  }
-
-  final String getBuffer(int index, int length) {
-    return new String(buffer, index, length);
-  }
-
-  final int getCode(int index) {
-    return codes[index];
   }
 
 }

@@ -26,7 +26,7 @@ final class GeneratedAbstractTemplateStep extends ThisTemplate {
 
   @Override
   protected final void definition() {
-    packageDeclaration("br.com.objectos.html.tmpl");
+    packageDeclaration("objectos.html");
 
     autoImports();
 

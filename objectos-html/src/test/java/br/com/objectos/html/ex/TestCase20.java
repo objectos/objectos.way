@@ -15,8 +15,8 @@
  */
 package br.com.objectos.html.ex;
 
-import br.com.objectos.html.tmpl.AbstractTemplate;
-import br.com.objectos.html.tmpl.Template;
+import objectos.html.AbstractTemplate;
+import objectos.html.Template;
 
 public class TestCase20 extends AbstractTemplate {
 

@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.AbstractFragment;
+import objectos.html.AttributeOrElement;
+import objectos.html.CompiledTemplate;
+import objectos.html.Lambda;
+import objectos.html.Template;
+import objectos.html.TemplateDsl;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.ElementKind;
 import objectos.html.tmpl.ElementName;
@@ -25,7 +31,7 @@ import objectos.lang.Check;
 import objectos.util.CharArrays;
 import objectos.util.IntArrays;
 
-final class TemplateDslImpl implements TemplateDsl {
+public final class TemplateDslImpl implements TemplateDsl {
 
   private final int[][] attr;
   private final int[] attrLength;
@@ -48,7 +54,7 @@ final class TemplateDslImpl implements TemplateDsl {
   private int[] proto;
   private int protoLength;
 
-  TemplateDslImpl() {
+  public TemplateDslImpl() {
     buffer = new char[8 * 1024];
     proto = new int[1024];
 

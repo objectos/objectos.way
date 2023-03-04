@@ -46,7 +46,7 @@ public class GeneratedAbstractTemplateStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.tmpl;
+      package objectos.html;
 
       import objectos.html.tmpl.DivValue;
       import objectos.html.tmpl.ElementName;
@@ -107,7 +107,7 @@ public class GeneratedAbstractTemplateStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.tmpl;
+      package objectos.html;
 
       import objectos.html.tmpl.ElementName;
       import objectos.html.tmpl.StandardAttributeName;

@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html;
 
+import objectos.html.spi.Marker;
+import objectos.html.spi.Renderer;
 import objectos.html.tmpl.NonVoidElementValue;
 
-public interface Template extends NonVoidElementValue {
+@FunctionalInterface
+public interface Lambda extends NonVoidElementValue {
 
-  void acceptTemplateDsl(TemplateDsl dsl);
+  void apply();
 
-  CompiledTemplate compile();
+  @Override
+  default void mark(Marker marker) {
+    marker.markLambda();
+  }
 
-  String printMinified();
+  @Override
+  default void render(Renderer renderer) {
+    // noop
+  }
 
 }

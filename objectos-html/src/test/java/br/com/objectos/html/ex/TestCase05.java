@@ -15,7 +15,7 @@
  */
 package br.com.objectos.html.ex;
 
-import br.com.objectos.html.tmpl.AbstractTemplate;
+import objectos.html.AbstractTemplate;
 
 /**
  * Nest depth=2 and a self closing tag (meta).

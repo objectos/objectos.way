@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html.internal;
 
 import static org.testng.Assert.assertEquals;
 
@@ -49,6 +49,7 @@ import br.com.objectos.html.ex.TestCase28;
 import br.com.objectos.html.ex.TestCase29;
 import br.com.objectos.html.ex.TestCase30;
 import br.com.objectos.html.ex.TestCase31;
+import objectos.html.Template;
 import org.testng.annotations.Test;
 
 public class CompiledTemplateTest {

@@ -15,10 +15,10 @@
  */
 package br.com.objectos.html.writer;
 
-import br.com.objectos.html.tmpl.CompiledTemplateVisitor;
-import br.com.objectos.html.tmpl.Template;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import objectos.html.CompiledTemplateVisitor;
+import objectos.html.Template;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.ElementName;
 import objectos.lang.Check;

@@ -13,34 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html;
 
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.ElementName;
-import objectos.html.tmpl.Value;
+import objectos.util.UnmodifiableList;
 
-public interface TemplateDsl extends Marker, Renderer {
+public interface CompiledTemplateVisitor {
 
-  void addAttribute(AttributeName name);
+  void visitAttribute(AttributeName name);
 
-  void addAttribute(AttributeName name, String value);
+  void visitAttribute(AttributeName name, UnmodifiableList<String> values);
 
-  void addAttributeOrElement(AttributeOrElement value, String text);
+  void visitAttribute(AttributeName name, String value);
 
-  void addDoctype();
+  void visitAttribute(String name);
 
-  void addElement(ElementName name, String text);
+  void visitAttribute(String name, String value);
 
-  void addElement(ElementName name, Value... values);
+  void visitEndTag(ElementName name);
 
-  void addFragment(AbstractFragment fragment);
+  void visitEndTag(String name);
 
-  void addLambda(Lambda lambda);
+  void visitRaw(String raw);
 
-  void addRaw(String text);
+  void visitStartTag(ElementName name);
 
-  void addText(String text);
+  void visitStartTag(String name);
+
+  void visitStartTagEnd();
+
+  void visitStartTagEndSelfClosing();
+
+  void visitText(String text);
 
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html.internal;
 
 import static objectos.html.tmpl.StandardAttributeName.CHARSET;
 import static objectos.html.tmpl.StandardAttributeName.CLASS;
@@ -44,6 +44,9 @@ import br.com.objectos.html.ex.TestCase20;
 import br.com.objectos.html.ex.TestCase21;
 import br.com.objectos.html.ex.TestCase26;
 import java.util.Arrays;
+import objectos.html.AbstractTemplate;
+import objectos.html.AttributeOrElement;
+import objectos.html.CompiledTemplate;
 import objectos.html.tmpl.StandardElementName;
 import org.testng.annotations.Test;
 

@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html.internal;
 
-import objectos.util.IntArrays;
+import objectos.html.CompiledTemplate;
+import objectos.html.CompiledTemplateVisitor;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.GrowableList;
+import objectos.util.IntArrays;
 
-class Interpreter {
+public final class Interpreter {
 
   private static final int CURRENT_ATTR_INC = 10;
 
@@ -39,7 +41,7 @@ class Interpreter {
   private final CompiledTemplate template;
   private final CompiledTemplateVisitor visitor;
 
-  Interpreter(CompiledTemplate template, CompiledTemplateVisitor visitor) {
+  public Interpreter(CompiledTemplate template, CompiledTemplateVisitor visitor) {
     this.template = template;
     this.visitor = visitor;
   }
@@ -87,14 +89,14 @@ class Interpreter {
     switch (code) {
       case ByteCode.BOOLEAN_ATTR:
         visitor.visitAttribute(
-            getBuffer(getCurrentAttr(), getCurrentAttr())
+          getBuffer(getCurrentAttr(), getCurrentAttr())
         );
         break;
       case ByteCode.BOOLEAN_STD:
         visitor.visitAttribute(
-            StandardAttributeName.getByCode(
-                getCurrentAttr()
-            )
+          StandardAttributeName.getByCode(
+            getCurrentAttr()
+          )
         );
         break;
       case ByteCode.STRING_ATTR:
@@ -102,14 +104,14 @@ class Interpreter {
         int nLength = getCurrentAttr();
         int vLength = getCurrentAttr();
         visitor.visitAttribute(
-            getBuffer(index, nLength),
-            getBuffer(index + nLength, vLength)
+          getBuffer(index, nLength),
+          getBuffer(index + nLength, vLength)
         );
         break;
       case ByteCode.STRING_STD:
         doAttrs0StringStd(
-            StandardAttributeName.getByCode(getCurrentAttr()),
-            getCurrentAttr()
+          StandardAttributeName.getByCode(getCurrentAttr()),
+          getCurrentAttr()
         );
         break;
       default:
@@ -123,20 +125,20 @@ class Interpreter {
         throw new AssertionError("Unexpected valueCount = 0");
       case 1:
         visitor.visitAttribute(
-            name,
-            getBuffer(getCurrentAttr(), getCurrentAttr())
+          name,
+          getBuffer(getCurrentAttr(), getCurrentAttr())
         );
         break;
       default:
         GrowableList<String> values = new GrowableList<>();
         for (int i = 0; i < valueCount; i++) {
           values.add(
-              getBuffer(getCurrentAttr(), getCurrentAttr())
+            getBuffer(getCurrentAttr(), getCurrentAttr())
           );
         }
         visitor.visitAttribute(
-            name,
-            values.toUnmodifiableList()
+          name,
+          values.toUnmodifiableList()
         );
         break;
     }

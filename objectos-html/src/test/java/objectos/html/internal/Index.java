@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.tmpl;
+package objectos.html.internal;
 
 import br.com.objectos.html.ex.Sitemap;
+import objectos.html.AbstractTemplate;
 
 class Index extends AbstractTemplate {
 
