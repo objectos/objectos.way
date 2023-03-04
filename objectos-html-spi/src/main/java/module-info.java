@@ -15,7 +15,9 @@
  */
 /**
  * Defines the Objectos HTML SPI API.
+ *
+ * @since 0.5.0
  */
 module objectos.html.spi {
-  exports br.com.objectos.html.spi.tmpl;
+  exports objectos.html.spi;
 }

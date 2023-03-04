@@ -17,11 +17,11 @@ package br.com.objectos.html.tmpl;
 
 import br.com.objectos.html.attribute.StandardAttributeName;
 import br.com.objectos.html.element.StandardElementName;
-import br.com.objectos.html.spi.tmpl.Marker;
-import br.com.objectos.html.spi.tmpl.Renderer;
 import br.com.objectos.html.spi.type.AnyElementValue;
 import java.util.EnumSet;
 import java.util.Set;
+import objectos.html.spi.Marker;
+import objectos.html.spi.Renderer;
 
 public enum AttributeOrElement implements AnyElementValue {
 

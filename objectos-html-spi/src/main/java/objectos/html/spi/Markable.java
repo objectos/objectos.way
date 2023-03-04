@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.spi.tmpl;
+package objectos.html.spi;
 
-public interface Renderer {
+public interface Markable {
 
-  void addAttribute(String name, String value);
-
+  void mark(Marker marker);
+  
 }

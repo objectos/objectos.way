@@ -15,8 +15,8 @@
  */
 package br.com.objectos.html.element;
 
-import br.com.objectos.html.spi.tmpl.Marker;
-import br.com.objectos.html.spi.tmpl.Renderer;
+import objectos.html.spi.Marker;
+import objectos.html.spi.Renderer;
 
 public enum StandardElementName implements ElementName {
   A(ElementKind.NORMAL, "a"),

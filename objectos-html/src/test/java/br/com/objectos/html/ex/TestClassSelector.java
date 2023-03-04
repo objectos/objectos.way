@@ -15,9 +15,9 @@
  */
 package br.com.objectos.html.ex;
 
-import br.com.objectos.html.spi.tmpl.Marker;
-import br.com.objectos.html.spi.tmpl.Renderer;
 import br.com.objectos.html.spi.type.AnyElementValue;
+import objectos.html.spi.Marker;
+import objectos.html.spi.Renderer;
 
 class TestClassSelector implements AnyElementValue {
 

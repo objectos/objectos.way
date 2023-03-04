@@ -49,7 +49,7 @@ public abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STD_ELEMENT_NAME = ClassTypeName.of(elem, "StandardElementName");
 
-  static final String spi_tmpl = "br.com.objectos.html.spi.tmpl";
+  static final String spi_tmpl = "objectos.html.spi";
 
   static final ClassTypeName MARKER = ClassTypeName.of(spi_tmpl, "Marker");
 

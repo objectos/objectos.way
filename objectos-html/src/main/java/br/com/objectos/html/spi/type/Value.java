@@ -15,8 +15,8 @@
  */
 package br.com.objectos.html.spi.type;
 
-import br.com.objectos.html.spi.tmpl.Markable;
-import br.com.objectos.html.spi.tmpl.Renderable;
+import objectos.html.spi.Markable;
+import objectos.html.spi.Renderable;
 
 public interface Value
     extends

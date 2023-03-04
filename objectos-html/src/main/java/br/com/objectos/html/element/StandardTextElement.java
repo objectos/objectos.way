@@ -15,9 +15,9 @@
  */
 package br.com.objectos.html.element;
 
-import br.com.objectos.html.spi.tmpl.Marker;
-import br.com.objectos.html.spi.tmpl.Renderer;
 import br.com.objectos.html.spi.type.NonVoidElementValue;
+import objectos.html.spi.Marker;
+import objectos.html.spi.Renderer;
 
 public enum StandardTextElement implements NonVoidElementValue {
 
