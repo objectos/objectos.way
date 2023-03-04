@@ -69,6 +69,7 @@
 		<module>objectos-bom</module>
 		<module>objectos-code</module>
 		<module>objectos-lang</module>
+		<module>objectos-selfgen</module>
 		<module>objectos-util</module>
 	</modules>
 
