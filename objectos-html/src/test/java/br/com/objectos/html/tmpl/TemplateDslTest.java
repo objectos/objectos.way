@@ -15,10 +15,6 @@
  */
 package br.com.objectos.html.tmpl;
 
-import static br.com.objectos.html.attribute.StandardAttributeName.CHARSET;
-import static br.com.objectos.html.attribute.StandardAttributeName.CLASS;
-import static br.com.objectos.html.attribute.StandardAttributeName.ID;
-import static br.com.objectos.html.attribute.StandardAttributeName.LANG;
 import static br.com.objectos.html.element.StandardElementName.A;
 import static br.com.objectos.html.element.StandardElementName.BODY;
 import static br.com.objectos.html.element.StandardElementName.DIV;
@@ -28,6 +24,10 @@ import static br.com.objectos.html.element.StandardElementName.META;
 import static br.com.objectos.html.element.StandardElementName.NAV;
 import static br.com.objectos.html.element.StandardElementName.P;
 import static br.com.objectos.html.element.StandardElementName.SECTION;
+import static objectos.html.tmpl.StandardAttributeName.CHARSET;
+import static objectos.html.tmpl.StandardAttributeName.CLASS;
+import static objectos.html.tmpl.StandardAttributeName.ID;
+import static objectos.html.tmpl.StandardAttributeName.LANG;
 import static org.testng.Assert.assertEquals;
 
 import br.com.objectos.html.element.StandardElementName;

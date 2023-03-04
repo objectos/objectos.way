@@ -19,7 +19,6 @@
  * @since 0.5.0
  */
 module objectos.html {
-  exports br.com.objectos.html.attribute;
   exports br.com.objectos.html.element;
   exports br.com.objectos.html.tmpl;
   exports br.com.objectos.html.writer;

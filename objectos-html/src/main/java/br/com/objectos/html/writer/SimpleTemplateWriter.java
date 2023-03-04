@@ -15,12 +15,12 @@
  */
 package br.com.objectos.html.writer;
 
-import br.com.objectos.html.attribute.AttributeName;
 import br.com.objectos.html.element.ElementName;
 import br.com.objectos.html.tmpl.CompiledTemplateVisitor;
 import br.com.objectos.html.tmpl.Template;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import objectos.html.tmpl.AttributeName;
 import objectos.lang.Check;
 import objectos.util.UnmodifiableList;
 

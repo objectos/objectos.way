@@ -13,34 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.attribute;
+package objectos.html.tmpl;
 
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AValue;
-import objectos.html.tmpl.BlockquoteValue;
-import objectos.html.tmpl.BodyValue;
-import objectos.html.tmpl.ButtonValue;
-import objectos.html.tmpl.ClipPathValue;
-import objectos.html.tmpl.DefsValue;
-import objectos.html.tmpl.DetailsValue;
-import objectos.html.tmpl.FormValue;
-import objectos.html.tmpl.GValue;
-import objectos.html.tmpl.ImgValue;
-import objectos.html.tmpl.InputValue;
-import objectos.html.tmpl.LabelValue;
-import objectos.html.tmpl.LinkValue;
-import objectos.html.tmpl.MetaValue;
-import objectos.html.tmpl.OlValue;
-import objectos.html.tmpl.OptionValue;
-import objectos.html.tmpl.PathValue;
-import objectos.html.tmpl.ScriptValue;
-import objectos.html.tmpl.SelectValue;
-import objectos.html.tmpl.StyleValue;
-import objectos.html.tmpl.SvgValue;
-import objectos.html.tmpl.TableValue;
-import objectos.html.tmpl.TextareaValue;
-import objectos.html.tmpl.Value;
 import objectos.util.UnmodifiableMap;
 
 public abstract class StandardAttributeName implements AttributeName, Value {
@@ -322,7 +298,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
 
   public static final UnicodeBidi UNICODEBIDI = new UnicodeBidi();
 
-  public static final br.com.objectos.html.attribute.StandardAttributeName.Value VALUE = new br.com.objectos.html.attribute.StandardAttributeName.Value();
+  public static final objectos.html.tmpl.StandardAttributeName.Value VALUE = new objectos.html.tmpl.StandardAttributeName.Value();
 
   public static final VectorEffect VECTOREFFECT = new VectorEffect();
 

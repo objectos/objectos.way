@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.attribute;
+package objectos.html.tmpl;
 
-public enum AttributeKind {
+import objectos.util.UnmodifiableMap;
+import objectos.util.GrowableMap;
 
-  BOOLEAN,
+class NamesBuilder {
 
-  STRING;
+  private final GrowableMap<String, StandardAttributeName> map = new GrowableMap<>();
+
+  public final UnmodifiableMap<String, StandardAttributeName> build() {
+    return map.toUnmodifiableMap();
+  }
+
+  public final NamesBuilder put(String name, StandardAttributeName value) {
+    map.put(name, value);
+    return this;
+  }
 
 }

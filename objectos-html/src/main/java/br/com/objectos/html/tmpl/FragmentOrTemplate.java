@@ -15,7 +15,6 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.attribute.StandardAttributeName;
 import br.com.objectos.html.element.Doctype;
 import br.com.objectos.html.element.ElementName;
 import br.com.objectos.html.element.StandardElementName;
@@ -25,6 +24,7 @@ import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.NonVoidElementValue;
+import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 

@@ -15,13 +15,13 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.attribute.StandardAttributeName;
 import br.com.objectos.html.element.StandardElementName;
 import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
+import objectos.html.tmpl.StandardAttributeName;
 
 public enum AttributeOrElement implements AnyElementValue {
 

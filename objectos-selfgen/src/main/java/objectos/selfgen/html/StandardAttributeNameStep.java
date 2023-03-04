@@ -30,7 +30,7 @@ final class StandardAttributeNameStep extends ThisTemplate {
 
   @Override
   protected final void definition() {
-    packageDeclaration(attr);
+    packageDeclaration(HTML_TMPL);
 
     autoImports();
 

@@ -15,9 +15,9 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.attribute.StandardAttributeName;
 import br.com.objectos.html.element.StandardElementName;
 import objectos.util.IntArrays;
+import objectos.html.tmpl.StandardAttributeName;
 import objectos.util.GrowableList;
 
 class Interpreter {

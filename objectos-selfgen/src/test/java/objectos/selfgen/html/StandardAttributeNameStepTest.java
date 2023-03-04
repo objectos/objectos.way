@@ -42,12 +42,10 @@ public class StandardAttributeNameStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.attribute;
+      package objectos.html.tmpl;
 
       import objectos.html.spi.Marker;
       import objectos.html.spi.Renderer;
-      import objectos.html.tmpl.MetaValue;
-      import objectos.html.tmpl.Value;
       import objectos.util.UnmodifiableMap;
 
       public abstract class StandardAttributeName implements AttributeName, Value {
