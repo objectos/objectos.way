@@ -46,6 +46,16 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-html</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-html-spi</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>objectos-lang</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -201,23 +211,6 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>git</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>html</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>html-boot</artifactId>
-				<version>${project.version}</version>
-				<scope>runtime</scope>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>html-spi</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			
