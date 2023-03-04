@@ -19,7 +19,7 @@ final class AnyElementValueStep extends ThisTemplate {
 
   @Override
   protected final void definition() {
-    packageDeclaration(spi_type);
+    packageDeclaration(HTML_TMPL);
 
     autoImports();
 

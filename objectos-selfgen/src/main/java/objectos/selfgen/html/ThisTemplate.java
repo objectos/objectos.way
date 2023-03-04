@@ -29,6 +29,8 @@ public abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName UNMODIFIABLE_MAP = ClassTypeName.of(UnmodifiableMap.class);
 
+  static final String HTML_TMPL = "objectos.html.tmpl";
+
   static final String attr = "br.com.objectos.html.attribute";
 
   static final ClassTypeName ATTRIBUTE_KIND = ClassTypeName.of(attr, "AttributeKind");
@@ -49,19 +51,17 @@ public abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STD_ELEMENT_NAME = ClassTypeName.of(elem, "StandardElementName");
 
-  static final String spi_tmpl = "objectos.html.spi";
+  private static final String spi_tmpl = "objectos.html.spi";
 
   static final ClassTypeName MARKER = ClassTypeName.of(spi_tmpl, "Marker");
 
   static final ClassTypeName RENDERER = ClassTypeName.of(spi_tmpl, "Renderer");
 
-  static final String spi_type = "br.com.objectos.html.spi.type";
+  static final ClassTypeName ANY_ELEMENT_VALUE = ClassTypeName.of(HTML_TMPL, "AnyElementValue");
 
-  static final ClassTypeName ANY_ELEMENT_VALUE = ClassTypeName.of(spi_type, "AnyElementValue");
+  static final ClassTypeName NON_VOID = ClassTypeName.of(HTML_TMPL, "NonVoidElementValue");
 
-  static final ClassTypeName NON_VOID = ClassTypeName.of(spi_type, "NonVoidElementValue");
-
-  static final ClassTypeName VALUE = ClassTypeName.of(spi_type, "Value");
+  static final ClassTypeName VALUE = ClassTypeName.of(HTML_TMPL, "Value");
 
   HtmlSelfGen spec;
 

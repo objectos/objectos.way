@@ -45,7 +45,7 @@ public class AnyElementValueStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.spi.type;
+      package objectos.html.tmpl;
 
       public interface AnyElementValue extends MetaValue, TitleValue {}
       """

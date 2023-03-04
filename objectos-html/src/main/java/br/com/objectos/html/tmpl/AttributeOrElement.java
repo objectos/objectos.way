@@ -17,21 +17,21 @@ package br.com.objectos.html.tmpl;
 
 import br.com.objectos.html.attribute.StandardAttributeName;
 import br.com.objectos.html.element.StandardElementName;
-import br.com.objectos.html.spi.type.AnyElementValue;
 import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.AnyElementValue;
 
 public enum AttributeOrElement implements AnyElementValue {
 
   CLIPPATH(StandardAttributeName.CLIPPATH, StandardElementName.CLIPPATH) {
     private final Set<StandardElementName> attribute = EnumSet.of(
-        StandardElementName.CLIPPATH,
-        StandardElementName.DEFS,
-        StandardElementName.G,
-        StandardElementName.PATH,
-        StandardElementName.SVG
+      StandardElementName.CLIPPATH,
+      StandardElementName.DEFS,
+      StandardElementName.G,
+      StandardElementName.PATH,
+      StandardElementName.SVG
     );
 
     @Override
@@ -42,7 +42,7 @@ public enum AttributeOrElement implements AnyElementValue {
 
   LABEL(StandardAttributeName.LABEL, StandardElementName.LABEL) {
     private final Set<StandardElementName> attribute = EnumSet.of(
-        StandardElementName.OPTION
+      StandardElementName.OPTION
     );
 
     @Override

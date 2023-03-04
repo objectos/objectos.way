@@ -38,7 +38,7 @@ public class NonVoidElementValueStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.spi.type;
+      package objectos.html.tmpl;
 
       public interface NonVoidElementValue extends DivValue, SpanValue {}
       """

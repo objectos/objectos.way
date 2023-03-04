@@ -17,9 +17,9 @@ package br.com.objectos.html.tmpl;
 
 import br.com.objectos.html.attribute.AttributeName;
 import br.com.objectos.html.element.ElementName;
-import br.com.objectos.html.spi.type.Value;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.Value;
 
 public interface TemplateDsl extends Marker, Renderer {
 

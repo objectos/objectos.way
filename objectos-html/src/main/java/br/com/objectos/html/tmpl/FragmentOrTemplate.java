@@ -20,12 +20,12 @@ import br.com.objectos.html.element.Doctype;
 import br.com.objectos.html.element.ElementName;
 import br.com.objectos.html.element.StandardElementName;
 import br.com.objectos.html.element.StandardTextElement;
-import br.com.objectos.html.spi.type.AnyElementValue;
-import br.com.objectos.html.spi.type.NonVoidElementValue;
-import br.com.objectos.html.spi.type.Value;
 import br.com.objectos.html.writer.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.AnyElementValue;
+import objectos.html.tmpl.NonVoidElementValue;
+import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 
 abstract class FragmentOrTemplate extends GeneratedAbstractTemplate {

@@ -15,8 +15,16 @@
  */
 package objectos.html.spi;
 
+/**
+ * TODO
+ */
 public interface Markable {
 
+  /**
+   * TODO
+   *
+   * @param marker TODO
+   */
   void mark(Marker marker);
-  
+
 }

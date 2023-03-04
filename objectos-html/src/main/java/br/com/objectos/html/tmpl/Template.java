@@ -15,7 +15,7 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.spi.type.NonVoidElementValue;
+import objectos.html.tmpl.NonVoidElementValue;
 
 public interface Template extends NonVoidElementValue {
 

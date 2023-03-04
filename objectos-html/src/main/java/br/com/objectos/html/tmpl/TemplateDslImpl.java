@@ -19,8 +19,8 @@ import br.com.objectos.html.attribute.AttributeName;
 import br.com.objectos.html.attribute.StandardAttributeName;
 import br.com.objectos.html.element.ElementKind;
 import br.com.objectos.html.element.ElementName;
-import br.com.objectos.html.spi.type.Value;
 import java.util.Arrays;
+import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 import objectos.util.CharArrays;
 import objectos.util.IntArrays;
@@ -105,6 +105,7 @@ final class TemplateDslImpl implements TemplateDsl {
     }
   }
 
+  @Override
   public final void addAttributeOrElement(AttributeOrElement value, String text) {
     addProto(text.length());
     addProto(bufferLength);

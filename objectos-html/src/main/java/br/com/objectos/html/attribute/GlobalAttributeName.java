@@ -15,6 +15,6 @@
  */
 package br.com.objectos.html.attribute;
 
-import br.com.objectos.html.spi.type.AnyElementValue;
+import objectos.html.tmpl.AnyElementValue;
 
 interface GlobalAttributeName extends AttributeName, AnyElementValue {}

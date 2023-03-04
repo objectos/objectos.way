@@ -15,9 +15,9 @@
  */
 package br.com.objectos.html.tmpl;
 
-import br.com.objectos.html.spi.type.NonVoidElementValue;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.NonVoidElementValue;
 
 @FunctionalInterface
 public interface Lambda extends NonVoidElementValue {

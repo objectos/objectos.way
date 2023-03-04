@@ -51,10 +51,10 @@ public class GeneratedAbstractTemplateStepTest {
       import br.com.objectos.html.attribute.StandardAttributeName;
       import br.com.objectos.html.element.ElementName;
       import br.com.objectos.html.element.StandardElementName;
-      import br.com.objectos.html.spi.type.DivValue;
-      import br.com.objectos.html.spi.type.FormValue;
-      import br.com.objectos.html.spi.type.MetaValue;
-      import br.com.objectos.html.spi.type.Value;
+      import objectos.html.tmpl.DivValue;
+      import objectos.html.tmpl.FormValue;
+      import objectos.html.tmpl.MetaValue;
+      import objectos.html.tmpl.Value;
 
       abstract class GeneratedAbstractTemplate {
         public final ElementName div(DivValue... values) {
@@ -114,7 +114,7 @@ public class GeneratedAbstractTemplateStepTest {
       import br.com.objectos.html.attribute.StandardAttributeName.S;
       import br.com.objectos.html.element.ElementName;
       import br.com.objectos.html.element.StandardElementName;
-      import br.com.objectos.html.spi.type.Value;
+      import objectos.html.tmpl.Value;
 
       abstract class GeneratedAbstractTemplate {
         public final B b() {

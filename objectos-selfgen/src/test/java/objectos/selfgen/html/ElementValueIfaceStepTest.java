@@ -41,7 +41,7 @@ public class ElementValueIfaceStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.spi.type;
+      package objectos.html.tmpl;
 
       public interface DivValue extends Value {}
       """
@@ -53,7 +53,7 @@ public class ElementValueIfaceStepTest {
       template.toString(),
 
       """
-      package br.com.objectos.html.spi.type;
+      package objectos.html.tmpl;
 
       public interface SpanValue extends Value {}
       """

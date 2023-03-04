@@ -48,7 +48,7 @@ public final class ElementSpec
 
     this.name = name;
 
-    className = ClassTypeName.of(ThisTemplate.spi_type, valueSimpleName());
+    className = ClassTypeName.of(ThisTemplate.HTML_TMPL, valueSimpleName());
 
     constantName = JavaNames.toIdentifier(name.toUpperCase());
   }

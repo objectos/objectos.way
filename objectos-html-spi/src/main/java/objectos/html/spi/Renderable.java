@@ -15,8 +15,16 @@
  */
 package objectos.html.spi;
 
+/**
+ * TODO
+ */
 public interface Renderable {
 
+  /**
+   * TODO
+   *
+   * @param renderer TODO
+   */
   void render(Renderer renderer);
-  
+
 }

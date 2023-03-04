@@ -15,22 +15,49 @@
  */
 package objectos.html.spi;
 
+/**
+ * TODO
+ */
 public interface Marker {
 
+  /**
+   * TODO
+   */
   void markAttribute();
 
+  /**
+   * TODO
+   */
   void markAttributeOrElement();
 
+  /**
+   * TODO
+   */
   void markElement();
 
+  /**
+   * TODO
+   */
   void markLambda();
 
+  /**
+   * TODO
+   */
   void markRaw();
 
+  /**
+   * TODO
+   */
   void markRootElement();
 
+  /**
+   * TODO
+   */
   void markTemplate();
 
+  /**
+   * TODO
+   */
   void markText();
 
 }

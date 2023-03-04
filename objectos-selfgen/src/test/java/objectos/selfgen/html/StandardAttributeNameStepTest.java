@@ -44,10 +44,10 @@ public class StandardAttributeNameStepTest {
       """
       package br.com.objectos.html.attribute;
 
-      import br.com.objectos.html.spi.type.MetaValue;
-      import br.com.objectos.html.spi.type.Value;
       import objectos.html.spi.Marker;
       import objectos.html.spi.Renderer;
+      import objectos.html.tmpl.MetaValue;
+      import objectos.html.tmpl.Value;
       import objectos.util.UnmodifiableMap;
 
       public abstract class StandardAttributeName implements AttributeName, Value {

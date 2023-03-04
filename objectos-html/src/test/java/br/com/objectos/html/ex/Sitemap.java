@@ -15,9 +15,9 @@
  */
 package br.com.objectos.html.ex;
 
-import br.com.objectos.html.spi.type.LinkValue;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.LinkValue;
 
 public final class Sitemap {
 

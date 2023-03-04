@@ -15,8 +15,17 @@
  */
 package objectos.html.spi;
 
+/**
+ * TODO
+ */
 public interface Renderer {
 
+  /**
+   * TODO
+   *
+   * @param name TODO
+   * @param value TODO
+   */
   void addAttribute(String name, String value);
 
 }

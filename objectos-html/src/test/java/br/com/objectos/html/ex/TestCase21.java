@@ -15,8 +15,8 @@
  */
 package br.com.objectos.html.ex;
 
-import br.com.objectos.html.spi.type.AnyElementValue;
 import br.com.objectos.html.tmpl.AbstractTemplate;
+import objectos.html.tmpl.AnyElementValue;
 
 public class TestCase21 extends AbstractTemplate {
 

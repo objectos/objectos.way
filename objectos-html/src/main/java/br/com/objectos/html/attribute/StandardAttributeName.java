@@ -15,32 +15,32 @@
  */
 package br.com.objectos.html.attribute;
 
-import br.com.objectos.html.spi.type.AValue;
-import br.com.objectos.html.spi.type.BlockquoteValue;
-import br.com.objectos.html.spi.type.BodyValue;
-import br.com.objectos.html.spi.type.ButtonValue;
-import br.com.objectos.html.spi.type.ClipPathValue;
-import br.com.objectos.html.spi.type.DefsValue;
-import br.com.objectos.html.spi.type.DetailsValue;
-import br.com.objectos.html.spi.type.FormValue;
-import br.com.objectos.html.spi.type.GValue;
-import br.com.objectos.html.spi.type.ImgValue;
-import br.com.objectos.html.spi.type.InputValue;
-import br.com.objectos.html.spi.type.LabelValue;
-import br.com.objectos.html.spi.type.LinkValue;
-import br.com.objectos.html.spi.type.MetaValue;
-import br.com.objectos.html.spi.type.OlValue;
-import br.com.objectos.html.spi.type.OptionValue;
-import br.com.objectos.html.spi.type.PathValue;
-import br.com.objectos.html.spi.type.ScriptValue;
-import br.com.objectos.html.spi.type.SelectValue;
-import br.com.objectos.html.spi.type.StyleValue;
-import br.com.objectos.html.spi.type.SvgValue;
-import br.com.objectos.html.spi.type.TableValue;
-import br.com.objectos.html.spi.type.TextareaValue;
-import br.com.objectos.html.spi.type.Value;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.AValue;
+import objectos.html.tmpl.BlockquoteValue;
+import objectos.html.tmpl.BodyValue;
+import objectos.html.tmpl.ButtonValue;
+import objectos.html.tmpl.ClipPathValue;
+import objectos.html.tmpl.DefsValue;
+import objectos.html.tmpl.DetailsValue;
+import objectos.html.tmpl.FormValue;
+import objectos.html.tmpl.GValue;
+import objectos.html.tmpl.ImgValue;
+import objectos.html.tmpl.InputValue;
+import objectos.html.tmpl.LabelValue;
+import objectos.html.tmpl.LinkValue;
+import objectos.html.tmpl.MetaValue;
+import objectos.html.tmpl.OlValue;
+import objectos.html.tmpl.OptionValue;
+import objectos.html.tmpl.PathValue;
+import objectos.html.tmpl.ScriptValue;
+import objectos.html.tmpl.SelectValue;
+import objectos.html.tmpl.StyleValue;
+import objectos.html.tmpl.SvgValue;
+import objectos.html.tmpl.TableValue;
+import objectos.html.tmpl.TextareaValue;
+import objectos.html.tmpl.Value;
 import objectos.util.UnmodifiableMap;
 
 public abstract class StandardAttributeName implements AttributeName, Value {
