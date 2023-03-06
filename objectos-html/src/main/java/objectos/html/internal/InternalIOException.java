@@ -15,44 +15,18 @@
  */
 package objectos.html.internal;
 
-import br.com.objectos.html.ex.Sitemap;
-import objectos.html.HtmlTemplate;
+import java.io.IOException;
 
-class Index extends HtmlTemplate {
+public class InternalIOException extends RuntimeException {
 
-  @SuppressWarnings("unused")
-  private final Sitemap sitemap;
+  private static final long serialVersionUID = 3617603395237858684L;
 
-  Index(Sitemap sitemap) {
-    this.sitemap = sitemap;
+  public InternalIOException(IOException cause) {
+    super(cause);
   }
 
-  @Override
-  protected final void definition() {
-    doctype();
-    html(
-      head(
-        f(this::head0)
-      ),
-      body(
-        f(this::body0)
-      )
-    );
-  }
-
-  private void head0() {
-    meta();
-    link();
-  }
-
-  private void body0() {
-    header(
-      nav(
-        a(
-          img()
-        )
-      )
-    );
+  public final IOException unwrap() {
+    return (IOException) getCause();
   }
 
 }

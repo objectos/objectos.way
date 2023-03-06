@@ -16,12 +16,24 @@
 package objectos.html;
 
 import br.com.objectos.html.writer.SimpleTemplateWriter;
+import java.io.IOException;
 import objectos.html.internal.TemplateDslImpl;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.ElementName;
 import objectos.lang.Check;
 
 public abstract class HtmlTemplate extends FragmentOrTemplate implements Template {
+
+  public interface Visitor {
+
+    void startTag(ElementName name) throws IOException;
+
+    void startTagEnd(ElementName name) throws IOException;
+
+    void endTag(ElementName name) throws IOException;
+
+  }
 
   @Override
   public final void acceptTemplateDsl(TemplateDsl dsl) {
@@ -48,6 +60,20 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
   @Override
   public final void mark(Marker dsl) {
     dsl.markTemplate();
+  }
+
+  public final String minified() {
+    try {
+      var sink = new HtmlSink();
+
+      var out = new StringBuilder();
+
+      sink.appendTo(this, out);
+
+      return out.toString();
+    } catch (IOException e) {
+      throw new AssertionError("java.lang.StringBuilder does not throw IOException", e);
+    }
   }
 
   @Override

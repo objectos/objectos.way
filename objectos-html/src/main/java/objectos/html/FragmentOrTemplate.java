@@ -16,6 +16,7 @@
 package objectos.html;
 
 import br.com.objectos.html.writer.SimpleTemplateWriter;
+import java.util.Objects;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
@@ -366,6 +367,8 @@ abstract class FragmentOrTemplate extends GeneratedAbstractTemplate {
 
   @Override
   protected final ElementName addStandardElement(StandardElementName element, Value[] values) {
+    Objects.requireNonNull(element, "element == null");
+
     dsl.addElement(element, values);
 
     return element;

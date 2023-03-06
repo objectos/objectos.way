@@ -15,44 +15,31 @@
  */
 package objectos.html.internal;
 
-import br.com.objectos.html.ex.Sitemap;
+import java.io.IOException;
 import objectos.html.HtmlTemplate;
+import objectos.html.tmpl.ElementName;
 
-class Index extends HtmlTemplate {
+public final class MinifiedWriter implements HtmlTemplate.Visitor {
 
-  @SuppressWarnings("unused")
-  private final Sitemap sitemap;
+  public Appendable out;
 
-  Index(Sitemap sitemap) {
-    this.sitemap = sitemap;
+  @Override
+  public final void startTag(ElementName name) throws IOException {
+    out.append('<');
+    out.append(name.getName());
   }
 
   @Override
-  protected final void definition() {
-    doctype();
-    html(
-      head(
-        f(this::head0)
-      ),
-      body(
-        f(this::body0)
-      )
-    );
+  public final void startTagEnd(ElementName name) throws IOException {
+    out.append('>');
   }
 
-  private void head0() {
-    meta();
-    link();
-  }
-
-  private void body0() {
-    header(
-      nav(
-        a(
-          img()
-        )
-      )
-    );
+  @Override
+  public final void endTag(ElementName name) throws IOException {
+    out.append('<');
+    out.append('/');
+    out.append(name.getName());
+    out.append('>');
   }
 
 }

@@ -13,45 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-import br.com.objectos.html.ex.Sitemap;
-import objectos.html.HtmlTemplate;
+import static org.testng.Assert.assertEquals;
 
-class Index extends HtmlTemplate {
+import org.testng.annotations.Test;
 
-  @SuppressWarnings("unused")
-  private final Sitemap sitemap;
+public class HtmlTemplateTest {
 
-  Index(Sitemap sitemap) {
-    this.sitemap = sitemap;
-  }
+  @Test(description = """
+  HtmlTemplate TC00
 
-  @Override
-  protected final void definition() {
-    doctype();
-    html(
-      head(
-        f(this::head0)
-      ),
-      body(
-        f(this::body0)
-      )
-    );
-  }
+  - single html element
+  """)
+  public void testCase00() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html();
+        }
+      }.minified(),
 
-  private void head0() {
-    meta();
-    link();
-  }
-
-  private void body0() {
-    header(
-      nav(
-        a(
-          img()
-        )
-      )
+      """
+      <html></html>"""
     );
   }
 
