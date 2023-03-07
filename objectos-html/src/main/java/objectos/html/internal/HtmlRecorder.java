@@ -79,8 +79,17 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void addDoctype() {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addDoctype() {
+    int startIndex = protoIndex;
+
+    protoAdd(
+      ByteProto2.DOCTYPE, NULL,
+      startIndex, ByteProto2.DOCTYPE
+    );
+
+    int endIndex = protoIndex;
+
+    protoArray[startIndex + 1] = endIndex;
   }
 
   @Override
@@ -279,6 +288,12 @@ public class HtmlRecorder implements TemplateDsl {
       int proto = protoArray[--rootIndex];
 
       switch (proto) {
+        case ByteProto2.DOCTYPE -> {
+          rootIndex = protoArray[--rootIndex];
+
+          stackPush(proto);
+        }
+
         case ByteProto2.ELEMENT -> {
           int elem = protoArray[--rootIndex];
 
@@ -340,6 +355,14 @@ public class HtmlRecorder implements TemplateDsl {
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
     protoArray[protoIndex++] = v2;
+  }
+
+  private void protoAdd(int v0, int v1, int v2, int v3) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 3);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
   }
 
   private void protoAdd(int v0, int v1, int v2, int v3, int v4, int v5) {

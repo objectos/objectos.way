@@ -31,6 +31,8 @@ final class ByteProto2 {
 
   static final int ROOT_END = -7;
 
+  static final int DOCTYPE = -8;
+
   private ByteProto2() {}
 
 }

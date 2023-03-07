@@ -30,13 +30,15 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
     void attribute(AttributeName name, String value) throws IOException;
 
+    void doctype() throws IOException;
+
+    void endTag(ElementName name) throws IOException;
+
     void startTag(ElementName name) throws IOException;
 
     void startTagEnd(ElementName name) throws IOException;
 
     void startTagEndSelfClosing() throws IOException;
-
-    void endTag(ElementName name) throws IOException;
 
   }
 

@@ -132,6 +132,8 @@ public class HtmlPlayer extends HtmlRecorder {
       int proto = protoNext();
 
       switch (proto) {
+        case ByteProto2.DOCTYPE -> visitor.doctype();
+
         case ByteProto2.ELEMENT -> element();
 
         case ByteProto2.ROOT -> {}

@@ -146,4 +146,96 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC06
+
+  - Nest depth=2
+  - self closing tag (meta)
+  - with attributes
+  """)
+  public void testCase06() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            lang("pt-BR"),
+            head(
+              meta(charset("utf-8"))
+            )
+          );
+        }
+      }.minified(),
+
+      """
+      <html lang="pt-BR"><head><meta charset="utf-8"></head></html>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC07
+
+  - Siblings as children of a single html element.
+  """)
+  public void testCase07() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            head(),
+            body()
+          );
+        }
+      }.minified(),
+
+      """
+      <html><head></head><body></body></html>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC08
+
+  - Siblings + single attribute.
+  """)
+  public void testCase08() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            lang("pt-BR"),
+            head(),
+            body()
+          );
+        }
+      }.minified(),
+
+      """
+      <html lang="pt-BR"><head></head><body></body></html>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC09
+
+  - Siblings at root.
+  - Also doctype.
+  """)
+  public void testCase09() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          html();
+        }
+      }.minified(),
+
+      """
+      <!doctype html><html></html>"""
+    );
+  }
+
 }

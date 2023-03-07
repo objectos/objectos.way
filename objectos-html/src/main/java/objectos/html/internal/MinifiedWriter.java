@@ -26,14 +26,18 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
   public Appendable out;
 
   @Override
-  public final void startTag(ElementName name) throws IOException {
-    out.append('<');
+  public final void attribute(AttributeName name, String value) throws IOException {
+    out.append(' ');
     out.append(name.getName());
+    out.append('=');
+    out.append('"');
+    HtmlEscape.to(value, out);
+    out.append('"');
   }
 
   @Override
-  public final void startTagEnd(ElementName name) throws IOException {
-    out.append('>');
+  public final void doctype() throws IOException {
+    out.append("<!doctype html>");
   }
 
   @Override
@@ -45,18 +49,19 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
   }
 
   @Override
-  public final void startTagEndSelfClosing() throws IOException {
+  public final void startTag(ElementName name) throws IOException {
+    out.append('<');
+    out.append(name.getName());
+  }
+
+  @Override
+  public final void startTagEnd(ElementName name) throws IOException {
     out.append('>');
   }
 
   @Override
-  public final void attribute(AttributeName name, String value) throws IOException {
-    out.append(' ');
-    out.append(name.getName());
-    out.append('=');
-    out.append('"');
-    HtmlEscape.to(value, out);
-    out.append('"');
+  public final void startTagEndSelfClosing() throws IOException {
+    out.append('>');
   }
 
 }
