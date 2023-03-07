@@ -137,6 +137,8 @@ public class HtmlRecorder implements TemplateDsl {
         }
 
         protoAdd(proto, attr);
+
+        attr += 5;
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: value.class=" + value.getClass());

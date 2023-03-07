@@ -59,4 +59,23 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC02
+
+  - Single html element with two attributes
+  """)
+  public void testCase02() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(_class("no-js"), lang("pt-BR"));
+        }
+      }.minified(),
+
+      """
+      <html class="no-js" lang="pt-BR"></html>"""
+    );
+  }
+
 }
