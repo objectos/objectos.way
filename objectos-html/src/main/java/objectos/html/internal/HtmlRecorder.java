@@ -23,6 +23,7 @@ import objectos.html.TemplateDsl;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -32,11 +33,11 @@ public class HtmlRecorder implements TemplateDsl {
 
   static final int NULL = Integer.MIN_VALUE;
 
-  Object[] objectArray = new Object[16];
+  Object[] objectArray = new Object[64];
 
   int objectIndex;
 
-  int[] protoArray = new int[64];
+  int[] protoArray = new int[256];
 
   int protoIndex;
 
@@ -53,8 +54,18 @@ public class HtmlRecorder implements TemplateDsl {
   public final void addAttribute(AttributeName name, String value) {
     int code = name.getCode(); // name implicit null-check
     value = value.toString(); // value implicit null-check
+
     int startIndex = protoIndex;
-    protoAdd(ByteProto2.ATTRIBUTE, code, objectAdd(value), startIndex, ByteProto2.ATTRIBUTE);
+
+    protoAdd(
+      ByteProto2.ATTRIBUTE, NULL,
+      code, objectAdd(value),
+      startIndex, ByteProto2.ATTRIBUTE
+    );
+
+    int endIndex = protoIndex;
+
+    protoArray[startIndex + 1] = endIndex;
   }
 
   @Override
@@ -87,6 +98,9 @@ public class HtmlRecorder implements TemplateDsl {
     int attr = NULL;
     int lastAttr = NULL;
 
+    int child = NULL;
+    int lastChild = NULL;
+
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
 
@@ -111,6 +125,17 @@ public class HtmlRecorder implements TemplateDsl {
           attr = itemStart;
         }
 
+        case ByteProto2.ELEMENT -> {
+          --itemStart;
+          itemStart = protoArray[--itemStart];
+
+          if (lastChild == NULL) {
+            lastChild = itemStart;
+          }
+
+          child = itemStart;
+        }
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );
@@ -119,7 +144,7 @@ public class HtmlRecorder implements TemplateDsl {
 
     int elemStart = protoIndex;
 
-    protoAdd(ByteProto2.ELEMENT, code);
+    protoAdd(ByteProto2.ELEMENT, NULL, code);
 
     // attributes
     for (int i = 0; i < length; i++) {
@@ -136,12 +161,9 @@ public class HtmlRecorder implements TemplateDsl {
           throw new UnsupportedOperationException("Implement me");
         }
 
-        protoAdd(proto, attr);
+        protoAdd(proto, attr++);
 
-        attr += 5;
-      } else {
-        throw new UnsupportedOperationException(
-          "Implement me :: value.class=" + value.getClass());
+        attr = protoArray[attr];
       }
     }
 
@@ -152,12 +174,35 @@ public class HtmlRecorder implements TemplateDsl {
     } else {
       protoAdd(ByteProto2.ELEMENT_NORMAL);
 
-      // elements
+      // children
+      for (int i = 0; i < length; i++) {
+        var value = values[i];
+
+        if (value instanceof StandardElementName std) {
+          if (child == NULL) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          int proto = protoArray[child];
+
+          if (proto != ByteProto2.ELEMENT) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          protoAdd(proto, child++);
+
+          child = protoArray[child];
+        }
+      }
 
       protoAdd(ByteProto2.ELEMENT_END);
     }
 
     protoAdd(itemStart, elemStart, ByteProto2.ELEMENT);
+
+    int end = protoIndex;
+
+    protoArray[elemStart + 1] = end;
   }
 
   @Override
@@ -298,13 +343,14 @@ public class HtmlRecorder implements TemplateDsl {
     protoArray[protoIndex++] = v2;
   }
 
-  private void protoAdd(int v0, int v1, int v2, int v3, int v4) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 4);
+  private void protoAdd(int v0, int v1, int v2, int v3, int v4, int v5) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 5);
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
     protoArray[protoIndex++] = v2;
     protoArray[protoIndex++] = v3;
     protoArray[protoIndex++] = v4;
+    protoArray[protoIndex++] = v5;
   }
 
   private void stackPush(int v0, int v1) {

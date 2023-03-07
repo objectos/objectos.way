@@ -78,4 +78,25 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC03
+
+  - Single html element with a single head child element
+  """)
+  public void testCase03() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            head()
+          );
+        }
+      }.minified(),
+
+      """
+      <html><head></head></html>"""
+    );
+  }
+
 }

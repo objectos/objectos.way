@@ -18,7 +18,6 @@ package objectos.html.internal;
 import java.io.IOException;
 import objectos.html.HtmlTemplate;
 import objectos.html.HtmlTemplate.Visitor;
-import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 
@@ -48,6 +47,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
   private void attributeImpl() throws IOException {
     protoNext(); // ByteProto.ATTRIBUTE
+    protoNext(); // tail index
 
     int code = protoNext();
 
@@ -67,7 +67,12 @@ public class HtmlPlayer extends HtmlRecorder {
   }
 
   private void elementImpl() throws IOException {
-    ElementName elem = null;
+    protoNext(); // ByteProto.ELEMENT
+    protoNext(); // tail index;
+
+    var elem = StandardElementName.getByCode(protoNext());
+
+    visitor.startTag(elem);
 
     loop: while (protoMore()) {
       int proto = protoNext();
@@ -75,13 +80,7 @@ public class HtmlPlayer extends HtmlRecorder {
       switch (proto) {
         case ByteProto2.ATTRIBUTE -> attribute();
 
-        case ByteProto2.ELEMENT -> {
-          int code = protoNext();
-
-          elem = StandardElementName.getByCode(code);
-
-          visitor.startTag(elem);
-        }
+        case ByteProto2.ELEMENT -> element();
 
         case ByteProto2.ELEMENT_END -> {
           visitor.endTag(elem);
