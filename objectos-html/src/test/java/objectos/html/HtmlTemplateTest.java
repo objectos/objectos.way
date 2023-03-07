@@ -99,4 +99,27 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC04
+
+  - Single html element with an attribute and child.
+  - Attribute is defined in Java after the element.
+  """)
+  public void testCase04() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            head(),
+            lang("pt-BR")
+          );
+        }
+      }.minified(),
+
+      """
+      <html lang="pt-BR"><head></head></html>"""
+    );
+  }
+
 }
