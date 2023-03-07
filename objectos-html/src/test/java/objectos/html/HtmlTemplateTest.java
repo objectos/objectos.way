@@ -122,4 +122,28 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC05
+
+  - Nest depth=2
+  - self closing tag (meta)
+  """)
+  public void testCase05() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            head(
+              meta()
+            )
+          );
+        }
+      }.minified(),
+
+      """
+      <html><head><meta></head></html>"""
+    );
+  }
+
 }

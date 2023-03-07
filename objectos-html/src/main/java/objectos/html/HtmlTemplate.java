@@ -34,6 +34,8 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
     void startTagEnd(ElementName name) throws IOException;
 
+    void startTagEndSelfClosing() throws IOException;
+
     void endTag(ElementName name) throws IOException;
 
   }

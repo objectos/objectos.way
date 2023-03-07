@@ -126,14 +126,13 @@ public class HtmlRecorder implements TemplateDsl {
         }
 
         case ByteProto2.ELEMENT -> {
-          --itemStart;
-          itemStart = protoArray[--itemStart];
+          child = protoArray[--itemStart];
 
           if (lastChild == NULL) {
-            lastChild = itemStart;
+            lastChild = child;
           }
 
-          child = itemStart;
+          itemStart = protoArray[--itemStart];
         }
 
         default -> throw new UnsupportedOperationException(

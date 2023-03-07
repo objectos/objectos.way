@@ -90,6 +90,12 @@ public class HtmlPlayer extends HtmlRecorder {
 
         case ByteProto2.ELEMENT_NORMAL -> visitor.startTagEnd(elem);
 
+        case ByteProto2.ELEMENT_VOID -> {
+          visitor.startTagEndSelfClosing();
+
+          break loop;
+        }
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );

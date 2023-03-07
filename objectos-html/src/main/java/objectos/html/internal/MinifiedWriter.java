@@ -45,6 +45,11 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
   }
 
   @Override
+  public final void startTagEndSelfClosing() throws IOException {
+    out.append('>');
+  }
+
+  @Override
   public final void attribute(AttributeName name, String value) throws IOException {
     out.append(' ');
     out.append(name.getName());
