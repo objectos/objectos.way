@@ -13,35 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.io;
 
-import java.io.IOException;
-import objectos.html.internal.HtmlPlayer;
-import objectos.html.internal.MinifiedWriter;
+class Instructions {
 
-/**
- * @since 0.5.0
- */
-public final class HtmlSink extends HtmlPlayer {
+  static final int START_TAG = -1;
+  
+  static final int GT = -2;
 
-  private MinifiedWriter minifiedWriter;
+  static final int END_TAG = -3;
 
-  public final void appendTo(HtmlTemplate template, Appendable out) throws IOException {
-    record(template);
-
-    var writer = minifiedWriter();
-
-    writer.out = out;
-
-    play(writer);
-  }
-
-  private MinifiedWriter minifiedWriter() {
-    if (minifiedWriter == null) {
-      minifiedWriter = new MinifiedWriter();
-    }
-
-    return minifiedWriter;
-  }
-
+  static final int ATTR_NAME = -4;
+  
+  static final int ATTR_VALUE = -5;
+  
 }

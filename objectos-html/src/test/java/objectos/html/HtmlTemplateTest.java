@@ -40,4 +40,23 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC01
+
+  - single html element with a single attribute.
+  """)
+  public void testCase01() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(lang("pt-BR"));
+        }
+      }.minified(),
+
+      """
+      <html lang="pt-BR"></html>"""
+    );
+  }
+
 }

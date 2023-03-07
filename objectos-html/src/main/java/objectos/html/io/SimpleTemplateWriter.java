@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.writer;
+package objectos.html.io;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

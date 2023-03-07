@@ -19,8 +19,8 @@
  * @since 0.5.0
  */
 module objectos.html {
-  exports br.com.objectos.html.writer;
   exports objectos.html;
+  exports objectos.html.io;
   exports objectos.html.tmpl;
 
   requires transitive objectos.html.spi;

@@ -17,6 +17,8 @@ package objectos.html.internal;
 
 import java.io.IOException;
 import objectos.html.HtmlTemplate;
+import objectos.html.io.HtmlEscape;
+import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.ElementName;
 
 public final class MinifiedWriter implements HtmlTemplate.Visitor {
@@ -40,6 +42,16 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
     out.append('/');
     out.append(name.getName());
     out.append('>');
+  }
+
+  @Override
+  public final void attribute(AttributeName name, String value) throws IOException {
+    out.append(' ');
+    out.append(name.getName());
+    out.append('=');
+    out.append('"');
+    HtmlEscape.to(value, out);
+    out.append('"');
   }
 
 }

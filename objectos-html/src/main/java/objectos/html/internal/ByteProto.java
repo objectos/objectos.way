@@ -15,7 +15,7 @@
  */
 package objectos.html.internal;
 
-class ByteProto {
+final class ByteProto {
 
   static final int START_ELEMENT = -1;
 

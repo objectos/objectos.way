@@ -13,6 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.writer;
+package objectos.html.internal;
 
-public interface HtmlWritable {}
+final class ByteProto2 {
+
+  static final int ATTRIBUTE = -1;
+
+  static final int ELEMENT = -2;
+
+  static final int ELEMENT_NORMAL = -3;
+
+  static final int ELEMENT_VOID = -4;
+
+  static final int ELEMENT_END = -5;
+
+  static final int ROOT = -6;
+
+  static final int ROOT_END = -7;
+
+  private ByteProto2() {}
+
+}

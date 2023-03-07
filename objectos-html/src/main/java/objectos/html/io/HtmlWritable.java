@@ -13,18 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.writer;
+package objectos.html.io;
 
-class Instructions {
-
-  static final int START_TAG = -1;
-  
-  static final int GT = -2;
-
-  static final int END_TAG = -3;
-
-  static final int ATTR_NAME = -4;
-  
-  static final int ATTR_VALUE = -5;
-  
-}
+public interface HtmlWritable {}

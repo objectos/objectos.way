@@ -13,13 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package br.com.objectos.html.writer;
+package objectos.html.io;
+
+import java.io.IOException;
 
 public final class HtmlEscape {
 
   private HtmlEscape() {}
 
   public static void to(String source, StringBuilder out) {
+    for (int i = 0, len = source.length(); i < len; i++) {
+      var c = source.charAt(i);
+
+      switch (c) {
+        case '"' -> out.append("&quot;");
+        case '&' -> out.append("&amp;");
+        case '<' -> out.append("&lt;");
+        case '>' -> out.append("&gt;");
+        case '\u00A9' -> out.append("&copy;");
+        default -> out.append(c);
+      }
+    }
+  }
+
+  public static void to(String source, Appendable out) throws IOException {
     for (int i = 0, len = source.length(); i < len; i++) {
       var c = source.charAt(i);
 

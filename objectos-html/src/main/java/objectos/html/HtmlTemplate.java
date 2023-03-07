@@ -15,17 +15,20 @@
  */
 package objectos.html;
 
-import br.com.objectos.html.writer.SimpleTemplateWriter;
 import java.io.IOException;
 import objectos.html.internal.TemplateDslImpl;
+import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.ElementName;
 import objectos.lang.Check;
 
 public abstract class HtmlTemplate extends FragmentOrTemplate implements Template {
 
   public interface Visitor {
+
+    void attribute(AttributeName name, String value) throws IOException;
 
     void startTag(ElementName name) throws IOException;
 

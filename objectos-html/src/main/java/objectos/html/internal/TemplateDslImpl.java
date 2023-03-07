@@ -16,9 +16,9 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
-import objectos.html.HtmlFragment;
 import objectos.html.AttributeOrElement;
 import objectos.html.CompiledTemplate;
+import objectos.html.HtmlFragment;
 import objectos.html.Lambda;
 import objectos.html.Template;
 import objectos.html.TemplateDsl;

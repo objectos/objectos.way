@@ -15,8 +15,8 @@
  */
 package objectos.html;
 
-import br.com.objectos.html.writer.SimpleTemplateWriter;
 import java.util.Objects;
+import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
