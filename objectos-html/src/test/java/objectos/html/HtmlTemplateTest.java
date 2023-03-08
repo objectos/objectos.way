@@ -429,4 +429,34 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC17
+
+  - attribute or element (title)
+  """)
+  public void testCase17() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            head(
+              meta(charset("utf8")),
+              title("test case 17")
+            ),
+            body(
+              id("id"),
+              title("t1"),
+              title("t2"),
+              p("tc17")
+            )
+          );
+        }
+      }.minified(),
+
+      """
+      <html><head><meta charset="utf8"><title>test case 17</title></head><body id="id" title="t1 t2"><p>tc17</p></body></html>"""
+    );
+  }
+
 }

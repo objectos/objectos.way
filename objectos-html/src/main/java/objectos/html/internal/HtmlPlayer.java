@@ -25,6 +25,8 @@ import objectos.util.IntArrays;
 
 public class HtmlPlayer extends HtmlRecorder {
 
+  private static final int CAPACITY = 10;
+
   private Visitor visitor;
 
   public final void play(HtmlTemplate.Visitor visitor) throws IOException {
@@ -85,6 +87,22 @@ public class HtmlPlayer extends HtmlRecorder {
         index += 3;
 
         continue;
+      }
+
+      int cellStyle = protoArray[index + 1];
+
+      if (cellStyle == ByteProto2.SINGLE) {
+        int requiredIndex = stackIndex + CAPACITY;
+
+        stackArray = IntArrays.growIfNecessary(stackArray, requiredIndex);
+        stackArray[stackIndex + 0] = 2;
+        stackArray[stackIndex + 1] = protoArray[index + 2];
+        stackArray[stackIndex + 2] = value;
+
+        protoArray[index + 1] = ByteProto2.LIST;
+        protoArray[index + 2] = stackIndex;
+
+        break;
       }
 
       throw new UnsupportedOperationException("Implement me");
@@ -164,18 +182,29 @@ public class HtmlPlayer extends HtmlRecorder {
       int cellType = protoArray[attrIndex++];
       int value = protoArray[attrIndex++];
 
+      var name = StandardAttributeName.getByCode(code);
+
+      visitor.attributeStart(name.getName());
+
       if (cellType == ByteProto2.SINGLE) {
-        var name = StandardAttributeName.getByCode(code);
         var string = (String) objectGet(value);
 
-        visitor.attributeStart(name.getName());
         visitor.attributeValue(string);
-        visitor.attributeEnd();
       } else {
-        throw new UnsupportedOperationException(
-          "Implement me :: cellType=" + cellType
-        );
+        int base = value;
+
+        int length = stackArray[base + 0];
+
+        for (int i = 0; i < length; i++) {
+          int obj = stackArray[base + i + 1];
+
+          var string = (String) objectGet(obj);
+
+          visitor.attributeValue(string);
+        }
       }
+
+      visitor.attributeEnd();
     }
 
     var kind = elemName.getKind();
