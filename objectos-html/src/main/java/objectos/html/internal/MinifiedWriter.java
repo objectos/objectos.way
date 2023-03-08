@@ -18,22 +18,12 @@ package objectos.html.internal;
 import java.io.IOException;
 import objectos.html.HtmlTemplate;
 import objectos.html.io.HtmlEscape;
-import objectos.html.tmpl.AttributeName;
-import objectos.html.tmpl.ElementName;
 
 public final class MinifiedWriter implements HtmlTemplate.Visitor {
 
   public Appendable out;
 
-  @Override
-  public final void attribute(AttributeName name, String value) throws IOException {
-    out.append(' ');
-    out.append(name.getName());
-    out.append('=');
-    out.append('"');
-    HtmlEscape.to(value, out);
-    out.append('"');
-  }
+  private boolean firstValue;
 
   @Override
   public final void doctype() throws IOException {
@@ -41,26 +31,52 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
   }
 
   @Override
-  public final void endTag(ElementName name) throws IOException {
+  public final void selfClosingEnd() throws IOException {
+    out.append('>');
+  }
+
+  @Override
+  public final void attributeEnd() throws IOException {
+    out.append('"');
+  }
+
+  @Override
+  public final void attributeStart(String name) throws IOException {
+    out.append(' ');
+    out.append(name);
+    out.append('=');
+    out.append('"');
+
+    firstValue = true;
+  }
+
+  @Override
+  public final void attributeValue(String value) throws IOException {
+    if (firstValue) {
+      firstValue = false;
+    } else {
+      out.append(' ');
+    }
+
+    HtmlEscape.to(value, out);
+  }
+
+  @Override
+  public final void endTag(String name) throws IOException {
     out.append('<');
     out.append('/');
-    out.append(name.getName());
+    out.append(name);
     out.append('>');
   }
 
   @Override
-  public final void startTag(ElementName name) throws IOException {
+  public final void startTag(String name) throws IOException {
     out.append('<');
-    out.append(name.getName());
+    out.append(name);
   }
 
   @Override
-  public final void startTagEnd(ElementName name) throws IOException {
-    out.append('>');
-  }
-
-  @Override
-  public final void startTagEndSelfClosing() throws IOException {
+  public final void startTagEnd(String name) throws IOException {
     out.append('>');
   }
 

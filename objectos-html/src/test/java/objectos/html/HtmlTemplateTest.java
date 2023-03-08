@@ -238,4 +238,31 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(enabled = false, description = """
+  HtmlTemplate TC10
+
+  - Test fragment inclusion.
+  """)
+  public void testCase10() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            head(
+              f(this::head0)
+            )
+          );
+        }
+
+        private void head0() {
+          meta(charset("utf-8"));
+        }
+      }.minified(),
+
+      """
+      <html><head><meta charset="utf-8"></head></html>"""
+    );
+  }
+
 }

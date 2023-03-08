@@ -21,17 +21,21 @@ final class ByteProto2 {
 
   static final int ELEMENT = -2;
 
-  static final int ELEMENT_NORMAL = -3;
+  static final int ELEMENT_END = -3;
 
-  static final int ELEMENT_VOID = -4;
+  static final int ROOT = -4;
 
-  static final int ELEMENT_END = -5;
+  static final int ROOT_END = -5;
 
-  static final int ROOT = -6;
+  static final int DOCTYPE = -6;
 
-  static final int ROOT_END = -7;
+  static final int LAMBDA = -7;
 
-  static final int DOCTYPE = -8;
+  static final int SINGLE = -8;
+
+  static final int LIST = -9;
+
+  static final int ATTRS_END = -10;
 
   private ByteProto2() {}
 

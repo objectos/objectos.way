@@ -20,6 +20,7 @@ import objectos.html.HtmlTemplate;
 import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.util.IntArrays;
 
 public class HtmlPlayer extends HtmlRecorder {
 
@@ -28,7 +29,9 @@ public class HtmlPlayer extends HtmlRecorder {
   public final void play(HtmlTemplate.Visitor visitor) throws IOException {
     this.visitor = visitor;
 
-    stackIndex = -1;
+    protoArray = IntArrays.growIfNecessary(protoArray, objectIndex);
+
+    stackIndex = 0;
 
     try {
       rootElement();
@@ -38,11 +41,17 @@ public class HtmlPlayer extends HtmlRecorder {
   }
 
   private void attribute() throws IOException {
-    jumpPrepare();
+    protoNext(); // ByteProto.ATTRIBUTE
+
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
 
     attributeImpl();
 
-    jumpReturn();
+    protoIndex = returnTo;
   }
 
   private void attributeImpl() throws IOException {
@@ -50,49 +59,72 @@ public class HtmlPlayer extends HtmlRecorder {
     protoNext(); // tail index
 
     int code = protoNext();
+    int value = protoNext();
 
-    var attr = StandardAttributeName.getByCode(code);
+    int index = objectIndex;
 
-    var value = (String) objectGet(protoNext());
+    while (index < protoArray.length) {
+      int proto = protoArray[index];
 
-    visitor.attribute(attr, value);
+      if (proto == ByteProto2.ATTRS_END) {
+        protoArray = IntArrays.growIfNecessary(protoArray, index + 3);
+        protoArray[index++] = code;
+        protoArray[index++] = ByteProto2.SINGLE;
+        protoArray[index++] = value;
+        protoArray[index++] = ByteProto2.ATTRS_END;
+
+        break;
+      }
+
+      if (proto != code) {
+        index += 3;
+
+        continue;
+      }
+
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
   private void element() throws IOException {
-    jumpPrepare();
+    protoNext(); // ByteProto.ELEMENT
+
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
 
     elementImpl();
 
-    jumpReturn();
+    protoIndex = returnTo;
   }
 
   private void elementImpl() throws IOException {
     protoNext(); // ByteProto.ELEMENT
     protoNext(); // tail index;
 
-    var elem = StandardElementName.getByCode(protoNext());
+    protoArray[objectIndex] = ByteProto2.ATTRS_END;
 
-    visitor.startTag(elem);
+    var elemName = StandardElementName.getByCode(protoNext());
+
+    int elem = NULL;
 
     loop: while (protoMore()) {
-      int proto = protoNext();
+      int proto = protoPeek();
 
       switch (proto) {
         case ByteProto2.ATTRIBUTE -> attribute();
 
-        case ByteProto2.ELEMENT -> element();
+        case ByteProto2.ELEMENT -> {
+          if (elem == NULL) {
+            elem = protoIndex;
+          }
 
-        case ByteProto2.ELEMENT_END -> {
-          visitor.endTag(elem);
-
-          break loop;
+          protoIndex += 2;
         }
 
-        case ByteProto2.ELEMENT_NORMAL -> visitor.startTagEnd(elem);
-
-        case ByteProto2.ELEMENT_VOID -> {
-          visitor.startTagEndSelfClosing();
-
+        case ByteProto2.ELEMENT_END -> {
           break loop;
         }
 
@@ -101,18 +133,69 @@ public class HtmlPlayer extends HtmlRecorder {
         );
       }
     }
-  }
 
-  private void jumpPrepare() {
-    int location = protoNext();
+    visitor.startTag(elemName.getName());
 
-    stackPush(protoIndex);
+    int attrIndex = objectIndex;
 
-    protoIndex = location;
-  }
+    while (attrIndex < protoArray.length) {
+      int code = protoArray[attrIndex++];
 
-  private void jumpReturn() {
-    protoIndex = stackPop();
+      if (code == ByteProto2.ATTRS_END) {
+        break;
+      }
+
+      int cellType = protoArray[attrIndex++];
+      int value = protoArray[attrIndex++];
+
+      if (cellType == ByteProto2.SINGLE) {
+        var name = StandardAttributeName.getByCode(code);
+        var string = (String) objectGet(value);
+
+        visitor.attributeStart(name.getName());
+        visitor.attributeValue(string);
+        visitor.attributeEnd();
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: cellType=" + cellType
+        );
+      }
+    }
+
+    var kind = elemName.getKind();
+
+    if (kind.isVoid()) {
+      visitor.selfClosingEnd();
+    } else {
+      visitor.startTagEnd(elemName.getName());
+
+      if (elem != NULL) {
+        protoIndex = elem;
+
+        loop: while (protoMore()) {
+          int proto = protoPeek();
+
+          switch (proto) {
+            case ByteProto2.ATTRIBUTE -> {
+              protoNext();
+              protoNext();
+            }
+
+            case ByteProto2.ELEMENT -> element();
+
+            case ByteProto2.ELEMENT_END -> {
+              break loop;
+            }
+
+            default -> throw new UnsupportedOperationException(
+              "Implement me :: proto=" + proto
+            );
+          }
+        }
+      }
+
+      visitor.endTag(elemName.getName());
+    }
   }
 
   private Object objectGet(int index) {
@@ -123,16 +206,26 @@ public class HtmlPlayer extends HtmlRecorder {
     return protoIndex < protoArray.length;
   }
 
+  private int protoPeek() {
+    return protoArray[protoIndex];
+  }
+
   private int protoNext() {
     return protoArray[protoIndex++];
   }
 
   private void rootElement() throws IOException {
+    protoNext(); // ByteProto.ROOT
+
     loop: while (protoMore()) {
-      int proto = protoNext();
+      int proto = protoPeek();
 
       switch (proto) {
-        case ByteProto2.DOCTYPE -> visitor.doctype();
+        case ByteProto2.DOCTYPE -> {
+          visitor.doctype();
+
+          protoIndex++;
+        }
 
         case ByteProto2.ELEMENT -> element();
 

@@ -102,46 +102,59 @@ public class HtmlRecorder implements TemplateDsl {
     int code = name.getCode(); // name implicit null-check
     int length = values.length; // values implicit null-check
 
-    int itemStart = protoIndex;
+    int contents = protoIndex;
 
     int attr = NULL;
-    int lastAttr = NULL;
+    int attrLast = NULL;
 
-    int child = NULL;
-    int lastChild = NULL;
+    int elem = NULL;
+    int elemLast = NULL;
+
+    int lambda = NULL;
+    int lambdaLast = NULL;
 
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
 
       executeIfNecessary(value);
 
-      if (itemStart == 0) {
+      if (contents == 0) {
         // html(Margin.V02);
         // no protos but we would get values.length > 0
         continue;
       }
 
-      var proto = protoArray[--itemStart];
+      var proto = protoArray[--contents];
 
       switch (proto) {
         case ByteProto2.ATTRIBUTE -> {
-          itemStart = protoArray[--itemStart];
+          contents = protoArray[--contents];
 
-          if (lastAttr == NULL) {
-            lastAttr = itemStart;
+          if (attrLast == NULL) {
+            attrLast = contents;
           }
 
-          attr = itemStart;
+          attr = contents;
         }
 
         case ByteProto2.ELEMENT -> {
-          child = protoArray[--itemStart];
+          elem = protoArray[--contents];
 
-          if (lastChild == NULL) {
-            lastChild = child;
+          if (elemLast == NULL) {
+            elemLast = elem;
           }
 
-          itemStart = protoArray[--itemStart];
+          contents = protoArray[--contents];
+        }
+
+        case ByteProto2.LAMBDA -> {
+          lambda = protoArray[--contents];
+
+          if (lambdaLast == NULL) {
+            lambdaLast = lambda;
+          }
+
+          contents = protoArray[--contents];
         }
 
         default -> throw new UnsupportedOperationException(
@@ -150,67 +163,61 @@ public class HtmlRecorder implements TemplateDsl {
       }
     }
 
-    int elemStart = protoIndex;
+    int selfStart = protoIndex;
 
     protoAdd(ByteProto2.ELEMENT, NULL, code);
 
-    // attributes
     for (int i = 0; i < length; i++) {
       var value = values[i];
 
-      if (value instanceof StandardAttributeName std) {
+      if (value instanceof StandardAttributeName) {
         if (attr == NULL) {
           throw new UnsupportedOperationException("Implement me");
         }
 
         int proto = protoArray[attr];
 
-        if (proto != ByteProto2.ATTRIBUTE) {
+        while (proto != ByteProto2.ATTRIBUTE) {
+          attr = protoArray[attr + 1];
+
+          proto = protoArray[attr];
+        }
+
+        protoAdd(proto, attr);
+
+        attr = protoArray[attr + 1];
+      } else if (value instanceof StandardElementName) {
+        if (elem == NULL) {
           throw new UnsupportedOperationException("Implement me");
         }
 
-        protoAdd(proto, attr++);
+        int proto = protoArray[elem];
 
-        attr = protoArray[attr];
-      }
-    }
+        while (proto != ByteProto2.ELEMENT) {
+          elem = protoArray[elem + 1];
 
-    var kind = name.getKind();
-
-    if (kind.isVoid()) {
-      protoAdd(ByteProto2.ELEMENT_VOID);
-    } else {
-      protoAdd(ByteProto2.ELEMENT_NORMAL);
-
-      // children
-      for (int i = 0; i < length; i++) {
-        var value = values[i];
-
-        if (value instanceof StandardElementName std) {
-          if (child == NULL) {
-            throw new UnsupportedOperationException("Implement me");
-          }
-
-          int proto = protoArray[child];
-
-          if (proto != ByteProto2.ELEMENT) {
-            throw new UnsupportedOperationException("Implement me");
-          }
-
-          protoAdd(proto, child++);
-
-          child = protoArray[child];
+          proto = protoArray[elem];
         }
-      }
 
-      protoAdd(ByteProto2.ELEMENT_END);
+        protoAdd(proto, elem);
+
+        elem = protoArray[elem + 1];
+      } else if (value instanceof Lambda) {
+        throw new UnsupportedOperationException("Implement me");
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: type=" + value.getClass()
+        );
+      }
     }
 
-    protoAdd(itemStart, elemStart, ByteProto2.ELEMENT);
+    protoAdd(ByteProto2.ELEMENT_END);
 
-    int end = protoIndex;
+    protoAdd(contents, selfStart, ByteProto2.ELEMENT);
 
-    protoArray[elemStart + 1] = end;
+    int selfEnd = protoIndex;
+
+    protoArray[selfStart + 1] = selfEnd;
   }
 
   @Override
@@ -219,8 +226,18 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void addLambda(Lambda lambda) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addLambda(Lambda lambda) {
+    int lambdaStart = protoIndex;
+
+    protoAdd(ByteProto2.LAMBDA, NULL);
+
+    lambda.apply();
+
+    protoAdd(lambdaStart, ByteProto2.LAMBDA);
+
+    int end = protoIndex;
+
+    protoArray[lambdaStart + 1] = end;
   }
 
   @Override
@@ -317,6 +334,8 @@ public class HtmlRecorder implements TemplateDsl {
     }
 
     protoAdd(ByteProto2.ROOT_END);
+
+    objectIndex = protoIndex;
 
     protoIndex = returnTo;
   }

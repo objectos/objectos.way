@@ -20,25 +20,27 @@ import objectos.html.internal.TemplateDslImpl;
 import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AttributeName;
-import objectos.html.tmpl.ElementName;
 import objectos.lang.Check;
 
 public abstract class HtmlTemplate extends FragmentOrTemplate implements Template {
 
   public interface Visitor {
 
-    void attribute(AttributeName name, String value) throws IOException;
+    void attributeEnd() throws IOException;
+
+    void attributeStart(String name) throws IOException;
+
+    void attributeValue(String value) throws IOException;
 
     void doctype() throws IOException;
 
-    void endTag(ElementName name) throws IOException;
+    void endTag(String name) throws IOException;
 
-    void startTag(ElementName name) throws IOException;
+    void selfClosingEnd() throws IOException;
 
-    void startTagEnd(ElementName name) throws IOException;
+    void startTag(String name) throws IOException;
 
-    void startTagEndSelfClosing() throws IOException;
+    void startTagEnd(String name) throws IOException;
 
   }
 
