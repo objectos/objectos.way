@@ -357,4 +357,27 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC14
+
+  - text child element
+  """)
+  public void testCase14() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            body(
+              p("o7html")
+            )
+          );
+        }
+      }.minified(),
+
+      """
+      <html><body><p>o7html</p></body></html>"""
+    );
+  }
+
 }

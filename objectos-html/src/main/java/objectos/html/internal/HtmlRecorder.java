@@ -15,6 +15,7 @@
  */
 package objectos.html.internal;
 
+import java.util.Objects;
 import objectos.html.AttributeOrElement;
 import objectos.html.HtmlFragment;
 import objectos.html.HtmlTemplate;
@@ -69,8 +70,8 @@ public class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void addAttribute(String name, String value) {
-    Check.notNull(name, "name == null");
-    Check.notNull(value, "value == null");
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
 
     var std = StandardAttributeName.getByName(name);
 
@@ -101,8 +102,27 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void addElement(ElementName name, String text) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addElement(ElementName name, String text) {
+    int code = name.getCode(); // name implicit null-check
+
+    int textIndex = protoIndex;
+
+    addText(text);
+
+    protoArray[textIndex] = ByteProto2.MARKED;
+
+    int startIndex = protoIndex;
+
+    protoAdd(
+      ByteProto2.ELEMENT, NULL, code,
+      ByteProto2.TEXT, textIndex,
+      ByteProto2.ELEMENT_END,
+      textIndex, startIndex, ByteProto2.ELEMENT
+    );
+
+    int endIndex = protoIndex;
+
+    protoArray[startIndex + 1] = endIndex;
   }
 
   @Override
@@ -211,8 +231,20 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void addText(String text) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addText(String text) {
+    Objects.requireNonNull(text, "text == null");
+
+    int startIndex = protoIndex;
+
+    protoAdd(
+      ByteProto2.TEXT, NULL,
+      objectAdd(text),
+      startIndex, ByteProto2.TEXT
+    );
+
+    int endIndex = protoIndex;
+
+    protoArray[startIndex + 1] = endIndex;
   }
 
   @Override
@@ -430,6 +462,15 @@ public class HtmlRecorder implements TemplateDsl {
     protoArray[protoIndex++] = v3;
   }
 
+  private void protoAdd(int v0, int v1, int v2, int v3, int v4) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 4);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
+    protoArray[protoIndex++] = v4;
+  }
+
   private void protoAdd(int v0, int v1, int v2, int v3, int v4, int v5) {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 5);
     protoArray[protoIndex++] = v0;
@@ -440,18 +481,31 @@ public class HtmlRecorder implements TemplateDsl {
     protoArray[protoIndex++] = v5;
   }
 
-  private int stackPeek(int offset) {
-    return stackArray[stackIndex - offset];
+  private void protoAdd(int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 8);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
+    protoArray[protoIndex++] = v4;
+    protoArray[protoIndex++] = v5;
+    protoArray[protoIndex++] = v6;
+    protoArray[protoIndex++] = v7;
+    protoArray[protoIndex++] = v8;
   }
 
-  private void stackSet(int offset, int value) {
-    stackArray[stackIndex - offset] = value;
+  private int stackPeek(int offset) {
+    return stackArray[stackIndex - offset];
   }
 
   private void stackPush(int v0, int v1) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
     stackArray[++stackIndex] = v0;
     stackArray[++stackIndex] = v1;
+  }
+
+  private void stackSet(int offset, int value) {
+    stackArray[stackIndex - offset] = value;
   }
 
 }

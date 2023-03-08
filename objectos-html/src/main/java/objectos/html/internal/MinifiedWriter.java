@@ -80,4 +80,9 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
     out.append('>');
   }
 
+  @Override
+  public final void text(String value) throws IOException {
+    HtmlEscape.to(value, out);
+  }
+
 }

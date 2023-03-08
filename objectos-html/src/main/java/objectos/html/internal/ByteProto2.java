@@ -41,6 +41,8 @@ final class ByteProto2 {
 
   static final int MARKED = -12;
 
+  static final int TEXT = -13;
+
   private ByteProto2() {}
 
 }

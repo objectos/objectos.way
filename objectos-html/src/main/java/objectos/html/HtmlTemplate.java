@@ -42,6 +42,8 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
     void startTagEnd(String name) throws IOException;
 
+    void text(String value) throws IOException;
+
   }
 
   @Override

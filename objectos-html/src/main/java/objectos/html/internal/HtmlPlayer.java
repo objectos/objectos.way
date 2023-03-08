@@ -116,7 +116,8 @@ public class HtmlPlayer extends HtmlRecorder {
       switch (proto) {
         case ByteProto2.ATTRIBUTE -> attribute();
 
-        case ByteProto2.ELEMENT -> {
+        case ByteProto2.ELEMENT,
+             ByteProto2.TEXT -> {
           if (elem == NULL) {
             elem = protoIndex;
           }
@@ -187,6 +188,8 @@ public class HtmlPlayer extends HtmlRecorder {
               break loop;
             }
 
+            case ByteProto2.TEXT -> text();
+
             default -> throw new UnsupportedOperationException(
               "Implement me :: proto=" + proto
             );
@@ -206,12 +209,12 @@ public class HtmlPlayer extends HtmlRecorder {
     return protoIndex < protoArray.length;
   }
 
-  private int protoPeek() {
-    return protoArray[protoIndex];
-  }
-
   private int protoNext() {
     return protoArray[protoIndex++];
+  }
+
+  private int protoPeek() {
+    return protoArray[protoIndex];
   }
 
   private void rootElement() throws IOException {
@@ -240,6 +243,31 @@ public class HtmlPlayer extends HtmlRecorder {
         );
       }
     }
+  }
+
+  private void text() throws IOException {
+    protoNext(); // ByteProto.TEXT
+
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
+
+    textImpl();
+
+    protoIndex = returnTo;
+  }
+
+  private void textImpl() throws IOException {
+    protoNext(); // ByteProto.TEXT
+    protoNext(); // tail index
+
+    int index = protoNext();
+
+    var text = (String) objectGet(index);
+
+    visitor.text(text);
   }
 
 }
