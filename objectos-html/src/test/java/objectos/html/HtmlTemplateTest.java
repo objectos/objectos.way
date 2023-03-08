@@ -238,7 +238,7 @@ public class HtmlTemplateTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   HtmlTemplate TC10
 
   - Test fragment inclusion.

@@ -203,7 +203,11 @@ public class HtmlRecorder implements TemplateDsl {
 
         elem = protoArray[elem + 1];
       } else if (value instanceof Lambda) {
-        throw new UnsupportedOperationException("Implement me");
+        if (lambda == NULL) {
+          throw new UnsupportedOperationException("Implement me");
+        }
+
+        lambda = executeLambda(lambda);
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: type=" + value.getClass()
@@ -218,6 +222,46 @@ public class HtmlRecorder implements TemplateDsl {
     int selfEnd = protoIndex;
 
     protoArray[selfStart + 1] = selfEnd;
+  }
+
+  private int executeLambda(int lambda) {
+    int proto = protoArray[lambda++];
+
+    while (proto != ByteProto2.LAMBDA) {
+      lambda = protoArray[lambda];
+
+      proto = protoArray[lambda++];
+    }
+
+    int tail = protoArray[lambda++];
+
+    int lambdaIndex = tail - 2;
+
+    int start = lambda;
+
+    while (lambdaIndex > start) {
+      proto = protoArray[--lambdaIndex];
+
+      switch (proto) {
+        case ByteProto2.ELEMENT -> {
+          int elem = protoArray[--lambdaIndex];
+
+          lambdaIndex = protoArray[--lambdaIndex];
+
+          stackPush(elem, proto);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    while (stackIndex >= 0) {
+      protoAdd(stackPop());
+    }
+
+    return tail;
   }
 
   @Override
