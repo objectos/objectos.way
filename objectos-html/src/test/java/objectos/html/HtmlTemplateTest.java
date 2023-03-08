@@ -265,4 +265,71 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC11
+
+  - Nested fragments.
+  """)
+  public void testCase11() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            body(
+              f(this::body0)
+            )
+          );
+        }
+
+        private void body0() {
+          header(
+            f(this::hero)
+          );
+        }
+
+        private void hero() {
+          nav();
+        }
+      }.minified(),
+
+      """
+      <html><body><header><nav></nav></header></body></html>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC12
+
+  - Siblings fragments.
+  """)
+  public void testCase12() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            f(this::head0),
+            f(this::body0)
+          );
+        }
+
+        private void head0() {
+          head(
+            meta()
+          );
+        }
+
+        private void body0() {
+          body(
+            header()
+          );
+        }
+      }.minified(),
+
+      """
+      <html><head><meta></head><body><header></header></body></html>"""
+    );
+  }
+
 }

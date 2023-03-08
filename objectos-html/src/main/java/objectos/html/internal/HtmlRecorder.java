@@ -154,7 +154,7 @@ public class HtmlRecorder implements TemplateDsl {
             lambdaLast = lambda;
           }
 
-          contents = protoArray[--contents];
+          contents = lambda;
         }
 
         default -> throw new UnsupportedOperationException(
