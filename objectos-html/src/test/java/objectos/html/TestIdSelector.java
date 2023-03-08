@@ -13,34 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-final class ByteProto2 {
+import objectos.html.spi.Marker;
+import objectos.html.spi.Renderer;
+import objectos.html.tmpl.AnyElementValue;
 
-  static final int ATTRIBUTE = -1;
+final class TestIdSelector implements AnyElementValue {
 
-  static final int ELEMENT = -2;
+  private final String id;
 
-  static final int ELEMENT_END = -3;
+  public TestIdSelector(String id) {
+    this.id = id;
+  }
 
-  static final int ROOT = -4;
+  @Override
+  public final void mark(Marker marker) {
+    marker.markAttribute();
+  }
 
-  static final int ROOT_END = -5;
-
-  static final int DOCTYPE = -6;
-
-  static final int LAMBDA = -7;
-
-  static final int SINGLE = -8;
-
-  static final int LIST = -9;
-
-  static final int ATTRS_END = -10;
-
-  static final int ATTRIBUTE_EXT = -11;
-
-  static final int MARKED = -12;
-
-  private ByteProto2() {}
+  @Override
+  public final void render(Renderer renderer) {
+    renderer.addAttribute("id", id);
+  }
 
 }

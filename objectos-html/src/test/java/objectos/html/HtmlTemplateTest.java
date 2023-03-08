@@ -332,4 +332,29 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC13
+
+  - attributes come from another object.
+  """)
+  public void testCase13() {
+    assertEquals(
+      new HtmlTemplate() {
+        final TestIdSelector FOO = new TestIdSelector("foo");
+        final TestIdSelector BAR = new TestIdSelector("bar");
+
+        @Override
+        protected final void definition() {
+          html(
+            FOO,
+            body(BAR)
+          );
+        }
+      }.minified(),
+
+      """
+      <html id="foo"><body id="bar"></body></html>"""
+    );
+  }
+
 }

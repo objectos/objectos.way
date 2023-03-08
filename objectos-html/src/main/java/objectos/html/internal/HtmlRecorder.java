@@ -23,7 +23,6 @@ import objectos.html.TemplateDsl;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardAttributeName;
-import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -69,8 +68,17 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void addAttribute(String name, String value) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addAttribute(String name, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(value, "value == null");
+
+    var std = StandardAttributeName.getByName(name);
+
+    if (std != null) {
+      addAttribute(std, value);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
   @Override
@@ -105,22 +113,17 @@ public class HtmlRecorder implements TemplateDsl {
     int contents = protoIndex;
 
     int attr = NULL;
-    int attrLast = NULL;
-
     int elem = NULL;
-    int elemLast = NULL;
-
     int lambda = NULL;
-    int lambdaLast = NULL;
 
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
 
-      executeIfNecessary(value);
+      int before = protoIndex;
 
-      if (contents == 0) {
-        // html(Margin.V02);
-        // no protos but we would get values.length > 0
+      value.render(this);
+
+      if (protoIndex > before) {
         continue;
       }
 
@@ -128,31 +131,19 @@ public class HtmlRecorder implements TemplateDsl {
 
       switch (proto) {
         case ByteProto2.ATTRIBUTE -> {
-          contents = protoArray[--contents];
+          attr = protoArray[--contents];
 
-          if (attrLast == NULL) {
-            attrLast = contents;
-          }
-
-          attr = contents;
+          contents = attr;
         }
 
         case ByteProto2.ELEMENT -> {
           elem = protoArray[--contents];
-
-          if (elemLast == NULL) {
-            elemLast = elem;
-          }
 
           contents = protoArray[--contents];
         }
 
         case ByteProto2.LAMBDA -> {
           lambda = protoArray[--contents];
-
-          if (lambdaLast == NULL) {
-            lambdaLast = lambda;
-          }
 
           contents = lambda;
         }
@@ -167,53 +158,23 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto2.ELEMENT, NULL, code);
 
+    stackPush(lambda); // 2
+    stackPush(elem); // 1
+    if (attr == NULL) {
+      stackPush(contents); // 0
+    } else {
+      stackPush(attr); // 0
+    }
+
     for (int i = 0; i < length; i++) {
       var value = values[i];
 
-      if (value instanceof StandardAttributeName) {
-        if (attr == NULL) {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        int proto = protoArray[attr];
-
-        while (proto != ByteProto2.ATTRIBUTE) {
-          attr = protoArray[attr + 1];
-
-          proto = protoArray[attr];
-        }
-
-        protoAdd(proto, attr);
-
-        attr = protoArray[attr + 1];
-      } else if (value instanceof StandardElementName) {
-        if (elem == NULL) {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        int proto = protoArray[elem];
-
-        while (proto != ByteProto2.ELEMENT) {
-          elem = protoArray[elem + 1];
-
-          proto = protoArray[elem];
-        }
-
-        protoAdd(proto, elem);
-
-        elem = protoArray[elem + 1];
-      } else if (value instanceof Lambda) {
-        if (lambda == NULL) {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        lambda = executeLambda(lambda);
-      } else {
-        throw new UnsupportedOperationException(
-          "Implement me :: type=" + value.getClass()
-        );
-      }
+      value.mark(this);
     }
+
+    stackPop();
+    stackPop();
+    stackPop();
 
     protoAdd(ByteProto2.ELEMENT_END);
 
@@ -222,46 +183,6 @@ public class HtmlRecorder implements TemplateDsl {
     int selfEnd = protoIndex;
 
     protoArray[selfStart + 1] = selfEnd;
-  }
-
-  private int executeLambda(int lambda) {
-    int proto = protoArray[lambda++];
-
-    while (proto != ByteProto2.LAMBDA) {
-      lambda = protoArray[lambda];
-
-      proto = protoArray[lambda++];
-    }
-
-    int tail = protoArray[lambda++];
-
-    int lambdaIndex = tail - 2;
-
-    int start = lambda;
-
-    while (lambdaIndex > start) {
-      proto = protoArray[--lambdaIndex];
-
-      switch (proto) {
-        case ByteProto2.ELEMENT -> {
-          int elem = protoArray[--lambdaIndex];
-
-          lambdaIndex = protoArray[--lambdaIndex];
-
-          stackPush(elem, proto);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    while (stackIndex >= 0) {
-      protoAdd(stackPop());
-    }
-
-    return tail;
   }
 
   @Override
@@ -295,8 +216,24 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void markAttribute() {
-    throw new UnsupportedOperationException("Implement me");
+  public final void markAttribute() {
+    var attr = stackPeek(0);
+
+    int proto = protoArray[attr];
+
+    while (proto != ByteProto2.ATTRIBUTE) {
+      attr = protoArray[attr + 1];
+
+      proto = protoArray[attr];
+    }
+
+    protoArray[attr] = ByteProto2.MARKED;
+
+    protoAdd(proto, attr);
+
+    attr = protoArray[attr + 1];
+
+    stackSet(0, attr);
   }
 
   @Override
@@ -305,13 +242,81 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void markElement() {
-    throw new UnsupportedOperationException("Implement me");
+  public final void markElement() {
+    var elem = stackPeek(1);
+
+    if (elem == NULL) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    int proto = protoArray[elem];
+
+    while (proto != ByteProto2.ELEMENT) {
+      elem = protoArray[elem + 1];
+
+      proto = protoArray[elem];
+    }
+
+    protoArray[elem] = ByteProto2.MARKED;
+
+    protoAdd(proto, elem);
+
+    elem = protoArray[elem + 1];
+
+    stackSet(1, elem);
   }
 
   @Override
-  public void markLambda() {
-    throw new UnsupportedOperationException("Implement me");
+  public final void markLambda() {
+    var lambda = stackPeek(2);
+
+    if (lambda == NULL) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    int proto = protoArray[lambda];
+
+    while (proto != ByteProto2.LAMBDA) {
+      lambda = protoArray[lambda + 1];
+
+      proto = protoArray[lambda];
+    }
+
+    protoArray[lambda] = ByteProto2.MARKED;
+
+    int tail = protoArray[lambda + 1];
+
+    int lambdaIndex = tail - 2;
+
+    int start = lambda + 2;
+
+    int stackStart = stackIndex + 1;
+
+    while (lambdaIndex > start) {
+      proto = protoArray[--lambdaIndex];
+
+      switch (proto) {
+        case ByteProto2.ELEMENT -> {
+          int elem = protoArray[--lambdaIndex];
+
+          lambdaIndex = protoArray[--lambdaIndex];
+
+          stackPush(elem, proto);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    while (stackIndex >= stackStart) {
+      protoAdd(stackPop());
+    }
+
+    lambda = tail;
+
+    stackSet(2, lambda);
   }
 
   @Override
@@ -321,7 +326,6 @@ public class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void markRootElement() {
-
   }
 
   @Override
@@ -393,8 +397,6 @@ public class HtmlRecorder implements TemplateDsl {
     stackArray[++stackIndex] = v0;
   }
 
-  private void executeIfNecessary(Value value) {}
-
   private int objectAdd(Object value) {
     int result = objectIndex;
     objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
@@ -436,6 +438,14 @@ public class HtmlRecorder implements TemplateDsl {
     protoArray[protoIndex++] = v3;
     protoArray[protoIndex++] = v4;
     protoArray[protoIndex++] = v5;
+  }
+
+  private int stackPeek(int offset) {
+    return stackArray[stackIndex - offset];
+  }
+
+  private void stackSet(int offset, int value) {
+    stackArray[stackIndex - offset] = value;
   }
 
   private void stackPush(int v0, int v1) {
