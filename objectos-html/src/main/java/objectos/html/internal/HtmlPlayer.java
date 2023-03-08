@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.io.IOException;
+import objectos.html.AttributeOrElement;
 import objectos.html.HtmlTemplate;
 import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.tmpl.StandardAttributeName;
@@ -61,6 +62,10 @@ public class HtmlPlayer extends HtmlRecorder {
     int code = protoNext();
     int value = protoNext();
 
+    attributeImpl(code, value);
+  }
+
+  private void attributeImpl(int code, int value) {
     int index = objectIndex;
 
     while (index < protoArray.length) {
@@ -115,6 +120,16 @@ public class HtmlPlayer extends HtmlRecorder {
 
       switch (proto) {
         case ByteProto2.ATTRIBUTE -> attribute();
+
+        case ByteProto2.ATTR_OR_ELEM -> {
+          int before = protoIndex;
+
+          var attribute = maybeAttribute(elemName);
+
+          if (!attribute && elem == NULL) {
+            elem = before;
+          }
+        }
 
         case ByteProto2.ELEMENT,
              ByteProto2.TEXT -> {
@@ -182,6 +197,8 @@ public class HtmlPlayer extends HtmlRecorder {
               protoNext();
             }
 
+            case ByteProto2.ATTR_OR_ELEM -> maybeElement(elemName);
+
             case ByteProto2.ELEMENT -> element();
 
             case ByteProto2.ELEMENT_END -> {
@@ -198,6 +215,86 @@ public class HtmlPlayer extends HtmlRecorder {
       }
 
       visitor.endTag(elemName.getName());
+    }
+  }
+
+  private void maybeElement(StandardElementName parent) throws IOException {
+    protoNext(); // ByteProto.ATTR_OR_ELEM
+
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
+
+    maybeElementImpl(parent);
+
+    protoIndex = returnTo;
+  }
+
+  private void maybeElementImpl(StandardElementName parent) throws IOException {
+    protoNext(); // ByteProto.ATTR_OR_ELEM
+    protoNext(); // tail index
+
+    int code = protoNext();
+
+    var attributeOrElement = AttributeOrElement.get(code);
+
+    if (!attributeOrElement.isAttributeOf(parent)) {
+      code = attributeOrElement.elementByteCode();
+
+      var element = StandardElementName.getByCode(code);
+
+      var name = element.getName();
+
+      visitor.startTag(name);
+
+      visitor.startTagEnd(name);
+
+      int value = protoNext();
+
+      var text = (String) objectGet(value);
+
+      visitor.text(text);
+
+      visitor.endTag(name);
+    }
+  }
+
+  private boolean maybeAttribute(StandardElementName parent) {
+    protoNext(); // ByteProto.ATTR_OR_ELEM
+
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
+
+    var result = maybeAttributeImpl(parent);
+
+    protoIndex = returnTo;
+
+    return result;
+  }
+
+  private boolean maybeAttributeImpl(StandardElementName parent) {
+    protoNext(); // ByteProto.ATTR_OR_ELEM
+    protoNext(); // tail index
+
+    int code = protoNext();
+
+    var attributeOrElement = AttributeOrElement.get(code);
+
+    if (attributeOrElement.isAttributeOf(parent)) {
+      code = attributeOrElement.attributeByteCode();
+
+      int value = protoNext();
+
+      attributeImpl(code, value);
+
+      return true;
+    } else {
+      return false;
     }
   }
 

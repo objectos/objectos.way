@@ -43,6 +43,8 @@ final class ByteProto2 {
 
   static final int TEXT = -13;
 
+  static final int ATTR_OR_ELEM = -14;
+
   private ByteProto2() {}
 
 }

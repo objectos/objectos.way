@@ -380,4 +380,53 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC15
+
+  - text nodes + element nodes
+  """)
+  public void testCase15() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          div(
+            t("a"),
+            p("b"),
+            t("c")
+          );
+        }
+      }.minified(),
+
+      """
+      <div>a<p>b</p>c</div>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC16
+
+  - attribute or element (title)
+  """)
+  public void testCase16() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          html(
+            head(
+              title("element")
+            ),
+            body(
+              title("attribute")
+            )
+          );
+        }
+      }.minified(),
+
+      """
+      <html><head><title>element</title></head><body title="attribute"></body></html>"""
+    );
+  }
+
 }
