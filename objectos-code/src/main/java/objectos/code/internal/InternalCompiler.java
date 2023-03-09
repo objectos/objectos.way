@@ -1106,6 +1106,8 @@ class InternalCompiler extends InternalApi {
       protoIndex = declarators;
 
       fieldDeclarationVariableList();
+    } else {
+      unnamed();
     }
 
     semicolon();
@@ -3166,9 +3168,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void unnamed() {
-    if (lastIs(_KEYWORD)) {
-      codeAdd(Whitespace.MANDATORY);
-    }
+    preIdentifier();
 
     codeAdd(ByteCode.IDENTIFIER, object("unnamed"));
   }
