@@ -149,4 +149,12 @@ public final class ByteProto {
     return proto == NEW_LINE;
   }
 
+  public static boolean isContinuation(int proto) {
+    return switch (proto) {
+      case V -> true;
+
+      default -> false;
+    };
+  }
+
 }

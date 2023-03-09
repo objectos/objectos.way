@@ -43,8 +43,9 @@ class InternalCompiler extends InternalApi {
       _KEYWORD = 6,
       _NEW_LINE = 7,
       _PRIMARY = 8,
-      _SYMBOL = 9,
-      _TYPE = 10;
+      _PRIMARY_NL = 9,
+      _SYMBOL = 10,
+      _TYPE = 11;
 
   protected final void compile() {
     codeIndex = 0;
@@ -147,23 +148,29 @@ class InternalCompiler extends InternalApi {
   private void argList() {
     argumentStart();
 
-    consumeWs();
+    int nl = countNewLine();
 
     if (protoIs(ByteProto.ARGUMENT)) {
+      nl = newLine(nl);
+
       execute(this::arg);
 
-      consumeWs();
+      nl = countNewLine();
 
       while (protoIs(ByteProto.ARGUMENT)) {
+        nl = newLine(nl);
+
         argumentComma();
 
         execute(this::arg);
 
-        consumeWs();
+        nl = countNewLine();
       }
     }
 
     argumentEnd();
+
+    nl = newLine(nl);
   }
 
   private void argument() {
@@ -864,6 +871,18 @@ class InternalCompiler extends InternalApi {
     }
   }
 
+  private int countNewLine() {
+    int count = 0;
+
+    while (protoMore() && protoPeek() == ByteProto.NEW_LINE) {
+      count++;
+
+      protoIndex += 2;
+    }
+
+    return count;
+  }
+
   private void declarationName() {
     preIdentifier();
 
@@ -1149,7 +1168,11 @@ class InternalCompiler extends InternalApi {
         return;
       }
 
+      codeAdd(Indentation.ENTER_CONTINUATION);
+
       langItem(proto);
+
+      codeAdd(Indentation.EXIT_CONTINUATION);
     }
   }
 
@@ -1367,10 +1390,26 @@ class InternalCompiler extends InternalApi {
   }
 
   private void lang() {
-    while (elemMore()) {
+    if (elemMore()) {
       int proto = protoPeek();
 
       langItem(proto);
+
+      var continuation = ByteProto.isContinuation(proto);
+
+      while (elemMore()) {
+        proto = protoPeek();
+
+        if (continuation) {
+          codeAdd(Indentation.ENTER_CONTINUATION);
+
+          langItem(proto);
+
+          codeAdd(Indentation.EXIT_CONTINUATION);
+        } else {
+          langItem(proto);
+        }
+      }
     }
   }
 
@@ -1466,7 +1505,11 @@ class InternalCompiler extends InternalApi {
       case ByteProto.V -> {
         execute(this::v);
         argList();
-        last(_PRIMARY);
+        if (lastIs(_NEW_LINE)) {
+          last(_PRIMARY_NL);
+        } else {
+          last(_PRIMARY);
+        }
       }
 
       case ByteProto.VAR -> {
@@ -1756,6 +1799,14 @@ class InternalCompiler extends InternalApi {
     codeAdd(Whitespace.NEW_LINE);
 
     last(_NEW_LINE);
+  }
+
+  private int newLine(int count) {
+    for (int i = 0; i < count; i++) {
+      newLine();
+    }
+
+    return 0;
   }
 
   private void noop() {}
@@ -2569,6 +2620,11 @@ class InternalCompiler extends InternalApi {
       case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
 
       case _NEW_LINE -> codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+
+      case _PRIMARY_NL -> {
+        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+        codeAdd(Symbol.DOT);
+      }
 
       case _SYMBOL -> codeAdd(Whitespace.OPTIONAL);
     }

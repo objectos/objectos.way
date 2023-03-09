@@ -39,6 +39,10 @@ public abstract class InternalInterpreter extends InternalCompiler {
 
   protected final void levelIncrease() { protoIndex++; }
 
+  protected final void levelDecrease(int count) { protoIndex -= count; }
+
+  protected final void levelIncrease(int count) { protoIndex += count; }
+
   protected abstract void writeComment(String value);
 
   protected abstract void writeCompilationUnitEnd(String packageName, String fileName);

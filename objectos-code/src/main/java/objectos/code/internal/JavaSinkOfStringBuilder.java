@@ -59,11 +59,13 @@ public class JavaSinkOfStringBuilder extends JavaSink {
 
       case EXIT_BLOCK -> levelDecrease();
 
+      case ENTER_CONTINUATION -> levelIncrease(2);
+
+      case EXIT_CONTINUATION -> levelDecrease(2);
+
       case ENTER_PARENTHESIS -> levelIncrease();
 
       case EXIT_PARENTHESIS -> levelDecrease();
-
-      default -> {}
     }
   }
 

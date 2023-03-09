@@ -55,6 +55,10 @@ public enum Indentation {
    */
   EXIT_BLOCK,
 
+  ENTER_CONTINUATION,
+
+  EXIT_CONTINUATION,
+
   /**
    * Indicates that the source code generation has entered a parenthesized
    * construct.

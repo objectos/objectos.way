@@ -158,6 +158,11 @@ public class MethodInvocationExpressionTest {
                 argument(s("1")), NL, NL,
                 argument(v("m2")), NL, NL,
                 argument(s("3"), NL)
+              ),
+              p(
+                v("m0"), NL,
+                v("m1"), NL,
+                v("m2")
               )
             )
           );
@@ -174,6 +179,9 @@ public class MethodInvocationExpressionTest {
 
             "3"
           );
+          m0()
+              .m1()
+              .m2();
         }
       }
       """
