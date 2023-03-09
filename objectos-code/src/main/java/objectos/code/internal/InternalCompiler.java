@@ -32,6 +32,8 @@ class InternalCompiler extends InternalApi {
     void execute(int proto);
   }
 
+  static final int TRUE = 1, FALSE = 0;
+
   private static final int _START = 0,
       _ANNOTATION = 1,
       _BLOCK = 2,
@@ -441,7 +443,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void bodyMember() {
-    topLevel(NULL);
+    topLevel(FALSE);
 
     if (itemIs(ByteProto.FIELD_DECLARATION)) {
       execute(this::fieldDeclaration);
@@ -545,7 +547,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void bodyMember(int proto) {
-    topLevel(NULL);
+    topLevel(FALSE);
 
     switch (last()) {
       case _START -> codeAdd(Whitespace.BEFORE_FIRST_MEMBER);
@@ -2616,7 +2618,7 @@ class InternalCompiler extends InternalApi {
 
     simpleName(NULL);
 
-    topLevel(1);
+    topLevel(TRUE);
   }
 
   private void preType() {
@@ -2901,7 +2903,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void topLevelDeclaration() {
-    topLevel(1);
+    topLevel(TRUE);
 
     oldDeclarationAnnotationList();
 
@@ -3097,7 +3099,7 @@ class InternalCompiler extends InternalApi {
   private void typeDeclarationNameValue(int proto) {
     simpleName(proto);
 
-    var topLevel = topLevel() != NULL;
+    var topLevel = topLevel() == TRUE;
 
     if (topLevel) {
       var publicFound = publicFound() != NULL;

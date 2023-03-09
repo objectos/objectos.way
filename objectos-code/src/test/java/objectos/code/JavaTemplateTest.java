@@ -17,9 +17,10 @@ package objectos.code;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
 import org.testng.annotations.Test;
 
-public class CompilationUnitTest {
+public class JavaTemplateTest {
 
   @Test(description = """
   empty
@@ -355,6 +356,61 @@ public class CompilationUnitTest {
 
       """
       class Test {}
+      """
+    );
+  }
+
+  @Test(description = """
+  Compilation Unit TC11
+
+  - autoImports
+  - single import
+  - no package decl
+  """)
+  public void testCase11() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName STRING
+            = ClassTypeName.of(String.class);
+
+        static final ParameterizedTypeName LIST
+            = ParameterizedTypeName.of(
+              ClassTypeName.of(List.class),
+              STRING
+            );
+
+        @Override
+        protected final void definition() {
+          autoImports();
+
+          classDeclaration(
+            name("FieldName"),
+
+            field(
+              INT, name("a")
+            ),
+
+            field(
+              STRING, name("b")
+            ),
+
+            field(
+              LIST, name("c")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      import java.util.List;
+
+      class FieldName {
+        int a;
+
+        String b;
+
+        List<String> c;
+      }
       """
     );
   }
