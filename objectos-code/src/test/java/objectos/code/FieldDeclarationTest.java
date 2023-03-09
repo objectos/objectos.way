@@ -273,6 +273,7 @@ public class FieldDeclarationTest {
       """
     );
   }
+
   @Test(description = """
   Field declarations TC08
 
@@ -294,6 +295,36 @@ public class FieldDeclarationTest {
       """
       class Fields {
         int unnamed;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  Field declarations TC09
+
+  - no type specified -> void
+  """)
+  public void testCase09() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            name("Fields"),
+
+            field(name("a")),
+
+            field(PUBLIC, name("b"))
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        void a;
+
+        public void b;
       }
       """
     );

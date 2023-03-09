@@ -1102,6 +1102,8 @@ class InternalCompiler extends InternalApi {
 
     if (type != NULL) {
       singleSwitch(type, this::type);
+    } else {
+      voidKeyword();
     }
 
     if (declarators != NULL) {
