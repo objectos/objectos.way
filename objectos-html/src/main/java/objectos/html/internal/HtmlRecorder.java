@@ -55,17 +55,20 @@ public class HtmlRecorder implements TemplateDsl {
     int code = name.getCode(); // name implicit null-check
     value = value.toString(); // value implicit null-check
 
-    int startIndex = protoIndex;
+    int start = protoIndex;
 
     protoAdd(
-      ByteProto2.ATTRIBUTE, NULL,
-      code, objectAdd(value),
-      startIndex, ByteProto2.ATTRIBUTE
+      ByteProto2.ATTRIBUTE,
+      NULL,
+
+      code,
+      objectAdd(value),
+
+      start,
+      ByteProto2.ATTRIBUTE
     );
 
-    int endIndex = protoIndex;
-
-    protoArray[startIndex + 1] = endIndex;
+    endSet(start);
   }
 
   @Override
@@ -87,55 +90,63 @@ public class HtmlRecorder implements TemplateDsl {
     int code = value.code(); // name implicit null-check
     text = text.toString(); // text implicit null-check
 
-    int startIndex = protoIndex;
+    int start = protoIndex;
 
     protoAdd(
-      ByteProto2.ATTR_OR_ELEM, NULL,
-      code, objectAdd(text),
-      startIndex, ByteProto2.ATTR_OR_ELEM
+      ByteProto2.ATTR_OR_ELEM,
+      NULL,
+
+      code,
+      objectAdd(text),
+
+      start,
+      ByteProto2.ATTR_OR_ELEM
     );
 
-    int endIndex = protoIndex;
-
-    protoArray[startIndex + 1] = endIndex;
+    endSet(start);
   }
 
   @Override
   public final void addDoctype() {
-    int startIndex = protoIndex;
+    int start = protoIndex;
 
     protoAdd(
-      ByteProto2.DOCTYPE, NULL,
-      startIndex, ByteProto2.DOCTYPE
+      ByteProto2.DOCTYPE,
+      NULL,
+
+      start,
+      ByteProto2.DOCTYPE
     );
 
-    int endIndex = protoIndex;
-
-    protoArray[startIndex + 1] = endIndex;
+    endSet(start);
   }
 
   @Override
   public final void addElement(ElementName name, String text) {
     int code = name.getCode(); // name implicit null-check
 
-    int textIndex = protoIndex;
+    int contents = protoIndex;
 
     addText(text);
 
-    protoArray[textIndex] = ByteProto2.MARKED;
+    protoArray[contents] = ByteProto2.MARKED;
 
-    int startIndex = protoIndex;
+    int start = protoIndex;
 
     protoAdd(
-      ByteProto2.ELEMENT, NULL, code,
-      ByteProto2.TEXT, textIndex,
+      ByteProto2.ELEMENT,
+      NULL,
+      code,
+
+      ByteProto2.TEXT, contents,
       ByteProto2.ELEMENT_END,
-      textIndex, startIndex, ByteProto2.ELEMENT
+
+      contents,
+      start,
+      ByteProto2.ELEMENT
     );
 
-    int endIndex = protoIndex;
-
-    protoArray[startIndex + 1] = endIndex;
+    endSet(start);
   }
 
   @Override
@@ -145,10 +156,10 @@ public class HtmlRecorder implements TemplateDsl {
 
     int contents = protoIndex;
 
-    int attr = NULL;
-    int elem = NULL;
-    int lambda = NULL;
-    int attrElem = NULL;
+    int attributes = NULL;
+    int elements = NULL;
+    int lambdas = NULL;
+    int attrOrElems = NULL;
 
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
@@ -165,33 +176,24 @@ public class HtmlRecorder implements TemplateDsl {
 
       switch (proto) {
         case ByteProto2.ATTRIBUTE -> {
-          attr = protoArray[--contents];
-
-          contents = attr;
+          contents = attributes = protoArray[--contents];
         }
 
         case ByteProto2.ATTR_OR_ELEM -> {
-          attrElem = protoArray[--contents];
-
-          contents = attrElem;
+          contents = attrOrElems = protoArray[--contents];
         }
 
         case ByteProto2.ELEMENT -> {
-          elem = protoArray[--contents];
-
+          elements = protoArray[--contents];
           contents = protoArray[--contents];
         }
 
         case ByteProto2.LAMBDA -> {
-          lambda = protoArray[--contents];
-
-          contents = lambda;
+          contents = lambdas = protoArray[--contents];
         }
 
         case ByteProto2.TEXT -> {
-          elem = protoArray[--contents];
-
-          contents = elem;
+          contents = elements = protoArray[--contents];
         }
 
         default -> throw new UnsupportedOperationException(
@@ -200,17 +202,17 @@ public class HtmlRecorder implements TemplateDsl {
       }
     }
 
-    int selfStart = protoIndex;
+    int start = protoIndex;
 
     protoAdd(ByteProto2.ELEMENT, NULL, code);
 
-    stackPush(attrElem);
-    stackPush(lambda); // 2
-    stackPush(elem); // 1
-    if (attr == NULL) {
+    stackPush(attrOrElems); // 3
+    stackPush(lambdas); // 2
+    stackPush(elements); // 1
+    if (attributes == NULL) {
       stackPush(contents); // 0
     } else {
-      stackPush(attr); // 0
+      stackPush(attributes); // 0
     }
 
     for (int i = 0; i < length; i++) {
@@ -226,11 +228,9 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto2.ELEMENT_END);
 
-    protoAdd(contents, selfStart, ByteProto2.ELEMENT);
+    protoAdd(contents, start, ByteProto2.ELEMENT);
 
-    int selfEnd = protoIndex;
-
-    protoArray[selfStart + 1] = selfEnd;
+    endSet(start);
   }
 
   @Override
@@ -240,17 +240,15 @@ public class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void addLambda(Lambda lambda) {
-    int lambdaStart = protoIndex;
+    int start = protoIndex;
 
     protoAdd(ByteProto2.LAMBDA, NULL);
 
     lambda.apply();
 
-    protoAdd(lambdaStart, ByteProto2.LAMBDA);
+    protoAdd(start, ByteProto2.LAMBDA);
 
-    int end = protoIndex;
-
-    protoArray[lambdaStart + 1] = end;
+    endSet(start);
   }
 
   @Override
@@ -262,101 +260,39 @@ public class HtmlRecorder implements TemplateDsl {
   public final void addText(String text) {
     Objects.requireNonNull(text, "text == null");
 
-    int startIndex = protoIndex;
+    int start = protoIndex;
 
     protoAdd(
-      ByteProto2.TEXT, NULL,
+      ByteProto2.TEXT,
+      NULL,
+
       objectAdd(text),
-      startIndex, ByteProto2.TEXT
+
+      start,
+      ByteProto2.TEXT
     );
 
-    int endIndex = protoIndex;
-
-    protoArray[startIndex + 1] = endIndex;
+    endSet(start);
   }
 
   @Override
   public final void markAttribute() {
-    var attr = stackPeek(0);
-
-    int proto = protoArray[attr];
-
-    while (proto != ByteProto2.ATTRIBUTE) {
-      attr = protoArray[attr + 1];
-
-      proto = protoArray[attr];
-    }
-
-    protoArray[attr] = ByteProto2.MARKED;
-
-    protoAdd(proto, attr);
-
-    attr = protoArray[attr + 1];
-
-    stackSet(0, attr);
+    markImpl(0, ByteProto2.ATTRIBUTE);
   }
 
   @Override
   public final void markAttributeOrElement() {
-    var attrElem = stackPeek(3);
-
-    int proto = protoArray[attrElem];
-
-    while (proto != ByteProto2.ATTR_OR_ELEM) {
-      attrElem = protoArray[attrElem + 1];
-
-      proto = protoArray[attrElem];
-    }
-
-    protoArray[attrElem] = ByteProto2.MARKED;
-
-    protoAdd(proto, attrElem);
-
-    attrElem = protoArray[attrElem + 1];
-
-    stackSet(3, attrElem);
+    markImpl(3, ByteProto2.ATTR_OR_ELEM);
   }
 
   @Override
   public final void markElement() {
-    var elem = stackPeek(1);
-
-    if (elem == NULL) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    int proto = protoArray[elem];
-
-    while (proto != ByteProto2.ELEMENT) {
-      elem = protoArray[elem + 1];
-
-      proto = protoArray[elem];
-    }
-
-    protoArray[elem] = ByteProto2.MARKED;
-
-    protoAdd(proto, elem);
-
-    elem = protoArray[elem + 1];
-
-    stackSet(1, elem);
+    markImpl(1, ByteProto2.ELEMENT);
   }
 
   @Override
   public final void markLambda() {
-    var lambda = stackPeek(2);
-
-    if (lambda == NULL) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    int proto = protoArray[lambda];
-
-    while (proto != ByteProto2.LAMBDA) {
-      lambda = protoArray[lambda + 1];
-
-      proto = protoArray[lambda];
-    }
+    int lambda = markSearch(2, ByteProto2.LAMBDA);
 
     protoArray[lambda] = ByteProto2.MARKED;
 
@@ -369,7 +305,7 @@ public class HtmlRecorder implements TemplateDsl {
     int stackStart = stackIndex + 1;
 
     while (lambdaIndex > start) {
-      proto = protoArray[--lambdaIndex];
+      int proto = protoArray[--lambdaIndex];
 
       switch (proto) {
         case ByteProto2.ELEMENT -> {
@@ -402,6 +338,7 @@ public class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void markRootElement() {
+    // noop
   }
 
   @Override
@@ -411,27 +348,7 @@ public class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void markText() {
-    var elem = stackPeek(1);
-
-    if (elem == NULL) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    int proto = protoArray[elem];
-
-    while (proto != ByteProto2.TEXT) {
-      elem = protoArray[elem + 1];
-
-      proto = protoArray[elem];
-    }
-
-    protoArray[elem] = ByteProto2.MARKED;
-
-    protoAdd(proto, elem);
-
-    elem = protoArray[elem + 1];
-
-    stackSet(1, elem);
+    markImpl(1, ByteProto2.TEXT);
   }
 
   public final void record(HtmlTemplate template) {
@@ -491,6 +408,36 @@ public class HtmlRecorder implements TemplateDsl {
   final void stackPush(int v0) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
     stackArray[++stackIndex] = v0;
+  }
+
+  private void endSet(int start) {
+    protoArray[start + 1] = protoIndex;
+  }
+
+  private void markImpl(int offset, int proto) {
+    var index = markSearch(offset, proto);
+
+    protoArray[index] = ByteProto2.MARKED;
+
+    protoAdd(proto, index);
+
+    index = protoArray[index + 1];
+
+    stackSet(offset, index);
+  }
+
+  private int markSearch(int offset, int condition) {
+    var index = stackPeek(offset);
+
+    int proto = protoArray[index];
+
+    while (proto != condition) {
+      index = protoArray[index + 1];
+
+      proto = protoArray[index];
+    }
+
+    return index;
   }
 
   private int objectAdd(Object value) {
