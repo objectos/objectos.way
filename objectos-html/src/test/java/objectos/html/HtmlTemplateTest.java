@@ -459,4 +459,50 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC18
+
+  - attribute or element (title)
+  """)
+  public void testCase18() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          body(
+            id("id"),
+            title("t1"),
+            title("t2"),
+            p("tc18")
+          );
+        }
+      }.minified(),
+
+      """
+      <body id="id" title="t1 t2"><p>tc18</p></body>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC19
+
+  - attribute or element (label)
+  """)
+  public void testCase19() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          body(
+            option(label("attribute")),
+            fieldset(label("element"))
+          );
+        }
+      }.minified(),
+
+      """
+      <body><option label="attribute"></option><fieldset><label>element</label></fieldset></body>"""
+    );
+  }
+
 }

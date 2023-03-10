@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Provides the Objectos HTML API.
+ * Defines the Objectos HTML API.
  *
  * @since 0.5.0
  */
