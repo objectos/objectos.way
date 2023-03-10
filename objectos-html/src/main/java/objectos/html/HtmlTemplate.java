@@ -105,8 +105,8 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
   @Override
   public final void render(Renderer renderer) {
-    if (renderer instanceof TemplateDsl) {
-      acceptTemplateDsl((TemplateDsl) renderer);
+    if (renderer instanceof TemplateDsl dsl) {
+      dsl.addTemplate(this);
     }
   }
 

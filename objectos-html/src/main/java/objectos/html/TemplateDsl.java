@@ -41,6 +41,8 @@ public interface TemplateDsl extends Marker, Renderer {
 
   void addRaw(String text);
 
+  void addTemplate(HtmlTemplate template);
+
   void addText(String text);
 
 }

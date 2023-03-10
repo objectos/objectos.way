@@ -45,6 +45,8 @@ final class ByteProto2 {
 
   static final int ATTR_OR_ELEM = -14;
 
+  static final int TEMPLATE = -15;
+
   private ByteProto2() {}
 
 }

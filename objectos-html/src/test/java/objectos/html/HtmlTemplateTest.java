@@ -505,4 +505,44 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC20
+
+  - include template
+  """)
+  public void testCase20() {
+    assertEquals(
+      new HtmlTemplate() {
+        private final Template nav = new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            nav(
+              a("o7html")
+            );
+          }
+        };
+
+        private final Template hero = new HtmlTemplate() {
+          @Override
+          protected final void definition() {
+            section(
+              p("is cool")
+            );
+          }
+        };
+
+        @Override
+        protected final void definition() {
+          body(
+            nav,
+            hero
+          );
+        }
+      }.minified(),
+
+      """
+      <body><nav><a>o7html</a></nav><section><p>is cool</p></section></body>"""
+    );
+  }
+
 }

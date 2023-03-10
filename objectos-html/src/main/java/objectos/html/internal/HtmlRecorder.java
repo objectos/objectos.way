@@ -160,6 +160,7 @@ public class HtmlRecorder implements TemplateDsl {
     int elements = NULL;
     int lambdas = NULL;
     int attrOrElems = NULL;
+    int templates = NULL;
 
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
@@ -169,6 +170,11 @@ public class HtmlRecorder implements TemplateDsl {
       value.render(this);
 
       if (protoIndex > before) {
+        if (templates == NULL) {
+          // maybe this should be implemented in HtmlTemplate::render instead?
+          templates = before;
+        }
+
         continue;
       }
 
@@ -206,6 +212,7 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto2.ELEMENT, NULL, code);
 
+    stackPush(templates); // 4
     stackPush(attrOrElems); // 3
     stackPush(lambdas); // 2
     stackPush(elements); // 1
@@ -221,6 +228,7 @@ public class HtmlRecorder implements TemplateDsl {
       value.mark(this);
     }
 
+    stackPop();
     stackPop();
     stackPop();
     stackPop();
@@ -257,6 +265,19 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
+  public final void addTemplate(HtmlTemplate template) {
+    int start = protoIndex;
+
+    protoAdd(ByteProto2.TEMPLATE, NULL);
+
+    template.acceptTemplateDsl(this);
+
+    protoAdd(start, ByteProto2.TEMPLATE);
+
+    endSet(start);
+  }
+
+  @Override
   public final void addText(String text) {
     Objects.requireNonNull(text, "text == null");
 
@@ -277,58 +298,22 @@ public class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void markAttribute() {
-    markImpl(0, ByteProto2.ATTRIBUTE);
+    markImplStandard(0, ByteProto2.ATTRIBUTE);
   }
 
   @Override
   public final void markAttributeOrElement() {
-    markImpl(3, ByteProto2.ATTR_OR_ELEM);
+    markImplStandard(3, ByteProto2.ATTR_OR_ELEM);
   }
 
   @Override
   public final void markElement() {
-    markImpl(1, ByteProto2.ELEMENT);
+    markImplStandard(1, ByteProto2.ELEMENT);
   }
 
   @Override
   public final void markLambda() {
-    int lambda = markSearch(2, ByteProto2.LAMBDA);
-
-    protoArray[lambda] = ByteProto2.MARKED;
-
-    int tail = protoArray[lambda + 1];
-
-    int lambdaIndex = tail - 2;
-
-    int start = lambda + 2;
-
-    int stackStart = stackIndex + 1;
-
-    while (lambdaIndex > start) {
-      int proto = protoArray[--lambdaIndex];
-
-      switch (proto) {
-        case ByteProto2.ELEMENT -> {
-          int elem = protoArray[--lambdaIndex];
-
-          lambdaIndex = protoArray[--lambdaIndex];
-
-          stackPush(elem, proto);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    while (stackIndex >= stackStart) {
-      protoAdd(stackPop());
-    }
-
-    lambda = tail;
-
-    stackSet(2, lambda);
+    markImplLambda(2, ByteProto2.LAMBDA);
   }
 
   @Override
@@ -342,13 +327,13 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void markTemplate() {
-    throw new UnsupportedOperationException("Implement me");
+  public final void markTemplate() {
+    markImplLambda(4, ByteProto2.TEMPLATE);
   }
 
   @Override
   public final void markText() {
-    markImpl(1, ByteProto2.TEXT);
+    markImplStandard(1, ByteProto2.TEXT);
   }
 
   public final void record(HtmlTemplate template) {
@@ -414,7 +399,47 @@ public class HtmlRecorder implements TemplateDsl {
     protoArray[start + 1] = protoIndex;
   }
 
-  private void markImpl(int offset, int proto) {
+  private void markImplLambda(int offset, int type) {
+    int thisStart = markSearch(offset, type);
+
+    protoArray[thisStart] = ByteProto2.MARKED;
+
+    int tail = protoArray[thisStart + 1];
+
+    int thisIndex = tail - 2;
+
+    int start = thisStart + 2;
+
+    int stackStart = stackIndex + 1;
+
+    while (thisIndex > start) {
+      int proto = protoArray[--thisIndex];
+
+      switch (proto) {
+        case ByteProto2.ELEMENT -> {
+          int elem = protoArray[--thisIndex];
+
+          thisIndex = protoArray[--thisIndex];
+
+          stackPush(elem, proto);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    while (stackIndex >= stackStart) {
+      protoAdd(stackPop());
+    }
+
+    thisStart = tail;
+
+    stackSet(offset, thisStart);
+  }
+
+  private void markImplStandard(int offset, int proto) {
     var index = markSearch(offset, proto);
 
     protoArray[index] = ByteProto2.MARKED;

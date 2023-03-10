@@ -19,6 +19,7 @@ import java.util.Arrays;
 import objectos.html.AttributeOrElement;
 import objectos.html.CompiledTemplate;
 import objectos.html.HtmlFragment;
+import objectos.html.HtmlTemplate;
 import objectos.html.Lambda;
 import objectos.html.Template;
 import objectos.html.TemplateDsl;
@@ -74,6 +75,11 @@ public final class TemplateDslImpl implements TemplateDsl {
 
     level = 0;
     initLevel();
+  }
+
+  @Override
+  public final void addTemplate(HtmlTemplate template) {
+    template.acceptTemplateDsl(this);
   }
 
   @Override
