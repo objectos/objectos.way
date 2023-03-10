@@ -92,7 +92,7 @@ public class HtmlPlayer extends HtmlRecorder {
       int cellStyle = protoArray[index + 1];
 
       if (cellStyle == ByteProto2.SINGLE) {
-        int requiredIndex = stackIndex + CAPACITY;
+        int requiredIndex = stackIndex + CAPACITY + 1;
 
         stackArray = IntArrays.growIfNecessary(stackArray, requiredIndex);
         stackArray[stackIndex + 0] = 2;
@@ -102,10 +102,38 @@ public class HtmlPlayer extends HtmlRecorder {
         protoArray[index + 1] = ByteProto2.LIST;
         protoArray[index + 2] = stackIndex;
 
+        stackIndex = requiredIndex + 1;
+
         break;
       }
 
-      throw new UnsupportedOperationException("Implement me");
+      int listIndex = protoArray[index + 2];
+
+      int length = stackArray[listIndex + 0];
+
+      while (length == CAPACITY) {
+        listIndex = stackArray[listIndex + CAPACITY + 1];
+
+        length = stackArray[listIndex + 0];
+      }
+
+      int newLength = length + 1;
+
+      stackArray[listIndex + 0] = newLength;
+      stackArray[listIndex + newLength] = value;
+
+      if (newLength == CAPACITY) {
+        int requiredIndex = stackIndex + CAPACITY + 1;
+
+        stackArray = IntArrays.growIfNecessary(stackArray, requiredIndex);
+        stackArray[stackIndex + 0] = 0;
+
+        stackArray[listIndex + newLength + 1] = stackIndex;
+
+        stackIndex = requiredIndex + 1;
+      }
+
+      break;
     }
   }
 
@@ -193,14 +221,24 @@ public class HtmlPlayer extends HtmlRecorder {
       } else {
         int base = value;
 
-        int length = stackArray[base + 0];
+        while (true) {
+          int length = stackArray[base + 0];
 
-        for (int i = 0; i < length; i++) {
-          int obj = stackArray[base + i + 1];
+          for (int i = 0; i < length; i++) {
+            int obj = stackArray[base + i + 1];
 
-          var string = (String) objectGet(obj);
+            var string = (String) objectGet(obj);
 
-          visitor.attributeValue(string);
+            visitor.attributeValue(string);
+          }
+
+          if (length == CAPACITY) {
+            base = stackArray[base + length + 1];
+
+            continue;
+          } else {
+            break;
+          }
         }
       }
 

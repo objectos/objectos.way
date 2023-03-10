@@ -17,6 +17,7 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.tmpl.AnyElementValue;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -542,6 +543,60 @@ public class HtmlTemplateTest {
 
       """
       <body><nav><a>o7html</a></nav><section><p>is cool</p></section></body>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC21
+
+  - attributes come from another object.
+  """)
+  public void testCase21() {
+    assertEquals(
+      new HtmlTemplate() {
+        private final AnyElementValue first = new TestClassSelector("first");
+
+        private final AnyElementValue second = new TestClassSelector("second");
+
+        @Override
+        protected final void definition() {
+          div(first, second);
+        }
+      }.minified(),
+
+      """
+      <div class="first second"></div>"""
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC22
+
+  - multiple invocations of the same attribute
+  """)
+  public void testCase22() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          div(
+            // count < capacity
+            _class("c1"), _class("c2"), _class("c3"), _class("c4"), _class("c5"),
+
+            // count == capacity
+            id("1"), id("2"), id("3"), id("4"), id("5"),
+            id("6"), id("7"), id("8"), id("9"), id("10"),
+
+            // count > capacity
+            dir("1"), dir("2"), dir("3"), dir("4"), dir("5"),
+            dir("6"), dir("7"), dir("8"), dir("9"), dir("10"),
+            dir("11")
+          );
+        }
+      }.minified(),
+
+      """
+      <div class="c1 c2 c3 c4 c5" id="1 2 3 4 5 6 7 8 9 10" dir="1 2 3 4 5 6 7 8 9 10 11"></div>"""
     );
   }
 
