@@ -86,12 +86,6 @@ public class HtmlPlayer extends HtmlRecorder {
       }
     }
 
-    System.out.println(
-      "attributeValue=" + attributeValue
-          + ";mismatch=" + mismatch
-          + ";baseDir=" + baseDir
-          + ";dirCount=" + dirCount);
-
     return switch (mismatch) {
       case -1 -> {
         if (baseDir == -1) {
