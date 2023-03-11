@@ -178,7 +178,8 @@ public class HtmlPlayer extends HtmlRecorder {
         }
 
         case ByteProto2.ELEMENT,
-             ByteProto2.TEXT -> {
+             ByteProto2.TEXT,
+             ByteProto2.RAW -> {
           if (elem == NULL) {
             elem = protoIndex;
           }
@@ -215,9 +216,11 @@ public class HtmlPlayer extends HtmlRecorder {
       visitor.attributeStart(name.getName());
 
       if (cellType == ByteProto2.SINGLE) {
-        var string = (String) objectGet(value);
+        if (value != NULL) {
+          var string = (String) objectGet(value);
 
-        visitor.attributeValue(string);
+          visitor.attributeValue(string);
+        }
       } else {
         int base = value;
 
@@ -272,6 +275,8 @@ public class HtmlPlayer extends HtmlRecorder {
               break loop;
             }
 
+            case ByteProto2.RAW -> raw();
+
             case ByteProto2.TEXT -> text();
 
             default -> throw new UnsupportedOperationException(
@@ -282,6 +287,43 @@ public class HtmlPlayer extends HtmlRecorder {
       }
 
       visitor.endTag(elemName.getName());
+    }
+  }
+
+  private boolean maybeAttribute(StandardElementName parent) {
+    protoNext(); // ByteProto.ATTR_OR_ELEM
+
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
+
+    var result = maybeAttributeImpl(parent);
+
+    protoIndex = returnTo;
+
+    return result;
+  }
+
+  private boolean maybeAttributeImpl(StandardElementName parent) {
+    protoNext(); // ByteProto.ATTR_OR_ELEM
+    protoNext(); // tail index
+
+    int code = protoNext();
+
+    var attributeOrElement = AttributeOrElement.get(code);
+
+    if (attributeOrElement.isAttributeOf(parent)) {
+      code = attributeOrElement.attributeByteCode();
+
+      int value = protoNext();
+
+      attributeImpl(code, value);
+
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -328,43 +370,6 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
-  private boolean maybeAttribute(StandardElementName parent) {
-    protoNext(); // ByteProto.ATTR_OR_ELEM
-
-    int location = protoNext();
-
-    int returnTo = protoIndex;
-
-    protoIndex = location;
-
-    var result = maybeAttributeImpl(parent);
-
-    protoIndex = returnTo;
-
-    return result;
-  }
-
-  private boolean maybeAttributeImpl(StandardElementName parent) {
-    protoNext(); // ByteProto.ATTR_OR_ELEM
-    protoNext(); // tail index
-
-    int code = protoNext();
-
-    var attributeOrElement = AttributeOrElement.get(code);
-
-    if (attributeOrElement.isAttributeOf(parent)) {
-      code = attributeOrElement.attributeByteCode();
-
-      int value = protoNext();
-
-      attributeImpl(code, value);
-
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   private Object objectGet(int index) {
     return objectArray[index];
   }
@@ -379,6 +384,31 @@ public class HtmlPlayer extends HtmlRecorder {
 
   private int protoPeek() {
     return protoArray[protoIndex];
+  }
+
+  private void raw() throws IOException {
+    protoNext(); // ByteProto.RAW
+
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    protoIndex = location;
+
+    rawImpl();
+
+    protoIndex = returnTo;
+  }
+
+  private void rawImpl() throws IOException {
+    protoNext(); // ByteProto.RAW
+    protoNext(); // tail index
+
+    int index = protoNext();
+
+    var raw = (String) objectGet(index);
+
+    visitor.raw(raw);
   }
 
   private void rootElement() throws IOException {

@@ -47,6 +47,8 @@ final class ByteProto2 {
 
   static final int TEMPLATE = -15;
 
+  static final int RAW = -16;
+
   private ByteProto2() {}
 
 }

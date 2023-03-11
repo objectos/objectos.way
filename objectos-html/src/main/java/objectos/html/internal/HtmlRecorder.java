@@ -46,8 +46,23 @@ public class HtmlRecorder implements TemplateDsl {
   int stackIndex;
 
   @Override
-  public void addAttribute(AttributeName name) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addAttribute(AttributeName name) {
+    int code = name.getCode(); // name implicit null-check
+
+    int start = protoIndex;
+
+    protoAdd(
+      ByteProto2.ATTRIBUTE,
+      NULL,
+
+      code,
+      NULL,
+
+      start,
+      ByteProto2.ATTRIBUTE
+    );
+
+    endSet(start);
   }
 
   @Override
@@ -161,6 +176,7 @@ public class HtmlRecorder implements TemplateDsl {
     int lambdas = NULL;
     int attrOrElems = NULL;
     int templates = NULL;
+    int raws = NULL;
 
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
@@ -198,6 +214,10 @@ public class HtmlRecorder implements TemplateDsl {
           contents = lambdas = protoArray[--contents];
         }
 
+        case ByteProto2.RAW -> {
+          contents = raws = protoArray[--contents];
+        }
+
         case ByteProto2.TEXT -> {
           contents = elements = protoArray[--contents];
         }
@@ -212,6 +232,7 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto2.ELEMENT, NULL, code);
 
+    stackPush(raws); // 5
     stackPush(templates); // 4
     stackPush(attrOrElems); // 3
     stackPush(lambdas); // 2
@@ -228,6 +249,7 @@ public class HtmlRecorder implements TemplateDsl {
       value.mark(this);
     }
 
+    stackPop();
     stackPop();
     stackPop();
     stackPop();
@@ -260,8 +282,22 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void addRaw(String text) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addRaw(String text) {
+    Objects.requireNonNull(text, "text == null");
+
+    int start = protoIndex;
+
+    protoAdd(
+      ByteProto2.RAW,
+      NULL,
+
+      objectAdd(text),
+
+      start,
+      ByteProto2.RAW
+    );
+
+    endSet(start);
   }
 
   @Override
@@ -317,8 +353,8 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void markRaw() {
-    throw new UnsupportedOperationException("Implement me");
+  public final void markRaw() {
+    markImplStandard(5, ByteProto2.RAW);
   }
 
   @Override

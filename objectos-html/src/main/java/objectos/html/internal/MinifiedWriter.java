@@ -26,26 +26,16 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
   private boolean firstValue;
 
   @Override
-  public final void doctype() throws IOException {
-    out.append("<!doctype html>");
-  }
-
-  @Override
-  public final void selfClosingEnd() throws IOException {
-    out.append('>');
-  }
-
-  @Override
   public final void attributeEnd() throws IOException {
-    out.append('"');
+    if (!firstValue) {
+      out.append('"');
+    }
   }
 
   @Override
   public final void attributeStart(String name) throws IOException {
     out.append(' ');
     out.append(name);
-    out.append('=');
-    out.append('"');
 
     firstValue = true;
   }
@@ -53,6 +43,9 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
   @Override
   public final void attributeValue(String value) throws IOException {
     if (firstValue) {
+      out.append('=');
+      out.append('"');
+
       firstValue = false;
     } else {
       out.append(' ');
@@ -62,10 +55,25 @@ public final class MinifiedWriter implements HtmlTemplate.Visitor {
   }
 
   @Override
+  public final void doctype() throws IOException {
+    out.append("<!doctype html>");
+  }
+
+  @Override
   public final void endTag(String name) throws IOException {
     out.append('<');
     out.append('/');
     out.append(name);
+    out.append('>');
+  }
+
+  @Override
+  public final void raw(String value) throws IOException {
+    out.append(value);
+  }
+
+  @Override
+  public final void selfClosingEnd() throws IOException {
     out.append('>');
   }
 
