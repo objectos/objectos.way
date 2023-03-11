@@ -86,6 +86,12 @@ public class HtmlPlayer extends HtmlRecorder {
       }
     }
 
+    System.out.println(
+      "attributeValue=" + attributeValue
+          + ";mismatch=" + mismatch
+          + ";baseDir=" + baseDir
+          + ";dirCount=" + dirCount);
+
     return switch (mismatch) {
       case -1 -> {
         if (baseDir == -1) {
@@ -132,8 +138,19 @@ public class HtmlPlayer extends HtmlRecorder {
           yield sb.toString();
         }
 
-        throw new UnsupportedOperationException(
-          "Implement me :: baseDir=" + baseDir + ";dirCount=" + dirCount);
+        var sb = stringBuilder();
+
+        for (int i = 0; i < dirCount; i++) {
+          sb.append("../");
+        }
+
+        int valueIndex = baseDir + 1;
+
+        var subValue = attributeValue.substring(valueIndex);
+
+        sb.append(subValue);
+
+        yield sb.toString();
       }
     };
   }

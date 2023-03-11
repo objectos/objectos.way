@@ -45,6 +45,14 @@ public class HtmlPlayerTest {
     processHrefImpl("foo/base.html", "bar/baz/other.html", "../bar/baz/other.html");
   }
 
+  @Test
+  public void processHrefTC03() {
+    processHrefImpl("foo/bar/base.html", "foo/bar/base.html", "base.html");
+    processHrefImpl("foo/bar/base.html", "other.html", "../../other.html");
+    processHrefImpl("foo/bar/base.html", "foo/other.html", "../other.html");
+    processHrefImpl("foo/bar/base.html", "foo/baz/other.html", "../baz/other.html");
+  }
+
   private void processHrefImpl(String pathName, String href, String expected) {
     var result = player.processHref(pathName, href);
 
