@@ -27,6 +27,8 @@ public class HtmlPlayer extends HtmlRecorder {
 
   private static final int CAPACITY = 10;
 
+  private StringBuilder stringBuilder;
+
   private Visitor visitor;
 
   public final void play(HtmlTemplate.Visitor visitor) throws IOException {
@@ -47,23 +49,93 @@ public class HtmlPlayer extends HtmlRecorder {
     var thisName = pathName;
     var thatName = attributeValue;
 
-    int mismatch = 0;
-    int minLength = Math.min(pathName.length(), attributeValue.length());
+    var thisLen = thisName.length();
+    var thatLen = thatName.length();
 
-    for (; mismatch < minLength; mismatch++) {
-      char thisChar = thisName.charAt(mismatch);
-      char thatChar = thatName.charAt(mismatch);
+    int baseDir = -1;
+    int dirCount = 0;
+    int mismatch = -1;
 
-      if (thisChar != thatChar) {
-        break;
+    for (int i = 0; i < thisLen; i++) {
+      char thisChar = thisName.charAt(i);
+
+      if (i < thatLen) {
+        char thatChar = thatName.charAt(i);
+
+        if (thisChar == thatChar) {
+          if (thisChar == '/') {
+            if (mismatch == -1) {
+              baseDir = i;
+            } else {
+              dirCount++;
+            }
+          }
+        } else {
+          if (mismatch == -1) {
+            mismatch = i;
+          }
+
+          if (thisChar == '/') {
+            dirCount++;
+          }
+        }
+      } else {
+        if (thisChar == '/') {
+          dirCount++;
+        }
       }
     }
 
-    if (mismatch == 0) {
-      return attributeValue;
-    }
+    return switch (mismatch) {
+      case -1 -> {
+        if (baseDir == -1) {
+          yield attributeValue;
+        } else {
+          int valueIndex = baseDir + 1;
 
-    throw new UnsupportedOperationException("Implement me");
+          yield attributeValue.substring(valueIndex);
+        }
+      }
+
+      case 0 -> {
+        if (dirCount == 0) {
+          yield attributeValue;
+        } else {
+          var sb = stringBuilder();
+
+          for (int i = 0; i < dirCount; i++) {
+            sb.append("../");
+          }
+
+          sb.append(attributeValue);
+
+          yield sb.toString();
+        }
+      }
+
+      default -> {
+        if (dirCount == 0) {
+          int valueIndex = baseDir + 1;
+
+          yield attributeValue.substring(valueIndex);
+        }
+
+        if (baseDir == -1) {
+          var sb = stringBuilder();
+
+          for (int i = 0; i < dirCount; i++) {
+            sb.append("../");
+          }
+
+          sb.append(attributeValue);
+
+          yield sb.toString();
+        }
+
+        throw new UnsupportedOperationException(
+          "Implement me :: baseDir=" + baseDir + ";dirCount=" + dirCount);
+      }
+    };
   }
 
   private void attribute() throws IOException {
@@ -476,6 +548,16 @@ public class HtmlPlayer extends HtmlRecorder {
         );
       }
     }
+  }
+
+  private StringBuilder stringBuilder() {
+    if (stringBuilder == null) {
+      stringBuilder = new StringBuilder();
+    } else {
+      stringBuilder.setLength(0);
+    }
+
+    return stringBuilder;
   }
 
   private void text() throws IOException {

@@ -24,10 +24,25 @@ public class HtmlPlayerTest {
   private final HtmlPlayer player = new HtmlPlayer();
 
   @Test
-  public void processHrefTestCase01() {
+  public void processHrefTC01() {
+    processHrefImpl("base.html", "base.html", "base.html");
     processHrefImpl("base.html", "other.html", "other.html");
     processHrefImpl("base.html", "foo/other.html", "foo/other.html");
+    processHrefImpl("base.html", "foo/base/other.html", "foo/base/other.html");
     processHrefImpl("base.html", "foo/bar/other.html", "foo/bar/other.html");
+  }
+
+  @Test
+  public void processHrefTC02() {
+    processHrefImpl("foo/base.html", "foo/base.html", "base.html");
+    processHrefImpl("foo/base.html", "other.html", "../other.html");
+    processHrefImpl("foo/base.html", "foo/other.html", "other.html");
+    processHrefImpl("foo/base.html", "foo/base/other.html", "base/other.html");
+    processHrefImpl("foo/base.html", "foo/base.html/other.html", "base.html/other.html");
+    processHrefImpl("foo/base.html", "foo/bar/other.html", "bar/other.html");
+    processHrefImpl("foo/base.html", "foobar/other.html", "../foobar/other.html");
+    processHrefImpl("foo/base.html", "bar/other.html", "../bar/other.html");
+    processHrefImpl("foo/base.html", "bar/baz/other.html", "../bar/baz/other.html");
   }
 
   private void processHrefImpl(String pathName, String href, String expected) {
