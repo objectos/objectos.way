@@ -17,6 +17,7 @@ package objectos.html;
 
 import java.io.IOException;
 import objectos.html.internal.TemplateDslImpl;
+import objectos.html.internal.Validate;
 import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
@@ -59,6 +60,12 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
     } finally {
       this.dsl = null;
     }
+  }
+
+  protected final void pathName(String path) {
+    Validate.pathName(path.toString()); // path implicit null-check
+
+    dsl().pathName(path);
   }
 
   @Override

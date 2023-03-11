@@ -896,4 +896,28 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC32
+
+  - pathName + href interaction
+  """)
+  public void testCase32() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          pathName("index.html");
+
+          html(
+            a(href("a.html"), t("a")),
+            a(href("foo/b.html"), t("b"))
+          );
+        }
+      }.minified(),
+
+      """
+      <html><a href="a.html">a</a><a href="foo/b.html">b</a></html>"""
+    );
+  }
+
 }

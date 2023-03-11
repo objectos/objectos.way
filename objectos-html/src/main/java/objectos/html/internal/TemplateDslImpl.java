@@ -78,11 +78,6 @@ public final class TemplateDslImpl implements TemplateDsl {
   }
 
   @Override
-  public final void addTemplate(HtmlTemplate template) {
-    template.acceptTemplateDsl(this);
-  }
-
-  @Override
   public final void addAttribute(AttributeName name) {
     Check.notNull(name, "name == null");
 
@@ -244,6 +239,11 @@ public final class TemplateDslImpl implements TemplateDsl {
     addObject(ByteProto.MARK_RAW_ELEMENT);
   }
 
+  @Override
+  public final void addTemplate(HtmlTemplate template) {
+    template.acceptTemplateDsl(this);
+  }
+
   public final void addTemplate(Template template) {
     Check.notNull(template, "template == null");
     template.acceptTemplateDsl(this);
@@ -320,6 +320,11 @@ public final class TemplateDslImpl implements TemplateDsl {
   @Override
   public final void markText() {
     markedObject[level]++;
+  }
+
+  @Override
+  public final void pathName(String path) {
+    throw new UnsupportedOperationException();
   }
 
   final String bufferToString() {

@@ -15,18 +15,25 @@
  */
 package objectos.html.internal;
 
-import java.io.IOException;
+import static org.testng.Assert.assertEquals;
 
-public class InternalIOException extends RuntimeException {
+import org.testng.annotations.Test;
 
-  private static final long serialVersionUID = 3617603395237858684L;
+public class HtmlPlayerTest {
 
-  public InternalIOException(IOException cause) {
-    super(cause);
+  private final HtmlPlayer player = new HtmlPlayer();
+
+  @Test
+  public void processHrefTestCase01() {
+    processHrefImpl("base.html", "other.html", "other.html");
+    processHrefImpl("base.html", "foo/other.html", "foo/other.html");
+    processHrefImpl("base.html", "foo/bar/other.html", "foo/bar/other.html");
   }
 
-  public final IOException unwrap() {
-    return (IOException) getCause();
+  private void processHrefImpl(String pathName, String href, String expected) {
+    var result = player.processHref(pathName, href);
+
+    assertEquals(result, expected);
   }
 
 }

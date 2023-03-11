@@ -45,4 +45,6 @@ public interface TemplateDsl extends Marker, Renderer {
 
   void addText(String text);
 
+  void pathName(String path);
+
 }

@@ -372,8 +372,18 @@ public class HtmlRecorder implements TemplateDsl {
     markImplStandard(1, ByteProto2.TEXT);
   }
 
+  @Override
+  public final void pathName(String path) {
+    objectArray[0] = path;
+  }
+
   public final void record(HtmlTemplate template) {
-    objectIndex = 0;
+    // objectArray[0] is reserved for the path name value
+    objectArray[0] = null;
+
+    // objectIndex starts @ 1
+    // as objectArray[0] is the path name value
+    objectIndex = 1;
 
     protoIndex = 0;
 

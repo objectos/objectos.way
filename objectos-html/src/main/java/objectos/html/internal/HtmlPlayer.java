@@ -43,6 +43,29 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
+  final String processHref(String pathName, String attributeValue) {
+    var thisName = pathName;
+    var thatName = attributeValue;
+
+    int mismatch = 0;
+    int minLength = Math.min(pathName.length(), attributeValue.length());
+
+    for (; mismatch < minLength; mismatch++) {
+      char thisChar = thisName.charAt(mismatch);
+      char thatChar = thatName.charAt(mismatch);
+
+      if (thisChar != thatChar) {
+        break;
+      }
+    }
+
+    if (mismatch == 0) {
+      return attributeValue;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   private void attribute() throws IOException {
     protoNext(); // ByteProto.ATTRIBUTE
 
@@ -230,9 +253,11 @@ public class HtmlPlayer extends HtmlRecorder {
           for (int i = 0; i < length; i++) {
             int obj = stackArray[base + i + 1];
 
-            var string = (String) objectGet(obj);
+            var attributeValue = (String) objectGet(obj);
 
-            visitor.attributeValue(string);
+            attributeValue = processAttributeValue(name, attributeValue);
+
+            visitor.attributeValue(attributeValue);
           }
 
           if (length == CAPACITY) {
@@ -372,6 +397,20 @@ public class HtmlPlayer extends HtmlRecorder {
 
   private Object objectGet(int index) {
     return objectArray[index];
+  }
+
+  private String processAttributeValue(StandardAttributeName name, String attributeValue) {
+    var result = attributeValue;
+
+    if (name == StandardAttributeName.HREF) {
+      var pathName = (String) objectArray[0];
+
+      if (pathName != null) {
+        result = processHref(pathName, attributeValue);
+      }
+    }
+
+    return result;
   }
 
   private boolean protoMore() {
