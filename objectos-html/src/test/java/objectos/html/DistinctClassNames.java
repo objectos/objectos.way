@@ -16,6 +16,8 @@
 package objectos.html;
 
 import java.util.Set;
+import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardElementName;
 import objectos.util.GrowableSet;
 
 public final class DistinctClassNames implements HtmlTemplate.Visitor {
@@ -30,8 +32,8 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   }
 
   @Override
-  public final void attributeStart(String name) {
-    if (name.equals("class")) {
+  public final void attributeStart(StandardAttributeName name) {
+    if (name == StandardAttributeName.CLASS) {
       collect = true;
     }
   }
@@ -64,7 +66,7 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   }
 
   @Override
-  public void endTag(String name) {}
+  public void endTag(StandardElementName name) {}
 
   @Override
   public void raw(String value) {}
@@ -77,10 +79,10 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   }
 
   @Override
-  public void startTag(String name) {}
+  public void startTag(StandardElementName name) {}
 
   @Override
-  public void startTagEnd(String name) {}
+  public void startTagEnd() {}
 
   @Override
   public void text(String value) {}

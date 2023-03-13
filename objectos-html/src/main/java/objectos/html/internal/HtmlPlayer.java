@@ -321,7 +321,7 @@ public class HtmlPlayer extends HtmlRecorder {
       }
     }
 
-    visitor.startTag(elemName.getName());
+    visitor.startTag(elemName);
 
     int attrIndex = objectIndex;
 
@@ -337,7 +337,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
       var name = StandardAttributeName.getByCode(code);
 
-      visitor.attributeStart(name.getName());
+      visitor.attributeStart(name);
 
       if (cellType == ByteProto2.SINGLE) {
         if (value != NULL) {
@@ -373,7 +373,7 @@ public class HtmlPlayer extends HtmlRecorder {
     if (kind.isVoid()) {
       visitor.selfClosingEnd();
     } else {
-      visitor.startTagEnd(elemName.getName());
+      visitor.startTagEnd();
 
       if (elem != NULL) {
         protoIndex = elem;
@@ -406,7 +406,7 @@ public class HtmlPlayer extends HtmlRecorder {
         }
       }
 
-      visitor.endTag(elemName.getName());
+      visitor.endTag(elemName);
     }
   }
 
@@ -474,11 +474,9 @@ public class HtmlPlayer extends HtmlRecorder {
 
       var element = StandardElementName.getByCode(code);
 
-      var name = element.getName();
+      visitor.startTag(element);
 
-      visitor.startTag(name);
-
-      visitor.startTagEnd(name);
+      visitor.startTagEnd();
 
       int value = protoNext();
 
@@ -486,7 +484,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
       visitor.text(text);
 
-      visitor.endTag(name);
+      visitor.endTag(element);
     }
   }
 

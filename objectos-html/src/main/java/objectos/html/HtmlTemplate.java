@@ -20,6 +20,8 @@ import objectos.html.internal.Validate;
 import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
+import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardElementName;
 import objectos.lang.Check;
 
 public abstract class HtmlTemplate extends FragmentOrTemplate implements Template {
@@ -28,7 +30,7 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
     void attributeEnd();
 
-    void attributeStart(String name);
+    void attributeStart(StandardAttributeName name);
 
     void attributeValue(String value);
 
@@ -48,15 +50,15 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
      */
     void documentStart();
 
-    void endTag(String name);
+    void endTag(StandardElementName name);
 
     void raw(String value);
 
     void selfClosingEnd();
 
-    void startTag(String name);
+    void startTag(StandardElementName name);
 
-    void startTagEnd(String name);
+    void startTagEnd();
 
     void text(String value);
 

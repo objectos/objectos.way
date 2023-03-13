@@ -15,6 +15,8 @@
  */
 package objectos.html.internal;
 
+import objectos.html.tmpl.StandardElementName;
+
 public final class PrettyPrintWriter extends MinifiedWriter {
 
   @Override
@@ -25,7 +27,7 @@ public final class PrettyPrintWriter extends MinifiedWriter {
   }
 
   @Override
-  public final void endTag(String name) {
+  public final void endTag(StandardElementName name) {
     super.endTag(name);
 
     nl();

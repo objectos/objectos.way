@@ -16,6 +16,8 @@
 package objectos.html.internal;
 
 import objectos.html.HtmlSink;
+import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardElementName;
 
 public class MinifiedWriter extends HtmlSink.Writer {
 
@@ -31,9 +33,9 @@ public class MinifiedWriter extends HtmlSink.Writer {
   }
 
   @Override
-  public void attributeStart(String name) {
+  public void attributeStart(StandardAttributeName name) {
     write(' ');
-    write(name);
+    write(name.getName());
 
     setTrue(FIRST_VALUE);
   }
@@ -66,10 +68,10 @@ public class MinifiedWriter extends HtmlSink.Writer {
   }
 
   @Override
-  public void endTag(String name) {
+  public void endTag(StandardElementName name) {
     write('<');
     write('/');
-    write(name);
+    write(name.getName());
     write('>');
   }
 
@@ -84,13 +86,13 @@ public class MinifiedWriter extends HtmlSink.Writer {
   }
 
   @Override
-  public void startTag(String name) {
+  public void startTag(StandardElementName name) {
     write('<');
-    write(name);
+    write(name.getName());
   }
 
   @Override
-  public void startTagEnd(String name) {
+  public void startTagEnd() {
     write('>');
   }
 
