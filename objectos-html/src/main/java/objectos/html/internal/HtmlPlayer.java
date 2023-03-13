@@ -15,7 +15,6 @@
  */
 package objectos.html.internal;
 
-import java.io.IOException;
 import objectos.html.AttributeOrElement;
 import objectos.html.HtmlTemplate;
 import objectos.html.HtmlTemplate.Visitor;
@@ -31,7 +30,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
   private Visitor visitor;
 
-  public final void play(HtmlTemplate.Visitor visitor) throws IOException {
+  public final void play(HtmlTemplate.Visitor visitor) {
     this.visitor = visitor;
 
     protoArray = IntArrays.growIfNecessary(protoArray, objectIndex);
@@ -156,7 +155,7 @@ public class HtmlPlayer extends HtmlRecorder {
     };
   }
 
-  private void attribute() throws IOException {
+  private void attribute() {
     protoNext(); // ByteProto.ATTRIBUTE
 
     int location = protoNext();
@@ -170,7 +169,7 @@ public class HtmlPlayer extends HtmlRecorder {
     protoIndex = returnTo;
   }
 
-  private void attributeImpl() throws IOException {
+  private void attributeImpl() {
     protoNext(); // ByteProto.ATTRIBUTE
     protoNext(); // tail index
 
@@ -258,7 +257,7 @@ public class HtmlPlayer extends HtmlRecorder {
     visitor.attributeValue(attributeValue);
   }
 
-  private void element() throws IOException {
+  private void element() {
     protoNext(); // ByteProto.ELEMENT
 
     int location = protoNext();
@@ -272,7 +271,7 @@ public class HtmlPlayer extends HtmlRecorder {
     protoIndex = returnTo;
   }
 
-  private void elementImpl() throws IOException {
+  private void elementImpl() {
     protoNext(); // ByteProto.ELEMENT
     protoNext(); // tail index;
 
@@ -444,7 +443,7 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
-  private void maybeElement(StandardElementName parent) throws IOException {
+  private void maybeElement(StandardElementName parent) {
     protoNext(); // ByteProto.ATTR_OR_ELEM
 
     int location = protoNext();
@@ -458,7 +457,7 @@ public class HtmlPlayer extends HtmlRecorder {
     protoIndex = returnTo;
   }
 
-  private void maybeElementImpl(StandardElementName parent) throws IOException {
+  private void maybeElementImpl(StandardElementName parent) {
     protoNext(); // ByteProto.ATTR_OR_ELEM
     protoNext(); // tail index
 
@@ -517,7 +516,7 @@ public class HtmlPlayer extends HtmlRecorder {
     return protoArray[protoIndex];
   }
 
-  private void raw() throws IOException {
+  private void raw() {
     protoNext(); // ByteProto.RAW
 
     int location = protoNext();
@@ -531,7 +530,7 @@ public class HtmlPlayer extends HtmlRecorder {
     protoIndex = returnTo;
   }
 
-  private void rawImpl() throws IOException {
+  private void rawImpl() {
     protoNext(); // ByteProto.RAW
     protoNext(); // tail index
 
@@ -542,7 +541,7 @@ public class HtmlPlayer extends HtmlRecorder {
     visitor.raw(raw);
   }
 
-  private void rootElement() throws IOException {
+  private void rootElement() {
     protoNext(); // ByteProto.ROOT
 
     loop: while (protoMore()) {
@@ -580,7 +579,7 @@ public class HtmlPlayer extends HtmlRecorder {
     return stringBuilder;
   }
 
-  private void text() throws IOException {
+  private void text() {
     protoNext(); // ByteProto.TEXT
 
     int location = protoNext();
@@ -594,7 +593,7 @@ public class HtmlPlayer extends HtmlRecorder {
     protoIndex = returnTo;
   }
 
-  private void textImpl() throws IOException {
+  private void textImpl() {
     protoNext(); // ByteProto.TEXT
     protoNext(); // tail index
 

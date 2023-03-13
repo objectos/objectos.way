@@ -26,11 +26,15 @@ import objectos.html.io.HtmlEscape;
 import objectos.lang.Check;
 
 /**
+ * TODO
+ *
  * @since 0.5.0
  */
 public final class HtmlSink extends HtmlPlayer {
 
   /**
+   * Base {@link Visitor} implementation suitable for writing HTML files.
+   *
    * @since 0.5.1
    */
   public abstract static class Writer implements Visitor {
@@ -103,6 +107,8 @@ public final class HtmlSink extends HtmlPlayer {
   }
 
   /**
+   * Instructs this sink to use the minified writer.
+   *
    * @return this {@code HtmlSink} instance
    *
    * @since 0.5.1
@@ -114,6 +120,22 @@ public final class HtmlSink extends HtmlPlayer {
   }
 
   /**
+   * Writes the specified template to the specified directory.
+   *
+   * @param template
+   *        the template to be written
+   * @param directory
+   *        the directory to be the parent or ancestor of the generated HTML
+   *        file
+   *
+   * @throws IOException
+   *         if an I/O error occurs while writing the template
+   *
+   * @throws IllegalArgumentException
+   *         if the specified template does not define a pathname of if the
+   *         template's pathname resolves to a file that is not a descendant of
+   *         the specified directory
+   *
    * @since 0.5.1
    */
   public final void toDirectory(HtmlTemplate template, Path directory) throws IOException {
@@ -150,6 +172,26 @@ public final class HtmlSink extends HtmlPlayer {
     try (var writer = Files.newBufferedWriter(resolved)) {
       writeImpl(writer);
     }
+  }
+
+  /**
+   * Visits the specified template using the specified visitor.
+   *
+   * @param template
+   *        the template to be visited
+   *
+   * @param visitor
+   *        the visitor instance
+   *
+   * @since 0.5.1
+   */
+  public final void toVisitor(HtmlTemplate template, Visitor visitor) {
+    Objects.requireNonNull(template, "template == null");
+    Objects.requireNonNull(visitor, "visitor == null");
+
+    record(template);
+
+    play(visitor);
   }
 
   private MinifiedWriter minifiedWriter() {

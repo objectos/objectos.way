@@ -24,12 +24,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import objectos.html.tmpl.AnyElementValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class HtmlSinkTest {
+
+  private final DistinctClassNames classNames = new DistinctClassNames();
 
   private Path directory;
 
@@ -145,6 +148,37 @@ public class HtmlSinkTest {
 
       assertTrue(msg.contains("no pathname was defined"));
     }
+  }
+
+  @Test(description = """
+  HtmlSink toDirectory TC01
+
+  - collect distinct class names use-case
+  """)
+  public void toVisitor01() {
+    var tmpl = new HtmlTemplate() {
+      private final AnyElementValue abc = new TestClassSelector("abc");
+      private final AnyElementValue def = new TestClassSelector("def");
+      private final AnyElementValue ghi = new TestClassSelector("ghi");
+
+      @Override
+      protected final void definition() {
+        div(
+          abc, ghi, _class("c01"), def,
+          p(abc, def, t("Test case01"))
+        );
+      }
+    };
+
+    classNames.clear();
+
+    sink.toVisitor(tmpl, classNames);
+
+    assertEquals(classNames.size(), 4);
+    assertTrue(classNames.contains("abc"));
+    assertTrue(classNames.contains("def"));
+    assertTrue(classNames.contains("ghi"));
+    assertTrue(classNames.contains("c01"));
   }
 
 }
