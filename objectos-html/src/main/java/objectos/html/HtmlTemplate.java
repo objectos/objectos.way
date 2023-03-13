@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import java.io.IOException;
 import objectos.html.internal.TemplateDslImpl;
 import objectos.html.internal.Validate;
 import objectos.html.io.SimpleTemplateWriter;
@@ -34,6 +33,20 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
     void attributeValue(String value);
 
     void doctype();
+
+    /**
+     * Invoked after the visiting ends.
+     *
+     * @since 0.5.1
+     */
+    void documentEnd();
+
+    /**
+     * Invoked before the visiting starts.
+     *
+     * @since 0.5.1
+     */
+    void documentStart();
 
     void endTag(String name);
 
@@ -77,19 +90,15 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
   }
 
   public final String minified() {
-    try {
-      var sink = new HtmlSink();
+    var sink = new HtmlSink();
 
-      sink.minified();
+    sink.minified();
 
-      var out = new StringBuilder();
+    var out = new StringBuilder();
 
-      sink.appendTo(this, out);
+    sink.toStringBuilder(this, out);
 
-      return out.toString();
-    } catch (IOException e) {
-      throw new AssertionError("java.lang.StringBuilder does not throw IOException", e);
-    }
+    return out.toString();
   }
 
   @Override

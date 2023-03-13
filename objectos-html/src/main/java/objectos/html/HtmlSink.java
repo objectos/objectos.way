@@ -22,6 +22,7 @@ import java.util.Objects;
 import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.internal.HtmlPlayer;
 import objectos.html.internal.MinifiedWriter;
+import objectos.html.internal.PrettyPrintWriter;
 import objectos.html.io.HtmlEscape;
 import objectos.lang.Check;
 
@@ -95,6 +96,8 @@ public final class HtmlSink extends HtmlPlayer {
 
   private MinifiedWriter minifiedWriter;
 
+  private PrettyPrintWriter prettyPrintWriter;
+
   private Writer writer;
 
   public final void appendTo(HtmlTemplate template, Appendable out) throws IOException {
@@ -120,10 +123,24 @@ public final class HtmlSink extends HtmlPlayer {
   }
 
   /**
+   * Instructs this sink to use the standard <em>pretty-print</em> writer.
+   *
+   * @return this {@code HtmlSink} instance
+   *
+   * @since 0.5.1
+   */
+  public final HtmlSink prettyPrint() {
+    writer = prettyPrintWriter();
+
+    return this;
+  }
+
+  /**
    * Writes the specified template to the specified directory.
    *
    * @param template
    *        the template to be written
+   *
    * @param directory
    *        the directory to be the parent or ancestor of the generated HTML
    *        file
@@ -175,6 +192,31 @@ public final class HtmlSink extends HtmlPlayer {
   }
 
   /**
+   * Writes the specified template to the end of the specified
+   * {@code StringBuilder} instance.
+   *
+   * @param template
+   *        the template to be written
+   *
+   * @param out
+   *        where this template will be appended to
+   *
+   * @since 0.5.1
+   */
+  public final void toStringBuilder(HtmlTemplate template, StringBuilder out) {
+    Objects.requireNonNull(template, "template == null");
+    Objects.requireNonNull(out, "out == null");
+
+    record(template);
+
+    try {
+      writeImpl(out);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
+  }
+
+  /**
    * Visits the specified template using the specified visitor.
    *
    * @param template
@@ -202,9 +244,17 @@ public final class HtmlSink extends HtmlPlayer {
     return minifiedWriter;
   }
 
+  private PrettyPrintWriter prettyPrintWriter() {
+    if (prettyPrintWriter == null) {
+      prettyPrintWriter = new PrettyPrintWriter();
+    }
+
+    return prettyPrintWriter;
+  }
+
   private Writer thisWriter() {
     if (writer == null) {
-      writer = minifiedWriter();
+      writer = prettyPrintWriter();
     }
 
     return writer;

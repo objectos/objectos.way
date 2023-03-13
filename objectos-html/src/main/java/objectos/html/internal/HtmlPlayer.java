@@ -37,9 +37,13 @@ public class HtmlPlayer extends HtmlRecorder {
 
     stackIndex = 0;
 
+    this.visitor.documentStart();
+
     try {
       rootElement();
     } finally {
+      this.visitor.documentEnd();
+
       this.visitor = null;
     }
   }

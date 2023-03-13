@@ -91,7 +91,8 @@ public class HtmlSinkTest {
       Files.readString(file),
 
       """
-      <p>Test Case 01</p>"""
+      <p>Test Case 01</p>
+      """
     );
   }
 
@@ -122,7 +123,8 @@ public class HtmlSinkTest {
       Files.readString(file),
 
       """
-      <a href="../../index.html">Test case 02</a>"""
+      <a href="../../index.html">Test case 02</a>
+      """
     );
   }
 

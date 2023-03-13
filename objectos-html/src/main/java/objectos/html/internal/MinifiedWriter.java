@@ -17,32 +17,34 @@ package objectos.html.internal;
 
 import objectos.html.HtmlSink;
 
-public final class MinifiedWriter extends HtmlSink.Writer {
+public class MinifiedWriter extends HtmlSink.Writer {
 
-  private boolean firstValue;
+  static final int FIRST_VALUE = 1 << 0;
+
+  private int flags;
 
   @Override
-  public final void attributeEnd() {
-    if (!firstValue) {
+  public void attributeEnd() {
+    if (!isSet(FIRST_VALUE)) {
       write('"');
     }
   }
 
   @Override
-  public final void attributeStart(String name) {
+  public void attributeStart(String name) {
     write(' ');
     write(name);
 
-    firstValue = true;
+    setTrue(FIRST_VALUE);
   }
 
   @Override
-  public final void attributeValue(String value) {
-    if (firstValue) {
+  public void attributeValue(String value) {
+    if (isSet(FIRST_VALUE)) {
       write('=');
       write('"');
 
-      firstValue = false;
+      setFalse(FIRST_VALUE);
     } else {
       write(' ');
     }
@@ -51,12 +53,20 @@ public final class MinifiedWriter extends HtmlSink.Writer {
   }
 
   @Override
-  public final void doctype() {
+  public void doctype() {
     write("<!doctype html>");
   }
 
   @Override
-  public final void endTag(String name) {
+  public void documentEnd() {}
+
+  @Override
+  public void documentStart() {
+    flags = 0;
+  }
+
+  @Override
+  public void endTag(String name) {
     write('<');
     write('/');
     write(name);
@@ -64,29 +74,41 @@ public final class MinifiedWriter extends HtmlSink.Writer {
   }
 
   @Override
-  public final void raw(String value) {
+  public void raw(String value) {
     write(value);
   }
 
   @Override
-  public final void selfClosingEnd() {
+  public void selfClosingEnd() {
     write('>');
   }
 
   @Override
-  public final void startTag(String name) {
+  public void startTag(String name) {
     write('<');
     write(name);
   }
 
   @Override
-  public final void startTagEnd(String name) {
+  public void startTagEnd(String name) {
     write('>');
   }
 
   @Override
-  public final void text(String value) {
+  public void text(String value) {
     escaped(value);
+  }
+
+  final boolean isSet(int flag) {
+    return (flags & flag) != 0;
+  }
+
+  final void setFalse(int flag) {
+    flags &= ~flag;
+  }
+
+  final void setTrue(int flag) {
+    flags |= flag;
   }
 
 }

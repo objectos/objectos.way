@@ -56,6 +56,14 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   public void doctype() {}
 
   @Override
+  public void documentEnd() {}
+
+  @Override
+  public final void documentStart() {
+    clear();
+  }
+
+  @Override
   public void endTag(String name) {}
 
   @Override
