@@ -45,6 +45,13 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
+  protected final String $pathName() {
+    return (String) objectArray[0];
+  }
+
+  /*
+   * Visible for testing.
+   */
   final String processHref(String pathName, String attributeValue) {
     var thisName = pathName;
     var thatName = attributeValue;
@@ -243,6 +250,14 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
+  private void attributeValueImpl(StandardAttributeName name, int obj) {
+    var attributeValue = (String) objectGet(obj);
+
+    attributeValue = processAttributeValue(name, attributeValue);
+
+    visitor.attributeValue(attributeValue);
+  }
+
   private void element() throws IOException {
     protoNext(); // ByteProto.ELEMENT
 
@@ -323,9 +338,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
       if (cellType == ByteProto2.SINGLE) {
         if (value != NULL) {
-          var string = (String) objectGet(value);
-
-          visitor.attributeValue(string);
+          attributeValueImpl(name, value);
         }
       } else {
         int base = value;
@@ -336,11 +349,7 @@ public class HtmlPlayer extends HtmlRecorder {
           for (int i = 0; i < length; i++) {
             int obj = stackArray[base + i + 1];
 
-            var attributeValue = (String) objectGet(obj);
-
-            attributeValue = processAttributeValue(name, attributeValue);
-
-            visitor.attributeValue(attributeValue);
+            attributeValueImpl(name, obj);
           }
 
           if (length == CAPACITY) {
@@ -486,7 +495,7 @@ public class HtmlPlayer extends HtmlRecorder {
     var result = attributeValue;
 
     if (name == StandardAttributeName.HREF) {
-      var pathName = (String) objectArray[0];
+      var pathName = $pathName();
 
       if (pathName != null) {
         result = processHref(pathName, attributeValue);

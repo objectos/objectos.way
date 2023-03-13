@@ -16,10 +16,14 @@
 package objectos.html;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
 import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.internal.HtmlPlayer;
 import objectos.html.internal.MinifiedWriter;
 import objectos.html.io.HtmlEscape;
+import objectos.lang.Check;
 
 /**
  * @since 0.5.0
@@ -90,15 +94,12 @@ public final class HtmlSink extends HtmlPlayer {
   private Writer writer;
 
   public final void appendTo(HtmlTemplate template, Appendable out) throws IOException {
+    Objects.requireNonNull(template, "template == null");
+    Objects.requireNonNull(out, "out == null");
+
     record(template);
 
-    var writer = thisWriter();
-
-    writer.out = out;
-
-    play(writer);
-
-    writer.throwIfNecessary();
+    writeImpl(out);
   }
 
   /**
@@ -110,6 +111,45 @@ public final class HtmlSink extends HtmlPlayer {
     writer = minifiedWriter();
 
     return this;
+  }
+
+  /**
+   * @since 0.5.1
+   */
+  public final void toDirectory(HtmlTemplate template, Path directory) throws IOException {
+    Objects.requireNonNull(template, "template == null");
+    Objects.requireNonNull(directory, "directory == null");
+    Check.argument(Files.isDirectory(directory), directory, " is not a directory");
+
+    record(template);
+
+    var pathName = $pathName();
+
+    if (pathName == null) {
+      throw new IllegalArgumentException("""
+      Cannot write template: no pathname was defined for this template.
+
+      Please use the `pathName` instruction to set a template's pathname.
+      """
+      );
+    }
+
+    var resolved = directory.resolve(pathName).normalize();
+
+    if (!resolved.startsWith(directory)) {
+      throw new IllegalArgumentException("""
+      Cannot write template: pathname resolved to a path outside of the directory.
+      """
+      );
+    }
+
+    var parent = resolved.getParent();
+
+    Files.createDirectories(parent);
+
+    try (var writer = Files.newBufferedWriter(resolved)) {
+      writeImpl(writer);
+    }
   }
 
   private MinifiedWriter minifiedWriter() {
@@ -126,6 +166,16 @@ public final class HtmlSink extends HtmlPlayer {
     }
 
     return writer;
+  }
+
+  private void writeImpl(Appendable out) throws IOException {
+    var writer = thisWriter();
+
+    writer.out = out;
+
+    play(writer);
+
+    writer.throwIfNecessary();
   }
 
 }
