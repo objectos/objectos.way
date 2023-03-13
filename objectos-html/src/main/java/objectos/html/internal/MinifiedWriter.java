@@ -15,82 +15,78 @@
  */
 package objectos.html.internal;
 
-import java.io.IOException;
-import objectos.html.HtmlTemplate;
-import objectos.html.io.HtmlEscape;
+import objectos.html.HtmlSink;
 
-public final class MinifiedWriter implements HtmlTemplate.Visitor {
-
-  public Appendable out;
+public final class MinifiedWriter extends HtmlSink.Writer {
 
   private boolean firstValue;
 
   @Override
-  public final void attributeEnd() throws IOException {
+  public final void attributeEnd() {
     if (!firstValue) {
-      out.append('"');
+      write('"');
     }
   }
 
   @Override
-  public final void attributeStart(String name) throws IOException {
-    out.append(' ');
-    out.append(name);
+  public final void attributeStart(String name) {
+    write(' ');
+    write(name);
 
     firstValue = true;
   }
 
   @Override
-  public final void attributeValue(String value) throws IOException {
+  public final void attributeValue(String value) {
     if (firstValue) {
-      out.append('=');
-      out.append('"');
+      write('=');
+      write('"');
 
       firstValue = false;
     } else {
-      out.append(' ');
+      write(' ');
     }
 
-    HtmlEscape.to(value, out);
+    escaped(value);
   }
 
   @Override
-  public final void doctype() throws IOException {
-    out.append("<!doctype html>");
+  public final void doctype() {
+    write("<!doctype html>");
   }
 
   @Override
-  public final void endTag(String name) throws IOException {
-    out.append('<');
-    out.append('/');
-    out.append(name);
-    out.append('>');
+  public final void endTag(String name) {
+    write('<');
+    write('/');
+    write(name);
+    write('>');
   }
 
   @Override
-  public final void raw(String value) throws IOException {
-    out.append(value);
+  public final void raw(String value) {
+    write(value);
   }
 
   @Override
-  public final void selfClosingEnd() throws IOException {
-    out.append('>');
+  public final void selfClosingEnd() {
+    write('>');
   }
 
   @Override
-  public final void startTag(String name) throws IOException {
-    out.append('<');
-    out.append(name);
+  public final void startTag(String name) {
+    write('<');
+    write(name);
   }
 
   @Override
-  public final void startTagEnd(String name) throws IOException {
-    out.append('>');
+  public final void startTagEnd(String name) {
+    write('>');
   }
 
   @Override
-  public final void text(String value) throws IOException {
-    HtmlEscape.to(value, out);
+  public final void text(String value) {
+    escaped(value);
   }
 
 }

@@ -27,25 +27,25 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
   public interface Visitor {
 
-    void attributeEnd() throws IOException;
+    void attributeEnd();
 
-    void attributeStart(String name) throws IOException;
+    void attributeStart(String name);
 
-    void attributeValue(String value) throws IOException;
+    void attributeValue(String value);
 
-    void doctype() throws IOException;
+    void doctype();
 
-    void endTag(String name) throws IOException;
+    void endTag(String name);
 
-    void raw(String value) throws IOException;
+    void raw(String value);
 
-    void selfClosingEnd() throws IOException;
+    void selfClosingEnd();
 
-    void startTag(String name) throws IOException;
+    void startTag(String name);
 
-    void startTagEnd(String name) throws IOException;
+    void startTagEnd(String name);
 
-    void text(String value) throws IOException;
+    void text(String value);
 
   }
 
@@ -60,12 +60,6 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
     } finally {
       this.dsl = null;
     }
-  }
-
-  protected final void pathName(String path) {
-    Validate.pathName(path.toString()); // path implicit null-check
-
-    dsl().pathName(path);
   }
 
   @Override
@@ -85,6 +79,8 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
   public final String minified() {
     try {
       var sink = new HtmlSink();
+
+      sink.minified();
 
       var out = new StringBuilder();
 
@@ -126,6 +122,12 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
     } finally {
       this.dsl = null;
     }
+  }
+
+  protected final void pathName(String path) {
+    Validate.pathName(path.toString()); // path implicit null-check
+
+    dsl().pathName(path);
   }
 
 }
