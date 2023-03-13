@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -61,7 +62,7 @@ public class HtmlSinkTest {
   }
 
   @Test(description = """
-  HtmlSink writeToDirectory TC01
+  HtmlSink toDirectory TC01
 
   - index.html
   """)
@@ -92,7 +93,7 @@ public class HtmlSinkTest {
   }
 
   @Test(description = """
-  HtmlSink writeToDirectory TC02
+  HtmlSink toDirectory TC02
 
   - /a/b/index.html
   """)
@@ -120,6 +121,30 @@ public class HtmlSinkTest {
       """
       <a href="../../index.html">Test case 02</a>"""
     );
+  }
+
+  @Test(description = """
+  HtmlSink toDirectory TC03
+
+  - no path name defined should throw
+  """)
+  public void toDirectory03() throws IOException {
+    var tmpl = new HtmlTemplate() {
+      @Override
+      protected final void definition() {
+        p("Test Case 03");
+      }
+    };
+
+    try {
+      sink.toDirectory(tmpl, directory);
+
+      Assert.fail();
+    } catch (IllegalArgumentException expected) {
+      var msg = expected.getMessage();
+
+      assertTrue(msg.contains("no pathname was defined"));
+    }
   }
 
 }
