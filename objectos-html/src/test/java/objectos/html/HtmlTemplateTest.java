@@ -976,12 +976,13 @@ public class HtmlTemplateTest {
         }
 
         private void head0() {
+          meta(charset("utf-8"));
           title("Test Case 34");
         }
       }.minified(),
 
       """
-      <head><title>Test Case 34</title></head>"""
+      <head><meta charset="utf-8"><title>Test Case 34</title></head>"""
     );
   }
 
