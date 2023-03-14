@@ -21,15 +21,19 @@ import objectos.html.tmpl.StandardElementName;
 
 public class MinifiedWriter extends HtmlSink.Writer {
 
-  static final int FIRST_VALUE = 1 << 0;
+  private static final int START = 0,
+      ATTR_NAME = 1,
+      ATTR_VALUE = 2;
 
-  private int flags;
+  int state;
 
   @Override
   public void attributeEnd() {
-    if (!isSet(FIRST_VALUE)) {
+    if (state == ATTR_VALUE) {
       write('"');
     }
+
+    state = START;
   }
 
   @Override
@@ -37,21 +41,21 @@ public class MinifiedWriter extends HtmlSink.Writer {
     write(' ');
     write(name.getName());
 
-    setTrue(FIRST_VALUE);
+    state = ATTR_NAME;
   }
 
   @Override
   public void attributeValue(String value) {
-    if (isSet(FIRST_VALUE)) {
+    if (state == ATTR_NAME) {
       write('=');
       write('"');
-
-      setFalse(FIRST_VALUE);
     } else {
       write(' ');
     }
 
     escaped(value);
+
+    state = ATTR_VALUE;
   }
 
   @Override
@@ -64,7 +68,7 @@ public class MinifiedWriter extends HtmlSink.Writer {
 
   @Override
   public void documentStart() {
-    flags = 0;
+    state = START;
   }
 
   @Override
@@ -92,25 +96,13 @@ public class MinifiedWriter extends HtmlSink.Writer {
   }
 
   @Override
-  public void startTagEnd() {
+  public void startTagEnd(StandardElementName name) {
     write('>');
   }
 
   @Override
   public void text(String value) {
     escaped(value);
-  }
-
-  final boolean isSet(int flag) {
-    return (flags & flag) != 0;
-  }
-
-  final void setFalse(int flag) {
-    flags &= ~flag;
-  }
-
-  final void setTrue(int flag) {
-    flags |= flag;
   }
 
 }

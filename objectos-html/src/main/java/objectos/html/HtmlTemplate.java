@@ -58,7 +58,7 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
     void startTag(StandardElementName name);
 
-    void startTagEnd();
+    void startTagEnd(StandardElementName name);
 
     void text(String value);
 

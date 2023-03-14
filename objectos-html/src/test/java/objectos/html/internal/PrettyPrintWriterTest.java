@@ -69,10 +69,10 @@ public class PrettyPrintWriterTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   PrettyPrintWriter TC03
 
-  - head/body (indentation)
+  - head/body
   """)
   public void testCase03() {
     test(
@@ -93,6 +93,250 @@ public class PrettyPrintWriterTest {
       <head></head>
       <body></body>
       </html>
+      """
+    );
+  }
+
+  @Test(description = """
+  PrettyPrintWriter TC04
+
+  - head/meta (self closing)
+  """)
+  public void testCase04() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          html(
+            head(
+              meta(charset("utf-8"))
+            ),
+            body()
+          );
+        }
+      },
+
+      """
+      <!doctype html>
+      <html>
+      <head>
+      <meta charset="utf-8">
+      </head>
+      <body></body>
+      </html>
+      """
+    );
+  }
+
+  @Test(description = """
+  PrettyPrintWriter TC05
+
+  - head/meta (self closing)
+  - + attributes
+  """)
+  public void testCase05() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          html(
+            id("a"),
+            head(
+              id("b"),
+              meta(charset("utf-8"))
+            ),
+            body(
+              id("c")
+            )
+          );
+        }
+      },
+
+      """
+      <!doctype html>
+      <html id="a">
+      <head id="b">
+      <meta charset="utf-8">
+      </head>
+      <body id="c"></body>
+      </html>
+      """
+    );
+  }
+
+  @Test(description = """
+  PrettyPrintWriter TC06
+
+  - paragraph w/ text
+  """)
+  public void testCase06() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          html(
+            body(
+              p("abc")
+            )
+          );
+        }
+      },
+
+      """
+      <!doctype html>
+      <html>
+      <body>
+      <p>abc</p>
+      </body>
+      </html>
+      """
+    );
+  }
+
+  @Test(description = """
+  PrettyPrintWriter TC07
+
+  - paragraph w/ text
+  - + inline elements
+  """)
+  public void testCase07() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          html(
+            body(
+              p(t("abc "), em("def"), t(" ghi"))
+            )
+          );
+        }
+      },
+
+      """
+      <!doctype html>
+      <html>
+      <body>
+      <p>abc <em>def</em> ghi</p>
+      </body>
+      </html>
+      """
+    );
+  }
+
+  @Test(description = """
+  PrettyPrintWriter TC08
+
+  - ul/li
+  """)
+  public void testCase08() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          html(
+            body(
+              ul(
+                li("a"),
+                li(p("b")),
+                li(em("c"))
+              )
+            )
+          );
+        }
+      },
+
+      """
+      <!doctype html>
+      <html>
+      <body>
+      <ul>
+      <li>a</li>
+      <li>
+      <p>b</p>
+      </li>
+      <li><em>c</em></li>
+      </ul>
+      </body>
+      </html>
+      """
+    );
+  }
+
+  @Test(description = """
+  PrettyPrintWriter TC09
+
+  - style
+  """)
+  public void testCase09() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          html(
+            head(
+              style(
+                raw("""
+                #a {border: 0}
+
+                #b {margin: 0}"""
+                )
+              ),
+              style(
+                raw("""
+                #c {border: 0}
+
+                #d {margin: 0}
+                """)
+              )
+            )
+          );
+        }
+      },
+
+      """
+      <!doctype html>
+      <html>
+      <head>
+      <style>
+      #a {border: 0}
+
+      #b {margin: 0}
+      </style>
+      <style>
+      #c {border: 0}
+
+      #d {margin: 0}
+      </style>
+      </head>
+      </html>
+      """
+    );
+  }
+
+  @Test(description = """
+  PrettyPrintWriter TC10
+
+  - always end with a NL
+  """)
+  public void testCase10() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          doctype();
+          a(href("index.html"), t("a"));
+        }
+      },
+
+      """
+      <!doctype html>
+      <a href="index.html">a</a>
       """
     );
   }

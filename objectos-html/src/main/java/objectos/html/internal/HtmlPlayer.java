@@ -373,7 +373,7 @@ public class HtmlPlayer extends HtmlRecorder {
     if (kind.isVoid()) {
       visitor.selfClosingEnd();
     } else {
-      visitor.startTagEnd();
+      visitor.startTagEnd(elemName);
 
       if (elem != NULL) {
         protoIndex = elem;
@@ -476,7 +476,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
       visitor.startTag(element);
 
-      visitor.startTagEnd();
+      visitor.startTagEnd(element);
 
       int value = protoNext();
 

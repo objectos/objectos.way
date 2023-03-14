@@ -82,7 +82,7 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   public void startTag(StandardElementName name) {}
 
   @Override
-  public void startTagEnd() {}
+  public void startTagEnd(StandardElementName name) {}
 
   @Override
   public void text(String value) {}
