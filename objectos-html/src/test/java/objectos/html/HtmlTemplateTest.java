@@ -985,4 +985,37 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC35
+
+  - support noop() instruction
+  """)
+  public void testCase35() {
+    assertEquals(
+      new HtmlTemplate() {
+        private final AnyElementValue A = new TestClassSelector("ca");
+        private final AnyElementValue B = new TestClassSelector("cb");
+
+        @Override
+        protected final void definition() {
+          ul(
+            li(a(A, B, noop(), href("a"), raw("a"))),
+
+            li(
+              h2(A, B, t("h2")),
+
+              ul(
+                li(A, B, noop(), a(href("b"), raw("b"))),
+                li(A, B, noop(), a(href("c"), raw("c")))
+              )
+            )
+          );
+        }
+      }.minified(),
+
+      """
+      <ul><li><a href="a" class="ca cb">a</a></li><li><h2 class="ca cb">h2</h2><ul><li class="ca cb"><a href="b">b</a></li><li class="ca cb"><a href="c">c</a></li></ul></li></ul>"""
+    );
+  }
+
 }

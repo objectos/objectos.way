@@ -181,6 +181,10 @@ public class HtmlRecorder implements TemplateDsl {
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
 
+      if (value == NoOp.INSTANCE) {
+        continue;
+      }
+
       int before = protoIndex;
 
       value.render(this);

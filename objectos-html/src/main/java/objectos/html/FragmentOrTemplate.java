@@ -16,6 +16,7 @@
 package objectos.html;
 
 import java.util.Objects;
+import objectos.html.internal.NoOp;
 import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
@@ -34,18 +35,6 @@ abstract class FragmentOrTemplate extends GeneratedAbstractTemplate {
   private enum DoctypeImpl implements Doctype {
 
     INSTANCE;
-
-  }
-
-  private enum NoOp implements AnyElementValue {
-
-    INSTANCE;
-
-    @Override
-    public final void mark(Marker marker) {}
-
-    @Override
-    public final void render(Renderer renderer) {}
 
   }
 
