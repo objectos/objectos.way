@@ -16,7 +16,7 @@
 package objectos.html.internal;
 
 import objectos.html.HtmlSink;
-import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.StandardElementName;
 
 public class MinifiedWriter extends HtmlSink.Writer {
@@ -37,7 +37,7 @@ public class MinifiedWriter extends HtmlSink.Writer {
   }
 
   @Override
-  public void attributeStart(StandardAttributeName name) {
+  public void attributeStart(AttributeName name) {
     write(' ');
     write(name.getName());
 

@@ -67,13 +67,13 @@ public class HtmlSinkTest {
   @Test(description = """
   HtmlSink toDirectory TC01
 
-  - index.html
+  - /index.html
   """)
   public void toDirectory01() throws IOException {
     var tmpl = new HtmlTemplate() {
       @Override
       protected final void definition() {
-        pathName("index.html");
+        pathName("/index.html");
 
         p("Test Case 01");
       }
@@ -105,9 +105,9 @@ public class HtmlSinkTest {
     var tmpl = new HtmlTemplate() {
       @Override
       protected final void definition() {
-        pathName("a/b/index.html");
+        pathName("/a/b/index.html");
 
-        a(href("index.html"), t("Test case 02"));
+        a(pathTo("/index.html"), t("Test case 02"));
       }
     };
 

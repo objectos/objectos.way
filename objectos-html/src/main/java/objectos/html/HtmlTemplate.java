@@ -20,7 +20,8 @@ import objectos.html.internal.Validate;
 import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
-import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.lang.Check;
 
@@ -30,7 +31,7 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
 
     void attributeEnd();
 
-    void attributeStart(StandardAttributeName name);
+    void attributeStart(AttributeName name);
 
     void attributeValue(String value);
 
@@ -139,6 +140,16 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
     Validate.pathName(path.toString()); // path implicit null-check
 
     dsl().pathName(path);
+  }
+
+  protected CustomAttributeName.PathTo pathTo(String path) {
+    Validate.pathName(path.toString()); // path implicit null-check
+
+    var name = CustomAttributeName.PATH_TO;
+
+    dsl().addAttribute(name, path);
+
+    return name;
   }
 
 }

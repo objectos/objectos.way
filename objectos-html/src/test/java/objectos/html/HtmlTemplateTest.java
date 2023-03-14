@@ -906,7 +906,7 @@ public class HtmlTemplateTest {
       new HtmlTemplate() {
         @Override
         protected final void definition() {
-          pathName("index.html");
+          pathName("/index.html");
 
           html(
             a(href("a.html"), t("a")),

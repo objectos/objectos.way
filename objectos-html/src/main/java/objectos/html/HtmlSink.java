@@ -173,6 +173,9 @@ public final class HtmlSink extends HtmlPlayer {
       );
     }
 
+    // remove leading slash
+    pathName = pathName.substring(1);
+
     var resolved = directory.resolve(pathName).normalize();
 
     if (!resolved.startsWith(directory)) {

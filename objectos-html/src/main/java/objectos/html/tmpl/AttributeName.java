@@ -17,6 +17,14 @@ package objectos.html.tmpl;
 
 public interface AttributeName {
 
+  static AttributeName getByCode(int code) {
+    if (code < StandardAttributeName.size()) {
+      return StandardAttributeName.getByCode(code);
+    } else {
+      return CustomAttributeName.getByCode(code);
+    }
+  }
+
   int getCode();
 
   AttributeKind getKind();

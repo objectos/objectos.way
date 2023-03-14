@@ -18,7 +18,8 @@ package objectos.html.internal;
 import objectos.html.AttributeOrElement;
 import objectos.html.HtmlTemplate;
 import objectos.html.HtmlTemplate.Visitor;
-import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.IntArrays;
 
@@ -253,7 +254,7 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
-  private void attributeValueImpl(StandardAttributeName name, int obj) {
+  private void attributeValueImpl(AttributeName name, int obj) {
     var attributeValue = (String) objectGet(obj);
 
     attributeValue = processAttributeValue(name, attributeValue);
@@ -335,7 +336,7 @@ public class HtmlPlayer extends HtmlRecorder {
       int cellType = protoArray[attrIndex++];
       int value = protoArray[attrIndex++];
 
-      var name = StandardAttributeName.getByCode(code);
+      var name = AttributeName.getByCode(code);
 
       visitor.attributeStart(name);
 
@@ -492,10 +493,10 @@ public class HtmlPlayer extends HtmlRecorder {
     return objectArray[index];
   }
 
-  private String processAttributeValue(StandardAttributeName name, String attributeValue) {
+  private String processAttributeValue(AttributeName name, String attributeValue) {
     var result = attributeValue;
 
-    if (name == StandardAttributeName.HREF) {
+    if (name == CustomAttributeName.PATH_TO) {
       var pathName = $pathName();
 
       if (pathName != null) {

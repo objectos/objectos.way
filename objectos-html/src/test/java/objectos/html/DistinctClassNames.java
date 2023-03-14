@@ -16,6 +16,7 @@
 package objectos.html;
 
 import java.util.Set;
+import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.GrowableSet;
@@ -32,7 +33,7 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   }
 
   @Override
-  public final void attributeStart(StandardAttributeName name) {
+  public final void attributeStart(AttributeName name) {
     if (name == StandardAttributeName.CLASS) {
       collect = true;
     }
