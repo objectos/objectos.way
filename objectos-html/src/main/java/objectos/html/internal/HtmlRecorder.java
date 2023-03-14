@@ -470,7 +470,7 @@ public class HtmlRecorder implements TemplateDsl {
       int proto = protoArray[--thisIndex];
 
       switch (proto) {
-        case ByteProto2.ELEMENT -> {
+        case ByteProto2.ATTR_OR_ELEM, ByteProto2.ELEMENT -> {
           int elem = protoArray[--thisIndex];
 
           thisIndex = protoArray[--thisIndex];

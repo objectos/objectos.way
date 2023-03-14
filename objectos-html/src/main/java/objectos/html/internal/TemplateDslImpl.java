@@ -324,7 +324,7 @@ public final class TemplateDslImpl implements TemplateDsl {
 
   @Override
   public final void pathName(String path) {
-    throw new UnsupportedOperationException();
+    // no-op
   }
 
   final String bufferToString() {

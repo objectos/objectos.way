@@ -960,4 +960,29 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC34
+
+  - allow attributeOrElement in the root of lambda
+  """)
+  public void testCase34() {
+    assertEquals(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          head(
+            f(this::head0)
+          );
+        }
+
+        private void head0() {
+          title("Test Case 34");
+        }
+      }.minified(),
+
+      """
+      <head><title>Test Case 34</title></head>"""
+    );
+  }
+
 }
