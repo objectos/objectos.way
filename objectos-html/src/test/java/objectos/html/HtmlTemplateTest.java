@@ -920,4 +920,44 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC33
+
+  - include html fragment (to ease migration)
+  """)
+  public void testCase33() {
+    assertEquals(
+      new HtmlTemplate() {
+        private final HtmlFragment nav = new HtmlFragment() {
+          @Override
+          protected final void definition() {
+            nav(
+              a("o7html")
+            );
+          }
+        };
+
+        private final HtmlFragment hero = new HtmlFragment() {
+          @Override
+          protected final void definition() {
+            section(
+              p("is cool")
+            );
+          }
+        };
+
+        @Override
+        protected final void definition() {
+          body(
+            f(nav),
+            f(hero)
+          );
+        }
+      }.minified(),
+
+      """
+      <body><nav><a>o7html</a></nav><section><p>is cool</p></section></body>"""
+    );
+  }
+
 }

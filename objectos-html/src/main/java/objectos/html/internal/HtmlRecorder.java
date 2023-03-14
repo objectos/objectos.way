@@ -264,8 +264,16 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public void addFragment(HtmlFragment fragment) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void addFragment(HtmlFragment fragment) {
+    int start = protoIndex;
+
+    protoAdd(ByteProto2.LAMBDA, NULL);
+
+    fragment.acceptTemplateDsl(this);
+
+    protoAdd(start, ByteProto2.LAMBDA);
+
+    endSet(start);
   }
 
   @Override
