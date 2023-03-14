@@ -24,7 +24,6 @@ import objectos.html.internal.HtmlPlayer;
 import objectos.html.internal.MinifiedWriter;
 import objectos.html.internal.PrettyPrintWriter;
 import objectos.html.io.HtmlEscape;
-import objectos.lang.Check;
 
 /**
  * TODO
@@ -158,7 +157,6 @@ public final class HtmlSink extends HtmlPlayer {
   public final void toDirectory(HtmlTemplate template, Path directory) throws IOException {
     Objects.requireNonNull(template, "template == null");
     Objects.requireNonNull(directory, "directory == null");
-    Check.argument(Files.isDirectory(directory), directory, " is not a directory");
 
     record(template);
 
