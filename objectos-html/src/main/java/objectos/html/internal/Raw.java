@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.internal;
 
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.NonVoidElementValue;
 
-@FunctionalInterface
-public interface Lambda extends NonVoidElementValue {
+public enum Raw implements NonVoidElementValue {
 
-  void apply();
+  INSTANCE;
 
   @Override
-  default void mark(Marker marker) {
-    marker.markLambda();
+  public final void mark(Marker marker) {
+    marker.markRaw();
   }
 
   @Override
-  default void render(Renderer renderer) {
-    // noop
-  }
+  public final void render(Renderer renderer) {}
 
 }

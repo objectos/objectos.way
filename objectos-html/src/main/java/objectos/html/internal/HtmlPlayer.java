@@ -15,10 +15,10 @@
  */
 package objectos.html.internal;
 
-import objectos.html.AttributeOrElement;
 import objectos.html.HtmlTemplate;
 import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.IntArrays;

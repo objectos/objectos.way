@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.tmpl;
 
 import java.util.EnumSet;
 import java.util.Set;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AnyElementValue;
-import objectos.html.tmpl.StandardAttributeName;
-import objectos.html.tmpl.StandardElementName;
 
+/**
+ * TODO
+ */
 public enum AttributeOrElement implements AnyElementValue {
 
   CLIPPATH(StandardAttributeName.CLIPPATH, StandardElementName.CLIPPATH) {

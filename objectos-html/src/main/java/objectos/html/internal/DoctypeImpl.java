@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.internal;
 
-import objectos.html.tmpl.NonVoidElementValue;
+import objectos.html.tmpl.Doctype;
 
-/**
- * TODO
- */
-public interface Template extends NonVoidElementValue {
+public enum DoctypeImpl implements Doctype {
 
-  void acceptTemplateDsl(TemplateDsl dsl);
-
-  String minified();
+  INSTANCE;
 
 }

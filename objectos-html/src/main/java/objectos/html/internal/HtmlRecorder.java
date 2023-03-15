@@ -16,12 +16,12 @@
 package objectos.html.internal;
 
 import java.util.Objects;
-import objectos.html.AttributeOrElement;
 import objectos.html.HtmlTemplate;
-import objectos.html.Lambda;
 import objectos.html.TemplateDsl;
 import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
+import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;
