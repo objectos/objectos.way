@@ -190,12 +190,12 @@ public class HtmlPlayer extends HtmlRecorder {
     while (index < protoArray.length) {
       int proto = protoArray[index];
 
-      if (proto == ByteProto2.ATTRS_END) {
+      if (proto == ByteProto.ATTRS_END) {
         protoArray = IntArrays.growIfNecessary(protoArray, index + 3);
         protoArray[index++] = code;
-        protoArray[index++] = ByteProto2.SINGLE;
+        protoArray[index++] = ByteProto.SINGLE;
         protoArray[index++] = value;
-        protoArray[index++] = ByteProto2.ATTRS_END;
+        protoArray[index++] = ByteProto.ATTRS_END;
 
         break;
       }
@@ -208,7 +208,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
       int cellStyle = protoArray[index + 1];
 
-      if (cellStyle == ByteProto2.SINGLE) {
+      if (cellStyle == ByteProto.SINGLE) {
         int requiredIndex = stackIndex + CAPACITY + 1;
 
         stackArray = IntArrays.growIfNecessary(stackArray, requiredIndex);
@@ -216,7 +216,7 @@ public class HtmlPlayer extends HtmlRecorder {
         stackArray[stackIndex + 1] = protoArray[index + 2];
         stackArray[stackIndex + 2] = value;
 
-        protoArray[index + 1] = ByteProto2.LIST;
+        protoArray[index + 1] = ByteProto.LIST;
         protoArray[index + 2] = stackIndex;
 
         stackIndex = requiredIndex + 1;
@@ -280,7 +280,7 @@ public class HtmlPlayer extends HtmlRecorder {
     protoNext(); // ByteProto.ELEMENT
     protoNext(); // tail index;
 
-    protoArray[objectIndex] = ByteProto2.ATTRS_END;
+    protoArray[objectIndex] = ByteProto.ATTRS_END;
 
     var elemName = StandardElementName.getByCode(protoNext());
 
@@ -290,9 +290,9 @@ public class HtmlPlayer extends HtmlRecorder {
       int proto = protoPeek();
 
       switch (proto) {
-        case ByteProto2.ATTRIBUTE -> attribute();
+        case ByteProto.ATTRIBUTE -> attribute();
 
-        case ByteProto2.ATTR_OR_ELEM -> {
+        case ByteProto.ATTR_OR_ELEM -> {
           int before = protoIndex;
 
           var attribute = maybeAttribute(elemName);
@@ -302,9 +302,9 @@ public class HtmlPlayer extends HtmlRecorder {
           }
         }
 
-        case ByteProto2.ELEMENT,
-             ByteProto2.TEXT,
-             ByteProto2.RAW -> {
+        case ByteProto.ELEMENT,
+             ByteProto.TEXT,
+             ByteProto.RAW -> {
           if (elem == NULL) {
             elem = protoIndex;
           }
@@ -312,7 +312,7 @@ public class HtmlPlayer extends HtmlRecorder {
           protoIndex += 2;
         }
 
-        case ByteProto2.ELEMENT_END -> {
+        case ByteProto.ELEMENT_END -> {
           break loop;
         }
 
@@ -329,7 +329,7 @@ public class HtmlPlayer extends HtmlRecorder {
     while (attrIndex < protoArray.length) {
       int code = protoArray[attrIndex++];
 
-      if (code == ByteProto2.ATTRS_END) {
+      if (code == ByteProto.ATTRS_END) {
         break;
       }
 
@@ -340,7 +340,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
       visitor.attributeStart(name);
 
-      if (cellType == ByteProto2.SINGLE) {
+      if (cellType == ByteProto.SINGLE) {
         if (value != NULL) {
           attributeValueImpl(name, value);
         }
@@ -383,22 +383,22 @@ public class HtmlPlayer extends HtmlRecorder {
           int proto = protoPeek();
 
           switch (proto) {
-            case ByteProto2.ATTRIBUTE -> {
+            case ByteProto.ATTRIBUTE -> {
               protoNext();
               protoNext();
             }
 
-            case ByteProto2.ATTR_OR_ELEM -> maybeElement(elemName);
+            case ByteProto.ATTR_OR_ELEM -> maybeElement(elemName);
 
-            case ByteProto2.ELEMENT -> element();
+            case ByteProto.ELEMENT -> element();
 
-            case ByteProto2.ELEMENT_END -> {
+            case ByteProto.ELEMENT_END -> {
               break loop;
             }
 
-            case ByteProto2.RAW -> raw();
+            case ByteProto.RAW -> raw();
 
-            case ByteProto2.TEXT -> text();
+            case ByteProto.TEXT -> text();
 
             default -> throw new UnsupportedOperationException(
               "Implement me :: proto=" + proto
@@ -551,17 +551,17 @@ public class HtmlPlayer extends HtmlRecorder {
       int proto = protoPeek();
 
       switch (proto) {
-        case ByteProto2.DOCTYPE -> {
+        case ByteProto.DOCTYPE -> {
           visitor.doctype();
 
           protoIndex++;
         }
 
-        case ByteProto2.ELEMENT -> element();
+        case ByteProto.ELEMENT -> element();
 
-        case ByteProto2.ROOT -> {}
+        case ByteProto.ROOT -> {}
 
-        case ByteProto2.ROOT_END -> {
+        case ByteProto.ROOT_END -> {
           break loop;
         }
 
