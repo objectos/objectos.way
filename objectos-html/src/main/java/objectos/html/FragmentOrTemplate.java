@@ -352,12 +352,6 @@ abstract class FragmentOrTemplate extends GeneratedAbstractTemplate {
     return dsl;
   }
 
-  protected final HtmlFragment f(HtmlFragment fragment) {
-    dsl.addFragment(fragment);
-
-    return fragment;
-  }
-
   protected final Lambda f(Lambda lambda) {
     dsl.addLambda(lambda);
 

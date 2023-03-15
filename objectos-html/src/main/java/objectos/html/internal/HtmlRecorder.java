@@ -17,7 +17,6 @@ package objectos.html.internal;
 
 import java.util.Objects;
 import objectos.html.AttributeOrElement;
-import objectos.html.HtmlFragment;
 import objectos.html.HtmlTemplate;
 import objectos.html.Lambda;
 import objectos.html.TemplateDsl;
@@ -263,19 +262,6 @@ public class HtmlRecorder implements TemplateDsl {
     protoAdd(ByteProto2.ELEMENT_END);
 
     protoAdd(contents, start, ByteProto2.ELEMENT);
-
-    endSet(start);
-  }
-
-  @Override
-  public final void addFragment(HtmlFragment fragment) {
-    int start = protoIndex;
-
-    protoAdd(ByteProto2.LAMBDA, NULL);
-
-    fragment.acceptTemplateDsl(this);
-
-    protoAdd(start, ByteProto2.LAMBDA);
 
     endSet(start);
   }
