@@ -17,7 +17,6 @@ package objectos.html;
 
 import java.util.Objects;
 import objectos.html.internal.NoOp;
-import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
@@ -61,8 +60,6 @@ abstract class FragmentOrTemplate extends GeneratedAbstractTemplate {
   public final AttributeOrElement clipPath(String text) {
     return addAttributeOrElement(AttributeOrElement.CLIPPATH, text);
   }
-
-  public abstract CompiledTemplate compile();
 
   public final Doctype doctype() {
     dsl.addDoctype();
@@ -329,22 +326,6 @@ abstract class FragmentOrTemplate extends GeneratedAbstractTemplate {
 
   public final AttributeOrElement title(String text) {
     return addAttributeOrElement(AttributeOrElement.TITLE, text);
-  }
-
-  @Override
-  public final String toString() {
-    CompiledTemplate compiled;
-    compiled = compile();
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    SimpleTemplateWriter writer;
-    writer = new SimpleTemplateWriter(out);
-
-    compiled.acceptTemplateVisitor(writer);
-
-    return out.toString();
   }
 
   @Override

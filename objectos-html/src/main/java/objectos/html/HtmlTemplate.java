@@ -15,9 +15,7 @@
  */
 package objectos.html;
 
-import objectos.html.internal.TemplateDslImpl;
 import objectos.html.internal.Validate;
-import objectos.html.io.SimpleTemplateWriter;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AttributeName;
@@ -79,19 +77,11 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
   }
 
   @Override
-  public final CompiledTemplate compile() {
-    var dsl = new TemplateDslImpl();
-
-    acceptTemplateDsl(dsl);
-
-    return dsl.compile();
-  }
-
-  @Override
   public final void mark(Marker dsl) {
     dsl.markTemplate();
   }
 
+  @Override
   public final String minified() {
     var sink = new HtmlSink();
 
@@ -100,22 +90,6 @@ public abstract class HtmlTemplate extends FragmentOrTemplate implements Templat
     var out = new StringBuilder();
 
     sink.toStringBuilder(this, out);
-
-    return out.toString();
-  }
-
-  @Override
-  public final String printMinified() {
-    CompiledTemplate compiled;
-    compiled = compile();
-
-    StringBuilder out;
-    out = new StringBuilder();
-
-    SimpleTemplateWriter writer;
-    writer = new SimpleTemplateWriter(out);
-
-    compiled.acceptTemplateVisitor(writer);
 
     return out.toString();
   }

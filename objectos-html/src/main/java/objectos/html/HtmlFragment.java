@@ -15,7 +15,6 @@
  */
 package objectos.html;
 
-import objectos.html.internal.TemplateDslImpl;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.NonVoidElementValue;
@@ -32,17 +31,6 @@ public abstract class HtmlFragment extends FragmentOrTemplate implements NonVoid
     } finally {
       this.dsl = null;
     }
-  }
-
-  @Override
-  public final CompiledTemplate compile() {
-    var dsl = new TemplateDslImpl();
-
-    acceptTemplateDsl(dsl);
-
-    dsl.markRootElement();
-
-    return dsl.compile();
   }
 
   @Override

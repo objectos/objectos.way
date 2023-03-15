@@ -21,8 +21,6 @@ public interface Template extends NonVoidElementValue {
 
   void acceptTemplateDsl(TemplateDsl dsl);
 
-  CompiledTemplate compile();
-
-  String printMinified();
+  String minified();
 
 }
