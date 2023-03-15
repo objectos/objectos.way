@@ -28,4 +28,9 @@ public interface Renderer {
    */
   void addAttribute(String name, String value);
 
+  /**
+   * @since 0.5.1
+   */
+  void addNoOp();
+
 }

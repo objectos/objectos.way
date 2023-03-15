@@ -49,6 +49,8 @@ final class ByteProto {
 
   static final int RAW = -16;
 
+  static final int NOOP = -17;
+
   private ByteProto() {}
 
 }

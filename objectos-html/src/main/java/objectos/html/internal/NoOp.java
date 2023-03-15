@@ -27,6 +27,8 @@ public enum NoOp implements AnyElementValue {
   public final void mark(Marker marker) {}
 
   @Override
-  public final void render(Renderer renderer) {}
+  public final void render(Renderer renderer) {
+    renderer.addNoOp();
+  }
 
 }

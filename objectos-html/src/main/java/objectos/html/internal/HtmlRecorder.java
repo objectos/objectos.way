@@ -180,10 +180,6 @@ public class HtmlRecorder implements TemplateDsl {
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
 
-      if (value == NoOp.INSTANCE) {
-        continue;
-      }
-
       int before = protoIndex;
 
       value.render(this);
@@ -275,6 +271,21 @@ public class HtmlRecorder implements TemplateDsl {
     lambda.apply();
 
     protoAdd(start, ByteProto.LAMBDA);
+
+    endSet(start);
+  }
+
+  @Override
+  public final void addNoOp() {
+    int start = protoIndex;
+
+    protoAdd(
+      ByteProto.NOOP,
+      NULL,
+
+      start,
+      ByteProto.NOOP
+    );
 
     endSet(start);
   }
