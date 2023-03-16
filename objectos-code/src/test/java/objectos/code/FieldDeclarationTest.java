@@ -330,4 +330,49 @@ public class FieldDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Field declarations TC10
+
+  - annotations
+  """)
+  public void testCase10() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A
+            = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B
+            = ClassTypeName.of("com.example", "B");
+
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            name("Fields"),
+
+            field(
+              annotation(A),
+              INT, name("a")
+            ),
+
+            field(
+              annotation(A),
+              annotation(B),
+              INT, name("b")
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Fields {
+        @com.example.A
+        int a;
+
+        @com.example.A
+        @com.example.B
+        int b;
+      }
+      """
+    );
+  }
+
 }

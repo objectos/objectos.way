@@ -43,7 +43,7 @@ public class ClassDeclarationTest {
   }
 
   @Test(description = """
-  single annotation on class
+  annotations on class
 
   @java.lang.Deprecated
   class Subject {}
@@ -51,11 +51,22 @@ public class ClassDeclarationTest {
   public void testCase02() {
     assertEquals(
       new JavaTemplate() {
+        static final ClassTypeName A
+            = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B
+            = ClassTypeName.of("com.example", "B");
+
         @Override
         protected final void definition() {
           classDeclaration(
             annotation(Deprecated.class),
             name("Subject")
+          );
+
+          classDeclaration(
+            annotation(A),
+            annotation(B),
+            name("Other")
           );
         }
       }.toString(),
@@ -63,6 +74,10 @@ public class ClassDeclarationTest {
       """
       @java.lang.Deprecated
       class Subject {}
+
+      @com.example.A
+      @com.example.B
+      class Other {}
       """
     );
   }

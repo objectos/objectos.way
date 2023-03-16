@@ -111,30 +111,6 @@ class InternalCompiler extends InternalApi {
     stackArray[5] = value;
   }
 
-  private void annotation() {
-    codeAdd(Symbol.COMMERCIAL_AT);
-
-    execute(this::classType);
-
-    if (elemMore()) {
-      codeAdd(Symbol.LEFT_PARENTHESIS);
-
-      last(_START);
-
-      execute(this::annotationValue);
-
-      while (elemMore()) {
-        comma();
-
-        execute(this::annotationValue);
-      }
-
-      codeAdd(Symbol.RIGHT_PARENTHESIS);
-    }
-
-    last(_ANNOTATION);
-  }
-
   private void annotationValue() {
     // TODO name
 
@@ -820,7 +796,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
+      listExecute(annotations, this::declarationAnnotation);
     }
 
     if (modifiers != NULL) {
@@ -881,6 +857,38 @@ class InternalCompiler extends InternalApi {
     }
 
     return count;
+  }
+
+  private void declarationAnnotation() {
+    switch (last()) {
+      case _ANNOTATION -> {
+        codeAdd(Whitespace.NEW_LINE);
+        codeAdd(Whitespace.BEFORE_FIRST_LINE_CONTENT);
+        last(_START);
+      }
+    }
+
+    codeAdd(Symbol.COMMERCIAL_AT);
+
+    execute(this::classType);
+
+    if (elemMore()) {
+      codeAdd(Symbol.LEFT_PARENTHESIS);
+
+      last(_START);
+
+      execute(this::annotationValue);
+
+      while (elemMore()) {
+        comma();
+
+        execute(this::annotationValue);
+      }
+
+      codeAdd(Symbol.RIGHT_PARENTHESIS);
+    }
+
+    last(_ANNOTATION);
   }
 
   private void declarationName() {
@@ -957,7 +965,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
+      listExecute(annotations, this::declarationAnnotation);
     }
 
     if (name != NULL) {
@@ -1112,7 +1120,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
+      listExecute(annotations, this::declarationAnnotation);
     }
 
     if (modifiers != NULL) {
@@ -1707,7 +1715,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
+      listExecute(annotations, this::declarationAnnotation);
     }
 
     if (modifiers != NULL) {
@@ -2564,7 +2572,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
+      listExecute(annotations, this::declarationAnnotation);
     }
 
     if (modifiers != NULL) {
@@ -3102,7 +3110,7 @@ class InternalCompiler extends InternalApi {
     }
 
     if (annotations != NULL) {
-      listExecute(annotations, this::annotation);
+      listExecute(annotations, this::declarationAnnotation);
     }
 
     if (modifiers != NULL) {

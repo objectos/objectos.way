@@ -184,6 +184,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       extends
       ClassDeclarationInstruction,
       EnumDeclarationInstruction,
+      FieldDeclarationInstruction,
       InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {}
 
