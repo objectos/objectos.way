@@ -46,11 +46,25 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
    */
   public interface Visitor {
 
-    void attributeEnd();
+    /**
+     * @since 0.5.2
+     */
+    void attribute(AttributeName name);
 
-    void attributeStart(AttributeName name);
+    /**
+     * @since 0.5.2
+     */
+    void attributeFirstValue(String value);
 
-    void attributeValue(String value);
+    /**
+     * @since 0.5.2
+     */
+    void attributeNextValue(String value);
+
+    /**
+     * @since 0.5.2
+     */
+    void attributeValueEnd();
 
     void doctype();
 
@@ -119,17 +133,6 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
     var sink = new HtmlSink();
 
     sink.minified();
-
-    var out = new StringBuilder();
-
-    sink.toStringBuilder(this, out);
-
-    return out.toString();
-  }
-
-  @Override
-  public final String toString() {
-    var sink = new HtmlSink();
 
     var out = new StringBuilder();
 
@@ -409,6 +412,17 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
 
   public final AttributeOrElement title(String text) {
     return addAttributeOrElement(AttributeOrElement.TITLE, text);
+  }
+
+  @Override
+  public final String toString() {
+    var sink = new HtmlSink();
+
+    var out = new StringBuilder();
+
+    sink.toStringBuilder(this, out);
+
+    return out.toString();
   }
 
   @Override

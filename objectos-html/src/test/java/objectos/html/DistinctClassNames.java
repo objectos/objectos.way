@@ -28,26 +28,32 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   private boolean collect;
 
   @Override
-  public final void attributeEnd() {
-    collect = false;
-  }
-
-  @Override
-  public final void attributeStart(AttributeName name) {
+  public final void attribute(AttributeName name) {
     if (name == StandardAttributeName.CLASS) {
       collect = true;
     }
   }
 
   @Override
-  public final void attributeValue(String value) {
+  public final void attributeFirstValue(String value) {
     if (collect) {
       names.add(value);
     }
   }
 
+  @Override
+  public final void attributeNextValue(String value) {
+    attributeFirstValue(value);
+  }
+
+  @Override
+  public final void attributeValueEnd() {
+    collect = false;
+  }
+
   public final void clear() {
     collect = false;
+
     names.clear();
   }
 

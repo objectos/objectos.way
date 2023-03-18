@@ -63,6 +63,8 @@ public final class PrettyPrintWriter extends MinifiedWriter {
     StandardElementName.SCRIPT
   );
 
+  private int state;
+
   @Override
   public final void doctype() {
     super.doctype();

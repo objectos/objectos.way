@@ -21,41 +21,30 @@ import objectos.html.tmpl.StandardElementName;
 
 public class MinifiedWriter extends HtmlSink.Writer {
 
-  private static final int START = 0,
-      ATTR_NAME = 1,
-      ATTR_VALUE = 2;
-
-  int state;
-
   @Override
-  public void attributeEnd() {
-    if (state == ATTR_VALUE) {
-      write('"');
-    }
-
-    state = START;
-  }
-
-  @Override
-  public void attributeStart(AttributeName name) {
+  public final void attribute(AttributeName name) {
     write(' ');
-    write(name.getName());
 
-    state = ATTR_NAME;
+    write(name.getName());
   }
 
   @Override
-  public void attributeValue(String value) {
-    if (state == ATTR_NAME) {
-      write('=');
-      write('"');
-    } else {
-      write(' ');
-    }
+  public final void attributeFirstValue(String value) {
+    write("=\"");
 
     escaped(value);
+  }
 
-    state = ATTR_VALUE;
+  @Override
+  public final void attributeNextValue(String value) {
+    write(' ');
+
+    escaped(value);
+  }
+
+  @Override
+  public final void attributeValueEnd() {
+    write('"');
   }
 
   @Override
@@ -67,9 +56,7 @@ public class MinifiedWriter extends HtmlSink.Writer {
   public void documentEnd() {}
 
   @Override
-  public void documentStart() {
-    state = START;
-  }
+  public void documentStart() {}
 
   @Override
   public void endTag(StandardElementName name) {

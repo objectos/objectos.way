@@ -254,12 +254,10 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
-  private void attributeValueImpl(AttributeName name, int obj) {
+  private String attributeValueImpl(AttributeName name, int obj) {
     var attributeValue = (String) objectGet(obj);
 
-    attributeValue = processAttributeValue(name, attributeValue);
-
-    visitor.attributeValue(attributeValue);
+    return processAttributeValue(name, attributeValue);
   }
 
   private void element() {
@@ -338,14 +336,20 @@ public class HtmlPlayer extends HtmlRecorder {
 
       var name = AttributeName.getByCode(code);
 
-      visitor.attributeStart(name);
+      visitor.attribute(name);
 
       if (cellType == ByteProto.SINGLE) {
         if (value != NULL) {
-          attributeValueImpl(name, value);
+          var attrValue = attributeValueImpl(name, value);
+
+          visitor.attributeFirstValue(attrValue);
+
+          visitor.attributeValueEnd();
         }
       } else {
         int base = value;
+
+        int count = 0;
 
         while (true) {
           int length = stackArray[base + 0];
@@ -353,7 +357,15 @@ public class HtmlPlayer extends HtmlRecorder {
           for (int i = 0; i < length; i++) {
             int obj = stackArray[base + i + 1];
 
-            attributeValueImpl(name, obj);
+            var attrValue = attributeValueImpl(name, obj);
+
+            if (count == 0) {
+              visitor.attributeFirstValue(attrValue);
+            } else {
+              visitor.attributeNextValue(attrValue);
+            }
+
+            count++;
           }
 
           if (length == CAPACITY) {
@@ -364,9 +376,9 @@ public class HtmlPlayer extends HtmlRecorder {
             break;
           }
         }
-      }
 
-      visitor.attributeEnd();
+        visitor.attributeValueEnd();
+      }
     }
 
     var kind = elemName.getKind();
