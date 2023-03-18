@@ -13,10 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.html.doc;
+
 /**
- * Contains the interfaces that model the domain-specific language provided by
- * {@link objectos.html.HtmlTemplate}.
- *
- * @since 0.5.0
+ * A consumer of a {@link HtmlDocument}.
  */
-package objectos.html.tmpl;
+@FunctionalInterface
+public interface DocumentProcessor {
+
+  /**
+   * Consumes the specified HTML document.
+   *
+   * @param document
+   *        the {@link HtmlDocument} instance to be consumed
+   */
+  void process(HtmlDocument document);
+
+}

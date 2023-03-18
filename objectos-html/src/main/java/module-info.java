@@ -20,6 +20,7 @@
  */
 module objectos.html {
   exports objectos.html;
+  exports objectos.html.doc;
   exports objectos.html.io;
   exports objectos.html.tmpl;
 

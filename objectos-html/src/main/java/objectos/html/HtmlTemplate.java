@@ -16,7 +16,6 @@
 package objectos.html;
 
 import java.util.Objects;
-import objectos.html.internal.DoctypeImpl;
 import objectos.html.internal.NoOp;
 import objectos.html.internal.Raw;
 import objectos.html.internal.Validate;
@@ -26,7 +25,6 @@ import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
-import objectos.html.tmpl.Doctype;
 import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
@@ -103,10 +101,8 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
     return addAttributeOrElement(AttributeOrElement.CLIPPATH, text);
   }
 
-  public final Doctype doctype() {
+  public final void doctype() {
     dsl().addDoctype();
-
-    return DoctypeImpl.INSTANCE;
   }
 
   public final AttributeOrElement label(String text) {

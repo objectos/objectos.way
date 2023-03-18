@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 /**
- * Contains the interfaces that model the domain-specific language provided by
- * {@link objectos.html.HtmlTemplate}.
+ * Provides the classes for generating HTML using the Java programming language.
  *
  * @since 0.5.0
  */
-package objectos.html.tmpl;
+package objectos.html;

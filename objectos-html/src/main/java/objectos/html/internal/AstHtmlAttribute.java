@@ -13,10 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Contains the interfaces that model the domain-specific language provided by
- * {@link objectos.html.HtmlTemplate}.
- *
- * @since 0.5.0
- */
-package objectos.html.tmpl;
+package objectos.html.internal;
+
+import objectos.html.doc.HtmlAttribute;
+import objectos.html.doc.HtmlIterable;
+
+public final class AstHtmlAttribute implements HtmlAttribute {
+
+  @Override
+  public final String name() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final boolean isBoolean() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final HtmlIterable<String> values() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+}

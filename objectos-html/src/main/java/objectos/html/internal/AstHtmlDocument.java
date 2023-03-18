@@ -15,10 +15,15 @@
  */
 package objectos.html.internal;
 
-import objectos.html.tmpl.Doctype;
+import objectos.html.doc.HtmlDocument;
+import objectos.html.doc.HtmlIterable;
+import objectos.html.doc.HtmlNode;
 
-public enum DoctypeImpl implements Doctype {
+public final class AstHtmlDocument implements HtmlDocument {
 
-  INSTANCE;
+  @Override
+  public final HtmlIterable<HtmlNode> nodes() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
 }

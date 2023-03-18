@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 /**
- * Contains the interfaces that model the domain-specific language provided by
- * {@link objectos.html.HtmlTemplate}.
+ * Contains the interfaces that allow processing a {@link HtmlTemplate}.
  *
- * @since 0.5.0
+ * <p>
+ * Instances of the interfaces from this package are meant to be consumed
+ * immediately during processing. In other words, instances must not be cached
+ * nor stored for later processing.
+ *
+ * @since 0.5.2
  */
-package objectos.html.tmpl;
+package objectos.html.doc;

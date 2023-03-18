@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Contains the interfaces that model the domain-specific language provided by
- * {@link objectos.html.HtmlTemplate}.
- *
- * @since 0.5.0
- */
-package objectos.html.tmpl;
+package objectos.html.doc;
+
+public sealed interface HtmlNode permits HtmlDocumentType, HtmlElement {}

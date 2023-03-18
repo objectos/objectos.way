@@ -13,10 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.html.doc;
+
+import java.util.Iterator;
+
 /**
- * Contains the interfaces that model the domain-specific language provided by
- * {@link objectos.html.HtmlTemplate}.
+ * An {@link Iterable} which can be traversed only once.
  *
- * @since 0.5.0
+ * @since 0.5.2
  */
-package objectos.html.tmpl;
+public interface HtmlIterable<T> extends Iterable<T> {
+
+  /**
+   * Returns an iterator over elements of type T.
+   *
+   * @return an iterator
+   *
+   * @throws IllegalStateException
+   *         if this {@code Iterable} has already been traversed
+   */
+  @Override
+  Iterator<T> iterator();
+
+}

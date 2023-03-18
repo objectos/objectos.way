@@ -13,6 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.tmpl;
+package objectos.html.doc;
 
-public interface Doctype {}
+import objectos.html.HtmlTemplate;
+import objectos.html.internal.AstHtmlDocument;
+
+/**
+ * Represents the materialized {@link HtmlTemplate}.
+ */
+public sealed interface HtmlDocument permits AstHtmlDocument {
+
+  HtmlIterable<HtmlNode> nodes();
+
+}
