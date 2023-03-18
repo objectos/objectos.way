@@ -127,6 +127,17 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
     return out.toString();
   }
 
+  @Override
+  public final String toString() {
+    var sink = new HtmlSink();
+
+    var out = new StringBuilder();
+
+    sink.toStringBuilder(this, out);
+
+    return out.toString();
+  }
+
   public final AnyElementValue noop() {
     return NoOp.INSTANCE;
   }
