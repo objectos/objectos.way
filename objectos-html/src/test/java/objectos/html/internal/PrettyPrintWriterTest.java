@@ -281,18 +281,18 @@ public class PrettyPrintWriterTest {
           html(
             head(
               style(
-                raw("""
+                """
                 #a {border: 0}
 
                 #b {margin: 0}"""
-                )
+
               ),
               style(
-                raw("""
+                """
                 #c {border: 0}
 
                 #d {margin: 0}
-                """)
+                """
               )
             )
           );

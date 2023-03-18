@@ -23,6 +23,7 @@ import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -141,7 +142,17 @@ public class HtmlRecorder implements TemplateDsl {
 
     int contents = protoIndex;
 
-    addText(text);
+    int type;
+
+    if (name == StandardElementName.SCRIPT || name == StandardElementName.STYLE) {
+      type = ByteProto.RAW;
+
+      addRaw(text);
+    } else {
+      type = ByteProto.TEXT;
+
+      addText(text);
+    }
 
     protoArray[contents] = ByteProto.MARKED;
 
@@ -152,7 +163,7 @@ public class HtmlRecorder implements TemplateDsl {
       NULL,
       code,
 
-      ByteProto.TEXT, contents,
+      type, contents,
       ByteProto.ELEMENT_END,
 
       contents,

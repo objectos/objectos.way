@@ -145,7 +145,7 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
     return NoOp.INSTANCE;
   }
 
-  public final NonVoidElementValue raw(String text) {
+  protected final NonVoidElementValue raw(String text) {
     dsl().addRaw(text);
 
     return Raw.INSTANCE;

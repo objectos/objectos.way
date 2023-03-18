@@ -833,7 +833,7 @@ public class HtmlTemplateTest {
         @Override
         protected final void definition() {
           style(
-            raw("ul > li { margin: 0; }")
+            "ul > li { margin: 0; }"
           );
         }
       },
@@ -965,7 +965,7 @@ public class HtmlTemplateTest {
         @Override
         protected final void definition() {
           script(
-            raw("alert(\"hello world!\");")
+            "alert(\"hello world!\");"
           );
         }
       },
