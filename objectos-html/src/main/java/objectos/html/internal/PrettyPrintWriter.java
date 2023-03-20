@@ -17,9 +17,10 @@ package objectos.html.internal;
 
 import java.util.EnumSet;
 import java.util.Set;
+import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.StandardElementName;
 
-public final class PrettyPrintWriter extends MinifiedWriter {
+public final class PrettyPrintWriter extends Writer {
 
   private static final int START = 0,
       CONTENTS = 1,
@@ -66,16 +67,40 @@ public final class PrettyPrintWriter extends MinifiedWriter {
   private int state;
 
   @Override
+  public final void attribute(AttributeName name) {
+    write(' ');
+
+    write(name.getName());
+  }
+
+  @Override
+  public final void attributeFirstValue(String value) {
+    write("=\"");
+
+    escaped(value);
+  }
+
+  @Override
+  public final void attributeNextValue(String value) {
+    write(' ');
+
+    escaped(value);
+  }
+
+  @Override
+  public final void attributeValueEnd() {
+    write('"');
+  }
+
+  @Override
   public final void doctype() {
-    super.doctype();
+    write("<!doctype html>");
 
     nl();
   }
 
   @Override
   public final void documentEnd() {
-    super.documentEnd();
-
     if (state == INLINE_END) {
       nl();
     }
@@ -83,8 +108,6 @@ public final class PrettyPrintWriter extends MinifiedWriter {
 
   @Override
   public final void documentStart() {
-    super.documentStart();
-
     state = START;
   }
 
@@ -94,7 +117,10 @@ public final class PrettyPrintWriter extends MinifiedWriter {
       nl();
     }
 
-    super.endTag(name);
+    write('<');
+    write('/');
+    write(name.getName());
+    write('>');
 
     if (isBlock(name)) {
       nl();
@@ -107,14 +133,14 @@ public final class PrettyPrintWriter extends MinifiedWriter {
   public final void raw(String value) {
     preText(value);
 
-    super.raw(value);
+    write(value);
 
     postText(value);
   }
 
   @Override
   public final void selfClosingEnd() {
-    super.selfClosingEnd();
+    write('>');
 
     nl();
   }
@@ -127,12 +153,13 @@ public final class PrettyPrintWriter extends MinifiedWriter {
       }
     }
 
-    super.startTag(name);
+    write('<');
+    write(name.getName());
   }
 
   @Override
   public final void startTagEnd(StandardElementName name) {
-    super.startTagEnd(name);
+    write('>');
 
     if (ELANG_SET.contains(name)) {
       state = ELANG;
@@ -145,7 +172,7 @@ public final class PrettyPrintWriter extends MinifiedWriter {
   public final void text(String value) {
     preText(value);
 
-    super.text(value);
+    escaped(value);
 
     postText(value);
   }

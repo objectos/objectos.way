@@ -124,19 +124,6 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
   @Override
   public final void mark(Marker dsl) {}
 
-  @Override
-  public final String minified() {
-    var sink = new HtmlSink();
-
-    sink.minified();
-
-    var out = new StringBuilder();
-
-    sink.toStringBuilder(this, out);
-
-    return out.toString();
-  }
-
   public final AnyElementValue noop() {
     return NoOp.INSTANCE;
   }

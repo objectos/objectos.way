@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.internal;
 
-import objectos.html.tmpl.NonVoidElementValue;
+public enum Symbol {
 
-/**
- * TODO
- */
-public interface Template extends NonVoidElementValue {
-
-  void acceptTemplateDsl(TemplateDsl dsl);
+  ATTRIBUTE_QUOTE;
 
 }

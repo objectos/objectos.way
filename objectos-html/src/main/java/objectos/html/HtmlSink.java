@@ -21,9 +21,8 @@ import java.nio.file.Path;
 import java.util.Objects;
 import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.internal.HtmlPlayer;
-import objectos.html.internal.MinifiedWriter;
 import objectos.html.internal.PrettyPrintWriter;
-import objectos.html.io.HtmlEscape;
+import objectos.html.internal.Writer;
 
 /**
  * TODO
@@ -32,107 +31,9 @@ import objectos.html.io.HtmlEscape;
  */
 public final class HtmlSink extends HtmlPlayer {
 
-  /**
-   * Base {@link Visitor} implementation suitable for writing HTML files.
-   *
-   * @since 0.5.1
-   */
-  public abstract static class Writer implements Visitor {
-
-    private IOException ioException;
-
-    private Appendable out;
-
-    protected final void escaped(String value) {
-      if (ioException != null) {
-        return;
-      }
-
-      try {
-        HtmlEscape.to(value, out);
-      } catch (IOException e) {
-        ioException = e;
-      }
-    }
-
-    protected final void write(char c) {
-      if (ioException != null) {
-        return;
-      }
-
-      try {
-        out.append(c);
-      } catch (IOException e) {
-        ioException = e;
-      }
-    }
-
-    protected final void write(String s) {
-      if (ioException != null) {
-        return;
-      }
-
-      try {
-        out.append(s);
-      } catch (IOException e) {
-        ioException = e;
-      }
-    }
-
-    final void throwIfNecessary() throws IOException {
-      if (ioException == null) {
-        return;
-      }
-
-      var toThrow = ioException;
-
-      ioException = null;
-
-      throw toThrow;
-    }
-
-  }
-
-  private MinifiedWriter minifiedWriter;
-
   private PrettyPrintWriter prettyPrintWriter;
 
   private Writer writer;
-
-  public final void appendTo(HtmlTemplate template, Appendable out) throws IOException {
-    Objects.requireNonNull(template, "template == null");
-    Objects.requireNonNull(out, "out == null");
-
-    record(template);
-
-    writeImpl(out);
-  }
-
-  /**
-   * Instructs this sink to use the minified writer.
-   *
-   * @return this {@code HtmlSink} instance
-   *
-   * @since 0.5.1
-   */
-  public final HtmlSink minified() {
-    writer = minifiedWriter();
-
-    return this;
-  }
-
-  /**
-   * Instructs this sink to use the standard <em>pretty-print</em> writer.
-   *
-   * @return this {@code HtmlSink} instance
-   *
-   * @since 0.5.1
-   */
-  public final HtmlSink prettyPrint() {
-    writer = prettyPrintWriter();
-
-    return this;
-  }
 
   /**
    * Writes the specified template to the specified directory.
@@ -235,14 +136,6 @@ public final class HtmlSink extends HtmlPlayer {
     record(template);
 
     play(visitor);
-  }
-
-  private MinifiedWriter minifiedWriter() {
-    if (minifiedWriter == null) {
-      minifiedWriter = new MinifiedWriter();
-    }
-
-    return minifiedWriter;
   }
 
   private PrettyPrintWriter prettyPrintWriter() {
