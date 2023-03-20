@@ -17,7 +17,6 @@ package objectos.html.internal;
 
 import java.util.Objects;
 import objectos.html.HtmlTemplate;
-import objectos.html.Template;
 import objectos.html.TemplateDsl;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
@@ -35,6 +34,20 @@ public class HtmlRecorder implements TemplateDsl {
 
   static final int NULL = Integer.MIN_VALUE;
 
+  private static final int CONTENTS = 0,
+      ATTRIBUTE = 1,
+      ELEMENT = 2,
+      LAMBDA = 3,
+      AMBIGUOUS = 4,
+      TEMPLATE = 5,
+      RAW = 6;
+
+  int[] listArray = new int[8];
+
+  int listBase;
+
+  int listIndex;
+
   Object[] objectArray = new Object[64];
 
   int objectIndex;
@@ -42,10 +55,6 @@ public class HtmlRecorder implements TemplateDsl {
   int[] protoArray = new int[256];
 
   int protoIndex;
-
-  int[] stackArray = new int[8];
-
-  int stackIndex;
 
   @Override
   public final void addAttribute(AttributeName name) {
@@ -95,11 +104,15 @@ public class HtmlRecorder implements TemplateDsl {
 
     var std = StandardAttributeName.getByName(name);
 
-    if (std != null) {
-      addAttribute(std, value);
-    } else {
-      throw new UnsupportedOperationException("Implement me");
+    if (std == null) {
+      throw new IllegalArgumentException(
+        """
+        The attribute '%s' is either invalid or not implemented yet.
+        """.formatted(name)
+      );
     }
+
+    addAttribute(std, value);
   }
 
   @Override
@@ -181,62 +194,68 @@ public class HtmlRecorder implements TemplateDsl {
     int code = name.getCode(); // name implicit null-check
     int length = values.length; // values implicit null-check
 
-    int contents = protoIndex;
+    listBase = listIndex;
 
-    int attributes = NULL;
-    int elements = NULL;
-    int lambdas = NULL;
-    int attrOrElems = NULL;
-    int templates = NULL;
-    int raws = NULL;
+    listAdd(
+      /*0=contents */protoIndex,
+      /*1=attribute*/NULL,
+      /*2=element  */NULL,
+      /*3=lambda   */NULL,
+      /*4=ambiguous*/NULL,
+      /*5=template */NULL,
+      /*6=raw      */NULL
+    );
+
+    int listStart = listIndex;
 
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
 
-      int before = protoIndex;
+      if (value instanceof AttributeName) {
+        listAdd(ByteProto.ATTRIBUTE);
 
-      value.render(this);
+        updateIndex();
+      } else if (value instanceof ElementName) {
+        listAdd(ByteProto.ELEMENT);
 
-      if (protoIndex > before) {
-        if (templates == NULL) {
-          // maybe this should be implemented in HtmlTemplate::render instead?
-          templates = before;
+        updateIndex();
+      } else if (value instanceof Lambda) {
+        listAdd(ByteProto.LAMBDA);
+
+        updateIndex();
+      } else if (value instanceof AttributeOrElement) {
+        listAdd(ByteProto.ATTR_OR_ELEM);
+
+        updateIndex();
+      } else if (value instanceof HtmlTemplate template) {
+        listAdd(ByteProto.TEMPLATE);
+
+        int index = listBase(TEMPLATE);
+
+        if (index == NULL) {
+          index = protoIndex;
         }
 
-        continue;
-      }
+        int restoreTo = listBase;
 
-      var proto = protoArray[--contents];
+        addTemplate(template);
 
-      switch (proto) {
-        case ByteProto.ATTRIBUTE -> {
-          contents = attributes = protoArray[--contents];
-        }
+        listBase = restoreTo;
 
-        case ByteProto.ATTR_OR_ELEM -> {
-          contents = attrOrElems = protoArray[--contents];
-        }
+        listBase(TEMPLATE, index);
+      } else if (value instanceof StandardTextElement) {
+        listAdd(ByteProto.TEXT);
 
-        case ByteProto.ELEMENT -> {
-          elements = protoArray[--contents];
-          contents = protoArray[--contents];
-        }
+        updateIndex();
+      } else if (value instanceof Raw) {
+        listAdd(ByteProto.RAW);
 
-        case ByteProto.LAMBDA -> {
-          contents = lambdas = protoArray[--contents];
-        }
-
-        case ByteProto.RAW -> {
-          contents = raws = protoArray[--contents];
-        }
-
-        case ByteProto.TEXT -> {
-          contents = elements = protoArray[--contents];
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
+        updateIndex();
+      } else if (value instanceof NoOp) {
+        // noop
+      } else {
+        value.render(this);
+        value.mark(this);
       }
     }
 
@@ -244,48 +263,37 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto.ELEMENT, NULL, code);
 
-    stackPush(
-      /*5*/raws,
-      /*4*/templates,
-      /*3*/attrOrElems,
-      /*2*/lambdas,
-      /*1*/elements,
-      /*0*/attributes != NULL ? attributes : contents
-    );
+    for (int i = listStart; i < listIndex; i++) {
+      int proto = listArray[i];
 
-    for (int i = 0; i < length; i++) {
-      var value = values[i];
+      switch (proto) {
+        case ByteProto.ATTRIBUTE -> markImplStandard(1, proto);
 
-      mark(value);
+        case ByteProto.ELEMENT -> markImplStandard(2, proto);
+
+        case ByteProto.LAMBDA -> markImplLambda(3, proto);
+
+        case ByteProto.ATTR_OR_ELEM -> markImplStandard(4, proto);
+
+        case ByteProto.TEMPLATE -> markImplLambda(5, proto);
+
+        case ByteProto.TEXT -> markImplStandard(2, proto);
+
+        case ByteProto.RAW -> markImplStandard(6, proto);
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: mark proto=" + proto
+        );
+      }
     }
-
-    stackPop(6);
 
     protoAdd(ByteProto.ELEMENT_END);
 
-    protoAdd(contents, start, ByteProto.ELEMENT);
+    protoAdd(listBase(CONTENTS), start, ByteProto.ELEMENT);
 
     endSet(start);
-  }
 
-  private void mark(Value value) {
-    if (value instanceof AttributeName) {
-      markImplStandard(0, ByteProto.ATTRIBUTE);
-    } else if (value instanceof ElementName) {
-      markImplStandard(1, ByteProto.ELEMENT);
-    } else if (value instanceof Lambda) {
-      markImplLambda(2, ByteProto.LAMBDA);
-    } else if (value instanceof AttributeOrElement) {
-      markImplStandard(3, ByteProto.ATTR_OR_ELEM);
-    } else if (value instanceof Template) {
-      markImplLambda(4, ByteProto.TEMPLATE);
-    } else if (value instanceof StandardTextElement) {
-      markImplStandard(1, ByteProto.TEXT);
-    } else if (value instanceof Raw) {
-      markImplStandard(5, ByteProto.RAW);
-    } else {
-      value.mark(this);
-    }
+    listIndex = listBase;
   }
 
   @Override
@@ -369,7 +377,7 @@ public class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void markAttribute() {
-    markImplStandard(0, ByteProto.ATTRIBUTE);
+    listAdd(ByteProto.ATTRIBUTE);
   }
 
   @Override
@@ -385,9 +393,7 @@ public class HtmlRecorder implements TemplateDsl {
     // as objectArray[0] is the path name value
     objectIndex = 1;
 
-    protoIndex = 0;
-
-    stackIndex = -1;
+    listIndex = protoIndex = 0;
 
     template.acceptTemplateDsl(this);
 
@@ -421,7 +427,7 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto.ROOT);
 
-    while (stackIndex >= 0) {
+    while (listIndex > 0) {
       protoAdd(stackPop());
     }
 
@@ -433,20 +439,45 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   final int stackPop() {
-    return stackArray[stackIndex--];
+    return listArray[--listIndex];
   }
 
   final void stackPop(int count) {
-    stackIndex -= count;
+    listIndex -= count;
   }
 
   final void stackPush(int v0) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-    stackArray[++stackIndex] = v0;
+    listArray = IntArrays.growIfNecessary(listArray, listIndex);
+
+    listArray[listIndex++] = v0;
   }
 
   private void endSet(int start) {
     protoArray[start + 1] = protoIndex;
+  }
+
+  private void listAdd(int v0) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 0);
+    listArray[listIndex++] = v0;
+  }
+
+  private void listAdd(int v0, int v1, int v2, int v3, int v4, int v5, int v6) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 6);
+    listArray[listIndex++] = v0;
+    listArray[listIndex++] = v1;
+    listArray[listIndex++] = v2;
+    listArray[listIndex++] = v3;
+    listArray[listIndex++] = v4;
+    listArray[listIndex++] = v5;
+    listArray[listIndex++] = v6;
+  }
+
+  private int listBase(int index) {
+    return listArray[listBase + index];
+  }
+
+  private void listBase(int index, int value) {
+    listArray[listBase + index] = value;
   }
 
   private void markImplLambda(int offset, int type) {
@@ -460,7 +491,7 @@ public class HtmlRecorder implements TemplateDsl {
 
     int start = thisStart + 2;
 
-    int stackStart = stackIndex + 1;
+    int stackStart = listIndex + 1;
 
     while (thisIndex > start) {
       int proto = protoArray[--thisIndex];
@@ -486,13 +517,13 @@ public class HtmlRecorder implements TemplateDsl {
       }
     }
 
-    while (stackIndex >= stackStart) {
+    while (listIndex >= stackStart) {
       protoAdd(stackPop());
     }
 
     thisStart = tail;
 
-    stackSet(offset, thisStart);
+    listBase(offset, thisStart);
   }
 
   private void markImplStandard(int offset, int proto) {
@@ -504,11 +535,15 @@ public class HtmlRecorder implements TemplateDsl {
 
     index = protoArray[index + 1];
 
-    stackSet(offset, index);
+    listBase(offset, index);
   }
 
   private int markSearch(int offset, int condition) {
-    var index = stackPeek(offset);
+    var index = listBase(offset);
+
+    if (index == NULL) {
+      index = listBase(CONTENTS);
+    }
 
     int proto = protoArray[index];
 
@@ -586,28 +621,62 @@ public class HtmlRecorder implements TemplateDsl {
     protoArray[protoIndex++] = v8;
   }
 
-  private int stackPeek(int offset) {
-    return stackArray[stackIndex - offset];
-  }
-
   private void stackPush(int v0, int v1) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
-    stackArray[++stackIndex] = v0;
-    stackArray[++stackIndex] = v1;
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 1);
+    listArray[listIndex++] = v0;
+    listArray[listIndex++] = v1;
   }
 
-  private void stackPush(int v0, int v1, int v2, int v3, int v4, int v5) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 6);
-    stackArray[++stackIndex] = v0;
-    stackArray[++stackIndex] = v1;
-    stackArray[++stackIndex] = v2;
-    stackArray[++stackIndex] = v3;
-    stackArray[++stackIndex] = v4;
-    stackArray[++stackIndex] = v5;
-  }
+  private void updateIndex() {
+    int contents = listBase(CONTENTS);
 
-  private void stackSet(int offset, int value) {
-    stackArray[stackIndex - offset] = value;
+    var proto = protoArray[--contents];
+
+    switch (proto) {
+      case ByteProto.ATTRIBUTE -> {
+        contents = protoArray[--contents];
+
+        listBase(ATTRIBUTE, contents);
+      }
+
+      case ByteProto.ATTR_OR_ELEM -> {
+        contents = protoArray[--contents];
+
+        listBase(AMBIGUOUS, contents);
+      }
+
+      case ByteProto.ELEMENT -> {
+        int element = protoArray[--contents];
+
+        listBase(ELEMENT, element);
+
+        contents = protoArray[--contents];
+      }
+
+      case ByteProto.LAMBDA -> {
+        contents = protoArray[--contents];
+
+        listBase(LAMBDA, contents);
+      }
+
+      case ByteProto.RAW -> {
+        contents = protoArray[--contents];
+
+        listBase(RAW, contents);
+      }
+
+      case ByteProto.TEXT -> {
+        contents = protoArray[--contents];
+
+        listBase(ELEMENT, contents);
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    }
+
+    listBase(CONTENTS, contents);
   }
 
 }

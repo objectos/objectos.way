@@ -18,4 +18,6 @@ package objectos.html.tmpl;
 import objectos.html.spi.Markable;
 import objectos.html.spi.Renderable;
 
-public interface Value extends Markable, Renderable {}
+public interface Value extends Markable, Renderable {
+
+}

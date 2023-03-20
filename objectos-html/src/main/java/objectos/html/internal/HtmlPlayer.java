@@ -36,7 +36,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
     protoArray = IntArrays.growIfNecessary(protoArray, objectIndex);
 
-    stackIndex = 0;
+    listIndex = 0;
 
     this.visitor.documentStart();
 
@@ -209,45 +209,45 @@ public class HtmlPlayer extends HtmlRecorder {
       int cellStyle = protoArray[index + 1];
 
       if (cellStyle == ByteProto.SINGLE) {
-        int requiredIndex = stackIndex + CAPACITY + 1;
+        int requiredIndex = listIndex + CAPACITY + 1;
 
-        stackArray = IntArrays.growIfNecessary(stackArray, requiredIndex);
-        stackArray[stackIndex + 0] = 2;
-        stackArray[stackIndex + 1] = protoArray[index + 2];
-        stackArray[stackIndex + 2] = value;
+        listArray = IntArrays.growIfNecessary(listArray, requiredIndex);
+        listArray[listIndex + 0] = 2;
+        listArray[listIndex + 1] = protoArray[index + 2];
+        listArray[listIndex + 2] = value;
 
         protoArray[index + 1] = ByteProto.LIST;
-        protoArray[index + 2] = stackIndex;
+        protoArray[index + 2] = listIndex;
 
-        stackIndex = requiredIndex + 1;
+        listIndex = requiredIndex + 1;
 
         break;
       }
 
-      int listIndex = protoArray[index + 2];
+      int listOffset = protoArray[index + 2];
 
-      int length = stackArray[listIndex + 0];
+      int length = listArray[listOffset + 0];
 
       while (length == CAPACITY) {
-        listIndex = stackArray[listIndex + CAPACITY + 1];
+        listOffset = listArray[listOffset + CAPACITY + 1];
 
-        length = stackArray[listIndex + 0];
+        length = listArray[listOffset + 0];
       }
 
       int newLength = length + 1;
 
-      stackArray[listIndex + 0] = newLength;
-      stackArray[listIndex + newLength] = value;
+      listArray[listOffset + 0] = newLength;
+      listArray[listOffset + newLength] = value;
 
       if (newLength == CAPACITY) {
-        int requiredIndex = stackIndex + CAPACITY + 1;
+        int requiredIndex = listIndex + CAPACITY + 1;
 
-        stackArray = IntArrays.growIfNecessary(stackArray, requiredIndex);
-        stackArray[stackIndex + 0] = 0;
+        listArray = IntArrays.growIfNecessary(listArray, requiredIndex);
+        listArray[listIndex + 0] = 0;
 
-        stackArray[listIndex + newLength + 1] = stackIndex;
+        listArray[listOffset + newLength + 1] = listIndex;
 
-        stackIndex = requiredIndex + 1;
+        listIndex = requiredIndex + 1;
       }
 
       break;
@@ -352,10 +352,10 @@ public class HtmlPlayer extends HtmlRecorder {
         int count = 0;
 
         while (true) {
-          int length = stackArray[base + 0];
+          int length = listArray[base + 0];
 
           for (int i = 0; i < length; i++) {
-            int obj = stackArray[base + i + 1];
+            int obj = listArray[base + i + 1];
 
             var attrValue = attributeValueImpl(name, obj);
 
@@ -369,7 +369,7 @@ public class HtmlPlayer extends HtmlRecorder {
           }
 
           if (length == CAPACITY) {
-            base = stackArray[base + length + 1];
+            base = listArray[base + length + 1];
 
             continue;
           } else {
