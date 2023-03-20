@@ -101,7 +101,7 @@ limitations under the License.
 ]]>
 		</objectos.license.headerMain>
 		<objectos.license.projectName>${project.name}</objectos.license.projectName>
-		<org.testng.version>7.5</org.testng.version>
+		<org.testng.version>7.7.1</org.testng.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
