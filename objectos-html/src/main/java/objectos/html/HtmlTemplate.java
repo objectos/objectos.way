@@ -104,8 +104,6 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
 
     try {
       definition();
-
-      this.dsl.markRootElement();
     } finally {
       this.dsl = null;
     }
@@ -124,9 +122,7 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
   }
 
   @Override
-  public final void mark(Marker dsl) {
-    dsl.markTemplate();
-  }
+  public final void mark(Marker dsl) {}
 
   @Override
   public final String minified() {

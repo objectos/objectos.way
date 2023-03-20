@@ -28,7 +28,7 @@ public interface Lambda extends NonVoidElementValue {
 
   @Override
   default void mark(Marker marker) {
-    marker.markLambda();
+    // noop
   }
 
   @Override

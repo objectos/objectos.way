@@ -125,8 +125,7 @@ final class StandardAttributeNameStep extends ThisTemplate {
     method(
       annotation(OVERRIDE),
       PUBLIC, FINAL, VOID, name("mark"),
-      parameter(MARKER, name("marker")),
-      p(n("marker"), v("markAttribute"))
+      parameter(MARKER, name("marker"))
     );
 
     method(

@@ -25,39 +25,4 @@ public interface Marker {
    */
   void markAttribute();
 
-  /**
-   * TODO
-   */
-  void markAttributeOrElement();
-
-  /**
-   * TODO
-   */
-  void markElement();
-
-  /**
-   * TODO
-   */
-  void markLambda();
-
-  /**
-   * TODO
-   */
-  void markRaw();
-
-  /**
-   * TODO
-   */
-  void markRootElement();
-
-  /**
-   * TODO
-   */
-  void markTemplate();
-
-  /**
-   * TODO
-   */
-  void markText();
-
 }

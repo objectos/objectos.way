@@ -107,9 +107,7 @@ public class StandardAttributeNameStepTest {
         }
 
         @Override
-        public final void mark(Marker marker) {
-          marker.markAttribute();
-        }
+        public final void mark(Marker marker) {}
 
         @Override
         public final void render(Renderer renderer) {}

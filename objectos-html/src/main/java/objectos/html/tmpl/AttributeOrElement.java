@@ -89,7 +89,7 @@ public enum AttributeOrElement implements AnyElementValue {
 
   @Override
   public final void mark(Marker marker) {
-    marker.markAttributeOrElement();
+    // noop
   }
 
   @Override

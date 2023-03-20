@@ -82,9 +82,7 @@ public class StandardElementNameStepTest {
         }
 
         @Override
-        public final void mark(Marker marker) {
-          marker.markElement();
-        }
+        public final void mark(Marker marker) {}
 
         @Override
         public final void render(Renderer renderer) {}

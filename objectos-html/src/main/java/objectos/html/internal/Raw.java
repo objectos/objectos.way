@@ -24,9 +24,7 @@ public enum Raw implements NonVoidElementValue {
   INSTANCE;
 
   @Override
-  public final void mark(Marker marker) {
-    marker.markRaw();
-  }
+  public final void mark(Marker marker) {}
 
   @Override
   public final void render(Renderer renderer) {}

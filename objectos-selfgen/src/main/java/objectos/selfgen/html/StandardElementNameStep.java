@@ -97,8 +97,7 @@ final class StandardElementNameStep extends ThisTemplate {
     method(
       annotation(OVERRIDE),
       PUBLIC, FINAL, VOID, name("mark"),
-      parameter(MARKER, name("marker")),
-      p(n("marker"), v("markElement"))
+      parameter(MARKER, name("marker"))
     );
 
     method(

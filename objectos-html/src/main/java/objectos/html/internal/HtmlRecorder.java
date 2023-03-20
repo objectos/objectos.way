@@ -17,6 +17,7 @@ package objectos.html.internal;
 
 import java.util.Objects;
 import objectos.html.HtmlTemplate;
+import objectos.html.Template;
 import objectos.html.TemplateDsl;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
@@ -24,6 +25,7 @@ import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.html.tmpl.StandardTextElement;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -242,35 +244,48 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto.ELEMENT, NULL, code);
 
-    stackPush(raws); // 5
-    stackPush(templates); // 4
-    stackPush(attrOrElems); // 3
-    stackPush(lambdas); // 2
-    stackPush(elements); // 1
-    if (attributes == NULL) {
-      stackPush(contents); // 0
-    } else {
-      stackPush(attributes); // 0
-    }
+    stackPush(
+      /*5*/raws,
+      /*4*/templates,
+      /*3*/attrOrElems,
+      /*2*/lambdas,
+      /*1*/elements,
+      /*0*/attributes != NULL ? attributes : contents
+    );
 
     for (int i = 0; i < length; i++) {
       var value = values[i];
 
-      value.mark(this);
+      mark(value);
     }
 
-    stackPop();
-    stackPop();
-    stackPop();
-    stackPop();
-    stackPop();
-    stackPop();
+    stackPop(6);
 
     protoAdd(ByteProto.ELEMENT_END);
 
     protoAdd(contents, start, ByteProto.ELEMENT);
 
     endSet(start);
+  }
+
+  private void mark(Value value) {
+    if (value instanceof AttributeName) {
+      markImplStandard(0, ByteProto.ATTRIBUTE);
+    } else if (value instanceof ElementName) {
+      markImplStandard(1, ByteProto.ELEMENT);
+    } else if (value instanceof Lambda) {
+      markImplLambda(2, ByteProto.LAMBDA);
+    } else if (value instanceof AttributeOrElement) {
+      markImplStandard(3, ByteProto.ATTR_OR_ELEM);
+    } else if (value instanceof Template) {
+      markImplLambda(4, ByteProto.TEMPLATE);
+    } else if (value instanceof StandardTextElement) {
+      markImplStandard(1, ByteProto.TEXT);
+    } else if (value instanceof Raw) {
+      markImplStandard(5, ByteProto.RAW);
+    } else {
+      value.mark(this);
+    }
   }
 
   @Override
@@ -358,41 +373,6 @@ public class HtmlRecorder implements TemplateDsl {
   }
 
   @Override
-  public final void markAttributeOrElement() {
-    markImplStandard(3, ByteProto.ATTR_OR_ELEM);
-  }
-
-  @Override
-  public final void markElement() {
-    markImplStandard(1, ByteProto.ELEMENT);
-  }
-
-  @Override
-  public final void markLambda() {
-    markImplLambda(2, ByteProto.LAMBDA);
-  }
-
-  @Override
-  public final void markRaw() {
-    markImplStandard(5, ByteProto.RAW);
-  }
-
-  @Override
-  public final void markRootElement() {
-    // noop
-  }
-
-  @Override
-  public final void markTemplate() {
-    markImplLambda(4, ByteProto.TEMPLATE);
-  }
-
-  @Override
-  public final void markText() {
-    markImplStandard(1, ByteProto.TEXT);
-  }
-
-  @Override
   public final void pathName(String path) {
     objectArray[0] = path;
   }
@@ -454,6 +434,10 @@ public class HtmlRecorder implements TemplateDsl {
 
   final int stackPop() {
     return stackArray[stackIndex--];
+  }
+
+  final void stackPop(int count) {
+    stackIndex -= count;
   }
 
   final void stackPush(int v0) {
@@ -610,6 +594,16 @@ public class HtmlRecorder implements TemplateDsl {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
     stackArray[++stackIndex] = v0;
     stackArray[++stackIndex] = v1;
+  }
+
+  private void stackPush(int v0, int v1, int v2, int v3, int v4, int v5) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 6);
+    stackArray[++stackIndex] = v0;
+    stackArray[++stackIndex] = v1;
+    stackArray[++stackIndex] = v2;
+    stackArray[++stackIndex] = v3;
+    stackArray[++stackIndex] = v4;
+    stackArray[++stackIndex] = v5;
   }
 
   private void stackSet(int offset, int value) {

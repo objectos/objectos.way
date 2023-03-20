@@ -24,7 +24,7 @@ public enum StandardTextElement implements NonVoidElementValue {
 
   @Override
   public final void mark(Marker dsl) {
-    dsl.markText();
+    // noop
   }
 
   @Override
