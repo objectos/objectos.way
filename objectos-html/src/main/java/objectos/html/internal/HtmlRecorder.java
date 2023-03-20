@@ -34,17 +34,7 @@ public class HtmlRecorder implements TemplateDsl {
 
   static final int NULL = Integer.MIN_VALUE;
 
-  private static final int CONTENTS = 0,
-      ATTRIBUTE = 1,
-      ELEMENT = 2,
-      LAMBDA = 3,
-      AMBIGUOUS = 4,
-      TEMPLATE = 5,
-      RAW = 6;
-
   int[] listArray = new int[8];
-
-  int listBase;
 
   int listIndex;
 
@@ -194,19 +184,9 @@ public class HtmlRecorder implements TemplateDsl {
     int code = name.getCode(); // name implicit null-check
     int length = values.length; // values implicit null-check
 
-    listBase = listIndex;
+    int listBase = listIndex;
 
-    listAdd(
-      /*0=contents */protoIndex,
-      /*1=attribute*/NULL,
-      /*2=element  */NULL,
-      /*3=lambda   */NULL,
-      /*4=ambiguous*/NULL,
-      /*5=template */NULL,
-      /*6=raw      */NULL
-    );
-
-    int listStart = listIndex;
+    int contents = protoIndex;
 
     for (int i = 0; i < length; i++) {
       var value = Check.notNull(values[i], "values[", i, "] == null");
@@ -214,43 +194,31 @@ public class HtmlRecorder implements TemplateDsl {
       if (value instanceof AttributeName) {
         listAdd(ByteProto.ATTRIBUTE);
 
-        updateIndex();
+        contents = updateContents(contents);
       } else if (value instanceof ElementName) {
         listAdd(ByteProto.ELEMENT);
 
-        updateIndex();
+        contents = updateContents(contents);
       } else if (value instanceof Lambda) {
         listAdd(ByteProto.LAMBDA);
 
-        updateIndex();
+        contents = updateContents(contents);
       } else if (value instanceof AttributeOrElement) {
         listAdd(ByteProto.ATTR_OR_ELEM);
 
-        updateIndex();
+        contents = updateContents(contents);
       } else if (value instanceof HtmlTemplate template) {
         listAdd(ByteProto.TEMPLATE);
 
-        int index = listBase(TEMPLATE);
-
-        if (index == NULL) {
-          index = protoIndex;
-        }
-
-        int restoreTo = listBase;
-
         addTemplate(template);
-
-        listBase = restoreTo;
-
-        listBase(TEMPLATE, index);
       } else if (value instanceof StandardTextElement) {
         listAdd(ByteProto.TEXT);
 
-        updateIndex();
+        contents = updateContents(contents);
       } else if (value instanceof Raw) {
         listAdd(ByteProto.RAW);
 
-        updateIndex();
+        contents = updateContents(contents);
       } else if (value instanceof NoOp) {
         // noop
       } else {
@@ -263,7 +231,18 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto.ELEMENT, NULL, code);
 
-    for (int i = listStart; i < listIndex; i++) {
+    int listMax = listIndex;
+
+    listAdd(
+      /*6=raw      */contents,
+      /*5=template */contents,
+      /*4=ambiguous*/contents,
+      /*3=lambda   */contents,
+      /*2=element  */contents,
+      /*1=attribute*/contents
+    );
+
+    for (int i = listBase; i < listMax; i++) {
       int proto = listArray[i];
 
       switch (proto) {
@@ -289,7 +268,7 @@ public class HtmlRecorder implements TemplateDsl {
 
     protoAdd(ByteProto.ELEMENT_END);
 
-    protoAdd(listBase(CONTENTS), start, ByteProto.ELEMENT);
+    protoAdd(contents, start, ByteProto.ELEMENT);
 
     endSet(start);
 
@@ -461,23 +440,22 @@ public class HtmlRecorder implements TemplateDsl {
     listArray[listIndex++] = v0;
   }
 
-  private void listAdd(int v0, int v1, int v2, int v3, int v4, int v5, int v6) {
-    listArray = IntArrays.growIfNecessary(listArray, listIndex + 6);
+  private void listAdd(int v0, int v1, int v2, int v3, int v4, int v5) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 5);
     listArray[listIndex++] = v0;
     listArray[listIndex++] = v1;
     listArray[listIndex++] = v2;
     listArray[listIndex++] = v3;
     listArray[listIndex++] = v4;
     listArray[listIndex++] = v5;
-    listArray[listIndex++] = v6;
   }
 
-  private int listBase(int index) {
-    return listArray[listBase + index];
+  private int listOffset(int offset) {
+    return listArray[listIndex - offset];
   }
 
-  private void listBase(int index, int value) {
-    listArray[listBase + index] = value;
+  private void listOffset(int offset, int value) {
+    listArray[listIndex - offset] = value;
   }
 
   private void markImplLambda(int offset, int type) {
@@ -523,7 +501,7 @@ public class HtmlRecorder implements TemplateDsl {
 
     thisStart = tail;
 
-    listBase(offset, thisStart);
+    listOffset(offset, thisStart);
   }
 
   private void markImplStandard(int offset, int proto) {
@@ -535,15 +513,11 @@ public class HtmlRecorder implements TemplateDsl {
 
     index = protoArray[index + 1];
 
-    listBase(offset, index);
+    listOffset(offset, index);
   }
 
   private int markSearch(int offset, int condition) {
-    var index = listBase(offset);
-
-    if (index == NULL) {
-      index = listBase(CONTENTS);
-    }
+    var index = listOffset(offset);
 
     int proto = protoArray[index];
 
@@ -627,48 +601,22 @@ public class HtmlRecorder implements TemplateDsl {
     listArray[listIndex++] = v1;
   }
 
-  private void updateIndex() {
-    int contents = listBase(CONTENTS);
-
+  private int updateContents(int contents) {
     var proto = protoArray[--contents];
 
     switch (proto) {
-      case ByteProto.ATTRIBUTE -> {
+      case ByteProto.ATTRIBUTE,
+           ByteProto.ATTR_OR_ELEM,
+           ByteProto.LAMBDA,
+           ByteProto.RAW,
+           ByteProto.TEXT -> {
         contents = protoArray[--contents];
-
-        listBase(ATTRIBUTE, contents);
-      }
-
-      case ByteProto.ATTR_OR_ELEM -> {
-        contents = protoArray[--contents];
-
-        listBase(AMBIGUOUS, contents);
       }
 
       case ByteProto.ELEMENT -> {
-        int element = protoArray[--contents];
-
-        listBase(ELEMENT, element);
+        --contents;
 
         contents = protoArray[--contents];
-      }
-
-      case ByteProto.LAMBDA -> {
-        contents = protoArray[--contents];
-
-        listBase(LAMBDA, contents);
-      }
-
-      case ByteProto.RAW -> {
-        contents = protoArray[--contents];
-
-        listBase(RAW, contents);
-      }
-
-      case ByteProto.TEXT -> {
-        contents = protoArray[--contents];
-
-        listBase(ELEMENT, contents);
       }
 
       default -> throw new UnsupportedOperationException(
@@ -676,7 +624,7 @@ public class HtmlRecorder implements TemplateDsl {
       );
     }
 
-    listBase(CONTENTS, contents);
+    return contents;
   }
 
 }
