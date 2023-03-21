@@ -86,8 +86,6 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
 
     void raw(String value);
 
-    void selfClosingEnd();
-
     void startTag(StandardElementName name);
 
     void startTagEnd(StandardElementName name);

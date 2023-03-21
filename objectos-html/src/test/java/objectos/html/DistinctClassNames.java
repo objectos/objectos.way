@@ -78,9 +78,6 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
   @Override
   public void raw(String value) {}
 
-  @Override
-  public void selfClosingEnd() {}
-
   public final int size() {
     return names.size();
   }

@@ -381,46 +381,46 @@ public class HtmlPlayer extends HtmlRecorder {
       }
     }
 
+    visitor.startTagEnd(elemName);
+
     var kind = elemName.getKind();
 
     if (kind.isVoid()) {
-      visitor.selfClosingEnd();
-    } else {
-      visitor.startTagEnd(elemName);
+      return;
+    }
 
-      if (elem != NULL) {
-        protoIndex = elem;
+    if (elem != NULL) {
+      protoIndex = elem;
 
-        loop: while (protoMore()) {
-          int proto = protoPeek();
+      loop: while (protoMore()) {
+        int proto = protoPeek();
 
-          switch (proto) {
-            case ByteProto.ATTRIBUTE -> {
-              protoNext();
-              protoNext();
-            }
-
-            case ByteProto.ATTR_OR_ELEM -> maybeElement(elemName);
-
-            case ByteProto.ELEMENT -> element();
-
-            case ByteProto.ELEMENT_END -> {
-              break loop;
-            }
-
-            case ByteProto.RAW -> raw();
-
-            case ByteProto.TEXT -> text();
-
-            default -> throw new UnsupportedOperationException(
-              "Implement me :: proto=" + proto
-            );
+        switch (proto) {
+          case ByteProto.ATTRIBUTE -> {
+            protoNext();
+            protoNext();
           }
+
+          case ByteProto.ATTR_OR_ELEM -> maybeElement(elemName);
+
+          case ByteProto.ELEMENT -> element();
+
+          case ByteProto.ELEMENT_END -> {
+            break loop;
+          }
+
+          case ByteProto.RAW -> raw();
+
+          case ByteProto.TEXT -> text();
+
+          default -> throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+          );
         }
       }
-
-      visitor.endTag(elemName);
     }
+
+    visitor.endTag(elemName);
   }
 
   private boolean maybeAttribute(StandardElementName parent) {

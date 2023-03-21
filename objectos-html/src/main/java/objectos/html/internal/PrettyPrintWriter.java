@@ -145,13 +145,6 @@ public final class PrettyPrintWriter extends Writer {
   }
 
   @Override
-  public final void selfClosingEnd() {
-    write('>');
-
-    nl();
-  }
-
-  @Override
   public final void startTag(StandardElementName name) {
     if (last >= CONTENTS && (metadata || !phrasing(name))) {
       nl();
@@ -170,6 +163,12 @@ public final class PrettyPrintWriter extends Writer {
     write('>');
 
     last = CONTENTS;
+
+    var kind = name.getKind();
+
+    if (kind.isVoid() && (metadata || !phrasing(name))) {
+      nl();
+    }
   }
 
   @Override
