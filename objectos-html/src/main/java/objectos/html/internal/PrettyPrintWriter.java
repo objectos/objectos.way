@@ -23,48 +23,40 @@ import objectos.html.tmpl.StandardElementName;
 public final class PrettyPrintWriter extends Writer {
 
   private static final int START = 0,
-      CONTENTS = 1,
-      ELANG = 2,
-      TEXT = 3,
-      TEXT_NL = 4,
-      INLINE_END = 5;
+      NL = 1,
+      CONTENTS = 2;
 
-  private static final Set<StandardElementName> BLOCKS = EnumSet.of(
-    StandardElementName.HTML,
-    StandardElementName.HEAD,
-    StandardElementName.TITLE,
-    StandardElementName.META,
+  private static final Set<StandardElementName> PHRASING = EnumSet.of(
+    StandardElementName.A,
+    StandardElementName.ABBR,
+    StandardElementName.B,
+    StandardElementName.BR,
+    StandardElementName.BUTTON,
+    StandardElementName.CODE,
+    StandardElementName.EM,
+    StandardElementName.IMG,
+    StandardElementName.INPUT,
+    StandardElementName.KBD,
+    StandardElementName.LABEL,
     StandardElementName.LINK,
-    StandardElementName.STYLE,
+    StandardElementName.META,
+    StandardElementName.PROGRESS,
+    StandardElementName.SAMP,
     StandardElementName.SCRIPT,
-    StandardElementName.BODY,
-    StandardElementName.DIV,
-    StandardElementName.HEADER,
-    StandardElementName.NAV,
-    StandardElementName.MAIN,
-    StandardElementName.ARTICLE,
-    StandardElementName.SECTION,
-    StandardElementName.FOOTER,
-    StandardElementName.H1,
-    StandardElementName.H2,
-    StandardElementName.H3,
-    StandardElementName.H4,
-    StandardElementName.H5,
-    StandardElementName.H6,
-    StandardElementName.P,
-    StandardElementName.PRE,
-    StandardElementName.UL,
-    StandardElementName.OL,
-    StandardElementName.LI,
-    StandardElementName.BLOCKQUOTE
+    StandardElementName.SELECT,
+    StandardElementName.SMALL,
+    StandardElementName.SPAN,
+    StandardElementName.STRONG,
+    StandardElementName.SUB,
+    StandardElementName.SUP,
+    StandardElementName.SVG,
+    StandardElementName.TEMPLATE,
+    StandardElementName.TEXTAREA
   );
 
-  private static final Set<StandardElementName> ELANG_SET = EnumSet.of(
-    StandardElementName.STYLE,
-    StandardElementName.SCRIPT
-  );
+  private int last;
 
-  private int state;
+  private boolean metadata;
 
   @Override
   public final void attribute(AttributeName name) {
@@ -101,41 +93,55 @@ public final class PrettyPrintWriter extends Writer {
 
   @Override
   public final void documentEnd() {
-    if (state == INLINE_END) {
+    if (last != NL) {
       nl();
     }
   }
 
   @Override
   public final void documentStart() {
-    state = START;
+    last = START;
+
+    metadata = false;
   }
 
   @Override
   public final void endTag(StandardElementName name) {
-    if (ELANG_SET.contains(name) && state == TEXT) {
-      nl();
-    }
-
     write('<');
     write('/');
     write(name.getName());
     write('>');
 
-    if (isBlock(name)) {
+    if (metadata || !phrasing(name)) {
       nl();
-    } else {
-      state = INLINE_END;
+    }
+
+    if (head(name)) {
+      metadata = false;
     }
   }
 
   @Override
   public final void raw(String value) {
-    preText(value);
+    int length = value.length();
 
-    write(value);
+    if (metadata && length > 0) {
+      var first = value.charAt(0);
 
-    postText(value);
+      if (!nl(first)) {
+        nl();
+      }
+
+      write(value);
+
+      var last = value.charAt(length - 1);
+
+      if (!nl(last)) {
+        nl();
+      }
+    } else {
+      write(value);
+    }
   }
 
   @Override
@@ -147,80 +153,46 @@ public final class PrettyPrintWriter extends Writer {
 
   @Override
   public final void startTag(StandardElementName name) {
-    if (state != START) {
-      if (isBlock(name)) {
-        nl();
-      }
+    if (last >= CONTENTS && (metadata || !phrasing(name))) {
+      nl();
     }
 
     write('<');
     write(name.getName());
+
+    if (head(name)) {
+      metadata = true;
+    }
   }
 
   @Override
   public final void startTagEnd(StandardElementName name) {
     write('>');
 
-    if (ELANG_SET.contains(name)) {
-      state = ELANG;
-    } else {
-      state = CONTENTS;
-    }
+    last = CONTENTS;
   }
 
   @Override
   public final void text(String value) {
-    preText(value);
-
     escaped(value);
-
-    postText(value);
   }
 
-  private boolean isBlock(StandardElementName name) {
-    return BLOCKS.contains(name);
+  private boolean head(StandardElementName name) {
+    return name == StandardElementName.HEAD;
   }
 
   private void nl() {
     write(System.lineSeparator());
 
-    state = START;
+    last = NL;
   }
 
-  private void postText(String value) {
-    state = TEXT;
-
-    int length = value.length();
-
-    if (length == 0) {
-      return;
-    }
-
-    var last = value.charAt(length - 1);
-
-    if (last != '\n' && last != '\r') {
-      return;
-    }
-
-    state = TEXT_NL;
+  private boolean nl(char c) {
+    return c == '\n' || c == '\r';
   }
 
-  private void preText(String value) {
-    if (state != ELANG) {
-      return;
-    }
-
-    if (value.isEmpty()) {
-      return;
-    }
-
-    var first = value.charAt(0);
-
-    if (first == '\n' || first == '\r') {
-      return;
-    }
-
-    nl();
+  private boolean phrasing(StandardElementName name) {
+    return PHRASING.contains(name);
   }
 
 }

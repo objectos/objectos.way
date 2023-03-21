@@ -557,8 +557,6 @@ public class HtmlPlayer extends HtmlRecorder {
   }
 
   private void rootElement() {
-    protoNext(); // ByteProto.ROOT
-
     loop: while (protoMore()) {
       int proto = protoPeek();
 
@@ -571,7 +569,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
         case ByteProto.ELEMENT -> element();
 
-        case ByteProto.ROOT -> {}
+        case ByteProto.ROOT -> protoNext();
 
         case ByteProto.ROOT_END -> {
           break loop;
