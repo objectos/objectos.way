@@ -69,7 +69,6 @@
 		<module>objectos-bom</module>
 		<module>objectos-code</module>
 		<module>objectos-html</module>
-		<module>objectos-html-spi</module>
 		<module>objectos-lang</module>
 		<module>objectos-selfgen</module>
 		<module>objectos-util</module>

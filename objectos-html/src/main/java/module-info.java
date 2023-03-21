@@ -21,9 +21,8 @@
 module objectos.html {
   exports objectos.html;
   exports objectos.html.io;
+  exports objectos.html.spi;
   exports objectos.html.tmpl;
-
-  requires transitive objectos.html.spi;
 
   requires objectos.lang;
   requires objectos.util;
