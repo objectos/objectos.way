@@ -63,7 +63,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html></html>
       """
     );
@@ -88,7 +88,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html>
       <head></head>
       <body></body>
@@ -118,7 +118,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html>
       <head>
       <meta charset="utf-8">
@@ -155,7 +155,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html id="a">
       <head id="b">
       <meta charset="utf-8">
@@ -186,7 +186,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html>
       <body>
       <p>abc</p>
@@ -217,7 +217,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html>
       <body>
       <p>abc <em>def</em> ghi</p>
@@ -251,7 +251,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html>
       <body>
       <ul>
@@ -300,7 +300,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html>
       <head>
       <style>
@@ -335,7 +335,7 @@ public class PrettyPrintWriterTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <a href="index.html">a</a>
       """
     );

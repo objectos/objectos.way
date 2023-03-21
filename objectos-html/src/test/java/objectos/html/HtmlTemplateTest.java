@@ -267,7 +267,7 @@ public class HtmlTemplateTest {
       },
 
       """
-      <!doctype html>
+      <!DOCTYPE html>
       <html></html>
       """
     );

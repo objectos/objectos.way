@@ -30,7 +30,7 @@ import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-public class HtmlRecorder implements TemplateDsl {
+class HtmlRecorder implements TemplateDsl {
 
   static final int NULL = Integer.MIN_VALUE;
 

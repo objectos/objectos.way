@@ -86,7 +86,7 @@ public final class PrettyPrintWriter extends Writer {
 
   @Override
   public final void doctype() {
-    write("<!doctype html>");
+    write("<!DOCTYPE html>");
 
     nl();
   }
