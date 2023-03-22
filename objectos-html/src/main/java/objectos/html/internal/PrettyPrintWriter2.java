@@ -22,6 +22,7 @@ import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
+import objectos.html.pseudom.HtmlText;
 import objectos.html.tmpl.ElementKind;
 import objectos.html.tmpl.StandardElementName;
 
@@ -121,8 +122,6 @@ public final class PrettyPrintWriter2 extends Writer2 {
 
   private void documentType() {
     write("<!DOCTYPE html>");
-
-    write(NL);
   }
 
   private void element(HtmlElement element) {
@@ -160,6 +159,8 @@ public final class PrettyPrintWriter2 extends Writer2 {
 
         newLine = true;
       }
+    } else if (node instanceof HtmlText text) {
+      escaped(text.value());
     } else {
       var type = node.getClass();
 

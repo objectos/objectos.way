@@ -50,6 +50,8 @@ public class HtmlPlayer2 extends HtmlRecorder {
     objectArray[ELEMENT] = new PseudoHtmlElement(this);
 
     objectArray[ATTRIBUTE] = new PseudoHtmlAttribute(this);
+
+    objectArray[TEXT] = new PseudoHtmlText();
   }
 
   public final void play(DocumentProcessor processor) {
@@ -171,9 +173,13 @@ public class HtmlPlayer2 extends HtmlRecorder {
     int proto = protoNext();
 
     return switch (proto) {
-      case ByteProto.DOCTYPE -> throw new UnsupportedOperationException("Implement me");
+      case ByteProto.DOCTYPE -> {
+        proto2ctx();
 
-      case ByteProto.ELEMENT -> htmlElement();
+        yield PseudoHtmlDocumentType.INSTANCE;
+      }
+
+      case ByteProto.ELEMENT -> executeElement();
 
       case ByteProto.ROOT_END -> throw new NoSuchElementException();
 
@@ -329,7 +335,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
       ctxSet(0, _ELEMENT);
 
-      var htmlElement = element();
+      var htmlElement = htmlElement();
 
       int code = ctxPeek(3);
 
@@ -363,12 +369,18 @@ public class HtmlPlayer2 extends HtmlRecorder {
         //case ByteProto.ATTR_OR_ELEM -> maybeElement(name);
 
         case ByteProto.ELEMENT -> {
-          node = htmlElement();
+          node = executeElement();
 
           break loop;
         }
 
         case ByteProto.ELEMENT_END -> {
+          break loop;
+        }
+
+        case ByteProto.TEXT -> {
+          node = executeText();
+
           break loop;
         }
 
@@ -641,10 +653,6 @@ public class HtmlPlayer2 extends HtmlRecorder {
     }
   }
 
-  private PseudoHtmlElement element() {
-    return (PseudoHtmlElement) objectArray[ELEMENT];
-  }
-
   private void elementAttributesHasNextCheck() {
     int peek = ctxPeek();
 
@@ -714,18 +722,14 @@ public class HtmlPlayer2 extends HtmlRecorder {
     }
   }
 
-  private PseudoHtmlAttribute htmlAttribute() {
-    return (PseudoHtmlAttribute) objectArray[ATTRIBUTE];
-  }
-
-  private HtmlElement htmlElement() {
+  private HtmlElement executeElement() {
     int location = protoNext();
 
     int parent = protoIndex;
 
     proto2ctx();
 
-    var element = element();
+    var element = htmlElement();
 
     // skip ByteProto.ELEMENT
     // skip tail index
@@ -738,6 +742,36 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxPush(elemCode, parent, protoIndex, _ELEMENT);
 
     return element;
+  }
+
+  private PseudoHtmlText executeText() {
+    int location = protoNext();
+
+    proto2ctx();
+
+    // skip ByteProto.TEXT
+    // skip tail index
+    protoIndex = location + 2;
+
+    var text = htmlText();
+
+    var index = protoNext();
+
+    text.value = (String) objectArray[index];
+
+    return text;
+  }
+
+  private PseudoHtmlAttribute htmlAttribute() {
+    return (PseudoHtmlAttribute) objectArray[ATTRIBUTE];
+  }
+
+  private PseudoHtmlElement htmlElement() {
+    return (PseudoHtmlElement) objectArray[ELEMENT];
+  }
+
+  private PseudoHtmlText htmlText() {
+    return (PseudoHtmlText) objectArray[TEXT];
   }
 
   private String processAttributeValue(AttributeName name, String attributeValue) {

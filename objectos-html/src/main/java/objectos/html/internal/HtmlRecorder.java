@@ -36,7 +36,8 @@ class HtmlRecorder implements TemplateDsl {
   static final int DOCUMENT = 1;
   static final int ELEMENT = 2;
   static final int ATTRIBUTE = 3;
-  static final int OBJECT_INDEX = 4;
+  static final int TEXT = 4;
+  static final int OBJECT_INDEX = 5;
 
   static final int NULL = Integer.MIN_VALUE;
 

@@ -15,6 +15,15 @@
  */
 package objectos.html.internal;
 
-import objectos.html.pseudom.HtmlDocumentType;
+import objectos.html.pseudom.HtmlText;
 
-public final class PseudoDocumentType implements HtmlDocumentType {}
+public final class PseudoHtmlText implements HtmlText {
+
+  String value;
+
+  @Override
+  public final String value() {
+    return value;
+  }
+
+}

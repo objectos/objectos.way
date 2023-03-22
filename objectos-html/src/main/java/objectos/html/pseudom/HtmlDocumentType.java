@@ -15,6 +15,6 @@
  */
 package objectos.html.pseudom;
 
-import objectos.html.internal.PseudoDocumentType;
+import objectos.html.internal.PseudoHtmlDocumentType;
 
-public sealed interface HtmlDocumentType extends HtmlNode permits PseudoDocumentType {}
+public sealed interface HtmlDocumentType extends HtmlNode permits PseudoHtmlDocumentType {}

@@ -15,4 +15,10 @@
  */
 package objectos.html.pseudom;
 
-public sealed interface HtmlNode permits HtmlDocumentType, HtmlElement, HtmlText {}
+import objectos.html.internal.PseudoHtmlText;
+
+public sealed interface HtmlText extends HtmlNode permits PseudoHtmlText {
+
+  String value();
+
+}

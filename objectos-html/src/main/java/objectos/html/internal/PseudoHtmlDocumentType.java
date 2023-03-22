@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.pseudom;
+package objectos.html.internal;
 
-public sealed interface HtmlNode permits HtmlDocumentType, HtmlElement, HtmlText {}
+import objectos.html.pseudom.HtmlDocumentType;
+
+public enum PseudoHtmlDocumentType implements HtmlDocumentType {
+  INSTANCE;
+}
