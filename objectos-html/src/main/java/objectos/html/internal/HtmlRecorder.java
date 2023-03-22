@@ -32,6 +32,11 @@ import objectos.util.ObjectArrays;
 
 class HtmlRecorder implements TemplateDsl {
 
+  static final int PATH_NAME = 0;
+  static final int DOCUMENT = 1;
+  static final int ELEMENT = 2;
+  static final int OBJECT_INDEX = 3;
+
   static final int NULL = Integer.MIN_VALUE;
 
   int[] listArray = new int[8];
@@ -361,16 +366,16 @@ class HtmlRecorder implements TemplateDsl {
 
   @Override
   public final void pathName(String path) {
-    objectArray[0] = path;
+    objectArray[PATH_NAME] = path;
   }
 
   public final void record(HtmlTemplate template) {
     // objectArray[0] is reserved for the path name value
-    objectArray[0] = null;
+    objectArray[PATH_NAME] = null;
 
     // objectIndex starts @ 1
     // as objectArray[0] is the path name value
-    objectIndex = 1;
+    objectIndex = OBJECT_INDEX;
 
     listIndex = protoIndex = 0;
 
@@ -385,7 +390,7 @@ class HtmlRecorder implements TemplateDsl {
         case ByteProto.DOCTYPE -> {
           rootIndex = protoArray[--rootIndex];
 
-          stackPush(proto);
+          listPush(proto);
         }
 
         case ByteProto.ELEMENT -> {
@@ -393,7 +398,7 @@ class HtmlRecorder implements TemplateDsl {
 
           rootIndex = protoArray[--rootIndex];
 
-          stackPush(elem, proto);
+          listPush(elem, proto);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -407,7 +412,7 @@ class HtmlRecorder implements TemplateDsl {
     protoAdd(ByteProto.ROOT);
 
     while (listIndex > 0) {
-      protoAdd(stackPop());
+      protoAdd(listPop());
     }
 
     protoAdd(ByteProto.ROOT_END);
@@ -415,20 +420,6 @@ class HtmlRecorder implements TemplateDsl {
     objectIndex = protoIndex;
 
     protoIndex = returnTo;
-  }
-
-  final int stackPop() {
-    return listArray[--listIndex];
-  }
-
-  final void stackPop(int count) {
-    listIndex -= count;
-  }
-
-  final void stackPush(int v0) {
-    listArray = IntArrays.growIfNecessary(listArray, listIndex);
-
-    listArray[listIndex++] = v0;
   }
 
   private void endSet(int start) {
@@ -458,6 +449,22 @@ class HtmlRecorder implements TemplateDsl {
     listArray[listIndex - offset] = value;
   }
 
+  private int listPop() {
+    return listArray[--listIndex];
+  }
+
+  private void listPush(int v0) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex);
+
+    listArray[listIndex++] = v0;
+  }
+
+  private void listPush(int v0, int v1) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 1);
+    listArray[listIndex++] = v0;
+    listArray[listIndex++] = v1;
+  }
+
   private void markImplLambda(int offset, int type) {
     int thisStart = markSearch(offset, type);
 
@@ -478,7 +485,7 @@ class HtmlRecorder implements TemplateDsl {
         case ByteProto.ATTR_OR_ELEM -> {
           int elem = thisIndex = protoArray[--thisIndex];
 
-          stackPush(elem, proto);
+          listPush(elem, proto);
         }
 
         case ByteProto.ELEMENT -> {
@@ -486,7 +493,7 @@ class HtmlRecorder implements TemplateDsl {
 
           thisIndex = protoArray[--thisIndex];
 
-          stackPush(elem, proto);
+          listPush(elem, proto);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -496,7 +503,7 @@ class HtmlRecorder implements TemplateDsl {
     }
 
     while (listIndex >= stackStart) {
-      protoAdd(stackPop());
+      protoAdd(listPop());
     }
 
     thisStart = tail;
@@ -593,12 +600,6 @@ class HtmlRecorder implements TemplateDsl {
     protoArray[protoIndex++] = v6;
     protoArray[protoIndex++] = v7;
     protoArray[protoIndex++] = v8;
-  }
-
-  private void stackPush(int v0, int v1) {
-    listArray = IntArrays.growIfNecessary(listArray, listIndex + 1);
-    listArray[listIndex++] = v0;
-    listArray[listIndex++] = v1;
   }
 
   private int updateContents(int contents) {

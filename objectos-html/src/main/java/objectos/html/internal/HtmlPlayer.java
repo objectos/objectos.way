@@ -15,17 +15,22 @@
  */
 package objectos.html.internal;
 
+import java.util.Objects;
 import objectos.html.HtmlTemplate;
 import objectos.html.HtmlTemplate.Visitor;
+import objectos.html.pseudom.DocumentProcessor;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.lang.Check;
 import objectos.util.IntArrays;
 
 public class HtmlPlayer extends HtmlRecorder {
 
   private static final int CAPACITY = 10;
+
+  private DocumentProcessor processor;
 
   private StringBuilder stringBuilder;
 
@@ -46,6 +51,33 @@ public class HtmlPlayer extends HtmlRecorder {
       this.visitor.documentEnd();
 
       this.visitor = null;
+    }
+  }
+
+  public final void play2(DocumentProcessor processor) {
+    Objects.requireNonNull(processor, "processor == null");
+
+    Check.state(
+      this.processor == null,
+
+      """
+      Concurrent processing is not supported.
+
+      It seems a previous HTML template processing:
+
+      - is currently running; or
+      - finished abruptly (most likely due to a bug in this component, sorry...).
+      """
+    );
+
+    protoArray = IntArrays.growIfNecessary(protoArray, objectIndex);
+
+    listIndex = 0;
+
+    try {
+      rootElement();
+    } finally {
+      this.processor = null;
     }
   }
 
