@@ -54,11 +54,16 @@ public final class PrettyPrintWriter2 extends Writer2 {
     var valuesIter = values.iterator();
 
     if (valuesIter.hasNext()) {
+      write('=');
+      write('\"');
       write(valuesIter.next());
+      write('\"');
 
       while (valuesIter.hasNext()) {
         write(' ');
+        write('\"');
         write(valuesIter.next());
+        write('\"');
       }
     }
   }

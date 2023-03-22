@@ -17,28 +17,39 @@ package objectos.html.internal;
 
 import java.util.NoSuchElementException;
 import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
+import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.IntArrays;
 
 public class HtmlPlayer2 extends HtmlRecorder {
 
-  private static final int _START = 1,
-      _DOCUMENT = 2,
-      _DOCUMENT_NODES = 3,
-      _ELEMENT = 4,
-      _ELEMENT_ATTRS_REQ = 5,
-      _ELEMENT_ATTRS_ITER = 6,
-      _ELEMENT_NODES_REQ = 7,
-      _ELEMENT_NODES_ITER = 8;
+  private static final int _START = -1,
+      _DOCUMENT = -2,
+      _DOCUMENT_NODES = -3,
+      _ELEMENT = -4,
+      _ELEMENT_ATTRS_REQ = -5,
+      _ELEMENT_ATTRS_ITER = -6,
+      _ELEMENT_NODES_REQ = -7,
+      _ELEMENT_NODES_ITER = -8,
+      _ATTRIBUTE = -9,
+      _ATTRIBUTE_VALUES_REQ = -10,
+      _ATTRIBUTE_VALUES_ITER = -11;
 
-  private static final int ATTRS_END = -1;
+  private static final int ATTRS_END = -12,
+      ATTRS_SINGLE = -13;
+
+  private StringBuilder stringBuilder;
 
   public HtmlPlayer2() {
     objectArray[DOCUMENT] = new PseudoHtmlDocument(this);
 
     objectArray[ELEMENT] = new PseudoHtmlElement(this);
+
+    objectArray[ATTRIBUTE] = new PseudoHtmlAttribute(this);
   }
 
   public final void play(DocumentProcessor processor) {
@@ -49,6 +60,60 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxPush(_START);
 
     processor.process(document());
+  }
+
+  final void attributeValues() {
+    ctxCheck(_ATTRIBUTE);
+
+    ctxSet(0, _ATTRIBUTE_VALUES_REQ);
+  }
+
+  final boolean attributeValuesHasNext() {
+    ctxCheck(_ATTRIBUTE_VALUES_ITER);
+
+    var type = ctxGet(1);
+
+    var value = ctxGet(2);
+
+    var hasNext = false;
+
+    if (type == ATTRS_SINGLE) {
+      hasNext = value != NULL;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    if (!hasNext) {
+      ctxSet(0, _ATTRIBUTE);
+    }
+
+    return hasNext;
+  }
+
+  final void attributeValuesIterator() {
+    ctxCheck(_ATTRIBUTE_VALUES_REQ);
+
+    ctxSet(0, _ATTRIBUTE_VALUES_ITER);
+  }
+
+  final String attributeValuesNext(AttributeName name) {
+    ctxCheck(_ATTRIBUTE_VALUES_ITER);
+
+    var type = ctxGet(1);
+
+    var value = ctxGet(2);
+
+    if (type == ATTRS_SINGLE) {
+      if (value == NULL) {
+        throw new NoSuchElementException();
+      }
+
+      ctxSet(2, NULL);
+
+      return attributeValueImpl(name, value);
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
   final boolean documentHasNext() {
@@ -125,7 +190,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
   }
 
   final boolean elementAttributesHasNext() {
-    ctxCheck(_ELEMENT_ATTRS_ITER);
+    elementAttributesHasNextCheck();
 
     int index = ctxGet(1);
 
@@ -134,7 +199,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
     if (value == ATTRS_END) {
       int start = ctxGet(2);
 
-      listIndex = start;
+      listIndex = start - 1;
 
       ctxCheck(_ELEMENT_ATTRS_REQ);
 
@@ -142,7 +207,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
       return false;
     } else {
-      throw new UnsupportedOperationException("Implement me");
+      return true;
     }
   }
 
@@ -151,8 +216,12 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
     ctx2proto();
 
-    int startIndex = listIndex;
-    ctxPush(ATTRS_END); // end marker
+    int startIndex = listIndex + 1;
+
+    // end marker
+    ctxPush(ATTRS_END);
+
+    // start index to be used in the while-loop
     ctxPush(startIndex);
 
     loop: while (protoMore()) {
@@ -178,9 +247,38 @@ public class HtmlPlayer2 extends HtmlRecorder {
     }
 
     ctxPush(
-      startIndex + 1, // marks the current index
+      startIndex, // cursor for iteration
+
       _ELEMENT_ATTRS_ITER
     );
+  }
+
+  final HtmlAttribute elementAttributesNext() {
+    ctxCheck(_ELEMENT_ATTRS_ITER);
+
+    int index = ctxGet(1);
+
+    int code = listArray[index++];
+
+    if (code == ATTRS_END) {
+      throw new NoSuchElementException();
+    }
+
+    var attribute = htmlAttribute();
+
+    var name = AttributeName.getByCode(code);
+
+    attribute.name = name;
+
+    var type = listArray[index++];
+
+    var value = listArray[index++];
+
+    ctxSet(1, index);
+
+    ctxPush(index, value, type, _ATTRIBUTE);
+
+    return attribute;
   }
 
   final void elementNodes() {
@@ -243,6 +341,113 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxPush(index, _ELEMENT_NODES_ITER);
   }
 
+  /*
+   * Visible for testing.
+   */
+  final String processHref(String pathName, String attributeValue) {
+    var thisName = pathName;
+    var thatName = attributeValue;
+
+    var thisLen = thisName.length();
+    var thatLen = thatName.length();
+
+    int baseDir = -1;
+    int dirCount = 0;
+    int mismatch = -1;
+
+    for (int i = 0; i < thisLen; i++) {
+      char thisChar = thisName.charAt(i);
+
+      if (i < thatLen) {
+        char thatChar = thatName.charAt(i);
+
+        if (thisChar == thatChar) {
+          if (thisChar == '/') {
+            if (mismatch == -1) {
+              baseDir = i;
+            } else {
+              dirCount++;
+            }
+          }
+        } else {
+          if (mismatch == -1) {
+            mismatch = i;
+          }
+
+          if (thisChar == '/') {
+            dirCount++;
+          }
+        }
+      } else {
+        if (thisChar == '/') {
+          dirCount++;
+        }
+      }
+    }
+
+    return switch (mismatch) {
+      case -1 -> {
+        if (baseDir == -1) {
+          yield attributeValue;
+        } else {
+          int valueIndex = baseDir + 1;
+
+          yield attributeValue.substring(valueIndex);
+        }
+      }
+
+      case 0 -> {
+        if (dirCount == 0) {
+          yield attributeValue;
+        } else {
+          var sb = stringBuilder();
+
+          for (int i = 0; i < dirCount; i++) {
+            sb.append("../");
+          }
+
+          sb.append(attributeValue);
+
+          yield sb.toString();
+        }
+      }
+
+      default -> {
+        if (dirCount == 0) {
+          int valueIndex = baseDir + 1;
+
+          yield attributeValue.substring(valueIndex);
+        }
+
+        if (baseDir == -1) {
+          var sb = stringBuilder();
+
+          for (int i = 0; i < dirCount; i++) {
+            sb.append("../");
+          }
+
+          sb.append(attributeValue);
+
+          yield sb.toString();
+        }
+
+        var sb = stringBuilder();
+
+        for (int i = 0; i < dirCount; i++) {
+          sb.append("../");
+        }
+
+        int valueIndex = baseDir + 1;
+
+        var subValue = attributeValue.substring(valueIndex);
+
+        sb.append(subValue);
+
+        yield sb.toString();
+      }
+    };
+  }
+
   private void attribute() {
     protoNext(); // ByteProto.ATTRIBUTE
 
@@ -264,7 +469,34 @@ public class HtmlPlayer2 extends HtmlRecorder {
   }
 
   private void attributeImpl(int code, int value) {
+    int startIndex = ctxPeek();
+
+    listIndex = startIndex;
+
+    int attr = ctxPeek();
+
+    if (attr == ATTRS_END) {
+      // pop ATTRS_END so we can overwrite it
+      ctxPop(1);
+
+      ctxPush(
+        code,
+        ATTRS_SINGLE,
+        value,
+        ATTRS_END,
+        startIndex
+      );
+
+      return;
+    }
+
     throw new UnsupportedOperationException("Implement me");
+  }
+
+  private String attributeValueImpl(AttributeName name, int value) {
+    var attributeValue = (String) objectArray[value];
+
+    return processAttributeValue(name, attributeValue);
   }
 
   private void ctx2proto() {
@@ -307,6 +539,23 @@ public class HtmlPlayer2 extends HtmlRecorder {
     listArray[++listIndex] = v2;
   }
 
+  private void ctxPush(int v0, int v1, int v2, int v3) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 4);
+    listArray[++listIndex] = v0;
+    listArray[++listIndex] = v1;
+    listArray[++listIndex] = v2;
+    listArray[++listIndex] = v3;
+  }
+
+  private void ctxPush(int v0, int v1, int v2, int v3, int v4) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 5);
+    listArray[++listIndex] = v0;
+    listArray[++listIndex] = v1;
+    listArray[++listIndex] = v2;
+    listArray[++listIndex] = v3;
+    listArray[++listIndex] = v4;
+  }
+
   private void ctxSet(int offset, int value) {
     listArray[listIndex - offset] = value;
   }
@@ -332,11 +581,21 @@ public class HtmlPlayer2 extends HtmlRecorder {
       case _DOCUMENT_NODES -> ctx2proto();
 
       case _ELEMENT -> {
+        // this element's parent
         int parent = ctxGet(2);
+
+        // pop _ELEMENT, elem index, elem parent
         ctxPop(3);
+
+        // parent
         int ctx = ctxPeek();
+
+        // parent should be _DOCUMENT_NODES
         ctxThrow(ctx, _DOCUMENT_NODES);
+
+        // actual parent index
         int actual = ctxGet(1);
+
         if (parent != actual) {
           throw new IllegalStateException(
             """
@@ -344,6 +603,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
           """
           );
         }
+
         ctx2proto();
       }
 
@@ -353,6 +613,42 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
   private PseudoHtmlElement element() {
     return (PseudoHtmlElement) objectArray[ELEMENT];
+  }
+
+  private void elementAttributesHasNextCheck() {
+    int peek = ctxPeek();
+
+    switch (peek) {
+      case _ELEMENT_ATTRS_ITER -> {}
+
+      case _ATTRIBUTE -> {
+        // this attributes's parent
+        int parent = ctxGet(3);
+
+        // pop _ATTRIBUTE, attr type, attr value, attr parent
+        ctxPop(4);
+
+        // parent should be _ELEMENT_ATTRS_ITER
+        ctxThrow(ctxPeek(), _ELEMENT_ATTRS_ITER);
+
+        // actual parent index
+        int actual = ctxGet(1);
+
+        if (parent != actual) {
+          throw new IllegalStateException(
+            """
+          Last consumed attribute was not a child of this element
+          """
+          );
+        }
+      }
+
+      default -> ctxThrow(peek, _ELEMENT_ATTRS_ITER);
+    }
+  }
+
+  private PseudoHtmlAttribute htmlAttribute() {
+    return (PseudoHtmlAttribute) objectArray[ATTRIBUTE];
   }
 
   private HtmlElement htmlElement() {
@@ -377,6 +673,20 @@ public class HtmlPlayer2 extends HtmlRecorder {
     return element;
   }
 
+  private String processAttributeValue(AttributeName name, String attributeValue) {
+    var result = attributeValue;
+
+    if (name == CustomAttributeName.PATH_TO) {
+      var pathName = $pathName();
+
+      if (pathName != null) {
+        result = processHref(pathName, attributeValue);
+      }
+    }
+
+    return result;
+  }
+
   private void proto2ctx() {
     ctxSet(1, protoIndex);
   }
@@ -391,6 +701,16 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
   private int protoPeek() {
     return protoArray[protoIndex];
+  }
+
+  private StringBuilder stringBuilder() {
+    if (stringBuilder == null) {
+      stringBuilder = new StringBuilder();
+    } else {
+      stringBuilder.setLength(0);
+    }
+
+    return stringBuilder;
   }
 
 }

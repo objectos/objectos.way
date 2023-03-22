@@ -41,7 +41,7 @@ public final class PseudoHtmlElement
 
     @Override
     public final HtmlAttribute next() {
-      throw new UnsupportedOperationException("Implement me");
+      return player.elementAttributesNext();
     }
 
   }

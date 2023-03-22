@@ -15,24 +15,55 @@
  */
 package objectos.html.internal;
 
+import java.util.Iterator;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlIterable;
+import objectos.html.tmpl.AttributeKind;
+import objectos.html.tmpl.AttributeName;
 
-public final class PseudoHtmlAttribute implements HtmlAttribute {
+public final class PseudoHtmlAttribute
+    implements HtmlAttribute, HtmlIterable<String>, Iterator<String> {
+
+  AttributeName name;
+
+  private final HtmlPlayer2 player;
+
+  PseudoHtmlAttribute(HtmlPlayer2 player) {
+    this.player = player;
+  }
 
   @Override
   public final String name() {
-    throw new UnsupportedOperationException("Implement me");
+    return name.getName();
   }
 
   @Override
   public final boolean isBoolean() {
-    throw new UnsupportedOperationException("Implement me");
+    return name.getKind() == AttributeKind.BOOLEAN;
   }
 
   @Override
   public final HtmlIterable<String> values() {
-    throw new UnsupportedOperationException("Implement me");
+    player.attributeValues();
+
+    return this;
+  }
+
+  @Override
+  public final boolean hasNext() {
+    return player.attributeValuesHasNext();
+  }
+
+  @Override
+  public final String next() {
+    return player.attributeValuesNext(name);
+  }
+
+  @Override
+  public final Iterator<String> iterator() {
+    player.attributeValuesIterator();
+
+    return this;
   }
 
 }

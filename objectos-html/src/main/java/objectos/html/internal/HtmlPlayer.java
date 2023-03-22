@@ -81,10 +81,6 @@ public class HtmlPlayer extends HtmlRecorder {
     }
   }
 
-  protected final String $pathName() {
-    return (String) objectArray[0];
-  }
-
   /*
    * Visible for testing.
    */
