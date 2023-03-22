@@ -15,27 +15,64 @@
  */
 package objectos.html.internal;
 
+import java.util.EnumSet;
+import java.util.Set;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;
+import objectos.html.pseudom.HtmlNode;
+import objectos.html.tmpl.ElementKind;
+import objectos.html.tmpl.StandardElementName;
 
 public final class PrettyPrintWriter2 extends Writer2 {
 
+  private static final Set<StandardElementName> PHRASING = EnumSet.of(
+    StandardElementName.A,
+    StandardElementName.ABBR,
+    StandardElementName.B,
+    StandardElementName.BR,
+    StandardElementName.BUTTON,
+    StandardElementName.CODE,
+    StandardElementName.EM,
+    StandardElementName.IMG,
+    StandardElementName.INPUT,
+    StandardElementName.KBD,
+    StandardElementName.LABEL,
+    StandardElementName.LINK,
+    StandardElementName.META,
+    StandardElementName.PROGRESS,
+    StandardElementName.SAMP,
+    StandardElementName.SCRIPT,
+    StandardElementName.SELECT,
+    StandardElementName.SMALL,
+    StandardElementName.SPAN,
+    StandardElementName.STRONG,
+    StandardElementName.SUB,
+    StandardElementName.SUP,
+    StandardElementName.SVG,
+    StandardElementName.TEMPLATE,
+    StandardElementName.TEXTAREA
+  );
+
+  private static final String NL = System.lineSeparator();
+
   @Override
   public final void process(HtmlDocument document) {
-    for (var node : document.nodes()) {
-      if (node instanceof HtmlDocumentType) {
-        documentType();
-      } else if (node instanceof HtmlElement element) {
-        topLevelElement(element);
-      } else {
-        var type = node.getClass();
+    var nodes = document.nodes();
 
-        throw new UnsupportedOperationException(
-          "Implement me :: type=" + type
-        );
+    var nodesIter = nodes.iterator();
+
+    if (nodesIter.hasNext()) {
+      documentNode(nodesIter.next());
+
+      while (nodesIter.hasNext()) {
+        write(NL);
+
+        documentNode(nodesIter.next());
       }
+
+      write(NL);
     }
   }
 
@@ -68,14 +105,95 @@ public final class PrettyPrintWriter2 extends Writer2 {
     }
   }
 
+  private void documentNode(HtmlNode node) {
+    if (node instanceof HtmlDocumentType) {
+      documentType();
+    } else if (node instanceof HtmlElement element) {
+      element(element);
+    } else {
+      var type = node.getClass();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + type
+      );
+    }
+  }
+
   private void documentType() {
     write("<!DOCTYPE html>");
 
-    nl();
+    write(NL);
   }
 
-  private void nl() {
-    write(System.lineSeparator());
+  private void element(HtmlElement element) {
+    startTag(element);
+
+    if (isVoid(element)) {
+      return;
+    }
+
+    var metadata = isHead(element);
+
+    var newLine = false;
+
+    for (var node : element.nodes()) {
+      newLine = elementNode(node, metadata, newLine);
+    }
+
+    endTag(element);
+  }
+
+  private boolean elementNode(HtmlNode node, boolean metadata, boolean wasNewLine) {
+    var newLine = false;
+
+    if (node instanceof HtmlElement child) {
+      if (!metadata && isPhrasing(child)) {
+        element(child);
+      } else {
+        if (!wasNewLine) {
+          write(NL);
+        }
+
+        element(child);
+
+        write(NL);
+
+        newLine = true;
+      }
+    } else {
+      var type = node.getClass();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + type
+      );
+    }
+
+    return newLine;
+  }
+
+  private void endTag(HtmlElement element) {
+    write('<');
+    write('/');
+    write(element.name());
+    write('>');
+  }
+
+  private boolean isHead(HtmlElement element) {
+    return element.elementName() == StandardElementName.HEAD;
+  }
+
+  private boolean isPhrasing(HtmlElement element) {
+    var name = element.elementName();
+
+    return PHRASING.contains(name);
+  }
+
+  private boolean isVoid(HtmlElement element) {
+    var name = element.elementName();
+
+    var kind = name.getKind();
+
+    return kind == ElementKind.VOID;
   }
 
   private void startTag(HtmlElement element) {
@@ -88,37 +206,6 @@ public final class PrettyPrintWriter2 extends Writer2 {
       attribute(attribute);
     }
 
-    write('>');
-  }
-
-  private void topLevelElement(HtmlElement element) {
-    element(element);
-
-    nl();
-  }
-
-  private void element(HtmlElement element) {
-    startTag(element);
-
-    if (element.isVoid()) {
-      return;
-    }
-
-    for (var node : element.nodes()) {
-      var type = node.getClass();
-
-      throw new UnsupportedOperationException(
-        "Implement me :: type=" + type
-      );
-    }
-
-    endTag(element);
-  }
-
-  private void endTag(HtmlElement element) {
-    write('<');
-    write('/');
-    write(element.name());
     write('>');
   }
 

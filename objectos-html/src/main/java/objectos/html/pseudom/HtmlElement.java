@@ -16,14 +16,17 @@
 package objectos.html.pseudom;
 
 import objectos.html.internal.PseudoHtmlElement;
+import objectos.html.tmpl.ElementName;
 
 public sealed interface HtmlElement extends HtmlNode permits PseudoHtmlElement {
 
   HtmlIterable<HtmlAttribute> attributes();
 
-  boolean isVoid();
+  ElementName elementName();
 
-  String name();
+  default String name() {
+    return elementName().getName();
+  }
 
   HtmlIterable<HtmlNode> nodes();
 

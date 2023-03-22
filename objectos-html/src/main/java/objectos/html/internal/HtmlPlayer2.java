@@ -288,7 +288,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
   }
 
   final boolean elementNodesHasNext() {
-    ctxCheck(_ELEMENT_NODES_ITER);
+    elementNodesHasNextCheck();
 
     ctx2proto();
 
@@ -328,6 +328,12 @@ public class HtmlPlayer2 extends HtmlRecorder {
       ctxCheck(_ELEMENT_NODES_REQ);
 
       ctxSet(0, _ELEMENT);
+
+      var htmlElement = element();
+
+      int code = ctxPeek(3);
+
+      htmlElement.name = StandardElementName.getByCode(code);
     }
 
     return hasNext;
@@ -339,6 +345,44 @@ public class HtmlPlayer2 extends HtmlRecorder {
     int index = ctxPeek(1);
 
     ctxPush(index, _ELEMENT_NODES_ITER);
+  }
+
+  final HtmlNode elementNodesNext() {
+    ctxCheck(_ELEMENT_NODES_ITER);
+
+    ctx2proto();
+
+    HtmlNode node = null;
+
+    loop: while (protoMore()) {
+      int proto = protoNext();
+
+      switch (proto) {
+        case ByteProto.ATTRIBUTE -> protoNext();
+
+        //case ByteProto.ATTR_OR_ELEM -> maybeElement(name);
+
+        case ByteProto.ELEMENT -> {
+          node = htmlElement();
+
+          break loop;
+        }
+
+        case ByteProto.ELEMENT_END -> {
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    if (node == null) {
+      throw new NoSuchElementException();
+    }
+
+    return node;
   }
 
   /*
@@ -546,13 +590,6 @@ public class HtmlPlayer2 extends HtmlRecorder {
     listArray[++listIndex] = v1;
   }
 
-  private void ctxPush(int v0, int v1, int v2) {
-    listArray = IntArrays.growIfNecessary(listArray, listIndex + 3);
-    listArray[++listIndex] = v0;
-    listArray[++listIndex] = v1;
-    listArray[++listIndex] = v2;
-  }
-
   private void ctxPush(int v0, int v1, int v2, int v3) {
     listArray = IntArrays.growIfNecessary(listArray, listIndex + 4);
     listArray[++listIndex] = v0;
@@ -595,28 +632,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
       case _DOCUMENT_NODES -> ctx2proto();
 
       case _ELEMENT -> {
-        // this element's parent
-        int parent = ctxPeek(2);
-
-        // pop _ELEMENT, elem index, elem parent
-        ctxPop(3);
-
-        // parent
-        int ctx = ctxPeek();
-
-        // parent should be _DOCUMENT_NODES
-        ctxThrow(ctx, _DOCUMENT_NODES);
-
-        // actual parent index
-        int actual = ctxPeek(1);
-
-        if (parent != actual) {
-          throw new IllegalStateException(
-            """
-          Last consumed element was not a child of document
-          """
-          );
-        }
+        elementPop(_DOCUMENT_NODES);
 
         ctx2proto();
       }
@@ -661,6 +677,43 @@ public class HtmlPlayer2 extends HtmlRecorder {
     }
   }
 
+  private void elementNodesHasNextCheck() {
+    int peek = ctxPeek();
+
+    switch (peek) {
+      case _ELEMENT_NODES_ITER -> {}
+
+      case _ELEMENT -> elementPop(_ELEMENT_NODES_ITER);
+
+      default -> ctxThrow(peek, _DOCUMENT_NODES);
+    }
+  }
+
+  private void elementPop(int context) {
+    // this element's parent
+    int parent = ctxPeek(2);
+
+    // pop _ELEMENT, elem index, elem parent, elem code
+    ctxPop(4);
+
+    // parent
+    int ctx = ctxPeek();
+
+    // parent should be context
+    ctxThrow(ctx, context);
+
+    // actual parent index
+    int actual = ctxPeek(1);
+
+    if (parent != actual) {
+      throw new IllegalStateException(
+        """
+      Last consumed element was not a child of this document or element
+      """
+      );
+    }
+  }
+
   private PseudoHtmlAttribute htmlAttribute() {
     return (PseudoHtmlAttribute) objectArray[ATTRIBUTE];
   }
@@ -682,7 +735,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
     element.name = StandardElementName.getByCode(elemCode);
 
-    ctxPush(parent, protoIndex, _ELEMENT);
+    ctxPush(elemCode, parent, protoIndex, _ELEMENT);
 
     return element;
   }

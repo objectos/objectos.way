@@ -20,6 +20,7 @@ import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
+import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardElementName;
 
 public final class PseudoHtmlElement
@@ -73,11 +74,6 @@ public final class PseudoHtmlElement
   }
 
   @Override
-  public final boolean isVoid() {
-    return name.getKind().isVoid();
-  }
-
-  @Override
   public final Iterator<HtmlNode> iterator() {
     player.elementNodesIterator();
 
@@ -85,13 +81,13 @@ public final class PseudoHtmlElement
   }
 
   @Override
-  public final String name() {
-    return name.getName();
+  public final ElementName elementName() {
+    return name;
   }
 
   @Override
   public final HtmlNode next() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.elementNodesNext();
   }
 
   @Override
