@@ -71,9 +71,9 @@ public class HtmlPlayer2 extends HtmlRecorder {
   final boolean attributeValuesHasNext() {
     ctxCheck(_ATTRIBUTE_VALUES_ITER);
 
-    var type = ctxGet(1);
+    var type = ctxPeek(1);
 
-    var value = ctxGet(2);
+    var value = ctxPeek(2);
 
     var hasNext = false;
 
@@ -99,9 +99,9 @@ public class HtmlPlayer2 extends HtmlRecorder {
   final String attributeValuesNext(AttributeName name) {
     ctxCheck(_ATTRIBUTE_VALUES_ITER);
 
-    var type = ctxGet(1);
+    var type = ctxPeek(1);
 
-    var value = ctxGet(2);
+    var value = ctxPeek(2);
 
     if (type == ATTRS_SINGLE) {
       if (value == NULL) {
@@ -192,12 +192,12 @@ public class HtmlPlayer2 extends HtmlRecorder {
   final boolean elementAttributesHasNext() {
     elementAttributesHasNextCheck();
 
-    int index = ctxGet(1);
+    int index = ctxPeek(1);
 
     int value = listArray[index];
 
     if (value == ATTRS_END) {
-      int start = ctxGet(2);
+      int start = ctxPeek(2);
 
       listIndex = start - 1;
 
@@ -256,7 +256,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
   final HtmlAttribute elementAttributesNext() {
     ctxCheck(_ELEMENT_ATTRS_ITER);
 
-    int index = ctxGet(1);
+    int index = ctxPeek(1);
 
     int code = listArray[index++];
 
@@ -336,7 +336,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
   final void elementNodesIterator() {
     ctxCheck(_ELEMENT_NODES_REQ);
 
-    int index = ctxGet(1);
+    int index = ctxPeek(1);
 
     ctxPush(index, _ELEMENT_NODES_ITER);
   }
@@ -471,26 +471,36 @@ public class HtmlPlayer2 extends HtmlRecorder {
   private void attributeImpl(int code, int value) {
     int startIndex = ctxPeek();
 
-    listIndex = startIndex;
+    int index = startIndex;
 
-    int attr = ctxPeek();
+    while (index < listIndex) {
+      int attr = ctxGet(index);
 
-    if (attr == ATTRS_END) {
-      // pop ATTRS_END so we can overwrite it
-      ctxPop(1);
+      if (attr == ATTRS_END) {
+        listIndex = index;
 
-      ctxPush(
-        code,
-        ATTRS_SINGLE,
-        value,
-        ATTRS_END,
-        startIndex
-      );
+        // pop ATTRS_END so we can overwrite it
+        ctxPop(1);
 
-      return;
+        ctxPush(
+          code,
+          ATTRS_SINGLE,
+          value,
+          ATTRS_END,
+          startIndex
+        );
+
+        break;
+      }
+
+      if (attr != code) {
+        index += 3;
+
+        continue;
+      }
+
+      throw new UnsupportedOperationException("Implement me");
     }
-
-    throw new UnsupportedOperationException("Implement me");
   }
 
   private String attributeValueImpl(AttributeName name, int value) {
@@ -500,7 +510,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
   }
 
   private void ctx2proto() {
-    protoIndex = ctxGet(1);
+    protoIndex = ctxPeek(1);
   }
 
   private void ctxCheck(int expected) {
@@ -509,12 +519,16 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxThrow(state, expected);
   }
 
-  private int ctxGet(int offset) {
-    return listArray[listIndex - offset];
+  private int ctxGet(int index) {
+    return listArray[index];
   }
 
   private int ctxPeek() {
     return listArray[listIndex];
+  }
+
+  private int ctxPeek(int offset) {
+    return listArray[listIndex - offset];
   }
 
   private void ctxPop(int count) {
@@ -582,7 +596,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
       case _ELEMENT -> {
         // this element's parent
-        int parent = ctxGet(2);
+        int parent = ctxPeek(2);
 
         // pop _ELEMENT, elem index, elem parent
         ctxPop(3);
@@ -594,7 +608,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
         ctxThrow(ctx, _DOCUMENT_NODES);
 
         // actual parent index
-        int actual = ctxGet(1);
+        int actual = ctxPeek(1);
 
         if (parent != actual) {
           throw new IllegalStateException(
@@ -623,7 +637,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
       case _ATTRIBUTE -> {
         // this attributes's parent
-        int parent = ctxGet(3);
+        int parent = ctxPeek(3);
 
         // pop _ATTRIBUTE, attr type, attr value, attr parent
         ctxPop(4);
@@ -632,7 +646,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
         ctxThrow(ctxPeek(), _ELEMENT_ATTRS_ITER);
 
         // actual parent index
-        int actual = ctxGet(1);
+        int actual = ctxPeek(1);
 
         if (parent != actual) {
           throw new IllegalStateException(
