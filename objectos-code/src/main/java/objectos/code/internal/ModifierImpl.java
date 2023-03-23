@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.tmpl;
+package objectos.code.internal;
 
-import objectos.code.JavaTemplate;
-import objectos.code.internal.ParameterInstructionImpl;
+import objectos.code.tmpl.FinalModifier;
+import objectos.code.tmpl.Modifier;
 
 /**
- * TODO
+ * Represents a modifier of the Java language.
  *
- * @since 0.4.4
+ * @since 0.4.2
  */
-public sealed interface ParameterInstruction
-    extends Instruction
-    permits
-    DeclarationName,
-    JavaTemplate._Item,
-    FinalModifier,
-    ParameterInstructionImpl,
-    TypeName {}
+public final class ModifierImpl extends External implements Modifier, FinalModifier {
+  final int value;
+
+  public ModifierImpl(Keyword keyword) {
+    this.value = keyword.ordinal();
+  }
+
+  @Override
+  public final void execute(InternalApi api) {
+    api.extStart();
+    api.protoAdd(ByteProto.MODIFIER, value);
+  }
+}

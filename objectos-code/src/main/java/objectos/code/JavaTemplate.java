@@ -24,6 +24,7 @@ import objectos.code.internal.InternalApi;
 import objectos.code.internal.InternalJavaTemplate;
 import objectos.code.internal.JavaModel;
 import objectos.code.internal.Keyword;
+import objectos.code.internal.ModifierImpl;
 import objectos.code.internal.ParameterInstructionImpl;
 import objectos.code.internal.Symbol;
 import objectos.code.tmpl.AnnotationInstruction;
@@ -47,6 +48,7 @@ import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.Instruction;
 import objectos.code.tmpl.InterfaceDeclarationInstruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
+import objectos.code.tmpl.Modifier;
 import objectos.code.tmpl.ParameterElement;
 import objectos.code.tmpl.ParameterInstruction;
 import objectos.code.tmpl.StatementPart;
@@ -108,7 +110,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ExtendsKeyword,
       FieldDeclaration,
       FieldDeclarationInstruction,
-      FinalModifier,
+      OldFinalModifier,
       Identifier,
       IfCondition,
       ImplementsClause,
@@ -149,30 +151,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
     INSTANCE;
 
-  }
-
-  /**
-   * Represents a modifier of the Java language.
-   *
-   * @since 0.4.2
-   */
-  protected static final class Modifier extends External
-      implements
-      ClassDeclarationInstruction,
-      ConstructorDeclarationInstruction,
-      EnumDeclarationInstruction,
-      FieldDeclarationInstruction,
-      InterfaceDeclarationInstruction,
-      MethodDeclarationInstruction {
-    final int value;
-
-    private Modifier(Keyword keyword) { this.value = keyword.ordinal(); }
-
-    @Override
-    public final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.MODIFIER, value);
-    }
   }
 
   interface AbstractModifier extends BodyElement {}
@@ -257,8 +235,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       EnumDeclarationInstruction,
       InterfaceDeclarationInstruction {}
 
-  interface FinalModifier extends BodyElement {}
-
   interface Identifier extends BlockInstruction, BodyElement, ParameterElement {}
 
   interface IfCondition extends BlockInstruction {}
@@ -312,6 +288,9 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   @Deprecated
   interface OldEqualityOperator extends ExpressionPart {}
+
+  @Deprecated
+  interface OldFinalModifier extends BodyElement {}
 
   @Deprecated
   interface OldNewKeyword extends BlockInstruction {}
@@ -650,42 +629,42 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.2
    */
-  protected static final Modifier PUBLIC = new Modifier(Keyword.PUBLIC);
+  protected static final Modifier PUBLIC = new ModifierImpl(Keyword.PUBLIC);
 
   /**
    * The {@code protected} modifier.
    *
    * @since 0.4.2
    */
-  protected static final Modifier PROTECTED = new Modifier(Keyword.PROTECTED);
+  protected static final Modifier PROTECTED = new ModifierImpl(Keyword.PROTECTED);
 
   /**
    * The {@code private} modifier.
    *
    * @since 0.4.2
    */
-  protected static final Modifier PRIVATE = new Modifier(Keyword.PRIVATE);
+  protected static final Modifier PRIVATE = new ModifierImpl(Keyword.PRIVATE);
 
   /**
    * The {@code abstract} modifier.
    *
    * @since 0.4.2
    */
-  protected static final Modifier ABSTRACT = new Modifier(Keyword.ABSTRACT);
+  protected static final Modifier ABSTRACT = new ModifierImpl(Keyword.ABSTRACT);
 
   /**
    * The {@code static} modifier.
    *
    * @since 0.4.2
    */
-  protected static final Modifier STATIC = new Modifier(Keyword.STATIC);
+  protected static final Modifier STATIC = new ModifierImpl(Keyword.STATIC);
 
   /**
    * The {@code final} modifier.
    *
    * @since 0.4.2
    */
-  protected static final Modifier FINAL = new Modifier(Keyword.FINAL);
+  protected static final objectos.code.tmpl.FinalModifier FINAL = new ModifierImpl(Keyword.FINAL);
 
   /**
    * The simple assignment operator {@code =}.
@@ -873,7 +852,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @return the {@code final} modifier
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final FinalModifier _final() {
+  protected final OldFinalModifier _final() {
     return api().itemAdd(ByteProto.MODIFIER, Keyword.FINAL.ordinal());
   }
 
@@ -1515,38 +1494,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * Adds the parenthesized expression that is part of a {@code if},
-   * {@code while} and {@code do-while} statement.
-   *
-   * <p>
-   * The following Objectos Code statement:
-   *
-   * <pre>
-   * p(IF, condition(n("active")), block(
-   *   p(v("execute"))
-   * ))</pre>
-   *
-   * <p>
-   * Generates:
-   *
-   * <pre>
-   * if (active) {
-   *   execute();
-   * }</pre>
-   *
-   * @param contents
-   *        the parts of the expression
-   *
-   * @return a condition instruction
-   *
-   * @since 0.4.4
-   */
-  protected final StatementPart condition(ExpressionPart... contents) {
-    Object[] many = Objects.requireNonNull(contents, "contents == null");
-    return api().elemMany(ByteProto.CONDITION, many);
-  }
-
-  /**
    * @since 0.4.4
    */
   protected final ArrayInitializer arrayInitializer() {
@@ -1636,6 +1583,38 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
         api.externalToLocal();
       }
     }
+  }
+
+  /**
+   * Adds the parenthesized expression that is part of a {@code if},
+   * {@code while} and {@code do-while} statement.
+   *
+   * <p>
+   * The following Objectos Code statement:
+   *
+   * <pre>
+   * p(IF, condition(n("active")), block(
+   *   p(v("execute"))
+   * ))</pre>
+   *
+   * <p>
+   * Generates:
+   *
+   * <pre>
+   * if (active) {
+   *   execute();
+   * }</pre>
+   *
+   * @param contents
+   *        the parts of the expression
+   *
+   * @return a condition instruction
+   *
+   * @since 0.4.4
+   */
+  protected final StatementPart condition(ExpressionPart... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.CONDITION, many);
   }
 
   /**
@@ -1802,6 +1781,16 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @since 0.4.4
+   */
+  protected final EnumConstant enumConstant(EnumConstantInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    return api().elemMany(ByteProto.ENUM_CONSTANT, many);
+  }
+
+  /**
+   * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.4")
   protected final EnumConstant enumConstant(String name) {
@@ -1855,16 +1844,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
     var api = api();
     api.identifierext(name);
     return api.elem(ByteProto.ENUM_CONSTANT, EXT, e1.self(), e2.self(), e3.self(), e4.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @since 0.4.4
-   */
-  protected final EnumConstant enumConstant(EnumConstantInstruction... contents) {
-    Object[] many = Objects.requireNonNull(contents, "contents == null");
-    return api().elemMany(ByteProto.ENUM_CONSTANT, many);
   }
 
   /**

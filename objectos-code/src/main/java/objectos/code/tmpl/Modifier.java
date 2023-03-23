@@ -15,19 +15,20 @@
  */
 package objectos.code.tmpl;
 
-import objectos.code.JavaTemplate;
-import objectos.code.internal.ParameterInstructionImpl;
+import objectos.code.internal.ModifierImpl;
 
 /**
- * TODO
+ * Represents a modifier of the Java language.
  *
- * @since 0.4.4
+ * @since 0.5.2
  */
-public sealed interface ParameterInstruction
-    extends Instruction
-    permits
-    DeclarationName,
-    JavaTemplate._Item,
-    FinalModifier,
-    ParameterInstructionImpl,
-    TypeName {}
+public sealed interface Modifier
+    extends
+    ClassDeclarationInstruction,
+    ConstructorDeclarationInstruction,
+    EnumDeclarationInstruction,
+    FieldDeclarationInstruction,
+    InterfaceDeclarationInstruction,
+    MethodDeclarationInstruction permits ModifierImpl, FinalModifier {
+
+}

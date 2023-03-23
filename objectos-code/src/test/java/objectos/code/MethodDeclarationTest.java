@@ -645,4 +645,33 @@ public class MethodDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Method declarations TC14
+
+  - final formal parameter
+  """)
+  public void testCase14() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            name("Methods"),
+
+            method(
+              name("a"),
+              parameter(FINAL, INT, name("a"))
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class Methods {
+        void a(final int a) {}
+      }
+      """
+    );
+  }
+
 }
