@@ -35,7 +35,7 @@ public enum AttributeOrElement implements AnyElementValue {
     );
 
     @Override
-    public final boolean isAttributeOf(StandardElementName element) {
+    public final boolean isAttributeOf(ElementName element) {
       return attribute.contains(element);
     }
   },
@@ -46,15 +46,15 @@ public enum AttributeOrElement implements AnyElementValue {
     );
 
     @Override
-    public final boolean isAttributeOf(StandardElementName element) {
+    public final boolean isAttributeOf(ElementName element) {
       return attribute.contains(element);
     }
   },
 
   TITLE(StandardAttributeName.TITLE, StandardElementName.TITLE) {
     @Override
-    public final boolean isAttributeOf(StandardElementName element) {
-      return !element.equals(StandardElementName.HEAD);
+    public final boolean isAttributeOf(ElementName element) {
+      return element != StandardElementName.HEAD;
     }
   };
 
@@ -85,7 +85,7 @@ public enum AttributeOrElement implements AnyElementValue {
     return elementByteCode;
   }
 
-  public abstract boolean isAttributeOf(StandardElementName element);
+  public abstract boolean isAttributeOf(ElementName element);
 
   @Override
   public final void mark(Marker marker) {

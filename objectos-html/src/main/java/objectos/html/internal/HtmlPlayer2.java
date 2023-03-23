@@ -21,7 +21,9 @@ import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
 import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
+import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.IntArrays;
 
@@ -217,7 +219,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
     }
   }
 
-  final void elementAttributesIterator(StandardElementName name) {
+  final void elementAttributesIterator(StandardElementName parent) {
     ctxCheck(_ELEMENT_ATTRS_REQ);
 
     ctx2proto();
@@ -231,16 +233,38 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxPush(startIndex);
 
     loop: while (protoMore()) {
-      int proto = protoPeek();
+      int proto = protoNext();
 
       switch (proto) {
-        case ByteProto.ATTRIBUTE -> attribute();
+        case ByteProto.ATTRIBUTE -> executeAttribute();
 
-        //case ByteProto.ATTR_OR_ELEM -> maybeAttribute(name);
+        case ByteProto.ATTR_OR_ELEM -> {
+          int location = protoNext();
+
+          int returnTo = protoIndex;
+
+          // skip ByteProto.ATTR_OR_ELEM
+          // skip tail index
+          protoIndex = location + 2;
+
+          int code = protoNext();
+
+          var attributeOrElement = AttributeOrElement.get(code);
+
+          if (attributeOrElement.isAttributeOf(parent)) {
+            code = attributeOrElement.attributeByteCode();
+
+            int value = protoNext();
+
+            attributeImpl(code, value);
+          }
+
+          protoIndex = returnTo;
+        }
 
         case ByteProto.ELEMENT,
              ByteProto.TEXT,
-             ByteProto.RAW -> protoIndex += 2;
+             ByteProto.RAW -> protoNext();
 
         case ByteProto.ELEMENT_END -> {
           break loop;
@@ -293,7 +317,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxSet(0, _ELEMENT_NODES_REQ);
   }
 
-  final boolean elementNodesHasNext() {
+  final boolean elementNodesHasNext(ElementName parent) {
     elementNodesHasNextCheck();
 
     ctx2proto();
@@ -306,7 +330,31 @@ public class HtmlPlayer2 extends HtmlRecorder {
       switch (proto) {
         case ByteProto.ATTRIBUTE -> protoIndex += 2;
 
-        //case ByteProto.ATTR_OR_ELEM -> maybeElement(name);
+        case ByteProto.ATTR_OR_ELEM -> {
+          int returnToTrue = protoIndex;
+
+          protoNext(); // ByteProto.ATTR_OR_ELEM
+
+          int location = protoNext();
+
+          int returnToFalse = protoIndex;
+
+          protoIndex = location + 2;
+
+          int code = protoNext();
+
+          var attributeOrElement = AttributeOrElement.get(code);
+
+          if (!attributeOrElement.isAttributeOf(parent)) {
+            hasNext = true;
+
+            protoIndex = returnToTrue;
+
+            break loop;
+          } else {
+            protoIndex = returnToFalse;
+          }
+        }
 
         case ByteProto.ELEMENT,
              ByteProto.TEXT,
@@ -358,37 +406,21 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
     ctx2proto();
 
-    HtmlNode node = null;
+    int proto = protoNext();
 
-    loop: while (protoMore()) {
-      int proto = protoNext();
+    HtmlNode node = switch (proto) {
+      case ByteProto.ATTR_OR_ELEM -> executeMaybeElement();
 
-      switch (proto) {
-        case ByteProto.ATTRIBUTE -> protoNext();
+      case ByteProto.ELEMENT -> executeElement();
 
-        //case ByteProto.ATTR_OR_ELEM -> maybeElement(name);
+      case ByteProto.ELEMENT_END -> null;
 
-        case ByteProto.ELEMENT -> {
-          node = executeElement();
+      case ByteProto.TEXT -> executeText();
 
-          break loop;
-        }
-
-        case ByteProto.ELEMENT_END -> {
-          break loop;
-        }
-
-        case ByteProto.TEXT -> {
-          node = executeText();
-
-          break loop;
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    };
 
     if (node == null) {
       throw new NoSuchElementException();
@@ -502,26 +534,6 @@ public class HtmlPlayer2 extends HtmlRecorder {
         yield sb.toString();
       }
     };
-  }
-
-  private void attribute() {
-    protoNext(); // ByteProto.ATTRIBUTE
-
-    int location = protoNext();
-
-    int returnTo = protoIndex;
-
-    // skip ByteProto.ATTRIBUTE
-    // skip tail index
-    protoIndex = location + 2;
-
-    int code = protoNext();
-
-    int value = protoNext();
-
-    attributeImpl(code, value);
-
-    protoIndex = returnTo;
   }
 
   private void attributeImpl(int code, int value) {
@@ -722,6 +734,24 @@ public class HtmlPlayer2 extends HtmlRecorder {
     }
   }
 
+  private void executeAttribute() {
+    int location = protoNext();
+
+    int returnTo = protoIndex;
+
+    // skip ByteProto.ATTRIBUTE
+    // skip tail index
+    protoIndex = location + 2;
+
+    int code = protoNext();
+
+    int value = protoNext();
+
+    attributeImpl(code, value);
+
+    protoIndex = returnTo;
+  }
+
   private HtmlElement executeElement() {
     int location = protoNext();
 
@@ -740,6 +770,47 @@ public class HtmlPlayer2 extends HtmlRecorder {
     element.name = StandardElementName.getByCode(elemCode);
 
     ctxPush(elemCode, parent, protoIndex, _ELEMENT);
+
+    return element;
+  }
+
+  private PseudoHtmlElement executeMaybeElement() {
+    int location = protoNext();
+
+    int parent = protoIndex;
+
+    proto2ctx();
+
+    var element = htmlElement();
+
+    // skip ByteProto.ATTR_OR_ELEMENT
+    // skip tail index
+    protoIndex = location + 2;
+
+    int code = protoNext();
+
+    var attributeOrElement = AttributeOrElement.get(code);
+
+    var elemCode = attributeOrElement.elementByteCode();
+
+    element.name = StandardElementName.getByCode(elemCode);
+
+    int elemStart = objectIndex;
+
+    protoArray = IntArrays.growIfNecessary(protoArray, elemStart + 2);
+    protoArray[elemStart + 0] = ByteProto.TEXT;
+    // location + 0 = ByteProto.ATTR_OR_ELEMENT
+    // location + 1 = tail index
+    // location + 2 = code
+    // location + 3 = value
+    // executeText() will skip:
+    // - tail index
+    // - code
+    // and will consume value
+    protoArray[elemStart + 1] = location + 1;
+    protoArray[elemStart + 2] = ByteProto.ELEMENT_END;
+
+    ctxPush(elemCode, parent, elemStart, _ELEMENT);
 
     return element;
   }
