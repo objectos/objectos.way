@@ -659,8 +659,14 @@ public class MethodDeclarationTest {
             name("Methods"),
 
             method(
-              name("a"),
+              name("ex01"),
               parameter(FINAL, INT, name("a"))
+            ),
+
+            method(
+              name("ex02"),
+              parameter(FINAL, INT, name("a")),
+              parameter(FINAL, INT, name("b"))
             )
           );
         }
@@ -668,7 +674,9 @@ public class MethodDeclarationTest {
 
       """
       class Methods {
-        void a(final int a) {}
+        void ex01(final int a) {}
+
+        void ex02(final int a, final int b) {}
       }
       """
     );

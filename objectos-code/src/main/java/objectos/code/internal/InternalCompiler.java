@@ -1775,6 +1775,8 @@ class InternalCompiler extends InternalApi {
     switch (last()) {
       case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
 
+      case _COMMA -> codeAdd(Whitespace.OPTIONAL);
+
       case _KEYWORD -> codeAdd(Whitespace.MANDATORY);
     }
 
