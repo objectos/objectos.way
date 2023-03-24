@@ -15,6 +15,7 @@
  */
 package objectos.html.internal;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import objectos.html.pseudom.DocumentProcessor;
 import objectos.html.pseudom.HtmlAttribute;
@@ -23,7 +24,6 @@ import objectos.html.pseudom.HtmlNode;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
-import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.IntArrays;
 
@@ -42,7 +42,8 @@ public class HtmlPlayer2 extends HtmlRecorder {
       _ATTRIBUTE_VALUES_ITER = -11;
 
   private static final int ATTRS_END = -12,
-      ATTRS_SINGLE = -13;
+      ATTRS_SINGLE = -13,
+      ATTRS_NEXT = -14;
 
   private StringBuilder stringBuilder;
 
@@ -84,7 +85,13 @@ public class HtmlPlayer2 extends HtmlRecorder {
     if (type == ATTRS_SINGLE) {
       hasNext = value != NULL;
     } else {
-      throw new UnsupportedOperationException("Implement me");
+      int proto = protoArray[value];
+
+      if (proto == ATTRS_NEXT) {
+        throw new UnsupportedOperationException("Implement me");
+      } else if (proto != NULL) {
+        hasNext = true;
+      }
     }
 
     if (!hasNext) {
@@ -116,7 +123,17 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
       return attributeValueImpl(name, value);
     } else {
-      throw new UnsupportedOperationException("Implement me");
+      int proto = protoArray[value];
+
+      if (proto == ATTRS_NEXT) {
+        throw new UnsupportedOperationException("Implement me");
+      } else if (proto == NULL) {
+        throw new NoSuchElementException();
+      } else {
+        ctxSet(2, value + 1);
+
+        return attributeValueImpl(name, proto);
+      }
     }
   }
 
@@ -317,7 +334,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxSet(0, _ELEMENT_NODES_REQ);
   }
 
-  final boolean elementNodesHasNext(ElementName parent) {
+  final boolean elementNodesHasNext() {
     elementNodesHasNextCheck();
 
     ctx2proto();
@@ -331,6 +348,10 @@ public class HtmlPlayer2 extends HtmlRecorder {
         case ByteProto.ATTRIBUTE -> protoIndex += 2;
 
         case ByteProto.ATTR_OR_ELEM -> {
+          int elemCode = ctxPeek(2);
+
+          var parent = StandardElementName.getByCode(elemCode);
+
           int returnToTrue = protoIndex;
 
           protoNext(); // ByteProto.ATTR_OR_ELEM
@@ -377,7 +398,7 @@ public class HtmlPlayer2 extends HtmlRecorder {
     proto2ctx();
 
     if (!hasNext) {
-      ctxPop(2);
+      ctxPop(3);
 
       ctxCheck(_ELEMENT_NODES_REQ);
 
@@ -397,8 +418,9 @@ public class HtmlPlayer2 extends HtmlRecorder {
     ctxCheck(_ELEMENT_NODES_REQ);
 
     int index = ctxPeek(1);
+    int elemCode = ctxPeek(3);
 
-    ctxPush(index, _ELEMENT_NODES_ITER);
+    ctxPush(elemCode, index, _ELEMENT_NODES_ITER);
   }
 
   final HtmlNode elementNodesNext() {
@@ -536,6 +558,8 @@ public class HtmlPlayer2 extends HtmlRecorder {
     };
   }
 
+  private static final int CAPACITY = 10;
+
   private void attributeImpl(int code, int value) {
     int startIndex = ctxPeek();
 
@@ -565,6 +589,26 @@ public class HtmlPlayer2 extends HtmlRecorder {
         index += 3;
 
         continue;
+      }
+
+      int cellStyle = ctxGet(index + 1);
+
+      if (cellStyle == ATTRS_SINGLE) {
+        int requiredIndex = objectIndex + CAPACITY + 1;
+        int nextObjectIndex = requiredIndex + 1;
+
+        protoArray = IntArrays.growIfNecessary(protoArray, requiredIndex);
+        Arrays.fill(protoArray, objectIndex, nextObjectIndex, NULL);
+        protoArray[objectIndex + 0] = ctxGet(index + 2);
+        protoArray[objectIndex + 1] = value;
+        protoArray[objectIndex + CAPACITY] = ATTRS_NEXT;
+
+        listArray[index + 1] = objectIndex + 2;
+        listArray[index + 2] = objectIndex;
+
+        objectIndex = nextObjectIndex;
+
+        break;
       }
 
       throw new UnsupportedOperationException("Implement me");
@@ -612,6 +656,13 @@ public class HtmlPlayer2 extends HtmlRecorder {
     listArray = IntArrays.growIfNecessary(listArray, listIndex + 2);
     listArray[++listIndex] = v0;
     listArray[++listIndex] = v1;
+  }
+
+  private void ctxPush(int v0, int v1, int v2) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 3);
+    listArray[++listIndex] = v0;
+    listArray[++listIndex] = v1;
+    listArray[++listIndex] = v2;
   }
 
   private void ctxPush(int v0, int v1, int v2, int v3) {
