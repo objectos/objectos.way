@@ -22,6 +22,7 @@ import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlDocumentType;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
+import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
 import objectos.html.tmpl.ElementKind;
 import objectos.html.tmpl.StandardElementName;
@@ -109,7 +110,7 @@ public final class PrettyPrintWriter2 extends Writer2 {
     if (node instanceof HtmlDocumentType) {
       documentType();
     } else if (node instanceof HtmlElement element) {
-      element(element);
+      element(element, false);
     } else {
       var type = node.getClass();
 
@@ -123,14 +124,16 @@ public final class PrettyPrintWriter2 extends Writer2 {
     write("<!DOCTYPE html>");
   }
 
-  private void element(HtmlElement element) {
+  private void element(HtmlElement element, boolean metadata) {
     startTag(element);
 
     if (isVoid(element)) {
       return;
     }
 
-    var metadata = isHead(element);
+    if (isHead(element)) {
+      metadata = true;
+    }
 
     var newLine = false;
 
@@ -146,20 +149,38 @@ public final class PrettyPrintWriter2 extends Writer2 {
 
     if (node instanceof HtmlElement child) {
       if (!metadata && isPhrasing(child)) {
-        element(child);
+        element(child, metadata);
       } else {
         if (!wasNewLine) {
           write(NL);
         }
 
-        element(child);
+        element(child, metadata);
 
         write(NL);
 
         newLine = true;
       }
     } else if (node instanceof HtmlText text) {
-      escaped(text.value());
+      var value = text.value();
+
+      escaped(value);
+    } else if (node instanceof HtmlRawText raw) {
+      var value = raw.value();
+
+      if (metadata) {
+        if (!startsWithNewLine(value)) {
+          write(NL);
+        }
+
+        write(value);
+
+        if (!endsWithNewLine(value)) {
+          write(NL);
+        }
+      } else {
+        write(value);
+      }
     } else {
       var type = node.getClass();
 
@@ -171,6 +192,18 @@ public final class PrettyPrintWriter2 extends Writer2 {
     return newLine;
   }
 
+  private boolean endsWithNewLine(String value) {
+    int length = value.length();
+
+    if (length > 0) {
+      var last = value.charAt(length - 1);
+
+      return isNewLine(last);
+    } else {
+      return false;
+    }
+  }
+
   private void endTag(HtmlElement element) {
     write('<');
     write('/');
@@ -180,6 +213,10 @@ public final class PrettyPrintWriter2 extends Writer2 {
 
   private boolean isHead(HtmlElement element) {
     return element.elementName() == StandardElementName.HEAD;
+  }
+
+  private boolean isNewLine(char c) {
+    return c == '\n' || c == '\r';
   }
 
   private boolean isPhrasing(HtmlElement element) {
@@ -194,6 +231,18 @@ public final class PrettyPrintWriter2 extends Writer2 {
     var kind = name.getKind();
 
     return kind == ElementKind.VOID;
+  }
+
+  private boolean startsWithNewLine(String value) {
+    int length = value.length();
+
+    if (length > 0) {
+      var first = value.charAt(0);
+
+      return isNewLine(first);
+    } else {
+      return false;
+    }
   }
 
   private void startTag(HtmlElement element) {

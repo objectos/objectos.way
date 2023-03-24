@@ -17,13 +17,14 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.internal.HtmlSink2;
 import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.ElementName;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
 
-  private final HtmlSink sink = new HtmlSink();
+  private final HtmlSink2 sink = new HtmlSink2();
 
   private final StringBuilder stringBuilder = new StringBuilder();
 

@@ -13,6 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.pseudom;
+package objectos.html.internal;
 
-public sealed interface HtmlNode permits HtmlDocumentType, HtmlElement, HtmlRawText, HtmlText {}
+import objectos.html.pseudom.HtmlRawText;
+
+public final class PseudoHtmlRawText implements HtmlRawText {
+
+  String value;
+
+  @Override
+  public final String value() {
+    return value;
+  }
+
+}

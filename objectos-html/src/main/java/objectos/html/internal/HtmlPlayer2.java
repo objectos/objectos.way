@@ -45,6 +45,8 @@ public class HtmlPlayer2 extends HtmlRecorder {
       ATTRS_SINGLE = -13,
       ATTRS_NEXT = -14;
 
+  private static final int CAPACITY = 10;
+
   private StringBuilder stringBuilder;
 
   public HtmlPlayer2() {
@@ -55,6 +57,8 @@ public class HtmlPlayer2 extends HtmlRecorder {
     objectArray[ATTRIBUTE] = new PseudoHtmlAttribute(this);
 
     objectArray[TEXT] = new PseudoHtmlText();
+
+    objectArray[RAW_TEXT] = new PseudoHtmlRawText();
   }
 
   public final void play(DocumentProcessor processor) {
@@ -455,6 +459,8 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
       case ByteProto.TEXT -> executeText();
 
+      case ByteProto.RAW -> executeRaw();
+
       default -> throw new UnsupportedOperationException(
         "Implement me :: proto=" + proto
       );
@@ -573,8 +579,6 @@ public class HtmlPlayer2 extends HtmlRecorder {
       }
     };
   }
-
-  private static final int CAPACITY = 10;
 
   private void attributeImpl(int code, int value) {
     int startIndex = ctxPeek();
@@ -908,6 +912,24 @@ public class HtmlPlayer2 extends HtmlRecorder {
     return element;
   }
 
+  private PseudoHtmlRawText executeRaw() {
+    int location = protoNext();
+
+    proto2ctx();
+
+    // skip ByteProto.RAW_TEXT
+    // skip tail index
+    protoIndex = location + 2;
+
+    var raw = htmlRawText();
+
+    var index = protoNext();
+
+    raw.value = (String) objectArray[index];
+
+    return raw;
+  }
+
   private PseudoHtmlText executeText() {
     int location = protoNext();
 
@@ -932,6 +954,10 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
   private PseudoHtmlElement htmlElement() {
     return (PseudoHtmlElement) objectArray[ELEMENT];
+  }
+
+  private PseudoHtmlRawText htmlRawText() {
+    return (PseudoHtmlRawText) objectArray[RAW_TEXT];
   }
 
   private PseudoHtmlText htmlText() {
