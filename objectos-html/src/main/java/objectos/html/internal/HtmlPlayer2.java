@@ -88,7 +88,11 @@ public class HtmlPlayer2 extends HtmlRecorder {
       int proto = protoArray[value];
 
       if (proto == ATTRS_NEXT) {
-        throw new UnsupportedOperationException("Implement me");
+        value++;
+
+        proto = protoArray[value];
+
+        hasNext = proto != NULL;
       } else if (proto != NULL) {
         hasNext = true;
       }
@@ -123,14 +127,26 @@ public class HtmlPlayer2 extends HtmlRecorder {
 
       return attributeValueImpl(name, value);
     } else {
-      int proto = protoArray[value];
+      int proto = protoArray[value++];
 
       if (proto == ATTRS_NEXT) {
-        throw new UnsupportedOperationException("Implement me");
+        proto = protoArray[value];
+
+        if (proto == NULL) {
+          throw new NoSuchElementException();
+        }
+
+        value = proto;
+
+        proto = protoArray[value++];
+
+        ctxSet(2, value);
+
+        return attributeValueImpl(name, proto);
       } else if (proto == NULL) {
         throw new NoSuchElementException();
       } else {
-        ctxSet(2, value + 1);
+        ctxSet(2, value);
 
         return attributeValueImpl(name, proto);
       }
@@ -591,9 +607,9 @@ public class HtmlPlayer2 extends HtmlRecorder {
         continue;
       }
 
-      int cellStyle = ctxGet(index + 1);
+      int maybeSingle = ctxGet(index + 1);
 
-      if (cellStyle == ATTRS_SINGLE) {
+      if (maybeSingle == ATTRS_SINGLE) {
         int requiredIndex = objectIndex + CAPACITY + 1;
         int nextObjectIndex = requiredIndex + 1;
 
@@ -611,7 +627,33 @@ public class HtmlPlayer2 extends HtmlRecorder {
         break;
       }
 
-      throw new UnsupportedOperationException("Implement me");
+      int nextSlot = maybeSingle;
+
+      int proto = protoArray[nextSlot];
+
+      if (proto != ATTRS_NEXT) {
+        protoArray[nextSlot++] = value;
+
+        listArray[index + 1] = nextSlot;
+
+        break;
+      }
+
+      protoArray[nextSlot + 1] = objectIndex;
+
+      int requiredIndex = objectIndex + CAPACITY + 1;
+      int nextObjectIndex = requiredIndex + 1;
+
+      protoArray = IntArrays.growIfNecessary(protoArray, requiredIndex);
+      Arrays.fill(protoArray, objectIndex, nextObjectIndex, NULL);
+      protoArray[objectIndex + 0] = value;
+      protoArray[objectIndex + CAPACITY] = ATTRS_NEXT;
+
+      listArray[index + 1] = objectIndex;
+
+      objectIndex = nextObjectIndex;
+
+      break;
     }
   }
 
