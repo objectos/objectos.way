@@ -29,6 +29,7 @@ import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardAttributeName.Class;
 import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.StandardTextElement;
 import objectos.html.tmpl.Value;
@@ -124,12 +125,6 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
 
   public final AnyElementValue noop() {
     return NoOp.INSTANCE;
-  }
-
-  protected final NonVoidElementValue raw(String text) {
-    dsl().addRaw(text);
-
-    return Raw.INSTANCE;
   }
 
   @Override
@@ -422,6 +417,10 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
     return element;
   }
 
+  protected final Class className(String value) {
+    return _class(value);
+  }
+
   protected abstract void definition();
 
   protected final Lambda f(Lambda lambda) {
@@ -444,6 +443,12 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
     dsl().addAttribute(name, path);
 
     return name;
+  }
+
+  protected final NonVoidElementValue raw(String text) {
+    dsl().addRaw(text);
+
+    return Raw.INSTANCE;
   }
 
   @Override

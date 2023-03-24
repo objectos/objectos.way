@@ -1126,6 +1126,32 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC36
+
+  - the `className` instruction
+  """)
+  public void testCase36() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          div(
+            className("a"),
+            className("b"),
+            h1("Objectos HTML")
+          );
+        }
+      },
+
+      """
+      <div class="a b">
+      <h1>Objectos HTML</h1>
+      </div>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     stringBuilder.setLength(0);
 
