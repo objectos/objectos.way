@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 /**
- * Contains the interfaces that allow processing a
- * {@link objectos.html.HtmlTemplate}.
+ * Provides the interfaces for the Pseudo Document Object Model (P-DOM).
  *
  * <p>
  * Instances of the interfaces from this package are meant to be consumed

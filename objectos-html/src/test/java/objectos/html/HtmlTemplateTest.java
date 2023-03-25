@@ -1152,6 +1152,29 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC37
+
+  - two consecutive input elements
+  """)
+  public void testCase37() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          div(
+            input(type("email"), name("a")),
+            input(type("submit"), name("b"), value("Submit"))
+          );
+        }
+      },
+
+      """
+      <div><input type="email" name="a"><input type="submit" name="b" value="Submit"></div>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     stringBuilder.setLength(0);
 
