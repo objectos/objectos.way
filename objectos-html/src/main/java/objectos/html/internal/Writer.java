@@ -16,11 +16,11 @@
 package objectos.html.internal;
 
 import java.io.IOException;
-import objectos.html.io.HtmlEscape;
 import objectos.html.pseudom.DocumentProcessor;
 
 /**
- * Base {@link Visitor} implementation suitable for writing HTML files.
+ * Base {@link DocumentProcessor} implementation suitable for writing HTML
+ * files.
  *
  * @since 0.5.1
  */
@@ -48,7 +48,18 @@ public abstract class Writer implements DocumentProcessor {
     }
 
     try {
-      HtmlEscape.to(value, out);
+      for (int i = 0, len = value.length(); i < len; i++) {
+        var c = value.charAt(i);
+
+        switch (c) {
+          case '"' -> out.append("&quot;");
+          case '&' -> out.append("&amp;");
+          case '<' -> out.append("&lt;");
+          case '>' -> out.append("&gt;");
+          case '\u00A9' -> out.append("&copy;");
+          default -> out.append(c);
+        }
+      }
     } catch (IOException e) {
       ioException = e;
     }
