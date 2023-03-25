@@ -56,12 +56,6 @@
 					</arguments>
 				</configuration>
 			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<excludedGroups>browser</excludedGroups>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 

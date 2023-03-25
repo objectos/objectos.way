@@ -24,7 +24,6 @@ import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
 import objectos.html.pseudom.HtmlRawText;
 import objectos.html.pseudom.HtmlText;
-import objectos.html.tmpl.ElementKind;
 import objectos.html.tmpl.StandardElementName;
 
 public final class PrettyPrintWriter extends Writer {
@@ -127,7 +126,7 @@ public final class PrettyPrintWriter extends Writer {
   private void element(HtmlElement element, boolean metadata) {
     startTag(element);
 
-    if (isVoid(element)) {
+    if (element.isVoid()) {
       return;
     }
 
@@ -212,7 +211,7 @@ public final class PrettyPrintWriter extends Writer {
   }
 
   private boolean isHead(HtmlElement element) {
-    return element.elementName() == StandardElementName.HEAD;
+    return element.hasName(StandardElementName.HEAD);
   }
 
   private boolean isNewLine(char c) {
@@ -220,17 +219,7 @@ public final class PrettyPrintWriter extends Writer {
   }
 
   private boolean isPhrasing(HtmlElement element) {
-    var name = element.elementName();
-
-    return PHRASING.contains(name);
-  }
-
-  private boolean isVoid(HtmlElement element) {
-    var name = element.elementName();
-
-    var kind = name.getKind();
-
-    return kind == ElementKind.VOID;
+    return element.matches(PHRASING::contains);
   }
 
   private boolean startsWithNewLine(String value) {

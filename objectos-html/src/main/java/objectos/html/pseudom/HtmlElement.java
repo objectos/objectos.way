@@ -15,6 +15,7 @@
  */
 package objectos.html.pseudom;
 
+import java.util.function.Predicate;
 import objectos.html.internal.PseudoHtmlElement;
 import objectos.html.tmpl.ElementName;
 
@@ -22,15 +23,13 @@ public sealed interface HtmlElement extends HtmlNode permits PseudoHtmlElement {
 
   HtmlIterable<HtmlAttribute> attributes();
 
-  ElementName elementName();
-
   boolean hasName(ElementName name);
 
-  default String name() {
-    return elementName().getName();
-  }
-
   boolean isVoid();
+
+  boolean matches(Predicate<? super ElementName> predicate);
+
+  String name();
 
   HtmlIterable<HtmlNode> nodes();
 

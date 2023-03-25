@@ -19,8 +19,6 @@ import java.util.Iterator;
 
 /**
  * An {@link Iterable} which can be traversed only once.
- *
- * @since 0.5.2
  */
 public interface HtmlIterable<T> extends Iterable<T> {
 

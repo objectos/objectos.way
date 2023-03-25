@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlIterable;
@@ -70,8 +71,8 @@ public final class PseudoHtmlElement
   }
 
   @Override
-  public final ElementName elementName() {
-    return name;
+  public final boolean matches(Predicate<? super ElementName> predicate) {
+    return predicate.test(name);
   }
 
   @Override
@@ -94,6 +95,11 @@ public final class PseudoHtmlElement
     player.elementNodesIterator();
 
     return this;
+  }
+
+  @Override
+  public final String name() {
+    return name.getName();
   }
 
   @Override
