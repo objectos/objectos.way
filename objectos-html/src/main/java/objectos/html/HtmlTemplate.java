@@ -22,7 +22,6 @@ import objectos.html.internal.Validate;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
-import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.ElementName;
@@ -41,59 +40,6 @@ import objectos.lang.Check;
  * @since 0.5.0
  */
 public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements Template {
-
-  /**
-   * TODO
-   */
-  public interface Visitor {
-
-    /**
-     * @since 0.5.2
-     */
-    void attribute(AttributeName name);
-
-    /**
-     * @since 0.5.2
-     */
-    void attributeFirstValue(String value);
-
-    /**
-     * @since 0.5.2
-     */
-    void attributeNextValue(String value);
-
-    /**
-     * @since 0.5.2
-     */
-    void attributeValueEnd();
-
-    void doctype();
-
-    /**
-     * Invoked after the visiting ends.
-     *
-     * @since 0.5.1
-     */
-    void documentEnd();
-
-    /**
-     * Invoked before the visiting starts.
-     *
-     * @since 0.5.1
-     */
-    void documentStart();
-
-    void endTag(StandardElementName name);
-
-    void raw(String value);
-
-    void startTag(StandardElementName name);
-
-    void startTagEnd(StandardElementName name);
-
-    void text(String value);
-
-  }
 
   private TemplateDsl dsl;
 

@@ -19,10 +19,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.internal.HtmlPlayer;
 import objectos.html.internal.PrettyPrintWriter;
 import objectos.html.internal.Writer;
+import objectos.html.pseudom.DocumentProcessor;
 
 /**
  * TODO
@@ -119,23 +119,23 @@ public final class HtmlSink extends HtmlPlayer {
   }
 
   /**
-   * Visits the specified template using the specified visitor.
+   * Process the specified template with the specified processor.
    *
    * @param template
-   *        the template to be visited
+   *        the template to be processed
    *
-   * @param visitor
-   *        the visitor instance
+   * @param processor
+   *        the processor that will consume the template
    *
-   * @since 0.5.1
+   * @since 0.5.3
    */
-  public final void toVisitor(HtmlTemplate template, Visitor visitor) {
+  public final void toProcessor(HtmlTemplate template, DocumentProcessor processor) {
     Objects.requireNonNull(template, "template == null");
-    Objects.requireNonNull(visitor, "visitor == null");
+    Objects.requireNonNull(processor, "processor == null");
 
     record(template);
 
-    play(visitor);
+    play(processor);
   }
 
   private PrettyPrintWriter prettyPrintWriter() {

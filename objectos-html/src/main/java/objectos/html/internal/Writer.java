@@ -16,15 +16,15 @@
 package objectos.html.internal;
 
 import java.io.IOException;
-import objectos.html.HtmlTemplate.Visitor;
 import objectos.html.io.HtmlEscape;
+import objectos.html.pseudom.DocumentProcessor;
 
 /**
  * Base {@link Visitor} implementation suitable for writing HTML files.
  *
  * @since 0.5.1
  */
-public abstract class Writer implements Visitor {
+public abstract class Writer implements DocumentProcessor {
 
   private IOException ioException;
 

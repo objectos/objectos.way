@@ -27,9 +27,9 @@ public final class PseudoHtmlAttribute
 
   AttributeName name;
 
-  private final HtmlPlayer2 player;
+  private final HtmlPlayer player;
 
-  PseudoHtmlAttribute(HtmlPlayer2 player) {
+  PseudoHtmlAttribute(HtmlPlayer player) {
     this.player = player;
   }
 

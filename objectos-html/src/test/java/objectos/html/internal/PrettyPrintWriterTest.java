@@ -17,12 +17,13 @@ package objectos.html.internal;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.HtmlSink;
 import objectos.html.HtmlTemplate;
 import org.testng.annotations.Test;
 
 public class PrettyPrintWriterTest {
 
-  private final HtmlSink2 sink = new HtmlSink2();
+  private final HtmlSink sink = new HtmlSink();
 
   private final StringBuilder stringBuilder = new StringBuilder();
 

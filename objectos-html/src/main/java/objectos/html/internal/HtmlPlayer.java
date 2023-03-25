@@ -15,70 +15,462 @@
  */
 package objectos.html.internal;
 
-import java.util.Objects;
-import objectos.html.HtmlTemplate;
-import objectos.html.HtmlTemplate.Visitor;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
 import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlAttribute;
+import objectos.html.pseudom.HtmlElement;
+import objectos.html.pseudom.HtmlNode;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.StandardElementName;
-import objectos.lang.Check;
 import objectos.util.IntArrays;
 
 public class HtmlPlayer extends HtmlRecorder {
 
-  private static final int CAPACITY = 10;
+  private static final int _START = -1,
+      _DOCUMENT = -2,
+      _DOCUMENT_NODES = -3,
+      _ELEMENT = -4,
+      _ELEMENT_ATTRS_REQ = -5,
+      _ELEMENT_ATTRS_ITER = -6,
+      _ELEMENT_NODES_REQ = -7,
+      _ELEMENT_NODES_ITER = -8,
+      _ATTRIBUTE = -9,
+      _ATTRIBUTE_VALUES_REQ = -10,
+      _ATTRIBUTE_VALUES_ITER = -11;
 
-  private DocumentProcessor processor;
+  private static final int ATTRS_END = -12,
+      ATTRS_SINGLE = -13,
+      ATTRS_NEXT = -14;
+
+  private static final int CAPACITY = 10;
 
   private StringBuilder stringBuilder;
 
-  private Visitor visitor;
+  public HtmlPlayer() {
+    objectArray[DOCUMENT] = new PseudoHtmlDocument(this);
 
-  public final void play(HtmlTemplate.Visitor visitor) {
-    this.visitor = visitor;
+    objectArray[ELEMENT] = new PseudoHtmlElement(this);
+
+    objectArray[ATTRIBUTE] = new PseudoHtmlAttribute(this);
+
+    objectArray[TEXT] = new PseudoHtmlText();
+
+    objectArray[RAW_TEXT] = new PseudoHtmlRawText();
+  }
+
+  public final void play(DocumentProcessor processor) {
+    listIndex = -1;
 
     protoArray = IntArrays.growIfNecessary(protoArray, objectIndex);
 
-    listIndex = 0;
+    ctxPush(_START);
 
-    this.visitor.documentStart();
+    processor.process(document());
+  }
 
-    try {
-      rootElement();
-    } finally {
-      this.visitor.documentEnd();
+  final void attributeValues() {
+    ctxCheck(_ATTRIBUTE);
 
-      this.visitor = null;
+    ctxSet(0, _ATTRIBUTE_VALUES_REQ);
+  }
+
+  final boolean attributeValuesHasNext() {
+    ctxCheck(_ATTRIBUTE_VALUES_ITER);
+
+    var type = ctxPeek(1);
+
+    var value = ctxPeek(2);
+
+    var hasNext = false;
+
+    if (type == ATTRS_SINGLE) {
+      hasNext = value != NULL;
+    } else {
+      int proto = protoArray[value];
+
+      if (proto == ATTRS_NEXT) {
+        value++;
+
+        proto = protoArray[value];
+
+        hasNext = proto != NULL;
+      } else if (proto != NULL) {
+        hasNext = true;
+      }
+    }
+
+    if (!hasNext) {
+      ctxSet(0, _ATTRIBUTE);
+    }
+
+    return hasNext;
+  }
+
+  final void attributeValuesIterator() {
+    ctxCheck(_ATTRIBUTE_VALUES_REQ);
+
+    ctxSet(0, _ATTRIBUTE_VALUES_ITER);
+  }
+
+  final String attributeValuesNext(AttributeName name) {
+    ctxCheck(_ATTRIBUTE_VALUES_ITER);
+
+    var type = ctxPeek(1);
+
+    var value = ctxPeek(2);
+
+    if (type == ATTRS_SINGLE) {
+      if (value == NULL) {
+        throw new NoSuchElementException();
+      }
+
+      ctxSet(2, NULL);
+
+      return attributeValueImpl(name, value);
+    } else {
+      int proto = protoArray[value++];
+
+      if (proto == ATTRS_NEXT) {
+        proto = protoArray[value];
+
+        if (proto == NULL) {
+          throw new NoSuchElementException();
+        }
+
+        value = proto;
+
+        proto = protoArray[value++];
+
+        ctxSet(2, value);
+
+        return attributeValueImpl(name, proto);
+      } else if (proto == NULL) {
+        throw new NoSuchElementException();
+      } else {
+        ctxSet(2, value);
+
+        return attributeValueImpl(name, proto);
+      }
     }
   }
 
-  public final void play2(DocumentProcessor processor) {
-    Objects.requireNonNull(processor, "processor == null");
+  final boolean documentHasNext() {
+    documentHasNextCheck();
 
-    Check.state(
-      this.processor == null,
+    var result = false;
 
-      """
-      Concurrent processing is not supported.
+    loop: while (protoMore()) {
+      int proto = protoPeek();
 
-      It seems a previous HTML template processing:
+      switch (proto) {
+        case ByteProto.DOCTYPE,
+             ByteProto.ELEMENT -> {
+          result = true;
 
-      - is currently running; or
-      - finished abruptly (most likely due to a bug in this component, sorry...).
-      """
-    );
+          break loop;
+        }
 
-    protoArray = IntArrays.growIfNecessary(protoArray, objectIndex);
+        case ByteProto.ROOT -> protoNext();
 
-    listIndex = 0;
+        case ByteProto.ROOT_END -> {
+          protoNext();
 
-    try {
-      rootElement();
-    } finally {
-      this.processor = null;
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
     }
+
+    proto2ctx();
+
+    return result;
+  }
+
+  final void documentIterable() {
+    ctxCheck(_START);
+
+    ctxSet(0, _DOCUMENT);
+  }
+
+  final void documentIterator() {
+    ctxCheck(_DOCUMENT);
+
+    ctxPush(protoIndex, _DOCUMENT_NODES);
+  }
+
+  final HtmlNode documentNext() {
+    ctxCheck(_DOCUMENT_NODES);
+
+    ctx2proto();
+
+    int proto = protoNext();
+
+    return switch (proto) {
+      case ByteProto.DOCTYPE -> {
+        proto2ctx();
+
+        yield PseudoHtmlDocumentType.INSTANCE;
+      }
+
+      case ByteProto.ELEMENT -> executeElement();
+
+      case ByteProto.ROOT_END -> throw new NoSuchElementException();
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    };
+  }
+
+  final void elementAttributes() {
+    ctxCheck(_ELEMENT);
+
+    ctxSet(0, _ELEMENT_ATTRS_REQ);
+  }
+
+  final boolean elementAttributesHasNext() {
+    elementAttributesHasNextCheck();
+
+    int index = ctxPeek(1);
+
+    int value = listArray[index];
+
+    if (value == ATTRS_END) {
+      int start = ctxPeek(2);
+
+      listIndex = start - 1;
+
+      ctxCheck(_ELEMENT_ATTRS_REQ);
+
+      ctxSet(0, _ELEMENT);
+
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  final void elementAttributesIterator(StandardElementName parent) {
+    ctxCheck(_ELEMENT_ATTRS_REQ);
+
+    ctx2proto();
+
+    int startIndex = listIndex + 1;
+
+    // end marker
+    ctxPush(ATTRS_END);
+
+    // start index to be used in the while-loop
+    ctxPush(startIndex);
+
+    loop: while (protoMore()) {
+      int proto = protoNext();
+
+      switch (proto) {
+        case ByteProto.ATTRIBUTE -> executeAttribute();
+
+        case ByteProto.ATTR_OR_ELEM -> {
+          int location = protoNext();
+
+          int returnTo = protoIndex;
+
+          // skip ByteProto.ATTR_OR_ELEM
+          // skip tail index
+          protoIndex = location + 2;
+
+          int code = protoNext();
+
+          var attributeOrElement = AttributeOrElement.get(code);
+
+          if (attributeOrElement.isAttributeOf(parent)) {
+            code = attributeOrElement.attributeByteCode();
+
+            int value = protoNext();
+
+            attributeImpl(code, value);
+          }
+
+          protoIndex = returnTo;
+        }
+
+        case ByteProto.ELEMENT,
+             ByteProto.TEXT,
+             ByteProto.RAW -> protoNext();
+
+        case ByteProto.ELEMENT_END -> {
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    ctxPush(
+      startIndex, // cursor for iteration
+
+      _ELEMENT_ATTRS_ITER
+    );
+  }
+
+  final HtmlAttribute elementAttributesNext() {
+    ctxCheck(_ELEMENT_ATTRS_ITER);
+
+    int index = ctxPeek(1);
+
+    int code = listArray[index++];
+
+    if (code == ATTRS_END) {
+      throw new NoSuchElementException();
+    }
+
+    var attribute = htmlAttribute();
+
+    var name = AttributeName.getByCode(code);
+
+    attribute.name = name;
+
+    var type = listArray[index++];
+
+    var value = listArray[index++];
+
+    ctxSet(1, index);
+
+    ctxPush(index, value, type, _ATTRIBUTE);
+
+    return attribute;
+  }
+
+  final void elementNodes() {
+    ctxCheck(_ELEMENT);
+
+    ctxSet(0, _ELEMENT_NODES_REQ);
+  }
+
+  final boolean elementNodesHasNext() {
+    elementNodesHasNextCheck();
+
+    ctx2proto();
+
+    var hasNext = false;
+
+    loop: while (protoMore()) {
+      int proto = protoPeek();
+
+      switch (proto) {
+        case ByteProto.ATTRIBUTE -> protoIndex += 2;
+
+        case ByteProto.ATTR_OR_ELEM -> {
+          int elemCode = ctxPeek(2);
+
+          var parent = StandardElementName.getByCode(elemCode);
+
+          int returnToTrue = protoIndex;
+
+          protoNext(); // ByteProto.ATTR_OR_ELEM
+
+          int location = protoNext();
+
+          int returnToFalse = protoIndex;
+
+          protoIndex = location + 2;
+
+          int code = protoNext();
+
+          var attributeOrElement = AttributeOrElement.get(code);
+
+          if (!attributeOrElement.isAttributeOf(parent)) {
+            hasNext = true;
+
+            protoIndex = returnToTrue;
+
+            break loop;
+          } else {
+            protoIndex = returnToFalse;
+          }
+        }
+
+        case ByteProto.ELEMENT,
+             ByteProto.TEXT,
+             ByteProto.RAW -> {
+          hasNext = true;
+
+          break loop;
+        }
+
+        case ByteProto.ELEMENT_END -> {
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    proto2ctx();
+
+    if (!hasNext) {
+      ctxPop(3);
+
+      ctxCheck(_ELEMENT_NODES_REQ);
+
+      ctxSet(0, _ELEMENT);
+
+      var htmlElement = htmlElement();
+
+      int code = ctxPeek(3);
+
+      htmlElement.name = StandardElementName.getByCode(code);
+    }
+
+    return hasNext;
+  }
+
+  final void elementNodesIterator() {
+    ctxCheck(_ELEMENT_NODES_REQ);
+
+    int index = ctxPeek(1);
+    int elemCode = ctxPeek(3);
+
+    ctxPush(elemCode, index, _ELEMENT_NODES_ITER);
+  }
+
+  final HtmlNode elementNodesNext() {
+    ctxCheck(_ELEMENT_NODES_ITER);
+
+    ctx2proto();
+
+    int proto = protoNext();
+
+    HtmlNode node = switch (proto) {
+      case ByteProto.ATTR_OR_ELEM -> executeMaybeElement();
+
+      case ByteProto.ELEMENT -> executeElement();
+
+      case ByteProto.ELEMENT_END -> null;
+
+      case ByteProto.TEXT -> executeText();
+
+      case ByteProto.RAW -> executeRaw();
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    };
+
+    if (node == null) {
+      throw new NoSuchElementException();
+    }
+
+    return node;
   }
 
   /*
@@ -188,349 +580,388 @@ public class HtmlPlayer extends HtmlRecorder {
     };
   }
 
-  private void attribute() {
-    protoNext(); // ByteProto.ATTRIBUTE
-
-    int location = protoNext();
-
-    int returnTo = protoIndex;
-
-    protoIndex = location;
-
-    attributeImpl();
-
-    protoIndex = returnTo;
-  }
-
-  private void attributeImpl() {
-    protoNext(); // ByteProto.ATTRIBUTE
-    protoNext(); // tail index
-
-    int code = protoNext();
-    int value = protoNext();
-
-    attributeImpl(code, value);
-  }
-
   private void attributeImpl(int code, int value) {
-    int index = objectIndex;
+    int startIndex = ctxPeek();
 
-    while (index < protoArray.length) {
-      int proto = protoArray[index];
+    int index = startIndex;
 
-      if (proto == ByteProto.ATTRS_END) {
-        protoArray = IntArrays.growIfNecessary(protoArray, index + 3);
-        protoArray[index++] = code;
-        protoArray[index++] = ByteProto.SINGLE;
-        protoArray[index++] = value;
-        protoArray[index++] = ByteProto.ATTRS_END;
+    while (index < listIndex) {
+      int attr = ctxGet(index);
+
+      if (attr == ATTRS_END) {
+        listIndex = index;
+
+        // pop ATTRS_END so we can overwrite it
+        ctxPop(1);
+
+        ctxPush(
+          code,
+          ATTRS_SINGLE,
+          value,
+          ATTRS_END,
+          startIndex
+        );
 
         break;
       }
 
-      if (proto != code) {
+      if (attr != code) {
         index += 3;
 
         continue;
       }
 
-      int cellStyle = protoArray[index + 1];
+      int maybeSingle = ctxGet(index + 1);
 
-      if (cellStyle == ByteProto.SINGLE) {
-        int requiredIndex = listIndex + CAPACITY + 1;
+      if (maybeSingle == ATTRS_SINGLE) {
+        int requiredIndex = objectIndex + CAPACITY + 1;
+        int nextObjectIndex = requiredIndex + 1;
 
-        listArray = IntArrays.growIfNecessary(listArray, requiredIndex);
-        listArray[listIndex + 0] = 2;
-        listArray[listIndex + 1] = protoArray[index + 2];
-        listArray[listIndex + 2] = value;
+        protoArray = IntArrays.growIfNecessary(protoArray, requiredIndex);
+        Arrays.fill(protoArray, objectIndex, nextObjectIndex, NULL);
+        protoArray[objectIndex + 0] = ctxGet(index + 2);
+        protoArray[objectIndex + 1] = value;
+        protoArray[objectIndex + CAPACITY] = ATTRS_NEXT;
 
-        protoArray[index + 1] = ByteProto.LIST;
-        protoArray[index + 2] = listIndex;
+        listArray[index + 1] = objectIndex + 2;
+        listArray[index + 2] = objectIndex;
 
-        listIndex = requiredIndex + 1;
+        objectIndex = nextObjectIndex;
 
         break;
       }
 
-      int listOffset = protoArray[index + 2];
+      int nextSlot = maybeSingle;
 
-      int length = listArray[listOffset + 0];
+      int proto = protoArray[nextSlot];
 
-      while (length == CAPACITY) {
-        listOffset = listArray[listOffset + CAPACITY + 1];
+      if (proto != ATTRS_NEXT) {
+        protoArray[nextSlot++] = value;
 
-        length = listArray[listOffset + 0];
+        listArray[index + 1] = nextSlot;
+
+        break;
       }
 
-      int newLength = length + 1;
+      protoArray[nextSlot + 1] = objectIndex;
 
-      listArray[listOffset + 0] = newLength;
-      listArray[listOffset + newLength] = value;
+      int requiredIndex = objectIndex + CAPACITY + 1;
+      int nextObjectIndex = requiredIndex + 1;
 
-      if (newLength == CAPACITY) {
-        int requiredIndex = listIndex + CAPACITY + 1;
+      protoArray = IntArrays.growIfNecessary(protoArray, requiredIndex);
+      Arrays.fill(protoArray, objectIndex, nextObjectIndex, NULL);
+      protoArray[objectIndex + 0] = value;
+      protoArray[objectIndex + CAPACITY] = ATTRS_NEXT;
 
-        listArray = IntArrays.growIfNecessary(listArray, requiredIndex);
-        listArray[listIndex + 0] = 0;
+      listArray[index + 1] = objectIndex;
 
-        listArray[listOffset + newLength + 1] = listIndex;
-
-        listIndex = requiredIndex + 1;
-      }
+      objectIndex = nextObjectIndex;
 
       break;
     }
   }
 
-  private String attributeValueImpl(AttributeName name, int obj) {
-    var attributeValue = (String) objectGet(obj);
+  private String attributeValueImpl(AttributeName name, int value) {
+    var attributeValue = (String) objectArray[value];
 
     return processAttributeValue(name, attributeValue);
   }
 
-  private void element() {
-    protoNext(); // ByteProto.ELEMENT
-
-    int location = protoNext();
-
-    int returnTo = protoIndex;
-
-    protoIndex = location;
-
-    elementImpl();
-
-    protoIndex = returnTo;
+  private void ctx2proto() {
+    protoIndex = ctxPeek(1);
   }
 
-  private void elementImpl() {
-    protoNext(); // ByteProto.ELEMENT
-    protoNext(); // tail index;
+  private void ctxCheck(int expected) {
+    int state = ctxPeek();
 
-    protoArray[objectIndex] = ByteProto.ATTRS_END;
+    ctxThrow(state, expected);
+  }
 
-    var elemName = StandardElementName.getByCode(protoNext());
+  private int ctxGet(int index) {
+    return listArray[index];
+  }
 
-    int elem = NULL;
+  private int ctxPeek() {
+    return listArray[listIndex];
+  }
 
-    loop: while (protoMore()) {
-      int proto = protoPeek();
+  private int ctxPeek(int offset) {
+    return listArray[listIndex - offset];
+  }
 
-      switch (proto) {
-        case ByteProto.ATTRIBUTE -> attribute();
+  private void ctxPop(int count) {
+    listIndex -= count;
+  }
 
-        case ByteProto.ATTR_OR_ELEM -> {
-          int before = protoIndex;
+  private void ctxPush(int v0) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 1);
+    listArray[++listIndex] = v0;
+  }
 
-          var attribute = maybeAttribute(elemName);
+  private void ctxPush(int v0, int v1) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 2);
+    listArray[++listIndex] = v0;
+    listArray[++listIndex] = v1;
+  }
 
-          if (!attribute && elem == NULL) {
-            elem = before;
-          }
-        }
+  private void ctxPush(int v0, int v1, int v2) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 3);
+    listArray[++listIndex] = v0;
+    listArray[++listIndex] = v1;
+    listArray[++listIndex] = v2;
+  }
 
-        case ByteProto.ELEMENT,
-             ByteProto.TEXT,
-             ByteProto.RAW -> {
-          if (elem == NULL) {
-            elem = protoIndex;
-          }
+  private void ctxPush(int v0, int v1, int v2, int v3) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 4);
+    listArray[++listIndex] = v0;
+    listArray[++listIndex] = v1;
+    listArray[++listIndex] = v2;
+    listArray[++listIndex] = v3;
+  }
 
-          protoIndex += 2;
-        }
+  private void ctxPush(int v0, int v1, int v2, int v3, int v4) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 5);
+    listArray[++listIndex] = v0;
+    listArray[++listIndex] = v1;
+    listArray[++listIndex] = v2;
+    listArray[++listIndex] = v3;
+    listArray[++listIndex] = v4;
+  }
 
-        case ByteProto.ELEMENT_END -> {
-          break loop;
-        }
+  private void ctxSet(int offset, int value) {
+    listArray[listIndex - offset] = value;
+  }
 
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
+  private void ctxThrow(int actual, int expected) {
+    if (actual != expected) {
+      throw new IllegalStateException(
+        """
+      Found state '%d' but expected state '%d'
+      """.formatted(actual, expected)
+      );
     }
+  }
 
-    visitor.startTag(elemName);
+  private PseudoHtmlDocument document() {
+    return (PseudoHtmlDocument) objectArray[DOCUMENT];
+  }
 
-    int attrIndex = objectIndex;
+  private void documentHasNextCheck() {
+    int peek = ctxPeek();
 
-    while (attrIndex < protoArray.length) {
-      int code = protoArray[attrIndex++];
+    switch (peek) {
+      case _DOCUMENT_NODES -> ctx2proto();
 
-      if (code == ByteProto.ATTRS_END) {
-        break;
+      case _ELEMENT -> {
+        elementPop(_DOCUMENT_NODES);
+
+        ctx2proto();
       }
 
-      int cellType = protoArray[attrIndex++];
-      int value = protoArray[attrIndex++];
-
-      var name = AttributeName.getByCode(code);
-
-      visitor.attribute(name);
-
-      if (cellType == ByteProto.SINGLE) {
-        if (value != NULL) {
-          var attrValue = attributeValueImpl(name, value);
-
-          visitor.attributeFirstValue(attrValue);
-
-          visitor.attributeValueEnd();
-        }
-      } else {
-        int base = value;
-
-        int count = 0;
-
-        while (true) {
-          int length = listArray[base + 0];
-
-          for (int i = 0; i < length; i++) {
-            int obj = listArray[base + i + 1];
-
-            var attrValue = attributeValueImpl(name, obj);
-
-            if (count == 0) {
-              visitor.attributeFirstValue(attrValue);
-            } else {
-              visitor.attributeNextValue(attrValue);
-            }
-
-            count++;
-          }
-
-          if (length == CAPACITY) {
-            base = listArray[base + length + 1];
-
-            continue;
-          } else {
-            break;
-          }
-        }
-
-        visitor.attributeValueEnd();
-      }
+      default -> ctxThrow(peek, _DOCUMENT_NODES);
     }
+  }
 
-    visitor.startTagEnd(elemName);
+  private void elementAttributesHasNextCheck() {
+    int peek = ctxPeek();
 
-    var kind = elemName.getKind();
+    switch (peek) {
+      case _ELEMENT_ATTRS_ITER -> {}
 
-    if (kind.isVoid()) {
-      return;
-    }
+      case _ATTRIBUTE -> {
+        // this attributes's parent
+        int parent = ctxPeek(3);
 
-    if (elem != NULL) {
-      protoIndex = elem;
+        // pop _ATTRIBUTE, attr type, attr value, attr parent
+        ctxPop(4);
 
-      loop: while (protoMore()) {
-        int proto = protoPeek();
+        // parent should be _ELEMENT_ATTRS_ITER
+        ctxThrow(ctxPeek(), _ELEMENT_ATTRS_ITER);
 
-        switch (proto) {
-          case ByteProto.ATTRIBUTE -> {
-            protoNext();
-            protoNext();
-          }
+        // actual parent index
+        int actual = ctxPeek(1);
 
-          case ByteProto.ATTR_OR_ELEM -> maybeElement(elemName);
-
-          case ByteProto.ELEMENT -> element();
-
-          case ByteProto.ELEMENT_END -> {
-            break loop;
-          }
-
-          case ByteProto.RAW -> raw();
-
-          case ByteProto.TEXT -> text();
-
-          default -> throw new UnsupportedOperationException(
-            "Implement me :: proto=" + proto
+        if (parent != actual) {
+          throw new IllegalStateException(
+            """
+          Last consumed attribute was not a child of this element
+          """
           );
         }
       }
-    }
 
-    visitor.endTag(elemName);
+      default -> ctxThrow(peek, _ELEMENT_ATTRS_ITER);
+    }
   }
 
-  private boolean maybeAttribute(StandardElementName parent) {
-    protoNext(); // ByteProto.ATTR_OR_ELEM
+  private void elementNodesHasNextCheck() {
+    int peek = ctxPeek();
 
+    switch (peek) {
+      case _ELEMENT_NODES_ITER -> {}
+
+      case _ELEMENT -> elementPop(_ELEMENT_NODES_ITER);
+
+      default -> ctxThrow(peek, _DOCUMENT_NODES);
+    }
+  }
+
+  private void elementPop(int context) {
+    // this element's parent
+    int parent = ctxPeek(2);
+
+    // pop _ELEMENT, elem index, elem parent, elem code
+    ctxPop(4);
+
+    // parent
+    int ctx = ctxPeek();
+
+    // parent should be context
+    ctxThrow(ctx, context);
+
+    // actual parent index
+    int actual = ctxPeek(1);
+
+    if (parent != actual) {
+      throw new IllegalStateException(
+        """
+      Last consumed element was not a child of this document or element
+      """
+      );
+    }
+  }
+
+  private void executeAttribute() {
     int location = protoNext();
 
     int returnTo = protoIndex;
 
-    protoIndex = location;
+    // skip ByteProto.ATTRIBUTE
+    // skip tail index
+    protoIndex = location + 2;
 
-    var result = maybeAttributeImpl(parent);
+    int code = protoNext();
+
+    int value = protoNext();
+
+    attributeImpl(code, value);
 
     protoIndex = returnTo;
-
-    return result;
   }
 
-  private boolean maybeAttributeImpl(StandardElementName parent) {
-    protoNext(); // ByteProto.ATTR_OR_ELEM
-    protoNext(); // tail index
+  private HtmlElement executeElement() {
+    int location = protoNext();
+
+    int parent = protoIndex;
+
+    proto2ctx();
+
+    var element = htmlElement();
+
+    // skip ByteProto.ELEMENT
+    // skip tail index
+    protoIndex = location + 2;
+
+    int elemCode = protoNext();
+
+    element.name = StandardElementName.getByCode(elemCode);
+
+    ctxPush(elemCode, parent, protoIndex, _ELEMENT);
+
+    return element;
+  }
+
+  private PseudoHtmlElement executeMaybeElement() {
+    int location = protoNext();
+
+    int parent = protoIndex;
+
+    proto2ctx();
+
+    var element = htmlElement();
+
+    // skip ByteProto.ATTR_OR_ELEMENT
+    // skip tail index
+    protoIndex = location + 2;
 
     int code = protoNext();
 
     var attributeOrElement = AttributeOrElement.get(code);
 
-    if (attributeOrElement.isAttributeOf(parent)) {
-      code = attributeOrElement.attributeByteCode();
+    var elemCode = attributeOrElement.elementByteCode();
 
-      int value = protoNext();
+    element.name = StandardElementName.getByCode(elemCode);
 
-      attributeImpl(code, value);
+    int elemStart = objectIndex;
 
-      return true;
-    } else {
-      return false;
-    }
+    protoArray = IntArrays.growIfNecessary(protoArray, elemStart + 2);
+    protoArray[elemStart + 0] = ByteProto.TEXT;
+    // location + 0 = ByteProto.ATTR_OR_ELEMENT
+    // location + 1 = tail index
+    // location + 2 = code
+    // location + 3 = value
+    // executeText() will skip:
+    // - tail index
+    // - code
+    // and will consume value
+    protoArray[elemStart + 1] = location + 1;
+    protoArray[elemStart + 2] = ByteProto.ELEMENT_END;
+
+    ctxPush(elemCode, parent, elemStart, _ELEMENT);
+
+    return element;
   }
 
-  private void maybeElement(StandardElementName parent) {
-    protoNext(); // ByteProto.ATTR_OR_ELEM
-
+  private PseudoHtmlRawText executeRaw() {
     int location = protoNext();
 
-    int returnTo = protoIndex;
+    proto2ctx();
 
-    protoIndex = location;
+    // skip ByteProto.RAW_TEXT
+    // skip tail index
+    protoIndex = location + 2;
 
-    maybeElementImpl(parent);
+    var raw = htmlRawText();
 
-    protoIndex = returnTo;
+    var index = protoNext();
+
+    raw.value = (String) objectArray[index];
+
+    return raw;
   }
 
-  private void maybeElementImpl(StandardElementName parent) {
-    protoNext(); // ByteProto.ATTR_OR_ELEM
-    protoNext(); // tail index
+  private PseudoHtmlText executeText() {
+    int location = protoNext();
 
-    int code = protoNext();
+    proto2ctx();
 
-    var attributeOrElement = AttributeOrElement.get(code);
+    // skip ByteProto.TEXT
+    // skip tail index
+    protoIndex = location + 2;
 
-    if (!attributeOrElement.isAttributeOf(parent)) {
-      code = attributeOrElement.elementByteCode();
+    var text = htmlText();
 
-      var element = StandardElementName.getByCode(code);
+    var index = protoNext();
 
-      visitor.startTag(element);
+    text.value = (String) objectArray[index];
 
-      visitor.startTagEnd(element);
-
-      int value = protoNext();
-
-      var text = (String) objectGet(value);
-
-      visitor.text(text);
-
-      visitor.endTag(element);
-    }
+    return text;
   }
 
-  private Object objectGet(int index) {
-    return objectArray[index];
+  private PseudoHtmlAttribute htmlAttribute() {
+    return (PseudoHtmlAttribute) objectArray[ATTRIBUTE];
+  }
+
+  private PseudoHtmlElement htmlElement() {
+    return (PseudoHtmlElement) objectArray[ELEMENT];
+  }
+
+  private PseudoHtmlRawText htmlRawText() {
+    return (PseudoHtmlRawText) objectArray[RAW_TEXT];
+  }
+
+  private PseudoHtmlText htmlText() {
+    return (PseudoHtmlText) objectArray[TEXT];
   }
 
   private String processAttributeValue(AttributeName name, String attributeValue) {
@@ -547,6 +978,10 @@ public class HtmlPlayer extends HtmlRecorder {
     return result;
   }
 
+  private void proto2ctx() {
+    ctxSet(1, protoIndex);
+  }
+
   private boolean protoMore() {
     return protoIndex < protoArray.length;
   }
@@ -559,57 +994,6 @@ public class HtmlPlayer extends HtmlRecorder {
     return protoArray[protoIndex];
   }
 
-  private void raw() {
-    protoNext(); // ByteProto.RAW
-
-    int location = protoNext();
-
-    int returnTo = protoIndex;
-
-    protoIndex = location;
-
-    rawImpl();
-
-    protoIndex = returnTo;
-  }
-
-  private void rawImpl() {
-    protoNext(); // ByteProto.RAW
-    protoNext(); // tail index
-
-    int index = protoNext();
-
-    var raw = (String) objectGet(index);
-
-    visitor.raw(raw);
-  }
-
-  private void rootElement() {
-    loop: while (protoMore()) {
-      int proto = protoPeek();
-
-      switch (proto) {
-        case ByteProto.DOCTYPE -> {
-          visitor.doctype();
-
-          protoIndex++;
-        }
-
-        case ByteProto.ELEMENT -> element();
-
-        case ByteProto.ROOT -> protoNext();
-
-        case ByteProto.ROOT_END -> {
-          break loop;
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-  }
-
   private StringBuilder stringBuilder() {
     if (stringBuilder == null) {
       stringBuilder = new StringBuilder();
@@ -618,31 +1002,6 @@ public class HtmlPlayer extends HtmlRecorder {
     }
 
     return stringBuilder;
-  }
-
-  private void text() {
-    protoNext(); // ByteProto.TEXT
-
-    int location = protoNext();
-
-    int returnTo = protoIndex;
-
-    protoIndex = location;
-
-    textImpl();
-
-    protoIndex = returnTo;
-  }
-
-  private void textImpl() {
-    protoNext(); // ByteProto.TEXT
-    protoNext(); // tail index
-
-    int index = protoNext();
-
-    var text = (String) objectGet(index);
-
-    visitor.text(text);
   }
 
 }

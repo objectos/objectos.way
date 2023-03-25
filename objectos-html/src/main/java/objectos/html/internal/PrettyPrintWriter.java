@@ -17,14 +17,17 @@ package objectos.html.internal;
 
 import java.util.EnumSet;
 import java.util.Set;
-import objectos.html.tmpl.AttributeName;
+import objectos.html.pseudom.HtmlAttribute;
+import objectos.html.pseudom.HtmlDocument;
+import objectos.html.pseudom.HtmlDocumentType;
+import objectos.html.pseudom.HtmlElement;
+import objectos.html.pseudom.HtmlNode;
+import objectos.html.pseudom.HtmlRawText;
+import objectos.html.pseudom.HtmlText;
+import objectos.html.tmpl.ElementKind;
 import objectos.html.tmpl.StandardElementName;
 
 public final class PrettyPrintWriter extends Writer {
-
-  private static final int START = 0,
-      NL = 1,
-      CONTENTS = 2;
 
   private static final Set<StandardElementName> PHRASING = EnumSet.of(
     StandardElementName.A,
@@ -54,144 +57,205 @@ public final class PrettyPrintWriter extends Writer {
     StandardElementName.TEXTAREA
   );
 
-  private int last;
-
-  private boolean metadata;
+  private static final String NL = System.lineSeparator();
 
   @Override
-  public final void attribute(AttributeName name) {
-    write(' ');
+  public final void process(HtmlDocument document) {
+    var nodes = document.nodes();
 
-    write(name.getName());
-  }
+    var nodesIter = nodes.iterator();
 
-  @Override
-  public final void attributeFirstValue(String value) {
-    write("=\"");
+    if (nodesIter.hasNext()) {
+      documentNode(nodesIter.next());
 
-    escaped(value);
-  }
+      while (nodesIter.hasNext()) {
+        write(NL);
 
-  @Override
-  public final void attributeNextValue(String value) {
-    write(' ');
-
-    escaped(value);
-  }
-
-  @Override
-  public final void attributeValueEnd() {
-    write('"');
-  }
-
-  @Override
-  public final void doctype() {
-    write("<!DOCTYPE html>");
-
-    nl();
-  }
-
-  @Override
-  public final void documentEnd() {
-    if (last != NL) {
-      nl();
-    }
-  }
-
-  @Override
-  public final void documentStart() {
-    last = START;
-
-    metadata = false;
-  }
-
-  @Override
-  public final void endTag(StandardElementName name) {
-    write('<');
-    write('/');
-    write(name.getName());
-    write('>');
-
-    if (metadata || !phrasing(name)) {
-      nl();
-    }
-
-    if (head(name)) {
-      metadata = false;
-    }
-  }
-
-  @Override
-  public final void raw(String value) {
-    int length = value.length();
-
-    if (metadata && length > 0) {
-      var first = value.charAt(0);
-
-      if (!nl(first)) {
-        nl();
+        documentNode(nodesIter.next());
       }
 
-      write(value);
+      write(NL);
+    }
+  }
 
-      var last = value.charAt(length - 1);
+  private void attribute(HtmlAttribute attribute) {
+    var name = attribute.name();
 
-      if (!nl(last)) {
-        nl();
+    write(' ');
+    write(name);
+
+    if (attribute.isBoolean()) {
+      return;
+    }
+
+    var values = attribute.values();
+
+    var valuesIter = values.iterator();
+
+    if (valuesIter.hasNext()) {
+      write('=');
+      write('\"');
+      write(valuesIter.next());
+
+      while (valuesIter.hasNext()) {
+        write(' ');
+        write(valuesIter.next());
       }
+
+      write('\"');
+    }
+  }
+
+  private void documentNode(HtmlNode node) {
+    if (node instanceof HtmlDocumentType) {
+      documentType();
+    } else if (node instanceof HtmlElement element) {
+      element(element, false);
     } else {
-      write(value);
+      var type = node.getClass();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + type
+      );
     }
   }
 
-  @Override
-  public final void startTag(StandardElementName name) {
-    if (last >= CONTENTS && (metadata || !phrasing(name))) {
-      nl();
+  private void documentType() {
+    write("<!DOCTYPE html>");
+  }
+
+  private void element(HtmlElement element, boolean metadata) {
+    startTag(element);
+
+    if (isVoid(element)) {
+      return;
     }
 
-    write('<');
-    write(name.getName());
-
-    if (head(name)) {
+    if (isHead(element)) {
       metadata = true;
     }
+
+    var newLine = false;
+
+    for (var node : element.nodes()) {
+      newLine = elementNode(node, metadata, newLine);
+    }
+
+    endTag(element);
   }
 
-  @Override
-  public final void startTagEnd(StandardElementName name) {
-    write('>');
+  private boolean elementNode(HtmlNode node, boolean metadata, boolean wasNewLine) {
+    var newLine = false;
 
-    last = CONTENTS;
+    if (node instanceof HtmlElement child) {
+      if (!metadata && isPhrasing(child)) {
+        element(child, metadata);
+      } else {
+        if (!wasNewLine) {
+          write(NL);
+        }
 
-    var kind = name.getKind();
+        element(child, metadata);
 
-    if (kind.isVoid() && (metadata || !phrasing(name))) {
-      nl();
+        write(NL);
+
+        newLine = true;
+      }
+    } else if (node instanceof HtmlText text) {
+      var value = text.value();
+
+      escaped(value);
+    } else if (node instanceof HtmlRawText raw) {
+      var value = raw.value();
+
+      if (metadata) {
+        if (!startsWithNewLine(value)) {
+          write(NL);
+        }
+
+        write(value);
+
+        if (!endsWithNewLine(value)) {
+          write(NL);
+        }
+      } else {
+        write(value);
+      }
+    } else {
+      var type = node.getClass();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + type
+      );
+    }
+
+    return newLine;
+  }
+
+  private boolean endsWithNewLine(String value) {
+    int length = value.length();
+
+    if (length > 0) {
+      var last = value.charAt(length - 1);
+
+      return isNewLine(last);
+    } else {
+      return false;
     }
   }
 
-  @Override
-  public final void text(String value) {
-    escaped(value);
+  private void endTag(HtmlElement element) {
+    write('<');
+    write('/');
+    write(element.name());
+    write('>');
   }
 
-  private boolean head(StandardElementName name) {
-    return name == StandardElementName.HEAD;
+  private boolean isHead(HtmlElement element) {
+    return element.elementName() == StandardElementName.HEAD;
   }
 
-  private void nl() {
-    write(System.lineSeparator());
-
-    last = NL;
-  }
-
-  private boolean nl(char c) {
+  private boolean isNewLine(char c) {
     return c == '\n' || c == '\r';
   }
 
-  private boolean phrasing(StandardElementName name) {
+  private boolean isPhrasing(HtmlElement element) {
+    var name = element.elementName();
+
     return PHRASING.contains(name);
+  }
+
+  private boolean isVoid(HtmlElement element) {
+    var name = element.elementName();
+
+    var kind = name.getKind();
+
+    return kind == ElementKind.VOID;
+  }
+
+  private boolean startsWithNewLine(String value) {
+    int length = value.length();
+
+    if (length > 0) {
+      var first = value.charAt(0);
+
+      return isNewLine(first);
+    } else {
+      return false;
+    }
+  }
+
+  private void startTag(HtmlElement element) {
+    var name = element.name();
+
+    write('<');
+    write(name);
+
+    for (var attribute : element.attributes()) {
+      attribute(attribute);
+    }
+
+    write('>');
   }
 
 }

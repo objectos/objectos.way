@@ -20,6 +20,7 @@ import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlIterable;
 import objectos.html.pseudom.HtmlNode;
+import objectos.html.tmpl.ElementKind;
 import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.StandardElementName;
 
@@ -49,11 +50,11 @@ public final class PseudoHtmlElement
 
   StandardElementName name;
 
-  private final HtmlPlayer2 player;
+  private final HtmlPlayer player;
 
   private ThisAttributes attributes;
 
-  PseudoHtmlElement(HtmlPlayer2 player) {
+  PseudoHtmlElement(HtmlPlayer player) {
     this.player = player;
   }
 
@@ -69,8 +70,23 @@ public final class PseudoHtmlElement
   }
 
   @Override
+  public final ElementName elementName() {
+    return name;
+  }
+
+  @Override
+  public final boolean hasName(ElementName name) {
+    return name.equals(this.name);
+  }
+
+  @Override
   public final boolean hasNext() {
     return player.elementNodesHasNext();
+  }
+
+  @Override
+  public final boolean isVoid() {
+    return name.getKind() == ElementKind.VOID;
   }
 
   @Override
@@ -78,11 +94,6 @@ public final class PseudoHtmlElement
     player.elementNodesIterator();
 
     return this;
-  }
-
-  @Override
-  public final ElementName elementName() {
-    return name;
   }
 
   @Override

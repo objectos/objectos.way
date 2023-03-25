@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import objectos.html.internal.HtmlSink2;
 import objectos.html.tmpl.AnyElementValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -37,7 +36,7 @@ public class HtmlSinkTest {
 
   private Path directory;
 
-  private final HtmlSink2 sink = new HtmlSink2();
+  private final HtmlSink sink = new HtmlSink();
 
   @BeforeClass
   public void _setUp() throws IOException {

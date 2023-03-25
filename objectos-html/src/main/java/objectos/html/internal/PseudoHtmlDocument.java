@@ -23,9 +23,9 @@ import objectos.html.pseudom.HtmlNode;
 public final class PseudoHtmlDocument
     implements HtmlDocument, HtmlIterable<HtmlNode>, Iterator<HtmlNode> {
 
-  private final HtmlPlayer2 player;
+  private final HtmlPlayer player;
 
-  PseudoHtmlDocument(HtmlPlayer2 player) {
+  PseudoHtmlDocument(HtmlPlayer player) {
     this.player = player;
   }
 

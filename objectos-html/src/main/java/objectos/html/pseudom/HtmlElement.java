@@ -24,9 +24,13 @@ public sealed interface HtmlElement extends HtmlNode permits PseudoHtmlElement {
 
   ElementName elementName();
 
+  boolean hasName(ElementName name);
+
   default String name() {
     return elementName().getName();
   }
+
+  boolean isVoid();
 
   HtmlIterable<HtmlNode> nodes();
 

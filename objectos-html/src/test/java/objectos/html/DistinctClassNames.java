@@ -20,64 +20,20 @@ import objectos.html.pseudom.DocumentProcessor;
 import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlDocument;
 import objectos.html.pseudom.HtmlElement;
-import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.StandardAttributeName;
-import objectos.html.tmpl.StandardElementName;
 import objectos.util.GrowableSet;
 
-public final class DistinctClassNames implements HtmlTemplate.Visitor, DocumentProcessor {
+public final class DistinctClassNames implements DocumentProcessor {
 
   private final Set<String> names = new GrowableSet<>();
 
-  private boolean collect;
-
-  @Override
-  public final void attribute(AttributeName name) {
-    if (name == StandardAttributeName.CLASS) {
-      collect = true;
-    }
-  }
-
-  @Override
-  public final void attributeFirstValue(String value) {
-    if (collect) {
-      names.add(value);
-    }
-  }
-
-  @Override
-  public final void attributeNextValue(String value) {
-    attributeFirstValue(value);
-  }
-
-  @Override
-  public final void attributeValueEnd() {
-    collect = false;
-  }
-
   public final void clear() {
-    collect = false;
-
     names.clear();
   }
 
   public final boolean contains(String value) {
     return names.contains(value);
   }
-
-  @Override
-  public void doctype() {}
-
-  @Override
-  public void documentEnd() {}
-
-  @Override
-  public final void documentStart() {
-    clear();
-  }
-
-  @Override
-  public void endTag(StandardElementName name) {}
 
   @Override
   public final void process(HtmlDocument document) {
@@ -104,20 +60,8 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor, DocumentP
     }
   }
 
-  @Override
-  public void raw(String value) {}
-
   public final int size() {
     return names.size();
   }
-
-  @Override
-  public void startTag(StandardElementName name) {}
-
-  @Override
-  public void startTagEnd(StandardElementName name) {}
-
-  @Override
-  public void text(String value) {}
 
 }
