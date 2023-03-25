@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.internal;
 
 import objectos.html.tmpl.AValue;
 import objectos.html.tmpl.AbbrValue;
@@ -1371,11 +1371,11 @@ abstract class GeneratedAbstractTemplate {
     return addStandardAttribute(StandardAttributeName.XMLNS, value);
   }
 
-  abstract <N extends StandardAttributeName> N addStandardAttribute(N name);
+  protected abstract <N extends StandardAttributeName> N addStandardAttribute(N name);
 
-  abstract <N extends StandardAttributeName> N addStandardAttribute(N name, String value);
+  protected abstract <N extends StandardAttributeName> N addStandardAttribute(N name, String value);
 
-  abstract ElementName addStandardElement(StandardElementName name, String text);
+  protected abstract ElementName addStandardElement(StandardElementName name, String text);
 
-  abstract ElementName addStandardElement(StandardElementName name, objectos.html.tmpl.Value[] values);
+  protected abstract ElementName addStandardElement(StandardElementName name, objectos.html.tmpl.Value[] values);
 }

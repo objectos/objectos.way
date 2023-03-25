@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.internal;
 
+import objectos.html.HtmlTemplate;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AttributeName;
@@ -25,8 +26,10 @@ import objectos.html.tmpl.Value;
 
 /**
  * TODO
+ *
+ * @since 0.5.3
  */
-public interface TemplateDsl extends Marker, Renderer {
+public interface HtmlTemplateApi extends Marker, Renderer {
 
   void addAttribute(AttributeName name);
 

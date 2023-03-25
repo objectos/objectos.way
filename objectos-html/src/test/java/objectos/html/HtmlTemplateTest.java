@@ -601,7 +601,7 @@ public class HtmlTemplateTest {
   public void testCase20() {
     test(
       new HtmlTemplate() {
-        private final Template nav = new HtmlTemplate() {
+        private final HtmlTemplate nav = new HtmlTemplate() {
           @Override
           protected final void definition() {
             nav(
@@ -610,7 +610,7 @@ public class HtmlTemplateTest {
           }
         };
 
-        private final Template hero = new HtmlTemplate() {
+        private final HtmlTemplate hero = new HtmlTemplate() {
           @Override
           protected final void definition() {
             section(

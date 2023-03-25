@@ -16,6 +16,8 @@
 package objectos.html;
 
 import java.util.Objects;
+import objectos.html.internal.HtmlTemplateApi;
+import objectos.html.internal.InternalHtmlTemplate;
 import objectos.html.internal.NoOp;
 import objectos.html.internal.Raw;
 import objectos.html.internal.Validate;
@@ -39,27 +41,14 @@ import objectos.lang.Check;
  *
  * @since 0.5.0
  */
-public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements Template {
-
-  private TemplateDsl dsl;
-
-  @Override
-  public final void acceptTemplateDsl(TemplateDsl dsl) {
-    this.dsl = Check.notNull(dsl, "dsl == null");
-
-    try {
-      definition();
-    } finally {
-      this.dsl = null;
-    }
-  }
+public abstract class HtmlTemplate extends InternalHtmlTemplate implements NonVoidElementValue {
 
   public final AttributeOrElement clipPath(String text) {
     return addAttributeOrElement(AttributeOrElement.CLIPPATH, text);
   }
 
   public final void doctype() {
-    dsl().addDoctype();
+    api().addDoctype();
   }
 
   public final AttributeOrElement label(String text) {
@@ -75,22 +64,13 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
 
   @Override
   public final void render(Renderer renderer) {
-    if (renderer instanceof TemplateDsl dsl) {
+    if (renderer instanceof HtmlTemplateApi dsl) {
       dsl.addTemplate(this);
     }
   }
 
-  public final void runFragment(TemplateDsl dsl) {
-    this.dsl = dsl;
-    try {
-      definition();
-    } finally {
-      this.dsl = null;
-    }
-  }
-
   public final StandardTextElement t(String text) {
-    dsl().addText(text);
+    api().addText(text);
 
     return StandardTextElement.INSTANCE;
   }
@@ -348,8 +328,22 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
   }
 
   @Override
+  protected final <N extends StandardAttributeName> N addStandardAttribute(N name) {
+    api().addAttribute(name);
+
+    return name;
+  }
+
+  @Override
+  protected final <N extends StandardAttributeName> N addStandardAttribute(N name, String value) {
+    api().addAttribute(name, value);
+
+    return name;
+  }
+
+  @Override
   protected final ElementName addStandardElement(StandardElementName element, String text) {
-    dsl().addElement(element, text);
+    api().addElement(element, text);
 
     return element;
   }
@@ -358,7 +352,7 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
   protected final ElementName addStandardElement(StandardElementName element, Value[] values) {
     Objects.requireNonNull(element, "element == null");
 
-    dsl().addElement(element, values);
+    api().addElement(element, values);
 
     return element;
   }
@@ -367,10 +361,11 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
     return _class(value);
   }
 
+  @Override
   protected abstract void definition();
 
   protected final Lambda f(Lambda lambda) {
-    dsl().addLambda(lambda);
+    api().addLambda(lambda);
 
     return lambda;
   }
@@ -378,7 +373,7 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
   protected final void pathName(String path) {
     Validate.pathName(path.toString()); // path implicit null-check
 
-    dsl().pathName(path);
+    api().pathName(path);
   }
 
   protected CustomAttributeName.PathTo pathTo(String path) {
@@ -386,41 +381,21 @@ public abstract class HtmlTemplate extends GeneratedAbstractTemplate implements 
 
     var name = CustomAttributeName.PATH_TO;
 
-    dsl().addAttribute(name, path);
+    api().addAttribute(name, path);
 
     return name;
   }
 
   protected final NonVoidElementValue raw(String text) {
-    dsl().addRaw(text);
+    api().addRaw(text);
 
     return Raw.INSTANCE;
   }
 
-  @Override
-  final <N extends StandardAttributeName> N addStandardAttribute(N name) {
-    dsl().addAttribute(name);
-
-    return name;
-  }
-
-  @Override
-  final <N extends StandardAttributeName> N addStandardAttribute(N name, String value) {
-    dsl().addAttribute(name, value);
-
-    return name;
-  }
-
   private AttributeOrElement addAttributeOrElement(AttributeOrElement value, String text) {
-    dsl().addAttributeOrElement(value, text);
+    api().addAttributeOrElement(value, text);
 
     return value;
-  }
-
-  private TemplateDsl dsl() {
-    Check.state(dsl != null, "dsl not set");
-
-    return dsl;
   }
 
 }

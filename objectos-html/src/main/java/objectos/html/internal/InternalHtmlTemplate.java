@@ -13,15 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.internal;
 
-import objectos.html.tmpl.NonVoidElementValue;
+import objectos.lang.Check;
 
 /**
- * TODO
+ * @since 0.5.3
  */
-public interface Template extends NonVoidElementValue {
+public abstract class InternalHtmlTemplate extends GeneratedAbstractTemplate {
 
-  void acceptTemplateDsl(TemplateDsl dsl);
+  private HtmlTemplateApi api;
+
+  public final void acceptTemplateDsl(HtmlTemplateApi api) {
+    this.api = Check.notNull(api, "api == null");
+
+    try {
+      definition();
+    } finally {
+      this.api = null;
+    }
+  }
+
+  protected abstract void definition();
+
+  protected final HtmlTemplateApi api() {
+    Check.state(api != null, "api not set");
+
+    return api;
+  }
 
 }

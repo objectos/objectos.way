@@ -26,7 +26,7 @@ final class GeneratedAbstractTemplateStep extends ThisTemplate {
 
   @Override
   protected final void definition() {
-    packageDeclaration("objectos.html");
+    packageDeclaration("objectos.html.internal");
 
     autoImports();
 
@@ -87,18 +87,18 @@ final class GeneratedAbstractTemplateStep extends ThisTemplate {
     }
 
     method(
-      ABSTRACT, typeParameter("N", STD_ATTR_NAME), N, name("addStandardAttribute"),
+      PROTECTED, ABSTRACT, typeParameter("N", STD_ATTR_NAME), N, name("addStandardAttribute"),
       parameter(N, name("name"))
     );
 
     method(
-      ABSTRACT, typeParameter("N", STD_ATTR_NAME), N, name("addStandardAttribute"),
+      PROTECTED, ABSTRACT, typeParameter("N", STD_ATTR_NAME), N, name("addStandardAttribute"),
       parameter(N, name("name")),
       parameter(STRING, name("value"))
     );
 
     method(
-      ABSTRACT, ELEMENT_NAME, name("addStandardElement"),
+      PROTECTED, ABSTRACT, ELEMENT_NAME, name("addStandardElement"),
       parameter(STD_ELEMENT_NAME, name("name")),
       parameter(STRING, name("text"))
     );
@@ -106,7 +106,7 @@ final class GeneratedAbstractTemplateStep extends ThisTemplate {
     var valueArray = ArrayTypeName.of(VALUE);
 
     method(
-      ABSTRACT, ELEMENT_NAME, name("addStandardElement"),
+      PROTECTED, ABSTRACT, ELEMENT_NAME, name("addStandardElement"),
       parameter(STD_ELEMENT_NAME, name("name")),
       parameter(valueArray, name("values"))
     );

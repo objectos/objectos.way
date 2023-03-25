@@ -17,7 +17,6 @@ package objectos.html.internal;
 
 import java.util.Objects;
 import objectos.html.HtmlTemplate;
-import objectos.html.TemplateDsl;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
@@ -30,7 +29,7 @@ import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-class HtmlRecorder implements TemplateDsl {
+class HtmlRecorder implements HtmlTemplateApi {
 
   static final int PATH_NAME = 0;
   static final int DOCUMENT = 1;

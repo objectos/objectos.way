@@ -46,7 +46,7 @@ public class GeneratedAbstractTemplateStepTest {
       template.toString(),
 
       """
-      package objectos.html;
+      package objectos.html.internal;
 
       import objectos.html.tmpl.DivValue;
       import objectos.html.tmpl.ElementName;
@@ -73,13 +73,13 @@ public class GeneratedAbstractTemplateStepTest {
           return addStandardElement(StandardElementName.META, values);
         }
 
-        abstract <N extends StandardAttributeName> N addStandardAttribute(N name);
+        protected abstract <N extends StandardAttributeName> N addStandardAttribute(N name);
 
-        abstract <N extends StandardAttributeName> N addStandardAttribute(N name, String value);
+        protected abstract <N extends StandardAttributeName> N addStandardAttribute(N name, String value);
 
-        abstract ElementName addStandardElement(StandardElementName name, String text);
+        protected abstract ElementName addStandardElement(StandardElementName name, String text);
 
-        abstract ElementName addStandardElement(StandardElementName name, Value[] values);
+        protected abstract ElementName addStandardElement(StandardElementName name, Value[] values);
       }
       """
     );
@@ -107,7 +107,7 @@ public class GeneratedAbstractTemplateStepTest {
       template.toString(),
 
       """
-      package objectos.html;
+      package objectos.html.internal;
 
       import objectos.html.tmpl.ElementName;
       import objectos.html.tmpl.StandardAttributeName;
@@ -125,13 +125,13 @@ public class GeneratedAbstractTemplateStepTest {
           return addStandardAttribute(StandardAttributeName.S, value);
         }
 
-        abstract <N extends StandardAttributeName> N addStandardAttribute(N name);
+        protected abstract <N extends StandardAttributeName> N addStandardAttribute(N name);
 
-        abstract <N extends StandardAttributeName> N addStandardAttribute(N name, String value);
+        protected abstract <N extends StandardAttributeName> N addStandardAttribute(N name, String value);
 
-        abstract ElementName addStandardElement(StandardElementName name, String text);
+        protected abstract ElementName addStandardElement(StandardElementName name, String text);
 
-        abstract ElementName addStandardElement(StandardElementName name, Value[] values);
+        protected abstract ElementName addStandardElement(StandardElementName name, Value[] values);
       }
       """
     );
