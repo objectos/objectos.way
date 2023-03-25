@@ -20,6 +20,7 @@ import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlIterable;
 import objectos.html.tmpl.AttributeKind;
 import objectos.html.tmpl.AttributeName;
+import objectos.html.tmpl.StandardAttributeName;
 
 public final class PseudoHtmlAttribute
     implements HtmlAttribute, HtmlIterable<String>, Iterator<String> {
@@ -30,6 +31,11 @@ public final class PseudoHtmlAttribute
 
   PseudoHtmlAttribute(HtmlPlayer2 player) {
     this.player = player;
+  }
+
+  @Override
+  public final boolean hasName(StandardAttributeName name) {
+    return this.name == name;
   }
 
   @Override

@@ -22,6 +22,6 @@
  * immediately during processing. In other words, instances must not be cached
  * nor stored for later processing.
  *
- * @since 0.5.2
+ * @since 0.5.3
  */
 package objectos.html.pseudom;

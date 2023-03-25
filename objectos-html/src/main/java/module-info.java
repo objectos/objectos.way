@@ -21,6 +21,7 @@
 module objectos.html {
   exports objectos.html;
   exports objectos.html.io;
+  exports objectos.html.pseudom;
   exports objectos.html.spi;
   exports objectos.html.tmpl;
 

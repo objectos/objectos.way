@@ -16,12 +16,16 @@
 package objectos.html;
 
 import java.util.Set;
+import objectos.html.pseudom.DocumentProcessor;
+import objectos.html.pseudom.HtmlAttribute;
+import objectos.html.pseudom.HtmlDocument;
+import objectos.html.pseudom.HtmlElement;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.GrowableSet;
 
-public final class DistinctClassNames implements HtmlTemplate.Visitor {
+public final class DistinctClassNames implements HtmlTemplate.Visitor, DocumentProcessor {
 
   private final Set<String> names = new GrowableSet<>();
 
@@ -74,6 +78,31 @@ public final class DistinctClassNames implements HtmlTemplate.Visitor {
 
   @Override
   public void endTag(StandardElementName name) {}
+
+  @Override
+  public final void process(HtmlDocument document) {
+    names.clear();
+
+    for (var node : document.nodes()) {
+      if (node instanceof HtmlElement element) {
+        processElement(element);
+      }
+    }
+  }
+
+  private void processElement(HtmlElement element) {
+    for (var attribute : element.attributes()) {
+      if (attribute.hasName(StandardAttributeName.CLASS)) {
+        processClassAttribute(attribute);
+      }
+    }
+  }
+
+  private void processClassAttribute(HtmlAttribute attribute) {
+    for (var value : attribute.values()) {
+      names.add(value);
+    }
+  }
 
   @Override
   public void raw(String value) {}

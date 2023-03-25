@@ -16,10 +16,11 @@
 package objectos.html.internal;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import objectos.html.HtmlTemplate;
-import objectos.html.HtmlTemplate.Visitor;
+import objectos.html.pseudom.DocumentProcessor;
 
 /**
  * TODO
@@ -53,7 +54,41 @@ public final class HtmlSink2 extends HtmlPlayer2 {
    * @since 0.5.1
    */
   public final void toDirectory(HtmlTemplate template, Path directory) throws IOException {
-    throw new UnsupportedOperationException("Implement me");
+    Objects.requireNonNull(template, "template == null");
+    Objects.requireNonNull(directory, "directory == null");
+
+    record(template);
+
+    var pathName = $pathName();
+
+    if (pathName == null) {
+      throw new IllegalArgumentException("""
+      Cannot write template: no pathname was defined for this template.
+
+      Please use the `pathName` instruction to set a template's pathname.
+      """
+      );
+    }
+
+    // remove leading slash
+    pathName = pathName.substring(1);
+
+    var resolved = directory.resolve(pathName).normalize();
+
+    if (!resolved.startsWith(directory)) {
+      throw new IllegalArgumentException("""
+      Cannot write template: pathname resolved to a path outside of the directory.
+      """
+      );
+    }
+
+    var parent = resolved.getParent();
+
+    Files.createDirectories(parent);
+
+    try (var writer = Files.newBufferedWriter(resolved)) {
+      writeImpl(writer);
+    }
   }
 
   /**
@@ -82,18 +117,23 @@ public final class HtmlSink2 extends HtmlPlayer2 {
   }
 
   /**
-   * Visits the specified template using the specified visitor.
+   * Process the specified template with the specified processor.
    *
    * @param template
-   *        the template to be visited
+   *        the template to be processed
    *
-   * @param visitor
-   *        the visitor instance
+   * @param processor
+   *        the processor that will consume the template
    *
-   * @since 0.5.1
+   * @since 0.5.3
    */
-  public final void toVisitor(HtmlTemplate template, Visitor visitor) {
-    throw new UnsupportedOperationException("Implement me");
+  public final void toProcessor(HtmlTemplate template, DocumentProcessor processor) {
+    Objects.requireNonNull(template, "template == null");
+    Objects.requireNonNull(processor, "processor == null");
+
+    record(template);
+
+    play(processor);
   }
 
   private PrettyPrintWriter2 prettyPrintWriter() {

@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import objectos.html.internal.HtmlSink2;
 import objectos.html.tmpl.AnyElementValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -36,13 +37,11 @@ public class HtmlSinkTest {
 
   private Path directory;
 
-  private HtmlSink sink;
+  private final HtmlSink2 sink = new HtmlSink2();
 
   @BeforeClass
   public void _setUp() throws IOException {
     directory = Files.createTempDirectory("html-sink-test-");
-
-    sink = new HtmlSink();
   }
 
   @AfterClass
@@ -153,11 +152,11 @@ public class HtmlSinkTest {
   }
 
   @Test(description = """
-  HtmlSink toDirectory TC01
+  HtmlSink toProcessor TC01
 
   - collect distinct class names use-case
   """)
-  public void toVisitor01() {
+  public void toProcessor01() {
     var tmpl = new HtmlTemplate() {
       private final AnyElementValue abc = new TestClassSelector("abc");
       private final AnyElementValue def = new TestClassSelector("def");
@@ -174,7 +173,7 @@ public class HtmlSinkTest {
 
     classNames.clear();
 
-    sink.toVisitor(tmpl, classNames);
+    sink.toProcessor(tmpl, classNames);
 
     assertEquals(classNames.size(), 4);
     assertTrue(classNames.contains("abc"));

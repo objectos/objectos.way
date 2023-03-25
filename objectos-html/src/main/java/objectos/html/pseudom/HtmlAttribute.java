@@ -16,12 +16,15 @@
 package objectos.html.pseudom;
 
 import objectos.html.internal.PseudoHtmlAttribute;
+import objectos.html.tmpl.StandardAttributeName;
 
 public sealed interface HtmlAttribute permits PseudoHtmlAttribute {
 
   String name();
 
   boolean isBoolean();
+
+  boolean hasName(StandardAttributeName name);
 
   HtmlIterable<String> values();
 
