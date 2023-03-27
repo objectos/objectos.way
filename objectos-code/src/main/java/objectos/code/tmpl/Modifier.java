@@ -29,5 +29,4 @@ public sealed interface Modifier
     InterfaceDeclarationInstruction,
     MethodDeclarationInstruction
     permits
-    FinalModifier,
-    SealedModifier {}
+    FinalModifier {}

@@ -97,6 +97,13 @@ public enum Keyword {
   NEW,
 
   /**
+   * The {@code non-sealed} contextual keyword.
+   *
+   * @since 0.5.3
+   */
+  NON_SEALED("non-sealed"),
+
+  /**
    * The {@code null} reserved keyword.
    *
    * @since 0.4.1
@@ -169,7 +176,15 @@ public enum Keyword {
 
   private static final Keyword[] VALUES = values();
 
-  private final String toString = name().toLowerCase(Locale.US);
+  private final String toString;
+
+  Keyword() {
+    toString = name().toLowerCase(Locale.US);
+  }
+
+  Keyword(String toString) {
+    this.toString = toString;
+  }
 
   static Keyword get(int index) {
     return VALUES[index];

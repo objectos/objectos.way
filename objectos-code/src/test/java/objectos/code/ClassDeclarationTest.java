@@ -249,6 +249,10 @@ public class ClassDeclarationTest {
           classDeclaration(
             SEALED, name("G")
           );
+
+          classDeclaration(
+            NON_SEALED, name("H")
+          );
         }
       }.toString(),
 
@@ -266,6 +270,8 @@ public class ClassDeclarationTest {
       final class F {}
 
       sealed class G {}
+
+      non-sealed class H {}
       """
     );
   }

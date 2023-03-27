@@ -78,6 +78,10 @@ public class InterfaceDeclarationTest {
           interfaceDeclaration(
             SEALED, name("E")
           );
+
+          interfaceDeclaration(
+            NON_SEALED, name("F")
+          );
         }
       }.toString(),
 
@@ -94,6 +98,8 @@ public class InterfaceDeclarationTest {
       private static interface D {}
 
       sealed interface E {}
+
+      non-sealed interface F {}
       """
     );
   }

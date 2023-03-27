@@ -15,8 +15,12 @@
  */
 package objectos.code.tmpl;
 
+import objectos.code.JavaTemplate;
+import objectos.code.internal.ModifierImpl;
+
 /**
  * @since 0.4.4
  */
-public interface ClassOrInterfaceDeclarationInstruction
-    extends ClassDeclarationInstruction, InterfaceDeclarationInstruction {}
+public sealed interface ClassOrInterfaceDeclarationInstruction
+    extends ClassDeclarationInstruction, InterfaceDeclarationInstruction
+    permits ModifierImpl, JavaTemplate._Item {}

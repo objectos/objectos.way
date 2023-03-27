@@ -51,7 +51,6 @@ import objectos.code.tmpl.MethodDeclarationInstruction;
 import objectos.code.tmpl.Modifier;
 import objectos.code.tmpl.ParameterElement;
 import objectos.code.tmpl.ParameterInstruction;
-import objectos.code.tmpl.SealedModifier;
 import objectos.code.tmpl.StatementPart;
 import objectos.code.tmpl.TypeDeclarationInstruction;
 import objectos.code.tmpl.TypeName;
@@ -93,6 +92,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ClassDeclaration,
       ClassInstanceCreationExpression,
       ClassKeyword,
+      ClassOrInterfaceDeclarationInstruction,
       ClassTypeInstruction,
       ClassTypeWithArgs,
       ConstructorDeclaration,
@@ -107,7 +107,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       OldEqualityOperator,
       ExplicitConstructorInvocation,
       ExpressionName,
-      ClassOrInterfaceDeclarationInstruction,
       ExtendsKeyword,
       FieldDeclaration,
       FieldDeclarationInstruction,
@@ -672,7 +671,16 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.5.3
    */
-  protected static final SealedModifier SEALED = new ModifierImpl(Keyword.SEALED);
+  protected static final ClassOrInterfaceDeclarationInstruction SEALED
+      = new ModifierImpl(Keyword.SEALED);
+
+  /**
+   * The {@code non-sealed} modifier.
+   *
+   * @since 0.5.3
+   */
+  protected static final ClassOrInterfaceDeclarationInstruction NON_SEALED
+      = new ModifierImpl(Keyword.NON_SEALED);
 
   /**
    * The simple assignment operator {@code =}.

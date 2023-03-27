@@ -15,15 +15,18 @@
  */
 package objectos.code.internal;
 
+import objectos.code.tmpl.ClassOrInterfaceDeclarationInstruction;
 import objectos.code.tmpl.FinalModifier;
-import objectos.code.tmpl.SealedModifier;
 
 /**
  * Represents a modifier of the Java language.
  *
  * @since 0.4.2
  */
-public final class ModifierImpl extends External implements FinalModifier, SealedModifier {
+public final class ModifierImpl extends External
+    implements
+    ClassOrInterfaceDeclarationInstruction,
+    FinalModifier {
   final int value;
 
   public ModifierImpl(Keyword keyword) {
