@@ -94,11 +94,11 @@ public final class PrettyPrintWriter extends Writer {
     if (valuesIter.hasNext()) {
       write('=');
       write('\"');
-      write(valuesIter.next());
+      writeAttributeValue(valuesIter.next());
 
       while (valuesIter.hasNext()) {
         write(' ');
-        write(valuesIter.next());
+        writeAttributeValue(valuesIter.next());
       }
 
       write('\"');

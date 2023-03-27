@@ -18,7 +18,7 @@ package objectos.html.internal;
 import static org.testng.Assert.assertEquals;
 
 import objectos.html.pseudom.HtmlDocument;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class WriterTest {
@@ -34,62 +34,88 @@ public class WriterTest {
 
   private final Writer writer = new ThisWriter();
 
-  @BeforeMethod
-  public void _beforeMethod() {
-    out.setLength(0);
-
+  @BeforeClass
+  public void _beforeClass() {
     writer.out = out;
   }
 
-  @Test(description = """
-  ::writeText TC01
+  @Test
+  public void writeAttributeValue() {
+    // normal text
+    writeAttributeValue("abc", "abc");
 
-  - no escape required
-  """)
-  public void writeText01() {
-    writeText(
-      "abc",
-      "abc"
-    );
+    // html tokens
+    writeAttributeValue("if (a < b && c > d) {}", "if (a &lt; b &amp;&amp; c &gt; d) {}");
+
+    // named entities
+    writeAttributeValue("foo&nbsp;bar", "foo&nbsp;bar");
+    writeAttributeValue("foo&nb#;bar", "foo&amp;nb#;bar");
+    writeAttributeValue("foo&nbsp bar", "foo&amp;nbsp bar");
+
+    // decimal entities
+    writeAttributeValue("foo&#39;bar", "foo&#39;bar");
+    writeAttributeValue("foo &# 39;", "foo &amp;# 39;");
+
+    // hex entities
+    writeAttributeValue("foo&#xa9;bar&Xa9;baz", "foo&#xa9;bar&Xa9;baz");
+    writeAttributeValue("foo &#xxa9;", "foo &amp;#xxa9;");
+
+    // ampersand edge cases
+    writeAttributeValue("&", "&amp;");
+    writeAttributeValue("int a = value & MASK;", "int a = value &amp; MASK;");
+
+    // quotes
+    writeAttributeValue("\"", "&quot;");
+    writeAttributeValue("'", "&#39;");
+
+    // new lines should be left alone
+    writeAttributeValue("foo\nbar", "foo\nbar");
   }
 
-  @Test(description = """
-  ::writeText TC02
+  @Test
+  public void writeText() {
+    // normal text
+    writeText("abc", "abc");
 
-  - tag and html entities tokens
-  """)
-  public void writeText02() {
-    writeText(
-      "if (a < b && c > d) {}",
-      "if (a &lt; b &amp;&amp; c &gt; d) {}"
-    );
+    // html tokens
+    writeText("if (a < b && c > d) {}", "if (a &lt; b &amp;&amp; c &gt; d) {}");
+
+    // named entities
+    writeText("foo&nbsp;bar", "foo&nbsp;bar");
+    writeText("foo&nb#;bar", "foo&amp;nb#;bar");
+    writeText("foo&nbsp bar", "foo&amp;nbsp bar");
+
+    // decimal entities
+    writeText("foo&#39;bar", "foo&#39;bar");
+    writeText("foo &# 39;", "foo &amp;# 39;");
+
+    // hex entities
+    writeText("foo&#xa9;bar&Xa9;baz", "foo&#xa9;bar&Xa9;baz");
+    writeText("foo &#xxa9;", "foo &amp;#xxa9;");
+
+    // ampersand edge cases
+    writeText("&", "&amp;");
+    writeText("int a = value & MASK;", "int a = value &amp; MASK;");
+
+    // quotes should be left alone
+    writeText("\"", "\"");
+    writeText("'", "'");
+
+    // new lines should be left alone
+    writeText("foo\nbar", "foo\nbar");
   }
 
-  @Test(description = """
-  ::writeText TC03
+  private void writeAttributeValue(String source, String expected) {
+    out.setLength(0);
 
-  - tag and html entities tokens
-  """)
-  public void writeText03() {
-    writeText(
-      "if (a < b && c > d) {}",
-      "if (a &lt; b &amp;&amp; c &gt; d) {}"
-    );
-  }
+    writer.writeAttributeValue(source);
 
-  @Test(description = """
-  ::writeText TC04
-
-  - do not escape named html entities
-  """)
-  public void writeText04() {
-    writeText(
-      "foo&nbsp;bar",
-      "foo&nbsp;bar"
-    );
+    assertEquals(out.toString(), expected);
   }
 
   private void writeText(String source, String expected) {
+    out.setLength(0);
+
     writer.writeText(source);
 
     assertEquals(out.toString(), expected);

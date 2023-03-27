@@ -66,13 +66,53 @@ public abstract class Writer implements DocumentProcessor {
     }
   }
 
+  protected final void writeAttributeValue(String value) {
+    if (ioException != null) {
+      return;
+    }
+
+    try {
+      for (int idx = 0, len = value.length(); idx < len;) {
+        var c = value.charAt(idx++);
+
+        switch (c) {
+          case '&' -> idx = writeAmpersand(value, idx, len);
+
+          case '<' -> writeLesserThan();
+
+          case '>' -> writeGreaterThan();
+
+          case '"' -> out.append("&quot;");
+
+          case '\'' -> out.append("&#39;");
+
+          default -> out.append(c);
+        }
+      }
+    } catch (IOException e) {
+      ioException = e;
+    }
+  }
+
   protected final void writeText(String value) {
     if (ioException != null) {
       return;
     }
 
     try {
-      writeText0(value);
+      for (int idx = 0, len = value.length(); idx < len;) {
+        var c = value.charAt(idx++);
+
+        switch (c) {
+          case '&' -> idx = writeAmpersand(value, idx, len);
+
+          case '<' -> writeLesserThan();
+
+          case '>' -> writeGreaterThan();
+
+          default -> out.append(c);
+        }
+      }
     } catch (IOException e) {
       ioException = e;
     }
@@ -91,98 +131,136 @@ public abstract class Writer implements DocumentProcessor {
     return '0' <= c && c <= '9';
   }
 
-  private void writeText0(String value) throws IOException {
-    for (int idx = 0, len = value.length(); idx < len;) {
-      var c = value.charAt(idx++);
+  private boolean isAsciiHexDigit(char c) {
+    return isAsciiDigit(c)
+        || 'a' <= c && c <= 'f'
+        || 'A' <= c && c <= 'F';
+  }
 
-      switch (c) {
-        case '&' -> {
-          enum State {
-            START,
-            MAYBE_NAMED,
-            MAYBE_NUMERIC,
-            MAYBE_DECIMAL,
-            MAYBE_HEX,
-            ENTITY,
-            TEXT;
-          }
+  private int writeAmpersand(String value, int idx, int len) throws IOException {
+    enum State {
+      START,
+      MAYBE_NAMED,
+      MAYBE_NUMERIC,
+      MAYBE_DECIMAL,
+      MAYBE_HEX,
+      ENTITY,
+      TEXT;
+    }
 
-          int start = idx;
+    int start = idx;
 
-          var state = State.START;
+    var state = State.START;
 
-          loop: while (idx < len) {
-            c = value.charAt(idx++);
+    loop: while (idx < len) {
+      char c = value.charAt(idx++);
 
-            switch (state) {
-              case START -> {
-                if (c == '#') {
-                  state = State.MAYBE_NUMERIC;
-                } else if (isAsciiAlphanumeric(c)) {
-                  state = State.MAYBE_NAMED;
-                } else {
-                  state = State.TEXT;
+      switch (state) {
+        case START -> {
+          if (c == '#') {
+            state = State.MAYBE_NUMERIC;
+          } else if (isAsciiAlphanumeric(c)) {
+            state = State.MAYBE_NAMED;
+          } else {
+            state = State.TEXT;
 
-                  break loop;
-                }
-              }
-
-              case MAYBE_NAMED -> {
-                if (c == ';') {
-                  state = State.ENTITY;
-
-                  break loop;
-                } else if (!isAsciiAlphanumeric(c)) {
-                  state = State.TEXT;
-
-                  break loop;
-                }
-              }
-
-              case ENTITY, TEXT -> {
-                throw new AssertionError();
-              }
-
-              default -> {
-                throw new UnsupportedOperationException(
-                  "Implement me :: state=" + state
-                );
-              }
-            }
-          }
-
-          switch (state) {
-            case ENTITY -> {
-              out.append('&');
-
-              out.append(value, start, idx);
-            }
-
-            case TEXT -> {
-              out.append("&amp;");
-
-              idx = start;
-            }
-
-            default -> {
-              throw new UnsupportedOperationException(
-                "Implement me :: state=" + state
-              );
-            }
+            break loop;
           }
         }
 
-        case '"' -> out.append("&quot;");
+        case MAYBE_NAMED -> {
+          if (c == ';') {
+            state = State.ENTITY;
 
-        case '<' -> out.append("&lt;");
+            break loop;
+          } else if (!isAsciiAlphanumeric(c)) {
+            state = State.TEXT;
 
-        case '>' -> out.append("&gt;");
+            break loop;
+          }
+        }
 
-        case '\u00A9' -> out.append("&copy;");
+        case MAYBE_NUMERIC -> {
+          if (c == 'x' || c == 'X') {
+            state = State.MAYBE_HEX;
+          } else if (isAsciiDigit(c)) {
+            state = State.MAYBE_DECIMAL;
+          } else {
+            state = State.TEXT;
 
-        default -> out.append(c);
+            break loop;
+          }
+        }
+
+        case MAYBE_DECIMAL -> {
+          if (c == ';') {
+            state = State.ENTITY;
+
+            break loop;
+          } else if (!isAsciiDigit(c)) {
+            state = State.TEXT;
+
+            break loop;
+          }
+        }
+
+        case MAYBE_HEX -> {
+          if (c == ';') {
+            state = State.ENTITY;
+
+            break loop;
+          } else if (!isAsciiHexDigit(c)) {
+            state = State.TEXT;
+
+            break loop;
+          }
+        }
+
+        case ENTITY, TEXT -> {
+          throw new AssertionError();
+        }
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: state=" + state
+          );
+        }
       }
     }
+
+    switch (state) {
+      case START -> {
+        out.append("&amp;");
+      }
+
+      case ENTITY -> {
+        out.append('&');
+
+        out.append(value, start, idx);
+      }
+
+      case TEXT -> {
+        out.append("&amp;");
+
+        idx = start;
+      }
+
+      default -> {
+        throw new UnsupportedOperationException(
+          "Implement me :: state=" + state
+        );
+      }
+    }
+
+    return idx;
+  }
+
+  private void writeGreaterThan() throws IOException {
+    out.append("&gt;");
+  }
+
+  private void writeLesserThan() throws IOException {
+    out.append("&lt;");
   }
 
 }

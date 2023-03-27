@@ -740,7 +740,7 @@ public class HtmlTemplateTest {
         @Override
         protected final void definition() {
           pre(
-            code(t("<xml></xml>©"))
+            code(t("<xml></xml>&copy;"))
           );
         }
       },
@@ -1204,6 +1204,28 @@ public class HtmlTemplateTest {
 
       """
       <div class="c01 c02 c03 c04 c05 c06 c07 c08 c09 c10 c11 c12"></div>
+      """
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC39
+
+  - attribute value escaping
+  """)
+  public void testCase39() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          div(
+            onclick("echo(\"a > b\");")
+          );
+        }
+      },
+
+      """
+      <div onclick="echo(&quot;a &gt; b&quot;);"></div>
       """
     );
   }
