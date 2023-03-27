@@ -164,7 +164,7 @@ public class HtmlSinkTest {
       @Override
       protected final void definition() {
         div(
-          abc, ghi, _class("c01"), def,
+          abc, ghi, className("c01"), def,
           p(abc, def, t("Test case01"))
         );
       }

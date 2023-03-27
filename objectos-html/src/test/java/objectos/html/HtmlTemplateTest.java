@@ -77,7 +77,7 @@ public class HtmlTemplateTest {
       new HtmlTemplate() {
         @Override
         protected final void definition() {
-          html(_class("no-js"), lang("pt-BR"));
+          html(className("no-js"), lang("pt-BR"));
         }
       },
 
@@ -675,7 +675,7 @@ public class HtmlTemplateTest {
         protected final void definition() {
           div(
             // count < capacity
-            _class("c1"), _class("c2"), _class("c3"), _class("c4"), _class("c5"),
+            className("c1"), className("c2"), className("c3"), className("c4"), className("c5"),
 
             // count == capacity
             id("1"), id("2"), id("3"), id("4"), id("5"),
@@ -870,7 +870,7 @@ public class HtmlTemplateTest {
           div(
             svg(
               xmlns("http://www.w3.org/2000/svg"),
-              _class("icon icon-tabler icon-tabler-brand-github"),
+              className("icon icon-tabler icon-tabler-brand-github"),
               width("24"),
               height("24"),
               viewBox("0 0 24 24"),

@@ -843,7 +843,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardAttribute(StandardAttributeName.CITE, value);
   }
 
-  public final Class _class(String value) {
+  public final Class className(String value) {
     return addStandardAttribute(StandardAttributeName.CLASS, value);
   }
 

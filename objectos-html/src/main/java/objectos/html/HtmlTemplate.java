@@ -30,7 +30,6 @@ import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
-import objectos.html.tmpl.StandardAttributeName.Class;
 import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.StandardTextElement;
 import objectos.html.tmpl.Value;
@@ -355,10 +354,6 @@ public abstract class HtmlTemplate extends InternalHtmlTemplate implements NonVo
     api().addElement(element, values);
 
     return element;
-  }
-
-  protected final Class className(String value) {
-    return _class(value);
   }
 
   @Override

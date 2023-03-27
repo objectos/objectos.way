@@ -44,7 +44,7 @@ public final class HtmlSpec extends HtmlSelfGen {
 
     rootElement()
         .attribute("accesskey")
-        .attribute("class").as("_class").classNameType()
+        .attribute("class").as("className").classNameType()
         .attribute("contenteditable")
         .attribute("dir")
         .attribute("draggable")
