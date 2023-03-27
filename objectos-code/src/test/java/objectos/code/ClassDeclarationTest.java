@@ -513,4 +513,61 @@ public class ClassDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Class declarations TC13
+
+  - permits clause
+  """)
+  public void testCase13() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B = ClassTypeName.of("com.example", "B");
+        static final ClassTypeName C = ClassTypeName.of("com.example", "C");
+
+        @Override
+        protected final void definition() {
+          autoImports();
+
+          classDeclaration(
+            name("Test1"),
+            permitsClause(A)
+          );
+
+          classDeclaration(
+            name("Test2"),
+            permitsClause(A, B, C)
+          );
+
+          classDeclaration(
+            name("Test3"),
+            implementsClause(A),
+            permitsClause(B, C)
+          );
+
+          classDeclaration(
+            name("Test4"),
+            extendsClause(A),
+            implementsClause(B),
+            permitsClause(C)
+          );
+        }
+      }.toString(),
+
+      """
+      import com.example.A;
+      import com.example.B;
+      import com.example.C;
+
+      class Test1 permits A {}
+
+      class Test2 permits A, B, C {}
+
+      class Test3 implements A permits B, C {}
+
+      class Test4 extends A implements B permits C {}
+      """
+    );
+  }
+
 }

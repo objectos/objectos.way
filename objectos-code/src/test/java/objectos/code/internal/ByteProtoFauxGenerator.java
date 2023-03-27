@@ -78,6 +78,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PACKAGE_DECLARATION");
     value("PARAMETER"); // deprecated
     value("PARAMETER_DECLARATION");
+    value("PERMITS_CLAUSE");
     value("STATEMENT");
     value("TYPE_PARAMETER");
 

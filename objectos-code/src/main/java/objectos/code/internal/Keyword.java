@@ -116,6 +116,13 @@ public enum Keyword {
   PACKAGE,
 
   /**
+   * The {@code permits} contextual keyword.
+   *
+   * @since 0.5.3
+   */
+  PERMITS,
+
+  /**
    * The {@code private} reserved keyword.
    */
   PRIVATE,

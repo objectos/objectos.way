@@ -142,4 +142,60 @@ public class InterfaceDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Interface declarations TC04
+
+  - permits clause
+  """)
+  public void testCase04() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B = ClassTypeName.of("com.example", "B");
+        static final ClassTypeName C = ClassTypeName.of("com.example", "C");
+
+        @Override
+        protected final void definition() {
+          autoImports();
+
+          interfaceDeclaration(
+            name("Test1"),
+            permitsClause(A)
+          );
+
+          interfaceDeclaration(
+            name("Test2"),
+            permitsClause(A, B, C)
+          );
+
+          interfaceDeclaration(
+            name("Test3"),
+            extendsClause(A),
+            permitsClause(B, C)
+          );
+
+          interfaceDeclaration(
+            name("Test4"),
+            extendsClause(A, B),
+            permitsClause(C)
+          );
+        }
+      }.toString(),
+
+      """
+      import com.example.A;
+      import com.example.B;
+      import com.example.C;
+
+      interface Test1 permits A {}
+
+      interface Test2 permits A, B, C {}
+
+      interface Test3 extends A permits B, C {}
+
+      interface Test4 extends A, B permits C {}
+      """
+    );
+  }
+
 }

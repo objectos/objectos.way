@@ -2423,6 +2423,16 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   /**
    * TODO
+   *
+   * @since 0.5.3
+   */
+  protected final ClassOrInterfaceDeclarationInstruction permitsClause(ClassTypeName... types) {
+    Object[] many = Objects.requireNonNull(types, "types == null");
+    return api().elemMany(ByteProto.PERMITS_CLAUSE, many);
+  }
+
+  /**
+   * TODO
    */
   protected final StringLiteral s(String string) {
     Objects.requireNonNull(string, "string == null");

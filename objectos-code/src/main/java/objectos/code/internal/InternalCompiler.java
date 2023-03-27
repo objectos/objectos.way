@@ -1260,6 +1260,10 @@ class InternalCompiler extends InternalApi {
     clause(Keyword.IMPLEMENTS);
   }
 
+  private void permitsClause() {
+    clause(Keyword.PERMITS);
+  }
+
   private void implementsKeyword() {
     preKeyword();
 
@@ -3060,6 +3064,7 @@ class InternalCompiler extends InternalApi {
         name = NULL,
         extendsClause = NULL,
         implementsClause = NULL,
+        permitsClause = NULL,
         enumConstants = NULL,
         body = NULL;
 
@@ -3100,6 +3105,8 @@ class InternalCompiler extends InternalApi {
         case ByteProto.METHOD_DECLARATION -> body = listAdd(body);
 
         case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
+
+        case ByteProto.PERMITS_CLAUSE -> permitsClause = listAdd(permitsClause);
 
         case ByteProto.TYPE_PARAMETER -> typeParameters = listAdd(typeParameters);
 
@@ -3145,6 +3152,12 @@ class InternalCompiler extends InternalApi {
       last(_IDENTIFIER);
 
       listExecute(implementsClause, this::implementsClause);
+    }
+
+    if (permitsClause != NULL) {
+      last(_IDENTIFIER);
+
+      listExecute(permitsClause, this::permitsClause);
     }
 
     body(enumConstants, body);
