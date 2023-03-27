@@ -74,6 +74,10 @@ public class InterfaceDeclarationTest {
             annotation(TypeAnnotation.class),
             PRIVATE, STATIC, name("D")
           );
+
+          interfaceDeclaration(
+            SEALED, name("E")
+          );
         }
       }.toString(),
 
@@ -88,6 +92,8 @@ public class InterfaceDeclarationTest {
 
       @objectos.code.TypeAnnotation
       private static interface D {}
+
+      sealed interface E {}
       """
     );
   }

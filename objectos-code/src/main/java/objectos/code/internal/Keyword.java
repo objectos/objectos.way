@@ -25,138 +25,145 @@ import java.util.Locale;
 public enum Keyword {
 
   /**
-   * The reserved keyword {@code abstract}.
+   * The {@code abstract} reserved keyword.
    */
   ABSTRACT,
 
   /**
-   * The reserved keyword {@code boolean}.
+   * The {@code boolean} reserved keyword.
    */
   BOOLEAN,
 
   /**
-   * The reserved keyword {@code class}.
+   * The {@code class} reserved keyword.
    */
   CLASS,
 
   /**
-   * The reserved keyword {@code double}.
+   * The {@code double} reserved keyword.
    */
   DOUBLE,
 
   /**
-   * The reserved keyword {@code else}.
+   * The {@code else} reserved keyword.
    */
   ELSE,
 
   /**
-   * The reserved keyword {@code enum}.
+   * The {@code enum} reserved keyword.
    */
   ENUM,
 
   /**
-   * The reserved keyword {@code extends}.
+   * The {@code extends} reserved keyword.
    */
   EXTENDS,
 
   /**
-   * The reserved keyword {@code final}.
+   * The {@code final} reserved keyword.
    */
   FINAL,
 
   /**
-   * The reserved keyword {@code if}.
+   * The {@code if} reserved keyword.
    *
    * @since 0.4.1
    */
   IF,
 
   /**
-   * The reserved keyword {@code implements}.
+   * The {@code implements} reserved keyword.
    */
   IMPLEMENTS,
 
   /**
-   * The reserved keyword {@code import}.
+   * The {@code import} reserved keyword.
    */
   IMPORT,
 
   /**
-   * The reserved keyword {@code import}.
+   * The {@code import} reserved keyword.
    */
   INT,
 
   /**
-   * The reserved keyword {@code interface}.
+   * The {@code interface} reserved keyword.
    */
   INTERFACE,
 
   /**
-   * The reserved keyword {@code new}.
+   * The {@code new} reserved keyword.
    */
   NEW,
 
   /**
-   * The reserved keyword {@code null}.
+   * The {@code null} reserved keyword.
    *
    * @since 0.4.1
    */
   NULL,
 
   /**
-   * The reserved keyword {@code package}.
+   * The {@code package} reserved keyword.
    */
   PACKAGE,
 
   /**
-   * The reserved keyword {@code private}.
+   * The {@code private} reserved keyword.
    */
   PRIVATE,
 
   /**
-   * The reserved keyword {@code protected}.
+   * The {@code protected} reserved keyword.
    */
   PROTECTED,
 
   /**
-   * The reserved keyword {@code public}.
+   * The {@code public} reserved keyword.
    */
   PUBLIC,
 
   /**
-   * The reserved keyword {@code return}.
+   * The {@code return} reserved keyword.
    */
   RETURN,
 
   /**
-   * The reserved keyword {@code static}.
+   * The {@code sealed} contextual keyword.
+   *
+   * @since 0.5.3
+   */
+  SEALED,
+
+  /**
+   * The {@code static} reserved keyword.
    */
   STATIC,
 
   /**
-   * The reserved keyword {@code super}.
+   * The {@code super} reserved keyword.
    */
   SUPER,
 
   /**
-   * The reserved keyword {@code this}.
+   * The {@code this} reserved keyword.
    */
   THIS,
 
   /**
-   * The reserved keyword {@code throw}.
+   * The {@code throw} reserved keyword.
    *
    * @since 0.4.1
    */
   THROW,
 
   /**
-   * The contextual keyword {@code var}.
+   * The {@code var} contextual keyword.
    */
   VAR,
 
   /**
-   * The reserved keyword {@code void}.
+   * The {@code void} reserved keyword.
    */
   VOID;
 

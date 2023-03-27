@@ -15,8 +15,6 @@
  */
 package objectos.code.tmpl;
 
-import objectos.code.internal.ModifierImpl;
-
 /**
  * Represents a modifier of the Java language.
  *
@@ -29,6 +27,7 @@ public sealed interface Modifier
     EnumDeclarationInstruction,
     FieldDeclarationInstruction,
     InterfaceDeclarationInstruction,
-    MethodDeclarationInstruction permits ModifierImpl, FinalModifier {
-
-}
+    MethodDeclarationInstruction
+    permits
+    FinalModifier,
+    SealedModifier {}

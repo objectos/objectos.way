@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.internal;
+package objectos.code.tmpl;
 
-import objectos.code.tmpl.FinalModifier;
-import objectos.code.tmpl.SealedModifier;
+import objectos.code.internal.ModifierImpl;
 
 /**
- * Represents a modifier of the Java language.
+ * The {@code sealed} modifier.
  *
- * @since 0.4.2
+ * @since 0.5.3
  */
-public final class ModifierImpl extends External implements FinalModifier, SealedModifier {
-  final int value;
-
-  public ModifierImpl(Keyword keyword) {
-    this.value = keyword.ordinal();
-  }
-
-  @Override
-  public final void execute(InternalApi api) {
-    api.extStart();
-    api.protoAdd(ByteProto.MODIFIER, value);
-  }
-}
+public sealed interface SealedModifier
+    extends Modifier, ClassDeclarationInstruction, InterfaceDeclarationInstruction
+    permits ModifierImpl {}

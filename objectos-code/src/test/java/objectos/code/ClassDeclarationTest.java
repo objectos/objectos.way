@@ -245,6 +245,10 @@ public class ClassDeclarationTest {
           classDeclaration(
             FINAL, name("F")
           );
+
+          classDeclaration(
+            SEALED, name("G")
+          );
         }
       }.toString(),
 
@@ -260,6 +264,8 @@ public class ClassDeclarationTest {
       abstract class E {}
 
       final class F {}
+
+      sealed class G {}
       """
     );
   }
