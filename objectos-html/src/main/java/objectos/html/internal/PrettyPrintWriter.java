@@ -163,7 +163,7 @@ public final class PrettyPrintWriter extends Writer {
     } else if (node instanceof HtmlText text) {
       var value = text.value();
 
-      escaped(value);
+      writeText(value);
     } else if (node instanceof HtmlRawText raw) {
       var value = raw.value();
 

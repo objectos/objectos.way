@@ -653,7 +653,7 @@ public class HtmlPlayer extends HtmlRecorder {
       protoArray[objectIndex + 0] = value;
       protoArray[objectIndex + CAPACITY] = ATTRS_NEXT;
 
-      listArray[index + 1] = objectIndex;
+      listArray[index + 1] = objectIndex + 1;
 
       objectIndex = nextObjectIndex;
 

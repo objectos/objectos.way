@@ -1175,6 +1175,39 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC38
+
+  - 12 attribute values
+  """)
+  public void testCase38() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          div(
+            className("c01"),
+            className("c02"),
+            className("c03"),
+            className("c04"),
+            className("c05"),
+            className("c06"),
+            className("c07"),
+            className("c08"),
+            className("c09"),
+            className("c10"),
+            className("c11"),
+            className("c12")
+          );
+        }
+      },
+
+      """
+      <div class="c01 c02 c03 c04 c05 c06 c07 c08 c09 c10 c11 c12"></div>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     stringBuilder.setLength(0);
 
