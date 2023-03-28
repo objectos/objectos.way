@@ -29,6 +29,12 @@ final class InstructionIfaceStep extends ThisTemplate {
     );
   }
 
+  private void attributeExtends(AttributeSpec attribute) {
+    for (var className : attribute.elementInstructionMap.values()) {
+      extendsClause(className);
+    }
+  }
+
   private void globalAttributeExtends() {
     for (var element : spec.elements()) {
       extendsClause(element.instructionClassName);
@@ -42,6 +48,20 @@ final class InstructionIfaceStep extends ThisTemplate {
 
         extendsClause(INSTRUCTION)
       );
+    }
+
+    for (var attribute : spec.attributes()) {
+      var className = attribute.instructionClassName;
+
+      if (className != null) {
+        interfaceDeclaration(
+          SEALED, name(className),
+
+          include(() -> attributeExtends(attribute)),
+
+          permitsClause(INTERNAL_INSTRUCTION)
+        );
+      }
     }
 
     interfaceDeclaration(

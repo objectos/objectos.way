@@ -33,6 +33,13 @@ public class InstructionIfaceStepTest {
         element("div");
 
         element("meta");
+
+        element("option")
+            .attribute("disabled").booleanType()
+            .attribute("label");
+
+        element("select")
+            .attribute("disabled").booleanType();
       }
     }.prepare();
 
@@ -51,7 +58,13 @@ public class InstructionIfaceStepTest {
 
         sealed interface MetaInstruction extends Instruction {}
 
-        sealed interface GlobalAttribute extends AnchorInstruction, DivInstruction, MetaInstruction permits InternalInstruction {}
+        sealed interface OptionInstruction extends Instruction {}
+
+        sealed interface SelectInstruction extends Instruction {}
+
+        sealed interface DisabledAttribute extends OptionInstruction, SelectInstruction permits InternalInstruction {}
+
+        sealed interface GlobalAttribute extends AnchorInstruction, DivInstruction, MetaInstruction, OptionInstruction, SelectInstruction permits InternalInstruction {}
       }
       """
     );

@@ -33,6 +33,13 @@ public class InternalInstructionStepTest {
         element("div");
 
         element("meta");
+
+        element("option")
+            .attribute("disabled").booleanType()
+            .attribute("label");
+
+        element("select")
+            .attribute("disabled").booleanType();
       }
     }.prepare();
 
@@ -42,9 +49,12 @@ public class InternalInstructionStepTest {
       """
       package objectos.html.internal;
 
+      import objectos.html.tmpl.Instruction.DisabledAttribute;
       import objectos.html.tmpl.Instruction.GlobalAttribute;
 
-      public enum InternalInstruction implements GlobalAttribute {
+      public enum InternalInstruction implements
+          DisabledAttribute,
+          GlobalAttribute {
         INSTANCE;
       }
       """

@@ -34,7 +34,9 @@ abstract class AttributeSpec {
     }
 
     @Override
-    public boolean global() { return true; }
+    public final boolean global() {
+      return true;
+    }
 
     @Override
     final ElementAttributeSpec toElementAttributeSpec(ElementSpec parent) {
@@ -45,12 +47,13 @@ abstract class AttributeSpec {
 
   public final ClassTypeName className;
 
-  @Deprecated
-  public final String classSimpleName;
-
   public final String constantName;
 
   public final Map<String, ClassTypeName> interfaceMap = new TreeMap<>();
+
+  final Map<String, ClassTypeName> elementInstructionMap = new TreeMap<>();
+
+  ClassTypeName instructionClassName;
 
   private final Set<AttributeKind> kindSet = new TreeSet<>();
 
@@ -61,7 +64,7 @@ abstract class AttributeSpec {
   AttributeSpec(String name) {
     this.name = name;
 
-    classSimpleName = JavaNames.toValidClassName(name);
+    var classSimpleName = JavaNames.toValidClassName(name);
 
     className = ClassTypeName.of(ThisTemplate.STD_ATTR_NAME, classSimpleName);
 
@@ -82,11 +85,17 @@ abstract class AttributeSpec {
     }
   }
 
-  public final String constantName() { return constantName; }
+  public final String constantName() {
+    return constantName;
+  }
 
-  public boolean global() { return false; }
+  public boolean global() {
+    return false;
+  }
 
-  public final Iterable<ClassTypeName> interfaces() { return interfaceMap.values(); }
+  public final Iterable<ClassTypeName> interfaces() {
+    return interfaceMap.values();
+  }
 
   public final AttributeKind kind() {
     Set<AttributeKind> s;

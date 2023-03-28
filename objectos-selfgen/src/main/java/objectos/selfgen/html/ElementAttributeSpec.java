@@ -15,6 +15,8 @@
  */
 package objectos.selfgen.html;
 
+import objectos.code.ClassTypeName;
+
 class ElementAttributeSpec extends AttributeSpec {
 
   ElementAttributeSpec(String name) {
@@ -26,6 +28,14 @@ class ElementAttributeSpec extends AttributeSpec {
     var className = parent.className;
 
     interfaceMap.put(className.simpleName(), className);
+
+    var parentClassName = parent.instructionClassName;
+
+    elementInstructionMap.put(parentClassName.simpleName(), parent.instructionClassName);
+
+    if (elementInstructionMap.size() > 1) {
+      instructionClassName = ClassTypeName.of(ThisTemplate.INSTRUCTION, simpleName() + "Attribute");
+    }
 
     return this;
   }

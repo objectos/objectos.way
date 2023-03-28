@@ -164,5 +164,161 @@ public sealed interface Instruction {
 
   sealed interface UnorderedListInstruction extends Instruction {}
 
+  sealed interface AlignmentBaselineAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface AutocompleteAttribute extends SelectInstruction, TextAreaInstruction permits InternalInstruction {}
+
+  sealed interface BaselineShiftAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface ClipPathAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface ClipRuleAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface ColorAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface ColorInterpolationAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface ColorInterpolationFiltersAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface CrossoriginAttribute extends LinkInstruction, ScriptInstruction permits InternalInstruction {}
+
+  sealed interface CursorAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface DAttribute extends ClipPathInstruction, PathInstruction permits InternalInstruction {}
+
+  sealed interface DirectionAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface DisabledAttribute extends OptionInstruction, SelectInstruction, TextAreaInstruction permits InternalInstruction {}
+
+  sealed interface DisplayAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface DominantBaselineAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FillAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FillOpacityAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FillRuleAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FilterAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FloodColorAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FloodOpacityAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FontFamilyAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FontSizeAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FontSizeAdjustAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FontStretchAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FontStyleAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FontVariantAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FontWeightAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface FormAttribute extends SelectInstruction, TextAreaInstruction permits InternalInstruction {}
+
+  sealed interface GlyphOrientationHorizontalAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface GlyphOrientationVerticalAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface HeightAttribute extends ImageInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface HrefAttribute extends AnchorInstruction, LinkInstruction permits InternalInstruction {}
+
+  sealed interface ImageRenderingAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface LetterSpacingAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface LightingColorAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface MarkerEndAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface MarkerMidAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface MarkerStartAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface MaskAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface MaskTypeAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface NameAttribute extends FormInstruction, InputInstruction, MetaInstruction, SelectInstruction, TextAreaInstruction permits InternalInstruction {}
+
+  sealed interface OpacityAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface OverflowAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface PaintOrderAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface PlaceholderAttribute extends InputInstruction, TextAreaInstruction permits InternalInstruction {}
+
+  sealed interface PointerEventsAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface ReadonlyAttribute extends InputInstruction, TextAreaInstruction permits InternalInstruction {}
+
+  sealed interface ReferrerpolicyAttribute extends LinkInstruction, ScriptInstruction permits InternalInstruction {}
+
+  sealed interface RequiredAttribute extends InputInstruction, SelectInstruction, TextAreaInstruction permits InternalInstruction {}
+
+  sealed interface ShapeRenderingAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface SrcAttribute extends ImageInstruction, ScriptInstruction permits InternalInstruction {}
+
+  sealed interface StopColorAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StopOpacityAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeDasharrayAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeDashoffsetAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeLinecapAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeLinejoinAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeMiterlimitAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeOpacityAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface StrokeWidthAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface TargetAttribute extends AnchorInstruction, FormInstruction permits InternalInstruction {}
+
+  sealed interface TextAnchorAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface TextDecorationAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface TextOverflowAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface TextRenderingAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface TransformAttribute extends ClipPathInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface TransformOriginAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface TypeAttribute extends ButtonInstruction, InputInstruction, LinkInstruction, OrderedListInstruction, ScriptInstruction, StyleInstruction permits InternalInstruction {}
+
+  sealed interface UnicodeBidiAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface ValueAttribute extends InputInstruction, OptionInstruction permits InternalInstruction {}
+
+  sealed interface VectorEffectAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface VisibilityAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface WhiteSpaceAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface WidthAttribute extends ImageInstruction, SvgInstruction, TableInstruction permits InternalInstruction {}
+
+  sealed interface WordSpacingAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
+  sealed interface WritingModeAttribute extends ClipPathInstruction, DefsInstruction, GInstruction, PathInstruction, SvgInstruction permits InternalInstruction {}
+
   sealed interface GlobalAttribute extends AnchorInstruction, AbbreviationInstruction, ArticleInstruction, BringAttentionToInstruction, BlockquoteInstruction, BodyInstruction, LineBreakInstruction, ButtonInstruction, ClipPathInstruction, CodeInstruction, DefinitionDescriptionInstruction, DefsInstruction, DetailsInstruction, DivInstruction, DefinitionListInstruction, DefinitionTermInstruction, EmphasisInstruction, FieldsetInstruction, FigureInstruction, FooterInstruction, FormInstruction, GInstruction, Heading1Instruction, Heading2Instruction, Heading3Instruction, Heading4Instruction, Heading5Instruction, Heading6Instruction, HeadInstruction, HeaderInstruction, HeadingGroupInstruction, HorizontalRuleInstruction, HtmlInstruction, ImageInstruction, InputInstruction, KeyboardInputInstruction, LabelInstruction, LegendInstruction, ListItemInstruction, LinkInstruction, MainInstruction, MenuInstruction, MetaInstruction, NavInstruction, OrderedListInstruction, OptionGroupInstruction, OptionInstruction, ParagraphInstruction, PathInstruction, PreInstruction, ProgressInstruction, SampleOutputInstruction, ScriptInstruction, SectionInstruction, SelectInstruction, SmallInstruction, SpanInstruction, StrongInstruction, StyleInstruction, SubscriptInstruction, SummaryInstruction, SuperscriptInstruction, SvgInstruction, TableInstruction, TableBodyInstruction, TableDataInstruction, TemplateInstruction, TextAreaInstruction, TableHeaderInstruction, TableHeadInstruction, TitleInstruction, TableRowInstruction, UnorderedListInstruction permits InternalInstruction {}
 }

@@ -30,7 +30,15 @@ final class InternalInstructionStep extends ThisTemplate {
   }
 
   private void enumBody() {
-    implementsClause(GLOBAL_ATTRIBUTE);
+    for (var attribute : spec.attributes()) {
+      var className = attribute.instructionClassName;
+
+      if (className != null) {
+        implementsClause(NL, className);
+      }
+    }
+
+    implementsClause(NL, GLOBAL_ATTRIBUTE);
 
     enumConstant(name("INSTANCE"));
   }
