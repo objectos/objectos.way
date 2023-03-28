@@ -163,6 +163,7 @@ public final class HtmlSpec extends HtmlSelfGen {
 
     for (int i = 1; i <= 6; i++) {
       element("h" + i)
+          .simpleName("Heading" + i)
           .category(flow)
           .category(heading)
           .category(palpable)
@@ -170,6 +171,7 @@ public final class HtmlSpec extends HtmlSelfGen {
     }
 
     element("hgroup")
+        .simpleName("HeadingGroup")
         .category(flow)
         .category(heading)
         .category(palpable)
@@ -193,11 +195,13 @@ public final class HtmlSpec extends HtmlSelfGen {
     // 4.4 Grouping content
 
     element("p")
+        .simpleName("Paragraph")
         .category(flow)
         .category(palpable)
         .one(text());
 
     element("hr")
+        .simpleName("HorizontalRule")
         .category(flow)
         .noEndTag();
 
@@ -214,6 +218,7 @@ public final class HtmlSpec extends HtmlSelfGen {
         .attributeEnd();
 
     element("ol")
+        .simpleName("OrderedList")
         .category(flow)
         .category(palpable)
         .zeroOrMore(el("li"))
@@ -223,6 +228,7 @@ public final class HtmlSpec extends HtmlSelfGen {
         .attributeEnd();
 
     element("ul")
+        .simpleName("UnorderedList")
         .category(flow)
         .category(palpable)
         .zeroOrMore(el("li"));
@@ -233,13 +239,16 @@ public final class HtmlSpec extends HtmlSelfGen {
         .zeroOrMore(el("li"));
 
     element("dl")
+        .simpleName("DefinitionList")
         .category(flow)
         .zeroOrMore(el("dt"));
 
     element("dt")
+        .simpleName("DefinitionTerm")
         .contentModel(flow);
 
     element("dd")
+        .simpleName("DefinitionDescription")
         .contentModel(flow);
 
     element("figure")
@@ -248,6 +257,7 @@ public final class HtmlSpec extends HtmlSelfGen {
         .category(palpable);
 
     element("li")
+        .simpleName("ListItem")
         .contentModel(flow);
 
     element("main")
@@ -264,6 +274,7 @@ public final class HtmlSpec extends HtmlSelfGen {
 
     // TODO: <a> transparent
     element("a")
+        .simpleName("Anchor")
         .category(flow)
         .category(phrasing)
         .category(interactive)
@@ -273,6 +284,7 @@ public final class HtmlSpec extends HtmlSelfGen {
         .one(text());
 
     element("em")
+        .simpleName("Emphasis")
         .category(flow)
         .category(phrasing)
         .category(palpable)
@@ -291,6 +303,7 @@ public final class HtmlSpec extends HtmlSelfGen {
         .contentModel(phrasing);
 
     element("abbr")
+        .simpleName("Abbreviation")
         .category(flow)
         .category(phrasing)
         .category(palpable)
@@ -303,12 +316,14 @@ public final class HtmlSpec extends HtmlSelfGen {
         .contentModel(phrasing);
 
     element("samp")
+        .simpleName("SampleOutput")
         .category(flow)
         .category(phrasing)
         .category(palpable)
         .contentModel(phrasing);
 
     element("kbd")
+        .simpleName("KeyboardInput")
         .category(flow)
         .category(phrasing)
         .category(palpable)
@@ -321,23 +336,27 @@ public final class HtmlSpec extends HtmlSelfGen {
         .contentModel(phrasing);
 
     element("br")
+        .simpleName("LineBreak")
         .category(flow)
         .category(phrasing)
         .noEndTag();
 
     element("sub")
+        .simpleName("Subscript")
         .category(flow)
         .category(phrasing)
         .category(palpable)
         .contentModel(phrasing);
 
     element("sup")
+        .simpleName("Superscript")
         .category(flow)
         .category(phrasing)
         .category(palpable)
         .contentModel(phrasing);
 
     element("b")
+        .simpleName("BringAttentionTo")
         .category(flow)
         .category(phrasing)
         .category(palpable)
@@ -346,6 +365,7 @@ public final class HtmlSpec extends HtmlSelfGen {
     // 4.7 Embedded content
 
     element("img")
+        .simpleName("Image")
         .category(flow)
         .category(phrasing)
         .category(embedded)
@@ -476,19 +496,24 @@ public final class HtmlSpec extends HtmlSelfGen {
         .zeroOrMore(el("tbody"));
 
     element("thead")
+        .simpleName("TableHead")
         .zeroOrMore(el("tr"));
 
     element("tbody")
+        .simpleName("TableBody")
         .zeroOrMore(el("tr"));
 
     element("tr")
+        .simpleName("TableRow")
         .zeroOrMore(el("th"))
         .zeroOrMore(el("td"));
 
     element("th")
+        .simpleName("TableHeader")
         .one(text());
 
     element("td")
+        .simpleName("TableData")
         .zeroOrMore(text())
         .zeroOrMore(el("a"));
 
@@ -559,6 +584,7 @@ public final class HtmlSpec extends HtmlSelfGen {
         .zeroOrMore(el("optgroup"));
 
     element("optgroup")
+        .simpleName("OptionGroup")
         .zeroOrMore(el("option"));
 
     element("option")
@@ -569,6 +595,7 @@ public final class HtmlSpec extends HtmlSelfGen {
         .one(text());
 
     element("textarea")
+        .simpleName("TextArea")
         .category(flow)
         .category(phrasing)
         .category(interactive)

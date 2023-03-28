@@ -28,6 +28,8 @@ public class InstructionIfaceStepTest {
     template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
+        element("a").simpleName("Anchor");
+
         element("div");
 
         element("meta");
@@ -43,6 +45,8 @@ public class InstructionIfaceStepTest {
       import objectos.html.internal.InternalInstruction;
 
       public sealed interface Instruction {
+        sealed interface AnchorInstruction extends Instruction permits InternalInstruction {}
+
         sealed interface DivInstruction extends Instruction permits InternalInstruction {}
 
         sealed interface MetaInstruction extends Instruction permits InternalInstruction {}

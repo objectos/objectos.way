@@ -695,7 +695,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Alt extends StandardAttributeName implements ImgValue {
+  public static class Alt extends StandardAttributeName implements ImageValue {
     private Alt() {
       super(4, AttributeKind.STRING, "alt");
     }
@@ -713,7 +713,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Autocomplete extends StandardAttributeName implements SelectValue, TextareaValue {
+  public static class Autocomplete extends StandardAttributeName implements SelectValue, TextAreaValue {
     private Autocomplete() {
       super(7, AttributeKind.STRING, "autocomplete");
     }
@@ -797,7 +797,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Cols extends StandardAttributeName implements TextareaValue {
+  public static class Cols extends StandardAttributeName implements TextAreaValue {
     private Cols() {
       super(21, AttributeKind.STRING, "cols");
     }
@@ -851,13 +851,13 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Dirname extends StandardAttributeName implements TextareaValue {
+  public static class Dirname extends StandardAttributeName implements TextAreaValue {
     private Dirname() {
       super(30, AttributeKind.STRING, "dirname");
     }
   }
 
-  public static class Disabled extends StandardAttributeName implements OptionValue, SelectValue, TextareaValue {
+  public static class Disabled extends StandardAttributeName implements OptionValue, SelectValue, TextAreaValue {
     private Disabled() {
       super(31, AttributeKind.BOOLEAN, "disabled");
     }
@@ -971,7 +971,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Form extends StandardAttributeName implements SelectValue, TextareaValue {
+  public static class Form extends StandardAttributeName implements SelectValue, TextAreaValue {
     private Form() {
       super(50, AttributeKind.STRING, "form");
     }
@@ -989,7 +989,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Height extends StandardAttributeName implements ImgValue, SvgValue {
+  public static class Height extends StandardAttributeName implements ImageValue, SvgValue {
     private Height() {
       super(53, AttributeKind.STRING, "height");
     }
@@ -1001,7 +1001,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Href extends StandardAttributeName implements AValue, LinkValue {
+  public static class Href extends StandardAttributeName implements AnchorValue, LinkValue {
     private Href() {
       super(55, AttributeKind.STRING, "href");
     }
@@ -1085,7 +1085,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Maxlength extends StandardAttributeName implements TextareaValue {
+  public static class Maxlength extends StandardAttributeName implements TextAreaValue {
     private Maxlength() {
       super(69, AttributeKind.STRING, "maxlength");
     }
@@ -1103,7 +1103,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Minlength extends StandardAttributeName implements TextareaValue {
+  public static class Minlength extends StandardAttributeName implements TextAreaValue {
     private Minlength() {
       super(72, AttributeKind.STRING, "minlength");
     }
@@ -1115,7 +1115,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Name extends StandardAttributeName implements FormValue, InputValue, MetaValue, SelectValue, TextareaValue {
+  public static class Name extends StandardAttributeName implements FormValue, InputValue, MetaValue, SelectValue, TextAreaValue {
     private Name() {
       super(74, AttributeKind.STRING, "name");
     }
@@ -1253,7 +1253,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Placeholder extends StandardAttributeName implements InputValue, TextareaValue {
+  public static class Placeholder extends StandardAttributeName implements InputValue, TextAreaValue {
     private Placeholder() {
       super(97, AttributeKind.STRING, "placeholder");
     }
@@ -1271,7 +1271,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Readonly extends StandardAttributeName implements InputValue, TextareaValue {
+  public static class Readonly extends StandardAttributeName implements InputValue, TextAreaValue {
     private Readonly() {
       super(100, AttributeKind.BOOLEAN, "readonly");
     }
@@ -1289,7 +1289,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Required extends StandardAttributeName implements InputValue, SelectValue, TextareaValue {
+  public static class Required extends StandardAttributeName implements InputValue, SelectValue, TextAreaValue {
     private Required() {
       super(103, AttributeKind.BOOLEAN, "required");
     }
@@ -1301,7 +1301,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Reversed extends StandardAttributeName implements OlValue {
+  public static class Reversed extends StandardAttributeName implements OrderedListValue {
     private Reversed() {
       super(105, AttributeKind.BOOLEAN, "reversed");
     }
@@ -1313,7 +1313,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Rows extends StandardAttributeName implements TextareaValue {
+  public static class Rows extends StandardAttributeName implements TextAreaValue {
     private Rows() {
       super(107, AttributeKind.STRING, "rows");
     }
@@ -1349,19 +1349,19 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Src extends StandardAttributeName implements ImgValue, ScriptValue {
+  public static class Src extends StandardAttributeName implements ImageValue, ScriptValue {
     private Src() {
       super(113, AttributeKind.STRING, "src");
     }
   }
 
-  public static class Srcset extends StandardAttributeName implements ImgValue {
+  public static class Srcset extends StandardAttributeName implements ImageValue {
     private Srcset() {
       super(114, AttributeKind.STRING, "srcset");
     }
   }
 
-  public static class Start extends StandardAttributeName implements OlValue {
+  public static class Start extends StandardAttributeName implements OrderedListValue {
     private Start() {
       super(115, AttributeKind.STRING, "start");
     }
@@ -1439,7 +1439,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Target extends StandardAttributeName implements AValue, FormValue {
+  public static class Target extends StandardAttributeName implements AnchorValue, FormValue {
     private Target() {
       super(128, AttributeKind.STRING, "target");
     }
@@ -1493,7 +1493,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Type extends StandardAttributeName implements ButtonValue, InputValue, LinkValue, OlValue, ScriptValue, StyleValue {
+  public static class Type extends StandardAttributeName implements ButtonValue, InputValue, LinkValue, OrderedListValue, ScriptValue, StyleValue {
     private Type() {
       super(137, AttributeKind.STRING, "type");
     }
@@ -1535,7 +1535,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Width extends StandardAttributeName implements ImgValue, SvgValue, TableValue {
+  public static class Width extends StandardAttributeName implements ImageValue, SvgValue, TableValue {
     private Width() {
       super(144, AttributeKind.STRING, "width");
     }
@@ -1547,7 +1547,7 @@ public abstract class StandardAttributeName implements AttributeName, Value {
     }
   }
 
-  public static class Wrap extends StandardAttributeName implements TextareaValue {
+  public static class Wrap extends StandardAttributeName implements TextAreaValue {
     private Wrap() {
       super(146, AttributeKind.STRING, "wrap");
     }

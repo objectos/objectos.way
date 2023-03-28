@@ -18,19 +18,19 @@ package objectos.html.tmpl;
 import objectos.html.internal.InternalInstruction;
 
 public sealed interface Instruction {
-  sealed interface AInstruction extends Instruction permits InternalInstruction {}
+  sealed interface AnchorInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface AbbrInstruction extends Instruction permits InternalInstruction {}
+  sealed interface AbbreviationInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface ArticleInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface BInstruction extends Instruction permits InternalInstruction {}
+  sealed interface BringAttentionToInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface BlockquoteInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface BodyInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface BrInstruction extends Instruction permits InternalInstruction {}
+  sealed interface LineBreakInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface ButtonInstruction extends Instruction permits InternalInstruction {}
 
@@ -38,7 +38,7 @@ public sealed interface Instruction {
 
   sealed interface CodeInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface DdInstruction extends Instruction permits InternalInstruction {}
+  sealed interface DefinitionDescriptionInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface DefsInstruction extends Instruction permits InternalInstruction {}
 
@@ -46,11 +46,11 @@ public sealed interface Instruction {
 
   sealed interface DivInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface DlInstruction extends Instruction permits InternalInstruction {}
+  sealed interface DefinitionListInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface DtInstruction extends Instruction permits InternalInstruction {}
+  sealed interface DefinitionTermInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface EmInstruction extends Instruction permits InternalInstruction {}
+  sealed interface EmphasisInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface FieldsetInstruction extends Instruction permits InternalInstruction {}
 
@@ -62,39 +62,39 @@ public sealed interface Instruction {
 
   sealed interface GInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface H1Instruction extends Instruction permits InternalInstruction {}
+  sealed interface Heading1Instruction extends Instruction permits InternalInstruction {}
 
-  sealed interface H2Instruction extends Instruction permits InternalInstruction {}
+  sealed interface Heading2Instruction extends Instruction permits InternalInstruction {}
 
-  sealed interface H3Instruction extends Instruction permits InternalInstruction {}
+  sealed interface Heading3Instruction extends Instruction permits InternalInstruction {}
 
-  sealed interface H4Instruction extends Instruction permits InternalInstruction {}
+  sealed interface Heading4Instruction extends Instruction permits InternalInstruction {}
 
-  sealed interface H5Instruction extends Instruction permits InternalInstruction {}
+  sealed interface Heading5Instruction extends Instruction permits InternalInstruction {}
 
-  sealed interface H6Instruction extends Instruction permits InternalInstruction {}
+  sealed interface Heading6Instruction extends Instruction permits InternalInstruction {}
 
   sealed interface HeadInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface HeaderInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface HgroupInstruction extends Instruction permits InternalInstruction {}
+  sealed interface HeadingGroupInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface HrInstruction extends Instruction permits InternalInstruction {}
+  sealed interface HorizontalRuleInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface HtmlInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface ImgInstruction extends Instruction permits InternalInstruction {}
+  sealed interface ImageInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface InputInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface KbdInstruction extends Instruction permits InternalInstruction {}
+  sealed interface KeyboardInputInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface LabelInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface LegendInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface LiInstruction extends Instruction permits InternalInstruction {}
+  sealed interface ListItemInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface LinkInstruction extends Instruction permits InternalInstruction {}
 
@@ -106,13 +106,13 @@ public sealed interface Instruction {
 
   sealed interface NavInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface OlInstruction extends Instruction permits InternalInstruction {}
+  sealed interface OrderedListInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface OptgroupInstruction extends Instruction permits InternalInstruction {}
+  sealed interface OptionGroupInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface OptionInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface PInstruction extends Instruction permits InternalInstruction {}
+  sealed interface ParagraphInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface PathInstruction extends Instruction permits InternalInstruction {}
 
@@ -120,7 +120,7 @@ public sealed interface Instruction {
 
   sealed interface ProgressInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface SampInstruction extends Instruction permits InternalInstruction {}
+  sealed interface SampleOutputInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface ScriptInstruction extends Instruction permits InternalInstruction {}
 
@@ -136,31 +136,31 @@ public sealed interface Instruction {
 
   sealed interface StyleInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface SubInstruction extends Instruction permits InternalInstruction {}
+  sealed interface SubscriptInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface SummaryInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface SupInstruction extends Instruction permits InternalInstruction {}
+  sealed interface SuperscriptInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface SvgInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface TableInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface TbodyInstruction extends Instruction permits InternalInstruction {}
+  sealed interface TableBodyInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface TdInstruction extends Instruction permits InternalInstruction {}
+  sealed interface TableDataInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface TemplateInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface TextareaInstruction extends Instruction permits InternalInstruction {}
+  sealed interface TextAreaInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface ThInstruction extends Instruction permits InternalInstruction {}
+  sealed interface TableHeaderInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface TheadInstruction extends Instruction permits InternalInstruction {}
+  sealed interface TableHeadInstruction extends Instruction permits InternalInstruction {}
 
   sealed interface TitleInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface TrInstruction extends Instruction permits InternalInstruction {}
+  sealed interface TableRowInstruction extends Instruction permits InternalInstruction {}
 
-  sealed interface UlInstruction extends Instruction permits InternalInstruction {}
+  sealed interface UnorderedListInstruction extends Instruction permits InternalInstruction {}
 }

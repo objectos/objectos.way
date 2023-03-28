@@ -15,59 +15,59 @@
  */
 package objectos.html.internal;
 
-import objectos.html.tmpl.AValue;
-import objectos.html.tmpl.AbbrValue;
+import objectos.html.tmpl.AbbreviationValue;
+import objectos.html.tmpl.AnchorValue;
 import objectos.html.tmpl.ArticleValue;
-import objectos.html.tmpl.BValue;
 import objectos.html.tmpl.BlockquoteValue;
 import objectos.html.tmpl.BodyValue;
-import objectos.html.tmpl.BrValue;
+import objectos.html.tmpl.BringAttentionToValue;
 import objectos.html.tmpl.ButtonValue;
 import objectos.html.tmpl.ClipPathValue;
 import objectos.html.tmpl.CodeValue;
-import objectos.html.tmpl.DdValue;
+import objectos.html.tmpl.DefinitionDescriptionValue;
+import objectos.html.tmpl.DefinitionListValue;
+import objectos.html.tmpl.DefinitionTermValue;
 import objectos.html.tmpl.DefsValue;
 import objectos.html.tmpl.DetailsValue;
 import objectos.html.tmpl.DivValue;
-import objectos.html.tmpl.DlValue;
-import objectos.html.tmpl.DtValue;
 import objectos.html.tmpl.ElementName;
-import objectos.html.tmpl.EmValue;
+import objectos.html.tmpl.EmphasisValue;
 import objectos.html.tmpl.FieldsetValue;
 import objectos.html.tmpl.FigureValue;
 import objectos.html.tmpl.FooterValue;
 import objectos.html.tmpl.FormValue;
 import objectos.html.tmpl.GValue;
-import objectos.html.tmpl.H1Value;
-import objectos.html.tmpl.H2Value;
-import objectos.html.tmpl.H3Value;
-import objectos.html.tmpl.H4Value;
-import objectos.html.tmpl.H5Value;
-import objectos.html.tmpl.H6Value;
 import objectos.html.tmpl.HeadValue;
 import objectos.html.tmpl.HeaderValue;
-import objectos.html.tmpl.HgroupValue;
-import objectos.html.tmpl.HrValue;
+import objectos.html.tmpl.Heading1Value;
+import objectos.html.tmpl.Heading2Value;
+import objectos.html.tmpl.Heading3Value;
+import objectos.html.tmpl.Heading4Value;
+import objectos.html.tmpl.Heading5Value;
+import objectos.html.tmpl.Heading6Value;
+import objectos.html.tmpl.HeadingGroupValue;
+import objectos.html.tmpl.HorizontalRuleValue;
 import objectos.html.tmpl.HtmlValue;
-import objectos.html.tmpl.ImgValue;
+import objectos.html.tmpl.ImageValue;
 import objectos.html.tmpl.InputValue;
-import objectos.html.tmpl.KbdValue;
+import objectos.html.tmpl.KeyboardInputValue;
 import objectos.html.tmpl.LabelValue;
 import objectos.html.tmpl.LegendValue;
-import objectos.html.tmpl.LiValue;
+import objectos.html.tmpl.LineBreakValue;
 import objectos.html.tmpl.LinkValue;
+import objectos.html.tmpl.ListItemValue;
 import objectos.html.tmpl.MainValue;
 import objectos.html.tmpl.MenuValue;
 import objectos.html.tmpl.MetaValue;
 import objectos.html.tmpl.NavValue;
-import objectos.html.tmpl.OlValue;
-import objectos.html.tmpl.OptgroupValue;
+import objectos.html.tmpl.OptionGroupValue;
 import objectos.html.tmpl.OptionValue;
-import objectos.html.tmpl.PValue;
+import objectos.html.tmpl.OrderedListValue;
+import objectos.html.tmpl.ParagraphValue;
 import objectos.html.tmpl.PathValue;
 import objectos.html.tmpl.PreValue;
 import objectos.html.tmpl.ProgressValue;
-import objectos.html.tmpl.SampValue;
+import objectos.html.tmpl.SampleOutputValue;
 import objectos.html.tmpl.ScriptValue;
 import objectos.html.tmpl.SectionValue;
 import objectos.html.tmpl.SelectValue;
@@ -223,23 +223,23 @@ import objectos.html.tmpl.StandardAttributeName.Xmlns;
 import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.StrongValue;
 import objectos.html.tmpl.StyleValue;
-import objectos.html.tmpl.SubValue;
+import objectos.html.tmpl.SubscriptValue;
 import objectos.html.tmpl.SummaryValue;
-import objectos.html.tmpl.SupValue;
+import objectos.html.tmpl.SuperscriptValue;
 import objectos.html.tmpl.SvgValue;
+import objectos.html.tmpl.TableBodyValue;
+import objectos.html.tmpl.TableDataValue;
+import objectos.html.tmpl.TableHeadValue;
+import objectos.html.tmpl.TableHeaderValue;
+import objectos.html.tmpl.TableRowValue;
 import objectos.html.tmpl.TableValue;
-import objectos.html.tmpl.TbodyValue;
-import objectos.html.tmpl.TdValue;
 import objectos.html.tmpl.TemplateValue;
-import objectos.html.tmpl.TextareaValue;
-import objectos.html.tmpl.ThValue;
-import objectos.html.tmpl.TheadValue;
+import objectos.html.tmpl.TextAreaValue;
 import objectos.html.tmpl.TitleValue;
-import objectos.html.tmpl.TrValue;
-import objectos.html.tmpl.UlValue;
+import objectos.html.tmpl.UnorderedListValue;
 
 abstract class GeneratedAbstractTemplate {
-  public final ElementName a(AValue... values) {
+  public final ElementName a(AnchorValue... values) {
     return addStandardElement(StandardElementName.A, values);
   }
 
@@ -247,7 +247,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.A, text);
   }
 
-  public final ElementName abbr(AbbrValue... values) {
+  public final ElementName abbr(AbbreviationValue... values) {
     return addStandardElement(StandardElementName.ABBR, values);
   }
 
@@ -263,7 +263,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.ARTICLE, text);
   }
 
-  public final ElementName b(BValue... values) {
+  public final ElementName b(BringAttentionToValue... values) {
     return addStandardElement(StandardElementName.B, values);
   }
 
@@ -287,7 +287,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.BODY, text);
   }
 
-  public final ElementName br(BrValue... values) {
+  public final ElementName br(LineBreakValue... values) {
     return addStandardElement(StandardElementName.BR, values);
   }
 
@@ -311,7 +311,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.CODE, text);
   }
 
-  public final ElementName dd(DdValue... values) {
+  public final ElementName dd(DefinitionDescriptionValue... values) {
     return addStandardElement(StandardElementName.DD, values);
   }
 
@@ -343,7 +343,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.DIV, text);
   }
 
-  public final ElementName dl(DlValue... values) {
+  public final ElementName dl(DefinitionListValue... values) {
     return addStandardElement(StandardElementName.DL, values);
   }
 
@@ -351,7 +351,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.DL, text);
   }
 
-  public final ElementName dt(DtValue... values) {
+  public final ElementName dt(DefinitionTermValue... values) {
     return addStandardElement(StandardElementName.DT, values);
   }
 
@@ -359,7 +359,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.DT, text);
   }
 
-  public final ElementName em(EmValue... values) {
+  public final ElementName em(EmphasisValue... values) {
     return addStandardElement(StandardElementName.EM, values);
   }
 
@@ -403,7 +403,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.G, text);
   }
 
-  public final ElementName h1(H1Value... values) {
+  public final ElementName h1(Heading1Value... values) {
     return addStandardElement(StandardElementName.H1, values);
   }
 
@@ -411,7 +411,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.H1, text);
   }
 
-  public final ElementName h2(H2Value... values) {
+  public final ElementName h2(Heading2Value... values) {
     return addStandardElement(StandardElementName.H2, values);
   }
 
@@ -419,7 +419,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.H2, text);
   }
 
-  public final ElementName h3(H3Value... values) {
+  public final ElementName h3(Heading3Value... values) {
     return addStandardElement(StandardElementName.H3, values);
   }
 
@@ -427,7 +427,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.H3, text);
   }
 
-  public final ElementName h4(H4Value... values) {
+  public final ElementName h4(Heading4Value... values) {
     return addStandardElement(StandardElementName.H4, values);
   }
 
@@ -435,7 +435,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.H4, text);
   }
 
-  public final ElementName h5(H5Value... values) {
+  public final ElementName h5(Heading5Value... values) {
     return addStandardElement(StandardElementName.H5, values);
   }
 
@@ -443,7 +443,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.H5, text);
   }
 
-  public final ElementName h6(H6Value... values) {
+  public final ElementName h6(Heading6Value... values) {
     return addStandardElement(StandardElementName.H6, values);
   }
 
@@ -467,7 +467,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.HEADER, text);
   }
 
-  public final ElementName hgroup(HgroupValue... values) {
+  public final ElementName hgroup(HeadingGroupValue... values) {
     return addStandardElement(StandardElementName.HGROUP, values);
   }
 
@@ -475,7 +475,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.HGROUP, text);
   }
 
-  public final ElementName hr(HrValue... values) {
+  public final ElementName hr(HorizontalRuleValue... values) {
     return addStandardElement(StandardElementName.HR, values);
   }
 
@@ -487,7 +487,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.HTML, text);
   }
 
-  public final ElementName img(ImgValue... values) {
+  public final ElementName img(ImageValue... values) {
     return addStandardElement(StandardElementName.IMG, values);
   }
 
@@ -495,7 +495,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.INPUT, values);
   }
 
-  public final ElementName kbd(KbdValue... values) {
+  public final ElementName kbd(KeyboardInputValue... values) {
     return addStandardElement(StandardElementName.KBD, values);
   }
 
@@ -515,7 +515,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.LEGEND, text);
   }
 
-  public final ElementName li(LiValue... values) {
+  public final ElementName li(ListItemValue... values) {
     return addStandardElement(StandardElementName.LI, values);
   }
 
@@ -555,7 +555,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.NAV, text);
   }
 
-  public final ElementName ol(OlValue... values) {
+  public final ElementName ol(OrderedListValue... values) {
     return addStandardElement(StandardElementName.OL, values);
   }
 
@@ -563,7 +563,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.OL, text);
   }
 
-  public final ElementName optgroup(OptgroupValue... values) {
+  public final ElementName optgroup(OptionGroupValue... values) {
     return addStandardElement(StandardElementName.OPTGROUP, values);
   }
 
@@ -579,7 +579,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.OPTION, text);
   }
 
-  public final ElementName p(PValue... values) {
+  public final ElementName p(ParagraphValue... values) {
     return addStandardElement(StandardElementName.P, values);
   }
 
@@ -611,7 +611,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.PROGRESS, text);
   }
 
-  public final ElementName samp(SampValue... values) {
+  public final ElementName samp(SampleOutputValue... values) {
     return addStandardElement(StandardElementName.SAMP, values);
   }
 
@@ -675,7 +675,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.STYLE, text);
   }
 
-  public final ElementName sub(SubValue... values) {
+  public final ElementName sub(SubscriptValue... values) {
     return addStandardElement(StandardElementName.SUB, values);
   }
 
@@ -691,7 +691,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.SUMMARY, text);
   }
 
-  public final ElementName sup(SupValue... values) {
+  public final ElementName sup(SuperscriptValue... values) {
     return addStandardElement(StandardElementName.SUP, values);
   }
 
@@ -715,7 +715,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.TABLE, text);
   }
 
-  public final ElementName tbody(TbodyValue... values) {
+  public final ElementName tbody(TableBodyValue... values) {
     return addStandardElement(StandardElementName.TBODY, values);
   }
 
@@ -723,7 +723,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.TBODY, text);
   }
 
-  public final ElementName td(TdValue... values) {
+  public final ElementName td(TableDataValue... values) {
     return addStandardElement(StandardElementName.TD, values);
   }
 
@@ -739,7 +739,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.TEMPLATE, text);
   }
 
-  public final ElementName textarea(TextareaValue... values) {
+  public final ElementName textarea(TextAreaValue... values) {
     return addStandardElement(StandardElementName.TEXTAREA, values);
   }
 
@@ -747,7 +747,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.TEXTAREA, text);
   }
 
-  public final ElementName th(ThValue... values) {
+  public final ElementName th(TableHeaderValue... values) {
     return addStandardElement(StandardElementName.TH, values);
   }
 
@@ -755,7 +755,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.TH, text);
   }
 
-  public final ElementName thead(TheadValue... values) {
+  public final ElementName thead(TableHeadValue... values) {
     return addStandardElement(StandardElementName.THEAD, values);
   }
 
@@ -767,7 +767,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.TITLE, values);
   }
 
-  public final ElementName tr(TrValue... values) {
+  public final ElementName tr(TableRowValue... values) {
     return addStandardElement(StandardElementName.TR, values);
   }
 
@@ -775,7 +775,7 @@ abstract class GeneratedAbstractTemplate {
     return addStandardElement(StandardElementName.TR, text);
   }
 
-  public final ElementName ul(UlValue... values) {
+  public final ElementName ul(UnorderedListValue... values) {
     return addStandardElement(StandardElementName.UL, values);
   }
 

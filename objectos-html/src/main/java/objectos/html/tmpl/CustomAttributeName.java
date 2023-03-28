@@ -67,7 +67,8 @@ public sealed abstract class CustomAttributeName implements AttributeName, Value
   @Override
   public final void render(Renderer renderer) {}
 
-  public static final class PathTo extends CustomAttributeName implements AValue, LinkValue {
+  public static final class PathTo extends CustomAttributeName
+      implements AValue, AnchorValue, LinkValue {
     private PathTo() {
       super(StandardAttributeName.size() + 0, AttributeKind.STRING, "href");
     }

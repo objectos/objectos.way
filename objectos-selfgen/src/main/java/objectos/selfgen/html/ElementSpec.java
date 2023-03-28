@@ -27,6 +27,12 @@ public final class ElementSpec
     Comparable<ElementSpec>,
     Name {
 
+  public ClassTypeName className;
+
+  public String constantName;
+
+  public ClassTypeName instructionClassName;
+
   private ElementAttributeSpec attribute;
 
   private ContentModel childSpec = ContentModel.start();
@@ -39,22 +45,12 @@ public final class ElementSpec
 
   private final Set<ElementSpec> parentSet = new TreeSet<>();
 
-  public final ClassTypeName className;
-
-  public final String constantName;
-
-  public ClassTypeName instructionClassName;
-
   ElementSpec(HtmlSelfGen dsl, String name) {
     this.dsl = dsl;
 
     this.name = name;
 
-    className = ClassTypeName.of(ThisTemplate.HTML_TMPL, valueSimpleName());
-
-    constantName = JavaNames.toIdentifier(name.toUpperCase());
-
-    instructionClassName = ClassTypeName.of(ThisTemplate.INSTRUCTION, instructionSimpleName());
+    simpleName(JavaNames.toValidClassName(name));
   }
 
   @Override
@@ -190,6 +186,16 @@ public final class ElementSpec
     childSpec.prepare(this);
   }
 
+  public final ElementSpec simpleName(String simpleName) {
+    className = ClassTypeName.of(ThisTemplate.HTML_TMPL, simpleName + "Value");
+
+    constantName = JavaNames.toIdentifier(name.toUpperCase());
+
+    instructionClassName = ClassTypeName.of(ThisTemplate.INSTRUCTION, simpleName + "Instruction");
+
+    return this;
+  }
+
   public final ElementSpec zeroOrMore(Child el) {
     stringKindIfNecessary();
 
@@ -200,27 +206,15 @@ public final class ElementSpec
     return this;
   }
 
-  private String instructionSimpleName() {
-    return simpleName() + "Instruction";
-  }
-
   private void setKind(AttributeKind kind) {
     attribute.addKind(kind);
     attribute = null;
-  }
-
-  private String simpleName() {
-    return JavaNames.toValidClassName(name);
   }
 
   private void stringKindIfNecessary() {
     if (attribute != null) {
       setKind(AttributeKind.STRING);
     }
-  }
-
-  private String valueSimpleName() {
-    return simpleName() + "Value";
   }
 
 }
