@@ -67,6 +67,10 @@ public abstract class HtmlSelfGen {
         write(sink, new StandardAttributeNameStep());
 
         write(sink, new StandardElementNameStep());
+
+        write(sink, new InstructionIfaceStep());
+
+        write(sink, new InternalInstructionStep());
       }
 
       default -> throw new IllegalArgumentException("Unknown module: " + moduleName);
