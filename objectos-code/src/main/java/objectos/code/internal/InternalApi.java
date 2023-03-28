@@ -77,6 +77,75 @@ public class InternalApi {
     arrayTypeName(dimCount);
   }
 
+  public final _Item arrayTypeName(int dimCount) {
+    elemCnt(ByteProto.ARRAY_TYPE, 1 + dimCount);
+
+    elemItem(_Item.INSTANCE);
+
+    for (int i = 0; i < dimCount; i++) {
+      elemItem(_Item.INSTANCE);
+    }
+
+    return elemRet();
+  }
+
+  public final void arrayTypeName(TypeName type, int count) {
+    // cast is safe: TypeName is sealed
+    var ext = (External) type;
+
+    ext.execute(this);
+
+    for (int i = 0; i < count; i++) {
+      itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);
+    }
+
+    elemCnt(ByteProto.ARRAY_TYPE, 1 + count);
+
+    elemItem(_Ext.INSTANCE);
+
+    for (int i = 0; i < count; i++) {
+      elemItem(_Item.INSTANCE);
+    }
+
+    elemRet();
+  }
+
+  public final _Item classType(Class<?> type) {
+    var last = objectIndex;
+
+    while (true) {
+      var simpleName = type.getSimpleName(); // implicit null-check
+
+      object(simpleName);
+
+      var outer = type.getEnclosingClass();
+
+      if (outer == null) {
+        break;
+      } else {
+        type = outer;
+      }
+    }
+
+    var first = objectIndex - 1;
+
+    var names = objectIndex - last;
+
+    var packageName = type.getPackageName();
+
+    localStart();
+
+    protoAdd(ByteProto.CLASS_TYPE, object(packageName), names);
+
+    for (var index = first; index >= last; index--) {
+      var simpleName = objectArray[index];
+
+      protoAdd(object(simpleName));
+    }
+
+    return _Item.INSTANCE;
+  }
+
   public final _Item elem(int proto) {
     int count = 0;
     elemCnt(proto, count);
@@ -307,139 +376,6 @@ public class InternalApi {
     return elemRet();
   }
 
-  public final void extStart() {
-    levelAdd(EXT, protoIndex);
-  }
-
-  public final _Item itemAdd(int v0, int v1) {
-    localStart();
-    protoAdd(v0, v1);
-    return _Item.INSTANCE;
-  }
-
-  public final void localToExternal() {
-    codeArray[codeIndex - 2] = EXT;
-  }
-
-  public final int object(Object value) {
-    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
-
-    var result = objectIndex;
-
-    objectArray[objectIndex++] = value;
-
-    return result;
-  }
-
-  public final void protoAdd(int v0, int v1) {
-    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
-    protoArray[protoIndex++] = v0;
-    protoArray[protoIndex++] = v1;
-  }
-
-  protected final void accept(InternalJavaTemplate template) {
-    autoImports.clear();
-
-    stackIndex = -1;
-
-    codeIndex = objectIndex = protoIndex = 0;
-
-    template.execute(this);
-
-    int self = protoIndex;
-
-    for (int i = 0; i < codeIndex;) {
-      int kind = codeArray[i++];
-
-      if (kind == LOCAL) {
-        int protoIndex = codeArray[i++];
-
-        int proto = protoGet(protoIndex++);
-
-        protoAdd(proto, protoIndex);
-      } else {
-        throw new UnsupportedOperationException(
-          "Implement me :: code=" + kind
-        );
-      }
-    }
-
-    protoAdd(ByteProto.END_ELEMENT);
-
-    stackIndex = protoIndex;
-
-    protoIndex = self;
-  }
-
-  public final _Item arrayTypeName(int dimCount) {
-    elemCnt(ByteProto.ARRAY_TYPE, 1 + dimCount);
-
-    elemItem(_Item.INSTANCE);
-
-    for (int i = 0; i < dimCount; i++) {
-      elemItem(_Item.INSTANCE);
-    }
-
-    return elemRet();
-  }
-
-  public final void arrayTypeName(TypeName type, int count) {
-    // cast is safe: TypeName is sealed
-    var ext = (External) type;
-
-    ext.execute(this);
-
-    for (int i = 0; i < count; i++) {
-      itemAdd(ByteProto.ARRAY_DIMENSION, ByteProto.NOOP);
-    }
-
-    elemCnt(ByteProto.ARRAY_TYPE, 1 + count);
-
-    elemItem(_Ext.INSTANCE);
-
-    for (int i = 0; i < count; i++) {
-      elemItem(_Item.INSTANCE);
-    }
-
-    elemRet();
-  }
-
-  public final _Item classType(Class<?> type) {
-    var last = objectIndex;
-
-    while (true) {
-      var simpleName = type.getSimpleName(); // implicit null-check
-
-      object(simpleName);
-
-      var outer = type.getEnclosingClass();
-
-      if (outer == null) {
-        break;
-      } else {
-        type = outer;
-      }
-    }
-
-    var first = objectIndex - 1;
-
-    var names = objectIndex - last;
-
-    var packageName = type.getPackageName();
-
-    localStart();
-
-    protoAdd(ByteProto.CLASS_TYPE, object(packageName), names);
-
-    for (var index = first; index >= last; index--) {
-      var simpleName = objectArray[index];
-
-      protoAdd(object(simpleName));
-    }
-
-    return _Item.INSTANCE;
-  }
-
   public final _Item elemMany(int proto, Object[] elements) {
     int count = 0;
 
@@ -463,20 +399,18 @@ public class InternalApi {
     codeArray[codeIndex - 2] = LOCAL;
   }
 
+  public final void extStart() {
+    levelAdd(EXT, protoIndex);
+  }
+
   public final void identifierext(String value) {
     levelAdd(EXT, protoIndex);
     protoAdd(ByteProto.IDENTIFIER, object(value));
   }
 
-  final _Item itemAdd(int v0) {
+  public final _Item itemAdd(int v0, int v1) {
     localStart();
-    protoAdd(v0);
-    return _Item.INSTANCE;
-  }
-
-  final _Item itemAdd(int v0, int v1, int v2) {
-    localStart();
-    protoAdd(v0, v1, v2);
+    protoAdd(v0, v1);
     return _Item.INSTANCE;
   }
 
@@ -515,9 +449,75 @@ public class InternalApi {
     levelAdd(LOCAL, protoIndex);
   }
 
+  public final void localToExternal() {
+    codeArray[codeIndex - 2] = EXT;
+  }
+
+  public final int object(Object value) {
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    var result = objectIndex;
+
+    objectArray[objectIndex++] = value;
+
+    return result;
+  }
+
   public final void protoAdd(int v0) {
     protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 0);
     protoArray[protoIndex++] = v0;
+  }
+
+  public final void protoAdd(int v0, int v1) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 1);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+  }
+
+  protected final void accept(InternalJavaTemplate template) {
+    autoImports.clear();
+
+    stackIndex = -1;
+
+    codeIndex = objectIndex = protoIndex = 0;
+
+    template.execute(this);
+
+    int self = protoIndex;
+
+    for (int i = 0; i < codeIndex;) {
+      int kind = codeArray[i++];
+
+      if (kind == LOCAL) {
+        int protoIndex = codeArray[i++];
+
+        int proto = protoGet(protoIndex++);
+
+        protoAdd(proto, protoIndex);
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: code=" + kind
+        );
+      }
+    }
+
+    protoAdd(ByteProto.END_ELEMENT);
+
+    stackArray[0] = protoIndex;
+
+    protoIndex = self;
+  }
+
+  final _Item itemAdd(int v0) {
+    localStart();
+    protoAdd(v0);
+    return _Item.INSTANCE;
+  }
+
+  final _Item itemAdd(int v0, int v1, int v2) {
+    localStart();
+    protoAdd(v0, v1, v2);
+    return _Item.INSTANCE;
   }
 
   final void protoAdd(int v0, int v1, int v2) {
@@ -525,6 +525,13 @@ public class InternalApi {
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
     protoArray[protoIndex++] = v2;
+  }
+
+  final int stackPop() { return stackArray[stackIndex--]; }
+
+  final void stackPush(int v0) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
+    stackArray[++stackIndex] = v0;
   }
 
   private void elemCnt(int value, int itemCount) {
@@ -712,13 +719,6 @@ public class InternalApi {
   private int protoGet(int index) { return protoArray[index]; }
 
   private int stackPeek(int offset) { return stackArray[stackIndex - offset]; }
-
-  private int stackPop() { return stackArray[stackIndex--]; }
-
-  private void stackPush(int v0) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-    stackArray[++stackIndex] = v0;
-  }
 
   private void stackPush(int v0, int v1, int v2, int v3, int v4) {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 5);

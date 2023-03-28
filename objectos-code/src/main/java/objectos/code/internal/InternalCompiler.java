@@ -47,27 +47,30 @@ class InternalCompiler extends InternalApi {
       _SYMBOL = 10,
       _TYPE = 11;
 
+  private static final int _CTX_OTHER = -1, _CTX_IFACE = -2;
+
   protected final void compile() {
     codeIndex = 0;
 
     // simpleName
-    stackArray[0] = NULL;
-    // public found
     stackArray[1] = NULL;
-    // comma slot
+    // public found
     stackArray[2] = NULL;
-    // topLevel
+    // slot
     stackArray[3] = NULL;
+    // topLevel
+    stackArray[4] = NULL;
     // error
-    stackArray[4] = 0;
+    stackArray[5] = 0;
     // abstract found
-    stackArray[5] = NULL;
-    // last
     stackArray[6] = NULL;
+    // last
+    stackArray[7] = NULL;
+
+    stackIndex = 7;
 
     // do not change
     // - objectIndex
-    // - stackIndex
 
     try {
       compilationUnit();
@@ -101,15 +104,13 @@ class InternalCompiler extends InternalApi {
     );
   }
 
-  final int topLevel() { return stackArray[3]; }
+  final int topLevel() { return stackArray[4]; }
 
-  final void topLevel(int value) { stackArray[3] = value; }
+  final void topLevel(int value) { stackArray[4] = value; }
 
-  private boolean abstractFound() { return stackArray[5] != NULL; }
+  private boolean abstractFound() { return stackArray[6] != NULL; }
 
-  private void abstractFound(int value) {
-    stackArray[5] = value;
-  }
+  private void abstractFound(int value) { stackArray[6] = value; }
 
   private void annotationValue() {
     // TODO name
@@ -768,7 +769,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void constructorDeclaration() {
-    int start = stackIndex;
+    int start = stackArray[0];
 
     abstractFound(NULL);
 
@@ -836,7 +837,7 @@ class InternalCompiler extends InternalApi {
 
     executableBody(statements);
 
-    stackIndex = start;
+    stackArray[0] = start;
   }
 
   private void constructorDeclarator() {
@@ -1002,14 +1003,14 @@ class InternalCompiler extends InternalApi {
   }
 
   private boolean error() {
-    var result = stackArray[4] == 1;
+    var result = stackArray[5] == 1;
 
-    stackArray[4] = 0;
+    stackArray[5] = 0;
 
     return result;
   }
 
-  private void errorRaise() { stackArray[4] = 1; }
+  private void errorRaise() { stackArray[5] = 1; }
 
   private void errorRaise(String message) {
     errorRaise();
@@ -1019,6 +1020,14 @@ class InternalCompiler extends InternalApi {
 
   private void executableBody(int statements) {
     codeAdd(Symbol.RIGHT_PARENTHESIS);
+
+    var iface = stackPeek() == _CTX_IFACE;
+
+    if (iface && statements == NULL) {
+      semicolon();
+
+      return;
+    }
 
     if (!abstractFound()) {
       codeAdd(Whitespace.OPTIONAL);
@@ -1098,7 +1107,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void fieldDeclaration() {
-    int start = stackIndex;
+    int start = stackArray[0];
 
     last(_START);
 
@@ -1155,7 +1164,7 @@ class InternalCompiler extends InternalApi {
 
     semicolon();
 
-    stackIndex = start;
+    stackArray[0] = start;
   }
 
   private void fieldDeclarationVariableItem() {
@@ -1270,10 +1279,6 @@ class InternalCompiler extends InternalApi {
 
   private void implementsClause() {
     clause(Keyword.IMPLEMENTS);
-  }
-
-  private void permitsClause() {
-    clause(Keyword.PERMITS);
   }
 
   private void implementsKeyword() {
@@ -1547,31 +1552,35 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int last() { return stackArray[6]; }
+  private int last() { return stackArray[7]; }
 
-  private void last(int value) { stackArray[6] = value; }
+  private void last(int value) { stackArray[7] = value; }
 
   private boolean lastIs(int value) { return last() == value; }
 
   private int listAdd(int list) {
+    var index = stackArray[0];
+
     if (list == NULL) {
-      list = stackIndex;
-      protoArray = IntArrays.growIfNecessary(protoArray, stackIndex + 3);
-      protoArray[stackIndex++] = NULL;
+      list = index;
+      protoArray = IntArrays.growIfNecessary(protoArray, index + 3);
+      protoArray[index++] = NULL;
     } else {
       int jmpLocation = protoArray[list];
-      protoArray[jmpLocation] = stackIndex;
-      protoArray = IntArrays.growIfNecessary(protoArray, stackIndex + 2);
+      protoArray[jmpLocation] = index;
+      protoArray = IntArrays.growIfNecessary(protoArray, index + 2);
     }
 
     int proto = protoNext();
     int value = protoNext();
 
-    protoArray[stackIndex++] = proto;
-    protoArray[stackIndex++] = value;
-    int tail = stackIndex;
-    protoArray[stackIndex++] = NULL;
+    protoArray[index++] = proto;
+    protoArray[index++] = value;
+    int tail = index;
+    protoArray[index++] = NULL;
     protoArray[list] = tail;
+
+    stackArray[0] = index;
 
     return list;
   }
@@ -1679,7 +1688,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void methodDeclaration() {
-    int start = stackIndex;
+    int start = stackArray[0];
 
     abstractFound(NULL);
 
@@ -1764,7 +1773,7 @@ class InternalCompiler extends InternalApi {
 
     executableBody(statements);
 
-    stackIndex = start;
+    stackArray[0] = start;
   }
 
   private void methodResult(int proto) {
@@ -2635,6 +2644,10 @@ class InternalCompiler extends InternalApi {
     last(_TYPE);
   }
 
+  private void permitsClause() {
+    clause(Keyword.PERMITS);
+  }
+
   private void preDot() {
     switch (last()) {
       case _COMMA -> codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
@@ -2803,9 +2816,9 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private int publicFound() { return stackArray[1]; }
+  private int publicFound() { return stackArray[2]; }
 
-  private void publicFound(int value) { stackArray[1] = value; }
+  private void publicFound(int value) { stackArray[2] = value; }
 
   private void returnKeyword() {
     preKeyword();
@@ -2821,9 +2834,9 @@ class InternalCompiler extends InternalApi {
     last(_SYMBOL);
   }
 
-  private int simpleName() { return stackArray[0]; }
+  private int simpleName() { return stackArray[1]; }
 
-  private void simpleName(int value) { stackArray[0] = value; }
+  private void simpleName(int value) { stackArray[1] = value; }
 
   private void singleExecute(int offset, Action action) {
     int location = protoArray[offset + 1];
@@ -2842,10 +2855,14 @@ class InternalCompiler extends InternalApi {
     int value = protoNext();
 
     if (property == NULL) {
-      property = stackIndex;
-      protoArray = IntArrays.growIfNecessary(protoArray, stackIndex + 1);
-      protoArray[stackIndex++] = proto;
-      protoArray[stackIndex++] = value;
+      var index = stackArray[0];
+
+      property = index;
+      protoArray = IntArrays.growIfNecessary(protoArray, index + 1);
+      protoArray[index++] = proto;
+      protoArray[index++] = value;
+
+      stackArray[0] = index;
     } else {
       protoArray[property + 0] = proto;
       protoArray[property + 1] = value;
@@ -2871,7 +2888,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void slot() {
-    stackArray[2] = codeIndex;
+    stackArray[3] = codeIndex;
 
     codeAdd(ByteCode.NOP1);
 
@@ -2879,7 +2896,7 @@ class InternalCompiler extends InternalApi {
   }
 
   private void slotComma() {
-    int index = stackArray[2];
+    int index = stackArray[3];
 
     codeArray[index + 0] = ByteCode.SYMBOL;
 
@@ -2887,12 +2904,14 @@ class InternalCompiler extends InternalApi {
   }
 
   private void slotSemicolon() {
-    int index = stackArray[2];
+    int index = stackArray[3];
 
     codeArray[index + 0] = ByteCode.SYMBOL;
 
     codeArray[index + 1] = Symbol.SEMICOLON.ordinal();
   }
+
+  private int stackPeek() { return stackArray[stackIndex]; }
 
   private boolean stop() {
     if (itemIs(ByteProto.STOP)) {
@@ -3066,7 +3085,13 @@ class InternalCompiler extends InternalApi {
   }
 
   private void typeDeclaration(Keyword keyword) {
-    int start = stackIndex;
+    if (keyword == Keyword.INTERFACE) {
+      stackPush(_CTX_IFACE);
+    } else {
+      stackPush(_CTX_OTHER);
+    }
+
+    int start = stackArray[0];
 
     last(_START);
 
@@ -3178,7 +3203,9 @@ class InternalCompiler extends InternalApi {
 
     body(enumConstants, body);
 
-    stackIndex = start;
+    stackArray[0] = start;
+
+    stackPop();
   }
 
   private void typeDeclarationName() {

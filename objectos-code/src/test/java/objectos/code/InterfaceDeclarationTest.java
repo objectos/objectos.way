@@ -239,4 +239,29 @@ public class InterfaceDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Interface declarations TC06
+
+  - method declarations
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          interfaceDeclaration(
+            name("A"),
+            method(VOID, name("a"))
+          );
+        }
+      }.toString(),
+
+      """
+      interface A {
+        void a();
+      }
+      """
+    );
+  }
+
 }
