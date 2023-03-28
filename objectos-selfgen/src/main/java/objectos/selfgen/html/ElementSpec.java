@@ -43,6 +43,8 @@ public final class ElementSpec
 
   public final String constantName;
 
+  public ClassTypeName instructionClassName;
+
   ElementSpec(HtmlSelfGen dsl, String name) {
     this.dsl = dsl;
 
@@ -51,15 +53,17 @@ public final class ElementSpec
     className = ClassTypeName.of(ThisTemplate.HTML_TMPL, valueSimpleName());
 
     constantName = JavaNames.toIdentifier(name.toUpperCase());
-  }
 
-  // DSL methods
+    instructionClassName = ClassTypeName.of(ThisTemplate.INSTRUCTION, instructionSimpleName());
+  }
 
   @Override
   public final Name addParent(ElementSpec parent) {
     parentSet.add(parent);
     return this;
   }
+
+  // DSL methods
 
   @Override
   public final ElementSpec as(String... alternatives) {
@@ -126,22 +130,22 @@ public final class ElementSpec
     return name.equals(that.name);
   }
 
-  //
-
   public final ElementSpec except(ElementSpec element) {
     childSpec = childSpec.except(element);
     return this;
   }
 
+  //
+
   public final boolean hasBuilder() {
     return childSpec.hasBuilder();
   }
 
-  //
-
   public final boolean hasChildren() {
     return childSpec.hasChildren();
   }
+
+  //
 
   public final boolean hasEndTag() {
     return hasEndTag;
@@ -194,6 +198,10 @@ public final class ElementSpec
     childSpec = childSpec.zeroOrMore(name);
 
     return this;
+  }
+
+  private String instructionSimpleName() {
+    return simpleName() + "Instruction";
   }
 
   private void setKind(AttributeKind kind) {

@@ -29,11 +29,18 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName UNMODIFIABLE_MAP = ClassTypeName.of(UnmodifiableMap.class);
 
+  static final String HTML_INTERNAL = "objectos.html.internal";
+
+  static final ClassTypeName INTERNAL_INSTRUCTION
+      = ClassTypeName.of(HTML_INTERNAL, "InternalInstruction");
+
   static final String HTML_TMPL = "objectos.html.tmpl";
 
   static final ClassTypeName ATTRIBUTE_KIND = ClassTypeName.of(HTML_TMPL, "AttributeKind");
 
   static final ClassTypeName ATTRIBUTE_NAME = ClassTypeName.of(HTML_TMPL, "AttributeName");
+
+  static final ClassTypeName INSTRUCTION = ClassTypeName.of(HTML_TMPL, "Instruction");
 
   static final ClassTypeName NAMES_BUILDER = ClassTypeName.of(HTML_TMPL, "NamesBuilder");
 
