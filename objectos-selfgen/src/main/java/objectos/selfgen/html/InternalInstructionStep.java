@@ -31,7 +31,7 @@ final class InternalInstructionStep extends ThisTemplate {
 
   private void enumBody() {
     for (var element : spec.elements()) {
-      implementsClause(element.instructionClassName);
+      implementsClause(NL, element.instructionClassName);
     }
 
     enumConstant(name("INSTANCE"));

@@ -46,7 +46,10 @@ public class InternalInstructionStepTest {
       import objectos.html.tmpl.Instruction.DivInstruction;
       import objectos.html.tmpl.Instruction.MetaInstruction;
 
-      public enum InternalInstruction implements AnchorInstruction, DivInstruction, MetaInstruction {
+      public enum InternalInstruction implements
+          AnchorInstruction,
+          DivInstruction,
+          MetaInstruction {
         INSTANCE;
       }
       """
