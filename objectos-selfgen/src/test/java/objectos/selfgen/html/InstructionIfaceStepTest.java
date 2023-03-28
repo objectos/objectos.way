@@ -45,11 +45,11 @@ public class InstructionIfaceStepTest {
       import objectos.html.internal.InternalInstruction;
 
       public sealed interface Instruction {
-        sealed interface AnchorInstruction extends Instruction permits InternalInstruction {}
+        sealed interface AnchorInstruction extends Instruction {}
 
-        sealed interface DivInstruction extends Instruction permits InternalInstruction {}
+        sealed interface DivInstruction extends Instruction {}
 
-        sealed interface MetaInstruction extends Instruction permits InternalInstruction {}
+        sealed interface MetaInstruction extends Instruction {}
 
         sealed interface GlobalAttribute extends AnchorInstruction, DivInstruction, MetaInstruction permits InternalInstruction {}
       }

@@ -42,16 +42,9 @@ public class InternalInstructionStepTest {
       """
       package objectos.html.internal;
 
-      import objectos.html.tmpl.Instruction.AnchorInstruction;
-      import objectos.html.tmpl.Instruction.DivInstruction;
       import objectos.html.tmpl.Instruction.GlobalAttribute;
-      import objectos.html.tmpl.Instruction.MetaInstruction;
 
-      public enum InternalInstruction implements
-          AnchorInstruction,
-          DivInstruction,
-          MetaInstruction,
-          GlobalAttribute {
+      public enum InternalInstruction implements GlobalAttribute {
         INSTANCE;
       }
       """

@@ -40,9 +40,7 @@ final class InstructionIfaceStep extends ThisTemplate {
       interfaceDeclaration(
         SEALED, name(element.instructionClassName),
 
-        extendsClause(INSTRUCTION),
-
-        permitsClause(INTERNAL_INSTRUCTION)
+        extendsClause(INSTRUCTION)
       );
     }
 
