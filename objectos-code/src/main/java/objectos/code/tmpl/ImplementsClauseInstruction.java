@@ -18,6 +18,7 @@ package objectos.code.tmpl;
 import objectos.code.ClassTypeName;
 import objectos.code.ParameterizedTypeName;
 
-public sealed interface ClassOrParameterizedTypeName
-    extends ReferenceTypeName
-    permits ClassTypeName, ParameterizedTypeName {}
+public sealed interface ImplementsClauseInstruction
+    permits ClassTypeName, ParameterizedTypeName, NewLine {
+
+}

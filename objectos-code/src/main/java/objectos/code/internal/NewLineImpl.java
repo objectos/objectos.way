@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.code.tmpl;
+package objectos.code.internal;
 
-import objectos.code.ClassTypeName;
-import objectos.code.ParameterizedTypeName;
+import objectos.code.tmpl.NewLine;
 
-public sealed interface ClassOrParameterizedTypeName
-    extends ReferenceTypeName
-    permits ClassTypeName, ParameterizedTypeName {}
+/**
+ * @since 0.4.3.1
+ */
+public final class NewLineImpl extends External implements NewLine {
+  @Override
+  public final void execute(InternalApi api) {
+    api.extStart();
+    api.protoAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
+  }
+}

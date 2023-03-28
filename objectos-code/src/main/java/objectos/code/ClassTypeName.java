@@ -21,6 +21,7 @@ import objectos.code.internal.JavaModel;
 import objectos.code.tmpl.ArrayTypeComponent;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.ExpressionPart;
+import objectos.code.tmpl.ImplementsClauseInstruction;
 import objectos.lang.Check;
 
 /**
@@ -39,8 +40,12 @@ import objectos.lang.Check;
  * @since 0.4.2
  */
 public sealed interface ClassTypeName
-    extends ClassOrParameterizedTypeName, ArrayTypeComponent,
-    ExpressionPart permits ClassTypeNameImpl {
+    extends
+    ClassOrParameterizedTypeName,
+    ArrayTypeComponent,
+    ExpressionPart,
+    ImplementsClauseInstruction
+    permits ClassTypeNameImpl {
 
   /**
    * Creates a new {@code ClassTypeName} from the provided {@code Class}

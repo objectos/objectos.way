@@ -655,13 +655,25 @@ class InternalCompiler extends InternalApi {
         case _TYPE -> comma();
       }
 
+      int nl = countNewLine();
+
+      nl = newLine(nl);
+
       executeSwitch(this::type);
 
+      nl = countNewLine();
+
       while (elemMore()) {
-        comma();
+        nl = newLine(nl);
+
+        argumentComma();
 
         executeSwitch(this::type);
+
+        nl = countNewLine();
       }
+
+      nl = newLine(nl);
     }
   }
 
@@ -3151,7 +3163,11 @@ class InternalCompiler extends InternalApi {
     if (implementsClause != NULL) {
       last(_IDENTIFIER);
 
+      codeAdd(Indentation.ENTER_CONTINUATION);
+
       listExecute(implementsClause, this::implementsClause);
+
+      codeAdd(Indentation.EXIT_CONTINUATION);
     }
 
     if (permitsClause != NULL) {

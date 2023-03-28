@@ -15,9 +15,13 @@
  */
 package objectos.code.tmpl;
 
-import objectos.code.ClassTypeName;
-import objectos.code.ParameterizedTypeName;
+import objectos.code.JavaTemplate;
 
-public sealed interface ClassOrParameterizedTypeName
-    extends ReferenceTypeName
-    permits ClassTypeName, ParameterizedTypeName {}
+/**
+ * The {@code implements} clause instruction.
+ *
+ * @since 0.4.4
+ */
+public sealed interface ImplementsClause
+    extends ClassDeclarationInstruction, EnumDeclarationInstruction
+    permits JavaTemplate._Item {}

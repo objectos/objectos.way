@@ -25,6 +25,7 @@ import objectos.code.internal.InternalJavaTemplate;
 import objectos.code.internal.JavaModel;
 import objectos.code.internal.Keyword;
 import objectos.code.internal.ModifierImpl;
+import objectos.code.internal.NewLineImpl;
 import objectos.code.internal.ParameterInstructionImpl;
 import objectos.code.internal.Symbol;
 import objectos.code.tmpl.AnnotationInstruction;
@@ -43,12 +44,15 @@ import objectos.code.tmpl.EnumDeclarationInstruction;
 import objectos.code.tmpl.ExecutableDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
 import objectos.code.tmpl.FieldDeclarationInstruction;
+import objectos.code.tmpl.ImplementsClause;
+import objectos.code.tmpl.ImplementsClauseInstruction;
 import objectos.code.tmpl.Include;
 import objectos.code.tmpl.IncludeTarget;
 import objectos.code.tmpl.Instruction;
 import objectos.code.tmpl.InterfaceDeclarationInstruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
 import objectos.code.tmpl.Modifier;
+import objectos.code.tmpl.NewLine;
 import objectos.code.tmpl.ParameterElement;
 import objectos.code.tmpl.ParameterInstruction;
 import objectos.code.tmpl.StatementPart;
@@ -239,14 +243,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
 
   interface IfCondition extends BlockInstruction {}
 
-  /**
-   * @since 0.4.4
-   */
-  interface ImplementsClause
-      extends
-      ClassDeclarationInstruction,
-      EnumDeclarationInstruction {}
-
   @Deprecated
   interface ImplementsKeyword extends BodyElement {}
 
@@ -414,17 +410,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
     }
   }
 
-  /**
-   * @since 0.4.3.1
-   */
-  private static final class NewLine extends External implements ExpressionPart {
-    @Override
-    public final void execute(InternalApi api) {
-      api.extStart();
-      api.protoAdd(ByteProto.NEW_LINE, ByteProto.NOOP);
-    }
-  }
-
   private static final class NullLiteral extends External implements ExpressionPart {
     @Override
     public final void execute(InternalApi api) {
@@ -515,7 +500,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.3.1
    */
-  protected static final ExpressionPart NL = new NewLine();
+  protected static final NewLine NL = new NewLineImpl();
 
   /**
    * The {@code else} keyword. Use it as part of a `if-then-else` Java
@@ -1960,8 +1945,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    *
    * @since 0.4.4
    */
-  protected final ImplementsClause implementsClause(ClassOrParameterizedTypeName... types) {
-    Object[] many = Objects.requireNonNull(types, "types == null");
+  protected final ImplementsClause implementsClause(ImplementsClauseInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.IMPLEMENTS_CLAUSE, many);
   }
 

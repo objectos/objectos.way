@@ -289,4 +289,62 @@ public class EnumDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Enum class declarations TC07
+
+  - new lines in implements clause
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B = ClassTypeName.of("com.example", "B");
+        static final ClassTypeName C = ClassTypeName.of("com.example", "C");
+
+        @Override
+        protected final void definition() {
+          autoImports();
+
+          enumDeclaration(
+            name("Test1"),
+            implementsClause(NL, A, NL, B, NL, C),
+            enumConstant(name("INSTANCE"))
+          );
+
+          enumDeclaration(
+            name("Test2"),
+            include(this::interfaces),
+            enumConstant(name("INSTANCE"))
+          );
+        }
+
+        private void interfaces() {
+          implementsClause(NL, A);
+          implementsClause(NL, B);
+          implementsClause(NL, C);
+        }
+      }.toString(),
+
+      """
+      import com.example.A;
+      import com.example.B;
+      import com.example.C;
+
+      enum Test1 implements
+          A,
+          B,
+          C {
+        INSTANCE;
+      }
+
+      enum Test2 implements
+          A,
+          B,
+          C {
+        INSTANCE;
+      }
+      """
+    );
+  }
+
 }

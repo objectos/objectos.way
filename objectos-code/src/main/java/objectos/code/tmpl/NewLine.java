@@ -15,9 +15,13 @@
  */
 package objectos.code.tmpl;
 
-import objectos.code.ClassTypeName;
-import objectos.code.ParameterizedTypeName;
+import objectos.code.internal.NewLineImpl;
 
-public sealed interface ClassOrParameterizedTypeName
-    extends ReferenceTypeName
-    permits ClassTypeName, ParameterizedTypeName {}
+/**
+ * The new line instruction
+ *
+ * @since 0.5.3
+ */
+public sealed interface NewLine
+    extends ExpressionPart, ImplementsClauseInstruction
+    permits NewLineImpl {}
