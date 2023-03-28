@@ -32,7 +32,8 @@ public class InstructionIfaceStepTest {
 
         element("div");
 
-        element("meta");
+        element("meta")
+            .noEndTag();
 
         element("option")
             .attribute("disabled").booleanType()
@@ -80,6 +81,8 @@ public class InstructionIfaceStepTest {
             Set<String> value();
           }
         }
+
+        sealed interface ElementContents extends AnchorInstruction, DivInstruction, OptionInstruction, SelectInstruction permits InternalInstruction {}
       }
       """
     );

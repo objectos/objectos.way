@@ -47,8 +47,11 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName GLOBAL_ATTRIBUTE = ClassTypeName.of(INSTRUCTION, "GlobalAttribute");
 
-  static final ClassTypeName EXTERNAL_ATTRIBUTE
-      = ClassTypeName.of(INSTRUCTION, "ExternalAttribute");
+  static final ClassTypeName EXTERNAL_ATTRIBUTE = ClassTypeName.of(
+    INSTRUCTION, "ExternalAttribute"
+  );
+
+  static final ClassTypeName ELEMENT_CONTENTS = ClassTypeName.of(INSTRUCTION, "ElementContents");
 
   static final ClassTypeName NAMES_BUILDER = ClassTypeName.of(HTML_TMPL, "NamesBuilder");
 

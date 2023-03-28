@@ -30,6 +30,7 @@ import objectos.html.tmpl.Instruction.DirectionAttribute;
 import objectos.html.tmpl.Instruction.DisabledAttribute;
 import objectos.html.tmpl.Instruction.DisplayAttribute;
 import objectos.html.tmpl.Instruction.DominantBaselineAttribute;
+import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.Instruction.FillAttribute;
 import objectos.html.tmpl.Instruction.FillOpacityAttribute;
 import objectos.html.tmpl.Instruction.FillRuleAttribute;
@@ -174,6 +175,7 @@ public enum InternalInstruction implements
     WidthAttribute,
     WordSpacingAttribute,
     WritingModeAttribute,
-    GlobalAttribute {
+    GlobalAttribute,
+    ElementContents {
   INSTANCE;
 }

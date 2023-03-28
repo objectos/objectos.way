@@ -50,11 +50,13 @@ public class InternalInstructionStepTest {
       package objectos.html.internal;
 
       import objectos.html.tmpl.Instruction.DisabledAttribute;
+      import objectos.html.tmpl.Instruction.ElementContents;
       import objectos.html.tmpl.Instruction.GlobalAttribute;
 
       public enum InternalInstruction implements
           DisabledAttribute,
-          GlobalAttribute {
+          GlobalAttribute,
+          ElementContents {
         INSTANCE;
       }
       """

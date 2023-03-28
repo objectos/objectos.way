@@ -40,6 +40,8 @@ final class InternalInstructionStep extends ThisTemplate {
 
     implementsClause(NL, GLOBAL_ATTRIBUTE);
 
+    implementsClause(NL, ELEMENT_CONTENTS);
+
     enumConstant(name("INSTANCE"));
   }
 }

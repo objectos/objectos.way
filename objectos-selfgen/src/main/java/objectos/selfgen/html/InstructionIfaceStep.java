@@ -31,13 +31,66 @@ final class InstructionIfaceStep extends ThisTemplate {
     );
   }
 
-  private void attributeExtends(AttributeSpec attribute) {
+  private void interfaceBody() {
+    for (var element : spec.elements()) {
+      interfaceDeclaration(
+        SEALED, name(element.instructionClassName),
+
+        extendsClause(INSTRUCTION)
+      );
+    }
+
+    for (var attribute : spec.attributes()) {
+      var className = attribute.instructionClassName;
+
+      if (className != null) {
+        interfaceDeclaration(
+          SEALED, name(className),
+
+          include(() -> interfaceBody0Attr(attribute)),
+
+          permitsClause(INTERNAL_INSTRUCTION)
+        );
+      }
+    }
+
+    interfaceDeclaration(
+      SEALED, name(GLOBAL_ATTRIBUTE),
+
+      include(this::interfaceBody1Global),
+
+      permitsClause(EXTERNAL_ATTRIBUTE, INTERNAL_INSTRUCTION)
+    );
+
+    interfaceDeclaration(
+      SEALED, name(EXTERNAL_ATTRIBUTE),
+      extendsClause(GLOBAL_ATTRIBUTE),
+
+      include(this::interfaceBody2External)
+    );
+
+    interfaceDeclaration(
+      SEALED, name(ELEMENT_CONTENTS),
+
+      include(this::interfaceBody3Contents),
+
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+  }
+
+  private void interfaceBody0Attr(AttributeSpec attribute) {
     for (var className : attribute.elementInstructionMap.values()) {
       extendsClause(className);
     }
   }
 
-  private void externalAttributeBody() {
+  private void interfaceBody1Global() {
+    for (var element : spec.elements()) {
+      extendsClause(element.instructionClassName);
+    }
+  }
+
+  private void interfaceBody2External() {
     interfaceDeclaration(
       NON_SEALED, name("Id"),
       extendsClause(EXTERNAL_ATTRIBUTE),
@@ -66,48 +119,11 @@ final class InstructionIfaceStep extends ThisTemplate {
     );
   }
 
-  private void globalAttributeExtends() {
+  private void interfaceBody3Contents() {
     for (var element : spec.elements()) {
-      extendsClause(element.instructionClassName);
-    }
-  }
-
-  private void interfaceBody() {
-    for (var element : spec.elements()) {
-      interfaceDeclaration(
-        SEALED, name(element.instructionClassName),
-
-        extendsClause(INSTRUCTION)
-      );
-    }
-
-    for (var attribute : spec.attributes()) {
-      var className = attribute.instructionClassName;
-
-      if (className != null) {
-        interfaceDeclaration(
-          SEALED, name(className),
-
-          include(() -> attributeExtends(attribute)),
-
-          permitsClause(INTERNAL_INSTRUCTION)
-        );
+      if (element.hasEndTag()) {
+        extendsClause(element.instructionClassName);
       }
     }
-
-    interfaceDeclaration(
-      SEALED, name(GLOBAL_ATTRIBUTE),
-
-      include(this::globalAttributeExtends),
-
-      permitsClause(EXTERNAL_ATTRIBUTE, INTERNAL_INSTRUCTION)
-    );
-
-    interfaceDeclaration(
-      SEALED, name(EXTERNAL_ATTRIBUTE),
-      extendsClause(GLOBAL_ATTRIBUTE),
-
-      include(this::externalAttributeBody)
-    );
   }
 }
