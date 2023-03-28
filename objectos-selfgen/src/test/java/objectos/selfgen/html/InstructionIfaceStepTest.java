@@ -50,6 +50,8 @@ public class InstructionIfaceStepTest {
         sealed interface DivInstruction extends Instruction permits InternalInstruction {}
 
         sealed interface MetaInstruction extends Instruction permits InternalInstruction {}
+
+        sealed interface GlobalAttribute extends AnchorInstruction, DivInstruction, MetaInstruction permits InternalInstruction {}
       }
       """
     );

@@ -100,7 +100,6 @@ limitations under the License.
 ]]>
 		</objectos.license.headerMain>
 		<objectos.license.projectName>${project.name}</objectos.license.projectName>
-		<org.testng.version>7.7.1</org.testng.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -556,9 +555,15 @@ limitations under the License.
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-nop</artifactId>
+				<version>1.7.36</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
-				<version>${org.testng.version}</version>
+				<version>7.7.1</version>
 				<scope>test</scope>
 				<exclusions>
 					<exclusion>

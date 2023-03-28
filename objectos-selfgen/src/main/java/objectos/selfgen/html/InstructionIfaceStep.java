@@ -29,6 +29,12 @@ final class InstructionIfaceStep extends ThisTemplate {
     );
   }
 
+  private void globalAttributeExtends() {
+    for (var element : spec.elements()) {
+      extendsClause(element.instructionClassName);
+    }
+  }
+
   private void interfaceBody() {
     for (var element : spec.elements()) {
       interfaceDeclaration(
@@ -39,5 +45,13 @@ final class InstructionIfaceStep extends ThisTemplate {
         permitsClause(INTERNAL_INSTRUCTION)
       );
     }
+
+    interfaceDeclaration(
+      SEALED, name(GLOBAL_ATTRIBUTE),
+
+      include(this::globalAttributeExtends),
+
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
   }
 }

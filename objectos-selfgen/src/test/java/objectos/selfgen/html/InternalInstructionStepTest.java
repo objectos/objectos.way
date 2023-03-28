@@ -44,12 +44,14 @@ public class InternalInstructionStepTest {
 
       import objectos.html.tmpl.Instruction.AnchorInstruction;
       import objectos.html.tmpl.Instruction.DivInstruction;
+      import objectos.html.tmpl.Instruction.GlobalAttribute;
       import objectos.html.tmpl.Instruction.MetaInstruction;
 
       public enum InternalInstruction implements
           AnchorInstruction,
           DivInstruction,
-          MetaInstruction {
+          MetaInstruction,
+          GlobalAttribute {
         INSTANCE;
       }
       """
