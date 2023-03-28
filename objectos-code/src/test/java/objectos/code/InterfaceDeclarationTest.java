@@ -198,4 +198,45 @@ public class InterfaceDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Interface declarations TC05
+
+  - type parameters
+  """)
+  public void testCase05() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName CHARSEQ = ClassTypeName.of(CharSequence.class);
+
+        @Override
+        protected final void definition() {
+          interfaceDeclaration(
+            name("A"),
+            typeParameter("T")
+          );
+
+          interfaceDeclaration(
+            name("B"),
+            typeParameter("T1"),
+            typeParameter("T2")
+          );
+
+          interfaceDeclaration(
+            name("C"),
+            typeParameter("X", CHARSEQ),
+            typeParameter("Y")
+          );
+        }
+      }.toString(),
+
+      """
+      interface A<T> {}
+
+      interface B<T1, T2> {}
+
+      interface C<X extends java.lang.CharSequence, Y> {}
+      """
+    );
+  }
+
 }

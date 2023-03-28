@@ -15,9 +15,16 @@
  */
 package objectos.code.tmpl;
 
+import objectos.code.JavaTemplate;
+
 /**
  * TODO
  *
  * @since 0.4.3.1
  */
-public interface TypeParameter extends ClassDeclarationInstruction, MethodDeclarationInstruction {}
+public sealed interface TypeParameter
+    extends
+    ClassDeclarationInstruction,
+    InterfaceDeclarationInstruction,
+    MethodDeclarationInstruction
+    permits JavaTemplate._Item {}
