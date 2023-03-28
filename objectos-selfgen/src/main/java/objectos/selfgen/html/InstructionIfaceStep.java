@@ -15,6 +15,8 @@
  */
 package objectos.selfgen.html;
 
+import objectos.code.ParameterizedTypeName;
+
 final class InstructionIfaceStep extends ThisTemplate {
   @Override
   protected final void definition() {
@@ -33,6 +35,35 @@ final class InstructionIfaceStep extends ThisTemplate {
     for (var className : attribute.elementInstructionMap.values()) {
       extendsClause(className);
     }
+  }
+
+  private void externalAttributeBody() {
+    interfaceDeclaration(
+      NON_SEALED, name("Id"),
+      extendsClause(EXTERNAL_ATTRIBUTE),
+
+      method(
+        STRING, name("value")
+      )
+    );
+
+    interfaceDeclaration(
+      NON_SEALED, name("StyleClass"),
+      extendsClause(EXTERNAL_ATTRIBUTE),
+
+      method(
+        STRING, name("value")
+      )
+    );
+
+    interfaceDeclaration(
+      NON_SEALED, name("StyleClassSet"),
+      extendsClause(EXTERNAL_ATTRIBUTE),
+
+      method(
+        ParameterizedTypeName.of(SET, STRING), name("value")
+      )
+    );
   }
 
   private void globalAttributeExtends() {
@@ -69,7 +100,14 @@ final class InstructionIfaceStep extends ThisTemplate {
 
       include(this::globalAttributeExtends),
 
-      permitsClause(INTERNAL_INSTRUCTION)
+      permitsClause(EXTERNAL_ATTRIBUTE, INTERNAL_INSTRUCTION)
+    );
+
+    interfaceDeclaration(
+      SEALED, name(EXTERNAL_ATTRIBUTE),
+      extendsClause(GLOBAL_ATTRIBUTE),
+
+      include(this::externalAttributeBody)
     );
   }
 }

@@ -16,6 +16,7 @@
 package objectos.selfgen.html;
 
 import java.io.IOException;
+import java.util.Set;
 import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 import objectos.code.JavaTemplate;
@@ -24,6 +25,8 @@ import objectos.util.UnmodifiableMap;
 abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
+
+  static final ClassTypeName SET = ClassTypeName.of(Set.class);
 
   static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
@@ -43,6 +46,9 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName INSTRUCTION = ClassTypeName.of(HTML_TMPL, "Instruction");
 
   static final ClassTypeName GLOBAL_ATTRIBUTE = ClassTypeName.of(INSTRUCTION, "GlobalAttribute");
+
+  static final ClassTypeName EXTERNAL_ATTRIBUTE
+      = ClassTypeName.of(INSTRUCTION, "ExternalAttribute");
 
   static final ClassTypeName NAMES_BUILDER = ClassTypeName.of(HTML_TMPL, "NamesBuilder");
 

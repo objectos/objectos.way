@@ -49,6 +49,7 @@ public class InstructionIfaceStepTest {
       """
       package objectos.html.tmpl;
 
+      import java.util.Set;
       import objectos.html.internal.InternalInstruction;
 
       public sealed interface Instruction {
@@ -64,7 +65,21 @@ public class InstructionIfaceStepTest {
 
         sealed interface DisabledAttribute extends OptionInstruction, SelectInstruction permits InternalInstruction {}
 
-        sealed interface GlobalAttribute extends AnchorInstruction, DivInstruction, MetaInstruction, OptionInstruction, SelectInstruction permits InternalInstruction {}
+        sealed interface GlobalAttribute extends AnchorInstruction, DivInstruction, MetaInstruction, OptionInstruction, SelectInstruction permits ExternalAttribute, InternalInstruction {}
+
+        sealed interface ExternalAttribute extends GlobalAttribute {
+          non-sealed interface Id extends ExternalAttribute {
+            String value();
+          }
+
+          non-sealed interface StyleClass extends ExternalAttribute {
+            String value();
+          }
+
+          non-sealed interface StyleClassSet extends ExternalAttribute {
+            Set<String> value();
+          }
+        }
       }
       """
     );
