@@ -67,7 +67,12 @@ public class InstructionIfaceStepTest {
 
         sealed interface DisabledAttribute extends OptionInstruction, SelectInstruction permits InternalInstruction {}
 
-        sealed interface GlobalAttribute extends AnchorInstruction, DivInstruction, MetaInstruction, OptionInstruction, SelectInstruction permits ExternalAttribute, InternalInstruction {}
+        sealed interface GlobalAttribute extends
+            AnchorInstruction,
+            DivInstruction,
+            MetaInstruction,
+            OptionInstruction,
+            SelectInstruction permits ExternalAttribute, InternalInstruction {}
 
         sealed interface ExternalAttribute extends GlobalAttribute {
           non-sealed interface Id extends ExternalAttribute {
@@ -88,6 +93,36 @@ public class InstructionIfaceStepTest {
             DivInstruction,
             OptionInstruction,
             SelectInstruction permits HtmlTemplate, InternalInstruction {}
+
+        @FunctionalInterface
+        non-sealed interface Fragment0 extends
+            AnchorInstruction,
+            DivInstruction,
+            MetaInstruction,
+            OptionInstruction,
+            SelectInstruction {
+          void execute();
+        }
+
+        @FunctionalInterface
+        non-sealed interface Fragment1<T1> extends
+            AnchorInstruction,
+            DivInstruction,
+            MetaInstruction,
+            OptionInstruction,
+            SelectInstruction {
+          void execute(T1 arg1);
+        }
+
+        @FunctionalInterface
+        non-sealed interface Fragment2<T1, T2> extends
+            AnchorInstruction,
+            DivInstruction,
+            MetaInstruction,
+            OptionInstruction,
+            SelectInstruction {
+          void execute(T1 arg1, T2 arg2);
+        }
       }
       """
     );

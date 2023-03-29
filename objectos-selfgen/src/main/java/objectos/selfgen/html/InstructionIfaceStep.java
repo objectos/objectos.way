@@ -18,13 +18,17 @@ package objectos.selfgen.html;
 import java.util.Set;
 import objectos.code.ClassTypeName;
 import objectos.code.ParameterizedTypeName;
+import objectos.code.TypeVariableName;
 
 final class InstructionIfaceStep extends ThisTemplate {
-  private static final ClassTypeName HTML_TEMPLATE = ClassTypeName.of(
-    "objectos.html", "HtmlTemplate"
-  );
+  private static final ClassTypeName FUNCTIONAL_IFACE
+      = ClassTypeName.of(FunctionalInterface.class);
 
-  private static final ClassTypeName SET = ClassTypeName.of(Set.class);
+  private static final ClassTypeName HTML_TEMPLATE
+      = ClassTypeName.of("objectos.html", "HtmlTemplate");
+
+  private static final ClassTypeName SET
+      = ClassTypeName.of(Set.class);
 
   @Override
   protected final void definition() {
@@ -65,7 +69,7 @@ final class InstructionIfaceStep extends ThisTemplate {
     interfaceDeclaration(
       SEALED, name(GLOBAL_ATTRIBUTE),
 
-      include(this::interfaceBody1Global),
+      include(this::interfaceBodyExtendsAll),
 
       permitsClause(EXTERNAL_ATTRIBUTE, INTERNAL_INSTRUCTION)
     );
@@ -84,17 +88,25 @@ final class InstructionIfaceStep extends ThisTemplate {
 
       permitsClause(HTML_TEMPLATE, INTERNAL_INSTRUCTION)
     );
+
+    for (int i = 0; i < 3; i++) {
+      final int count = i;
+
+      interfaceDeclaration(
+        annotation(FUNCTIONAL_IFACE),
+
+        NON_SEALED, name("Fragment" + i),
+
+        include(this::interfaceBodyExtendsAll),
+
+        include(() -> interfaceBody4Fragment(count))
+      );
+    }
   }
 
   private void interfaceBody0Attr(AttributeSpec attribute) {
     for (var className : attribute.elementInstructionMap.values()) {
       extendsClause(className);
-    }
-  }
-
-  private void interfaceBody1Global() {
-    for (var element : spec.elements()) {
-      extendsClause(element.instructionClassName);
     }
   }
 
@@ -132,6 +144,30 @@ final class InstructionIfaceStep extends ThisTemplate {
       if (element.hasEndTag()) {
         extendsClause(NL, element.instructionClassName);
       }
+    }
+  }
+
+  private void interfaceBody4Fragment(int count) {
+    for (int i = 1; i <= count; i++) {
+      typeParameter("T" + i);
+    }
+
+    method(
+      VOID, name("execute"),
+
+      include(() -> interfaceBody4FragmentParams(count))
+    );
+  }
+
+  private void interfaceBody4FragmentParams(int count) {
+    for (int i = 1; i <= count; i++) {
+      parameter(TypeVariableName.of("T" + i), name("arg" + i));
+    }
+  }
+
+  private void interfaceBodyExtendsAll() {
+    for (var element : spec.elements()) {
+      extendsClause(NL, element.instructionClassName);
     }
   }
 }
