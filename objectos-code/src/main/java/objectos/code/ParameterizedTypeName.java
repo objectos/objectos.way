@@ -18,6 +18,7 @@ package objectos.code;
 import objectos.code.internal.ParameterizedTypeNameImpl;
 import objectos.code.tmpl.ClassOrParameterizedTypeName;
 import objectos.code.tmpl.ExpressionPart;
+import objectos.code.tmpl.ExtendsClauseInstruction;
 import objectos.code.tmpl.ImplementsClauseInstruction;
 import objectos.code.tmpl.ReferenceTypeName;
 
@@ -27,7 +28,11 @@ import objectos.code.tmpl.ReferenceTypeName;
  * @since 0.4.2
  */
 public sealed interface ParameterizedTypeName
-    extends ClassOrParameterizedTypeName, ExpressionPart, ImplementsClauseInstruction
+    extends
+    ClassOrParameterizedTypeName,
+    ExpressionPart,
+    ExtendsClauseInstruction,
+    ImplementsClauseInstruction
     permits ParameterizedTypeNameImpl {
   /**
    * Creates a new {@code ParameterizedTypeName} of the generic type {@code raw}

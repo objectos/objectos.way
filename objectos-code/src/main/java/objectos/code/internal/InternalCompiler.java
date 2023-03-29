@@ -3181,7 +3181,11 @@ class InternalCompiler extends InternalApi {
       if (keyword == Keyword.CLASS) {
         singleExecute(extendsClause, this::extendsClause);
       } else {
+        codeAdd(Indentation.ENTER_CONTINUATION);
+
         listExecute(extendsClause, this::extendsClause);
+
+        codeAdd(Indentation.EXIT_CONTINUATION);
       }
     }
 

@@ -43,6 +43,7 @@ import objectos.code.tmpl.EnumConstantInstruction;
 import objectos.code.tmpl.EnumDeclarationInstruction;
 import objectos.code.tmpl.ExecutableDeclarationInstruction;
 import objectos.code.tmpl.ExpressionPart;
+import objectos.code.tmpl.ExtendsClauseInstruction;
 import objectos.code.tmpl.FieldDeclarationInstruction;
 import objectos.code.tmpl.ImplementsClause;
 import objectos.code.tmpl.ImplementsClauseInstruction;
@@ -1885,8 +1886,8 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @since 0.4.4
    */
   protected final InterfaceDeclarationInstruction
-      extendsClause(ClassOrParameterizedTypeName... types) {
-    Object[] many = Objects.requireNonNull(types, "types == null");
+      extendsClause(ExtendsClauseInstruction... contents) {
+    Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.EXTENDS_CLAUSE, many);
   }
 

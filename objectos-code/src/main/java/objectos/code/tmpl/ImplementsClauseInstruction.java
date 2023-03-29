@@ -18,7 +18,13 @@ package objectos.code.tmpl;
 import objectos.code.ClassTypeName;
 import objectos.code.ParameterizedTypeName;
 
+/**
+ * TODO
+ *
+ * @since 0.5.3
+ */
 public sealed interface ImplementsClauseInstruction
-    permits ClassTypeName, ParameterizedTypeName, NewLine {
-
-}
+    permits
+    ClassTypeName,
+    ParameterizedTypeName,
+    NewLine {}

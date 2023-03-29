@@ -264,4 +264,56 @@ public class InterfaceDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Interface declarations TC07
+
+  - allow NL in `extendsClause`
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B = ClassTypeName.of("com.example", "B");
+        static final ClassTypeName C = ClassTypeName.of("com.example", "C");
+
+        @Override
+        protected final void definition() {
+          autoImports();
+
+          interfaceDeclaration(
+            name("Test1"),
+            extendsClause(NL, A, NL, B, NL, C)
+          );
+
+          interfaceDeclaration(
+            name("Test2"),
+            include(this::interfaces)
+          );
+        }
+
+        private void interfaces() {
+          extendsClause(NL, A);
+          extendsClause(NL, B);
+          extendsClause(NL, C);
+        }
+      }.toString(),
+
+      """
+      import com.example.A;
+      import com.example.B;
+      import com.example.C;
+
+      interface Test1 extends
+          A,
+          B,
+          C {}
+
+      interface Test2 extends
+          A,
+          B,
+          C {}
+      """
+    );
+  }
+
 }

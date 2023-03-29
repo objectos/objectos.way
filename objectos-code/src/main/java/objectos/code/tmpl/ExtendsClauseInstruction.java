@@ -15,16 +15,16 @@
  */
 package objectos.code.tmpl;
 
-import objectos.code.internal.NewLineImpl;
+import objectos.code.ClassTypeName;
+import objectos.code.ParameterizedTypeName;
 
 /**
- * The new line instruction
+ * TODO
  *
  * @since 0.5.3
  */
-public sealed interface NewLine
-    extends
-    ExpressionPart,
-    ExtendsClauseInstruction,
-    ImplementsClauseInstruction
-    permits NewLineImpl {}
+public sealed interface ExtendsClauseInstruction
+    permits
+    ClassTypeName,
+    ParameterizedTypeName,
+    NewLine {}
