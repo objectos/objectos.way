@@ -67,6 +67,13 @@ public class InstructionIfaceStepTest {
 
         sealed interface DisabledAttribute extends OptionInstruction, SelectInstruction permits InternalInstruction {}
 
+        sealed interface AmbiguousInstruction extends
+            AnchorInstruction,
+            DivInstruction,
+            MetaInstruction,
+            OptionInstruction,
+            SelectInstruction permits InternalInstruction {}
+
         sealed interface GlobalAttribute extends
             AnchorInstruction,
             DivInstruction,

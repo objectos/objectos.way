@@ -79,6 +79,12 @@ public abstract class HtmlSelfGen {
     }
   }
 
+  public final boolean isAmbiguous(ElementSpec element) {
+    var name = element.name();
+
+    return attributeMap.containsKey(name);
+  }
+
   protected final CategorySpec category(String name) {
     return categoryMap.computeIfAbsent(name, this::category0);
   }

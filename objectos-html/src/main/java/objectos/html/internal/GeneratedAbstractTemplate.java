@@ -123,7 +123,6 @@ import objectos.html.tmpl.StandardAttributeName.FontStyle;
 import objectos.html.tmpl.StandardAttributeName.FontVariant;
 import objectos.html.tmpl.StandardAttributeName.FontWeight;
 import objectos.html.tmpl.StandardAttributeName.For;
-import objectos.html.tmpl.StandardAttributeName.Form;
 import objectos.html.tmpl.StandardAttributeName.GlyphOrientationHorizontal;
 import objectos.html.tmpl.StandardAttributeName.GlyphOrientationVertical;
 import objectos.html.tmpl.StandardAttributeName.Height;
@@ -981,10 +980,6 @@ abstract class GeneratedAbstractTemplate {
 
   public final For forElement(String value) {
     return addStandardAttribute(StandardAttributeName.FOR, value);
-  }
-
-  public final Form form(String value) {
-    return addStandardAttribute(StandardAttributeName.FORM, value);
   }
 
   public final GlyphOrientationHorizontal glyphOrientationHorizontal(String value) {

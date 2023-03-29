@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import objectos.html.tmpl.Instruction.AlignmentBaselineAttribute;
+import objectos.html.tmpl.Instruction.AmbiguousInstruction;
 import objectos.html.tmpl.Instruction.AutocompleteAttribute;
 import objectos.html.tmpl.Instruction.BaselineShiftAttribute;
 import objectos.html.tmpl.Instruction.ClipPathAttribute;
@@ -176,6 +177,7 @@ public enum InternalInstruction implements
     WidthAttribute,
     WordSpacingAttribute,
     WritingModeAttribute,
+    AmbiguousInstruction,
     GlobalAttribute,
     ElementContents,
     NoOpInstruction {

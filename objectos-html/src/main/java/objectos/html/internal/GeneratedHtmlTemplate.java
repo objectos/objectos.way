@@ -18,6 +18,7 @@ package objectos.html.internal;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Instruction.AbbreviationInstruction;
 import objectos.html.tmpl.Instruction.AlignmentBaselineAttribute;
+import objectos.html.tmpl.Instruction.AmbiguousInstruction;
 import objectos.html.tmpl.Instruction.AnchorInstruction;
 import objectos.html.tmpl.Instruction.ArticleInstruction;
 import objectos.html.tmpl.Instruction.AutocompleteAttribute;
@@ -63,7 +64,6 @@ import objectos.html.tmpl.Instruction.FontStyleAttribute;
 import objectos.html.tmpl.Instruction.FontVariantAttribute;
 import objectos.html.tmpl.Instruction.FontWeightAttribute;
 import objectos.html.tmpl.Instruction.FooterInstruction;
-import objectos.html.tmpl.Instruction.FormAttribute;
 import objectos.html.tmpl.Instruction.FormInstruction;
 import objectos.html.tmpl.Instruction.GInstruction;
 import objectos.html.tmpl.Instruction.GlobalAttribute;
@@ -367,6 +367,11 @@ abstract class GeneratedHtmlTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  public final AmbiguousInstruction form(String text) {
+    ambiguous(Ambiguous.FORM, text);
+    return InternalInstruction.INSTANCE;
+  }
+
   public final ElementContents g(GInstruction... contents) {
     element(StandardElementName.G, contents);
     return InternalInstruction.INSTANCE;
@@ -504,6 +509,11 @@ abstract class GeneratedHtmlTemplate {
 
   public final ElementContents label(LabelInstruction... contents) {
     element(StandardElementName.LABEL, contents);
+    return InternalInstruction.INSTANCE;
+  }
+
+  public final AmbiguousInstruction label(String text) {
+    ambiguous(Ambiguous.LABEL, text);
     return InternalInstruction.INSTANCE;
   }
 
@@ -832,6 +842,11 @@ abstract class GeneratedHtmlTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  public final AmbiguousInstruction title(String text) {
+    ambiguous(Ambiguous.TITLE, text);
+    return InternalInstruction.INSTANCE;
+  }
+
   public final ElementContents tr(TableRowInstruction... contents) {
     element(StandardElementName.TR, contents);
     return InternalInstruction.INSTANCE;
@@ -1099,11 +1114,6 @@ abstract class GeneratedHtmlTemplate {
 
   public final LabelInstruction forElement(String value) {
     attribute(StandardAttributeName.FOR, value);
-    return InternalInstruction.INSTANCE;
-  }
-
-  public final FormAttribute form(String value) {
-    attribute(StandardAttributeName.FORM, value);
     return InternalInstruction.INSTANCE;
   }
 
@@ -1586,6 +1596,8 @@ abstract class GeneratedHtmlTemplate {
     attribute(StandardAttributeName.XMLNS, value);
     return InternalInstruction.INSTANCE;
   }
+
+  abstract void ambiguous(Ambiguous name, String text);
 
   abstract void attribute(StandardAttributeName name);
 

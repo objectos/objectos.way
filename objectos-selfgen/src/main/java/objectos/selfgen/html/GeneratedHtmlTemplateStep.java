@@ -16,14 +16,17 @@
 package objectos.selfgen.html;
 
 import objectos.code.ArrayTypeName;
+import objectos.code.ClassTypeName;
 
 final class GeneratedHtmlTemplateStep extends ThisTemplate {
+  private static final ClassTypeName AMBIGUOUS
+      = ClassTypeName.of(HTML_INTERNAL, "Ambiguous");
 
   private AttributeSpec attribute;
 
   @Override
   protected final void definition() {
-    packageDeclaration("objectos.html.internal");
+    packageDeclaration(HTML_INTERNAL);
 
     autoImports();
 
@@ -41,6 +44,8 @@ final class GeneratedHtmlTemplateStep extends ThisTemplate {
 
       if (template.shouldIncludeText(element)) {
         body1elementMethodText(element);
+      } else if (spec.isAmbiguous(element)) {
+        body1elementMethodAmbiguous(element);
       }
     }
 
@@ -53,6 +58,12 @@ final class GeneratedHtmlTemplateStep extends ThisTemplate {
         }
       }
     }
+
+    method(
+      ABSTRACT, VOID, name("ambiguous"),
+      parameter(AMBIGUOUS, name("name")),
+      parameter(STRING, name("text"))
+    );
 
     method(
       ABSTRACT, VOID, name("attribute"),
@@ -89,6 +100,19 @@ final class GeneratedHtmlTemplateStep extends ThisTemplate {
         v("element"),
         argument(STD_ELEMENT_NAME, n(element.constantName)),
         argument(n("contents"))
+      ),
+      p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
+    );
+  }
+
+  private void body1elementMethodAmbiguous(ElementSpec element) {
+    method(
+      PUBLIC, FINAL, AMBIGUOUS_INST, name(element.methodName()),
+      parameter(STRING, name("text")),
+      p(
+        v("ambiguous"),
+        argument(AMBIGUOUS, n(element.constantName)),
+        argument(n("text"))
       ),
       p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
     );

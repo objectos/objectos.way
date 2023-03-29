@@ -67,6 +67,14 @@ final class InstructionIfaceStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
+      SEALED, name(AMBIGUOUS_INST),
+
+      include(this::interfaceBodyExtendsAll),
+
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+
+    interfaceDeclaration(
       SEALED, name(GLOBAL_ATTRIBUTE),
 
       include(this::interfaceBodyExtendsAll),

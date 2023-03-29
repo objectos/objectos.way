@@ -35,9 +35,9 @@ public final class HtmlSpec extends HtmlSelfGen {
   protected final void definition() {
     template()
         .skipAttribute("clipPath")
+        .skipAttribute("form")
         .skipAttribute("label")
-        .skipAttribute("title")
-        .skipText("form");
+        .skipAttribute("title");
 
     rootElement()
         .attribute("accesskey")

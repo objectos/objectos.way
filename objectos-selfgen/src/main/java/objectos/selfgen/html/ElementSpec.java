@@ -22,7 +22,6 @@ import objectos.selfgen.util.JavaNames;
 
 public final class ElementSpec
     implements
-    AttributeDsl<ElementSpec>,
     Child,
     Comparable<ElementSpec>,
     Name {
@@ -61,20 +60,17 @@ public final class ElementSpec
 
   // DSL methods
 
-  @Override
   public final ElementSpec as(String... alternatives) {
     attribute.as(alternatives);
     return this;
   }
 
-  @Override
   public final ElementSpec attribute(String name) {
     stringKindIfNecessary();
     attribute = dsl.elementAttribute(this, name);
     return this;
   }
 
-  @Override
   public final ElementSpec attributeEnd() {
     stringKindIfNecessary();
     return this;
@@ -88,7 +84,6 @@ public final class ElementSpec
     return this;
   }
 
-  @Override
   public final ElementSpec booleanType() {
     setKind(AttributeKind.BOOLEAN);
     return this;
@@ -98,11 +93,6 @@ public final class ElementSpec
     stringKindIfNecessary();
     category.add(this);
     return this;
-  }
-
-  @Override
-  public final ElementSpec classNameType() {
-    throw new UnsupportedOperationException("Global attribute only");
   }
 
   @Override
@@ -150,11 +140,6 @@ public final class ElementSpec
   @Override
   public final int hashCode() {
     return name.hashCode();
-  }
-
-  @Override
-  public final ElementSpec idType() {
-    throw new UnsupportedOperationException("Global attribute only");
   }
 
   public final String methodName() {

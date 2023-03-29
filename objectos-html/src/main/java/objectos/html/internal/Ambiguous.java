@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.html;
+package objectos.html.internal;
 
-public interface AttributeDsl<X> {
+public enum Ambiguous {
 
-  AttributeDsl<X> as(String... alternatives);
+  FORM,
 
-  AttributeDsl<X> attribute(String name);
+  LABEL,
 
-  X attributeEnd();
-
-  X booleanType();
-
-  X classNameType();
-
-  X idType();
+  TITLE
 
 }

@@ -28,10 +28,16 @@ public class GeneratedHtmlTemplateStepTest {
     template.spec = new HtmlSelfGen() {
       @Override
       protected final void definition() {
+        template()
+            .skipAttribute("title");
+
         rootElement()
-            .attribute("lang");
+            .attribute("lang")
+            .attribute("title");
 
         element("a").simpleName("Anchor");
+
+        element("title");
 
         element("meta").noEndTag();
 
@@ -51,6 +57,7 @@ public class GeneratedHtmlTemplateStepTest {
       package objectos.html.internal;
 
       import objectos.html.tmpl.Instruction;
+      import objectos.html.tmpl.Instruction.AmbiguousInstruction;
       import objectos.html.tmpl.Instruction.AnchorInstruction;
       import objectos.html.tmpl.Instruction.DisabledAttribute;
       import objectos.html.tmpl.Instruction.ElementContents;
@@ -58,6 +65,7 @@ public class GeneratedHtmlTemplateStepTest {
       import objectos.html.tmpl.Instruction.MetaInstruction;
       import objectos.html.tmpl.Instruction.OptionInstruction;
       import objectos.html.tmpl.Instruction.SelectInstruction;
+      import objectos.html.tmpl.Instruction.TitleInstruction;
       import objectos.html.tmpl.StandardAttributeName;
       import objectos.html.tmpl.StandardElementName;
 
@@ -97,6 +105,16 @@ public class GeneratedHtmlTemplateStepTest {
           return InternalInstruction.INSTANCE;
         }
 
+        public final ElementContents title(TitleInstruction... contents) {
+          element(StandardElementName.TITLE, contents);
+          return InternalInstruction.INSTANCE;
+        }
+
+        public final AmbiguousInstruction title(String text) {
+          ambiguous(Ambiguous.TITLE, text);
+          return InternalInstruction.INSTANCE;
+        }
+
         public final DisabledAttribute disabled() {
           attribute(StandardAttributeName.DISABLED);
           return InternalInstruction.INSTANCE;
@@ -111,6 +129,8 @@ public class GeneratedHtmlTemplateStepTest {
           attribute(StandardAttributeName.LANG, value);
           return InternalInstruction.INSTANCE;
         }
+
+        abstract void ambiguous(Ambiguous name, String text);
 
         abstract void attribute(StandardAttributeName name);
 

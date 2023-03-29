@@ -42,6 +42,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName INSTRUCTION = ClassTypeName.of(HTML_TMPL, "Instruction");
 
+  static final ClassTypeName AMBIGUOUS_INST = ClassTypeName.of(INSTRUCTION, "AmbiguousInstruction");
+
   static final ClassTypeName GLOBAL_ATTRIBUTE = ClassTypeName.of(INSTRUCTION, "GlobalAttribute");
 
   static final ClassTypeName EXTERNAL_ATTRIBUTE

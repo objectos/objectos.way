@@ -15,7 +15,7 @@
  */
 package objectos.selfgen.html;
 
-public final class RootElementSpec implements AttributeDsl<RootElementSpec> {
+public final class RootElementSpec {
 
   private final HtmlSelfGen dsl;
 
@@ -25,39 +25,33 @@ public final class RootElementSpec implements AttributeDsl<RootElementSpec> {
     this.dsl = dsl;
   }
 
-  @Override
-  public final AttributeDsl<RootElementSpec> as(String... alternatives) {
+  public final RootElementSpec as(String... alternatives) {
     attribute.as(alternatives);
     return this;
   }
 
-  @Override
-  public final AttributeDsl<RootElementSpec> attribute(String name) {
+  public final RootElementSpec attribute(String name) {
     stringKindIfNecessary();
     attribute = dsl.globalAttribute(name);
     return this;
   }
 
-  @Override
   public final RootElementSpec attributeEnd() {
     stringKindIfNecessary();
     return this;
   }
 
-  @Override
   public final RootElementSpec booleanType() {
     setKind(AttributeKind.BOOLEAN);
     return this;
   }
 
-  @Override
   public final RootElementSpec classNameType() {
     attribute.addKind(AttributeKind.STRING);
     setKind(AttributeKind.CLASS_NAME);
     return this;
   }
 
-  @Override
   public final RootElementSpec idType() {
     attribute.addKind(AttributeKind.STRING);
     setKind(AttributeKind.ID);

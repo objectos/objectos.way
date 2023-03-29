@@ -38,6 +38,8 @@ final class InternalInstructionStep extends ThisTemplate {
       }
     }
 
+    implementsClause(NL, AMBIGUOUS_INST);
+
     implementsClause(NL, GLOBAL_ATTRIBUTE);
 
     implementsClause(NL, ELEMENT_CONTENTS);
