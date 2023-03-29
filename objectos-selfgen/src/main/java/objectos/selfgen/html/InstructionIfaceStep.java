@@ -102,6 +102,14 @@ final class InstructionIfaceStep extends ThisTemplate {
         include(() -> interfaceBody4Fragment(count))
       );
     }
+
+    interfaceDeclaration(
+      SEALED, name(NOOP_INSTRUCTION),
+
+      include(this::interfaceBodyExtendsAll),
+
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
   }
 
   private void interfaceBody0Attr(AttributeSpec attribute) {

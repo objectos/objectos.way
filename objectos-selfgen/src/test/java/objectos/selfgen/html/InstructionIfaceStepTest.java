@@ -123,6 +123,13 @@ public class InstructionIfaceStepTest {
             SelectInstruction {
           void execute(T1 arg1, T2 arg2);
         }
+
+        sealed interface NoOpInstruction extends
+            AnchorInstruction,
+            DivInstruction,
+            MetaInstruction,
+            OptionInstruction,
+            SelectInstruction permits InternalInstruction {}
       }
       """
     );
