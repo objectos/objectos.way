@@ -27,6 +27,7 @@ import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.ElementName;
+import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
@@ -40,7 +41,8 @@ import objectos.lang.Check;
  *
  * @since 0.5.0
  */
-public abstract class HtmlTemplate extends InternalHtmlTemplate implements NonVoidElementValue {
+public non-sealed abstract class HtmlTemplate
+    extends InternalHtmlTemplate implements ElementContents, NonVoidElementValue {
 
   public final AttributeOrElement clipPath(String text) {
     return addAttributeOrElement(AttributeOrElement.CLIPPATH, text);

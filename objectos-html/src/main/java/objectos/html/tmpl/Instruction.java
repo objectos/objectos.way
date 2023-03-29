@@ -16,6 +16,7 @@
 package objectos.html.tmpl;
 
 import java.util.Set;
+import objectos.html.HtmlTemplate;
 import objectos.html.internal.InternalInstruction;
 
 public sealed interface Instruction {
@@ -337,5 +338,72 @@ public sealed interface Instruction {
     }
   }
 
-  sealed interface ElementContents extends AnchorInstruction, AbbreviationInstruction, ArticleInstruction, BringAttentionToInstruction, BlockquoteInstruction, BodyInstruction, ButtonInstruction, ClipPathInstruction, CodeInstruction, DefinitionDescriptionInstruction, DefsInstruction, DetailsInstruction, DivInstruction, DefinitionListInstruction, DefinitionTermInstruction, EmphasisInstruction, FieldsetInstruction, FigureInstruction, FooterInstruction, FormInstruction, GInstruction, Heading1Instruction, Heading2Instruction, Heading3Instruction, Heading4Instruction, Heading5Instruction, Heading6Instruction, HeadInstruction, HeaderInstruction, HeadingGroupInstruction, HtmlInstruction, KeyboardInputInstruction, LabelInstruction, LegendInstruction, ListItemInstruction, MainInstruction, MenuInstruction, NavInstruction, OrderedListInstruction, OptionGroupInstruction, OptionInstruction, ParagraphInstruction, PathInstruction, PreInstruction, ProgressInstruction, SampleOutputInstruction, ScriptInstruction, SectionInstruction, SelectInstruction, SmallInstruction, SpanInstruction, StrongInstruction, StyleInstruction, SubscriptInstruction, SummaryInstruction, SuperscriptInstruction, SvgInstruction, TableInstruction, TableBodyInstruction, TableDataInstruction, TemplateInstruction, TextAreaInstruction, TableHeaderInstruction, TableHeadInstruction, TitleInstruction, TableRowInstruction, UnorderedListInstruction permits InternalInstruction {}
+  sealed interface ElementContents extends
+      AnchorInstruction,
+      AbbreviationInstruction,
+      ArticleInstruction,
+      BringAttentionToInstruction,
+      BlockquoteInstruction,
+      BodyInstruction,
+      ButtonInstruction,
+      ClipPathInstruction,
+      CodeInstruction,
+      DefinitionDescriptionInstruction,
+      DefsInstruction,
+      DetailsInstruction,
+      DivInstruction,
+      DefinitionListInstruction,
+      DefinitionTermInstruction,
+      EmphasisInstruction,
+      FieldsetInstruction,
+      FigureInstruction,
+      FooterInstruction,
+      FormInstruction,
+      GInstruction,
+      Heading1Instruction,
+      Heading2Instruction,
+      Heading3Instruction,
+      Heading4Instruction,
+      Heading5Instruction,
+      Heading6Instruction,
+      HeadInstruction,
+      HeaderInstruction,
+      HeadingGroupInstruction,
+      HtmlInstruction,
+      KeyboardInputInstruction,
+      LabelInstruction,
+      LegendInstruction,
+      ListItemInstruction,
+      MainInstruction,
+      MenuInstruction,
+      NavInstruction,
+      OrderedListInstruction,
+      OptionGroupInstruction,
+      OptionInstruction,
+      ParagraphInstruction,
+      PathInstruction,
+      PreInstruction,
+      ProgressInstruction,
+      SampleOutputInstruction,
+      ScriptInstruction,
+      SectionInstruction,
+      SelectInstruction,
+      SmallInstruction,
+      SpanInstruction,
+      StrongInstruction,
+      StyleInstruction,
+      SubscriptInstruction,
+      SummaryInstruction,
+      SuperscriptInstruction,
+      SvgInstruction,
+      TableInstruction,
+      TableBodyInstruction,
+      TableDataInstruction,
+      TemplateInstruction,
+      TextAreaInstruction,
+      TableHeaderInstruction,
+      TableHeadInstruction,
+      TitleInstruction,
+      TableRowInstruction,
+      UnorderedListInstruction permits HtmlTemplate, InternalInstruction {}
 }

@@ -15,9 +15,17 @@
  */
 package objectos.selfgen.html;
 
+import java.util.Set;
+import objectos.code.ClassTypeName;
 import objectos.code.ParameterizedTypeName;
 
 final class InstructionIfaceStep extends ThisTemplate {
+  private static final ClassTypeName HTML_TEMPLATE = ClassTypeName.of(
+    "objectos.html", "HtmlTemplate"
+  );
+
+  private static final ClassTypeName SET = ClassTypeName.of(Set.class);
+
   @Override
   protected final void definition() {
     packageDeclaration(HTML_TMPL);
@@ -74,7 +82,7 @@ final class InstructionIfaceStep extends ThisTemplate {
 
       include(this::interfaceBody3Contents),
 
-      permitsClause(INTERNAL_INSTRUCTION)
+      permitsClause(HTML_TEMPLATE, INTERNAL_INSTRUCTION)
     );
   }
 
@@ -122,7 +130,7 @@ final class InstructionIfaceStep extends ThisTemplate {
   private void interfaceBody3Contents() {
     for (var element : spec.elements()) {
       if (element.hasEndTag()) {
-        extendsClause(element.instructionClassName);
+        extendsClause(NL, element.instructionClassName);
       }
     }
   }

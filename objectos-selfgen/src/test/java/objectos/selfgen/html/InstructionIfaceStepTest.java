@@ -51,6 +51,7 @@ public class InstructionIfaceStepTest {
       package objectos.html.tmpl;
 
       import java.util.Set;
+      import objectos.html.HtmlTemplate;
       import objectos.html.internal.InternalInstruction;
 
       public sealed interface Instruction {
@@ -82,7 +83,11 @@ public class InstructionIfaceStepTest {
           }
         }
 
-        sealed interface ElementContents extends AnchorInstruction, DivInstruction, OptionInstruction, SelectInstruction permits InternalInstruction {}
+        sealed interface ElementContents extends
+            AnchorInstruction,
+            DivInstruction,
+            OptionInstruction,
+            SelectInstruction permits HtmlTemplate, InternalInstruction {}
       }
       """
     );
