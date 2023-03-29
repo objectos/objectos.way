@@ -62,6 +62,8 @@ public abstract class HtmlSelfGen {
 
         write(sink, new GeneratedAbstractTemplateStep());
 
+        write(sink, new GeneratedHtmlTemplateStep());
+
         write(sink, new NonVoidElementValueStep());
 
         write(sink, new StandardAttributeNameStep());

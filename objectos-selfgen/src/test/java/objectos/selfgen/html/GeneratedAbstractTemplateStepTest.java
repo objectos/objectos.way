@@ -32,8 +32,6 @@ public class GeneratedAbstractTemplateStepTest {
       @Override
       protected final void definition() {
         template()
-            .maxLevel(1)
-            .maxArity(1)
             .skipText("form");
 
         element("div");
@@ -91,8 +89,6 @@ public class GeneratedAbstractTemplateStepTest {
       @Override
       protected final void definition() {
         template()
-            .maxLevel(1)
-            .maxArity(1)
             .skipAttribute("title");
 
         rootElement()

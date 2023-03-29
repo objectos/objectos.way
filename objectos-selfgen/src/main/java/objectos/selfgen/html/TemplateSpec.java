@@ -15,40 +15,15 @@
  */
 package objectos.selfgen.html;
 
-import objectos.lang.Check;
 import objectos.util.GrowableSet;
 
 public final class TemplateSpec {
-
-  private int maxArity = 5;
-
-  private int maxLevel = 5;
 
   private final GrowableSet<String> skipAttribute = new GrowableSet<>();
 
   private final GrowableSet<String> skipText = new GrowableSet<>();
 
   TemplateSpec() {}
-
-  public final int getMaxArity() {
-    return maxArity;
-  }
-
-  public final int getMaxLevel() {
-    return maxLevel;
-  }
-
-  public final TemplateSpec maxArity(int newArity) {
-    Check.argument(newArity > 0, "arity must be > 0");
-    maxArity = newArity;
-    return this;
-  }
-
-  public final TemplateSpec maxLevel(int newLevel) {
-    Check.argument(newLevel > 0, "level must be > 0");
-    maxLevel = newLevel;
-    return this;
-  }
 
   public final boolean shouldIncludeAttribute(String method) {
     return !skipAttribute.contains(method);

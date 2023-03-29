@@ -34,12 +34,9 @@ public final class HtmlSpec extends HtmlSelfGen {
   @Override
   protected final void definition() {
     template()
-        .maxLevel(5)
-        .maxArity(5)
         .skipAttribute("clipPath")
         .skipAttribute("label")
         .skipAttribute("title")
-
         .skipText("form");
 
     rootElement()
