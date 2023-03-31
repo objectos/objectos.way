@@ -76,7 +76,7 @@ public abstract class Writer implements DocumentProcessor {
         var c = value.charAt(idx++);
 
         switch (c) {
-          case '&' -> idx = writeAmpersand(value, idx, len);
+          case '&' -> idx = writeAmpersandAttribute(value, idx, len);
 
           case '<' -> writeLesserThan();
 
@@ -104,7 +104,7 @@ public abstract class Writer implements DocumentProcessor {
         var c = value.charAt(idx++);
 
         switch (c) {
-          case '&' -> idx = writeAmpersand(value, idx, len);
+          case '&' -> writeAmpersand();
 
           case '<' -> writeLesserThan();
 
@@ -137,7 +137,11 @@ public abstract class Writer implements DocumentProcessor {
         || 'A' <= c && c <= 'F';
   }
 
-  private int writeAmpersand(String value, int idx, int len) throws IOException {
+  private void writeAmpersand() throws IOException {
+    out.append("&amp;");
+  }
+
+  private int writeAmpersandAttribute(String value, int idx, int len) throws IOException {
     enum State {
       START,
       MAYBE_NAMED,

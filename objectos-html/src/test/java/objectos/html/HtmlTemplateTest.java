@@ -746,7 +746,7 @@ public class HtmlTemplateTest {
       },
 
       """
-      <pre><code>&lt;xml&gt;&lt;/xml&gt;&copy;</code></pre>
+      <pre><code>&lt;xml&gt;&lt;/xml&gt;&amp;copy;</code></pre>
       """
     );
   }

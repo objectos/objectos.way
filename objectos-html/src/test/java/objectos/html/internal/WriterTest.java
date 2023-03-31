@@ -81,16 +81,16 @@ public class WriterTest {
     writeText("if (a < b && c > d) {}", "if (a &lt; b &amp;&amp; c &gt; d) {}");
 
     // named entities
-    writeText("foo&nbsp;bar", "foo&nbsp;bar");
+    writeText("foo&nbsp;bar", "foo&amp;nbsp;bar");
     writeText("foo&nb#;bar", "foo&amp;nb#;bar");
     writeText("foo&nbsp bar", "foo&amp;nbsp bar");
 
     // decimal entities
-    writeText("foo&#39;bar", "foo&#39;bar");
+    writeText("foo&#39;bar", "foo&amp;#39;bar");
     writeText("foo &# 39;", "foo &amp;# 39;");
 
     // hex entities
-    writeText("foo&#xa9;bar&Xa9;baz", "foo&#xa9;bar&Xa9;baz");
+    writeText("foo&#xa9;bar&Xa9;baz", "foo&amp;#xa9;bar&amp;Xa9;baz");
     writeText("foo &#xxa9;", "foo &amp;#xxa9;");
 
     // ampersand edge cases
