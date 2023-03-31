@@ -21,7 +21,6 @@ import objectos.html.internal.NoOp;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
-import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardTextElement;
@@ -34,14 +33,6 @@ import objectos.lang.Check;
  */
 public non-sealed abstract class HtmlTemplate
     extends InternalHtmlTemplate implements ElementContents, NonVoidElementValue {
-
-  public final AttributeOrElement clipPath(String text) {
-    return addAttributeOrElement(AttributeOrElement.CLIPPATH, text);
-  }
-
-  public final AttributeOrElement label(String text) {
-    return addAttributeOrElement(AttributeOrElement.LABEL, text);
-  }
 
   @Override
   public final void mark(Marker dsl) {}
@@ -298,10 +289,6 @@ public non-sealed abstract class HtmlTemplate
           .append(t9)
           .toString()
     );
-  }
-
-  public final AttributeOrElement title(String text) {
-    return addAttributeOrElement(AttributeOrElement.TITLE, text);
   }
 
   @Override

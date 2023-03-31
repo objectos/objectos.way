@@ -20,6 +20,7 @@ import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
+import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -95,7 +96,60 @@ class HtmlRecorder extends HtmlTemplateApi {
     return (String) objectArray[PATH_NAME];
   }
 
-  protected final void record(HtmlTemplate template) {
+  protected final void record(InternalHtmlTemplate template) {
+    // objectArray[0] is reserved for the path name value
+    objectArray[PATH_NAME] = null;
+
+    // objectIndex starts @ 1
+    // as objectArray[0] is the path name value
+    objectIndex = OBJECT_INDEX;
+
+    listIndex = protoIndex = 0;
+
+    template.acceptTemplateDsl(this);
+
+    var rootIndex = protoIndex;
+
+    while (rootIndex > 0) {
+      int proto = protoArray[--rootIndex];
+
+      switch (proto) {
+        case ByteProto.DOCTYPE -> {
+          rootIndex = protoArray[--rootIndex];
+
+          listPush(proto);
+        }
+
+        case ByteProto.ELEMENT -> {
+          int elem = protoArray[--rootIndex];
+
+          rootIndex = protoArray[--rootIndex];
+
+          listPush(elem, proto);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    int returnTo = protoIndex;
+
+    protoAdd(ByteProto.ROOT);
+
+    while (listIndex > 0) {
+      protoAdd(listPop());
+    }
+
+    protoAdd(ByteProto.ROOT_END);
+
+    objectIndex = protoIndex;
+
+    protoIndex = returnTo;
+  }
+
+  protected final void record(InternalHtmlTemplate2 template) {
     // objectArray[0] is reserved for the path name value
     objectArray[PATH_NAME] = null;
 
@@ -223,6 +277,11 @@ class HtmlRecorder extends HtmlTemplateApi {
     );
 
     endSet(start);
+  }
+
+  @Override
+  final void addElement(ElementName name, Instruction... contents) {
+
   }
 
   @Override
@@ -392,7 +451,20 @@ class HtmlRecorder extends HtmlTemplateApi {
   }
 
   @Override
-  final void addTemplate(HtmlTemplate template) {
+  final void addTemplate(InternalHtmlTemplate template) {
+    int start = protoIndex;
+
+    protoAdd(ByteProto.TEMPLATE, NULL);
+
+    template.acceptTemplateDsl(this);
+
+    protoAdd(start, ByteProto.TEMPLATE);
+
+    endSet(start);
+  }
+
+  @Override
+  final void addTemplate(InternalHtmlTemplate2 template) {
     int start = protoIndex;
 
     protoAdd(ByteProto.TEMPLATE, NULL);

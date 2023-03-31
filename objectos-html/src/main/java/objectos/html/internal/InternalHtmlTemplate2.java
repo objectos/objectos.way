@@ -15,75 +15,31 @@
  */
 package objectos.html.internal;
 
-import java.util.Objects;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
-import objectos.html.tmpl.ElementName;
+import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
-import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 
 /**
  * @since 0.5.3
  */
-public abstract class InternalHtmlTemplate extends GeneratedAbstractTemplate {
+public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   private HtmlTemplateApi api;
 
-  public final AttributeOrElement clipPath(String text) {
-    return addAttributeOrElement(AttributeOrElement.CLIPPATH, text);
-  }
-
   public final void doctype() {
     api().addDoctype();
-  }
-
-  public final AttributeOrElement label(String text) {
-    return addAttributeOrElement(AttributeOrElement.LABEL, text);
-  }
-
-  public final AttributeOrElement title(String text) {
-    return addAttributeOrElement(AttributeOrElement.TITLE, text);
   }
 
   protected final AttributeOrElement addAttributeOrElement(AttributeOrElement value, String text) {
     api().addAttributeOrElement(value, text);
 
     return value;
-  }
-
-  @Override
-  protected final <N extends StandardAttributeName> N addStandardAttribute(N name) {
-    api().addAttribute(name);
-
-    return name;
-  }
-
-  @Override
-  protected final <N extends StandardAttributeName> N addStandardAttribute(N name, String value) {
-    api().addAttribute(name, value);
-
-    return name;
-  }
-
-  @Override
-  protected final ElementName addStandardElement(StandardElementName element, String text) {
-    api().addElement(element, text);
-
-    return element;
-  }
-
-  @Override
-  protected final ElementName addStandardElement(StandardElementName element, Value[] values) {
-    Objects.requireNonNull(element, "element == null");
-
-    api().addElement(element, values);
-
-    return element;
   }
 
   protected final void addTemplate(HtmlTemplate template) {
@@ -132,6 +88,31 @@ public abstract class InternalHtmlTemplate extends GeneratedAbstractTemplate {
     } finally {
       this.api = null;
     }
+  }
+
+  @Override
+  final void ambiguous(Ambiguous name, String text) {
+
+  }
+
+  @Override
+  final void attribute(StandardAttributeName name) {
+    api().addAttribute(name);
+  }
+
+  @Override
+  final void attribute(StandardAttributeName name, String value) {
+    api().addAttribute(name, value);
+  }
+
+  @Override
+  final void element(StandardElementName name, Instruction[] contents) {
+    api().addElement(name, contents);
+  }
+
+  @Override
+  final void element(StandardElementName name, String text) {
+    api().addElement(name, text);
   }
 
   private HtmlTemplateApi api() {
