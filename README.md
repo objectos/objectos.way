@@ -4,8 +4,8 @@ Objectos is a suite of open-source Java libraries.
 
 Documentation for the current release:
 
-- [Programmer's guide](https://www.objectos.com.br/docs/0.5.1/)
-- [Javadocs](https://www.objectos.com.br/docs/0.5.1/api/) 
+- [Programmer's guide](https://www.objectos.com.br/docs/0.5.3/)
+- [Javadocs](https://www.objectos.com.br/docs/0.5.3/api/) 
 
 ## License
 
