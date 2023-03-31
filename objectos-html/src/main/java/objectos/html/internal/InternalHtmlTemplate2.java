@@ -19,6 +19,7 @@ import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.Instruction;
+import objectos.html.tmpl.Instruction.AnchorInstruction;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
@@ -64,14 +65,14 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     api().pathName(path);
   }
 
-  protected CustomAttributeName.PathTo pathTo(String path) {
+  protected AnchorInstruction pathTo(String path) {
     Validate.pathName(path.toString()); // path implicit null-check
 
     var name = CustomAttributeName.PATH_TO;
 
     api().addAttribute(name, path);
 
-    return name;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final NonVoidElementValue raw(String text) {

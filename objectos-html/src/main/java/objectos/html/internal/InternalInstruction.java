@@ -60,7 +60,6 @@ import objectos.html.tmpl.Instruction.MarkerStartAttribute;
 import objectos.html.tmpl.Instruction.MaskAttribute;
 import objectos.html.tmpl.Instruction.MaskTypeAttribute;
 import objectos.html.tmpl.Instruction.NameAttribute;
-import objectos.html.tmpl.Instruction.NoOpInstruction;
 import objectos.html.tmpl.Instruction.OpacityAttribute;
 import objectos.html.tmpl.Instruction.OverflowAttribute;
 import objectos.html.tmpl.Instruction.PaintOrderAttribute;
@@ -179,7 +178,6 @@ public enum InternalInstruction implements
     WritingModeAttribute,
     AmbiguousInstruction,
     GlobalAttribute,
-    ElementContents,
-    NoOpInstruction {
+    ElementContents {
   INSTANCE;
 }

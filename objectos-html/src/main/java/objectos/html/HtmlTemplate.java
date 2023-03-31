@@ -17,10 +17,8 @@ package objectos.html;
 
 import objectos.html.internal.HtmlTemplateApi;
 import objectos.html.internal.InternalHtmlTemplate;
-import objectos.html.internal.NoOp;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardTextElement;
@@ -36,10 +34,6 @@ public non-sealed abstract class HtmlTemplate
 
   @Override
   public final void mark(Marker dsl) {}
-
-  public final AnyElementValue noop() {
-    return NoOp.INSTANCE;
-  }
 
   @Override
   public final void render(Renderer renderer) {

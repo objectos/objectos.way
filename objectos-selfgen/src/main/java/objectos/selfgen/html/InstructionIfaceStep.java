@@ -18,12 +18,8 @@ package objectos.selfgen.html;
 import java.util.Set;
 import objectos.code.ClassTypeName;
 import objectos.code.ParameterizedTypeName;
-import objectos.code.TypeVariableName;
 
 final class InstructionIfaceStep extends ThisTemplate {
-  private static final ClassTypeName FUNCTIONAL_IFACE
-      = ClassTypeName.of(FunctionalInterface.class);
-
   private static final ClassTypeName HTML_TEMPLATE
       = ClassTypeName.of("objectos.html", "HtmlTemplate");
 
@@ -97,26 +93,24 @@ final class InstructionIfaceStep extends ThisTemplate {
       permitsClause(HTML_TEMPLATE, INTERNAL_INSTRUCTION)
     );
 
-    for (int i = 0; i < 3; i++) {
-      final int count = i;
-
-      interfaceDeclaration(
-        annotation(FUNCTIONAL_IFACE),
-
-        NON_SEALED, name("Fragment" + i),
-
-        include(this::interfaceBodyExtendsAll),
-
-        include(() -> interfaceBody4Fragment(count))
-      );
-    }
-
     interfaceDeclaration(
-      SEALED, name(NOOP_INSTRUCTION),
+      SEALED, name("Fragment"),
 
       include(this::interfaceBodyExtendsAll),
 
-      permitsClause(INTERNAL_INSTRUCTION)
+      permitsClause(
+        ClassTypeName.of(HTML_INTERNAL, "InternalFragment")
+      )
+    );
+
+    interfaceDeclaration(
+      SEALED, name("NoOp"),
+
+      include(this::interfaceBodyExtendsAll),
+
+      permitsClause(
+        ClassTypeName.of(HTML_INTERNAL, "InternalNoOp")
+      )
     );
   }
 
@@ -160,24 +154,6 @@ final class InstructionIfaceStep extends ThisTemplate {
       if (element.hasEndTag()) {
         extendsClause(NL, element.instructionClassName);
       }
-    }
-  }
-
-  private void interfaceBody4Fragment(int count) {
-    for (int i = 1; i <= count; i++) {
-      typeParameter("T" + i);
-    }
-
-    method(
-      VOID, name("execute"),
-
-      include(() -> interfaceBody4FragmentParams(count))
-    );
-  }
-
-  private void interfaceBody4FragmentParams(int count) {
-    for (int i = 1; i <= count; i++) {
-      parameter(TypeVariableName.of("T" + i), name("arg" + i));
     }
   }
 

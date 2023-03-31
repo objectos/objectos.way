@@ -52,7 +52,9 @@ public class InstructionIfaceStepTest {
 
       import java.util.Set;
       import objectos.html.HtmlTemplate;
+      import objectos.html.internal.InternalFragment;
       import objectos.html.internal.InternalInstruction;
+      import objectos.html.internal.InternalNoOp;
 
       public sealed interface Instruction {
         sealed interface AnchorInstruction extends Instruction {}
@@ -101,42 +103,19 @@ public class InstructionIfaceStepTest {
             OptionInstruction,
             SelectInstruction permits HtmlTemplate, InternalInstruction {}
 
-        @FunctionalInterface
-        non-sealed interface Fragment0 extends
+        sealed interface Fragment extends
             AnchorInstruction,
             DivInstruction,
             MetaInstruction,
             OptionInstruction,
-            SelectInstruction {
-          void execute();
-        }
+            SelectInstruction permits InternalFragment {}
 
-        @FunctionalInterface
-        non-sealed interface Fragment1<T1> extends
+        sealed interface NoOp extends
             AnchorInstruction,
             DivInstruction,
             MetaInstruction,
             OptionInstruction,
-            SelectInstruction {
-          void execute(T1 arg1);
-        }
-
-        @FunctionalInterface
-        non-sealed interface Fragment2<T1, T2> extends
-            AnchorInstruction,
-            DivInstruction,
-            MetaInstruction,
-            OptionInstruction,
-            SelectInstruction {
-          void execute(T1 arg1, T2 arg2);
-        }
-
-        sealed interface NoOpInstruction extends
-            AnchorInstruction,
-            DivInstruction,
-            MetaInstruction,
-            OptionInstruction,
-            SelectInstruction permits InternalInstruction {}
+            SelectInstruction permits InternalNoOp {}
       }
       """
     );

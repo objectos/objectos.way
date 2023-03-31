@@ -51,8 +51,6 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName ELEMENT_CONTENTS = ClassTypeName.of(INSTRUCTION, "ElementContents");
 
-  static final ClassTypeName NOOP_INSTRUCTION = ClassTypeName.of(INSTRUCTION, "NoOpInstruction");
-
   static final ClassTypeName NAMES_BUILDER = ClassTypeName.of(HTML_TMPL, "NamesBuilder");
 
   static final ClassTypeName GLB_ATTR_NAME = ClassTypeName.of(HTML_TMPL, "GlobalAttributeName");

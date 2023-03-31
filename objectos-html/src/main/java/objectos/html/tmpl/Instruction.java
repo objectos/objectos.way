@@ -17,7 +17,9 @@ package objectos.html.tmpl;
 
 import java.util.Set;
 import objectos.html.HtmlTemplate;
+import objectos.html.internal.InternalFragment;
 import objectos.html.internal.InternalInstruction;
+import objectos.html.internal.InternalNoOp;
 
 public sealed interface Instruction {
   sealed interface AnchorInstruction extends Instruction {}
@@ -555,8 +557,7 @@ public sealed interface Instruction {
       TableRowInstruction,
       UnorderedListInstruction permits HtmlTemplate, InternalInstruction {}
 
-  @FunctionalInterface
-  non-sealed interface Fragment0 extends
+  sealed interface Fragment extends
       AnchorInstruction,
       AbbreviationInstruction,
       ArticleInstruction,
@@ -629,12 +630,9 @@ public sealed interface Instruction {
       TableHeadInstruction,
       TitleInstruction,
       TableRowInstruction,
-      UnorderedListInstruction {
-    void execute();
-  }
+      UnorderedListInstruction permits InternalFragment {}
 
-  @FunctionalInterface
-  non-sealed interface Fragment1<T1> extends
+  sealed interface NoOp extends
       AnchorInstruction,
       AbbreviationInstruction,
       ArticleInstruction,
@@ -707,160 +705,5 @@ public sealed interface Instruction {
       TableHeadInstruction,
       TitleInstruction,
       TableRowInstruction,
-      UnorderedListInstruction {
-    void execute(T1 arg1);
-  }
-
-  @FunctionalInterface
-  non-sealed interface Fragment2<T1, T2> extends
-      AnchorInstruction,
-      AbbreviationInstruction,
-      ArticleInstruction,
-      BringAttentionToInstruction,
-      BlockquoteInstruction,
-      BodyInstruction,
-      LineBreakInstruction,
-      ButtonInstruction,
-      ClipPathInstruction,
-      CodeInstruction,
-      DefinitionDescriptionInstruction,
-      DefsInstruction,
-      DetailsInstruction,
-      DivInstruction,
-      DefinitionListInstruction,
-      DefinitionTermInstruction,
-      EmphasisInstruction,
-      FieldsetInstruction,
-      FigureInstruction,
-      FooterInstruction,
-      FormInstruction,
-      GInstruction,
-      Heading1Instruction,
-      Heading2Instruction,
-      Heading3Instruction,
-      Heading4Instruction,
-      Heading5Instruction,
-      Heading6Instruction,
-      HeadInstruction,
-      HeaderInstruction,
-      HeadingGroupInstruction,
-      HorizontalRuleInstruction,
-      HtmlInstruction,
-      ImageInstruction,
-      InputInstruction,
-      KeyboardInputInstruction,
-      LabelInstruction,
-      LegendInstruction,
-      ListItemInstruction,
-      LinkInstruction,
-      MainInstruction,
-      MenuInstruction,
-      MetaInstruction,
-      NavInstruction,
-      OrderedListInstruction,
-      OptionGroupInstruction,
-      OptionInstruction,
-      ParagraphInstruction,
-      PathInstruction,
-      PreInstruction,
-      ProgressInstruction,
-      SampleOutputInstruction,
-      ScriptInstruction,
-      SectionInstruction,
-      SelectInstruction,
-      SmallInstruction,
-      SpanInstruction,
-      StrongInstruction,
-      StyleInstruction,
-      SubscriptInstruction,
-      SummaryInstruction,
-      SuperscriptInstruction,
-      SvgInstruction,
-      TableInstruction,
-      TableBodyInstruction,
-      TableDataInstruction,
-      TemplateInstruction,
-      TextAreaInstruction,
-      TableHeaderInstruction,
-      TableHeadInstruction,
-      TitleInstruction,
-      TableRowInstruction,
-      UnorderedListInstruction {
-    void execute(T1 arg1, T2 arg2);
-  }
-
-  sealed interface NoOpInstruction extends
-      AnchorInstruction,
-      AbbreviationInstruction,
-      ArticleInstruction,
-      BringAttentionToInstruction,
-      BlockquoteInstruction,
-      BodyInstruction,
-      LineBreakInstruction,
-      ButtonInstruction,
-      ClipPathInstruction,
-      CodeInstruction,
-      DefinitionDescriptionInstruction,
-      DefsInstruction,
-      DetailsInstruction,
-      DivInstruction,
-      DefinitionListInstruction,
-      DefinitionTermInstruction,
-      EmphasisInstruction,
-      FieldsetInstruction,
-      FigureInstruction,
-      FooterInstruction,
-      FormInstruction,
-      GInstruction,
-      Heading1Instruction,
-      Heading2Instruction,
-      Heading3Instruction,
-      Heading4Instruction,
-      Heading5Instruction,
-      Heading6Instruction,
-      HeadInstruction,
-      HeaderInstruction,
-      HeadingGroupInstruction,
-      HorizontalRuleInstruction,
-      HtmlInstruction,
-      ImageInstruction,
-      InputInstruction,
-      KeyboardInputInstruction,
-      LabelInstruction,
-      LegendInstruction,
-      ListItemInstruction,
-      LinkInstruction,
-      MainInstruction,
-      MenuInstruction,
-      MetaInstruction,
-      NavInstruction,
-      OrderedListInstruction,
-      OptionGroupInstruction,
-      OptionInstruction,
-      ParagraphInstruction,
-      PathInstruction,
-      PreInstruction,
-      ProgressInstruction,
-      SampleOutputInstruction,
-      ScriptInstruction,
-      SectionInstruction,
-      SelectInstruction,
-      SmallInstruction,
-      SpanInstruction,
-      StrongInstruction,
-      StyleInstruction,
-      SubscriptInstruction,
-      SummaryInstruction,
-      SuperscriptInstruction,
-      SvgInstruction,
-      TableInstruction,
-      TableBodyInstruction,
-      TableDataInstruction,
-      TemplateInstruction,
-      TextAreaInstruction,
-      TableHeaderInstruction,
-      TableHeadInstruction,
-      TitleInstruction,
-      TableRowInstruction,
-      UnorderedListInstruction permits InternalInstruction {}
+      UnorderedListInstruction permits InternalNoOp {}
 }

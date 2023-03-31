@@ -44,8 +44,6 @@ final class InternalInstructionStep extends ThisTemplate {
 
     implementsClause(NL, ELEMENT_CONTENTS);
 
-    implementsClause(NL, NOOP_INSTRUCTION);
-
     enumConstant(name("INSTANCE"));
   }
 }

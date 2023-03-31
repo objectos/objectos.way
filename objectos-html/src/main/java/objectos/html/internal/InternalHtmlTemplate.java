@@ -17,6 +17,7 @@ package objectos.html.internal;
 
 import java.util.Objects;
 import objectos.html.HtmlTemplate;
+import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.ElementName;
@@ -44,6 +45,10 @@ public abstract class InternalHtmlTemplate extends GeneratedAbstractTemplate {
 
   public final AttributeOrElement label(String text) {
     return addAttributeOrElement(AttributeOrElement.LABEL, text);
+  }
+
+  public final AnyElementValue noop() {
+    return objectos.html.internal.NoOp.INSTANCE;
   }
 
   public final AttributeOrElement title(String text) {
