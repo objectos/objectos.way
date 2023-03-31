@@ -15,25 +15,16 @@
  */
 package objectos.html;
 
-import java.util.Objects;
 import objectos.html.internal.HtmlTemplateApi;
 import objectos.html.internal.InternalHtmlTemplate;
 import objectos.html.internal.NoOp;
-import objectos.html.internal.Raw;
-import objectos.html.internal.Validate;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.AttributeOrElement;
-import objectos.html.tmpl.CustomAttributeName;
-import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.Instruction.ElementContents;
-import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
-import objectos.html.tmpl.StandardAttributeName;
-import objectos.html.tmpl.StandardElementName;
 import objectos.html.tmpl.StandardTextElement;
-import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 
 /**
@@ -46,10 +37,6 @@ public non-sealed abstract class HtmlTemplate
 
   public final AttributeOrElement clipPath(String text) {
     return addAttributeOrElement(AttributeOrElement.CLIPPATH, text);
-  }
-
-  public final void doctype() {
-    api().addDoctype();
   }
 
   public final AttributeOrElement label(String text) {
@@ -66,12 +53,12 @@ public non-sealed abstract class HtmlTemplate
   @Override
   public final void render(Renderer renderer) {
     if (renderer instanceof HtmlTemplateApi dsl) {
-      dsl.addTemplate(this);
+      addTemplate(this);
     }
   }
 
   public final StandardTextElement t(String text) {
-    api().addText(text);
+    addText(text);
 
     return StandardTextElement.INSTANCE;
   }
@@ -329,70 +316,6 @@ public non-sealed abstract class HtmlTemplate
   }
 
   @Override
-  protected final <N extends StandardAttributeName> N addStandardAttribute(N name) {
-    api().addAttribute(name);
-
-    return name;
-  }
-
-  @Override
-  protected final <N extends StandardAttributeName> N addStandardAttribute(N name, String value) {
-    api().addAttribute(name, value);
-
-    return name;
-  }
-
-  @Override
-  protected final ElementName addStandardElement(StandardElementName element, String text) {
-    api().addElement(element, text);
-
-    return element;
-  }
-
-  @Override
-  protected final ElementName addStandardElement(StandardElementName element, Value[] values) {
-    Objects.requireNonNull(element, "element == null");
-
-    api().addElement(element, values);
-
-    return element;
-  }
-
-  @Override
   protected abstract void definition();
-
-  protected final Lambda f(Lambda lambda) {
-    api().addLambda(lambda);
-
-    return lambda;
-  }
-
-  protected final void pathName(String path) {
-    Validate.pathName(path.toString()); // path implicit null-check
-
-    api().pathName(path);
-  }
-
-  protected CustomAttributeName.PathTo pathTo(String path) {
-    Validate.pathName(path.toString()); // path implicit null-check
-
-    var name = CustomAttributeName.PATH_TO;
-
-    api().addAttribute(name, path);
-
-    return name;
-  }
-
-  protected final NonVoidElementValue raw(String text) {
-    api().addRaw(text);
-
-    return Raw.INSTANCE;
-  }
-
-  private AttributeOrElement addAttributeOrElement(AttributeOrElement value, String text) {
-    api().addAttributeOrElement(value, text);
-
-    return value;
-  }
 
 }

@@ -29,7 +29,7 @@ import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
-class HtmlRecorder implements HtmlTemplateApi {
+class HtmlRecorder extends HtmlTemplateApi {
 
   static final int PATH_NAME = 0;
   static final int DOCUMENT = 1;
@@ -54,7 +54,102 @@ class HtmlRecorder implements HtmlTemplateApi {
   int protoIndex;
 
   @Override
-  public final void addAttribute(AttributeName name) {
+  public final void addAttribute(String name, String value) {
+    Objects.requireNonNull(name, "name == null");
+    Objects.requireNonNull(value, "value == null");
+
+    var std = StandardAttributeName.getByName(name);
+
+    if (std == null) {
+      throw new IllegalArgumentException(
+        """
+        The attribute '%s' is either invalid or not implemented yet.
+        """.formatted(name)
+      );
+    }
+
+    addAttribute(std, value);
+  }
+
+  @Override
+  public final void addNoOp() {
+    int start = protoIndex;
+
+    protoAdd(
+      ByteProto.NOOP,
+      NULL,
+
+      start,
+      ByteProto.NOOP
+    );
+
+    endSet(start);
+  }
+
+  @Override
+  public final void markAttribute() {
+    listAdd(ByteProto.ATTRIBUTE);
+  }
+
+  protected final String $pathName() {
+    return (String) objectArray[PATH_NAME];
+  }
+
+  protected final void record(HtmlTemplate template) {
+    // objectArray[0] is reserved for the path name value
+    objectArray[PATH_NAME] = null;
+
+    // objectIndex starts @ 1
+    // as objectArray[0] is the path name value
+    objectIndex = OBJECT_INDEX;
+
+    listIndex = protoIndex = 0;
+
+    template.acceptTemplateDsl(this);
+
+    var rootIndex = protoIndex;
+
+    while (rootIndex > 0) {
+      int proto = protoArray[--rootIndex];
+
+      switch (proto) {
+        case ByteProto.DOCTYPE -> {
+          rootIndex = protoArray[--rootIndex];
+
+          listPush(proto);
+        }
+
+        case ByteProto.ELEMENT -> {
+          int elem = protoArray[--rootIndex];
+
+          rootIndex = protoArray[--rootIndex];
+
+          listPush(elem, proto);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    int returnTo = protoIndex;
+
+    protoAdd(ByteProto.ROOT);
+
+    while (listIndex > 0) {
+      protoAdd(listPop());
+    }
+
+    protoAdd(ByteProto.ROOT_END);
+
+    objectIndex = protoIndex;
+
+    protoIndex = returnTo;
+  }
+
+  @Override
+  final void addAttribute(AttributeName name) {
     int code = name.getCode(); // name implicit null-check
 
     int start = protoIndex;
@@ -74,7 +169,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addAttribute(AttributeName name, String value) {
+  final void addAttribute(AttributeName name, String value) {
     int code = name.getCode(); // name implicit null-check
     value = value.toString(); // value implicit null-check
 
@@ -95,25 +190,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addAttribute(String name, String value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-
-    var std = StandardAttributeName.getByName(name);
-
-    if (std == null) {
-      throw new IllegalArgumentException(
-        """
-        The attribute '%s' is either invalid or not implemented yet.
-        """.formatted(name)
-      );
-    }
-
-    addAttribute(std, value);
-  }
-
-  @Override
-  public final void addAttributeOrElement(AttributeOrElement value, String text) {
+  final void addAttributeOrElement(AttributeOrElement value, String text) {
     int code = value.code(); // name implicit null-check
     text = text.toString(); // text implicit null-check
 
@@ -134,7 +211,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addDoctype() {
+  final void addDoctype() {
     int start = protoIndex;
 
     protoAdd(
@@ -149,7 +226,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addElement(ElementName name, String text) {
+  final void addElement(ElementName name, String text) {
     int code = name.getCode(); // name implicit null-check
 
     int contents = protoIndex;
@@ -187,7 +264,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addElement(ElementName name, Value... values) {
+  final void addElement(ElementName name, Value... values) {
     int code = name.getCode(); // name implicit null-check
     int length = values.length; // values implicit null-check
 
@@ -283,7 +360,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addLambda(Lambda lambda) {
+  final void addLambda(Lambda lambda) {
     int start = protoIndex;
 
     protoAdd(ByteProto.LAMBDA, NULL);
@@ -296,22 +373,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addNoOp() {
-    int start = protoIndex;
-
-    protoAdd(
-      ByteProto.NOOP,
-      NULL,
-
-      start,
-      ByteProto.NOOP
-    );
-
-    endSet(start);
-  }
-
-  @Override
-  public final void addRaw(String text) {
+  final void addRaw(String text) {
     Objects.requireNonNull(text, "text == null");
 
     int start = protoIndex;
@@ -330,7 +392,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addTemplate(HtmlTemplate template) {
+  final void addTemplate(HtmlTemplate template) {
     int start = protoIndex;
 
     protoAdd(ByteProto.TEMPLATE, NULL);
@@ -343,7 +405,7 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void addText(String text) {
+  final void addText(String text) {
     Objects.requireNonNull(text, "text == null");
 
     int start = protoIndex;
@@ -362,70 +424,8 @@ class HtmlRecorder implements HtmlTemplateApi {
   }
 
   @Override
-  public final void markAttribute() {
-    listAdd(ByteProto.ATTRIBUTE);
-  }
-
-  @Override
-  public final void pathName(String path) {
+  final void pathName(String path) {
     objectArray[PATH_NAME] = path;
-  }
-
-  public final void record(HtmlTemplate template) {
-    // objectArray[0] is reserved for the path name value
-    objectArray[PATH_NAME] = null;
-
-    // objectIndex starts @ 1
-    // as objectArray[0] is the path name value
-    objectIndex = OBJECT_INDEX;
-
-    listIndex = protoIndex = 0;
-
-    template.acceptTemplateDsl(this);
-
-    var rootIndex = protoIndex;
-
-    while (rootIndex > 0) {
-      int proto = protoArray[--rootIndex];
-
-      switch (proto) {
-        case ByteProto.DOCTYPE -> {
-          rootIndex = protoArray[--rootIndex];
-
-          listPush(proto);
-        }
-
-        case ByteProto.ELEMENT -> {
-          int elem = protoArray[--rootIndex];
-
-          rootIndex = protoArray[--rootIndex];
-
-          listPush(elem, proto);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    int returnTo = protoIndex;
-
-    protoAdd(ByteProto.ROOT);
-
-    while (listIndex > 0) {
-      protoAdd(listPop());
-    }
-
-    protoAdd(ByteProto.ROOT_END);
-
-    objectIndex = protoIndex;
-
-    protoIndex = returnTo;
-  }
-
-  protected final String $pathName() {
-    return (String) objectArray[PATH_NAME];
   }
 
   private void endSet(int start) {

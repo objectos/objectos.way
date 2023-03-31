@@ -61,7 +61,7 @@ public class HtmlPlayer extends HtmlRecorder {
     objectArray[RAW_TEXT] = new PseudoHtmlRawText();
   }
 
-  public final void play(DocumentProcessor processor) {
+  protected final void play(DocumentProcessor processor) {
     listIndex = -1;
 
     protoArray = IntArrays.growIfNecessary(protoArray, objectIndex);

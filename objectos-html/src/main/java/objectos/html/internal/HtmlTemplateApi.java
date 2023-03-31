@@ -29,28 +29,28 @@ import objectos.html.tmpl.Value;
  *
  * @since 0.5.3
  */
-public interface HtmlTemplateApi extends Marker, Renderer {
+public abstract class HtmlTemplateApi implements Marker, Renderer {
 
-  void addAttribute(AttributeName name);
+  abstract void addAttribute(AttributeName name);
 
-  void addAttribute(AttributeName name, String value);
+  abstract void addAttribute(AttributeName name, String value);
 
-  void addAttributeOrElement(AttributeOrElement value, String text);
+  abstract void addAttributeOrElement(AttributeOrElement value, String text);
 
-  void addDoctype();
+  abstract void addDoctype();
 
-  void addElement(ElementName name, String text);
+  abstract void addElement(ElementName name, String text);
 
-  void addElement(ElementName name, Value... values);
+  abstract void addElement(ElementName name, Value... values);
 
-  void addLambda(Lambda lambda);
+  abstract void addLambda(Lambda lambda);
 
-  void addRaw(String text);
+  abstract void addRaw(String text);
 
-  void addTemplate(HtmlTemplate template);
+  abstract void addTemplate(HtmlTemplate template);
 
-  void addText(String text);
+  abstract void addText(String text);
 
-  void pathName(String path);
+  abstract void pathName(String path);
 
 }
