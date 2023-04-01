@@ -54,6 +54,16 @@ public abstract class InternalHtmlTemplate extends GeneratedHtmlTemplate {
 
   protected abstract void definition();
 
+  @Override
+  protected final void element(StandardElementName name, Instruction[] contents) {
+    api().addElement(name, contents);
+  }
+
+  @Deprecated
+  protected final ElementContents elementContents() {
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final Fragment f(FragmentAction action) {
     api().addFragment(action);
 
@@ -115,11 +125,6 @@ public abstract class InternalHtmlTemplate extends GeneratedHtmlTemplate {
   @Override
   final void attribute(StandardAttributeName name, String value) {
     api().addAttribute(name, value);
-  }
-
-  @Override
-  final void element(StandardElementName name, Instruction[] contents) {
-    api().addElement(name, contents);
   }
 
   @Override
