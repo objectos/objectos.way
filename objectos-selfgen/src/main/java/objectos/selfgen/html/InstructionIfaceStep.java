@@ -15,7 +15,7 @@
  */
 package objectos.selfgen.html;
 
-import java.util.Set;
+import java.util.Iterator;
 import objectos.code.ClassTypeName;
 import objectos.code.ParameterizedTypeName;
 
@@ -23,8 +23,8 @@ final class InstructionIfaceStep extends ThisTemplate {
   private static final ClassTypeName HTML_TEMPLATE
       = ClassTypeName.of("objectos.html", "HtmlTemplate");
 
-  private static final ClassTypeName SET
-      = ClassTypeName.of(Set.class);
+  private static final ClassTypeName ITERATOR
+      = ClassTypeName.of(Iterator.class);
 
   @Override
   protected final void definition() {
@@ -144,7 +144,7 @@ final class InstructionIfaceStep extends ThisTemplate {
       extendsClause(EXTERNAL_ATTRIBUTE),
 
       method(
-        ParameterizedTypeName.of(SET, STRING), name("value")
+        ParameterizedTypeName.of(ITERATOR, STRING), name("value")
       )
     );
   }

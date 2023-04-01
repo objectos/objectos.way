@@ -455,6 +455,18 @@ class HtmlRecorder extends HtmlTemplateApi {
       var value = externalValue(ext.value());
       addAttribute(StandardAttributeName.CLASS, value);
       listAdd(MARK_INTERNAL);
+    } else if (attribute instanceof ExternalAttribute.StyleClassSet ext) {
+      var set = ext.value();
+
+      if (set == null) {
+        return;
+      }
+
+      while (set.hasNext()) {
+        var value = externalValue(set.next());
+        addAttribute(StandardAttributeName.CLASS, value);
+        listAdd(MARK_INTERNAL);
+      }
     } else {
       var type = attribute.getClass();
 

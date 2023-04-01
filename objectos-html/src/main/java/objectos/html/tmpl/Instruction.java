@@ -15,7 +15,7 @@
  */
 package objectos.html.tmpl;
 
-import java.util.Set;
+import java.util.Iterator;
 import objectos.html.HtmlTemplate;
 import objectos.html.internal.InternalFragment;
 import objectos.html.internal.InternalInstruction;
@@ -484,7 +484,7 @@ public sealed interface Instruction {
     }
 
     non-sealed interface StyleClassSet extends ExternalAttribute {
-      Set<String> value();
+      Iterator<String> value();
     }
   }
 
