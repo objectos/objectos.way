@@ -13,34 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.tmpl;
 
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AnyElementValue;
-import objectos.html.tmpl.Instruction.ExternalAttribute;
+/**
+ * @since 0.5.4
+ */
+@FunctionalInterface
+public interface FragmentAction {
 
-final class TestIdSelector implements AnyElementValue, ExternalAttribute.Id {
-
-  private final String id;
-
-  public TestIdSelector(String id) {
-    this.id = id;
-  }
-
-  @Override
-  public final void mark(Marker marker) {
-    marker.markAttribute();
-  }
-
-  @Override
-  public final void render(Renderer renderer) {
-    renderer.addAttribute("id", id);
-  }
-
-  @Override
-  public final String value() {
-    return id;
-  }
+  void execute();
 
 }

@@ -21,6 +21,10 @@ public enum Ambiguous {
 
   LABEL,
 
-  TITLE
+  TITLE;
+
+  final int code() {
+    return ordinal();
+  }
 
 }

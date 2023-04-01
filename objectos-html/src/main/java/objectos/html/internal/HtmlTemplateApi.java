@@ -20,6 +20,7 @@ import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
+import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.Value;
@@ -30,6 +31,8 @@ import objectos.html.tmpl.Value;
  * @since 0.5.3
  */
 public abstract class HtmlTemplateApi implements Marker, Renderer {
+
+  abstract void addAmbiguous(Ambiguous name, String text);
 
   abstract void addAttribute(AttributeName name);
 
@@ -44,6 +47,8 @@ public abstract class HtmlTemplateApi implements Marker, Renderer {
   abstract void addElement(ElementName name, String text);
 
   abstract void addElement(ElementName name, Value... values);
+
+  abstract void addFragment(FragmentAction action);
 
   abstract void addLambda(Lambda lambda);
 

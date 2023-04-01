@@ -20,7 +20,9 @@ import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.AttributeName;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
+import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
+import objectos.html.tmpl.Instruction.ExternalAttribute;
 import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -31,6 +33,10 @@ import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
 
 class HtmlRecorder extends HtmlTemplateApi {
+
+  private static final int MARK_INTERNAL = -1;
+  private static final int MARK_FRAGMENT = -2;
+  private static final int MARK_TEMPLATE = -3;
 
   static final int PATH_NAME = 0;
   static final int DOCUMENT = 1;
@@ -203,6 +209,27 @@ class HtmlRecorder extends HtmlTemplateApi {
   }
 
   @Override
+  final void addAmbiguous(Ambiguous name, String text) {
+    int code = name.code(); // name implicit null-check
+    text = text.toString(); // text implicit null-check
+
+    int start = protoIndex;
+
+    protoAdd(
+      ByteProto.AMBIGUOUS,
+      NULL,
+
+      code,
+      objectAdd(text),
+
+      start,
+      ByteProto.AMBIGUOUS
+    );
+
+    endSet(start);
+  }
+
+  @Override
   final void addAttribute(AttributeName name) {
     int code = name.getCode(); // name implicit null-check
 
@@ -251,14 +278,14 @@ class HtmlRecorder extends HtmlTemplateApi {
     int start = protoIndex;
 
     protoAdd(
-      ByteProto.ATTR_OR_ELEM,
+      ByteProto.AMBIGUOUS,
       NULL,
 
       code,
       objectAdd(text),
 
       start,
-      ByteProto.ATTR_OR_ELEM
+      ByteProto.AMBIGUOUS
     );
 
     endSet(start);
@@ -280,8 +307,111 @@ class HtmlRecorder extends HtmlTemplateApi {
   }
 
   @Override
-  final void addElement(ElementName name, Instruction... contents) {
+  final void addElement(ElementName name, Instruction... values) {
+    int code = name.getCode(); // name implicit null-check
+    int length = values.length; // contents implicit null-check
 
+    int listBase = listIndex;
+
+    int contents = protoIndex;
+
+    for (int i = 0; i < length; i++) {
+      var value = Check.notNull(values[i], "values[", i, "] == null");
+
+      if (value instanceof InternalInstruction) {
+        listAdd(MARK_INTERNAL);
+
+        contents = updateContents(contents);
+      } else if (value instanceof InternalFragment) {
+        listAdd(MARK_FRAGMENT);
+
+        contents = updateContents(contents);
+      } else if (value instanceof ExternalAttribute attribute) {
+        addElementExternalAttribute(attribute);
+      } else if (value instanceof HtmlTemplate template) {
+        listAdd(MARK_TEMPLATE);
+
+        addTemplate(template);
+      } else {
+        var type = value.getClass();
+
+        throw new UnsupportedOperationException(
+          "Implement me :: type=" + type
+        );
+      }
+    }
+
+    int start = protoIndex;
+
+    protoAdd(ByteProto.ELEMENT, NULL, code);
+
+    int listMax = listIndex;
+
+    listAdd(
+      /*3=template*/contents,
+      /*2=fragment*/contents,
+      /*1=internal*/contents
+    );
+
+    for (int i = listBase; i < listMax; i++) {
+      int marker = listArray[i];
+
+      switch (marker) {
+        case MARK_INTERNAL -> {
+          var index = listOffset(1);
+
+          int proto = protoArray[index];
+
+          search: while (true) {
+            switch (proto) {
+              case ByteProto.AMBIGUOUS,
+                   ByteProto.ATTRIBUTE,
+                   ByteProto.ELEMENT,
+                   ByteProto.TEXT -> {
+                break search;
+              }
+
+              case ByteProto.FRAGMENT,
+                   ByteProto.MARKED -> {
+                index = protoArray[index + 1];
+
+                proto = protoArray[index];
+              }
+
+              default -> {
+                throw new UnsupportedOperationException(
+                  "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
+
+          protoArray[index] = ByteProto.MARKED;
+
+          protoAdd(proto, index);
+
+          index = protoArray[index + 1];
+
+          listOffset(1, index);
+        }
+
+        case MARK_FRAGMENT -> markImplLambda(2, ByteProto.FRAGMENT);
+
+        case MARK_TEMPLATE -> markImplLambda(3, ByteProto.TEMPLATE);
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: marker=" + marker
+        );
+      }
+    }
+
+    protoAdd(ByteProto.ELEMENT_END);
+
+    protoAdd(contents, start, ByteProto.ELEMENT);
+
+    endSet(start);
+
+    listIndex = listBase;
   }
 
   @Override
@@ -343,11 +473,11 @@ class HtmlRecorder extends HtmlTemplateApi {
 
         contents = updateContents(contents);
       } else if (value instanceof Lambda) {
-        listAdd(ByteProto.LAMBDA);
+        listAdd(ByteProto.FRAGMENT);
 
         contents = updateContents(contents);
       } else if (value instanceof AttributeOrElement) {
-        listAdd(ByteProto.ATTR_OR_ELEM);
+        listAdd(ByteProto.AMBIGUOUS);
 
         contents = updateContents(contents);
       } else if (value instanceof HtmlTemplate template) {
@@ -393,9 +523,9 @@ class HtmlRecorder extends HtmlTemplateApi {
 
         case ByteProto.ELEMENT -> markImplStandard(2, proto);
 
-        case ByteProto.LAMBDA -> markImplLambda(3, proto);
+        case ByteProto.FRAGMENT -> markImplLambda(3, proto);
 
-        case ByteProto.ATTR_OR_ELEM -> markImplStandard(4, proto);
+        case ByteProto.AMBIGUOUS -> markImplStandard(4, proto);
 
         case ByteProto.TEMPLATE -> markImplLambda(5, proto);
 
@@ -419,14 +549,27 @@ class HtmlRecorder extends HtmlTemplateApi {
   }
 
   @Override
+  final void addFragment(FragmentAction action) {
+    int start = protoIndex;
+
+    protoAdd(ByteProto.FRAGMENT, NULL);
+
+    action.execute();
+
+    protoAdd(start, ByteProto.FRAGMENT);
+
+    endSet(start);
+  }
+
+  @Override
   final void addLambda(Lambda lambda) {
     int start = protoIndex;
 
-    protoAdd(ByteProto.LAMBDA, NULL);
+    protoAdd(ByteProto.FRAGMENT, NULL);
 
     lambda.apply();
 
-    protoAdd(start, ByteProto.LAMBDA);
+    protoAdd(start, ByteProto.FRAGMENT);
 
     endSet(start);
   }
@@ -500,6 +643,32 @@ class HtmlRecorder extends HtmlTemplateApi {
     objectArray[PATH_NAME] = path;
   }
 
+  private void addElementExternalAttribute(ExternalAttribute attribute) {
+    if (attribute instanceof ExternalAttribute.Id ext) {
+      var value = externalValue(ext.value());
+      addAttribute(StandardAttributeName.ID, value);
+      listAdd(MARK_INTERNAL);
+    } else if (attribute instanceof ExternalAttribute.StyleClass ext) {
+      var value = externalValue(ext.value());
+      addAttribute(StandardAttributeName.CLASS, value);
+      listAdd(MARK_INTERNAL);
+    } else {
+      var type = attribute.getClass();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + type
+      );
+    }
+  }
+
+  private String externalValue(String value) {
+    if (value == null) {
+      return "null";
+    } else {
+      return value;
+    }
+  }
+
   private void endSet(int start) {
     protoArray[start + 1] = protoIndex;
   }
@@ -507,6 +676,13 @@ class HtmlRecorder extends HtmlTemplateApi {
   private void listAdd(int v0) {
     listArray = IntArrays.growIfNecessary(listArray, listIndex + 0);
     listArray[listIndex++] = v0;
+  }
+
+  private void listAdd(int v0, int v1, int v2) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 2);
+    listArray[listIndex++] = v0;
+    listArray[listIndex++] = v1;
+    listArray[listIndex++] = v2;
   }
 
   private void listAdd(int v0, int v1, int v2, int v3, int v4, int v5) {
@@ -560,7 +736,7 @@ class HtmlRecorder extends HtmlTemplateApi {
       int proto = protoArray[--thisIndex];
 
       switch (proto) {
-        case ByteProto.ATTR_OR_ELEM -> {
+        case ByteProto.AMBIGUOUS -> {
           int elem = thisIndex = protoArray[--thisIndex];
 
           listPush(elem, proto);
@@ -685,8 +861,8 @@ class HtmlRecorder extends HtmlTemplateApi {
 
     switch (proto) {
       case ByteProto.ATTRIBUTE,
-           ByteProto.ATTR_OR_ELEM,
-           ByteProto.LAMBDA,
+           ByteProto.AMBIGUOUS,
+           ByteProto.FRAGMENT,
            ByteProto.RAW,
            ByteProto.TEXT -> {
         contents = protoArray[--contents];

@@ -18,9 +18,11 @@ package objectos.html.internal;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
+import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Instruction.AnchorInstruction;
-import objectos.html.tmpl.Lambda;
+import objectos.html.tmpl.Instruction.ElementContents;
+import objectos.html.tmpl.Instruction.Fragment;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -43,6 +45,12 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     return value;
   }
 
+  protected final ElementContents t(String text) {
+    api().addText(text);
+
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final void addTemplate(HtmlTemplate template) {
     api().addTemplate(template);
   }
@@ -53,10 +61,10 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   protected abstract void definition();
 
-  protected final Lambda f(Lambda lambda) {
-    api().addLambda(lambda);
+  protected final Fragment f(FragmentAction action) {
+    api().addFragment(action);
 
-    return lambda;
+    return InternalFragment.INSTANCE;
   }
 
   protected final void pathName(String path) {
@@ -93,7 +101,7 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   @Override
   final void ambiguous(Ambiguous name, String text) {
-
+    api().addAmbiguous(name, text);
   }
 
   @Override

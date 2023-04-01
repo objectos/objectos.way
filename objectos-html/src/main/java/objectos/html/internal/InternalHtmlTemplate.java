@@ -25,6 +25,7 @@ import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.html.tmpl.StandardTextElement;
 import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 
@@ -49,10 +50,6 @@ public abstract class InternalHtmlTemplate extends GeneratedAbstractTemplate {
 
   public final AnyElementValue noop() {
     return objectos.html.internal.NoOp.INSTANCE;
-  }
-
-  public final AttributeOrElement title(String text) {
-    return addAttributeOrElement(AttributeOrElement.TITLE, text);
   }
 
   protected final AttributeOrElement addAttributeOrElement(AttributeOrElement value, String text) {
@@ -127,6 +124,253 @@ public abstract class InternalHtmlTemplate extends GeneratedAbstractTemplate {
     api().addRaw(text);
 
     return Raw.INSTANCE;
+  }
+
+  protected final StandardTextElement t(String text) {
+    addText(text);
+
+    return StandardTextElement.INSTANCE;
+  }
+
+  protected final StandardTextElement t(String... values) {
+    Check.notNull(values, "values == null");
+    switch (values.length) {
+      case 0:
+        return t("");
+      default:
+        StringBuilder sb = new StringBuilder();
+        sb.append(Check.notNull(values[0], "values[0] == null"));
+        for (int i = 1; i < values.length; i++) {
+          sb.append(' ');
+          String value = values[i];
+          if (value == null) {
+            throw new NullPointerException("values[" + i + "] == null");
+          }
+          sb.append(value);
+        }
+
+        return t(sb.toString());
+    }
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .toString()
+    );
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2,
+      String t3) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    Check.notNull(t3, "t3 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .append(' ')
+          .append(t3)
+          .toString()
+    );
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2,
+      String t3,
+      String t4) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    Check.notNull(t3, "t3 == null");
+    Check.notNull(t4, "t4 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .append(' ')
+          .append(t3)
+          .append(' ')
+          .append(t4)
+          .toString()
+    );
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2,
+      String t3,
+      String t4,
+      String t5) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    Check.notNull(t3, "t3 == null");
+    Check.notNull(t4, "t4 == null");
+    Check.notNull(t5, "t5 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .append(' ')
+          .append(t3)
+          .append(' ')
+          .append(t4)
+          .append(' ')
+          .append(t5)
+          .toString()
+    );
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2,
+      String t3,
+      String t4,
+      String t5,
+      String t6) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    Check.notNull(t3, "t3 == null");
+    Check.notNull(t4, "t4 == null");
+    Check.notNull(t5, "t5 == null");
+    Check.notNull(t6, "t6 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .append(' ')
+          .append(t3)
+          .append(' ')
+          .append(t4)
+          .append(' ')
+          .append(t5)
+          .append(' ')
+          .append(t6)
+          .toString()
+    );
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2,
+      String t3,
+      String t4,
+      String t5,
+      String t6,
+      String t7) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    Check.notNull(t3, "t3 == null");
+    Check.notNull(t4, "t4 == null");
+    Check.notNull(t5, "t5 == null");
+    Check.notNull(t6, "t6 == null");
+    Check.notNull(t7, "t7 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .append(' ')
+          .append(t3)
+          .append(' ')
+          .append(t4)
+          .append(' ')
+          .append(t5)
+          .append(' ')
+          .append(t6)
+          .append(' ')
+          .append(t7)
+          .toString()
+    );
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2,
+      String t3,
+      String t4,
+      String t5,
+      String t6,
+      String t7,
+      String t8) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    Check.notNull(t3, "t3 == null");
+    Check.notNull(t4, "t4 == null");
+    Check.notNull(t5, "t5 == null");
+    Check.notNull(t6, "t6 == null");
+    Check.notNull(t7, "t7 == null");
+    Check.notNull(t8, "t8 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .append(' ')
+          .append(t3)
+          .append(' ')
+          .append(t4)
+          .append(' ')
+          .append(t5)
+          .append(' ')
+          .append(t6)
+          .append(' ')
+          .append(t7)
+          .append(' ')
+          .append(t8)
+          .toString()
+    );
+  }
+
+  protected final StandardTextElement t(
+      String t1,
+      String t2,
+      String t3,
+      String t4,
+      String t5,
+      String t6,
+      String t7,
+      String t8,
+      String t9) {
+    Check.notNull(t1, "t1 == null");
+    Check.notNull(t2, "t2 == null");
+    Check.notNull(t3, "t3 == null");
+    Check.notNull(t4, "t4 == null");
+    Check.notNull(t5, "t5 == null");
+    Check.notNull(t6, "t6 == null");
+    Check.notNull(t7, "t7 == null");
+    Check.notNull(t8, "t8 == null");
+    Check.notNull(t9, "t9 == null");
+    return t(
+      new StringBuilder(t1)
+          .append(' ')
+          .append(t2)
+          .append(' ')
+          .append(t3)
+          .append(' ')
+          .append(t4)
+          .append(' ')
+          .append(t5)
+          .append(' ')
+          .append(t6)
+          .append(' ')
+          .append(t7)
+          .append(' ')
+          .append(t8)
+          .append(' ')
+          .append(t9)
+          .toString()
+    );
+  }
+
+  protected final AttributeOrElement title(String text) {
+    return addAttributeOrElement(AttributeOrElement.TITLE, text);
   }
 
   final void acceptTemplateDsl(HtmlTemplateApi api) {

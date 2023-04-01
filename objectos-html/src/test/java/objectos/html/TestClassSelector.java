@@ -18,8 +18,9 @@ package objectos.html;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AnyElementValue;
+import objectos.html.tmpl.Instruction.ExternalAttribute;
 
-class TestClassSelector implements AnyElementValue {
+class TestClassSelector implements AnyElementValue, ExternalAttribute.StyleClass {
 
   private final String value;
 
@@ -35,6 +36,11 @@ class TestClassSelector implements AnyElementValue {
   @Override
   public final void render(Renderer renderer) {
     renderer.addAttribute("class", value);
+  }
+
+  @Override
+  public final String value() {
+    return value;
   }
 
 }

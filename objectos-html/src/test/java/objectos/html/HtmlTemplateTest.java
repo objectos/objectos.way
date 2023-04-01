@@ -647,9 +647,9 @@ public class HtmlTemplateTest {
   public void testCase21() {
     test(
       new HtmlTemplate() {
-        private final AnyElementValue first = new TestClassSelector("first");
+        private final TestClassSelector first = new TestClassSelector("first");
 
-        private final AnyElementValue second = new TestClassSelector("second");
+        private final TestClassSelector second = new TestClassSelector("second");
 
         @Override
         protected final void definition() {

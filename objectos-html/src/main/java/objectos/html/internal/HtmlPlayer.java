@@ -275,7 +275,7 @@ public class HtmlPlayer extends HtmlRecorder {
       switch (proto) {
         case ByteProto.ATTRIBUTE -> executeAttribute();
 
-        case ByteProto.ATTR_OR_ELEM -> {
+        case ByteProto.AMBIGUOUS -> {
           int location = protoNext();
 
           int returnTo = protoIndex;
@@ -367,7 +367,7 @@ public class HtmlPlayer extends HtmlRecorder {
       switch (proto) {
         case ByteProto.ATTRIBUTE -> protoIndex += 2;
 
-        case ByteProto.ATTR_OR_ELEM -> {
+        case ByteProto.AMBIGUOUS -> {
           int elemCode = ctxPeek(2);
 
           var parent = StandardElementName.getByCode(elemCode);
@@ -451,7 +451,7 @@ public class HtmlPlayer extends HtmlRecorder {
     int proto = protoNext();
 
     HtmlNode node = switch (proto) {
-      case ByteProto.ATTR_OR_ELEM -> executeMaybeElement();
+      case ByteProto.AMBIGUOUS -> executeMaybeElement();
 
       case ByteProto.ELEMENT -> executeElement();
 

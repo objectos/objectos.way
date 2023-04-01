@@ -29,7 +29,7 @@ final class ByteProto {
 
   static final int DOCTYPE = -6;
 
-  static final int LAMBDA = -7;
+  static final int FRAGMENT = -7;
 
   static final int SINGLE = -8;
 
@@ -43,7 +43,7 @@ final class ByteProto {
 
   static final int TEXT = -13;
 
-  static final int ATTR_OR_ELEM = -14;
+  static final int AMBIGUOUS = -14;
 
   static final int TEMPLATE = -15;
 
