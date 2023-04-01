@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import objectos.html.tmpl.AnyElementValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -157,9 +156,9 @@ public class HtmlSinkTest {
   """)
   public void toProcessor01() {
     var tmpl = new HtmlTemplate() {
-      private final AnyElementValue abc = new TestClassSelector("abc");
-      private final AnyElementValue def = new TestClassSelector("def");
-      private final AnyElementValue ghi = new TestClassSelector("ghi");
+      private final TestClassSelector abc = new TestClassSelector("abc");
+      private final TestClassSelector def = new TestClassSelector("def");
+      private final TestClassSelector ghi = new TestClassSelector("ghi");
 
       @Override
       protected final void definition() {

@@ -332,6 +332,8 @@ class HtmlRecorder extends HtmlTemplateApi {
         listAdd(MARK_TEMPLATE);
 
         addTemplate(template);
+      } else if (value instanceof InternalNoOp) {
+        // no-op
       } else {
         var type = value.getClass();
 
@@ -367,6 +369,7 @@ class HtmlRecorder extends HtmlTemplateApi {
               case ByteProto.AMBIGUOUS,
                    ByteProto.ATTRIBUTE,
                    ByteProto.ELEMENT,
+                   ByteProto.RAW,
                    ByteProto.TEXT -> {
                 break search;
               }

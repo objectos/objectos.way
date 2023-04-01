@@ -17,7 +17,6 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.ElementName;
 import org.testng.annotations.Test;
 
@@ -1091,8 +1090,8 @@ public class HtmlTemplateTest {
   public void testCase35() {
     test(
       new HtmlTemplate() {
-        private final AnyElementValue A = new TestClassSelector("ca");
-        private final AnyElementValue B = new TestClassSelector("cb");
+        private final TestClassSelector A = new TestClassSelector("ca");
+        private final TestClassSelector B = new TestClassSelector("cb");
 
         @Override
         protected final void definition() {

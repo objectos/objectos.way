@@ -21,9 +21,9 @@ import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Instruction.AnchorInstruction;
+import objectos.html.tmpl.Instruction.ClipPathAttribute;
 import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.Instruction.Fragment;
-import objectos.html.tmpl.NonVoidElementValue;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.lang.Check;
@@ -45,12 +45,6 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     return value;
   }
 
-  protected final ElementContents t(String text) {
-    api().addText(text);
-
-    return InternalInstruction.INSTANCE;
-  }
-
   protected final void addTemplate(HtmlTemplate template) {
     api().addTemplate(template);
   }
@@ -59,12 +53,22 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     api().addText(text);
   }
 
+  protected final ClipPathAttribute clipPath(String value) {
+    api().addAttribute(StandardAttributeName.CLIPPATH, value);
+
+    return InternalInstruction.INSTANCE;
+  }
+
   protected abstract void definition();
 
   protected final Fragment f(FragmentAction action) {
     api().addFragment(action);
 
     return InternalFragment.INSTANCE;
+  }
+
+  protected final Instruction.NoOp noop() {
+    return InternalNoOp.INSTANCE;
   }
 
   protected final void pathName(String path) {
@@ -83,10 +87,16 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final NonVoidElementValue raw(String text) {
+  protected final ElementContents raw(String text) {
     api().addRaw(text);
 
-    return Raw.INSTANCE;
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final ElementContents t(String text) {
+    api().addText(text);
+
+    return InternalInstruction.INSTANCE;
   }
 
   final void acceptTemplateDsl(HtmlTemplateApi api) {
