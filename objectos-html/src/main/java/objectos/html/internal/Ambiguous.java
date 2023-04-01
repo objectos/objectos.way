@@ -15,16 +15,66 @@
  */
 package objectos.html.internal;
 
-public enum Ambiguous {
+import java.util.EnumSet;
+import java.util.Set;
+import objectos.html.tmpl.ElementName;
+import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardElementName;
 
-  FORM,
+enum Ambiguous {
 
-  LABEL,
+  FORM(StandardAttributeName.FORM, StandardElementName.FORM) {
+    static final Set<StandardElementName> ELEMENTS = EnumSet.of(
+      StandardElementName.SELECT, StandardElementName.TEXTAREA
+    );
 
-  TITLE;
+    @Override
+    public final boolean isAttributeOf(ElementName element) {
+      return ELEMENTS.contains(element);
+    }
+  },
 
-  final int code() {
+  LABEL(StandardAttributeName.LABEL, StandardElementName.LABEL) {
+    @Override
+    public final boolean isAttributeOf(ElementName element) {
+      return element == StandardElementName.OPTION;
+    }
+  },
+
+  TITLE(StandardAttributeName.TITLE, StandardElementName.TITLE) {
+    @Override
+    public final boolean isAttributeOf(ElementName element) {
+      return element != StandardElementName.HEAD;
+    }
+  };
+
+  private static final Ambiguous[] ALL = Ambiguous.values();
+
+  private final int attributeByteCode;
+
+  private final int elementByteCode;
+
+  private Ambiguous(StandardAttributeName attribute, StandardElementName element) {
+    this.attributeByteCode = attribute.getCode();
+    this.elementByteCode = element.getCode();
+  }
+
+  public static Ambiguous get(int code) {
+    return ALL[code];
+  }
+
+  public final int attributeByteCode() {
+    return attributeByteCode;
+  }
+
+  public final int code() {
     return ordinal();
   }
+
+  public final int elementByteCode() {
+    return elementByteCode;
+  }
+
+  public abstract boolean isAttributeOf(ElementName element);
 
 }

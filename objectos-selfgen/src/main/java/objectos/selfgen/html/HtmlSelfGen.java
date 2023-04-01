@@ -56,15 +56,7 @@ public abstract class HtmlSelfGen {
 
     switch (moduleName) {
       case "html" -> {
-        write(sink, new AnyElementValueStep());
-
-        write(sink, new ElementValueIfaceStep());
-
-        write(sink, new GeneratedAbstractTemplateStep());
-
         write(sink, new GeneratedHtmlTemplateStep());
-
-        write(sink, new NonVoidElementValueStep());
 
         write(sink, new StandardAttributeNameStep());
 

@@ -23,7 +23,7 @@ public class StandardAttributeNameStepTest {
 
   @Test(description = "it should generate an class for each distinct attribute defined")
   public void execute() {
-    var template = new StandardAttributeNameStep();
+    var template = new StandardAttributeNameStep2();
 
     template.spec = new HtmlSelfGen() {
       @Override
@@ -44,30 +44,22 @@ public class StandardAttributeNameStepTest {
       """
       package objectos.html.tmpl;
 
-      import objectos.html.spi.Marker;
-      import objectos.html.spi.Renderer;
       import objectos.util.UnmodifiableMap;
 
-      public abstract class StandardAttributeName implements AttributeName, Value {
-        public static final Charset CHARSET = new Charset();
+      public enum StandardAttributeName implements AttributeName {
+        CHARSET(AttributeKind.STRING, "charset"),
 
-        public static final Hidden HIDDEN = new Hidden();
+        HIDDEN(AttributeKind.BOOLEAN, "hidden");
 
-        private static final StandardAttributeName[] ARRAY = {
-          CHARSET,
-          HIDDEN
-        };
+        private static final StandardAttributeName[] ARRAY = StandardAttributeName.values();
 
         private static final UnmodifiableMap<String, StandardAttributeName> MAP = mapInit();
-
-        private final int code;
 
         private final AttributeKind kind;
 
         private final String name;
 
-        StandardAttributeName(int code, AttributeKind kind, String name) {
-          this.code = code;
+        StandardAttributeName(AttributeKind kind, String name) {
           this.kind = kind;
           this.name = name;
         }
@@ -93,7 +85,7 @@ public class StandardAttributeNameStepTest {
 
         @Override
         public final int getCode() {
-          return code;
+          return ordinal();
         }
 
         @Override
@@ -104,24 +96,6 @@ public class StandardAttributeNameStepTest {
         @Override
         public final String getName() {
           return name;
-        }
-
-        @Override
-        public final void mark(Marker marker) {}
-
-        @Override
-        public final void render(Renderer renderer) {}
-
-        public static class Charset extends StandardAttributeName implements MetaValue {
-          private Charset() {
-            super(0, AttributeKind.STRING, \"charset\");
-          }
-        }
-
-        public static class Hidden extends StandardAttributeName implements GlobalAttributeName {
-          private Hidden() {
-            super(1, AttributeKind.BOOLEAN, \"hidden\");
-          }
         }
       }
       """
