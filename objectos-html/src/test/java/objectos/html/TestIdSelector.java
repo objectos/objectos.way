@@ -15,27 +15,14 @@
  */
 package objectos.html;
 
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 
-final class TestIdSelector implements AnyElementValue, ExternalAttribute.Id {
+final class TestIdSelector implements ExternalAttribute.Id {
 
   private final String id;
 
   public TestIdSelector(String id) {
     this.id = id;
-  }
-
-  @Override
-  public final void mark(Marker marker) {
-    marker.markAttribute();
-  }
-
-  @Override
-  public final void render(Renderer renderer) {
-    renderer.addAttribute("id", id);
   }
 
   @Override

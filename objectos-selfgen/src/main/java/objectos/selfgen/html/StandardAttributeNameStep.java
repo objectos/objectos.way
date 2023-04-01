@@ -24,28 +24,27 @@ final class StandardAttributeNameStep extends ThisTemplate {
     UNMODIFIABLE_MAP, STRING, STD_ATTR_NAME
   );
 
-  private int counter;
-
-  private AttributeSpec currentAttribute;
-
   @Override
   protected final void definition() {
     packageDeclaration(HTML_TMPL);
 
     autoImports();
 
-    classDeclaration(
-      PUBLIC, ABSTRACT, name(STD_ATTR_NAME),
-      implementsClause(ATTRIBUTE_NAME, VALUE),
+    enumDeclaration(
+      PUBLIC, name(STD_ATTR_NAME),
+      implementsClause(ATTRIBUTE_NAME),
       include(this::standardAttributeName)
     );
   }
 
   private void standardAttributeName() {
     for (var attribute : spec.attributes()) {
-      field(
-        PUBLIC, STATIC, FINAL, attribute.className, name(attribute.constantName),
-        NEW, attribute.className
+      var kind = attribute.kind();
+
+      enumConstant(
+        name(attribute.constantName),
+        argument(ATTRIBUTE_KIND, n(kind.name())),
+        argument(s(attribute.name()))
       );
     }
 
@@ -53,15 +52,11 @@ final class StandardAttributeNameStep extends ThisTemplate {
 
     field(
       PRIVATE, STATIC, FINAL, arrayType, name("ARRAY"),
-      arrayInitializer(), include(this::standardAttributeNameArray)
+      STD_ATTR_NAME, v("values")
     );
 
     field(
       PRIVATE, STATIC, FINAL, MAP, name("MAP"), v("mapInit")
-    );
-
-    field(
-      PRIVATE, FINAL, INT, name("code")
     );
 
     field(
@@ -73,11 +68,9 @@ final class StandardAttributeNameStep extends ThisTemplate {
     );
 
     constructor(
-      parameter(INT, name("code")),
       parameter(ATTRIBUTE_KIND, name("kind")),
       parameter(STRING, name("name")),
 
-      p(THIS, n("code"), IS, n("code")),
       p(THIS, n("kind"), IS, n("kind")),
       p(THIS, n("name"), IS, n("name"))
     );
@@ -107,7 +100,7 @@ final class StandardAttributeNameStep extends ThisTemplate {
     method(
       annotation(OVERRIDE),
       PUBLIC, FINAL, INT, name("getCode"),
-      p(RETURN, n("code"))
+      p(RETURN, v("ordinal"))
     );
 
     method(
@@ -121,52 +114,6 @@ final class StandardAttributeNameStep extends ThisTemplate {
       PUBLIC, FINAL, STRING, name("getName"),
       p(RETURN, n("name"))
     );
-
-    method(
-      annotation(OVERRIDE),
-      PUBLIC, FINAL, VOID, name("mark"),
-      parameter(MARKER, name("marker"))
-    );
-
-    method(
-      annotation(OVERRIDE),
-      PUBLIC, FINAL, VOID, name("render"),
-      parameter(RENDERER, name("renderer"))
-    );
-
-    for (var attribute : spec.attributes()) {
-      currentAttribute = attribute;
-
-      var kind = currentAttribute.kind();
-
-      classDeclaration(
-        PUBLIC, STATIC, name(currentAttribute.className), extendsClause(STD_ATTR_NAME),
-
-        currentAttribute.global()
-            ? implementsClause(GLB_ATTR_NAME)
-            : include(this::standardAttributeNameType),
-
-        constructor(
-          PRIVATE,
-          p(
-            SUPER,
-            argument(i(counter++)),
-            argument(ATTRIBUTE_KIND, n(kind.name())),
-            argument(s(currentAttribute.name()))
-          )
-        )
-      );
-    }
-  }
-
-  private void standardAttributeNameArray() {
-    code(NL);
-
-    for (var attribute : spec.attributes()) {
-      value(n(attribute.constantName()));
-
-      code(NL);
-    }
   }
 
   private void standardAttributeNameMapInit() {
@@ -177,12 +124,6 @@ final class StandardAttributeNameStep extends ThisTemplate {
     }
 
     p(RETURN, n("builder"), v("build"));
-  }
-
-  private void standardAttributeNameType() {
-    for (var ifaceName : currentAttribute.interfaces()) {
-      implementsClause(ifaceName);
-    }
   }
 
 }

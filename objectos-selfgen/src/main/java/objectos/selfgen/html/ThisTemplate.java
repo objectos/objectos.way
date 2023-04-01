@@ -63,18 +63,6 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STD_ELEMENT_NAME = ClassTypeName.of(HTML_TMPL, "StandardElementName");
 
-  private static final String spi_tmpl = "objectos.html.spi";
-
-  static final ClassTypeName MARKER = ClassTypeName.of(spi_tmpl, "Marker");
-
-  static final ClassTypeName RENDERER = ClassTypeName.of(spi_tmpl, "Renderer");
-
-  static final ClassTypeName ANY_ELEMENT_VALUE = ClassTypeName.of(HTML_TMPL, "AnyElementValue");
-
-  static final ClassTypeName NON_VOID = ClassTypeName.of(HTML_TMPL, "NonVoidElementValue");
-
-  static final ClassTypeName VALUE = ClassTypeName.of(HTML_TMPL, "Value");
-
   HtmlSelfGen spec;
 
   public void write(JavaSink sink, HtmlSelfGen spec) throws IOException {

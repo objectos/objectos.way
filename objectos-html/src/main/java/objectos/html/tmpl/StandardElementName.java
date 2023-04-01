@@ -15,9 +15,6 @@
  */
 package objectos.html.tmpl;
 
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
-
 public enum StandardElementName implements ElementName {
   A(ElementKind.NORMAL, "a"),
 
@@ -198,10 +195,4 @@ public enum StandardElementName implements ElementName {
   public final String getName() {
     return name;
   }
-
-  @Override
-  public final void mark(Marker marker) {}
-
-  @Override
-  public final void render(Renderer renderer) {}
 }

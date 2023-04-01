@@ -18,16 +18,12 @@ package objectos.html.internal;
 import java.util.Objects;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.AttributeName;
-import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
-import objectos.html.tmpl.Lambda;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
-import objectos.html.tmpl.StandardTextElement;
-import objectos.html.tmpl.Value;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
@@ -155,59 +151,6 @@ class HtmlRecorder extends HtmlTemplateApi {
     protoIndex = returnTo;
   }
 
-  protected final void record(InternalHtmlTemplate2 template) {
-    // objectArray[0] is reserved for the path name value
-    objectArray[PATH_NAME] = null;
-
-    // objectIndex starts @ 1
-    // as objectArray[0] is the path name value
-    objectIndex = OBJECT_INDEX;
-
-    listIndex = protoIndex = 0;
-
-    template.acceptTemplateDsl(this);
-
-    var rootIndex = protoIndex;
-
-    while (rootIndex > 0) {
-      int proto = protoArray[--rootIndex];
-
-      switch (proto) {
-        case ByteProto.DOCTYPE -> {
-          rootIndex = protoArray[--rootIndex];
-
-          listPush(proto);
-        }
-
-        case ByteProto.ELEMENT -> {
-          int elem = protoArray[--rootIndex];
-
-          rootIndex = protoArray[--rootIndex];
-
-          listPush(elem, proto);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    int returnTo = protoIndex;
-
-    protoAdd(ByteProto.ROOT);
-
-    while (listIndex > 0) {
-      protoAdd(listPop());
-    }
-
-    protoAdd(ByteProto.ROOT_END);
-
-    objectIndex = protoIndex;
-
-    protoIndex = returnTo;
-  }
-
   @Override
   final void addAmbiguous(Ambiguous name, String text) {
     int code = name.code(); // name implicit null-check
@@ -265,27 +208,6 @@ class HtmlRecorder extends HtmlTemplateApi {
 
       start,
       ByteProto.ATTRIBUTE
-    );
-
-    endSet(start);
-  }
-
-  @Override
-  final void addAttributeOrElement(AttributeOrElement value, String text) {
-    int code = value.code(); // name implicit null-check
-    text = text.toString(); // text implicit null-check
-
-    int start = protoIndex;
-
-    protoAdd(
-      ByteProto.AMBIGUOUS,
-      NULL,
-
-      code,
-      objectAdd(text),
-
-      start,
-      ByteProto.AMBIGUOUS
     );
 
     endSet(start);
@@ -456,121 +378,12 @@ class HtmlRecorder extends HtmlTemplateApi {
   }
 
   @Override
-  final void addElement(ElementName name, Value... values) {
-    int code = name.getCode(); // name implicit null-check
-    int length = values.length; // values implicit null-check
-
-    int listBase = listIndex;
-
-    int contents = protoIndex;
-
-    for (int i = 0; i < length; i++) {
-      var value = Check.notNull(values[i], "values[", i, "] == null");
-
-      if (value instanceof AttributeName) {
-        listAdd(ByteProto.ATTRIBUTE);
-
-        contents = updateContents(contents);
-      } else if (value instanceof ElementName) {
-        listAdd(ByteProto.ELEMENT);
-
-        contents = updateContents(contents);
-      } else if (value instanceof Lambda) {
-        listAdd(ByteProto.FRAGMENT);
-
-        contents = updateContents(contents);
-      } else if (value instanceof AttributeOrElement) {
-        listAdd(ByteProto.AMBIGUOUS);
-
-        contents = updateContents(contents);
-      } else if (value instanceof HtmlTemplate template) {
-        listAdd(ByteProto.TEMPLATE);
-
-        addTemplate(template);
-      } else if (value instanceof StandardTextElement) {
-        listAdd(ByteProto.TEXT);
-
-        contents = updateContents(contents);
-      } else if (value instanceof Raw) {
-        listAdd(ByteProto.RAW);
-
-        contents = updateContents(contents);
-      } else if (value instanceof NoOp) {
-        // noop
-      } else {
-        value.render(this);
-        value.mark(this);
-      }
-    }
-
-    int start = protoIndex;
-
-    protoAdd(ByteProto.ELEMENT, NULL, code);
-
-    int listMax = listIndex;
-
-    listAdd(
-      /*6=raw      */contents,
-      /*5=template */contents,
-      /*4=ambiguous*/contents,
-      /*3=lambda   */contents,
-      /*2=element  */contents,
-      /*1=attribute*/contents
-    );
-
-    for (int i = listBase; i < listMax; i++) {
-      int proto = listArray[i];
-
-      switch (proto) {
-        case ByteProto.ATTRIBUTE -> markImplStandard(1, proto);
-
-        case ByteProto.ELEMENT -> markImplStandard(2, proto);
-
-        case ByteProto.FRAGMENT -> markImplLambda(3, proto);
-
-        case ByteProto.AMBIGUOUS -> markImplStandard(4, proto);
-
-        case ByteProto.TEMPLATE -> markImplLambda(5, proto);
-
-        case ByteProto.TEXT -> markImplStandard(2, proto);
-
-        case ByteProto.RAW -> markImplStandard(6, proto);
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: mark proto=" + proto
-        );
-      }
-    }
-
-    protoAdd(ByteProto.ELEMENT_END);
-
-    protoAdd(contents, start, ByteProto.ELEMENT);
-
-    endSet(start);
-
-    listIndex = listBase;
-  }
-
-  @Override
   final void addFragment(FragmentAction action) {
     int start = protoIndex;
 
     protoAdd(ByteProto.FRAGMENT, NULL);
 
     action.execute();
-
-    protoAdd(start, ByteProto.FRAGMENT);
-
-    endSet(start);
-  }
-
-  @Override
-  final void addLambda(Lambda lambda) {
-    int start = protoIndex;
-
-    protoAdd(ByteProto.FRAGMENT, NULL);
-
-    lambda.apply();
 
     protoAdd(start, ByteProto.FRAGMENT);
 
@@ -598,19 +411,6 @@ class HtmlRecorder extends HtmlTemplateApi {
 
   @Override
   final void addTemplate(InternalHtmlTemplate template) {
-    int start = protoIndex;
-
-    protoAdd(ByteProto.TEMPLATE, NULL);
-
-    template.acceptTemplateDsl(this);
-
-    protoAdd(start, ByteProto.TEMPLATE);
-
-    endSet(start);
-  }
-
-  @Override
-  final void addTemplate(InternalHtmlTemplate2 template) {
     int start = protoIndex;
 
     protoAdd(ByteProto.TEMPLATE, NULL);
@@ -688,16 +488,6 @@ class HtmlRecorder extends HtmlTemplateApi {
     listArray[listIndex++] = v2;
   }
 
-  private void listAdd(int v0, int v1, int v2, int v3, int v4, int v5) {
-    listArray = IntArrays.growIfNecessary(listArray, listIndex + 5);
-    listArray[listIndex++] = v0;
-    listArray[listIndex++] = v1;
-    listArray[listIndex++] = v2;
-    listArray[listIndex++] = v3;
-    listArray[listIndex++] = v4;
-    listArray[listIndex++] = v5;
-  }
-
   private int listOffset(int offset) {
     return listArray[listIndex - offset];
   }
@@ -766,18 +556,6 @@ class HtmlRecorder extends HtmlTemplateApi {
     thisStart = tail;
 
     listOffset(offset, thisStart);
-  }
-
-  private void markImplStandard(int offset, int proto) {
-    var index = markSearch(offset, proto);
-
-    protoArray[index] = ByteProto.MARKED;
-
-    protoAdd(proto, index);
-
-    index = protoArray[index + 1];
-
-    listOffset(offset, index);
   }
 
   private int markSearch(int offset, int condition) {

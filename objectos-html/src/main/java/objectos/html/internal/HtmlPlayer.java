@@ -22,7 +22,6 @@ import objectos.html.pseudom.HtmlAttribute;
 import objectos.html.pseudom.HtmlElement;
 import objectos.html.pseudom.HtmlNode;
 import objectos.html.tmpl.AttributeName;
-import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.IntArrays;
@@ -286,7 +285,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
           int code = protoNext();
 
-          var attributeOrElement = AttributeOrElement.get(code);
+          var attributeOrElement = Ambiguous.get(code);
 
           if (attributeOrElement.isAttributeOf(parent)) {
             code = attributeOrElement.attributeByteCode();
@@ -384,7 +383,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
           int code = protoNext();
 
-          var attributeOrElement = AttributeOrElement.get(code);
+          var attributeOrElement = Ambiguous.get(code);
 
           if (!attributeOrElement.isAttributeOf(parent)) {
             hasNext = true;
@@ -886,7 +885,7 @@ public class HtmlPlayer extends HtmlRecorder {
 
     int code = protoNext();
 
-    var attributeOrElement = AttributeOrElement.get(code);
+    var attributeOrElement = Ambiguous.get(code);
 
     var elemCode = attributeOrElement.elementByteCode();
 

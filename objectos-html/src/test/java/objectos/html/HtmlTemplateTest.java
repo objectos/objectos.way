@@ -17,7 +17,6 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.tmpl.ElementName;
 import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
@@ -716,7 +715,7 @@ public class HtmlTemplateTest {
       new HtmlTemplate() {
         @Override
         protected final void definition() {
-          ElementName[] children = new ElementName[count];
+          ElementContents[] children = new ElementContents[count];
           for (int i = 0; i < count; i++) {
             children[i] = li(Integer.toString(i));
           }

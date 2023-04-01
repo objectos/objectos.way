@@ -23,7 +23,7 @@ public class StandardAttributeNameStepTest {
 
   @Test(description = "it should generate an class for each distinct attribute defined")
   public void execute() {
-    var template = new StandardAttributeNameStep2();
+    var template = new StandardAttributeNameStep();
 
     template.spec = new HtmlSelfGen() {
       @Override

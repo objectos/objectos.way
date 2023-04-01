@@ -93,18 +93,6 @@ final class StandardElementNameStep extends ThisTemplate {
       PUBLIC, FINAL, STRING, name("getName"),
       p(RETURN, n("name"))
     );
-
-    method(
-      annotation(OVERRIDE),
-      PUBLIC, FINAL, VOID, name("mark"),
-      parameter(MARKER, name("marker"))
-    );
-
-    method(
-      annotation(OVERRIDE),
-      PUBLIC, FINAL, VOID, name("render"),
-      parameter(RENDERER, name("renderer"))
-    );
   }
 
 }

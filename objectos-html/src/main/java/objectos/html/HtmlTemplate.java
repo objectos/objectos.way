@@ -15,12 +15,8 @@
  */
 package objectos.html;
 
-import objectos.html.internal.HtmlTemplateApi;
 import objectos.html.internal.InternalHtmlTemplate;
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
 import objectos.html.tmpl.Instruction.ElementContents;
-import objectos.html.tmpl.NonVoidElementValue;
 
 /**
  * TODO
@@ -28,17 +24,7 @@ import objectos.html.tmpl.NonVoidElementValue;
  * @since 0.5.0
  */
 public non-sealed abstract class HtmlTemplate
-    extends InternalHtmlTemplate implements ElementContents, NonVoidElementValue {
-
-  @Override
-  public final void mark(Marker dsl) {}
-
-  @Override
-  public final void render(Renderer renderer) {
-    if (renderer instanceof HtmlTemplateApi dsl) {
-      addTemplate(this);
-    }
-  }
+    extends InternalHtmlTemplate implements ElementContents {
 
   @Override
   public final String toString() {

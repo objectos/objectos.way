@@ -18,12 +18,9 @@ package objectos.html.internal;
 import objectos.html.spi.Marker;
 import objectos.html.spi.Renderer;
 import objectos.html.tmpl.AttributeName;
-import objectos.html.tmpl.AttributeOrElement;
 import objectos.html.tmpl.ElementName;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
-import objectos.html.tmpl.Lambda;
-import objectos.html.tmpl.Value;
 
 /**
  * TODO
@@ -38,25 +35,17 @@ public abstract class HtmlTemplateApi implements Marker, Renderer {
 
   abstract void addAttribute(AttributeName name, String value);
 
-  abstract void addAttributeOrElement(AttributeOrElement value, String text);
-
   abstract void addDoctype();
 
   abstract void addElement(ElementName name, Instruction... contents);
 
   abstract void addElement(ElementName name, String text);
 
-  abstract void addElement(ElementName name, Value... values);
-
   abstract void addFragment(FragmentAction action);
-
-  abstract void addLambda(Lambda lambda);
 
   abstract void addRaw(String text);
 
   abstract void addTemplate(InternalHtmlTemplate template);
-
-  abstract void addTemplate(InternalHtmlTemplate2 template);
 
   abstract void addText(String text);
 

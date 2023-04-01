@@ -15,7 +15,7 @@
  */
 package objectos.html.tmpl;
 
-public interface ElementName extends NonVoidElementValue {
+public interface ElementName {
 
   int getCode();
 

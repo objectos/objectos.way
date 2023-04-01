@@ -15,10 +15,7 @@
  */
 package objectos.html.tmpl;
 
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
-
-public sealed abstract class CustomAttributeName implements AttributeName, Value {
+public sealed abstract class CustomAttributeName implements AttributeName {
 
   public static final PathTo PATH_TO = new PathTo();
 
@@ -59,15 +56,7 @@ public sealed abstract class CustomAttributeName implements AttributeName, Value
     return name;
   }
 
-  @Override
-  public final void mark(Marker marker) {
-    marker.markAttribute();
-  }
-
-  @Override
-  public final void render(Renderer renderer) {}
-
-  public static final class PathTo extends CustomAttributeName implements AnchorValue, LinkValue {
+  public static final class PathTo extends CustomAttributeName {
     private PathTo() {
       super(StandardAttributeName.size() + 0, AttributeKind.STRING, "href");
     }

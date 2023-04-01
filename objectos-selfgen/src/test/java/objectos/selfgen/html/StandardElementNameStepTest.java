@@ -39,9 +39,6 @@ public class StandardElementNameStepTest {
       """
       package objectos.html.tmpl;
 
-      import objectos.html.spi.Marker;
-      import objectos.html.spi.Renderer;
-
       public enum StandardElementName implements ElementName {
         DIV(ElementKind.NORMAL, "div"),
 
@@ -80,12 +77,6 @@ public class StandardElementNameStepTest {
         public final String getName() {
           return name;
         }
-
-        @Override
-        public final void mark(Marker marker) {}
-
-        @Override
-        public final void render(Renderer renderer) {}
       }
       """
     );

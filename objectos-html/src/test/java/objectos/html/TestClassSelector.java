@@ -15,27 +15,14 @@
  */
 package objectos.html;
 
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AnyElementValue;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 
-class TestClassSelector implements AnyElementValue, ExternalAttribute.StyleClass {
+class TestClassSelector implements ExternalAttribute.StyleClass {
 
   private final String value;
 
   TestClassSelector(String value) {
     this.value = value;
-  }
-
-  @Override
-  public final void mark(Marker marker) {
-    marker.markAttribute();
-  }
-
-  @Override
-  public final void render(Renderer renderer) {
-    renderer.addAttribute("class", value);
   }
 
   @Override
