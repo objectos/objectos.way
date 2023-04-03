@@ -1,0 +1,8 @@
+= Document title
+:a: a value
+
+Paragraph
+
+:b: b value  
+
+Ipsum {a} {b}

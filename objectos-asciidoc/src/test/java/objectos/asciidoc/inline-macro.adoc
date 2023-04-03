@@ -1,0 +1,15 @@
+= Inline macros
+
+== Test case 04
+
+a link:b[c].
+
+d
+
+== Test case 05
+
+link:b c[d]
+
+== Test case 06
+
+link:b[`c`]

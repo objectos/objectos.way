@@ -66,6 +66,7 @@
 	<inceptionYear>2022</inceptionYear>
 
 	<modules>
+		<module>objectos-asciidoc</module>
 		<module>objectos-bom</module>
 		<module>objectos-code</module>
 		<module>objectos-html</module>
