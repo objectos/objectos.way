@@ -19,8 +19,6 @@ final class Ctx {
 
   public static final int START = -1;
 
-  public static final int HEADING = -2;
-
   private Ctx() {}
 
 }

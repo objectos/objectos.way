@@ -24,6 +24,9 @@ public class DocumentTitleTest extends AsciiDocTest2 {
 
   - happy path
   - title ends @ eof
+
+  '''
+  = The doctitle'''
   """)
   public void testCase01() {
     test(
@@ -36,6 +39,34 @@ public class DocumentTitleTest extends AsciiDocTest2 {
       </div>
       <div id="content">
 
+      </div>
+      """
+    );
+  }
+
+  @Test(description = """
+  doctitle + NL
+
+  - happy path
+  - title ends @ NL
+
+  '''
+  = The doctitle
+  '''
+  """)
+  public void testCase02() {
+    test(
+      """
+      = The doctitle
+      """,
+
+      """
+      <div id="header">
+      <h1>The doctitle</h1>
+      </div>
+      <div id="content">
+
+      </div>
       </div>
       """
     );

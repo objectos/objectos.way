@@ -27,11 +27,11 @@ final class Parse {
 
   public static final int HEADING = 4;
 
-  public static final int CONTENTS = 5;
+  public static final int HEADING_CONTENTS = 5;
 
-  public static final int CONTENTS_NL = 6;
+  public static final int HEADING_CONTENTS_EOF = 6;
 
-  public static final int CONTENTS_EOF = 7;
+  public static final int HEADING_CONTENTS_NL = 7;
 
   private Parse() {}
 

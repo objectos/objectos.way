@@ -209,11 +209,13 @@ public class InternalSink {
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case Parse.CONTENTS -> parseContents();
-
-        case Parse.CONTENTS_EOF -> parseContentsEof();
-
         case Parse.HEADING -> parseHeading();
+
+        case Parse.HEADING_CONTENTS -> parseHeadingContents();
+
+        case Parse.HEADING_CONTENTS_EOF -> parseHeadingContentsEof();
+
+        case Parse.HEADING_CONTENTS_NL -> parseHeadingContentsNl();
 
         case Parse.MAYBE_HEADING -> parseMaybeHeading();
 
@@ -230,13 +232,23 @@ public class InternalSink {
     assert stackIndex == stackStart : "stackStart=" + stackStart + ";stackIndex=" + stackIndex;
   }
 
-  private int parseContents() throws IOException {
+  private int parseHeading() {
+    heading.level = stackPop();
+
+    nextNode = heading;
+
+    stackPush(sourceIndex, Ctx.START);
+
+    return Parse.HEADING_CONTENTS;
+  }
+
+  private int parseHeadingContents() throws IOException {
     if (!sourceMore()) {
-      return Parse.CONTENTS_EOF;
+      return Parse.HEADING_CONTENTS_EOF;
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.CONTENTS_NL);
+      case '\n', '\r' -> advance(Parse.HEADING_CONTENTS_NL);
 
       case '`' -> throw new UnsupportedOperationException("Implement me");
 
@@ -244,14 +256,14 @@ public class InternalSink {
 
       case '_' -> throw new UnsupportedOperationException("Implement me");
 
-      default -> advance(Parse.CONTENTS);
+      default -> advance(Parse.HEADING_CONTENTS);
     };
   }
 
-  private int parseContentsEof() {
+  private int parseHeadingContentsEof() {
     loop: while (!stackIsEmpty()) {
       switch (stackPeek()) {
-        case Ctx.HEADING -> {
+        case Ctx.START -> {
           stackPop();
 
           int sourceStart = stackPop();
@@ -268,14 +280,24 @@ public class InternalSink {
     return Parse.STOP;
   }
 
-  private int parseHeading() {
-    heading.level = stackPop();
+  private int parseHeadingContentsNl() {
+    loop: while (!stackIsEmpty()) {
+      switch (stackPeek()) {
+        case Ctx.START -> {
+          stackPop();
 
-    nextNode = heading;
+          int sourceStart = stackPop();
 
-    stackPush(sourceIndex, Ctx.HEADING);
+          contentsAdd(Contents.TEXT, sourceStart, sourceIndex - 1);
 
-    return Parse.CONTENTS;
+          break loop;
+        }
+
+        default -> stackStub();
+      }
+    }
+
+    return Parse.STOP;
   }
 
   private int parseMaybeHeading() throws IOException {
@@ -304,6 +326,10 @@ public class InternalSink {
 
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADING_TRIM);
+
+      case '\n', '\r' -> throw new UnsupportedOperationException(
+        "Implement me :: preamble paragraph"
+      );
 
       default -> Parse.HEADING;
     };
