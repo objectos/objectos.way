@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos AsciiDoc API.
- *
- * @since 0.6.0
- */
-module objectos.asciidoc {
-  exports objectos.asciidoc;
+package objectos.asciidoc;
 
-  requires objectos.lang;
-  requires objectos.util;
+import java.io.IOException;
+import java.io.StringReader;
+import objectos.asciidoc.internal.InternalSink;
+import objectos.asciidoc.pseudom.Document;
+
+class AsciiDoc2 extends InternalSink {
+
+  public AsciiDoc2() {}
+
+  public final void toProcessor(String source, Document.Processor processor) throws IOException {
+    try (var reader = new StringReader(source)) {
+      toProcessorImpl(reader, processor);
+    }
+  }
+
 }

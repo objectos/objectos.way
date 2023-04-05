@@ -21,9 +21,19 @@ import org.testng.annotations.BeforeClass;
 
 public abstract class AbstractAsciiDocTest {
 
-  private final AsciiDocTest outer;
+  abstract static class Delegate {
+    public abstract void _beforeClass();
 
-  AbstractAsciiDocTest(AsciiDocTest outer) {
+    abstract void test(String source,
+        int[] p0,
+        int[] p1, Map<String, String> docAttr,
+        int[][] p2,
+        String expectedHtml);
+  }
+
+  private final Delegate outer;
+
+  AbstractAsciiDocTest(Delegate outer) {
     this.outer = outer;
   }
 

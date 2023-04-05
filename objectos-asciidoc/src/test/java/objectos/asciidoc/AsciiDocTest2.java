@@ -17,6 +17,7 @@ package objectos.asciidoc;
 
 import static org.testng.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import org.jsoup.Jsoup;
@@ -24,41 +25,32 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 
-public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
+public class AsciiDocTest2 extends AbstractAsciiDocTest.Delegate {
 
-  AsciiDoc asciiDoc;
+  AsciiDoc2 asciiDoc;
 
-  ThisProcessor processor;
+  ThisDocumentProcessor processor;
 
   @Override
   @BeforeClass
   public void _beforeClass() {
     if (asciiDoc == null) {
-      asciiDoc = AsciiDoc.create();
+      asciiDoc = new AsciiDoc2();
 
-      processor = new ThisProcessor();
+      processor = new ThisDocumentProcessor();
     }
+  }
+
+  @Test(enabled = false)
+  public void _enableCodeMinings() {
   }
 
   @Factory
   public Object[] _factory() {
     return new Object[] {
-        new AttributeListTest(this),
-        new ConstrainedBoldTest(this),
-        new ConstrainedItalicTest(this),
-        new ConstrainedMonospaceTest(this),
-        new DocumentAttributeTest(this),
-        new DocumentTitleTest(this),
-        new InlineMacroTest(this),
-        new LexerTest(this),
-        new ListingBlockTest(this),
-        new ParagraphTest(this),
-        new PreambleTest(this),
-        new SectionTest(this),
-        new SourceCodeBlockTest(this),
-        new UnorderedListTest(this),
-        new UrlMacroTest(this)
+        new DocumentTitleTest(this)
     };
   }
 
@@ -77,19 +69,16 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
       int[] p1, Map<String, String> docAttr,
       int[][] p2,
       String expectedHtml) {
-    asciiDoc.process(source, processor);
+    try {
+      asciiDoc.toProcessor(source, processor);
 
-    var result = processor.toString();
+      var result = processor.toString();
 
-    testHtml(result, expectedHtml);
-
-    for (var entry : docAttr.entrySet()) {
-      var key = entry.getKey();
-      var expected = entry.getValue();
-
-      var actual = processor.attribute(key);
-
-      assertEquals(actual, expected, "key=" + key);
+      testHtml(result, expectedHtml);
+    } catch (IOException e) {
+      throw new AssertionError(
+        "StringReader should not throw IOException"
+      );
     }
   }
 

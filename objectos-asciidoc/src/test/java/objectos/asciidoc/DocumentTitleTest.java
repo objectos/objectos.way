@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 
 final class DocumentTitleTest extends AbstractAsciiDocTest {
 
-  DocumentTitleTest(AsciiDocTest outer) { super(outer); }
+  DocumentTitleTest(AbstractAsciiDocTest.Delegate outer) { super(outer); }
 
   @Test(description = //
   """
