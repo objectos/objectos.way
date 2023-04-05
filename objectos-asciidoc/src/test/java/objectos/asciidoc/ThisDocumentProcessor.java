@@ -1,7 +1,17 @@
 /*
- * Copyright 2023 Objectos Software LTDA.
+ * Copyright (C) 2021-2023 Objectos Software LTDA.
  *
- * Reprodução parcial ou total proibida.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package objectos.asciidoc;
 
@@ -31,6 +41,7 @@ final class ThisDocumentProcessor implements Document.Processor {
 
         out.append("""
         </div>
+        <div id="content">
         """);
       } else {
         throw new UnsupportedOperationException(
@@ -38,6 +49,11 @@ final class ThisDocumentProcessor implements Document.Processor {
         );
       }
     }
+
+    // end content
+    out.append("""
+    </div>
+    """);
   }
 
   @Override
@@ -46,7 +62,7 @@ final class ThisDocumentProcessor implements Document.Processor {
   }
 
   private void heading(Heading heading) throws IOException {
-    int level = heading.level();
+    int level = heading.level() + 1;
 
     out.append("<h");
     out.append(level);
@@ -64,9 +80,9 @@ final class ThisDocumentProcessor implements Document.Processor {
     out.append('\n');
   }
 
-  private void node(Node node) {
+  private void node(Node node) throws IOException {
     if (node instanceof Text text) {
-      out.append(text.value());
+      text.appendTo(out);
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + node.getClass().getSimpleName()

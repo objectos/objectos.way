@@ -15,26 +15,12 @@
  */
 package objectos.asciidoc.internal;
 
-import java.io.IOException;
-import objectos.asciidoc.pseudom.Document;
-import objectos.asciidoc.pseudom.Node;
+final class Ctx {
 
-public final class PseudoDocument implements Document {
+  public static final int START = -1;
 
-  private final InternalSink sink;
+  public static final int HEADING = -2;
 
-  PseudoDocument(InternalSink sink) {
-    this.sink = sink;
-  }
-
-  @Override
-  public final boolean hasNext() throws IOException {
-    return sink.documentHasNext();
-  }
-
-  @Override
-  public final Node next() throws IOException {
-    return sink.documentNext();
-  }
+  private Ctx() {}
 
 }

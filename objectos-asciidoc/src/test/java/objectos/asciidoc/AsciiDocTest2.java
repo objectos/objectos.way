@@ -18,22 +18,15 @@ package objectos.asciidoc;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
 
-public class AsciiDocTest2 extends AbstractAsciiDocTest.Delegate {
+public abstract class AsciiDocTest2 {
 
   AsciiDoc2 asciiDoc;
 
   ThisDocumentProcessor processor;
 
-  @Override
   @BeforeClass
   public void _beforeClass() {
     if (asciiDoc == null) {
@@ -43,32 +36,7 @@ public class AsciiDocTest2 extends AbstractAsciiDocTest.Delegate {
     }
   }
 
-  @Test(enabled = false)
-  public void _enableCodeMinings() {
-  }
-
-  @Factory
-  public Object[] _factory() {
-    return new Object[] {
-        new DocumentTitleTest(this)
-    };
-  }
-
-  final String normalize(String html) {
-    Document fragment = Jsoup.parseBodyFragment(html);
-
-    Element body = fragment.body();
-
-    return body.toString();
-  }
-
-  @Override
-  void test(
-      String source,
-      int[] p0,
-      int[] p1, Map<String, String> docAttr,
-      int[][] p2,
-      String expectedHtml) {
+  void test(String source, String expectedHtml) {
     try {
       asciiDoc.toProcessor(source, processor);
 
@@ -82,20 +50,16 @@ public class AsciiDocTest2 extends AbstractAsciiDocTest.Delegate {
     }
   }
 
-  final void testArrays(int[] result, int[] expected, String header) {
-    var msg = """
-
-    %s
-    actual  =%s
-    expected=%s
-
-    """.formatted(header, Arrays.toString(result), Arrays.toString(expected));
-
-    assertEquals(result, expected, msg);
-  }
-
   final void testHtml(String result, String expected) {
     assertEquals(normalize(result), normalize(expected));
+  }
+
+  private String normalize(String html) {
+    var fragment = Jsoup.parseBodyFragment(html);
+
+    var body = fragment.body();
+
+    return body.toString();
   }
 
 }
