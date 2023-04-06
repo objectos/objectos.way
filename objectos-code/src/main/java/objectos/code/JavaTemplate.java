@@ -198,7 +198,11 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * @since 0.4.4
    */
-  interface ClassDeclaration extends ClassDeclarationInstruction {}
+  interface ClassDeclaration
+      extends
+      ClassDeclarationInstruction,
+      EnumDeclarationInstruction,
+      InterfaceDeclarationInstruction {}
 
   interface ClassInstanceCreationExpression extends PrimaryNoNewArray {}
 
@@ -221,7 +225,11 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * @since 0.4.4
    */
-  interface EnumDeclaration extends ClassDeclarationInstruction {}
+  interface EnumDeclaration
+      extends
+      ClassDeclarationInstruction,
+      EnumDeclarationInstruction,
+      InterfaceDeclarationInstruction {}
 
   @Deprecated
   interface EnumKeyword extends BodyElement {}
@@ -252,7 +260,11 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * @since 0.4.4
    */
-  interface InterfaceDeclaration extends ClassDeclarationInstruction {}
+  interface InterfaceDeclaration
+      extends
+      ClassDeclarationInstruction,
+      EnumDeclarationInstruction,
+      InterfaceDeclarationInstruction {}
 
   @Deprecated
   interface InterfaceKeyword extends BodyElement {}

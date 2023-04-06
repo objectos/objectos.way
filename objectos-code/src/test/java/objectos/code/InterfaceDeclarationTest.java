@@ -316,4 +316,38 @@ public class InterfaceDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Interface declarations TC08
+
+  - nested types
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          interfaceDeclaration(
+            name("Nested"),
+
+            classDeclaration(name("A")),
+
+            enumDeclaration(name("B")),
+
+            interfaceDeclaration(name("C"))
+          );
+        }
+      }.toString(),
+
+      """
+      interface Nested {
+        class A {}
+
+        enum B {}
+
+        interface C {}
+      }
+      """
+    );
+  }
+
 }

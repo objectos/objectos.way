@@ -347,4 +347,39 @@ public class EnumDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Enum class declarations TC08
+
+  - nested types
+  """)
+  public void testCase08() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          enumDeclaration(
+            name("Example"),
+
+            classDeclaration(name("A")),
+
+            enumDeclaration(name("B")),
+
+            interfaceDeclaration(name("C"))
+          );
+
+        }
+      }.toString(),
+
+      """
+      enum Example {
+        class A {}
+
+        enum B {}
+
+        interface C {}
+      }
+      """
+    );
+  }
+
 }
