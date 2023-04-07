@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>br.com.objectos</groupId>
 		<artifactId>objectos</artifactId>
-		<version>0.5.4-SNAPSHOT</version>
+		<version>0.6.0</version>
 	</parent>
 
 	<artifactId>objectos-util</artifactId>
