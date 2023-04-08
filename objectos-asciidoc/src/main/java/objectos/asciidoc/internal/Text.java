@@ -15,24 +15,11 @@
  */
 package objectos.asciidoc.internal;
 
-final class Parse {
+final class Text {
 
-  public static final int START = 0;
+  public static final int START = -400;
+  public static final int BLOB = -401;
 
-  public static final int STOP = 1;
-
-  public static final int MAYBE_HEADING = 2;
-
-  public static final int MAYBE_HEADING_TRIM = 3;
-
-  public static final int HEADING = 4;
-
-  public static final int HEADING_CONTENTS = 5;
-
-  public static final int HEADING_CONTENTS_EOF = 6;
-
-  public static final int HEADING_CONTENTS_NL = 7;
-
-  private Parse() {}
+  private Text() {}
 
 }

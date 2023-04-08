@@ -15,10 +15,16 @@
  */
 package objectos.asciidoc.internal;
 
-final class Ctx {
+final class ParseTxt {
 
-  public static final int START = -1;
+  public static final boolean SINGLE_LINE = true;
 
-  private Ctx() {}
+  public static final int START_LIKE = 2;
+  public static final int STOP = 3;
+  public static final int SPACE_LIKE = 4;
+  public static final int BLOB = 5;
+  public static final int EOF = 6;
+
+  private ParseTxt() {}
 
 }

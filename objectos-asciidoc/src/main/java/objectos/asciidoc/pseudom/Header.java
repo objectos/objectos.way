@@ -15,4 +15,10 @@
  */
 package objectos.asciidoc.pseudom;
 
-public sealed interface Node permits Header, Heading, Text {}
+import objectos.asciidoc.internal.PseudoHeader;
+
+public sealed interface Header extends Node permits PseudoHeader {
+
+  IterableOnce<Node> nodes();
+
+}

@@ -16,7 +16,7 @@
 package objectos.asciidoc;
 
 import java.io.IOException;
-import java.io.StringReader;
+import java.util.Objects;
 import objectos.asciidoc.internal.InternalSink;
 import objectos.asciidoc.pseudom.Document;
 
@@ -25,9 +25,10 @@ class AsciiDoc2 extends InternalSink {
   public AsciiDoc2() {}
 
   public final void toProcessor(String source, Document.Processor processor) throws IOException {
-    try (var reader = new StringReader(source)) {
-      toProcessorImpl(reader, processor);
-    }
+    CharSequence cs = source.toString(); // implicit null-check
+    Objects.requireNonNull(processor, "processor == null");
+
+    toProcessorImpl(cs, processor);
   }
 
 }

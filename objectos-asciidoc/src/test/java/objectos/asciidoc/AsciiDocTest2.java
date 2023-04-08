@@ -45,7 +45,7 @@ public abstract class AsciiDocTest2 {
       testHtml(result, expectedHtml);
     } catch (IOException e) {
       throw new AssertionError(
-        "StringReader should not throw IOException"
+        "ThisDocumentProcessor does not throw IOException"
       );
     }
   }

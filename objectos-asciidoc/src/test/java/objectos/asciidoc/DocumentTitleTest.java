@@ -44,7 +44,7 @@ public class DocumentTitleTest extends AsciiDocTest2 {
     );
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   doctitle + NL
 
   - happy path

@@ -17,6 +17,7 @@ package objectos.asciidoc;
 
 import java.io.IOException;
 import objectos.asciidoc.pseudom.Document;
+import objectos.asciidoc.pseudom.Header;
 import objectos.asciidoc.pseudom.Heading;
 import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Text;
@@ -29,20 +30,11 @@ final class ThisDocumentProcessor implements Document.Processor {
   public final void process(Document document) throws IOException {
     out.setLength(0);
 
-    out.append("""
-    <div id="header">
-    """);
+    var contents = false;
 
-    while (document.hasNext()) {
-      var node = document.next();
-
-      if (node instanceof Heading heading) {
-        heading(heading);
-
-        out.append("""
-        </div>
-        <div id="content">
-        """);
+    for (var node : document.nodes()) {
+      if (node instanceof Header header) {
+        header(header);
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass().getSimpleName()
@@ -50,7 +42,29 @@ final class ThisDocumentProcessor implements Document.Processor {
       }
     }
 
-    // end content
+    if (!contents) {
+      out.append("""
+      <div id="content">
+      </div>
+      """);
+    }
+  }
+
+  private void header(Header header) throws IOException {
+    out.append("""
+    <div id="header">
+    """);
+
+    for (var node : header.nodes()) {
+      if (node instanceof Heading heading) {
+        heading(heading);
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: type=" + node.getClass().getSimpleName()
+        );
+      }
+    }
+
     out.append("""
     </div>
     """);
@@ -68,9 +82,7 @@ final class ThisDocumentProcessor implements Document.Processor {
     out.append(level);
     out.append(">");
 
-    while (heading.hasNext()) {
-      var node = heading.next();
-
+    for (var node : heading.nodes()) {
       node(node);
     }
 

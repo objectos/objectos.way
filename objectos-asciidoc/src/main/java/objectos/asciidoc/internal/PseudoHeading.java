@@ -15,18 +15,24 @@
  */
 package objectos.asciidoc.internal;
 
-import java.io.IOException;
+import java.util.Iterator;
 import objectos.asciidoc.pseudom.Heading;
+import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
 
-public final class PseudoHeading implements Heading {
+public final class PseudoHeading extends PseudoNode
+    implements Heading, IterableOnce<Node>, Iterator<Node> {
 
-  private final InternalSink sink;
+  private static final int NODES = -300;
+  private static final int ITERATOR = -301;
+  private static final int PARSE = -302;
+  private static final int COMPUTED = -303;
+  static final int CONSUMED = -304;
 
   int level;
 
   PseudoHeading(InternalSink sink) {
-    this.sink = sink;
+    super(sink);
   }
 
   @Override
@@ -35,13 +41,47 @@ public final class PseudoHeading implements Heading {
   }
 
   @Override
-  public final boolean hasNext() throws IOException {
-    return sink.headingHasNext();
+  public final boolean hasNext() {
+    switch (stackPeek()) {
+      case ITERATOR -> {
+        stackReplace(PARSE);
+
+        parseText(ParseTxt.START_LIKE, ParseTxt.SINGLE_LINE);
+
+        stackReplace(COMPUTED);
+      }
+
+      case COMPUTED -> {}
+
+      case CONSUMED -> stackPop();
+
+      default -> stackStub();
+    }
+
+    return hasNextText();
   }
 
   @Override
-  public final Node next() throws IOException {
-    return sink.headingNext();
+  public final Node next() {
+    return nextText();
+  }
+
+  @Override
+  public final Iterator<Node> iterator() {
+    stackAssert(NODES);
+
+    stackReplace(ITERATOR);
+
+    return this;
+  }
+
+  @Override
+  public final IterableOnce<Node> nodes() {
+    stackAssert(PseudoHeader.HEADING_CONSUMED);
+
+    stackPush(NODES);
+
+    return this;
   }
 
 }

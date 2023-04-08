@@ -26,8 +26,6 @@ public sealed interface Document permits PseudoDocument {
 
   }
 
-  boolean hasNext() throws IOException;
-
-  Node next() throws IOException;
+  IterableOnce<Node> nodes();
 
 }

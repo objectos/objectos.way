@@ -15,4 +15,22 @@
  */
 package objectos.asciidoc.pseudom;
 
-public sealed interface Node permits Header, Heading, Text {}
+import java.util.Iterator;
+
+/**
+ * An {@link Iterable} which can be traversed only once.
+ */
+public interface IterableOnce<T> extends Iterable<T> {
+
+  /**
+   * Returns an iterator over elements of type T.
+   *
+   * @return an iterator
+   *
+   * @throws IllegalStateException
+   *         if this {@code Iterable} has already been traversed
+   */
+  @Override
+  Iterator<T> iterator();
+
+}
