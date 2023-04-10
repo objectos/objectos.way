@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.asciidoc.internal;
+package objectos.asciidoc;
 
-final class Text {
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 
-  public static final int START = -400;
-  public static final int BLOB = -401;
-  public static final int EOL = -402;
+public class AsciidoctorTest2 {
 
-  private Text() {}
+  @Factory
+  public Object[] _factory() {
+    var doctor = Tester.doctor();
+    return new Object[] {
+        new DocumentTitleTest(doctor)
+    };
+  }
+
+  @Test(enabled = false)
+  public void _enableCodeMinings() {
+  }
 
 }

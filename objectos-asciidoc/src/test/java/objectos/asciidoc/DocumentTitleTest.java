@@ -17,7 +17,15 @@ package objectos.asciidoc;
 
 import org.testng.annotations.Test;
 
-public class DocumentTitleTest extends AsciiDocTest2 {
+public class DocumentTitleTest {
+
+  Tester tester = Tester.objectos();
+
+  public DocumentTitleTest() {}
+
+  DocumentTitleTest(Tester tester) {
+    this.tester = tester;
+  }
 
   @Test(description = """
   doctitle + eof
@@ -29,7 +37,7 @@ public class DocumentTitleTest extends AsciiDocTest2 {
   = The doctitle'''
   """)
   public void testCase01() {
-    test(
+    tester.test(
       """
       = The doctitle""",
 
@@ -44,7 +52,7 @@ public class DocumentTitleTest extends AsciiDocTest2 {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   doctitle + NL
 
   - happy path
@@ -55,7 +63,7 @@ public class DocumentTitleTest extends AsciiDocTest2 {
   '''
   """)
   public void testCase02() {
-    test(
+    tester.test(
       """
       = The doctitle
       """,
@@ -66,7 +74,6 @@ public class DocumentTitleTest extends AsciiDocTest2 {
       </div>
       <div id="content">
 
-      </div>
       </div>
       """
     );

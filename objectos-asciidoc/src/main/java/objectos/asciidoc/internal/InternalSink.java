@@ -23,6 +23,8 @@ import objectos.util.IntArrays;
 
 public class InternalSink {
 
+  private static final int NULL = Integer.MIN_VALUE;
+
   private final PseudoDocument document = new PseudoDocument(this);
 
   final PseudoHeader header = new PseudoHeader(this);
@@ -32,6 +34,8 @@ public class InternalSink {
   private final PseudoText text = new PseudoText(this);
 
   Node nextNode;
+
+  private boolean singleLine;
 
   private CharSequence source;
 
@@ -114,17 +118,21 @@ public class InternalSink {
   }
 
   final void parseText(int initialState, boolean singleLine) {
-    textIndex = 0;
+    textCursor = textIndex = 0;
 
     stackPush(Text.START);
 
     int state = initialState;
+
+    this.singleLine = singleLine;
 
     while (state != ParseTxt.STOP) {
       state = switch (state) {
         case ParseTxt.BLOB -> parseBlob();
 
         case ParseTxt.EOF -> parseEof();
+
+        case ParseTxt.EOL -> parseEol();
 
         case ParseTxt.START_LIKE -> parseStartLike();
 
@@ -200,16 +208,6 @@ public class InternalSink {
     return nextState;
   }
 
-  private int textNext() {
-    return textArray[textCursor++];
-  }
-
-  private Node textStub(int type) {
-    throw new UnsupportedOperationException(
-      "Implement me :: type=" + type
-    );
-  }
-
   private void end() {
     stackIndex = -1;
   }
@@ -220,32 +218,56 @@ public class InternalSink {
 
   private int parseBlob() {
     if (!sourceMore()) {
+      stackPush(sourceIndex, Text.EOL);
+
       return ParseTxt.EOF;
     }
 
     return switch (sourcePeek()) {
+      case '\n' -> {
+        stackPush(sourceIndex, Text.EOL);
+
+        yield advance(ParseTxt.EOL);
+      }
+
       default -> advance(ParseTxt.BLOB);
     };
   }
 
   private int parseEof() {
+    int end = NULL;
+
     loop: while (true) {
       switch (stackPop()) {
         case Text.BLOB -> {
           int start = stackPop();
 
-          int end = sourceIndex;
+          assert end != NULL : "end=" + end;
 
           textAdd(Contents.TEXT, start, end);
+        }
+
+        case Text.EOL -> {
+          end = stackPop();
         }
 
         case Text.START -> {
           break loop;
         }
+
+        default -> stackStub();
       }
     }
 
     return ParseTxt.STOP;
+  }
+
+  private int parseEol() {
+    if (singleLine) {
+      return ParseTxt.EOF;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
   }
 
   private int parseStartLike() {
@@ -283,6 +305,16 @@ public class InternalSink {
     textArray[textIndex++] = v0;
     textArray[textIndex++] = v1;
     textArray[textIndex++] = v2;
+  }
+
+  private int textNext() {
+    return textArray[textCursor++];
+  }
+
+  private Node textStub(int type) {
+    throw new UnsupportedOperationException(
+      "Implement me :: type=" + type
+    );
   }
 
 }

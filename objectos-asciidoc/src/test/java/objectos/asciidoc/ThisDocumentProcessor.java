@@ -45,6 +45,7 @@ final class ThisDocumentProcessor implements Document.Processor {
     if (!contents) {
       out.append("""
       <div id="content">
+
       </div>
       """);
     }
