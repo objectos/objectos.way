@@ -20,6 +20,7 @@ import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Header;
 import objectos.asciidoc.pseudom.Heading;
 import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Paragraph;
 import objectos.asciidoc.pseudom.Text;
 
 final class ThisDocumentProcessor implements Document.Processor {
@@ -30,11 +31,15 @@ final class ThisDocumentProcessor implements Document.Processor {
   public final void process(Document document) throws IOException {
     out.setLength(0);
 
-    var contents = false;
+    var content = false;
 
     for (var node : document.nodes()) {
       if (node instanceof Header header) {
         header(header);
+      } else if (node instanceof Paragraph paragraph) {
+        content = contentStart();
+
+        paragraph(paragraph);
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: type=" + node.getClass().getSimpleName()
@@ -42,13 +47,30 @@ final class ThisDocumentProcessor implements Document.Processor {
       }
     }
 
-    if (!contents) {
+    if (!content) {
       out.append("""
       <div id="content">
 
       </div>
       """);
+    } else {
+      out.append("""
+      </div>
+      """);
     }
+  }
+
+  @Override
+  public final String toString() {
+    return out.toString();
+  }
+
+  private boolean contentStart() {
+    out.append("""
+    <div id="content">
+    """);
+
+    return true;
   }
 
   private void header(Header header) throws IOException {
@@ -69,11 +91,6 @@ final class ThisDocumentProcessor implements Document.Processor {
     out.append("""
     </div>
     """);
-  }
-
-  @Override
-  public final String toString() {
-    return out.toString();
   }
 
   private void heading(Heading heading) throws IOException {
@@ -101,6 +118,21 @@ final class ThisDocumentProcessor implements Document.Processor {
         "Implement me :: type=" + node.getClass().getSimpleName()
       );
     }
+  }
+
+  private void paragraph(Paragraph paragraph) throws IOException {
+    out.append("""
+    <div class="paragraph">
+    <p>""");
+
+    for (var node : paragraph.nodes()) {
+      node(node);
+    }
+
+    out.append("""
+    </p>
+    </div>
+    """);
   }
 
 }

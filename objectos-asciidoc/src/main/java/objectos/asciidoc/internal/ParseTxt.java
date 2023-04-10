@@ -19,6 +19,7 @@ final class ParseTxt {
 
   public static final boolean SINGLE_LINE = true;
 
+  public static final int START = 1;
   public static final int START_LIKE = 2;
   public static final int STOP = 3;
   public static final int SPACE_LIKE = 4;

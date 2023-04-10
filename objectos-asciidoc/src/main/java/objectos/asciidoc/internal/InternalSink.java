@@ -23,15 +23,17 @@ import objectos.util.IntArrays;
 
 public class InternalSink {
 
+  private static final int PSEUDO_DOCUMENT = 0;
+  private static final int PSEUDO_HEADER = 1;
+  private static final int PSEUDO_HEADING = 2;
+  private static final int PSEUDO_NO_HEADER = 3;
+  private static final int PSEUDO_PARAGRAPH = 4;
+  private static final int PSEUDO_TEXT = 5;
+  private static final int PSEUDO_LENGTH = 6;
+
   private static final int NULL = Integer.MIN_VALUE;
 
-  private final PseudoDocument document = new PseudoDocument(this);
-
-  final PseudoHeader header = new PseudoHeader(this);
-
-  final PseudoHeading heading = new PseudoHeading(this);
-
-  private final PseudoText text = new PseudoText(this);
+  private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
   Node nextNode;
 
@@ -69,6 +71,8 @@ public class InternalSink {
     start(source);
 
     try {
+      var document = pseudoDocument();
+
       document.start();
 
       processor.process(document);
@@ -104,6 +108,8 @@ public class InternalSink {
 
     return switch (type) {
       case Contents.TEXT -> {
+        var text = pseudoText();
+
         text.start = textNext();
 
         text.end = textNext();
@@ -134,6 +140,8 @@ public class InternalSink {
 
         case ParseTxt.EOL -> parseEol();
 
+        case ParseTxt.START -> parseStart();
+
         case ParseTxt.START_LIKE -> parseStartLike();
 
         default -> throw new UnsupportedOperationException(
@@ -143,8 +151,76 @@ public class InternalSink {
     }
   }
 
+  final PseudoDocument pseudoDocument() {
+    var result = pseudoArray[PSEUDO_DOCUMENT];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_DOCUMENT] = new PseudoDocument(this);
+    }
+
+    return (PseudoDocument) result;
+  }
+
+  final PseudoHeader pseudoHeader() {
+    var result = pseudoArray[PSEUDO_HEADER];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_HEADER] = new PseudoHeader(this);
+    }
+
+    return (PseudoHeader) result;
+  }
+
+  final PseudoHeading pseudoHeading() {
+    var result = pseudoArray[PSEUDO_HEADING];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_HEADING] = new PseudoHeading(this);
+    }
+
+    return (PseudoHeading) result;
+  }
+
+  final PseudoNoHeader pseudoNoHeader() {
+    var result = pseudoArray[PSEUDO_NO_HEADER];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_NO_HEADER] = new PseudoNoHeader(this);
+    }
+
+    return (PseudoNoHeader) result;
+  }
+
+  final PseudoParagraph pseudoParagraph() {
+    var result = pseudoArray[PSEUDO_PARAGRAPH];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_PARAGRAPH] = new PseudoParagraph(this);
+    }
+
+    return (PseudoParagraph) result;
+  }
+
+  final PseudoText pseudoText() {
+    var result = pseudoArray[PSEUDO_TEXT];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_TEXT] = new PseudoText(this);
+    }
+
+    return (PseudoText) result;
+  }
+
   final void sourceAdvance() {
     sourceIndex++;
+  }
+
+  final int sourceIndex() {
+    return sourceIndex;
+  }
+
+  final void sourceIndex(int value) {
+    sourceIndex = value;
   }
 
   final boolean sourceMore() {
@@ -265,9 +341,35 @@ public class InternalSink {
   private int parseEol() {
     if (singleLine) {
       return ParseTxt.EOF;
-    } else {
-      throw new UnsupportedOperationException("Implement me");
     }
+
+    if (!sourceMore()) {
+      return ParseTxt.EOF;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private int parseStart() {
+    if (!sourceMore()) {
+      throw new UnsupportedOperationException(
+        "Implement me"
+      );
+    }
+
+    return switch (sourcePeek()) {
+      case '`' -> throw new UnsupportedOperationException("Implement me");
+
+      case '*' -> throw new UnsupportedOperationException("Implement me");
+
+      case '_' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> {
+        stackPush(sourceIndex, Text.BLOB);
+
+        yield advance(ParseTxt.BLOB);
+      }
+    };
   }
 
   private int parseStartLike() {

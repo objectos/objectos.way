@@ -35,12 +35,42 @@ public final class PseudoDocument extends PseudoNode
   private static final int START = -100;
   private static final int NODES = -101;
   private static final int ITERATOR = -102;
-  private static final int PARSE = -103;
+  private static final int DOCUMENT_START = -103;
   private static final int HEADING = -104;
   static final int HEADING_CONSUMED = -105;
+  private static final int DOCUMENT_MAYBE_PREAMBLE = -106;
+  private static final int NO_HEADER = -107;
+  static final int NO_HEADER_CONSUMED = -108;
+  private static final int DOCUMENT_BODY = -109;
+  private static final int PARAGRAPH = -110;
+  static final int PARAGRAPH_CONSUMED = -111;
 
   PseudoDocument(InternalSink sink) {
     super(sink);
+  }
+
+  @Override
+  public final boolean hasNext() {
+    switch (stackPeek()) {
+      case PseudoHeader.EXHAUSTED -> parse(DOCUMENT_MAYBE_PREAMBLE);
+
+      case PseudoNoHeader.EXHAUSTED,
+           PseudoParagraph.EXHAUSTED -> parse(DOCUMENT_BODY);
+
+      case ITERATOR -> parse(DOCUMENT_START);
+
+      case HEADING, NO_HEADER, PARAGRAPH -> {}
+
+      default -> stackStub();
+    }
+
+    return hasNextNode();
+  }
+
+  private void parse(int nextState) {
+    stackReplace(nextState);
+
+    parse();
   }
 
   @Override
@@ -53,34 +83,17 @@ public final class PseudoDocument extends PseudoNode
   }
 
   @Override
+  public final Node next() {
+    return nextNode();
+  }
+
+  @Override
   public final IterableOnce<Node> nodes() {
     stackAssert(START);
 
     stackReplace(NODES);
 
     return this;
-  }
-
-  @Override
-  public final boolean hasNext() {
-    switch (stackPeek()) {
-      case ITERATOR, PseudoHeader.EXHAUSTED -> {
-        stackReplace(PARSE);
-
-        parse();
-      }
-
-      case HEADING -> {}
-
-      default -> stackStub();
-    }
-
-    return hasNextNode();
-  }
-
-  @Override
-  public final Node next() {
-    return nextNode();
   }
 
   final void start() {
@@ -98,6 +111,8 @@ public final class PseudoDocument extends PseudoNode
 
         case Parse.MAYBE_HEADING_TRIM -> parseMaybeHeadingTrim();
 
+        case Parse.NOT_HEADING -> parseNotHeading();
+
         case Parse.START -> parseStart();
 
         default -> throw new UnsupportedOperationException(
@@ -110,31 +125,24 @@ public final class PseudoDocument extends PseudoNode
   private int parseHeading() {
     int level = stackPop();
 
+    // pops source index
+    stackPop();
+
     int top = stackPop();
 
-    assert top == PARSE;
+    switch (top) {
+      case DOCUMENT_START -> {}
+
+      default -> throw new AssertionError(
+        "Stack top must not be top=" + top
+      );
+    }
 
     stackPush(level, HEADING);
 
     nextNode(header());
 
     return Parse.STOP;
-  }
-
-  private int parseMaybeHeadingTrim() {
-    if (!sourceMore()) {
-      return Parse.NOT_HEADING;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADING_TRIM);
-
-      case '\n', '\r' -> throw new UnsupportedOperationException(
-        "Implement me :: preamble paragraph"
-      );
-
-      default -> Parse.HEADING;
-    };
   }
 
   private int parseMaybeHeading() {
@@ -156,6 +164,49 @@ public final class PseudoDocument extends PseudoNode
     };
   }
 
+  private int parseMaybeHeadingTrim() {
+    if (!sourceMore()) {
+      return Parse.NOT_HEADING;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADING_TRIM);
+
+      case '\n', '\r' -> throw new UnsupportedOperationException(
+        "Implement me :: preamble paragraph"
+      );
+
+      default -> Parse.HEADING;
+    };
+  }
+
+  private int parseNotHeading() {
+    // pops heading level
+    stackPop();
+
+    sourceIndex(stackPop());
+
+    return switch (stackPeek()) {
+      case DOCUMENT_BODY -> {
+        stackReplace(PARAGRAPH);
+
+        nextNode(paragraph());
+
+        yield Parse.STOP;
+      }
+
+      case DOCUMENT_START -> {
+        stackReplace(NO_HEADER);
+
+        nextNode(noHeader());
+
+        yield Parse.STOP;
+      }
+
+      default -> stackStub();
+    };
+  }
+
   private int parseStart() {
     if (!sourceMore()) {
       // empty document...
@@ -166,6 +217,8 @@ public final class PseudoDocument extends PseudoNode
 
     return switch (sourcePeek()) {
       case '=' -> {
+        stackPush(sourceIndex());
+
         // pushes heading level
         stackPush(0);
 

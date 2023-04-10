@@ -79,4 +79,31 @@ public class DocumentTitleTest {
     );
   }
 
+  @Test(description = """
+  doctitle (not a doctitle)
+
+  - not a title (no space after symbol '=')
+
+  '''
+  =Not Title
+  '''
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      =Not Title
+      """,
+
+      """
+      <div id="header">
+      </div>
+      <div id="content">
+      <div class="paragraph">
+      <p>=Not Title</p>
+      </div>
+      </div>
+      """
+    );
+  }
+
 }

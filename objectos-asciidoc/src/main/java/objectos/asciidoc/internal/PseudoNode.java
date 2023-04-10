@@ -43,11 +43,19 @@ abstract class PseudoNode {
   }
 
   final PseudoHeader header() {
-    return sink.header;
+    return sink.pseudoHeader();
+  }
+
+  final PseudoNoHeader noHeader() {
+    return sink.pseudoNoHeader();
+  }
+
+  final PseudoParagraph paragraph() {
+    return sink.pseudoParagraph();
   }
 
   final PseudoHeading heading() {
-    return sink.heading;
+    return sink.pseudoHeading();
   }
 
   final Node nextNode() {
@@ -74,8 +82,16 @@ abstract class PseudoNode {
     sink.parseText(initialState, singleLine);
   }
 
+  final int sourceIndex() {
+    return sink.sourceIndex();
+  }
+
   final boolean sourceMore() {
     return sink.sourceMore();
+  }
+
+  final void sourceIndex(int value) {
+    sink.sourceIndex(value);
   }
 
   final char sourcePeek() {
@@ -120,8 +136,16 @@ abstract class PseudoNode {
     sink.stackReplace(value);
   }
 
-  final void stackStub() {
+  final int stackStub() {
     sink.stackStub();
+
+    return Integer.MIN_VALUE;
+  }
+
+  final boolean stackStubBool() {
+    sink.stackStub();
+
+    return false;
   }
 
 }
