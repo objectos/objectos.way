@@ -39,7 +39,7 @@ public final class PseudoParagraph extends PseudoNode
       case ITERATOR -> {
         stackReplace(PARSE);
 
-        parseText(ParseTxt.START, false);
+        parseTextRegular();
 
         stackReplace(COMPUTED);
 

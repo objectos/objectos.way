@@ -46,7 +46,7 @@ public final class PseudoHeading extends PseudoNode
       case ITERATOR -> {
         stackReplace(PARSE);
 
-        parseText(ParseTxt.START_LIKE, ParseTxt.SINGLE_LINE);
+        parseTextHeading();
 
         stackReplace(COMPUTED);
       }

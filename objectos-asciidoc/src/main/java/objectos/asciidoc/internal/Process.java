@@ -15,10 +15,12 @@
  */
 package objectos.asciidoc.internal;
 
-final class Contents {
+final class Process {
 
-  public static final int TEXT = -1;
+  public static final int START = 1;
+  public static final int TEXT_START = 2;
+  public static final int STOP = 3;
 
-  private Contents() {}
+  private Process() {}
 
 }

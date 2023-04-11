@@ -30,6 +30,7 @@ public final class PseudoDocument extends PseudoNode
     int MAYBE_HEADING = 4;
     int MAYBE_HEADING_TRIM = 5;
     int NOT_HEADING = 6;
+    int PARAGRAPH = 7;
   }
 
   private static final int START = -100;
@@ -65,12 +66,6 @@ public final class PseudoDocument extends PseudoNode
     }
 
     return hasNextNode();
-  }
-
-  private void parse(int nextState) {
-    stackReplace(nextState);
-
-    parse();
   }
 
   @Override
@@ -113,6 +108,8 @@ public final class PseudoDocument extends PseudoNode
 
         case Parse.NOT_HEADING -> parseNotHeading();
 
+        case Parse.PARAGRAPH -> parseParagraph();
+
         case Parse.START -> parseStart();
 
         default -> throw new UnsupportedOperationException(
@@ -120,6 +117,12 @@ public final class PseudoDocument extends PseudoNode
         );
       };
     }
+  }
+
+  private void parse(int nextState) {
+    stackReplace(nextState);
+
+    parse();
   }
 
   private int parseHeading() {
@@ -207,6 +210,14 @@ public final class PseudoDocument extends PseudoNode
     };
   }
 
+  private int parseParagraph() {
+    stackPush(PARAGRAPH);
+
+    nextNode(paragraph());
+
+    return Parse.STOP;
+  }
+
   private int parseStart() {
     if (!sourceMore()) {
       // empty document...
@@ -225,7 +236,7 @@ public final class PseudoDocument extends PseudoNode
         yield advance(Parse.MAYBE_HEADING);
       }
 
-      default -> sourceStub();
+      default -> Parse.PARAGRAPH;
     };
   }
 

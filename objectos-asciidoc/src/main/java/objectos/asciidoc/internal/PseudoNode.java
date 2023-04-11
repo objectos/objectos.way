@@ -78,8 +78,12 @@ abstract class PseudoNode {
     sink.nextNode = value;
   }
 
-  final void parseText(int initialState, boolean singleLine) {
-    sink.parseText(initialState, singleLine);
+  final void parseTextHeading() {
+    sink.parseTextHeading();
+  }
+
+  final void parseTextRegular() {
+    sink.parseTextRegular();
   }
 
   final int sourceIndex() {

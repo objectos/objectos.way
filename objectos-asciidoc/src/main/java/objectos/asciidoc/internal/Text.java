@@ -17,9 +17,7 @@ package objectos.asciidoc.internal;
 
 final class Text {
 
-  public static final int START = -400;
-  public static final int BLOB = -401;
-  public static final int EOL = -402;
+  public static final int REGULAR = -1;
 
   private Text() {}
 

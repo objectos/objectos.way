@@ -10,6 +10,24 @@ de*
 *abc
 *
 
+false start*a* ;*b* :*c* }*d*
+
+real start &!*abc*!&
+
+end *a*a *b*; *c*. *c*!
+
+end1 *a*a
+
+*word*
+
+*wo rd*
+
+*wo!rd*
+
+*wo^!&¨%rd*
+
+*wo * rd*
+
 *abc*d
 
 *abc*0
@@ -39,6 +57,8 @@ de`
 `abc`def`
 
 *ab _cd de* a_
+
+_ab *cd de_ a*
 
 == monospace (constrained)
 
