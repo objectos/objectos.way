@@ -27,8 +27,13 @@ public final class PseudoHeading extends PseudoNode
   private static final int ITERATOR = -301;
   private static final int PARSE = -302;
   private static final int NODE = -303;
-  static final int NODE_CONSUMED = -304;
-  static final int EXHAUSTED = -305;
+  private static final int NODE_CONSUMED = -304;
+  private static final int LAST = -305;
+  @SuppressWarnings("unused")
+  private static final int LAST_CONSUMED = -306;
+  static final int EXHAUSTED = -307;
+
+  boolean last;
 
   int level;
 
@@ -44,19 +49,30 @@ public final class PseudoHeading extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case ITERATOR, NODE_CONSUMED -> {
+      case ITERATOR -> {
+        last = false;
+
+        stackReplace(PARSE);
+
+        parseTextHeading();
+
+        // sure to have at least one node
+        stackReplace(NODE);
+      }
+
+      case NODE -> {}
+
+      case NODE_CONSUMED -> {
         stackReplace(PARSE);
 
         parseTextHeading();
 
         if (hasNextNode()) {
-          stackReplace(NODE);
+          stackReplace(last ? LAST : NODE);
         } else {
           stackReplace(EXHAUSTED);
         }
       }
-
-      case NODE -> {}
 
       default -> stackStub();
     }
@@ -80,7 +96,7 @@ public final class PseudoHeading extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    stackAssert(PseudoHeader.HEADING_CONSUMED);
+    stackAssert(PseudoHeader.TITLE_CONSUMED);
 
     stackPush(NODES);
 

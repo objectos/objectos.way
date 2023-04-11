@@ -106,12 +106,9 @@ final class ThisDocumentProcessor {
 
       case HEADER | PREAMBLE -> """
         <div id="header">
-        %s
-        </div>
-
+        %s</div>
         <div id="content">
-        %s
-        </div>
+        %s</div>
         """.formatted(headerOut, preambleOut);
 
       case HEADER | PREAMBLE | CONTENT -> """

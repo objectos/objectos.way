@@ -33,7 +33,7 @@ public final class PseudoDocument extends PseudoNode
     HEADER,
     NO_HEADER,
 
-    DOCUMENT_HEADER_END,
+    DOCUMENT_BODY,
 
     PARAGRAPH;
   }
@@ -59,9 +59,9 @@ public final class PseudoDocument extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case PseudoHeader.EXHAUSTED -> parse(Parse.DOCUMENT_HEADER_END);
+      case PseudoHeader.EXHAUSTED -> parse(Parse.DOCUMENT_BODY);
 
-      case PseudoParagraph.EXHAUSTED -> parse(Parse.DOCUMENT_HEADER_END);
+      case PseudoParagraph.EXHAUSTED -> parse(Parse.DOCUMENT_BODY);
 
       case ITERATOR -> parse(Parse.DOCUMENT_START);
 
@@ -107,7 +107,7 @@ public final class PseudoDocument extends PseudoNode
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case DOCUMENT_HEADER_END -> parseDocumentHeaderEnd();
+        case DOCUMENT_BODY -> parseDocumentBody();
 
         case DOCUMENT_START -> parseDocumentStart();
 
@@ -128,12 +128,14 @@ public final class PseudoDocument extends PseudoNode
     }
   }
 
-  private Parse parseDocumentHeaderEnd() {
+  private Parse parseDocumentBody() {
     if (!sourceMore()) {
       return Parse.STOP;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    return switch (sourcePeek()) {
+      default -> Parse.PARAGRAPH;
+    };
   }
 
   private Parse parseDocumentStart() {

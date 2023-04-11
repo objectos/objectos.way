@@ -24,17 +24,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-  
+
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-  
+
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-  
+
    */
 
   private enum Parse {
@@ -356,14 +356,17 @@ public class InternalSink {
       // end before NL
       stackPush(sourceIndex - 1);
 
-      return advance(Parse.TEXT);
+      // single last one
+      pseudoHeading().last = true;
+
+      return Parse.TEXT;
     }
 
     if (!sourceMore()) {
       // end before NL
       stackPush(sourceIndex - 1);
 
-      return advance(Parse.TEXT);
+      return Parse.TEXT;
     }
 
     return switch (sourcePeek()) {

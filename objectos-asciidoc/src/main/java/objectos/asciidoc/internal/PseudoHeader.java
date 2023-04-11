@@ -23,16 +23,17 @@ import objectos.asciidoc.pseudom.Node;
 public final class PseudoHeader extends PseudoNode
     implements Header, IterableOnce<Node>, Iterator<Node> {
 
-  private interface Parse {
-    int START = 1;
-    int STOP = 2;
-    int TRIM = 3;
+  private enum Parse {
+    STOP,
+    AFTER_TITLE,
+    HEADER_END,
+    EXHAUSTED;
   }
 
   private static final int NODES = -200;
   private static final int ITERATOR = -201;
-  private static final int HEADING = -202;
-  static final int HEADING_CONSUMED = -203;
+  private static final int TITLE = -202;
+  static final int TITLE_CONSUMED = -203;
   private static final int PARSE = -204;
   static final int EXHAUSTED = -205;
 
@@ -43,14 +44,7 @@ public final class PseudoHeader extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case HEADING -> {}
-
-      case HEADING_CONSUMED,
-           PseudoHeading.EXHAUSTED -> {
-        stackReplace(PARSE);
-
-        parse();
-      }
+      case PseudoHeading.EXHAUSTED -> parse(Parse.AFTER_TITLE);
 
       case ITERATOR -> {
         stackPop();
@@ -61,8 +55,10 @@ public final class PseudoHeader extends PseudoNode
 
         nextNode(heading);
 
-        stackPush(HEADING);
+        stackPush(TITLE);
       }
+
+      case TITLE -> {}
 
       default -> stackStub();
     }
@@ -93,53 +89,57 @@ public final class PseudoHeader extends PseudoNode
     return this;
   }
 
-  private void parse() {
-    int state = Parse.START;
+  private void parse(Parse initialState) {
+    stackReplace(PARSE);
+
+    var state = initialState;
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case Parse.START -> parseStart();
+        case AFTER_TITLE -> parseAfterTitle();
 
-        case Parse.TRIM -> parseTrim();
+        case EXHAUSTED -> parseExhausted();
+
+        case HEADER_END -> parseHeaderEnd();
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: state=" + state
         );
       };
     }
-
-    stackAssert(PARSE);
-
-    if (hasNextNode()) {
-      stackReplace(HEADING);
-    } else {
-      stackReplace(EXHAUSTED);
-    }
   }
 
-  private int parseTrim() {
+  private Parse parseAfterTitle() {
     if (!sourceMore()) {
-      return Parse.STOP;
+      return Parse.EXHAUSTED;
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.TRIM);
-
-      default -> Parse.STOP;
-    };
-  }
-
-  private int parseStart() {
-    if (!sourceMore()) {
-      return Parse.STOP;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.TRIM);
+      case '\n' -> advance(Parse.HEADER_END);
 
       case ':' -> throw new UnsupportedOperationException("Implement me");
 
-      default -> sourceStub();
+      default -> Parse.EXHAUSTED;
+    };
+  }
+
+  private Parse parseExhausted() {
+    stackAssert(PARSE);
+
+    stackReplace(EXHAUSTED);
+
+    return Parse.STOP;
+  }
+
+  private Parse parseHeaderEnd() {
+    if (!sourceMore()) {
+      return Parse.EXHAUSTED;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Parse.HEADER_END);
+
+      default -> Parse.EXHAUSTED;
     };
   }
 

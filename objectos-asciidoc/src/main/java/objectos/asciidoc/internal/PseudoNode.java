@@ -101,6 +101,12 @@ abstract class PseudoNode {
     return sink.sourceStub();
   }
 
+  final <E extends Enum<E>> E sourceStub(E state) {
+    sourceStub();
+
+    return state;
+  }
+
   final void stackAssert(int expected) {
     int actual = stackPeek();
 

@@ -106,7 +106,7 @@ public class DocumentTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   doctitle + paragraph
 
   '''
