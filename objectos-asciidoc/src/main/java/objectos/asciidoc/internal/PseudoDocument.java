@@ -236,7 +236,13 @@ public final class PseudoDocument extends PseudoNode
         yield advance(Parse.MAYBE_HEADING);
       }
 
-      default -> Parse.PARAGRAPH;
+      default -> {
+        // pseudo state for NOT_HEADING
+        stackPush(sourceIndex());
+        stackPush(0);
+
+        yield Parse.NOT_HEADING;
+      }
     };
   }
 

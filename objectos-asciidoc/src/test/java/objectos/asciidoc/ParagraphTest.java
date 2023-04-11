@@ -27,7 +27,7 @@ public class ParagraphTest {
     this.tester = tester;
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   two lines paragraph
 
   0123
