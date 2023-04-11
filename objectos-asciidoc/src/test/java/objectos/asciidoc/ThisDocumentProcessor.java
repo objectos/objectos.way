@@ -23,12 +23,11 @@ import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Paragraph;
 import objectos.asciidoc.pseudom.Text;
 
-final class ThisDocumentProcessor implements Document.Processor {
+final class ThisDocumentProcessor {
 
   private final StringBuilder out = new StringBuilder();
 
-  @Override
-  public final void process(Document document) throws IOException {
+  public final String process(Document document) throws IOException {
     out.setLength(0);
 
     var content = false;
@@ -58,10 +57,7 @@ final class ThisDocumentProcessor implements Document.Processor {
       </div>
       """);
     }
-  }
 
-  @Override
-  public final String toString() {
     return out.toString();
   }
 

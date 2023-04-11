@@ -16,7 +16,7 @@
 package objectos.asciidoc.internal;
 
 import java.io.IOException;
-import objectos.asciidoc.pseudom.Document.Processor;
+import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -24,17 +24,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private static final int _HEADING = 1 << 0;
@@ -67,8 +67,7 @@ public class InternalSink {
 
   private int textIndex;
 
-  protected final void toProcessorImpl(
-      CharSequence source, Processor processor) throws IOException {
+  protected final Document openImpl(CharSequence source) {
     Check.state(
       finalState(),
 
@@ -84,21 +83,23 @@ public class InternalSink {
 
     start(source);
 
-    try {
-      var document = pseudoDocument();
+    var document = pseudoDocument();
 
-      document.start();
+    document.start();
 
-      processor.process(document);
-    } finally {
-      end();
-
-      assert stackIndex == -1;
-    }
+    return document;
   }
 
   final void appendTo(Appendable out, int start, int end) throws IOException {
     out.append(source, start, end);
+  }
+
+  final void close() throws IOException {
+    nextNode = null;
+
+    source = null;
+
+    stackIndex = -1;
   }
 
   final boolean hasNextText() {
@@ -280,10 +281,6 @@ public class InternalSink {
     sourceIndex++;
 
     return nextState;
-  }
-
-  private void end() {
-    stackIndex = -1;
   }
 
   private boolean finalState() {

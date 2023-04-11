@@ -18,13 +18,10 @@ package objectos.asciidoc.pseudom;
 import java.io.IOException;
 import objectos.asciidoc.internal.PseudoDocument;
 
-public sealed interface Document permits PseudoDocument {
+public sealed interface Document extends AutoCloseable permits PseudoDocument {
 
-  interface Processor {
-
-    void process(Document document) throws IOException;
-
-  }
+  @Override
+  void close() throws IOException;
 
   IterableOnce<Node> nodes();
 

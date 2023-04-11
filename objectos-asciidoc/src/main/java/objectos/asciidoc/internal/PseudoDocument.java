@@ -15,6 +15,7 @@
  */
 package objectos.asciidoc.internal;
 
+import java.io.IOException;
 import java.util.Iterator;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.IterableOnce;
@@ -48,6 +49,11 @@ public final class PseudoDocument extends PseudoNode
 
   PseudoDocument(InternalSink sink) {
     super(sink);
+  }
+
+  @Override
+  public final void close() throws IOException {
+    closeImpl();
   }
 
   @Override

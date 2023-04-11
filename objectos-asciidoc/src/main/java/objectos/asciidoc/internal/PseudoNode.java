@@ -15,6 +15,7 @@
  */
 package objectos.asciidoc.internal;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import objectos.asciidoc.pseudom.Node;
 
@@ -32,6 +33,10 @@ abstract class PseudoNode {
     sink.sourceAdvance();
 
     return state;
+  }
+
+  final void closeImpl() throws IOException {
+    sink.close();
   }
 
   final boolean hasNextNode() {

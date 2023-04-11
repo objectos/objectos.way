@@ -99,10 +99,8 @@ abstract class Tester {
 
     @Override
     public final void test(String source, String expectedHtml) {
-      try {
-        asciiDoc.toProcessor(source, processor);
-
-        var result = processor.toString();
+      try (var document = asciiDoc.open(source)) {
+        var result = processor.process(document);
 
         testHtml(result, expectedHtml);
       } catch (IOException e) {

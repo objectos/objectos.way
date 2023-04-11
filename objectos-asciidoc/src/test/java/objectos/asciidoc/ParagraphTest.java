@@ -57,4 +57,33 @@ public class ParagraphTest {
     );
   }
 
+  @Test(enabled = false, description = """
+  multiline paragraph
+
+  - last line starts with url macro
+
+  '''
+  abc
+  https://d[e].
+  '''
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      abc
+      https://d[e].
+      """,
+
+      """
+      <div id="header">
+      </div>
+      <div id="content">
+      <div class="paragraph">
+      <p>abc <a href="https://d">e</a>.</p>
+      </div>
+      </div>
+      """
+    );
+  }
+
 }
