@@ -24,7 +24,7 @@ public class AsciidoctorTest2 {
   public Object[] _factory() {
     var doctor = Tester.doctor();
     return new Object[] {
-        new DocumentTitleTest(doctor),
+        new DocumentTest(doctor),
         new ParagraphTest(doctor)
     };
   }

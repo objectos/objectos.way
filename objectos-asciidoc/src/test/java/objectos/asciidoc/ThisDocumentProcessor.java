@@ -25,18 +25,44 @@ import objectos.asciidoc.pseudom.Text;
 
 final class ThisDocumentProcessor {
 
-  private final StringBuilder out = new StringBuilder();
+  private static final int START = 0;
+
+  private static final int HEADER = 1 << 0;
+
+  private static final int PREAMBLE = 1 << 1;
+
+  private static final int CONTENT = 1 << 2;
+
+  private final StringBuilder contentOut = new StringBuilder();
+
+  private final StringBuilder headerOut = new StringBuilder();
+
+  private final StringBuilder preambleOut = new StringBuilder();
+
+  private StringBuilder out;
+
+  private int state;
 
   public final String process(Document document) throws IOException {
-    out.setLength(0);
+    contentOut.setLength(0);
 
-    var content = false;
+    headerOut.setLength(0);
+
+    preambleOut.setLength(0);
+
+    state = START;
 
     for (var node : document.nodes()) {
       if (node instanceof Header header) {
+        out = headerOut;
+
+        state = state | HEADER;
+
         header(header);
       } else if (node instanceof Paragraph paragraph) {
-        content = contentStart();
+        out = preambleOut;
+
+        state = state | PREAMBLE;
 
         paragraph(paragraph);
       } else {
@@ -44,36 +70,79 @@ final class ThisDocumentProcessor {
           "Implement me :: type=" + node.getClass().getSimpleName()
         );
       }
+
+      out = null;
     }
 
-    if (!content) {
-      out.append("""
-      <div id="content">
-
-      </div>
-      """);
-    } else {
-      out.append("""
-      </div>
-      """);
-    }
-
-    return out.toString();
+    return toString();
   }
 
-  private boolean contentStart() {
-    out.append("""
-    <div id="content">
-    """);
+  @Override
+  public final String toString() {
+    return switch (state) {
+      case HEADER -> """
+        <div id="header">
+        %s</div>
+        <div id="content">
 
-    return true;
+        </div>
+        """.formatted(headerOut);
+
+      case PREAMBLE -> """
+        <div id="header">
+        </div>
+        <div id="content">
+        %s</div>
+        """.formatted(preambleOut);
+
+      case CONTENT -> """
+        <div id="header">
+        </div>
+
+        <div id="content">
+        %s
+        </div>
+        """.formatted(contentOut);
+
+      case HEADER | PREAMBLE -> """
+        <div id="header">
+        %s
+        </div>
+
+        <div id="content">
+        %s
+        </div>
+        """.formatted(headerOut, preambleOut);
+
+      case HEADER | PREAMBLE | CONTENT -> """
+        <div id="header">
+        %s
+        </div>
+        <div id="content">
+        <div id="preamble">
+        <div class="sectionbody">
+        %s
+        </div>
+        </div>
+        %s
+        </div>
+        """.formatted(headerOut, preambleOut, contentOut);
+
+      case PREAMBLE | CONTENT -> """
+        <div id="header">
+        </div>
+        <div id="content">
+        %s
+        %s
+        </div>
+        """.formatted(preambleOut, contentOut);
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: state=" + Integer.toBinaryString(state));
+    };
   }
 
   private void header(Header header) throws IOException {
-    out.append("""
-    <div id="header">
-    """);
-
     for (var node : header.nodes()) {
       if (node instanceof Heading heading) {
         heading(heading);
@@ -83,10 +152,6 @@ final class ThisDocumentProcessor {
         );
       }
     }
-
-    out.append("""
-    </div>
-    """);
   }
 
   private void heading(Heading heading) throws IOException {

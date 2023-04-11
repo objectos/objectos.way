@@ -37,15 +37,21 @@ public class InternalSink {
   
    */
 
-  private static final int _HEADING = 1 << 0;
+  private enum Parse {
+    STOP,
+    BLOB,
+    TEXT,
+    EOL;
+  }
+
+  private static final int _SINGLE_LINE = 1 << 0;
 
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
   private static final int PSEUDO_HEADING = 2;
-  private static final int PSEUDO_NO_HEADER = 3;
   private static final int PSEUDO_PARAGRAPH = 4;
-  private static final int PSEUDO_TEXT = 5;
-  private static final int PSEUDO_LENGTH = 6;
+  private static final int PSEUDO_TEXT = 6;
+  private static final int PSEUDO_LENGTH = 7;
 
   private int flags;
 
@@ -60,12 +66,6 @@ public class InternalSink {
   private int[] stackArray = new int[8];
 
   private int stackIndex = -1;
-
-  private int[] textArray = new int[128];
-
-  private int textCursor;
-
-  private int textIndex;
 
   protected final Document openImpl(CharSequence source) {
     Check.state(
@@ -102,10 +102,6 @@ public class InternalSink {
     stackIndex = -1;
   }
 
-  final boolean hasNextText() {
-    return textCursor < textIndex;
-  }
-
   final Node nextNode() {
     var result = nextNode;
 
@@ -118,28 +114,8 @@ public class InternalSink {
     return result;
   }
 
-  final Node nextText() {
-    int type = textNext();
-
-    return switch (type) {
-      case Text.REGULAR -> {
-        var text = pseudoText();
-
-        text.start = textNext();
-
-        text.end = textNext();
-
-        stackDec();
-
-        yield text;
-      }
-
-      default -> textStub(type);
-    };
-  }
-
   final void parseTextHeading() {
-    flagsSet(_HEADING);
+    flagsSet(_SINGLE_LINE);
 
     parse();
   }
@@ -178,16 +154,6 @@ public class InternalSink {
     }
 
     return (PseudoHeading) result;
-  }
-
-  final PseudoNoHeader pseudoNoHeader() {
-    var result = pseudoArray[PSEUDO_NO_HEADER];
-
-    if (result == null) {
-      result = pseudoArray[PSEUDO_NO_HEADER] = new PseudoNoHeader(this);
-    }
-
-    return (PseudoNoHeader) result;
   }
 
   final PseudoParagraph pseudoParagraph() {
@@ -277,7 +243,7 @@ public class InternalSink {
     );
   }
 
-  private int advance(int nextState) {
+  private Parse advance(Parse nextState) {
     sourceIndex++;
 
     return nextState;
@@ -326,32 +292,50 @@ public class InternalSink {
   }
 
   private void parse() {
-    textCursor = textIndex = 0;
+    var state = Parse.BLOB;
 
-    tokenAdd(Token.START, sourceIndex);
-
-    int state = Parse.BLOB;
+    stackPush(sourceIndex);
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case Parse.BLOB -> parseBlob();
+        case BLOB -> parseBlob();
 
-        case Parse.EOL -> parseEol();
+        case EOL -> parseEol();
+
+        case TEXT -> parseText();
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: state=" + state
         );
       };
     }
-
-    process();
   }
 
-  private int parseBlob() {
-    if (!sourceMore()) {
-      tokenAdd(Token.EOF, sourceIndex);
+  private Parse parseText() {
+    int endIndex = stackPop();
 
-      return Parse.STOP;
+    int startIndex = stackPop();
+
+    if (startIndex < endIndex) {
+      var text = pseudoText();
+
+      text.end = endIndex;
+
+      text.start = startIndex;
+
+      nextNode = text;
+    } else {
+      nextNode = null;
+    }
+
+    return Parse.STOP;
+  }
+
+  private Parse parseBlob() {
+    if (!sourceMore()) {
+      stackPush(sourceIndex);
+
+      return Parse.TEXT;
     }
 
     return switch (sourcePeek()) {
@@ -367,77 +351,30 @@ public class InternalSink {
     };
   }
 
-  private int parseEol() {
-    if (flagsIs(_HEADING)) {
-      tokenAdd(Token.EOF, sourceIndex - 1);
+  private Parse parseEol() {
+    if (flagsIs(_SINGLE_LINE)) {
+      // end before NL
+      stackPush(sourceIndex - 1);
 
-      return Parse.STOP;
+      return advance(Parse.TEXT);
     }
 
     if (!sourceMore()) {
-      tokenAdd(Token.EOF, sourceIndex - 1);
+      // end before NL
+      stackPush(sourceIndex - 1);
 
-      return Parse.STOP;
+      return advance(Parse.TEXT);
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> throw new UnsupportedOperationException("Implement me");
+      case '\n' -> {
+        // end before NL
+        stackPush(sourceIndex);
 
-      default -> Parse.BLOB;
-    };
-  }
-
-  private void process() {
-    int max = textIndex;
-
-    int state = Process.START;
-
-    while (state != Process.STOP) {
-      int token = tokenNext();
-
-      state = switch (token) {
-        case Token.EOF -> processEof(state);
-
-        case Token.START -> processStart(state);
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: token=" + token
-        );
-      };
-    }
-
-    textCursor = max;
-  }
-
-  private int processEof(int state) {
-    int value = tokenNext();
-
-    return switch (state) {
-      case Process.TEXT_START -> {
-        textAdd(value);
-
-        yield Process.STOP;
+        yield advance(Parse.TEXT);
       }
 
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: state=" + state
-      );
-    };
-  }
-
-  private int processStart(int state) {
-    int value = tokenNext();
-
-    return switch (state) {
-      case Process.START -> {
-        textAdd(Text.REGULAR, value);
-
-        yield Process.TEXT_START;
-      }
-
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: state=" + state
-      );
+      default -> advance(Parse.BLOB);
     };
   }
 
@@ -447,37 +384,6 @@ public class InternalSink {
     sourceIndex = 0;
 
     stackIndex = -1;
-  }
-
-  private void textAdd(int v0) {
-    textArray = IntArrays.growIfNecessary(textArray, textIndex + 0);
-    textArray[textIndex++] = v0;
-  }
-
-  private void textAdd(int v0, int v1) {
-    textArray = IntArrays.growIfNecessary(textArray, textIndex + 1);
-    textArray[textIndex++] = v0;
-    textArray[textIndex++] = v1;
-  }
-
-  private int textNext() {
-    return textArray[textCursor++];
-  }
-
-  private Node textStub(int type) {
-    throw new UnsupportedOperationException(
-      "Implement me :: type=" + type
-    );
-  }
-
-  private void tokenAdd(int v0, int v1) {
-    textArray = IntArrays.growIfNecessary(textArray, textIndex + 1);
-    textArray[textIndex++] = v0;
-    textArray[textIndex++] = v1;
-  }
-
-  private int tokenNext() {
-    return textArray[textCursor++];
   }
 
 }

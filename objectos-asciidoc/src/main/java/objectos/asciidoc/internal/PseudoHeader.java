@@ -26,11 +26,12 @@ public final class PseudoHeader extends PseudoNode
   private interface Parse {
     int START = 1;
     int STOP = 2;
+    int TRIM = 3;
   }
 
   private static final int NODES = -200;
   private static final int ITERATOR = -201;
-  private static final int COMPUTED = -202;
+  private static final int HEADING = -202;
   static final int HEADING_CONSUMED = -203;
   private static final int PARSE = -204;
   static final int EXHAUSTED = -205;
@@ -42,32 +43,25 @@ public final class PseudoHeader extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case COMPUTED -> {}
+      case HEADING -> {}
+
+      case HEADING_CONSUMED,
+           PseudoHeading.EXHAUSTED -> {
+        stackReplace(PARSE);
+
+        parse();
+      }
 
       case ITERATOR -> {
         stackPop();
 
-        switch (stackPeek()) {
-          case PseudoDocument.HEADING_CONSUMED -> {
-            stackPop();
+        var heading = heading();
 
-            var heading = heading();
+        heading.level = 0;
 
-            heading.level = stackPop();
+        nextNode(heading);
 
-            nextNode(heading);
-
-            stackPush(COMPUTED);
-          }
-
-          default -> stackStub();
-        }
-      }
-
-      case HEADING_CONSUMED -> {
-        stackReplace(PARSE);
-
-        parse();
+        stackPush(HEADING);
       }
 
       default -> stackStub();
@@ -92,9 +86,9 @@ public final class PseudoHeader extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    stackAssert(PseudoDocument.HEADING_CONSUMED);
+    stackAssert(PseudoDocument.HEADER_CONSUMED);
 
-    stackPush(NODES);
+    stackReplace(NODES);
 
     return this;
   }
@@ -106,6 +100,8 @@ public final class PseudoHeader extends PseudoNode
       state = switch (state) {
         case Parse.START -> parseStart();
 
+        case Parse.TRIM -> parseTrim();
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: state=" + state
         );
@@ -115,10 +111,22 @@ public final class PseudoHeader extends PseudoNode
     stackAssert(PARSE);
 
     if (hasNextNode()) {
-      stackReplace(COMPUTED);
+      stackReplace(HEADING);
     } else {
       stackReplace(EXHAUSTED);
     }
+  }
+
+  private int parseTrim() {
+    if (!sourceMore()) {
+      return Parse.STOP;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Parse.TRIM);
+
+      default -> Parse.STOP;
+    };
   }
 
   private int parseStart() {
@@ -126,7 +134,13 @@ public final class PseudoHeader extends PseudoNode
       return Parse.STOP;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Parse.TRIM);
+
+      case ':' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> sourceStub();
+    };
   }
 
 }

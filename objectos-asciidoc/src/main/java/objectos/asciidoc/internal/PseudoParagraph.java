@@ -26,8 +26,9 @@ public final class PseudoParagraph extends PseudoNode
   private static final int NODES = -600;
   private static final int ITERATOR = -601;
   private static final int PARSE = -602;
-  private static final int COMPUTED = -603;
-  static final int EXHAUSTED = -604;
+  private static final int NODE = -603;
+  static final int NODE_CONSUMED = -604;
+  static final int EXHAUSTED = -605;
 
   PseudoParagraph(InternalSink sink) {
     super(sink);
@@ -35,23 +36,25 @@ public final class PseudoParagraph extends PseudoNode
 
   @Override
   public final boolean hasNext() {
-    return switch (stackPeek()) {
-      case ITERATOR -> {
+    switch (stackPeek()) {
+      case ITERATOR, NODE_CONSUMED -> {
         stackReplace(PARSE);
 
         parseTextRegular();
 
-        stackReplace(COMPUTED);
-
-        yield hasNextText();
+        if (hasNextNode()) {
+          stackReplace(NODE);
+        } else {
+          stackReplace(EXHAUSTED);
+        }
       }
 
-      case COMPUTED -> hasNextText();
+      case NODE -> {}
 
-      case EXHAUSTED -> false;
+      default -> stackStub();
+    }
 
-      default -> stackStubBool();
-    };
+    return hasNextNode();
   }
 
   @Override
@@ -65,7 +68,7 @@ public final class PseudoParagraph extends PseudoNode
 
   @Override
   public final Node next() {
-    return nextText();
+    return nextNode();
   }
 
   @Override

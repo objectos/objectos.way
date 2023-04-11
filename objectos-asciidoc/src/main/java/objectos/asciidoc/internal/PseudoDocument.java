@@ -24,26 +24,26 @@ import objectos.asciidoc.pseudom.Node;
 public final class PseudoDocument extends PseudoNode
     implements Document, IterableOnce<Node>, Iterator<Node> {
 
-  private interface Parse {
-    int START = 1;
-    int STOP = 2;
-    int HEADING = 3;
-    int MAYBE_HEADING = 4;
-    int MAYBE_HEADING_TRIM = 5;
-    int NOT_HEADING = 6;
-    int PARAGRAPH = 7;
+  private enum Parse {
+    STOP,
+
+    DOCUMENT_START,
+    MAYBE_HEADER,
+    MAYBE_HEADER_TRIM,
+    HEADER,
+    NO_HEADER,
+
+    DOCUMENT_HEADER_END,
+
+    PARAGRAPH;
   }
 
   private static final int START = -100;
   private static final int NODES = -101;
   private static final int ITERATOR = -102;
-  private static final int DOCUMENT_START = -103;
-  private static final int HEADING = -104;
-  static final int HEADING_CONSUMED = -105;
-  private static final int DOCUMENT_MAYBE_PREAMBLE = -106;
-  private static final int NO_HEADER = -107;
-  static final int NO_HEADER_CONSUMED = -108;
-  private static final int DOCUMENT_BODY = -109;
+  private static final int PARSE = -103;
+  private static final int HEADER = -104;
+  static final int HEADER_CONSUMED = -105;
   private static final int PARAGRAPH = -110;
   static final int PARAGRAPH_CONSUMED = -111;
 
@@ -59,14 +59,13 @@ public final class PseudoDocument extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case PseudoHeader.EXHAUSTED -> parse(DOCUMENT_MAYBE_PREAMBLE);
+      case PseudoHeader.EXHAUSTED -> parse(Parse.DOCUMENT_HEADER_END);
 
-      case PseudoNoHeader.EXHAUSTED,
-           PseudoParagraph.EXHAUSTED -> parse(DOCUMENT_BODY);
+      case PseudoParagraph.EXHAUSTED -> parse(Parse.DOCUMENT_HEADER_END);
 
-      case ITERATOR -> parse(DOCUMENT_START);
+      case ITERATOR -> parse(Parse.DOCUMENT_START);
 
-      case HEADING, NO_HEADER, PARAGRAPH -> {}
+      case HEADER, PARAGRAPH -> {}
 
       default -> stackStub();
     }
@@ -101,22 +100,26 @@ public final class PseudoDocument extends PseudoNode
     stackPush(START);
   }
 
-  private void parse() {
-    int state = Parse.START;
+  private void parse(Parse initialState) {
+    stackReplace(PARSE);
+
+    var state = initialState;
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case Parse.HEADING -> parseHeading();
+        case DOCUMENT_HEADER_END -> parseDocumentHeaderEnd();
 
-        case Parse.MAYBE_HEADING -> parseMaybeHeading();
+        case DOCUMENT_START -> parseDocumentStart();
 
-        case Parse.MAYBE_HEADING_TRIM -> parseMaybeHeadingTrim();
+        case HEADER -> parseHeader();
 
-        case Parse.NOT_HEADING -> parseNotHeading();
+        case MAYBE_HEADER -> parseMaybeHeader();
 
-        case Parse.PARAGRAPH -> parseParagraph();
+        case MAYBE_HEADER_TRIM -> parseMaybeHeaderTrim();
 
-        case Parse.START -> parseStart();
+        case NO_HEADER -> parseNoHeader();
+
+        case PARAGRAPH -> parseParagraph();
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: state=" + state
@@ -125,131 +128,85 @@ public final class PseudoDocument extends PseudoNode
     }
   }
 
-  private void parse(int nextState) {
-    stackReplace(nextState);
+  private Parse parseDocumentHeaderEnd() {
+    if (!sourceMore()) {
+      return Parse.STOP;
+    }
 
-    parse();
+    throw new UnsupportedOperationException("Implement me");
   }
 
-  private int parseHeading() {
-    int level = stackPop();
+  private Parse parseDocumentStart() {
+    if (!sourceMore()) {
+      return Parse.STOP;
+    }
 
+    stackPush(sourceIndex());
+
+    return switch (sourcePeek()) {
+      case '=' -> advance(Parse.MAYBE_HEADER);
+
+      default -> Parse.NO_HEADER;
+    };
+  }
+
+  private Parse parseHeader() {
     // pops source index
     stackPop();
 
-    int top = stackPop();
-
-    switch (top) {
-      case DOCUMENT_START -> {}
-
-      default -> throw new AssertionError(
-        "Stack top must not be top=" + top
-      );
-    }
-
-    stackPush(level, HEADING);
+    stackReplace(HEADER);
 
     nextNode(header());
 
     return Parse.STOP;
   }
 
-  private int parseMaybeHeading() {
+  private Parse parseMaybeHeader() {
     if (!sourceMore()) {
-      return Parse.NOT_HEADING;
+      return Parse.NO_HEADER;
     }
 
     return switch (sourcePeek()) {
-      case '=' -> {
-        // increase the heading level
-        stackInc();
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADER_TRIM);
 
-        yield advance(Parse.MAYBE_HEADING);
-      }
-
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADING_TRIM);
-
-      default -> Parse.NOT_HEADING;
+      default -> Parse.NO_HEADER;
     };
   }
 
-  private int parseMaybeHeadingTrim() {
+  private Parse parseMaybeHeaderTrim() {
     if (!sourceMore()) {
-      return Parse.NOT_HEADING;
+      return Parse.NO_HEADER;
     }
 
     return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADING_TRIM);
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADER_TRIM);
 
       case '\n', '\r' -> throw new UnsupportedOperationException(
         "Implement me :: preamble paragraph"
       );
 
-      default -> Parse.HEADING;
+      default -> Parse.HEADER;
     };
   }
 
-  private int parseNotHeading() {
-    // pops heading level
-    stackPop();
-
+  private Parse parseNoHeader() {
     sourceIndex(stackPop());
 
-    return switch (stackPeek()) {
-      case DOCUMENT_BODY -> {
-        stackReplace(PARAGRAPH);
+    return switch (sourcePeek()) {
+      case '*' -> throw new UnsupportedOperationException(
+        "Implement me :: maybe unordered list"
+      );
 
-        nextNode(paragraph());
-
-        yield Parse.STOP;
-      }
-
-      case DOCUMENT_START -> {
-        stackReplace(NO_HEADER);
-
-        nextNode(noHeader());
-
-        yield Parse.STOP;
-      }
-
-      default -> stackStub();
+      default -> Parse.PARAGRAPH;
     };
   }
 
-  private int parseParagraph() {
+  private Parse parseParagraph() {
     stackPush(PARAGRAPH);
 
     nextNode(paragraph());
 
     return Parse.STOP;
-  }
-
-  private int parseStart() {
-    if (!sourceMore()) {
-      // empty document...
-      // just stop
-
-      return Parse.STOP;
-    }
-
-    return switch (sourcePeek()) {
-      case '=' -> {
-        stackPush(sourceIndex());
-
-        // pushes heading level
-        stackPush(0);
-
-        yield advance(Parse.MAYBE_HEADING);
-      }
-
-      default -> {
-        // pseudo state for NOT_HEADING
-        stackPush(sourceIndex());
-        stackPush(0);
-
-        yield Parse.NOT_HEADING;
-      }
-    };
   }
 
 }

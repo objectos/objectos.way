@@ -29,6 +29,12 @@ abstract class PseudoNode {
 
   public abstract boolean hasNext();
 
+  final <E extends Enum<E>> E advance(E state) {
+    sink.sourceAdvance();
+
+    return state;
+  }
+
   final int advance(int state) {
     sink.sourceAdvance();
 
@@ -43,20 +49,8 @@ abstract class PseudoNode {
     return sink.nextNode != null;
   }
 
-  final boolean hasNextText() {
-    return sink.hasNextText();
-  }
-
   final PseudoHeader header() {
     return sink.pseudoHeader();
-  }
-
-  final PseudoNoHeader noHeader() {
-    return sink.pseudoNoHeader();
-  }
-
-  final PseudoParagraph paragraph() {
-    return sink.pseudoParagraph();
   }
 
   final PseudoHeading heading() {
@@ -71,16 +65,12 @@ abstract class PseudoNode {
     }
   }
 
-  final Node nextText() {
-    if (hasNext()) {
-      return sink.nextText();
-    } else {
-      throw new NoSuchElementException();
-    }
-  }
-
   final void nextNode(Node value) {
     sink.nextNode = value;
+  }
+
+  final PseudoParagraph paragraph() {
+    return sink.pseudoParagraph();
   }
 
   final void parseTextHeading() {
@@ -95,12 +85,12 @@ abstract class PseudoNode {
     return sink.sourceIndex();
   }
 
-  final boolean sourceMore() {
-    return sink.sourceMore();
-  }
-
   final void sourceIndex(int value) {
     sink.sourceIndex(value);
+  }
+
+  final boolean sourceMore() {
+    return sink.sourceMore();
   }
 
   final char sourcePeek() {
@@ -149,12 +139,6 @@ abstract class PseudoNode {
     sink.stackStub();
 
     return Integer.MIN_VALUE;
-  }
-
-  final boolean stackStubBool() {
-    sink.stackStub();
-
-    return false;
   }
 
 }

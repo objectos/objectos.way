@@ -16,9 +16,8 @@
 package objectos.asciidoc.pseudom;
 
 import objectos.asciidoc.internal.PseudoHeader;
-import objectos.asciidoc.internal.PseudoNoHeader;
 
-public sealed interface Header extends Node permits PseudoHeader, PseudoNoHeader {
+public sealed interface Header extends Node permits PseudoHeader {
 
   IterableOnce<Node> nodes();
 

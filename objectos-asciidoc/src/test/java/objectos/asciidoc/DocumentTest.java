@@ -15,47 +15,125 @@
  */
 package objectos.asciidoc;
 
-import static org.testng.Assert.assertEquals;
-
-import java.util.Map;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class DocumentTest extends AsciiDocTest {
+public class DocumentTest {
 
-  @BeforeClass
-  @Override
-  public void _beforeClass() {
-    super._beforeClass();
+  Tester tester = Tester.objectos();
+
+  public DocumentTest() {}
+
+  DocumentTest(Tester tester) {
+    this.tester = tester;
   }
 
-  @Test(enabled = false)
-  public void _enableCodeMinings() {
+  @Test(description = """
+  doctitle + eof
+
+  - happy path
+  - title ends @ eof
+
+  '''
+  = The doctitle'''
+  """)
+  public void testCase01() {
+    tester.test(
+      """
+      = The doctitle""",
+
+      """
+      <div id="header">
+      <h1>The doctitle</h1>
+      </div>
+      <div id="content">
+
+      </div>
+      """
+    );
   }
 
-  @Override
-  final void test(
-      String source,
-      int[] p0,
-      int[] p1, Map<String, String> docAttr,
-      int[][] p2,
-      String expectedHtml) {
-    var document = asciiDoc.parse(source);
+  @Test(description = """
+  doctitle + NL
 
-    for (var entry : docAttr.entrySet()) {
-      var key = entry.getKey();
-      var expected = entry.getValue();
+  - happy path
+  - title ends @ NL
 
-      var actual = document.getAttribute(key, "");
+  '''
+  = The doctitle
+  '''
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      = The doctitle
+      """,
 
-      assertEquals(actual, expected, "key=" + key);
-    }
+      """
+      <div id="header">
+      <h1>The doctitle</h1>
+      </div>
+      <div id="content">
 
-    document.process(processor);
+      </div>
+      """
+    );
+  }
 
-    var result = processor.toString();
+  @Test(description = """
+  doctitle (not a doctitle)
 
-    testHtml(result, expectedHtml);
+  - not a title (no space after symbol '=')
+
+  '''
+  =Not Title
+  '''
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      =Not Title
+      """,
+
+      """
+      <div id="header">
+      </div>
+      <div id="content">
+      <div class="paragraph">
+      <p>=Not Title</p>
+      </div>
+      </div>
+      """
+    );
+  }
+
+  @Test(enabled = false, description = """
+  doctitle + paragraph
+
+  '''
+  = A
+
+  b
+  '''
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      = A
+
+      b
+      """,
+
+      """
+      <div id="header">
+      <h1>A</h1>
+      </div>
+      <div id="content">
+      <div class="paragraph">
+      <p>b</p>
+      </div>
+      </div>
+      """
+    );
   }
 
 }
