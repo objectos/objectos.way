@@ -21,156 +21,59 @@ import objectos.asciidoc.pseudom.Header;
 import objectos.asciidoc.pseudom.Heading;
 import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Paragraph;
+import objectos.asciidoc.pseudom.Section;
 import objectos.asciidoc.pseudom.Text;
 
 final class ThisDocumentProcessor {
 
-  private static final int START = 0;
-
-  private static final int HEADER = 1 << 0;
-
-  private static final int PREAMBLE = 1 << 1;
-
-  private static final int CONTENT = 1 << 2;
-
-  private final StringBuilder contentOut = new StringBuilder();
-
-  private final StringBuilder headerOut = new StringBuilder();
-
-  private final StringBuilder preambleOut = new StringBuilder();
-
-  private StringBuilder out;
-
-  private int state;
+  private final StringBuilder out = new StringBuilder();
 
   public final String process(Document document) throws IOException {
-    contentOut.setLength(0);
+    out.setLength(0);
 
-    headerOut.setLength(0);
-
-    preambleOut.setLength(0);
-
-    state = START;
+    out.append("<document>\n");
 
     for (var node : document.nodes()) {
-      if (node instanceof Header header) {
-        out = headerOut;
-
-        state = state | HEADER;
-
-        header(header);
-      } else if (node instanceof Paragraph paragraph) {
-        out = preambleOut;
-
-        state = state | PREAMBLE;
-
-        paragraph(paragraph);
-      } else {
-        throw new UnsupportedOperationException(
-          "Implement me :: type=" + node.getClass().getSimpleName()
-        );
-      }
-
-      out = null;
+      node(node);
     }
+
+    out.append("</document>\n");
 
     return toString();
   }
 
   @Override
   public final String toString() {
-    return switch (state) {
-      case HEADER -> """
-        <div id="header">
-        %s</div>
-        <div id="content">
-
-        </div>
-        """.formatted(headerOut);
-
-      case PREAMBLE -> """
-        <div id="header">
-        </div>
-        <div id="content">
-        %s</div>
-        """.formatted(preambleOut);
-
-      case CONTENT -> """
-        <div id="header">
-        </div>
-
-        <div id="content">
-        %s
-        </div>
-        """.formatted(contentOut);
-
-      case HEADER | PREAMBLE -> """
-        <div id="header">
-        %s</div>
-        <div id="content">
-        %s</div>
-        """.formatted(headerOut, preambleOut);
-
-      case HEADER | PREAMBLE | CONTENT -> """
-        <div id="header">
-        %s
-        </div>
-        <div id="content">
-        <div id="preamble">
-        <div class="sectionbody">
-        %s
-        </div>
-        </div>
-        %s
-        </div>
-        """.formatted(headerOut, preambleOut, contentOut);
-
-      case PREAMBLE | CONTENT -> """
-        <div id="header">
-        </div>
-        <div id="content">
-        %s
-        %s
-        </div>
-        """.formatted(preambleOut, contentOut);
-
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: state=" + Integer.toBinaryString(state));
-    };
+    return out.toString();
   }
 
   private void header(Header header) throws IOException {
     for (var node : header.nodes()) {
-      if (node instanceof Heading heading) {
-        heading(heading);
-      } else {
-        throw new UnsupportedOperationException(
-          "Implement me :: type=" + node.getClass().getSimpleName()
-        );
-      }
+      node(node);
     }
   }
 
   private void heading(Heading heading) throws IOException {
-    int level = heading.level() + 1;
-
-    out.append("<h");
-    out.append(level);
-    out.append(">");
+    out.append("<title>");
 
     for (var node : heading.nodes()) {
       node(node);
     }
 
-    out.append("</h");
-    out.append(level);
-    out.append(">");
-    out.append('\n');
+    out.append("</title>\n");
   }
 
   private void node(Node node) throws IOException {
-    if (node instanceof Text text) {
+    if (node instanceof Header header) {
+      header(header);
+    } else if (node instanceof Paragraph paragraph) {
+      paragraph(paragraph);
+    } else if (node instanceof Section section) {
+      section(section);
+    } else if (node instanceof Text text) {
       text.appendTo(out);
+    } else if (node instanceof Heading title) {
+      heading(title);
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + node.getClass().getSimpleName()
@@ -179,18 +82,27 @@ final class ThisDocumentProcessor {
   }
 
   private void paragraph(Paragraph paragraph) throws IOException {
-    out.append("""
-    <div class="paragraph">
-    <p>""");
+    out.append("<p>");
 
     for (var node : paragraph.nodes()) {
       node(node);
     }
 
-    out.append("""
-    </p>
-    </div>
-    """);
+    out.append("</p>\n");
+  }
+
+  private void section(Section section) throws IOException {
+    int level = section.level();
+
+    out.append("\n<section level=\"");
+    out.append(level);
+    out.append("\">\n");
+
+    for (var node : section.nodes()) {
+      node(node);
+    }
+
+    out.append("</section>\n");
   }
 
 }

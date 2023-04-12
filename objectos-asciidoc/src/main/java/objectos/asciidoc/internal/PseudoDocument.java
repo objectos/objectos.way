@@ -31,9 +31,14 @@ public final class PseudoDocument extends PseudoNode
     MAYBE_HEADER,
     MAYBE_HEADER_TRIM,
     HEADER,
-    NO_HEADER,
+    NOT_HEADER,
 
     DOCUMENT_BODY,
+
+    MAYBE_SECTION,
+    MAYBE_SECTION_TRIM,
+    SECTION,
+    NOT_SECTION,
 
     PARAGRAPH;
   }
@@ -46,6 +51,8 @@ public final class PseudoDocument extends PseudoNode
   static final int HEADER_CONSUMED = -105;
   private static final int PARAGRAPH = -110;
   static final int PARAGRAPH_CONSUMED = -111;
+  private static final int SECTION = -112;
+  static final int SECTION_CONSUMED = -113;
 
   PseudoDocument(InternalSink sink) {
     super(sink);
@@ -59,13 +66,13 @@ public final class PseudoDocument extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case PseudoHeader.EXHAUSTED -> parse(Parse.DOCUMENT_BODY);
-
-      case PseudoParagraph.EXHAUSTED -> parse(Parse.DOCUMENT_BODY);
+      case PseudoHeader.EXHAUSTED,
+           PseudoParagraph.EXHAUSTED,
+           PseudoSection.EXHAUSTED -> parse(Parse.DOCUMENT_BODY);
 
       case ITERATOR -> parse(Parse.DOCUMENT_START);
 
-      case HEADER, PARAGRAPH -> {}
+      case HEADER, PARAGRAPH, SECTION -> {}
 
       default -> stackStub();
     }
@@ -117,9 +124,15 @@ public final class PseudoDocument extends PseudoNode
 
         case MAYBE_HEADER_TRIM -> parseMaybeHeaderTrim();
 
-        case NO_HEADER -> parseNoHeader();
+        case MAYBE_SECTION -> parseMaybeSection();
+
+        case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
+
+        case NOT_HEADER -> parseNotHeader();
 
         case PARAGRAPH -> parseParagraph();
+
+        case SECTION -> parseSection();
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: state=" + state
@@ -134,6 +147,15 @@ public final class PseudoDocument extends PseudoNode
     }
 
     return switch (sourcePeek()) {
+      case '=' -> {
+        stackPush(sourceIndex());
+
+        // push title level
+        stackPush(0);
+
+        yield advance(Parse.MAYBE_SECTION);
+      }
+
       default -> Parse.PARAGRAPH;
     };
   }
@@ -148,7 +170,7 @@ public final class PseudoDocument extends PseudoNode
     return switch (sourcePeek()) {
       case '=' -> advance(Parse.MAYBE_HEADER);
 
-      default -> Parse.NO_HEADER;
+      default -> Parse.NOT_HEADER;
     };
   }
 
@@ -165,19 +187,19 @@ public final class PseudoDocument extends PseudoNode
 
   private Parse parseMaybeHeader() {
     if (!sourceMore()) {
-      return Parse.NO_HEADER;
+      return Parse.NOT_HEADER;
     }
 
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> advance(Parse.MAYBE_HEADER_TRIM);
 
-      default -> Parse.NO_HEADER;
+      default -> Parse.NOT_HEADER;
     };
   }
 
   private Parse parseMaybeHeaderTrim() {
     if (!sourceMore()) {
-      return Parse.NO_HEADER;
+      return Parse.NOT_HEADER;
     }
 
     return switch (sourcePeek()) {
@@ -191,7 +213,38 @@ public final class PseudoDocument extends PseudoNode
     };
   }
 
-  private Parse parseNoHeader() {
+  private Parse parseMaybeSection() {
+    if (!sourceMore()) {
+      return Parse.NOT_SECTION;
+    }
+
+    return switch (sourcePeek()) {
+      case '=' -> {
+        // increase title level
+        stackInc();
+
+        yield advance(Parse.MAYBE_SECTION);
+      }
+
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+
+      default -> Parse.NOT_SECTION;
+    };
+  }
+
+  private Parse parseMaybeSectionTrim() {
+    if (!sourceMore()) {
+      return Parse.NOT_SECTION;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+
+      default -> Parse.SECTION;
+    };
+  }
+
+  private Parse parseNotHeader() {
     sourceIndex(stackPop());
 
     return switch (sourcePeek()) {
@@ -207,6 +260,23 @@ public final class PseudoDocument extends PseudoNode
     stackPush(PARAGRAPH);
 
     nextNode(paragraph());
+
+    return Parse.STOP;
+  }
+
+  private Parse parseSection() {
+    int level = stackPop();
+
+    // pops source index
+    stackPop();
+
+    stackPush(SECTION);
+
+    var section = section();
+
+    section.level = level;
+
+    nextNode(section);
 
     return Parse.STOP;
   }

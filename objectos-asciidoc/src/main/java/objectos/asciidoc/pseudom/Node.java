@@ -15,4 +15,4 @@
  */
 package objectos.asciidoc.pseudom;
 
-public sealed interface Node permits Header, Heading, Paragraph, Text {}
+public sealed interface Node permits Header, Heading, Paragraph, Section, Text {}

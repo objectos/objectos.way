@@ -45,14 +45,10 @@ public class ParagraphTest {
       """,
 
       """
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
+      <document>
       <p>abc
       def</p>
-      </div>
-      </div>
+      </document>
       """
     );
   }

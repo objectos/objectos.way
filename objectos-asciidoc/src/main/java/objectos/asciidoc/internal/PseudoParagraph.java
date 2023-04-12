@@ -28,7 +28,9 @@ public final class PseudoParagraph extends PseudoNode
   private static final int PARSE = -602;
   private static final int NODE = -603;
   static final int NODE_CONSUMED = -604;
-  static final int EXHAUSTED = -605;
+  private static final int LAST = -605;
+  static final int LAST_CONSUMED = -606;
+  static final int EXHAUSTED = -607;
 
   PseudoParagraph(InternalSink sink) {
     super(sink);
@@ -43,13 +45,15 @@ public final class PseudoParagraph extends PseudoNode
         parseTextRegular();
 
         if (hasNextNode()) {
-          stackReplace(NODE);
+          stackReplace(isLast() ? LAST : NODE);
         } else {
           stackReplace(EXHAUSTED);
         }
       }
 
-      case NODE -> {}
+      case LAST, NODE -> {}
+
+      case LAST_CONSUMED -> stackReplace(EXHAUSTED);
 
       default -> stackStub();
     }
@@ -73,9 +77,12 @@ public final class PseudoParagraph extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    stackAssert(PseudoDocument.PARAGRAPH_CONSUMED);
+    switch (stackPeek()) {
+      case PseudoDocument.PARAGRAPH_CONSUMED,
+           PseudoSection.PARAGRAPH_CONSUMED -> stackReplace(NODES);
 
-    stackReplace(NODES);
+      default -> stackStub();
+    }
 
     return this;
   }

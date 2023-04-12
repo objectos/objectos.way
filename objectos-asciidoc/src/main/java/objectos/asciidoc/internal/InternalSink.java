@@ -24,17 +24,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private enum Parse {
@@ -46,12 +46,15 @@ public class InternalSink {
 
   private static final int _SINGLE_LINE = 1 << 0;
 
+  private static final int _LAST = 1 << 1;
+
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
   private static final int PSEUDO_HEADING = 2;
-  private static final int PSEUDO_PARAGRAPH = 4;
-  private static final int PSEUDO_TEXT = 6;
-  private static final int PSEUDO_LENGTH = 7;
+  private static final int PSEUDO_PARAGRAPH = 3;
+  private static final int PSEUDO_SECTION = 4;
+  private static final int PSEUDO_TEXT = 5;
+  private static final int PSEUDO_LENGTH = 6;
 
   private int flags;
 
@@ -166,6 +169,16 @@ public class InternalSink {
     return (PseudoParagraph) result;
   }
 
+  final PseudoSection pseudoSection() {
+    var result = pseudoArray[PSEUDO_SECTION];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_SECTION] = new PseudoSection(this);
+    }
+
+    return (PseudoSection) result;
+  }
+
   final PseudoText pseudoText() {
     var result = pseudoArray[PSEUDO_TEXT];
 
@@ -194,6 +207,10 @@ public class InternalSink {
 
   final char sourcePeek() {
     return source.charAt(sourceIndex);
+  }
+
+  final char sourcePeek(int offset) {
+    return source.charAt(sourceIndex + offset);
   }
 
   final int sourceStub() {
@@ -311,31 +328,9 @@ public class InternalSink {
     }
   }
 
-  private Parse parseText() {
-    int endIndex = stackPop();
-
-    int startIndex = stackPop();
-
-    if (startIndex < endIndex) {
-      var text = pseudoText();
-
-      text.end = endIndex;
-
-      text.start = startIndex;
-
-      nextNode = text;
-    } else {
-      nextNode = null;
-    }
-
-    return Parse.STOP;
-  }
-
   private Parse parseBlob() {
     if (!sourceMore()) {
-      stackPush(sourceIndex);
-
-      return Parse.TEXT;
+      return toTextLast(0);
     }
 
     return switch (sourcePeek()) {
@@ -353,32 +348,50 @@ public class InternalSink {
 
   private Parse parseEol() {
     if (flagsIs(_SINGLE_LINE)) {
-      // end before NL
-      stackPush(sourceIndex - 1);
-
-      // single last one
-      pseudoHeading().last = true;
-
-      return Parse.TEXT;
+      // end before NL -> offset=1
+      return toTextLast(1);
     }
 
     if (!sourceMore()) {
-      // end before NL
-      stackPush(sourceIndex - 1);
-
-      return Parse.TEXT;
+      // end before NL -> offset=1
+      return toTextLast(1);
     }
 
     return switch (sourcePeek()) {
       case '\n' -> {
-        // end before NL
-        stackPush(sourceIndex);
+        var next = toTextLast(1);
 
-        yield advance(Parse.TEXT);
+        sourceIndex++;
+
+        trimNewLine();
+
+        yield next;
       }
 
       default -> advance(Parse.BLOB);
     };
+  }
+
+  private Parse parseText() {
+    int endIndex = stackPop();
+
+    int startIndex = stackPop();
+
+    if (startIndex < endIndex) {
+      var text = pseudoText();
+
+      text.end = endIndex;
+
+      text.start = startIndex;
+
+      text.last = flagsIs(_LAST);
+
+      nextNode = text;
+    } else {
+      nextNode = null;
+    }
+
+    return Parse.STOP;
   }
 
   private void start(CharSequence source) {
@@ -387,6 +400,30 @@ public class InternalSink {
     sourceIndex = 0;
 
     stackIndex = -1;
+  }
+
+  private Parse toTextLast(int offset) {
+    stackPush(sourceIndex - offset);
+
+    flagsSet(_LAST);
+
+    return Parse.TEXT;
+  }
+
+  private void trimNewLine() {
+    loop: while (sourceMore()) {
+      switch (sourcePeek()) {
+        case '\n' -> {
+          sourceIndex++;
+
+          continue loop;
+        }
+
+        default -> {
+          break loop;
+        }
+      }
+    }
   }
 
 }

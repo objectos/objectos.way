@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
 import org.asciidoctor.ast.ContentNode;
@@ -57,11 +56,21 @@ abstract class Tester {
     private Doctor() {
       asciidoctor = Asciidoctor.Factory.create();
 
-      var registry = asciidoctor.javaExtensionRegistry();
+      var converters = asciidoctor.javaConverterRegistry();
 
-      registry.inlineMacro(new IInlineMacro());
+      converters.register(ThisDoctorConverter.class);
+
+      var extesions = asciidoctor.javaExtensionRegistry();
+
+      extesions.inlineMacro(new IInlineMacro());
 
       options = Options.builder()
+          //          .attributes(
+          //            Attributes.builder()
+          //                .attribute("sectids", false)
+          //                .build()
+          //          )
+          .backend("tester")
           .headerFooter(true)
           .build();
     }
@@ -70,19 +79,21 @@ abstract class Tester {
     public final void test(String source, String expectedHtml) {
       var result = asciidoctor.convert(source, options);
 
-      var lines = result.lines()
-          .skip(12) // skip to first body child
-          .collect(Collectors.toUnmodifiableList());
-
-      int size = lines.size();
-
-      if (size < 8) {
-        throw new AssertionError("size < 8");
-      }
-
-      result = lines.subList(0, size - 7)
-          .stream()
-          .collect(Collectors.joining("\n", "", "\n"));
+      //      System.out.println(result);
+      //
+      //      var lines = result.lines()
+      //          .skip(12) // skip to first body child
+      //          .collect(Collectors.toUnmodifiableList());
+      //
+      //      int size = lines.size();
+      //
+      //      if (size < 8) {
+      //        throw new AssertionError("size < 8");
+      //      }
+      //
+      //      result = lines.subList(0, size - 7)
+      //          .stream()
+      //          .collect(Collectors.joining("\n", "", "\n"));
 
       testHtml(result, expectedHtml);
     }

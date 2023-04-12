@@ -42,12 +42,9 @@ public class DocumentTest {
       = The doctitle""",
 
       """
-      <div id="header">
-      <h1>The doctitle</h1>
-      </div>
-      <div id="content">
-
-      </div>
+      <document>
+      <title>The doctitle</title>
+      </document>
       """
     );
   }
@@ -69,12 +66,9 @@ public class DocumentTest {
       """,
 
       """
-      <div id="header">
-      <h1>The doctitle</h1>
-      </div>
-      <div id="content">
-
-      </div>
+      <document>
+      <title>The doctitle</title>
+      </document>
       """
     );
   }
@@ -95,13 +89,9 @@ public class DocumentTest {
       """,
 
       """
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
+      <document>
       <p>=Not Title</p>
-      </div>
-      </div>
+      </document>
       """
     );
   }
@@ -124,14 +114,10 @@ public class DocumentTest {
       """,
 
       """
-      <div id="header">
-      <h1>A</h1>
-      </div>
-      <div id="content">
-      <div class="paragraph">
+      <document>
+      <title>A</title>
       <p>b</p>
-      </div>
-      </div>
+      </document>
       """
     );
   }

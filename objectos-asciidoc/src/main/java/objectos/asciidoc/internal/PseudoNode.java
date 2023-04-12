@@ -57,6 +57,16 @@ abstract class PseudoNode {
     return sink.pseudoHeading();
   }
 
+  final boolean isLast() {
+    var next = sink.nextNode;
+
+    if (next != null && next instanceof PseudoText text) {
+      return text.last;
+    } else {
+      return false;
+    }
+  }
+
   final Node nextNode() {
     if (hasNext()) {
       return sink.nextNode();
@@ -71,6 +81,10 @@ abstract class PseudoNode {
 
   final PseudoParagraph paragraph() {
     return sink.pseudoParagraph();
+  }
+
+  final PseudoSection section() {
+    return sink.pseudoSection();
   }
 
   final void parseTextHeading() {
@@ -95,6 +109,10 @@ abstract class PseudoNode {
 
   final char sourcePeek() {
     return sink.sourcePeek();
+  }
+
+  final char sourcePeek(int offset) {
+    return sink.sourcePeek(offset);
   }
 
   final int sourceStub() {

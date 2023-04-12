@@ -25,7 +25,8 @@ public class AsciidoctorTest2 {
     var doctor = Tester.doctor();
     return new Object[] {
         new DocumentTest(doctor),
-        new ParagraphTest(doctor)
+        new ParagraphTest(doctor),
+        new SectionTest(doctor)
     };
   }
 

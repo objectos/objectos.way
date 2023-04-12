@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.asciidoc.internal;
+package objectos.asciidoc.pseudom;
 
-import java.io.IOException;
-import objectos.asciidoc.pseudom.Text;
+import objectos.asciidoc.internal.PseudoSection;
 
-public final class PseudoText implements Text {
+public sealed interface Section extends Node permits PseudoSection {
 
-  private final InternalSink sink;
+  int level();
 
-  int start;
-
-  int end;
-
-  boolean last;
-
-  PseudoText(InternalSink sink) {
-    this.sink = sink;
-  }
-
-  @Override
-  public final void appendTo(Appendable out) throws IOException {
-    sink.appendTo(out, start, end);
-  }
+  IterableOnce<Node> nodes();
 
 }
