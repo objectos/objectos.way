@@ -24,25 +24,6 @@ import objectos.asciidoc.pseudom.Node;
 public final class PseudoDocument extends PseudoNode
     implements Document, IterableOnce<Node>, Iterator<Node> {
 
-  private enum Parse {
-    STOP,
-
-    DOCUMENT_START,
-    MAYBE_HEADER,
-    MAYBE_HEADER_TRIM,
-    HEADER,
-    NOT_HEADER,
-
-    DOCUMENT_BODY,
-
-    MAYBE_SECTION,
-    MAYBE_SECTION_TRIM,
-    SECTION,
-    NOT_SECTION,
-
-    PARAGRAPH;
-  }
-
   private static final int START = -100;
   private static final int NODES = -101;
   private static final int ITERATOR = -102;
@@ -53,6 +34,7 @@ public final class PseudoDocument extends PseudoNode
   static final int PARAGRAPH_CONSUMED = -111;
   private static final int SECTION = -112;
   static final int SECTION_CONSUMED = -113;
+  static final int EXHAUSTED = -114;
 
   PseudoDocument(InternalSink sink) {
     super(sink);
@@ -68,7 +50,7 @@ public final class PseudoDocument extends PseudoNode
     switch (stackPeek()) {
       case PseudoHeader.EXHAUSTED,
            PseudoParagraph.EXHAUSTED,
-           PseudoSection.EXHAUSTED -> parse(Parse.DOCUMENT_BODY);
+           PseudoSection.EXHAUSTED -> parse(Parse.BODY);
 
       case ITERATOR -> parse(Parse.DOCUMENT_START);
 
@@ -114,9 +96,11 @@ public final class PseudoDocument extends PseudoNode
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case DOCUMENT_BODY -> parseDocumentBody();
+        case BODY -> parseBody();
 
         case DOCUMENT_START -> parseDocumentStart();
+
+        case EXHAUSTED -> parseExhausted();
 
         case HEADER -> parseHeader();
 
@@ -141,23 +125,12 @@ public final class PseudoDocument extends PseudoNode
     }
   }
 
-  private Parse parseDocumentBody() {
-    if (!sourceMore()) {
-      return Parse.STOP;
-    }
+  private Parse parseExhausted() {
+    stackAssert(PARSE);
 
-    return switch (sourcePeek()) {
-      case '=' -> {
-        stackPush(sourceIndex());
+    stackReplace(EXHAUSTED);
 
-        // push title level
-        stackPush(0);
-
-        yield advance(Parse.MAYBE_SECTION);
-      }
-
-      default -> Parse.PARAGRAPH;
-    };
+    return Parse.STOP;
   }
 
   private Parse parseDocumentStart() {
@@ -210,37 +183,6 @@ public final class PseudoDocument extends PseudoNode
       );
 
       default -> Parse.HEADER;
-    };
-  }
-
-  private Parse parseMaybeSection() {
-    if (!sourceMore()) {
-      return Parse.NOT_SECTION;
-    }
-
-    return switch (sourcePeek()) {
-      case '=' -> {
-        // increase title level
-        stackInc();
-
-        yield advance(Parse.MAYBE_SECTION);
-      }
-
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
-
-      default -> Parse.NOT_SECTION;
-    };
-  }
-
-  private Parse parseMaybeSectionTrim() {
-    if (!sourceMore()) {
-      return Parse.NOT_SECTION;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
-
-      default -> Parse.SECTION;
     };
   }
 

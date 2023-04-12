@@ -84,12 +84,10 @@ public final class PseudoHeading extends PseudoNode
   public final IterableOnce<Node> nodes() {
     switch (stackPeek()) {
       case PseudoHeader.TITLE_CONSUMED,
-           PseudoSection.TITLE_CONSUMED -> {}
+           PseudoSection.TITLE_CONSUMED -> stackReplace(NODES);
 
       default -> stackStub();
     }
-
-    stackPush(NODES);
 
     return this;
   }

@@ -83,8 +83,68 @@ abstract class PseudoNode {
     return sink.pseudoParagraph();
   }
 
-  final PseudoSection section() {
-    return sink.pseudoSection();
+  final Parse parseBody() {
+    if (!sourceMore()) {
+      return Parse.EXHAUSTED;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Parse.BODY_TRIM);
+
+      case '=' -> {
+        stackPush(sourceIndex());
+
+        // push title level
+        stackPush(0);
+
+        yield advance(Parse.MAYBE_SECTION);
+      }
+
+      default -> Parse.PARAGRAPH;
+    };
+  }
+
+  final Parse parseBodyTrim() {
+    if (!sourceMore()) {
+      return Parse.EXHAUSTED;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Parse.BODY_TRIM);
+
+      default -> Parse.BODY;
+    };
+  }
+
+  final Parse parseMaybeSection() {
+    if (!sourceMore()) {
+      return Parse.NOT_SECTION;
+    }
+
+    return switch (sourcePeek()) {
+      case '=' -> {
+        // increase title level
+        stackInc();
+
+        yield advance(Parse.MAYBE_SECTION);
+      }
+
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+
+      default -> Parse.NOT_SECTION;
+    };
+  }
+
+  final Parse parseMaybeSectionTrim() {
+    if (!sourceMore()) {
+      return Parse.NOT_SECTION;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+
+      default -> Parse.SECTION;
+    };
   }
 
   final void parseTextHeading() {
@@ -93,6 +153,10 @@ abstract class PseudoNode {
 
   final void parseTextRegular() {
     sink.parseTextRegular();
+  }
+
+  final PseudoSection section() {
+    return sink.pseudoSection();
   }
 
   final int sourceIndex() {

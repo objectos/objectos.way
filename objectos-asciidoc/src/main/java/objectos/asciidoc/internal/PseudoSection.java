@@ -23,16 +23,6 @@ import objectos.asciidoc.pseudom.Section;
 public final class PseudoSection extends PseudoNode
     implements Section, IterableOnce<Node>, Iterator<Node> {
 
-  private enum Parse {
-    STOP,
-    SECTION_BODY,
-    SECTION_BODY_TRIM,
-
-    PARAGRAPH,
-
-    EXHAUSTED;
-  }
-
   private static final int NODES = -700;
   private static final int ITERATOR = -701;
   private static final int TITLE = -702;
@@ -40,7 +30,9 @@ public final class PseudoSection extends PseudoNode
   private static final int PARSE = -704;
   private static final int PARAGRAPH = -705;
   static final int PARAGRAPH_CONSUMED = -706;
-  static final int EXHAUSTED = -707;
+  private static final int SECTION = -706;
+  static final int SECTION_CONSUMED = -707;
+  static final int EXHAUSTED = -708;
 
   int level;
 
@@ -51,9 +43,9 @@ public final class PseudoSection extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case PseudoHeading.EXHAUSTED -> parse(Parse.SECTION_BODY);
-
-      case PseudoParagraph.EXHAUSTED -> parse(Parse.SECTION_BODY);
+      case PseudoHeading.EXHAUSTED,
+           PseudoParagraph.EXHAUSTED,
+           PseudoSection.EXHAUSTED -> parse(Parse.BODY);
 
       case ITERATOR -> {
         stackPop();
@@ -70,7 +62,7 @@ public final class PseudoSection extends PseudoNode
         stackPush(TITLE);
       }
 
-      case PARAGRAPH, TITLE -> {}
+      case PARAGRAPH, SECTION, TITLE -> {}
 
       default -> stackStub();
     }
@@ -99,9 +91,12 @@ public final class PseudoSection extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    stackAssert(PseudoDocument.SECTION_CONSUMED);
+    switch (stackPeek()) {
+      case PseudoDocument.SECTION_CONSUMED,
+           PseudoSection.SECTION_CONSUMED -> stackReplace(NODES);
 
-    stackReplace(NODES);
+      default -> stackStub();
+    }
 
     return this;
   }
@@ -118,13 +113,19 @@ public final class PseudoSection extends PseudoNode
 
     while (state != Parse.STOP) {
       state = switch (state) {
+        case BODY -> parseBody();
+
+        case BODY_TRIM -> parseBodyTrim();
+
         case EXHAUSTED -> parseExhausted();
+
+        case MAYBE_SECTION -> parseMaybeSection();
+
+        case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
 
         case PARAGRAPH -> parseParagraph();
 
-        case SECTION_BODY -> parseSectionBody();
-
-        case SECTION_BODY_TRIM -> parseSectionBodyTrim();
+        case SECTION -> parseSection();
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: state=" + state
@@ -134,9 +135,12 @@ public final class PseudoSection extends PseudoNode
   }
 
   private Parse parseExhausted() {
-    // pop section level
+    stackAssert(PARSE);
+
+    // pops ASSERT
     stackPop();
 
+    // replaces section level
     stackReplace(EXHAUSTED);
 
     return Parse.STOP;
@@ -150,30 +154,31 @@ public final class PseudoSection extends PseudoNode
     return Parse.STOP;
   }
 
-  private Parse parseSectionBody() {
-    if (!sourceMore()) {
-      return Parse.EXHAUSTED;
+  private Parse parseSection() {
+    int nextLevel = stackPop();
+
+    // pops source index
+    stackPop();
+
+    stackAssert(PARSE);
+
+    stackPop();
+
+    int thisLevel = stackPeek();
+
+    if (nextLevel > thisLevel) {
+      stackPush(SECTION);
+
+      var section = section();
+
+      section.level = nextLevel;
+
+      nextNode(section);
+
+      return Parse.STOP;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
     }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.SECTION_BODY_TRIM);
-
-      case '=' -> throw new UnsupportedOperationException("Implement me");
-
-      default -> Parse.PARAGRAPH;
-    };
-  }
-
-  private Parse parseSectionBodyTrim() {
-    if (!sourceMore()) {
-      return Parse.EXHAUSTED;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.SECTION_BODY_TRIM);
-
-      default -> Parse.SECTION_BODY;
-    };
   }
 
 }

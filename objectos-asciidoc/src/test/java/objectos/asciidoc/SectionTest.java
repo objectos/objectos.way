@@ -69,4 +69,60 @@ public class SectionTest {
     );
   }
 
+  @Test(description = """
+  section
+
+  - level 1
+  - level 2
+  - single paragraph in each
+
+  '''
+  = doc
+
+  pream
+
+  == L1
+
+  sect1
+
+  === 2
+
+  sect2
+  '''
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      = doc
+
+      pream
+
+      == L1
+
+      sect1
+
+      === 2
+
+      sect2
+      """,
+
+      """
+      <document>
+      <title>doc</title>
+      <p>pream</p>
+
+      <section level="1">
+      <title>L1</title>
+      <p>sect1</p>
+
+      <section level="2">
+      <title>2</title>
+      <p>sect2</p>
+      </section>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }
