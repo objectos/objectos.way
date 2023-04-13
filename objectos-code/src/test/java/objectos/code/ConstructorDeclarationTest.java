@@ -246,4 +246,31 @@ public class ConstructorDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Constructor declarations TC06:
+
+  - multiple modifiers: last one wins
+  """)
+  public void testCase06() {
+    assertEquals(
+      new JavaTemplate() {
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            name("LastOneWins"),
+            constructor(
+              PUBLIC, PROTECTED, PRIVATE
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class LastOneWins {
+        private LastOneWins() {}
+      }
+      """
+    );
+  }
+
 }

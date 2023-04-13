@@ -774,7 +774,7 @@ class InternalCompiler extends InternalApi {
     last(_START);
 
     int annotations = NULL,
-        modifiers = NULL,
+        modifier = NULL,
         typeParameters = NULL,
         //receiverParameter = NULL,
         parameters = NULL,
@@ -790,7 +790,7 @@ class InternalCompiler extends InternalApi {
       switch (proto) {
         case ByteProto.ANNOTATION -> annotations = listAdd(annotations);
 
-        case ByteProto.MODIFIER -> modifiers = listAdd(modifiers);
+        case ByteProto.MODIFIER -> modifier = singleSet(modifier);
 
         case ByteProto.PARAMETER_DECLARATION -> parameters = listAdd(parameters);
 
@@ -810,8 +810,8 @@ class InternalCompiler extends InternalApi {
       listExecute(annotations, this::declarationAnnotation);
     }
 
-    if (modifiers != NULL) {
-      listExecute(modifiers, this::modifier);
+    if (modifier != NULL) {
+      singleExecute(modifier, this::modifier);
     }
 
     if (typeParameters != NULL) {
