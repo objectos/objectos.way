@@ -1632,16 +1632,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   }
 
   /**
-   * TODO
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor() {
-    return api().elem(ByteProto.CONSTRUCTOR);
-  }
-
-  /**
    * Adds a constructor declaration.
    *
    * @param contents
@@ -1655,111 +1645,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ConstructorDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.CONSTRUCTOR_DECLARATION, many);
-  }
-
-  /**
-   * TODO
-   *
-   * @param e1 Do not use!
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor(ParameterElement e1) {
-    return api().elem(ByteProto.CONSTRUCTOR, e1.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @param elements Do not use!
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor(ParameterElement... elements) {
-    Objects.requireNonNull(elements, "elements == null");
-    return api().elemMany(ByteProto.CONSTRUCTOR, elements);
-  }
-
-  /**
-   * TODO
-   *
-   * @param e1 Do not use!
-   * @param e2 Do not use!
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2) {
-    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @param e1 Do not use!
-   * @param e2 Do not use!
-   * @param e3 Do not use!
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
-      ParameterElement e3) {
-    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @param e1 Do not use!
-   * @param e2 Do not use!
-   * @param e3 Do not use!
-   * @param e4 Do not use!
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
-      ParameterElement e3, ParameterElement e4) {
-    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @param e1 Do not use!
-   * @param e2 Do not use!
-   * @param e3 Do not use!
-   * @param e4 Do not use!
-   * @param e5 Do not use!
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
-      ParameterElement e3, ParameterElement e4, ParameterElement e5) {
-    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(), e3.self(), e4.self(), e5.self());
-  }
-
-  /**
-   * TODO
-   *
-   * @param e1 Do not use!
-   * @param e2 Do not use!
-   * @param e3 Do not use!
-   * @param e4 Do not use!
-   * @param e5 Do not use!
-   * @param e6 Do not use!
-   *
-   * @return Do not use!
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final ConstructorDeclaration constructor(ParameterElement e1, ParameterElement e2,
-      ParameterElement e3, ParameterElement e4, ParameterElement e5, ParameterElement e6) {
-    return api().elem(ByteProto.CONSTRUCTOR, e1.self(), e2.self(),
-      e3.self(), e4.self(), e5.self(), e6.self());
   }
 
   /**

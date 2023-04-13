@@ -57,7 +57,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("CLASS"); // deprecated
     value("CLASS_DECLARATION");
     value("COMPILATION_UNIT");
-    value("CONSTRUCTOR"); // deprecated
     value("CONSTRUCTOR_DECLARATION");
     value("DECLARATION_NAME");
     value("ENUM"); // deprecated

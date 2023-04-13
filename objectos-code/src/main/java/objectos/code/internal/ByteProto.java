@@ -50,65 +50,64 @@ public final class ByteProto {
   public static final int CLASS = -20;
   public static final int CLASS_DECLARATION = -21;
   public static final int COMPILATION_UNIT = -22;
-  public static final int CONSTRUCTOR = -23;
-  public static final int CONSTRUCTOR_DECLARATION = -24;
-  public static final int DECLARATION_NAME = -25;
-  public static final int ENUM = -26;
-  public static final int ENUM_CONSTANT = -27;
-  public static final int ENUM_DECLARATION = -28;
-  public static final int EXTENDS = -29;
-  public static final int EXTENDS_CLAUSE = -30;
-  public static final int FIELD_DECLARATION = -31;
-  public static final int IDENTIFIER = -32;
-  public static final int IMPLEMENTS = -33;
-  public static final int IMPLEMENTS_CLAUSE = -34;
-  public static final int INTERFACE = -35;
-  public static final int INTERFACE_DECLARATION = -36;
-  public static final int METHOD = -37;
-  public static final int METHOD_DECLARATION = -38;
-  public static final int MODIFIER = -39;
-  public static final int PACKAGE = -40;
-  public static final int PACKAGE_DECLARATION = -41;
-  public static final int PARAMETER = -42;
-  public static final int PARAMETER_DECLARATION = -43;
-  public static final int PERMITS_CLAUSE = -44;
-  public static final int STATEMENT = -45;
-  public static final int TYPE_PARAMETER = -46;
+  public static final int CONSTRUCTOR_DECLARATION = -23;
+  public static final int DECLARATION_NAME = -24;
+  public static final int ENUM = -25;
+  public static final int ENUM_CONSTANT = -26;
+  public static final int ENUM_DECLARATION = -27;
+  public static final int EXTENDS = -28;
+  public static final int EXTENDS_CLAUSE = -29;
+  public static final int FIELD_DECLARATION = -30;
+  public static final int IDENTIFIER = -31;
+  public static final int IMPLEMENTS = -32;
+  public static final int IMPLEMENTS_CLAUSE = -33;
+  public static final int INTERFACE = -34;
+  public static final int INTERFACE_DECLARATION = -35;
+  public static final int METHOD = -36;
+  public static final int METHOD_DECLARATION = -37;
+  public static final int MODIFIER = -38;
+  public static final int PACKAGE = -39;
+  public static final int PACKAGE_DECLARATION = -40;
+  public static final int PARAMETER = -41;
+  public static final int PARAMETER_DECLARATION = -42;
+  public static final int PERMITS_CLAUSE = -43;
+  public static final int STATEMENT = -44;
+  public static final int TYPE_PARAMETER = -45;
 
   //statement start
 
-  public static final int BLOCK = -47;
-  public static final int IF_CONDITION = -48;
-  public static final int RETURN = -49;
-  public static final int SUPER = -50;
-  public static final int SUPER_INVOCATION = -51;
-  public static final int THROW = -52;
-  public static final int VAR = -53;
+  public static final int BLOCK = -46;
+  public static final int IF_CONDITION = -47;
+  public static final int RETURN = -48;
+  public static final int SUPER = -49;
+  public static final int SUPER_INVOCATION = -50;
+  public static final int THROW = -51;
+  public static final int VAR = -52;
 
   //statement part
 
-  public static final int CONDITION = -54;
-  public static final int IF = -55;
-  public static final int ELSE = -56;
+  public static final int CONDITION = -53;
+  public static final int IF = -54;
+  public static final int ELSE = -55;
 
   //expression start
 
-  public static final int CLASS_INSTANCE_CREATION = -57;
-  public static final int EXPRESSION_NAME = -58;
-  public static final int INVOKE = -59;
-  public static final int NEW = -60;
-  public static final int NULL_LITERAL = -61;
-  public static final int PRIMITIVE_LITERAL = -62;
-  public static final int STRING_LITERAL = -63;
-  public static final int THIS = -64;
-  public static final int V = -65;
+  public static final int CLASS_INSTANCE_CREATION = -56;
+  public static final int EXPRESSION_NAME = -57;
+  public static final int INVOKE = -58;
+  public static final int NEW = -59;
+  public static final int NULL_LITERAL = -60;
+  public static final int PRIMITIVE_LITERAL = -61;
+  public static final int STRING_LITERAL = -62;
+  public static final int THIS = -63;
+  public static final int V = -64;
 
   //expression part
 
-  public static final int ARGUMENT = -66;
-  public static final int ARRAY_ACCESS = -67;
-  public static final int ASSIGNMENT_OPERATOR = -68;
-  public static final int EQUALITY_OPERATOR = -69;
+  public static final int ARGUMENT = -65;
+  public static final int ARRAY_ACCESS = -66;
+  public static final int ASSIGNMENT_OPERATOR = -67;
+  public static final int EQUALITY_OPERATOR = -68;
 
   private ByteProto() {}
 

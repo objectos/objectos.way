@@ -492,8 +492,6 @@ class InternalCompiler extends InternalApi {
         oldClassDeclaration();
       }
 
-      case ByteProto.CONSTRUCTOR -> oldConstructorDeclaration();
-
       case ByteProto.ENUM -> oldEnumDeclaration();
 
       case ByteProto.ENUM_CONSTANT -> execute(this::oldEnumConstant);
@@ -838,20 +836,6 @@ class InternalCompiler extends InternalApi {
     executableBody(statements);
 
     stackArray[0] = start;
-  }
-
-  private void constructorDeclarator() {
-    int name = simpleName();
-
-    if (name == NULL) {
-      name = object("Constructor");
-    }
-
-    preIdentifier();
-
-    codeAdd(ByteCode.IDENTIFIER, name);
-
-    oldFormalParameterList();
   }
 
   private void consumeWs() {
@@ -2027,18 +2011,6 @@ class InternalCompiler extends InternalApi {
 
   private void oldClassKeyword() {
     typeKeyword(Keyword.CLASS);
-  }
-
-  private void oldConstructorDeclaration() {
-    execute(this::constructorDeclarator);
-
-    if (itemIs(ByteProto.BLOCK)) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      execute(this::oldBlock);
-    } else {
-      errorRaise("Constructor without a block() declaration");
-    }
   }
 
   private void oldDeclarationAnnotationList() {
