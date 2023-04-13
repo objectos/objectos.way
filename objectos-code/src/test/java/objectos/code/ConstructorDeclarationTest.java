@@ -273,4 +273,50 @@ public class ConstructorDeclarationTest {
     );
   }
 
+  @Test(description = """
+  Constructor declarations TC07:
+
+  - annotations
+  """)
+  public void testCase07() {
+    assertEquals(
+      new JavaTemplate() {
+        static final ClassTypeName A = ClassTypeName.of("com.example", "A");
+        static final ClassTypeName B = ClassTypeName.of("com.example", "B");
+
+        @Override
+        protected final void definition() {
+          classDeclaration(
+            name("ExA"),
+            constructor(
+              annotation(A),
+              PUBLIC
+            )
+          );
+
+          classDeclaration(
+            name("ExB"),
+            constructor(
+              annotation(A),
+              annotation(B)
+            )
+          );
+        }
+      }.toString(),
+
+      """
+      class ExA {
+        @com.example.A
+        public ExA() {}
+      }
+
+      class ExB {
+        @com.example.A
+        @com.example.B
+        ExB() {}
+      }
+      """
+    );
+  }
+
 }

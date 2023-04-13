@@ -2567,6 +2567,8 @@ class InternalCompiler extends InternalApi {
 
   private void preIdentifier() {
     switch (last()) {
+      case _ANNOTATION -> codeAdd(Whitespace.AFTER_ANNOTATION);
+
       case _COMMA -> codeAdd(Whitespace.BEFORE_NEXT_COMMA_SEPARATED_ITEM);
 
       case _IDENTIFIER,
