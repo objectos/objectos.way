@@ -54,7 +54,6 @@ import objectos.code.tmpl.InterfaceDeclarationInstruction;
 import objectos.code.tmpl.MethodDeclarationInstruction;
 import objectos.code.tmpl.Modifier;
 import objectos.code.tmpl.NewLine;
-import objectos.code.tmpl.ParameterElement;
 import objectos.code.tmpl.ParameterInstruction;
 import objectos.code.tmpl.StatementPart;
 import objectos.code.tmpl.TypeDeclarationInstruction;
@@ -103,7 +102,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       ConstructorDeclaration,
       ConstructorDeclarationInstruction,
       DeclarationName,
-      OldEllipsis,
       OldElseKeyword,
       End,
       EnumConstant,
@@ -125,7 +123,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       InterfaceKeyword,
       MethodDeclaration,
       MethodDeclarationInstruction,
-      MethodDeclarator,
       MethodInvocation,
       OldNewKeyword,
       OldNewLine,
@@ -171,7 +168,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       InterfaceDeclarationInstruction,
       MethodDeclarationInstruction {}
 
-  interface AnyType extends BodyElement, BlockInstruction, ParameterElement {}
+  interface AnyType extends BodyElement, BlockInstruction {}
 
   interface ArrayAccess extends ExpressionPart {}
 
@@ -248,7 +245,7 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       EnumDeclarationInstruction,
       InterfaceDeclarationInstruction {}
 
-  interface Identifier extends BlockInstruction, BodyElement, ParameterElement {}
+  interface Identifier extends BlockInstruction, BodyElement {}
 
   interface IfCondition extends BlockInstruction {}
 
@@ -278,8 +275,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
       EnumDeclarationInstruction,
       InterfaceDeclarationInstruction {}
 
-  interface MethodDeclarator extends BodyElement {}
-
   interface MethodInvocation extends PrimaryNoNewArray {}
 
   @Deprecated
@@ -288,9 +283,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   @Deprecated
   interface OldClassTypeInstruction
       extends ArgsPart, OldClassOrParameterizedType, ReferenceType, TypeParameterBound {}
-
-  @Deprecated
-  interface OldEllipsis extends ParameterElement {}
 
   @Deprecated
   interface OldElseKeyword extends BlockInstruction {}
@@ -1666,14 +1658,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * TODO
    */
   @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final OldEllipsis ellipsis() {
-    return api().itemAdd(ByteProto.ELLIPSIS, ByteProto.NOOP);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
   protected final End end() {
     return stop();
   }
@@ -2101,54 +2085,6 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   protected final MethodDeclaration method(MethodDeclarationInstruction... contents) {
     Object[] many = Objects.requireNonNull(contents, "contents == null");
     return api().elemMany(ByteProto.METHOD_DECLARATION, many);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final MethodDeclarator method(String methodName) {
-    JavaModel.checkMethodName(methodName);
-    var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD, EXT);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final MethodDeclarator method(String methodName,
-      ParameterElement e1) {
-    JavaModel.checkMethodName(methodName);
-    var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD, EXT, e1.self());
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final MethodDeclarator method(String methodName,
-      ParameterElement... elements) {
-    JavaModel.checkMethodName(methodName);
-    var api = api();
-    api.identifierext(methodName);
-    Object[] many = Objects.requireNonNull(elements, "elements == null");
-    return api.elemMany(ByteProto.METHOD, EXT, many);
-  }
-
-  /**
-   * TODO
-   */
-  @Deprecated(forRemoval = true, since = "0.4.3.1")
-  protected final MethodDeclarator method(String methodName,
-      ParameterElement e1, ParameterElement e2) {
-    JavaModel.checkMethodName(methodName);
-    var api = api();
-    api.identifierext(methodName);
-    return api.elem(ByteProto.METHOD, EXT, e1.self(), e2.self());
   }
 
   /**

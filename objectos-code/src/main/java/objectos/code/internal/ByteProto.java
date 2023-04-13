@@ -63,51 +63,50 @@ public final class ByteProto {
   public static final int IMPLEMENTS_CLAUSE = -33;
   public static final int INTERFACE = -34;
   public static final int INTERFACE_DECLARATION = -35;
-  public static final int METHOD = -36;
-  public static final int METHOD_DECLARATION = -37;
-  public static final int MODIFIER = -38;
-  public static final int PACKAGE = -39;
-  public static final int PACKAGE_DECLARATION = -40;
-  public static final int PARAMETER = -41;
-  public static final int PARAMETER_DECLARATION = -42;
-  public static final int PERMITS_CLAUSE = -43;
-  public static final int STATEMENT = -44;
-  public static final int TYPE_PARAMETER = -45;
+  public static final int METHOD_DECLARATION = -36;
+  public static final int MODIFIER = -37;
+  public static final int PACKAGE = -38;
+  public static final int PACKAGE_DECLARATION = -39;
+  public static final int PARAMETER = -40;
+  public static final int PARAMETER_DECLARATION = -41;
+  public static final int PERMITS_CLAUSE = -42;
+  public static final int STATEMENT = -43;
+  public static final int TYPE_PARAMETER = -44;
 
   //statement start
 
-  public static final int BLOCK = -46;
-  public static final int IF_CONDITION = -47;
-  public static final int RETURN = -48;
-  public static final int SUPER = -49;
-  public static final int SUPER_INVOCATION = -50;
-  public static final int THROW = -51;
-  public static final int VAR = -52;
+  public static final int BLOCK = -45;
+  public static final int IF_CONDITION = -46;
+  public static final int RETURN = -47;
+  public static final int SUPER = -48;
+  public static final int SUPER_INVOCATION = -49;
+  public static final int THROW = -50;
+  public static final int VAR = -51;
 
   //statement part
 
-  public static final int CONDITION = -53;
-  public static final int IF = -54;
-  public static final int ELSE = -55;
+  public static final int CONDITION = -52;
+  public static final int IF = -53;
+  public static final int ELSE = -54;
 
   //expression start
 
-  public static final int CLASS_INSTANCE_CREATION = -56;
-  public static final int EXPRESSION_NAME = -57;
-  public static final int INVOKE = -58;
-  public static final int NEW = -59;
-  public static final int NULL_LITERAL = -60;
-  public static final int PRIMITIVE_LITERAL = -61;
-  public static final int STRING_LITERAL = -62;
-  public static final int THIS = -63;
-  public static final int V = -64;
+  public static final int CLASS_INSTANCE_CREATION = -55;
+  public static final int EXPRESSION_NAME = -56;
+  public static final int INVOKE = -57;
+  public static final int NEW = -58;
+  public static final int NULL_LITERAL = -59;
+  public static final int PRIMITIVE_LITERAL = -60;
+  public static final int STRING_LITERAL = -61;
+  public static final int THIS = -62;
+  public static final int V = -63;
 
   //expression part
 
-  public static final int ARGUMENT = -65;
-  public static final int ARRAY_ACCESS = -66;
-  public static final int ASSIGNMENT_OPERATOR = -67;
-  public static final int EQUALITY_OPERATOR = -68;
+  public static final int ARGUMENT = -64;
+  public static final int ARRAY_ACCESS = -65;
+  public static final int ASSIGNMENT_OPERATOR = -66;
+  public static final int EQUALITY_OPERATOR = -67;
 
   private ByteProto() {}
 

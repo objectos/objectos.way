@@ -513,13 +513,9 @@ class InternalCompiler extends InternalApi {
       case ByteProto.VOID -> {
         execute(this::voidKeyword);
 
-        if (itemIs(ByteProto.METHOD)) {
-          oldMethodDeclaration();
-        } else {
-          errorRaise(
-            "method declarator not found"
-          );
-        }
+        errorRaise(
+          "method declarator not found"
+        );
       }
 
       default -> errorRaise(
@@ -1207,10 +1203,6 @@ class InternalCompiler extends InternalApi {
     switch (item) {
       case ByteProto.IDENTIFIER -> {
         oldFieldDeclarationVariableList();
-      }
-
-      case ByteProto.METHOD -> {
-        oldMethodDeclaration();
       }
 
       default -> errorRaise(
@@ -2152,47 +2144,6 @@ class InternalCompiler extends InternalApi {
     last(_SYMBOL);
   }
 
-  private void oldFormalParameter() {
-    if (itemTest(ByteProto::isType)) {
-      executeSwitch(this::oldType);
-    } else {
-      errorRaise("invalid formal parameter");
-
-      return;
-    }
-
-    if (itemIs(ByteProto.ELLIPSIS)) {
-      execute(this::ellipsis);
-    }
-
-    if (itemIs(ByteProto.IDENTIFIER)) {
-      execute(this::identifier);
-    } else {
-      errorRaise("invalid formal parameter");
-
-      return;
-    }
-  }
-
-  private void oldFormalParameterList() {
-    codeAdd(Symbol.LEFT_PARENTHESIS);
-
-    last(_START);
-
-    if (itemMore()) {
-      oldFormalParameter();
-
-      while (itemMore()) {
-        codeAdd(Symbol.COMMA);
-        last(_COMMA);
-
-        oldFormalParameter();
-      }
-    }
-
-    codeAdd(Symbol.RIGHT_PARENTHESIS);
-  }
-
   private void oldIfCondition() {
     codeAdd(Keyword.IF);
 
@@ -2242,21 +2193,6 @@ class InternalCompiler extends InternalApi {
     }
   }
 
-  private void oldMethodDeclaration() {
-    execute(this::oldMethodDeclarator);
-
-    if (itemIs(ByteProto.BLOCK)) {
-      codeAdd(Whitespace.OPTIONAL);
-
-      execute(this::oldBlock);
-    } else {
-      // assume abstract
-      codeAdd(Symbol.SEMICOLON);
-
-      last(_SYMBOL);
-    }
-  }
-
   private void oldMethodDeclarationAfterTypeParameterList() {
     int returnType = itemPeek();
 
@@ -2272,23 +2208,11 @@ class InternalCompiler extends InternalApi {
       return;
     }
 
-    if (itemIs(ByteProto.METHOD)) {
-      oldMethodDeclaration();
-    } else {
-      int next = itemPeek();
+    int next = itemPeek();
 
-      errorRaise(
-        "Method declaration: expected 'Declarator' but found '%s'".formatted(protoName(next))
-      );
-
-      return;
-    }
-  }
-
-  private void oldMethodDeclarator() {
-    execute(this::identifier);
-
-    oldFormalParameterList();
+    errorRaise(
+      "Method declaration: expected 'Declarator' but found '%s'".formatted(protoName(next))
+    );
   }
 
   private void oldModifier() {
