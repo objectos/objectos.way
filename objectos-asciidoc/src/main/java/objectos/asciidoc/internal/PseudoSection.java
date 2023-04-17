@@ -16,6 +16,7 @@
 package objectos.asciidoc.internal;
 
 import java.util.Iterator;
+import objectos.asciidoc.pseudom.Attributes;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Section;
@@ -38,6 +39,11 @@ public final class PseudoSection extends PseudoNode
 
   PseudoSection(InternalSink sink) {
     super(sink);
+  }
+
+  @Override
+  public final Attributes attributes() {
+    return pseudoAttributes().bindIfNecessary(this);
   }
 
   @Override
@@ -113,23 +119,15 @@ public final class PseudoSection extends PseudoNode
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case BODY -> parseBody();
-
         case BODY_TRIM -> parseBodyTrim();
 
         case EXHAUSTED -> parseExhausted();
-
-        case MAYBE_SECTION -> parseMaybeSection();
-
-        case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
 
         case PARAGRAPH -> parseParagraph();
 
         case SECTION -> parseSection();
 
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-        );
+        default -> parseDocumentOrSection(state);
       };
     }
   }

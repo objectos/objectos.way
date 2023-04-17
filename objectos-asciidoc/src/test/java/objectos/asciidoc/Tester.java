@@ -51,8 +51,6 @@ abstract class Tester {
 
     private final Asciidoctor asciidoctor;
 
-    private final Options options;
-
     private Doctor() {
       asciidoctor = Asciidoctor.Factory.create();
 
@@ -63,37 +61,16 @@ abstract class Tester {
       var extesions = asciidoctor.javaExtensionRegistry();
 
       extesions.inlineMacro(new IInlineMacro());
-
-      options = Options.builder()
-          //          .attributes(
-          //            Attributes.builder()
-          //                .attribute("sectids", false)
-          //                .build()
-          //          )
-          .backend("tester")
-          .headerFooter(true)
-          .build();
     }
 
     @Override
     public final void test(String source, String expectedHtml) {
-      var result = asciidoctor.convert(source, options);
+      var options = Options.builder()
+          .backend("tester")
+          .headerFooter(true)
+          .build();
 
-      //      System.out.println(result);
-      //
-      //      var lines = result.lines()
-      //          .skip(12) // skip to first body child
-      //          .collect(Collectors.toUnmodifiableList());
-      //
-      //      int size = lines.size();
-      //
-      //      if (size < 8) {
-      //        throw new AssertionError("size < 8");
-      //      }
-      //
-      //      result = lines.subList(0, size - 7)
-      //          .stream()
-      //          .collect(Collectors.joining("\n", "", "\n"));
+      var result = asciidoctor.convert(source, options);
 
       testHtml(result, expectedHtml);
     }

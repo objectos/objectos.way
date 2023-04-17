@@ -23,7 +23,7 @@ class AsciiDoc2 extends InternalSink {
   public AsciiDoc2() {}
 
   public final Document open(String source) {
-    CharSequence cs = source.toString(); // implicit null-check
+    String cs = source.toString(); // implicit null-check
 
     return openImpl(cs);
   }

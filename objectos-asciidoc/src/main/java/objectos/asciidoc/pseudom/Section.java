@@ -19,6 +19,8 @@ import objectos.asciidoc.internal.PseudoSection;
 
 public sealed interface Section extends Node permits PseudoSection {
 
+  Attributes attributes();
+
   int level();
 
   IterableOnce<Node> nodes();

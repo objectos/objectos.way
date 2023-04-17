@@ -13,38 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.asciidoc.internal;
+package objectos.asciidoc.pseudom;
 
-enum Parse {
-  STOP,
+import objectos.asciidoc.internal.PseudoAttributes;
 
-  /* document only */
-  DOCUMENT_START,
-  MAYBE_HEADER,
-  MAYBE_HEADER_TRIM,
-  HEADER,
-  NOT_HEADER,
+public sealed interface Attributes permits PseudoAttributes {
 
-  /* document or section */
+  String getOrDefault(String name, String defaultValue);
 
-  BODY,
-  BODY_TRIM,
-
-  MAYBE_ATTRLIST,
-  NAME_OR_VALUE,
-  MAYBE_ATTRLIST_END,
-  MAYBE_ATTRLIST_END_TRIM,
-  ATTRLIST,
-  NOT_ATTRLIST,
-
-  MAYBE_SECTION,
-  MAYBE_SECTION_TRIM,
-  SECTION,
-  NOT_SECTION,
-
-  PARAGRAPH,
-
-  /* section */
-
-  EXHAUSTED;
 }

@@ -61,6 +61,7 @@ public class SectionTest {
       <p>pream</p>
 
       <section level="1">
+      <style>null</style>
       <title>L1</title>
       <p>parag</p>
       </section>
@@ -112,13 +113,51 @@ public class SectionTest {
       <p>pream</p>
 
       <section level="1">
+      <style>null</style>
       <title>L1</title>
       <p>sect1</p>
 
       <section level="2">
+      <style>null</style>
       <title>2</title>
       <p>sect2</p>
       </section>
+      </section>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  section
+
+  - attribute list
+  - level 1
+  - no doctitle
+  - single paragraph
+
+  '''
+  [nam]
+  == L1
+
+  sect1
+  '''
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      [nam]
+      == L1
+
+      sect1
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>nam</style>
+      <title>L1</title>
+      <p>sect1</p>
       </section>
       </document>
       """

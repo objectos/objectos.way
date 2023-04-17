@@ -21,6 +21,8 @@ import objectos.asciidoc.pseudom.Node;
 
 abstract class PseudoNode {
 
+  private static final int ATTRLIST_BLOCK = -1;
+
   private final InternalSink sink;
 
   PseudoNode(InternalSink sink) {
@@ -83,27 +85,6 @@ abstract class PseudoNode {
     return sink.pseudoParagraph();
   }
 
-  final Parse parseBody() {
-    if (!sourceMore()) {
-      return Parse.EXHAUSTED;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.BODY_TRIM);
-
-      case '=' -> {
-        stackPush(sourceIndex());
-
-        // push title level
-        stackPush(0);
-
-        yield advance(Parse.MAYBE_SECTION);
-      }
-
-      default -> Parse.PARAGRAPH;
-    };
-  }
-
   final Parse parseBodyTrim() {
     if (!sourceMore()) {
       return Parse.EXHAUSTED;
@@ -116,34 +97,29 @@ abstract class PseudoNode {
     };
   }
 
-  final Parse parseMaybeSection() {
-    if (!sourceMore()) {
-      return Parse.NOT_SECTION;
-    }
+  final Parse parseDocumentOrSection(Parse state) {
+    return switch (state) {
+      case ATTRLIST -> parseAttrlist();
 
-    return switch (sourcePeek()) {
-      case '=' -> {
-        // increase title level
-        stackInc();
+      case BODY -> parseBody();
 
-        yield advance(Parse.MAYBE_SECTION);
-      }
+      case MAYBE_ATTRLIST -> parseMaybeAttrlist();
 
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+      case MAYBE_ATTRLIST_END -> parseMaybeAttrlistEnd();
 
-      default -> Parse.NOT_SECTION;
-    };
-  }
+      case MAYBE_ATTRLIST_END_TRIM -> parseMaybeAttrlistEndTrim();
 
-  final Parse parseMaybeSectionTrim() {
-    if (!sourceMore()) {
-      return Parse.NOT_SECTION;
-    }
+      case MAYBE_SECTION -> parseMaybeSection();
 
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+      case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
 
-      default -> Parse.SECTION;
+      case NAME_OR_VALUE -> parseNameOrValue();
+
+      case NOT_SECTION -> parseNotSection();
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: state=" + state
+      );
     };
   }
 
@@ -153,6 +129,10 @@ abstract class PseudoNode {
 
   final void parseTextRegular() {
     sink.parseTextRegular();
+  }
+
+  final PseudoAttributes pseudoAttributes() {
+    return sink.pseudoAttributes();
   }
 
   final PseudoSection section() {
@@ -227,6 +207,182 @@ abstract class PseudoNode {
     sink.stackStub();
 
     return Integer.MIN_VALUE;
+  }
+
+  private Parse parseAttrlist() {
+    int type = stackPop();
+
+    // pops rollback index
+    stackPop();
+
+    if (type == ATTRLIST_BLOCK) {
+      return Parse.BODY;
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: continue text"
+      );
+    }
+  }
+
+  private Parse parseBody() {
+    if (!sourceMore()) {
+      return Parse.EXHAUSTED;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Parse.BODY_TRIM);
+
+      case '[' -> {
+        // rollback index
+        stackPush(sourceIndex(), ATTRLIST_BLOCK);
+
+        yield advance(Parse.MAYBE_ATTRLIST);
+      }
+
+      case '=' -> {
+        stackPush(sourceIndex());
+
+        // push title level
+        stackPush(0);
+
+        yield advance(Parse.MAYBE_SECTION);
+      }
+
+      default -> Parse.PARAGRAPH;
+    };
+  }
+
+  private Parse parseMaybeAttrlist() {
+    if (!sourceMore()) {
+      return Parse.NOT_ATTRLIST;
+    }
+
+    return switch (sourcePeek()) {
+      case 't', ' ' -> Parse.NOT_ATTRLIST;
+
+      default -> {
+        var attributes = sink.pseudoAttributes();
+
+        attributes.clear();
+
+        // attr name/value start
+        stackPush(sourceIndex());
+
+        yield advance(Parse.NAME_OR_VALUE);
+      }
+    };
+  }
+
+  private Parse parseMaybeAttrlistEnd() {
+    int context = stackPeek();
+
+    if (!sourceMore()) {
+      // pop rollback index
+      stackPop();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: doc ends w/ attrlist"
+      );
+    }
+
+    if (context != ATTRLIST_BLOCK) {
+      throw new UnsupportedOperationException(
+        "Implement me :: inline attrlist"
+      );
+    }
+
+    return Parse.MAYBE_ATTRLIST_END_TRIM;
+  }
+
+  private Parse parseMaybeAttrlistEndTrim() {
+    if (!sourceMore()) {
+      // pop rollback index
+      stackPop();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: doc ends w/ attrlist"
+      );
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_ATTRLIST_END_TRIM);
+
+      case '\n' -> advance(Parse.ATTRLIST);
+
+      default -> {
+        throw new UnsupportedOperationException(
+          "Implement me :: rollback attrlist"
+        );
+      }
+    };
+  }
+
+  private Parse parseMaybeSection() {
+    if (!sourceMore()) {
+      return Parse.NOT_SECTION;
+    }
+
+    return switch (sourcePeek()) {
+      case '=' -> {
+        // increase title level
+        stackInc();
+
+        yield advance(Parse.MAYBE_SECTION);
+      }
+
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+
+      default -> Parse.NOT_SECTION;
+    };
+  }
+
+  private Parse parseMaybeSectionTrim() {
+    if (!sourceMore()) {
+      return Parse.NOT_SECTION;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
+
+      default -> Parse.SECTION;
+    };
+  }
+
+  private Parse parseNameOrValue() {
+    if (!sourceMore()) {
+      return Parse.NOT_ATTRLIST;
+    }
+
+    return switch (sourcePeek()) {
+      case ']' -> {
+        parsePositional();
+
+        yield advance(Parse.MAYBE_ATTRLIST_END);
+      }
+
+      default -> advance(Parse.NAME_OR_VALUE);
+    };
+  }
+
+  private Parse parseNotSection() {
+    // pops section level
+    stackPop();
+
+    sourceIndex(stackPop());
+
+    return Parse.PARAGRAPH;
+  }
+
+  private void parsePositional() {
+    int start = stackPop();
+
+    int end = sourceIndex();
+
+    var value = sink.sourceGet(start, end);
+
+    var attributes = sink.pseudoAttributes();
+
+    attributes.add(value);
   }
 
 }

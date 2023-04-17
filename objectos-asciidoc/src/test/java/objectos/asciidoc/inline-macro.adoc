@@ -13,3 +13,7 @@ link:b c[d]
 == Test case 06
 
 link:b[`c`]
+
+== Test case 07
+
+link:b[`c`]o

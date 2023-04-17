@@ -45,10 +45,13 @@ public class ThisDoctorConverter extends StringConverter {
     if (node instanceof org.asciidoctor.ast.Document document) {
       out.append("<document>\n");
 
-      var title = document.getStructuredDoctitle();
-      if (title != null) {
+      var doctitle = document.getAttribute("doctitle");
+
+      var title = document.getDoctitle();
+
+      if (doctitle != null && title != null) {
         out.append("<title>");
-        out.append(title.getCombined());
+        out.append(title);
         out.append("</title>\n");
       }
 
@@ -58,6 +61,10 @@ public class ThisDoctorConverter extends StringConverter {
       out.append("<section level=\"");
       out.append(section.getLevel());
       out.append("\">\n");
+
+      out.append("<style>");
+      out.append(section.getAttribute("style", "null"));
+      out.append("</style>\n");
 
       out.append("<title>");
       out.append(section.getTitle());

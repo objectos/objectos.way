@@ -54,7 +54,8 @@ public class InternalSink {
   private static final int PSEUDO_PARAGRAPH = 3;
   private static final int PSEUDO_SECTION = 4;
   private static final int PSEUDO_TEXT = 5;
-  private static final int PSEUDO_LENGTH = 6;
+  private static final int PSEUDO_ATTRIBUTES = 6;
+  private static final int PSEUDO_LENGTH = 7;
 
   private int flags;
 
@@ -62,7 +63,7 @@ public class InternalSink {
 
   Node nextNode;
 
-  private CharSequence source;
+  private String source;
 
   private int sourceIndex;
 
@@ -70,7 +71,7 @@ public class InternalSink {
 
   private int stackIndex = -1;
 
-  protected final Document openImpl(CharSequence source) {
+  protected final Document openImpl(String source) {
     Check.state(
       finalState(),
 
@@ -127,6 +128,16 @@ public class InternalSink {
     flags = 0;
 
     parse();
+  }
+
+  final PseudoAttributes pseudoAttributes() {
+    var result = pseudoArray[PSEUDO_ATTRIBUTES];
+
+    if (result == null) {
+      result = pseudoArray[PSEUDO_ATTRIBUTES] = new PseudoAttributes(this);
+    }
+
+    return (PseudoAttributes) result;
   }
 
   final PseudoDocument pseudoDocument() {
@@ -394,7 +405,7 @@ public class InternalSink {
     return Parse.STOP;
   }
 
-  private void start(CharSequence source) {
+  private void start(String source) {
     this.source = source;
 
     sourceIndex = 0;
@@ -424,6 +435,10 @@ public class InternalSink {
         }
       }
     }
+  }
+
+  final String sourceGet(int start, int end) {
+    return source.substring(start, end);
   }
 
 }

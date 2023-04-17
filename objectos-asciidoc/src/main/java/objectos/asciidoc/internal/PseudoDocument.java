@@ -96,8 +96,6 @@ public final class PseudoDocument extends PseudoNode
 
     while (state != Parse.STOP) {
       state = switch (state) {
-        case BODY -> parseBody();
-
         case DOCUMENT_START -> parseDocumentStart();
 
         case EXHAUSTED -> parseExhausted();
@@ -108,19 +106,13 @@ public final class PseudoDocument extends PseudoNode
 
         case MAYBE_HEADER_TRIM -> parseMaybeHeaderTrim();
 
-        case MAYBE_SECTION -> parseMaybeSection();
-
-        case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
-
         case NOT_HEADER -> parseNotHeader();
 
         case PARAGRAPH -> parseParagraph();
 
         case SECTION -> parseSection();
 
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-        );
+        default -> parseDocumentOrSection(state);
       };
     }
   }
@@ -189,13 +181,7 @@ public final class PseudoDocument extends PseudoNode
   private Parse parseNotHeader() {
     sourceIndex(stackPop());
 
-    return switch (sourcePeek()) {
-      case '*' -> throw new UnsupportedOperationException(
-        "Implement me :: maybe unordered list"
-      );
-
-      default -> Parse.PARAGRAPH;
-    };
+    return Parse.BODY;
   }
 
   private Parse parseParagraph() {

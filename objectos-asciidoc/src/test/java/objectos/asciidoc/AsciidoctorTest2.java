@@ -23,6 +23,7 @@ public class AsciidoctorTest2 {
   @Factory
   public Object[] _factory() {
     var doctor = Tester.doctor();
+
     return new Object[] {
         new DocumentTest(doctor),
         new ParagraphTest(doctor),

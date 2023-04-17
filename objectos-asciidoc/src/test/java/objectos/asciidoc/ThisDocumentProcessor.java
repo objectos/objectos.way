@@ -94,9 +94,19 @@ final class ThisDocumentProcessor {
   private void section(Section section) throws IOException {
     int level = section.level();
 
-    out.append("\n<section level=\"");
+    if (!"<document>\n".contentEquals(out)) {
+      out.append('\n');
+    }
+
+    out.append("<section level=\"");
     out.append(level);
     out.append("\">\n");
+
+    var attributes = section.attributes();
+
+    out.append("<style>");
+    out.append(attributes.getOrDefault("style", "null"));
+    out.append("</style>\n");
 
     for (var node : section.nodes()) {
       node(node);
