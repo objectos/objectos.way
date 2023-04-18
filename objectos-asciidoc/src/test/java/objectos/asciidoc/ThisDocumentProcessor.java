@@ -17,12 +17,14 @@ package objectos.asciidoc;
 
 import java.io.IOException;
 import objectos.asciidoc.pseudom.Document;
-import objectos.asciidoc.pseudom.Header;
-import objectos.asciidoc.pseudom.Heading;
 import objectos.asciidoc.pseudom.Node;
-import objectos.asciidoc.pseudom.Paragraph;
-import objectos.asciidoc.pseudom.Section;
-import objectos.asciidoc.pseudom.Text;
+import objectos.asciidoc.pseudom.Node.Header;
+import objectos.asciidoc.pseudom.Node.ListItem;
+import objectos.asciidoc.pseudom.Node.Paragraph;
+import objectos.asciidoc.pseudom.Node.Section;
+import objectos.asciidoc.pseudom.Node.Text;
+import objectos.asciidoc.pseudom.Node.Title;
+import objectos.asciidoc.pseudom.Node.UnorderedList;
 
 final class ThisDocumentProcessor {
 
@@ -53,27 +55,37 @@ final class ThisDocumentProcessor {
     }
   }
 
-  private void heading(Heading heading) throws IOException {
-    out.append("<title>");
+  private void listItem(ListItem item) throws IOException {
+    out.append("<item>\n");
 
-    for (var node : heading.nodes()) {
-      node(node);
+    for (var node : item.nodes()) {
+      if (node instanceof Text text) {
+        out.append("<text>");
+        text.appendTo(out);
+        out.append("</text>\n");
+      } else {
+        node(node);
+      }
     }
 
-    out.append("</title>\n");
+    out.append("</item>\n");
   }
 
   private void node(Node node) throws IOException {
     if (node instanceof Header header) {
       header(header);
+    } else if (node instanceof ListItem listItem) {
+      listItem(listItem);
     } else if (node instanceof Paragraph paragraph) {
       paragraph(paragraph);
     } else if (node instanceof Section section) {
       section(section);
     } else if (node instanceof Text text) {
       text.appendTo(out);
-    } else if (node instanceof Heading title) {
-      heading(title);
+    } else if (node instanceof Title title) {
+      title(title);
+    } else if (node instanceof UnorderedList list) {
+      unorderedList(list);
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + node.getClass().getSimpleName()
@@ -113,6 +125,26 @@ final class ThisDocumentProcessor {
     }
 
     out.append("</section>\n");
+  }
+
+  private void title(Title title) throws IOException {
+    out.append("<title>");
+
+    for (var node : title.nodes()) {
+      node(node);
+    }
+
+    out.append("</title>\n");
+  }
+
+  private void unorderedList(UnorderedList list) throws IOException {
+    out.append("<unordered-list>\n");
+
+    for (var node : list.nodes()) {
+      node(node);
+    }
+
+    out.append("</unordered-list>\n");
   }
 
 }

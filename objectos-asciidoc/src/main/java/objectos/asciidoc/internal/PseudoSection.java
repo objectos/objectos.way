@@ -19,7 +19,7 @@ import java.util.Iterator;
 import objectos.asciidoc.pseudom.Attributes;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
-import objectos.asciidoc.pseudom.Section;
+import objectos.asciidoc.pseudom.Node.Section;
 
 public final class PseudoSection extends PseudoNode
     implements Section, IterableOnce<Node>, Iterator<Node> {
@@ -49,7 +49,7 @@ public final class PseudoSection extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case PseudoHeading.EXHAUSTED,
+      case PseudoTitle.EXHAUSTED,
            PseudoParagraph.EXHAUSTED,
            PseudoSection.EXHAUSTED -> parse(Parse.BODY);
 

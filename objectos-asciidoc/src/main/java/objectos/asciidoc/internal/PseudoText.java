@@ -16,7 +16,7 @@
 package objectos.asciidoc.internal;
 
 import java.io.IOException;
-import objectos.asciidoc.pseudom.Text;
+import objectos.asciidoc.pseudom.Node.Text;
 
 public final class PseudoText implements Text {
 

@@ -16,6 +16,7 @@
 package objectos.asciidoc.internal;
 
 import java.io.IOException;
+import java.util.function.Function;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
 import objectos.lang.Check;
@@ -50,12 +51,14 @@ public class InternalSink {
 
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
-  private static final int PSEUDO_HEADING = 2;
+  private static final int PSEUDO_TITLE = 2;
   private static final int PSEUDO_PARAGRAPH = 3;
   private static final int PSEUDO_SECTION = 4;
   private static final int PSEUDO_TEXT = 5;
-  private static final int PSEUDO_ATTRIBUTES = 6;
-  private static final int PSEUDO_LENGTH = 7;
+  private static final int PSEUDO_ULIST = 6;
+  private static final int PSEUDO_LIST_ITEM = 7;
+  private static final int PSEUDO_ATTRIBUTES = 8;
+  private static final int PSEUDO_LENGTH = 9;
 
   private int flags;
 
@@ -118,90 +121,60 @@ public class InternalSink {
     return result;
   }
 
-  final void parseTextHeading() {
-    flagsSet(_SINGLE_LINE);
-
-    parse();
-  }
-
   final void parseTextRegular() {
     flags = 0;
 
     parse();
   }
 
+  final void parseTextSingleLine() {
+    flagsSet(_SINGLE_LINE);
+
+    parse();
+  }
+
   final PseudoAttributes pseudoAttributes() {
-    var result = pseudoArray[PSEUDO_ATTRIBUTES];
-
-    if (result == null) {
-      result = pseudoArray[PSEUDO_ATTRIBUTES] = new PseudoAttributes(this);
-    }
-
-    return (PseudoAttributes) result;
+    return pseudoFactory(PSEUDO_ATTRIBUTES, PseudoAttributes::new);
   }
 
   final PseudoDocument pseudoDocument() {
-    var result = pseudoArray[PSEUDO_DOCUMENT];
-
-    if (result == null) {
-      result = pseudoArray[PSEUDO_DOCUMENT] = new PseudoDocument(this);
-    }
-
-    return (PseudoDocument) result;
+    return pseudoFactory(PSEUDO_DOCUMENT, PseudoDocument::new);
   }
 
   final PseudoHeader pseudoHeader() {
-    var result = pseudoArray[PSEUDO_HEADER];
-
-    if (result == null) {
-      result = pseudoArray[PSEUDO_HEADER] = new PseudoHeader(this);
-    }
-
-    return (PseudoHeader) result;
+    return pseudoFactory(PSEUDO_HEADER, PseudoHeader::new);
   }
 
-  final PseudoHeading pseudoHeading() {
-    var result = pseudoArray[PSEUDO_HEADING];
-
-    if (result == null) {
-      result = pseudoArray[PSEUDO_HEADING] = new PseudoHeading(this);
-    }
-
-    return (PseudoHeading) result;
+  final PseudoListItem pseudoListItem() {
+    return pseudoFactory(PSEUDO_LIST_ITEM, PseudoListItem::new);
   }
 
   final PseudoParagraph pseudoParagraph() {
-    var result = pseudoArray[PSEUDO_PARAGRAPH];
-
-    if (result == null) {
-      result = pseudoArray[PSEUDO_PARAGRAPH] = new PseudoParagraph(this);
-    }
-
-    return (PseudoParagraph) result;
+    return pseudoFactory(PSEUDO_PARAGRAPH, PseudoParagraph::new);
   }
 
   final PseudoSection pseudoSection() {
-    var result = pseudoArray[PSEUDO_SECTION];
-
-    if (result == null) {
-      result = pseudoArray[PSEUDO_SECTION] = new PseudoSection(this);
-    }
-
-    return (PseudoSection) result;
+    return pseudoFactory(PSEUDO_SECTION, PseudoSection::new);
   }
 
   final PseudoText pseudoText() {
-    var result = pseudoArray[PSEUDO_TEXT];
+    return pseudoFactory(PSEUDO_TEXT, PseudoText::new);
+  }
 
-    if (result == null) {
-      result = pseudoArray[PSEUDO_TEXT] = new PseudoText(this);
-    }
+  final PseudoTitle pseudoTitle() {
+    return pseudoFactory(PSEUDO_TITLE, PseudoTitle::new);
+  }
 
-    return (PseudoText) result;
+  final PseudoUnorderedList pseudoUnorderedList() {
+    return pseudoFactory(PSEUDO_ULIST, PseudoUnorderedList::new);
   }
 
   final void sourceAdvance() {
     sourceIndex++;
+  }
+
+  final String sourceGet(int start, int end) {
+    return source.substring(start, end);
   }
 
   final int sourceIndex() {
@@ -405,6 +378,17 @@ public class InternalSink {
     return Parse.STOP;
   }
 
+  @SuppressWarnings("unchecked")
+  private <T> T pseudoFactory(int index, Function<InternalSink, T> factory) {
+    var result = pseudoArray[index];
+
+    if (result == null) {
+      result = pseudoArray[index] = factory.apply(this);
+    }
+
+    return (T) result;
+  }
+
   private void start(String source) {
     this.source = source;
 
@@ -435,10 +419,6 @@ public class InternalSink {
         }
       }
     }
-  }
-
-  final String sourceGet(int start, int end) {
-    return source.substring(start, end);
   }
 
 }

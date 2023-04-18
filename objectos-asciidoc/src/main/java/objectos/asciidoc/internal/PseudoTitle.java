@@ -16,12 +16,12 @@
 package objectos.asciidoc.internal;
 
 import java.util.Iterator;
-import objectos.asciidoc.pseudom.Heading;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Node.Title;
 
-public final class PseudoHeading extends PseudoNode
-    implements Heading, IterableOnce<Node>, Iterator<Node> {
+public final class PseudoTitle extends PseudoNode
+    implements Title, IterableOnce<Node>, Iterator<Node> {
 
   private static final int NODES = -300;
   private static final int ITERATOR = -301;
@@ -35,7 +35,7 @@ public final class PseudoHeading extends PseudoNode
 
   int level;
 
-  PseudoHeading(InternalSink sink) {
+  PseudoTitle(InternalSink sink) {
     super(sink);
   }
 
@@ -50,7 +50,7 @@ public final class PseudoHeading extends PseudoNode
       case ITERATOR -> {
         stackReplace(PARSE);
 
-        parseTextHeading();
+        parseTextSingleLine();
 
         // sure to have at least one node
         stackReplace(isLast() ? LAST : NODE);

@@ -17,6 +17,9 @@ package objectos.asciidoc;
 
 import java.util.Map;
 import org.asciidoctor.ast.ContentNode;
+import org.asciidoctor.ast.Document;
+import org.asciidoctor.ast.List;
+import org.asciidoctor.ast.ListItem;
 import org.asciidoctor.ast.Section;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.converter.ConverterFor;
@@ -42,7 +45,7 @@ public class ThisDoctorConverter extends StringConverter {
       transform = node.getNodeName();
     }
 
-    if (node instanceof org.asciidoctor.ast.Document document) {
+    if (node instanceof Document document) {
       out.append("<document>\n");
 
       var doctitle = document.getAttribute("doctitle");
@@ -80,6 +83,32 @@ public class ThisDoctorConverter extends StringConverter {
     } else if (transform.equals("preamble")) {
       StructuralNode block = (StructuralNode) node;
       out.append(block.getContent());
+    } else if (transform.equals("ulist")) {
+      out.append("<unordered-list>\n");
+
+      List list = (List) node;
+
+      for (var item : list.getItems()) {
+        if (item instanceof ListItem listItem) {
+          out.append("<item>\n");
+
+          if (listItem.hasText()) {
+            out.append("<text>");
+            out.append(listItem.getText());
+            out.append("</text>\n");
+          }
+
+          out.append(listItem.getContent());
+
+          out.append("</item>\n");
+        } else {
+          out.append("node name: ");
+          out.append(item.getNodeName());
+          out.append('\n');
+        }
+      }
+
+      out.append("</unordered-list>\n");
     } else {
       var type = node.getClass();
 

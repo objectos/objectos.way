@@ -22,6 +22,7 @@ import objectos.asciidoc.pseudom.Node;
 abstract class PseudoNode {
 
   private static final int ATTRLIST_BLOCK = -1;
+  static final int ULIST_TOP = -2;
 
   private final InternalSink sink;
 
@@ -55,8 +56,8 @@ abstract class PseudoNode {
     return sink.pseudoHeader();
   }
 
-  final PseudoHeading heading() {
-    return sink.pseudoHeading();
+  final PseudoTitle heading() {
+    return sink.pseudoTitle();
   }
 
   final boolean isLast() {
@@ -67,6 +68,10 @@ abstract class PseudoNode {
     } else {
       return false;
     }
+  }
+
+  final PseudoListItem listItem() {
+    return sink.pseudoListItem();
   }
 
   final Node nextNode() {
@@ -109,9 +114,13 @@ abstract class PseudoNode {
 
       case MAYBE_ATTRLIST_END_TRIM -> parseMaybeAttrlistEndTrim();
 
+      case MAYBE_LISTING_OR_ULIST -> parseMaybeListingOrUlist();
+
       case MAYBE_SECTION -> parseMaybeSection();
 
       case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
+
+      case MAYBE_ULIST -> parseMaybeUlist();
 
       case NAME_OR_VALUE -> parseNameOrValue();
 
@@ -123,12 +132,12 @@ abstract class PseudoNode {
     };
   }
 
-  final void parseTextHeading() {
-    sink.parseTextHeading();
-  }
-
   final void parseTextRegular() {
     sink.parseTextRegular();
+  }
+
+  final void parseTextSingleLine() {
+    sink.parseTextSingleLine();
   }
 
   final PseudoAttributes pseudoAttributes() {
@@ -137,6 +146,10 @@ abstract class PseudoNode {
 
   final PseudoSection section() {
     return sink.pseudoSection();
+  }
+
+  final String sourceGet(int start, int end) {
+    return sink.sourceGet(start, end);
   }
 
   final int sourceIndex() {
@@ -209,6 +222,10 @@ abstract class PseudoNode {
     return Integer.MIN_VALUE;
   }
 
+  final PseudoUnorderedList unorderedList() {
+    return sink.pseudoUnorderedList();
+  }
+
   private Parse parseAttrlist() {
     int type = stackPop();
 
@@ -237,6 +254,13 @@ abstract class PseudoNode {
         stackPush(sourceIndex(), ATTRLIST_BLOCK);
 
         yield advance(Parse.MAYBE_ATTRLIST);
+      }
+
+      case '-' -> {
+        // rollback index or marker start
+        stackPush(sourceIndex());
+
+        yield advance(Parse.MAYBE_LISTING_OR_ULIST);
       }
 
       case '=' -> {
@@ -317,6 +341,29 @@ abstract class PseudoNode {
     };
   }
 
+  private Parse parseMaybeListingOrUlist() {
+    if (!sourceMore()) {
+      return Parse.NOT_LISTING_OR_ULIST;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> {
+        int markerStart = stackPop();
+
+        stackPush(ULIST_TOP, markerStart);
+
+        // marker end
+        stackPush(sourceIndex());
+
+        yield advance(Parse.MAYBE_ULIST);
+      }
+
+      case '-' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> Parse.NOT_LISTING_OR_ULIST;
+    };
+  }
+
   private Parse parseMaybeSection() {
     if (!sourceMore()) {
       return Parse.NOT_SECTION;
@@ -345,6 +392,20 @@ abstract class PseudoNode {
       case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
 
       default -> Parse.SECTION;
+    };
+  }
+
+  private Parse parseMaybeUlist() {
+    if (!sourceMore()) {
+      return Parse.NOT_ULIST;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(Parse.MAYBE_ULIST);
+
+      case '\n' -> Parse.NOT_ULIST;
+
+      default -> Parse.ULIST;
     };
   }
 

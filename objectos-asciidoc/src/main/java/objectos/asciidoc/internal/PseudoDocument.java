@@ -34,7 +34,9 @@ public final class PseudoDocument extends PseudoNode
   static final int PARAGRAPH_CONSUMED = -111;
   private static final int SECTION = -112;
   static final int SECTION_CONSUMED = -113;
-  static final int EXHAUSTED = -114;
+  private static final int ULIST = -114;
+  static final int ULIST_CONSUMED = -115;
+  static final int EXHAUSTED = -116;
 
   PseudoDocument(InternalSink sink) {
     super(sink);
@@ -50,11 +52,12 @@ public final class PseudoDocument extends PseudoNode
     switch (stackPeek()) {
       case PseudoHeader.EXHAUSTED,
            PseudoParagraph.EXHAUSTED,
-           PseudoSection.EXHAUSTED -> parse(Parse.BODY);
+           PseudoSection.EXHAUSTED,
+           PseudoUnorderedList.EXHAUSTED -> parse(Parse.BODY);
 
       case ITERATOR -> parse(Parse.DOCUMENT_START);
 
-      case HEADER, PARAGRAPH, SECTION -> {}
+      case HEADER, PARAGRAPH, SECTION, ULIST -> {}
 
       default -> stackStub();
     }
@@ -112,17 +115,11 @@ public final class PseudoDocument extends PseudoNode
 
         case SECTION -> parseSection();
 
+        case ULIST -> parseUlist();
+
         default -> parseDocumentOrSection(state);
       };
     }
-  }
-
-  private Parse parseExhausted() {
-    stackAssert(PARSE);
-
-    stackReplace(EXHAUSTED);
-
-    return Parse.STOP;
   }
 
   private Parse parseDocumentStart() {
@@ -137,6 +134,14 @@ public final class PseudoDocument extends PseudoNode
 
       default -> Parse.NOT_HEADER;
     };
+  }
+
+  private Parse parseExhausted() {
+    stackAssert(PARSE);
+
+    stackReplace(EXHAUSTED);
+
+    return Parse.STOP;
   }
 
   private Parse parseHeader() {
@@ -205,6 +210,14 @@ public final class PseudoDocument extends PseudoNode
     section.level = level;
 
     nextNode(section);
+
+    return Parse.STOP;
+  }
+
+  private Parse parseUlist() {
+    stackPush(ULIST);
+
+    nextNode(unorderedList());
 
     return Parse.STOP;
   }

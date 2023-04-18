@@ -15,4 +15,63 @@
  */
 package objectos.asciidoc.pseudom;
 
-public sealed interface Node permits Header, Heading, Paragraph, Section, Text {}
+import java.io.IOException;
+import objectos.asciidoc.internal.PseudoHeader;
+import objectos.asciidoc.internal.PseudoListItem;
+import objectos.asciidoc.internal.PseudoParagraph;
+import objectos.asciidoc.internal.PseudoSection;
+import objectos.asciidoc.internal.PseudoText;
+import objectos.asciidoc.internal.PseudoTitle;
+import objectos.asciidoc.internal.PseudoUnorderedList;
+
+public sealed interface Node {
+
+  sealed interface Header extends Node permits PseudoHeader {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface Paragraph extends Node permits PseudoParagraph {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface Section extends Node permits PseudoSection {
+
+    Attributes attributes();
+
+    int level();
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface Text extends Node permits PseudoText {
+
+    void appendTo(Appendable out) throws IOException;
+
+  }
+
+  sealed interface Title extends Node permits PseudoTitle {
+
+    int level();
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface UnorderedList extends Node permits PseudoUnorderedList {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface ListItem extends Node permits PseudoListItem {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+}

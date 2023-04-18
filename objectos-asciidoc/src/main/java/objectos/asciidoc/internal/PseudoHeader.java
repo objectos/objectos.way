@@ -16,9 +16,9 @@
 package objectos.asciidoc.internal;
 
 import java.util.Iterator;
-import objectos.asciidoc.pseudom.Header;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Node.Header;
 
 public final class PseudoHeader extends PseudoNode
     implements Header, IterableOnce<Node>, Iterator<Node> {
@@ -44,7 +44,7 @@ public final class PseudoHeader extends PseudoNode
   @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case PseudoHeading.EXHAUSTED -> parse(Parse.AFTER_TITLE);
+      case PseudoTitle.EXHAUSTED -> parse(Parse.AFTER_TITLE);
 
       case ITERATOR -> {
         stackPop();

@@ -27,7 +27,8 @@ public class AsciidoctorTest2 {
     return new Object[] {
         new DocumentTest(doctor),
         new ParagraphTest(doctor),
-        new SectionTest(doctor)
+        new SectionTest(doctor),
+        new UnorderedListTest(doctor)
     };
   }
 

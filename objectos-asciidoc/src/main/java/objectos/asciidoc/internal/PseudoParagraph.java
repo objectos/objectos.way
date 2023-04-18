@@ -18,7 +18,7 @@ package objectos.asciidoc.internal;
 import java.util.Iterator;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
-import objectos.asciidoc.pseudom.Paragraph;
+import objectos.asciidoc.pseudom.Node.Paragraph;
 
 public final class PseudoParagraph extends PseudoNode
     implements Paragraph, IterableOnce<Node>, Iterator<Node> {
