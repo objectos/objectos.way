@@ -22,7 +22,12 @@ import objectos.asciidoc.pseudom.Node;
 abstract class PseudoNode {
 
   private static final int ATTRLIST_BLOCK = -1;
-  static final int ULIST_TOP = -2;
+
+  static final int _ULIST_TOP = -2;
+
+  static final int _NEXT_ITEM = -3;
+
+  static final int _LIST_END = -4;
 
   private final InternalSink sink;
 
@@ -60,21 +65,11 @@ abstract class PseudoNode {
     return sink.pseudoTitle();
   }
 
-  final boolean isLast() {
-    var next = sink.nextNode;
-
-    if (next != null && next instanceof PseudoText text) {
-      return text.last;
-    } else {
-      return false;
-    }
+  final void nextNode(Node value) {
+    sink.nextNode = value;
   }
 
-  final PseudoListItem listItem() {
-    return sink.pseudoListItem();
-  }
-
-  final Node nextNode() {
+  final Node nextNodeDefault() {
     if (hasNext()) {
       return sink.nextNode();
     } else {
@@ -82,8 +77,8 @@ abstract class PseudoNode {
     }
   }
 
-  final void nextNode(Node value) {
-    sink.nextNode = value;
+  final Node nextNodeSink() {
+    return sink.nextNode();
   }
 
   final PseudoParagraph paragraph() {
@@ -132,12 +127,32 @@ abstract class PseudoNode {
     };
   }
 
-  final void parseTextRegular() {
-    sink.parseTextRegular();
+  final void phrasing() {
+    var state = Phrasing.START;
+
+    stackPush(sourceIndex());
+
+    while (state != Phrasing.STOP) {
+      state = switch (state) {
+        case BLOB -> phrasingBlob();
+
+        case EOL -> phrasingEol();
+
+        case TEXT -> phrasingText();
+
+        case START -> phrasingStart();
+
+        case STOP -> throw new UnsupportedOperationException("Implement me");
+      };
+    }
   }
 
-  final void parseTextSingleLine() {
-    sink.parseTextSingleLine();
+  Phrasing phrasingEol() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  Phrasing phrasingStart() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   final PseudoAttributes pseudoAttributes() {
@@ -146,6 +161,10 @@ abstract class PseudoNode {
 
   final PseudoSection section() {
     return sink.pseudoSection();
+  }
+
+  final void sourceAdvance() {
+    sink.sourceAdvance();
   }
 
   final String sourceGet(int start, int end) {
@@ -162,6 +181,10 @@ abstract class PseudoNode {
 
   final boolean sourceMore() {
     return sink.sourceMore();
+  }
+
+  final char sourceNext() {
+    return sink.sourceNext();
   }
 
   final char sourcePeek() {
@@ -212,6 +235,10 @@ abstract class PseudoNode {
     sink.stackPush(v0, v1);
   }
 
+  final void stackPush(int v0, int v1, int v2, int v3) {
+    sink.stackPush(v0, v1, v2, v3);
+  }
+
   final void stackReplace(int value) {
     sink.stackReplace(value);
   }
@@ -220,6 +247,12 @@ abstract class PseudoNode {
     sink.stackStub();
 
     return Integer.MIN_VALUE;
+  }
+
+  final Phrasing toPhrasingEnd(int last) {
+    stackPush(last);
+
+    return Phrasing.TEXT;
   }
 
   final PseudoUnorderedList unorderedList() {
@@ -350,7 +383,7 @@ abstract class PseudoNode {
       case '\t', '\f', ' ' -> {
         int markerStart = stackPop();
 
-        stackPush(ULIST_TOP, markerStart);
+        stackPush(_ULIST_TOP, markerStart);
 
         // marker end
         stackPush(sourceIndex());
@@ -444,6 +477,44 @@ abstract class PseudoNode {
     var attributes = sink.pseudoAttributes();
 
     attributes.add(value);
+  }
+
+  private Phrasing phrasingBlob() {
+    if (!sourceMore()) {
+      return toPhrasingEnd(sourceIndex());
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Phrasing.EOL;
+
+      case '`' -> throw new UnsupportedOperationException("Implement me");
+
+      case '*' -> throw new UnsupportedOperationException("Implement me");
+
+      case '_' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> advance(Phrasing.BLOB);
+    };
+  }
+
+  private Phrasing phrasingText() {
+    int endIndex = stackPop();
+
+    int startIndex = stackPop();
+
+    if (startIndex < endIndex) {
+      var text = sink.pseudoText();
+
+      text.end = endIndex;
+
+      text.start = startIndex;
+
+      nextNode(text);
+    } else {
+      nextNode(null);
+    }
+
+    return Phrasing.STOP;
   }
 
 }

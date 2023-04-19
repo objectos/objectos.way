@@ -28,8 +28,6 @@ public final class PseudoParagraph extends PseudoNode
   private static final int PARSE = -602;
   private static final int NODE = -603;
   static final int NODE_CONSUMED = -604;
-  private static final int LAST = -605;
-  static final int LAST_CONSUMED = -606;
   static final int EXHAUSTED = -607;
 
   PseudoParagraph(InternalSink sink) {
@@ -42,18 +40,16 @@ public final class PseudoParagraph extends PseudoNode
       case ITERATOR, NODE_CONSUMED -> {
         stackReplace(PARSE);
 
-        parseTextRegular();
+        phrasing();
 
         if (hasNextNode()) {
-          stackReplace(isLast() ? LAST : NODE);
+          stackReplace(NODE);
         } else {
           stackReplace(EXHAUSTED);
         }
       }
 
-      case LAST, NODE -> {}
-
-      case LAST_CONSUMED -> stackReplace(EXHAUSTED);
+      case NODE -> {}
 
       default -> stackStub();
     }
@@ -72,7 +68,7 @@ public final class PseudoParagraph extends PseudoNode
 
   @Override
   public final Node next() {
-    return nextNode();
+    return nextNodeDefault();
   }
 
   @Override
@@ -85,6 +81,65 @@ public final class PseudoParagraph extends PseudoNode
     }
 
     return this;
+  }
+
+  @Override
+  final Phrasing phrasingEol() {
+    int atEol = sourceIndex();
+
+    sourceAdvance();
+
+    if (!sourceMore()) {
+      return toPhrasingEnd(atEol);
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> {
+        var next = toPhrasingEnd(atEol);
+
+        sourceIndex(atEol);
+
+        yield next;
+      }
+
+      default -> advance(Phrasing.BLOB);
+    };
+  }
+
+  @Override
+  final Phrasing phrasingStart() {
+    if (!sourceMore()) {
+      return popAndStop();
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> {
+        sourceAdvance();
+
+        if (!sourceMore()) {
+          yield popAndStop();
+        }
+
+        char next = sourceNext();
+
+        if (next == '\n') {
+          yield popAndStop();
+        }
+
+        sourceIndex(stackPeek());
+
+        yield Phrasing.BLOB;
+      }
+
+      default -> Phrasing.BLOB;
+    };
+  }
+
+  private Phrasing popAndStop() {
+    // pops start index
+    stackPop();
+
+    return Phrasing.STOP;
   }
 
 }

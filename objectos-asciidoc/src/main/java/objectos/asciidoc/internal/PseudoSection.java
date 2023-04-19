@@ -92,7 +92,7 @@ public final class PseudoSection extends PseudoNode
 
   @Override
   public final Node next() {
-    return nextNode();
+    return nextNodeDefault();
   }
 
   @Override

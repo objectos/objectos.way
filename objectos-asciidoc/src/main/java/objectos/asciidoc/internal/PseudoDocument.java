@@ -76,7 +76,7 @@ public final class PseudoDocument extends PseudoNode
 
   @Override
   public final Node next() {
-    return nextNode();
+    return nextNodeDefault();
   }
 
   @Override

@@ -66,4 +66,44 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(enabled = false, description = """
+  unordered list
+
+  - complex elements
+  - dash
+  - single level
+
+  '''
+  - a
+  bcd
+  - e
+  fgh
+  '''
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      - a
+      bcd
+      - e
+      fgh
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a
+      bcd</text>
+      </item>
+      <item>
+      <text>e
+      fgh</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
 }

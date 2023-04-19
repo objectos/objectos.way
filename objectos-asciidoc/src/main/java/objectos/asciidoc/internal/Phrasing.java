@@ -15,12 +15,16 @@
  */
 package objectos.asciidoc.internal;
 
-final class Process {
+enum Phrasing {
 
-  public static final int START = 1;
-  public static final int TEXT_START = 2;
-  public static final int STOP = 3;
+  START,
 
-  private Process() {}
+  STOP,
+
+  BLOB,
+
+  TEXT,
+
+  EOL;
 
 }

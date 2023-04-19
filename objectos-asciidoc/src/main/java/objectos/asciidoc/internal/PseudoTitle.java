@@ -27,10 +27,7 @@ public final class PseudoTitle extends PseudoNode
   private static final int ITERATOR = -301;
   private static final int PARSE = -302;
   private static final int NODE = -303;
-  @SuppressWarnings("unused")
   private static final int NODE_CONSUMED = -304;
-  private static final int LAST = -305;
-  private static final int LAST_CONSUMED = -306;
   static final int EXHAUSTED = -307;
 
   int level;
@@ -40,35 +37,26 @@ public final class PseudoTitle extends PseudoNode
   }
 
   @Override
-  public final int level() {
-    return level;
-  }
-
-  @Override
   public final boolean hasNext() {
     switch (stackPeek()) {
-      case ITERATOR -> {
+      case ITERATOR, NODE_CONSUMED -> {
         stackReplace(PARSE);
 
-        parseTextSingleLine();
+        phrasing();
 
-        // sure to have at least one node
-        stackReplace(isLast() ? LAST : NODE);
+        if (hasNextNode()) {
+          stackReplace(NODE);
+        } else {
+          stackReplace(EXHAUSTED);
+        }
       }
 
-      case LAST -> {}
-
-      case LAST_CONSUMED -> stackReplace(EXHAUSTED);
+      case NODE -> {}
 
       default -> stackStub();
     }
 
     return hasNextNode();
-  }
-
-  @Override
-  public final Node next() {
-    return nextNode();
   }
 
   @Override
@@ -81,6 +69,16 @@ public final class PseudoTitle extends PseudoNode
   }
 
   @Override
+  public final int level() {
+    return level;
+  }
+
+  @Override
+  public final Node next() {
+    return nextNodeDefault();
+  }
+
+  @Override
   public final IterableOnce<Node> nodes() {
     switch (stackPeek()) {
       case PseudoHeader.TITLE_CONSUMED,
@@ -90,6 +88,24 @@ public final class PseudoTitle extends PseudoNode
     }
 
     return this;
+  }
+
+  @Override
+  final Phrasing phrasingEol() {
+    return toPhrasingEnd(sourceIndex());
+  }
+
+  @Override
+  final Phrasing phrasingStart() {
+    if (!sourceMore()) {
+      return Phrasing.STOP;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Phrasing.STOP);
+
+      default -> Phrasing.BLOB;
+    };
   }
 
 }

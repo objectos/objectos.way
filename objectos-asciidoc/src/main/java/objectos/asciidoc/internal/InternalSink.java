@@ -38,17 +38,6 @@ public class InternalSink {
   
    */
 
-  private enum Parse {
-    STOP,
-    BLOB,
-    TEXT,
-    EOL;
-  }
-
-  private static final int _SINGLE_LINE = 1 << 0;
-
-  private static final int _LAST = 1 << 1;
-
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
   private static final int PSEUDO_TITLE = 2;
@@ -56,11 +45,8 @@ public class InternalSink {
   private static final int PSEUDO_SECTION = 4;
   private static final int PSEUDO_TEXT = 5;
   private static final int PSEUDO_ULIST = 6;
-  private static final int PSEUDO_LIST_ITEM = 7;
-  private static final int PSEUDO_ATTRIBUTES = 8;
-  private static final int PSEUDO_LENGTH = 9;
-
-  private int flags;
+  private static final int PSEUDO_ATTRIBUTES = 7;
+  private static final int PSEUDO_LENGTH = 8;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -121,18 +107,6 @@ public class InternalSink {
     return result;
   }
 
-  final void parseTextRegular() {
-    flags = 0;
-
-    parse();
-  }
-
-  final void parseTextSingleLine() {
-    flagsSet(_SINGLE_LINE);
-
-    parse();
-  }
-
   final PseudoAttributes pseudoAttributes() {
     return pseudoFactory(PSEUDO_ATTRIBUTES, PseudoAttributes::new);
   }
@@ -143,10 +117,6 @@ public class InternalSink {
 
   final PseudoHeader pseudoHeader() {
     return pseudoFactory(PSEUDO_HEADER, PseudoHeader::new);
-  }
-
-  final PseudoListItem pseudoListItem() {
-    return pseudoFactory(PSEUDO_LIST_ITEM, PseudoListItem::new);
   }
 
   final PseudoParagraph pseudoParagraph() {
@@ -187,6 +157,10 @@ public class InternalSink {
 
   final boolean sourceMore() {
     return sourceIndex < source.length();
+  }
+
+  final char sourceNext() {
+    return source.charAt(sourceIndex++);
   }
 
   final char sourcePeek() {
@@ -232,6 +206,14 @@ public class InternalSink {
     stackArray[++stackIndex] = v1;
   }
 
+  final void stackPush(int v0, int v1, int v2, int v3) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 4);
+    stackArray[++stackIndex] = v0;
+    stackArray[++stackIndex] = v1;
+    stackArray[++stackIndex] = v2;
+    stackArray[++stackIndex] = v3;
+  }
+
   final void stackReplace(int value) {
     stackArray[stackIndex] = value;
   }
@@ -244,27 +226,8 @@ public class InternalSink {
     );
   }
 
-  private Parse advance(Parse nextState) {
-    sourceIndex++;
-
-    return nextState;
-  }
-
   private boolean finalState() {
     return stackIndex == -1;
-  }
-
-  private boolean flagsIs(int value) {
-    return (flags & value) != 0;
-  }
-
-  private void flagsSet(int value) {
-    flags |= value;
-  }
-
-  @SuppressWarnings("unused")
-  private void flagsUnset(int value) {
-    flags &= ~value;
   }
 
   @SuppressWarnings("unused")
@@ -292,92 +255,6 @@ public class InternalSink {
     };
   }
 
-  private void parse() {
-    var state = Parse.BLOB;
-
-    stackPush(sourceIndex);
-
-    while (state != Parse.STOP) {
-      state = switch (state) {
-        case BLOB -> parseBlob();
-
-        case EOL -> parseEol();
-
-        case TEXT -> parseText();
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-        );
-      };
-    }
-  }
-
-  private Parse parseBlob() {
-    if (!sourceMore()) {
-      return toTextLast(0);
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.EOL);
-
-      case '`' -> throw new UnsupportedOperationException("Implement me");
-
-      case '*' -> throw new UnsupportedOperationException("Implement me");
-
-      case '_' -> throw new UnsupportedOperationException("Implement me");
-
-      default -> advance(Parse.BLOB);
-    };
-  }
-
-  private Parse parseEol() {
-    if (flagsIs(_SINGLE_LINE)) {
-      // end before NL -> offset=1
-      return toTextLast(1);
-    }
-
-    if (!sourceMore()) {
-      // end before NL -> offset=1
-      return toTextLast(1);
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> {
-        var next = toTextLast(1);
-
-        sourceIndex++;
-
-        trimNewLine();
-
-        yield next;
-      }
-
-      default -> advance(Parse.BLOB);
-    };
-  }
-
-  private Parse parseText() {
-    int endIndex = stackPop();
-
-    int startIndex = stackPop();
-
-    if (startIndex < endIndex) {
-      var text = pseudoText();
-
-      text.end = endIndex;
-
-      text.start = startIndex;
-
-      text.last = flagsIs(_LAST);
-
-      nextNode = text;
-    } else {
-      nextNode = null;
-    }
-
-    return Parse.STOP;
-  }
-
   @SuppressWarnings("unchecked")
   private <T> T pseudoFactory(int index, Function<InternalSink, T> factory) {
     var result = pseudoArray[index];
@@ -395,30 +272,6 @@ public class InternalSink {
     sourceIndex = 0;
 
     stackIndex = -1;
-  }
-
-  private Parse toTextLast(int offset) {
-    stackPush(sourceIndex - offset);
-
-    flagsSet(_LAST);
-
-    return Parse.TEXT;
-  }
-
-  private void trimNewLine() {
-    loop: while (sourceMore()) {
-      switch (sourcePeek()) {
-        case '\n' -> {
-          sourceIndex++;
-
-          continue loop;
-        }
-
-        default -> {
-          break loop;
-        }
-      }
-    }
   }
 
 }

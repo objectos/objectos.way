@@ -77,7 +77,7 @@ public final class PseudoHeader extends PseudoNode
 
   @Override
   public final Node next() {
-    return nextNode();
+    return nextNodeDefault();
   }
 
   @Override

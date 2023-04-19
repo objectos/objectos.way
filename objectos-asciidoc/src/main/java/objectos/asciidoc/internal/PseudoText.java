@@ -26,8 +26,6 @@ public final class PseudoText implements Text {
 
   int end;
 
-  boolean last;
-
   PseudoText(InternalSink sink) {
     this.sink = sink;
   }
