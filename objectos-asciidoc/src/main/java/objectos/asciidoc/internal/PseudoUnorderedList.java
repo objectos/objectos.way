@@ -178,7 +178,7 @@ public final class PseudoUnorderedList extends PseudoNode
     }
 
     return switch (sourcePeek()) {
-      case '-' -> thisPhrasing(atEol, ThisPhrasing.MAYBE_NEXT_ITEM);
+      case '-', '*' -> thisPhrasing(atEol, ThisPhrasing.MAYBE_NEXT_ITEM);
 
       default -> advance(Phrasing.BLOB);
     };

@@ -66,7 +66,7 @@ public class UnorderedListTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   unordered list
 
   - complex elements
@@ -99,6 +99,46 @@ public class UnorderedListTest {
       <item>
       <text>e
       fgh</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = //
+  """
+  unordered list
+
+  - simple elements
+  - asterisk
+  - single level
+
+  '''
+  * a
+  * b
+  * c
+  '''
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      * a
+      * b
+      * c
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      <item>
+      <text>b</text>
+      </item>
+      <item>
+      <text>c</text>
       </item>
       </unordered-list>
       </document>

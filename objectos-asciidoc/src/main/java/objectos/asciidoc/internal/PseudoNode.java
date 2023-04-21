@@ -109,6 +109,8 @@ abstract class PseudoNode {
 
       case MAYBE_ATTRLIST_END_TRIM -> parseMaybeAttrlistEndTrim();
 
+      case MAYBE_BOLD_OR_ULIST -> parseMaybeBoldOrUlist();
+
       case MAYBE_LISTING_OR_ULIST -> parseMaybeListingOrUlist();
 
       case MAYBE_SECTION -> parseMaybeSection();
@@ -296,6 +298,13 @@ abstract class PseudoNode {
         yield advance(Parse.MAYBE_LISTING_OR_ULIST);
       }
 
+      case '*' -> {
+        // rollback index or marker start
+        stackPush(sourceIndex());
+
+        yield advance(Parse.MAYBE_BOLD_OR_ULIST);
+      }
+
       case '=' -> {
         stackPush(sourceIndex());
 
@@ -374,22 +383,38 @@ abstract class PseudoNode {
     };
   }
 
+  private Parse parseMaybeBoldOrUlist() {
+    if (!sourceMore()) {
+      return Parse.NOT_BOLD_OR_ULIST;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> toMaybeUlist();
+
+      case '*' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> Parse.NOT_LISTING_OR_ULIST;
+    };
+  }
+
+  private Parse toMaybeUlist() {
+    int markerStart = stackPop();
+
+    stackPush(_ULIST_TOP, markerStart);
+
+    // marker end
+    stackPush(sourceIndex());
+
+    return advance(Parse.MAYBE_ULIST);
+  }
+
   private Parse parseMaybeListingOrUlist() {
     if (!sourceMore()) {
       return Parse.NOT_LISTING_OR_ULIST;
     }
 
     return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> {
-        int markerStart = stackPop();
-
-        stackPush(_ULIST_TOP, markerStart);
-
-        // marker end
-        stackPush(sourceIndex());
-
-        yield advance(Parse.MAYBE_ULIST);
-      }
+      case '\t', '\f', ' ' -> toMaybeUlist();
 
       case '-' -> throw new UnsupportedOperationException("Implement me");
 
