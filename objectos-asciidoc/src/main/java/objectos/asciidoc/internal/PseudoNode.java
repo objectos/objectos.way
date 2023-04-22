@@ -27,7 +27,11 @@ abstract class PseudoNode {
 
   static final int _NEXT_ITEM = -3;
 
-  static final int _LIST_END = -4;
+  static final int _NESTED = -4;
+
+  static final int _NESTED_END = -5;
+
+  static final int _LIST_END = -6;
 
   private final InternalSink sink;
 
@@ -225,8 +229,16 @@ abstract class PseudoNode {
     return sink.stackPeek();
   }
 
+  final int stackPeek(int offset) {
+    return sink.stackPeek(offset);
+  }
+
   final int stackPop() {
     return sink.stackPop();
+  }
+
+  final void stackPop(int count) {
+    sink.stackPop(count);
   }
 
   final void stackPush(int v0) {
@@ -235,10 +247,6 @@ abstract class PseudoNode {
 
   final void stackPush(int v0, int v1) {
     sink.stackPush(v0, v1);
-  }
-
-  final void stackPush(int v0, int v1, int v2, int v3) {
-    sink.stackPush(v0, v1, v2, v3);
   }
 
   final void stackReplace(int value) {

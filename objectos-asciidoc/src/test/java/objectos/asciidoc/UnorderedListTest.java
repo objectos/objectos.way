@@ -33,12 +33,6 @@ public class UnorderedListTest {
   - simple elements
   - dash
   - single level
-
-  '''
-  - a
-  - b
-  - c
-  '''
   """)
   public void testCase01() {
     tester.test(
@@ -72,13 +66,6 @@ public class UnorderedListTest {
   - complex elements
   - dash
   - single level
-
-  '''
-  - a
-  bcd
-  - e
-  fgh
-  '''
   """)
   public void testCase02() {
     tester.test(
@@ -106,19 +93,12 @@ public class UnorderedListTest {
     );
   }
 
-  @Test(description = //
-  """
+  @Test(description = """
   unordered list
 
   - simple elements
   - asterisk
   - single level
-
-  '''
-  * a
-  * b
-  * c
-  '''
   """)
   public void testCase03() {
     tester.test(
@@ -146,4 +126,41 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  unordered list
+
+  - nested unordered list
+  - asterisk
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      * a
+      ** b
+      ** c
+      * d
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      <unordered-list>
+      <item>
+      <text>b</text>
+      </item>
+      <item>
+      <text>c</text>
+      </item>
+      </unordered-list>
+      </item>
+      <item>
+      <text>d</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
 }

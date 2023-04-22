@@ -57,6 +57,7 @@ public final class PseudoUnorderedList extends PseudoNode
 
     MAYBE_NEXT_ITEM,
     MAYBE_NEXT_ITEM_TRIM,
+    NEXT_ITEM_OR_NESTED,
     NEXT_ITEM,
     NOT_NEXT_ITEM;
   }
@@ -70,7 +71,9 @@ public final class PseudoUnorderedList extends PseudoNode
   private static final int TEXT = -806;
   private static final int TEXT_CONSUMED = -807;
   private static final int ITEM_EXHAUSTED = -808;
-  static final int EXHAUSTED = -809;
+  private static final int ULIST = -809;
+  private static final int ULIST_CONSUMED = -810;
+  static final int EXHAUSTED = -812;
 
   private final PseudoListItem item = new PseudoListItem();
 
@@ -90,26 +93,12 @@ public final class PseudoUnorderedList extends PseudoNode
         int hint = stackPop();
 
         switch (hint) {
+          case _NESTED_END -> stackPush(EXHAUSTED);
+
           case _NEXT_ITEM -> {
-            int thisEnd = stackPop();
-            int thisStart = stackPop();
-            var thisMarker = sourceGet(thisStart, thisEnd);
+            nextNode(item);
 
-            int prevEnd = stackPop();
-            int prevStart = stackPop();
-            var prevMarker = sourceGet(prevStart, prevEnd);
-
-            if (prevMarker.equals(thisMarker)) {
-              stackPush(thisStart, thisEnd);
-
-              nextNode(item);
-
-              stackPush(ITEM);
-            } else {
-              throw new UnsupportedOperationException(
-                "Implement me :: prevMarker=" + prevMarker + ";thisMarker=" + thisMarker
-              );
-            }
+            stackPush(ITEM);
           }
 
           case _LIST_END -> {
@@ -121,12 +110,14 @@ public final class PseudoUnorderedList extends PseudoNode
 
             int top = stackPop();
 
-            assert top == _ULIST_TOP;
+            assert top == _ULIST_TOP : "top=" + top;
 
             stackPush(EXHAUSTED);
           }
 
-          default -> throw new UnsupportedOperationException("Implement me");
+          default -> throw new UnsupportedOperationException(
+            "Implement me :: hint=" + hint
+          );
         }
       }
 
@@ -159,7 +150,8 @@ public final class PseudoUnorderedList extends PseudoNode
   @Override
   public final IterableOnce<Node> nodes() {
     switch (stackPeek()) {
-      case PseudoDocument.ULIST_CONSUMED -> stackReplace(NODES);
+      case PseudoDocument.ULIST_CONSUMED,
+           ULIST_CONSUMED -> stackReplace(NODES);
 
       default -> stackStub();
     }
@@ -195,6 +187,8 @@ public final class PseudoUnorderedList extends PseudoNode
 
   private boolean itemHasNext() {
     switch (stackPeek()) {
+      case EXHAUSTED -> stackReplace(ITEM_EXHAUSTED);
+
       case ITEM_ITERATOR -> {
         stackPop();
 
@@ -216,11 +210,24 @@ public final class PseudoUnorderedList extends PseudoNode
         int hint = stackPeek();
 
         switch (hint) {
+          case _NESTED -> {
+            // pops hint
+            stackPop();
+
+            nextNode(this);
+
+            stackPush(ULIST);
+          }
+
+          case _NESTED_END -> stackPush(ITEM_EXHAUSTED);
+
           case _NEXT_ITEM -> stackPush(ITEM_EXHAUSTED);
 
           default -> stackPush(_LIST_END, ITEM_EXHAUSTED);
         }
       }
+
+      case ULIST -> {}
 
       default -> stackStub();
     }
@@ -266,16 +273,12 @@ public final class PseudoUnorderedList extends PseudoNode
         case MAYBE_NEXT_ITEM_TRIM -> thisPhrasingMaybeNextItemTrim();
 
         case NEXT_ITEM -> {
-          var markerEnd = stackPop();
-
-          var phrasingStart = stackPop();
-
-          stackPush(markerStart, markerEnd, _NEXT_ITEM, phrasingStart);
-
-          result = toPhrasingEnd(eol);
+          result = Phrasing.TEXT;
 
           yield ThisPhrasing.STOP;
         }
+
+        case NEXT_ITEM_OR_NESTED -> thisPhrasingNextItemOrNested(eol, markerStart);
 
         case NOT_NEXT_ITEM -> {
           throw new UnsupportedOperationException("Implement me");
@@ -290,6 +293,83 @@ public final class PseudoUnorderedList extends PseudoNode
     assert result != null;
 
     return result;
+  }
+
+  private ThisPhrasing thisPhrasingNextItemOrNested(int eol, int thisStart) {
+    var thisEnd = stackPop();
+    var phrasingStart = stackPop();
+    var thisMarker = sourceGet(thisStart, thisEnd);
+
+    int prevEnd = stackPop();
+    int prevStart = stackPop();
+    var prevMarker = sourceGet(prevStart, prevEnd);
+
+    if (thisMarker.equals(prevMarker)) {
+      // updates marker to current indexes
+      stackPush(thisStart, thisEnd);
+
+      // pushes hint
+      stackPush(_NEXT_ITEM);
+
+      // pushes text indexes
+      stackPush(phrasingStart, eol);
+
+      return ThisPhrasing.NEXT_ITEM;
+    }
+
+    int maybeTop = stackPeek();
+
+    if (maybeTop == _ULIST_TOP) {
+      // keep first level marker around
+      stackPush(prevStart, prevEnd);
+
+      // pushes the new level marker
+      stackPush(thisStart, thisEnd);
+
+      // pushes hint
+      stackPush(_NESTED);
+
+      // pushes text indexes
+      stackPush(phrasingStart, eol);
+
+      return ThisPhrasing.NEXT_ITEM;
+    }
+
+    var found = false;
+
+    int offset = 0;
+
+    while (maybeTop != _ULIST_TOP) {
+      prevEnd = stackPeek(offset++);
+      prevStart = stackPeek(offset++);
+      prevMarker = sourceGet(prevStart, prevEnd);
+
+      if (thisMarker.equals(prevMarker)) {
+        found = true;
+
+        break;
+      }
+    }
+
+    if (found) {
+      // pops finished levels
+      stackPop(offset);
+
+      // pushes the new level marker
+      stackPush(thisStart, thisEnd);
+
+      // pushes hint
+      stackPush(_NEXT_ITEM, _NESTED_END);
+
+      // pushes text indexes
+      stackPush(phrasingStart, eol);
+
+      return ThisPhrasing.NEXT_ITEM;
+    }
+
+    throw new UnsupportedOperationException(
+      "Implement me :: prevMarker=" + prevMarker + ";thisMarker=" + thisMarker
+    );
   }
 
   private ThisPhrasing thisPhrasingMaybeNextItem(char marker) {
@@ -323,7 +403,7 @@ public final class PseudoUnorderedList extends PseudoNode
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> advance(ThisPhrasing.MAYBE_NEXT_ITEM_TRIM);
 
-      default -> ThisPhrasing.NEXT_ITEM;
+      default -> ThisPhrasing.NEXT_ITEM_OR_NESTED;
     };
   }
 

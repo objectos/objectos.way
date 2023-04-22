@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-  
+
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-  
+
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-  
+
    */
 
   private static final int PSEUDO_DOCUMENT = 0;
@@ -191,8 +191,16 @@ public class InternalSink {
     return stackArray[stackIndex];
   }
 
+  final int stackPeek(int offset) {
+    return stackArray[stackIndex - offset];
+  }
+
   final int stackPop() {
     return stackArray[stackIndex--];
+  }
+
+  final void stackPop(int count) {
+    stackIndex -= count;
   }
 
   final void stackPush(int v0) {
@@ -204,14 +212,6 @@ public class InternalSink {
     stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
     stackArray[++stackIndex] = v0;
     stackArray[++stackIndex] = v1;
-  }
-
-  final void stackPush(int v0, int v1, int v2, int v3) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 4);
-    stackArray[++stackIndex] = v0;
-    stackArray[++stackIndex] = v1;
-    stackArray[++stackIndex] = v2;
-    stackArray[++stackIndex] = v3;
   }
 
   final void stackReplace(int value) {
