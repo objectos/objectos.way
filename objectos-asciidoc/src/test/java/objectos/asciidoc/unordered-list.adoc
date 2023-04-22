@@ -33,6 +33,12 @@ fgh
  ** c
 * d
 
+== Test case
+
+ * a
+ ** b
+ *** c
+
 == Edge cases
 
 //

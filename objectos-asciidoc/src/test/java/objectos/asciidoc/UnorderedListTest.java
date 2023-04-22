@@ -163,4 +163,43 @@ public class UnorderedListTest {
       """
     );
   }
+
+  @Test(description = """
+  unordered list
+
+  - indented nested unordered list
+  - asterisk
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      * a
+       ** b
+       ** c
+      * d
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      <unordered-list>
+      <item>
+      <text>b</text>
+      </item>
+      <item>
+      <text>c</text>
+      </item>
+      </unordered-list>
+      </item>
+      <item>
+      <text>d</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
 }

@@ -55,6 +55,9 @@ public final class PseudoUnorderedList extends PseudoNode
   private enum ThisPhrasing {
     STOP,
 
+    MARKER,
+
+    MAYBE_INDENTATION,
     MAYBE_NEXT_ITEM,
     MAYBE_NEXT_ITEM_TRIM,
     NEXT_ITEM_OR_NESTED,
@@ -170,7 +173,9 @@ public final class PseudoUnorderedList extends PseudoNode
     }
 
     return switch (sourcePeek()) {
-      case '-', '*' -> thisPhrasing(atEol, ThisPhrasing.MAYBE_NEXT_ITEM);
+      case '\t', '\f', ' ' -> thisPhrasing(atEol, ThisPhrasing.MAYBE_INDENTATION);
+
+      case '-', '*' -> thisPhrasing(atEol, ThisPhrasing.MARKER);
 
       default -> advance(Phrasing.BLOB);
     };
@@ -258,17 +263,17 @@ public final class PseudoUnorderedList extends PseudoNode
   }
 
   private Phrasing thisPhrasing(int eol, ThisPhrasing initial) {
-    var markerStart = sourceIndex();
-
-    var marker = sourceNext();
-
     Phrasing result = null;
 
     var state = initial;
 
     while (state != ThisPhrasing.STOP) {
       state = switch (state) {
-        case MAYBE_NEXT_ITEM -> thisPhrasingMaybeNextItem(marker);
+        case MARKER -> thisPhrasingMarker();
+
+        case MAYBE_INDENTATION -> thisPhrasingMaybeIndentation();
+
+        case MAYBE_NEXT_ITEM -> thisPhrasingMaybeNextItem();
 
         case MAYBE_NEXT_ITEM_TRIM -> thisPhrasingMaybeNextItemTrim();
 
@@ -278,7 +283,7 @@ public final class PseudoUnorderedList extends PseudoNode
           yield ThisPhrasing.STOP;
         }
 
-        case NEXT_ITEM_OR_NESTED -> thisPhrasingNextItemOrNested(eol, markerStart);
+        case NEXT_ITEM_OR_NESTED -> thisPhrasingNextItemOrNested(eol);
 
         case NOT_NEXT_ITEM -> {
           throw new UnsupportedOperationException("Implement me");
@@ -295,8 +300,74 @@ public final class PseudoUnorderedList extends PseudoNode
     return result;
   }
 
-  private ThisPhrasing thisPhrasingNextItemOrNested(int eol, int thisStart) {
+  private ThisPhrasing thisPhrasingMarker() {
+    int markerStart = sourceIndex();
+
+    char marker = sourceNext();
+
+    // marker start
+    stackPush(markerStart, marker);
+
+    return ThisPhrasing.MAYBE_NEXT_ITEM;
+  }
+
+  private ThisPhrasing thisPhrasingMaybeIndentation() {
+    if (!sourceMore()) {
+      return ThisPhrasing.NOT_NEXT_ITEM;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(ThisPhrasing.MAYBE_INDENTATION);
+
+      case '-', '*' -> ThisPhrasing.MARKER;
+
+      default -> ThisPhrasing.NOT_NEXT_ITEM;
+    };
+  }
+
+  private ThisPhrasing thisPhrasingMaybeNextItem() {
+    if (!sourceMore()) {
+      return ThisPhrasing.NOT_NEXT_ITEM;
+    }
+
+    char peek = sourcePeek();
+
+    char marker = (char) stackPeek();
+
+    if (peek == marker) {
+      return advance(ThisPhrasing.MAYBE_NEXT_ITEM);
+    }
+
+    return switch (peek) {
+      case '\t', '\f', ' ' -> {
+        // pops marker
+        stackPop();
+
+        // marker end
+        stackPush(sourceIndex());
+
+        yield advance(ThisPhrasing.MAYBE_NEXT_ITEM_TRIM);
+      }
+
+      default -> ThisPhrasing.NOT_NEXT_ITEM;
+    };
+  }
+
+  private ThisPhrasing thisPhrasingMaybeNextItemTrim() {
+    if (!sourceMore()) {
+      return ThisPhrasing.NOT_NEXT_ITEM;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> advance(ThisPhrasing.MAYBE_NEXT_ITEM_TRIM);
+
+      default -> ThisPhrasing.NEXT_ITEM_OR_NESTED;
+    };
+  }
+
+  private ThisPhrasing thisPhrasingNextItemOrNested(int eol) {
     var thisEnd = stackPop();
+    var thisStart = stackPop();
     var phrasingStart = stackPop();
     var thisMarker = sourceGet(thisStart, thisEnd);
 
@@ -370,41 +441,6 @@ public final class PseudoUnorderedList extends PseudoNode
     throw new UnsupportedOperationException(
       "Implement me :: prevMarker=" + prevMarker + ";thisMarker=" + thisMarker
     );
-  }
-
-  private ThisPhrasing thisPhrasingMaybeNextItem(char marker) {
-    if (!sourceMore()) {
-      return ThisPhrasing.NOT_NEXT_ITEM;
-    }
-
-    char peek = sourcePeek();
-
-    if (peek == marker) {
-      return advance(ThisPhrasing.MAYBE_NEXT_ITEM);
-    }
-
-    return switch (peek) {
-      case '\t', '\f', ' ' -> {
-        // marker end
-        stackPush(sourceIndex());
-
-        yield advance(ThisPhrasing.MAYBE_NEXT_ITEM_TRIM);
-      }
-
-      default -> ThisPhrasing.NOT_NEXT_ITEM;
-    };
-  }
-
-  private ThisPhrasing thisPhrasingMaybeNextItemTrim() {
-    if (!sourceMore()) {
-      return ThisPhrasing.NOT_NEXT_ITEM;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(ThisPhrasing.MAYBE_NEXT_ITEM_TRIM);
-
-      default -> ThisPhrasing.NEXT_ITEM_OR_NESTED;
-    };
   }
 
 }
