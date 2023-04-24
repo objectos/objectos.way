@@ -405,17 +405,6 @@ abstract class PseudoNode {
     };
   }
 
-  private Parse toMaybeUlist() {
-    int markerStart = stackPop();
-
-    stackPush(_ULIST_TOP, markerStart);
-
-    // marker end
-    stackPush(sourceIndex());
-
-    return advance(Parse.MAYBE_ULIST);
-  }
-
   private Parse parseMaybeListingOrUlist() {
     if (!sourceMore()) {
       return Parse.NOT_LISTING_OR_ULIST;
@@ -548,6 +537,17 @@ abstract class PseudoNode {
     }
 
     return Phrasing.STOP;
+  }
+
+  private Parse toMaybeUlist() {
+    int markerStart = stackPop();
+
+    stackPush(_ULIST_TOP, markerStart);
+
+    // marker end
+    stackPush(sourceIndex());
+
+    return advance(Parse.MAYBE_ULIST);
   }
 
 }

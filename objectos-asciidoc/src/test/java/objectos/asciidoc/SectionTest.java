@@ -32,16 +32,6 @@ public class SectionTest {
 
   - level 1
   - single paragraph
-
-  '''
-  = doc
-
-  pream
-
-  == L1
-
-  parag
-  '''
   """)
   public void testCase01() {
     tester.test(
@@ -76,20 +66,6 @@ public class SectionTest {
   - level 1
   - level 2
   - single paragraph in each
-
-  '''
-  = doc
-
-  pream
-
-  == L1
-
-  sect1
-
-  === 2
-
-  sect2
-  '''
   """)
   public void testCase02() {
     tester.test(
@@ -135,13 +111,6 @@ public class SectionTest {
   - level 1
   - no doctitle
   - single paragraph
-
-  '''
-  [nam]
-  == L1
-
-  sect1
-  '''
   """)
   public void testCase03() {
     tester.test(
@@ -158,6 +127,50 @@ public class SectionTest {
       <style>nam</style>
       <title>L1</title>
       <p>sect1</p>
+      </section>
+      </document>
+      """
+    );
+  }
+
+  @Test(enabled = false, description = """
+  section
+
+  - level 1
+  - starts after a UL
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      == L1
+
+      * a
+      * b
+
+      == L2
+
+      c
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title>L1</title>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      <item>
+      <text>b</text>
+      </item>
+      </unordered-list>
+      </section>
+
+      <section level="1">
+      <style>null</style>
+      <title>L2</title>
+      <p>c</p>
       </section>
       </document>
       """

@@ -31,9 +31,11 @@ public final class PseudoSection extends PseudoNode
   private static final int PARSE = -704;
   private static final int PARAGRAPH = -705;
   static final int PARAGRAPH_CONSUMED = -706;
-  private static final int SECTION = -706;
-  static final int SECTION_CONSUMED = -707;
-  static final int EXHAUSTED = -708;
+  private static final int SECTION = -707;
+  static final int SECTION_CONSUMED = -708;
+  private static final int ULIST = -709;
+  static final int ULIST_CONSUMED = -710;
+  static final int EXHAUSTED = -711;
 
   int level;
 
@@ -51,7 +53,8 @@ public final class PseudoSection extends PseudoNode
     switch (stackPeek()) {
       case PseudoTitle.EXHAUSTED,
            PseudoParagraph.EXHAUSTED,
-           PseudoSection.EXHAUSTED -> parse(Parse.BODY);
+           PseudoSection.EXHAUSTED,
+           PseudoUnorderedList.EXHAUSTED -> parse(Parse.BODY);
 
       case ITERATOR -> {
         stackPop();
@@ -68,7 +71,7 @@ public final class PseudoSection extends PseudoNode
         stackPush(TITLE);
       }
 
-      case PARAGRAPH, SECTION, TITLE -> {}
+      case PARAGRAPH, SECTION, TITLE, ULIST -> {}
 
       default -> stackStub();
     }
@@ -127,6 +130,8 @@ public final class PseudoSection extends PseudoNode
 
         case SECTION -> parseSection();
 
+        case ULIST -> parseUlist();
+
         default -> parseDocumentOrSection(state);
       };
     }
@@ -177,6 +182,26 @@ public final class PseudoSection extends PseudoNode
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
+  }
+
+  private Parse parseUlist() {
+    int markerEnd = stackPop();
+
+    int markerStart = stackPop();
+
+    int ulistTop = stackPop();
+
+    stackAssert(PARSE);
+
+    stackPush(ulistTop);
+
+    stackPush(markerStart, markerEnd);
+
+    stackPush(ULIST);
+
+    nextNode(unorderedList());
+
+    return Parse.STOP;
   }
 
 }

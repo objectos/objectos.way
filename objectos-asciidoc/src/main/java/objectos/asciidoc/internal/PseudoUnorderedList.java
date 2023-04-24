@@ -62,7 +62,10 @@ public final class PseudoUnorderedList extends PseudoNode
     MAYBE_NEXT_ITEM_TRIM,
     NEXT_ITEM_OR_NESTED,
     NEXT_ITEM,
-    NOT_NEXT_ITEM;
+    NOT_NEXT_ITEM,
+
+    END_TRIM,
+    END;
   }
 
   private static final int NODES = -800;
@@ -154,6 +157,7 @@ public final class PseudoUnorderedList extends PseudoNode
   public final IterableOnce<Node> nodes() {
     switch (stackPeek()) {
       case PseudoDocument.ULIST_CONSUMED,
+           PseudoSection.ULIST_CONSUMED,
            ULIST_CONSUMED -> stackReplace(NODES);
 
       default -> stackStub();
@@ -174,6 +178,8 @@ public final class PseudoUnorderedList extends PseudoNode
 
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> thisPhrasing(atEol, ThisPhrasing.MAYBE_INDENTATION);
+
+      case '\n' -> advance(thisPhrasing(atEol, ThisPhrasing.END_TRIM));
 
       case '-', '*' -> thisPhrasing(atEol, ThisPhrasing.MARKER);
 
@@ -269,6 +275,14 @@ public final class PseudoUnorderedList extends PseudoNode
 
     while (state != ThisPhrasing.STOP) {
       state = switch (state) {
+        case END -> {
+          result = toPhrasingEnd(eol);
+
+          yield ThisPhrasing.STOP;
+        }
+
+        case END_TRIM -> thisPhrasingEndTrim();
+
         case MARKER -> thisPhrasingMarker();
 
         case MAYBE_INDENTATION -> thisPhrasingMaybeIndentation();
@@ -298,6 +312,18 @@ public final class PseudoUnorderedList extends PseudoNode
     assert result != null;
 
     return result;
+  }
+
+  private ThisPhrasing thisPhrasingEndTrim() {
+    if (!sourceMore()) {
+      return ThisPhrasing.END;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(ThisPhrasing.END_TRIM);
+
+      default -> ThisPhrasing.END;
+    };
   }
 
   private ThisPhrasing thisPhrasingMarker() {
