@@ -22,14 +22,18 @@ import objectos.util.ObjectArrays;
 
 public final class PseudoAttributes implements Attributes {
 
+  private static final int ACTIVE = 1 << 0;
+
+  private static final int BOUND = 1 << 1;
+
   @SuppressWarnings("unused")
   private final InternalSink sink;
-
-  private boolean bound;
 
   private String[] data = new String[8];
 
   private int index;
+
+  private int state;
 
   PseudoAttributes(InternalSink sink) {
     this.sink = sink;
@@ -40,11 +44,11 @@ public final class PseudoAttributes implements Attributes {
   }
 
   final void clear() {
-    bound = false;
-
     Arrays.fill(data, null);
 
     index = 0;
+
+    state = 0;
   }
 
   private void addImpl(String name, String value) {
@@ -76,7 +80,7 @@ public final class PseudoAttributes implements Attributes {
   }
 
   final Attributes bindIfNecessary(PseudoSection section) {
-    if (!bound) {
+    if (!is(BOUND)) {
       if (index > 1) {
         if (data[0] != null) {
           throw new UnsupportedOperationException("Implement me");
@@ -85,10 +89,22 @@ public final class PseudoAttributes implements Attributes {
         data[0] = "style";
       }
 
-      bound = true;
+      set(BOUND);
     }
 
     return this;
+  }
+
+  final void active() {
+    set(ACTIVE);
+  }
+
+  private boolean is(int value) {
+    return (state & value) != 0;
+  }
+
+  private void set(int value) {
+    state |= value;
   }
 
 }

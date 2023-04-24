@@ -34,7 +34,7 @@ final class SectionTestToRemove extends AbstractAsciiDocTest {
   b
   '''
   """)
-  public final void testCase06() {
+  public final void testCase08() {
     test(
       """
       == `A`

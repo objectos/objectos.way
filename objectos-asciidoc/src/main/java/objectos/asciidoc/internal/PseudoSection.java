@@ -102,7 +102,7 @@ public final class PseudoSection extends PseudoNode
   public final IterableOnce<Node> nodes() {
     switch (stackPeek()) {
       case PseudoDocument.SECTION_CONSUMED,
-           PseudoSection.SECTION_CONSUMED -> stackReplace(NODES);
+           PseudoSection.SECTION_CONSUMED -> nodes(NODES);
 
       default -> stackStub();
     }

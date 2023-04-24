@@ -85,6 +85,12 @@ abstract class PseudoNode {
     return sink.nextNode();
   }
 
+  final void nodes(int value) {
+    stackReplace(value);
+
+    pseudoAttributes().clear();
+  }
+
   final PseudoParagraph paragraph() {
     return sink.pseudoParagraph();
   }
@@ -283,6 +289,8 @@ abstract class PseudoNode {
     stackPop();
 
     if (type == ATTRLIST_BLOCK) {
+      pseudoAttributes().active();
+
       return Parse.BODY;
     } else {
       throw new UnsupportedOperationException(

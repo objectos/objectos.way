@@ -178,24 +178,9 @@ public class SectionTest {
   }
 
   @Test(description = """
-  section level reduction
+  section
 
-  012345
-  6
-  78
-  9
-  01234
-  5
-  67
-  '''
-  === A
-
-  b
-
-  == C
-
-  d
-  '''
+  - level reduction
   """)
   public void testCase05() {
     tester.test(
@@ -221,6 +206,118 @@ public class SectionTest {
       <style>null</style>
       <title>C</title>
       <p>d</p>
+      </section>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  section
+
+  - level reduction
+  - L1 -> L2 -> L3 -> L2
+  """)
+  public void testCase06() {
+    tester.test(
+      """
+      == A
+
+      b
+
+      === C
+
+      d
+
+      ==== E
+
+      f
+
+      === G
+
+      h
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title>A</title>
+      <p>b</p>
+
+      <section level="2">
+      <style>null</style>
+      <title>C</title>
+      <p>d</p>
+
+      <section level="3">
+      <style>null</style>
+      <title>E</title>
+      <p>f</p>
+      </section>
+      </section>
+
+      <section level="2">
+      <style>null</style>
+      <title>G</title>
+      <p>h</p>
+      </section>
+      </section>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  section
+
+  - level reduction
+  - L1 -> L2 -> L3 -> L1
+  """)
+  public void testCase07() {
+    tester.test(
+      """
+      == A
+
+      b
+
+      === C
+
+      d
+
+      ==== E
+
+      f
+
+      == G
+
+      h
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title>A</title>
+      <p>b</p>
+
+      <section level="2">
+      <style>null</style>
+      <title>C</title>
+      <p>d</p>
+
+      <section level="3">
+      <style>null</style>
+      <title>E</title>
+      <p>f</p>
+      </section>
+      </section>
+      </section>
+
+      <section level="1">
+      <style>null</style>
+      <title>G</title>
+      <p>h</p>
       </section>
       </document>
       """
