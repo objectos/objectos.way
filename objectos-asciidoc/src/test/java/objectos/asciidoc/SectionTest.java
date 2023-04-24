@@ -177,4 +177,54 @@ public class SectionTest {
     );
   }
 
+  @Test(description = """
+  section level reduction
+
+  012345
+  6
+  78
+  9
+  01234
+  5
+  67
+  '''
+  === A
+
+  b
+
+  == C
+
+  d
+  '''
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      === A
+
+      b
+
+      == C
+
+      d
+      """,
+
+      """
+      <document>
+      <section level="2">
+      <style>null</style>
+      <title>A</title>
+      <p>b</p>
+      </section>
+
+      <section level="1">
+      <style>null</style>
+      <title>C</title>
+      <p>d</p>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }

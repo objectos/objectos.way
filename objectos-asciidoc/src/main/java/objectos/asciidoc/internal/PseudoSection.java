@@ -182,7 +182,10 @@ public final class PseudoSection extends PseudoNode
       // replaces section level
       stackReplace(EXHAUSTED);
     } else {
-      throw new UnsupportedOperationException("Implement me");
+      sourceIndex(sourceIndex);
+
+      // replaces section level
+      stackReplace(EXHAUSTED);
     }
 
     return Parse.STOP;
