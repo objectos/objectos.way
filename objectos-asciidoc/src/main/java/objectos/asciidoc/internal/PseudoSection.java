@@ -160,8 +160,7 @@ public final class PseudoSection extends PseudoNode
   private Parse parseSection() {
     int nextLevel = stackPop();
 
-    // pops source index
-    stackPop();
+    int sourceIndex = stackPop();
 
     stackAssert(PARSE);
 
@@ -177,11 +176,16 @@ public final class PseudoSection extends PseudoNode
       section.level = nextLevel;
 
       nextNode(section);
+    } else if (nextLevel == thisLevel) {
+      sourceIndex(sourceIndex);
 
-      return Parse.STOP;
+      // replaces section level
+      stackReplace(EXHAUSTED);
     } else {
       throw new UnsupportedOperationException("Implement me");
     }
+
+    return Parse.STOP;
   }
 
   private Parse parseUlist() {
@@ -191,7 +195,9 @@ public final class PseudoSection extends PseudoNode
 
     int ulistTop = stackPop();
 
-    stackAssert(PARSE);
+    int parse = stackPop();
+
+    assert parse == PARSE : "expected PARSE but found " + parse;
 
     stackPush(ulistTop);
 

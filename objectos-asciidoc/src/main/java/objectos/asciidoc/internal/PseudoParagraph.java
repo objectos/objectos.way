@@ -135,11 +135,4 @@ public final class PseudoParagraph extends PseudoNode
     };
   }
 
-  private Phrasing popAndStop() {
-    // pops start index
-    stackPop();
-
-    return Phrasing.STOP;
-  }
-
 }

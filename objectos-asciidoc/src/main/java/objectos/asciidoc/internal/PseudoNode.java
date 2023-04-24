@@ -161,6 +161,13 @@ abstract class PseudoNode {
     throw new UnsupportedOperationException("Implement me");
   }
 
+  final Phrasing popAndStop() {
+    // pops start index
+    stackPop();
+
+    return Phrasing.STOP;
+  }
+
   final PseudoAttributes pseudoAttributes() {
     return sink.pseudoAttributes();
   }

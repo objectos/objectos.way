@@ -133,7 +133,7 @@ public class SectionTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   section
 
   - level 1

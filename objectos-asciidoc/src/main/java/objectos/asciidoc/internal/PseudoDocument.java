@@ -203,7 +203,9 @@ public final class PseudoDocument extends PseudoNode
     // pops source index
     stackPop();
 
-    stackPush(SECTION);
+    stackAssert(PARSE);
+
+    stackReplace(SECTION);
 
     var section = section();
 

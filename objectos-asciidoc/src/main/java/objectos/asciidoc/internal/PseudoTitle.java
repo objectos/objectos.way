@@ -98,11 +98,11 @@ public final class PseudoTitle extends PseudoNode
   @Override
   final Phrasing phrasingStart() {
     if (!sourceMore()) {
-      return Phrasing.STOP;
+      return popAndStop();
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> advance(Phrasing.STOP);
+      case '\n' -> advance(popAndStop());
 
       default -> Phrasing.BLOB;
     };

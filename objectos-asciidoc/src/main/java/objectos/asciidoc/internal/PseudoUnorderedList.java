@@ -179,7 +179,7 @@ public final class PseudoUnorderedList extends PseudoNode
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> thisPhrasing(atEol, ThisPhrasing.MAYBE_INDENTATION);
 
-      case '\n' -> advance(thisPhrasing(atEol, ThisPhrasing.END_TRIM));
+      case '\n' -> thisPhrasing(atEol, ThisPhrasing.END_TRIM);
 
       case '-', '*' -> thisPhrasing(atEol, ThisPhrasing.MARKER);
 
