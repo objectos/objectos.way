@@ -17,137 +17,30 @@ package objectos.asciidoc;
 
 import org.testng.annotations.Test;
 
-final class UrlMacroTest extends AbstractAsciiDocTest {
+public class UrlMacroTest {
 
-  UrlMacroTest(AsciiDocTest outer) { super(outer); }
+  Tester tester = Tester.objectos();
 
-  @Test(description = //
-  """
+  public UrlMacroTest() {}
+
+  UrlMacroTest(Tester tester) {
+    this.tester = tester;
+  }
+
+  @Test(enabled = false, description = """
   - https
   - well-formed
-
-            1         2
-  012345678901234567890123
-  '''
-  https://example.com[Ex]
-  '''
-
-  P0: IM-0,5 T-6,19 [ AVAL20,22 ] LF
-      EOF
   """)
   public void testCase01() {
-    test(
+    tester.test(
       """
       https://example.com[Ex]
       """,
 
-      p0(
-        Token.INLINE_MACRO, 0, 5,
-        Token.BLOB, 6, 19,
-        Token.ATTR_LIST_START,
-        Token.ATTR_VALUE_START, Token.BLOB, 20, 22, Token.ATTR_VALUE_END,
-        Token.ATTR_LIST_END,
-        Token.LF,
-
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.PARAGRAPH_START,
-        Code.URL_MACRO, 0, 19,
-        Code.URL_TARGET_START, Code.TOKENS, 8, 11, Code.URL_TARGET_END,
-        Code.TOKENS, 13, 13,
-        Code.PARAGRAPH_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(
-        t(Text.REGULAR, 20, 22),
-        t()
-      ),
-
       """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
+      <document>
       <p><a href="https://example.com">Ex</a></p>
-      </div>
-      </div>
-      </body>
-      """
-    );
-  }
-
-  @Test(description = //
-  """
-  - https
-  - well-formed
-  - comma in attrlist
-
-  0123456789012345
-  '''
-  https://a[b, c]
-  '''
-  """)
-  public void testCase02() {
-    test(
-      """
-      https://a[b, c]
-      """,
-
-      p0(
-        Token.INLINE_MACRO, 0, 5,
-        Token.BLOB, 6, 9,
-        Token.ATTR_LIST_START,
-        Token.ATTR_VALUE_START, Token.BLOB, 10, 11, Token.ATTR_VALUE_END,
-        Token.SEPARATOR, 11, 13,
-        Token.ATTR_VALUE_START, Token.BLOB, 13, 14, Token.ATTR_VALUE_END,
-        Token.ATTR_LIST_END,
-        Token.LF,
-
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.PARAGRAPH_START,
-        Code.URL_MACRO, 0, 9,
-        Code.URL_TARGET_START,
-        Code.TOKENS, 8, 11, Code.TOKENS, 12, 15, Code.TOKENS, 16, 19,
-        Code.URL_TARGET_END,
-        Code.TOKENS, 21, 21,
-        Code.PARAGRAPH_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(
-        t(Text.REGULAR, 10, 11),
-        t(Text.REGULAR, 11, 13),
-        t(Text.REGULAR, 13, 14),
-        t()
-      ),
-
-      """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
-      <p><a href="https://a">b, c</a></p>
-      </div>
-      </div>
-      </body>
+      </document>
       """
     );
   }

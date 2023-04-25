@@ -21,6 +21,8 @@ import objectos.asciidoc.pseudom.Node;
 
 abstract class PseudoNode {
 
+  private static final int INLINE_MACRO_MAX_LENGTH = 20;
+
   private static final int ATTRLIST_BLOCK = -1;
 
   static final int _ULIST_TOP = -2;
@@ -146,15 +148,29 @@ abstract class PseudoNode {
 
     while (state != Phrasing.STOP) {
       state = switch (state) {
+        case AUTOLINK -> phrasingAutolink();
+
         case BLOB -> phrasingBlob();
+
+        case CUSTOM_INLINE_MACRO -> phrasingCustomInlineMacro();
 
         case EOL -> phrasingEol();
 
-        case TEXT -> phrasingText();
+        case INLINE_MACRO -> phrasingInlineMacro();
 
         case START -> phrasingStart();
 
         case STOP -> throw new UnsupportedOperationException("Implement me");
+
+        case TEXT -> phrasingText();
+
+        case URL_MACRO -> phrasingUrlMacro();
+
+        case URL_MACRO_ATTRLIST -> phrasingUrlMacroAttrlist();
+
+        case URL_MACRO_ROLLBACK -> phrasingUrlMacroRollback();
+
+        case URL_MACRO_TARGET -> phrasingUrlMacroTarget();
       };
     }
   }
@@ -188,6 +204,10 @@ abstract class PseudoNode {
 
   final String sourceGet(int start, int end) {
     return sink.sourceGet(start, end);
+  }
+
+  final boolean sourceInc() {
+    return sink.sourceInc();
   }
 
   final int sourceIndex() {
@@ -280,6 +300,30 @@ abstract class PseudoNode {
 
   final PseudoUnorderedList unorderedList() {
     return sink.pseudoUnorderedList();
+  }
+
+  private boolean isWord(char c) {
+    int type = Character.getType(c);
+
+    return switch (type) {
+      case Character.LOWERCASE_LETTER,
+           Character.MODIFIER_LETTER,
+           Character.OTHER_LETTER,
+           Character.TITLECASE_LETTER,
+           Character.UPPERCASE_LETTER,
+
+           Character.NON_SPACING_MARK,
+           Character.COMBINING_SPACING_MARK,
+           Character.ENCLOSING_MARK,
+
+           Character.DECIMAL_DIGIT_NUMBER,
+           Character.LETTER_NUMBER,
+           Character.OTHER_NUMBER,
+
+           Character.CONNECTOR_PUNCTUATION -> true;
+
+      default -> false;
+    };
   }
 
   private Parse parseAttrlist() {
@@ -516,6 +560,10 @@ abstract class PseudoNode {
     attributes.add(value);
   }
 
+  private Phrasing phrasingAutolink() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   private Phrasing phrasingBlob() {
     if (!sourceMore()) {
       return toPhrasingEnd(sourceIndex());
@@ -530,7 +578,69 @@ abstract class PseudoNode {
 
       case '_' -> throw new UnsupportedOperationException("Implement me");
 
+      case ':' -> Phrasing.INLINE_MACRO;
+
       default -> advance(Phrasing.BLOB);
+    };
+  }
+
+  private Phrasing phrasingCustomInlineMacro() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Phrasing phrasingInlineMacro() {
+    int colon = sourceIndex();
+
+    int min = Math.max(0, colon - INLINE_MACRO_MAX_LENGTH);
+
+    int index = colon;
+
+    var found = false;
+
+    loop: while (index > min) {
+      int peekIndex = index - 1;
+
+      char peek = sink.sourceAt(peekIndex);
+
+      if (!isWord(peek)) {
+        found = true;
+
+        break loop;
+      }
+
+      index = peekIndex;
+    }
+
+    if (index == 0) {
+      found = true;
+    }
+
+    if (!found) {
+      throw new UnsupportedOperationException(
+        "Implement me :: not inline macro :: index=" + index
+      );
+    }
+
+    int nameStart = index;
+
+    int nameEnd = colon;
+
+    int nameLength = nameEnd - nameStart;
+
+    return switch (nameLength) {
+      case 5 -> {
+        if (sink.sourceMatches(nameStart, "https://")) {
+          yield Phrasing.URL_MACRO;
+        } else {
+          yield Phrasing.CUSTOM_INLINE_MACRO;
+        }
+      }
+
+      default -> {
+        throw new UnsupportedOperationException(
+          "Implement me :: nameLength=" + nameLength
+        );
+      }
     };
   }
 
@@ -552,6 +662,93 @@ abstract class PseudoNode {
     }
 
     return Phrasing.STOP;
+  }
+
+  /*
+  
+  asciidoctor/lib/asciidoctor/rx.rb
+  
+  # Matches an implicit link and some of the link inline macro.
+  #
+  # Examples
+  #
+  #   https://github.com
+  #   https://github.com[GitHub]
+  #   <https://github.com>
+  #   link:https://github.com[]
+  #   "https://github.com[]"
+  #   (https://github.com) <= parenthesis not included in autolink
+  #
+  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
+
+  CG_BLANK=\p{Blank}
+  CG_ALL=.
+
+  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+
+  */
+
+  private Phrasing phrasingUrlMacro() {
+    // skips '//'
+    // from previous state we know for sure it is safe to advance
+    sourceAdvance();
+    sourceAdvance();
+
+    // pushes target start
+    // stack should be:
+    // 1 - target start
+    // 0 - rollback index (phrasing start)
+    stackPush(sourceIndex());
+
+    if (!sourceInc()) {
+      return Phrasing.URL_MACRO_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Phrasing.URL_MACRO_ROLLBACK;
+
+      case '[' -> Phrasing.URL_MACRO_ROLLBACK;
+
+      default -> Phrasing.URL_MACRO_TARGET;
+    };
+  }
+
+  private Phrasing phrasingUrlMacroAttrlist() {
+    // pushes attrlist start
+    // stack should be:
+    // 2 - attrlist start
+    // 1 - target start
+    // 0 - rollback index
+    stackPush(sourceIndex());
+
+    if (!sourceInc()) {
+      return Phrasing.URL_MACRO_ROLLBACK;
+    }
+
+    // need to look for attrlist end.
+    // as attrlist contents may be parse as phrasing itself...
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Phrasing phrasingUrlMacroRollback() {
+    throw new UnsupportedOperationException(
+      "Implement me :: rollback url macro"
+    );
+  }
+
+  private Phrasing phrasingUrlMacroTarget() {
+    if (!sourceInc()) {
+      return Phrasing.URL_MACRO_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Phrasing.AUTOLINK;
+
+      case '[' -> Phrasing.URL_MACRO_ATTRLIST;
+
+      default -> Phrasing.URL_MACRO_TARGET;
+    };
   }
 
   private Parse toMaybeUlist() {

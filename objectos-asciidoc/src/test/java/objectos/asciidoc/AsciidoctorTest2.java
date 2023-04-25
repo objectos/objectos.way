@@ -28,7 +28,8 @@ public class AsciidoctorTest2 {
         new DocumentTest(doctor),
         new ParagraphTest(doctor),
         new SectionTest(doctor),
-        new UnorderedListTest(doctor)
+        new UnorderedListTest(doctor),
+        new UrlMacroTest(doctor)
     };
   }
 

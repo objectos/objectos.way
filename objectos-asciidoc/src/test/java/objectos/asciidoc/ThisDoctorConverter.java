@@ -20,6 +20,7 @@ import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.List;
 import org.asciidoctor.ast.ListItem;
+import org.asciidoctor.ast.PhraseNode;
 import org.asciidoctor.ast.Section;
 import org.asciidoctor.ast.StructuralNode;
 import org.asciidoctor.converter.ConverterFor;
@@ -75,6 +76,13 @@ public class ThisDoctorConverter extends StringConverter {
 
       out.append(section.getContent());
       out.append("</section>\n");
+    } else if (transform.equals("inline_anchor")) {
+      var phrase = (PhraseNode) node;
+      out.append("<a href=\"");
+      out.append(phrase.getTarget());
+      out.append("\">");
+      out.append(phrase.getText());
+      out.append("</a>");
     } else if (transform.equals("paragraph")) {
       out.append("<p>");
       StructuralNode block = (StructuralNode) node;

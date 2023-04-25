@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private static final int PSEUDO_DOCUMENT = 0;
@@ -143,8 +143,18 @@ public class InternalSink {
     sourceIndex++;
   }
 
+  final char sourceAt(int index) {
+    return source.charAt(index);
+  }
+
   final String sourceGet(int start, int end) {
     return source.substring(start, end);
+  }
+
+  final boolean sourceInc() {
+    sourceAdvance();
+
+    return sourceMore();
   }
 
   final int sourceIndex() {
@@ -153,6 +163,10 @@ public class InternalSink {
 
   final void sourceIndex(int value) {
     sourceIndex = value;
+  }
+
+  final boolean sourceMatches(int sourceOffset, String other) {
+    return source.regionMatches(sourceOffset, other, 0, other.length());
   }
 
   final boolean sourceMore() {
@@ -228,31 +242,6 @@ public class InternalSink {
 
   private boolean finalState() {
     return stackIndex == -1;
-  }
-
-  @SuppressWarnings("unused")
-  private boolean isWord(char c) {
-    int type = Character.getType(c);
-
-    return switch (type) {
-      case Character.LOWERCASE_LETTER,
-           Character.MODIFIER_LETTER,
-           Character.OTHER_LETTER,
-           Character.TITLECASE_LETTER,
-           Character.UPPERCASE_LETTER,
-
-           Character.NON_SPACING_MARK,
-           Character.COMBINING_SPACING_MARK,
-           Character.ENCLOSING_MARK,
-
-           Character.DECIMAL_DIGIT_NUMBER,
-           Character.LETTER_NUMBER,
-           Character.OTHER_NUMBER,
-
-           Character.CONNECTOR_PUNCTUATION -> true;
-
-      default -> false;
-    };
   }
 
   @SuppressWarnings("unchecked")
