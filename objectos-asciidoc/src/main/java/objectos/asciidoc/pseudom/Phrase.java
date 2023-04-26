@@ -13,31 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.asciidoc.internal;
+package objectos.asciidoc.pseudom;
 
-enum Phrasing {
+import java.io.IOException;
+import objectos.asciidoc.internal.PseudoPhrase;
 
-  START,
+public sealed interface Phrase extends AutoCloseable permits PseudoPhrase {
 
-  STOP,
+  @Override
+  void close() throws IOException;
 
-  BLOB,
-
-  TEXT,
-
-  EOL,
-
-  INLINE_MACRO,
-  INLINE_MACRO_END,
-
-  CUSTOM_INLINE_MACRO,
-
-  URI_MACRO,
-  URI_MACRO_ATTRLIST,
-  URI_MACRO_ROLLBACK,
-  URI_MACRO_TARGET,
-  URI_MACRO_TARGET_LOOP,
-
-  AUTOLINK;
+  IterableOnce<Node> nodes();
 
 }

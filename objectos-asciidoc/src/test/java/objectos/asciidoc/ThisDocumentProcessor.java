@@ -19,6 +19,7 @@ import java.io.IOException;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Node.Header;
+import objectos.asciidoc.pseudom.Node.InlineMacro;
 import objectos.asciidoc.pseudom.Node.ListItem;
 import objectos.asciidoc.pseudom.Node.Paragraph;
 import objectos.asciidoc.pseudom.Node.Section;
@@ -27,6 +28,8 @@ import objectos.asciidoc.pseudom.Node.Title;
 import objectos.asciidoc.pseudom.Node.UnorderedList;
 
 final class ThisDocumentProcessor {
+
+  private final AsciiDoc2 inline = new AsciiDoc2();
 
   private final StringBuilder out = new StringBuilder();
 
@@ -55,6 +58,46 @@ final class ThisDocumentProcessor {
     }
   }
 
+  private void inlineMacro(InlineMacro macro) throws IOException {
+    var name = macro.name();
+
+    switch (name) {
+      case "https" -> urlMacro(macro);
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: name=" + name
+      );
+    }
+  }
+
+  private void urlMacro(InlineMacro macro) throws IOException {
+    var attributes = macro.attributes();
+
+    out.append("<a href=\"");
+    macro.targetTo(out);
+    out.append("\">");
+
+    var text = attributes.getPositional(1);
+
+    if (text != null) {
+      phrase(text);
+    }
+
+    out.append("</a>");
+  }
+
+  private void phrase(String text) {
+    try (var phrase = inline.openAsPhrase(text)) {
+      for (var node : phrase.nodes()) {
+        node(node);
+      }
+    } catch (IOException e) {
+      throw new AssertionError(
+        "ThisDocumentProcessor does not throw IOException"
+      );
+    }
+  }
+
   private void listItem(ListItem item) throws IOException {
     out.append("<item>\n");
 
@@ -74,6 +117,8 @@ final class ThisDocumentProcessor {
   private void node(Node node) throws IOException {
     if (node instanceof Header header) {
       header(header);
+    } else if (node instanceof InlineMacro macro) {
+      inlineMacro(macro);
     } else if (node instanceof ListItem listItem) {
       listItem(listItem);
     } else if (node instanceof Paragraph paragraph) {

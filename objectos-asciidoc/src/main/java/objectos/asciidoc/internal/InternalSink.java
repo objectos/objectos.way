@@ -46,7 +46,8 @@ public class InternalSink {
   private static final int PSEUDO_TEXT = 5;
   private static final int PSEUDO_ULIST = 6;
   private static final int PSEUDO_ATTRIBUTES = 7;
-  private static final int PSEUDO_LENGTH = 8;
+  private static final int PSEUDO_INLINE_MACRO = 8;
+  private static final int PSEUDO_LENGTH = 9;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -117,6 +118,10 @@ public class InternalSink {
 
   final PseudoHeader pseudoHeader() {
     return pseudoFactory(PSEUDO_HEADER, PseudoHeader::new);
+  }
+
+  final PseudoInlineMacro pseudoInlineMacro() {
+    return pseudoFactory(PSEUDO_INLINE_MACRO, PseudoInlineMacro::new);
   }
 
   final PseudoParagraph pseudoParagraph() {

@@ -17,6 +17,7 @@ package objectos.asciidoc.pseudom;
 
 import java.io.IOException;
 import objectos.asciidoc.internal.PseudoHeader;
+import objectos.asciidoc.internal.PseudoInlineMacro;
 import objectos.asciidoc.internal.PseudoParagraph;
 import objectos.asciidoc.internal.PseudoSection;
 import objectos.asciidoc.internal.PseudoText;
@@ -27,6 +28,22 @@ import objectos.asciidoc.internal.PseudoUnorderedList.PseudoListItem;
 public sealed interface Node {
 
   sealed interface Header extends Node permits PseudoHeader {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface InlineMacro extends Node permits PseudoInlineMacro {
+
+    Attributes attributes();
+
+    String name();
+
+    void targetTo(Appendable out) throws IOException;
+
+  }
+
+  sealed interface ListItem extends Node permits PseudoListItem {
 
     IterableOnce<Node> nodes();
 
@@ -63,12 +80,6 @@ public sealed interface Node {
   }
 
   sealed interface UnorderedList extends Node permits PseudoUnorderedList {
-
-    IterableOnce<Node> nodes();
-
-  }
-
-  sealed interface ListItem extends Node permits PseudoListItem {
 
     IterableOnce<Node> nodes();
 

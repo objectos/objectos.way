@@ -77,17 +77,9 @@ public class ThisDoctorConverter extends StringConverter {
       out.append(section.getContent());
       out.append("</section>\n");
     } else if (transform.equals("inline_anchor")) {
-      var phrase = (PhraseNode) node;
-      out.append("<a href=\"");
-      out.append(phrase.getTarget());
-      out.append("\">");
-      out.append(phrase.getText());
-      out.append("</a>");
+      urlMacro(out, node);
     } else if (transform.equals("paragraph")) {
-      out.append("<p>");
-      StructuralNode block = (StructuralNode) node;
-      out.append(block.getContent());
-      out.append("</p>\n");
+      paragraph(out, node);
     } else if (transform.equals("preamble")) {
       StructuralNode block = (StructuralNode) node;
       out.append(block.getContent());
@@ -129,6 +121,34 @@ public class ThisDoctorConverter extends StringConverter {
     }
 
     return out.toString();
+  }
+
+  private void paragraph(StringBuilder out, ContentNode node) {
+    var block = (StructuralNode) node;
+
+    out.append("<p>");
+    out.append(block.getContent());
+    out.append("</p>\n");
+  }
+
+  private void urlMacro(StringBuilder out, ContentNode node) {
+    var phrase = (PhraseNode) node;
+
+    var attributes = phrase.getAttributes();
+
+    for (var entry : attributes.entrySet()) {
+      out.append("name=");
+      out.append(entry.getKey());
+      out.append(";value=");
+      out.append(entry.getValue());
+      out.append('\n');
+    }
+
+    out.append("<a href=\"");
+    out.append(phrase.getTarget());
+    out.append("\">");
+    out.append(phrase.getText());
+    out.append("</a>");
   }
 
 }

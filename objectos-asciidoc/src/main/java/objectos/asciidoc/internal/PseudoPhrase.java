@@ -15,29 +15,30 @@
  */
 package objectos.asciidoc.internal;
 
-enum Phrasing {
+import java.io.IOException;
+import objectos.asciidoc.pseudom.IterableOnce;
+import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Phrase;
 
-  START,
+public final class PseudoPhrase extends PseudoNode implements Phrase {
 
-  STOP,
+  PseudoPhrase(InternalSink sink) {
+    super(sink);
+  }
 
-  BLOB,
+  @Override
+  public final void close() throws IOException {
+    closeImpl();
+  }
 
-  TEXT,
+  @Override
+  public final IterableOnce<Node> nodes() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-  EOL,
-
-  INLINE_MACRO,
-  INLINE_MACRO_END,
-
-  CUSTOM_INLINE_MACRO,
-
-  URI_MACRO,
-  URI_MACRO_ATTRLIST,
-  URI_MACRO_ROLLBACK,
-  URI_MACRO_TARGET,
-  URI_MACRO_TARGET_LOOP,
-
-  AUTOLINK;
+  @Override
+  public final boolean hasNext() {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
 }

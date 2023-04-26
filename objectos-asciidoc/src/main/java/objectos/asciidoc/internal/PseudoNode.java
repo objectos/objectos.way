@@ -25,15 +25,17 @@ abstract class PseudoNode {
 
   private static final int ATTRLIST_BLOCK = -1;
 
-  static final int _ULIST_TOP = -2;
+  private static final int ATTRLIST_INLINE = -2;
 
-  static final int _NEXT_ITEM = -3;
+  static final int _ULIST_TOP = -3;
 
-  static final int _NESTED = -4;
+  static final int _NEXT_ITEM = -4;
 
-  static final int _NESTED_END = -5;
+  static final int _NESTED = -5;
 
-  static final int _LIST_END = -6;
+  static final int _NESTED_END = -6;
+
+  static final int _LIST_END = -7;
 
   private final InternalSink sink;
 
@@ -53,6 +55,10 @@ abstract class PseudoNode {
     sink.sourceAdvance();
 
     return state;
+  }
+
+  final void appendTo(Appendable out, int start, int end) throws IOException {
+    sink.appendTo(out, start, end);
   }
 
   final void closeImpl() throws IOException {
@@ -158,19 +164,23 @@ abstract class PseudoNode {
 
         case INLINE_MACRO -> phrasingInlineMacro();
 
+        case INLINE_MACRO_END -> phrasingInlineMacroEnd();
+
         case START -> phrasingStart();
 
         case STOP -> throw new UnsupportedOperationException("Implement me");
 
         case TEXT -> phrasingText();
 
-        case URL_MACRO -> phrasingUrlMacro();
+        case URI_MACRO -> phrasingUriMacro();
 
-        case URL_MACRO_ATTRLIST -> phrasingUrlMacroAttrlist();
+        case URI_MACRO_ATTRLIST -> phrasingUriMacroAttrlist();
 
-        case URL_MACRO_ROLLBACK -> phrasingUrlMacroRollback();
+        case URI_MACRO_ROLLBACK -> phrasingUriMacroRollback();
 
-        case URL_MACRO_TARGET -> phrasingUrlMacroTarget();
+        case URI_MACRO_TARGET -> phrasingUriMacroTarget();
+
+        case URI_MACRO_TARGET_LOOP -> phrasingUriMacroTargetLoop();
       };
     }
   }
@@ -332,15 +342,17 @@ abstract class PseudoNode {
     // pops rollback index
     stackPop();
 
-    if (type == ATTRLIST_BLOCK) {
-      pseudoAttributes().active();
+    pseudoAttributes().active();
 
-      return Parse.BODY;
-    } else {
-      throw new UnsupportedOperationException(
-        "Implement me :: continue text"
+    return switch (type) {
+      case ATTRLIST_BLOCK -> Parse.BODY;
+
+      case ATTRLIST_INLINE -> Parse.INLINE_ATTRLIST;
+
+      default -> throw new AssertionError(
+        "Unexpected attrlist type=" + type
       );
-    }
+    };
   }
 
   private Parse parseBody() {
@@ -418,13 +430,15 @@ abstract class PseudoNode {
       );
     }
 
-    if (context != ATTRLIST_BLOCK) {
-      throw new UnsupportedOperationException(
-        "Implement me :: inline attrlist"
-      );
-    }
+    return switch (context) {
+      case ATTRLIST_BLOCK -> Parse.MAYBE_ATTRLIST_END_TRIM;
 
-    return Parse.MAYBE_ATTRLIST_END_TRIM;
+      case ATTRLIST_INLINE -> Parse.ATTRLIST;
+
+      default -> throw new AssertionError(
+        "Unexpected context = " + context
+      );
+    };
   }
 
   private Parse parseMaybeAttrlistEndTrim() {
@@ -589,9 +603,11 @@ abstract class PseudoNode {
   }
 
   private Phrasing phrasingInlineMacro() {
+    int phrasingStart = stackPeek();
+
     int colon = sourceIndex();
 
-    int min = Math.max(0, colon - INLINE_MACRO_MAX_LENGTH);
+    int min = Math.max(phrasingStart, colon - INLINE_MACRO_MAX_LENGTH);
 
     int index = colon;
 
@@ -625,23 +641,31 @@ abstract class PseudoNode {
 
     int nameEnd = colon;
 
-    int nameLength = nameEnd - nameStart;
+    var name = sourceGet(nameStart, nameEnd);
 
-    return switch (nameLength) {
-      case 5 -> {
-        if (sink.sourceMatches(nameStart, "https://")) {
-          yield Phrasing.URL_MACRO;
-        } else {
-          yield Phrasing.CUSTOM_INLINE_MACRO;
-        }
-      }
+    var macro = sink.pseudoInlineMacro();
+
+    macro.name = name;
+
+    return switch (name) {
+      case "https" -> Phrasing.URI_MACRO;
 
       default -> {
         throw new UnsupportedOperationException(
-          "Implement me :: nameLength=" + nameLength
+          "Implement me :: name=" + name
         );
       }
     };
+  }
+
+  private Phrasing phrasingInlineMacroEnd() {
+    // phrasing start
+    // make TC01 pass for now
+    stackPop();
+
+    nextNode(sink.pseudoInlineMacro());
+
+    return Phrasing.STOP;
   }
 
   private Phrasing phrasingText() {
@@ -688,66 +712,108 @@ abstract class PseudoNode {
 
   */
 
-  private Phrasing phrasingUrlMacro() {
-    // skips '//'
-    // from previous state we know for sure it is safe to advance
-    sourceAdvance();
-    sourceAdvance();
+  private Phrasing phrasingUriMacro() {
+    if (!sourceInc()) {
+      return Phrasing.URI_MACRO_ROLLBACK;
+    }
 
-    // pushes target start
-    // stack should be:
-    // 1 - target start
-    // 0 - rollback index (phrasing start)
-    stackPush(sourceIndex());
+    if (sourcePeek() != '/') {
+      return Phrasing.URI_MACRO_ROLLBACK;
+    }
 
     if (!sourceInc()) {
-      return Phrasing.URL_MACRO_ROLLBACK;
+      return Phrasing.URI_MACRO_ROLLBACK;
+    }
+
+    if (sourcePeek() != '/') {
+      return Phrasing.URI_MACRO_ROLLBACK;
+    }
+
+    if (!sourceInc()) {
+      return Phrasing.URI_MACRO_ROLLBACK;
     }
 
     return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> Phrasing.URL_MACRO_ROLLBACK;
+      case '\t', '\f', ' ' -> Phrasing.URI_MACRO_ROLLBACK;
 
-      case '[' -> Phrasing.URL_MACRO_ROLLBACK;
+      case '[' -> Phrasing.URI_MACRO_ROLLBACK;
 
-      default -> Phrasing.URL_MACRO_TARGET;
+      default -> Phrasing.URI_MACRO_TARGET;
     };
   }
 
-  private Phrasing phrasingUrlMacroAttrlist() {
-    // pushes attrlist start
-    // stack should be:
-    // 2 - attrlist start
-    // 1 - target start
-    // 0 - rollback index
-    stackPush(sourceIndex());
+  private Phrasing phrasingUriMacroAttrlist() {
+    int sourceIndex = sourceIndex();
 
     if (!sourceInc()) {
-      return Phrasing.URL_MACRO_ROLLBACK;
+      return Phrasing.URI_MACRO_ROLLBACK;
     }
 
-    // need to look for attrlist end.
-    // as attrlist contents may be parse as phrasing itself...
+    var macro = sink.pseudoInlineMacro();
 
-    throw new UnsupportedOperationException("Implement me");
+    macro.targetEnd = sourceIndex;
+
+    var found = false;
+
+    // attrlist rollback info
+    stackPush(sourceIndex, ATTRLIST_INLINE);
+
+    var parse = Parse.MAYBE_ATTRLIST;
+
+    loop: while (parse != Parse.STOP) {
+      parse = parseDocumentOrSection(parse);
+
+      switch (parse) {
+        case NOT_ATTRLIST -> {
+          found = false;
+
+          break loop;
+        }
+
+        case INLINE_ATTRLIST -> {
+          found = true;
+
+          break loop;
+        }
+
+        default -> {
+          continue loop;
+        }
+      }
+    }
+
+    if (!found) {
+      return Phrasing.URI_MACRO_ROLLBACK;
+    } else {
+      return Phrasing.INLINE_MACRO_END;
+    }
   }
 
-  private Phrasing phrasingUrlMacroRollback() {
+  private Phrasing phrasingUriMacroRollback() {
     throw new UnsupportedOperationException(
       "Implement me :: rollback url macro"
     );
   }
 
-  private Phrasing phrasingUrlMacroTarget() {
+  private Phrasing phrasingUriMacroTarget() {
+    var macro = sink.pseudoInlineMacro();
+
+    macro.targetStart = sourceIndex();
+
+    return Phrasing.URI_MACRO_TARGET_LOOP;
+  }
+
+  private Phrasing phrasingUriMacroTargetLoop() {
     if (!sourceInc()) {
-      return Phrasing.URL_MACRO_ROLLBACK;
+      return Phrasing.AUTOLINK;
     }
 
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> Phrasing.AUTOLINK;
 
-      case '[' -> Phrasing.URL_MACRO_ATTRLIST;
+      case '[' -> Phrasing.URI_MACRO_ATTRLIST;
 
-      default -> Phrasing.URL_MACRO_TARGET;
+      default -> Phrasing.URI_MACRO_TARGET_LOOP;
     };
   }
 

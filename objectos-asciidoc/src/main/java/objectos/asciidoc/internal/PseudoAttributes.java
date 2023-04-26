@@ -39,28 +39,6 @@ public final class PseudoAttributes implements Attributes {
     this.sink = sink;
   }
 
-  final void add(String value) {
-    addImpl(null, value);
-  }
-
-  final void clear() {
-    Arrays.fill(data, null);
-
-    index = 0;
-
-    state = 0;
-  }
-
-  private void addImpl(String name, String value) {
-    data = ObjectArrays.growIfNecessary(data, index + 1);
-    data[index++] = name;
-    data[index++] = value;
-  }
-
-  public final boolean isEmpty() {
-    return index == 0;
-  }
-
   @Override
   public final String getOrDefault(String name, String defaultValue) {
     Objects.requireNonNull(name, "name == null");
@@ -79,6 +57,35 @@ public final class PseudoAttributes implements Attributes {
     return result;
   }
 
+  @Override
+  public final String getPositional(int index) {
+    int thisIndex = index - 1;
+
+    thisIndex *= 2;
+
+    return data[thisIndex + 1];
+  }
+
+  public final boolean isEmpty() {
+    return index == 0;
+  }
+
+  final void active() {
+    set(ACTIVE);
+  }
+
+  final void add(String value) {
+    addImpl(null, value);
+  }
+
+  final Attributes bindIfNecessary(PseudoInlineMacro macro) {
+    if (!is(BOUND)) {
+      set(BOUND);
+    }
+
+    return this;
+  }
+
   final Attributes bindIfNecessary(PseudoSection section) {
     if (!is(BOUND)) {
       if (index > 1) {
@@ -95,8 +102,18 @@ public final class PseudoAttributes implements Attributes {
     return this;
   }
 
-  final void active() {
-    set(ACTIVE);
+  final void clear() {
+    Arrays.fill(data, null);
+
+    index = 0;
+
+    state = 0;
+  }
+
+  private void addImpl(String name, String value) {
+    data = ObjectArrays.growIfNecessary(data, index + 1);
+    data[index++] = name;
+    data[index++] = value;
   }
 
   private boolean is(int value) {

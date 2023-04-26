@@ -21,4 +21,6 @@ public sealed interface Attributes permits PseudoAttributes {
 
   String getOrDefault(String name, String defaultValue);
 
+  String getPositional(int index);
+
 }
