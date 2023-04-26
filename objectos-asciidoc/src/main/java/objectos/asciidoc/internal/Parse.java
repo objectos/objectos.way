@@ -25,7 +25,7 @@ enum Parse {
   HEADER,
   NOT_HEADER,
 
-  /* document or section */
+  /* document, section or phrase */
 
   BODY,
   BODY_TRIM,

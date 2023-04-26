@@ -62,7 +62,7 @@ final class ThisDocumentProcessor {
     var name = macro.name();
 
     switch (name) {
-      case "https" -> urlMacro(macro);
+      case "https" -> urlMacro(name, macro);
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: name=" + name
@@ -70,10 +70,12 @@ final class ThisDocumentProcessor {
     }
   }
 
-  private void urlMacro(InlineMacro macro) throws IOException {
+  private void urlMacro(String name, InlineMacro macro) throws IOException {
     var attributes = macro.attributes();
 
     out.append("<a href=\"");
+    out.append(name);
+    out.append("://");
     macro.targetTo(out);
     out.append("\">");
 

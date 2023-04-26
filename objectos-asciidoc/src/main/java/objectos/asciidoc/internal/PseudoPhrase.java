@@ -16,11 +16,21 @@
 package objectos.asciidoc.internal;
 
 import java.io.IOException;
+import java.util.Iterator;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Phrase;
 
-public final class PseudoPhrase extends PseudoNode implements Phrase {
+public final class PseudoPhrase extends PseudoNode
+    implements Phrase, IterableOnce<Node>, Iterator<Node> {
+
+  private static final int START = -900;
+  private static final int NODES = -901;
+  private static final int ITERATOR = -902;
+  private static final int PARSE = -903;
+  private static final int NODE = -904;
+  static final int NODE_CONSUMED = -905;
+  static final int EXHAUSTED = -906;
 
   PseudoPhrase(InternalSink sink) {
     super(sink);
@@ -32,13 +42,62 @@ public final class PseudoPhrase extends PseudoNode implements Phrase {
   }
 
   @Override
-  public final IterableOnce<Node> nodes() {
-    throw new UnsupportedOperationException("Implement me");
+  public final boolean hasNext() {
+    switch (stackPeek()) {
+      case ITERATOR, NODE_CONSUMED -> {
+        stackReplace(PARSE);
+
+        phrasing();
+
+        if (hasNextNode()) {
+          stackReplace(NODE);
+        } else {
+          stackReplace(EXHAUSTED);
+        }
+      }
+
+      case NODE -> {}
+
+      default -> stackStub();
+    }
+
+    return hasNextNode();
   }
 
   @Override
-  public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
+  public final Iterator<Node> iterator() {
+    stackAssert(NODES);
+
+    stackReplace(ITERATOR);
+
+    return this;
+  }
+
+  @Override
+  public final Node next() {
+    return nextNodeDefault();
+  }
+
+  @Override
+  public final IterableOnce<Node> nodes() {
+    stackAssert(START);
+
+    stackReplace(NODES);
+
+    return this;
+  }
+
+  final void start() {
+    stackPush(START);
+  }
+
+  @Override
+  final Phrasing phrasingStart() {
+    if (!sourceMore()) {
+      return popAndStop();
+    }
+
+    return Phrasing.BLOB;
   }
 
 }

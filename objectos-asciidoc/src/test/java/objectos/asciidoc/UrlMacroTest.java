@@ -27,7 +27,7 @@ public class UrlMacroTest {
     this.tester = tester;
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - https
   - well-formed
   """)

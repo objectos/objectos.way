@@ -26,11 +26,13 @@ class AsciiDoc2 extends InternalSink {
   public final Document open(String source) {
     String cs = source.toString(); // implicit null-check
 
-    return openImpl(cs);
+    return openDocument(cs);
   }
 
   public final Phrase openAsPhrase(String source) {
-    throw new UnsupportedOperationException("Implement me");
+    String cs = source.toString(); // implicit null-check
+
+    return openPhrase(cs);
   }
 
 }

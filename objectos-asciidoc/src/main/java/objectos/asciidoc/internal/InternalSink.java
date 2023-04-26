@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.function.Function;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Phrase;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 
@@ -47,7 +48,8 @@ public class InternalSink {
   private static final int PSEUDO_ULIST = 6;
   private static final int PSEUDO_ATTRIBUTES = 7;
   private static final int PSEUDO_INLINE_MACRO = 8;
-  private static final int PSEUDO_LENGTH = 9;
+  private static final int PSEUDO_PHRASE = 9;
+  private static final int PSEUDO_LENGTH = 10;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -61,7 +63,7 @@ public class InternalSink {
 
   private int stackIndex = -1;
 
-  protected final Document openImpl(String source) {
+  protected final Document openDocument(String source) {
     Check.state(
       finalState(),
 
@@ -82,6 +84,29 @@ public class InternalSink {
     document.start();
 
     return document;
+  }
+
+  protected final Phrase openPhrase(String source) {
+    Check.state(
+      finalState(),
+
+      """
+      Concurrent processing is not supported.
+
+      It seems a previous AsciiDoc document processing:
+
+      - is currently running; or
+      - finished abruptly (most likely due to a bug in this component, sorry...).
+      """
+    );
+
+    start(source);
+
+    var phrase = pseudoPhrase();
+
+    phrase.start();
+
+    return phrase;
   }
 
   final void appendTo(Appendable out, int start, int end) throws IOException {
@@ -110,10 +135,6 @@ public class InternalSink {
 
   final PseudoAttributes pseudoAttributes() {
     return pseudoFactory(PSEUDO_ATTRIBUTES, PseudoAttributes::new);
-  }
-
-  final PseudoDocument pseudoDocument() {
-    return pseudoFactory(PSEUDO_DOCUMENT, PseudoDocument::new);
   }
 
   final PseudoHeader pseudoHeader() {
@@ -249,6 +270,10 @@ public class InternalSink {
     return stackIndex == -1;
   }
 
+  private PseudoDocument pseudoDocument() {
+    return pseudoFactory(PSEUDO_DOCUMENT, PseudoDocument::new);
+  }
+
   @SuppressWarnings("unchecked")
   private <T> T pseudoFactory(int index, Function<InternalSink, T> factory) {
     var result = pseudoArray[index];
@@ -258,6 +283,10 @@ public class InternalSink {
     }
 
     return (T) result;
+  }
+
+  private PseudoPhrase pseudoPhrase() {
+    return pseudoFactory(PSEUDO_PHRASE, PseudoPhrase::new);
   }
 
   private void start(String source) {
