@@ -37,7 +37,7 @@ abstract class PseudoNode {
 
   static final int _LIST_END = -7;
 
-  private final InternalSink sink;
+  final InternalSink sink;
 
   PseudoNode(InternalSink sink) {
     this.sink = sink;

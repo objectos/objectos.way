@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+  
+<suite name="Objectos only" verbose="1" >
+  <test name="Tests">
+    <classes>
+      <class name="objectos.asciidoc.DocumentTest"/>
+      <class name="objectos.asciidoc.ParagraphTest"/>
+      <class name="objectos.asciidoc.SectionTest"/>
+      <class name="objectos.asciidoc.UnorderedListTest"/>
+      <class name="objectos.asciidoc.UrlMacroTest"/>
+    </classes>
+  </test>
+</suite>

@@ -21,6 +21,8 @@ import objectos.asciidoc.pseudom.Node.InlineMacro;
 
 public final class PseudoInlineMacro extends PseudoNode implements InlineMacro {
 
+  static final int MAX_LENGTH = 20;
+
   String name;
 
   int targetStart;

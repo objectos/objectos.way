@@ -25,70 +25,6 @@ final class UrlMacroTestToRemove extends AbstractAsciiDocTest {
   """
   - https
   - well-formed
-
-            1         2
-  012345678901234567890123
-  '''
-  https://example.com[Ex]
-  '''
-
-  P0: IM-0,5 T-6,19 [ AVAL20,22 ] LF
-      EOF
-  """)
-  public void testCase01() {
-    test(
-      """
-      https://example.com[Ex]
-      """,
-
-      p0(
-        Token.INLINE_MACRO, 0, 5,
-        Token.BLOB, 6, 19,
-        Token.ATTR_LIST_START,
-        Token.ATTR_VALUE_START, Token.BLOB, 20, 22, Token.ATTR_VALUE_END,
-        Token.ATTR_LIST_END,
-        Token.LF,
-
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.PARAGRAPH_START,
-        Code.URL_MACRO, 0, 19,
-        Code.URL_TARGET_START, Code.TOKENS, 8, 11, Code.URL_TARGET_END,
-        Code.TOKENS, 13, 13,
-        Code.PARAGRAPH_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(
-        t(Text.REGULAR, 20, 22),
-        t()
-      ),
-
-      """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
-      <p><a href="https://example.com">Ex</a></p>
-      </div>
-      </div>
-      </body>
-      """
-    );
-  }
-
-  @Test(description = //
-  """
-  - https
-  - well-formed
   - comma in attrlist
 
   0123456789012345
@@ -96,7 +32,7 @@ final class UrlMacroTestToRemove extends AbstractAsciiDocTest {
   https://a[b, c]
   '''
   """)
-  public void testCase02() {
+  public void testCase03() {
     test(
       """
       https://a[b, c]

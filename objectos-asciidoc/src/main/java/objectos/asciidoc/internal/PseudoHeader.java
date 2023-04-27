@@ -23,18 +23,11 @@ import objectos.asciidoc.pseudom.Node.Header;
 public final class PseudoHeader extends PseudoNode
     implements Header, IterableOnce<Node>, Iterator<Node> {
 
-  private enum Parse {
-    STOP,
-    AFTER_TITLE,
-    HEADER_END,
-    EXHAUSTED;
-  }
-
-  private static final int NODES = -200;
-  private static final int ITERATOR = -201;
-  private static final int TITLE = -202;
+  static final int NODES = -200;
+  static final int ITERATOR = -201;
+  static final int TITLE = -202;
   static final int TITLE_CONSUMED = -203;
-  private static final int PARSE = -204;
+  static final int PARSE = -204;
   static final int EXHAUSTED = -205;
 
   PseudoHeader(InternalSink sink) {
@@ -43,34 +36,12 @@ public final class PseudoHeader extends PseudoNode
 
   @Override
   public final boolean hasNext() {
-    switch (stackPeek()) {
-      case PseudoTitle.EXHAUSTED -> parse(Parse.AFTER_TITLE);
-
-      case ITERATOR -> {
-        stackPop();
-
-        var heading = heading();
-
-        heading.level = 0;
-
-        nextNode(heading);
-
-        stackPush(TITLE);
-      }
-
-      case TITLE -> {}
-
-      default -> stackStub();
-    }
-
-    return hasNextNode();
+    return sink.headerHasNext();
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    stackAssert(NODES);
-
-    stackReplace(ITERATOR);
+    sink.headerIterator();
 
     return this;
   }
@@ -82,65 +53,9 @@ public final class PseudoHeader extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    stackAssert(PseudoDocument.HEADER_CONSUMED);
-
-    stackReplace(NODES);
+    sink.headerNodes();
 
     return this;
-  }
-
-  private void parse(Parse initialState) {
-    stackReplace(PARSE);
-
-    var state = initialState;
-
-    while (state != Parse.STOP) {
-      state = switch (state) {
-        case AFTER_TITLE -> parseAfterTitle();
-
-        case EXHAUSTED -> parseExhausted();
-
-        case HEADER_END -> parseHeaderEnd();
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-        );
-      };
-    }
-  }
-
-  private Parse parseAfterTitle() {
-    if (!sourceMore()) {
-      return Parse.EXHAUSTED;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.HEADER_END);
-
-      case ':' -> throw new UnsupportedOperationException("Implement me");
-
-      default -> Parse.EXHAUSTED;
-    };
-  }
-
-  private Parse parseExhausted() {
-    stackAssert(PARSE);
-
-    stackReplace(EXHAUSTED);
-
-    return Parse.STOP;
-  }
-
-  private Parse parseHeaderEnd() {
-    if (!sourceMore()) {
-      return Parse.EXHAUSTED;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.HEADER_END);
-
-      default -> Parse.EXHAUSTED;
-    };
   }
 
 }

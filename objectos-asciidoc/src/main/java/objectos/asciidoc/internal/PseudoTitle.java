@@ -23,11 +23,11 @@ import objectos.asciidoc.pseudom.Node.Title;
 public final class PseudoTitle extends PseudoNode
     implements Title, IterableOnce<Node>, Iterator<Node> {
 
-  private static final int NODES = -300;
-  private static final int ITERATOR = -301;
-  private static final int PARSE = -302;
-  private static final int NODE = -303;
-  private static final int NODE_CONSUMED = -304;
+  static final int NODES = -300;
+  static final int ITERATOR = -301;
+  static final int PARSE = -302;
+  static final int NODE = -303;
+  static final int NODE_CONSUMED = -304;
   static final int EXHAUSTED = -307;
 
   int level;
@@ -38,32 +38,12 @@ public final class PseudoTitle extends PseudoNode
 
   @Override
   public final boolean hasNext() {
-    switch (stackPeek()) {
-      case ITERATOR, NODE_CONSUMED -> {
-        stackReplace(PARSE);
-
-        phrasing();
-
-        if (hasNextNode()) {
-          stackReplace(NODE);
-        } else {
-          stackReplace(EXHAUSTED);
-        }
-      }
-
-      case NODE -> {}
-
-      default -> stackStub();
-    }
-
-    return hasNextNode();
+    return sink.titleHasNext();
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    stackAssert(NODES);
-
-    stackReplace(ITERATOR);
+    sink.titleIterator();
 
     return this;
   }
@@ -80,32 +60,9 @@ public final class PseudoTitle extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    switch (stackPeek()) {
-      case PseudoHeader.TITLE_CONSUMED,
-           PseudoSection.TITLE_CONSUMED -> stackReplace(NODES);
-
-      default -> stackStub();
-    }
+    sink.titleNodes();
 
     return this;
-  }
-
-  @Override
-  final Phrasing phrasingEol() {
-    return toPhrasingEnd(sourceIndex());
-  }
-
-  @Override
-  final Phrasing phrasingStart() {
-    if (!sourceMore()) {
-      return popAndStop();
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(popAndStop());
-
-      default -> Phrasing.BLOB;
-    };
   }
 
 }

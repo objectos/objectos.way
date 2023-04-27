@@ -45,4 +45,23 @@ public class UrlMacroTest {
     );
   }
 
+  @Test(enabled = false, description = """
+  - https
+  - well-formed
+  - w/ text before
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      foo https://example.com[Ex]
+      """,
+
+      """
+      <document>
+      <p>foo <a href="https://example.com">Ex</a></p>
+      </document>
+      """
+    );
+  }
+
 }
