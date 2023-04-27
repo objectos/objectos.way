@@ -16,43 +16,50 @@
 package objectos.asciidoc.internal;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
-import objectos.asciidoc.pseudom.Node.UnorderedList;
+import objectos.asciidoc.pseudom.Node.ListItem;
 
-public final class PseudoUnorderedList extends PseudoNode
-    implements UnorderedList, IterableOnce<Node>, Iterator<Node> {
+public final class PseudoListItem extends PseudoNode
+    implements ListItem, IterableOnce<Node>, Iterator<Node> {
 
-  static final int NODES = -800;
-  static final int ITERATOR = -801;
-  static final int ITEM = -802;
-  static final int ITEM_CONSUMED = -803;
-  static final int EXHAUSTED = -804;
+  static final int NODES = -1000;
+  static final int ITERATOR = -1001;
+  static final int TEXT = -1002;
+  static final int TEXT_CONSUMED = -1003;
+  static final int ULIST = -1004;
+  static final int ULIST_CONSUMED = -1005;
+  static final int EXHAUSTED = -1006;
 
-  PseudoUnorderedList(InternalSink sink) {
+  PseudoListItem(InternalSink sink) {
     super(sink);
   }
 
   @Override
   public final boolean hasNext() {
-    return sink.unorderedListHasNext();
+    return sink.listItemHasNext();
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    sink.unorderedListIterator();
+    sink.listItemIterator();
 
     return this;
   }
 
   @Override
   public final Node next() {
-    return nextNodeDefault();
+    if (hasNext()) {
+      return nextNodeSink();
+    } else {
+      throw new NoSuchElementException();
+    }
   }
 
   @Override
   public final IterableOnce<Node> nodes() {
-    sink.unorderedListNodes();
+    sink.listItemNodes();
 
     return this;
   }

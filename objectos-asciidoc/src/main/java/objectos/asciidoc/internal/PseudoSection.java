@@ -45,7 +45,9 @@ public final class PseudoSection extends PseudoNode
 
   @Override
   public final Attributes attributes() {
-    return pseudoAttributes().bindIfNecessary(this);
+    var attributes = sink.attributes();
+
+    return attributes.bindIfNecessary(this);
   }
 
   @Override

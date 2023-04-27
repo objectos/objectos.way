@@ -18,12 +18,12 @@ package objectos.asciidoc.pseudom;
 import java.io.IOException;
 import objectos.asciidoc.internal.PseudoHeader;
 import objectos.asciidoc.internal.PseudoInlineMacro;
+import objectos.asciidoc.internal.PseudoListItem;
 import objectos.asciidoc.internal.PseudoParagraph;
 import objectos.asciidoc.internal.PseudoSection;
 import objectos.asciidoc.internal.PseudoText;
 import objectos.asciidoc.internal.PseudoTitle;
 import objectos.asciidoc.internal.PseudoUnorderedList;
-import objectos.asciidoc.internal.PseudoUnorderedList.PseudoListItem;
 
 public sealed interface Node {
 

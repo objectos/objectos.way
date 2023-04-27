@@ -35,7 +35,9 @@ public final class PseudoInlineMacro extends PseudoNode implements InlineMacro {
 
   @Override
   public final Attributes attributes() {
-    return pseudoAttributes().bindIfNecessary(this);
+    var attributes = sink.attributes();
+
+    return attributes.bindIfNecessary(this);
   }
 
   @Override

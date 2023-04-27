@@ -24,11 +24,11 @@ import objectos.asciidoc.pseudom.Phrase;
 public final class PseudoPhrase extends PseudoNode
     implements Phrase, IterableOnce<Node>, Iterator<Node> {
 
-  private static final int START = -900;
-  private static final int NODES = -901;
-  private static final int ITERATOR = -902;
-  private static final int PARSE = -903;
-  private static final int NODE = -904;
+  static final int START = -900;
+  static final int NODES = -901;
+  static final int ITERATOR = -902;
+  static final int PARSE = -903;
+  static final int NODE = -904;
   static final int NODE_CONSUMED = -905;
   static final int EXHAUSTED = -906;
 
@@ -43,32 +43,12 @@ public final class PseudoPhrase extends PseudoNode
 
   @Override
   public final boolean hasNext() {
-    switch (stackPeek()) {
-      case ITERATOR, NODE_CONSUMED -> {
-        stackReplace(PARSE);
-
-        phrasing();
-
-        if (hasNextNode()) {
-          stackReplace(NODE);
-        } else {
-          stackReplace(EXHAUSTED);
-        }
-      }
-
-      case NODE -> {}
-
-      default -> stackStub();
-    }
-
-    return hasNextNode();
+    return sink.phraseHasNext();
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    stackAssert(NODES);
-
-    stackReplace(ITERATOR);
+    sink.phraseIterator();
 
     return this;
   }
@@ -80,24 +60,9 @@ public final class PseudoPhrase extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    stackAssert(START);
-
-    stackReplace(NODES);
+    sink.phraseNodes();
 
     return this;
-  }
-
-  final void start() {
-    stackPush(START);
-  }
-
-  @Override
-  final Phrasing phrasingStart() {
-    if (!sourceMore()) {
-      return popAndStop();
-    }
-
-    return Phrasing.BLOB;
   }
 
 }
