@@ -23,10 +23,10 @@ import objectos.asciidoc.pseudom.Node.Paragraph;
 public final class PseudoParagraph extends PseudoNode
     implements Paragraph, IterableOnce<Node>, Iterator<Node> {
 
-  private static final int NODES = -600;
-  private static final int ITERATOR = -601;
-  private static final int PARSE = -602;
-  private static final int NODE = -603;
+  static final int NODES = -600;
+  static final int ITERATOR = -601;
+  static final int PARSE = -602;
+  static final int NODE = -603;
   static final int NODE_CONSUMED = -604;
   static final int EXHAUSTED = -607;
 
@@ -36,32 +36,12 @@ public final class PseudoParagraph extends PseudoNode
 
   @Override
   public final boolean hasNext() {
-    switch (stackPeek()) {
-      case ITERATOR, NODE_CONSUMED -> {
-        stackReplace(PARSE);
-
-        phrasing();
-
-        if (hasNextNode()) {
-          stackReplace(NODE);
-        } else {
-          stackReplace(EXHAUSTED);
-        }
-      }
-
-      case NODE -> {}
-
-      default -> stackStub();
-    }
-
-    return hasNextNode();
+    return sink.paragraphHasNext();
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    stackAssert(NODES);
-
-    stackReplace(ITERATOR);
+    sink.paragraphIterator();
 
     return this;
   }
@@ -73,66 +53,9 @@ public final class PseudoParagraph extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    switch (stackPeek()) {
-      case PseudoDocument.PARAGRAPH_CONSUMED,
-           PseudoSection.PARAGRAPH_CONSUMED -> stackReplace(NODES);
-
-      default -> stackStub();
-    }
+    sink.paragraphNodes();
 
     return this;
-  }
-
-  @Override
-  final Phrasing phrasingEol() {
-    int atEol = sourceIndex();
-
-    sourceAdvance();
-
-    if (!sourceMore()) {
-      return toPhrasingEnd(atEol);
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> {
-        var next = toPhrasingEnd(atEol);
-
-        sourceIndex(atEol);
-
-        yield next;
-      }
-
-      default -> advance(Phrasing.BLOB);
-    };
-  }
-
-  @Override
-  final Phrasing phrasingStart() {
-    if (!sourceMore()) {
-      return popAndStop();
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> {
-        sourceAdvance();
-
-        if (!sourceMore()) {
-          yield popAndStop();
-        }
-
-        char next = sourceNext();
-
-        if (next == '\n') {
-          yield popAndStop();
-        }
-
-        sourceIndex(stackPeek());
-
-        yield Phrasing.BLOB;
-      }
-
-      default -> Phrasing.BLOB;
-    };
   }
 
 }

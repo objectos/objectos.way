@@ -47,6 +47,8 @@ public class InternalSink {
   }
 
   private enum PhraseElement {
+    PARAGRAPH,
+
     TITLE;
   }
 
@@ -239,6 +241,44 @@ public class InternalSink {
     stackDec();
 
     return result;
+  }
+
+  final boolean paragraphHasNext() {
+    switch (stackPeek()) {
+      case PseudoParagraph.ITERATOR,
+           PseudoParagraph.NODE_CONSUMED -> {
+        stackReplace(PseudoParagraph.PARSE);
+
+        phrasing(PhraseElement.PARAGRAPH);
+
+        if (nextNode != null) {
+          stackReplace(PseudoParagraph.NODE);
+        } else {
+          stackReplace(PseudoParagraph.EXHAUSTED);
+        }
+      }
+
+      case PseudoParagraph.NODE -> {}
+
+      default -> stackStub();
+    }
+
+    return nextNode != null;
+  }
+
+  final void paragraphIterator() {
+    stackAssert(PseudoParagraph.NODES);
+
+    stackReplace(PseudoParagraph.ITERATOR);
+  }
+
+  final void paragraphNodes() {
+    switch (stackPeek()) {
+      case PseudoDocument.PARAGRAPH_CONSUMED,
+           PseudoSection.PARAGRAPH_CONSUMED -> stackReplace(PseudoParagraph.NODES);
+
+      default -> stackStub();
+    }
   }
 
   final PseudoAttributes pseudoAttributes() {
@@ -686,6 +726,56 @@ public class InternalSink {
     };
   }
 
+  private Phrasing paragraphPhrasingEol() {
+    int atEol = sourceIndex();
+
+    sourceAdvance();
+
+    if (!sourceMore()) {
+      return toPhrasingEnd(atEol);
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> {
+        var next = toPhrasingEnd(atEol);
+
+        sourceIndex(atEol);
+
+        yield next;
+      }
+
+      default -> advance(Phrasing.BLOB);
+    };
+  }
+
+  private Phrasing paragraphPhrasingStart() {
+    if (!sourceMore()) {
+      return popAndStop();
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> {
+        sourceAdvance();
+
+        if (!sourceMore()) {
+          yield popAndStop();
+        }
+
+        char next = sourceNext();
+
+        if (next == '\n') {
+          yield popAndStop();
+        }
+
+        sourceIndex(stackPeek());
+
+        yield Phrasing.BLOB;
+      }
+
+      default -> Phrasing.BLOB;
+    };
+  }
+
   private Parse parse(Parse state) {
     return switch (state) {
       case ATTRLIST -> parseAttrlist();
@@ -1026,6 +1116,8 @@ public class InternalSink {
 
   private Phrasing phrasingEol() {
     return switch (phrase) {
+      case PARAGRAPH -> paragraphPhrasingEol();
+
       case TITLE -> titlePhrasingEol();
     };
   }
@@ -1098,6 +1190,8 @@ public class InternalSink {
 
   private Phrasing phrasingStart() {
     return switch (phrase) {
+      case PARAGRAPH -> paragraphPhrasingStart();
+
       case TITLE -> titlePhrasingStart();
     };
   }
@@ -1213,6 +1307,30 @@ public class InternalSink {
     return Phrasing.URI_MACRO_TARGET_LOOP;
   }
 
+  /*
+
+  asciidoctor/lib/asciidoctor/rx.rb
+
+  # Matches an implicit link and some of the link inline macro.
+  #
+  # Examples
+  #
+  #   https://github.com
+  #   https://github.com[GitHub]
+  #   <https://github.com>
+  #   link:https://github.com[]
+  #   "https://github.com[]"
+  #   (https://github.com) <= parenthesis not included in autolink
+  #
+  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
+  
+  CG_BLANK=\p{Blank}
+  CG_ALL=.
+  
+  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+  
+  */
+
   private Phrasing phrasingUriMacroTargetLoop() {
     if (!sourceInc()) {
       return Phrasing.AUTOLINK;
@@ -1237,30 +1355,6 @@ public class InternalSink {
   private PseudoDocument pseudoDocument() {
     return pseudoFactory(PSEUDO_DOCUMENT, PseudoDocument::new);
   }
-
-  /*
-
-  asciidoctor/lib/asciidoctor/rx.rb
-
-  # Matches an implicit link and some of the link inline macro.
-  #
-  # Examples
-  #
-  #   https://github.com
-  #   https://github.com[GitHub]
-  #   <https://github.com>
-  #   link:https://github.com[]
-  #   "https://github.com[]"
-  #   (https://github.com) <= parenthesis not included in autolink
-  #
-  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-  
-  CG_BLANK=\p{Blank}
-  CG_ALL=.
-  
-  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
-  */
 
   @SuppressWarnings("unchecked")
   private <T> T pseudoFactory(int index, Function<InternalSink, T> factory) {
