@@ -24,16 +24,16 @@ import objectos.asciidoc.pseudom.Node.Section;
 public final class PseudoSection extends PseudoNode
     implements Section, IterableOnce<Node>, Iterator<Node> {
 
-  private static final int NODES = -700;
-  private static final int ITERATOR = -701;
-  private static final int TITLE = -702;
+  static final int NODES = -700;
+  static final int ITERATOR = -701;
+  static final int TITLE = -702;
   static final int TITLE_CONSUMED = -703;
-  private static final int PARSE = -704;
-  private static final int PARAGRAPH = -705;
+  static final int PARSE = -704;
+  static final int PARAGRAPH = -705;
   static final int PARAGRAPH_CONSUMED = -706;
-  private static final int SECTION = -707;
+  static final int SECTION = -707;
   static final int SECTION_CONSUMED = -708;
-  private static final int ULIST = -709;
+  static final int ULIST = -709;
   static final int ULIST_CONSUMED = -710;
   static final int EXHAUSTED = -711;
 
@@ -50,40 +50,12 @@ public final class PseudoSection extends PseudoNode
 
   @Override
   public final boolean hasNext() {
-    switch (stackPeek()) {
-      case PseudoTitle.EXHAUSTED,
-           PseudoParagraph.EXHAUSTED,
-           PseudoSection.EXHAUSTED,
-           PseudoUnorderedList.EXHAUSTED -> parse(Parse.BODY);
-
-      case ITERATOR -> {
-        stackPop();
-
-        // stores this section level
-        stackPush(level);
-
-        var heading = heading();
-
-        heading.level = level;
-
-        nextNode(heading);
-
-        stackPush(TITLE);
-      }
-
-      case PARAGRAPH, SECTION, TITLE, ULIST -> {}
-
-      default -> stackStub();
-    }
-
-    return hasNextNode();
+    return sink.sectionHasNext();
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    stackAssert(NODES);
-
-    stackReplace(ITERATOR);
+    sink.sectionIterator();
 
     return this;
   }
@@ -100,117 +72,9 @@ public final class PseudoSection extends PseudoNode
 
   @Override
   public final IterableOnce<Node> nodes() {
-    switch (stackPeek()) {
-      case PseudoDocument.SECTION_CONSUMED,
-           PseudoSection.SECTION_CONSUMED -> nodes(NODES);
-
-      default -> stackStub();
-    }
+    sink.sectionNodes();
 
     return this;
-  }
-
-  private void parse(Parse initialState) {
-    stackPop(); // previous state
-
-    @SuppressWarnings("unused")
-    int level = stackPeek();
-
-    stackPush(PARSE);
-
-    var state = initialState;
-
-    while (state != Parse.STOP) {
-      state = switch (state) {
-        case BODY_TRIM -> parseBodyTrim();
-
-        case EXHAUSTED -> parseExhausted();
-
-        case PARAGRAPH -> parseParagraph();
-
-        case SECTION -> parseSection();
-
-        case ULIST -> parseUlist();
-
-        default -> parseDocumentOrSection(state);
-      };
-    }
-  }
-
-  private Parse parseExhausted() {
-    stackAssert(PARSE);
-
-    // pops ASSERT
-    stackPop();
-
-    // replaces section level
-    stackReplace(EXHAUSTED);
-
-    return Parse.STOP;
-  }
-
-  private Parse parseParagraph() {
-    stackReplace(PARAGRAPH);
-
-    nextNode(paragraph());
-
-    return Parse.STOP;
-  }
-
-  private Parse parseSection() {
-    int nextLevel = stackPop();
-
-    int sourceIndex = stackPop();
-
-    stackAssert(PARSE);
-
-    stackPop();
-
-    int thisLevel = stackPeek();
-
-    if (nextLevel > thisLevel) {
-      stackPush(SECTION);
-
-      var section = section();
-
-      section.level = nextLevel;
-
-      nextNode(section);
-    } else if (nextLevel == thisLevel) {
-      sourceIndex(sourceIndex);
-
-      // replaces section level
-      stackReplace(EXHAUSTED);
-    } else {
-      sourceIndex(sourceIndex);
-
-      // replaces section level
-      stackReplace(EXHAUSTED);
-    }
-
-    return Parse.STOP;
-  }
-
-  private Parse parseUlist() {
-    int markerEnd = stackPop();
-
-    int markerStart = stackPop();
-
-    int ulistTop = stackPop();
-
-    int parse = stackPop();
-
-    assert parse == PARSE : "expected PARSE but found " + parse;
-
-    stackPush(ulistTop);
-
-    stackPush(markerStart, markerEnd);
-
-    stackPush(ULIST);
-
-    nextNode(unorderedList());
-
-    return Parse.STOP;
   }
 
 }

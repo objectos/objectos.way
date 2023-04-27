@@ -26,17 +26,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private enum HeaderParse {
@@ -271,6 +271,60 @@ public class InternalSink {
 
   final PseudoUnorderedList pseudoUnorderedList() {
     return pseudoFactory(PSEUDO_ULIST, PseudoUnorderedList::new);
+  }
+
+  final boolean sectionHasNext() {
+    switch (stackPeek()) {
+      case PseudoTitle.EXHAUSTED,
+           PseudoParagraph.EXHAUSTED,
+           PseudoSection.EXHAUSTED,
+           PseudoUnorderedList.EXHAUSTED -> sectionParse(Parse.BODY);
+
+      case PseudoSection.ITERATOR -> {
+        stackPop();
+
+        var section = pseudoSection();
+
+        // stores this section level
+        stackPush(section.level);
+
+        var heading = pseudoTitle();
+
+        heading.level = section.level;
+
+        nextNode = heading;
+
+        stackPush(PseudoSection.TITLE);
+      }
+
+      case PseudoSection.PARAGRAPH,
+           PseudoSection.SECTION,
+           PseudoSection.TITLE,
+           PseudoSection.ULIST -> {}
+
+      default -> stackStub();
+    }
+
+    return nextNode != null;
+  }
+
+  final void sectionIterator() {
+    stackAssert(PseudoSection.NODES);
+
+    stackReplace(PseudoSection.ITERATOR);
+  }
+
+  final void sectionNodes() {
+    switch (stackPeek()) {
+      case PseudoDocument.SECTION_CONSUMED,
+           PseudoSection.SECTION_CONSUMED -> {
+        stackReplace(PseudoSection.NODES);
+
+        pseudoAttributes().clear();
+      }
+
+      default -> stackStub();
+    }
   }
 
   final void sourceAdvance() {
@@ -1184,6 +1238,30 @@ public class InternalSink {
     return pseudoFactory(PSEUDO_DOCUMENT, PseudoDocument::new);
   }
 
+  /*
+
+  asciidoctor/lib/asciidoctor/rx.rb
+
+  # Matches an implicit link and some of the link inline macro.
+  #
+  # Examples
+  #
+  #   https://github.com
+  #   https://github.com[GitHub]
+  #   <https://github.com>
+  #   link:https://github.com[]
+  #   "https://github.com[]"
+  #   (https://github.com) <= parenthesis not included in autolink
+  #
+  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
+  
+  CG_BLANK=\p{Blank}
+  CG_ALL=.
+  
+  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+  
+  */
+
   @SuppressWarnings("unchecked")
   private <T> T pseudoFactory(int index, Function<InternalSink, T> factory) {
     var result = pseudoArray[index];
@@ -1199,35 +1277,126 @@ public class InternalSink {
     return pseudoFactory(PSEUDO_PHRASE, PseudoPhrase::new);
   }
 
+  private void sectionParse(Parse initialState) {
+    stackPop(); // previous state
+
+    @SuppressWarnings("unused")
+    int level = stackPeek();
+
+    stackPush(PseudoSection.PARSE);
+
+    var state = initialState;
+
+    while (state != Parse.STOP) {
+      state = switch (state) {
+        case BODY_TRIM -> sectionParseBodyTrim();
+
+        case EXHAUSTED -> sectionParseExhausted();
+
+        case PARAGRAPH -> sectionParseParagraph();
+
+        case SECTION -> sectionParseSection();
+
+        case ULIST -> sectionParseUlist();
+
+        default -> parse(state);
+      };
+    }
+  }
+
+  private Parse sectionParseBodyTrim() {
+    if (!sourceMore()) {
+      return Parse.EXHAUSTED;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> advance(Parse.BODY_TRIM);
+
+      default -> Parse.BODY;
+    };
+  }
+
+  private Parse sectionParseExhausted() {
+    stackAssert(PseudoSection.PARSE);
+
+    // pops ASSERT
+    stackPop();
+
+    // replaces section level
+    stackReplace(PseudoSection.EXHAUSTED);
+
+    return Parse.STOP;
+  }
+
+  private Parse sectionParseParagraph() {
+    stackReplace(PseudoSection.PARAGRAPH);
+
+    nextNode = pseudoParagraph();
+
+    return Parse.STOP;
+  }
+
+  private Parse sectionParseSection() {
+    int nextLevel = stackPop();
+
+    int sourceIndex = stackPop();
+
+    stackAssert(PseudoSection.PARSE);
+
+    stackPop();
+
+    int thisLevel = stackPeek();
+
+    if (nextLevel > thisLevel) {
+      stackPush(PseudoSection.SECTION);
+
+      var section = pseudoSection();
+
+      section.level = nextLevel;
+
+      nextNode = section;
+    } else if (nextLevel == thisLevel) {
+      sourceIndex(sourceIndex);
+
+      // replaces section level
+      stackReplace(PseudoSection.EXHAUSTED);
+    } else {
+      sourceIndex(sourceIndex);
+
+      // replaces section level
+      stackReplace(PseudoSection.EXHAUSTED);
+    }
+
+    return Parse.STOP;
+  }
+
+  private Parse sectionParseUlist() {
+    int markerEnd = stackPop();
+
+    int markerStart = stackPop();
+
+    int ulistTop = stackPop();
+
+    int parse = stackPop();
+
+    assert parse == PseudoSection.PARSE : "expected PARSE but found " + parse;
+
+    stackPush(ulistTop);
+
+    stackPush(markerStart, markerEnd);
+
+    stackPush(PseudoSection.ULIST);
+
+    nextNode = pseudoUnorderedList();
+
+    return Parse.STOP;
+  }
+
   private void stackAssert(int expected) {
     int actual = stackPeek();
 
     assert actual == expected : "actual=" + actual + ";expected=" + expected;
   }
-
-  /*
-  
-  asciidoctor/lib/asciidoctor/rx.rb
-  
-  # Matches an implicit link and some of the link inline macro.
-  #
-  # Examples
-  #
-  #   https://github.com
-  #   https://github.com[GitHub]
-  #   <https://github.com>
-  #   link:https://github.com[]
-  #   "https://github.com[]"
-  #   (https://github.com) <= parenthesis not included in autolink
-  #
-  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
-  CG_BLANK=\p{Blank}
-  CG_ALL=.
-
-  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
-  */
 
   private void start(String source) {
     this.source = source;

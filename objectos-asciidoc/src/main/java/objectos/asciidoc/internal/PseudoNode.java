@@ -93,26 +93,8 @@ abstract class PseudoNode {
     return sink.nextNode();
   }
 
-  final void nodes(int value) {
-    stackReplace(value);
-
-    pseudoAttributes().clear();
-  }
-
   final PseudoParagraph paragraph() {
     return sink.pseudoParagraph();
-  }
-
-  final Parse parseBodyTrim() {
-    if (!sourceMore()) {
-      return Parse.EXHAUSTED;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.BODY_TRIM);
-
-      default -> Parse.BODY;
-    };
   }
 
   final Parse parseDocumentOrSection(Parse state) {
