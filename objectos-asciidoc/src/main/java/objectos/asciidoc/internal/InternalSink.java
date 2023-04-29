@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.function.Function;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
-import objectos.asciidoc.pseudom.Phrase;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 
@@ -63,11 +62,11 @@ public class InternalSink {
   }
 
   private enum PhraseElement {
+    FRAGMENT,
+
     LIST_ITEM,
 
     PARAGRAPH,
-
-    PHRASE,
 
     TITLE;
   }
@@ -93,18 +92,20 @@ public class InternalSink {
     URI_MACRO_ROLLBACK,
     URI_MACRO_TARGET,
     URI_MACRO_TARGET_LOOP,
+    URI_MACRO_TEXT,
+    URI_MACRO_TEXT_END,
+    URI_MACRO_TEXT_LOOP,
 
     AUTOLINK;
   }
 
   private static final int ATTRLIST_BLOCK = -1;
-  private static final int ATTRLIST_INLINE = -2;
-  private static final int _ULIST_TOP = -3;
-  private static final int _NEXT_ITEM = -4;
-  private static final int _NESTED = -5;
-  private static final int _NESTED_END = -6;
+  private static final int _ULIST_TOP = -2;
+  private static final int _NEXT_ITEM = -3;
+  private static final int _NESTED = -4;
+  private static final int _NESTED_END = -5;
+  private static final int _LIST_END = -6;
 
-  private static final int _LIST_END = -7;
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
   private static final int PSEUDO_TITLE = 2;
@@ -115,9 +116,7 @@ public class InternalSink {
   private static final int PSEUDO_LIST_ITEM = 7;
   private static final int PSEUDO_ATTRIBUTES = 8;
   private static final int PSEUDO_INLINE_MACRO = 9;
-  private static final int PSEUDO_PHRASE = 10;
-
-  private static final int PSEUDO_LENGTH = 11;
+  private static final int PSEUDO_LENGTH = 10;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -128,6 +127,8 @@ public class InternalSink {
   private String source;
 
   private int sourceIndex;
+
+  private int sourceMax;
 
   private int[] stackArray = new int[8];
 
@@ -152,27 +153,6 @@ public class InternalSink {
     stackPush(PseudoDocument.START);
 
     return pseudoDocument();
-  }
-
-  protected final Phrase openPhrase(String source) {
-    Check.state(
-      finalState(),
-
-      """
-      Concurrent processing is not supported.
-
-      It seems a previous AsciiDoc document processing:
-
-      - is currently running; or
-      - finished abruptly (most likely due to a bug in this component, sorry...).
-      """
-    );
-
-    start(source);
-
-    stackPush(PseudoPhrase.START);
-
-    return pseudoPhrase();
   }
 
   final void appendTo(Appendable out, int start, int end) throws IOException {
@@ -259,6 +239,75 @@ public class InternalSink {
     stackReplace(PseudoHeader.NODES);
   }
 
+  final boolean inlineMacroHasNext() {
+    switch (stackPeek()) {
+      case PseudoInlineMacro.ITERATOR -> {
+        // pops ITERATOR
+        stackPop();
+
+        var macro = pseudoInlineMacro();
+
+        if (macro.hasText()) {
+          // pushes return to indexes
+          stackPush(sourceMax, sourceIndex);
+
+          sourceIndex = macro.textStart;
+
+          sourceMax = macro.textEnd;
+
+          phrasing(PhraseElement.FRAGMENT);
+
+          if (nextNode != null) {
+            stackPush(PseudoInlineMacro.NODE);
+          } else {
+            stackPush(PseudoInlineMacro.EXHAUSTED);
+          }
+        } else {
+          throw new UnsupportedOperationException("Implement me");
+        }
+      }
+
+      case PseudoInlineMacro.NODE -> {}
+
+      case PseudoInlineMacro.NODE_CONSUMED -> {
+        // pops NODE_CONSUMED
+        stackPop();
+
+        phrasing(PhraseElement.FRAGMENT);
+
+        if (nextNode != null) {
+          stackPush(PseudoInlineMacro.NODE);
+        } else {
+          // restore source state
+          sourceIndex = stackPop();
+          sourceMax = stackPop();
+
+          // we're done
+          stackPush(PseudoInlineMacro.EXHAUSTED);
+        }
+      }
+
+      default -> stackStub();
+    }
+
+    return nextNode != null;
+
+  }
+
+  final void inlineMacroIterator() {
+    stackAssert(PseudoInlineMacro.NODES);
+
+    stackReplace(PseudoInlineMacro.ITERATOR);
+  }
+
+  final void inlineMacroNodes() {
+    switch (stackPeek()) {
+      case PseudoParagraph.NODE_CONSUMED -> stackReplace(PseudoInlineMacro.NODES);
+
+      default -> stackStub();
+    }
+  }
+
   final boolean listItemHasNext() {
     switch (stackPeek()) {
       case PseudoUnorderedList.EXHAUSTED -> stackReplace(PseudoListItem.EXHAUSTED);
@@ -338,7 +387,8 @@ public class InternalSink {
   final boolean paragraphHasNext() {
     switch (stackPeek()) {
       case PseudoParagraph.ITERATOR,
-           PseudoParagraph.NODE_CONSUMED -> {
+           PseudoParagraph.NODE_CONSUMED,
+           PseudoInlineMacro.EXHAUSTED -> {
         stackReplace(PseudoParagraph.PARSE);
 
         phrasing(PhraseElement.PARAGRAPH);
@@ -425,107 +475,6 @@ public class InternalSink {
 
       default -> stackStub();
     }
-  }
-
-  final void sourceAdvance() {
-    sourceIndex++;
-  }
-
-  final char sourceAt(int index) {
-    return source.charAt(index);
-  }
-
-  final String sourceGet(int start, int end) {
-    return source.substring(start, end);
-  }
-
-  final boolean sourceInc() {
-    sourceAdvance();
-
-    return sourceMore();
-  }
-
-  final int sourceIndex() {
-    return sourceIndex;
-  }
-
-  final void sourceIndex(int value) {
-    sourceIndex = value;
-  }
-
-  final boolean sourceMatches(int sourceOffset, String other) {
-    return source.regionMatches(sourceOffset, other, 0, other.length());
-  }
-
-  final boolean sourceMore() {
-    return sourceIndex < source.length();
-  }
-
-  final char sourceNext() {
-    return source.charAt(sourceIndex++);
-  }
-
-  final char sourcePeek() {
-    return source.charAt(sourceIndex);
-  }
-
-  final char sourcePeek(int offset) {
-    return source.charAt(sourceIndex + offset);
-  }
-
-  final int sourceStub() {
-    var c = sourcePeek();
-
-    throw new UnsupportedOperationException(
-      "Implement me :: char=" + c
-    );
-  }
-
-  final void stackDec() {
-    stackArray[stackIndex]--;
-  }
-
-  final void stackInc() {
-    stackArray[stackIndex]++;
-  }
-
-  final int stackPeek() {
-    return stackArray[stackIndex];
-  }
-
-  final int stackPeek(int offset) {
-    return stackArray[stackIndex - offset];
-  }
-
-  final int stackPop() {
-    return stackArray[stackIndex--];
-  }
-
-  final void stackPop(int count) {
-    stackIndex -= count;
-  }
-
-  final void stackPush(int v0) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
-    stackArray[++stackIndex] = v0;
-  }
-
-  final void stackPush(int v0, int v1) {
-    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
-    stackArray[++stackIndex] = v0;
-    stackArray[++stackIndex] = v1;
-  }
-
-  final void stackReplace(int value) {
-    stackArray[stackIndex] = value;
-  }
-
-  final void stackStub() {
-    int ctx = stackPeek();
-
-    throw new UnsupportedOperationException(
-      "Implement me :: ctx=" + ctx
-    );
   }
 
   final boolean titleHasNext() {
@@ -674,7 +623,7 @@ public class InternalSink {
       return Parse.STOP;
     }
 
-    stackPush(sourceIndex());
+    stackPush(sourceIndex);
 
     return switch (sourcePeek()) {
       case '=' -> advance(Parse.MAYBE_HEADER);
@@ -912,7 +861,7 @@ public class InternalSink {
   }
 
   private Phrasing listItemPhrasingEol() {
-    int atEol = sourceIndex();
+    int atEol = sourceIndex;
 
     sourceAdvance();
 
@@ -932,7 +881,7 @@ public class InternalSink {
   }
 
   private ListItemPhrasing listItemPhrasingMarker() {
-    int markerStart = sourceIndex();
+    int markerStart = sourceIndex;
 
     char marker = sourceNext();
 
@@ -975,7 +924,7 @@ public class InternalSink {
         stackPop();
 
         // marker end
-        stackPush(sourceIndex());
+        stackPush(sourceIndex);
 
         yield advance(ListItemPhrasing.MAYBE_NEXT_ITEM_TRIM);
       }
@@ -1083,7 +1032,7 @@ public class InternalSink {
   }
 
   private Phrasing paragraphPhrasingEol() {
-    int atEol = sourceIndex();
+    int atEol = sourceIndex;
 
     sourceAdvance();
 
@@ -1175,8 +1124,6 @@ public class InternalSink {
     return switch (type) {
       case ATTRLIST_BLOCK -> Parse.BODY;
 
-      case ATTRLIST_INLINE -> Parse.INLINE_ATTRLIST;
-
       default -> throw new AssertionError(
         "Unexpected attrlist type=" + type
       );
@@ -1193,27 +1140,27 @@ public class InternalSink {
 
       case '[' -> {
         // rollback index
-        stackPush(sourceIndex(), ATTRLIST_BLOCK);
+        stackPush(sourceIndex, ATTRLIST_BLOCK);
 
         yield advance(Parse.MAYBE_ATTRLIST);
       }
 
       case '-' -> {
         // rollback index or marker start
-        stackPush(sourceIndex());
+        stackPush(sourceIndex);
 
         yield advance(Parse.MAYBE_LISTING_OR_ULIST);
       }
 
       case '*' -> {
         // rollback index or marker start
-        stackPush(sourceIndex());
+        stackPush(sourceIndex);
 
         yield advance(Parse.MAYBE_BOLD_OR_ULIST);
       }
 
       case '=' -> {
-        stackPush(sourceIndex());
+        stackPush(sourceIndex);
 
         // push title level
         stackPush(0);
@@ -1239,7 +1186,7 @@ public class InternalSink {
         attributes.clear();
 
         // attr name/value start
-        stackPush(sourceIndex());
+        stackPush(sourceIndex);
 
         yield advance(Parse.NAME_OR_VALUE);
       }
@@ -1260,8 +1207,6 @@ public class InternalSink {
 
     return switch (context) {
       case ATTRLIST_BLOCK -> Parse.MAYBE_ATTRLIST_END_TRIM;
-
-      case ATTRLIST_INLINE -> Parse.ATTRLIST;
 
       default -> throw new AssertionError(
         "Unexpected context = " + context
@@ -1393,7 +1338,7 @@ public class InternalSink {
   private void parsePositional() {
     int start = stackPop();
 
-    int end = sourceIndex();
+    int end = sourceIndex;
 
     var value = sourceGet(start, end);
 
@@ -1402,12 +1347,20 @@ public class InternalSink {
     attributes.add(value);
   }
 
+  private Phrasing fragmentPhrasingEol() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Phrasing fragmentPhrasingStart() {
+    return Phrasing.BLOB;
+  }
+
   private void phrasing(PhraseElement phrase) {
     this.phrase = phrase;
 
     var state = Phrasing.START;
 
-    stackPush(sourceIndex());
+    stackPush(sourceIndex);
 
     while (state != Phrasing.STOP) {
       state = switch (state) {
@@ -1438,6 +1391,12 @@ public class InternalSink {
         case URI_MACRO_TARGET -> phrasingUriMacroTarget();
 
         case URI_MACRO_TARGET_LOOP -> phrasingUriMacroTargetLoop();
+
+        case URI_MACRO_TEXT -> phrasingUriMacroText();
+
+        case URI_MACRO_TEXT_END -> phrasingUriMacroTextEnd();
+
+        case URI_MACRO_TEXT_LOOP -> phrasingUriMacroTextLoop();
       };
     }
   }
@@ -1448,7 +1407,7 @@ public class InternalSink {
 
   private Phrasing phrasingBlob() {
     if (!sourceMore()) {
-      return toPhrasingEnd(sourceIndex());
+      return toPhrasingEnd(sourceIndex);
     }
 
     return switch (sourcePeek()) {
@@ -1472,24 +1431,20 @@ public class InternalSink {
 
   private Phrasing phrasingEol() {
     return switch (phrase) {
+      case FRAGMENT -> fragmentPhrasingEol();
+
       case LIST_ITEM -> listItemPhrasingEol();
 
       case PARAGRAPH -> paragraphPhrasingEol();
-
-      case PHRASE -> phrasePhrasingEol();
 
       case TITLE -> titlePhrasingEol();
     };
   }
 
-  private Phrasing phrasePhrasingEol() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
 
-    int colon = sourceIndex();
+    int colon = sourceIndex;
 
     int min = Math.max(phrasingStart, colon - PseudoInlineMacro.MAX_LENGTH);
 
@@ -1552,24 +1507,44 @@ public class InternalSink {
     return Phrasing.STOP;
   }
 
+  /*
+
+  asciidoctor/lib/asciidoctor/rx.rb
+
+  # Matches an implicit link and some of the link inline macro.
+  #
+  # Examples
+  #
+  #   https://github.com
+  #   https://github.com[GitHub]
+  #   <https://github.com>
+  #   link:https://github.com[]
+  #   "https://github.com[]"
+  #   (https://github.com) <= parenthesis not included in autolink
+  #
+  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
+  
+  CG_BLANK=\p{Blank}
+  CG_ALL=.
+  
+  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+  
+  as PCRE
+  
+  (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+  
+  */
+
   private Phrasing phrasingStart() {
     return switch (phrase) {
+      case FRAGMENT -> fragmentPhrasingStart();
+
       case LIST_ITEM -> listItemPhrasingStart();
 
       case PARAGRAPH -> paragraphPhrasingStart();
 
-      case PHRASE -> phrasePhrasingStart();
-
       case TITLE -> titlePhrasingStart();
     };
-  }
-
-  private Phrasing phrasePhrasingStart() {
-    if (!sourceMore()) {
-      return popAndStop();
-    }
-
-    return Phrasing.BLOB;
   }
 
   private Phrasing phrasingText() {
@@ -1623,7 +1598,7 @@ public class InternalSink {
   }
 
   private Phrasing phrasingUriMacroAttrlist() {
-    int sourceIndex = sourceIndex();
+    int bracket = sourceIndex;
 
     if (!sourceInc()) {
       return Phrasing.URI_MACRO_ROLLBACK;
@@ -1631,42 +1606,19 @@ public class InternalSink {
 
     var macro = pseudoInlineMacro();
 
-    macro.targetEnd = sourceIndex;
+    macro.targetEnd = bracket;
 
-    var found = false;
+    return switch (sourcePeek()) {
+      case ']' -> throw new UnsupportedOperationException(
+        "Implement me :: empty attrlist"
+      );
 
-    // attrlist rollback info
-    stackPush(sourceIndex, ATTRLIST_INLINE);
+      case '"' -> throw new UnsupportedOperationException(
+        "Implement me :: quoted text"
+      );
 
-    var parse = Parse.MAYBE_ATTRLIST;
-
-    loop: while (parse != Parse.STOP) {
-      parse = parse(parse);
-
-      switch (parse) {
-        case NOT_ATTRLIST -> {
-          found = false;
-
-          break loop;
-        }
-
-        case INLINE_ATTRLIST -> {
-          found = true;
-
-          break loop;
-        }
-
-        default -> {
-          continue loop;
-        }
-      }
-    }
-
-    if (!found) {
-      return Phrasing.URI_MACRO_ROLLBACK;
-    } else {
-      return Phrasing.INLINE_MACRO_END;
-    }
+      default -> Phrasing.URI_MACRO_TEXT;
+    };
   }
 
   private Phrasing phrasingUriMacroRollback() {
@@ -1678,7 +1630,7 @@ public class InternalSink {
   private Phrasing phrasingUriMacroTarget() {
     var macro = pseudoInlineMacro();
 
-    macro.targetStart = sourceIndex();
+    macro.targetStart = sourceIndex;
 
     return Phrasing.URI_MACRO_TARGET_LOOP;
   }
@@ -1697,36 +1649,51 @@ public class InternalSink {
     };
   }
 
+  private Phrasing phrasingUriMacroText() {
+    // pushes text start
+    stackPush(sourceIndex);
+
+    return Phrasing.URI_MACRO_TEXT_LOOP;
+  }
+
+  private Phrasing phrasingUriMacroTextEnd() {
+    var macro = pseudoInlineMacro();
+
+    macro.textStart = stackPop();
+
+    macro.textEnd = sourceIndex;
+
+    // we resume AFTER the ']' char
+    sourceIndex++;
+
+    return Phrasing.INLINE_MACRO_END;
+  }
+
+  private Phrasing phrasingUriMacroTextLoop() {
+    if (!sourceInc()) {
+      // pops text start
+      stackPop();
+
+      return Phrasing.URI_MACRO_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case ']' -> Phrasing.URI_MACRO_TEXT_END;
+
+      case ',' -> throw new UnsupportedOperationException(
+        "Implement me :: next value"
+      );
+
+      default -> Phrasing.URI_MACRO_TEXT_LOOP;
+    };
+  }
+
   private Phrasing popAndStop() {
     // pops start index
     stackPop();
 
     return Phrasing.STOP;
   }
-
-  /*
-
-  asciidoctor/lib/asciidoctor/rx.rb
-
-  # Matches an implicit link and some of the link inline macro.
-  #
-  # Examples
-  #
-  #   https://github.com
-  #   https://github.com[GitHub]
-  #   <https://github.com>
-  #   link:https://github.com[]
-  #   "https://github.com[]"
-  #   (https://github.com) <= parenthesis not included in autolink
-  #
-  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-  
-  CG_BLANK=\p{Blank}
-  CG_ALL=.
-  
-  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
-  */
 
   private PseudoAttributes pseudoAttributes() {
     return pseudoFactory(PSEUDO_ATTRIBUTES, PseudoAttributes::new);
@@ -1761,10 +1728,6 @@ public class InternalSink {
 
   private PseudoParagraph pseudoParagraph() {
     return pseudoFactory(PSEUDO_PARAGRAPH, PseudoParagraph::new);
-  }
-
-  private PseudoPhrase pseudoPhrase() {
-    return pseudoFactory(PSEUDO_PHRASE, PseudoPhrase::new);
   }
 
   private PseudoSection pseudoSection() {
@@ -1898,10 +1861,91 @@ public class InternalSink {
     return Parse.STOP;
   }
 
+  private void sourceAdvance() {
+    sourceIndex++;
+  }
+
+  private char sourceAt(int index) {
+    return source.charAt(index);
+  }
+
+  private String sourceGet(int start, int end) {
+    return source.substring(start, end);
+  }
+
+  private boolean sourceInc() {
+    sourceAdvance();
+
+    return sourceMore();
+  }
+
+  private void sourceIndex(int value) {
+    sourceIndex = value;
+  }
+
+  private boolean sourceMore() {
+    return sourceIndex < sourceMax;
+  }
+
+  private char sourceNext() {
+    return source.charAt(sourceIndex++);
+  }
+
+  private char sourcePeek() {
+    return source.charAt(sourceIndex);
+  }
+
   private void stackAssert(int expected) {
     int actual = stackPeek();
 
     assert actual == expected : "actual=" + actual + ";expected=" + expected;
+  }
+
+  private void stackDec() {
+    stackArray[stackIndex]--;
+  }
+
+  private void stackInc() {
+    stackArray[stackIndex]++;
+  }
+
+  private int stackPeek() {
+    return stackArray[stackIndex];
+  }
+
+  private int stackPeek(int offset) {
+    return stackArray[stackIndex - offset];
+  }
+
+  private int stackPop() {
+    return stackArray[stackIndex--];
+  }
+
+  private void stackPop(int count) {
+    stackIndex -= count;
+  }
+
+  private void stackPush(int v0) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 1);
+    stackArray[++stackIndex] = v0;
+  }
+
+  private void stackPush(int v0, int v1) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 2);
+    stackArray[++stackIndex] = v0;
+    stackArray[++stackIndex] = v1;
+  }
+
+  private void stackReplace(int value) {
+    stackArray[stackIndex] = value;
+  }
+
+  private void stackStub() {
+    int ctx = stackPeek();
+
+    throw new UnsupportedOperationException(
+      "Implement me :: ctx=" + ctx
+    );
   }
 
   private void start(String source) {
@@ -1909,11 +1953,13 @@ public class InternalSink {
 
     sourceIndex = 0;
 
+    sourceMax = source.length();
+
     stackIndex = -1;
   }
 
   private Phrasing titlePhrasingEol() {
-    return toPhrasingEnd(sourceIndex());
+    return toPhrasingEnd(sourceIndex);
   }
 
   private Phrasing titlePhrasingStart() {
@@ -1934,7 +1980,7 @@ public class InternalSink {
     stackPush(_ULIST_TOP, markerStart);
 
     // marker end
-    stackPush(sourceIndex());
+    stackPush(sourceIndex);
 
     return advance(Parse.MAYBE_ULIST);
   }
@@ -1943,41 +1989,6 @@ public class InternalSink {
     stackPush(last);
 
     return Phrasing.TEXT;
-  }
-
-  final void phraseNodes() {
-    stackAssert(PseudoPhrase.START);
-
-    stackReplace(PseudoPhrase.NODES);
-  }
-
-  final void phraseIterator() {
-    stackAssert(PseudoPhrase.NODES);
-
-    stackReplace(PseudoPhrase.ITERATOR);
-  }
-
-  final boolean phraseHasNext() {
-    switch (stackPeek()) {
-      case PseudoPhrase.ITERATOR,
-           PseudoPhrase.NODE_CONSUMED -> {
-        stackReplace(PseudoPhrase.PARSE);
-
-        phrasing(PhraseElement.PHRASE);
-
-        if (nextNode != null) {
-          stackReplace(PseudoPhrase.NODE);
-        } else {
-          stackReplace(PseudoPhrase.EXHAUSTED);
-        }
-      }
-
-      case PseudoPhrase.NODE -> {}
-
-      default -> stackStub();
-    }
-
-    return nextNode != null;
   }
 
 }

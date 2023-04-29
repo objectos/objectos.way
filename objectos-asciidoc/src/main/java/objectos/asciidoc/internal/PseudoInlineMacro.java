@@ -16,12 +16,20 @@
 package objectos.asciidoc.internal;
 
 import java.io.IOException;
-import objectos.asciidoc.pseudom.Attributes;
+import java.util.Iterator;
+import objectos.asciidoc.pseudom.IterableOnce;
+import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Node.InlineMacro;
 
-public final class PseudoInlineMacro extends PseudoNode implements InlineMacro {
+public final class PseudoInlineMacro extends PseudoNode
+    implements InlineMacro, IterableOnce<Node>, Iterator<Node> {
 
   static final int MAX_LENGTH = 20;
+  static final int NODES = -400;
+  static final int ITERATOR = -401;
+  static final int NODE = -402;
+  static final int NODE_CONSUMED = -403;
+  static final int EXHAUSTED = -404;
 
   String name;
 
@@ -29,15 +37,41 @@ public final class PseudoInlineMacro extends PseudoNode implements InlineMacro {
 
   int targetEnd;
 
+  int textStart;
+
+  int textEnd;
+
   PseudoInlineMacro(InternalSink sink) {
     super(sink);
   }
 
   @Override
-  public final Attributes attributes() {
-    var attributes = sink.attributes();
+  public final boolean hasNext() {
+    return sink.inlineMacroHasNext();
+  }
 
-    return attributes.bindIfNecessary(this);
+  @Override
+  public final Iterator<Node> iterator() {
+    sink.inlineMacroIterator();
+
+    return this;
+  }
+
+  @Override
+  public final String name() {
+    return name;
+  }
+
+  @Override
+  public final Node next() {
+    return nextNodeDefault();
+  }
+
+  @Override
+  public final IterableOnce<Node> nodes() {
+    sink.inlineMacroNodes();
+
+    return this;
   }
 
   @Override
@@ -45,14 +79,8 @@ public final class PseudoInlineMacro extends PseudoNode implements InlineMacro {
     appendTo(out, targetStart, targetEnd);
   }
 
-  @Override
-  public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
-  public final String name() {
-    return name;
+  final boolean hasText() {
+    return textEnd - textStart > 0;
   }
 
 }

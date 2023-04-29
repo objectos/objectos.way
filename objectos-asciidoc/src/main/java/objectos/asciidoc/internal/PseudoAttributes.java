@@ -78,14 +78,6 @@ public final class PseudoAttributes implements Attributes {
     addImpl(null, value);
   }
 
-  final Attributes bindIfNecessary(PseudoInlineMacro macro) {
-    if (!is(BOUND)) {
-      set(BOUND);
-    }
-
-    return this;
-  }
-
   final Attributes bindIfNecessary(PseudoSection section) {
     if (!is(BOUND)) {
       if (index > 1) {

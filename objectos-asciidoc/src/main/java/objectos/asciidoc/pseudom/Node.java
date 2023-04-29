@@ -35,9 +35,9 @@ public sealed interface Node {
 
   sealed interface InlineMacro extends Node permits PseudoInlineMacro {
 
-    Attributes attributes();
-
     String name();
+
+    IterableOnce<Node> nodes();
 
     void targetTo(Appendable out) throws IOException;
 

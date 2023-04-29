@@ -29,8 +29,6 @@ import objectos.asciidoc.pseudom.Node.UnorderedList;
 
 final class ThisDocumentProcessor {
 
-  private final AsciiDoc2 inline = new AsciiDoc2();
-
   private final StringBuilder out = new StringBuilder();
 
   public final String process(Document document) throws IOException {
@@ -66,36 +64,6 @@ final class ThisDocumentProcessor {
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: name=" + name
-      );
-    }
-  }
-
-  private void urlMacro(String name, InlineMacro macro) throws IOException {
-    var attributes = macro.attributes();
-
-    out.append("<a href=\"");
-    out.append(name);
-    out.append("://");
-    macro.targetTo(out);
-    out.append("\">");
-
-    var text = attributes.getPositional(1);
-
-    if (text != null) {
-      phrase(text);
-    }
-
-    out.append("</a>");
-  }
-
-  private void phrase(String text) {
-    try (var phrase = inline.openAsPhrase(text)) {
-      for (var node : phrase.nodes()) {
-        node(node);
-      }
-    } catch (IOException e) {
-      throw new AssertionError(
-        "ThisDocumentProcessor does not throw IOException"
       );
     }
   }
@@ -192,6 +160,20 @@ final class ThisDocumentProcessor {
     }
 
     out.append("</unordered-list>\n");
+  }
+
+  private void urlMacro(String name, InlineMacro macro) throws IOException {
+    out.append("<a href=\"");
+    out.append(name);
+    out.append("://");
+    macro.targetTo(out);
+    out.append("\">");
+
+    for (var node : macro.nodes()) {
+      node(node);
+    }
+
+    out.append("</a>");
   }
 
 }

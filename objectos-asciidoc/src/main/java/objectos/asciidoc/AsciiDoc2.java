@@ -17,7 +17,6 @@ package objectos.asciidoc;
 
 import objectos.asciidoc.internal.InternalSink;
 import objectos.asciidoc.pseudom.Document;
-import objectos.asciidoc.pseudom.Phrase;
 
 class AsciiDoc2 extends InternalSink {
 
@@ -27,12 +26,6 @@ class AsciiDoc2 extends InternalSink {
     String cs = source.toString(); // implicit null-check
 
     return openDocument(cs);
-  }
-
-  public final Phrase openAsPhrase(String source) {
-    String cs = source.toString(); // implicit null-check
-
-    return openPhrase(cs);
   }
 
 }
