@@ -45,7 +45,7 @@ public class UrlMacroTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   - https
   - well-formed
   - w/ text before
