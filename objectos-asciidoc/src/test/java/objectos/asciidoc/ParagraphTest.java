@@ -29,13 +29,6 @@ public class ParagraphTest {
 
   @Test(description = """
   two lines paragraph
-
-  0123
-  4567
-  '''
-  abc
-  def
-  '''
   """)
   public void testCase01() {
     tester.test(
@@ -53,15 +46,10 @@ public class ParagraphTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   multiline paragraph
 
   - last line starts with url macro
-
-  '''
-  abc
-  https://d[e].
-  '''
   """)
   public void testCase02() {
     tester.test(
@@ -71,13 +59,10 @@ public class ParagraphTest {
       """,
 
       """
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
-      <p>abc <a href="https://d">e</a>.</p>
-      </div>
-      </div>
+      <document>
+      <p>abc
+      <a href="https://d">e</a>.</p>
+      </document>
       """
     );
   }
