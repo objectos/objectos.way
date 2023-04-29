@@ -64,4 +64,23 @@ public class UrlMacroTest {
     );
   }
 
+  @Test(description = """
+  - https
+  - well-formed
+  - comma in attrlist
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      https://a[b, c]
+      """,
+
+      """
+      <document>
+      <p><a href="https://a">b, c</a></p>
+      </document>
+      """
+    );
+  }
+
 }
