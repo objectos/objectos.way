@@ -19,6 +19,7 @@ import java.io.IOException;
 import objectos.asciidoc.internal.PseudoHeader;
 import objectos.asciidoc.internal.PseudoInlineMacro;
 import objectos.asciidoc.internal.PseudoListItem;
+import objectos.asciidoc.internal.PseudoMonospaced;
 import objectos.asciidoc.internal.PseudoParagraph;
 import objectos.asciidoc.internal.PseudoSection;
 import objectos.asciidoc.internal.PseudoText;
@@ -44,6 +45,12 @@ public sealed interface Node {
   }
 
   sealed interface ListItem extends Node permits PseudoListItem {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface Monospaced extends Node permits PseudoMonospaced {
 
     IterableOnce<Node> nodes();
 

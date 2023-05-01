@@ -3,6 +3,7 @@
 <suite name="Objectos only" verbose="1" >
   <test name="Tests">
     <classes>
+	  <class name="objectos.asciidoc.ConstrainedMonospaceTest"/>
       <class name="objectos.asciidoc.DocumentTest"/>
       <class name="objectos.asciidoc.ParagraphTest"/>
       <class name="objectos.asciidoc.SectionTest"/>

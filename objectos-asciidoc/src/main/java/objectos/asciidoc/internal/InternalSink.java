@@ -80,6 +80,11 @@ public class InternalSink {
 
     TEXT,
 
+    CONSTRAINED_MONOSPACE,
+    CONSTRAINED_MONOSPACE_END,
+    CONSTRAINED_MONOSPACE_LOOP,
+    CONSTRAINED_MONOSPACE_ROLLBACK,
+
     EOL,
 
     INLINE_MACRO,
@@ -116,7 +121,8 @@ public class InternalSink {
   private static final int PSEUDO_LIST_ITEM = 7;
   private static final int PSEUDO_ATTRIBUTES = 8;
   private static final int PSEUDO_INLINE_MACRO = 9;
-  private static final int PSEUDO_LENGTH = 10;
+  private static final int PSEUDO_MONOSPACED = 10;
+  private static final int PSEUDO_LENGTH = 11;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -291,7 +297,6 @@ public class InternalSink {
     }
 
     return nextNode != null;
-
   }
 
   final void inlineMacroIterator() {
@@ -372,6 +377,70 @@ public class InternalSink {
     }
   }
 
+  final boolean monospacedHasNext() {
+    switch (stackPeek()) {
+      case PseudoMonospaced.ITERATOR -> {
+        // pops ITERATOR
+        stackPop();
+
+        var mono = pseudoMonospaced();
+
+        // pushes return to indexes
+        stackPush(sourceMax, sourceIndex);
+
+        sourceIndex = mono.textStart;
+
+        sourceMax = mono.textEnd;
+
+        phrasing(PhraseElement.FRAGMENT);
+
+        if (nextNode != null) {
+          stackPush(PseudoMonospaced.NODE);
+        } else {
+          stackPush(PseudoMonospaced.EXHAUSTED);
+        }
+      }
+
+      case PseudoMonospaced.NODE -> {}
+
+      case PseudoMonospaced.NODE_CONSUMED -> {
+        // pops NODE_CONSUMED
+        stackPop();
+
+        phrasing(PhraseElement.FRAGMENT);
+
+        if (nextNode != null) {
+          stackPush(PseudoMonospaced.NODE);
+        } else {
+          // restore source state
+          sourceIndex = stackPop();
+          sourceMax = stackPop();
+
+          // we're done
+          stackPush(PseudoMonospaced.EXHAUSTED);
+        }
+      }
+
+      default -> stackStub();
+    }
+
+    return nextNode != null;
+  }
+
+  final void monospacedIterator() {
+    stackAssert(PseudoMonospaced.NODES);
+
+    stackReplace(PseudoMonospaced.ITERATOR);
+  }
+
+  final void monospacedNodes() {
+    switch (stackPeek()) {
+      case PseudoParagraph.NODE_CONSUMED -> stackReplace(PseudoMonospaced.NODES);
+
+      default -> stackStub();
+    }
+  }
+
   final Node nextNode() {
     var result = nextNode;
 
@@ -388,7 +457,8 @@ public class InternalSink {
     switch (stackPeek()) {
       case PseudoParagraph.ITERATOR,
            PseudoParagraph.NODE_CONSUMED,
-           PseudoInlineMacro.EXHAUSTED -> {
+           PseudoInlineMacro.EXHAUSTED,
+           PseudoMonospaced.EXHAUSTED -> {
         stackReplace(PseudoParagraph.PARSE);
 
         phrasing(PhraseElement.PARAGRAPH);
@@ -722,6 +792,14 @@ public class InternalSink {
 
   private boolean finalState() {
     return stackIndex == -1;
+  }
+
+  private Phrasing fragmentPhrasingEol() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Phrasing fragmentPhrasingStart() {
+    return Phrasing.BLOB;
   }
 
   private void headerParse(HeaderParse initialState) {
@@ -1347,14 +1425,6 @@ public class InternalSink {
     attributes.add(value);
   }
 
-  private Phrasing fragmentPhrasingEol() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  private Phrasing fragmentPhrasingStart() {
-    return Phrasing.BLOB;
-  }
-
   private void phrasing(PhraseElement phrase) {
     this.phrase = phrase;
 
@@ -1367,6 +1437,14 @@ public class InternalSink {
         case AUTOLINK -> phrasingAutolink();
 
         case BLOB -> phrasingBlob();
+
+        case CONSTRAINED_MONOSPACE -> phrasingConstrainedMonospace();
+
+        case CONSTRAINED_MONOSPACE_END -> phrasingConstrainedMonospaceEnd();
+
+        case CONSTRAINED_MONOSPACE_LOOP -> phrasingConstrainedMonospaceLoop();
+
+        case CONSTRAINED_MONOSPACE_ROLLBACK -> phrasingConstrainedMonospaceRollback();
 
         case CUSTOM_INLINE_MACRO -> phrasingCustomInlineMacro();
 
@@ -1413,7 +1491,7 @@ public class InternalSink {
     return switch (sourcePeek()) {
       case '\n' -> Phrasing.EOL;
 
-      case '`' -> throw new UnsupportedOperationException("Implement me");
+      case '`' -> Phrasing.CONSTRAINED_MONOSPACE;
 
       case '*' -> throw new UnsupportedOperationException("Implement me");
 
@@ -1423,6 +1501,109 @@ public class InternalSink {
 
       default -> advance(Phrasing.BLOB);
     };
+  }
+
+  /*
+
+  CC_WORD = CG_WORD = '\p{Word}'
+  CC_ALL = '.'
+  QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
+
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+  
+   */
+  private Phrasing phrasingConstrainedMonospace() {
+    int startSymbol = sourceIndex;
+
+    if (!sourceInc()) {
+      return toPhrasingEnd(startSymbol);
+    }
+
+    if (startSymbol != 0) {
+      char previous = sourceAt(startSymbol - 1);
+
+      var rollback = switch (previous) {
+        case ';', ':', '"', '\'', '`' -> true;
+
+        default -> isWord(previous);
+      };
+
+      if (rollback) {
+        return Phrasing.CONSTRAINED_MONOSPACE_ROLLBACK;
+      }
+    }
+
+    int phrasingStart = stackPeek();
+
+    int preTextLength = startSymbol - phrasingStart;
+
+    if (preTextLength > 0) {
+      // we'll resume at the (possible) monospace
+      sourceIndex = startSymbol;
+
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> throw new UnsupportedOperationException(
+        "Implement me :: not monospace"
+      );
+
+      case '`' -> throw new UnsupportedOperationException(
+        "Implement me :: maybe unconstrained"
+      );
+
+      default -> Phrasing.CONSTRAINED_MONOSPACE_LOOP;
+    };
+  }
+
+  private Phrasing phrasingConstrainedMonospaceEnd() {
+    int symbolEnd = sourceIndex;
+
+    // safe
+    char previous = sourceAt(symbolEnd - 1);
+
+    return switch (previous) {
+      case '\t', '\f', ' ' -> Phrasing.CONSTRAINED_MONOSPACE_ROLLBACK;
+
+      default -> {
+        if (!sourceInc()) {
+          yield toConstrainedMonospace();
+        }
+
+        char next = sourceAt(symbolEnd + 1);
+
+        if (isWord(next)) {
+          yield Phrasing.CONSTRAINED_MONOSPACE_ROLLBACK;
+        }
+
+        yield switch (next) {
+          case '"', '\'', '`' -> Phrasing.CONSTRAINED_MONOSPACE_ROLLBACK;
+
+          default -> toConstrainedMonospace();
+        };
+      }
+    };
+  }
+
+  private Phrasing phrasingConstrainedMonospaceLoop() {
+    if (!sourceInc()) {
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> throw new UnsupportedOperationException(
+        "Implement me :: maybe block end"
+      );
+
+      case '`' -> Phrasing.CONSTRAINED_MONOSPACE_END;
+
+      default -> Phrasing.CONSTRAINED_MONOSPACE_LOOP;
+    };
+  }
+
+  private Phrasing phrasingConstrainedMonospaceRollback() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private Phrasing phrasingCustomInlineMacro() {
@@ -1440,6 +1621,34 @@ public class InternalSink {
       case TITLE -> titlePhrasingEol();
     };
   }
+
+  /*
+
+  asciidoctor/lib/asciidoctor/rx.rb
+
+  # Matches an implicit link and some of the link inline macro.
+  #
+  # Examples
+  #
+  #   https://github.com
+  #   https://github.com[GitHub]
+  #   <https://github.com>
+  #   link:https://github.com[]
+  #   "https://github.com[]"
+  #   (https://github.com) <= parenthesis not included in autolink
+  #
+  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
+  
+  CG_BLANK=\p{Blank}
+  CG_ALL=.
+  
+  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+  
+  as PCRE
+  
+  (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+  
+  */
 
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -1514,34 +1723,6 @@ public class InternalSink {
 
     return Phrasing.STOP;
   }
-
-  /*
-
-  asciidoctor/lib/asciidoctor/rx.rb
-
-  # Matches an implicit link and some of the link inline macro.
-  #
-  # Examples
-  #
-  #   https://github.com
-  #   https://github.com[GitHub]
-  #   <https://github.com>
-  #   link:https://github.com[]
-  #   "https://github.com[]"
-  #   (https://github.com) <= parenthesis not included in autolink
-  #
-  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-  
-  CG_BLANK=\p{Blank}
-  CG_ALL=.
-  
-  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
-  as PCRE
-  
-  (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
-  */
 
   private Phrasing phrasingStart() {
     return switch (phrase) {
@@ -1732,6 +1913,10 @@ public class InternalSink {
 
   private PseudoListItem pseudoListItem() {
     return pseudoFactory(PSEUDO_LIST_ITEM, PseudoListItem::new);
+  }
+
+  private PseudoMonospaced pseudoMonospaced() {
+    return pseudoFactory(PSEUDO_MONOSPACED, PseudoMonospaced::new);
   }
 
   private PseudoParagraph pseudoParagraph() {
@@ -1980,6 +2165,23 @@ public class InternalSink {
 
       default -> Phrasing.BLOB;
     };
+  }
+
+  private Phrasing toConstrainedMonospace() {
+    int symbolStart = stackPop();
+
+    int symbolEnd = sourceIndex;
+
+    var monospaced = pseudoMonospaced();
+
+    // start after symbol
+    monospaced.textStart = symbolStart + 1;
+
+    monospaced.textEnd = symbolEnd;
+
+    nextNode = monospaced;
+
+    return Phrasing.STOP;
   }
 
   private Parse toMaybeUlist() {

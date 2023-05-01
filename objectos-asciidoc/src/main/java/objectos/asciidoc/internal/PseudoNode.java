@@ -22,16 +22,17 @@ import objectos.asciidoc.pseudom.Node;
 abstract class PseudoNode {
 
   /*
-  
+
   document = 100
   header = 200
   title = 300
   inline macro = 400
+  monospaced = 500
   paragraph = 600
   section = 700
   unordered list = 800
   list item = 1000
-
+  
   */
 
   final InternalSink sink;

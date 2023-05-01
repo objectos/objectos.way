@@ -78,6 +78,23 @@ public class ThisDoctorConverter extends StringConverter {
       out.append("</section>\n");
     } else if (transform.equals("inline_anchor")) {
       urlMacro(out, node);
+    } else if (transform.equals("inline_quoted")) {
+      var phrase = (PhraseNode) node;
+
+      var type = phrase.getType();
+
+      switch (type) {
+        case "monospaced" -> monospaced(out, phrase);
+
+        default -> {
+          var log = new LogRecord(
+            Severity.WARN,
+            "Unexpected phrase: type=" + type
+          );
+
+          log(log);
+        }
+      }
     } else if (transform.equals("paragraph")) {
       paragraph(out, node);
     } else if (transform.equals("preamble")) {
@@ -121,6 +138,12 @@ public class ThisDoctorConverter extends StringConverter {
     }
 
     return out.toString();
+  }
+
+  private void monospaced(StringBuilder out, PhraseNode node) {
+    out.append("<code>");
+    out.append(node.getText());
+    out.append("</code>");
   }
 
   private void paragraph(StringBuilder out, ContentNode node) {
