@@ -88,7 +88,7 @@ public class ConstrainedMonospaceTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   monospace
 
   - in the middle of paragraph
