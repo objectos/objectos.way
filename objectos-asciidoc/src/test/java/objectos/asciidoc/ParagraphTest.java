@@ -67,4 +67,27 @@ public class ParagraphTest {
     );
   }
 
+  @Test(description = """
+  multiline paragraph
+
+  - 3 lines
+  - second line ends with cmonospace
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      abc
+      d `e`
+      f
+      """,
+
+      """
+      <document>
+      <p>abc
+      d <code>e</code>
+      f</p>
+      </document>
+      """
+    );
+  }
 }
