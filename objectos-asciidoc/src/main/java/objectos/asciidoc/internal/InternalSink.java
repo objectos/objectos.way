@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private enum HeaderParse {
@@ -90,7 +90,8 @@ public class InternalSink {
     INLINE_MACRO,
     INLINE_MACRO_END,
 
-    CUSTOM_INLINE_MACRO,
+    CUSTOM_INLINE,
+    CUSTOM_INLINE_ROLLBACK,
 
     URI_MACRO,
     URI_MACRO_ATTRLIST,
@@ -1446,7 +1447,9 @@ public class InternalSink {
 
         case CONSTRAINED_MONOSPACE_ROLLBACK -> phrasingConstrainedMonospaceRollback();
 
-        case CUSTOM_INLINE_MACRO -> phrasingCustomInlineMacro();
+        case CUSTOM_INLINE -> phrasingCustomInline();
+
+        case CUSTOM_INLINE_ROLLBACK -> phrasingCustomInlineRollback();
 
         case EOL -> phrasingEol();
 
@@ -1504,13 +1507,13 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
 
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+  
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -1607,8 +1610,25 @@ public class InternalSink {
     return Phrasing.BLOB;
   }
 
-  private Phrasing phrasingCustomInlineMacro() {
-    throw new UnsupportedOperationException("Implement me");
+  private Phrasing phrasingCustomInline() {
+    if (!sourceInc()) {
+      return Phrasing.CUSTOM_INLINE_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Phrasing.CUSTOM_INLINE_ROLLBACK;
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: custom inline"
+      );
+    };
+  }
+
+  private Phrasing phrasingCustomInlineRollback() {
+    // no saved state
+    // just resume blob parsing
+
+    return Phrasing.BLOB;
   }
 
   private Phrasing phrasingEol() {
@@ -1624,9 +1644,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -1639,16 +1659,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
 
   private Phrasing phrasingInlineMacro() {
@@ -1697,9 +1717,6 @@ public class InternalSink {
       return toPhrasingEnd(sourceIndex);
     }
 
-    // pops phrasing start
-    stackPop();
-
     int nameEnd = colon;
 
     var name = sourceGet(nameStart, nameEnd);
@@ -1711,15 +1728,14 @@ public class InternalSink {
     return switch (name) {
       case "https" -> Phrasing.URI_MACRO;
 
-      default -> {
-        throw new UnsupportedOperationException(
-          "Implement me :: name=" + name
-        );
-      }
+      default -> Phrasing.CUSTOM_INLINE;
     };
   }
 
   private Phrasing phrasingInlineMacroEnd() {
+    // pops phrasing start
+    stackPop();
+
     nextNode = pseudoInlineMacro();
 
     return Phrasing.STOP;

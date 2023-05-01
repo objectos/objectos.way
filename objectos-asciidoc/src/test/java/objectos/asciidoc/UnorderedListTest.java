@@ -202,4 +202,44 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  unordered list
+
+  - simple elements
+  - asterisk
+  - single level
+  - section
+  """)
+  public void testCase06() {
+    tester.test(
+      """
+      == A
+
+      b c:
+
+      * d
+      * e
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title>A</title>
+      <p>b c:</p>
+
+      <unordered-list>
+      <item>
+      <text>d</text>
+      </item>
+      <item>
+      <text>e</text>
+      </item>
+      </unordered-list>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }

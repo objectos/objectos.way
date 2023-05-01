@@ -95,6 +95,12 @@ final class ThisDocumentProcessor {
     out.append("</code>");
   }
 
+  private void newLineIfNecessary() {
+    if (!"<document>\n".contentEquals(out)) {
+      out.append('\n');
+    }
+  }
+
   private void node(Node node) throws IOException {
     if (node instanceof Header header) {
       header(header);
@@ -134,9 +140,7 @@ final class ThisDocumentProcessor {
   private void section(Section section) throws IOException {
     int level = section.level();
 
-    if (!"<document>\n".contentEquals(out)) {
-      out.append('\n');
-    }
+    newLineIfNecessary();
 
     out.append("<section level=\"");
     out.append(level);
@@ -166,6 +170,8 @@ final class ThisDocumentProcessor {
   }
 
   private void unorderedList(UnorderedList list) throws IOException {
+    newLineIfNecessary();
+
     out.append("<unordered-list>\n");
 
     for (var node : list.nodes()) {
