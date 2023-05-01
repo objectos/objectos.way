@@ -48,4 +48,63 @@ public class ConstrainedMonospaceTest {
     );
   }
 
+  @Test(description = """
+  monospace
+
+  - constrained
+  - phrases
+  - well-formed
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      `a b` `c d`, `e f`
+      """,
+
+      """
+      <document>
+      <p><code>a b</code> <code>c d</code>, <code>e f</code></p>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  monospace
+
+  - in the middle of paragraph
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      a `b` c
+      """,
+
+      """
+      <document>
+      <p>a <code>b</code> c</p>
+      </document>
+      """
+    );
+  }
+
+  @Test(enabled = false, description = """
+  monospace
+
+  - in the middle of paragraph
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      a ` not ` c
+      """,
+
+      """
+      <document>
+      <p>a ` not ` c</p>
+      </document>
+      """
+    );
+  }
+
 }
