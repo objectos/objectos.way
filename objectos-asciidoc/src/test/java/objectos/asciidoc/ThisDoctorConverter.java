@@ -59,7 +59,13 @@ public class ThisDoctorConverter extends StringConverter {
         out.append("</title>\n");
       }
 
-      out.append(document.getContent());
+      var content = (String) document.getContent();
+
+      content = content.replaceAll("\n\n<section", "\n<section");
+
+      content = content.replaceAll("\n\n<unordered-list", "\n<unordered-list");
+
+      out.append(content);
       out.append("</document>\n");
     } else if (node instanceof Section section) {
       out.append("<section level=\"");

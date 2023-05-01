@@ -49,7 +49,6 @@ public class SectionTest {
       <document>
       <title>doc</title>
       <p>pream</p>
-
       <section level="1">
       <style>null</style>
       <title>L1</title>
@@ -87,12 +86,10 @@ public class SectionTest {
       <document>
       <title>doc</title>
       <p>pream</p>
-
       <section level="1">
       <style>null</style>
       <title>L1</title>
       <p>sect1</p>
-
       <section level="2">
       <style>null</style>
       <title>2</title>
@@ -166,7 +163,6 @@ public class SectionTest {
       </item>
       </unordered-list>
       </section>
-
       <section level="1">
       <style>null</style>
       <title>L2</title>
@@ -201,7 +197,6 @@ public class SectionTest {
       <title>A</title>
       <p>b</p>
       </section>
-
       <section level="1">
       <style>null</style>
       <title>C</title>
@@ -244,19 +239,16 @@ public class SectionTest {
       <style>null</style>
       <title>A</title>
       <p>b</p>
-
       <section level="2">
       <style>null</style>
       <title>C</title>
       <p>d</p>
-
       <section level="3">
       <style>null</style>
       <title>E</title>
       <p>f</p>
       </section>
       </section>
-
       <section level="2">
       <style>null</style>
       <title>G</title>
@@ -300,12 +292,10 @@ public class SectionTest {
       <style>null</style>
       <title>A</title>
       <p>b</p>
-
       <section level="2">
       <style>null</style>
       <title>C</title>
       <p>d</p>
-
       <section level="3">
       <style>null</style>
       <title>E</title>
@@ -313,7 +303,6 @@ public class SectionTest {
       </section>
       </section>
       </section>
-
       <section level="1">
       <style>null</style>
       <title>G</title>

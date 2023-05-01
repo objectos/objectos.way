@@ -19,9 +19,11 @@ import org.testng.annotations.Test;
 
 public class UnorderedListTest {
 
-  Tester tester = Tester.objectos();
+  final Tester tester;
 
-  public UnorderedListTest() {}
+  public UnorderedListTest() {
+    this(Tester.objectos());
+  }
 
   UnorderedListTest(Tester tester) {
     this.tester = tester;
@@ -227,7 +229,6 @@ public class UnorderedListTest {
       <style>null</style>
       <title>A</title>
       <p>b c:</p>
-
       <unordered-list>
       <item>
       <text>d</text>
@@ -237,6 +238,33 @@ public class UnorderedListTest {
       </item>
       </unordered-list>
       </section>
+      </document>
+      """
+    );
+  }
+
+  @Test(enabled = false, description = """
+  unordered list
+
+  - text with monospace
+  """)
+  public void testCase07() {
+    tester.test(
+      """
+      * a `b` c
+      * d
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a <code>b</code> c</text>
+      </item>
+      <item>
+      <text>d</text>
+      </item>
+      </unordered-list>
       </document>
       """
     );
