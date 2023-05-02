@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-  
+
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-  
+
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-  
+
    */
 
   private enum HeaderParse {
@@ -49,22 +49,72 @@ public class InternalSink {
     STOP,
 
     MARKER,
+    MARKER_LOOP,
+    MARKER_LOOP_TRIM,
+    MARKER_STOP,
 
     MAYBE_INDENTATION,
-    MAYBE_NEXT_ITEM,
-    MAYBE_NEXT_ITEM_TRIM,
     NEXT_ITEM_OR_NESTED,
     NEXT_ITEM,
     NOT_NEXT_ITEM,
+    NESTED,
+    NESTED_END,
 
     END_TRIM,
-    END;
+    END,
+
+    TEXT;
+  }
+
+  private enum Parse {
+    STOP,
+
+    /* document only */
+    DOCUMENT_START,
+    MAYBE_HEADER,
+    MAYBE_HEADER_TRIM,
+    HEADER,
+    NOT_HEADER,
+
+    /* document, section or phrase */
+
+    BODY,
+    BODY_TRIM,
+
+    MAYBE_ATTRLIST,
+    NAME_OR_VALUE,
+    MAYBE_ATTRLIST_END,
+    MAYBE_ATTRLIST_END_TRIM,
+    ATTRLIST,
+    NOT_ATTRLIST,
+
+    MAYBE_BOLD_OR_ULIST,
+    NOT_BOLD_OR_ULIST,
+
+    LISTING_OR_ULIST,
+    NOT_LISTING_OR_ULIST,
+    ULIST,
+    ULIST_STOP,
+    NOT_ULIST,
+
+    MAYBE_SECTION,
+    MAYBE_SECTION_TRIM,
+    SECTION,
+    NOT_SECTION,
+
+    PARAGRAPH,
+
+    /* section */
+
+    EXHAUSTED;
   }
 
   private enum PhraseElement {
     FRAGMENT,
 
     LIST_ITEM,
+
+    LIST_ITEM_NEXT,
 
     PARAGRAPH,
 
@@ -107,10 +157,8 @@ public class InternalSink {
 
   private static final int ATTRLIST_BLOCK = -1;
   private static final int _ULIST_TOP = -2;
-  private static final int _NEXT_ITEM = -3;
-  private static final int _NESTED = -4;
-  private static final int _NESTED_END = -5;
-  private static final int _LIST_END = -6;
+  private static final int HINT_NEXT_ITEM = -3;
+  private static final int HINT_NESTED_END = -4;
 
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
@@ -336,24 +384,40 @@ public class InternalSink {
         // pops state
         stackPop();
 
-        int hint = stackPeek();
+        phrasing(PhraseElement.LIST_ITEM_NEXT);
 
+        if (nextNode == null) {
+          stackPush(PseudoListItem.EXHAUSTED);
+        } else if (nextNode instanceof Node.Text) {
+          stackPush(PseudoListItem.TEXT);
+        } else if (nextNode instanceof Node.UnorderedList) {
+          stackPush(PseudoListItem.ULIST);
+        } else {
+          throw new UnsupportedOperationException(
+            "Implement me :: node.class=" + nextNode.getClass()
+          );
+        }
+
+        /*
+        int hint = stackPeek();
+        
         switch (hint) {
           case _NESTED -> {
             // pops hint
             stackPop();
-
+        
             nextNode = pseudoUnorderedList();
-
+        
             stackPush(PseudoListItem.ULIST);
           }
-
+        
           case _NESTED_END -> stackPush(PseudoListItem.EXHAUSTED);
-
+        
           case _NEXT_ITEM -> stackPush(PseudoListItem.EXHAUSTED);
-
+        
           default -> stackPush(_LIST_END, PseudoListItem.EXHAUSTED);
         }
+        */
       }
 
       case PseudoListItem.ULIST -> {}
@@ -597,31 +661,36 @@ public class InternalSink {
         int hint = stackPop();
 
         switch (hint) {
-          case _NESTED_END -> stackPush(PseudoUnorderedList.EXHAUSTED);
+          case HINT_NESTED_END -> stackPush(PseudoUnorderedList.EXHAUSTED);
 
-          case _NEXT_ITEM -> {
+          case HINT_NEXT_ITEM -> {
             nextNode = pseudoListItem();
 
             stackPush(PseudoUnorderedList.ITEM);
           }
 
+          /*
           case _LIST_END -> {
             // marker end
             stackPop();
-
+          
             // marker start
             stackPop();
-
+          
             int top = stackPop();
-
+          
             assert top == _ULIST_TOP : "top=" + top;
+          
+            stackPush(PseudoUnorderedList.EXHAUSTED);
+          }
+          */
+
+          default -> {
+            // not a hint, push it back
+            stackPush(hint);
 
             stackPush(PseudoUnorderedList.EXHAUSTED);
           }
-
-          default -> throw new UnsupportedOperationException(
-            "Implement me :: hint=" + hint
-          );
         }
       }
 
@@ -682,7 +751,7 @@ public class InternalSink {
 
         case SECTION -> documentParseSection();
 
-        case ULIST -> documentParseUlist();
+        case ULIST_STOP -> documentParseUlistStop();
 
         default -> parse(state);
       };
@@ -783,7 +852,7 @@ public class InternalSink {
     return Parse.STOP;
   }
 
-  private Parse documentParseUlist() {
+  private Parse documentParseUlistStop() {
     stackPush(PseudoDocument.ULIST);
 
     nextNode = pseudoUnorderedList();
@@ -881,6 +950,22 @@ public class InternalSink {
     };
   }
 
+  private Phrasing listItemNextPhrasingEol() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Phrasing listItemNextPhrasingStart() {
+    if (sourceEof()) {
+      return Phrasing.STOP;
+    }
+
+    return switch (sourcePeek()) {
+      case '-', '*' -> listItemPhrasing(sourceIndex, ListItemPhrasing.MARKER);
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
+  }
+
   private Phrasing listItemPhrasing(int eol, ListItemPhrasing initial) {
     Phrasing result = null;
 
@@ -898,14 +983,30 @@ public class InternalSink {
 
         case MARKER -> listItemPhrasingMarker();
 
+        case MARKER_LOOP -> listItemPhrasingMarkerLoop();
+
+        case MARKER_LOOP_TRIM -> listItemPhrasingMarkerLoopTrim();
+
+        case MARKER_STOP -> listItemPhrasingMarkerStop();
+
         case MAYBE_INDENTATION -> listItemPhrasingMaybeIndentation();
 
-        case MAYBE_NEXT_ITEM -> listItemPhrasingMaybeNextItem();
+        case NESTED -> {
+          nextNode = pseudoUnorderedList();
 
-        case MAYBE_NEXT_ITEM_TRIM -> listItemPhrasingMaybeNextItemTrim();
+          result = Phrasing.STOP;
+
+          yield ListItemPhrasing.STOP;
+        }
+
+        case NESTED_END -> {
+          result = Phrasing.STOP;
+
+          yield ListItemPhrasing.STOP;
+        }
 
         case NEXT_ITEM -> {
-          result = Phrasing.TEXT;
+          result = Phrasing.STOP;
 
           yield ListItemPhrasing.STOP;
         }
@@ -914,6 +1015,12 @@ public class InternalSink {
 
         case NOT_NEXT_ITEM -> {
           throw new UnsupportedOperationException("Implement me");
+        }
+
+        case TEXT -> {
+          result = toPhrasingEnd(eol);
+
+          yield ListItemPhrasing.STOP;
         }
 
         default -> throw new UnsupportedOperationException(
@@ -942,9 +1049,7 @@ public class InternalSink {
   private Phrasing listItemPhrasingEol() {
     int atEol = sourceIndex;
 
-    sourceAdvance();
-
-    if (!sourceMore()) {
+    if (!sourceInc()) {
       return toPhrasingEnd(atEol);
     }
 
@@ -962,12 +1067,72 @@ public class InternalSink {
   private ListItemPhrasing listItemPhrasingMarker() {
     int markerStart = sourceIndex;
 
-    char marker = sourceNext();
+    char marker = sourceAt(markerStart);
 
     // marker start
     stackPush(markerStart, marker);
 
-    return ListItemPhrasing.MAYBE_NEXT_ITEM;
+    return ListItemPhrasing.MARKER_LOOP;
+  }
+
+  private ListItemPhrasing listItemPhrasingMarkerLoop() {
+    if (!sourceInc()) {
+      return ListItemPhrasing.NOT_NEXT_ITEM;
+    }
+
+    char peek = sourcePeek();
+
+    char marker = (char) stackPeek();
+
+    if (peek == marker) {
+      return ListItemPhrasing.MARKER_LOOP;
+    }
+
+    return switch (peek) {
+      case '\t', '\f', ' ' -> {
+        // pops marker
+        stackPop();
+
+        // pushes marker end
+        stackPush(sourceIndex);
+
+        yield ListItemPhrasing.MARKER_LOOP_TRIM;
+      }
+
+      default -> ListItemPhrasing.NOT_NEXT_ITEM;
+    };
+  }
+
+  private ListItemPhrasing listItemPhrasingMarkerLoopTrim() {
+    if (!sourceInc()) {
+      return ListItemPhrasing.NOT_NEXT_ITEM;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> ListItemPhrasing.MARKER_LOOP_TRIM;
+
+      default -> ListItemPhrasing.MARKER_STOP;
+    };
+  }
+
+  private ListItemPhrasing listItemPhrasingMarkerStop() {
+    return switch (phrase) {
+      case LIST_ITEM -> {
+        // pops marker end
+        stackPop();
+
+        // resume at marker start
+        sourceIndex = stackPop();
+
+        yield ListItemPhrasing.TEXT;
+      }
+
+      case LIST_ITEM_NEXT -> ListItemPhrasing.NEXT_ITEM_OR_NESTED;
+
+      default -> throw new AssertionError(
+        "Unexpected phrase=" + phrase
+      );
+    };
   }
 
   private ListItemPhrasing listItemPhrasingMaybeIndentation() {
@@ -984,50 +1149,10 @@ public class InternalSink {
     };
   }
 
-  private ListItemPhrasing listItemPhrasingMaybeNextItem() {
-    if (!sourceMore()) {
-      return ListItemPhrasing.NOT_NEXT_ITEM;
-    }
-
-    char peek = sourcePeek();
-
-    char marker = (char) stackPeek();
-
-    if (peek == marker) {
-      return advance(ListItemPhrasing.MAYBE_NEXT_ITEM);
-    }
-
-    return switch (peek) {
-      case '\t', '\f', ' ' -> {
-        // pops marker
-        stackPop();
-
-        // marker end
-        stackPush(sourceIndex);
-
-        yield advance(ListItemPhrasing.MAYBE_NEXT_ITEM_TRIM);
-      }
-
-      default -> ListItemPhrasing.NOT_NEXT_ITEM;
-    };
-  }
-
-  private ListItemPhrasing listItemPhrasingMaybeNextItemTrim() {
-    if (!sourceMore()) {
-      return ListItemPhrasing.NOT_NEXT_ITEM;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(ListItemPhrasing.MAYBE_NEXT_ITEM_TRIM);
-
-      default -> ListItemPhrasing.NEXT_ITEM_OR_NESTED;
-    };
-  }
-
   private ListItemPhrasing listItemPhrasingNextItemOrNested(int eol) {
     var thisEnd = stackPop();
     var thisStart = stackPop();
-    var phrasingStart = stackPop();
+    /*var phrasingStart =*/stackPop();
     var thisMarker = sourceGet(thisStart, thisEnd);
 
     int prevEnd = stackPop();
@@ -1038,11 +1163,8 @@ public class InternalSink {
       // updates marker to current indexes
       stackPush(thisStart, thisEnd);
 
-      // pushes hint
-      stackPush(_NEXT_ITEM);
-
-      // pushes text indexes
-      stackPush(phrasingStart, eol);
+      // pushes HINT
+      stackPush(HINT_NEXT_ITEM);
 
       return ListItemPhrasing.NEXT_ITEM;
     }
@@ -1056,13 +1178,7 @@ public class InternalSink {
       // pushes the new level marker
       stackPush(thisStart, thisEnd);
 
-      // pushes hint
-      stackPush(_NESTED);
-
-      // pushes text indexes
-      stackPush(phrasingStart, eol);
-
-      return ListItemPhrasing.NEXT_ITEM;
+      return ListItemPhrasing.NESTED;
     }
 
     var found = false;
@@ -1088,13 +1204,10 @@ public class InternalSink {
       // pushes the new level marker
       stackPush(thisStart, thisEnd);
 
-      // pushes hint
-      stackPush(_NEXT_ITEM, _NESTED_END);
+      // pushes HINT
+      stackPush(HINT_NEXT_ITEM, HINT_NESTED_END);
 
-      // pushes text indexes
-      stackPush(phrasingStart, eol);
-
-      return ListItemPhrasing.NEXT_ITEM;
+      return ListItemPhrasing.NESTED_END;
     }
 
     throw new UnsupportedOperationException(
@@ -1103,11 +1216,7 @@ public class InternalSink {
   }
 
   private Phrasing listItemPhrasingStart() {
-    if (!sourceMore()) {
-      return Phrasing.STOP;
-    } else {
-      return Phrasing.BLOB;
-    }
+    return Phrasing.BLOB;
   }
 
   private Phrasing paragraphPhrasingEol() {
@@ -1166,6 +1275,8 @@ public class InternalSink {
 
       case BODY -> parseBody();
 
+      case LISTING_OR_ULIST -> parseListingOrUlist();
+
       case MAYBE_ATTRLIST -> parseMaybeAttrlist();
 
       case MAYBE_ATTRLIST_END -> parseMaybeAttrlistEnd();
@@ -1174,17 +1285,15 @@ public class InternalSink {
 
       case MAYBE_BOLD_OR_ULIST -> parseMaybeBoldOrUlist();
 
-      case MAYBE_LISTING_OR_ULIST -> parseMaybeListingOrUlist();
-
       case MAYBE_SECTION -> parseMaybeSection();
 
       case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
 
-      case MAYBE_ULIST -> parseMaybeUlist();
-
       case NAME_OR_VALUE -> parseNameOrValue();
 
       case NOT_SECTION -> parseNotSection();
+
+      case ULIST -> parseUlist();
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -1228,7 +1337,7 @@ public class InternalSink {
         // rollback index or marker start
         stackPush(sourceIndex);
 
-        yield advance(Parse.MAYBE_LISTING_OR_ULIST);
+        yield Parse.LISTING_OR_ULIST;
       }
 
       case '*' -> {
@@ -1248,6 +1357,20 @@ public class InternalSink {
       }
 
       default -> Parse.PARAGRAPH;
+    };
+  }
+
+  private Parse parseListingOrUlist() {
+    if (!sourceInc()) {
+      return Parse.NOT_LISTING_OR_ULIST;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> toUlist();
+
+      case '-' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> Parse.NOT_LISTING_OR_ULIST;
     };
   }
 
@@ -1322,23 +1445,9 @@ public class InternalSink {
     }
 
     return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> toMaybeUlist();
+      case '\t', '\f', ' ' -> toUlist();
 
       case '*' -> throw new UnsupportedOperationException("Implement me");
-
-      default -> Parse.NOT_LISTING_OR_ULIST;
-    };
-  }
-
-  private Parse parseMaybeListingOrUlist() {
-    if (!sourceMore()) {
-      return Parse.NOT_LISTING_OR_ULIST;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> toMaybeUlist();
-
-      case '-' -> throw new UnsupportedOperationException("Implement me");
 
       default -> Parse.NOT_LISTING_OR_ULIST;
     };
@@ -1372,20 +1481,6 @@ public class InternalSink {
       case '\t', '\f', ' ' -> advance(Parse.MAYBE_SECTION_TRIM);
 
       default -> Parse.SECTION;
-    };
-  }
-
-  private Parse parseMaybeUlist() {
-    if (!sourceMore()) {
-      return Parse.NOT_ULIST;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_ULIST);
-
-      case '\n' -> Parse.NOT_ULIST;
-
-      default -> Parse.ULIST;
     };
   }
 
@@ -1424,6 +1519,20 @@ public class InternalSink {
     var attributes = pseudoAttributes();
 
     attributes.add(value);
+  }
+
+  private Parse parseUlist() {
+    if (!sourceInc()) {
+      return Parse.NOT_ULIST;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Parse.ULIST;
+
+      case '\n' -> Parse.NOT_ULIST;
+
+      default -> Parse.ULIST_STOP;
+    };
   }
 
   private void phrasing(PhraseElement phrase) {
@@ -1507,13 +1616,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -1624,6 +1733,34 @@ public class InternalSink {
     };
   }
 
+  /*
+  
+  asciidoctor/lib/asciidoctor/rx.rb
+  
+  # Matches an implicit link and some of the link inline macro.
+  #
+  # Examples
+  #
+  #   https://github.com
+  #   https://github.com[GitHub]
+  #   <https://github.com>
+  #   link:https://github.com[]
+  #   "https://github.com[]"
+  #   (https://github.com) <= parenthesis not included in autolink
+  #
+  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
+
+  CG_BLANK=\p{Blank}
+  CG_ALL=.
+
+  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+
+  as PCRE
+
+  (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
+
+  */
+
   private Phrasing phrasingCustomInlineRollback() {
     // no saved state
     // just resume blob parsing
@@ -1637,39 +1774,13 @@ public class InternalSink {
 
       case LIST_ITEM -> listItemPhrasingEol();
 
+      case LIST_ITEM_NEXT -> listItemNextPhrasingEol();
+
       case PARAGRAPH -> paragraphPhrasingEol();
 
       case TITLE -> titlePhrasingEol();
     };
   }
-
-  /*
-
-  asciidoctor/lib/asciidoctor/rx.rb
-
-  # Matches an implicit link and some of the link inline macro.
-  #
-  # Examples
-  #
-  #   https://github.com
-  #   https://github.com[GitHub]
-  #   <https://github.com>
-  #   link:https://github.com[]
-  #   "https://github.com[]"
-  #   (https://github.com) <= parenthesis not included in autolink
-  #
-  InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-  
-  CG_BLANK=\p{Blank}
-  CG_ALL=.
-  
-  (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
-  as PCRE
-  
-  (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
-  */
 
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -1746,6 +1857,8 @@ public class InternalSink {
       case FRAGMENT -> fragmentPhrasingStart();
 
       case LIST_ITEM -> listItemPhrasingStart();
+
+      case LIST_ITEM_NEXT -> listItemNextPhrasingStart();
 
       case PARAGRAPH -> paragraphPhrasingStart();
 
@@ -1976,7 +2089,7 @@ public class InternalSink {
 
         case SECTION -> sectionParseSection();
 
-        case ULIST -> sectionParseUlist();
+        case ULIST_STOP -> sectionParseUlistStop();
 
         default -> parse(state);
       };
@@ -2049,7 +2162,7 @@ public class InternalSink {
     return Parse.STOP;
   }
 
-  private Parse sectionParseUlist() {
+  private Parse sectionParseUlistStop() {
     int markerEnd = stackPop();
 
     int markerStart = stackPop();
@@ -2077,6 +2190,10 @@ public class InternalSink {
 
   private char sourceAt(int index) {
     return source.charAt(index);
+  }
+
+  private boolean sourceEof() {
+    return sourceIndex >= sourceMax;
   }
 
   private String sourceGet(int start, int end) {
@@ -2201,7 +2318,13 @@ public class InternalSink {
     return Phrasing.STOP;
   }
 
-  private Parse toMaybeUlist() {
+  private Phrasing toPhrasingEnd(int last) {
+    stackPush(last);
+
+    return Phrasing.TEXT;
+  }
+
+  private Parse toUlist() {
     int markerStart = stackPop();
 
     stackPush(_ULIST_TOP, markerStart);
@@ -2209,13 +2332,7 @@ public class InternalSink {
     // marker end
     stackPush(sourceIndex);
 
-    return advance(Parse.MAYBE_ULIST);
-  }
-
-  private Phrasing toPhrasingEnd(int last) {
-    stackPush(last);
-
-    return Phrasing.TEXT;
+    return Parse.ULIST;
   }
 
 }

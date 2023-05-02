@@ -19,11 +19,9 @@ import org.testng.annotations.Test;
 
 public class UnorderedListTest {
 
-  final Tester tester;
+  Tester tester = Tester.objectos();
 
-  public UnorderedListTest() {
-    this(Tester.objectos());
-  }
+  public UnorderedListTest() {}
 
   UnorderedListTest(Tester tester) {
     this.tester = tester;

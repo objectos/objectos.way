@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
   
-<suite name="Objectos only" verbose="1" >
+<suite name="Objectos only" verbose="2" >
   <test name="Tests">
     <classes>
 	  <class name="objectos.asciidoc.ConstrainedMonospaceTest"/>
