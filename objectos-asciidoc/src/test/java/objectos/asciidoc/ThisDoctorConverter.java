@@ -61,6 +61,8 @@ public class ThisDoctorConverter extends StringConverter {
 
       var content = (String) document.getContent();
 
+      content = content.replaceAll("\n\n<p>", "\n<p>");
+
       content = content.replaceAll("\n\n<section", "\n<section");
 
       content = content.replaceAll("\n\n<unordered-list", "\n<unordered-list");

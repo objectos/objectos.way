@@ -297,4 +297,34 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  unordered list
+
+  - ul should end before the paragraph
+  """)
+  public void testCase09() {
+    tester.test(
+      """
+      * a
+      * b
+
+      c
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      <item>
+      <text>b</text>
+      </item>
+      </unordered-list>
+      <p>c</p>
+      </document>
+      """
+    );
+  }
+
 }
