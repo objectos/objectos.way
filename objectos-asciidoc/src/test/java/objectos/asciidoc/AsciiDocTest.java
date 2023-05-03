@@ -53,7 +53,6 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
         new ListingBlockTest(this),
         new ParagraphTestToRemove(this),
         new PreambleTest(this),
-        new SectionTestToRemove(this),
         new SourceCodeBlockTest(this),
         new UnorderedListTestToRemove(this)
     };

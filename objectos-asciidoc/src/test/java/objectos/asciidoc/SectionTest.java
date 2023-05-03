@@ -313,4 +313,27 @@ public class SectionTest {
     );
   }
 
+  @Test(description = """
+  title is constrained monospace
+  """)
+  public void testCase08() {
+    tester.test(
+      """
+      == `A`
+
+      b
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title><code>A</code></title>
+      <p>b</p>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }
