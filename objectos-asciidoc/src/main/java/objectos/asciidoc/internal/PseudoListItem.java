@@ -28,9 +28,13 @@ public final class PseudoListItem extends PseudoNode
   static final int ITERATOR = -1001;
   static final int TEXT = -1002;
   static final int TEXT_CONSUMED = -1003;
-  static final int ULIST = -1004;
-  static final int ULIST_CONSUMED = -1005;
+  static final int BLOCK = -1004;
+  static final int BLOCK_CONSUMED = -1005;
   static final int EXHAUSTED = -1006;
+
+  int textStart;
+
+  int textEnd;
 
   PseudoListItem(InternalSink sink) {
     super(sink);

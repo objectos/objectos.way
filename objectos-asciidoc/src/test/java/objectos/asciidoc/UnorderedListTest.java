@@ -241,7 +241,7 @@ public class UnorderedListTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   unordered list
 
   - text with monospace
@@ -267,5 +267,15 @@ public class UnorderedListTest {
       """
     );
   }
+
+  /*
+  
+  TC08
+
+  * a
+  * b
+  * 
+  
+   */
 
 }

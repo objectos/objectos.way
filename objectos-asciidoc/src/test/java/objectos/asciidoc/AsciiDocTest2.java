@@ -18,11 +18,11 @@ package objectos.asciidoc;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-public class AsciidoctorTest2 {
+public class AsciiDocTest2 {
 
   @Factory
   public Object[] _factory() {
-    var tester = Tester.doctor();
+    var tester = Tester.objectos();
 
     return new Object[] {
         new ConstrainedMonospaceTest(tester),

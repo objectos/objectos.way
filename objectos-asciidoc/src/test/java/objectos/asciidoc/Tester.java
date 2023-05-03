@@ -118,4 +118,9 @@ abstract class Tester {
     return html;
   }
 
+  @Override
+  public String toString() {
+    return getClass().getSimpleName();
+  }
+
 }

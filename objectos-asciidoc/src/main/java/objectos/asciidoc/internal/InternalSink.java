@@ -45,25 +45,26 @@ public class InternalSink {
     EXHAUSTED;
   }
 
-  private enum ListItemPhrasing {
+  private enum ListItemText {
     STOP,
+
+    START,
+    LOOP,
+    EOF,
+    EOL,
+    EOL_TRIM,
+
+    TEXT_EOF,
+
+    CONTINUATION,
+
+    INDENTATION,
 
     MARKER,
     MARKER_LOOP,
     MARKER_LOOP_TRIM,
-    MARKER_STOP,
-
-    MAYBE_INDENTATION,
-    NEXT_ITEM_OR_NESTED,
-    NEXT_ITEM,
-    NOT_NEXT_ITEM,
-    NESTED,
-    NESTED_END,
-
-    END_TRIM,
-    END,
-
-    TEXT;
+    MARKER_ROLLBACK,
+    MARKER_STOP;
   }
 
   private enum Parse {
@@ -112,10 +113,6 @@ public class InternalSink {
   private enum PhraseElement {
     FRAGMENT,
 
-    LIST_ITEM,
-
-    LIST_ITEM_NEXT,
-
     PARAGRAPH,
 
     TITLE;
@@ -156,10 +153,12 @@ public class InternalSink {
   }
 
   private static final int ATTRLIST_BLOCK = -1;
-  private static final int _ULIST_TOP = -2;
-  private static final int HINT_NEXT_ITEM = -3;
-  private static final int HINT_NESTED_END = -4;
+  private static final int HINT_CONTINUE_OR_NEST = -2;
+  private static final int HINT_LIST_END = -3;
+  private static final int HINT_NEXT_ITEM = -4;
+  private static final int HINT_NESTED_END = -5;
 
+  private static final int MARKER_ULIST = -7;
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
   private static final int PSEUDO_TITLE = 2;
@@ -171,6 +170,7 @@ public class InternalSink {
   private static final int PSEUDO_ATTRIBUTES = 8;
   private static final int PSEUDO_INLINE_MACRO = 9;
   private static final int PSEUDO_MONOSPACED = 10;
+
   private static final int PSEUDO_LENGTH = 11;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
@@ -364,63 +364,61 @@ public class InternalSink {
 
   final boolean listItemHasNext() {
     switch (stackPeek()) {
-      case PseudoUnorderedList.EXHAUSTED -> stackReplace(PseudoListItem.EXHAUSTED);
+      case PseudoListItem.BLOCK -> {}
 
       case PseudoListItem.ITERATOR -> {
         stackPop();
 
-        phrasing(PhraseElement.LIST_ITEM);
+        var item = listItemText();
+
+        // pushes return to indexes
+        stackPush(sourceMax, sourceIndex);
+
+        sourceIndex = item.textStart;
+
+        sourceMax = item.textEnd;
+
+        phrasing(PhraseElement.FRAGMENT);
 
         if (nextNode != null) {
           stackPush(PseudoListItem.TEXT);
-        } else {
-          throw new UnsupportedOperationException("Implement me");
+
+          break;
         }
+
+        throw new UnsupportedOperationException(
+          "Implement me :: no text, maybe block?"
+        );
       }
 
       case PseudoListItem.TEXT -> {}
 
-      case PseudoListItem.TEXT_CONSUMED -> {
-        // pops state
+      case PseudoListItem.TEXT_CONSUMED,
+           PseudoMonospaced.EXHAUSTED -> {
+        // pops TEXT_CONSUMED
         stackPop();
 
-        phrasing(PhraseElement.LIST_ITEM_NEXT);
+        phrasing(PhraseElement.FRAGMENT);
 
-        if (nextNode == null) {
-          stackPush(PseudoListItem.EXHAUSTED);
-        } else if (nextNode instanceof Node.Text) {
+        if (nextNode != null) {
           stackPush(PseudoListItem.TEXT);
-        } else if (nextNode instanceof Node.UnorderedList) {
-          stackPush(PseudoListItem.ULIST);
-        } else {
-          throw new UnsupportedOperationException(
-            "Implement me :: node.class=" + nextNode.getClass()
-          );
+
+          break;
         }
 
-        /*
-        int hint = stackPeek();
-        
-        switch (hint) {
-          case _NESTED -> {
-            // pops hint
-            stackPop();
-        
-            nextNode = pseudoUnorderedList();
-        
-            stackPush(PseudoListItem.ULIST);
-          }
-        
-          case _NESTED_END -> stackPush(PseudoListItem.EXHAUSTED);
-        
-          case _NEXT_ITEM -> stackPush(PseudoListItem.EXHAUSTED);
-        
-          default -> stackPush(_LIST_END, PseudoListItem.EXHAUSTED);
-        }
-        */
+        // restore source state
+        sourceIndex = stackPop();
+
+        sourceMax = stackPop();
+
+        listItemHint();
       }
 
-      case PseudoListItem.ULIST -> {}
+      case PseudoUnorderedList.EXHAUSTED -> {
+        // TODO there might be more blocks below the nested unordered list...
+
+        stackReplace(PseudoListItem.EXHAUSTED);
+      }
 
       default -> stackStub();
     }
@@ -500,7 +498,8 @@ public class InternalSink {
 
   final void monospacedNodes() {
     switch (stackPeek()) {
-      case PseudoParagraph.NODE_CONSUMED -> stackReplace(PseudoMonospaced.NODES);
+      case PseudoListItem.TEXT_CONSUMED,
+           PseudoParagraph.NODE_CONSUMED -> stackReplace(PseudoMonospaced.NODES);
 
       default -> stackStub();
     }
@@ -661,6 +660,8 @@ public class InternalSink {
         int hint = stackPop();
 
         switch (hint) {
+          case HINT_LIST_END -> stackPush(PseudoUnorderedList.EXHAUSTED);
+
           case HINT_NESTED_END -> stackPush(PseudoUnorderedList.EXHAUSTED);
 
           case HINT_NEXT_ITEM -> {
@@ -669,28 +670,9 @@ public class InternalSink {
             stackPush(PseudoUnorderedList.ITEM);
           }
 
-          /*
-          case _LIST_END -> {
-            // marker end
-            stackPop();
-          
-            // marker start
-            stackPop();
-          
-            int top = stackPop();
-          
-            assert top == _ULIST_TOP : "top=" + top;
-          
-            stackPush(PseudoUnorderedList.EXHAUSTED);
-          }
-          */
-
-          default -> {
-            // not a hint, push it back
-            stackPush(hint);
-
-            stackPush(PseudoUnorderedList.EXHAUSTED);
-          }
+          default -> throw new UnsupportedOperationException(
+            "Implement me :: hint=" + hint
+          );
         }
       }
 
@@ -715,8 +697,8 @@ public class InternalSink {
   final void unorderedListNodes() {
     switch (stackPeek()) {
       case PseudoDocument.ULIST_CONSUMED,
-           PseudoSection.ULIST_CONSUMED,
-           PseudoListItem.ULIST_CONSUMED -> stackReplace(PseudoUnorderedList.NODES);
+           PseudoListItem.BLOCK_CONSUMED,
+           PseudoSection.ULIST_CONSUMED -> stackReplace(PseudoUnorderedList.NODES);
 
       default -> stackStub();
     }
@@ -865,7 +847,7 @@ public class InternalSink {
   }
 
   private Phrasing fragmentPhrasingEol() {
-    throw new UnsupportedOperationException("Implement me");
+    return advance(Phrasing.BLOB);
   }
 
   private Phrasing fragmentPhrasingStart() {
@@ -950,209 +932,23 @@ public class InternalSink {
     };
   }
 
-  private Phrasing listItemNextPhrasingEol() {
-    throw new UnsupportedOperationException("Implement me");
-  }
+  private void listItemHint() {
+    int hint = stackPop();
 
-  private Phrasing listItemNextPhrasingStart() {
-    if (sourceEof()) {
-      return Phrasing.STOP;
-    }
+    switch (hint) {
+      case HINT_CONTINUE_OR_NEST -> listItemHintContinueOrNest();
 
-    return switch (sourcePeek()) {
-      case '-', '*' -> listItemPhrasing(sourceIndex, ListItemPhrasing.MARKER);
+      case HINT_LIST_END -> listItemHintListEnd();
 
-      default -> throw new UnsupportedOperationException("Implement me");
-    };
-  }
-
-  private Phrasing listItemPhrasing(int eol, ListItemPhrasing initial) {
-    Phrasing result = null;
-
-    var state = initial;
-
-    while (state != ListItemPhrasing.STOP) {
-      state = switch (state) {
-        case END -> {
-          result = toPhrasingEnd(eol);
-
-          yield ListItemPhrasing.STOP;
-        }
-
-        case END_TRIM -> listItemPhrasingEndTrim();
-
-        case MARKER -> listItemPhrasingMarker();
-
-        case MARKER_LOOP -> listItemPhrasingMarkerLoop();
-
-        case MARKER_LOOP_TRIM -> listItemPhrasingMarkerLoopTrim();
-
-        case MARKER_STOP -> listItemPhrasingMarkerStop();
-
-        case MAYBE_INDENTATION -> listItemPhrasingMaybeIndentation();
-
-        case NESTED -> {
-          nextNode = pseudoUnorderedList();
-
-          result = Phrasing.STOP;
-
-          yield ListItemPhrasing.STOP;
-        }
-
-        case NESTED_END -> {
-          result = Phrasing.STOP;
-
-          yield ListItemPhrasing.STOP;
-        }
-
-        case NEXT_ITEM -> {
-          result = Phrasing.STOP;
-
-          yield ListItemPhrasing.STOP;
-        }
-
-        case NEXT_ITEM_OR_NESTED -> listItemPhrasingNextItemOrNested(eol);
-
-        case NOT_NEXT_ITEM -> {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        case TEXT -> {
-          result = toPhrasingEnd(eol);
-
-          yield ListItemPhrasing.STOP;
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-        );
-      };
-    }
-
-    assert result != null;
-
-    return result;
-  }
-
-  private ListItemPhrasing listItemPhrasingEndTrim() {
-    if (!sourceMore()) {
-      return ListItemPhrasing.END;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(ListItemPhrasing.END_TRIM);
-
-      default -> ListItemPhrasing.END;
-    };
-  }
-
-  private Phrasing listItemPhrasingEol() {
-    int atEol = sourceIndex;
-
-    if (!sourceInc()) {
-      return toPhrasingEnd(atEol);
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> listItemPhrasing(atEol, ListItemPhrasing.MAYBE_INDENTATION);
-
-      case '\n' -> listItemPhrasing(atEol, ListItemPhrasing.END_TRIM);
-
-      case '-', '*' -> listItemPhrasing(atEol, ListItemPhrasing.MARKER);
-
-      default -> advance(Phrasing.BLOB);
-    };
-  }
-
-  private ListItemPhrasing listItemPhrasingMarker() {
-    int markerStart = sourceIndex;
-
-    char marker = sourceAt(markerStart);
-
-    // marker start
-    stackPush(markerStart, marker);
-
-    return ListItemPhrasing.MARKER_LOOP;
-  }
-
-  private ListItemPhrasing listItemPhrasingMarkerLoop() {
-    if (!sourceInc()) {
-      return ListItemPhrasing.NOT_NEXT_ITEM;
-    }
-
-    char peek = sourcePeek();
-
-    char marker = (char) stackPeek();
-
-    if (peek == marker) {
-      return ListItemPhrasing.MARKER_LOOP;
-    }
-
-    return switch (peek) {
-      case '\t', '\f', ' ' -> {
-        // pops marker
-        stackPop();
-
-        // pushes marker end
-        stackPush(sourceIndex);
-
-        yield ListItemPhrasing.MARKER_LOOP_TRIM;
-      }
-
-      default -> ListItemPhrasing.NOT_NEXT_ITEM;
-    };
-  }
-
-  private ListItemPhrasing listItemPhrasingMarkerLoopTrim() {
-    if (!sourceInc()) {
-      return ListItemPhrasing.NOT_NEXT_ITEM;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> ListItemPhrasing.MARKER_LOOP_TRIM;
-
-      default -> ListItemPhrasing.MARKER_STOP;
-    };
-  }
-
-  private ListItemPhrasing listItemPhrasingMarkerStop() {
-    return switch (phrase) {
-      case LIST_ITEM -> {
-        // pops marker end
-        stackPop();
-
-        // resume at marker start
-        sourceIndex = stackPop();
-
-        yield ListItemPhrasing.TEXT;
-      }
-
-      case LIST_ITEM_NEXT -> ListItemPhrasing.NEXT_ITEM_OR_NESTED;
-
-      default -> throw new AssertionError(
-        "Unexpected phrase=" + phrase
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: hint=" + hint
       );
-    };
-  }
-
-  private ListItemPhrasing listItemPhrasingMaybeIndentation() {
-    if (!sourceMore()) {
-      return ListItemPhrasing.NOT_NEXT_ITEM;
     }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(ListItemPhrasing.MAYBE_INDENTATION);
-
-      case '-', '*' -> ListItemPhrasing.MARKER;
-
-      default -> ListItemPhrasing.NOT_NEXT_ITEM;
-    };
   }
 
-  private ListItemPhrasing listItemPhrasingNextItemOrNested(int eol) {
+  private void listItemHintContinueOrNest() {
     var thisEnd = stackPop();
     var thisStart = stackPop();
-    /*var phrasingStart =*/stackPop();
     var thisMarker = sourceGet(thisStart, thisEnd);
 
     int prevEnd = stackPop();
@@ -1163,29 +959,33 @@ public class InternalSink {
       // updates marker to current indexes
       stackPush(thisStart, thisEnd);
 
-      // pushes HINT
-      stackPush(HINT_NEXT_ITEM);
+      // pushes HINT / next state
+      stackPush(HINT_NEXT_ITEM, PseudoListItem.EXHAUSTED);
 
-      return ListItemPhrasing.NEXT_ITEM;
+      return;
     }
 
     int maybeTop = stackPeek();
 
-    if (maybeTop == _ULIST_TOP) {
+    if (maybeTop == MARKER_ULIST) {
       // keep first level marker around
       stackPush(prevStart, prevEnd);
 
       // pushes the new level marker
       stackPush(thisStart, thisEnd);
 
-      return ListItemPhrasing.NESTED;
+      nextNode = pseudoUnorderedList();
+
+      stackPush(PseudoListItem.BLOCK);
+
+      return;
     }
 
     var found = false;
 
     int offset = 0;
 
-    while (maybeTop != _ULIST_TOP) {
+    while (maybeTop != MARKER_ULIST) {
       prevEnd = stackPeek(offset++);
       prevStart = stackPeek(offset++);
       prevMarker = sourceGet(prevStart, prevEnd);
@@ -1205,9 +1005,9 @@ public class InternalSink {
       stackPush(thisStart, thisEnd);
 
       // pushes HINT
-      stackPush(HINT_NEXT_ITEM, HINT_NESTED_END);
+      stackPush(HINT_NEXT_ITEM, HINT_NESTED_END, PseudoListItem.EXHAUSTED);
 
-      return ListItemPhrasing.NESTED_END;
+      return;
     }
 
     throw new UnsupportedOperationException(
@@ -1215,8 +1015,213 @@ public class InternalSink {
     );
   }
 
-  private Phrasing listItemPhrasingStart() {
-    return Phrasing.BLOB;
+  private void listItemHintListEnd() {
+    // pushes HINT / next state
+    stackPush(HINT_LIST_END, PseudoListItem.EXHAUSTED);
+  }
+
+  private PseudoListItem listItemText() {
+    var state = ListItemText.START;
+
+    while (state != ListItemText.STOP) {
+      state = switch (state) {
+        case CONTINUATION -> listItemTextContinuation();
+
+        case EOF -> listItemTextEof();
+
+        case EOL -> listItemTextEol();
+
+        case EOL_TRIM -> listItemTextEolTrim();
+
+        case INDENTATION -> listItemTextIndentation();
+
+        case LOOP -> listItemTextLoop();
+
+        case MARKER -> listItemTextMarker();
+
+        case MARKER_LOOP -> listItemTextMarkerLoop();
+
+        case MARKER_LOOP_TRIM -> listItemTextMarkerLoopTrim();
+
+        case MARKER_ROLLBACK -> listItemTextMarkerRollback();
+
+        case MARKER_STOP -> listItemTextMarkerStop();
+
+        case START -> listItemTextStart();
+
+        case STOP -> state;
+
+        case TEXT_EOF -> listItemTextTextEof();
+      };
+    }
+
+    return pseudoListItem();
+  }
+
+  private ListItemText listItemTextEolTrim() {
+    if (!sourceInc()) {
+      return ListItemText.TEXT_EOF;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> ListItemText.EOL_TRIM;
+
+      case '-', '*' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> ListItemText.TEXT_EOF;
+    };
+  }
+
+  private ListItemText listItemTextContinuation() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private ListItemText listItemTextEof() {
+    // text end
+    stackPush(sourceIndex);
+
+    return ListItemText.STOP;
+  }
+
+  private ListItemText listItemTextEol() {
+    // maybe text end
+    stackPush(sourceIndex);
+
+    if (!sourceInc()) {
+      return ListItemText.TEXT_EOF;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> ListItemText.INDENTATION;
+
+      case '\n' -> ListItemText.EOL_TRIM;
+
+      case '-', '*' -> ListItemText.MARKER;
+
+      case '+' -> ListItemText.CONTINUATION;
+
+      default -> {
+        // pops text end
+        stackPop();
+
+        yield ListItemText.LOOP;
+      }
+    };
+  }
+
+  private ListItemText listItemTextIndentation() {
+    if (!sourceInc()) {
+      return ListItemText.TEXT_EOF;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> ListItemText.INDENTATION;
+
+      case '-', '*' -> ListItemText.MARKER;
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
+  }
+
+  private ListItemText listItemTextLoop() {
+    if (!sourceInc()) {
+      return ListItemText.EOF;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> ListItemText.EOL;
+
+      default -> ListItemText.LOOP;
+    };
+  }
+
+  private ListItemText listItemTextMarker() {
+    int markerStart = sourceIndex;
+
+    char marker = sourceAt(markerStart);
+
+    stackPush(markerStart, marker);
+
+    return ListItemText.MARKER_LOOP;
+  }
+
+  private ListItemText listItemTextMarkerLoop() {
+    if (!sourceInc()) {
+      return ListItemText.MARKER_ROLLBACK;
+    }
+
+    char peek = sourcePeek();
+
+    char marker = (char) stackPeek();
+
+    if (peek == marker) {
+      return ListItemText.MARKER_LOOP;
+    }
+
+    return switch (peek) {
+      case '\t', '\f', ' ' -> {
+        // pops marker
+        stackPop();
+
+        // pushes marker end
+        stackPush(sourceIndex);
+
+        yield ListItemText.MARKER_LOOP_TRIM;
+      }
+
+      default -> ListItemText.MARKER_ROLLBACK;
+    };
+  }
+
+  private ListItemText listItemTextMarkerLoopTrim() {
+    if (!sourceInc()) {
+      return ListItemText.MARKER_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> ListItemText.MARKER_LOOP_TRIM;
+
+      default -> ListItemText.MARKER_STOP;
+    };
+  }
+
+  private ListItemText listItemTextMarkerRollback() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private ListItemText listItemTextMarkerStop() {
+    int markerEnd = stackPop();
+
+    int markerStart = stackPop();
+
+    var item = pseudoListItem();
+
+    item.textEnd = stackPop();
+
+    item.textStart = stackPop();
+
+    stackPush(markerStart, markerEnd, HINT_CONTINUE_OR_NEST);
+
+    return ListItemText.STOP;
+  }
+
+  private ListItemText listItemTextStart() {
+    // text start
+    stackPush(sourceIndex);
+
+    return ListItemText.LOOP;
+  }
+
+  private ListItemText listItemTextTextEof() {
+    var item = pseudoListItem();
+
+    item.textEnd = stackPop();
+
+    item.textStart = stackPop();
+
+    stackPush(HINT_LIST_END);
+
+    return ListItemText.STOP;
   }
 
   private Phrasing paragraphPhrasingEol() {
@@ -1772,10 +1777,6 @@ public class InternalSink {
     return switch (phrase) {
       case FRAGMENT -> fragmentPhrasingEol();
 
-      case LIST_ITEM -> listItemPhrasingEol();
-
-      case LIST_ITEM_NEXT -> listItemNextPhrasingEol();
-
       case PARAGRAPH -> paragraphPhrasingEol();
 
       case TITLE -> titlePhrasingEol();
@@ -1855,10 +1856,6 @@ public class InternalSink {
   private Phrasing phrasingStart() {
     return switch (phrase) {
       case FRAGMENT -> fragmentPhrasingStart();
-
-      case LIST_ITEM -> listItemPhrasingStart();
-
-      case LIST_ITEM_NEXT -> listItemNextPhrasingStart();
 
       case PARAGRAPH -> paragraphPhrasingStart();
 
@@ -2192,10 +2189,6 @@ public class InternalSink {
     return source.charAt(index);
   }
 
-  private boolean sourceEof() {
-    return sourceIndex >= sourceMax;
-  }
-
   private String sourceGet(int start, int end) {
     return source.substring(start, end);
   }
@@ -2263,6 +2256,13 @@ public class InternalSink {
     stackArray[++stackIndex] = v1;
   }
 
+  private void stackPush(int v0, int v1, int v2) {
+    stackArray = IntArrays.growIfNecessary(stackArray, stackIndex + 3);
+    stackArray[++stackIndex] = v0;
+    stackArray[++stackIndex] = v1;
+    stackArray[++stackIndex] = v2;
+  }
+
   private void stackReplace(int value) {
     stackArray[stackIndex] = value;
   }
@@ -2327,7 +2327,7 @@ public class InternalSink {
   private Parse toUlist() {
     int markerStart = stackPop();
 
-    stackPush(_ULIST_TOP, markerStart);
+    stackPush(MARKER_ULIST, markerStart);
 
     // marker end
     stackPush(sourceIndex);
