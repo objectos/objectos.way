@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private enum HeaderParse {
@@ -50,7 +50,6 @@ public class InternalSink {
 
     START,
     LOOP,
-    EOF,
     EOL,
     EOL_TRIM,
 
@@ -63,7 +62,6 @@ public class InternalSink {
     MARKER,
     MARKER_LOOP,
     MARKER_LOOP_TRIM,
-    MARKER_ROLLBACK,
     MARKER_STOP;
   }
 
@@ -1027,8 +1025,6 @@ public class InternalSink {
       state = switch (state) {
         case CONTINUATION -> listItemTextContinuation();
 
-        case EOF -> listItemTextEof();
-
         case EOL -> listItemTextEol();
 
         case EOL_TRIM -> listItemTextEolTrim();
@@ -1042,8 +1038,6 @@ public class InternalSink {
         case MARKER_LOOP -> listItemTextMarkerLoop();
 
         case MARKER_LOOP_TRIM -> listItemTextMarkerLoopTrim();
-
-        case MARKER_ROLLBACK -> listItemTextMarkerRollback();
 
         case MARKER_STOP -> listItemTextMarkerStop();
 
@@ -1074,13 +1068,6 @@ public class InternalSink {
 
   private ListItemText listItemTextContinuation() {
     throw new UnsupportedOperationException("Implement me");
-  }
-
-  private ListItemText listItemTextEof() {
-    // text end
-    stackPush(sourceIndex);
-
-    return ListItemText.STOP;
   }
 
   private ListItemText listItemTextEol() {
@@ -1125,7 +1112,10 @@ public class InternalSink {
 
   private ListItemText listItemTextLoop() {
     if (!sourceInc()) {
-      return ListItemText.EOF;
+      // pushes text end
+      stackPush(sourceIndex);
+
+      return ListItemText.TEXT_EOF;
     }
 
     return switch (sourcePeek()) {
@@ -1147,7 +1137,7 @@ public class InternalSink {
 
   private ListItemText listItemTextMarkerLoop() {
     if (!sourceInc()) {
-      return ListItemText.MARKER_ROLLBACK;
+      throw new UnsupportedOperationException("Implement me");
     }
 
     char peek = sourcePeek();
@@ -1169,13 +1159,26 @@ public class InternalSink {
         yield ListItemText.MARKER_LOOP_TRIM;
       }
 
-      default -> ListItemText.MARKER_ROLLBACK;
+      case '\n' -> {
+        // pops
+        // - marker
+        // - marker start
+        // - textEnd
+        stackPop(3);
+
+        // resumes before NL
+        sourceIndex--;
+
+        yield ListItemText.LOOP;
+      }
+
+      default -> throw new UnsupportedOperationException("Implement me");
     };
   }
 
   private ListItemText listItemTextMarkerLoopTrim() {
     if (!sourceInc()) {
-      return ListItemText.MARKER_ROLLBACK;
+      throw new UnsupportedOperationException("Implement me");
     }
 
     return switch (sourcePeek()) {
@@ -1183,10 +1186,6 @@ public class InternalSink {
 
       default -> ListItemText.MARKER_STOP;
     };
-  }
-
-  private ListItemText listItemTextMarkerRollback() {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   private ListItemText listItemTextMarkerStop() {
@@ -1621,13 +1620,13 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
 
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+  
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -1739,9 +1738,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -1754,16 +1753,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
 
   private Phrasing phrasingCustomInlineRollback() {

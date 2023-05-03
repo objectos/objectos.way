@@ -268,14 +268,33 @@ public class UnorderedListTest {
     );
   }
 
-  /*
-  
-  TC08
+  @Test(description = """
+  unordered list
 
-  * a
-  * b
-  * 
-  
-   */
+  - third item is NOT an item
+  """)
+  public void testCase08() {
+    tester.test(
+      """
+      - a
+      - b
+      -
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      <item>
+      <text>b
+      -</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
 
 }
