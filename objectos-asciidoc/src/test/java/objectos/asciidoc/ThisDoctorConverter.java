@@ -165,16 +165,6 @@ public class ThisDoctorConverter extends StringConverter {
   private void urlMacro(StringBuilder out, ContentNode node) {
     var phrase = (PhraseNode) node;
 
-    var attributes = phrase.getAttributes();
-
-    for (var entry : attributes.entrySet()) {
-      out.append("name=");
-      out.append(entry.getKey());
-      out.append(";value=");
-      out.append(entry.getValue());
-      out.append('\n');
-    }
-
     out.append("<a href=\"");
     out.append(phrase.getTarget());
     out.append("\">");

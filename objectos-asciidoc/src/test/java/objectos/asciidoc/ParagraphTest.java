@@ -90,4 +90,26 @@ public class ParagraphTest {
       """
     );
   }
+
+  @Test(description = """
+  multiline paragraph.
+
+  - line ends in a imacro.
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      a i:b[c]
+      d
+      """,
+
+      """
+      <document>
+      <p>a <a href="b">c</a>
+      d</p>
+      </document>
+      """
+    );
+  }
+
 }

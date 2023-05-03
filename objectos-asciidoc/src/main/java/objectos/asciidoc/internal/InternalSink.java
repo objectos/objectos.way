@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private enum HeaderParse {
@@ -1622,13 +1622,13 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
 
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+  
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -1733,9 +1733,24 @@ public class InternalSink {
     return switch (sourcePeek()) {
       case '\n' -> Phrasing.CUSTOM_INLINE_ROLLBACK;
 
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: custom inline"
-      );
+      default -> Phrasing.URI_MACRO_TARGET;
+    };
+  }
+
+  private Phrasing phrasingCustomInlineRollback() {
+    // no saved state
+    // just resume blob parsing
+
+    return Phrasing.BLOB;
+  }
+
+  private Phrasing phrasingEol() {
+    return switch (phrase) {
+      case FRAGMENT -> fragmentPhrasingEol();
+
+      case PARAGRAPH -> paragraphPhrasingEol();
+
+      case TITLE -> titlePhrasingEol();
     };
   }
 
@@ -1766,24 +1781,6 @@ public class InternalSink {
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
 
   */
-
-  private Phrasing phrasingCustomInlineRollback() {
-    // no saved state
-    // just resume blob parsing
-
-    return Phrasing.BLOB;
-  }
-
-  private Phrasing phrasingEol() {
-    return switch (phrase) {
-      case FRAGMENT -> fragmentPhrasingEol();
-
-      case PARAGRAPH -> paragraphPhrasingEol();
-
-      case TITLE -> titlePhrasingEol();
-    };
-  }
-
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
 

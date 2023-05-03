@@ -57,11 +57,25 @@ final class ThisDocumentProcessor {
     }
   }
 
+  private void iMacro(String name, InlineMacro macro) throws IOException {
+    out.append("<a href=\"");
+    macro.targetTo(out);
+    out.append("\">");
+
+    for (var node : macro.nodes()) {
+      node(node);
+    }
+
+    out.append("</a>");
+  }
+
   private void inlineMacro(InlineMacro macro) throws IOException {
     var name = macro.name();
 
     switch (name) {
       case "https" -> urlMacro(name, macro);
+
+      case "i" -> iMacro(name, macro);
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: name=" + name
