@@ -112,4 +112,21 @@ public class ParagraphTest {
     );
   }
 
+  @Test(description = """
+  imacro in the middle of a sentence
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      a i:b[c] d
+      """,
+
+      """
+      <document>
+      <p>a <a href="b">c</a> d</p>
+      </document>
+      """
+    );
+  }
+
 }

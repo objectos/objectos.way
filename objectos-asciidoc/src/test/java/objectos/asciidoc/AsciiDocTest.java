@@ -51,7 +51,6 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
         new InlineMacroTest(this),
         new LexerTest(this),
         new ListingBlockTest(this),
-        new ParagraphTestToRemove(this),
         new PreambleTest(this),
         new SourceCodeBlockTest(this),
         new UnorderedListTestToRemove(this)
