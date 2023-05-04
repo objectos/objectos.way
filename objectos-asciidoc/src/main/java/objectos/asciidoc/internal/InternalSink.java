@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-  
+
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-  
+
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-  
+
    */
 
   private enum HeaderParse {
@@ -1064,7 +1064,7 @@ public class InternalSink {
     return switch (sourcePeek()) {
       case '\n' -> ListItemText.EOL_TRIM;
 
-      case '-', '*' -> throw new UnsupportedOperationException("Implement me");
+      case '-', '*' -> ListItemText.MARKER;
 
       default -> ListItemText.TEXT_EOF;
     };
@@ -1624,13 +1624,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -1757,9 +1757,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -1772,16 +1772,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();

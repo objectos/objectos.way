@@ -358,4 +358,64 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  items can be separated by new line
+  """)
+  public void testCase11() {
+    tester.test(
+      """
+      * a
+
+      * b
+
+      * c
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      <item>
+      <text>b</text>
+      </item>
+      <item>
+      <text>c</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
+  @Test(enabled = false, description = """
+  ul should end before block attr list
+  """)
+  public void testCase12() {
+    tester.test(
+      """
+      * a
+
+      []
+      * b
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      </unordered-list>
+      <unordered-list>
+      <item>
+      <text>b</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
 }
