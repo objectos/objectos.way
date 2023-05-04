@@ -389,7 +389,7 @@ public class UnorderedListTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   ul should end before block attr list
   """)
   public void testCase12() {

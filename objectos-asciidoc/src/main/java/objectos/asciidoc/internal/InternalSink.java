@@ -1338,7 +1338,7 @@ public class InternalSink {
         // rollback index
         stackPush(sourceIndex, ATTRLIST_BLOCK);
 
-        yield advance(Parse.MAYBE_ATTRLIST);
+        yield Parse.MAYBE_ATTRLIST;
       }
 
       case '-' -> {
@@ -1383,12 +1383,14 @@ public class InternalSink {
   }
 
   private Parse parseMaybeAttrlist() {
-    if (!sourceMore()) {
+    if (!sourceInc()) {
       return Parse.NOT_ATTRLIST;
     }
 
     return switch (sourcePeek()) {
-      case 't', ' ' -> Parse.NOT_ATTRLIST;
+      case '\t', '\f', ' ' -> Parse.NOT_ATTRLIST;
+
+      case ']' -> advance(Parse.MAYBE_ATTRLIST_END);
 
       default -> {
         var attributes = pseudoAttributes();
@@ -1441,7 +1443,7 @@ public class InternalSink {
 
       default -> {
         throw new UnsupportedOperationException(
-          "Implement me :: rollback attrlist"
+          "Implement me :: rollback attrlist :: sourcePeek=" + sourcePeek()
         );
       }
     };
