@@ -327,4 +327,35 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  ul should end before section (ends with imacro)
+  """)
+  public void testCase10() {
+    tester.test(
+      """
+      * a
+      * i:b[c]
+
+      == D
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      <item>
+      <text><a href="b">c</a></text>
+      </item>
+      </unordered-list>
+      <section level="1">
+      <style>null</style>
+      <title>D</title>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }

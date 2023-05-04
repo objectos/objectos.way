@@ -90,18 +90,14 @@ final class ThisDocumentProcessor {
     var closed = false;
 
     for (var node : item.nodes()) {
-      if (node instanceof Monospaced mono) {
+      if (node instanceof InlineMacro ||
+          node instanceof Monospaced ||
+          node instanceof Text) {
         if (!opened) {
           out.append("<text>");
           opened = true;
         }
-        node(mono);
-      } else if (node instanceof Text text) {
-        if (!opened) {
-          out.append("<text>");
-          opened = true;
-        }
-        text.appendTo(out);
+        node(node);
       } else {
         if (!closed) {
           out.append("</text>\n");

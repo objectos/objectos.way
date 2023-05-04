@@ -354,7 +354,8 @@ public class InternalSink {
 
   final void inlineMacroNodes() {
     switch (stackPeek()) {
-      case PseudoParagraph.NODE_CONSUMED -> stackReplace(PseudoInlineMacro.NODES);
+      case PseudoListItem.TEXT_CONSUMED,
+           PseudoParagraph.NODE_CONSUMED -> stackReplace(PseudoInlineMacro.NODES);
 
       default -> stackStub();
     }
@@ -391,7 +392,8 @@ public class InternalSink {
 
       case PseudoListItem.TEXT -> {}
 
-      case PseudoListItem.TEXT_CONSUMED,
+      case PseudoInlineMacro.EXHAUSTED,
+           PseudoListItem.TEXT_CONSUMED,
            PseudoMonospaced.EXHAUSTED -> {
         // pops TEXT_CONSUMED
         stackPop();
