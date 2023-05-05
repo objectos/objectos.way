@@ -19,6 +19,7 @@ import java.io.IOException;
 import objectos.asciidoc.internal.PseudoHeader;
 import objectos.asciidoc.internal.PseudoInlineMacro;
 import objectos.asciidoc.internal.PseudoListItem;
+import objectos.asciidoc.internal.PseudoListingBlock;
 import objectos.asciidoc.internal.PseudoMonospaced;
 import objectos.asciidoc.internal.PseudoParagraph;
 import objectos.asciidoc.internal.PseudoSection;
@@ -41,6 +42,14 @@ public sealed interface Node {
     IterableOnce<Node> nodes();
 
     void targetTo(Appendable out) throws IOException;
+
+  }
+
+  sealed interface ListingBlock extends Node permits PseudoListingBlock {
+
+    Attributes attributes();
+
+    IterableOnce<Node> nodes();
 
   }
 

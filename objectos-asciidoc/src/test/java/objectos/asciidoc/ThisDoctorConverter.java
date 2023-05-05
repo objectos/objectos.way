@@ -16,6 +16,7 @@
 package objectos.asciidoc;
 
 import java.util.Map;
+import org.asciidoctor.ast.Block;
 import org.asciidoctor.ast.ContentNode;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.ast.List;
@@ -103,6 +104,8 @@ public class ThisDoctorConverter extends StringConverter {
           log(log);
         }
       }
+    } else if (transform.equals("listing")) {
+      listing(out, node);
     } else if (transform.equals("paragraph")) {
       paragraph(out, node);
     } else if (transform.equals("preamble")) {
@@ -146,6 +149,22 @@ public class ThisDoctorConverter extends StringConverter {
     }
 
     return out.toString();
+  }
+
+  private void listing(StringBuilder out, ContentNode node) {
+    var block = (Block) node;
+
+    out.append("<listing>\n");
+
+    out.append("<style>");
+    out.append(block.getAttribute("style", "null"));
+    out.append("</style>\n");
+
+    out.append("<pre>");
+    out.append(block.getContent());
+    out.append("</pre>\n");
+
+    out.append("</listing>\n");
   }
 
   private void monospaced(StringBuilder out, PhraseNode node) {

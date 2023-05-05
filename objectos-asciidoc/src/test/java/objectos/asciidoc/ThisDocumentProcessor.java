@@ -21,6 +21,7 @@ import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Node.Header;
 import objectos.asciidoc.pseudom.Node.InlineMacro;
 import objectos.asciidoc.pseudom.Node.ListItem;
+import objectos.asciidoc.pseudom.Node.ListingBlock;
 import objectos.asciidoc.pseudom.Node.Monospaced;
 import objectos.asciidoc.pseudom.Node.Paragraph;
 import objectos.asciidoc.pseudom.Node.Section;
@@ -83,6 +84,26 @@ final class ThisDocumentProcessor {
     }
   }
 
+  private void listingBlock(ListingBlock block) throws IOException {
+    out.append("<listing>\n");
+
+    var attributes = block.attributes();
+
+    out.append("<style>");
+    out.append(attributes.getOrDefault("style", "null"));
+    out.append("</style>\n");
+
+    out.append("<pre>");
+
+    for (var node : block.nodes()) {
+      node(node);
+    }
+
+    out.append("</pre>");
+
+    out.append("</listing>");
+  }
+
   private void listItem(ListItem item) throws IOException {
     out.append("<item>\n");
 
@@ -130,6 +151,8 @@ final class ThisDocumentProcessor {
       header(header);
     } else if (node instanceof InlineMacro macro) {
       inlineMacro(macro);
+    } else if (node instanceof ListingBlock block) {
+      listingBlock(block);
     } else if (node instanceof ListItem listItem) {
       listItem(listItem);
     } else if (node instanceof Monospaced monospaced) {

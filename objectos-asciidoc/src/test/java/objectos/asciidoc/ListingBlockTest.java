@@ -17,252 +17,37 @@ package objectos.asciidoc;
 
 import org.testng.annotations.Test;
 
-final class ListingBlockTest extends AbstractAsciiDocTest {
+public class ListingBlockTest {
 
-  ListingBlockTest(AsciiDocTest outer) { super(outer); }
+  Tester tester = Tester.objectos();
 
-  @Test(description = //
-  """
+  public ListingBlockTest() {}
+
+  ListingBlockTest(Tester tester) {
+    this.tester = tester;
+  }
+
+  @Test(enabled = false, description = """
   listing block
 
   - delimited
   - single line
-
-  01234
-  56789
-  01234
-  '''
-  ----
-  code
-  ----
-  '''
-
-  P0: ^ LBD $ LF
-      ^ B5,9 $ LF
-      ^ LBD $ LF
-      ^ $ EOF
   """)
   public void testCase01() {
-    test(
+    tester.test(
       """
       ----
       code
       ----
       """,
 
-      p0(
-        Token.LISTING_BLOCK_DELIM, 4, Token.LF,
-
-        Token.BLOB, 5, 9, Token.LF,
-
-        Token.LISTING_BLOCK_DELIM, 4, Token.LF,
-
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.LISTING_BLOCK_START,
-        Code.VERBATIM, 3, 6,
-        Code.LISTING_BLOCK_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(),
-
       """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="listingblock">
-      <div class="content">
+      <document>
+      <listing>
+      <style>listing</style>
       <pre>code</pre>
-      </div>
-      </div>
-      </div>
-      </body>
-      """
-    );
-  }
-
-  @Test(description = //
-  """
-  listing block code with ']'
-
-  01234
-  56789
-  01234
-  '''
-  ----
-  foo]
-  ----
-  '''
-  """)
-  public void testCase02() {
-    test(
-      """
-      ----
-      foo]
-      ----
-      """,
-
-      p0(
-        Token.LISTING_BLOCK_DELIM, 4, Token.LF,
-        Token.BLOB, 5, 9, Token.LF,
-        Token.LISTING_BLOCK_DELIM, 4, Token.LF,
-
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.LISTING_BLOCK_START,
-        Code.VERBATIM, 3, 6,
-        Code.LISTING_BLOCK_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(),
-
-      """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="listingblock">
-      <div class="content">
-      <pre>foo]</pre>
-      </div>
-      </div>
-      </div>
-      </body>
-      """
-    );
-  }
-
-  @Test(description = //
-  """
-  listing block code with '[x]'
-
-  01234
-  5678901
-  23456
-  '''
-  ----
-  a: b[2]
-  ----
-  '''
-  """)
-  public void testCase03() {
-    test(
-      """
-      ----
-      a: b[2]
-      ----
-      """,
-
-      p0(
-        Token.LISTING_BLOCK_DELIM, 4, Token.LF,
-        Token.INLINE_MACRO, 5, 6,
-        Token.BLOB, 7, 9,
-        Token.ATTR_LIST_START, Token.ATTR_VALUE_START,
-        Token.BLOB, 10, 11,
-        Token.ATTR_VALUE_END, Token.ATTR_LIST_END, Token.LF,
-        Token.LISTING_BLOCK_DELIM, 4,
-        Token.LF, Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.LISTING_BLOCK_START,
-        Code.VERBATIM, 3, 16,
-        Code.LISTING_BLOCK_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(),
-
-      """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="listingblock">
-      <div class="content">
-      <pre>a: b[2]</pre>
-      </div>
-      </div>
-      </div>
-      </body>
-      """
-    );
-  }
-
-  @Test(description = //
-  """
-  listing block code with '_'
-
-  ----
-  foo _bar
-  ----
-  '''
-  """)
-  public void testCase04() {
-    test(
-      """
-      ----
-      foo _bar
-      ----
-      """,
-
-      p0(
-        Token.LISTING_BLOCK_DELIM, 4, Token.LF,
-        Token.BLOB, 5, 9,
-        Token.ITALIC_START, 9,
-        Token.BLOB, 10, 13, Token.LF,
-        Token.LISTING_BLOCK_DELIM, 4,
-        Token.LF, Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.LISTING_BLOCK_START,
-        Code.VERBATIM, 3, 11,
-        Code.LISTING_BLOCK_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(),
-
-      """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="listingblock">
-      <div class="content">
-      <pre>foo _bar</pre>
-      </div>
-      </div>
-      </div>
-      </body>
+      </listing>
+      </document>
       """
     );
   }

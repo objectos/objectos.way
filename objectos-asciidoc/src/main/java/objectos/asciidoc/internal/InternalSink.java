@@ -92,6 +92,14 @@ public class InternalSink {
 
     LISTING_OR_ULIST,
     NOT_LISTING_OR_ULIST,
+
+    LISTING_BLOCK,
+    LISTING_BLOCK_COUNT,
+    LISTING_BLOCK_LOOP,
+    LISTING_BLOCK_ROLLBACK,
+    LISTING_BLOCK_STOP,
+    LISTING_BLOCK_TRIM,
+
     ULIST,
     ULIST_STOP,
     NOT_ULIST,
@@ -155,8 +163,8 @@ public class InternalSink {
   private static final int HINT_LIST_END = -3;
   private static final int HINT_NEXT_ITEM = -4;
   private static final int HINT_NESTED_END = -5;
-
   private static final int MARKER_ULIST = -7;
+
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
   private static final int PSEUDO_TITLE = 2;
@@ -168,8 +176,8 @@ public class InternalSink {
   private static final int PSEUDO_ATTRIBUTES = 8;
   private static final int PSEUDO_INLINE_MACRO = 9;
   private static final int PSEUDO_MONOSPACED = 10;
-
-  private static final int PSEUDO_LENGTH = 11;
+  private static final int PSEUDO_LISTING_BLOCK = 11;
+  private static final int PSEUDO_LENGTH = 12;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -233,10 +241,10 @@ public class InternalSink {
 
       case PseudoDocument.ITERATOR -> documentParse(Parse.DOCUMENT_START);
 
-      case PseudoDocument.HEADER,
+      case PseudoDocument.BLOCK,
+           PseudoDocument.HEADER,
            PseudoDocument.PARAGRAPH,
-           PseudoDocument.SECTION,
-           PseudoDocument.ULIST -> {}
+           PseudoDocument.SECTION -> {}
 
       default -> stackStub();
     }
@@ -359,6 +367,10 @@ public class InternalSink {
 
       default -> stackStub();
     }
+  }
+
+  final void listingBlockNodes() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   final boolean listItemHasNext() {
@@ -698,7 +710,7 @@ public class InternalSink {
 
   final void unorderedListNodes() {
     switch (stackPeek()) {
-      case PseudoDocument.ULIST_CONSUMED,
+      case PseudoDocument.BLOCK_CONSUMED,
            PseudoListItem.BLOCK_CONSUMED,
            PseudoSection.ULIST_CONSUMED -> stackReplace(PseudoUnorderedList.NODES);
 
@@ -710,6 +722,12 @@ public class InternalSink {
     sourceAdvance();
 
     return state;
+  }
+
+  private Parse documentListingBlockStop() {
+    stackPush(PseudoDocument.BLOCK);
+
+    return Parse.STOP;
   }
 
   private void documentParse(Parse initialState) {
@@ -724,6 +742,8 @@ public class InternalSink {
         case EXHAUSTED -> documentParseExhausted();
 
         case HEADER -> documentParseHeader();
+
+        case LISTING_BLOCK_STOP -> documentListingBlockStop();
 
         case MAYBE_HEADER -> documentParseMaybeHeader();
 
@@ -837,7 +857,7 @@ public class InternalSink {
   }
 
   private Parse documentParseUlistStop() {
-    stackPush(PseudoDocument.ULIST);
+    stackPush(PseudoDocument.BLOCK);
 
     nextNode = pseudoUnorderedList();
 
@@ -1056,20 +1076,6 @@ public class InternalSink {
     return pseudoListItem();
   }
 
-  private ListItemText listItemTextEolTrim() {
-    if (!sourceInc()) {
-      return ListItemText.TEXT_EOF;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> ListItemText.EOL_TRIM;
-
-      case '-', '*' -> ListItemText.MARKER;
-
-      default -> ListItemText.TEXT_EOF;
-    };
-  }
-
   private ListItemText listItemTextContinuation() {
     throw new UnsupportedOperationException("Implement me");
   }
@@ -1097,6 +1103,20 @@ public class InternalSink {
 
         yield ListItemText.LOOP;
       }
+    };
+  }
+
+  private ListItemText listItemTextEolTrim() {
+    if (!sourceInc()) {
+      return ListItemText.TEXT_EOF;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> ListItemText.EOL_TRIM;
+
+      case '-', '*' -> ListItemText.MARKER;
+
+      default -> ListItemText.TEXT_EOF;
     };
   }
 
@@ -1283,6 +1303,12 @@ public class InternalSink {
 
       case BODY -> parseBody();
 
+      case LISTING_BLOCK -> parseListingBlock();
+
+      case LISTING_BLOCK_COUNT -> parseListingBlockCount();
+
+      case LISTING_BLOCK_LOOP -> parseListingBlockLoop();
+
       case LISTING_OR_ULIST -> parseListingOrUlist();
 
       case MAYBE_ATTRLIST -> parseMaybeAttrlist();
@@ -1341,12 +1367,7 @@ public class InternalSink {
         yield Parse.MAYBE_ATTRLIST;
       }
 
-      case '-' -> {
-        // rollback index or marker start
-        stackPush(sourceIndex);
-
-        yield Parse.LISTING_OR_ULIST;
-      }
+      case '-' -> Parse.LISTING_OR_ULIST;
 
       case '*' -> {
         // rollback index or marker start
@@ -1368,7 +1389,58 @@ public class InternalSink {
     };
   }
 
+  private Parse parseListingBlock() {
+    // pushes current dash count
+    // - first on BODY
+    // - second on LISTING_OR_ULIST
+    stackPush(2);
+
+    return Parse.LISTING_BLOCK_LOOP;
+  }
+
+  private Parse parseListingBlockCount() {
+    int count = stackPop();
+
+    if (count < 4) {
+      return Parse.LISTING_BLOCK_ROLLBACK;
+    }
+
+    // pops rollback index
+    stackPop();
+
+    var block = pseudoListingBlock();
+
+    block.markerSize = count;
+
+    nextNode = block;
+
+    return Parse.LISTING_BLOCK_STOP;
+  }
+
+  private Parse parseListingBlockLoop() {
+    if (!sourceInc()) {
+      return Parse.LISTING_BLOCK_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '-' -> {
+        stackInc();
+
+        yield Parse.LISTING_BLOCK_LOOP;
+      }
+
+      case '\t', '\f', ' ' -> Parse.LISTING_BLOCK_TRIM;
+
+      case '\n' -> Parse.LISTING_BLOCK_COUNT;
+
+      default -> Parse.LISTING_BLOCK_ROLLBACK;
+    };
+  }
+
   private Parse parseListingOrUlist() {
+    // rollback index or marker start
+    stackPush(sourceIndex);
+
     if (!sourceInc()) {
       return Parse.NOT_LISTING_OR_ULIST;
     }
@@ -1376,7 +1448,7 @@ public class InternalSink {
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> toUlist();
 
-      case '-' -> throw new UnsupportedOperationException("Implement me");
+      case '-' -> Parse.LISTING_BLOCK;
 
       default -> Parse.NOT_LISTING_OR_ULIST;
     };
@@ -2038,6 +2110,10 @@ public class InternalSink {
 
   private PseudoInlineMacro pseudoInlineMacro() {
     return pseudoFactory(PSEUDO_INLINE_MACRO, PseudoInlineMacro::new);
+  }
+
+  private PseudoListingBlock pseudoListingBlock() {
+    return pseudoFactory(PSEUDO_LISTING_BLOCK, PseudoListingBlock::new);
   }
 
   private PseudoListItem pseudoListItem() {

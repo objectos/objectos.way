@@ -27,6 +27,7 @@ public class AsciiDocTest2 {
     return new Object[] {
         new ConstrainedMonospaceTest(tester),
         new DocumentTest(tester),
+        new ListingBlockTest(tester),
         new ParagraphTest(tester),
         new SectionTest(tester),
         new UnorderedListTest(tester),

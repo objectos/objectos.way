@@ -4,6 +4,12 @@
 code
 ----
 
+== How many dashes?
+
+------
+more than four?
+------
+
 == Not listing block
 
 ----Not

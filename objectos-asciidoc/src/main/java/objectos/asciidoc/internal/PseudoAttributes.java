@@ -78,6 +78,22 @@ public final class PseudoAttributes implements Attributes {
     addImpl(null, value);
   }
 
+  final Attributes bindIfNecessary(PseudoListingBlock block) {
+    if (!is(BOUND)) {
+      if (index == 0) {
+        index = 2;
+
+        data[0] = "style";
+
+        data[1] = "listing";
+      }
+
+      set(BOUND);
+    }
+
+    return this;
+  }
+
   final Attributes bindIfNecessary(PseudoSection section) {
     if (!is(BOUND)) {
       if (index > 1) {

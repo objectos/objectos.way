@@ -15,58 +15,49 @@
  */
 package objectos.asciidoc.internal;
 
-import java.io.IOException;
 import java.util.Iterator;
-import objectos.asciidoc.pseudom.Document;
+import objectos.asciidoc.pseudom.Attributes;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Node.ListingBlock;
 
-public final class PseudoDocument extends PseudoNode
-    implements Document, IterableOnce<Node>, Iterator<Node> {
+public final class PseudoListingBlock extends PseudoNode
+    implements ListingBlock, IterableOnce<Node>, Iterator<Node> {
 
-  static final int START = -100;
-  static final int NODES = -101;
-  static final int ITERATOR = -102;
-  static final int PARSE = -103;
-  static final int HEADER = -104;
-  static final int HEADER_CONSUMED = -105;
-  static final int PARAGRAPH = -110;
-  static final int PARAGRAPH_CONSUMED = -111;
-  static final int SECTION = -112;
-  static final int SECTION_CONSUMED = -113;
-  static final int BLOCK = -114;
-  static final int BLOCK_CONSUMED = -115;
-  static final int EXHAUSTED = -116;
+  static final int NODES = -900;
+  static final int ITERATOR = -901;
 
-  PseudoDocument(InternalSink sink) {
+  int markerSize;
+
+  PseudoListingBlock(InternalSink sink) {
     super(sink);
   }
 
   @Override
-  public final void close() throws IOException {
-    closeImpl();
+  public final Attributes attributes() {
+    var attributes = sink.attributes();
+
+    return attributes.bindIfNecessary(this);
   }
 
   @Override
   public final boolean hasNext() {
-    return sink.documentHasNext();
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    sink.documentIterator();
-
-    return this;
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final Node next() {
-    return nextNodeDefault();
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final IterableOnce<Node> nodes() {
-    sink.documentNodes();
+    sink.listingBlockNodes();
 
     return this;
   }
