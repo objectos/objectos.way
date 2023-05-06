@@ -19,8 +19,8 @@ import objectos.asciidoc.internal.PseudoAttributes;
 
 public sealed interface Attributes permits PseudoAttributes {
 
-  String getOrDefault(String name, String defaultValue);
+  String getNamed(String name);
 
-  String getPositional(int index);
+  String getNamed(String name, String defaultValue);
 
 }

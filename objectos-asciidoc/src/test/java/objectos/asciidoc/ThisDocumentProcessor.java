@@ -89,9 +89,17 @@ final class ThisDocumentProcessor {
 
     var attributes = block.attributes();
 
+    var style = attributes.getNamed("style", "null");
+
     out.append("<style>");
-    out.append(attributes.getOrDefault("style", "null"));
+    out.append(style);
     out.append("</style>\n");
+
+    if (style.equals("source")) {
+      out.append("<lang>");
+      out.append(attributes.getNamed("language"));
+      out.append("</lang>\n");
+    }
 
     out.append("<pre>");
 
@@ -194,7 +202,7 @@ final class ThisDocumentProcessor {
     var attributes = section.attributes();
 
     out.append("<style>");
-    out.append(attributes.getOrDefault("style", "null"));
+    out.append(attributes.getNamed("style", "null"));
     out.append("</style>\n");
 
     for (var node : section.nodes()) {

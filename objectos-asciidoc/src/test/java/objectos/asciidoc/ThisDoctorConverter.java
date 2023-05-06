@@ -156,9 +156,17 @@ public class ThisDoctorConverter extends StringConverter {
 
     out.append("<listing>\n");
 
+    var style = (String) block.getAttribute("style", "null");
+
     out.append("<style>");
-    out.append(block.getAttribute("style", "null"));
+    out.append(style);
     out.append("</style>\n");
+
+    if ("source".equals(style)) {
+      out.append("<lang>");
+      out.append(block.getAttribute("language", ""));
+      out.append("</lang>\n");
+    }
 
     out.append("<pre>");
     out.append(block.getContent());

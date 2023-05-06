@@ -25,17 +25,17 @@ import objectos.util.IntArrays;
 public class InternalSink {
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
   %(\[([^\[\]]+)\])
   CC_ALL = '.'
-
+  
   [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-
+  
   /./m - Any character (the m modifier enables multiline mode)
   /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-
+  
    */
 
   private enum HeaderParse {
@@ -80,12 +80,13 @@ public class InternalSink {
     BODY,
     BODY_TRIM,
 
-    MAYBE_ATTRLIST,
-    NAME_OR_VALUE,
-    MAYBE_ATTRLIST_END,
-    MAYBE_ATTRLIST_END_TRIM,
     ATTRLIST,
-    NOT_ATTRLIST,
+    ATTRLIST_END_MARKER,
+    ATTRLIST_FOUND,
+    ATTRLIST_NAME,
+    ATTRLIST_NAME_LOOP,
+    ATTRLIST_ROLLBACK,
+    ATTRLIST_START_MARKER,
 
     MAYBE_BOLD_OR_ULIST,
     NOT_BOLD_OR_ULIST,
@@ -158,11 +159,28 @@ public class InternalSink {
     AUTOLINK;
   }
 
-  private static final int ATTRLIST_BLOCK = -1;
-  private static final int HINT_CONTINUE_OR_NEST = -2;
-  private static final int HINT_LIST_END = -3;
-  private static final int HINT_NEXT_ITEM = -4;
-  private static final int HINT_NESTED_END = -5;
+  private enum Pre {
+    STOP,
+
+    START,
+    LOOP,
+
+    EOL,
+    MAKE_TEXT,
+    MARKER,
+    MARKER_COUNT,
+    MARKER_FOUND,
+    MARKER_LOOP,
+    MARKER_ROLLBACK,
+    MARKER_TRIM,
+
+    TRIM;
+  }
+
+  private static final int HINT_CONTINUE_OR_NEST = -1;
+  private static final int HINT_LIST_END = -2;
+  private static final int HINT_NEXT_ITEM = -3;
+  private static final int HINT_NESTED_END = -4;
   private static final int MARKER_ULIST = -7;
 
   private static final int PSEUDO_DOCUMENT = 0;
@@ -405,172 +423,6 @@ public class InternalSink {
     }
 
     return nextNode != null;
-  }
-
-  private enum Pre {
-    STOP,
-
-    START,
-    LOOP,
-
-    EOL,
-    MAKE_TEXT,
-    MARKER,
-    MARKER_COUNT,
-    MARKER_FOUND,
-    MARKER_LOOP,
-    MARKER_ROLLBACK,
-    MARKER_TRIM,
-
-    TRIM;
-  }
-
-  private void pre() {
-    var state = Pre.START;
-
-    while (state != Pre.STOP) {
-      state = switch (state) {
-        case EOL -> preEol();
-
-        case LOOP -> preLoop();
-
-        case MAKE_TEXT -> preMakeText();
-
-        case MARKER -> preMarker();
-
-        case MARKER_COUNT -> preMarkerCount();
-
-        case MARKER_FOUND -> preMarkerFound();
-
-        case MARKER_LOOP -> preMarkerLoop();
-
-        case MARKER_ROLLBACK -> preMarkerRollback();
-
-        case MARKER_TRIM -> preMarkerTrim();
-
-        case START -> preStart();
-
-        case STOP -> preStop();
-
-        case TRIM -> preTrim();
-      };
-    }
-  }
-
-  private Pre preTrim() {
-    if (!sourceInc()) {
-      return Pre.STOP;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> Pre.TRIM;
-
-      default -> Pre.STOP;
-    };
-  }
-
-  private Pre preEol() {
-    if (!sourceInc()) {
-      return Pre.MAKE_TEXT;
-    }
-
-    return switch (sourcePeek()) {
-      case '-' -> Pre.MARKER;
-
-      default -> Pre.LOOP;
-    };
-  }
-
-  private Pre preLoop() {
-    if (!sourceInc()) {
-      return Pre.MAKE_TEXT;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> Pre.EOL;
-
-      default -> Pre.LOOP;
-    };
-  }
-
-  private Pre preMakeText() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  private Pre preMarker() {
-    // pushes pre end
-    // before EOL
-    stackPush(sourceIndex - 1);
-
-    // pushes marker count
-    stackPush(0);
-
-    return Pre.MARKER_LOOP;
-  }
-
-  private Pre preMarkerCount() {
-    int length = stackPop();
-
-    if (length == pseudoListingBlock().markerLength) {
-      return Pre.MARKER_FOUND;
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
-  }
-
-  private Pre preMarkerFound() {
-    var block = pseudoListingBlock();
-
-    block.last = true;
-
-    var text = pseudoText();
-
-    text.end = stackPop();
-
-    text.start = stackPop();
-
-    nextNode = text;
-
-    return Pre.TRIM;
-  }
-
-  private Pre preMarkerLoop() {
-    if (!sourceInc()) {
-      return Pre.MARKER_ROLLBACK;
-    }
-
-    stackInc();
-
-    return switch (sourcePeek()) {
-      case '-' -> Pre.MARKER_LOOP;
-
-      case '\t', '\f', ' ' -> Pre.MARKER_TRIM;
-
-      case '\n' -> Pre.MARKER_COUNT;
-
-      default -> Pre.MARKER_ROLLBACK;
-    };
-  }
-
-  private Pre preMarkerRollback() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  private Pre preMarkerTrim() {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  private Pre preStart() {
-    // pushes pre start
-    stackPush(sourceIndex);
-
-    return Pre.LOOP;
-  }
-
-  private Pre preStop() {
-    throw new AssertionError(
-      "STOP action should not have been called"
-    );
   }
 
   final void listingBlockIterator() {
@@ -945,6 +797,8 @@ public class InternalSink {
   }
 
   private void documentParse(Parse initialState) {
+    pseudoAttributes().clear();
+
     stackReplace(PseudoDocument.PARSE);
 
     var state = initialState;
@@ -1515,6 +1369,16 @@ public class InternalSink {
     return switch (state) {
       case ATTRLIST -> parseAttrlist();
 
+      case ATTRLIST_END_MARKER -> parseAttrlistEndMarker();
+
+      case ATTRLIST_FOUND -> parseAttrlistFound();
+
+      case ATTRLIST_NAME -> parseAttrlistName();
+
+      case ATTRLIST_NAME_LOOP -> parseAttrlistNameLoop();
+
+      case ATTRLIST_START_MARKER -> parseAttrlistStartMarker();
+
       case BODY -> parseBody();
 
       case LISTING_BLOCK -> parseListingBlock();
@@ -1525,19 +1389,11 @@ public class InternalSink {
 
       case LISTING_OR_ULIST -> parseListingOrUlist();
 
-      case MAYBE_ATTRLIST -> parseMaybeAttrlist();
-
-      case MAYBE_ATTRLIST_END -> parseMaybeAttrlistEnd();
-
-      case MAYBE_ATTRLIST_END_TRIM -> parseMaybeAttrlistEndTrim();
-
       case MAYBE_BOLD_OR_ULIST -> parseMaybeBoldOrUlist();
 
       case MAYBE_SECTION -> parseMaybeSection();
 
       case MAYBE_SECTION_TRIM -> parseMaybeSectionTrim();
-
-      case NAME_OR_VALUE -> parseNameOrValue();
 
       case NOT_SECTION -> parseNotSection();
 
@@ -1550,19 +1406,102 @@ public class InternalSink {
   }
 
   private Parse parseAttrlist() {
-    int type = stackPop();
+    // rollback index
+    stackPush(sourceIndex);
 
+    return Parse.ATTRLIST_START_MARKER;
+  }
+
+  private Parse parseAttrlistEndMarker() {
+    if (!sourceInc()) {
+      // pop rollback index
+      stackPop();
+
+      throw new UnsupportedOperationException(
+        "Implement me :: doc ends w/ attrlist"
+      );
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Parse.ATTRLIST_END_MARKER;
+
+      case '\n' -> Parse.ATTRLIST_FOUND;
+
+      default -> throw new AssertionError(
+        "Implement me :: rollback attrlist :: sourcePeek=" + sourcePeek()
+      );
+    };
+  }
+
+  private Parse parseAttrlistFound() {
     // pops rollback index
     stackPop();
 
+    // skips EOL
+    sourceInc();
+
     pseudoAttributes().active();
 
-    return switch (type) {
-      case ATTRLIST_BLOCK -> Parse.BODY;
+    return Parse.BODY;
+  }
 
-      default -> throw new AssertionError(
-        "Unexpected attrlist type=" + type
-      );
+  private Parse parseAttrlistName() {
+    // pushes name start
+    stackPush(sourceIndex);
+
+    // so loop analyzes current char
+    sourceIndex--;
+
+    return Parse.ATTRLIST_NAME_LOOP;
+  }
+
+  private Parse parseAttrlistNameLoop() {
+    if (!sourceInc()) {
+      return Parse.ATTRLIST_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case ',' -> {
+        parseAttrlistPositional();
+
+        sourceInc();
+
+        yield Parse.ATTRLIST_NAME;
+      }
+
+      case ']' -> {
+        parseAttrlistPositional();
+
+        yield Parse.ATTRLIST_END_MARKER;
+      }
+
+      default -> Parse.ATTRLIST_NAME_LOOP;
+    };
+  }
+
+  private void parseAttrlistPositional() {
+    int start = stackPop();
+
+    int end = sourceIndex;
+
+    var value = sourceGet(start, end);
+
+    var attributes = pseudoAttributes();
+
+    attributes.addPositional(value);
+  }
+
+  private Parse parseAttrlistStartMarker() {
+    if (!sourceInc()) {
+      return Parse.ATTRLIST_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Parse.ATTRLIST_ROLLBACK;
+
+      case ']' -> Parse.ATTRLIST_END_MARKER;
+
+      default -> Parse.ATTRLIST_NAME;
     };
   }
 
@@ -1574,12 +1513,7 @@ public class InternalSink {
     return switch (sourcePeek()) {
       case '\n' -> advance(Parse.BODY_TRIM);
 
-      case '[' -> {
-        // rollback index
-        stackPush(sourceIndex, ATTRLIST_BLOCK);
-
-        yield Parse.MAYBE_ATTRLIST;
-      }
+      case '[' -> Parse.ATTRLIST;
 
       case '-' -> Parse.LISTING_OR_ULIST;
 
@@ -1673,73 +1607,6 @@ public class InternalSink {
     };
   }
 
-  private Parse parseMaybeAttrlist() {
-    if (!sourceInc()) {
-      return Parse.NOT_ATTRLIST;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> Parse.NOT_ATTRLIST;
-
-      case ']' -> advance(Parse.MAYBE_ATTRLIST_END);
-
-      default -> {
-        var attributes = pseudoAttributes();
-
-        attributes.clear();
-
-        // attr name/value start
-        stackPush(sourceIndex);
-
-        yield advance(Parse.NAME_OR_VALUE);
-      }
-    };
-  }
-
-  private Parse parseMaybeAttrlistEnd() {
-    int context = stackPeek();
-
-    if (!sourceMore()) {
-      // pop rollback index
-      stackPop();
-
-      throw new UnsupportedOperationException(
-        "Implement me :: doc ends w/ attrlist"
-      );
-    }
-
-    return switch (context) {
-      case ATTRLIST_BLOCK -> Parse.MAYBE_ATTRLIST_END_TRIM;
-
-      default -> throw new AssertionError(
-        "Unexpected context = " + context
-      );
-    };
-  }
-
-  private Parse parseMaybeAttrlistEndTrim() {
-    if (!sourceMore()) {
-      // pop rollback index
-      stackPop();
-
-      throw new UnsupportedOperationException(
-        "Implement me :: doc ends w/ attrlist"
-      );
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> advance(Parse.MAYBE_ATTRLIST_END_TRIM);
-
-      case '\n' -> advance(Parse.ATTRLIST);
-
-      default -> {
-        throw new UnsupportedOperationException(
-          "Implement me :: rollback attrlist :: sourcePeek=" + sourcePeek()
-        );
-      }
-    };
-  }
-
   private Parse parseMaybeBoldOrUlist() {
     if (!sourceMore()) {
       return Parse.NOT_BOLD_OR_ULIST;
@@ -1785,22 +1652,6 @@ public class InternalSink {
     };
   }
 
-  private Parse parseNameOrValue() {
-    if (!sourceMore()) {
-      return Parse.NOT_ATTRLIST;
-    }
-
-    return switch (sourcePeek()) {
-      case ']' -> {
-        parsePositional();
-
-        yield advance(Parse.MAYBE_ATTRLIST_END);
-      }
-
-      default -> advance(Parse.NAME_OR_VALUE);
-    };
-  }
-
   private Parse parseNotSection() {
     // pops section level
     stackPop();
@@ -1808,18 +1659,6 @@ public class InternalSink {
     sourceIndex(stackPop());
 
     return Parse.PARAGRAPH;
-  }
-
-  private void parsePositional() {
-    int start = stackPop();
-
-    int end = sourceIndex;
-
-    var value = sourceGet(start, end);
-
-    var attributes = pseudoAttributes();
-
-    attributes.add(value);
   }
 
   private Parse parseUlist() {
@@ -1917,13 +1756,13 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
 
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+  
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2050,9 +1889,9 @@ public class InternalSink {
   }
 
   /*
-
+  
   asciidoctor/lib/asciidoctor/rx.rb
-
+  
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2065,16 +1904,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-  
+
   CG_BLANK=\p{Blank}
   CG_ALL=.
-  
+
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
+
   as PCRE
-  
+
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
+
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -2304,6 +2143,154 @@ public class InternalSink {
     return Phrasing.STOP;
   }
 
+  private void pre() {
+    var state = Pre.START;
+
+    while (state != Pre.STOP) {
+      state = switch (state) {
+        case EOL -> preEol();
+
+        case LOOP -> preLoop();
+
+        case MAKE_TEXT -> preMakeText();
+
+        case MARKER -> preMarker();
+
+        case MARKER_COUNT -> preMarkerCount();
+
+        case MARKER_FOUND -> preMarkerFound();
+
+        case MARKER_LOOP -> preMarkerLoop();
+
+        case MARKER_ROLLBACK -> preMarkerRollback();
+
+        case MARKER_TRIM -> preMarkerTrim();
+
+        case START -> preStart();
+
+        case STOP -> preStop();
+
+        case TRIM -> preTrim();
+      };
+    }
+  }
+
+  private Pre preEol() {
+    if (!sourceInc()) {
+      return Pre.MAKE_TEXT;
+    }
+
+    return switch (sourcePeek()) {
+      case '-' -> Pre.MARKER;
+
+      default -> Pre.LOOP;
+    };
+  }
+
+  private Pre preLoop() {
+    if (!sourceInc()) {
+      return Pre.MAKE_TEXT;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Pre.EOL;
+
+      default -> Pre.LOOP;
+    };
+  }
+
+  private Pre preMakeText() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Pre preMarker() {
+    // pushes pre end
+    // before EOL
+    stackPush(sourceIndex - 1);
+
+    // pushes marker count
+    stackPush(0);
+
+    return Pre.MARKER_LOOP;
+  }
+
+  private Pre preMarkerCount() {
+    int length = stackPop();
+
+    if (length == pseudoListingBlock().markerLength) {
+      return Pre.MARKER_FOUND;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private Pre preMarkerFound() {
+    var block = pseudoListingBlock();
+
+    block.last = true;
+
+    var text = pseudoText();
+
+    text.end = stackPop();
+
+    text.start = stackPop();
+
+    nextNode = text;
+
+    return Pre.TRIM;
+  }
+
+  private Pre preMarkerLoop() {
+    if (!sourceInc()) {
+      return Pre.MARKER_ROLLBACK;
+    }
+
+    stackInc();
+
+    return switch (sourcePeek()) {
+      case '-' -> Pre.MARKER_LOOP;
+
+      case '\t', '\f', ' ' -> Pre.MARKER_TRIM;
+
+      case '\n' -> Pre.MARKER_COUNT;
+
+      default -> Pre.MARKER_ROLLBACK;
+    };
+  }
+
+  private Pre preMarkerRollback() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Pre preMarkerTrim() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Pre preStart() {
+    // pushes pre start
+    stackPush(sourceIndex);
+
+    return Pre.LOOP;
+  }
+
+  private Pre preStop() {
+    throw new AssertionError(
+      "STOP action should not have been called"
+    );
+  }
+
+  private Pre preTrim() {
+    if (!sourceInc()) {
+      return Pre.STOP;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Pre.TRIM;
+
+      default -> Pre.STOP;
+    };
+  }
+
   private PseudoAttributes pseudoAttributes() {
     return pseudoFactory(PSEUDO_ATTRIBUTES, PseudoAttributes::new);
   }
@@ -2364,6 +2351,8 @@ public class InternalSink {
   }
 
   private void sectionParse(Parse initialState) {
+    pseudoAttributes().clear();
+
     stackPop(); // previous state
 
     @SuppressWarnings("unused")

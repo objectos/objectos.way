@@ -26,29 +26,30 @@ public final class PseudoAttributes implements Attributes {
 
   private static final int BOUND = 1 << 1;
 
-  @SuppressWarnings("unused")
-  private final InternalSink sink;
+  private String[] named = new String[8];
 
-  private String[] data = new String[8];
+  private int namedIndex;
 
-  private int index;
+  private String[] positional = new String[4];
+
+  private int positionalIndex;
 
   private int state;
 
   PseudoAttributes(InternalSink sink) {
-    this.sink = sink;
   }
 
   @Override
-  public final String getOrDefault(String name, String defaultValue) {
+  public final String getNamed(String name) {
     Objects.requireNonNull(name, "name == null");
-    var result = defaultValue.toString(); // implicit null-check
 
-    for (int i = 0; i < index; i += 2) {
-      var candidate = data[i];
+    String result = null;
+
+    for (int i = 0; i < namedIndex; i += 2) {
+      var candidate = named[i];
 
       if (name.equals(candidate)) {
-        result = data[i + 1];
+        result = named[i + 1];
 
         break;
       }
@@ -58,35 +59,46 @@ public final class PseudoAttributes implements Attributes {
   }
 
   @Override
+  public final String getNamed(String name, String defaultValue) {
+    var result = getNamed(name);
+
+    if (result != null) {
+      return result;
+    } else {
+      return defaultValue;
+    }
+  }
+
   public final String getPositional(int index) {
-    int thisIndex = index - 1;
+    int actualIndex = index - 1;
 
-    thisIndex *= 2;
+    if (actualIndex < 0) {
+      return null;
+    }
 
-    return data[thisIndex + 1];
+    if (actualIndex >= positionalIndex) {
+      return null;
+    }
+
+    return positional[actualIndex];
   }
 
   public final boolean isEmpty() {
-    return index == 0;
+    return namedIndex == 0;
   }
 
   final void active() {
     set(ACTIVE);
   }
 
-  final void add(String value) {
-    addImpl(null, value);
+  final void addPositional(String value) {
+    positional = ObjectArrays.growIfNecessary(positional, positionalIndex);
+    positional[positionalIndex++] = value;
   }
 
   final Attributes bindIfNecessary(PseudoListingBlock block) {
     if (!is(BOUND)) {
-      if (index == 0) {
-        index = 2;
-
-        data[0] = "style";
-
-        data[1] = "listing";
-      }
+      bindPseudoListingBlock();
 
       set(BOUND);
     }
@@ -96,13 +108,7 @@ public final class PseudoAttributes implements Attributes {
 
   final Attributes bindIfNecessary(PseudoSection section) {
     if (!is(BOUND)) {
-      if (index > 1) {
-        if (data[0] != null) {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
-        data[0] = "style";
-      }
+      bindPseudoSection();
 
       set(BOUND);
     }
@@ -111,21 +117,68 @@ public final class PseudoAttributes implements Attributes {
   }
 
   final void clear() {
-    Arrays.fill(data, null);
+    Arrays.fill(named, null);
+    Arrays.fill(positional, null);
 
-    index = 0;
-
-    state = 0;
+    namedIndex = positionalIndex = state = 0;
   }
 
-  private void addImpl(String name, String value) {
-    data = ObjectArrays.growIfNecessary(data, index + 1);
-    data[index++] = name;
-    data[index++] = value;
+  private void bindPseudoListingBlock() {
+    var style = getNamed("style");
+
+    if (style == null) {
+      style = "listing";
+
+      putNamedUnchecked("style", style);
+    }
+
+    var language = getPositional(2);
+
+    if (language != null) {
+      if (style.equals("listing")) {
+        style = "source";
+
+        replaceNamed("style", style);
+
+        putNamedUnchecked("language", language);
+      } else if (style.equals("source")) {
+        putNamedUnchecked("language", language);
+      }
+    }
+  }
+
+  private void bindPseudoSection() {
+    if (!hasNamed("style")) {
+      var style = getPositional(1);
+
+      putNamedUnchecked("style", style);
+    }
+  }
+
+  private boolean hasNamed(String name) {
+    return getNamed(name) != null;
   }
 
   private boolean is(int value) {
     return (state & value) != 0;
+  }
+
+  private void putNamedUnchecked(String name, String value) {
+    named = ObjectArrays.growIfNecessary(named, namedIndex + 1);
+    named[namedIndex++] = name;
+    named[namedIndex++] = value;
+  }
+
+  private void replaceNamed(String name, String value) {
+    for (int i = 0; i < namedIndex; i += 2) {
+      var candidate = named[i];
+
+      if (name.equals(candidate)) {
+        named[i + 1] = value;
+
+        break;
+      }
+    }
   }
 
   private void set(int value) {

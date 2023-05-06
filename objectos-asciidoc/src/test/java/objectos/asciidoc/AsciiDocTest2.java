@@ -30,6 +30,7 @@ public class AsciiDocTest2 {
         new ListingBlockTest(tester),
         new ParagraphTest(tester),
         new SectionTest(tester),
+        new SourceCodeBlockTest(tester),
         new UnorderedListTest(tester),
         new UrlMacroTest(tester)
     };
