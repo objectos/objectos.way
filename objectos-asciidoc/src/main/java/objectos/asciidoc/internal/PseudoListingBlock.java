@@ -26,8 +26,13 @@ public final class PseudoListingBlock extends PseudoNode
 
   static final int NODES = -900;
   static final int ITERATOR = -901;
+  static final int NODE = -903;
+  static final int NODE_CONSUMED = -904;
+  static final int EXHAUSTED = -905;
 
-  int markerSize;
+  boolean last;
+
+  int markerLength;
 
   PseudoListingBlock(InternalSink sink) {
     super(sink);
@@ -42,17 +47,19 @@ public final class PseudoListingBlock extends PseudoNode
 
   @Override
   public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
+    return sink.listingBlockHasNext();
   }
 
   @Override
   public final Iterator<Node> iterator() {
-    throw new UnsupportedOperationException("Implement me");
+    sink.listingBlockIterator();
+
+    return this;
   }
 
   @Override
   public final Node next() {
-    throw new UnsupportedOperationException("Implement me");
+    return nextNodeDefault();
   }
 
   @Override

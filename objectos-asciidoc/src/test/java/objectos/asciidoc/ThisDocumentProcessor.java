@@ -99,9 +99,9 @@ final class ThisDocumentProcessor {
       node(node);
     }
 
-    out.append("</pre>");
+    out.append("</pre>\n");
 
-    out.append("</listing>");
+    out.append("</listing>\n");
   }
 
   private void listItem(ListItem item) throws IOException {

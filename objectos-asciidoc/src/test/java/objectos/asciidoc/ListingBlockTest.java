@@ -27,7 +27,7 @@ public class ListingBlockTest {
     this.tester = tester;
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   listing block
 
   - delimited

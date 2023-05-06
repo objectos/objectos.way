@@ -235,6 +235,7 @@ public class InternalSink {
   final boolean documentHasNext() {
     switch (stackPeek()) {
       case PseudoHeader.EXHAUSTED,
+           PseudoListingBlock.EXHAUSTED,
            PseudoParagraph.EXHAUSTED,
            PseudoSection.EXHAUSTED,
            PseudoUnorderedList.EXHAUSTED -> documentParse(Parse.BODY);
@@ -369,8 +370,221 @@ public class InternalSink {
     }
   }
 
-  final void listingBlockNodes() {
+  /*
+   * things to consider:
+   *
+   * - include directive is supported
+   * - special characters are enabled by default
+   * - callouts are enabled by default
+   */
+  final boolean listingBlockHasNext() {
+    switch (stackPeek()) {
+      case PseudoListingBlock.ITERATOR -> {
+        stackPop();
+
+        pre();
+
+        stackPush(PseudoListingBlock.NODE);
+      }
+
+      case PseudoListingBlock.NODE -> {}
+
+      case PseudoListingBlock.NODE_CONSUMED -> {
+        stackPop();
+
+        var block = pseudoListingBlock();
+
+        if (block.last) {
+          stackPush(PseudoListingBlock.EXHAUSTED);
+        } else {
+          throw new UnsupportedOperationException("Implement me");
+        }
+      }
+
+      default -> stackStub();
+    }
+
+    return nextNode != null;
+  }
+
+  private enum Pre {
+    STOP,
+
+    START,
+    LOOP,
+
+    EOL,
+    MAKE_TEXT,
+    MARKER,
+    MARKER_COUNT,
+    MARKER_FOUND,
+    MARKER_LOOP,
+    MARKER_ROLLBACK,
+    MARKER_TRIM,
+
+    TRIM;
+  }
+
+  private void pre() {
+    var state = Pre.START;
+
+    while (state != Pre.STOP) {
+      state = switch (state) {
+        case EOL -> preEol();
+
+        case LOOP -> preLoop();
+
+        case MAKE_TEXT -> preMakeText();
+
+        case MARKER -> preMarker();
+
+        case MARKER_COUNT -> preMarkerCount();
+
+        case MARKER_FOUND -> preMarkerFound();
+
+        case MARKER_LOOP -> preMarkerLoop();
+
+        case MARKER_ROLLBACK -> preMarkerRollback();
+
+        case MARKER_TRIM -> preMarkerTrim();
+
+        case START -> preStart();
+
+        case STOP -> preStop();
+
+        case TRIM -> preTrim();
+      };
+    }
+  }
+
+  private Pre preTrim() {
+    if (!sourceInc()) {
+      return Pre.STOP;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Pre.TRIM;
+
+      default -> Pre.STOP;
+    };
+  }
+
+  private Pre preEol() {
+    if (!sourceInc()) {
+      return Pre.MAKE_TEXT;
+    }
+
+    return switch (sourcePeek()) {
+      case '-' -> Pre.MARKER;
+
+      default -> Pre.LOOP;
+    };
+  }
+
+  private Pre preLoop() {
+    if (!sourceInc()) {
+      return Pre.MAKE_TEXT;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Pre.EOL;
+
+      default -> Pre.LOOP;
+    };
+  }
+
+  private Pre preMakeText() {
     throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Pre preMarker() {
+    // pushes pre end
+    // before EOL
+    stackPush(sourceIndex - 1);
+
+    // pushes marker count
+    stackPush(0);
+
+    return Pre.MARKER_LOOP;
+  }
+
+  private Pre preMarkerCount() {
+    int length = stackPop();
+
+    if (length == pseudoListingBlock().markerLength) {
+      return Pre.MARKER_FOUND;
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private Pre preMarkerFound() {
+    var block = pseudoListingBlock();
+
+    block.last = true;
+
+    var text = pseudoText();
+
+    text.end = stackPop();
+
+    text.start = stackPop();
+
+    nextNode = text;
+
+    return Pre.TRIM;
+  }
+
+  private Pre preMarkerLoop() {
+    if (!sourceInc()) {
+      return Pre.MARKER_ROLLBACK;
+    }
+
+    stackInc();
+
+    return switch (sourcePeek()) {
+      case '-' -> Pre.MARKER_LOOP;
+
+      case '\t', '\f', ' ' -> Pre.MARKER_TRIM;
+
+      case '\n' -> Pre.MARKER_COUNT;
+
+      default -> Pre.MARKER_ROLLBACK;
+    };
+  }
+
+  private Pre preMarkerRollback() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Pre preMarkerTrim() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Pre preStart() {
+    // pushes pre start
+    stackPush(sourceIndex);
+
+    return Pre.LOOP;
+  }
+
+  private Pre preStop() {
+    throw new AssertionError(
+      "STOP action should not have been called"
+    );
+  }
+
+  final void listingBlockIterator() {
+    stackAssert(PseudoListingBlock.NODES);
+
+    stackReplace(PseudoListingBlock.ITERATOR);
+  }
+
+  final void listingBlockNodes() {
+    switch (stackPeek()) {
+      case PseudoDocument.BLOCK_CONSUMED -> stackReplace(PseudoListingBlock.NODES);
+
+      default -> stackStub();
+    }
   }
 
   final boolean listItemHasNext() {
@@ -1408,9 +1622,14 @@ public class InternalSink {
     // pops rollback index
     stackPop();
 
+    // skips new line
+    sourceInc();
+
     var block = pseudoListingBlock();
 
-    block.markerSize = count;
+    block.last = false;
+
+    block.markerLength = count;
 
     nextNode = block;
 
