@@ -55,4 +55,36 @@ public class SourceCodeBlockTest {
     );
   }
 
+  @Test(description = """
+  source code block
+
+  - explict source style
+  - delimited
+  - multiple lines
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      [source,java]
+      ----
+      class A {
+
+      }
+      ----
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>source</style>
+      <lang>java</lang>
+      <pre>class A {
+
+      }</pre>
+      </listing>
+      </document>
+      """
+    );
+  }
+
 }
