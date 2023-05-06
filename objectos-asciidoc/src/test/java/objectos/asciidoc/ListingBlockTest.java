@@ -52,4 +52,70 @@ public class ListingBlockTest {
     );
   }
 
+  @Test(description = """
+  listing block code with ']'
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      ----
+      foo]
+      ----
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>listing</style>
+      <pre>foo]</pre>
+      </listing>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  listing block code with '[x]'
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      ----
+      a: b[2]
+      ----
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>listing</style>
+      <pre>a: b[2]</pre>
+      </listing>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  listing block code with '_'
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      ----
+      foo _bar
+      ----
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>listing</style>
+      <pre>foo _bar</pre>
+      </listing>
+      </document>
+      """
+    );
+  }
+
 }
