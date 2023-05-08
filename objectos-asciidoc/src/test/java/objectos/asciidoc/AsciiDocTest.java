@@ -48,7 +48,6 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
         new ConstrainedBoldTest(this),
         new ConstrainedItalicTest(this),
         new DocumentAttributeTest(this),
-        new InlineMacroTestToRemove(this),
         new LexerTest(this),
         new PreambleTest(this)
     };
