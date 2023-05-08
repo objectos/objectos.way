@@ -50,8 +50,7 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
         new DocumentAttributeTest(this),
         new InlineMacroTest(this),
         new LexerTest(this),
-        new PreambleTest(this),
-        new SourceCodeBlockTestToRemove(this)
+        new PreambleTest(this)
     };
   }
 

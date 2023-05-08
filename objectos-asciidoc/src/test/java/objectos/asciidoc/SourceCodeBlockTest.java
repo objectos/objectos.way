@@ -87,4 +87,62 @@ public class SourceCodeBlockTest {
     );
   }
 
+  @Test(description = """
+  source code block
+
+  - implict source style
+  - delimited
+  - indented content
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      [,a]
+      ----
+      b
+          c
+      ----
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>source</style>
+      <lang>a</lang>
+      <pre>b
+          c</pre>
+      </listing>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  source code block
+
+  - implict source style
+  - delimited
+  - contains Token.BOLD_END
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      [,a]
+      ----
+      b*;
+      ----
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>source</style>
+      <lang>a</lang>
+      <pre>b*;</pre>
+      </listing>
+      </document>
+      """
+    );
+  }
+
 }
