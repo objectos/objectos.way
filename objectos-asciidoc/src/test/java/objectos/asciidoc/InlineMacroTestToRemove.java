@@ -23,66 +23,6 @@ final class InlineMacroTestToRemove extends AbstractAsciiDocTest {
 
   @Test(description = //
   """
-  imacro + monospace
-
-  012345678
-  '''
-  i:b[`c`]
-  '''
-  """)
-  public void testCase06() {
-    test(
-      """
-      i:b[`c`]
-      """,
-
-      p0(
-        Token.INLINE_MACRO, 0, 1,
-        Token.BLOB, 2, 3,
-        Token.ATTR_LIST_START,
-        Token.ATTR_VALUE_START,
-        Token.MONO_START, 4, Token.BLOB, 5, 6, Token.MONO_END, 6,
-        Token.ATTR_VALUE_END,
-        Token.ATTR_LIST_END,
-        Token.LF,
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.PARAGRAPH_START,
-        Code.INLINE_MACRO, 0, 1,
-        Code.MACRO_TARGET, 2, 3,
-        Code.ATTR_POSITIONAL, 1, 8, 15,
-        Code.TOKENS, 17, 17,
-        Code.PARAGRAPH_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(
-        t()
-      ),
-
-      """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
-       <p><a href="b"><code>c</code></a></p>
-      </div>
-      </div>
-      </body>
-      """
-    );
-  }
-
-  @Test(description = //
-  """
   imacro + spaces + monospace
 
   0123456789012

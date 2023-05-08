@@ -118,4 +118,21 @@ public class InlineMacroTest {
     );
   }
 
+  @Test(description = """
+  imacro + monospace
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      i:b[`c`]
+      """,
+
+      """
+      <document>
+      <p><a href="b"><code>c</code></a></p>
+      </document>
+      """
+    );
+  }
+
 }

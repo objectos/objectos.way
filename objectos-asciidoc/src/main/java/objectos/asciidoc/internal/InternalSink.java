@@ -351,7 +351,8 @@ public class InternalSink {
 
       case PseudoInlineMacro.NODE -> {}
 
-      case PseudoInlineMacro.NODE_CONSUMED -> {
+      case PseudoInlineMacro.NODE_CONSUMED,
+           PseudoMonospaced.EXHAUSTED -> {
         // pops NODE_CONSUMED
         stackPop();
 
@@ -578,7 +579,8 @@ public class InternalSink {
 
   final void monospacedNodes() {
     switch (stackPeek()) {
-      case PseudoListItem.TEXT_CONSUMED,
+      case PseudoInlineMacro.NODE_CONSUMED,
+           PseudoListItem.TEXT_CONSUMED,
            PseudoParagraph.NODE_CONSUMED,
            PseudoTitle.NODE_CONSUMED -> stackReplace(PseudoMonospaced.NODES);
 
