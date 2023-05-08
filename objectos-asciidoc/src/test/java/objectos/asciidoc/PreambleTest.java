@@ -17,31 +17,21 @@ package objectos.asciidoc;
 
 import org.testng.annotations.Test;
 
-final class PreambleTest extends AbstractAsciiDocTest {
+public class PreambleTest {
 
-  PreambleTest(AsciiDocTest outer) { super(outer); }
+  Tester tester = Tester.objectos();
 
-  @Test(description = //
-  """
+  public PreambleTest() {}
+
+  PreambleTest(Tester tester) {
+    this.tester = tester;
+  }
+
+  @Test(description = """
   paragraph + UL
-
-  0123
-  4
-  56
-  7
-  8901
-  2345
-  '''
-  = A
-
-  b
-
-  * c
-  * d
-  '''
   """)
   public void testCase01() {
-    test(
+    tester.test(
       """
       = A
 
@@ -51,57 +41,19 @@ final class PreambleTest extends AbstractAsciiDocTest {
       * d
       """,
 
-      p0(
-        Token.HEADING, 1, 0, 2,
-        Token.BLOB, 2, 3, Token.LF,
-        Token.LF,
-        Token.BLOB, 5, 6, Token.LF,
-        Token.LF,
-        Token.ULIST_ASTERISK, 1, 8, 9, Token.BLOB, 10, 11, Token.LF,
-        Token.ULIST_ASTERISK, 1, 12, 13, Token.BLOB, 14, 15, Token.LF,
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.HEADING_START, 1, Code.TOKENS, 4, 7, Code.HEADING_END, 1,
-        Code.PREAMBLE_START,
-        Code.PARAGRAPH_START, Code.TOKENS, 9, 12, Code.PARAGRAPH_END,
-
-        Code.ULIST_START,
-        Code.LI_START, Code.TOKENS, 18, 21, Code.LI_END,
-
-        Code.LI_START, Code.TOKENS, 26, 29, Code.LI_END,
-        Code.ULIST_END,
-
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(
-        t(Text.REGULAR, 2, 3),
-        t(Text.REGULAR, 5, 6),
-        t(Text.REGULAR, 10, 11),
-        t(Text.REGULAR, 14, 15)
-      ),
-
       """
-      <div id="header">
-      <h1>A</h1>
-      </div>
-      <div id="content">
-      <div class="paragraph">
-       <p>b</p>
-      </div>
-      <div class="ulist">
-       <ul>
-        <li><p>c</p></li>
-        <li><p>d</p></li>
-       </ul>
-      </div>
-      </div>
+      <document>
+      <title>A</title>
+      <p>b</p>
+      <unordered-list>
+      <item>
+      <text>c</text>
+      </item>
+      <item>
+      <text>d</text>
+      </item>
+      </unordered-list>
+      </document>
       """
     );
   }

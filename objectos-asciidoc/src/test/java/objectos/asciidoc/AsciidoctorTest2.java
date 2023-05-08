@@ -30,6 +30,7 @@ public class AsciidoctorTest2 {
         new InlineMacroTest(tester),
         new ListingBlockTest(tester),
         new ParagraphTest(tester),
+        new PreambleTest(tester),
         new SectionTest(tester),
         new SourceCodeBlockTest(tester),
         new UnorderedListTest(tester),
