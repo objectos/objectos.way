@@ -47,4 +47,75 @@ public class InlineMacroTest {
     );
   }
 
+  @Test(description = """
+  inline macro
+
+  - unordered list
+  - section
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      == A
+
+      * i:b[c]
+      * i:d[e]
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title>A</title>
+      <unordered-list>
+      <item>
+      <text><a href="b">c</a></text>
+      </item>
+      <item>
+      <text><a href="d">e</a></text>
+      </item>
+      </unordered-list>
+      </section>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  imacro ends the sentence
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      a i:b[c].
+
+      d
+      """,
+
+      """
+      <document>
+      <p>a <a href="b">c</a>.</p>
+      <p>d</p>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  not imacro: target with spaces
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      i:b c[d]
+      """,
+
+      """
+      <document>
+      <p>i:b c[d]</p>
+      </document>
+      """
+    );
+  }
+
 }

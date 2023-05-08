@@ -146,6 +146,8 @@ public class InternalSink {
 
     CUSTOM_INLINE,
     CUSTOM_INLINE_ROLLBACK,
+    CUSTOM_INLINE_TARGET,
+    CUSTOM_INLINE_TARGET_LOOP,
 
     URI_MACRO,
     URI_MACRO_ATTRLIST,
@@ -1698,6 +1700,10 @@ public class InternalSink {
 
         case CUSTOM_INLINE -> phrasingCustomInline();
 
+        case CUSTOM_INLINE_TARGET -> phrasingCustomInlineTarget();
+
+        case CUSTOM_INLINE_TARGET_LOOP -> phrasingCustomInlineTargetLoop();
+
         case CUSTOM_INLINE_ROLLBACK -> phrasingCustomInlineRollback();
 
         case EOL -> phrasingEol();
@@ -1867,7 +1873,7 @@ public class InternalSink {
     return switch (sourcePeek()) {
       case '\n' -> Phrasing.CUSTOM_INLINE_ROLLBACK;
 
-      default -> Phrasing.URI_MACRO_TARGET;
+      default -> Phrasing.CUSTOM_INLINE_TARGET;
     };
   }
 
@@ -1876,6 +1882,28 @@ public class InternalSink {
     // just resume blob parsing
 
     return Phrasing.BLOB;
+  }
+
+  private Phrasing phrasingCustomInlineTarget() {
+    var macro = pseudoInlineMacro();
+
+    macro.targetStart = sourceIndex;
+
+    return Phrasing.CUSTOM_INLINE_TARGET_LOOP;
+  }
+
+  private Phrasing phrasingCustomInlineTargetLoop() {
+    if (!sourceInc()) {
+      return Phrasing.CUSTOM_INLINE_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Phrasing.CUSTOM_INLINE_ROLLBACK;
+
+      case '[' -> Phrasing.URI_MACRO_ATTRLIST;
+
+      default -> Phrasing.CUSTOM_INLINE_TARGET_LOOP;
+    };
   }
 
   private Phrasing phrasingEol() {
