@@ -18,6 +18,7 @@ package objectos.asciidoc;
 import java.io.IOException;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Node.Emphasis;
 import objectos.asciidoc.pseudom.Node.Header;
 import objectos.asciidoc.pseudom.Node.InlineMacro;
 import objectos.asciidoc.pseudom.Node.ListItem;
@@ -50,6 +51,16 @@ final class ThisDocumentProcessor {
   @Override
   public final String toString() {
     return out.toString();
+  }
+
+  private void emphasis(Emphasis emphasis) throws IOException {
+    out.append("<em>");
+
+    for (var node : emphasis.nodes()) {
+      node(node);
+    }
+
+    out.append("</em>");
   }
 
   private void header(Header header) throws IOException {
@@ -119,7 +130,8 @@ final class ThisDocumentProcessor {
     var closed = false;
 
     for (var node : item.nodes()) {
-      if (node instanceof InlineMacro ||
+      if (node instanceof Emphasis ||
+          node instanceof InlineMacro ||
           node instanceof Monospaced ||
           node instanceof Text) {
         if (!opened) {
@@ -155,7 +167,9 @@ final class ThisDocumentProcessor {
   }
 
   private void node(Node node) throws IOException {
-    if (node instanceof Header header) {
+    if (node instanceof Emphasis emphasis) {
+      emphasis(emphasis);
+    } else if (node instanceof Header header) {
       header(header);
     } else if (node instanceof InlineMacro macro) {
       inlineMacro(macro);

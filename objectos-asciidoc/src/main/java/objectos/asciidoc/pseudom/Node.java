@@ -16,6 +16,7 @@
 package objectos.asciidoc.pseudom;
 
 import java.io.IOException;
+import objectos.asciidoc.internal.PseudoEmphasis;
 import objectos.asciidoc.internal.PseudoHeader;
 import objectos.asciidoc.internal.PseudoInlineMacro;
 import objectos.asciidoc.internal.PseudoListItem;
@@ -54,6 +55,12 @@ public sealed interface Node {
   }
 
   sealed interface ListItem extends Node permits PseudoListItem {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface Emphasis extends Node permits PseudoEmphasis {
 
     IterableOnce<Node> nodes();
 

@@ -24,20 +24,6 @@ import objectos.util.IntArrays;
 
 public class InternalSink {
 
-  /*
-  
-  CC_WORD = CG_WORD = '\p{Word}'
-  QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\])
-  %(\[([^\[\]]+)\])
-  CC_ALL = '.'
-  
-  [:strong, :constrained, /(^|[^#{CC_WORD};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S#{CC_ALL}*?\S)\*(?!#{CG_WORD})/m]
-  
-  /./m - Any character (the m modifier enables multiline mode)
-  /\S/ - A non-whitespace character: /[^ \t\r\n\f\v]/
-  
-   */
-
   private enum HeaderParse {
     STOP,
     AFTER_TITLE,
@@ -134,8 +120,13 @@ public class InternalSink {
 
     TEXT,
 
+    CONSTRAINED_ITALIC,
+    CONSTRAINED_ITALIC_FOUND,
+    CONSTRAINED_ITALIC_LOOP,
+    CONSTRAINED_ITALIC_ROLLBACK,
+
     CONSTRAINED_MONOSPACE,
-    CONSTRAINED_MONOSPACE_END,
+    CONSTRAINED_MONOSPACE_FOUND,
     CONSTRAINED_MONOSPACE_LOOP,
     CONSTRAINED_MONOSPACE_ROLLBACK,
 
@@ -197,7 +188,8 @@ public class InternalSink {
   private static final int PSEUDO_INLINE_MACRO = 9;
   private static final int PSEUDO_MONOSPACED = 10;
   private static final int PSEUDO_LISTING_BLOCK = 11;
-  private static final int PSEUDO_LENGTH = 12;
+  private static final int PSEUDO_EMPHASIS = 12;
+  private static final int PSEUDO_LENGTH = 13;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -283,6 +275,73 @@ public class InternalSink {
     stackAssert(PseudoDocument.START);
 
     stackReplace(PseudoDocument.NODES);
+  }
+
+  final boolean emphasisHasNext() {
+    switch (stackPeek()) {
+      case PseudoEmphasis.ITERATOR -> {
+        // pops ITERATOR
+        stackPop();
+
+        var em = pseudoEmphasis();
+
+        // pushes return to indexes
+        stackPush(sourceMax, sourceIndex);
+
+        sourceIndex = em.textStart;
+
+        sourceMax = em.textEnd;
+
+        phrasing(PhraseElement.FRAGMENT);
+
+        if (nextNode != null) {
+          stackPush(PseudoEmphasis.NODE);
+        } else {
+          stackPush(PseudoEmphasis.EXHAUSTED);
+        }
+      }
+
+      case PseudoEmphasis.NODE -> {}
+
+      case PseudoEmphasis.NODE_CONSUMED -> {
+        // pops NODE_CONSUMED
+        stackPop();
+
+        phrasing(PhraseElement.FRAGMENT);
+
+        if (nextNode != null) {
+          stackPush(PseudoEmphasis.NODE);
+        } else {
+          // restore source state
+          sourceIndex = stackPop();
+          sourceMax = stackPop();
+
+          // we're done
+          stackPush(PseudoEmphasis.EXHAUSTED);
+        }
+      }
+
+      default -> stackStub();
+    }
+
+    return nextNode != null;
+  }
+
+  final void emphasisIterator() {
+    stackAssert(PseudoEmphasis.NODES);
+
+    stackReplace(PseudoEmphasis.ITERATOR);
+  }
+
+  final void emphasisNodes() {
+    switch (stackPeek()) {
+      case PseudoInlineMacro.NODE_CONSUMED,
+           PseudoListItem.TEXT_CONSUMED,
+           PseudoParagraph.NODE_CONSUMED,
+           PseudoTitle.NODE_CONSUMED -> stackReplace(PseudoEmphasis.NODES);
+
+      default -> stackStub();
+    }
   }
 
   final boolean headerHasNext() {
@@ -602,7 +661,8 @@ public class InternalSink {
 
   final boolean paragraphHasNext() {
     switch (stackPeek()) {
-      case PseudoParagraph.ITERATOR,
+      case PseudoEmphasis.EXHAUSTED,
+           PseudoParagraph.ITERATOR,
            PseudoParagraph.NODE_CONSUMED,
            PseudoInlineMacro.EXHAUSTED,
            PseudoMonospaced.EXHAUSTED -> {
@@ -1692,9 +1752,17 @@ public class InternalSink {
 
         case BLOB -> phrasingBlob();
 
+        case CONSTRAINED_ITALIC -> phrasingConstrainedItalic();
+
+        case CONSTRAINED_ITALIC_FOUND -> phrasingConstrainedItalicFound();
+
+        case CONSTRAINED_ITALIC_LOOP -> phrasingConstrainedItalicLoop();
+
+        case CONSTRAINED_ITALIC_ROLLBACK -> phrasingConstrainedItalicRollback();
+
         case CONSTRAINED_MONOSPACE -> phrasingConstrainedMonospace();
 
-        case CONSTRAINED_MONOSPACE_END -> phrasingConstrainedMonospaceEnd();
+        case CONSTRAINED_MONOSPACE_FOUND -> phrasingConstrainedMonospaceFound();
 
         case CONSTRAINED_MONOSPACE_LOOP -> phrasingConstrainedMonospaceLoop();
 
@@ -1755,7 +1823,7 @@ public class InternalSink {
 
       case '*' -> throw new UnsupportedOperationException("Implement me");
 
-      case '_' -> throw new UnsupportedOperationException("Implement me");
+      case '_' -> Phrasing.CONSTRAINED_ITALIC;
 
       case ':' -> Phrasing.INLINE_MACRO;
 
@@ -1764,13 +1832,107 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  # _emphasis_
+  /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
+
+   */
+  private Phrasing phrasingConstrainedItalic() {
+    int startSymbol = sourceIndex;
+
+    if (!sourceInc()) {
+      return toPhrasingEnd(startSymbol);
+    }
+
+    if (startSymbol != 0) {
+      char previous = sourceAt(startSymbol - 1);
+
+      var rollback = switch (previous) {
+        case ';', ':', '}' -> true;
+
+        default -> isWord(previous);
+      };
+
+      if (rollback) {
+        return Phrasing.CONSTRAINED_ITALIC_ROLLBACK;
+      }
+    }
+
+    int phrasingStart = stackPeek();
+
+    int preTextLength = startSymbol - phrasingStart;
+
+    if (preTextLength > 0) {
+      // we'll resume at the (possible) italic
+      sourceIndex = startSymbol;
+
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Phrasing.CONSTRAINED_ITALIC_ROLLBACK;
+
+      default -> Phrasing.CONSTRAINED_ITALIC_LOOP;
+    };
+  }
+
+  private Phrasing phrasingConstrainedItalicFound() {
+    int symbolEnd = sourceIndex;
+
+    // safe
+    char previous = sourceAt(symbolEnd - 1);
+
+    return switch (previous) {
+      case '\t', '\f', ' ' -> Phrasing.CONSTRAINED_ITALIC_ROLLBACK;
+
+      default -> {
+        if (!sourceInc()) {
+          yield toConstrainedItalic();
+        }
+
+        char next = sourceAt(symbolEnd + 1);
+
+        if (isWord(next)) {
+          yield Phrasing.CONSTRAINED_ITALIC_ROLLBACK;
+        } else {
+          yield toConstrainedItalic();
+        }
+      }
+    };
+  }
+
+  private Phrasing phrasingConstrainedItalicLoop() {
+    if (!sourceInc()) {
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> throw new UnsupportedOperationException(
+        "Implement me :: maybe block end"
+      );
+
+      case '_' -> Phrasing.CONSTRAINED_ITALIC_FOUND;
+
+      default -> Phrasing.CONSTRAINED_ITALIC_LOOP;
+    };
+  }
+
+  private Phrasing phrasingConstrainedItalicRollback() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  /*
+  
+  CC_WORD = CG_WORD = '\p{Word}'
+  CC_ALL = '.'
+  QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
+  
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -1783,7 +1945,7 @@ public class InternalSink {
       char previous = sourceAt(startSymbol - 1);
 
       var rollback = switch (previous) {
-        case ';', ':', '"', '\'', '`' -> true;
+        case ';', ':', '"', '\'', '`', '}' -> true;
 
         default -> isWord(previous);
       };
@@ -1815,7 +1977,7 @@ public class InternalSink {
     };
   }
 
-  private Phrasing phrasingConstrainedMonospaceEnd() {
+  private Phrasing phrasingConstrainedMonospaceFound() {
     int symbolEnd = sourceIndex;
 
     // safe
@@ -1854,7 +2016,7 @@ public class InternalSink {
         "Implement me :: maybe block end"
       );
 
-      case '`' -> Phrasing.CONSTRAINED_MONOSPACE_END;
+      case '`' -> Phrasing.CONSTRAINED_MONOSPACE_FOUND;
 
       default -> Phrasing.CONSTRAINED_MONOSPACE_LOOP;
     };
@@ -1919,9 +2081,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -1934,16 +2096,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -2329,6 +2491,10 @@ public class InternalSink {
     return pseudoFactory(PSEUDO_DOCUMENT, PseudoDocument::new);
   }
 
+  private PseudoEmphasis pseudoEmphasis() {
+    return pseudoFactory(PSEUDO_EMPHASIS, PseudoEmphasis::new);
+  }
+
   @SuppressWarnings("unchecked")
   private <T> T pseudoFactory(int index, Function<InternalSink, T> factory) {
     var result = pseudoArray[index];
@@ -2615,6 +2781,23 @@ public class InternalSink {
 
       default -> Phrasing.BLOB;
     };
+  }
+
+  private Phrasing toConstrainedItalic() {
+    int symbolStart = stackPop();
+
+    int symbolEnd = sourceIndex;
+
+    var emphasis = pseudoEmphasis();
+
+    // start after symbol
+    emphasis.textStart = symbolStart + 1;
+
+    emphasis.textEnd = symbolEnd;
+
+    nextNode = emphasis;
+
+    return Phrasing.STOP;
   }
 
   private Phrasing toConstrainedMonospace() {

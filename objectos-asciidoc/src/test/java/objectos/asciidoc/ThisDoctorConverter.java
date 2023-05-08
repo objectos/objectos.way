@@ -48,62 +48,13 @@ public class ThisDoctorConverter extends StringConverter {
     }
 
     if (node instanceof Document document) {
-      out.append("<document>\n");
-
-      var doctitle = document.getAttribute("doctitle");
-
-      var title = document.getDoctitle();
-
-      if (doctitle != null && title != null) {
-        out.append("<title>");
-        out.append(title);
-        out.append("</title>\n");
-      }
-
-      var content = (String) document.getContent();
-
-      content = content.replaceAll("\n\n<p>", "\n<p>");
-
-      content = content.replaceAll("\n\n<section", "\n<section");
-
-      content = content.replaceAll("\n\n<unordered-list", "\n<unordered-list");
-
-      out.append(content);
-      out.append("</document>\n");
+      document(out, document);
     } else if (node instanceof Section section) {
-      out.append("<section level=\"");
-      out.append(section.getLevel());
-      out.append("\">\n");
-
-      out.append("<style>");
-      out.append(section.getAttribute("style", "null"));
-      out.append("</style>\n");
-
-      out.append("<title>");
-      out.append(section.getTitle());
-      out.append("</title>\n");
-
-      out.append(section.getContent());
-      out.append("</section>\n");
+      section(out, section);
     } else if (transform.equals("inline_anchor")) {
       urlMacro(out, node);
     } else if (transform.equals("inline_quoted")) {
-      var phrase = (PhraseNode) node;
-
-      var type = phrase.getType();
-
-      switch (type) {
-        case "monospaced" -> monospaced(out, phrase);
-
-        default -> {
-          var log = new LogRecord(
-            Severity.WARN,
-            "Unexpected phrase: type=" + type
-          );
-
-          log(log);
-        }
-      }
+      inlineQuoted(out, node);
     } else if (transform.equals("listing")) {
       listing(out, node);
     } else if (transform.equals("paragraph")) {
@@ -112,31 +63,7 @@ public class ThisDoctorConverter extends StringConverter {
       StructuralNode block = (StructuralNode) node;
       out.append(block.getContent());
     } else if (transform.equals("ulist")) {
-      out.append("<unordered-list>\n");
-
-      List list = (List) node;
-
-      for (var item : list.getItems()) {
-        if (item instanceof ListItem listItem) {
-          out.append("<item>\n");
-
-          if (listItem.hasText()) {
-            out.append("<text>");
-            out.append(listItem.getText());
-            out.append("</text>\n");
-          }
-
-          out.append(listItem.getContent());
-
-          out.append("</item>\n");
-        } else {
-          out.append("node name: ");
-          out.append(item.getNodeName());
-          out.append('\n');
-        }
-      }
-
-      out.append("</unordered-list>\n");
+      unorderedList(out, node);
     } else {
       var type = node.getClass();
 
@@ -149,6 +76,58 @@ public class ThisDoctorConverter extends StringConverter {
     }
 
     return out.toString();
+  }
+
+  private void document(StringBuilder out, Document document) {
+    out.append("<document>\n");
+
+    var doctitle = document.getAttribute("doctitle");
+
+    var title = document.getDoctitle();
+
+    if (doctitle != null && title != null) {
+      out.append("<title>");
+      out.append(title);
+      out.append("</title>\n");
+    }
+
+    var content = (String) document.getContent();
+
+    content = content.replaceAll("\n\n<p>", "\n<p>");
+
+    content = content.replaceAll("\n\n<section", "\n<section");
+
+    content = content.replaceAll("\n\n<unordered-list", "\n<unordered-list");
+
+    out.append(content);
+    out.append("</document>\n");
+  }
+
+  private void emphasis(StringBuilder out, PhraseNode node) {
+    out.append("<em>");
+    out.append(node.getText());
+    out.append("</em>");
+  }
+
+  private void inlineQuoted(StringBuilder out, ContentNode node) {
+    var phrase = (PhraseNode) node;
+
+    var type = phrase.getType();
+
+    switch (type) {
+      case "emphasis" -> emphasis(out, phrase);
+
+      case "monospaced" -> monospaced(out, phrase);
+
+      default -> {
+        var log = new LogRecord(
+          Severity.WARN,
+          "Unexpected phrase: type=" + type
+        );
+
+        log(log);
+      }
+    }
   }
 
   private void listing(StringBuilder out, ContentNode node) {
@@ -187,6 +166,51 @@ public class ThisDoctorConverter extends StringConverter {
     out.append("<p>");
     out.append(block.getContent());
     out.append("</p>\n");
+  }
+
+  private void section(StringBuilder out, Section section) {
+    out.append("<section level=\"");
+    out.append(section.getLevel());
+    out.append("\">\n");
+
+    out.append("<style>");
+    out.append(section.getAttribute("style", "null"));
+    out.append("</style>\n");
+
+    out.append("<title>");
+    out.append(section.getTitle());
+    out.append("</title>\n");
+
+    out.append(section.getContent());
+    out.append("</section>\n");
+  }
+
+  private void unorderedList(StringBuilder out, ContentNode node) {
+    out.append("<unordered-list>\n");
+
+    List list = (List) node;
+
+    for (var item : list.getItems()) {
+      if (item instanceof ListItem listItem) {
+        out.append("<item>\n");
+
+        if (listItem.hasText()) {
+          out.append("<text>");
+          out.append(listItem.getText());
+          out.append("</text>\n");
+        }
+
+        out.append(listItem.getContent());
+
+        out.append("</item>\n");
+      } else {
+        out.append("node name: ");
+        out.append(item.getNodeName());
+        out.append('\n');
+      }
+    }
+
+    out.append("</unordered-list>\n");
   }
 
   private void urlMacro(StringBuilder out, ContentNode node) {
