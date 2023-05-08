@@ -89,4 +89,29 @@ public class ConstrainedItalicTest {
     );
   }
 
+  @Test(description = """
+  = italic
+
+  - constrained
+  - not an italic
+  """)
+  public void testCase04() {
+    tester.test(
+      """
+      a '_' b
+      foo
+
+      bar
+      """,
+
+      """
+      <document>
+      <p>a '_' b
+      foo</p>
+      <p>bar</p>
+      </document>
+      """
+    );
+  }
+
 }

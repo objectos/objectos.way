@@ -1891,7 +1891,11 @@ public class InternalSink {
       return toPhrasingEnd(textEnd);
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    return switch (sourcePeek()) {
+      case '\n' -> Phrasing.CONSTRAINED_ITALIC_ROLLBACK;
+
+      default -> Phrasing.CONSTRAINED_ITALIC_LOOP;
+    };
   }
 
   private Phrasing phrasingConstrainedItalicFound() {
@@ -1934,7 +1938,10 @@ public class InternalSink {
   }
 
   private Phrasing phrasingConstrainedItalicRollback() {
-    throw new UnsupportedOperationException("Implement me");
+    // resume after opening symbol
+    sourceIndex = stackPeek() + 1;
+
+    return Phrasing.BLOB;
   }
 
   /*
