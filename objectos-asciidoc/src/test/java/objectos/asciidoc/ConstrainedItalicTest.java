@@ -48,4 +48,25 @@ public class ConstrainedItalicTest {
     );
   }
 
+  @Test(description = """
+  italic
+
+  - constrained
+  - phrases
+  - well-formed
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      _a b_ _c d_, _e f_
+      """,
+
+      """
+      <document>
+      <p><em>a b</em> <em>c d</em>, <em>e f</em></p>
+      </document>
+      """
+    );
+  }
+
 }
