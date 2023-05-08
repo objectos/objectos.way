@@ -121,6 +121,7 @@ public class InternalSink {
     TEXT,
 
     CONSTRAINED_ITALIC,
+    CONSTRAINED_ITALIC_EOL,
     CONSTRAINED_ITALIC_FOUND,
     CONSTRAINED_ITALIC_LOOP,
     CONSTRAINED_ITALIC_ROLLBACK,
@@ -1754,6 +1755,8 @@ public class InternalSink {
 
         case CONSTRAINED_ITALIC -> phrasingConstrainedItalic();
 
+        case CONSTRAINED_ITALIC_EOL -> phrasingConstrainedItalicEol();
+
         case CONSTRAINED_ITALIC_FOUND -> phrasingConstrainedItalicFound();
 
         case CONSTRAINED_ITALIC_LOOP -> phrasingConstrainedItalicLoop();
@@ -1880,6 +1883,17 @@ public class InternalSink {
     };
   }
 
+  private Phrasing phrasingConstrainedItalicEol() {
+    if (!sourceInc()) {
+      // end text before NL
+      int textEnd = sourceIndex - 1;
+
+      return toPhrasingEnd(textEnd);
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   private Phrasing phrasingConstrainedItalicFound() {
     int symbolEnd = sourceIndex;
 
@@ -1911,9 +1925,7 @@ public class InternalSink {
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> throw new UnsupportedOperationException(
-        "Implement me :: maybe block end"
-      );
+      case '\n' -> Phrasing.CONSTRAINED_ITALIC_EOL;
 
       case '_' -> Phrasing.CONSTRAINED_ITALIC_FOUND;
 

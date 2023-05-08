@@ -46,7 +46,6 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
     return new Object[] {
         new AttributeListTest(this),
         new ConstrainedBoldTest(this),
-        new ConstrainedItalicTestToRemove(this),
         new DocumentAttributeTest(this),
         new LexerTest(this)
     };
