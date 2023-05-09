@@ -48,4 +48,25 @@ public class ConstrainedBoldTest {
     );
   }
 
+  @Test(description = """
+  bold
+
+  - constrained
+  - phrases
+  - well-formed
+  """)
+  public void testCase02() {
+    tester.test(
+      """
+      *a b* *c d*, *e f*
+      """,
+
+      """
+      <document>
+      <p><strong>a b</strong> <strong>c d</strong>, <strong>e f</strong></p>
+      </document>
+      """
+    );
+  }
+
 }
