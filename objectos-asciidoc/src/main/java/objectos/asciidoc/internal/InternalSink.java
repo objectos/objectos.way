@@ -2662,7 +2662,17 @@ public class InternalSink {
   }
 
   private Pre preMarkerTrim() {
-    throw new UnsupportedOperationException("Implement me");
+    if (!sourceInc()) {
+      return Pre.MARKER_COUNT;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Pre.MARKER_TRIM;
+
+      case '\n' -> Pre.MARKER_COUNT;
+
+      default -> Pre.MARKER_ROLLBACK;
+    };
   }
 
   private Pre preStart() {

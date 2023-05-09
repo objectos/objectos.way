@@ -145,4 +145,34 @@ public class SourceCodeBlockTest {
     );
   }
 
+  @Test(description = """
+  source code block
+
+  - trailing space at close marker
+  - has paragraph after
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      [,a]
+      ----
+      b*;
+      ----\040\040
+
+      foo
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>source</style>
+      <lang>a</lang>
+      <pre>b*;</pre>
+      </listing>
+      <p>foo</p>
+      </document>
+      """
+    );
+  }
+
 }
