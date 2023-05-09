@@ -69,4 +69,21 @@ public class ConstrainedBoldTest {
     );
   }
 
+  @Test(description = """
+  bold enclosing italic
+  """)
+  public void testCase03() {
+    tester.test(
+      """
+      a *_b_*.
+      """,
+
+      """
+      <document>
+      <p>a <strong><em>b</em></strong>.</p>
+      </document>
+      """
+    );
+  }
+
 }
