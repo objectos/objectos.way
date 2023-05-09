@@ -336,4 +336,27 @@ public class SectionTest {
     );
   }
 
+  @Test(description = """
+  section has title only, i.e., no body
+  """)
+  public void testCase09() {
+    tester.test(
+      """
+      intro
+
+      == ABC
+      """,
+
+      """
+      <document>
+      <p>intro</p>
+      <section level="1">
+      <style>null</style>
+      <title>ABC</title>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }
