@@ -119,6 +119,8 @@ public class ThisDoctorConverter extends StringConverter {
 
       case "monospaced" -> monospaced(out, phrase);
 
+      case "strong" -> strong(out, phrase);
+
       default -> {
         var log = new LogRecord(
           Severity.WARN,
@@ -183,6 +185,12 @@ public class ThisDoctorConverter extends StringConverter {
 
     out.append(section.getContent());
     out.append("</section>\n");
+  }
+
+  private void strong(StringBuilder out, PhraseNode node) {
+    out.append("<strong>");
+    out.append(node.getText());
+    out.append("</strong>");
   }
 
   private void unorderedList(StringBuilder out, ContentNode node) {

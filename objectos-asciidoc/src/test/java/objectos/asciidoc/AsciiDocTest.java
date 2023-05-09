@@ -45,7 +45,7 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
   public Object[] _factory() {
     return new Object[] {
         new AttributeListTest(this),
-        new ConstrainedBoldTest(this),
+        new ConstrainedBoldTestToRemove(this),
         new DocumentAttributeTest(this),
         new LexerTest(this)
     };

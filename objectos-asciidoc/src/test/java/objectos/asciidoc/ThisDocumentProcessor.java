@@ -26,6 +26,7 @@ import objectos.asciidoc.pseudom.Node.ListingBlock;
 import objectos.asciidoc.pseudom.Node.Monospaced;
 import objectos.asciidoc.pseudom.Node.Paragraph;
 import objectos.asciidoc.pseudom.Node.Section;
+import objectos.asciidoc.pseudom.Node.Strong;
 import objectos.asciidoc.pseudom.Node.Text;
 import objectos.asciidoc.pseudom.Node.Title;
 import objectos.asciidoc.pseudom.Node.UnorderedList;
@@ -183,6 +184,8 @@ final class ThisDocumentProcessor {
       paragraph(paragraph);
     } else if (node instanceof Section section) {
       section(section);
+    } else if (node instanceof Strong strong) {
+      strong(strong);
     } else if (node instanceof Text text) {
       text.appendTo(out);
     } else if (node instanceof Title title) {
@@ -224,6 +227,16 @@ final class ThisDocumentProcessor {
     }
 
     out.append("</section>\n");
+  }
+
+  private void strong(Strong strong) throws IOException {
+    out.append("<strong>");
+
+    for (var node : strong.nodes()) {
+      node(node);
+    }
+
+    out.append("</strong>");
   }
 
   private void title(Title title) throws IOException {

@@ -74,7 +74,7 @@ public class InternalSink {
     ATTRLIST_ROLLBACK,
     ATTRLIST_START_MARKER,
 
-    MAYBE_BOLD_OR_ULIST,
+    BOLD_OR_ULIST,
     NOT_BOLD_OR_ULIST,
 
     LISTING_OR_ULIST,
@@ -119,6 +119,12 @@ public class InternalSink {
     BLOB,
 
     TEXT,
+
+    CONSTRAINED_BOLD,
+    CONSTRAINED_BOLD_EOL,
+    CONSTRAINED_BOLD_FOUND,
+    CONSTRAINED_BOLD_LOOP,
+    CONSTRAINED_BOLD_ROLLBACK,
 
     CONSTRAINED_ITALIC,
     CONSTRAINED_ITALIC_EOL,
@@ -190,7 +196,8 @@ public class InternalSink {
   private static final int PSEUDO_MONOSPACED = 10;
   private static final int PSEUDO_LISTING_BLOCK = 11;
   private static final int PSEUDO_EMPHASIS = 12;
-  private static final int PSEUDO_LENGTH = 13;
+  private static final int PSEUDO_STRONG = 13;
+  private static final int PSEUDO_LENGTH = 14;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -666,7 +673,8 @@ public class InternalSink {
            PseudoParagraph.ITERATOR,
            PseudoParagraph.NODE_CONSUMED,
            PseudoInlineMacro.EXHAUSTED,
-           PseudoMonospaced.EXHAUSTED -> {
+           PseudoMonospaced.EXHAUSTED,
+           PseudoStrong.EXHAUSTED -> {
         stackReplace(PseudoParagraph.PARSE);
 
         phrasing(PhraseElement.PARAGRAPH);
@@ -750,6 +758,73 @@ public class InternalSink {
 
         pseudoAttributes().clear();
       }
+
+      default -> stackStub();
+    }
+  }
+
+  final boolean strongHasNext() {
+    switch (stackPeek()) {
+      case PseudoStrong.ITERATOR -> {
+        // pops ITERATOR
+        stackPop();
+
+        var em = pseudoStrong();
+
+        // pushes return to indexes
+        stackPush(sourceMax, sourceIndex);
+
+        sourceIndex = em.textStart;
+
+        sourceMax = em.textEnd;
+
+        phrasing(PhraseElement.FRAGMENT);
+
+        if (nextNode != null) {
+          stackPush(PseudoStrong.NODE);
+        } else {
+          stackPush(PseudoStrong.EXHAUSTED);
+        }
+      }
+
+      case PseudoStrong.NODE -> {}
+
+      case PseudoStrong.NODE_CONSUMED -> {
+        // pops NODE_CONSUMED
+        stackPop();
+
+        phrasing(PhraseElement.FRAGMENT);
+
+        if (nextNode != null) {
+          stackPush(PseudoStrong.NODE);
+        } else {
+          // restore source state
+          sourceIndex = stackPop();
+          sourceMax = stackPop();
+
+          // we're done
+          stackPush(PseudoStrong.EXHAUSTED);
+        }
+      }
+
+      default -> stackStub();
+    }
+
+    return nextNode != null;
+  }
+
+  final void strongIterator() {
+    stackAssert(PseudoStrong.NODES);
+
+    stackReplace(PseudoStrong.ITERATOR);
+  }
+
+  final void strongNodes() {
+    switch (stackPeek()) {
+      case PseudoInlineMacro.NODE_CONSUMED,
+           PseudoListItem.TEXT_CONSUMED,
+           PseudoParagraph.NODE_CONSUMED,
+           PseudoTitle.NODE_CONSUMED -> stackReplace(PseudoStrong.NODES);
 
       default -> stackStub();
     }
@@ -1446,6 +1521,8 @@ public class InternalSink {
 
       case BODY -> parseBody();
 
+      case BOLD_OR_ULIST -> parseBoldOrUlist();
+
       case LISTING_BLOCK -> parseListingBlock();
 
       case LISTING_BLOCK_COUNT -> parseListingBlockCount();
@@ -1453,8 +1530,6 @@ public class InternalSink {
       case LISTING_BLOCK_LOOP -> parseListingBlockLoop();
 
       case LISTING_OR_ULIST -> parseListingOrUlist();
-
-      case MAYBE_BOLD_OR_ULIST -> parseMaybeBoldOrUlist();
 
       case MAYBE_SECTION -> parseMaybeSection();
 
@@ -1582,12 +1657,7 @@ public class InternalSink {
 
       case '-' -> Parse.LISTING_OR_ULIST;
 
-      case '*' -> {
-        // rollback index or marker start
-        stackPush(sourceIndex);
-
-        yield advance(Parse.MAYBE_BOLD_OR_ULIST);
-      }
+      case '*' -> Parse.BOLD_OR_ULIST;
 
       case '=' -> {
         stackPush(sourceIndex);
@@ -1599,6 +1669,30 @@ public class InternalSink {
       }
 
       default -> Parse.PARAGRAPH;
+    };
+  }
+
+  private Parse parseBoldOrUlist() {
+    int markerStart = sourceIndex;
+
+    if (!sourceInc()) {
+      return Parse.NOT_BOLD_OR_ULIST;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> {
+        stackPush(markerStart);
+
+        yield toUlist();
+      }
+
+      case '*' -> throw new UnsupportedOperationException("Implement me");
+
+      default -> {
+        sourceIndex = markerStart;
+
+        yield Parse.PARAGRAPH;
+      }
     };
   }
 
@@ -1672,20 +1766,6 @@ public class InternalSink {
     };
   }
 
-  private Parse parseMaybeBoldOrUlist() {
-    if (!sourceMore()) {
-      return Parse.NOT_BOLD_OR_ULIST;
-    }
-
-    return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> toUlist();
-
-      case '*' -> throw new UnsupportedOperationException("Implement me");
-
-      default -> Parse.NOT_LISTING_OR_ULIST;
-    };
-  }
-
   private Parse parseMaybeSection() {
     if (!sourceMore()) {
       return Parse.NOT_SECTION;
@@ -1752,6 +1832,16 @@ public class InternalSink {
         case AUTOLINK -> phrasingAutolink();
 
         case BLOB -> phrasingBlob();
+
+        case CONSTRAINED_BOLD -> phrasingConstrainedBold();
+
+        case CONSTRAINED_BOLD_EOL -> phrasingConstrainedBoldEol();
+
+        case CONSTRAINED_BOLD_FOUND -> phrasingConstrainedBoldFound();
+
+        case CONSTRAINED_BOLD_LOOP -> phrasingConstrainedBoldLoop();
+
+        case CONSTRAINED_BOLD_ROLLBACK -> phrasingConstrainedBoldRollback();
 
         case CONSTRAINED_ITALIC -> phrasingConstrainedItalic();
 
@@ -1824,7 +1914,7 @@ public class InternalSink {
 
       case '`' -> Phrasing.CONSTRAINED_MONOSPACE;
 
-      case '*' -> throw new UnsupportedOperationException("Implement me");
+      case '*' -> Phrasing.CONSTRAINED_BOLD;
 
       case '_' -> Phrasing.CONSTRAINED_ITALIC;
 
@@ -1832,6 +1922,102 @@ public class InternalSink {
 
       default -> advance(Phrasing.BLOB);
     };
+  }
+
+  /*
+  
+  CC_WORD = CG_WORD = '\p{Word}'
+  CC_ALL = '.'
+  QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
+  
+  # _emphasis_
+  /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
+
+   */
+  private Phrasing phrasingConstrainedBold() {
+    int startSymbol = sourceIndex;
+
+    if (!sourceInc()) {
+      return toPhrasingEnd(startSymbol);
+    }
+
+    if (startSymbol != 0) {
+      char previous = sourceAt(startSymbol - 1);
+
+      var rollback = switch (previous) {
+        case ';', ':', '}' -> true;
+
+        default -> isWord(previous);
+      };
+
+      if (rollback) {
+        return Phrasing.CONSTRAINED_BOLD_ROLLBACK;
+      }
+    }
+
+    int phrasingStart = stackPeek();
+
+    int preTextLength = startSymbol - phrasingStart;
+
+    if (preTextLength > 0) {
+      // we'll resume at the (possible) italic
+      sourceIndex = startSymbol;
+
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Phrasing.CONSTRAINED_BOLD_ROLLBACK;
+
+      default -> Phrasing.CONSTRAINED_BOLD_LOOP;
+    };
+  }
+
+  private Phrasing phrasingConstrainedBoldEol() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private Phrasing phrasingConstrainedBoldFound() {
+    int symbolEnd = sourceIndex;
+
+    // safe
+    char previous = sourceAt(symbolEnd - 1);
+
+    return switch (previous) {
+      case '\t', '\f', ' ' -> Phrasing.CONSTRAINED_BOLD_ROLLBACK;
+
+      default -> {
+        if (!sourceInc()) {
+          yield toConstrainedBold();
+        }
+
+        char next = sourceAt(symbolEnd + 1);
+
+        if (isWord(next)) {
+          yield Phrasing.CONSTRAINED_BOLD_ROLLBACK;
+        } else {
+          yield toConstrainedBold();
+        }
+      }
+    };
+  }
+
+  private Phrasing phrasingConstrainedBoldLoop() {
+    if (!sourceInc()) {
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Phrasing.CONSTRAINED_BOLD_EOL;
+
+      case '*' -> Phrasing.CONSTRAINED_BOLD_FOUND;
+
+      default -> Phrasing.CONSTRAINED_BOLD_LOOP;
+    };
+  }
+
+  private Phrasing phrasingConstrainedBoldRollback() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   /*
@@ -2553,6 +2739,10 @@ public class InternalSink {
     return pseudoFactory(PSEUDO_SECTION, PseudoSection::new);
   }
 
+  private PseudoStrong pseudoStrong() {
+    return pseudoFactory(PSEUDO_STRONG, PseudoStrong::new);
+  }
+
   private PseudoText pseudoText() {
     return pseudoFactory(PSEUDO_TEXT, PseudoText::new);
   }
@@ -2800,6 +2990,23 @@ public class InternalSink {
 
       default -> Phrasing.BLOB;
     };
+  }
+
+  private Phrasing toConstrainedBold() {
+    int symbolStart = stackPop();
+
+    int symbolEnd = sourceIndex;
+
+    var strong = pseudoStrong();
+
+    // start after symbol
+    strong.textStart = symbolStart + 1;
+
+    strong.textEnd = symbolEnd;
+
+    nextNode = strong;
+
+    return Phrasing.STOP;
   }
 
   private Phrasing toConstrainedItalic() {

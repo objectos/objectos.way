@@ -24,6 +24,7 @@ import objectos.asciidoc.internal.PseudoListingBlock;
 import objectos.asciidoc.internal.PseudoMonospaced;
 import objectos.asciidoc.internal.PseudoParagraph;
 import objectos.asciidoc.internal.PseudoSection;
+import objectos.asciidoc.internal.PseudoStrong;
 import objectos.asciidoc.internal.PseudoText;
 import objectos.asciidoc.internal.PseudoTitle;
 import objectos.asciidoc.internal.PseudoUnorderedList;
@@ -61,6 +62,12 @@ public sealed interface Node {
   }
 
   sealed interface Emphasis extends Node permits PseudoEmphasis {
+
+    IterableOnce<Node> nodes();
+
+  }
+
+  sealed interface Strong extends Node permits PseudoStrong {
 
     IterableOnce<Node> nodes();
 

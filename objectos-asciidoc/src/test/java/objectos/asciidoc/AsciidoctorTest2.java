@@ -25,6 +25,7 @@ public class AsciidoctorTest2 {
     var tester = Tester.doctor();
 
     return new Object[] {
+        new ConstrainedBoldTest(tester),
         new ConstrainedItalicTest(tester),
         new ConstrainedMonospaceTest(tester),
         new DocumentTest(tester),
