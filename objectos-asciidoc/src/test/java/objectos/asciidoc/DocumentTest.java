@@ -32,9 +32,6 @@ public class DocumentTest {
 
   - happy path
   - title ends @ eof
-
-  '''
-  = The doctitle'''
   """)
   public void testCase01() {
     tester.test(
@@ -54,10 +51,6 @@ public class DocumentTest {
 
   - happy path
   - title ends @ NL
-
-  '''
-  = The doctitle
-  '''
   """)
   public void testCase02() {
     tester.test(
@@ -77,10 +70,6 @@ public class DocumentTest {
   doctitle (not a doctitle)
 
   - not a title (no space after symbol '=')
-
-  '''
-  =Not Title
-  '''
   """)
   public void testCase03() {
     tester.test(
@@ -98,12 +87,6 @@ public class DocumentTest {
 
   @Test(description = """
   doctitle + paragraph
-
-  '''
-  = A
-
-  b
-  '''
   """)
   public void testCase04() {
     tester.test(
@@ -120,6 +103,32 @@ public class DocumentTest {
       </document>
       """
     );
+  }
+
+  @Test(enabled = false, description = """
+  document attributes
+
+  - Objectos Docs v0002/index doc header
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      = a
+      :b: c
+      :d: e
+
+      f
+      """,
+
+      """
+      <document>
+      <title>a</title>
+      <p>f</p>
+      </document>
+      """
+    );
+    tester.attribute("b", "c");
+    tester.attribute("d", "e");
   }
 
 }

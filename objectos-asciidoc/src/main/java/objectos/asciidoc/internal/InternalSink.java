@@ -63,6 +63,15 @@ public class InternalSink {
 
     /* document, section or phrase */
 
+    ATTRIBUTE,
+    ATTRIBUTE_BOOLEAN,
+    ATTRIBUTE_NAME,
+    ATTRIBUTE_NAME_FOUND,
+    ATTRIBUTE_STRING,
+    ATTRIBUTE_TRIM,
+    ATTRIBUTE_VALUE,
+    ATTRIBUTE_VALUE_LOOP,
+
     BODY,
     BODY_TRIM,
 
@@ -233,7 +242,7 @@ public class InternalSink {
 
     stackPush(PseudoDocument.START);
 
-    return pseudoDocument();
+    return pseudoDocument().clear();
   }
 
   final void appendTo(Appendable out, int start, int end) throws IOException {
@@ -247,7 +256,11 @@ public class InternalSink {
   final void close() throws IOException {
     nextNode = null;
 
+    phrase = null;
+
     source = null;
+
+    sourceIndex = sourceMax = 0;
 
     stackIndex = -1;
   }
@@ -947,6 +960,8 @@ public class InternalSink {
 
     while (state != Parse.STOP) {
       state = switch (state) {
+        case ATTRIBUTE_STRING -> documentParseAttributeString();
+
         case DOCUMENT_START -> documentParseDocumentStart();
 
         case EXHAUSTED -> documentParseExhausted();
@@ -970,6 +985,22 @@ public class InternalSink {
         default -> parse(state);
       };
     }
+  }
+
+  private Parse documentParseAttributeString() {
+    int valueEnd = sourceIndex;
+    int valueStart = stackPop();
+    var value = sourceGet(valueStart, valueEnd);
+
+    int nameEnd = stackPop();
+    int nameStart = stackPop();
+    var name = sourceGet(nameStart, nameEnd);
+
+    var document = pseudoDocument();
+
+    document.attribute(name, value);
+
+    return Parse.BODY;
   }
 
   private Parse documentParseDocumentStart() {
@@ -1113,8 +1144,6 @@ public class InternalSink {
 
     return switch (sourcePeek()) {
       case '\n' -> advance(HeaderParse.HEADER_END);
-
-      case ':' -> throw new UnsupportedOperationException("Implement me");
 
       default -> HeaderParse.EXHAUSTED;
     };
@@ -1509,6 +1538,18 @@ public class InternalSink {
 
   private Parse parse(Parse state) {
     return switch (state) {
+      case ATTRIBUTE -> parseAttribute();
+
+      case ATTRIBUTE_NAME -> parseAttributeName();
+
+      case ATTRIBUTE_NAME_FOUND -> parseAttributeNameFound();
+
+      case ATTRIBUTE_TRIM -> parseAttributeTrim();
+
+      case ATTRIBUTE_VALUE -> parseAttributeValue();
+
+      case ATTRIBUTE_VALUE_LOOP -> parseAttributeValueLoop();
+
       case ATTRLIST -> parseAttrlist();
 
       case ATTRLIST_END_MARKER -> parseAttrlistEndMarker();
@@ -1522,6 +1563,8 @@ public class InternalSink {
       case ATTRLIST_START_MARKER -> parseAttrlistStartMarker();
 
       case BODY -> parseBody();
+
+      case BODY_TRIM -> parseBodyTrim();
 
       case BOLD_OR_ULIST -> parseBoldOrUlist();
 
@@ -1544,6 +1587,92 @@ public class InternalSink {
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
       );
+    };
+  }
+
+  private Parse parseAttribute() {
+    if (!sourceInc()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    // name start
+    stackPush(sourceIndex);
+
+    // adjust for ATTRIBUTE_NAME;
+    sourceIndex--;
+
+    return Parse.ATTRIBUTE_NAME;
+  }
+
+  private Parse parseAttributeName() {
+    if (!sourceInc()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    char peek = sourcePeek();
+
+    if (isWord(peek)) {
+      return Parse.ATTRIBUTE_NAME;
+    }
+
+    return switch (peek) {
+      case ':' -> Parse.ATTRIBUTE_NAME_FOUND;
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
+  }
+
+  private Parse parseAttributeNameFound() {
+    // name end
+    stackPush(sourceIndex);
+
+    if (!sourceInc()) {
+      return Parse.ATTRIBUTE_BOOLEAN;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Parse.ATTRIBUTE_TRIM;
+
+      case '\n' -> Parse.ATTRIBUTE_BOOLEAN;
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: attribute rollback? attribute ignore?"
+      );
+    };
+  }
+
+  private Parse parseAttributeTrim() {
+    if (!sourceInc()) {
+      // we'll do it for due dilligence...
+      // as the doc ended so where can this be used?
+      return Parse.ATTRIBUTE_BOOLEAN;
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Parse.ATTRIBUTE_TRIM;
+
+      case '\n' -> Parse.ATTRIBUTE_BOOLEAN;
+
+      default -> Parse.ATTRIBUTE_VALUE;
+    };
+  }
+
+  private Parse parseAttributeValue() {
+    // value start
+    stackPush(sourceIndex);
+
+    return Parse.ATTRIBUTE_VALUE_LOOP;
+  }
+
+  private Parse parseAttributeValueLoop() {
+    if (!sourceInc()) {
+      return Parse.ATTRIBUTE_STRING;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Parse.ATTRIBUTE_STRING;
+
+      default -> Parse.ATTRIBUTE_VALUE_LOOP;
     };
   }
 
@@ -1653,7 +1782,9 @@ public class InternalSink {
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> advance(Parse.BODY_TRIM);
+      case '\n' -> Parse.BODY_TRIM;
+
+      case ':' -> Parse.ATTRIBUTE;
 
       case '[' -> Parse.ATTRLIST;
 
@@ -1671,6 +1802,18 @@ public class InternalSink {
       }
 
       default -> Parse.PARAGRAPH;
+    };
+  }
+
+  private Parse parseBodyTrim() {
+    if (!sourceInc()) {
+      return Parse.STOP;
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> Parse.BODY_TRIM;
+
+      default -> Parse.BODY;
     };
   }
 

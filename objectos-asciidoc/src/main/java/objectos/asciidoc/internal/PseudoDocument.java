@@ -17,6 +17,8 @@ package objectos.asciidoc.internal;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
@@ -37,6 +39,8 @@ public final class PseudoDocument extends PseudoNode
   static final int BLOCK = -114;
   static final int BLOCK_CONSUMED = -115;
   static final int EXHAUSTED = -116;
+
+  private Map<String, String> attributes;
 
   PseudoDocument(InternalSink sink) {
     super(sink);
@@ -67,6 +71,22 @@ public final class PseudoDocument extends PseudoNode
   @Override
   public final IterableOnce<Node> nodes() {
     sink.documentNodes();
+
+    return this;
+  }
+
+  final void attribute(String name, String value) {
+    if (attributes == null) {
+      attributes = new LinkedHashMap<>();
+    }
+
+    attributes.put(name, value);
+  }
+
+  final PseudoDocument clear() {
+    if (attributes != null) {
+      attributes.clear();
+    }
 
     return this;
   }

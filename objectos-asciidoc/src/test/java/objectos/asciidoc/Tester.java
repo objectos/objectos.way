@@ -51,6 +51,8 @@ abstract class Tester {
 
     private final Asciidoctor asciidoctor;
 
+    private Map<String, Object> attributes;
+
     private Doctor() {
       asciidoctor = Asciidoctor.Factory.create();
 
@@ -64,13 +66,24 @@ abstract class Tester {
     }
 
     @Override
+    public final void attribute(String name, Object expectedValue) {
+      var result = attributes.get(name);
+
+      assertEquals(result, expectedValue);
+    }
+
+    @Override
     public final void test(String source, String expectedHtml) {
       var options = Options.builder()
           .backend("tester")
           .headerFooter(true)
           .build();
 
-      var result = asciidoctor.convert(source, options);
+      var document = asciidoctor.load(source, options);
+
+      attributes = document.getAttributes();
+
+      var result = document.convert();
 
       testHtml(result, expectedHtml);
     }
@@ -84,6 +97,11 @@ abstract class Tester {
     private final AsciiDoc2 asciiDoc = new AsciiDoc2();
 
     private final ThisDocumentProcessor processor = new ThisDocumentProcessor();
+
+    @Override
+    public final void attribute(String name, Object expectedValue) {
+
+    }
 
     @Override
     public final void test(String source, String expectedHtml) {
@@ -108,7 +126,14 @@ abstract class Tester {
     return Objectos.INSTANCE;
   }
 
+  public abstract void attribute(String name, Object expectedValue);
+
   public abstract void test(String source, String expectedHtml);
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName();
+  }
 
   final void testHtml(String result, String expected) {
     assertEquals(normalize(result), normalize(expected));
@@ -116,11 +141,6 @@ abstract class Tester {
 
   private String normalize(String html) {
     return html;
-  }
-
-  @Override
-  public String toString() {
-    return getClass().getSimpleName();
   }
 
 }

@@ -1,8 +1,10 @@
-= Document title
-:a: a value
+= Title
+:a: 123
+:b 456
+:c: 789
 
-Paragraph
+a is {a}, b is {b}, c is {c} 
 
-:b: b value  
+:c: c value  
 
-Ipsum {a} {b}
+Ipsum {a} {c}
