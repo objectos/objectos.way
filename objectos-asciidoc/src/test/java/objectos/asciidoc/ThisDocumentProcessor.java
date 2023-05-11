@@ -27,6 +27,7 @@ import objectos.asciidoc.pseudom.Node.Monospaced;
 import objectos.asciidoc.pseudom.Node.Paragraph;
 import objectos.asciidoc.pseudom.Node.Section;
 import objectos.asciidoc.pseudom.Node.Strong;
+import objectos.asciidoc.pseudom.Node.Symbol;
 import objectos.asciidoc.pseudom.Node.Text;
 import objectos.asciidoc.pseudom.Node.Title;
 import objectos.asciidoc.pseudom.Node.UnorderedList;
@@ -186,6 +187,8 @@ final class ThisDocumentProcessor {
       section(section);
     } else if (node instanceof Strong strong) {
       strong(strong);
+    } else if (node instanceof Symbol symbol) {
+      symbol(symbol);
     } else if (node instanceof Text text) {
       text.appendTo(out);
     } else if (node instanceof Title title) {
@@ -237,6 +240,12 @@ final class ThisDocumentProcessor {
     }
 
     out.append("</strong>");
+  }
+
+  private void symbol(Symbol symbol) {
+    switch (symbol) {
+      case RIGHT_SINGLE_QUOTATION_MARK -> out.append("&#8217;");
+    }
   }
 
   private void title(Title title) throws IOException {

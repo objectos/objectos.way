@@ -30,6 +30,7 @@ public class AsciidoctorTest2 {
         new ConstrainedMonospaceTest(tester),
         new DocumentTest(tester),
         new InlineMacroTest(tester),
+        new LexerTest(tester),
         new ListingBlockTest(tester),
         new ParagraphTest(tester),
         new PreambleTest(tester),

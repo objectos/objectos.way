@@ -17,56 +17,29 @@ package objectos.asciidoc;
 
 import org.testng.annotations.Test;
 
-final class LexerTest extends AbstractAsciiDocTest {
+public class LexerTest {
 
-  LexerTest(AsciiDocTest outer) { super(outer); }
+  Tester tester = Tester.objectos();
 
-  @Test(description = //
-  """
+  public LexerTest() {}
+
+  LexerTest(Tester tester) {
+    this.tester = tester;
+  }
+
+  @Test(description = """
   apostrophe between word chars
-
-  0123
-  '''
-  a'b
-  '''
   """)
   public void testCase01() {
-    test(
+    tester.test(
       """
       a'b
       """,
 
-      p0(
-        Token.BLOB, 0, 1, Token.APOSTROPHE, 1, Token.BLOB, 2, 3, Token.LF,
-        Token.EOF
-      ),
-
-      p1(
-        Code.DOCUMENT_START,
-        Code.PREAMBLE_START,
-        Code.PARAGRAPH_START,
-        Code.TOKENS, 0, 8,
-        Code.PARAGRAPH_END,
-        Code.PREAMBLE_END,
-        Code.DOCUMENT_END
-      ),
-
-      docAttr(),
-
-      p2(
-        t(Text.REGULAR, 0, 1, Text.CURVED_APOSTROPHE, Text.REGULAR, 2, 3)
-      ),
-
       """
-      <body>
-      <div id="header">
-      </div>
-      <div id="content">
-      <div class="paragraph">
-      <p>a’b</p>
-      </div>
-      </div>
-      </body>
+      <document>
+      <p>a&#8217;b</p>
+      </document>
       """
     );
   }

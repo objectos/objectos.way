@@ -116,4 +116,10 @@ public sealed interface Node {
 
   }
 
+  enum Symbol implements Node {
+
+    RIGHT_SINGLE_QUOTATION_MARK;
+
+  }
+
 }

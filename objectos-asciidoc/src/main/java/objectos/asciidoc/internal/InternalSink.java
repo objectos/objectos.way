@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.function.Function;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
+import objectos.asciidoc.pseudom.Node.Symbol;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 
@@ -170,7 +171,9 @@ public class InternalSink {
     ATTRIBUTE,
     ATTRIBUTE_FOUND,
     ATTRIBUTE_NAME,
-    ATTRIBUTE_ROLLBACK;
+    ATTRIBUTE_ROLLBACK,
+
+    APOSTROPHE;
   }
 
   private enum Pre {
@@ -1980,6 +1983,8 @@ public class InternalSink {
 
     while (state != Phrasing.STOP) {
       state = switch (state) {
+        case APOSTROPHE -> phrasingApostrophe();
+
         case ATTRIBUTE -> phrasingAttribute();
 
         case ATTRIBUTE_FOUND -> phrasingAttributeFound();
@@ -2057,6 +2062,45 @@ public class InternalSink {
         case URI_MACRO_TEXT_LOOP -> phrasingUriMacroTextLoop();
       };
     }
+  }
+
+  private Phrasing phrasingApostrophe() {
+    int symbol = sourceIndex;
+
+    if (symbol == 0) {
+      return Phrasing.BLOB;
+    }
+
+    int phrasingStart = stackPeek();
+
+    int preTextLength = symbol - phrasingStart;
+
+    if (preTextLength > 0) {
+      // we'll resume at the (possible) symbol
+      sourceIndex = symbol;
+
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    char before = sourceAt(sourceIndex - 1);
+
+    if (!isWord(before)) {
+      return advance(Phrasing.BLOB);
+    }
+
+    if (!sourceInc()) {
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    char after = sourcePeek();
+
+    if (!isWord(after)) {
+      return Phrasing.BLOB;
+    }
+
+    nextNode = Symbol.RIGHT_SINGLE_QUOTATION_MARK;
+
+    return Phrasing.STOP;
   }
 
   private Phrasing phrasingAttribute() {
@@ -2151,6 +2195,8 @@ public class InternalSink {
       case ':' -> Phrasing.INLINE_MACRO;
 
       case '{' -> Phrasing.ATTRIBUTE;
+
+      case '\'' -> Phrasing.APOSTROPHE;
 
       default -> advance(Phrasing.BLOB);
     };
