@@ -15,7 +15,6 @@
  */
 package objectos.code.internal;
 
-import objectos.code.JavaTemplate;
 import objectos.code.JavaTemplate._Ext;
 import objectos.code.JavaTemplate._Include;
 import objectos.code.JavaTemplate._Item;
@@ -28,9 +27,9 @@ public class InternalApi {
 
   static final int NULL = Integer.MIN_VALUE;
 
-  private static final int LOCAL = -1;
+  protected static final int LOCAL = -1;
   private static final int EXT = -2;
-  private static final int LAMBDA = -3;
+  protected static final int LAMBDA = -3;
   private static final int LTAIL = -4;
 
   public final AutoImports autoImports = new AutoImports();
@@ -604,43 +603,45 @@ public class InternalApi {
     }
   }
 
-  private void elemItem(Object obj) {
-    int offset;
-    int kind;
+  protected record OffsetKindResult(int offset, int kind) {}
 
-    if (obj instanceof JavaTemplate._Item item) {
-      offset = 0;
+  protected void elemItem(Object obj) {
+    final var offsetKind = getOffsetKind(obj);
 
-      kind = LOCAL;
-    } else if (
-      obj == _Ext.INSTANCE || obj instanceof External || obj instanceof String) {
-      offset = 1;
+    int index = stackPeek(offsetKind.offset());
 
-      kind = EXT;
-    } else if (obj == _Include.INSTANCE) {
-      offset = 2;
+    index = levelSearch(index, offsetKind.kind());
 
-      kind = LAMBDA;
-    } else {
-      throw new UnsupportedOperationException(
-        "Implement me :: obj=" + obj);
-    }
+    modifyLambdaOrProto(offsetKind, index);
 
-    int index = stackPeek(offset);
+    stackset(offsetKind.offset(), index);
+  }
 
-    index = levelSearch(index, kind);
-
-    if (kind != LAMBDA) {
-      int levelValue = levelGet(index);
-
-      int proto = protoGet(levelValue++);
-
-      protoAdd(proto, levelValue);
-    } else {
+  protected void modifyLambdaOrProto(OffsetKindResult offsetKind, int index) {
+    if (offsetKind.kind() == LAMBDA) {
       elemCntx0lambda(index);
+      return;
     }
 
-    stackset(offset, index);
+    int levelValue = levelGet(index);
+    int proto = protoGet(levelValue++);
+    protoAdd(proto, levelValue);
+  }
+
+  protected static OffsetKindResult getOffsetKind(Object obj) {
+    if (obj instanceof _Item) {
+      return new OffsetKindResult(0, LOCAL);
+    }
+
+    if (obj == _Ext.INSTANCE || obj instanceof External || obj instanceof String) {
+      return new OffsetKindResult(1, EXT);
+    }
+
+    if (obj == _Include.INSTANCE) {
+      return new OffsetKindResult(2, LAMBDA);
+    }
+
+    throw new UnsupportedOperationException("Implement me :: obj=" + obj);
   }
 
   private int elemPre(Object obj) {
