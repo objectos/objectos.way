@@ -75,7 +75,15 @@ public final class PseudoDocument extends PseudoNode
     return this;
   }
 
-  final void attribute(String name, String value) {
+  final PseudoDocument clear() {
+    if (attributes != null) {
+      attributes.clear();
+    }
+
+    return this;
+  }
+
+  final void putAttribute(String name, String value) {
     if (attributes == null) {
       attributes = new LinkedHashMap<>();
     }
@@ -83,12 +91,12 @@ public final class PseudoDocument extends PseudoNode
     attributes.put(name, value);
   }
 
-  final PseudoDocument clear() {
-    if (attributes != null) {
-      attributes.clear();
+  final String getAttribute(String name) {
+    if (attributes == null) {
+      return null;
+    } else {
+      return attributes.get(name);
     }
-
-    return this;
   }
 
 }

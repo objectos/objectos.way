@@ -105,7 +105,7 @@ public class DocumentTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   document attributes
 
   - Objectos Docs v0002/index doc header
@@ -117,18 +117,16 @@ public class DocumentTest {
       :b: c
       :d: e
 
-      f
+      {b}-{d}
       """,
 
       """
       <document>
       <title>a</title>
-      <p>f</p>
+      <p>c-e</p>
       </document>
       """
     );
-    tester.attribute("b", "c");
-    tester.attribute("d", "e");
   }
 
 }

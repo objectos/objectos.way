@@ -165,7 +165,12 @@ public class InternalSink {
     URI_MACRO_TEXT_END,
     URI_MACRO_TEXT_LOOP,
 
-    AUTOLINK;
+    AUTOLINK,
+
+    ATTRIBUTE,
+    ATTRIBUTE_FOUND,
+    ATTRIBUTE_NAME,
+    ATTRIBUTE_ROLLBACK;
   }
 
   private enum Pre {
@@ -206,7 +211,8 @@ public class InternalSink {
   private static final int PSEUDO_LISTING_BLOCK = 11;
   private static final int PSEUDO_EMPHASIS = 12;
   private static final int PSEUDO_STRONG = 13;
-  private static final int PSEUDO_LENGTH = 14;
+  private static final int PSEUDO_TEXT_VALUE = 14;
+  private static final int PSEUDO_LENGTH = 15;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -998,7 +1004,7 @@ public class InternalSink {
 
     var document = pseudoDocument();
 
-    document.attribute(name, value);
+    document.putAttribute(name, value);
 
     return Parse.BODY;
   }
@@ -1974,6 +1980,14 @@ public class InternalSink {
 
     while (state != Phrasing.STOP) {
       state = switch (state) {
+        case ATTRIBUTE -> phrasingAttribute();
+
+        case ATTRIBUTE_FOUND -> phrasingAttributeFound();
+
+        case ATTRIBUTE_NAME -> phrasingAttributeName();
+
+        case ATTRIBUTE_ROLLBACK -> phrasingAttributeRollback();
+
         case AUTOLINK -> phrasingAutolink();
 
         case BLOB -> phrasingBlob();
@@ -2045,6 +2059,77 @@ public class InternalSink {
     }
   }
 
+  private Phrasing phrasingAttribute() {
+    int startSymbol = sourceIndex;
+
+    if (!sourceInc()) {
+      return toPhrasingEnd(startSymbol);
+    }
+
+    int phrasingStart = stackPeek();
+
+    int preTextLength = startSymbol - phrasingStart;
+
+    if (preTextLength > 0) {
+      // we'll resume at the (possible) attribute reference
+      sourceIndex = startSymbol;
+
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    // name start
+    stackPush(sourceIndex);
+
+    // adjust for next state
+    sourceIndex--;
+
+    return Phrasing.ATTRIBUTE_NAME;
+  }
+
+  private Phrasing phrasingAttributeFound() {
+    int end = sourceIndex;
+    int start = stackPop();
+    // pops phrasing start
+    stackPop();
+    var name = sourceGet(start, end);
+    var value = searchAttribute(name);
+
+    if (value != null) {
+      // resume after '}'
+      sourceIndex++;
+
+      var text = pseudoTextValue();
+
+      text.value = value;
+
+      nextNode = text;
+
+      return Phrasing.STOP;
+    } else {
+      return Phrasing.BLOB;
+    }
+  }
+
+  private Phrasing phrasingAttributeName() {
+    if (!sourceInc()) {
+      return toPhrasingEnd(sourceIndex);
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Phrasing.ATTRIBUTE_ROLLBACK;
+
+      case '\n' -> Phrasing.ATTRIBUTE_ROLLBACK;
+
+      case '}' -> Phrasing.ATTRIBUTE_FOUND;
+
+      default -> Phrasing.ATTRIBUTE_NAME;
+    };
+  }
+
+  private Phrasing phrasingAttributeRollback() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   private Phrasing phrasingAutolink() {
     throw new UnsupportedOperationException("Implement me");
   }
@@ -2064,6 +2149,8 @@ public class InternalSink {
       case '_' -> Phrasing.CONSTRAINED_ITALIC;
 
       case ':' -> Phrasing.INLINE_MACRO;
+
+      case '{' -> Phrasing.ATTRIBUTE;
 
       default -> advance(Phrasing.BLOB);
     };
@@ -2902,12 +2989,22 @@ public class InternalSink {
     return pseudoFactory(PSEUDO_TEXT, PseudoText::new);
   }
 
+  private PseudoTextValue pseudoTextValue() {
+    return pseudoFactory(PSEUDO_TEXT_VALUE, PseudoTextValue::new);
+  }
+
   private PseudoTitle pseudoTitle() {
     return pseudoFactory(PSEUDO_TITLE, PseudoTitle::new);
   }
 
   private PseudoUnorderedList pseudoUnorderedList() {
     return pseudoFactory(PSEUDO_ULIST, PseudoUnorderedList::new);
+  }
+
+  private String searchAttribute(String name) {
+    var document = pseudoDocument();
+
+    return document.getAttribute(name);
   }
 
   private void sectionParse(Parse initialState) {
