@@ -159,6 +159,9 @@ public class InternalSink {
 
     URI_MACRO,
     URI_MACRO_ATTRLIST,
+    URI_MACRO_QUOTED,
+    URI_MACRO_QUOTED_LOOP,
+    URI_MACRO_QUOTED_TEXT,
     URI_MACRO_ROLLBACK,
     URI_MACRO_TARGET,
     URI_MACRO_TARGET_LOOP,
@@ -2049,6 +2052,12 @@ public class InternalSink {
 
         case URI_MACRO_ATTRLIST -> phrasingUriMacroAttrlist();
 
+        case URI_MACRO_QUOTED -> phrasingUriMacroQuoted();
+
+        case URI_MACRO_QUOTED_LOOP -> phrasingUriMacroQuotedLoop();
+
+        case URI_MACRO_QUOTED_TEXT -> phrasingUriMacroQuotedText();
+
         case URI_MACRO_ROLLBACK -> phrasingUriMacroRollback();
 
         case URI_MACRO_TARGET -> phrasingUriMacroTarget();
@@ -2657,6 +2666,9 @@ public class InternalSink {
 
     nextNode = pseudoInlineMacro();
 
+    // resume after ']'
+    sourceIndex++;
+
     return Phrasing.STOP;
   }
 
@@ -2736,11 +2748,53 @@ public class InternalSink {
         "Implement me :: empty attrlist"
       );
 
-      case '"' -> throw new UnsupportedOperationException(
-        "Implement me :: quoted text"
-      );
+      case '"' -> Phrasing.URI_MACRO_QUOTED;
 
       default -> Phrasing.URI_MACRO_TEXT;
+    };
+  }
+
+  private Phrasing phrasingUriMacroQuoted() {
+    // pushes text start
+    stackPush(sourceIndex + 1);
+
+    return Phrasing.URI_MACRO_QUOTED_LOOP;
+  }
+
+  private Phrasing phrasingUriMacroQuotedLoop() {
+    if (!sourceInc()) {
+      // pops text start
+      stackPop();
+
+      return Phrasing.URI_MACRO_ROLLBACK;
+    }
+
+    return switch (sourcePeek()) {
+      case '"' -> Phrasing.URI_MACRO_QUOTED_TEXT;
+
+      default -> Phrasing.URI_MACRO_QUOTED_LOOP;
+    };
+  }
+
+  private Phrasing phrasingUriMacroQuotedText() {
+    int textStart = stackPop();
+
+    int textEnd = sourceIndex;
+
+    if (!sourceInc()) {
+      return Phrasing.URI_MACRO_ROLLBACK;
+    }
+
+    var macro = pseudoInlineMacro();
+
+    macro.textStart = textStart;
+
+    macro.textEnd = textEnd;
+
+    return switch (sourcePeek()) {
+      case ']' -> Phrasing.INLINE_MACRO_END;
+
+      default -> throw new UnsupportedOperationException("Implement me");
     };
   }
 
@@ -2785,9 +2839,6 @@ public class InternalSink {
     macro.textStart = stackPop();
 
     macro.textEnd = sourceIndex;
-
-    // we resume AFTER the ']' char
-    sourceIndex++;
 
     return Phrasing.INLINE_MACRO_END;
   }

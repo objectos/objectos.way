@@ -25,6 +25,7 @@ public class AsciiDocTest2 {
     var tester = Tester.objectos();
 
     return new Object[] {
+        new AttributeListTest(tester),
         new ConstrainedBoldTest(tester),
         new ConstrainedItalicTest(tester),
         new ConstrainedMonospaceTest(tester),

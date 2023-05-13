@@ -44,7 +44,7 @@ public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
   @Factory
   public Object[] _factory() {
     return new Object[] {
-        new AttributeListTest(this)
+        new AttributeListTestToRemove(this)
     };
   }
 
