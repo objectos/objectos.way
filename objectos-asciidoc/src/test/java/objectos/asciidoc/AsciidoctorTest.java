@@ -15,79 +15,35 @@
  */
 package objectos.asciidoc;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.asciidoctor.Asciidoctor;
-import org.asciidoctor.Options;
-import org.asciidoctor.ast.ContentNode;
-import org.asciidoctor.extension.InlineMacroProcessor;
-import org.asciidoctor.extension.Name;
-import org.jsoup.Jsoup;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-public class AsciidoctorTest extends AsciiDocTest {
+public class AsciidoctorTest {
 
-  @Name("i")
-  static final class IInlineMacro extends InlineMacroProcessor {
-    @Override
-    public final Object process(ContentNode parent, String target, Map<String, Object> attributes) {
-      var href = target;
+  @Factory
+  public Object[] _factory() {
+    var tester = Tester.doctor();
 
-      var text = (String) attributes.get("1");
-
-      var options = new HashMap<String, Object>();
-      options.put("type", ":link");
-      options.put("target", href);
-
-      return createPhraseNode(parent, "anchor", text, attributes, options);
-    }
-  }
-
-  private Asciidoctor asciidoctor;
-
-  private Options options;
-
-  @BeforeClass
-  @Override
-  public void _beforeClass() {
-    asciidoctor = Asciidoctor.Factory.create();
-
-    var registry = asciidoctor.javaExtensionRegistry();
-
-    registry.inlineMacro(new IInlineMacro());
-
-    options = Options.builder()
-        .headerFooter(true)
-        .build();
+    return new Object[] {
+        new AttributeListTest(tester),
+        new ConstrainedBoldTest(tester),
+        new ConstrainedItalicTest(tester),
+        new ConstrainedMonospaceTest(tester),
+        new DocumentTest(tester),
+        new InlineMacroTest(tester),
+        new LexerTest(tester),
+        new ListingBlockTest(tester),
+        new ParagraphTest(tester),
+        new PreambleTest(tester),
+        new SectionTest(tester),
+        new SourceCodeBlockTest(tester),
+        new UnorderedListTest(tester),
+        new UrlMacroTest(tester)
+    };
   }
 
   @Test(enabled = false)
   public void _enableCodeMinings() {
-  }
-
-  @Override
-  final void test(
-      String source,
-      int[] p0,
-      int[] p1, Map<String, String> docAttr,
-      int[][] p2,
-      String expectedHtml) {
-    var html = asciidoctor.convert(source, options);
-
-    var document = Jsoup.parse(html);
-
-    var body = document.body();
-
-    body.removeAttr("class");
-
-    var footer = body.getElementById("footer");
-
-    footer.remove();
-
-    var result = body.toString();
-
-    testHtml(result, expectedHtml);
   }
 
 }

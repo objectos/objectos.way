@@ -27,16 +27,10 @@ public class AttributeListTest {
     this.tester = tester;
   }
 
-  @Test(description = //
-  """
+  @Test(description = """
   Attribute with comma (and quotes)
 
   - well-formed
-
-  012345678901
-  '''
-  i:a["b, c"]
-  '''
   """)
   public void testCase01() {
     tester.test(

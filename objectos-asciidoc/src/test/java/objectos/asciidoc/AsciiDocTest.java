@@ -15,84 +15,35 @@
  */
 package objectos.asciidoc;
 
-import static org.testng.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.Map;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 
-public class AsciiDocTest extends AbstractAsciiDocTest.Delegate {
-
-  AsciiDoc asciiDoc;
-
-  ThisProcessor processor;
-
-  @Override
-  @BeforeClass
-  public void _beforeClass() {
-    if (asciiDoc == null) {
-      asciiDoc = AsciiDoc.create();
-
-      processor = new ThisProcessor();
-    }
-  }
+public class AsciiDocTest {
 
   @Factory
   public Object[] _factory() {
+    var tester = Tester.objectos();
+
     return new Object[] {
-        new AttributeListTestToRemove(this)
+        new AttributeListTest(tester),
+        new ConstrainedBoldTest(tester),
+        new ConstrainedItalicTest(tester),
+        new ConstrainedMonospaceTest(tester),
+        new DocumentTest(tester),
+        new InlineMacroTest(tester),
+        new LexerTest(tester),
+        new ListingBlockTest(tester),
+        new ParagraphTest(tester),
+        new PreambleTest(tester),
+        new SectionTest(tester),
+        new SourceCodeBlockTest(tester),
+        new UnorderedListTest(tester),
+        new UrlMacroTest(tester)
     };
   }
 
-  final String normalize(String html) {
-    Document fragment = Jsoup.parseBodyFragment(html);
-
-    Element body = fragment.body();
-
-    return body.toString();
-  }
-
-  @Override
-  void test(
-      String source,
-      int[] p0,
-      int[] p1, Map<String, String> docAttr,
-      int[][] p2,
-      String expectedHtml) {
-    asciiDoc.process(source, processor);
-
-    var result = processor.toString();
-
-    testHtml(result, expectedHtml);
-
-    for (var entry : docAttr.entrySet()) {
-      var key = entry.getKey();
-      var expected = entry.getValue();
-
-      var actual = processor.attribute(key);
-
-      assertEquals(actual, expected, "key=" + key);
-    }
-  }
-
-  final void testArrays(int[] result, int[] expected, String header) {
-    var msg = """
-
-    %s
-    actual  =%s
-    expected=%s
-
-    """.formatted(header, Arrays.toString(result), Arrays.toString(expected));
-
-    assertEquals(result, expected, msg);
-  }
-
-  final void testHtml(String result, String expected) {
-    assertEquals(normalize(result), normalize(expected));
+  @Test(enabled = false)
+  public void _enableCodeMinings() {
   }
 
 }
