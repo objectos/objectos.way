@@ -15,7 +15,6 @@
  */
 package objectos.asciidoc.internal;
 
-import java.io.IOException;
 import java.util.Iterator;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
@@ -33,9 +32,7 @@ public final class PseudoInlineMacro extends PseudoNode
 
   String name;
 
-  int targetStart;
-
-  int targetEnd;
+  String target;
 
   int textStart;
 
@@ -75,8 +72,8 @@ public final class PseudoInlineMacro extends PseudoNode
   }
 
   @Override
-  public final void targetTo(Appendable out) throws IOException {
-    appendTo(out, targetStart, targetEnd);
+  public final String target() {
+    return target;
   }
 
   final boolean hasText() {

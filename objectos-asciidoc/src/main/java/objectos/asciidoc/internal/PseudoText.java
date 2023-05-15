@@ -15,24 +15,17 @@
  */
 package objectos.asciidoc.internal;
 
-import java.io.IOException;
 import objectos.asciidoc.pseudom.Node.Text;
 
 public final class PseudoText implements Text {
 
-  private final InternalSink sink;
+  String value;
 
-  int start;
-
-  int end;
-
-  PseudoText(InternalSink sink) {
-    this.sink = sink;
-  }
+  PseudoText(InternalSink sink) {}
 
   @Override
-  public final void appendTo(Appendable out) throws IOException {
-    sink.appendTo(out, start, end);
+  public final String value() {
+    return value;
   }
 
 }

@@ -156,6 +156,7 @@ public class InternalSink {
     CUSTOM_INLINE_ROLLBACK,
     CUSTOM_INLINE_TARGET,
     CUSTOM_INLINE_TARGET_LOOP,
+    CUSTOM_INLINE_TARGET_ROLLBACK,
 
     URI_MACRO,
     URI_MACRO_ATTRLIST,
@@ -217,8 +218,7 @@ public class InternalSink {
   private static final int PSEUDO_LISTING_BLOCK = 11;
   private static final int PSEUDO_EMPHASIS = 12;
   private static final int PSEUDO_STRONG = 13;
-  private static final int PSEUDO_TEXT_VALUE = 14;
-  private static final int PSEUDO_LENGTH = 15;
+  private static final int PSEUDO_LENGTH = 14;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -2034,6 +2034,8 @@ public class InternalSink {
 
         case CUSTOM_INLINE_TARGET_LOOP -> phrasingCustomInlineTargetLoop();
 
+        case CUSTOM_INLINE_TARGET_ROLLBACK -> phrasingCustomInlineTargetRollback();
+
         case CUSTOM_INLINE_ROLLBACK -> phrasingCustomInlineRollback();
 
         case EOL -> phrasingEol();
@@ -2151,7 +2153,7 @@ public class InternalSink {
       // resume after '}'
       sourceIndex++;
 
-      var text = pseudoTextValue();
+      var text = pseudoText();
 
       text.value = value;
 
@@ -2212,14 +2214,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2308,14 +2310,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2418,13 +2420,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2541,25 +2543,30 @@ public class InternalSink {
   }
 
   private Phrasing phrasingCustomInlineTarget() {
-    var macro = pseudoInlineMacro();
-
-    macro.targetStart = sourceIndex;
+    stackPush(sourceIndex);
 
     return Phrasing.CUSTOM_INLINE_TARGET_LOOP;
   }
 
   private Phrasing phrasingCustomInlineTargetLoop() {
     if (!sourceInc()) {
-      return Phrasing.CUSTOM_INLINE_ROLLBACK;
+      return Phrasing.CUSTOM_INLINE_TARGET_ROLLBACK;
     }
 
     return switch (sourcePeek()) {
-      case '\t', '\f', ' ' -> Phrasing.CUSTOM_INLINE_ROLLBACK;
+      case '\t', '\f', ' ' -> Phrasing.CUSTOM_INLINE_TARGET_ROLLBACK;
 
       case '[' -> Phrasing.URI_MACRO_ATTRLIST;
 
       default -> Phrasing.CUSTOM_INLINE_TARGET_LOOP;
     };
+  }
+
+  private Phrasing phrasingCustomInlineTargetRollback() {
+    // pops target start
+    stackPop();
+
+    return Phrasing.CUSTOM_INLINE_ROLLBACK;
   }
 
   private Phrasing phrasingEol() {
@@ -2573,9 +2580,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2588,16 +2595,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -2690,9 +2697,7 @@ public class InternalSink {
     if (startIndex < endIndex) {
       var text = pseudoText();
 
-      text.end = endIndex;
-
-      text.start = startIndex;
+      text.value = sourceGet(startIndex, endIndex);
 
       nextNode = text;
     } else {
@@ -2733,6 +2738,8 @@ public class InternalSink {
   }
 
   private Phrasing phrasingUriMacroAttrlist() {
+    int start = stackPop();
+
     int bracket = sourceIndex;
 
     if (!sourceInc()) {
@@ -2741,7 +2748,9 @@ public class InternalSink {
 
     var macro = pseudoInlineMacro();
 
-    macro.targetEnd = bracket;
+    int end = bracket;
+
+    macro.target = sourceGet(start, end);
 
     return switch (sourcePeek()) {
       case ']' -> throw new UnsupportedOperationException(
@@ -2805,9 +2814,7 @@ public class InternalSink {
   }
 
   private Phrasing phrasingUriMacroTarget() {
-    var macro = pseudoInlineMacro();
-
-    macro.targetStart = sourceIndex;
+    stackPush(sourceIndex);
 
     return Phrasing.URI_MACRO_TARGET_LOOP;
   }
@@ -2957,9 +2964,11 @@ public class InternalSink {
 
     var text = pseudoText();
 
-    text.end = stackPop();
+    int end = stackPop();
 
-    text.start = stackPop();
+    int start = stackPop();
+
+    text.value = sourceGet(start, end);
 
     nextNode = text;
 
@@ -3084,10 +3093,6 @@ public class InternalSink {
 
   private PseudoText pseudoText() {
     return pseudoFactory(PSEUDO_TEXT, PseudoText::new);
-  }
-
-  private PseudoTextValue pseudoTextValue() {
-    return pseudoFactory(PSEUDO_TEXT_VALUE, PseudoTextValue::new);
   }
 
   private PseudoTitle pseudoTitle() {

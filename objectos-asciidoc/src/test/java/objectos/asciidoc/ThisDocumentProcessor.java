@@ -15,7 +15,6 @@
  */
 package objectos.asciidoc;
 
-import java.io.IOException;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Node.Emphasis;
@@ -36,7 +35,7 @@ final class ThisDocumentProcessor {
 
   private final StringBuilder out = new StringBuilder();
 
-  public final String process(Document document) throws IOException {
+  public final String process(Document document) {
     out.setLength(0);
 
     out.append("<document>\n");
@@ -55,7 +54,7 @@ final class ThisDocumentProcessor {
     return out.toString();
   }
 
-  private void emphasis(Emphasis emphasis) throws IOException {
+  private void emphasis(Emphasis emphasis) {
     out.append("<em>");
 
     for (var node : emphasis.nodes()) {
@@ -65,15 +64,15 @@ final class ThisDocumentProcessor {
     out.append("</em>");
   }
 
-  private void header(Header header) throws IOException {
+  private void header(Header header) {
     for (var node : header.nodes()) {
       node(node);
     }
   }
 
-  private void iMacro(String name, InlineMacro macro) throws IOException {
+  private void iMacro(String name, InlineMacro macro) {
     out.append("<a href=\"");
-    macro.targetTo(out);
+    out.append(macro.target());
     out.append("\">");
 
     for (var node : macro.nodes()) {
@@ -83,7 +82,7 @@ final class ThisDocumentProcessor {
     out.append("</a>");
   }
 
-  private void inlineMacro(InlineMacro macro) throws IOException {
+  private void inlineMacro(InlineMacro macro) {
     var name = macro.name();
 
     switch (name) {
@@ -97,7 +96,7 @@ final class ThisDocumentProcessor {
     }
   }
 
-  private void listingBlock(ListingBlock block) throws IOException {
+  private void listingBlock(ListingBlock block) {
     out.append("<listing>\n");
 
     var attributes = block.attributes();
@@ -125,7 +124,7 @@ final class ThisDocumentProcessor {
     out.append("</listing>\n");
   }
 
-  private void listItem(ListItem item) throws IOException {
+  private void listItem(ListItem item) {
     out.append("<item>\n");
 
     var opened = false;
@@ -158,7 +157,7 @@ final class ThisDocumentProcessor {
     out.append("</item>\n");
   }
 
-  private void monospaced(Monospaced monospaced) throws IOException {
+  private void monospaced(Monospaced monospaced) {
     out.append("<code>");
 
     for (var node : monospaced.nodes()) {
@@ -168,7 +167,7 @@ final class ThisDocumentProcessor {
     out.append("</code>");
   }
 
-  private void node(Node node) throws IOException {
+  private void node(Node node) {
     if (node instanceof Emphasis emphasis) {
       emphasis(emphasis);
     } else if (node instanceof Header header) {
@@ -190,7 +189,7 @@ final class ThisDocumentProcessor {
     } else if (node instanceof Symbol symbol) {
       symbol(symbol);
     } else if (node instanceof Text text) {
-      text.appendTo(out);
+      out.append(text.value());
     } else if (node instanceof Title title) {
       title(title);
     } else if (node instanceof UnorderedList list) {
@@ -202,7 +201,7 @@ final class ThisDocumentProcessor {
     }
   }
 
-  private void paragraph(Paragraph paragraph) throws IOException {
+  private void paragraph(Paragraph paragraph) {
     out.append("<p>");
 
     for (var node : paragraph.nodes()) {
@@ -212,7 +211,7 @@ final class ThisDocumentProcessor {
     out.append("</p>\n");
   }
 
-  private void section(Section section) throws IOException {
+  private void section(Section section) {
     int level = section.level();
 
     out.append("<section level=\"");
@@ -232,7 +231,7 @@ final class ThisDocumentProcessor {
     out.append("</section>\n");
   }
 
-  private void strong(Strong strong) throws IOException {
+  private void strong(Strong strong) {
     out.append("<strong>");
 
     for (var node : strong.nodes()) {
@@ -248,7 +247,7 @@ final class ThisDocumentProcessor {
     }
   }
 
-  private void title(Title title) throws IOException {
+  private void title(Title title) {
     out.append("<title>");
 
     for (var node : title.nodes()) {
@@ -258,7 +257,7 @@ final class ThisDocumentProcessor {
     out.append("</title>\n");
   }
 
-  private void unorderedList(UnorderedList list) throws IOException {
+  private void unorderedList(UnorderedList list) {
     out.append("<unordered-list>\n");
 
     for (var node : list.nodes()) {
@@ -268,11 +267,11 @@ final class ThisDocumentProcessor {
     out.append("</unordered-list>\n");
   }
 
-  private void urlMacro(String name, InlineMacro macro) throws IOException {
+  private void urlMacro(String name, InlineMacro macro) {
     out.append("<a href=\"");
     out.append(name);
     out.append("://");
-    macro.targetTo(out);
+    out.append(macro.target());
     out.append("\">");
 
     for (var node : macro.nodes()) {
