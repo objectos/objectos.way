@@ -18,7 +18,7 @@ package objectos.asciidoc;
 import objectos.asciidoc.internal.InternalSink;
 import objectos.asciidoc.pseudom.Document;
 
-class AsciiDoc2 extends InternalSink {
+public class AsciiDoc2 extends InternalSink {
 
   public AsciiDoc2() {}
 

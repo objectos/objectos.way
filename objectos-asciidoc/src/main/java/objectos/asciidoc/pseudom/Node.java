@@ -32,67 +32,43 @@ import objectos.asciidoc.internal.PseudoUnorderedList;
 
 public sealed interface Node {
 
-  sealed interface Header extends Node permits PseudoHeader {
+  sealed interface ContainerNode extends Node {
 
     IterableOnce<Node> nodes();
 
   }
 
-  sealed interface InlineMacro extends Node permits PseudoInlineMacro {
+  sealed interface Header extends ContainerNode permits PseudoHeader {}
+
+  sealed interface InlineMacro extends ContainerNode permits PseudoInlineMacro {
 
     String name();
-
-    IterableOnce<Node> nodes();
 
     void targetTo(Appendable out) throws IOException;
 
   }
 
-  sealed interface ListingBlock extends Node permits PseudoListingBlock {
+  sealed interface ListingBlock extends ContainerNode permits PseudoListingBlock {
 
     Attributes attributes();
 
-    IterableOnce<Node> nodes();
-
   }
 
-  sealed interface ListItem extends Node permits PseudoListItem {
+  sealed interface ListItem extends ContainerNode permits PseudoListItem {}
 
-    IterableOnce<Node> nodes();
+  sealed interface Emphasis extends ContainerNode permits PseudoEmphasis {}
 
-  }
+  sealed interface Strong extends ContainerNode permits PseudoStrong {}
 
-  sealed interface Emphasis extends Node permits PseudoEmphasis {
+  sealed interface Monospaced extends ContainerNode permits PseudoMonospaced {}
 
-    IterableOnce<Node> nodes();
+  sealed interface Paragraph extends ContainerNode permits PseudoParagraph {}
 
-  }
-
-  sealed interface Strong extends Node permits PseudoStrong {
-
-    IterableOnce<Node> nodes();
-
-  }
-
-  sealed interface Monospaced extends Node permits PseudoMonospaced {
-
-    IterableOnce<Node> nodes();
-
-  }
-
-  sealed interface Paragraph extends Node permits PseudoParagraph {
-
-    IterableOnce<Node> nodes();
-
-  }
-
-  sealed interface Section extends Node permits PseudoSection {
+  sealed interface Section extends ContainerNode permits PseudoSection {
 
     Attributes attributes();
 
     int level();
-
-    IterableOnce<Node> nodes();
 
   }
 
@@ -102,19 +78,13 @@ public sealed interface Node {
 
   }
 
-  sealed interface Title extends Node permits PseudoTitle {
+  sealed interface Title extends ContainerNode permits PseudoTitle {
 
     int level();
 
-    IterableOnce<Node> nodes();
-
   }
 
-  sealed interface UnorderedList extends Node permits PseudoUnorderedList {
-
-    IterableOnce<Node> nodes();
-
-  }
+  sealed interface UnorderedList extends ContainerNode permits PseudoUnorderedList {}
 
   enum Symbol implements Node {
 

@@ -20,6 +20,7 @@
  */
 module objectos.asciidoc {
   exports objectos.asciidoc;
+  exports objectos.asciidoc.pseudom;
 
   requires objectos.lang;
   requires objectos.util;
