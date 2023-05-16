@@ -269,8 +269,6 @@ final class ThisDocumentProcessor {
 
   private void urlMacro(String name, InlineMacro macro) {
     out.append("<a href=\"");
-    out.append(name);
-    out.append("://");
     out.append(macro.target());
     out.append("\">");
 
