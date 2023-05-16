@@ -541,7 +541,7 @@ class HtmlRecorder extends HtmlTemplateApi {
       int proto = protoArray[--thisIndex];
 
       switch (proto) {
-        case ByteProto.AMBIGUOUS -> {
+        case ByteProto.AMBIGUOUS, ByteProto.TEXT -> {
           int elem = thisIndex = protoArray[--thisIndex];
 
           listPush(elem, proto);

@@ -1228,6 +1228,30 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC40
+
+  - text in lambda
+  """)
+  public void testCase40() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          h1(f(this::heading1));
+        }
+
+        private void heading1() {
+          t("abc");
+        }
+      },
+
+      """
+      <h1>abc</h1>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     stringBuilder.setLength(0);
 
