@@ -530,7 +530,8 @@ public class InternalSink {
 
   final void listingBlockNodes() {
     switch (stackPeek()) {
-      case PseudoDocument.BLOCK_CONSUMED -> stackReplace(PseudoListingBlock.NODES);
+      case PseudoDocument.BLOCK_CONSUMED,
+           PseudoSection.BLOCK_CONSUMED -> stackReplace(PseudoListingBlock.NODES);
 
       default -> stackStub();
     }
@@ -730,7 +731,7 @@ public class InternalSink {
   final void paragraphNodes() {
     switch (stackPeek()) {
       case PseudoDocument.PARAGRAPH_CONSUMED,
-           PseudoSection.PARAGRAPH_CONSUMED -> stackReplace(PseudoParagraph.NODES);
+           PseudoSection.BLOCK_CONSUMED -> stackReplace(PseudoParagraph.NODES);
 
       default -> stackStub();
     }
@@ -738,9 +739,10 @@ public class InternalSink {
 
   final boolean sectionHasNext() {
     switch (stackPeek()) {
-      case PseudoTitle.EXHAUSTED,
+      case PseudoListingBlock.EXHAUSTED,
            PseudoParagraph.EXHAUSTED,
            PseudoSection.EXHAUSTED,
+           PseudoTitle.EXHAUSTED,
            PseudoUnorderedList.EXHAUSTED -> sectionParse(Parse.BODY);
 
       case PseudoSection.ITERATOR -> {
@@ -760,10 +762,9 @@ public class InternalSink {
         stackPush(PseudoSection.TITLE);
       }
 
-      case PseudoSection.PARAGRAPH,
+      case PseudoSection.BLOCK,
            PseudoSection.SECTION,
-           PseudoSection.TITLE,
-           PseudoSection.ULIST -> {}
+           PseudoSection.TITLE -> {}
 
       default -> stackStub();
     }
@@ -946,7 +947,7 @@ public class InternalSink {
     switch (stackPeek()) {
       case PseudoDocument.BLOCK_CONSUMED,
            PseudoListItem.BLOCK_CONSUMED,
-           PseudoSection.ULIST_CONSUMED -> stackReplace(PseudoUnorderedList.NODES);
+           PseudoSection.BLOCK_CONSUMED -> stackReplace(PseudoUnorderedList.NODES);
 
       default -> stackStub();
     }
@@ -2229,14 +2230,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2325,14 +2326,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2435,13 +2436,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2595,9 +2596,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2610,16 +2611,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -3142,6 +3143,8 @@ public class InternalSink {
 
         case EXHAUSTED -> sectionParseExhausted();
 
+        case LISTING_BLOCK_STOP -> sectionParseListingBlockStop();
+
         case PARAGRAPH -> sectionParseParagraph();
 
         case SECTION -> sectionParseSection();
@@ -3151,6 +3154,12 @@ public class InternalSink {
         default -> parse(state);
       };
     }
+  }
+
+  private Parse sectionParseListingBlockStop() {
+    stackPush(PseudoSection.BLOCK);
+
+    return Parse.STOP;
   }
 
   private Parse sectionParseBodyTrim() {
@@ -3178,7 +3187,7 @@ public class InternalSink {
   }
 
   private Parse sectionParseParagraph() {
-    stackReplace(PseudoSection.PARAGRAPH);
+    stackReplace(PseudoSection.BLOCK);
 
     nextNode = pseudoParagraph();
 
@@ -3234,7 +3243,7 @@ public class InternalSink {
 
     stackPush(markerStart, markerEnd);
 
-    stackPush(PseudoSection.ULIST);
+    stackPush(PseudoSection.BLOCK);
 
     nextNode = pseudoUnorderedList();
 

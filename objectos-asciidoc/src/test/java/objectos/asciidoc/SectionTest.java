@@ -359,4 +359,34 @@ public class SectionTest {
     );
   }
 
+  @Test(description = """
+  section has source code block
+  """)
+  public void testCase10() {
+    tester.test(
+      """
+      == ABC
+
+      [,java]
+      ----
+      break;
+      ----
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title>ABC</title>
+      <listing>
+      <style>source</style>
+      <lang>java</lang>
+      <pre>break;</pre>
+      </listing>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }
