@@ -129,4 +129,28 @@ public class DocumentTest {
     );
   }
 
+  @Test(description = """
+  document attributes
+
+  - allow dash/underscore in attribute name
+  """)
+  public void testCase06() {
+    tester.test(
+      """
+      = ABC
+      :a-a: Foo
+      :b_b: Bar
+
+      -{a-a}-{b_b}-
+      """,
+
+      """
+      <document>
+      <title>ABC</title>
+      <p>-Foo-Bar-</p>
+      </document>
+      """
+    );
+  }
+
 }
