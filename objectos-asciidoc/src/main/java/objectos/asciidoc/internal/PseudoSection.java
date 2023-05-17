@@ -28,12 +28,11 @@ public final class PseudoSection extends PseudoNode
   static final int ITERATOR = -701;
   static final int TITLE = -702;
   static final int TITLE_CONSUMED = -703;
-  static final int PARSE = -704;
-  static final int BLOCK = -705;
-  static final int BLOCK_CONSUMED = -706;
-  static final int SECTION = -707;
-  static final int SECTION_CONSUMED = -708;
-  static final int EXHAUSTED = -711;
+  static final int BLOCK = -704;
+  static final int BLOCK_CONSUMED = -705;
+  static final int SECTION = -706;
+  static final int SECTION_CONSUMED = -707;
+  static final int EXHAUSTED = -708;
 
   int level;
 

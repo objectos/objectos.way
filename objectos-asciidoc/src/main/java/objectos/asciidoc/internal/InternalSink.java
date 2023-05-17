@@ -742,7 +742,11 @@ public class InternalSink {
            PseudoParagraph.EXHAUSTED,
            PseudoSection.EXHAUSTED,
            PseudoTitle.EXHAUSTED,
-           PseudoUnorderedList.EXHAUSTED -> sectionParse(Parse.BODY);
+           PseudoUnorderedList.EXHAUSTED -> {
+        stackPop();
+
+        sectionParse(Parse.BODY);
+      }
 
       case PseudoSection.ITERATOR -> {
         stackPop();
@@ -2247,14 +2251,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2343,14 +2347,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2453,13 +2457,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2611,9 +2615,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2626,16 +2630,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -3147,13 +3151,6 @@ public class InternalSink {
   private void sectionParse(Parse initialState) {
     pseudoAttributes().clear();
 
-    stackPop(); // previous state
-
-    @SuppressWarnings("unused")
-    int level = stackPeek();
-
-    stackPush(PseudoSection.PARSE);
-
     var state = initialState;
 
     while (state != Parse.STOP) {
@@ -3194,11 +3191,6 @@ public class InternalSink {
   }
 
   private Parse sectionParseExhausted() {
-    stackAssert(PseudoSection.PARSE);
-
-    // pops ASSERT
-    stackPop();
-
     // replaces section level
     stackReplace(PseudoSection.EXHAUSTED);
 
@@ -3206,7 +3198,7 @@ public class InternalSink {
   }
 
   private Parse sectionParseParagraph() {
-    stackReplace(PseudoSection.BLOCK);
+    stackPush(PseudoSection.BLOCK);
 
     nextNode = pseudoParagraph();
 
@@ -3217,10 +3209,6 @@ public class InternalSink {
     int nextLevel = stackPop();
 
     int sourceIndex = stackPop();
-
-    stackAssert(PseudoSection.PARSE);
-
-    stackPop();
 
     int thisLevel = stackPeek();
 
@@ -3253,10 +3241,6 @@ public class InternalSink {
     int markerStart = stackPop();
 
     int ulistTop = stackPop();
-
-    int parse = stackPop();
-
-    assert parse == PseudoSection.PARSE : "expected PARSE but found " + parse;
 
     stackPush(ulistTop);
 

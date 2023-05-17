@@ -418,4 +418,32 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  ul at end of document
+  """)
+  public void testCase13() {
+    tester.test(
+      """
+      * a
+      * b
+      cde
+
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>a</text>
+      </item>
+      <item>
+      <text>b
+      cde</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
 }
