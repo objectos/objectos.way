@@ -107,4 +107,23 @@ public class ConstrainedMonospaceTest {
     );
   }
 
+  @Test(description = """
+  monospace
+
+  - contents is a (not) inline macro
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      a `Int::value` c
+      """,
+
+      """
+      <document>
+      <p>a <code>Int::value</code> c</p>
+      </document>
+      """
+    );
+  }
+
 }
