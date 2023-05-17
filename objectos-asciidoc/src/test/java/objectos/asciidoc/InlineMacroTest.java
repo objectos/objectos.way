@@ -152,4 +152,26 @@ public class InlineMacroTest {
     );
   }
 
+  @Test(description = """
+  not inline macro:
+
+  - semicolon @ eol
+  """)
+  public void testCase07() {
+    tester.test(
+      """
+      foo tmpl:\040
+
+      bar
+      """,
+
+      """
+      <document>
+      <p>foo tmpl:</p>
+      <p>bar</p>
+      </document>
+      """
+    );
+  }
+
 }

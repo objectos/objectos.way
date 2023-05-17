@@ -156,7 +156,6 @@ public class InternalSink {
     CUSTOM_INLINE,
     CUSTOM_INLINE_ROLLBACK,
     CUSTOM_INLINE_TARGET,
-    CUSTOM_INLINE_TARGET_LOOP,
     CUSTOM_INLINE_TARGET_ROLLBACK,
 
     URI_MACRO,
@@ -1503,15 +1502,15 @@ public class InternalSink {
   private Phrasing paragraphPhrasingEol() {
     int atEol = sourceIndex;
 
-    sourceAdvance();
+    int trimIndex = trimIndex();
 
-    if (!sourceMore()) {
-      return toPhrasingEnd(atEol);
+    if (!sourceInc()) {
+      return toPhrasingEnd(trimIndex);
     }
 
     return switch (sourcePeek()) {
       case '\n' -> {
-        var next = toPhrasingEnd(atEol);
+        var next = toPhrasingEnd(trimIndex);
 
         sourceIndex(atEol);
 
@@ -1520,6 +1519,26 @@ public class InternalSink {
 
       default -> advance(Phrasing.BLOB);
     };
+  }
+
+  private int trimIndex() {
+    int index = sourceIndex;
+
+    loop: while (index > 0) {
+      int maybe = index - 1;
+
+      switch (sourceAt(maybe)) {
+        case '\t', '\f', ' ' -> {
+          index = maybe;
+        }
+
+        default -> {
+          break loop;
+        }
+      }
+    }
+
+    return index;
   }
 
   private Phrasing paragraphPhrasingStart() {
@@ -2048,8 +2067,6 @@ public class InternalSink {
 
         case CUSTOM_INLINE_TARGET -> phrasingCustomInlineTarget();
 
-        case CUSTOM_INLINE_TARGET_LOOP -> phrasingCustomInlineTargetLoop();
-
         case CUSTOM_INLINE_TARGET_ROLLBACK -> phrasingCustomInlineTargetRollback();
 
         case CUSTOM_INLINE_ROLLBACK -> phrasingCustomInlineRollback();
@@ -2544,11 +2561,13 @@ public class InternalSink {
       return Phrasing.CUSTOM_INLINE_ROLLBACK;
     }
 
-    return switch (sourcePeek()) {
-      case '\n' -> Phrasing.CUSTOM_INLINE_ROLLBACK;
+    // target start
+    stackPush(sourceIndex);
 
-      default -> Phrasing.CUSTOM_INLINE_TARGET;
-    };
+    // adjust for CUSTOM_INLINE_TARGET
+    sourceIndex--;
+
+    return Phrasing.CUSTOM_INLINE_TARGET;
   }
 
   private Phrasing phrasingCustomInlineRollback() {
@@ -2559,12 +2578,6 @@ public class InternalSink {
   }
 
   private Phrasing phrasingCustomInlineTarget() {
-    stackPush(sourceIndex);
-
-    return Phrasing.CUSTOM_INLINE_TARGET_LOOP;
-  }
-
-  private Phrasing phrasingCustomInlineTargetLoop() {
     if (!sourceInc()) {
       return Phrasing.CUSTOM_INLINE_TARGET_ROLLBACK;
     }
@@ -2572,9 +2585,11 @@ public class InternalSink {
     return switch (sourcePeek()) {
       case '\t', '\f', ' ' -> Phrasing.CUSTOM_INLINE_TARGET_ROLLBACK;
 
+      case '\n' -> Phrasing.CUSTOM_INLINE_TARGET_ROLLBACK;
+
       case '[' -> Phrasing.URI_MACRO_ATTRLIST;
 
-      default -> Phrasing.CUSTOM_INLINE_TARGET_LOOP;
+      default -> Phrasing.CUSTOM_INLINE_TARGET;
     };
   }
 
