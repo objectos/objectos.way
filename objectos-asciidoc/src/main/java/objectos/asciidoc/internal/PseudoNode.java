@@ -22,7 +22,7 @@ import objectos.asciidoc.pseudom.Node;
 abstract class PseudoNode {
 
   /*
-  
+
   document = 100
   header = 200
   title = 300
@@ -35,7 +35,7 @@ abstract class PseudoNode {
   list item = 1000
   emphasis = 1100;
   strong = 1200;
-
+  
   */
 
   final InternalSink sink;
@@ -48,10 +48,6 @@ abstract class PseudoNode {
 
   final void appendTo(Appendable out, int start, int end) throws IOException {
     sink.appendTo(out, start, end);
-  }
-
-  final void closeImpl() throws IOException {
-    sink.close();
   }
 
   final Node nextNodeDefault() {

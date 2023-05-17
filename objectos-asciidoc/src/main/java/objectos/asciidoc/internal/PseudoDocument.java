@@ -15,7 +15,6 @@
  */
 package objectos.asciidoc.internal;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -29,16 +28,15 @@ public final class PseudoDocument extends PseudoNode
   static final int START = -100;
   static final int NODES = -101;
   static final int ITERATOR = -102;
-  static final int PARSE = -103;
-  static final int HEADER = -104;
-  static final int HEADER_CONSUMED = -105;
-  static final int PARAGRAPH = -110;
-  static final int PARAGRAPH_CONSUMED = -111;
-  static final int SECTION = -112;
-  static final int SECTION_CONSUMED = -113;
-  static final int BLOCK = -114;
-  static final int BLOCK_CONSUMED = -115;
-  static final int EXHAUSTED = -116;
+  static final int HEADER = -103;
+  static final int HEADER_CONSUMED = -104;
+  static final int PARAGRAPH = -105;
+  static final int PARAGRAPH_CONSUMED = -106;
+  static final int SECTION = -107;
+  static final int SECTION_CONSUMED = -108;
+  static final int BLOCK = -109;
+  static final int BLOCK_CONSUMED = -110;
+  static final int EXHAUSTED = -111;
 
   private Map<String, String> attributes;
 
@@ -47,8 +45,8 @@ public final class PseudoDocument extends PseudoNode
   }
 
   @Override
-  public final void close() throws IOException {
-    closeImpl();
+  public final void close() {
+    sink.close();
   }
 
   @Override

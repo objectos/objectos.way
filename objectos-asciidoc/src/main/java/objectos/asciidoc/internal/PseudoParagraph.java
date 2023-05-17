@@ -25,10 +25,9 @@ public final class PseudoParagraph extends PseudoNode
 
   static final int NODES = -600;
   static final int ITERATOR = -601;
-  static final int PARSE = -602;
-  static final int NODE = -603;
-  static final int NODE_CONSUMED = -604;
-  static final int EXHAUSTED = -607;
+  static final int NODE = -602;
+  static final int NODE_CONSUMED = -603;
+  static final int EXHAUSTED = -604;
 
   PseudoParagraph(InternalSink sink) {
     super(sink);
