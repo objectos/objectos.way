@@ -187,6 +187,7 @@ public class InternalSink {
     LOOP,
 
     EOL,
+    EOL_TRIM,
     MAKE_TEXT,
     MARKER,
     MARKER_COUNT,
@@ -279,17 +280,6 @@ public class InternalSink {
     sourceIndex = sourceMax = 0;
 
     stackIndex = -1;
-  }
-
-  private String stackToString() {
-    var sb = new StringBuilder();
-
-    while (stackIndex >= 0) {
-      sb.append("\n");
-      sb.append(stackPop());
-    }
-
-    return sb.toString();
   }
 
   final boolean documentHasNext() {
@@ -1550,26 +1540,6 @@ public class InternalSink {
 
       default -> advance(Phrasing.BLOB);
     };
-  }
-
-  private int trimIndex() {
-    int index = sourceIndex;
-
-    loop: while (index > 0) {
-      int maybe = index - 1;
-
-      switch (sourceAt(maybe)) {
-        case '\t', '\f', ' ' -> {
-          index = maybe;
-        }
-
-        default -> {
-          break loop;
-        }
-      }
-    }
-
-    return index;
   }
 
   private Phrasing paragraphPhrasingStart() {
@@ -2959,6 +2929,8 @@ public class InternalSink {
       state = switch (state) {
         case EOL -> preEol();
 
+        case EOL_TRIM -> preEolTrim();
+
         case LOOP -> preLoop();
 
         case MAKE_TEXT -> preMakeText();
@@ -2985,15 +2957,40 @@ public class InternalSink {
   }
 
   private Pre preEol() {
+    // eol idx
+    stackPush(sourceIndex);
+
     if (!sourceInc()) {
       return Pre.MAKE_TEXT;
     }
 
+    return preEol0();
+  }
+
+  private Pre preEol0() {
     return switch (sourcePeek()) {
+      case '\n' -> Pre.EOL_TRIM;
+
       case '-' -> Pre.MARKER;
 
-      default -> Pre.LOOP;
+      default -> {
+        // pops eol idx
+        stackPop();
+
+        yield Pre.LOOP;
+      }
     };
+  }
+
+  private Pre preEolTrim() {
+    if (!sourceInc()) {
+      // eol idx
+      stackPop();
+
+      return Pre.MAKE_TEXT;
+    }
+
+    return preEol0();
   }
 
   private Pre preLoop() {
@@ -3013,10 +3010,6 @@ public class InternalSink {
   }
 
   private Pre preMarker() {
-    // pushes pre end
-    // before EOL
-    stackPush(sourceIndex - 1);
-
     // pushes marker count
     stackPush(0);
 
@@ -3209,12 +3202,6 @@ public class InternalSink {
     }
   }
 
-  private Parse sectionParseListingBlockStop() {
-    stackPush(PseudoSection.BLOCK);
-
-    return Parse.STOP;
-  }
-
   private Parse sectionParseBodyTrim() {
     if (!sourceMore()) {
       return Parse.EXHAUSTED;
@@ -3230,6 +3217,12 @@ public class InternalSink {
   private Parse sectionParseExhausted() {
     // replaces section level
     stackReplace(PseudoSection.EXHAUSTED);
+
+    return Parse.STOP;
+  }
+
+  private Parse sectionParseListingBlockStop() {
+    stackPush(PseudoSection.BLOCK);
 
     return Parse.STOP;
   }
@@ -3380,6 +3373,17 @@ public class InternalSink {
     );
   }
 
+  private String stackToString() {
+    var sb = new StringBuilder();
+
+    while (stackIndex >= 0) {
+      sb.append("\n");
+      sb.append(stackPop());
+    }
+
+    return sb.toString();
+  }
+
   private void start(String source) {
     this.source = source;
 
@@ -3472,6 +3476,26 @@ public class InternalSink {
     stackPush(sourceIndex);
 
     return Parse.ULIST;
+  }
+
+  private int trimIndex() {
+    int index = sourceIndex;
+
+    loop: while (index > 0) {
+      int maybe = index - 1;
+
+      switch (sourceAt(maybe)) {
+        case '\t', '\f', ' ' -> {
+          index = maybe;
+        }
+
+        default -> {
+          break loop;
+        }
+      }
+    }
+
+    return index;
   }
 
 }

@@ -175,4 +175,37 @@ public class SourceCodeBlockTest {
     );
   }
 
+  @Test(description = """
+  source code block
+
+  - empty line before ending marker
+  - has paragraph after
+  """)
+  public void testCase06() {
+    tester.test(
+      """
+      [,java]
+      ----
+      class A {
+      }
+
+      ----
+
+      foo
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>source</style>
+      <lang>java</lang>
+      <pre>class A {
+      }</pre>
+      </listing>
+      <p>foo</p>
+      </document>
+      """
+    );
+  }
+
 }
