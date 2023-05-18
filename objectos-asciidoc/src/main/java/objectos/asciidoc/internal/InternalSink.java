@@ -3013,7 +3013,7 @@ public class InternalSink {
 
   private Pre preMarker() {
     // pushes marker count
-    stackPush(0);
+    stackPush(1);
 
     return Pre.MARKER_LOOP;
   }
@@ -3048,13 +3048,15 @@ public class InternalSink {
 
   private Pre preMarkerLoop() {
     if (!sourceInc()) {
-      return Pre.MARKER_ROLLBACK;
+      return Pre.MARKER_COUNT;
     }
 
-    stackInc();
-
     return switch (sourcePeek()) {
-      case '-' -> Pre.MARKER_LOOP;
+      case '-' -> {
+        stackInc();
+
+        yield Pre.MARKER_LOOP;
+      }
 
       case '\t', '\f', ' ' -> Pre.MARKER_TRIM;
 

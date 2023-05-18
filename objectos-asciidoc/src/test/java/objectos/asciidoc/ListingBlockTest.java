@@ -118,4 +118,25 @@ public class ListingBlockTest {
     );
   }
 
+  @Test(description = """
+  listing block marker ends at EOF
+  """)
+  public void testCase05() {
+    tester.test(
+      """
+      ----
+      foo
+      ----""",
+
+      """
+      <document>
+      <listing>
+      <style>listing</style>
+      <pre>foo</pre>
+      </listing>
+      </document>
+      """
+    );
+  }
+
 }
