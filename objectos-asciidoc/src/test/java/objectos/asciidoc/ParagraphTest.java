@@ -168,4 +168,24 @@ public class ParagraphTest {
     );
   }
 
+  @Test(description = """
+  paragraph
+
+  - trim before EOF
+  """)
+  public void testCase08() {
+    tester.test(
+      """
+      foo
+      \040\040
+      """,
+
+      """
+      <document>
+      <p>foo</p>
+      </document>
+      """
+    );
+  }
+
 }

@@ -1144,6 +1144,9 @@ public class InternalSink {
   }
 
   private Phrasing fragmentPhrasingStart() {
+    // pushes start
+    stackPush(sourceIndex);
+
     return Phrasing.BLOB;
   }
 
@@ -1526,6 +1529,16 @@ public class InternalSink {
     return ListItemText.STOP;
   }
 
+  private Phrasing paragraphPhrasingDone(int last) {
+    int start = stackPop();
+
+    stackPush(HINT_PARAGRAPH_END);
+
+    stackPush(start, last);
+
+    return Phrasing.TEXT;
+  }
+
   private Phrasing paragraphPhrasingEol() {
     int trimIndex = trimIndex();
 
@@ -1544,16 +1557,6 @@ public class InternalSink {
 
       default -> Phrasing.BLOB;
     };
-  }
-
-  private Phrasing paragraphPhrasingDone(int last) {
-    int start = stackPop();
-
-    stackPush(HINT_PARAGRAPH_END);
-
-    stackPush(start, last);
-
-    return Phrasing.TEXT;
   }
 
   private Phrasing paragraphPhrasingEolTrim() {
@@ -1581,31 +1584,39 @@ public class InternalSink {
 
   private Phrasing paragraphPhrasingStart() {
     if (!sourceMore()) {
-      return popAndStop();
+      if (stackIndex >= 0 && stackPeek() == HINT_PARAGRAPH_END) {
+        stackPop();
+      }
+
+      return Phrasing.STOP;
     }
 
     return switch (sourcePeek()) {
       case '\n' -> {
-        // only phrasing start
-        if (stackIndex == 0) {
-          yield Phrasing.BLOB;
+        if (stackIndex == -1) {
+          yield paragraphPhrasingStartBlob();
         }
-
-        int start = stackPop();
 
         int maybeHint = stackPop();
 
         if (maybeHint == HINT_PARAGRAPH_END) {
           yield Phrasing.STOP;
         } else {
-          stackPush(start, maybeHint);
+          stackPush(maybeHint);
 
-          yield Phrasing.BLOB;
+          yield paragraphPhrasingStartBlob();
         }
       }
 
-      default -> Phrasing.BLOB;
+      default -> paragraphPhrasingStartBlob();
     };
+  }
+
+  private Phrasing paragraphPhrasingStartBlob() {
+    // phrasing start
+    stackPush(sourceIndex);
+
+    return Phrasing.BLOB;
   }
 
   private Parse parse(Parse state) {
@@ -1886,7 +1897,7 @@ public class InternalSink {
 
   private Parse parseBodyTrim() {
     if (!sourceInc()) {
-      return Parse.STOP;
+      return Parse.EXHAUSTED;
     }
 
     return switch (sourcePeek()) {
@@ -2055,8 +2066,6 @@ public class InternalSink {
     this.phrase = phrase;
 
     var state = Phrasing.START;
-
-    stackPush(sourceIndex);
 
     while (state != Phrasing.STOP) {
       state = switch (state) {
@@ -2291,14 +2300,14 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
+
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-
+  
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2389,14 +2398,14 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
+
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-
+  
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2501,13 +2510,13 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
 
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+  
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2678,9 +2687,9 @@ public class InternalSink {
   }
 
   /*
-
+  
   asciidoctor/lib/asciidoctor/rx.rb
-
+  
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2693,16 +2702,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-  
+
   CG_BLANK=\p{Blank}
   CG_ALL=.
-  
+
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
+
   as PCRE
-  
+
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
+
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -2969,13 +2978,6 @@ public class InternalSink {
 
       default -> Phrasing.URI_MACRO_TEXT_LOOP;
     };
-  }
-
-  private Phrasing popAndStop() {
-    // pops start index
-    stackPop();
-
-    return Phrasing.STOP;
   }
 
   private void pre() {
@@ -3458,13 +3460,18 @@ public class InternalSink {
 
   private Phrasing titlePhrasingStart() {
     if (!sourceMore()) {
-      return popAndStop();
+      return Phrasing.STOP;
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> advance(popAndStop());
+      case '\n' -> advance(Phrasing.STOP);
 
-      default -> Phrasing.BLOB;
+      default -> {
+        // phrasing start
+        stackPush(sourceIndex);
+
+        yield Phrasing.BLOB;
+      }
     };
   }
 
