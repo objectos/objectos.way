@@ -126,4 +126,27 @@ public class ConstrainedMonospaceTest {
     );
   }
 
+  @Test(description = """
+  monospace
+
+  - contents is a (not) emphasis
+  - contents is a (not) strong
+  """)
+  public void testCase06() {
+    tester.test(
+      """
+      a `_this()` c
+
+      a `*what` c
+      """,
+
+      """
+      <document>
+      <p>a <code>_this()</code> c</p>
+      <p>a <code>*what</code> c</p>
+      </document>
+      """
+    );
+  }
+
 }

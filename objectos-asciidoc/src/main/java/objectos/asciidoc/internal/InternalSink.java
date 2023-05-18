@@ -2331,8 +2331,10 @@ public class InternalSink {
   }
 
   private Phrasing phrasingConstrainedBoldLoop() {
+    int maybeEnd = sourceIndex;
+
     if (!sourceInc()) {
-      return toPhrasingEnd(sourceIndex);
+      return toPhrasingEnd(maybeEnd);
     }
 
     return switch (sourcePeek()) {
@@ -2438,8 +2440,10 @@ public class InternalSink {
   }
 
   private Phrasing phrasingConstrainedItalicLoop() {
+    int maybeEnd = sourceIndex;
+
     if (!sourceInc()) {
-      return toPhrasingEnd(sourceIndex);
+      return toPhrasingEnd(maybeEnd);
     }
 
     return switch (sourcePeek()) {
