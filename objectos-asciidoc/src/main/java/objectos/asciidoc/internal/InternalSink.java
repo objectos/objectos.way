@@ -2253,14 +2253,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2349,14 +2349,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2459,13 +2459,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2594,7 +2594,7 @@ public class InternalSink {
 
   private Phrasing phrasingCustomInlineTarget() {
     if (!sourceInc()) {
-      throw new UnsupportedOperationException("Implement me");
+      return Phrasing.CUSTOM_INLINE_TARGET_ROLLBACK;
     }
 
     return switch (sourcePeek()) {
@@ -2626,9 +2626,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2641,16 +2641,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();

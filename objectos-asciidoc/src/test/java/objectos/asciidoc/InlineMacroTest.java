@@ -174,4 +174,35 @@ public class InlineMacroTest {
     );
   }
 
+  @Test(description = """
+  not inline macro:
+
+  - no attrlist at EOL
+  - also list...
+  """)
+  public void testCase08() {
+    tester.test(
+      """
+      * Service; and
+      * Service.java:4.
+
+      baz
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>Service; and</text>
+      </item>
+      <item>
+      <text>Service.java:4.</text>
+      </item>
+      </unordered-list>
+      <p>baz</p>
+      </document>
+      """
+    );
+  }
+
 }
