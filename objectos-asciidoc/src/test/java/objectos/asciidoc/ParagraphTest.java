@@ -188,4 +188,28 @@ public class ParagraphTest {
     );
   }
 
+  @Test(description = """
+  paragraph
+
+  - whole paragraph is emphasis
+  - followed by another paragraph
+  """)
+  public void testCase09() {
+    tester.test(
+      """
+      _foo_
+
+      bar
+
+      """,
+
+      """
+      <document>
+      <p><em>foo</em></p>
+      <p>bar</p>
+      </document>
+      """
+    );
+  }
+
 }
