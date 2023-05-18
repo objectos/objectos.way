@@ -148,4 +148,24 @@ public class ParagraphTest {
     );
   }
 
+  @Test(description = """
+  paragraphs separated by non-empty line
+  """)
+  public void testCase07() {
+    tester.test(
+      """
+      foo
+      \040\040
+      bar
+      """,
+
+      """
+      <document>
+      <p>foo</p>
+      <p>bar</p>
+      </document>
+      """
+    );
+  }
+
 }

@@ -149,6 +149,7 @@ public class InternalSink {
     CONSTRAINED_MONOSPACE_ROLLBACK,
 
     EOL,
+    EOL_TRIM,
 
     INLINE_MACRO,
     INLINE_MACRO_END,
@@ -203,7 +204,8 @@ public class InternalSink {
   private static final int HINT_LIST_END = -2;
   private static final int HINT_NEXT_ITEM = -3;
   private static final int HINT_NESTED_END = -4;
-  private static final int MARKER_ULIST = -5;
+  private static final int HINT_PARAGRAPH_END = -5;
+  private static final int MARKER_ULIST = -6;
 
   private static final int PSEUDO_DOCUMENT = 0;
   private static final int PSEUDO_HEADER = 1;
@@ -1525,8 +1527,6 @@ public class InternalSink {
   }
 
   private Phrasing paragraphPhrasingEol() {
-    int atEol = sourceIndex;
-
     int trimIndex = trimIndex();
 
     if (!sourceInc()) {
@@ -1534,15 +1534,48 @@ public class InternalSink {
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> {
-        var next = toPhrasingEnd(trimIndex);
+      case '\n' -> paragraphPhrasingDone(trimIndex);
 
-        sourceIndex(atEol);
+      case '\t', '\f', ' ' -> {
+        stackPush(trimIndex);
 
-        yield next;
+        yield Phrasing.EOL_TRIM;
       }
 
       default -> Phrasing.BLOB;
+    };
+  }
+
+  private Phrasing paragraphPhrasingDone(int last) {
+    int start = stackPop();
+
+    stackPush(HINT_PARAGRAPH_END);
+
+    stackPush(start, last);
+
+    return Phrasing.TEXT;
+  }
+
+  private Phrasing paragraphPhrasingEolTrim() {
+    if (!sourceInc()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return switch (sourcePeek()) {
+      case '\n' -> {
+        int trimIndex = stackPop();
+
+        yield paragraphPhrasingDone(trimIndex);
+      }
+
+      case '\t', '\f', ' ' -> Phrasing.EOL_TRIM;
+
+      default -> {
+        // pops trimIndex
+        stackPop();
+
+        yield Phrasing.BLOB;
+      }
     };
   }
 
@@ -1553,19 +1586,22 @@ public class InternalSink {
 
     return switch (sourcePeek()) {
       case '\n' -> {
-        if (!sourceInc()) {
-          yield popAndStop();
+        // only phrasing start
+        if (stackIndex == 0) {
+          yield Phrasing.BLOB;
         }
 
-        char next = sourcePeek();
+        int start = stackPop();
 
-        if (next == '\n') {
-          yield popAndStop();
+        int maybeHint = stackPop();
+
+        if (maybeHint == HINT_PARAGRAPH_END) {
+          yield Phrasing.STOP;
+        } else {
+          stackPush(start, maybeHint);
+
+          yield Phrasing.BLOB;
         }
-
-        sourceIndex(stackPeek());
-
-        yield Phrasing.BLOB;
       }
 
       default -> Phrasing.BLOB;
@@ -2076,6 +2112,8 @@ public class InternalSink {
 
         case EOL -> phrasingEol();
 
+        case EOL_TRIM -> phrasingEolTrim();
+
         case INLINE_MACRO -> phrasingInlineMacro();
 
         case INLINE_MACRO_END -> phrasingInlineMacroEnd();
@@ -2253,14 +2291,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2351,14 +2389,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2463,13 +2501,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2629,10 +2667,20 @@ public class InternalSink {
     };
   }
 
+  private Phrasing phrasingEolTrim() {
+    return switch (phrase) {
+      case PARAGRAPH -> paragraphPhrasingEolTrim();
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: phrase=" + phrase
+      );
+    };
+  }
+
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2645,16 +2693,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
