@@ -134,6 +134,7 @@ final class ThisDocumentProcessor {
       if (node instanceof Emphasis ||
           node instanceof InlineMacro ||
           node instanceof Monospaced ||
+          node instanceof Strong ||
           node instanceof Text) {
         if (!opened) {
           out.append("<text>");

@@ -580,9 +580,11 @@ public class InternalSink {
 
       case PseudoListItem.TEXT -> {}
 
-      case PseudoInlineMacro.EXHAUSTED,
+      case PseudoEmphasis.EXHAUSTED,
+           PseudoInlineMacro.EXHAUSTED,
            PseudoListItem.TEXT_CONSUMED,
-           PseudoMonospaced.EXHAUSTED -> {
+           PseudoMonospaced.EXHAUSTED,
+           PseudoStrong.EXHAUSTED -> {
         // pops TEXT_CONSUMED
         stackPop();
 

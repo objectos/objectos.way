@@ -446,4 +446,37 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  unordered list
+
+  - text with monospace
+  - text with strong
+  - text with emphasis
+  """)
+  public void testCase14() {
+    tester.test(
+      """
+      * `a`
+      * _b_
+      * *c* d
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text><code>a</code></text>
+      </item>
+      <item>
+      <text><em>b</em></text>
+      </item>
+      <item>
+      <text><strong>c</strong> d</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
 }
