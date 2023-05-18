@@ -208,4 +208,34 @@ public class SourceCodeBlockTest {
     );
   }
 
+  @Test(description = """
+  source code block
+
+  - paragraph after
+  - separating line is non-empty
+  """)
+  public void testCase07() {
+    tester.test(
+      """
+      [,java]
+      ----
+      break;
+      ----
+      \040\040
+      foo
+      """,
+
+      """
+      <document>
+      <listing>
+      <style>source</style>
+      <lang>java</lang>
+      <pre>break;</pre>
+      </listing>
+      <p>foo</p>
+      </document>
+      """
+    );
+  }
+
 }

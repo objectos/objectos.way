@@ -197,7 +197,9 @@ public class InternalSink {
     MARKER_ROLLBACK,
     MARKER_TRIM,
 
-    TRIM;
+    TRIM,
+    TRIM_LOOP,
+    TRIM_LOOP_WS;
   }
 
   private static final int HINT_CONTINUE_OR_NEST = -1;
@@ -2302,14 +2304,14 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
+
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-
+  
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2400,14 +2402,14 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
+
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-
+  
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2512,13 +2514,13 @@ public class InternalSink {
   }
 
   /*
-  
+
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-  
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
 
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+  
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2689,9 +2691,9 @@ public class InternalSink {
   }
 
   /*
-
+  
   asciidoctor/lib/asciidoctor/rx.rb
-
+  
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2704,16 +2706,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-  
+
   CG_BLANK=\p{Blank}
   CG_ALL=.
-  
+
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
+
   as PCRE
-  
+
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-  
+
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -3012,6 +3014,10 @@ public class InternalSink {
         case STOP -> preStop();
 
         case TRIM -> preTrim();
+
+        case TRIM_LOOP -> preTrimLoop();
+
+        case TRIM_LOOP_WS -> preTrimLoopWs();
       };
     }
   }
@@ -3156,15 +3162,48 @@ public class InternalSink {
   }
 
   private Pre preTrim() {
+    // trim rollback index
+    stackPush(sourceIndex);
+
+    return Pre.TRIM_LOOP;
+  }
+
+  private Pre preTrimLoop() {
     if (!sourceInc()) {
-      return Pre.STOP;
+      return preTrimStop();
     }
 
     return switch (sourcePeek()) {
-      case '\n' -> Pre.TRIM;
+      case '\t', '\f', ' ' -> Pre.TRIM_LOOP_WS;
 
-      default -> Pre.STOP;
+      case '\n' -> preTrimStop();
+
+      default -> preTrimStop();
     };
+  }
+
+  private Pre preTrimLoopWs() {
+    if (!sourceInc()) {
+      return preTrimStop();
+    }
+
+    return switch (sourcePeek()) {
+      case '\t', '\f', ' ' -> Pre.TRIM_LOOP_WS;
+
+      case '\n' -> preTrimStop();
+
+      default -> {
+        sourceIndex(stackPop());
+
+        yield Pre.STOP;
+      }
+    };
+  }
+
+  private Pre preTrimStop() {
+    stackPop();
+
+    return Pre.STOP;
   }
 
   private PseudoAttributes pseudoAttributes() {
