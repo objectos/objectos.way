@@ -389,4 +389,27 @@ public class SectionTest {
     );
   }
 
+  @Test(description = """
+  title has constrained italic/bold
+  """)
+  public void testCase11() {
+    tester.test(
+      """
+      == A _B_ *C* D
+
+      e
+      """,
+
+      """
+      <document>
+      <section level="1">
+      <style>null</style>
+      <title>A <em>B</em> <strong>C</strong> D</title>
+      <p>e</p>
+      </section>
+      </document>
+      """
+    );
+  }
+
 }
