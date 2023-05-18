@@ -479,4 +479,43 @@ public class UnorderedListTest {
     );
   }
 
+  @Test(description = """
+  unordered list
+
+  - items separated by NL
+  """)
+  public void testCase15() {
+    tester.test(
+      """
+      * item 1:
+      more 1
+
+      * item 2:
+      more 2
+
+      * item 3:
+      more 3
+      """,
+
+      """
+      <document>
+      <unordered-list>
+      <item>
+      <text>item 1:
+      more 1</text>
+      </item>
+      <item>
+      <text>item 2:
+      more 2</text>
+      </item>
+      <item>
+      <text>item 3:
+      more 3</text>
+      </item>
+      </unordered-list>
+      </document>
+      """
+    );
+  }
+
 }

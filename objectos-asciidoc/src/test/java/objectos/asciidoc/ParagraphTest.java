@@ -129,4 +129,23 @@ public class ParagraphTest {
     );
   }
 
+  @Test(description = """
+  next line of paragraph starts with monospace
+  """)
+  public void testCase06() {
+    tester.test(
+      """
+      abc;
+      `foo` bar
+      """,
+
+      """
+      <document>
+      <p>abc;
+      <code>foo</code> bar</p>
+      </document>
+      """
+    );
+  }
+
 }
