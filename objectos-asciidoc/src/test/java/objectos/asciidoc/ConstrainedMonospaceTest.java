@@ -149,4 +149,46 @@ public class ConstrainedMonospaceTest {
     );
   }
 
+  @Test(description = """
+  monospace
+
+  - contents is a (not) emphasis
+  - contents is a (not) strong
+  """)
+  public void testCase07() {
+    tester.test(
+      """
+      foo `UTF_8` bar
+
+      foo `UTF*8` bar
+      """,
+
+      """
+      <document>
+      <p>foo <code>UTF_8</code> bar</p>
+      <p>foo <code>UTF*8</code> bar</p>
+      </document>
+      """
+    );
+  }
+
+  @Test(description = """
+  monospace
+
+  - not a monospace
+  """)
+  public void testCase08() {
+    tester.test(
+      """
+      foo`bar
+      """,
+
+      """
+      <document>
+      <p>foo`bar</p>
+      </document>
+      """
+    );
+  }
+
 }
