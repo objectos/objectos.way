@@ -37,7 +37,7 @@ abstract class Tester {
           ContentNode parent, String target, Map<String, Object> attributes) {
         var href = target;
 
-        var text = (String) attributes.get("1");
+        var text = (String) attributes.getOrDefault("1", "");
 
         var options = new HashMap<String, Object>();
         options.put("type", ":link");

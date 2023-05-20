@@ -205,4 +205,23 @@ public class InlineMacroTest {
     );
   }
 
+  @Test(description = """
+  inline macro:
+
+  - empty attrlist
+  """)
+  public void testCase09() {
+    tester.test(
+      """
+      i:foo[]
+      """,
+
+      """
+      <document>
+      <p><a href="foo"></a></p>
+      </document>
+      """
+    );
+  }
+
 }
