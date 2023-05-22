@@ -18,7 +18,6 @@ package objectos.asciidoc;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.Node;
 import objectos.asciidoc.pseudom.Node.Emphasis;
-import objectos.asciidoc.pseudom.Node.Header;
 import objectos.asciidoc.pseudom.Node.InlineMacro;
 import objectos.asciidoc.pseudom.Node.ListItem;
 import objectos.asciidoc.pseudom.Node.ListingBlock;
@@ -62,12 +61,6 @@ final class ThisDocumentProcessor {
     }
 
     out.append("</em>");
-  }
-
-  private void header(Header header) {
-    for (var node : header.nodes()) {
-      node(node);
-    }
   }
 
   private void iMacro(String name, InlineMacro macro) {
@@ -171,8 +164,6 @@ final class ThisDocumentProcessor {
   private void node(Node node) {
     if (node instanceof Emphasis emphasis) {
       emphasis(emphasis);
-    } else if (node instanceof Header header) {
-      header(header);
     } else if (node instanceof InlineMacro macro) {
       inlineMacro(macro);
     } else if (node instanceof ListingBlock block) {

@@ -25,13 +25,6 @@ import objectos.util.IntArrays;
 
 public class InternalSink {
 
-  private enum HeaderParse {
-    STOP,
-    AFTER_TITLE,
-    HEADER_END,
-    EXHAUSTED;
-  }
-
   private enum ListItemText {
     STOP,
 
@@ -210,20 +203,19 @@ public class InternalSink {
   private static final int MARKER_ULIST = -6;
 
   private static final int PSEUDO_DOCUMENT = 0;
-  private static final int PSEUDO_HEADER = 1;
-  private static final int PSEUDO_TITLE = 2;
-  private static final int PSEUDO_PARAGRAPH = 3;
-  private static final int PSEUDO_SECTION = 4;
-  private static final int PSEUDO_TEXT = 5;
-  private static final int PSEUDO_ULIST = 6;
-  private static final int PSEUDO_LIST_ITEM = 7;
-  private static final int PSEUDO_ATTRIBUTES = 8;
-  private static final int PSEUDO_INLINE_MACRO = 9;
-  private static final int PSEUDO_MONOSPACED = 10;
-  private static final int PSEUDO_LISTING_BLOCK = 11;
-  private static final int PSEUDO_EMPHASIS = 12;
-  private static final int PSEUDO_STRONG = 13;
-  private static final int PSEUDO_LENGTH = 14;
+  private static final int PSEUDO_TITLE = 1;
+  private static final int PSEUDO_PARAGRAPH = 2;
+  private static final int PSEUDO_SECTION = 3;
+  private static final int PSEUDO_TEXT = 4;
+  private static final int PSEUDO_ULIST = 5;
+  private static final int PSEUDO_LIST_ITEM = 6;
+  private static final int PSEUDO_ATTRIBUTES = 7;
+  private static final int PSEUDO_INLINE_MACRO = 8;
+  private static final int PSEUDO_MONOSPACED = 9;
+  private static final int PSEUDO_LISTING_BLOCK = 10;
+  private static final int PSEUDO_EMPHASIS = 11;
+  private static final int PSEUDO_STRONG = 12;
+  private static final int PSEUDO_LENGTH = 13;
 
   private final Object[] pseudoArray = new Object[PSEUDO_LENGTH];
 
@@ -273,7 +265,7 @@ public class InternalSink {
   final void close() {
     assert stackIndex == 0 : stackToString();
 
-    assert stackPop() == PseudoDocument.EXHAUSTED;
+    //assert stackPop() == PseudoDocument.EXHAUSTED;
 
     nextNode = null;
 
@@ -288,10 +280,10 @@ public class InternalSink {
 
   final boolean documentHasNext() {
     switch (stackPeek()) {
-      case PseudoHeader.EXHAUSTED,
-           PseudoListingBlock.EXHAUSTED,
+      case PseudoListingBlock.EXHAUSTED,
            PseudoParagraph.EXHAUSTED,
            PseudoSection.EXHAUSTED,
+           PseudoTitle.EXHAUSTED,
            PseudoUnorderedList.EXHAUSTED -> {
         stackPop();
 
@@ -305,9 +297,9 @@ public class InternalSink {
       }
 
       case PseudoDocument.BLOCK,
-           PseudoDocument.HEADER,
            PseudoDocument.PARAGRAPH,
-           PseudoDocument.SECTION -> {}
+           PseudoDocument.SECTION,
+           PseudoDocument.TITLE -> {}
 
       default -> stackStub();
     }
@@ -393,42 +385,6 @@ public class InternalSink {
 
       default -> stackStub();
     }
-  }
-
-  final boolean headerHasNext() {
-    switch (stackPeek()) {
-      case PseudoTitle.EXHAUSTED -> headerParse(HeaderParse.AFTER_TITLE);
-
-      case PseudoHeader.ITERATOR -> {
-        stackPop();
-
-        var title = pseudoTitle();
-
-        title.level = 0;
-
-        nextNode = title;
-
-        stackPush(PseudoHeader.TITLE);
-      }
-
-      case PseudoHeader.TITLE -> {}
-
-      default -> stackStub();
-    }
-
-    return nextNode != null;
-  }
-
-  final void headerIterator() {
-    stackAssert(PseudoHeader.NODES);
-
-    stackReplace(PseudoHeader.ITERATOR);
-  }
-
-  final void headerNodes() {
-    stackAssert(PseudoDocument.HEADER_CONSUMED);
-
-    stackReplace(PseudoHeader.NODES);
   }
 
   final boolean inlineMacroHasNext() {
@@ -915,7 +871,7 @@ public class InternalSink {
 
   final void titleNodes() {
     switch (stackPeek()) {
-      case PseudoHeader.TITLE_CONSUMED,
+      case PseudoDocument.TITLE_CONSUMED,
            PseudoSection.TITLE_CONSUMED -> stackReplace(PseudoTitle.NODES);
 
       default -> stackStub();
@@ -1063,9 +1019,13 @@ public class InternalSink {
     // pops source index
     stackPop();
 
-    stackPush(PseudoDocument.HEADER);
+    stackPush(PseudoDocument.TITLE);
 
-    nextNode = pseudoHeader();
+    var title = pseudoTitle();
+
+    title.level = 0;
+
+    nextNode = title;
 
     return Parse.STOP;
   }
@@ -1150,58 +1110,6 @@ public class InternalSink {
     stackPush(sourceIndex);
 
     return Phrasing.BLOB;
-  }
-
-  private void headerParse(HeaderParse initialState) {
-    stackReplace(PseudoHeader.PARSE);
-
-    var state = initialState;
-
-    while (state != HeaderParse.STOP) {
-      state = switch (state) {
-        case AFTER_TITLE -> headerParseAfterTitle();
-
-        case EXHAUSTED -> headerParseExhausted();
-
-        case HEADER_END -> headerParseHeaderEnd();
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: state=" + state
-        );
-      };
-    }
-  }
-
-  private HeaderParse headerParseAfterTitle() {
-    if (!sourceMore()) {
-      return HeaderParse.EXHAUSTED;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(HeaderParse.HEADER_END);
-
-      default -> HeaderParse.EXHAUSTED;
-    };
-  }
-
-  private HeaderParse headerParseExhausted() {
-    stackAssert(PseudoHeader.PARSE);
-
-    stackReplace(PseudoHeader.EXHAUSTED);
-
-    return HeaderParse.STOP;
-  }
-
-  private HeaderParse headerParseHeaderEnd() {
-    if (!sourceMore()) {
-      return HeaderParse.EXHAUSTED;
-    }
-
-    return switch (sourcePeek()) {
-      case '\n' -> advance(HeaderParse.HEADER_END);
-
-      default -> HeaderParse.EXHAUSTED;
-    };
   }
 
   private boolean isWord(char c) {
@@ -2304,14 +2212,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?\*(\S|\S.*?\S)\*(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedBold() {
     int startSymbol = sourceIndex;
@@ -2402,14 +2310,14 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
+  
   # _emphasis_
   /(^|[^\p{Word};:}])(?:#{QuoteAttributeListRxt})?_(\S|\S.*?\S)_(?!\p{Word})/m
-  
+
    */
   private Phrasing phrasingConstrainedItalic() {
     int startSymbol = sourceIndex;
@@ -2514,13 +2422,13 @@ public class InternalSink {
   }
 
   /*
-
+  
   CC_WORD = CG_WORD = '\p{Word}'
   CC_ALL = '.'
   QuoteAttributeListRxt = %(\\[([^\\[\\]]+)\\]) -> \[([^\[\\]]+)\]
-
-  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
   
+  (^|[^\p{Xwd};:"'`}])(?:\[([^\[\\]]+)\])?`(\S|\S.*?\S)`(?![\p{Xwd}"'`])
+
    */
   private Phrasing phrasingConstrainedMonospace() {
     int startSymbol = sourceIndex;
@@ -2691,9 +2599,9 @@ public class InternalSink {
   }
 
   /*
-  
+
   asciidoctor/lib/asciidoctor/rx.rb
-  
+
   # Matches an implicit link and some of the link inline macro.
   #
   # Examples
@@ -2706,16 +2614,16 @@ public class InternalSink {
   #   (https://github.com) <= parenthesis not included in autolink
   #
   InlineLinkRx = %r((^|link:|#{CG_BLANK}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|#{CC_ALL}*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)]))))m
-
+  
   CG_BLANK=\p{Blank}
   CG_ALL=.
-
+  
   (^|link:|\p{Blank}|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc)://)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   as PCRE
-
+  
   (^|link:|\h|&lt;|[>\(\)\[\];"'])(\\?(?:https?|file|ftp|irc):\/\/)(?:([^\s\[\]]+)\[(|.*?[^\\])\]|([^\s\[\]<]*([^\s,.?!\[\]<\)])))
-
+  
   */
   private Phrasing phrasingInlineMacro() {
     int phrasingStart = stackPeek();
@@ -3230,10 +3138,6 @@ public class InternalSink {
     }
 
     return (T) result;
-  }
-
-  private PseudoHeader pseudoHeader() {
-    return pseudoFactory(PSEUDO_HEADER, PseudoHeader::new);
   }
 
   private PseudoInlineMacro pseudoInlineMacro() {

@@ -28,8 +28,8 @@ public final class PseudoDocument extends PseudoNode
   static final int START = -100;
   static final int NODES = -101;
   static final int ITERATOR = -102;
-  static final int HEADER = -103;
-  static final int HEADER_CONSUMED = -104;
+  static final int TITLE = -103;
+  static final int TITLE_CONSUMED = -104;
   static final int PARAGRAPH = -105;
   static final int PARAGRAPH_CONSUMED = -106;
   static final int SECTION = -107;

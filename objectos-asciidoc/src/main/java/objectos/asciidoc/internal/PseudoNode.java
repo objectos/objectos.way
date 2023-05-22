@@ -22,9 +22,8 @@ import objectos.asciidoc.pseudom.Node;
 abstract class PseudoNode {
 
   /*
-
+  
   document = 100
-  header = 200
   title = 300
   inline macro = 400
   monospaced = 500
@@ -35,7 +34,7 @@ abstract class PseudoNode {
   list item = 1000
   emphasis = 1100;
   strong = 1200;
-  
+
   */
 
   final InternalSink sink;
