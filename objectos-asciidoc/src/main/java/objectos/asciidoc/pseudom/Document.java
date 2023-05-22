@@ -23,6 +23,10 @@ public sealed interface Document extends AutoCloseable permits PseudoDocument {
   @Override
   void close() throws IOException;
 
+  String getNamed(String name);
+
+  String getNamed(String name, String defaultValue);
+
   IterableOnce<Node> nodes();
 
 }

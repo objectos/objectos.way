@@ -18,6 +18,7 @@ package objectos.asciidoc.internal;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import objectos.asciidoc.pseudom.Document;
 import objectos.asciidoc.pseudom.IterableOnce;
 import objectos.asciidoc.pseudom.Node;
@@ -47,6 +48,26 @@ public final class PseudoDocument extends PseudoNode
   @Override
   public final void close() {
     sink.close();
+  }
+
+  @Override
+  public final String getNamed(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    return getAttribute(name);
+  }
+
+  @Override
+  public final String getNamed(String name, String defaultValue) {
+    Objects.requireNonNull(defaultValue, "defaultValue == null");
+
+    var result = getNamed(name);
+
+    if (result != null) {
+      return result;
+    } else {
+      return defaultValue;
+    }
   }
 
   @Override
@@ -81,20 +102,20 @@ public final class PseudoDocument extends PseudoNode
     return this;
   }
 
-  final void putAttribute(String name, String value) {
-    if (attributes == null) {
-      attributes = new LinkedHashMap<>();
-    }
-
-    attributes.put(name, value);
-  }
-
   final String getAttribute(String name) {
     if (attributes == null) {
       return null;
     } else {
       return attributes.get(name);
     }
+  }
+
+  final void putAttribute(String name, String value) {
+    if (attributes == null) {
+      attributes = new LinkedHashMap<>();
+    }
+
+    attributes.put(name, value);
   }
 
 }

@@ -60,6 +60,8 @@ public final class PseudoAttributes implements Attributes {
 
   @Override
   public final String getNamed(String name, String defaultValue) {
+    Objects.requireNonNull(defaultValue, "defaultValue == null");
+
     var result = getNamed(name);
 
     if (result != null) {
