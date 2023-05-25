@@ -1,0 +1,10 @@
+<single-animation>:<time> || <timing-function> || <time> || <single-animation-iteration-count> || <single-animation-direction> || <single-animation-fill-mode> || <single-animation-play-state> || [ none | <keyframes-name> ]
+<timing-function>:linear | <cubic-bezier-timing-function> | <step-timing-function>
+<single-animation-iteration-count>:infinite | <number>
+<single-animation-direction>:normal | reverse | alternate | alternate-reverse
+<single-animation-fill-mode>:none | forwards | backwards | both
+<single-animation-play-state>:running | paused
+<keyframes-name>:<custom-ident> | <string>
+<cubic-bezier-timing-function>:ease | ease-in | ease-out | ease-in-out | cubic-bezier(<number>, <number>, <number>, <number>)
+<step-timing-function>:step-start | step-end | steps(<integer>[, <step-position>]?)
+<step-position>:jump-start | jump-end | jump-none | jump-both | start | end

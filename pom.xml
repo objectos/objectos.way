@@ -72,6 +72,7 @@
 		<module>objectos-html</module>
 		<module>objectos-lang</module>
 		<module>objectos-selfgen</module>
+		<module>objectos-specgen</module>
 		<module>objectos-util</module>
 	</modules>
 

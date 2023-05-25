@@ -1,0 +1,20 @@
+<filter-function-list>:[ <filter-function> | <url> ]+
+<filter-function>:<blur()> | <brightness()> | <contrast()> | <drop-shadow()> | <grayscale()> | <hue-rotate()> | <invert()> | <opacity()> | <saturate()> | <sepia()>
+<blur()>:blur( <length> )
+<brightness()>:brightness( <number-percentage> )
+<contrast()>:contrast( [ <number-percentage> ] )
+<drop-shadow()>:drop-shadow( <length>{2,3} <color>? )
+<grayscale()>:grayscale( <number-percentage> )
+<hue-rotate()>:hue-rotate( <angle> )
+<invert()>:invert( <number-percentage> )
+<opacity()>:opacity( [ <number-percentage> ] )
+<saturate()>:saturate( <number-percentage> )
+<sepia()>:sepia( <number-percentage> )
+<number-percentage>:<number> | <percentage>
+<color>:<rgb()> | <rgba()> | <hsl()> | <hsla()> | <hex-color> | <named-color> | currentcolor | <deprecated-system-color>
+<rgb()>:rgb( <percentage>{3} [ / <alpha-value> ]? ) | rgb( <number>{3} [ / <alpha-value> ]? ) | rgb( <percentage>#{3} , <alpha-value>? ) | rgb( <number>#{3} , <alpha-value>? )
+<rgba()>:rgba( <percentage>{3} [ / <alpha-value> ]? ) | rgba( <number>{3} [ / <alpha-value> ]? ) | rgba( <percentage>#{3} , <alpha-value>? ) | rgba( <number>#{3} , <alpha-value>? )
+<hsl()>:hsl( <hue> <percentage> <percentage> [ / <alpha-value> ]? ) | hsl( <hue>, <percentage>, <percentage>, <alpha-value>? )
+<hsla()>:hsla( <hue> <percentage> <percentage> [ / <alpha-value> ]? ) | hsla( <hue>, <percentage>, <percentage>, <alpha-value>? )
+<alpha-value>:<number> | <percentage>
+<hue>:<number> | <angle>

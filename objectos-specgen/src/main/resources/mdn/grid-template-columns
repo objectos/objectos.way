@@ -1,0 +1,13 @@
+<track-list>:[ <line-names>? [ <track-size> | <track-repeat> ] ]+ <line-names>?
+<auto-track-list>:[ <line-names>? [ <fixed-size> | <fixed-repeat> ] ]* <line-names>? <auto-repeat> [ <line-names>? [ <fixed-size> | <fixed-repeat> ] ]* <line-names>?
+<line-name-list>:[ <line-names> | <name-repeat> ]+
+<line-names>:'[' <custom-ident>* ']'
+<track-size>:<track-breadth> | minmax( <inflexible-breadth> , <track-breadth> ) | fit-content( [ <length> | <percentage> ] )
+<track-repeat>:repeat( [ <positive-integer> ] , [ <line-names>? <track-size> ]+ <line-names>? )
+<fixed-size>:<fixed-breadth> | minmax( <fixed-breadth> , <track-breadth> ) | minmax( <inflexible-breadth> , <fixed-breadth> )
+<fixed-repeat>:repeat( [ <positive-integer> ] , [ <line-names>? <fixed-size> ]+ <line-names>? )
+<auto-repeat>:repeat( [ auto-fill | auto-fit ] , [ <line-names>? <fixed-size> ]+ <line-names>? )
+<track-breadth>:<length-percentage> | <flex> | min-content | max-content | auto
+<inflexible-breadth>:<length> | <percentage> | min-content | max-content | auto
+<fixed-breadth>:<length-percentage>
+<length-percentage>:<length> | <percentage>
