@@ -25,6 +25,12 @@ public final class HtmlSpec extends HtmlSelfGen {
 
   private HtmlSpec() {}
 
+  public static Set<String> elementNamesForCss() {
+    var spec = new HtmlSpec();
+
+    return spec.elementNames();
+  }
+
   public static void main(String[] args) throws IOException {
     var spec = new HtmlSpec();
 

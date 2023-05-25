@@ -22,4 +22,5 @@ module objectos.selfgen {
   requires objectos.code;
   requires objectos.lang;
   requires objectos.util;
+  requires java.compiler;
 }

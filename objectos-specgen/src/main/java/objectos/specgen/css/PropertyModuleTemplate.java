@@ -24,8 +24,8 @@ import objectos.specgen.util.JavaNames;
 
 class PropertyModuleTemplate extends JavaTemplate {
 
-  private static final String BOOT = "br.com.objectos.css.boot";
-  private static final String SPEC = "br.com.objectos.css.boot.spec";
+  private static final String BOOT = "objectos.selfgen.css";
+  private static final String SPEC = "objectos.selfgen.css.spec";
 
   private static final ClassTypeName ABSTRACT_PROPERTY_MODULE
       = ClassTypeName.of(BOOT, "AbstractPropertyModule");

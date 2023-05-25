@@ -74,9 +74,7 @@ public class MdnCrawlerTest {
     public void handle(HttpExchange exchange) throws IOException {
       var method = exchange.getRequestMethod();
 
-      if (!method.equals("GET")) {
-        return;
-      }
+      assert method.equals("GET");
 
       var uri = exchange.getRequestURI();
 

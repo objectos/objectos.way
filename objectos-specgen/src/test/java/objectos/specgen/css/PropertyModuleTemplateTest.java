@@ -41,10 +41,11 @@ public class PropertyModuleTemplateTest {
 
     assertEquals(
       template.toString(),
-      """
-      package br.com.objectos.css.boot;
 
-      import br.com.objectos.css.boot.spec.Source;
+      """
+      package objectos.selfgen.css;
+
+      import objectos.selfgen.css.spec.Source;
 
       final class ClearPropertyModule extends AbstractPropertyModule {
         @Override
@@ -80,10 +81,11 @@ public class PropertyModuleTemplateTest {
 
     assertEquals(
       template.toString(),
-      """
-      package br.com.objectos.css.boot;
 
-      import br.com.objectos.css.boot.spec.Source;
+      """
+      package objectos.selfgen.css;
+
+      import objectos.selfgen.css.spec.Source;
 
       final class MarginPropertyModule extends AbstractPropertyModule {
         @Override

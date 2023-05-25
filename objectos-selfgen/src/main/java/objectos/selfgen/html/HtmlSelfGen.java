@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import objectos.code.JavaSink;
 
 public abstract class HtmlSelfGen {
@@ -69,6 +71,15 @@ public abstract class HtmlSelfGen {
 
       default -> throw new IllegalArgumentException("Unknown module: " + moduleName);
     }
+  }
+
+  public final Set<String> elementNames() {
+    definition();
+
+    return elementMap.values()
+        .stream()
+        .map(ElementSpec::name)
+        .collect(Collectors.toUnmodifiableSet());
   }
 
   public final boolean isAmbiguous(ElementSpec element) {
