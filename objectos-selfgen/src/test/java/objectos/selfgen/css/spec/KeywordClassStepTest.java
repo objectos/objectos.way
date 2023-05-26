@@ -50,9 +50,9 @@ public class KeywordClassStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.keyword;
+      package objectos.css.keyword;
 
-      import br.com.objectos.css.type.TopValue;
+      import objectos.css.type.TopValue;
 
       public final class AutoKeyword extends StandardKeyword implements TopValue {
         static final AutoKeyword INSTANCE = new AutoKeyword();
@@ -68,7 +68,7 @@ public class KeywordClassStepTest extends AbstractCssBootSpecTest {
       resultList.get(1),
 
       """
-      package br.com.objectos.css.keyword;
+      package objectos.css.keyword;
 
       public final class DoubleKeyword extends StandardKeyword {
         static final DoubleKeyword INSTANCE = new DoubleKeyword();

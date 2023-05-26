@@ -33,19 +33,19 @@ abstract class ThisTemplate extends JavaTemplate implements Step {
 
   static final ClassTypeName UNMODIFIABLE_MAP = ClassTypeName.of(UnmodifiableMap.class);
 
-  static final String css = "br.com.objectos.css";
+  static final String css = "objectos.css";
 
-  static final String function = "br.com.objectos.css.function";
+  static final String function = "objectos.css.function";
 
-  static final String keyword = "br.com.objectos.css.keyword";
+  static final String keyword = "objectos.css.keyword";
 
-  static final String property = "br.com.objectos.css.property";
+  static final String property = "objectos.css.property";
 
-  static final String select = "br.com.objectos.css.select";
+  static final String select = "objectos.css.select";
 
-  static final String sheet = "br.com.objectos.css.sheet";
+  static final String sheet = "objectos.css.sheet";
 
-  static final String type = "br.com.objectos.css.type";
+  static final String type = "objectos.css.type";
 
   private final StepAdapter adapter;
 

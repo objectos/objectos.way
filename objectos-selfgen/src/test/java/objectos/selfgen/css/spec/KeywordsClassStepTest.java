@@ -46,7 +46,7 @@ public class KeywordsClassStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.keyword;
+      package objectos.css.keyword;
 
       import objectos.util.GrowableMap;
       import objectos.util.UnmodifiableMap;

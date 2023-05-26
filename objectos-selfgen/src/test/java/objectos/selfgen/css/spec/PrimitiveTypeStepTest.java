@@ -47,7 +47,7 @@ public class PrimitiveTypeStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.type;
+      package objectos.css.type;
 
       public interface LengthType extends BottomValue, Value {}
       """
@@ -57,7 +57,7 @@ public class PrimitiveTypeStepTest extends AbstractCssBootSpecTest {
       resultList.get(1),
 
       """
-      package br.com.objectos.css.type;
+      package objectos.css.type;
 
       public interface PercentageType extends BottomValue, Value {}
       """

@@ -40,7 +40,7 @@ public class GeneratedColorStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.type;
+      package objectos.css.type;
 
       import objectos.util.GrowableMap;
       import objectos.util.UnmodifiableMap;

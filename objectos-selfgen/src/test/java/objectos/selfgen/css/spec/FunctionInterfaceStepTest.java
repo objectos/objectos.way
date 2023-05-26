@@ -48,9 +48,9 @@ public class FunctionInterfaceStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.function;
+      package objectos.css.function;
 
-      import br.com.objectos.css.type.TransformValue;
+      import objectos.css.type.TransformValue;
 
       public interface RotateFunction extends TransformValue {}
       """

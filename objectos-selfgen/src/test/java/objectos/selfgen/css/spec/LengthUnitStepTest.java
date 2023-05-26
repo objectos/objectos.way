@@ -40,7 +40,7 @@ public class LengthUnitStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.type;
+      package objectos.css.type;
 
       import java.util.Locale;
 

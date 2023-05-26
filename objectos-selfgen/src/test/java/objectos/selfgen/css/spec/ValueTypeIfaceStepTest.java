@@ -52,7 +52,7 @@ public class ValueTypeIfaceStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.type;
+      package objectos.css.type;
 
       public interface ClearValue extends Value {}
       """
@@ -62,7 +62,7 @@ public class ValueTypeIfaceStepTest extends AbstractCssBootSpecTest {
       resultList.get(1),
 
       """
-      package br.com.objectos.css.type;
+      package objectos.css.type;
 
       public interface TopValue extends Value {}
       """

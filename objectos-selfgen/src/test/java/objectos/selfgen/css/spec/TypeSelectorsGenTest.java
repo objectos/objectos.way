@@ -41,7 +41,7 @@ public class TypeSelectorsGenTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.select;
+      package objectos.css.select;
 
       import objectos.util.GrowableMap;
       import objectos.util.UnmodifiableMap;

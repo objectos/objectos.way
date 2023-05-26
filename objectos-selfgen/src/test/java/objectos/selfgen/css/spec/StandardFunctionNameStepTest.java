@@ -40,7 +40,7 @@ public class StandardFunctionNameStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.function;
+      package objectos.css.function;
 
       import objectos.util.GrowableMap;
       import objectos.util.UnmodifiableMap;

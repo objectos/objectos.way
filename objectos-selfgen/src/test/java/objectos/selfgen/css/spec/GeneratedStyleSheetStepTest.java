@@ -102,27 +102,27 @@ public class GeneratedStyleSheetStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.sheet;
+      package objectos.css.sheet;
 
-      import br.com.objectos.css.Css;
-      import br.com.objectos.css.function.RotateFunction;
-      import br.com.objectos.css.function.StandardFunctionName;
-      import br.com.objectos.css.keyword.AutoKeyword;
-      import br.com.objectos.css.keyword.Keywords;
-      import br.com.objectos.css.keyword.NoneKeyword;
-      import br.com.objectos.css.property.StandardPropertyName;
-      import br.com.objectos.css.select.PseudoClassSelector;
-      import br.com.objectos.css.select.PseudoElementSelector;
-      import br.com.objectos.css.select.TypeSelector;
-      import br.com.objectos.css.type.AngleType;
-      import br.com.objectos.css.type.AngleUnit;
-      import br.com.objectos.css.type.ClearValue;
-      import br.com.objectos.css.type.Color;
-      import br.com.objectos.css.type.LengthType;
-      import br.com.objectos.css.type.LengthUnit;
-      import br.com.objectos.css.type.TopValue;
-      import br.com.objectos.css.type.TransformValue;
-      import br.com.objectos.css.type.Value;
+      import objectos.css.Css;
+      import objectos.css.function.RotateFunction;
+      import objectos.css.function.StandardFunctionName;
+      import objectos.css.keyword.AutoKeyword;
+      import objectos.css.keyword.Keywords;
+      import objectos.css.keyword.NoneKeyword;
+      import objectos.css.property.StandardPropertyName;
+      import objectos.css.select.PseudoClassSelector;
+      import objectos.css.select.PseudoElementSelector;
+      import objectos.css.select.TypeSelector;
+      import objectos.css.type.AngleType;
+      import objectos.css.type.AngleUnit;
+      import objectos.css.type.ClearValue;
+      import objectos.css.type.Color;
+      import objectos.css.type.LengthType;
+      import objectos.css.type.LengthUnit;
+      import objectos.css.type.TopValue;
+      import objectos.css.type.TransformValue;
+      import objectos.css.type.Value;
 
       abstract class GeneratedStyleSheet {
         protected static final TypeSelector a = Css.a;

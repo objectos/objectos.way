@@ -53,7 +53,7 @@ public class StandardPropertyNameStepTest extends AbstractCssBootSpecTest {
       resultList.get(0),
 
       """
-      package br.com.objectos.css.property;
+      package objectos.css.property;
 
       import objectos.util.GrowableMap;
       import objectos.util.UnmodifiableMap;
