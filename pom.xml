@@ -69,6 +69,7 @@
 		<module>objectos-asciidoc</module>
 		<module>objectos-bom</module>
 		<module>objectos-code</module>
+		<module>objectos-css</module>
 		<module>objectos-html</module>
 		<module>objectos-lang</module>
 		<module>objectos-selfgen</module>

@@ -1,0 +1,5 @@
+<factorypath>
+    <factorypathentry kind="VARJAR" id="M2_REPO/br/com/objectos/css-boot/0.3.0-SNAPSHOT/css-boot-0.3.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/br/com/objectos/code/0.3.0-SNAPSHOT/code-0.3.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/br/com/objectos/code-annotations/0.3.0-SNAPSHOT/code-annotations-0.3.0-SNAPSHOT.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>

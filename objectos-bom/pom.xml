@@ -46,6 +46,11 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-css</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>objectos-html</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -136,22 +141,6 @@
 				<version>${project.version}</version>
 			</dependency>
 
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>css</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>css-boot</artifactId>
-				<version>${project.version}</version>
-				<optional>true</optional>
-			</dependency>
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>css-core</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>css-formal</artifactId>
