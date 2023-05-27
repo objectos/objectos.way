@@ -65,12 +65,11 @@
 			<artifactId>objectos-util</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>objectos-selfgen</artifactId>
 			<version>${project.version}</version>
-			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>

@@ -59,7 +59,7 @@
 						</configuration>
 						<dependencies>
 							<dependency>
-								<groupId>br.com.objectos</groupId>
+								<groupId>${project.groupId}</groupId>
 								<artifactId>css-specgen</artifactId>
 								<version>${project.version}</version>
 							</dependency>
@@ -119,11 +119,12 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>objectos-html</artifactId>
 			<version>${project.version}</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>objectos-selfgen</artifactId>
 			<version>${project.version}</version>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
