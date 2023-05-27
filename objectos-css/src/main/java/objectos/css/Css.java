@@ -320,7 +320,7 @@ public final class Css {
   private Css() {}
 
   public static Color hex(String text) {
-    return ColorFactory.hex(text);
+    return Color.hex(text);
   }
 
   public static ClassSelector randomClassSelector(int length) {

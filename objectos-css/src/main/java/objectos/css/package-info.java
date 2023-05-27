@@ -13,4 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Provides the classes for generating CSS using the Java programming language.
+ *
+ * @since 0.7.0
+ */
 package objectos.css;
