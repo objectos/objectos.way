@@ -20,10 +20,9 @@ package objectos.code.tmpl;
  *
  * @since 0.4
  */
-@SuppressWarnings("deprecation")
 public interface Include
     extends
-    ArgsPart, BlockInstruction, BodyElement, ExpressionPart, VariableInitializer,
+    BlockInstruction, ExpressionPart, VariableInitializer,
 
     ClassDeclarationInstruction,
     EnumDeclarationInstruction,
