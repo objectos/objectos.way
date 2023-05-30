@@ -38,11 +38,9 @@ final class RandomIdSelectorGenerator {
     Check.argument(length > 0, "length must be > 0");
 
     for (int i = 0; i < MAX_TRIES; i++) {
-      String className;
-      className = RandomStringImpl.next(length);
+      var className = RandomStringImpl.next(length);
 
-      char first;
-      first = className.charAt(0);
+      char first = className.charAt(0);
 
       if (Character.isDigit(first)) {
         continue;
@@ -56,7 +54,7 @@ final class RandomIdSelectorGenerator {
     }
 
     throw new IllegalArgumentException(
-        "Could not generate distinct IdSelector after " + MAX_TRIES + " tries");
+      "Could not generate distinct IdSelector after " + MAX_TRIES + " tries");
   }
 
 }

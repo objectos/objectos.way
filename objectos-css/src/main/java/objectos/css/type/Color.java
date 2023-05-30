@@ -54,12 +54,6 @@ public abstract class Color extends GeneratedColor implements ColorType, Value {
     }
   }
 
-  // public static String toFieldName(String keyword) {
-  // return DictionaryHolder.toFieldNameMap.getOrDefault(keyword, keyword);
-  // }
-
-  public abstract <R> R accept(ColorVisitor<R> visitor);
-
   @Override
   public final boolean equals(Object obj) {
     if (obj == this) {

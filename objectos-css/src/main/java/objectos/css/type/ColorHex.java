@@ -100,11 +100,6 @@ public class ColorHex extends Color {
   }
 
   @Override
-  public final <R> R accept(ColorVisitor<R> visitor) {
-    return visitor.visitColorHex(this);
-  }
-
-  @Override
   public final void acceptValueCreator(Creator creator) {
     creator.createColor(value);
   }

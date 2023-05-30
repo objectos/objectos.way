@@ -54,8 +54,6 @@ public interface StyleEngine extends Creator, Marker {
 
   void addRule(UnmodifiableList<RuleElement> elements);
 
-  void clearRulePrefix();
-
   void createAttributeSelector(String name);
 
   void createAttributeValueElement(AttributeValueOperator operator, String value);
@@ -67,7 +65,5 @@ public interface StyleEngine extends Creator, Marker {
   void createIdSelector(String id);
 
   void markAttributeValueElement();
-
-  void setRulePrefix(RuleElement... elements);
 
 }

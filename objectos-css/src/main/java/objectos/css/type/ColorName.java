@@ -26,11 +26,6 @@ public final class ColorName extends Color {
   }
 
   @Override
-  public final <R> R accept(ColorVisitor<R> visitor) {
-    return visitor.visitNamedColor(this);
-  }
-
-  @Override
   public final void acceptValueCreator(Creator creator) {
     // noop
   }

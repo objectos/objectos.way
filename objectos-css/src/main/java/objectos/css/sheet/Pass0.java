@@ -59,8 +59,6 @@ final class Pass0 implements AutoCloseable, StyleEngine {
 
   final GrowableList<String> strings = new GrowableList<>();
 
-  private GrowableList<RuleElement> rulePrefix;
-
   Pass0() {
     doubles = new double[10];
 
@@ -309,19 +307,11 @@ final class Pass0 implements AutoCloseable, StyleEngine {
       acceptRuleElement0(element);
     }
 
-    if (rulePrefix != null) {
-      for (int i = rulePrefix.size() - 1; i >= 0; i--) {
-        RuleElement element;
-        element = rulePrefix.get(i);
-
-        acceptRuleElement0(element);
-      }
-    }
-
     addProto(ByteProto.RULE_START);
     addObject(ByteProto.RULE_MARK);
   }
 
+  @Override
   public void addRule(UnmodifiableList<RuleElement> elements) {
     Check.notNull(elements, "elements == null");
 
@@ -348,13 +338,6 @@ final class Pass0 implements AutoCloseable, StyleEngine {
   }
 
   @Override
-  public final void clearRulePrefix() {
-    if (rulePrefix != null) {
-      rulePrefix.clear();
-    }
-  }
-
-  @Override
   public final void close() {
     doublesLength = 0;
 
@@ -363,10 +346,6 @@ final class Pass0 implements AutoCloseable, StyleEngine {
     protosLength = 0;
 
     strings.clear();
-
-    if (rulePrefix != null) {
-      rulePrefix.clear();
-    }
   }
 
   @Override
@@ -677,20 +656,6 @@ final class Pass0 implements AutoCloseable, StyleEngine {
   @Override
   public final void markUri() {
     addProto(ByteProto.VALUE_URI_MARK);
-  }
-
-  @Override
-  public final void setRulePrefix(RuleElement... elements) {
-    if (rulePrefix == null) {
-      rulePrefix = new GrowableList<>();
-    }
-
-    for (int i = 0; i < elements.length; i++) {
-      RuleElement element;
-      element = elements[i];
-
-      rulePrefix.addWithNullMessage(element, "elements[", i, "] == null");
-    }
   }
 
   void addDouble(double value) {

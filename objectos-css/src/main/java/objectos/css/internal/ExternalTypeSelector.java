@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.type;
+package objectos.css.internal;
 
-public interface ColorVisitor<R> {
+import objectos.css.tmpl.Instruction.ExternalSelector;
 
-  R visitColorHex(ColorHex color);
+public enum ExternalTypeSelector implements ExternalSelector {
 
-  R visitNamedColor(ColorName color);
+  BODY;
 
 }

@@ -218,8 +218,6 @@ public abstract class AbstractStyleSheet extends GeneratedStyleSheet
     this.engine = Check.notNull(engine, "engine == null");
 
     try {
-      this.engine.clearRulePrefix();
-
       definition();
     } finally {
       this.engine = null;
@@ -269,10 +267,6 @@ public abstract class AbstractStyleSheet extends GeneratedStyleSheet
     engine.createAttributeValueSelector(name);
 
     return AttributeValueSelectorMark.INSTANCE;
-  }
-
-  protected final void clearRulePrefix() {
-    engine.clearRulePrefix();
   }
 
   protected final RuleElement cn(String className) {
@@ -425,10 +419,6 @@ public abstract class AbstractStyleSheet extends GeneratedStyleSheet
     engine.createRgba(r, g, b, alpha);
 
     return ThisColorType.RGBA_INT;
-  }
-
-  protected final void setRulePrefix(RuleElement... elements) {
-    engine.setRulePrefix(elements);
   }
 
   protected final Combinator sp() {
