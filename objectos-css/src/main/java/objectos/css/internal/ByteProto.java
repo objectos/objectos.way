@@ -17,13 +17,19 @@ package objectos.css.internal;
 
 final class ByteProto {
 
-  static final int MARKED = -1;
+  static final int NULL = Integer.MIN_VALUE;
 
-  static final int RULE = -2;
+  static final int ROOT = -1;
 
-  static final int RULE_END = -3;
+  static final int ROOT_END = -2;
 
-  static final int TYPE_SELECTOR = -4;
+  static final int RULE = -3;
+
+  static final int RULE_END = -4;
+
+  static final int MARKED = -5;
+
+  static final int TYPE_SELECTOR = -6;
 
   private ByteProto() {}
 

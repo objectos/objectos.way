@@ -19,6 +19,6 @@ import objectos.css.tmpl.Instruction;
 
 public abstract class CssTemplateApi {
 
-  abstract void addRule(Instruction[] elements);
+  abstract void addRule(Instruction... elements);
 
 }

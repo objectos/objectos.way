@@ -24,8 +24,6 @@ class CssRecorder extends CssTemplateApi {
 
   private static final int MARK_SELECTOR = -1;
 
-  static final int NULL = Integer.MIN_VALUE;
-
   int[] listArray = new int[8];
 
   int listIndex;
@@ -35,13 +33,15 @@ class CssRecorder extends CssTemplateApi {
   int protoIndex;
 
   protected final void executeRecorder(InternalCssTemplate template) {
-    listIndex = protoIndex = 0;
+    executeBefore();
 
     template.acceptTemplateApi(this);
+
+    executeAfter();
   }
 
   @Override
-  final void addRule(Instruction[] elements) {
+  final void addRule(Instruction... elements) {
     int length = elements.length; // elements implicit null-check
 
     int listBase = listIndex;
@@ -64,7 +64,7 @@ class CssRecorder extends CssTemplateApi {
 
     int start = protoIndex;
 
-    protoAdd(ByteProto.RULE, NULL);
+    protoAdd(ByteProto.RULE, ByteProto.NULL);
 
     int listMax = listIndex;
 
@@ -119,6 +119,42 @@ class CssRecorder extends CssTemplateApi {
     listIndex = listBase;
   }
 
+  final void executeAfter() {
+    var rootIndex = protoIndex;
+
+    while (rootIndex > 0) {
+      int proto = protoArray[--rootIndex];
+
+      switch (proto) {
+        case ByteProto.RULE -> {
+          int elem = protoArray[--rootIndex];
+
+          rootIndex = protoArray[--rootIndex];
+
+          listPush(elem, proto);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    int returnTo = protoIndex;
+
+    protoAdd(ByteProto.ROOT);
+
+    while (listIndex > 0) {
+      protoAdd(listPop());
+    }
+
+    protoAdd(ByteProto.ROOT_END, returnTo);
+  }
+
+  final void executeBefore() {
+    listIndex = protoIndex = 0;
+  }
+
   private void addRuleExternalSelector(ExternalSelector selector) {
     if (selector instanceof ExternalTypeSelector typeSelector) {
       int value = typeSelector.ordinal();
@@ -127,7 +163,7 @@ class CssRecorder extends CssTemplateApi {
 
       protoAdd(
         ByteProto.TYPE_SELECTOR,
-        NULL,
+        ByteProto.NULL,
 
         value,
 
@@ -160,6 +196,16 @@ class CssRecorder extends CssTemplateApi {
 
   private void listOffset(int offset, int value) {
     listArray[listIndex - offset] = value;
+  }
+
+  private int listPop() {
+    return listArray[--listIndex];
+  }
+
+  private void listPush(int v0, int v1) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 1);
+    listArray[listIndex++] = v0;
+    listArray[listIndex++] = v1;
   }
 
   private void protoAdd(int v0) {

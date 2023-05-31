@@ -19,6 +19,10 @@ import objectos.css.pseudom.StyleSheetProcessor;
 
 public class CssPlayer extends CssRecorder {
 
+  public CssPlayer() {
+
+  }
+
   protected final void play(StyleSheetProcessor processor) {
     throw new UnsupportedOperationException("Implement me");
   }
