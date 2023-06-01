@@ -102,7 +102,7 @@ class HtmlRecorder extends HtmlTemplateApi {
     // objectArray[0] is reserved for the path name value
     objectArray[PATH_NAME] = null;
 
-    // objectIndex starts @ 1
+    // objectIndex starts @ OBJECT_INDEX
     // as objectArray[0] is the path name value
     objectIndex = OBJECT_INDEX;
 

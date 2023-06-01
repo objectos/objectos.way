@@ -24,20 +24,27 @@ class CssRecorder extends CssTemplateApi {
 
   private static final int MARK_SELECTOR = -1;
 
+  static final int PSTYLE_SHEET = 0;
+  static final int OBJECT_INDEX = 1;
+
   int[] listArray = new int[8];
 
   int listIndex;
+
+  Object[] objectArray = new Object[64];
+
+  int objectIndex;
 
   int[] protoArray = new int[256];
 
   int protoIndex;
 
   protected final void executeRecorder(InternalCssTemplate template) {
-    executeBefore();
+    executeRecorderBefore();
 
     template.acceptTemplateApi(this);
 
-    executeAfter();
+    executeRecorderAfter();
   }
 
   @Override
@@ -119,7 +126,7 @@ class CssRecorder extends CssTemplateApi {
     listIndex = listBase;
   }
 
-  final void executeAfter() {
+  final void executeRecorderAfter() {
     var rootIndex = protoIndex;
 
     while (rootIndex > 0) {
@@ -151,8 +158,10 @@ class CssRecorder extends CssTemplateApi {
     protoAdd(ByteProto.ROOT_END, returnTo);
   }
 
-  final void executeBefore() {
+  final void executeRecorderBefore() {
     listIndex = protoIndex = 0;
+
+    objectIndex = OBJECT_INDEX;
   }
 
   private void addRuleExternalSelector(ExternalSelector selector) {

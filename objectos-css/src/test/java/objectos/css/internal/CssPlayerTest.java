@@ -16,29 +16,21 @@
 package objectos.css.internal;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
-import java.util.Arrays;
-import objectos.css.tmpl.Instruction;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CssRecorderTest {
+public class CssPlayerTest {
 
-  private final CssRecorder recorder = new CssRecorder();
+  private final CssPlayer player = new CssPlayer();
 
   @Test(description = """
-  CssRecorder
+  CssPlayer
 
   - style(BODY);
   """)
   public void testCase00() {
-    executeBefore();
-
-    addRule(ExternalTypeSelector.BODY);
-
-    executeAfter();
-
-    testProto(
+    putProto(
       // [0]: BODY
       ByteProto.MARKED,
       ByteProto.NULL,
@@ -63,33 +55,22 @@ public class CssRecorderTest {
       ByteProto.ROOT_END,
       13
     );
+
+    player.executePlayerBefore();
+
+    assertEquals(player.protoIndex, 13);
+
+    var sheet = player.pseudoStyleSheet();
+
+    var rules = sheet.rules().iterator();
+
+    assertTrue(rules.hasNext());
   }
 
-  private void addRule(Instruction... elements) {
-    recorder.addRule(elements);
-  }
+  private void putProto(int... values) {
+    System.arraycopy(values, 0, player.protoArray, 0, values.length);
 
-  private void executeAfter() {
-    recorder.executeRecorderAfter();
-  }
-
-  private void executeBefore() {
-    recorder.executeRecorderBefore();
-  }
-
-  private void testProto(int... expected) {
-    int[] protos = Arrays.copyOf(recorder.protoArray, recorder.protoIndex);
-
-    if (protos.length != expected.length) {
-      Assert.fail("""
-      protos length differ
-
-      actual  : %s
-      expected: %s
-      """.formatted(Arrays.toString(protos), Arrays.toString(expected)));
-    }
-
-    assertEquals(protos, expected);
+    player.protoIndex = values.length;
   }
 
 }

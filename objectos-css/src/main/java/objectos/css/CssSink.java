@@ -48,7 +48,7 @@ public final class CssSink extends CssPlayer {
 
     writer.out = out;
 
-    play(writer);
+    executePlayer(writer);
 
     writer.throwIfNecessary();
   }

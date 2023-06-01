@@ -23,19 +23,29 @@ import objectos.css.pseudom.StyleSheet.Rule;
 public final class PseudoStyleSheet
     implements StyleSheet, IterableOnce<Rule>, Iterator<Rule> {
 
+  private final CssPlayer player;
+
+  PseudoStyleSheet(CssPlayer player) {
+    this.player = player;
+  }
+
   @Override
   public final IterableOnce<Rule> rules() {
-    throw new UnsupportedOperationException("Implement me");
+    player.styleSheetIterable();
+
+    return this;
   }
 
   @Override
   public final Iterator<Rule> iterator() {
-    throw new UnsupportedOperationException("Implement me");
+    player.styleSheetIterator();
+
+    return this;
   }
 
   @Override
   public final boolean hasNext() {
-    throw new UnsupportedOperationException("Implement me");
+    return player.styleSheetHasNext();
   }
 
   @Override
