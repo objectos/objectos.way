@@ -15,6 +15,7 @@
  */
 package objectos.css.tmpl;
 
+import java.util.Locale;
 import objectos.css.pseudom.PSelectorElement.PTypeSelector;
 import objectos.css.tmpl.Instruction.ExternalSelector;
 
@@ -22,10 +23,21 @@ public enum TypeSelector implements ExternalSelector, PTypeSelector {
 
   BODY;
 
+  private final String toString;
+
   private static final TypeSelector[] VALUES = TypeSelector.values();
+
+  private TypeSelector() {
+    toString = name().toLowerCase(Locale.US);
+  }
 
   public static TypeSelector ofOrdinal(int value) {
     return VALUES[value];
+  }
+
+  @Override
+  public final String toString() {
+    return toString;
   }
 
 }

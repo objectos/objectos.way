@@ -25,7 +25,7 @@ public class CssTemplateTest {
 
   private final StringBuilder stringBuilder = new StringBuilder();
 
-  @Test(enabled = false)
+  @Test
   public void testCase00() {
     test(
       new CssTemplate() {

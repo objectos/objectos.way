@@ -28,7 +28,9 @@ public class CssPlayer extends CssRecorder {
   }
 
   protected final void executePlayer(StyleSheetProcessor processor) {
-    throw new UnsupportedOperationException("Implement me");
+    var sheet = pseudoStyleSheet();
+
+    processor.process(sheet.init());
   }
 
   final int protoGet(int index) {
