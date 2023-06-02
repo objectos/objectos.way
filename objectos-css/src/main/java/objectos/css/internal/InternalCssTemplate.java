@@ -15,13 +15,14 @@
  */
 package objectos.css.internal;
 
+import objectos.css.tmpl.TypeSelector;
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.Instruction.ExternalSelector;
 import objectos.lang.Check;
 
 public abstract class InternalCssTemplate {
 
-  protected static final ExternalSelector BODY = ExternalTypeSelector.BODY;
+  protected static final ExternalSelector BODY = TypeSelector.BODY;
 
   private CssTemplateApi api;
 

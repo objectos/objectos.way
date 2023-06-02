@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.css.tmpl.TypeSelector;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 
@@ -25,7 +26,9 @@ class CssRecorder extends CssTemplateApi {
   private static final int MARK_SELECTOR = -1;
 
   static final int PSTYLE_SHEET = 0;
-  static final int OBJECT_INDEX = 1;
+  static final int PSTYLE_RULE = 1;
+  static final int PSELECTOR = 2;
+  static final int OBJECT_INDEX = 3;
 
   int[] listArray = new int[8];
 
@@ -71,7 +74,7 @@ class CssRecorder extends CssTemplateApi {
 
     int start = protoIndex;
 
-    protoAdd(ByteProto.RULE, ByteProto.NULL);
+    protoAdd(ByteProto.STYLE_RULE, ByteProto.NULL);
 
     int listMax = listIndex;
 
@@ -117,9 +120,9 @@ class CssRecorder extends CssTemplateApi {
       }
     }
 
-    protoAdd(ByteProto.RULE_END);
+    protoAdd(ByteProto.STYLE_RULE_END);
 
-    protoAdd(contents, start, ByteProto.RULE);
+    protoAdd(contents, start, ByteProto.STYLE_RULE);
 
     endSet(start);
 
@@ -133,7 +136,7 @@ class CssRecorder extends CssTemplateApi {
       int proto = protoArray[--rootIndex];
 
       switch (proto) {
-        case ByteProto.RULE -> {
+        case ByteProto.STYLE_RULE -> {
           int elem = protoArray[--rootIndex];
 
           rootIndex = protoArray[--rootIndex];
@@ -165,7 +168,7 @@ class CssRecorder extends CssTemplateApi {
   }
 
   private void addRuleExternalSelector(ExternalSelector selector) {
-    if (selector instanceof ExternalTypeSelector typeSelector) {
+    if (selector instanceof TypeSelector typeSelector) {
       int value = typeSelector.ordinal();
 
       int start = protoIndex;

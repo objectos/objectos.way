@@ -16,7 +16,7 @@
 package objectos.css.pseudom;
 
 /**
- * A consumer of a {@link StyleSheet}.
+ * A consumer of a {@link PStyleSheet}.
  */
 @FunctionalInterface
 public interface StyleSheetProcessor {
@@ -25,8 +25,8 @@ public interface StyleSheetProcessor {
    * Consumes the specified CSS style sheet.
    *
    * @param sheet
-   *        the {@link StyleSheet} instance to be consumed
+   *        the {@link PStyleSheet} instance to be consumed
    */
-  void process(StyleSheet sheet);
+  void process(PStyleSheet sheet);
 
 }

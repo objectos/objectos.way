@@ -23,9 +23,9 @@ final class ByteProto {
 
   static final int ROOT_END = -2;
 
-  static final int RULE = -3;
+  static final int STYLE_RULE = -3;
 
-  static final int RULE_END = -4;
+  static final int STYLE_RULE_END = -4;
 
   static final int MARKED = -5;
 

@@ -15,10 +15,8 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.css.pseudom.PRule;
 
-public enum ExternalTypeSelector implements ExternalSelector {
-
-  BODY;
+public final class PseudoDeclaration implements PRule.PDeclaration {
 
 }

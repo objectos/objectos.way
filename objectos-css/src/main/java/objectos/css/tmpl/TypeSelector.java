@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.pseudom.PStyleSheet;
+import objectos.css.pseudom.PSelectorElement.PTypeSelector;
+import objectos.css.tmpl.Instruction.ExternalSelector;
 
-public final class PrettyPrintWriter extends Writer {
+public enum TypeSelector implements ExternalSelector, PTypeSelector {
 
-  @Override
-  public final void process(PStyleSheet sheet) {
+  BODY;
 
+  private static final TypeSelector[] VALUES = TypeSelector.values();
+
+  public static TypeSelector ofOrdinal(int value) {
+    return VALUES[value];
   }
 
 }

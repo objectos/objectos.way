@@ -18,6 +18,7 @@ package objectos.css.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
+import objectos.css.tmpl.TypeSelector;
 import objectos.css.tmpl.Instruction;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -34,7 +35,7 @@ public class CssRecorderTest {
   public void testCase00() {
     executeBefore();
 
-    addRule(ExternalTypeSelector.BODY);
+    addRule(TypeSelector.BODY);
 
     executeAfter();
 
@@ -42,23 +43,23 @@ public class CssRecorderTest {
       // [0]: BODY
       ByteProto.MARKED,
       ByteProto.NULL,
-      ExternalTypeSelector.BODY.ordinal(),
+      TypeSelector.BODY.ordinal(),
       0,
       ByteProto.TYPE_SELECTOR,
 
       // [5]: style()
-      ByteProto.RULE,
+      ByteProto.STYLE_RULE,
       13,
       ByteProto.TYPE_SELECTOR,
       0,
-      ByteProto.RULE_END,
+      ByteProto.STYLE_RULE_END,
       0, // contents
       5, // start
-      ByteProto.RULE,
+      ByteProto.STYLE_RULE,
 
       // [13]: ROOT
       ByteProto.ROOT,
-      ByteProto.RULE,
+      ByteProto.STYLE_RULE,
       5,
       ByteProto.ROOT_END,
       13

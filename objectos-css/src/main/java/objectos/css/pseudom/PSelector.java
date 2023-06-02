@@ -15,15 +15,10 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.PseudoStyleRule;
-import objectos.css.internal.PseudoStyleSheet;
+import objectos.css.internal.PseudoSelector;
 
-public sealed interface StyleSheet permits PseudoStyleSheet {
+public sealed interface PSelector permits PseudoSelector {
 
-  sealed interface Rule {}
-
-  sealed interface StyleRule extends Rule permits PseudoStyleRule {}
-
-  IterableOnce<Rule> rules();
+  IterableOnce<PSelectorElement> elements();
 
 }

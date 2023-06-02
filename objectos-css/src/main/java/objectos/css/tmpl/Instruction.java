@@ -15,10 +15,8 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.ExternalTypeSelector;
-
 public sealed interface Instruction {
 
-  sealed interface ExternalSelector extends Instruction permits ExternalTypeSelector {}
+  sealed interface ExternalSelector extends Instruction permits TypeSelector {}
 
 }

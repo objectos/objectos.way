@@ -16,15 +16,8 @@
 package objectos.css.internal;
 
 import objectos.css.pseudom.StyleSheetProcessor;
-import objectos.util.IntArrays;
 
 public class CssPlayer extends CssRecorder {
-
-  private interface Context {
-    int START = -1;
-    int STYLE_SHEET = -2;
-    int STYLE_SHEET_RULES = -3;
-  }
 
   @FunctionalInterface
   private interface PseudoFactory<T> {
@@ -38,123 +31,28 @@ public class CssPlayer extends CssRecorder {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  final void executePlayerBefore() {
-    // sets protoIndex to ROOT START
-    protoIndex = protoArray[--protoIndex];
+  final int protoGet(int index) {
+    return protoArray[index];
+  }
 
-    // listArray is a proper stack
-    listIndex = -1;
+  final int protoLast() {
+    return protoArray[protoIndex - 1];
+  }
 
-    ctxPush(Context.START);
+  final boolean protoMore(int index) {
+    return index < protoIndex;
+  }
+
+  final PseudoSelector pseudoSelector() {
+    return pseudoFactory(PSELECTOR, PseudoSelector::new);
+  }
+
+  final PseudoStyleRule pseudoStyleRule() {
+    return pseudoFactory(PSTYLE_RULE, PseudoStyleRule::new);
   }
 
   final PseudoStyleSheet pseudoStyleSheet() {
     return pseudoFactory(PSTYLE_SHEET, PseudoStyleSheet::new);
-  }
-
-  final boolean styleSheetHasNext() {
-    styleSheetHasNextCheck();
-
-    var result = false;
-
-    loop: while (protoMore()) {
-      int proto = protoPeek();
-
-      switch (proto) {
-        case ByteProto.RULE -> {
-          result = true;
-
-          break loop;
-        }
-
-        case ByteProto.ROOT -> protoNext();
-
-        case ByteProto.ROOT_END -> {
-          protoNext();
-
-          break loop;
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    proto2ctx();
-
-    return result;
-  }
-
-  final void styleSheetIterable() {
-    ctxCheck(Context.START);
-
-    ctxSet(0, Context.STYLE_SHEET);
-  }
-
-  final void styleSheetIterator() {
-    ctxCheck(Context.STYLE_SHEET);
-
-    ctxPush(protoIndex, Context.STYLE_SHEET_RULES);
-  }
-
-  private void ctx2proto() {
-    protoIndex = ctxPeek(1);
-  }
-
-  private void ctxCheck(int expected) {
-    int state = ctxPeek();
-
-    ctxThrow(state, expected);
-  }
-
-  private int ctxPeek() {
-    return listArray[listIndex];
-  }
-
-  private int ctxPeek(int offset) {
-    return listArray[listIndex - offset];
-  }
-
-  private void ctxPush(int v0) {
-    listArray = IntArrays.growIfNecessary(listArray, listIndex + 1);
-    listArray[++listIndex] = v0;
-  }
-
-  private void ctxPush(int v0, int v1) {
-    listArray = IntArrays.growIfNecessary(listArray, listIndex + 2);
-    listArray[++listIndex] = v0;
-    listArray[++listIndex] = v1;
-  }
-
-  private void ctxSet(int offset, int value) {
-    listArray[listIndex - offset] = value;
-  }
-
-  private void ctxThrow(int actual, int expected) {
-    if (actual != expected) {
-      throw new IllegalStateException(
-        """
-      Found state '%d' but expected state '%d'
-      """.formatted(actual, expected)
-      );
-    }
-  }
-
-  private void proto2ctx() {
-    ctxSet(1, protoIndex);
-  }
-
-  private boolean protoMore() {
-    return protoIndex < protoArray.length;
-  }
-
-  private int protoNext() {
-    return protoArray[protoIndex++];
-  }
-
-  private int protoPeek() {
-    return protoArray[protoIndex];
   }
 
   @SuppressWarnings("unchecked")
@@ -166,14 +64,16 @@ public class CssPlayer extends CssRecorder {
     return (T) objectArray[index];
   }
 
-  private void styleSheetHasNextCheck() {
-    int peek = ctxPeek();
-
-    switch (peek) {
-      case Context.STYLE_SHEET_RULES -> ctx2proto();
-
-      default -> ctxThrow(peek, Context.STYLE_SHEET_RULES);
+  final int cas(int state, int expected, int newState) {
+    if (state != expected) {
+      throw new IllegalStateException(
+        """
+        Found state '%d' but expected state '%d'
+        """.formatted(state, expected)
+      );
     }
+
+    return newState;
   }
 
 }

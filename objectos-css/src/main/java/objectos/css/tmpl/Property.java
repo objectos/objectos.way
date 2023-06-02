@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.pseudom.PStyleSheet;
+public enum Property {
 
-public final class PrettyPrintWriter extends Writer {
-
-  @Override
-  public final void process(PStyleSheet sheet) {
-
-  }
+  BORDER;
 
 }

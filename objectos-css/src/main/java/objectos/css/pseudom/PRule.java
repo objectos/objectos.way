@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.pseudom;
 
-import objectos.css.pseudom.PStyleSheet;
+import objectos.css.internal.PseudoDeclaration;
+import objectos.css.internal.PseudoStyleRule;
 
-public final class PrettyPrintWriter extends Writer {
+public sealed interface PRule {
 
-  @Override
-  public final void process(PStyleSheet sheet) {
+  sealed interface PDeclaration permits PseudoDeclaration {}
+
+  sealed interface PStyleRule extends PRule permits PseudoStyleRule {
+
+    PSelector selector();
+
+    IterableOnce<PDeclaration> declarations();
 
   }
 

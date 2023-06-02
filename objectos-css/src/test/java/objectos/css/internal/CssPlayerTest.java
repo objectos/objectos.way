@@ -16,8 +16,10 @@
 package objectos.css.internal;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
+import objectos.css.pseudom.PRule.PStyleRule;
+import objectos.css.tmpl.TypeSelector;
+import objectos.util.UnmodifiableList;
 import org.testng.annotations.Test;
 
 public class CssPlayerTest {
@@ -34,37 +36,48 @@ public class CssPlayerTest {
       // [0]: BODY
       ByteProto.MARKED,
       ByteProto.NULL,
-      ExternalTypeSelector.BODY.ordinal(),
+      TypeSelector.BODY.ordinal(),
       0,
       ByteProto.TYPE_SELECTOR,
 
       // [5]: style()
-      ByteProto.RULE,
+      ByteProto.STYLE_RULE,
       13,
       ByteProto.TYPE_SELECTOR,
       0,
-      ByteProto.RULE_END,
+      ByteProto.STYLE_RULE_END,
       0, // contents
       5, // start
-      ByteProto.RULE,
+      ByteProto.STYLE_RULE,
 
       // [13]: ROOT
       ByteProto.ROOT,
-      ByteProto.RULE,
+      ByteProto.STYLE_RULE,
       5,
       ByteProto.ROOT_END,
       13
     );
 
-    player.executePlayerBefore();
+    var sheet = player.pseudoStyleSheet().init();
 
-    assertEquals(player.protoIndex, 13);
+    assertEquals(sheet.protoIndex, 13);
 
-    var sheet = player.pseudoStyleSheet();
+    var rules = UnmodifiableList.copyOf(sheet.rules());
 
-    var rules = sheet.rules().iterator();
+    assertEquals(rules.size(), 1);
 
-    assertTrue(rules.hasNext());
+    var rule = (PStyleRule) rules.get(0);
+
+    var selector = rule.selector();
+
+    var elements = UnmodifiableList.copyOf(selector.elements());
+
+    assertEquals(elements.size(), 1);
+    assertEquals(elements.get(0), TypeSelector.BODY);
+
+    var declarations = UnmodifiableList.copyOf(rule.declarations());
+
+    assertEquals(declarations.size(), 0);
   }
 
   private void putProto(int... values) {
