@@ -52,7 +52,8 @@ class CssRecorder extends CssTemplateApi {
     executeRecorderAfter();
   }
 
-  final Instruction addInternal(int type, int value) {
+  @Override
+  final InternalInstruction addInternal(int type, int value) {
     int start = protoIndex;
 
     protoAdd(
@@ -68,6 +69,7 @@ class CssRecorder extends CssTemplateApi {
     return InternalInstruction.INSTANCE;
   }
 
+  @Override
   final int addObject(Object value) {
     int result = objectIndex;
     objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);

@@ -28,6 +28,11 @@ public abstract class InternalCssTemplate {
 
   protected abstract void definition();
 
+  protected final Instruction.InternalSelector id(String id) {
+    var api = api();
+    return api.addInternal(ByteProto.ID_SELECTOR, api.addObject(id));
+  }
+
   protected final void style(Instruction... elements) {
     api().addRule(elements);
   }
