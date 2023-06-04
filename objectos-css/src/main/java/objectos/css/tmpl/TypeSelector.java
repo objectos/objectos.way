@@ -21,6 +21,8 @@ import objectos.css.tmpl.Instruction.ExternalSelector;
 
 public enum TypeSelector implements ExternalSelector, PTypeSelector {
 
+  A,
+
   BODY;
 
   private final String toString;

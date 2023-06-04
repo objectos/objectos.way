@@ -111,6 +111,61 @@ public class CssRecorderTest {
     );
   }
 
+  @Test(description = """
+  CssRecorder
+
+  style(
+    A, id("myid")
+  );
+  """)
+  public void testCase02() {
+    executeBefore();
+
+    int id = recorder.addObject("myid");
+
+    addRule(
+      TypeSelector.A,
+      recorder.addInternal(ByteProto.ID_SELECTOR, id)
+    );
+
+    executeAfter();
+
+    testProto(
+      // [0]: ID "myid"
+      ByteProto.MARKED,
+      5,
+      id,
+      0,
+      ByteProto.ID_SELECTOR,
+
+      // [5]: A
+      ByteProto.MARKED,
+      10,
+      TypeSelector.A.ordinal(),
+      5,
+      ByteProto.TYPE_SELECTOR,
+
+      // [10]: style()
+      ByteProto.STYLE_RULE,
+      20,
+      ByteProto.TYPE_SELECTOR,
+      5,
+      ByteProto.ID_SELECTOR,
+      0,
+      ByteProto.STYLE_RULE_END,
+      0, // contents
+      10, // start
+      ByteProto.STYLE_RULE,
+
+      // [20]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE,
+      10,
+      ByteProto.ROOT_END,
+      20
+    );
+  }
+
   private void addRule(Instruction... elements) {
     recorder.addRule(elements);
   }

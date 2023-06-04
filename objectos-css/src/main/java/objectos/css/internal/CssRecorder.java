@@ -25,7 +25,7 @@ import objectos.util.ObjectArrays;
 class CssRecorder extends CssTemplateApi {
 
   private static final int MARK_INTERNAL = -1;
-  private static final int MARK_SELECTOR = -2;
+  private static final int MARK_EXTERNAL = -2;
 
   static final int PSTYLE_SHEET = 0;
   static final int PSTYLE_RULE = 1;
@@ -110,6 +110,7 @@ class CssRecorder extends CssTemplateApi {
     int listMax = listIndex;
 
     listAdd(
+      /*2=external*/contents,
       /*1=internal*/contents
     );
 
@@ -145,8 +146,8 @@ class CssRecorder extends CssTemplateApi {
           listOffset(1, index);
         }
 
-        case MARK_SELECTOR -> {
-          var index = listOffset(1);
+        case MARK_EXTERNAL -> {
+          var index = listOffset(2);
 
           int proto = protoArray[index];
 
@@ -154,6 +155,12 @@ class CssRecorder extends CssTemplateApi {
             switch (proto) {
               case ByteProto.TYPE_SELECTOR -> {
                 break search;
+              }
+
+              case ByteProto.ID_SELECTOR -> {
+                index = protoArray[index + 1];
+
+                proto = protoArray[index];
               }
 
               default -> {
@@ -170,7 +177,7 @@ class CssRecorder extends CssTemplateApi {
 
           index = protoArray[index + 1];
 
-          listOffset(1, index);
+          listOffset(2, index);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -260,7 +267,7 @@ class CssRecorder extends CssTemplateApi {
 
       endSet(start);
 
-      listAdd(MARK_SELECTOR);
+      listAdd(MARK_EXTERNAL);
     } else {
       var type = selector.getClass();
 
@@ -277,6 +284,12 @@ class CssRecorder extends CssTemplateApi {
   private void listAdd(int v0) {
     listArray = IntArrays.growIfNecessary(listArray, listIndex + 0);
     listArray[listIndex++] = v0;
+  }
+
+  private void listAdd(int v0, int v1) {
+    listArray = IntArrays.growIfNecessary(listArray, listIndex + 1);
+    listArray[listIndex++] = v0;
+    listArray[listIndex++] = v1;
   }
 
   private int listOffset(int offset) {
