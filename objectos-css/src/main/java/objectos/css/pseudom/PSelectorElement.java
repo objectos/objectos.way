@@ -15,10 +15,15 @@
  */
 package objectos.css.pseudom;
 
+import objectos.css.internal.PseudoClassSelector;
 import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.TypeSelector;
 
 public sealed interface PSelectorElement {
+
+  sealed interface PClassSelector extends PSelectorElement permits PseudoClassSelector {
+    String className();
+  }
 
   sealed interface PIdSelector extends PSelectorElement permits IdSelector {
     String id();

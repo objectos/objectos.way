@@ -23,7 +23,7 @@ public class TestCase04 extends AbstractStyleSheet {
   @Override
   protected final void definition() {
     style(
-        body, cn("dsl"), Css.cn("obj")
+      body, cn("dsl"), Css.cn("obj")
     );
   }
 

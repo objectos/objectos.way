@@ -61,6 +61,10 @@ public class CssPlayer extends CssRecorder {
     return index < protoIndex;
   }
 
+  final PseudoClassSelector pseudoClassSelector() {
+    return pseudoFactory(PCLASS_SELECTOR, PseudoClassSelector::new);
+  }
+
   final PseudoSelector pseudoSelector() {
     return pseudoFactory(PSELECTOR, PseudoSelector::new);
   }

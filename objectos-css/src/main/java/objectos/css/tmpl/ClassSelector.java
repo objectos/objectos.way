@@ -13,32 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-final class ByteProto {
+import java.util.Objects;
+import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.lang.Check;
 
-  static final int NULL = Integer.MIN_VALUE;
+public record ClassSelector(String className)
+    implements ExternalSelector {
 
-  static final int ROOT = -1;
+  public ClassSelector {
+    Objects.requireNonNull(className, "className == null");
 
-  static final int ROOT_END = -2;
+    Check.argument(!className.isBlank(), "className must not be blank");
+  }
 
-  static final int STYLE_RULE = -3;
-
-  static final int STYLE_RULE_END = -4;
-
-  static final int MARKED = -5;
-
-  static final int TYPE_SELECTOR = -6;
-
-  static final int ID_SELECTOR = -7;
-
-  static final int ID_SELECTOR_EXTERNAL = -8;
-
-  static final int CLASS_SELECTOR = -9;
-
-  static final int CLASS_SELECTOR_EXTERNAL = -10;
-
-  private ByteProto() {}
+  public static ClassSelector of(String className) {
+    return new ClassSelector(className);
+  }
 
 }

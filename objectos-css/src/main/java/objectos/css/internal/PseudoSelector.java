@@ -103,7 +103,9 @@ public final class PseudoSelector
           break loop;
         }
 
-        case ByteProto.ID_SELECTOR,
+        case ByteProto.CLASS_SELECTOR,
+             ByteProto.CLASS_SELECTOR_EXTERNAL,
+             ByteProto.ID_SELECTOR,
              ByteProto.ID_SELECTOR_EXTERNAL,
              ByteProto.TYPE_SELECTOR -> {
           state = NEXT;
@@ -128,6 +130,11 @@ public final class PseudoSelector
     int proto = player.protoGet(protoIndex++);
 
     return switch (proto) {
+      case ByteProto.CLASS_SELECTOR,
+           ByteProto.CLASS_SELECTOR_EXTERNAL -> nextClassSelector(
+             player.protoGet(protoIndex++)
+           );
+
       case ByteProto.ID_SELECTOR,
            ByteProto.ID_SELECTOR_EXTERNAL -> nextIdSelector(
              player.protoGet(protoIndex++)
@@ -141,6 +148,13 @@ public final class PseudoSelector
         "Implement me :: proto=" + proto
       );
     };
+  }
+
+  private PseudoClassSelector nextClassSelector(int index) {
+    // skips MARKER, end index
+    int objectIndex = player.protoGet(index + 2);
+
+    return player.pseudoClassSelector().init(objectIndex);
   }
 
   private IdSelector nextIdSelector(int index) {

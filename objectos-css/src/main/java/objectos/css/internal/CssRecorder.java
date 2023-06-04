@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import objectos.css.tmpl.ClassSelector;
 import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.Instruction.ExternalSelector;
@@ -31,7 +32,8 @@ class CssRecorder extends CssTemplateApi {
   static final int PSTYLE_SHEET = 0;
   static final int PSTYLE_RULE = 1;
   static final int PSELECTOR = 2;
-  static final int OBJECT_INDEX = 3;
+  static final int PCLASS_SELECTOR = 3;
+  static final int OBJECT_INDEX = 4;
 
   int[] listArray = new int[8];
 
@@ -126,7 +128,8 @@ class CssRecorder extends CssTemplateApi {
 
           search: while (true) {
             switch (proto) {
-              case ByteProto.ID_SELECTOR -> {
+              case ByteProto.CLASS_SELECTOR,
+                   ByteProto.ID_SELECTOR -> {
                 break search;
               }
 
@@ -154,12 +157,14 @@ class CssRecorder extends CssTemplateApi {
 
           search: while (true) {
             switch (proto) {
-              case ByteProto.ID_SELECTOR_EXTERNAL,
+              case ByteProto.CLASS_SELECTOR_EXTERNAL,
+                   ByteProto.ID_SELECTOR_EXTERNAL,
                    ByteProto.TYPE_SELECTOR -> {
                 break search;
               }
 
-              case ByteProto.ID_SELECTOR -> {
+              case ByteProto.CLASS_SELECTOR,
+                   ByteProto.ID_SELECTOR -> {
                 index = protoArray[index + 1];
 
                 proto = protoArray[index];
@@ -239,7 +244,8 @@ class CssRecorder extends CssTemplateApi {
     var proto = protoArray[--contents];
 
     switch (proto) {
-      case ByteProto.ID_SELECTOR -> {
+      case ByteProto.CLASS_SELECTOR,
+           ByteProto.ID_SELECTOR -> {
         contents = protoArray[--contents];
       }
 
@@ -252,7 +258,15 @@ class CssRecorder extends CssTemplateApi {
   }
 
   private void addRuleExternalSelector(ExternalSelector selector) {
-    if (selector instanceof IdSelector idSelector) {
+    if (selector instanceof ClassSelector classSelector) {
+      var className = classSelector.className();
+
+      int index = addObject(className);
+
+      addInternal(ByteProto.CLASS_SELECTOR_EXTERNAL, index);
+
+      listAdd(MARK_EXTERNAL);
+    } else if (selector instanceof IdSelector idSelector) {
       var id = idSelector.id();
 
       int index = addObject(id);

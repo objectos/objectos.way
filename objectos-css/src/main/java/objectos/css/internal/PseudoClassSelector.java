@@ -15,30 +15,27 @@
  */
 package objectos.css.internal;
 
-final class ByteProto {
+import objectos.css.pseudom.PSelectorElement.PClassSelector;
 
-  static final int NULL = Integer.MIN_VALUE;
+public final class PseudoClassSelector implements PClassSelector {
 
-  static final int ROOT = -1;
+  private final CssPlayer player;
 
-  static final int ROOT_END = -2;
+  private int objectIndex;
 
-  static final int STYLE_RULE = -3;
+  PseudoClassSelector(CssPlayer player) {
+    this.player = player;
+  }
 
-  static final int STYLE_RULE_END = -4;
+  @Override
+  public final String className() {
+    return (String) player.objectGet(objectIndex);
+  }
 
-  static final int MARKED = -5;
+  final PseudoClassSelector init(int objectIndex) {
+    this.objectIndex = objectIndex;
 
-  static final int TYPE_SELECTOR = -6;
-
-  static final int ID_SELECTOR = -7;
-
-  static final int ID_SELECTOR_EXTERNAL = -8;
-
-  static final int CLASS_SELECTOR = -9;
-
-  static final int CLASS_SELECTOR_EXTERNAL = -10;
-
-  private ByteProto() {}
+    return this;
+  }
 
 }

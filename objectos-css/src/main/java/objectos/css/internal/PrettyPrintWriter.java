@@ -18,9 +18,10 @@ package objectos.css.internal;
 import objectos.css.pseudom.PRule;
 import objectos.css.pseudom.PRule.PStyleRule;
 import objectos.css.pseudom.PSelector;
+import objectos.css.pseudom.PSelectorElement.PClassSelector;
+import objectos.css.pseudom.PSelectorElement.PIdSelector;
+import objectos.css.pseudom.PSelectorElement.PTypeSelector;
 import objectos.css.pseudom.PStyleSheet;
-import objectos.css.tmpl.IdSelector;
-import objectos.css.tmpl.TypeSelector;
 
 public final class PrettyPrintWriter extends Writer {
 
@@ -67,10 +68,13 @@ public final class PrettyPrintWriter extends Writer {
 
   private void selector(PSelector selector) {
     for (var element : selector.elements()) {
-      if (element instanceof IdSelector idSelector) {
+      if (element instanceof PClassSelector classSelector) {
+        write('.');
+        write(classSelector.className());
+      } else if (element instanceof PIdSelector idSelector) {
         write('#');
         write(idSelector.id());
-      } else if (element instanceof TypeSelector typeSelector) {
+      } else if (element instanceof PTypeSelector typeSelector) {
         write(typeSelector.toString());
       } else {
         throw new UnsupportedOperationException(

@@ -17,6 +17,7 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.tmpl.ClassSelector;
 import objectos.css.tmpl.IdSelector;
 import org.testng.annotations.Test;
 
@@ -102,6 +103,26 @@ public class CssTemplateTest {
 
       """
       a#myid{}
+      """
+    );
+  }
+
+  @Test
+  public void testCase04() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(BODY, className("dsl"), ClassSelector.of("obj"));
+        }
+      },
+
+      """
+      body.dsl.obj {}
+      """,
+
+      """
+      body.dsl.obj{}
       """
     );
   }
