@@ -20,10 +20,12 @@ import objectos.css.tmpl.Instruction.ExternalSelector;
 import objectos.css.tmpl.TypeSelector;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
+import objectos.util.ObjectArrays;
 
 class CssRecorder extends CssTemplateApi {
 
-  private static final int MARK_SELECTOR = -1;
+  private static final int MARK_INTERNAL = -1;
+  private static final int MARK_SELECTOR = -2;
 
   static final int PSTYLE_SHEET = 0;
   static final int PSTYLE_RULE = 1;
@@ -50,6 +52,29 @@ class CssRecorder extends CssTemplateApi {
     executeRecorderAfter();
   }
 
+  final Instruction addInternal(int type, int value) {
+    int start = protoIndex;
+
+    protoAdd(
+      type,
+      ByteProto.NULL,
+      value,
+      start,
+      type
+    );
+
+    endSet(start);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  final int addObject(Object value) {
+    int result = objectIndex;
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+    objectArray[objectIndex++] = value;
+    return result;
+  }
+
   @Override
   final void addRule(Instruction... elements) {
     int length = elements.length; // elements implicit null-check
@@ -61,7 +86,11 @@ class CssRecorder extends CssTemplateApi {
     for (int i = 0; i < length; i++) {
       var element = Check.notNull(elements[i], "elements[", i, "] == null");
 
-      if (element instanceof ExternalSelector selector) {
+      if (element instanceof InternalInstruction) {
+        listAdd(MARK_INTERNAL);
+
+        contents = updateContents(contents);
+      } else if (element instanceof ExternalSelector selector) {
         addRuleExternalSelector(selector);
       } else {
         var type = element.getClass();
@@ -86,6 +115,34 @@ class CssRecorder extends CssTemplateApi {
       int marker = listArray[i];
 
       switch (marker) {
+        case MARK_INTERNAL -> {
+          var index = listOffset(1);
+
+          int proto = protoArray[index];
+
+          search: while (true) {
+            switch (proto) {
+              case ByteProto.ID_SELECTOR -> {
+                break search;
+              }
+
+              default -> {
+                throw new UnsupportedOperationException(
+                  "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
+
+          protoArray[index] = ByteProto.MARKED;
+
+          protoAdd(proto, index);
+
+          index = protoArray[index + 1];
+
+          listOffset(1, index);
+        }
+
         case MARK_SELECTOR -> {
           var index = listOffset(1);
 
@@ -167,6 +224,22 @@ class CssRecorder extends CssTemplateApi {
     objectIndex = OBJECT_INDEX;
   }
 
+  private int updateContents(int contents) {
+    var proto = protoArray[--contents];
+
+    switch (proto) {
+      case ByteProto.ID_SELECTOR -> {
+        contents = protoArray[--contents];
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    }
+
+    return contents;
+  }
+
   private void addRuleExternalSelector(ExternalSelector selector) {
     if (selector instanceof TypeSelector typeSelector) {
       int value = typeSelector.ordinal();
@@ -182,6 +255,8 @@ class CssRecorder extends CssTemplateApi {
         start,
         ByteProto.TYPE_SELECTOR
       );
+
+      endSet(start);
 
       listAdd(MARK_SELECTOR);
     } else {

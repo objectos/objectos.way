@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import objectos.css.internal.InternalInstruction;
+import objectos.css.tmpl.Instruction.InternalSelector;
 
-public sealed interface Instruction {
-
-  sealed interface ExternalSelector extends Instruction permits TypeSelector {}
-
-  sealed interface InternalSelector extends Instruction permits InternalInstruction {}
-
+public enum InternalInstruction
+    implements
+    InternalSelector {
+  INSTANCE;
 }

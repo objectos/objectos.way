@@ -18,8 +18,8 @@ package objectos.css.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
-import objectos.css.tmpl.TypeSelector;
 import objectos.css.tmpl.Instruction;
+import objectos.css.tmpl.TypeSelector;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,7 +42,7 @@ public class CssRecorderTest {
     testProto(
       // [0]: BODY
       ByteProto.MARKED,
-      ByteProto.NULL,
+      5,
       TypeSelector.BODY.ordinal(),
       0,
       ByteProto.TYPE_SELECTOR,
@@ -51,6 +51,51 @@ public class CssRecorderTest {
       ByteProto.STYLE_RULE,
       13,
       ByteProto.TYPE_SELECTOR,
+      0,
+      ByteProto.STYLE_RULE_END,
+      0, // contents
+      5, // start
+      ByteProto.STYLE_RULE,
+
+      // [13]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE,
+      5,
+      ByteProto.ROOT_END,
+      13
+    );
+  }
+
+  @Test(description = """
+  CssRecorder
+
+  style(
+    id("myid")
+  );
+  """)
+  public void testCase01() {
+    executeBefore();
+
+    int id = recorder.addObject("myid");
+
+    addRule(
+      recorder.addInternal(ByteProto.ID_SELECTOR, id)
+    );
+
+    executeAfter();
+
+    testProto(
+      // [0]: ID "myid"
+      ByteProto.MARKED,
+      5,
+      id,
+      0,
+      ByteProto.ID_SELECTOR,
+
+      // [5]: style()
+      ByteProto.STYLE_RULE,
+      13,
+      ByteProto.ID_SELECTOR,
       0,
       ByteProto.STYLE_RULE_END,
       0, // contents

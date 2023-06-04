@@ -31,6 +31,8 @@ final class ByteProto {
 
   static final int TYPE_SELECTOR = -6;
 
+  static final int ID_SELECTOR = -7;
+
   private ByteProto() {}
 
 }

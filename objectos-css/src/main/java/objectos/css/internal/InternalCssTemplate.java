@@ -15,9 +15,9 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.TypeSelector;
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.css.tmpl.TypeSelector;
 import objectos.lang.Check;
 
 public abstract class InternalCssTemplate {
