@@ -15,7 +15,22 @@
  */
 package objectos.css.tmpl;
 
+import java.util.Objects;
 import objectos.css.pseudom.PSelectorElement.PIdSelector;
+import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.lang.Check;
 
 public final record IdSelector(String id)
-    implements PIdSelector {}
+    implements ExternalSelector, PIdSelector {
+
+  public IdSelector {
+    Objects.requireNonNull(id, "id == null");
+
+    Check.argument(!id.isBlank(), "id must no be blank");
+  }
+
+  public static IdSelector of(String id) {
+    return new IdSelector(id);
+  }
+
+}

@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.Instruction.ExternalSelector;
 import objectos.css.tmpl.TypeSelector;
@@ -153,7 +154,8 @@ class CssRecorder extends CssTemplateApi {
 
           search: while (true) {
             switch (proto) {
-              case ByteProto.TYPE_SELECTOR -> {
+              case ByteProto.ID_SELECTOR_EXTERNAL,
+                   ByteProto.TYPE_SELECTOR -> {
                 break search;
               }
 
@@ -250,22 +252,18 @@ class CssRecorder extends CssTemplateApi {
   }
 
   private void addRuleExternalSelector(ExternalSelector selector) {
-    if (selector instanceof TypeSelector typeSelector) {
+    if (selector instanceof IdSelector idSelector) {
+      var id = idSelector.id();
+
+      int index = addObject(id);
+
+      addInternal(ByteProto.ID_SELECTOR_EXTERNAL, index);
+
+      listAdd(MARK_EXTERNAL);
+    } else if (selector instanceof TypeSelector typeSelector) {
       int value = typeSelector.ordinal();
 
-      int start = protoIndex;
-
-      protoAdd(
-        ByteProto.TYPE_SELECTOR,
-        ByteProto.NULL,
-
-        value,
-
-        start,
-        ByteProto.TYPE_SELECTOR
-      );
-
-      endSet(start);
+      addInternal(ByteProto.TYPE_SELECTOR, value);
 
       listAdd(MARK_EXTERNAL);
     } else {

@@ -104,6 +104,7 @@ public final class PseudoSelector
         }
 
         case ByteProto.ID_SELECTOR,
+             ByteProto.ID_SELECTOR_EXTERNAL,
              ByteProto.TYPE_SELECTOR -> {
           state = NEXT;
 
@@ -127,9 +128,10 @@ public final class PseudoSelector
     int proto = player.protoGet(protoIndex++);
 
     return switch (proto) {
-      case ByteProto.ID_SELECTOR -> nextIdSelector(
-        player.protoGet(protoIndex++)
-      );
+      case ByteProto.ID_SELECTOR,
+           ByteProto.ID_SELECTOR_EXTERNAL -> nextIdSelector(
+             player.protoGet(protoIndex++)
+           );
 
       case ByteProto.TYPE_SELECTOR -> nextTypeSelector(
         player.protoGet(protoIndex++)

@@ -98,6 +98,7 @@ public final class PseudoStyleRule
 
       switch (proto) {
         case ByteProto.ID_SELECTOR,
+             ByteProto.ID_SELECTOR_EXTERNAL,
              ByteProto.STYLE_RULE,
              ByteProto.TYPE_SELECTOR -> protoIndex += 2;
 

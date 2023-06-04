@@ -17,6 +17,7 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.tmpl.IdSelector;
 import org.testng.annotations.Test;
 
 public class CssTemplateTest {
@@ -72,6 +73,26 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(A, id("myid"));
+        }
+      },
+
+      """
+      a#myid {}
+      """,
+
+      """
+      a#myid{}
+      """
+    );
+  }
+
+  @Test
+  public void testCase03() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(A, IdSelector.of("myid"));
         }
       },
 
