@@ -40,28 +40,20 @@ public class CssPlayerTest {
   public void testCase00() {
     putProto(
       // [0]: BODY
-      ByteProto.MARKED,
-      5,
+      ByteProto.MARKED, 5,
       TypeSelector.BODY.ordinal(),
-      0,
-      ByteProto.TYPE_SELECTOR,
+      0, ByteProto.TYPE_SELECTOR,
 
       // [5]: style()
-      ByteProto.STYLE_RULE,
-      13,
-      ByteProto.TYPE_SELECTOR,
-      0,
+      ByteProto.STYLE_RULE, 13,
+      ByteProto.TYPE_SELECTOR, 0,
       ByteProto.STYLE_RULE_END,
-      0, // contents
-      5, // start
-      ByteProto.STYLE_RULE,
+      0, 5, ByteProto.STYLE_RULE,
 
       // [13]: ROOT
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE,
-      5,
-      ByteProto.ROOT_END,
-      13
+      ByteProto.STYLE_RULE, 5,
+      ByteProto.ROOT_END, 13
     );
 
     var sheet = player.pseudoStyleSheet().init();
@@ -91,28 +83,20 @@ public class CssPlayerTest {
 
     putProto(
       // [0]: ID "myid"
-      ByteProto.MARKED,
-      5,
+      ByteProto.MARKED, 5,
       id,
-      0,
-      ByteProto.ID_SELECTOR,
+      0, ByteProto.ID_SELECTOR,
 
       // [5]: style()
-      ByteProto.STYLE_RULE,
-      13,
-      ByteProto.ID_SELECTOR,
-      0,
+      ByteProto.STYLE_RULE, 13,
+      ByteProto.ID_SELECTOR, 0,
       ByteProto.STYLE_RULE_END,
-      0, // contents
-      5, // start
-      ByteProto.STYLE_RULE,
+      0, 5, ByteProto.STYLE_RULE,
 
       // [13]: ROOT
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE,
-      5,
-      ByteProto.ROOT_END,
-      13
+      ByteProto.STYLE_RULE, 5,
+      ByteProto.ROOT_END, 13
     );
 
     var sheet = player.pseudoStyleSheet().init();
@@ -122,6 +106,56 @@ public class CssPlayerTest {
     // rule[0]
     var rule = (PStyleRule) rules.next();
     var selector = rule.selector().elements().iterator();
+    assertEquals(selector.next(), new IdSelector("myid"));
+    assertEquals(selector.hasNext(), false);
+    var declarations = rule.declarations().iterator();
+    assertEquals(declarations.hasNext(), false);
+
+    assertEquals(rules.hasNext(), false);
+  }
+
+  @Test(description = """
+  CssPlayer
+
+  style(
+    A, id("myid")
+  );
+  """)
+  public void testCase02() {
+    int id = player.addObject("myid");
+
+    putProto(
+      // [0]: ID "myid"
+      ByteProto.MARKED, 5,
+      id,
+      0, ByteProto.ID_SELECTOR,
+
+      // [5]: A
+      ByteProto.MARKED, 10,
+      TypeSelector.A.ordinal(),
+      5, ByteProto.TYPE_SELECTOR,
+
+      // [10]: style()
+      ByteProto.STYLE_RULE, 20,
+      ByteProto.TYPE_SELECTOR, 5,
+      ByteProto.ID_SELECTOR, 0,
+      ByteProto.STYLE_RULE_END,
+      0, 10, ByteProto.STYLE_RULE,
+
+      // [20]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, 10,
+      ByteProto.ROOT_END, 20
+    );
+
+    var sheet = player.pseudoStyleSheet().init();
+    assertEquals(sheet.protoIndex, 20);
+    var rules = sheet.rules().iterator();
+
+    // rule[0]
+    var rule = (PStyleRule) rules.next();
+    var selector = rule.selector().elements().iterator();
+    assertEquals(selector.next(), TypeSelector.A);
     assertEquals(selector.next(), new IdSelector("myid"));
     assertEquals(selector.hasNext(), false);
     var declarations = rule.declarations().iterator();
