@@ -22,6 +22,8 @@ import objectos.lang.Check;
 
 public abstract class InternalCssTemplate {
 
+  protected static final ExternalSelector A = TypeSelector.A;
+
   protected static final ExternalSelector BODY = TypeSelector.BODY;
 
   private CssTemplateApi api;

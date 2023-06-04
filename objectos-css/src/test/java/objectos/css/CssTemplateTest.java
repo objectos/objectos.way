@@ -65,6 +65,26 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase02() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(A, id("myid"));
+        }
+      },
+
+      """
+      a#myid {}
+      """,
+
+      """
+      a#myid{}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 
