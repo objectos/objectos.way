@@ -13,17 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.tmpl;
 
-import objectos.css.tmpl.IdSelector;
-import objectos.css.tmpl.TypeSelector;
+import objectos.css.pseudom.PSelectorElement.PIdSelector;
 
-public sealed interface PSelectorElement {
-
-  sealed interface PIdSelector extends PSelectorElement permits IdSelector {
-    String id();
-  }
-
-  sealed interface PTypeSelector extends PSelectorElement permits TypeSelector {}
-
-}
+public final record IdSelector(String id)
+    implements PIdSelector {}

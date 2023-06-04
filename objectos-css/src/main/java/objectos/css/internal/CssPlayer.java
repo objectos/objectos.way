@@ -33,6 +33,22 @@ public class CssPlayer extends CssRecorder {
     processor.process(sheet.init());
   }
 
+  final int cas(int state, int expected, int newState) {
+    if (state != expected) {
+      throw new IllegalStateException(
+        """
+        Found state '%d' but expected state '%d'
+        """.formatted(state, expected)
+      );
+    }
+
+    return newState;
+  }
+
+  final Object objectGet(int index) {
+    return objectArray[index];
+  }
+
   final int protoGet(int index) {
     return protoArray[index];
   }
@@ -64,18 +80,6 @@ public class CssPlayer extends CssRecorder {
     }
 
     return (T) objectArray[index];
-  }
-
-  final int cas(int state, int expected, int newState) {
-    if (state != expected) {
-      throw new IllegalStateException(
-        """
-        Found state '%d' but expected state '%d'
-        """.formatted(state, expected)
-      );
-    }
-
-    return newState;
   }
 
 }

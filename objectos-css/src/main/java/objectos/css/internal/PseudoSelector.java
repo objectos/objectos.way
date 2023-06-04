@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PSelector;
 import objectos.css.pseudom.PSelectorElement;
+import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.TypeSelector;
 
 public final class PseudoSelector
@@ -102,7 +103,8 @@ public final class PseudoSelector
           break loop;
         }
 
-        case ByteProto.TYPE_SELECTOR -> {
+        case ByteProto.ID_SELECTOR,
+             ByteProto.TYPE_SELECTOR -> {
           state = NEXT;
 
           found = true;
@@ -125,7 +127,13 @@ public final class PseudoSelector
     int proto = player.protoGet(protoIndex++);
 
     return switch (proto) {
-      case ByteProto.TYPE_SELECTOR -> nextTypeSelector();
+      case ByteProto.ID_SELECTOR -> nextIdSelector(
+        player.protoGet(protoIndex++)
+      );
+
+      case ByteProto.TYPE_SELECTOR -> nextTypeSelector(
+        player.protoGet(protoIndex++)
+      );
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: proto=" + proto
@@ -133,10 +141,20 @@ public final class PseudoSelector
     };
   }
 
-  private TypeSelector nextTypeSelector() {
-    int ordingal = player.protoGet(protoIndex++);
+  private IdSelector nextIdSelector(int index) {
+    // skips MARKER, end index
+    int objectIndex = player.protoGet(index + 2);
 
-    return TypeSelector.ofOrdinal(ordingal);
+    var id = (String) player.objectGet(objectIndex);
+
+    return new IdSelector(id);
+  }
+
+  private TypeSelector nextTypeSelector(int index) {
+    // skips MARKER, end index
+    int ordinal = player.protoGet(index + 2);
+
+    return TypeSelector.ofOrdinal(ordinal);
   }
 
 }

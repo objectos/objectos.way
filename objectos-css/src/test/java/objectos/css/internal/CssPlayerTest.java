@@ -18,13 +18,19 @@ package objectos.css.internal;
 import static org.testng.Assert.assertEquals;
 
 import objectos.css.pseudom.PRule.PStyleRule;
+import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.TypeSelector;
-import objectos.util.UnmodifiableList;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class CssPlayerTest {
 
   private final CssPlayer player = new CssPlayer();
+
+  @BeforeMethod
+  public void _beforeMethod() {
+    player.objectIndex = CssPlayer.OBJECT_INDEX;
+  }
 
   @Test(description = """
   CssPlayer
@@ -35,7 +41,7 @@ public class CssPlayerTest {
     putProto(
       // [0]: BODY
       ByteProto.MARKED,
-      ByteProto.NULL,
+      5,
       TypeSelector.BODY.ordinal(),
       0,
       ByteProto.TYPE_SELECTOR,
@@ -59,25 +65,69 @@ public class CssPlayerTest {
     );
 
     var sheet = player.pseudoStyleSheet().init();
-
     assertEquals(sheet.protoIndex, 13);
+    var rules = sheet.rules().iterator();
 
-    var rules = UnmodifiableList.copyOf(sheet.rules());
+    // rule[0]
+    var rule = (PStyleRule) rules.next();
+    var selector = rule.selector().elements().iterator();
+    assertEquals(selector.next(), TypeSelector.BODY);
+    assertEquals(selector.hasNext(), false);
+    var declarations = rule.declarations().iterator();
+    assertEquals(declarations.hasNext(), false);
 
-    assertEquals(rules.size(), 1);
+    assertEquals(rules.hasNext(), false);
+  }
 
-    var rule = (PStyleRule) rules.get(0);
+  @Test(description = """
+  CssPlayer
 
-    var selector = rule.selector();
+  style(
+    id("myid")
+  );
+  """)
+  public void testCase01() {
+    int id = player.addObject("myid");
 
-    var elements = UnmodifiableList.copyOf(selector.elements());
+    putProto(
+      // [0]: ID "myid"
+      ByteProto.MARKED,
+      5,
+      id,
+      0,
+      ByteProto.ID_SELECTOR,
 
-    assertEquals(elements.size(), 1);
-    assertEquals(elements.get(0), TypeSelector.BODY);
+      // [5]: style()
+      ByteProto.STYLE_RULE,
+      13,
+      ByteProto.ID_SELECTOR,
+      0,
+      ByteProto.STYLE_RULE_END,
+      0, // contents
+      5, // start
+      ByteProto.STYLE_RULE,
 
-    var declarations = UnmodifiableList.copyOf(rule.declarations());
+      // [13]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE,
+      5,
+      ByteProto.ROOT_END,
+      13
+    );
 
-    assertEquals(declarations.size(), 0);
+    var sheet = player.pseudoStyleSheet().init();
+    assertEquals(sheet.protoIndex, 13);
+    var rules = sheet.rules().iterator();
+
+    // rule[0]
+    var rule = (PStyleRule) rules.next();
+    var selector = rule.selector().elements().iterator();
+    assertEquals(selector.next(), new IdSelector("myid"));
+    assertEquals(selector.hasNext(), false);
+    var declarations = rule.declarations().iterator();
+    assertEquals(declarations.hasNext(), false);
+
+    assertEquals(rules.hasNext(), false);
   }
 
   private void putProto(int... values) {
