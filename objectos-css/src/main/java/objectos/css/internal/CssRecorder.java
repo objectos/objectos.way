@@ -130,9 +130,67 @@ class CssRecorder extends CssTemplateApi {
 
   @Override
   final void addRule(StyleRuleElement... elements) {
-    int length = elements.length; // elements implicit null-check
-
     int listBase = listIndex;
+
+    int contents = addRule0Elements(elements);
+
+    int listMax = listIndex;
+
+    int start = protoIndex;
+
+    protoAdd(ByteProto.STYLE_RULE, ByteProto.NULL);
+
+    addRule1Mark(listBase, contents, listMax);
+
+    protoAdd(ByteProto.STYLE_RULE_END);
+
+    protoAdd(contents, start, ByteProto.STYLE_RULE);
+
+    endSet(start);
+
+    listIndex = listBase;
+  }
+
+  final void executeRecorderAfter() {
+    var rootIndex = protoIndex;
+
+    while (rootIndex > 0) {
+      int proto = protoArray[--rootIndex];
+
+      switch (proto) {
+        case ByteProto.STYLE_RULE -> {
+          int elem = protoArray[--rootIndex];
+
+          rootIndex = protoArray[--rootIndex];
+
+          listPush(elem, proto);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    int returnTo = protoIndex;
+
+    protoAdd(ByteProto.ROOT);
+
+    while (listIndex > 0) {
+      protoAdd(listPop());
+    }
+
+    protoAdd(ByteProto.ROOT_END, returnTo);
+  }
+
+  final void executeRecorderBefore() {
+    listIndex = protoIndex = 0;
+
+    objectIndex = OBJECT_INDEX;
+  }
+
+  private int addRule0Elements(StyleRuleElement... elements) {
+    int length = elements.length; // elements implicit null-check
 
     int contents = protoIndex;
 
@@ -140,9 +198,9 @@ class CssRecorder extends CssTemplateApi {
       var element = Check.notNull(elements[i], "elements[", i, "] == null");
 
       if (element instanceof InternalInstruction) {
-        listAdd(MARK_INTERNAL);
-
         contents = updateContents(contents);
+
+        listAdd(MARK_INTERNAL);
       } else if (element instanceof ClassSelector classSelector) {
         var className = classSelector.className();
 
@@ -192,12 +250,10 @@ class CssRecorder extends CssTemplateApi {
       }
     }
 
-    int start = protoIndex;
+    return contents;
+  }
 
-    protoAdd(ByteProto.STYLE_RULE, ByteProto.NULL);
-
-    int listMax = listIndex;
-
+  private void addRule1Mark(int listBase, int contents, int listMax) {
     listAdd(
       /*2=external*/contents,
       /*1=internal*/contents
@@ -291,52 +347,6 @@ class CssRecorder extends CssTemplateApi {
         );
       }
     }
-
-    protoAdd(ByteProto.STYLE_RULE_END);
-
-    protoAdd(contents, start, ByteProto.STYLE_RULE);
-
-    endSet(start);
-
-    listIndex = listBase;
-  }
-
-  final void executeRecorderAfter() {
-    var rootIndex = protoIndex;
-
-    while (rootIndex > 0) {
-      int proto = protoArray[--rootIndex];
-
-      switch (proto) {
-        case ByteProto.STYLE_RULE -> {
-          int elem = protoArray[--rootIndex];
-
-          rootIndex = protoArray[--rootIndex];
-
-          listPush(elem, proto);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    int returnTo = protoIndex;
-
-    protoAdd(ByteProto.ROOT);
-
-    while (listIndex > 0) {
-      protoAdd(listPop());
-    }
-
-    protoAdd(ByteProto.ROOT_END, returnTo);
-  }
-
-  final void executeRecorderBefore() {
-    listIndex = protoIndex = 0;
-
-    objectIndex = OBJECT_INDEX;
   }
 
   private void endSet(int start) {
