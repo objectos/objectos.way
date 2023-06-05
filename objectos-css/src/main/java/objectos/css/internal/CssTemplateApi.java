@@ -21,6 +21,8 @@ public abstract class CssTemplateApi {
 
   abstract InternalInstruction addInternal(int type, int value);
 
+  abstract InternalInstruction addInternal(int type, int value0, int value1);
+
   abstract int addObject(Object value);
 
   abstract void addRule(Instruction... elements);

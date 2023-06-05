@@ -58,6 +58,33 @@ class CssRecorder extends CssTemplateApi {
     executeRecorderAfter();
   }
 
+  final InternalInstruction addAttribute(int name, Instruction element) {
+    int index = protoIndex;
+
+    int elementType = protoArray[--index];
+
+    assert elementType == ByteProto.ATTR_VALUE_ELEMENT;
+
+    int elementStart = protoArray[--index];
+
+    protoArray[elementStart] = ByteProto.MARKED;
+
+    int start = protoIndex;
+
+    protoAdd(
+      ByteProto.ATTR_VALUE_SELECTOR,
+      ByteProto.NULL,
+      name,
+      elementStart,
+      elementStart,
+      ByteProto.ATTR_VALUE_SELECTOR
+    );
+
+    endSet(start);
+
+    return InternalInstruction.INSTANCE;
+  }
+
   @Override
   final InternalInstruction addInternal(int type, int value) {
     int start = protoIndex;
@@ -66,6 +93,24 @@ class CssRecorder extends CssTemplateApi {
       type,
       ByteProto.NULL,
       value,
+      start,
+      type
+    );
+
+    endSet(start);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  @Override
+  final InternalInstruction addInternal(int type, int value0, int value1) {
+    int start = protoIndex;
+
+    protoAdd(
+      type,
+      ByteProto.NULL,
+      value0,
+      value1,
       start,
       type
     );
@@ -131,9 +176,17 @@ class CssRecorder extends CssTemplateApi {
 
           search: while (true) {
             switch (proto) {
-              case ByteProto.CLASS_SELECTOR,
+              case ByteProto.ATTR_NAME_SELECTOR,
+                   ByteProto.ATTR_VALUE_SELECTOR,
+                   ByteProto.CLASS_SELECTOR,
                    ByteProto.ID_SELECTOR -> {
                 break search;
+              }
+
+              case ByteProto.MARKED -> {
+                index = protoArray[index + 1];
+
+                proto = protoArray[index];
               }
 
               default -> {
@@ -246,23 +299,6 @@ class CssRecorder extends CssTemplateApi {
     objectIndex = OBJECT_INDEX;
   }
 
-  private int updateContents(int contents) {
-    var proto = protoArray[--contents];
-
-    switch (proto) {
-      case ByteProto.CLASS_SELECTOR,
-           ByteProto.ID_SELECTOR -> {
-        contents = protoArray[--contents];
-      }
-
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: proto=" + proto
-      );
-    }
-
-    return contents;
-  }
-
   private void addRuleExternalSelector(ExternalSelector selector) {
     if (selector instanceof ClassSelector classSelector) {
       var className = classSelector.className();
@@ -371,6 +407,35 @@ class CssRecorder extends CssTemplateApi {
     protoArray[protoIndex++] = v2;
     protoArray[protoIndex++] = v3;
     protoArray[protoIndex++] = v4;
+  }
+
+  private void protoAdd(int v0, int v1, int v2, int v3, int v4, int v5) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 5);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
+    protoArray[protoIndex++] = v4;
+    protoArray[protoIndex++] = v5;
+  }
+
+  private int updateContents(int contents) {
+    var proto = protoArray[--contents];
+
+    switch (proto) {
+      case ByteProto.ATTR_NAME_SELECTOR,
+           ByteProto.ATTR_VALUE_SELECTOR,
+           ByteProto.CLASS_SELECTOR,
+           ByteProto.ID_SELECTOR -> {
+        contents = protoArray[--contents];
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    }
+
+    return contents;
   }
 
 }

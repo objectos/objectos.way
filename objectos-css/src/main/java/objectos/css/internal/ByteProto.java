@@ -45,6 +45,12 @@ final class ByteProto {
 
   static final int PSEUDO_ELEMENT_SELECTOR = -13;
 
+  static final int ATTR_NAME_SELECTOR = -14;
+
+  static final int ATTR_VALUE_SELECTOR = -15;
+
+  static final int ATTR_VALUE_ELEMENT = -16;
+
   private ByteProto() {}
 
 }

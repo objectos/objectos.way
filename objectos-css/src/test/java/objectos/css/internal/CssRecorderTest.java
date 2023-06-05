@@ -18,6 +18,7 @@ package objectos.css.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
+import objectos.css.tmpl.AttributeValueOperator;
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.TypeSelector;
 import org.testng.Assert;
@@ -135,6 +136,104 @@ public class CssRecorderTest {
       // [20]: ROOT
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, 10,
+      ByteProto.ROOT_END, 20
+    );
+  }
+
+  @Test(description = """
+  CssRecorder
+
+  style(
+    attr("type")
+  );
+  """)
+  public void testCase07A() {
+    executeBefore();
+
+    int name = recorder.addObject("type");
+
+    addRule(
+      recorder.addInternal(ByteProto.ATTR_NAME_SELECTOR, name)
+    );
+
+    executeAfter();
+
+    testProto(
+      // [0]: attr("type")
+      ByteProto.MARKED, 5,
+      name,
+      0, ByteProto.ATTR_NAME_SELECTOR,
+
+      // [5]: style()
+      ByteProto.STYLE_RULE, 13,
+      ByteProto.ATTR_NAME_SELECTOR, 0,
+      ByteProto.STYLE_RULE_END,
+      0, 5, ByteProto.STYLE_RULE,
+
+      // [13]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, 5,
+      ByteProto.ROOT_END, 13
+    );
+  }
+
+  @Test(description = """
+  CssRecorder
+
+  style(
+    attr("type", eq("input"))
+  );
+  """)
+  public void testCase07B() {
+    executeBefore();
+
+    int equals = AttributeValueOperator.EQUALS.ordinal();
+    int value = recorder.addObject("input");
+
+    var instruction = recorder.addInternal(
+      ByteProto.ATTR_VALUE_ELEMENT, equals, value
+    );
+
+    int name = recorder.addObject("type");
+
+    instruction = recorder.addAttribute(name, instruction);
+
+    testProto(
+      // [0]: eq("input")
+      ByteProto.MARKED, 6,
+      equals, value,
+      0, ByteProto.ATTR_VALUE_ELEMENT,
+
+      // [6]: attr("type", ...)
+      ByteProto.ATTR_VALUE_SELECTOR, 12,
+      name, 0,
+      0, ByteProto.ATTR_VALUE_SELECTOR
+    );
+
+    addRule(instruction);
+
+    executeAfter();
+
+    testProto(
+      // [0]: eq("input")
+      ByteProto.MARKED, 6,
+      equals, value,
+      0, ByteProto.ATTR_VALUE_ELEMENT,
+
+      // [6]: attr("type", ...)
+      ByteProto.MARKED, 12,
+      name, 0,
+      0, ByteProto.ATTR_VALUE_SELECTOR,
+
+      // [12]: style()
+      ByteProto.STYLE_RULE, 20,
+      ByteProto.ATTR_VALUE_SELECTOR, 6,
+      ByteProto.STYLE_RULE_END,
+      0, 12, ByteProto.STYLE_RULE,
+
+      // [20]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, 12,
       ByteProto.ROOT_END, 20
     );
   }

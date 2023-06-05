@@ -22,9 +22,9 @@ public class TestCase07 extends AbstractStyleSheet {
   @Override
   protected final void definition() {
     style(
-        attr("type"), or(),
-        attr("type", eq("input")), or(),
-        attr("data-attr", startsWith("start"))
+      attr("type"), or(),
+      attr("type", eq("input")), or(),
+      attr("data-attr", startsWith("start"))
     );
   }
 
