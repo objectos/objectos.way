@@ -15,12 +15,14 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.Instruction.AttributeValueElement;
-import objectos.css.tmpl.Instruction.InternalSelector;
+import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.StyleRuleElement;
 
 public enum InternalInstruction
     implements
     AttributeValueElement,
-    InternalSelector {
+    StyleRuleElement {
+
   INSTANCE;
+
 }

@@ -15,14 +15,10 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.ClassSelector;
-import objectos.css.tmpl.Combinator;
-import objectos.css.tmpl.IdSelector;
-import objectos.css.tmpl.Instruction;
-import objectos.css.tmpl.Instruction.ExternalSelector;
-import objectos.css.tmpl.PseudoClassSelector;
-import objectos.css.tmpl.PseudoElementSelector;
-import objectos.css.tmpl.TypeSelector;
+import objectos.css.ClassSelector;
+import objectos.css.IdSelector;
+import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
 import objectos.util.ObjectArrays;
@@ -61,7 +57,7 @@ class CssRecorder extends CssTemplateApi {
   }
 
   @Override
-  final InternalInstruction addAttribute(int name, Instruction element) {
+  final InternalInstruction addAttribute(int name, AttributeValueElement element) {
     int index = protoIndex;
 
     int elementType = protoArray[--index];
@@ -132,7 +128,7 @@ class CssRecorder extends CssTemplateApi {
   }
 
   @Override
-  final void addRule(Instruction... elements) {
+  final void addRule(StyleRuleElement... elements) {
     int length = elements.length; // elements implicit null-check
 
     int listBase = listIndex;
@@ -146,8 +142,46 @@ class CssRecorder extends CssTemplateApi {
         listAdd(MARK_INTERNAL);
 
         contents = updateContents(contents);
-      } else if (element instanceof ExternalSelector selector) {
-        addRuleExternalSelector(selector);
+      } else if (element instanceof ClassSelector classSelector) {
+        var className = classSelector.className();
+
+        int index = addObject(className);
+
+        addInternal(ByteProto.CLASS_SELECTOR_EXTERNAL, index);
+
+        listAdd(MARK_EXTERNAL);
+      } else if (element instanceof Combinator combinator) {
+        int value = combinator.ordinal();
+
+        addInternal(ByteProto.COMBINATOR, value);
+
+        listAdd(MARK_EXTERNAL);
+      } else if (element instanceof IdSelector idSelector) {
+        var id = idSelector.id();
+
+        int index = addObject(id);
+
+        addInternal(ByteProto.ID_SELECTOR_EXTERNAL, index);
+
+        listAdd(MARK_EXTERNAL);
+      } else if (element instanceof PseudoClassSelector pseudoClass) {
+        int value = pseudoClass.ordinal();
+
+        addInternal(ByteProto.PSEUDO_CLASS_SELECTOR, value);
+
+        listAdd(MARK_EXTERNAL);
+      } else if (element instanceof PseudoElementSelector pseudoElement) {
+        int value = pseudoElement.ordinal();
+
+        addInternal(ByteProto.PSEUDO_ELEMENT_SELECTOR, value);
+
+        listAdd(MARK_EXTERNAL);
+      } else if (element instanceof TypeSelector typeSelector) {
+        int value = typeSelector.ordinal();
+
+        addInternal(ByteProto.TYPE_SELECTOR, value);
+
+        listAdd(MARK_EXTERNAL);
       } else {
         var type = element.getClass();
 
@@ -302,56 +336,6 @@ class CssRecorder extends CssTemplateApi {
     listIndex = protoIndex = 0;
 
     objectIndex = OBJECT_INDEX;
-  }
-
-  private void addRuleExternalSelector(ExternalSelector selector) {
-    if (selector instanceof ClassSelector classSelector) {
-      var className = classSelector.className();
-
-      int index = addObject(className);
-
-      addInternal(ByteProto.CLASS_SELECTOR_EXTERNAL, index);
-
-      listAdd(MARK_EXTERNAL);
-    } else if (selector instanceof Combinator combinator) {
-      int value = combinator.ordinal();
-
-      addInternal(ByteProto.COMBINATOR, value);
-
-      listAdd(MARK_EXTERNAL);
-    } else if (selector instanceof IdSelector idSelector) {
-      var id = idSelector.id();
-
-      int index = addObject(id);
-
-      addInternal(ByteProto.ID_SELECTOR_EXTERNAL, index);
-
-      listAdd(MARK_EXTERNAL);
-    } else if (selector instanceof PseudoClassSelector pseudoClass) {
-      int value = pseudoClass.ordinal();
-
-      addInternal(ByteProto.PSEUDO_CLASS_SELECTOR, value);
-
-      listAdd(MARK_EXTERNAL);
-    } else if (selector instanceof PseudoElementSelector pseudoElement) {
-      int value = pseudoElement.ordinal();
-
-      addInternal(ByteProto.PSEUDO_ELEMENT_SELECTOR, value);
-
-      listAdd(MARK_EXTERNAL);
-    } else if (selector instanceof TypeSelector typeSelector) {
-      int value = typeSelector.ordinal();
-
-      addInternal(ByteProto.TYPE_SELECTOR, value);
-
-      listAdd(MARK_EXTERNAL);
-    } else {
-      var type = selector.getClass();
-
-      throw new UnsupportedOperationException(
-        "Implement me :: selector=" + type
-      );
-    }
   }
 
   private void endSet(int start) {

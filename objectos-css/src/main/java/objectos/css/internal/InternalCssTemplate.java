@@ -16,8 +16,8 @@
 package objectos.css.internal;
 
 import java.util.Objects;
-import objectos.css.tmpl.AttributeValueOperator;
-import objectos.css.tmpl.Instruction;
+import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
@@ -26,15 +26,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected abstract void definition();
 
-  protected final Instruction.InternalSelector attr(String name) {
+  protected final StyleRuleElement attr(String name) {
     checkName(name);
 
     var api = api();
     return api.addInternal(ByteProto.ATTR_NAME_SELECTOR, api.addObject(name));
   }
 
-  protected final Instruction.InternalSelector attr(
-      String name, Instruction.AttributeValueElement element) {
+  protected final StyleRuleElement attr(
+      String name, AttributeValueElement element) {
     checkName(name);
     Objects.requireNonNull(element, "element == null");
 
@@ -42,15 +42,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return api.addAttribute(api.addObject(name), element);
   }
 
-  protected final Instruction.AttributeValueElement eq(String value) {
+  protected final AttributeValueElement eq(String value) {
     return attrValue(AttributeValueOperator.EQUALS, value);
   }
 
-  protected final Instruction.AttributeValueElement startsWith(String value) {
+  protected final AttributeValueElement startsWith(String value) {
     return attrValue(AttributeValueOperator.STARTS_WITH, value);
   }
 
-  private Instruction.AttributeValueElement attrValue(
+  private AttributeValueElement attrValue(
       AttributeValueOperator operator, String value) {
     checkValue(value);
 
@@ -69,19 +69,19 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     Check.argument(!value.isBlank(), "value must not be blank");
   }
 
-  protected final Instruction.InternalSelector className(String name) {
+  protected final StyleRuleElement className(String name) {
     checkName(name);
 
     var api = api();
     return api.addInternal(ByteProto.CLASS_SELECTOR, api.addObject(name));
   }
 
-  protected final Instruction.InternalSelector id(String id) {
+  protected final StyleRuleElement id(String id) {
     var api = api();
     return api.addInternal(ByteProto.ID_SELECTOR, api.addObject(id));
   }
 
-  protected final void style(Instruction... elements) {
+  protected final void style(StyleRuleElement... elements) {
     api().addRule(elements);
   }
 

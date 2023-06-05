@@ -15,13 +15,13 @@
  */
 package objectos.css.pseudom;
 
+import objectos.css.IdSelector;
+import objectos.css.internal.AttributeValueOperator;
+import objectos.css.internal.Combinator;
 import objectos.css.internal.PAttributeSelectorImpl;
 import objectos.css.internal.PAttributeValueSelectorImpl;
-import objectos.css.internal.PseudoClassSelector;
-import objectos.css.tmpl.AttributeValueOperator;
-import objectos.css.tmpl.Combinator;
-import objectos.css.tmpl.IdSelector;
-import objectos.css.tmpl.TypeSelector;
+import objectos.css.internal.PClassSelectorImpl;
+import objectos.css.internal.TypeSelector;
 
 public sealed interface PSelectorElement {
 
@@ -37,7 +37,7 @@ public sealed interface PSelectorElement {
     String value();
   }
 
-  sealed interface PClassSelector extends PSelectorElement permits PseudoClassSelector {
+  sealed interface PClassSelector extends PSelectorElement permits PClassSelectorImpl {
     String className();
   }
 
@@ -48,10 +48,10 @@ public sealed interface PSelectorElement {
   }
 
   sealed interface PPseudoClassSelector extends PSelectorElement
-      permits objectos.css.tmpl.PseudoClassSelector {}
+      permits objectos.css.internal.PseudoClassSelector {}
 
   sealed interface PPseudoElementSelector extends PSelectorElement
-      permits objectos.css.tmpl.PseudoElementSelector {}
+      permits objectos.css.internal.PseudoElementSelector {}
 
   sealed interface PTypeSelector extends PSelectorElement permits TypeSelector {}
 

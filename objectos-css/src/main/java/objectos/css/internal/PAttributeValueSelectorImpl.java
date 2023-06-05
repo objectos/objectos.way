@@ -16,7 +16,6 @@
 package objectos.css.internal;
 
 import objectos.css.pseudom.PSelectorElement.PAttributeValueSelector;
-import objectos.css.tmpl.AttributeValueOperator;
 
 public final class PAttributeValueSelectorImpl implements PAttributeValueSelector {
 

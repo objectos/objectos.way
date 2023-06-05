@@ -15,30 +15,26 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.Combinator;
-import objectos.css.tmpl.Instruction.ExternalSelector;
-import objectos.css.tmpl.PseudoClassSelector;
-import objectos.css.tmpl.PseudoElementSelector;
-import objectos.css.tmpl.TypeSelector;
+import objectos.css.tmpl.StyleRuleElement;
 
 abstract class GeneratedCssTemplate {
 
-  protected static final ExternalSelector A = TypeSelector.A;
+  protected static final StyleRuleElement A = TypeSelector.A;
 
-  protected static final ExternalSelector BODY = TypeSelector.BODY;
+  protected static final StyleRuleElement BODY = TypeSelector.BODY;
 
-  protected static final ExternalSelector LI = TypeSelector.LI;
+  protected static final StyleRuleElement LI = TypeSelector.LI;
 
-  protected static final ExternalSelector UL = TypeSelector.UL;
+  protected static final StyleRuleElement UL = TypeSelector.UL;
 
-  protected static final Combinator OR = Combinator.LIST;
+  protected static final StyleRuleElement OR = Combinator.LIST;
 
-  protected static final Combinator SP = Combinator.DESCENDANT;
+  protected static final StyleRuleElement SP = Combinator.DESCENDANT;
 
-  protected static final PseudoClassSelector ACTIVE = PseudoClassSelector.ACTIVE;
+  protected static final StyleRuleElement ACTIVE = PseudoClassSelector.ACTIVE;
 
-  protected static final PseudoClassSelector VISITED = PseudoClassSelector.VISITED;
+  protected static final StyleRuleElement VISITED = PseudoClassSelector.VISITED;
 
-  protected static final PseudoElementSelector AFTER = PseudoElementSelector.AFTER;
+  protected static final StyleRuleElement AFTER = PseudoElementSelector.AFTER;
 
 }

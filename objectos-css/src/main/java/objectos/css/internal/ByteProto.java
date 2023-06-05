@@ -51,6 +51,10 @@ final class ByteProto {
 
   static final int ATTR_VALUE_ELEMENT = -16;
 
+  static final int DECLARATION = -17;
+
+  static final int KEYWORD = -18;
+
   private ByteProto() {}
 
 }

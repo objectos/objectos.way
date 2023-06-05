@@ -13,45 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-public enum AttributeValueOperator {
+import java.util.Locale;
+import objectos.css.pseudom.PSelectorElement.PTypeSelector;
+import objectos.css.tmpl.StyleRuleElement;
 
-  CONTAINS("*=", "contains"),
+// generate me
+public enum TypeSelector implements StyleRuleElement, PTypeSelector {
 
-  ENDS_WITH("$=", "endsWith"),
+  A,
 
-  EQUALS("=", "eq"),
+  BODY,
 
-  HYPHEN("|=", "lang"),
+  LI,
 
-  STARTS_WITH("^=", "startsWith"),
+  UL;
 
-  WS_LIST("~=", "whitespaceSeparated");
+  private static final TypeSelector[] VALUES = TypeSelector.values();
 
-  private static final AttributeValueOperator[] VALUES = values();
+  private final String toString;
 
-  private final String symbol;
-
-  private AttributeValueOperator(String symbol, String methodName) {
-    this.symbol = symbol;
+  private TypeSelector() {
+    toString = name().toLowerCase(Locale.US);
   }
 
-  public static AttributeValueOperator ofOrdinal(int value) {
+  public static TypeSelector ofOrdinal(int value) {
     return VALUES[value];
-  }
-
-  public final int getCode() {
-    return ordinal();
-  }
-
-  public final String symbol() {
-    return symbol;
   }
 
   @Override
   public final String toString() {
-    return symbol;
+    return toString;
   }
 
 }

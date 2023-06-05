@@ -15,27 +15,31 @@
  */
 package objectos.css.internal;
 
-import objectos.css.pseudom.PSelectorElement.PClassSelector;
+import objectos.css.pseudom.PSelectorElement.PPseudoClassSelector;
+import objectos.css.tmpl.StyleRuleElement;
 
-public final class PseudoClassSelector implements PClassSelector {
+// generate me
+public enum PseudoClassSelector implements StyleRuleElement, PPseudoClassSelector {
 
-  private final CssPlayer player;
+  ACTIVE(":active"),
 
-  private int objectIndex;
+  VISITED(":visited");
 
-  PseudoClassSelector(CssPlayer player) {
-    this.player = player;
+  private static final PseudoClassSelector[] VALUES = PseudoClassSelector.values();
+
+  private final String toString;
+
+  private PseudoClassSelector(String toString) {
+    this.toString = toString;
+  }
+
+  public static PseudoClassSelector ofOrdinal(int value) {
+    return VALUES[value];
   }
 
   @Override
-  public final String className() {
-    return (String) player.objectGet(objectIndex);
-  }
-
-  final PseudoClassSelector init(int objectIndex) {
-    this.objectIndex = objectIndex;
-
-    return this;
+  public final String toString() {
+    return toString;
   }
 
 }

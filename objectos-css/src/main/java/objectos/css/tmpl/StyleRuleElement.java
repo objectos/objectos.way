@@ -15,29 +15,20 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.pseudom.PSelectorElement.PPseudoElementSelector;
-import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.css.ClassSelector;
+import objectos.css.IdSelector;
+import objectos.css.internal.Combinator;
+import objectos.css.internal.InternalInstruction;
+import objectos.css.internal.PseudoClassSelector;
+import objectos.css.internal.PseudoElementSelector;
+import objectos.css.internal.TypeSelector;
 
-// generate me
-public enum PseudoElementSelector implements ExternalSelector, PPseudoElementSelector {
-
-  AFTER("::after");
-
-  private static final PseudoElementSelector[] VALUES = PseudoElementSelector.values();
-
-  private final String toString;
-
-  private PseudoElementSelector(String toString) {
-    this.toString = toString;
-  }
-
-  public static PseudoElementSelector ofOrdinal(int value) {
-    return VALUES[value];
-  }
-
-  @Override
-  public final String toString() {
-    return toString;
-  }
-
-}
+public sealed interface StyleRuleElement
+    permits
+    ClassSelector,
+    IdSelector,
+    Combinator,
+    InternalInstruction,
+    PseudoClassSelector,
+    PseudoElementSelector,
+    TypeSelector {}

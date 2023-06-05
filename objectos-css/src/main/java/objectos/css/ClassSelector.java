@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.sheet.ex;
+package objectos.css;
 
-import objectos.css.sheet.AbstractStyleSheet;
+import java.util.Objects;
+import objectos.css.tmpl.StyleRuleElement;
+import objectos.lang.Check;
 
-public class TestCase08 extends AbstractStyleSheet {
+public record ClassSelector(String className) implements StyleRuleElement {
 
-  @Override
-  protected final void definition() {
-    style(
-      any(),
+  public ClassSelector {
+    Objects.requireNonNull(className, "className == null");
 
-      display(block)
-    );
+    Check.argument(!className.isBlank(), "className must not be blank");
+  }
+
+  public static ClassSelector of(String className) {
+    return new ClassSelector(className);
   }
 
 }

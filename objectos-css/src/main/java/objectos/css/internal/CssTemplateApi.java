@@ -15,7 +15,8 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.Instruction;
+import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.StyleRuleElement;
 
 public abstract class CssTemplateApi {
 
@@ -23,10 +24,10 @@ public abstract class CssTemplateApi {
 
   abstract InternalInstruction addInternal(int type, int value0, int value1);
 
-  abstract InternalInstruction addAttribute(int name, Instruction element);
+  abstract InternalInstruction addAttribute(int name, AttributeValueElement element);
 
   abstract int addObject(Object value);
 
-  abstract void addRule(Instruction... elements);
+  abstract void addRule(StyleRuleElement... elements);
 
 }

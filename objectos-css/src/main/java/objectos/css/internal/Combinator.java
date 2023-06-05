@@ -13,19 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.sheet.ex;
+package objectos.css.internal;
 
-import objectos.css.sheet.AbstractStyleSheet;
+import objectos.css.pseudom.PSelectorElement.PCombinator;
+import objectos.css.tmpl.StyleRuleElement;
 
-public class TestCase08 extends AbstractStyleSheet {
+public enum Combinator implements StyleRuleElement, PCombinator {
 
-  @Override
-  protected final void definition() {
-    style(
-      any(),
+  ADJACENT_SIBLING('+'),
 
-      display(block)
-    );
+  CHILD('>'),
+
+  DESCENDANT(' '),
+
+  GENERAL_SIBLING('~'),
+
+  LIST(',');
+
+  private static final Combinator[] VALUES = values();
+
+  public final char symbol;
+
+  private Combinator(char symbol) {
+    this.symbol = symbol;
+  }
+
+  public static Combinator ofOrdinal(int value) {
+    return VALUES[value];
   }
 
 }

@@ -17,13 +17,10 @@ package objectos.css.internal;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import objectos.css.IdSelector;
 import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PSelector;
 import objectos.css.pseudom.PSelectorElement;
-import objectos.css.tmpl.AttributeValueOperator;
-import objectos.css.tmpl.Combinator;
-import objectos.css.tmpl.IdSelector;
-import objectos.css.tmpl.TypeSelector;
 
 public final class PseudoSelector
     implements PSelector, IterableOnce<PSelectorElement>, Iterator<PSelectorElement> {
@@ -203,7 +200,7 @@ public final class PseudoSelector
     return impl;
   }
 
-  private PseudoClassSelector nextClassSelector(int index) {
+  private PClassSelectorImpl nextClassSelector(int index) {
     // skips MARKER, end index
     int objectIndex = player.protoGet(index + 2);
 
@@ -230,14 +227,14 @@ public final class PseudoSelector
     // skips MARKER, end index
     int ordinal = player.protoGet(index + 2);
 
-    return objectos.css.tmpl.PseudoClassSelector.ofOrdinal(ordinal);
+    return objectos.css.internal.PseudoClassSelector.ofOrdinal(ordinal);
   }
 
   private PSelectorElement nextPseudoElementSelector(int index) {
     // skips MARKER, end index
     int ordinal = player.protoGet(index + 2);
 
-    return objectos.css.tmpl.PseudoElementSelector.ofOrdinal(ordinal);
+    return objectos.css.internal.PseudoElementSelector.ofOrdinal(ordinal);
   }
 
   private TypeSelector nextTypeSelector(int index) {

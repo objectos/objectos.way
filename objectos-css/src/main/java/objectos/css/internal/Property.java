@@ -13,24 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import java.util.Objects;
-import objectos.css.pseudom.PSelectorElement.PIdSelector;
-import objectos.css.tmpl.Instruction.ExternalSelector;
-import objectos.lang.Check;
+// generate me
+public enum Property {
 
-public final record IdSelector(String id)
-    implements ExternalSelector, PIdSelector {
+  BORDER,
 
-  public IdSelector {
-    Objects.requireNonNull(id, "id == null");
-
-    Check.argument(!id.isBlank(), "id must no be blank");
-  }
-
-  public static IdSelector of(String id) {
-    return new IdSelector(id);
-  }
+  DISPLAY;
 
 }

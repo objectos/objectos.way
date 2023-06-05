@@ -13,11 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
+
+import objectos.css.pseudom.PSelectorElement.PPseudoElementSelector;
+import objectos.css.tmpl.StyleRuleElement;
 
 // generate me
-public enum Property {
+public enum PseudoElementSelector implements StyleRuleElement, PPseudoElementSelector {
 
-  BORDER;
+  AFTER("::after");
+
+  private static final PseudoElementSelector[] VALUES = PseudoElementSelector.values();
+
+  private final String toString;
+
+  private PseudoElementSelector(String toString) {
+    this.toString = toString;
+  }
+
+  public static PseudoElementSelector ofOrdinal(int value) {
+    return VALUES[value];
+  }
+
+  @Override
+  public final String toString() {
+    return toString;
+  }
 
 }

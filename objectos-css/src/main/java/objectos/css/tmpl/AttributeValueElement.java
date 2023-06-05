@@ -15,31 +15,6 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.pseudom.PSelectorElement.PCombinator;
-import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.css.internal.InternalInstruction;
 
-public enum Combinator implements ExternalSelector, PCombinator {
-
-  ADJACENT_SIBLING('+'),
-
-  CHILD('>'),
-
-  DESCENDANT(' '),
-
-  GENERAL_SIBLING('~'),
-
-  LIST(',');
-
-  private static final Combinator[] VALUES = values();
-
-  public final char symbol;
-
-  private Combinator(char symbol) {
-    this.symbol = symbol;
-  }
-
-  public static Combinator ofOrdinal(int value) {
-    return VALUES[value];
-  }
-
-}
+public sealed interface AttributeValueElement permits InternalInstruction {}

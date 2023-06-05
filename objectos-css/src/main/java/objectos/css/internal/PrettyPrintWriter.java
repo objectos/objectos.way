@@ -24,7 +24,6 @@ import objectos.css.pseudom.PSelectorElement.PPseudoClassSelector;
 import objectos.css.pseudom.PSelectorElement.PPseudoElementSelector;
 import objectos.css.pseudom.PSelectorElement.PTypeSelector;
 import objectos.css.pseudom.PStyleSheet;
-import objectos.css.tmpl.Combinator;
 
 public final class PrettyPrintWriter extends Writer {
 

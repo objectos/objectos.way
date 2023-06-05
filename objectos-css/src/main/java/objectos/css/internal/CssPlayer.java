@@ -69,8 +69,8 @@ public class CssPlayer extends CssRecorder {
     return pseudoFactory(PATTRIBUTE_VALUE_SELECTOR, PAttributeValueSelectorImpl::new);
   }
 
-  final PseudoClassSelector pseudoClassSelector() {
-    return pseudoFactory(PCLASS_SELECTOR, PseudoClassSelector::new);
+  final PClassSelectorImpl pseudoClassSelector() {
+    return pseudoFactory(PCLASS_SELECTOR, PClassSelectorImpl::new);
   }
 
   final PseudoSelector pseudoSelector() {

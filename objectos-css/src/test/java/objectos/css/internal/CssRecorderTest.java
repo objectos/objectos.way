@@ -18,9 +18,7 @@ package objectos.css.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
-import objectos.css.tmpl.AttributeValueOperator;
-import objectos.css.tmpl.Instruction;
-import objectos.css.tmpl.TypeSelector;
+import objectos.css.tmpl.StyleRuleElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -238,7 +236,44 @@ public class CssRecorderTest {
     );
   }
 
-  private void addRule(Instruction... elements) {
+  @Test(enabled = false, description = """
+  CssRecorder
+
+  style(
+    ANY, display(block)
+  );
+  """)
+  public void testCase08() {
+    executeBefore();
+
+    int name = recorder.addObject("type");
+
+    addRule(
+      recorder.addInternal(ByteProto.ATTR_NAME_SELECTOR, name)
+    );
+
+    executeAfter();
+
+    testProto(
+      // [0]: display(block)
+      ByteProto.MARKED, 5,
+      name,
+      0, ByteProto.DECLARATION,
+
+      // [5]: style()
+      ByteProto.STYLE_RULE, 13,
+      ByteProto.ATTR_NAME_SELECTOR, 0,
+      ByteProto.STYLE_RULE_END,
+      0, 5, ByteProto.STYLE_RULE,
+
+      // [13]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, 5,
+      ByteProto.ROOT_END, 13
+    );
+  }
+
+  private void addRule(StyleRuleElement... elements) {
     recorder.addRule(elements);
   }
 

@@ -17,9 +17,8 @@ package objectos.css.internal;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.IdSelector;
 import objectos.css.pseudom.PRule.PStyleRule;
-import objectos.css.tmpl.IdSelector;
-import objectos.css.tmpl.TypeSelector;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

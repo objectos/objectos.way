@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css;
 
-import objectos.css.internal.InternalInstruction;
+import java.util.Objects;
+import objectos.css.pseudom.PSelectorElement.PIdSelector;
+import objectos.css.tmpl.StyleRuleElement;
+import objectos.lang.Check;
 
-public sealed interface Instruction {
+public final record IdSelector(String id) implements StyleRuleElement, PIdSelector {
 
-  sealed interface AttributeValueElement extends Instruction
-      permits InternalInstruction {}
+  public IdSelector {
+    Objects.requireNonNull(id, "id == null");
 
-  sealed interface ExternalSelector extends Instruction
-      permits
-      ClassSelector,
-      Combinator,
-      IdSelector,
-      PseudoClassSelector,
-      PseudoElementSelector,
-      TypeSelector {}
+    Check.argument(!id.isBlank(), "id must no be blank");
+  }
 
-  sealed interface InternalSelector extends Instruction permits InternalInstruction {}
+  public static IdSelector of(String id) {
+    return new IdSelector(id);
+  }
 
 }

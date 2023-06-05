@@ -13,23 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import java.util.Objects;
-import objectos.css.tmpl.Instruction.ExternalSelector;
-import objectos.lang.Check;
+import objectos.css.pseudom.PSelectorElement.PClassSelector;
 
-public record ClassSelector(String className)
-    implements ExternalSelector {
+public final class PClassSelectorImpl implements PClassSelector {
 
-  public ClassSelector {
-    Objects.requireNonNull(className, "className == null");
+  private final CssPlayer player;
 
-    Check.argument(!className.isBlank(), "className must not be blank");
+  private int objectIndex;
+
+  PClassSelectorImpl(CssPlayer player) {
+    this.player = player;
   }
 
-  public static ClassSelector of(String className) {
-    return new ClassSelector(className);
+  @Override
+  public final String className() {
+    return (String) player.objectGet(objectIndex);
+  }
+
+  final PClassSelectorImpl init(int objectIndex) {
+    this.objectIndex = objectIndex;
+
+    return this;
   }
 
 }
