@@ -13,25 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.tmpl;
 
-import objectos.css.internal.PseudoClassSelector;
-import objectos.css.tmpl.Combinator;
-import objectos.css.tmpl.IdSelector;
-import objectos.css.tmpl.TypeSelector;
+import objectos.css.pseudom.PSelectorElement.PCombinator;
+import objectos.css.tmpl.Instruction.ExternalSelector;
 
-public sealed interface PSelectorElement {
+public enum Combinator implements ExternalSelector, PCombinator {
 
-  sealed interface PClassSelector extends PSelectorElement permits PseudoClassSelector {
-    String className();
+  ADJACENT_SIBLING('+'),
+
+  CHILD('>'),
+
+  DESCENDANT(' '),
+
+  GENERAL_SIBLING('~'),
+
+  LIST(',');
+
+  private static final Combinator[] VALUES = values();
+
+  public final char symbol;
+
+  private Combinator(char symbol) {
+    this.symbol = symbol;
   }
 
-  sealed interface PCombinator extends PSelectorElement permits Combinator {}
-
-  sealed interface PIdSelector extends PSelectorElement permits IdSelector {
-    String id();
+  public static Combinator ofOrdinal(int value) {
+    return VALUES[value];
   }
-
-  sealed interface PTypeSelector extends PSelectorElement permits TypeSelector {}
 
 }

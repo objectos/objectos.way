@@ -22,6 +22,7 @@ import objectos.css.pseudom.PSelectorElement.PClassSelector;
 import objectos.css.pseudom.PSelectorElement.PIdSelector;
 import objectos.css.pseudom.PSelectorElement.PTypeSelector;
 import objectos.css.pseudom.PStyleSheet;
+import objectos.css.tmpl.Combinator;
 
 public final class PrettyPrintWriter extends Writer {
 
@@ -71,6 +72,16 @@ public final class PrettyPrintWriter extends Writer {
       if (element instanceof PClassSelector classSelector) {
         write('.');
         write(classSelector.className());
+      } else if (element instanceof Combinator combinator) {
+        switch (combinator) {
+          case DESCENDANT -> write(' ');
+
+          default -> {
+            write(' ');
+            write(combinator.symbol);
+            write(' ');
+          }
+        }
       } else if (element instanceof PIdSelector idSelector) {
         write('#');
         write(idSelector.id());

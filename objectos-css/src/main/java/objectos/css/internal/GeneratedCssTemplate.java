@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.internal;
 
-import objectos.css.internal.PseudoClassSelector;
 import objectos.css.tmpl.Combinator;
-import objectos.css.tmpl.IdSelector;
+import objectos.css.tmpl.Instruction.ExternalSelector;
 import objectos.css.tmpl.TypeSelector;
 
-public sealed interface PSelectorElement {
+abstract class GeneratedCssTemplate {
 
-  sealed interface PClassSelector extends PSelectorElement permits PseudoClassSelector {
-    String className();
-  }
+  protected static final ExternalSelector A = TypeSelector.A;
 
-  sealed interface PCombinator extends PSelectorElement permits Combinator {}
+  protected static final ExternalSelector BODY = TypeSelector.BODY;
 
-  sealed interface PIdSelector extends PSelectorElement permits IdSelector {
-    String id();
-  }
+  protected static final ExternalSelector LI = TypeSelector.LI;
 
-  sealed interface PTypeSelector extends PSelectorElement permits TypeSelector {}
+  protected static final ExternalSelector UL = TypeSelector.UL;
+
+  protected static final Combinator SP = Combinator.DESCENDANT;
 
 }

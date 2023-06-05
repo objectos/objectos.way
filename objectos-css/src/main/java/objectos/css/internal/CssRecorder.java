@@ -16,6 +16,7 @@
 package objectos.css.internal;
 
 import objectos.css.tmpl.ClassSelector;
+import objectos.css.tmpl.Combinator;
 import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.Instruction.ExternalSelector;
@@ -158,6 +159,7 @@ class CssRecorder extends CssTemplateApi {
           search: while (true) {
             switch (proto) {
               case ByteProto.CLASS_SELECTOR_EXTERNAL,
+                   ByteProto.COMBINATOR,
                    ByteProto.ID_SELECTOR_EXTERNAL,
                    ByteProto.TYPE_SELECTOR -> {
                 break search;
@@ -264,6 +266,12 @@ class CssRecorder extends CssTemplateApi {
       int index = addObject(className);
 
       addInternal(ByteProto.CLASS_SELECTOR_EXTERNAL, index);
+
+      listAdd(MARK_EXTERNAL);
+    } else if (selector instanceof Combinator combinator) {
+      int value = combinator.ordinal();
+
+      addInternal(ByteProto.COMBINATOR, value);
 
       listAdd(MARK_EXTERNAL);
     } else if (selector instanceof IdSelector idSelector) {

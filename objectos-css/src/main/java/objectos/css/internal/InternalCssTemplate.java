@@ -16,15 +16,9 @@
 package objectos.css.internal;
 
 import objectos.css.tmpl.Instruction;
-import objectos.css.tmpl.Instruction.ExternalSelector;
-import objectos.css.tmpl.TypeSelector;
 import objectos.lang.Check;
 
-public abstract class InternalCssTemplate {
-
-  protected static final ExternalSelector A = TypeSelector.A;
-
-  protected static final ExternalSelector BODY = TypeSelector.BODY;
+public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   private CssTemplateApi api;
 

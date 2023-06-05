@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PSelector;
 import objectos.css.pseudom.PSelectorElement;
+import objectos.css.tmpl.Combinator;
 import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.TypeSelector;
 
@@ -105,6 +106,7 @@ public final class PseudoSelector
 
         case ByteProto.CLASS_SELECTOR,
              ByteProto.CLASS_SELECTOR_EXTERNAL,
+             ByteProto.COMBINATOR,
              ByteProto.ID_SELECTOR,
              ByteProto.ID_SELECTOR_EXTERNAL,
              ByteProto.TYPE_SELECTOR -> {
@@ -135,6 +137,10 @@ public final class PseudoSelector
              player.protoGet(protoIndex++)
            );
 
+      case ByteProto.COMBINATOR -> nextCombinator(
+        player.protoGet(protoIndex++)
+      );
+
       case ByteProto.ID_SELECTOR,
            ByteProto.ID_SELECTOR_EXTERNAL -> nextIdSelector(
              player.protoGet(protoIndex++)
@@ -148,6 +154,13 @@ public final class PseudoSelector
         "Implement me :: proto=" + proto
       );
     };
+  }
+
+  private Combinator nextCombinator(int index) {
+    // skips MARKER, end index
+    int ordinal = player.protoGet(index + 2);
+
+    return Combinator.ofOrdinal(ordinal);
   }
 
   private PseudoClassSelector nextClassSelector(int index) {

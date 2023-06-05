@@ -99,6 +99,7 @@ public final class PseudoStyleRule
       switch (proto) {
         case ByteProto.CLASS_SELECTOR,
              ByteProto.CLASS_SELECTOR_EXTERNAL,
+             ByteProto.COMBINATOR,
              ByteProto.ID_SELECTOR,
              ByteProto.ID_SELECTOR_EXTERNAL,
              ByteProto.STYLE_RULE,

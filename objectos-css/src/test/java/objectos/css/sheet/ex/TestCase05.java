@@ -22,7 +22,7 @@ public class TestCase05 extends AbstractStyleSheet {
   @Override
   protected final void definition() {
     style(
-        ul, sp(), li
+      ul, sp(), li
     );
   }
 

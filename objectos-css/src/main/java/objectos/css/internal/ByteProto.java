@@ -39,6 +39,8 @@ final class ByteProto {
 
   static final int CLASS_SELECTOR_EXTERNAL = -10;
 
+  static final int COMBINATOR = -11;
+
   private ByteProto() {}
 
 }

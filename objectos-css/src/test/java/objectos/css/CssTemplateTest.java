@@ -127,6 +127,26 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase05() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(UL, SP, LI);
+        }
+      },
+
+      """
+      ul li {}
+      """,
+
+      """
+      ul li{}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

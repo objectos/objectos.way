@@ -23,7 +23,11 @@ public enum TypeSelector implements ExternalSelector, PTypeSelector {
 
   A,
 
-  BODY;
+  BODY,
+
+  LI,
+
+  UL;
 
   private final String toString;
 
