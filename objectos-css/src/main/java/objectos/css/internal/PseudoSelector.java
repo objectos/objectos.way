@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PSelector;
 import objectos.css.pseudom.PSelectorElement;
+import objectos.css.tmpl.AttributeValueOperator;
 import objectos.css.tmpl.Combinator;
 import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.TypeSelector;
@@ -104,7 +105,9 @@ public final class PseudoSelector
           break loop;
         }
 
-        case ByteProto.CLASS_SELECTOR,
+        case ByteProto.ATTR_NAME_SELECTOR,
+             ByteProto.ATTR_VALUE_SELECTOR,
+             ByteProto.CLASS_SELECTOR,
              ByteProto.CLASS_SELECTOR_EXTERNAL,
              ByteProto.COMBINATOR,
              ByteProto.ID_SELECTOR,
@@ -134,6 +137,14 @@ public final class PseudoSelector
     int proto = player.protoGet(protoIndex++);
 
     return switch (proto) {
+      case ByteProto.ATTR_NAME_SELECTOR -> nextAttributeNameSelector(
+        player.protoGet(protoIndex++)
+      );
+
+      case ByteProto.ATTR_VALUE_SELECTOR -> nextAttributeValueSelector(
+        player.protoGet(protoIndex++)
+      );
+
       case ByteProto.CLASS_SELECTOR,
            ByteProto.CLASS_SELECTOR_EXTERNAL -> nextClassSelector(
              player.protoGet(protoIndex++)
@@ -164,6 +175,32 @@ public final class PseudoSelector
         "Implement me :: proto=" + proto
       );
     };
+  }
+
+  private PSelectorElement nextAttributeNameSelector(int index) {
+    var impl = player.pseudoAttributeNameSelector();
+
+    // skips MARKER, end index
+    impl.nameIndex = player.protoGet(index + 2);
+
+    return impl;
+  }
+
+  private PSelectorElement nextAttributeValueSelector(int index) {
+    var impl = player.pseudoAttributeValueSelector();
+
+    // skips MARKER, end index
+    impl.nameIndex = player.protoGet(index + 2);
+
+    int valueOffset = player.protoGet(index + 3);
+
+    int operatorOrdinal = player.protoGet(valueOffset + 2);
+
+    impl.operator = AttributeValueOperator.ofOrdinal(operatorOrdinal);
+
+    impl.valueIndex = player.protoGet(valueOffset + 3);
+
+    return impl;
   }
 
   private PseudoClassSelector nextClassSelector(int index) {

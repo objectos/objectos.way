@@ -15,10 +15,12 @@
  */
 package objectos.css.internal;
 
+import objectos.css.tmpl.Instruction.AttributeValueElement;
 import objectos.css.tmpl.Instruction.InternalSelector;
 
 public enum InternalInstruction
     implements
+    AttributeValueElement,
     InternalSelector {
   INSTANCE;
 }

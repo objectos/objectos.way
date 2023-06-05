@@ -97,7 +97,9 @@ public final class PseudoStyleRule
       int proto = player.protoGet(protoIndex);
 
       switch (proto) {
-        case ByteProto.CLASS_SELECTOR,
+        case ByteProto.ATTR_NAME_SELECTOR,
+             ByteProto.ATTR_VALUE_SELECTOR,
+             ByteProto.CLASS_SELECTOR,
              ByteProto.CLASS_SELECTOR_EXTERNAL,
              ByteProto.COMBINATOR,
              ByteProto.ID_SELECTOR,

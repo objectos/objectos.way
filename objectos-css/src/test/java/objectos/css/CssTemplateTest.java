@@ -170,6 +170,30 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase07() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            attr("type"), OR,
+            attr("type", eq("input")), OR,
+            attr("data-attr", startsWith("start"))
+          );
+        }
+      },
+
+      """
+      [type], [type="input"], [data-attr^="start"] {}
+      """,
+
+      """
+      [type],[type=input],[data-attr^=start]{}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import objectos.css.internal.InternalInstruction;
+import objectos.css.pseudom.PSelectorElement.PAttributeSelector;
 
-public sealed interface Instruction {
+public final class PAttributeSelectorImpl implements PAttributeSelector {
 
-  sealed interface AttributeValueElement extends Instruction
-      permits InternalInstruction {}
+  private final CssPlayer player;
 
-  sealed interface ExternalSelector extends Instruction
-      permits
-      ClassSelector,
-      Combinator,
-      IdSelector,
-      PseudoClassSelector,
-      PseudoElementSelector,
-      TypeSelector {}
+  int nameIndex;
 
-  sealed interface InternalSelector extends Instruction permits InternalInstruction {}
+  PAttributeSelectorImpl(CssPlayer player) {
+    this.player = player;
+  }
+
+  @Override
+  public final String attributeName() {
+    return (String) player.objectGet(nameIndex);
+  }
 
 }

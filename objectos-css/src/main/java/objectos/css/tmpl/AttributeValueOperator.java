@@ -31,28 +31,21 @@ public enum AttributeValueOperator {
 
   private static final AttributeValueOperator[] VALUES = values();
 
-  private final String methodName;
-
   private final String symbol;
 
   private AttributeValueOperator(String symbol, String methodName) {
     this.symbol = symbol;
-    this.methodName = methodName;
   }
 
-  public static AttributeValueOperator getByCode(int code) {
-    return VALUES[code];
+  public static AttributeValueOperator ofOrdinal(int value) {
+    return VALUES[value];
   }
 
   public final int getCode() {
     return ordinal();
   }
 
-  public final String getMethodName() {
-    return methodName;
-  }
-
-  public final String getSymbol() {
+  public final String symbol() {
     return symbol;
   }
 

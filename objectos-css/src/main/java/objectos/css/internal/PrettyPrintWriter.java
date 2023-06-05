@@ -71,7 +71,19 @@ public final class PrettyPrintWriter extends Writer {
 
   private void selector(PSelector selector) {
     for (var element : selector.elements()) {
-      if (element instanceof PClassSelector classSelector) {
+      if (element instanceof PAttributeSelectorImpl impl) {
+        write('[');
+        write(impl.attributeName());
+        write(']');
+      } else if (element instanceof PAttributeValueSelectorImpl impl) {
+        write('[');
+        write(impl.attributeName());
+        write(impl.operator().symbol());
+        write('"');
+        write(impl.value());
+        write('"');
+        write(']');
+      } else if (element instanceof PClassSelector classSelector) {
         write('.');
         write(classSelector.className());
       } else if (element instanceof Combinator combinator) {

@@ -36,7 +36,9 @@ class CssRecorder extends CssTemplateApi {
   static final int PSTYLE_RULE = 1;
   static final int PSELECTOR = 2;
   static final int PCLASS_SELECTOR = 3;
-  static final int OBJECT_INDEX = 4;
+  static final int PATTRIBUTE_NAME_SELECTOR = 4;
+  static final int PATTRIBUTE_VALUE_SELECTOR = 5;
+  static final int OBJECT_INDEX = 6;
 
   int[] listArray = new int[8];
 
@@ -58,6 +60,7 @@ class CssRecorder extends CssTemplateApi {
     executeRecorderAfter();
   }
 
+  @Override
   final InternalInstruction addAttribute(int name, Instruction element) {
     int index = protoIndex;
 
@@ -222,8 +225,10 @@ class CssRecorder extends CssTemplateApi {
                 break search;
               }
 
-              case ByteProto.CLASS_SELECTOR,
-                   ByteProto.ID_SELECTOR -> {
+              case ByteProto.ATTR_VALUE_SELECTOR,
+                   ByteProto.CLASS_SELECTOR,
+                   ByteProto.ID_SELECTOR,
+                   ByteProto.MARKED -> {
                 index = protoArray[index + 1];
 
                 proto = protoArray[index];

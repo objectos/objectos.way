@@ -15,6 +15,8 @@
  */
 package objectos.css.internal;
 
+import java.util.Objects;
+import objectos.css.tmpl.AttributeValueOperator;
 import objectos.css.tmpl.Instruction;
 import objectos.lang.Check;
 
@@ -24,7 +26,52 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected abstract void definition();
 
+  protected final Instruction.InternalSelector attr(String name) {
+    checkName(name);
+
+    var api = api();
+    return api.addInternal(ByteProto.ATTR_NAME_SELECTOR, api.addObject(name));
+  }
+
+  protected final Instruction.InternalSelector attr(
+      String name, Instruction.AttributeValueElement element) {
+    checkName(name);
+    Objects.requireNonNull(element, "element == null");
+
+    var api = api();
+    return api.addAttribute(api.addObject(name), element);
+  }
+
+  protected final Instruction.AttributeValueElement eq(String value) {
+    return attrValue(AttributeValueOperator.EQUALS, value);
+  }
+
+  protected final Instruction.AttributeValueElement startsWith(String value) {
+    return attrValue(AttributeValueOperator.STARTS_WITH, value);
+  }
+
+  private Instruction.AttributeValueElement attrValue(
+      AttributeValueOperator operator, String value) {
+    checkValue(value);
+
+    var api = api();
+    return api.addInternal(
+      ByteProto.ATTR_VALUE_ELEMENT, operator.ordinal(), api.addObject(value));
+  }
+
+  private void checkName(String name) {
+    Objects.requireNonNull(name, "name == null");
+    Check.argument(!name.isBlank(), "name must not be blank");
+  }
+
+  private void checkValue(String value) {
+    Objects.requireNonNull(value, "value == null");
+    Check.argument(!value.isBlank(), "value must not be blank");
+  }
+
   protected final Instruction.InternalSelector className(String name) {
+    checkName(name);
+
     var api = api();
     return api.addInternal(ByteProto.CLASS_SELECTOR, api.addObject(name));
   }

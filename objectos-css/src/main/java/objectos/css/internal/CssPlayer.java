@@ -61,6 +61,14 @@ public class CssPlayer extends CssRecorder {
     return index < protoIndex;
   }
 
+  final PAttributeSelectorImpl pseudoAttributeNameSelector() {
+    return pseudoFactory(PATTRIBUTE_NAME_SELECTOR, PAttributeSelectorImpl::new);
+  }
+
+  final PAttributeValueSelectorImpl pseudoAttributeValueSelector() {
+    return pseudoFactory(PATTRIBUTE_VALUE_SELECTOR, PAttributeValueSelectorImpl::new);
+  }
+
   final PseudoClassSelector pseudoClassSelector() {
     return pseudoFactory(PCLASS_SELECTOR, PseudoClassSelector::new);
   }

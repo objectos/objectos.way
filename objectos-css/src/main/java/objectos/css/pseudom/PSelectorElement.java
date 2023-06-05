@@ -15,12 +15,27 @@
  */
 package objectos.css.pseudom;
 
+import objectos.css.internal.PAttributeSelectorImpl;
+import objectos.css.internal.PAttributeValueSelectorImpl;
 import objectos.css.internal.PseudoClassSelector;
+import objectos.css.tmpl.AttributeValueOperator;
 import objectos.css.tmpl.Combinator;
 import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.TypeSelector;
 
 public sealed interface PSelectorElement {
+
+  sealed interface PAttributeSelector extends PSelectorElement
+      permits PAttributeSelectorImpl, PAttributeValueSelector {
+    String attributeName();
+  }
+
+  sealed interface PAttributeValueSelector extends PAttributeSelector
+      permits PAttributeValueSelectorImpl {
+    AttributeValueOperator operator();
+
+    String value();
+  }
 
   sealed interface PClassSelector extends PSelectorElement permits PseudoClassSelector {
     String className();
