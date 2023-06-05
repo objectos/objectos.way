@@ -13,18 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.sheet.ex;
+package objectos.css.tmpl;
 
-import objectos.css.sheet.AbstractStyleSheet;
+import objectos.css.pseudom.PSelectorElement.PPseudoElementSelector;
+import objectos.css.tmpl.Instruction.ExternalSelector;
 
-public class TestCase06 extends AbstractStyleSheet {
+// generate me
+public enum PseudoElementSelector implements ExternalSelector, PPseudoElementSelector {
+
+  AFTER("::after");
+
+  private static final PseudoElementSelector[] VALUES = PseudoElementSelector.values();
+
+  private final String toString;
+
+  private PseudoElementSelector(String toString) {
+    this.toString = toString;
+  }
+
+  public static PseudoElementSelector ofOrdinal(int value) {
+    return VALUES[value];
+  }
 
   @Override
-  protected final void definition() {
-    style(
-      a, AFTER, or(),
-      a, VISITED
-    );
+  public final String toString() {
+    return toString;
   }
 
 }

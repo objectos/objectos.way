@@ -102,6 +102,8 @@ public final class PseudoStyleRule
              ByteProto.COMBINATOR,
              ByteProto.ID_SELECTOR,
              ByteProto.ID_SELECTOR_EXTERNAL,
+             ByteProto.PSEUDO_CLASS_SELECTOR,
+             ByteProto.PSEUDO_ELEMENT_SELECTOR,
              ByteProto.STYLE_RULE,
              ByteProto.TYPE_SELECTOR -> protoIndex += 2;
 

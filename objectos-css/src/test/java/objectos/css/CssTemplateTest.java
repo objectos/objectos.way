@@ -147,6 +147,29 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase06() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            A, AFTER, OR,
+            A, VISITED
+          );
+        }
+      },
+
+      """
+      a::after, a:visited {}
+      """,
+
+      """
+      a::after,a:visited{}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

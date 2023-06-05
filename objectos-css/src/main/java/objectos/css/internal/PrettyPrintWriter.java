@@ -20,6 +20,8 @@ import objectos.css.pseudom.PRule.PStyleRule;
 import objectos.css.pseudom.PSelector;
 import objectos.css.pseudom.PSelectorElement.PClassSelector;
 import objectos.css.pseudom.PSelectorElement.PIdSelector;
+import objectos.css.pseudom.PSelectorElement.PPseudoClassSelector;
+import objectos.css.pseudom.PSelectorElement.PPseudoElementSelector;
 import objectos.css.pseudom.PSelectorElement.PTypeSelector;
 import objectos.css.pseudom.PStyleSheet;
 import objectos.css.tmpl.Combinator;
@@ -76,6 +78,8 @@ public final class PrettyPrintWriter extends Writer {
         switch (combinator) {
           case DESCENDANT -> write(' ');
 
+          case LIST -> write(", ");
+
           default -> {
             write(' ');
             write(combinator.symbol);
@@ -85,6 +89,10 @@ public final class PrettyPrintWriter extends Writer {
       } else if (element instanceof PIdSelector idSelector) {
         write('#');
         write(idSelector.id());
+      } else if (element instanceof PPseudoClassSelector pseudo) {
+        write(pseudo.toString());
+      } else if (element instanceof PPseudoElementSelector pseudo) {
+        write(pseudo.toString());
       } else if (element instanceof PTypeSelector typeSelector) {
         write(typeSelector.toString());
       } else {

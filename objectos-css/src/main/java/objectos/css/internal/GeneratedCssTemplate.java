@@ -17,6 +17,8 @@ package objectos.css.internal;
 
 import objectos.css.tmpl.Combinator;
 import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.css.tmpl.PseudoClassSelector;
+import objectos.css.tmpl.PseudoElementSelector;
 import objectos.css.tmpl.TypeSelector;
 
 abstract class GeneratedCssTemplate {
@@ -29,6 +31,14 @@ abstract class GeneratedCssTemplate {
 
   protected static final ExternalSelector UL = TypeSelector.UL;
 
+  protected static final Combinator OR = Combinator.LIST;
+
   protected static final Combinator SP = Combinator.DESCENDANT;
+
+  protected static final PseudoClassSelector ACTIVE = PseudoClassSelector.ACTIVE;
+
+  protected static final PseudoClassSelector VISITED = PseudoClassSelector.VISITED;
+
+  protected static final PseudoElementSelector AFTER = PseudoElementSelector.AFTER;
 
 }

@@ -19,6 +19,7 @@ import java.util.Locale;
 import objectos.css.pseudom.PSelectorElement.PTypeSelector;
 import objectos.css.tmpl.Instruction.ExternalSelector;
 
+// generate me
 public enum TypeSelector implements ExternalSelector, PTypeSelector {
 
   A,
@@ -29,9 +30,9 @@ public enum TypeSelector implements ExternalSelector, PTypeSelector {
 
   UL;
 
-  private final String toString;
-
   private static final TypeSelector[] VALUES = TypeSelector.values();
+
+  private final String toString;
 
   private TypeSelector() {
     toString = name().toLowerCase(Locale.US);

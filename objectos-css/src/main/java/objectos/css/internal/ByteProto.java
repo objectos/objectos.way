@@ -41,6 +41,10 @@ final class ByteProto {
 
   static final int COMBINATOR = -11;
 
+  static final int PSEUDO_CLASS_SELECTOR = -12;
+
+  static final int PSEUDO_ELEMENT_SELECTOR = -13;
+
   private ByteProto() {}
 
 }

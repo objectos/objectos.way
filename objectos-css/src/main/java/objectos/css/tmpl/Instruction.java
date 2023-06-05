@@ -20,7 +20,13 @@ import objectos.css.internal.InternalInstruction;
 public sealed interface Instruction {
 
   sealed interface ExternalSelector extends Instruction
-      permits ClassSelector, Combinator, IdSelector, TypeSelector {}
+      permits
+      ClassSelector,
+      Combinator,
+      IdSelector,
+      PseudoClassSelector,
+      PseudoElementSelector,
+      TypeSelector {}
 
   sealed interface InternalSelector extends Instruction permits InternalInstruction {}
 

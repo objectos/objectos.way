@@ -20,6 +20,8 @@ import objectos.css.tmpl.Combinator;
 import objectos.css.tmpl.IdSelector;
 import objectos.css.tmpl.Instruction;
 import objectos.css.tmpl.Instruction.ExternalSelector;
+import objectos.css.tmpl.PseudoClassSelector;
+import objectos.css.tmpl.PseudoElementSelector;
 import objectos.css.tmpl.TypeSelector;
 import objectos.lang.Check;
 import objectos.util.IntArrays;
@@ -161,6 +163,8 @@ class CssRecorder extends CssTemplateApi {
               case ByteProto.CLASS_SELECTOR_EXTERNAL,
                    ByteProto.COMBINATOR,
                    ByteProto.ID_SELECTOR_EXTERNAL,
+                   ByteProto.PSEUDO_CLASS_SELECTOR,
+                   ByteProto.PSEUDO_ELEMENT_SELECTOR,
                    ByteProto.TYPE_SELECTOR -> {
                 break search;
               }
@@ -280,6 +284,18 @@ class CssRecorder extends CssTemplateApi {
       int index = addObject(id);
 
       addInternal(ByteProto.ID_SELECTOR_EXTERNAL, index);
+
+      listAdd(MARK_EXTERNAL);
+    } else if (selector instanceof PseudoClassSelector pseudoClass) {
+      int value = pseudoClass.ordinal();
+
+      addInternal(ByteProto.PSEUDO_CLASS_SELECTOR, value);
+
+      listAdd(MARK_EXTERNAL);
+    } else if (selector instanceof PseudoElementSelector pseudoElement) {
+      int value = pseudoElement.ordinal();
+
+      addInternal(ByteProto.PSEUDO_ELEMENT_SELECTOR, value);
 
       listAdd(MARK_EXTERNAL);
     } else if (selector instanceof TypeSelector typeSelector) {

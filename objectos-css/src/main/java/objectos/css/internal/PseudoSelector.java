@@ -109,6 +109,8 @@ public final class PseudoSelector
              ByteProto.COMBINATOR,
              ByteProto.ID_SELECTOR,
              ByteProto.ID_SELECTOR_EXTERNAL,
+             ByteProto.PSEUDO_CLASS_SELECTOR,
+             ByteProto.PSEUDO_ELEMENT_SELECTOR,
              ByteProto.TYPE_SELECTOR -> {
           state = NEXT;
 
@@ -146,6 +148,14 @@ public final class PseudoSelector
              player.protoGet(protoIndex++)
            );
 
+      case ByteProto.PSEUDO_CLASS_SELECTOR -> nextPseudoClassSelector(
+        player.protoGet(protoIndex++)
+      );
+
+      case ByteProto.PSEUDO_ELEMENT_SELECTOR -> nextPseudoElementSelector(
+        player.protoGet(protoIndex++)
+      );
+
       case ByteProto.TYPE_SELECTOR -> nextTypeSelector(
         player.protoGet(protoIndex++)
       );
@@ -156,18 +166,18 @@ public final class PseudoSelector
     };
   }
 
-  private Combinator nextCombinator(int index) {
-    // skips MARKER, end index
-    int ordinal = player.protoGet(index + 2);
-
-    return Combinator.ofOrdinal(ordinal);
-  }
-
   private PseudoClassSelector nextClassSelector(int index) {
     // skips MARKER, end index
     int objectIndex = player.protoGet(index + 2);
 
     return player.pseudoClassSelector().init(objectIndex);
+  }
+
+  private Combinator nextCombinator(int index) {
+    // skips MARKER, end index
+    int ordinal = player.protoGet(index + 2);
+
+    return Combinator.ofOrdinal(ordinal);
   }
 
   private IdSelector nextIdSelector(int index) {
@@ -177,6 +187,20 @@ public final class PseudoSelector
     var id = (String) player.objectGet(objectIndex);
 
     return new IdSelector(id);
+  }
+
+  private PSelectorElement nextPseudoClassSelector(int index) {
+    // skips MARKER, end index
+    int ordinal = player.protoGet(index + 2);
+
+    return objectos.css.tmpl.PseudoClassSelector.ofOrdinal(ordinal);
+  }
+
+  private PSelectorElement nextPseudoElementSelector(int index) {
+    // skips MARKER, end index
+    int ordinal = player.protoGet(index + 2);
+
+    return objectos.css.tmpl.PseudoElementSelector.ofOrdinal(ordinal);
   }
 
   private TypeSelector nextTypeSelector(int index) {

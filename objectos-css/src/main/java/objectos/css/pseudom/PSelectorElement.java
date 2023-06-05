@@ -32,6 +32,12 @@ public sealed interface PSelectorElement {
     String id();
   }
 
+  sealed interface PPseudoClassSelector extends PSelectorElement
+      permits objectos.css.tmpl.PseudoClassSelector {}
+
+  sealed interface PPseudoElementSelector extends PSelectorElement
+      permits objectos.css.tmpl.PseudoElementSelector {}
+
   sealed interface PTypeSelector extends PSelectorElement permits TypeSelector {}
 
 }

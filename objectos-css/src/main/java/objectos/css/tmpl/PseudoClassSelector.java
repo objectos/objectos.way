@@ -15,9 +15,31 @@
  */
 package objectos.css.tmpl;
 
-// generate me
-public enum Property {
+import objectos.css.pseudom.PSelectorElement.PPseudoClassSelector;
+import objectos.css.tmpl.Instruction.ExternalSelector;
 
-  BORDER;
+// generate me
+public enum PseudoClassSelector implements ExternalSelector, PPseudoClassSelector {
+
+  ACTIVE(":active"),
+
+  VISITED(":visited");
+
+  private static final PseudoClassSelector[] VALUES = PseudoClassSelector.values();
+
+  private final String toString;
+
+  private PseudoClassSelector(String toString) {
+    this.toString = toString;
+  }
+
+  public static PseudoClassSelector ofOrdinal(int value) {
+    return VALUES[value];
+  }
+
+  @Override
+  public final String toString() {
+    return toString;
+  }
 
 }
