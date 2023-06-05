@@ -73,16 +73,20 @@ public class CssPlayer extends CssRecorder {
     return pseudoFactory(PCLASS_SELECTOR, PClassSelectorImpl::new);
   }
 
-  final PseudoSelector pseudoSelector() {
-    return pseudoFactory(PSELECTOR, PseudoSelector::new);
+  final PIdSelectorImpl pseudoIdSelector() {
+    return pseudoFactory(PID_SELECTOR, PIdSelectorImpl::new);
   }
 
-  final PseudoStyleRule pseudoStyleRule() {
-    return pseudoFactory(PSTYLE_RULE, PseudoStyleRule::new);
+  final PSelectorImpl pseudoSelector() {
+    return pseudoFactory(PSELECTOR, PSelectorImpl::new);
   }
 
-  final PseudoStyleSheet pseudoStyleSheet() {
-    return pseudoFactory(PSTYLE_SHEET, PseudoStyleSheet::new);
+  final PStyleRuleImpl pseudoStyleRule() {
+    return pseudoFactory(PSTYLE_RULE, PStyleRuleImpl::new);
+  }
+
+  final PStyleSheetImpl pseudoStyleSheet() {
+    return pseudoFactory(PSTYLE_SHEET, PStyleSheetImpl::new);
   }
 
   @SuppressWarnings("unchecked")

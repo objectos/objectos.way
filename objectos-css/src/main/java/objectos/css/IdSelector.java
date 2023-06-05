@@ -16,16 +16,15 @@
 package objectos.css;
 
 import java.util.Objects;
-import objectos.css.pseudom.PSelectorElement.PIdSelector;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
 
-public final record IdSelector(String id) implements StyleRuleElement, PIdSelector {
+public final record IdSelector(String id) implements StyleRuleElement {
 
   public IdSelector {
     Objects.requireNonNull(id, "id == null");
 
-    Check.argument(!id.isBlank(), "id must no be blank");
+    Check.argument(!id.isBlank(), "id must not be blank");
   }
 
   public static IdSelector of(String id) {

@@ -17,12 +17,11 @@ package objectos.css.internal;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import objectos.css.IdSelector;
 import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PSelector;
 import objectos.css.pseudom.PSelectorElement;
 
-public final class PseudoSelector
+public final class PSelectorImpl
     implements PSelector, IterableOnce<PSelectorElement>, Iterator<PSelectorElement> {
 
   private static final int START = -1;
@@ -37,7 +36,7 @@ public final class PseudoSelector
 
   private int state;
 
-  PseudoSelector(CssPlayer player) {
+  PSelectorImpl(CssPlayer player) {
     this.player = player;
   }
 
@@ -81,7 +80,7 @@ public final class PseudoSelector
     }
   }
 
-  final PseudoSelector init(int protoIndex) {
+  final PSelectorImpl init(int protoIndex) {
     this.protoIndex = protoIndex;
 
     state = START;
@@ -201,10 +200,12 @@ public final class PseudoSelector
   }
 
   private PClassSelectorImpl nextClassSelector(int index) {
-    // skips MARKER, end index
-    int objectIndex = player.protoGet(index + 2);
+    var impl = player.pseudoClassSelector();
 
-    return player.pseudoClassSelector().init(objectIndex);
+    // skips MARKER, end index
+    impl.objectIndex = player.protoGet(index + 2);
+
+    return impl;
   }
 
   private Combinator nextCombinator(int index) {
@@ -214,13 +215,13 @@ public final class PseudoSelector
     return Combinator.ofOrdinal(ordinal);
   }
 
-  private IdSelector nextIdSelector(int index) {
+  private PIdSelectorImpl nextIdSelector(int index) {
+    var impl = player.pseudoIdSelector();
+
     // skips MARKER, end index
-    int objectIndex = player.protoGet(index + 2);
+    impl.objectIndex = player.protoGet(index + 2);
 
-    var id = (String) player.objectGet(objectIndex);
-
-    return new IdSelector(id);
+    return impl;
   }
 
   private PSelectorElement nextPseudoClassSelector(int index) {

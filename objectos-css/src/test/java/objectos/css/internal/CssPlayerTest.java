@@ -17,8 +17,8 @@ package objectos.css.internal;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.css.IdSelector;
 import objectos.css.pseudom.PRule.PStyleRule;
+import objectos.css.pseudom.PSelectorElement.PIdSelector;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -105,7 +105,8 @@ public class CssPlayerTest {
     // rule[0]
     var rule = (PStyleRule) rules.next();
     var selector = rule.selector().elements().iterator();
-    assertEquals(selector.next(), new IdSelector("myid"));
+    var idSel = (PIdSelector) selector.next();
+    assertEquals(idSel.id(), "myid");
     assertEquals(selector.hasNext(), false);
     var declarations = rule.declarations().iterator();
     assertEquals(declarations.hasNext(), false);
@@ -155,7 +156,8 @@ public class CssPlayerTest {
     var rule = (PStyleRule) rules.next();
     var selector = rule.selector().elements().iterator();
     assertEquals(selector.next(), TypeSelector.A);
-    assertEquals(selector.next(), new IdSelector("myid"));
+    var idSel = (PIdSelector) selector.next();
+    assertEquals(idSel.id(), "myid");
     assertEquals(selector.hasNext(), false);
     var declarations = rule.declarations().iterator();
     assertEquals(declarations.hasNext(), false);

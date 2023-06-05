@@ -21,7 +21,7 @@ public final class PClassSelectorImpl implements PClassSelector {
 
   private final CssPlayer player;
 
-  private int objectIndex;
+  int objectIndex;
 
   PClassSelectorImpl(CssPlayer player) {
     this.player = player;
@@ -30,12 +30,6 @@ public final class PClassSelectorImpl implements PClassSelector {
   @Override
   public final String className() {
     return (String) player.objectGet(objectIndex);
-  }
-
-  final PClassSelectorImpl init(int objectIndex) {
-    this.objectIndex = objectIndex;
-
-    return this;
   }
 
 }

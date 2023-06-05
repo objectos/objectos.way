@@ -15,9 +15,9 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.PseudoSelector;
+import objectos.css.internal.PSelectorImpl;
 
-public sealed interface PSelector permits PseudoSelector {
+public sealed interface PSelector permits PSelectorImpl {
 
   IterableOnce<PSelectorElement> elements();
 

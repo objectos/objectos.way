@@ -16,34 +16,42 @@
 package objectos.css.internal;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PRule;
-import objectos.css.pseudom.PStyleSheet;
+import objectos.css.pseudom.PRule.PDeclaration;
+import objectos.css.pseudom.PSelector;
 
-public final class PseudoStyleSheet
-    implements PStyleSheet, IterableOnce<PRule>, Iterator<PRule> {
+public final class PStyleRuleImpl
+    implements PRule.PStyleRule, IterableOnce<PDeclaration>, Iterator<PDeclaration> {
 
   private static final int START = -1;
   private static final int ITERABLE = -2;
   private static final int ITERATOR = -3;
   private static final int NEXT = -4;
+  @SuppressWarnings("unused")
   private static final int NEXT_CONSUMED = -5;
 
   private final CssPlayer player;
 
-  int protoIndex;
+  private int protoIndex;
 
-  int state;
+  private int state;
 
-  PseudoStyleSheet(CssPlayer player) {
+  PStyleRuleImpl(CssPlayer player) {
     this.player = player;
+  }
+
+  @Override
+  public final IterableOnce<PDeclaration> declarations() {
+    state = player.cas(state, START, ITERABLE);
+
+    return this;
   }
 
   @Override
   public final boolean hasNext() {
     switch (state) {
-      case ITERATOR, NEXT_CONSUMED -> {}
+      case ITERATOR -> {}
 
       case NEXT -> {
         return true;
@@ -58,31 +66,24 @@ public final class PseudoStyleSheet
   }
 
   @Override
-  public final Iterator<PRule> iterator() {
+  public final Iterator<PDeclaration> iterator() {
     state = player.cas(state, ITERABLE, ITERATOR);
 
     return this;
   }
 
   @Override
-  public final PRule next() {
-    if (hasNext()) {
-      return next0();
-    } else {
-      throw new NoSuchElementException();
-    }
+  public final PDeclaration next() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
-  public final IterableOnce<PRule> rules() {
-    state = player.cas(state, START, ITERABLE);
-
-    return this;
+  public final PSelector selector() {
+    return player.pseudoSelector().init(protoIndex);
   }
 
-  final PseudoStyleSheet init() {
-    // sets protoIndex to ROOT START
-    protoIndex = player.protoLast();
+  final PStyleRuleImpl init(int index) {
+    protoIndex = index;
 
     state = START;
 
@@ -96,17 +97,19 @@ public final class PseudoStyleSheet
       int proto = player.protoGet(protoIndex);
 
       switch (proto) {
-        case ByteProto.ROOT -> protoIndex++;
+        case ByteProto.ATTR_NAME_SELECTOR,
+             ByteProto.ATTR_VALUE_SELECTOR,
+             ByteProto.CLASS_SELECTOR,
+             ByteProto.CLASS_SELECTOR_EXTERNAL,
+             ByteProto.COMBINATOR,
+             ByteProto.ID_SELECTOR,
+             ByteProto.ID_SELECTOR_EXTERNAL,
+             ByteProto.PSEUDO_CLASS_SELECTOR,
+             ByteProto.PSEUDO_ELEMENT_SELECTOR,
+             ByteProto.STYLE_RULE,
+             ByteProto.TYPE_SELECTOR -> protoIndex += 2;
 
-        case ByteProto.ROOT_END -> {
-          break loop;
-        }
-
-        case ByteProto.STYLE_RULE -> {
-          state = NEXT;
-
-          found = true;
-
+        case ByteProto.STYLE_RULE_END -> {
           break loop;
         }
 
@@ -117,28 +120,6 @@ public final class PseudoStyleSheet
     }
 
     return found;
-  }
-
-  private PRule next0() {
-    state = player.cas(state, NEXT, NEXT_CONSUMED);
-
-    int proto = player.protoGet(protoIndex++);
-
-    return switch (proto) {
-      case ByteProto.STYLE_RULE -> nextStyleRule();
-
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: proto=" + proto
-      );
-    };
-  }
-
-  private PRule nextStyleRule() {
-    var rule = player.pseudoStyleRule();
-
-    int index = player.protoGet(protoIndex++);
-
-    return rule.init(index);
   }
 
 }

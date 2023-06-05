@@ -16,13 +16,13 @@
 package objectos.css.pseudom;
 
 import objectos.css.internal.PseudoDeclaration;
-import objectos.css.internal.PseudoStyleRule;
+import objectos.css.internal.PStyleRuleImpl;
 
 public sealed interface PRule {
 
   sealed interface PDeclaration permits PseudoDeclaration {}
 
-  sealed interface PStyleRule extends PRule permits PseudoStyleRule {
+  sealed interface PStyleRule extends PRule permits PStyleRuleImpl {
 
     PSelector selector();
 

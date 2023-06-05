@@ -15,12 +15,12 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.IdSelector;
 import objectos.css.internal.AttributeValueOperator;
 import objectos.css.internal.Combinator;
 import objectos.css.internal.PAttributeSelectorImpl;
 import objectos.css.internal.PAttributeValueSelectorImpl;
 import objectos.css.internal.PClassSelectorImpl;
+import objectos.css.internal.PIdSelectorImpl;
 import objectos.css.internal.TypeSelector;
 
 public sealed interface PSelectorElement {
@@ -43,7 +43,7 @@ public sealed interface PSelectorElement {
 
   sealed interface PCombinator extends PSelectorElement permits Combinator {}
 
-  sealed interface PIdSelector extends PSelectorElement permits IdSelector {
+  sealed interface PIdSelector extends PSelectorElement permits PIdSelectorImpl {
     String id();
   }
 

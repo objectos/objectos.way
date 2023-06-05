@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.internal;
 
-import objectos.css.internal.PStyleSheetImpl;
+import objectos.css.pseudom.PSelectorElement.PIdSelector;
 
-public sealed interface PStyleSheet permits PStyleSheetImpl {
+public final class PIdSelectorImpl implements PIdSelector {
 
-  IterableOnce<PRule> rules();
+  private final CssPlayer player;
+
+  int objectIndex;
+
+  PIdSelectorImpl(CssPlayer player) {
+    this.player = player;
+  }
+
+  @Override
+  public final String id() {
+    return (String) player.objectGet(objectIndex);
+  }
 
 }
