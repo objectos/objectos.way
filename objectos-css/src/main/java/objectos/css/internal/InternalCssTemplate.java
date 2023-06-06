@@ -87,8 +87,9 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final StyleRuleElement addDeclaration(Property property, PropertyValue value) {
-    throw new UnsupportedOperationException("Implement me");
+  final StyleRuleElement addDeclaration(
+      Property property, PropertyValue... values) {
+    return api().addDeclaration(property, values);
   }
 
   final void acceptTemplateApi(CssTemplateApi api) {

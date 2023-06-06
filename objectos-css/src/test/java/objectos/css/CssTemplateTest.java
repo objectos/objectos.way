@@ -192,6 +192,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase08() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ANY,
+
+            display(BLOCK)
+          );
+        }
+      },
+
+      """
+      * {
+        display: block;
+      }
+      """,
+
+      """
+      *{display:block}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

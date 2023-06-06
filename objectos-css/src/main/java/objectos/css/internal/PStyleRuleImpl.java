@@ -51,7 +51,7 @@ public final class PStyleRuleImpl
   @Override
   public final boolean hasNext() {
     switch (state) {
-      case ITERATOR -> {}
+      case ITERATOR, NEXT_CONSUMED -> {}
 
       case NEXT -> {
         return true;

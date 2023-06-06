@@ -15,6 +15,9 @@
  */
 package objectos.css.internal;
 
+import objectos.css.pseudom.PDeclaration;
+import objectos.css.pseudom.PPropertyValue;
+import objectos.css.pseudom.PPropertyValue.PKeyword;
 import objectos.css.pseudom.PRule;
 import objectos.css.pseudom.PRule.PStyleRule;
 import objectos.css.pseudom.PSelector;
@@ -23,6 +26,7 @@ import objectos.css.pseudom.PSelectorElement.PIdSelector;
 import objectos.css.pseudom.PSelectorElement.PPseudoClassSelector;
 import objectos.css.pseudom.PSelectorElement.PPseudoElementSelector;
 import objectos.css.pseudom.PSelectorElement.PTypeSelector;
+import objectos.css.pseudom.PSelectorElement.PUniversalSelector;
 import objectos.css.pseudom.PStyleSheet;
 
 public final class PrettyPrintWriter extends Writer {
@@ -61,10 +65,43 @@ public final class PrettyPrintWriter extends Writer {
 
     if (iter.hasNext()) {
       write(" {");
+      write(NL);
 
-      throw new UnsupportedOperationException("Implement me");
+      while (iter.hasNext()) {
+        write("  ");
+        declaration(iter.next());
+        write(NL);
+      }
+
+      write('}');
     } else {
       write(" {}");
+    }
+  }
+
+  private void declaration(PDeclaration declaration) {
+    var property = declaration.property();
+
+    write(property.propertyName());
+    write(':');
+
+    var values = declaration.values().iterator();
+
+    while (values.hasNext()) {
+      write(' ');
+      propertyValue(values.next());
+    }
+
+    write(';');
+  }
+
+  private void propertyValue(PPropertyValue value) {
+    if (value instanceof PKeyword keyword) {
+      write(keyword.keywordName());
+    } else {
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + value.getClass()
+      );
     }
   }
 
@@ -106,6 +143,8 @@ public final class PrettyPrintWriter extends Writer {
         write(pseudo.toString());
       } else if (element instanceof PTypeSelector typeSelector) {
         write(typeSelector.toString());
+      } else if (element instanceof PUniversalSelector) {
+        write('*');
       } else {
         throw new UnsupportedOperationException(
           "Implement me :: type=" + element.getClass()

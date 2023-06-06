@@ -46,7 +46,11 @@ public final class PDeclarationImpl
   @Override
   public final boolean hasNext() {
     switch (state) {
-      case ITERATOR -> {}
+      case ITERATOR, NEXT_CONSUMED -> {}
+
+      case NEXT -> {
+        return true;
+      }
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -91,6 +95,10 @@ public final class PDeclarationImpl
       int proto = player.protoGet(protoIndex);
 
       switch (proto) {
+        case ByteProto.DECLARATION_END -> {
+          break loop;
+        }
+
         case ByteProto.KEYWORD -> {
           state = NEXT;
 

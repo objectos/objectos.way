@@ -15,10 +15,13 @@
  */
 package objectos.css.internal;
 
+import objectos.css.tmpl.Keywords;
 import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 
 abstract class GeneratedCssTemplate {
+
+  protected static final StyleRuleElement ANY = UniversalSelector.INSTANCE;
 
   protected static final StyleRuleElement A = TypeSelector.A;
 
@@ -38,10 +41,13 @@ abstract class GeneratedCssTemplate {
 
   protected static final StyleRuleElement AFTER = PseudoElementSelector.AFTER;
 
+  protected static final Keywords.Block BLOCK = Keyword.BLOCK;
+
   protected final StyleRuleElement display(PropertyValue.Display1 value) {
     return addDeclaration(Property.DISPLAY, value.self());
   }
 
-  abstract StyleRuleElement addDeclaration(Property property, PropertyValue value);
+  abstract StyleRuleElement addDeclaration(
+      Property property, PropertyValue... values);
 
 }
