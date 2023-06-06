@@ -163,7 +163,7 @@ public final class PSelectorImpl
         player.protoGet(protoIndex++)
       );
 
-      case ByteProto.TYPE_SELECTOR -> nextTypeSelector(
+      case ByteProto.TYPE_SELECTOR -> TypeSelector.ofOrdinal(
         player.protoGet(protoIndex++)
       );
 
@@ -236,13 +236,6 @@ public final class PSelectorImpl
     int ordinal = player.protoGet(index + 2);
 
     return objectos.css.internal.PseudoElementSelector.ofOrdinal(ordinal);
-  }
-
-  private TypeSelector nextTypeSelector(int index) {
-    // skips MARKER, end index
-    int ordinal = player.protoGet(index + 2);
-
-    return TypeSelector.ofOrdinal(ordinal);
   }
 
 }

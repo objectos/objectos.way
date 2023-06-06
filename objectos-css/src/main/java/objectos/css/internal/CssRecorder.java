@@ -98,7 +98,7 @@ class CssRecorder extends CssTemplateApi {
 
     protoAdd(ByteProto.DECLARATION, ByteProto.NULL, property.ordinal());
 
-    addDeclaration1Mark(values, listBase, contents);
+    addDeclaration1Mark(listBase, contents);
 
     protoAdd(ByteProto.DECLARATION_END);
 
@@ -133,7 +133,7 @@ class CssRecorder extends CssTemplateApi {
     return contents;
   }
 
-  private void addDeclaration1Mark(PropertyValue[] values, int listBase, int contents) {
+  private void addDeclaration1Mark(int listBase, int contents) {
     int listMax = listIndex;
 
     int idx = listBase;
@@ -303,12 +303,10 @@ class CssRecorder extends CssTemplateApi {
         addInternal(ByteProto.PSEUDO_ELEMENT_SELECTOR, value);
 
         listAdd(MARK_EXTERNAL);
-      } else if (element instanceof TypeSelector typeSelector) {
-        int value = typeSelector.ordinal();
+      } else if (element instanceof TypeSelector selector) {
+        int value = selector.ordinal();
 
-        addInternal(ByteProto.TYPE_SELECTOR, value);
-
-        listAdd(MARK_EXTERNAL);
+        listAdd(MARK_VALUE2, ByteProto.TYPE_SELECTOR, value);
       } else if (element instanceof UniversalSelector) {
         listAdd(MARK_VALUE1, ByteProto.UNIVERSAL_SELECTOR);
       } else {
@@ -418,6 +416,8 @@ class CssRecorder extends CssTemplateApi {
         }
 
         case MARK_VALUE1 -> protoAdd(listArray[idx++]);
+
+        case MARK_VALUE2 -> protoAdd(listArray[idx++], listArray[idx++]);
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: marker=" + marker

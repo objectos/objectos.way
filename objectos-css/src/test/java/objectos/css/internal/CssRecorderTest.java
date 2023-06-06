@@ -38,21 +38,16 @@ public class CssRecorderTest {
     executeAfter();
 
     testProto(
-      // [0]: BODY
-      ByteProto.MARKED, 5,
-      TypeSelector.BODY.ordinal(),
-      0, ByteProto.TYPE_SELECTOR,
-
-      // [5]: style()
-      ByteProto.STYLE_RULE, 13,
-      ByteProto.TYPE_SELECTOR, 0,
+      // [0]: style()
+      ByteProto.STYLE_RULE, 8,
+      ByteProto.TYPE_SELECTOR, TypeSelector.BODY.ordinal(),
       ByteProto.STYLE_RULE_END,
-      0, 5, ByteProto.STYLE_RULE,
+      0, 0, ByteProto.STYLE_RULE,
 
-      // [13]: ROOT
+      // [8]: ROOT
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, 5,
-      ByteProto.ROOT_END, 13
+      ByteProto.STYLE_RULE, 0,
+      ByteProto.ROOT_END, 8
     );
   }
 
@@ -118,22 +113,17 @@ public class CssRecorderTest {
       id,
       0, ByteProto.ID_SELECTOR,
 
-      // [5]: A
-      ByteProto.MARKED, 10,
-      TypeSelector.A.ordinal(),
-      5, ByteProto.TYPE_SELECTOR,
-
-      // [10]: style()
-      ByteProto.STYLE_RULE, 20,
-      ByteProto.TYPE_SELECTOR, 5,
+      // [5]: style()
+      ByteProto.STYLE_RULE, 15,
+      ByteProto.TYPE_SELECTOR, TypeSelector.A.ordinal(),
       ByteProto.ID_SELECTOR, 0,
       ByteProto.STYLE_RULE_END,
-      0, 10, ByteProto.STYLE_RULE,
+      0, 5, ByteProto.STYLE_RULE,
 
-      // [20]: ROOT
+      // [15]: ROOT
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, 10,
-      ByteProto.ROOT_END, 20
+      ByteProto.STYLE_RULE, 5,
+      ByteProto.ROOT_END, 15
     );
   }
 
