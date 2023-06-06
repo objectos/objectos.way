@@ -269,14 +269,12 @@ class CssRecorder extends CssTemplateApi {
         contents = updateContents(contents);
 
         listAdd(MARK_INTERNAL);
-      } else if (element instanceof ClassSelector classSelector) {
-        var className = classSelector.className();
+      } else if (element instanceof ClassSelector selector) {
+        var className = selector.className();
 
         int index = addObject(className);
 
-        addInternal(ByteProto.CLASS_SELECTOR_EXTERNAL, index);
-
-        listAdd(MARK_EXTERNAL);
+        listAdd(MARK_VALUE2, ByteProto.CLASS_SELECTOR, index);
       } else if (element instanceof Combinator combinator) {
         int value = combinator.ordinal();
 
@@ -342,12 +340,12 @@ class CssRecorder extends CssTemplateApi {
             switch (proto) {
               case ByteProto.ATTR_NAME_SELECTOR,
                    ByteProto.ATTR_VALUE_SELECTOR,
-                   ByteProto.CLASS_SELECTOR,
                    ByteProto.DECLARATION -> {
                 break search;
               }
 
-              case ByteProto.ID_SELECTOR -> {
+              case ByteProto.CLASS_SELECTOR,
+                   ByteProto.ID_SELECTOR -> {
                 protoArray[index] = ByteProto.MARKED;
 
                 protoAdd(proto, protoArray[index + 2]);
@@ -389,9 +387,7 @@ class CssRecorder extends CssTemplateApi {
 
           search: while (true) {
             switch (proto) {
-              case ByteProto.CLASS_SELECTOR_EXTERNAL,
-                   ByteProto.COMBINATOR,
-                   ByteProto.ID_SELECTOR_EXTERNAL,
+              case ByteProto.COMBINATOR,
                    ByteProto.PSEUDO_CLASS_SELECTOR,
                    ByteProto.PSEUDO_ELEMENT_SELECTOR,
                    ByteProto.TYPE_SELECTOR -> {

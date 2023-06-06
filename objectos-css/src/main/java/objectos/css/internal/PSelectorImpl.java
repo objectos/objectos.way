@@ -104,10 +104,8 @@ public final class PSelectorImpl
         case ByteProto.ATTR_NAME_SELECTOR,
              ByteProto.ATTR_VALUE_SELECTOR,
              ByteProto.CLASS_SELECTOR,
-             ByteProto.CLASS_SELECTOR_EXTERNAL,
              ByteProto.COMBINATOR,
              ByteProto.ID_SELECTOR,
-             ByteProto.ID_SELECTOR_EXTERNAL,
              ByteProto.PSEUDO_CLASS_SELECTOR,
              ByteProto.PSEUDO_ELEMENT_SELECTOR,
              ByteProto.TYPE_SELECTOR -> {
@@ -141,19 +139,17 @@ public final class PSelectorImpl
         player.protoGet(protoIndex++)
       );
 
-      case ByteProto.CLASS_SELECTOR,
-           ByteProto.CLASS_SELECTOR_EXTERNAL -> nextClassSelector(
-             player.protoGet(protoIndex++)
-           );
+      case ByteProto.CLASS_SELECTOR -> nextClassSelector(
+        player.protoGet(protoIndex++)
+      );
 
       case ByteProto.COMBINATOR -> nextCombinator(
         player.protoGet(protoIndex++)
       );
 
-      case ByteProto.ID_SELECTOR,
-           ByteProto.ID_SELECTOR_EXTERNAL -> nextIdSelector(
-             player.protoGet(protoIndex++)
-           );
+      case ByteProto.ID_SELECTOR -> nextIdSelector(
+        player.protoGet(protoIndex++)
+      );
 
       case ByteProto.PSEUDO_CLASS_SELECTOR -> nextPseudoClassSelector(
         player.protoGet(protoIndex++)
@@ -202,8 +198,7 @@ public final class PSelectorImpl
   private PClassSelectorImpl nextClassSelector(int index) {
     var impl = player.pseudoClassSelector();
 
-    // skips MARKER, end index
-    impl.objectIndex = player.protoGet(index + 2);
+    impl.objectIndex = index;
 
     return impl;
   }

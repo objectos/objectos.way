@@ -33,11 +33,7 @@ final class ByteProto {
 
   static final int ID_SELECTOR = -7;
 
-  static final int ID_SELECTOR_EXTERNAL = -8;
-
   static final int CLASS_SELECTOR = -9;
-
-  static final int CLASS_SELECTOR_EXTERNAL = -10;
 
   static final int COMBINATOR = -11;
 
