@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.pseudom;
 
-import objectos.css.pseudom.PRule;
+import objectos.css.internal.Property;
 
-public final class PseudoDeclaration implements PRule.PDeclaration {
+public sealed interface PProperty permits Property {
+
+  String propertyName();
 
 }

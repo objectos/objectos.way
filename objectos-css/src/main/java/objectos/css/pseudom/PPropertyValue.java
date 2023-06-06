@@ -15,16 +15,12 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.PStyleRuleImpl;
+import objectos.css.internal.Keyword;
 
-public sealed interface PRule {
+public sealed interface PPropertyValue {
 
-  sealed interface PStyleRule extends PRule permits PStyleRuleImpl {
-
-    PSelector selector();
-
-    IterableOnce<PDeclaration> declarations();
-
+  sealed interface PKeyword extends PPropertyValue permits Keyword {
+    String keywordName();
   }
 
 }

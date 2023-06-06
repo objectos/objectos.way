@@ -15,11 +15,30 @@
  */
 package objectos.css.internal;
 
+import java.util.Locale;
+import objectos.css.pseudom.PPropertyValue.PKeyword;
 import objectos.css.tmpl.Keywords;
 
 // generate me
-public enum Keyword implements Keywords.Block {
+public enum Keyword implements PKeyword, Keywords.Block {
 
   BLOCK;
+
+  private static final Keyword[] VALUES = Keyword.values();
+
+  private final String keywordName;
+
+  private Keyword() {
+    this.keywordName = name().toLowerCase(Locale.US);
+  }
+
+  public static Keyword ofOrdinal(int value) {
+    return VALUES[value];
+  }
+
+  @Override
+  public final String keywordName() {
+    return keywordName;
+  }
 
 }

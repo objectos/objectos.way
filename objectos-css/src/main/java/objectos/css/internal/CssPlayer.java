@@ -73,6 +73,10 @@ public class CssPlayer extends CssRecorder {
     return pseudoFactory(PCLASS_SELECTOR, PClassSelectorImpl::new);
   }
 
+  final PDeclarationImpl pseudoDeclaration() {
+    return pseudoFactory(PDECLARATION, PDeclarationImpl::new);
+  }
+
   final PIdSelectorImpl pseudoIdSelector() {
     return pseudoFactory(PID_SELECTOR, PIdSelectorImpl::new);
   }

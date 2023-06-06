@@ -15,9 +15,10 @@
  */
 package objectos.css.internal;
 
+import objectos.css.pseudom.PSelectorElement.PUniversalSelector;
 import objectos.css.tmpl.StyleRuleElement;
 
-public enum UniversalSelector implements StyleRuleElement {
+public enum UniversalSelector implements PUniversalSelector, StyleRuleElement {
 
   INSTANCE;
 

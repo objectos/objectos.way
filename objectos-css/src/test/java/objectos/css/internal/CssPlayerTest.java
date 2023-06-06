@@ -155,6 +155,54 @@ public class CssPlayerTest {
     assertEquals(rules.hasNext(), false);
   }
 
+  @Test(description = """
+  CssRecorder
+
+  style(
+    ANY, display(block)
+  );
+  """)
+  public void testCase08() {
+    putProto(
+      // [0]: display(block)
+      ByteProto.MARKED, 9,
+      Property.DISPLAY.ordinal(),
+      ByteProto.KEYWORD, Keyword.BLOCK.ordinal(),
+      ByteProto.DECLARATION_END,
+      0, 0, ByteProto.DECLARATION,
+
+      // [9]: style()
+      ByteProto.STYLE_RULE, 18,
+      ByteProto.UNIVERSAL_SELECTOR,
+      ByteProto.DECLARATION, 0,
+      ByteProto.STYLE_RULE_END,
+      0, 9, ByteProto.STYLE_RULE,
+
+      // [18]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, 9,
+      ByteProto.ROOT_END, 18
+    );
+
+    var sheet = player.pseudoStyleSheet().init();
+    assertEquals(sheet.protoIndex, 18);
+    var rules = sheet.rules().iterator();
+
+    // rule[0]
+    var rule = (PStyleRule) rules.next();
+    var selector = rule.selector().elements().iterator();
+    assertEquals(selector.next(), UniversalSelector.INSTANCE);
+    assertEquals(selector.hasNext(), false);
+
+    var declaration = rule.declarations().iterator().next();
+    assertEquals(declaration.property(), Property.DISPLAY);
+
+    var values = declaration.values().iterator();
+    assertEquals(values.next(), Keyword.BLOCK);
+
+    assertEquals(rules.hasNext(), false);
+  }
+
   private void putProto(int... values) {
     System.arraycopy(values, 0, player.protoArray, 0, values.length);
 

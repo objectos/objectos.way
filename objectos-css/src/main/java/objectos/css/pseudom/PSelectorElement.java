@@ -21,7 +21,10 @@ import objectos.css.internal.PAttributeSelectorImpl;
 import objectos.css.internal.PAttributeValueSelectorImpl;
 import objectos.css.internal.PClassSelectorImpl;
 import objectos.css.internal.PIdSelectorImpl;
+import objectos.css.internal.PseudoClassSelector;
+import objectos.css.internal.PseudoElementSelector;
 import objectos.css.internal.TypeSelector;
+import objectos.css.internal.UniversalSelector;
 
 public sealed interface PSelectorElement {
 
@@ -48,11 +51,13 @@ public sealed interface PSelectorElement {
   }
 
   sealed interface PPseudoClassSelector extends PSelectorElement
-      permits objectos.css.internal.PseudoClassSelector {}
+      permits PseudoClassSelector {}
 
   sealed interface PPseudoElementSelector extends PSelectorElement
-      permits objectos.css.internal.PseudoElementSelector {}
+      permits PseudoElementSelector {}
 
   sealed interface PTypeSelector extends PSelectorElement permits TypeSelector {}
+
+  sealed interface PUniversalSelector extends PSelectorElement permits UniversalSelector {}
 
 }

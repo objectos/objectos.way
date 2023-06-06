@@ -15,16 +15,12 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.PStyleRuleImpl;
+import objectos.css.internal.PDeclarationImpl;
 
-public sealed interface PRule {
+public sealed interface PDeclaration permits PDeclarationImpl {
 
-  sealed interface PStyleRule extends PRule permits PStyleRuleImpl {
+  PProperty property();
 
-    PSelector selector();
-
-    IterableOnce<PDeclaration> declarations();
-
-  }
+  IterableOnce<PPropertyValue> values();
 
 }

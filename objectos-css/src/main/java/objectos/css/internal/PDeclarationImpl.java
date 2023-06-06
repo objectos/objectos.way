@@ -19,13 +19,13 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PDeclaration;
-import objectos.css.pseudom.PRule;
-import objectos.css.pseudom.PSelector;
+import objectos.css.pseudom.PProperty;
+import objectos.css.pseudom.PPropertyValue;
 
-public final class PStyleRuleImpl
-    implements PRule.PStyleRule, IterableOnce<PDeclaration>, Iterator<PDeclaration> {
+public final class PDeclarationImpl
+    implements PDeclaration, IterableOnce<PPropertyValue>, Iterator<PPropertyValue> {
 
-  private static final int START = -1;
+  static final int START = -1;
   private static final int ITERABLE = -2;
   private static final int ITERATOR = -3;
   private static final int NEXT = -4;
@@ -33,29 +33,20 @@ public final class PStyleRuleImpl
 
   private final CssPlayer player;
 
-  private int protoIndex;
+  Property property;
 
-  private int state;
+  int protoIndex;
 
-  PStyleRuleImpl(CssPlayer player) {
+  int state;
+
+  PDeclarationImpl(CssPlayer player) {
     this.player = player;
-  }
-
-  @Override
-  public final IterableOnce<PDeclaration> declarations() {
-    state = player.cas(state, START, ITERABLE);
-
-    return this;
   }
 
   @Override
   public final boolean hasNext() {
     switch (state) {
       case ITERATOR -> {}
-
-      case NEXT -> {
-        return true;
-      }
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -66,14 +57,14 @@ public final class PStyleRuleImpl
   }
 
   @Override
-  public final Iterator<PDeclaration> iterator() {
+  public final Iterator<PPropertyValue> iterator() {
     state = player.cas(state, ITERABLE, ITERATOR);
 
     return this;
   }
 
   @Override
-  public final PDeclaration next() {
+  public final PPropertyValue next() {
     if (hasNext()) {
       return next0();
     } else {
@@ -81,40 +72,14 @@ public final class PStyleRuleImpl
     }
   }
 
-  private PDeclaration next0() {
-    state = player.cas(state, NEXT, NEXT_CONSUMED);
-
-    int proto = player.protoGet(protoIndex++);
-
-    assert proto == ByteProto.DECLARATION;
-
-    var impl = player.pseudoDeclaration();
-
-    int index = player.protoGet(protoIndex++);
-
-    // skips MARKED & start
-    index += 2;
-
-    int ordinal = player.protoGet(index++);
-
-    impl.property = Property.ofOrdinal(ordinal);
-
-    impl.protoIndex = index;
-
-    impl.state = PDeclarationImpl.START;
-
-    return impl;
+  @Override
+  public final PProperty property() {
+    return property;
   }
 
   @Override
-  public final PSelector selector() {
-    return player.pseudoSelector().init(protoIndex);
-  }
-
-  final PStyleRuleImpl init(int index) {
-    protoIndex = index;
-
-    state = START;
+  public final IterableOnce<PPropertyValue> values() {
+    state = player.cas(state, START, ITERABLE);
 
     return this;
   }
@@ -126,23 +91,7 @@ public final class PStyleRuleImpl
       int proto = player.protoGet(protoIndex);
 
       switch (proto) {
-        case ByteProto.ATTR_NAME_SELECTOR,
-             ByteProto.ATTR_VALUE_SELECTOR,
-             ByteProto.CLASS_SELECTOR,
-             ByteProto.COMBINATOR,
-             ByteProto.ID_SELECTOR,
-             ByteProto.PSEUDO_CLASS_SELECTOR,
-             ByteProto.PSEUDO_ELEMENT_SELECTOR,
-             ByteProto.STYLE_RULE,
-             ByteProto.TYPE_SELECTOR -> protoIndex += 2;
-
-        case ByteProto.UNIVERSAL_SELECTOR -> protoIndex++;
-
-        case ByteProto.STYLE_RULE_END -> {
-          break loop;
-        }
-
-        case ByteProto.DECLARATION -> {
+        case ByteProto.KEYWORD -> {
           state = NEXT;
 
           found = true;
@@ -157,6 +106,22 @@ public final class PStyleRuleImpl
     }
 
     return found;
+  }
+
+  private PPropertyValue next0() {
+    state = player.cas(state, NEXT, NEXT_CONSUMED);
+
+    int proto = player.protoGet(protoIndex++);
+
+    return switch (proto) {
+      case ByteProto.KEYWORD -> Keyword.ofOrdinal(
+        player.protoGet(protoIndex++)
+      );
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    };
   }
 
 }

@@ -15,11 +15,31 @@
  */
 package objectos.css.internal;
 
+import java.util.Locale;
+import objectos.css.pseudom.PProperty;
+
 // generate me
-public enum Property {
+public enum Property implements PProperty {
 
   BORDER,
 
   DISPLAY;
+
+  private static final Property[] VALUES = Property.values();
+
+  private final String propertyName;
+
+  private Property() {
+    propertyName = name().toLowerCase(Locale.US);
+  }
+
+  public static Property ofOrdinal(int value) {
+    return VALUES[value];
+  }
+
+  @Override
+  public final String propertyName() {
+    return propertyName;
+  }
 
 }

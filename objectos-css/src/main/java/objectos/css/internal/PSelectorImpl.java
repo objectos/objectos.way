@@ -97,7 +97,8 @@ public final class PSelectorImpl
       switch (proto) {
         case ByteProto.STYLE_RULE -> protoIndex += 2;
 
-        case ByteProto.STYLE_RULE_END -> {
+        case ByteProto.DECLARATION,
+             ByteProto.STYLE_RULE_END -> {
           break loop;
         }
 
@@ -108,7 +109,8 @@ public final class PSelectorImpl
              ByteProto.ID_SELECTOR,
              ByteProto.PSEUDO_CLASS_SELECTOR,
              ByteProto.PSEUDO_ELEMENT_SELECTOR,
-             ByteProto.TYPE_SELECTOR -> {
+             ByteProto.TYPE_SELECTOR,
+             ByteProto.UNIVERSAL_SELECTOR -> {
           state = NEXT;
 
           found = true;
@@ -162,6 +164,8 @@ public final class PSelectorImpl
       case ByteProto.TYPE_SELECTOR -> TypeSelector.ofOrdinal(
         player.protoGet(protoIndex++)
       );
+
+      case ByteProto.UNIVERSAL_SELECTOR -> UniversalSelector.INSTANCE;
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: proto=" + proto
