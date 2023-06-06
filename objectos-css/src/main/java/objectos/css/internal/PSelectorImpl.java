@@ -218,8 +218,7 @@ public final class PSelectorImpl
   private PIdSelectorImpl nextIdSelector(int index) {
     var impl = player.pseudoIdSelector();
 
-    // skips MARKER, end index
-    impl.objectIndex = player.protoGet(index + 2);
+    impl.objectIndex = index;
 
     return impl;
   }

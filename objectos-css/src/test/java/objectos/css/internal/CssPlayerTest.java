@@ -83,7 +83,7 @@ public class CssPlayerTest {
 
       // [5]: style()
       ByteProto.STYLE_RULE, 13,
-      ByteProto.ID_SELECTOR, 0,
+      ByteProto.ID_SELECTOR, id,
       ByteProto.STYLE_RULE_END,
       0, 5, ByteProto.STYLE_RULE,
 
@@ -128,7 +128,7 @@ public class CssPlayerTest {
       // [5]: style()
       ByteProto.STYLE_RULE, 15,
       ByteProto.TYPE_SELECTOR, TypeSelector.A.ordinal(),
-      ByteProto.ID_SELECTOR, 0,
+      ByteProto.ID_SELECTOR, id,
       ByteProto.STYLE_RULE_END,
       0, 5, ByteProto.STYLE_RULE,
 
