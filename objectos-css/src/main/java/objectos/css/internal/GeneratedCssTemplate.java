@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 
 abstract class GeneratedCssTemplate {
@@ -36,5 +37,11 @@ abstract class GeneratedCssTemplate {
   protected static final StyleRuleElement VISITED = PseudoClassSelector.VISITED;
 
   protected static final StyleRuleElement AFTER = PseudoElementSelector.AFTER;
+
+  protected final StyleRuleElement display(PropertyValue.Display1 value) {
+    return addDeclaration(Property.DISPLAY, value.self());
+  }
+
+  abstract StyleRuleElement addDeclaration(Property property, PropertyValue value);
 
 }

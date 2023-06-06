@@ -15,22 +15,10 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.ClassSelector;
-import objectos.css.IdSelector;
-import objectos.css.internal.Combinator;
-import objectos.css.internal.InternalInstruction;
-import objectos.css.internal.PseudoClassSelector;
-import objectos.css.internal.PseudoElementSelector;
-import objectos.css.internal.TypeSelector;
-import objectos.css.internal.UniversalSelector;
+public sealed interface PropertyValue {
+  sealed interface Display1 extends PropertyValue permits Keywords.Block {}
 
-public sealed interface StyleRuleElement
-    permits
-    ClassSelector,
-    IdSelector,
-    Combinator,
-    InternalInstruction,
-    PseudoClassSelector,
-    PseudoElementSelector,
-    TypeSelector,
-    UniversalSelector {}
+  default PropertyValue self() {
+    return this;
+  }
+}

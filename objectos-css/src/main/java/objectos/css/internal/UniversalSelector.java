@@ -15,22 +15,10 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.AttributeValueElement;
-import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 
-public abstract class CssTemplateApi {
+public enum UniversalSelector implements StyleRuleElement {
 
-  abstract InternalInstruction addAttribute(int name, AttributeValueElement element);
-
-  abstract InternalInstruction addDeclaration(Property property, PropertyValue... values);
-
-  abstract InternalInstruction addInternal(int type, int value);
-
-  abstract InternalInstruction addInternal(int type, int value0, int value1);
-
-  abstract int addObject(Object value);
-
-  abstract void addRule(StyleRuleElement... elements);
+  INSTANCE;
 
 }

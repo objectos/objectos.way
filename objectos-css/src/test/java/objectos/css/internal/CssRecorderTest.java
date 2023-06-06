@@ -18,7 +18,6 @@ package objectos.css.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
-import objectos.css.tmpl.StyleRuleElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,7 +33,7 @@ public class CssRecorderTest {
   public void testCase00() {
     executeBefore();
 
-    addRule(TypeSelector.BODY);
+    recorder.addRule(TypeSelector.BODY);
 
     executeAfter();
 
@@ -69,7 +68,7 @@ public class CssRecorderTest {
 
     int id = recorder.addObject("myid");
 
-    addRule(
+    recorder.addRule(
       recorder.addInternal(ByteProto.ID_SELECTOR, id)
     );
 
@@ -106,7 +105,7 @@ public class CssRecorderTest {
 
     int id = recorder.addObject("myid");
 
-    addRule(
+    recorder.addRule(
       TypeSelector.A,
       recorder.addInternal(ByteProto.ID_SELECTOR, id)
     );
@@ -150,7 +149,7 @@ public class CssRecorderTest {
 
     int name = recorder.addObject("type");
 
-    addRule(
+    recorder.addRule(
       recorder.addInternal(ByteProto.ATTR_NAME_SELECTOR, name)
     );
 
@@ -208,7 +207,7 @@ public class CssRecorderTest {
       0, ByteProto.ATTR_VALUE_SELECTOR
     );
 
-    addRule(instruction);
+    recorder.addRule(instruction);
 
     executeAfter();
 
@@ -236,7 +235,7 @@ public class CssRecorderTest {
     );
   }
 
-  @Test(enabled = false, description = """
+  @Test(description = """
   CssRecorder
 
   style(
@@ -246,35 +245,33 @@ public class CssRecorderTest {
   public void testCase08() {
     executeBefore();
 
-    int name = recorder.addObject("type");
-
-    addRule(
-      recorder.addInternal(ByteProto.ATTR_NAME_SELECTOR, name)
+    recorder.addRule(
+      UniversalSelector.INSTANCE,
+      recorder.addDeclaration(Property.DISPLAY, Keyword.BLOCK)
     );
 
     executeAfter();
 
     testProto(
       // [0]: display(block)
-      ByteProto.MARKED, 5,
-      name,
-      0, ByteProto.DECLARATION,
+      ByteProto.MARKED, 9,
+      Property.DISPLAY.ordinal(),
+      ByteProto.KEYWORD, Keyword.BLOCK.ordinal(),
+      ByteProto.DECLARATION_END,
+      0, 0, ByteProto.DECLARATION,
 
-      // [5]: style()
-      ByteProto.STYLE_RULE, 13,
-      ByteProto.ATTR_NAME_SELECTOR, 0,
+      // [9]: style()
+      ByteProto.STYLE_RULE, 18,
+      ByteProto.UNIVERSAL_SELECTOR,
+      ByteProto.DECLARATION, 0,
       ByteProto.STYLE_RULE_END,
-      0, 5, ByteProto.STYLE_RULE,
+      0, 9, ByteProto.STYLE_RULE,
 
-      // [13]: ROOT
+      // [18]: ROOT
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, 5,
-      ByteProto.ROOT_END, 13
+      ByteProto.STYLE_RULE, 9,
+      ByteProto.ROOT_END, 18
     );
-  }
-
-  private void addRule(StyleRuleElement... elements) {
-    recorder.addRule(elements);
   }
 
   private void executeAfter() {

@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import java.util.Objects;
 import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
 
@@ -83,6 +84,11 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected final void style(StyleRuleElement... elements) {
     api().addRule(elements);
+  }
+
+  @Override
+  final StyleRuleElement addDeclaration(Property property, PropertyValue value) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   final void acceptTemplateApi(CssTemplateApi api) {

@@ -51,9 +51,13 @@ final class ByteProto {
 
   static final int ATTR_VALUE_ELEMENT = -16;
 
-  static final int DECLARATION = -17;
+  static final int UNIVERSAL_SELECTOR = -17;
 
-  static final int KEYWORD = -18;
+  static final int DECLARATION = -18;
+
+  static final int DECLARATION_END = -19;
+
+  static final int KEYWORD = -20;
 
   private ByteProto() {}
 

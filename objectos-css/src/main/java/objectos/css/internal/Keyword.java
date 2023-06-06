@@ -15,22 +15,11 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.AttributeValueElement;
-import objectos.css.tmpl.PropertyValue;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.tmpl.Keywords;
 
-public abstract class CssTemplateApi {
+// generate me
+public enum Keyword implements Keywords.Block {
 
-  abstract InternalInstruction addAttribute(int name, AttributeValueElement element);
-
-  abstract InternalInstruction addDeclaration(Property property, PropertyValue... values);
-
-  abstract InternalInstruction addInternal(int type, int value);
-
-  abstract InternalInstruction addInternal(int type, int value0, int value1);
-
-  abstract int addObject(Object value);
-
-  abstract void addRule(StyleRuleElement... elements);
+  BLOCK;
 
 }
