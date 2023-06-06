@@ -27,9 +27,8 @@ import objectos.util.ObjectArrays;
 class CssRecorder extends CssTemplateApi {
 
   private static final int MARK_INTERNAL = -1;
-  private static final int MARK_EXTERNAL = -2;
-  private static final int MARK_VALUE1 = -3;
-  private static final int MARK_VALUE2 = -4;
+  private static final int MARK_VALUE1 = -2;
+  private static final int MARK_VALUE2 = -3;
 
   static final int PSTYLE_SHEET = 0;
   static final int PSTYLE_RULE = 1;
@@ -278,27 +277,21 @@ class CssRecorder extends CssTemplateApi {
       } else if (element instanceof Combinator combinator) {
         int value = combinator.ordinal();
 
-        addInternal(ByteProto.COMBINATOR, value);
-
-        listAdd(MARK_EXTERNAL);
+        listAdd(MARK_VALUE2, ByteProto.COMBINATOR, value);
       } else if (element instanceof IdSelector selector) {
         var id = selector.id();
 
         int index = addObject(id);
 
         listAdd(MARK_VALUE2, ByteProto.ID_SELECTOR, index);
-      } else if (element instanceof PseudoClassSelector pseudoClass) {
-        int value = pseudoClass.ordinal();
+      } else if (element instanceof PseudoClassSelector selector) {
+        int value = selector.ordinal();
 
-        addInternal(ByteProto.PSEUDO_CLASS_SELECTOR, value);
+        listAdd(MARK_VALUE2, ByteProto.PSEUDO_CLASS_SELECTOR, value);
+      } else if (element instanceof PseudoElementSelector selector) {
+        int value = selector.ordinal();
 
-        listAdd(MARK_EXTERNAL);
-      } else if (element instanceof PseudoElementSelector pseudoElement) {
-        int value = pseudoElement.ordinal();
-
-        addInternal(ByteProto.PSEUDO_ELEMENT_SELECTOR, value);
-
-        listAdd(MARK_EXTERNAL);
+        listAdd(MARK_VALUE2, ByteProto.PSEUDO_ELEMENT_SELECTOR, value);
       } else if (element instanceof TypeSelector selector) {
         int value = selector.ordinal();
 
@@ -321,7 +314,6 @@ class CssRecorder extends CssTemplateApi {
     int listMax = listIndex;
 
     listAdd(
-      /*2=external*/contents,
       /*1=internal*/contents
     );
 
@@ -378,46 +370,6 @@ class CssRecorder extends CssTemplateApi {
           index = protoArray[index + 1];
 
           listOffset(1, index);
-        }
-
-        case MARK_EXTERNAL -> {
-          var index = listOffset(2);
-
-          int proto = protoArray[index];
-
-          search: while (true) {
-            switch (proto) {
-              case ByteProto.COMBINATOR,
-                   ByteProto.PSEUDO_CLASS_SELECTOR,
-                   ByteProto.PSEUDO_ELEMENT_SELECTOR,
-                   ByteProto.TYPE_SELECTOR -> {
-                break search;
-              }
-
-              case ByteProto.ATTR_VALUE_SELECTOR,
-                   ByteProto.CLASS_SELECTOR,
-                   ByteProto.ID_SELECTOR,
-                   ByteProto.MARKED -> {
-                index = protoArray[index + 1];
-
-                proto = protoArray[index];
-              }
-
-              default -> {
-                throw new UnsupportedOperationException(
-                  "Implement me :: proto=" + proto
-                );
-              }
-            }
-          }
-
-          protoArray[index] = ByteProto.MARKED;
-
-          protoAdd(proto, index);
-
-          index = protoArray[index + 1];
-
-          listOffset(2, index);
         }
 
         case MARK_VALUE1 -> protoAdd(listArray[idx++]);

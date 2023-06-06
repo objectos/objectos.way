@@ -143,7 +143,7 @@ public final class PSelectorImpl
         player.protoGet(protoIndex++)
       );
 
-      case ByteProto.COMBINATOR -> nextCombinator(
+      case ByteProto.COMBINATOR -> Combinator.ofOrdinal(
         player.protoGet(protoIndex++)
       );
 
@@ -151,11 +151,11 @@ public final class PSelectorImpl
         player.protoGet(protoIndex++)
       );
 
-      case ByteProto.PSEUDO_CLASS_SELECTOR -> nextPseudoClassSelector(
+      case ByteProto.PSEUDO_CLASS_SELECTOR -> PseudoClassSelector.ofOrdinal(
         player.protoGet(protoIndex++)
       );
 
-      case ByteProto.PSEUDO_ELEMENT_SELECTOR -> nextPseudoElementSelector(
+      case ByteProto.PSEUDO_ELEMENT_SELECTOR -> PseudoElementSelector.ofOrdinal(
         player.protoGet(protoIndex++)
       );
 
@@ -203,33 +203,12 @@ public final class PSelectorImpl
     return impl;
   }
 
-  private Combinator nextCombinator(int index) {
-    // skips MARKER, end index
-    int ordinal = player.protoGet(index + 2);
-
-    return Combinator.ofOrdinal(ordinal);
-  }
-
   private PIdSelectorImpl nextIdSelector(int index) {
     var impl = player.pseudoIdSelector();
 
     impl.objectIndex = index;
 
     return impl;
-  }
-
-  private PSelectorElement nextPseudoClassSelector(int index) {
-    // skips MARKER, end index
-    int ordinal = player.protoGet(index + 2);
-
-    return objectos.css.internal.PseudoClassSelector.ofOrdinal(ordinal);
-  }
-
-  private PSelectorElement nextPseudoElementSelector(int index) {
-    // skips MARKER, end index
-    int ordinal = player.protoGet(index + 2);
-
-    return objectos.css.internal.PseudoElementSelector.ofOrdinal(ordinal);
   }
 
 }
