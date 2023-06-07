@@ -21,6 +21,7 @@ import objectos.css.pseudom.IterableOnce;
 import objectos.css.pseudom.PDeclaration;
 import objectos.css.pseudom.PProperty;
 import objectos.css.pseudom.PPropertyValue;
+import objectos.css.tmpl.LengthUnit;
 
 public final class PDeclarationImpl
     implements PDeclaration, IterableOnce<PPropertyValue>, Iterator<PPropertyValue> {
@@ -102,6 +103,7 @@ public final class PDeclarationImpl
         case ByteProto.DOUBLE_VALUE,
              ByteProto.INT_VALUE,
              ByteProto.KEYWORD,
+             ByteProto.LENGTH_INT,
              ByteProto.STRING_VALUE -> {
           state = NEXT;
 
@@ -150,6 +152,18 @@ public final class PDeclarationImpl
       case ByteProto.KEYWORD -> Keyword.ofOrdinal(
         player.protoGet(protoIndex++)
       );
+
+      case ByteProto.LENGTH_INT -> {
+        var impl = player.pseudoLengthIntValue();
+
+        int ordinal = player.protoGet(protoIndex++);
+
+        impl.unit = LengthUnit.ofOrdinal(ordinal);
+
+        impl.value = player.protoGet(protoIndex++);
+
+        yield impl;
+      }
 
       case ByteProto.STRING_VALUE -> {
         var impl = player.pseudoStringValue();

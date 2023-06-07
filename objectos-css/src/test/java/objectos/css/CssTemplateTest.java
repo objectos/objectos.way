@@ -296,6 +296,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase12() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ANY,
+
+            minHeight(px(160))
+          );
+        }
+      },
+
+      """
+      * {
+        min-height: 160px;
+      }
+      """,
+
+      """
+      *{min-height:160px}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

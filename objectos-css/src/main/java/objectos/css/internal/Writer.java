@@ -48,6 +48,12 @@ public abstract class Writer implements StyleSheetProcessor {
     }
   }
 
+  protected final void write(int value) {
+    var s = Integer.toString(value);
+
+    write(s);
+  }
+
   protected final void write(String s) {
     if (ioException != null) {
       return;

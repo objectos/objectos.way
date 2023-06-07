@@ -20,6 +20,11 @@ import objectos.css.pseudom.StyleSheetProcessor;
 public class CssPlayer extends CssRecorder {
 
   @FunctionalInterface
+  private interface PseudoFactory0<T> {
+    T create();
+  }
+
+  @FunctionalInterface
   private interface PseudoFactory<T> {
     T create(CssPlayer player);
   }
@@ -93,6 +98,10 @@ public class CssPlayer extends CssRecorder {
     return pseudoFactory(PSELECTOR, PSelectorImpl::new);
   }
 
+  final PLengthIntValueImpl pseudoLengthIntValue() {
+    return pseudoFactory(PLENGTH_INT_VALUE, PLengthIntValueImpl::new);
+  }
+
   final PStringValueImpl pseudoStringValue() {
     return pseudoFactory(PSTRING_VALUE, PStringValueImpl::new);
   }
@@ -103,6 +112,15 @@ public class CssPlayer extends CssRecorder {
 
   final PStyleSheetImpl pseudoStyleSheet() {
     return pseudoFactory(PSTYLE_SHEET, PStyleSheetImpl::new);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> T pseudoFactory(int index, PseudoFactory0<T> factory) {
+    if (objectArray[index] == null) {
+      objectArray[index] = factory.create();
+    }
+
+    return (T) objectArray[index];
   }
 
   @SuppressWarnings("unchecked")

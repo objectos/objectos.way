@@ -13,55 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import java.util.Locale;
+import objectos.css.pseudom.PPropertyValue.PLengthIntValue;
+import objectos.css.tmpl.LengthUnit;
 
-public enum LengthUnit {
-  CH,
+public final class PLengthIntValueImpl implements PLengthIntValue {
 
-  CM,
+  LengthUnit unit;
 
-  EM,
+  int value;
 
-  EX,
-
-  IN,
-
-  MM,
-
-  PC,
-
-  PT,
-
-  PX,
-
-  Q,
-
-  REM,
-
-  VH,
-
-  VMAX,
-
-  VMIN,
-
-  VW;
-
-  private static final LengthUnit[] ARRAY = LengthUnit.values();
-
-  private final String toString;
-
-  private LengthUnit() {
-    this.toString = name().toLowerCase(Locale.US);
-  }
-
-  public static LengthUnit ofOrdinal(int code) {
-    return ARRAY[code];
+  @Override
+  public final LengthUnit unit() {
+    return unit;
   }
 
   @Override
-  public final String toString() {
-    return toString;
+  public final int value() {
+    return value;
   }
+
 }

@@ -42,7 +42,8 @@ class CssRecorder extends CssTemplateApi {
   static final int PINT_VALUE = 8;
   static final int PDOUBLE_VALUE = 9;
   static final int PSTRING_VALUE = 10;
-  static final int OBJECT_INDEX = 11;
+  static final int PLENGTH_INT_VALUE = 11;
+  static final int OBJECT_INDEX = 12;
 
   int[] listArray = new int[8];
 
@@ -245,7 +246,7 @@ class CssRecorder extends CssTemplateApi {
   }
 
   @Override
-  final PropertyValue addLength(LengthUnit unit, int value) {
+  final PropertyValue.Length addLength(LengthUnit unit, int value) {
     protoAdd(
       ByteProto.LENGTH_INT,
       unit.ordinal(), value,

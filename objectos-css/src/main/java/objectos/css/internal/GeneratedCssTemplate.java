@@ -17,7 +17,9 @@ package objectos.css.internal;
 
 import java.util.Objects;
 import objectos.css.tmpl.Keywords;
+import objectos.css.tmpl.LengthUnit;
 import objectos.css.tmpl.PropertyValue;
+import objectos.css.tmpl.PropertyValue.Length;
 import objectos.css.tmpl.StyleRuleElement;
 
 abstract class GeneratedCssTemplate {
@@ -57,8 +59,16 @@ abstract class GeneratedCssTemplate {
     return api().addDeclaration(Property.LINE_HEIGHT, value);
   }
 
+  protected final StyleRuleElement minHeight(Length value) {
+    return api().addDeclaration(Property.MIN_HEIGHT, value.self());
+  }
+
   protected final StyleRuleElement zIndex(int value) {
     return api().addDeclaration(Property.Z_INDEX, value);
+  }
+
+  protected final Length px(int value) {
+    return api().addLength(LengthUnit.PX, value);
   }
 
   abstract CssTemplateApi api();
