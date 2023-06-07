@@ -89,6 +89,25 @@ class CssRecorder extends CssTemplateApi {
   }
 
   @Override
+  final InternalInstruction addDeclaration(Property property, int value) {
+    int start = protoIndex;
+
+    protoAdd(
+      ByteProto.DECLARATION,
+      ByteProto.NULL,
+      property.ordinal(),
+      ByteProto.INT_VALUE, value,
+      ByteProto.DECLARATION_END,
+      start, start,
+      ByteProto.DECLARATION
+    );
+
+    endSet(start);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  @Override
   final InternalInstruction addDeclaration(Property property, PropertyValue... values) {
     int listBase = listIndex;
 
@@ -109,48 +128,6 @@ class CssRecorder extends CssTemplateApi {
     listIndex = listBase;
 
     return InternalInstruction.INSTANCE;
-  }
-
-  private int addDeclaration0Values(PropertyValue[] values) {
-    int length = values.length; // elements implicit null-check
-
-    int contents = protoIndex;
-
-    for (int idx = 0; idx < length; idx++) {
-      var value = Check.notNull(values[idx], "values[", idx, "] == null");
-
-      if (value instanceof Keyword keyword) {
-        listAdd(MARK_VALUE2, ByteProto.KEYWORD, keyword.ordinal());
-      } else {
-        var type = value.getClass();
-
-        throw new UnsupportedOperationException(
-          "Implement me :: type=" + type
-        );
-      }
-    }
-
-    return contents;
-  }
-
-  private void addDeclaration1Mark(int listBase, int contents) {
-    int listMax = listIndex;
-
-    int idx = listBase;
-
-    while (idx < listMax) {
-      int marker = listArray[idx++];
-
-      switch (marker) {
-        case MARK_VALUE2 -> {
-          protoAdd(listArray[idx++], listArray[idx++]);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: marker=" + marker
-        );
-      }
-    }
   }
 
   @Override
@@ -255,6 +232,48 @@ class CssRecorder extends CssTemplateApi {
     listIndex = protoIndex = 0;
 
     objectIndex = OBJECT_INDEX;
+  }
+
+  private int addDeclaration0Values(PropertyValue[] values) {
+    int length = values.length; // elements implicit null-check
+
+    int contents = protoIndex;
+
+    for (int idx = 0; idx < length; idx++) {
+      var value = Check.notNull(values[idx], "values[", idx, "] == null");
+
+      if (value instanceof Keyword keyword) {
+        listAdd(MARK_VALUE2, ByteProto.KEYWORD, keyword.ordinal());
+      } else {
+        var type = value.getClass();
+
+        throw new UnsupportedOperationException(
+          "Implement me :: type=" + type
+        );
+      }
+    }
+
+    return contents;
+  }
+
+  private void addDeclaration1Mark(int listBase, int contents) {
+    int listMax = listIndex;
+
+    int idx = listBase;
+
+    while (idx < listMax) {
+      int marker = listArray[idx++];
+
+      switch (marker) {
+        case MARK_VALUE2 -> {
+          protoAdd(listArray[idx++], listArray[idx++]);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: marker=" + marker
+        );
+      }
+    }
   }
 
   private int addRule0Elements(StyleRuleElement... elements) {
@@ -459,6 +478,20 @@ class CssRecorder extends CssTemplateApi {
     protoArray[protoIndex++] = v3;
     protoArray[protoIndex++] = v4;
     protoArray[protoIndex++] = v5;
+  }
+
+  private void protoAdd(
+      int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 8);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
+    protoArray[protoIndex++] = v4;
+    protoArray[protoIndex++] = v5;
+    protoArray[protoIndex++] = v6;
+    protoArray[protoIndex++] = v7;
+    protoArray[protoIndex++] = v8;
   }
 
   private int updateContents(int contents) {

@@ -55,6 +55,8 @@ final class ByteProto {
 
   static final int KEYWORD = -20;
 
+  static final int INT_VALUE = -21;
+
   private ByteProto() {}
 
 }

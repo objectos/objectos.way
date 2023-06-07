@@ -264,6 +264,45 @@ public class CssRecorderTest {
     );
   }
 
+  @Test(description = """
+  CssRecorder
+
+  style(
+    ANY, zIndex(-300)
+  );
+  """)
+  public void testCase09() {
+    executeBefore();
+
+    recorder.addRule(
+      UniversalSelector.INSTANCE,
+      recorder.addDeclaration(Property.Z_INDEX, -300)
+    );
+
+    executeAfter();
+
+    testProto(
+      // [0]: display(block)
+      ByteProto.MARKED, 9,
+      Property.Z_INDEX.ordinal(),
+      ByteProto.INT_VALUE, -300,
+      ByteProto.DECLARATION_END,
+      0, 0, ByteProto.DECLARATION,
+
+      // [9]: style()
+      ByteProto.STYLE_RULE, 18,
+      ByteProto.UNIVERSAL_SELECTOR,
+      ByteProto.DECLARATION, 0,
+      ByteProto.STYLE_RULE_END,
+      0, 9, ByteProto.STYLE_RULE,
+
+      // [18]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, 9,
+      ByteProto.ROOT_END, 18
+    );
+  }
+
   private void executeAfter() {
     recorder.executeRecorderAfter();
   }

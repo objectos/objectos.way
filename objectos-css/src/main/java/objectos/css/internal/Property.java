@@ -23,7 +23,9 @@ public enum Property implements PProperty {
 
   BORDER,
 
-  DISPLAY;
+  DISPLAY,
+
+  Z_INDEX("z-index");
 
   private static final Property[] VALUES = Property.values();
 
@@ -31,6 +33,10 @@ public enum Property implements PProperty {
 
   private Property() {
     propertyName = name().toLowerCase(Locale.US);
+  }
+
+  private Property(String propertyName) {
+    this.propertyName = propertyName;
   }
 
   public static Property ofOrdinal(int value) {
