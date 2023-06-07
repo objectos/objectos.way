@@ -13,20 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.tmpl.AttributeValueElement;
-import objectos.css.tmpl.PropertyValue.Length;
-import objectos.css.tmpl.StyleRuleElement;
+import java.util.Locale;
 
-public enum InternalInstruction
-    implements
-    AttributeValueElement,
-    StyleRuleElement,
-    Length {
+public enum LengthUnit {
+  CH,
 
-  INSTANCE,
+  CM,
 
-  VALUE4;
+  EM,
 
+  EX,
+
+  IN,
+
+  MM,
+
+  PC,
+
+  PT,
+
+  PX,
+
+  Q,
+
+  REM,
+
+  VH,
+
+  VMAX,
+
+  VMIN,
+
+  VW;
+
+  private static final LengthUnit[] ARRAY = LengthUnit.values();
+
+  private final String name;
+
+  private LengthUnit() {
+    this.name = name().toLowerCase(Locale.US);
+  }
+
+  public static LengthUnit getByCode(int code) {
+    return ARRAY[code];
+  }
+
+  public static int size() {
+    return ARRAY.length;
+  }
+
+  public final int getCode() {
+    return ordinal();
+  }
+
+  public final String getName() {
+    return name;
+  }
 }

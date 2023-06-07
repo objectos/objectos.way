@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.ClassSelector;
 import objectos.css.IdSelector;
 import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.LengthUnit;
 import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
@@ -244,14 +245,14 @@ class CssRecorder extends CssTemplateApi {
   }
 
   @Override
-  final PropertyValue addValue(int type, int value) {
+  final PropertyValue addLength(LengthUnit unit, int value) {
     protoAdd(
-      type,
-      value,
-      type
+      ByteProto.LENGTH_INT,
+      unit.ordinal(), value,
+      ByteProto.LENGTH_INT
     );
 
-    return InternalInstruction.VALUE3;
+    return InternalInstruction.VALUE4;
   }
 
   final void executeRecorderAfter() {
@@ -300,8 +301,8 @@ class CssRecorder extends CssTemplateApi {
     for (int idx = 0; idx < length; idx++) {
       var value = Check.notNull(values[idx], "values[", idx, "] == null");
 
-      if (value == InternalInstruction.VALUE3) {
-        contents -= 3;
+      if (value == InternalInstruction.VALUE4) {
+        contents -= 4;
 
         listAdd(MARK_INTERNAL);
       } else if (value instanceof Keyword keyword) {
@@ -333,14 +334,15 @@ class CssRecorder extends CssTemplateApi {
           int proto = protoArray[internal];
 
           switch (proto) {
-            case ByteProto.PX1 -> {
-              int value = protoArray[internal + 1];
+            case ByteProto.LENGTH_INT -> {
+              int unit = protoArray[internal + 1];
+              int value = protoArray[internal + 2];
 
-              protoAdd(proto, value);
+              protoAdd(proto, unit, value);
 
-              protoArray[internal] = ByteProto.MARKED3;
+              protoArray[internal] = ByteProto.MARKED4;
 
-              internal += 3;
+              internal += 4;
             }
 
             default -> throw new UnsupportedOperationException(
@@ -461,8 +463,8 @@ class CssRecorder extends CssTemplateApi {
                 proto = protoArray[internal];
               }
 
-              case ByteProto.MARKED3 -> {
-                internal += 3;
+              case ByteProto.MARKED4 -> {
+                internal += 4;
 
                 proto = protoArray[internal];
               }
@@ -535,6 +537,14 @@ class CssRecorder extends CssTemplateApi {
     protoArray[protoIndex++] = v0;
     protoArray[protoIndex++] = v1;
     protoArray[protoIndex++] = v2;
+  }
+
+  private void protoAdd(int v0, int v1, int v2, int v3) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 3);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
   }
 
   private void protoAdd(int v0, int v1, int v2, int v3, int v4) {

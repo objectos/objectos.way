@@ -18,6 +18,7 @@ package objectos.css.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
+import objectos.css.tmpl.LengthUnit;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -317,7 +318,7 @@ public class CssRecorderTest {
       UniversalSelector.INSTANCE,
       recorder.addDeclaration(
         Property.MIN_HEIGHT,
-        recorder.addValue(ByteProto.PX1, 160)
+        recorder.addLength(LengthUnit.PX, 160)
       )
     );
 
@@ -325,28 +326,28 @@ public class CssRecorderTest {
 
     testProto(
       // [0]: px(160)
-      ByteProto.MARKED3,
-      160,
-      ByteProto.PX1,
+      ByteProto.MARKED4,
+      LengthUnit.PX.ordinal(), 160,
+      ByteProto.LENGTH_INT,
 
-      // [3]: minHeight(px(160))
-      ByteProto.MARKED, 12,
+      // [4]: minHeight(px(160))
+      ByteProto.MARKED, 14,
       Property.MIN_HEIGHT.ordinal(),
-      ByteProto.PX1, 160,
+      ByteProto.LENGTH_INT, LengthUnit.PX.ordinal(), 160,
       ByteProto.DECLARATION_END,
-      0, 3, ByteProto.DECLARATION,
+      0, 4, ByteProto.DECLARATION,
 
-      // [12]: style()
-      ByteProto.STYLE_RULE, 21,
+      // [14]: style()
+      ByteProto.STYLE_RULE, 23,
       ByteProto.UNIVERSAL_SELECTOR,
-      ByteProto.DECLARATION, 3,
+      ByteProto.DECLARATION, 4,
       ByteProto.STYLE_RULE_END,
-      0, 12, ByteProto.STYLE_RULE,
+      0, 14, ByteProto.STYLE_RULE,
 
-      // [21]: ROOT
+      // [23]: ROOT
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, 12,
-      ByteProto.ROOT_END, 21
+      ByteProto.STYLE_RULE, 14,
+      ByteProto.ROOT_END, 23
     );
   }
 

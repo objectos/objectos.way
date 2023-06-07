@@ -16,6 +16,7 @@
 package objectos.css.internal;
 
 import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.LengthUnit;
 import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 
@@ -35,7 +36,7 @@ public abstract class CssTemplateApi {
 
   abstract InternalInstruction addInternal(int type, int value0, int value1);
 
-  abstract PropertyValue addValue(int type, int value);
+  abstract PropertyValue addLength(LengthUnit unit, int value);
 
   abstract int addObject(Object value);
 
