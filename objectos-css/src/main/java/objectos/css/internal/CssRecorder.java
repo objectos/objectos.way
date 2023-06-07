@@ -40,7 +40,8 @@ class CssRecorder extends CssTemplateApi {
   static final int PDECLARATION = 7;
   static final int PINT_VALUE = 8;
   static final int PDOUBLE_VALUE = 9;
-  static final int OBJECT_INDEX = 10;
+  static final int PSTRING_VALUE = 10;
+  static final int OBJECT_INDEX = 11;
 
   int[] listArray = new int[8];
 
@@ -122,6 +123,27 @@ class CssRecorder extends CssTemplateApi {
       ByteProto.NULL,
       property.ordinal(),
       ByteProto.INT_VALUE, value,
+      ByteProto.DECLARATION_END,
+      start, start,
+      ByteProto.DECLARATION
+    );
+
+    endSet(start);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  @Override
+  final InternalInstruction addDeclaration(Property property, String value) {
+    int start = protoIndex;
+
+    int object = addObject(value);
+
+    protoAdd(
+      ByteProto.DECLARATION,
+      ByteProto.NULL,
+      property.ordinal(),
+      ByteProto.STRING_VALUE, object,
       ByteProto.DECLARATION_END,
       start, start,
       ByteProto.DECLARATION

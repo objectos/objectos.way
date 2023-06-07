@@ -93,6 +93,10 @@ public class CssPlayer extends CssRecorder {
     return pseudoFactory(PSELECTOR, PSelectorImpl::new);
   }
 
+  final PStringValueImpl pseudoStringValue() {
+    return pseudoFactory(PSTRING_VALUE, PStringValueImpl::new);
+  }
+
   final PStyleRuleImpl pseudoStyleRule() {
     return pseudoFactory(PSTYLE_RULE, PStyleRuleImpl::new);
   }

@@ -15,41 +15,21 @@
  */
 package objectos.css.internal;
 
-import java.util.Locale;
-import objectos.css.pseudom.PProperty;
+import objectos.css.pseudom.PPropertyValue.PStringValue;
 
-// generate me
-public enum Property implements PProperty {
+public final class PStringValueImpl implements PStringValue {
 
-  BORDER,
+  private final CssPlayer player;
 
-  CONTENT,
+  int objectIndex;
 
-  DISPLAY,
-
-  LINE_HEIGHT("line-height"),
-
-  Z_INDEX("z-index");
-
-  private static final Property[] VALUES = Property.values();
-
-  private final String propertyName;
-
-  private Property() {
-    propertyName = name().toLowerCase(Locale.US);
-  }
-
-  private Property(String propertyName) {
-    this.propertyName = propertyName;
-  }
-
-  public static Property ofOrdinal(int value) {
-    return VALUES[value];
+  PStringValueImpl(CssPlayer player) {
+    this.player = player;
   }
 
   @Override
-  public final String propertyName() {
-    return propertyName;
+  public final String value() {
+    return (String) player.objectGet(objectIndex);
   }
 
 }

@@ -101,7 +101,8 @@ public final class PDeclarationImpl
 
         case ByteProto.DOUBLE_VALUE,
              ByteProto.INT_VALUE,
-             ByteProto.KEYWORD -> {
+             ByteProto.KEYWORD,
+             ByteProto.STRING_VALUE -> {
           state = NEXT;
 
           found = true;
@@ -149,6 +150,14 @@ public final class PDeclarationImpl
       case ByteProto.KEYWORD -> Keyword.ofOrdinal(
         player.protoGet(protoIndex++)
       );
+
+      case ByteProto.STRING_VALUE -> {
+        var impl = player.pseudoStringValue();
+
+        impl.objectIndex = player.protoGet(protoIndex++);
+
+        yield impl;
+      }
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: proto=" + proto

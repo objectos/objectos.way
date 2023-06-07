@@ -27,6 +27,8 @@ public abstract class CssTemplateApi {
 
   abstract InternalInstruction addDeclaration(Property property, int value);
 
+  abstract InternalInstruction addDeclaration(Property property, String value);
+
   abstract InternalInstruction addDeclaration(Property property, PropertyValue... values);
 
   abstract InternalInstruction addInternal(int type, int value);

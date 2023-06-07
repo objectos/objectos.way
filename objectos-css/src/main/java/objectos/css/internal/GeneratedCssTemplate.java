@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import java.util.Objects;
 import objectos.css.tmpl.Keywords;
 import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
@@ -42,6 +43,11 @@ abstract class GeneratedCssTemplate {
   protected static final StyleRuleElement AFTER = PseudoElementSelector.AFTER;
 
   protected static final Keywords.Block BLOCK = Keyword.BLOCK;
+
+  protected final StyleRuleElement content(String value) {
+    Objects.requireNonNull(value, "value == null");
+    return api().addDeclaration(Property.CONTENT, value);
+  }
 
   protected final StyleRuleElement display(PropertyValue.Display1 value) {
     return api().addDeclaration(Property.DISPLAY, value.self());

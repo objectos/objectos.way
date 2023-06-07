@@ -20,6 +20,7 @@ import objectos.css.pseudom.PPropertyValue;
 import objectos.css.pseudom.PPropertyValue.PDoubleValue;
 import objectos.css.pseudom.PPropertyValue.PIntValue;
 import objectos.css.pseudom.PPropertyValue.PKeyword;
+import objectos.css.pseudom.PPropertyValue.PStringValue;
 import objectos.css.pseudom.PRule;
 import objectos.css.pseudom.PRule.PStyleRule;
 import objectos.css.pseudom.PSelector;
@@ -112,6 +113,11 @@ public final class PrettyPrintWriter extends Writer {
       write(s);
     } else if (value instanceof PKeyword keyword) {
       write(keyword.keywordName());
+    } else if (value instanceof PStringValue impl) {
+      var s = impl.value();
+      write('"');
+      write(s);
+      write('"');
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + value.getClass()

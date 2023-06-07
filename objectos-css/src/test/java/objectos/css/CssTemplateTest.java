@@ -270,6 +270,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase11() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ANY,
+
+            content("Chapter ")
+          );
+        }
+      },
+
+      """
+      * {
+        content: "Chapter ";
+      }
+      """,
+
+      """
+      *{content:"Chapter "}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

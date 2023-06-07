@@ -59,6 +59,8 @@ final class ByteProto {
 
   static final int DOUBLE_VALUE = -22;
 
+  static final int STRING_VALUE = -23;
+
   private ByteProto() {}
 
 }
