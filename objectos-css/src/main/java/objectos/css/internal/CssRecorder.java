@@ -417,52 +417,54 @@ class CssRecorder extends CssTemplateApi {
   private void addRule1Mark(int listBase, int contents) {
     int listMax = listIndex;
 
-    listAdd(
-      /*1=internal*/contents
-    );
-
     int idx = listBase;
+
+    int internal = contents;
 
     loop: while (idx < listMax) {
       int marker = listArray[idx++];
 
       switch (marker) {
         case MARK_INTERNAL -> {
-          var index = listOffset(1);
+          int proto = protoArray[internal];
 
-          int proto = protoArray[index];
-
-          search: while (true) {
+          while (true) {
             switch (proto) {
               case ByteProto.ATTR_NAME_SELECTOR,
                    ByteProto.ATTR_VALUE_SELECTOR,
                    ByteProto.DECLARATION -> {
-                break search;
+                protoArray[internal] = ByteProto.MARKED;
+
+                protoAdd(proto, internal);
+
+                internal = protoArray[internal + 1];
+
+                continue loop;
               }
 
               case ByteProto.CLASS_SELECTOR,
                    ByteProto.ID_SELECTOR -> {
-                protoArray[index] = ByteProto.MARKED;
+                protoArray[internal] = ByteProto.MARKED;
 
-                protoAdd(proto, protoArray[index + 2]);
+                int value = protoArray[internal + 2];
 
-                index = protoArray[index + 1];
+                protoAdd(proto, value);
 
-                listOffset(1, index);
+                internal = protoArray[internal + 1];
 
                 continue loop;
               }
 
               case ByteProto.MARKED -> {
-                index = protoArray[index + 1];
+                internal = protoArray[internal + 1];
 
-                proto = protoArray[index];
+                proto = protoArray[internal];
               }
 
               case ByteProto.MARKED3 -> {
-                index += 3;
+                internal += 3;
 
-                proto = protoArray[index];
+                proto = protoArray[internal];
               }
 
               default -> {
@@ -472,14 +474,6 @@ class CssRecorder extends CssTemplateApi {
               }
             }
           }
-
-          protoArray[index] = ByteProto.MARKED;
-
-          protoAdd(proto, index);
-
-          index = protoArray[index + 1];
-
-          listOffset(1, index);
         }
 
         case MARK_VALUE1 -> protoAdd(listArray[idx++]);
@@ -513,14 +507,6 @@ class CssRecorder extends CssTemplateApi {
     listArray[listIndex++] = v0;
     listArray[listIndex++] = v1;
     listArray[listIndex++] = v2;
-  }
-
-  private int listOffset(int offset) {
-    return listArray[listIndex - offset];
-  }
-
-  private void listOffset(int offset, int value) {
-    listArray[listIndex - offset] = value;
   }
 
   private int listPop() {
