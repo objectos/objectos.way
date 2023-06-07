@@ -29,6 +29,8 @@ public enum Property implements PProperty {
 
   LINE_HEIGHT("line-height"),
 
+  MIN_HEIGHT("min-height"),
+
   Z_INDEX("z-index");
 
   private static final Property[] VALUES = Property.values();

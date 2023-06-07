@@ -134,27 +134,6 @@ class CssRecorder extends CssTemplateApi {
   }
 
   @Override
-  final InternalInstruction addDeclaration(Property property, String value) {
-    int start = protoIndex;
-
-    int object = addObject(value);
-
-    protoAdd(
-      ByteProto.DECLARATION,
-      ByteProto.NULL,
-      property.ordinal(),
-      ByteProto.STRING_VALUE, object,
-      ByteProto.DECLARATION_END,
-      start, start,
-      ByteProto.DECLARATION
-    );
-
-    endSet(start);
-
-    return InternalInstruction.INSTANCE;
-  }
-
-  @Override
   final InternalInstruction addDeclaration(Property property, PropertyValue... values) {
     int listBase = listIndex;
 
@@ -173,6 +152,27 @@ class CssRecorder extends CssTemplateApi {
     endSet(start);
 
     listIndex = listBase;
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  @Override
+  final InternalInstruction addDeclaration(Property property, String value) {
+    int start = protoIndex;
+
+    int object = addObject(value);
+
+    protoAdd(
+      ByteProto.DECLARATION,
+      ByteProto.NULL,
+      property.ordinal(),
+      ByteProto.STRING_VALUE, object,
+      ByteProto.DECLARATION_END,
+      start, start,
+      ByteProto.DECLARATION
+    );
+
+    endSet(start);
 
     return InternalInstruction.INSTANCE;
   }
@@ -243,6 +243,17 @@ class CssRecorder extends CssTemplateApi {
     listIndex = listBase;
   }
 
+  @Override
+  final PropertyValue addValue(int type, int value) {
+    protoAdd(
+      type,
+      value,
+      type
+    );
+
+    return InternalInstruction.VALUE3;
+  }
+
   final void executeRecorderAfter() {
     var rootIndex = protoIndex;
 
@@ -289,7 +300,11 @@ class CssRecorder extends CssTemplateApi {
     for (int idx = 0; idx < length; idx++) {
       var value = Check.notNull(values[idx], "values[", idx, "] == null");
 
-      if (value instanceof Keyword keyword) {
+      if (value == InternalInstruction.VALUE3) {
+        contents -= 3;
+
+        listAdd(MARK_INTERNAL);
+      } else if (value instanceof Keyword keyword) {
         listAdd(MARK_VALUE2, ByteProto.KEYWORD, keyword.ordinal());
       } else {
         var type = value.getClass();
@@ -308,10 +323,32 @@ class CssRecorder extends CssTemplateApi {
 
     int idx = listBase;
 
+    int internal = contents;
+
     while (idx < listMax) {
       int marker = listArray[idx++];
 
       switch (marker) {
+        case MARK_INTERNAL -> {
+          int proto = protoArray[internal];
+
+          switch (proto) {
+            case ByteProto.PX1 -> {
+              int value = protoArray[internal + 1];
+
+              protoAdd(proto, value);
+
+              protoArray[internal] = ByteProto.MARKED3;
+
+              internal += 3;
+            }
+
+            default -> throw new UnsupportedOperationException(
+              "Implement me :: proto=" + proto
+            );
+          }
+        }
+
         case MARK_VALUE2 -> {
           protoAdd(listArray[idx++], listArray[idx++]);
         }
@@ -418,6 +455,12 @@ class CssRecorder extends CssTemplateApi {
 
               case ByteProto.MARKED -> {
                 index = protoArray[index + 1];
+
+                proto = protoArray[index];
+              }
+
+              case ByteProto.MARKED3 -> {
+                index += 3;
 
                 proto = protoArray[index];
               }
@@ -563,8 +606,13 @@ class CssRecorder extends CssTemplateApi {
       case ByteProto.ATTR_NAME_SELECTOR,
            ByteProto.ATTR_VALUE_SELECTOR,
            ByteProto.CLASS_SELECTOR,
-           ByteProto.DECLARATION,
            ByteProto.ID_SELECTOR -> {
+        contents = protoArray[--contents];
+      }
+
+      case ByteProto.DECLARATION -> {
+        --contents;
+
         contents = protoArray[--contents];
       }
 

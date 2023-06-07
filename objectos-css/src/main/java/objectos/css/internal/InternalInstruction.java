@@ -16,13 +16,17 @@
 package objectos.css.internal;
 
 import objectos.css.tmpl.AttributeValueElement;
+import objectos.css.tmpl.PropertyValue.Length;
 import objectos.css.tmpl.StyleRuleElement;
 
 public enum InternalInstruction
     implements
     AttributeValueElement,
-    StyleRuleElement {
+    StyleRuleElement,
+    Length {
 
-  INSTANCE;
+  INSTANCE,
+
+  VALUE3;
 
 }

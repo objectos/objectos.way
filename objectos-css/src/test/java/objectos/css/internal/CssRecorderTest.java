@@ -303,6 +303,53 @@ public class CssRecorderTest {
     );
   }
 
+  @Test(description = """
+  CssRecorder
+
+  style(
+    ANY, minHeight(px(160))
+  );
+  """)
+  public void testCase12() {
+    executeBefore();
+
+    recorder.addRule(
+      UniversalSelector.INSTANCE,
+      recorder.addDeclaration(
+        Property.MIN_HEIGHT,
+        recorder.addValue(ByteProto.PX1, 160)
+      )
+    );
+
+    executeAfter();
+
+    testProto(
+      // [0]: px(160)
+      ByteProto.MARKED3,
+      160,
+      ByteProto.PX1,
+
+      // [3]: minHeight(px(160))
+      ByteProto.MARKED, 12,
+      Property.MIN_HEIGHT.ordinal(),
+      ByteProto.PX1, 160,
+      ByteProto.DECLARATION_END,
+      0, 3, ByteProto.DECLARATION,
+
+      // [12]: style()
+      ByteProto.STYLE_RULE, 21,
+      ByteProto.UNIVERSAL_SELECTOR,
+      ByteProto.DECLARATION, 3,
+      ByteProto.STYLE_RULE_END,
+      0, 12, ByteProto.STYLE_RULE,
+
+      // [21]: ROOT
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, 12,
+      ByteProto.ROOT_END, 21
+    );
+  }
+
   private void executeAfter() {
     recorder.executeRecorderAfter();
   }

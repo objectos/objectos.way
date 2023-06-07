@@ -15,8 +15,12 @@
  */
 package objectos.css.tmpl;
 
+import objectos.css.internal.InternalInstruction;
+
 public sealed interface PropertyValue {
   sealed interface Display1 extends PropertyValue permits Keywords.Block {}
+
+  sealed interface Length extends PropertyValue permits InternalInstruction {}
 
   default PropertyValue self() {
     return this;
