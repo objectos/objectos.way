@@ -39,7 +39,8 @@ class CssRecorder extends CssTemplateApi {
   static final int PATTRIBUTE_VALUE_SELECTOR = 6;
   static final int PDECLARATION = 7;
   static final int PINT_VALUE = 8;
-  static final int OBJECT_INDEX = 9;
+  static final int PDOUBLE_VALUE = 9;
+  static final int OBJECT_INDEX = 10;
 
   int[] listArray = new int[8];
 
@@ -82,6 +83,29 @@ class CssRecorder extends CssTemplateApi {
       elementStart,
       elementStart,
       ByteProto.ATTR_VALUE_SELECTOR
+    );
+
+    endSet(start);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  @Override
+  final InternalInstruction addDeclaration(Property property, double value) {
+    int start = protoIndex;
+
+    long bits = Double.doubleToLongBits(value);
+    int high = (int) (bits >> 32);
+    int low = (int) bits;
+
+    protoAdd(
+      ByteProto.DECLARATION,
+      ByteProto.NULL,
+      property.ordinal(),
+      ByteProto.DOUBLE_VALUE, high, low,
+      ByteProto.DECLARATION_END,
+      start, start,
+      ByteProto.DECLARATION
     );
 
     endSet(start);
@@ -493,6 +517,21 @@ class CssRecorder extends CssTemplateApi {
     protoArray[protoIndex++] = v6;
     protoArray[protoIndex++] = v7;
     protoArray[protoIndex++] = v8;
+  }
+
+  private void protoAdd(
+      int v0, int v1, int v2, int v3, int v4, int v5, int v6, int v7, int v8, int v9) {
+    protoArray = IntArrays.growIfNecessary(protoArray, protoIndex + 9);
+    protoArray[protoIndex++] = v0;
+    protoArray[protoIndex++] = v1;
+    protoArray[protoIndex++] = v2;
+    protoArray[protoIndex++] = v3;
+    protoArray[protoIndex++] = v4;
+    protoArray[protoIndex++] = v5;
+    protoArray[protoIndex++] = v6;
+    protoArray[protoIndex++] = v7;
+    protoArray[protoIndex++] = v8;
+    protoArray[protoIndex++] = v9;
   }
 
   private int updateContents(int contents) {

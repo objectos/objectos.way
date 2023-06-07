@@ -99,7 +99,8 @@ public final class PDeclarationImpl
           break loop;
         }
 
-        case ByteProto.INT_VALUE,
+        case ByteProto.DOUBLE_VALUE,
+             ByteProto.INT_VALUE,
              ByteProto.KEYWORD -> {
           state = NEXT;
 
@@ -123,6 +124,20 @@ public final class PDeclarationImpl
     int proto = player.protoGet(protoIndex++);
 
     return switch (proto) {
+      case ByteProto.DOUBLE_VALUE -> {
+        var impl = player.pseudoDoubleValue();
+
+        int high = player.protoGet(protoIndex++);
+        int low = player.protoGet(protoIndex++);
+        long bits = high;
+        bits <<= 32;
+        bits |= low;
+
+        impl.doubleValue = Double.longBitsToDouble(bits);
+
+        yield impl;
+      }
+
       case ByteProto.INT_VALUE -> {
         var impl = player.pseudoIntValue();
 

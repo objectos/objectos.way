@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.pseudom.PDeclaration;
 import objectos.css.pseudom.PPropertyValue;
+import objectos.css.pseudom.PPropertyValue.PDoubleValue;
 import objectos.css.pseudom.PPropertyValue.PIntValue;
 import objectos.css.pseudom.PPropertyValue.PKeyword;
 import objectos.css.pseudom.PRule;
@@ -97,9 +98,18 @@ public final class PrettyPrintWriter extends Writer {
   }
 
   private void propertyValue(PPropertyValue value) {
-    if (value instanceof PIntValue impl) {
+    if (value instanceof PDoubleValue impl) {
+      double d = impl.doubleValue();
+
+      var s = Double.toString(d);
+
+      write(s);
+    } else if (value instanceof PIntValue impl) {
       int intValue = impl.intValue();
-      write(Integer.toString(intValue));
+
+      var s = Integer.toString(intValue);
+
+      write(s);
     } else if (value instanceof PKeyword keyword) {
       write(keyword.keywordName());
     } else {

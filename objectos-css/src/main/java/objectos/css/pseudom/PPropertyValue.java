@@ -16,9 +16,14 @@
 package objectos.css.pseudom;
 
 import objectos.css.internal.Keyword;
+import objectos.css.internal.PDoubleValueImpl;
 import objectos.css.internal.PIntValueImpl;
 
 public sealed interface PPropertyValue {
+
+  sealed interface PDoubleValue extends PPropertyValue permits PDoubleValueImpl {
+    double doubleValue();
+  }
 
   sealed interface PIntValue extends PPropertyValue permits PIntValueImpl {
     int intValue();

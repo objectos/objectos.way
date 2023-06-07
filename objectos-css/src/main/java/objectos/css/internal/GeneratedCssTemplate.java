@@ -47,6 +47,10 @@ abstract class GeneratedCssTemplate {
     return api().addDeclaration(Property.DISPLAY, value.self());
   }
 
+  protected final StyleRuleElement lineHeight(double value) {
+    return api().addDeclaration(Property.LINE_HEIGHT, value);
+  }
+
   protected final StyleRuleElement zIndex(int value) {
     return api().addDeclaration(Property.Z_INDEX, value);
   }
