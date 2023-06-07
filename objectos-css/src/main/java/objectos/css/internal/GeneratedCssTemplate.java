@@ -44,10 +44,13 @@ abstract class GeneratedCssTemplate {
   protected static final Keywords.Block BLOCK = Keyword.BLOCK;
 
   protected final StyleRuleElement display(PropertyValue.Display1 value) {
-    return addDeclaration(Property.DISPLAY, value.self());
+    return api().addDeclaration(Property.DISPLAY, value.self());
   }
 
-  abstract StyleRuleElement addDeclaration(
-      Property property, PropertyValue... values);
+  protected final StyleRuleElement zIndex(int value) {
+    return api().addDeclaration(Property.Z_INDEX, value);
+  }
+
+  abstract CssTemplateApi api();
 
 }

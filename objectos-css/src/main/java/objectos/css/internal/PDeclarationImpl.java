@@ -99,7 +99,8 @@ public final class PDeclarationImpl
           break loop;
         }
 
-        case ByteProto.KEYWORD -> {
+        case ByteProto.INT_VALUE,
+             ByteProto.KEYWORD -> {
           state = NEXT;
 
           found = true;
@@ -122,6 +123,14 @@ public final class PDeclarationImpl
     int proto = player.protoGet(protoIndex++);
 
     return switch (proto) {
+      case ByteProto.INT_VALUE -> {
+        var impl = player.pseudoIntValue();
+
+        impl.intValue = player.protoGet(protoIndex++);
+
+        yield impl;
+      }
+
       case ByteProto.KEYWORD -> Keyword.ofOrdinal(
         player.protoGet(protoIndex++)
       );

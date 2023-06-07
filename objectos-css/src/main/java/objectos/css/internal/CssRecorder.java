@@ -38,7 +38,8 @@ class CssRecorder extends CssTemplateApi {
   static final int PATTRIBUTE_NAME_SELECTOR = 5;
   static final int PATTRIBUTE_VALUE_SELECTOR = 6;
   static final int PDECLARATION = 7;
-  static final int OBJECT_INDEX = 8;
+  static final int PINT_VALUE = 8;
+  static final int OBJECT_INDEX = 9;
 
   int[] listArray = new int[8];
 

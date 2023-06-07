@@ -218,6 +218,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase09() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ANY,
+
+            zIndex(-300)
+          );
+        }
+      },
+
+      """
+      * {
+        z-index: -300;
+      }
+      """,
+
+      """
+      *{z-index:-300}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

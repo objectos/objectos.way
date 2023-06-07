@@ -81,6 +81,10 @@ public class CssPlayer extends CssRecorder {
     return pseudoFactory(PID_SELECTOR, PIdSelectorImpl::new);
   }
 
+  final PIntValueImpl pseudoIntValue() {
+    return pseudoFactory(PINT_VALUE, PIntValueImpl::new);
+  }
+
   final PSelectorImpl pseudoSelector() {
     return pseudoFactory(PSELECTOR, PSelectorImpl::new);
   }

@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.internal;
 
-import objectos.css.internal.Keyword;
-import objectos.css.internal.PIntValueImpl;
+import objectos.css.pseudom.PPropertyValue.PIntValue;
 
-public sealed interface PPropertyValue {
+public final class PIntValueImpl implements PIntValue {
 
-  sealed interface PIntValue extends PPropertyValue permits PIntValueImpl {
-    int intValue();
-  }
+  int intValue;
 
-  sealed interface PKeyword extends PPropertyValue permits Keyword {
-    String keywordName();
+  PIntValueImpl(CssPlayer player) {}
+
+  @Override
+  public final int intValue() {
+    return intValue;
   }
 
 }

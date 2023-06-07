@@ -17,15 +17,12 @@ package objectos.css.internal;
 
 import java.util.Objects;
 import objectos.css.tmpl.AttributeValueElement;
-import objectos.css.tmpl.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   private CssTemplateApi api;
-
-  protected abstract void definition();
 
   protected final StyleRuleElement attr(String name) {
     checkName(name);
@@ -43,12 +40,47 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return api.addAttribute(api.addObject(name), element);
   }
 
+  protected final StyleRuleElement className(String name) {
+    checkName(name);
+
+    var api = api();
+    return api.addInternal(ByteProto.CLASS_SELECTOR, api.addObject(name));
+  }
+
+  protected abstract void definition();
+
   protected final AttributeValueElement eq(String value) {
     return attrValue(AttributeValueOperator.EQUALS, value);
   }
 
+  protected final StyleRuleElement id(String id) {
+    var api = api();
+    return api.addInternal(ByteProto.ID_SELECTOR, api.addObject(id));
+  }
+
   protected final AttributeValueElement startsWith(String value) {
     return attrValue(AttributeValueOperator.STARTS_WITH, value);
+  }
+
+  protected final void style(StyleRuleElement... elements) {
+    api().addRule(elements);
+  }
+
+  final void acceptTemplateApi(CssTemplateApi api) {
+    this.api = Check.notNull(api, "api == null");
+
+    try {
+      definition();
+    } finally {
+      this.api = null;
+    }
+  }
+
+  @Override
+  final CssTemplateApi api() {
+    Check.state(api != null, "api not set");
+
+    return api;
   }
 
   private AttributeValueElement attrValue(
@@ -68,44 +100,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   private void checkValue(String value) {
     Objects.requireNonNull(value, "value == null");
     Check.argument(!value.isBlank(), "value must not be blank");
-  }
-
-  protected final StyleRuleElement className(String name) {
-    checkName(name);
-
-    var api = api();
-    return api.addInternal(ByteProto.CLASS_SELECTOR, api.addObject(name));
-  }
-
-  protected final StyleRuleElement id(String id) {
-    var api = api();
-    return api.addInternal(ByteProto.ID_SELECTOR, api.addObject(id));
-  }
-
-  protected final void style(StyleRuleElement... elements) {
-    api().addRule(elements);
-  }
-
-  @Override
-  final StyleRuleElement addDeclaration(
-      Property property, PropertyValue... values) {
-    return api().addDeclaration(property, values);
-  }
-
-  final void acceptTemplateApi(CssTemplateApi api) {
-    this.api = Check.notNull(api, "api == null");
-
-    try {
-      definition();
-    } finally {
-      this.api = null;
-    }
-  }
-
-  private CssTemplateApi api() {
-    Check.state(api != null, "api not set");
-
-    return api;
   }
 
 }
