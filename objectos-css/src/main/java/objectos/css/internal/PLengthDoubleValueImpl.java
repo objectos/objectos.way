@@ -15,20 +15,23 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.AttributeValueElement;
-import objectos.css.tmpl.PropertyValue.Length;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.pseudom.PPropertyValue.PLengthDoubleValue;
+import objectos.css.tmpl.LengthUnit;
 
-public enum InternalInstruction
-    implements
-    AttributeValueElement,
-    StyleRuleElement,
-    Length {
+public final class PLengthDoubleValueImpl implements PLengthDoubleValue {
 
-  INSTANCE,
+  LengthUnit unit;
 
-  VALUE4,
+  double value;
 
-  VALUE5;
+  @Override
+  public final LengthUnit unit() {
+    return unit;
+  }
+
+  @Override
+  public final double value() {
+    return value;
+  }
 
 }

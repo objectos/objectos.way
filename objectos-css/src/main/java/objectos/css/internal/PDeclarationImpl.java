@@ -103,6 +103,7 @@ public final class PDeclarationImpl
         case ByteProto.DOUBLE_VALUE,
              ByteProto.INT_VALUE,
              ByteProto.KEYWORD,
+             ByteProto.LENGTH_DOUBLE,
              ByteProto.LENGTH_INT,
              ByteProto.STRING_VALUE -> {
           state = NEXT;
@@ -152,6 +153,24 @@ public final class PDeclarationImpl
       case ByteProto.KEYWORD -> Keyword.ofOrdinal(
         player.protoGet(protoIndex++)
       );
+
+      case ByteProto.LENGTH_DOUBLE -> {
+        var impl = player.pseudoLengthDoubleValue();
+
+        int ordinal = player.protoGet(protoIndex++);
+
+        impl.unit = LengthUnit.ofOrdinal(ordinal);
+
+        int high = player.protoGet(protoIndex++);
+        int low = player.protoGet(protoIndex++);
+        long bits = high;
+        bits <<= 32;
+        bits |= low;
+
+        impl.value = Double.longBitsToDouble(bits);
+
+        yield impl;
+      }
 
       case ByteProto.LENGTH_INT -> {
         var impl = player.pseudoLengthIntValue();

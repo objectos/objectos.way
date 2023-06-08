@@ -322,6 +322,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase13() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ANY,
+
+            lineHeight(pt(1.4))
+          );
+        }
+      },
+
+      """
+      * {
+        line-height: 1.4pt;
+      }
+      """,
+
+      """
+      *{line-height:1.4pt}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

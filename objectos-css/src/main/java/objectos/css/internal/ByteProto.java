@@ -61,9 +61,13 @@ final class ByteProto {
 
   static final int STRING_VALUE = -23;
 
-  static final int LENGTH_INT = -24;
+  static final int LENGTH_DOUBLE = -24;
 
-  static final int MARKED4 = -25;
+  static final int LENGTH_INT = -25;
+
+  static final int MARKED4 = -26;
+
+  static final int MARKED5 = -27;
 
   private ByteProto() {}
 

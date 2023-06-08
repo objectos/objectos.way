@@ -42,8 +42,9 @@ class CssRecorder extends CssTemplateApi {
   static final int PINT_VALUE = 8;
   static final int PDOUBLE_VALUE = 9;
   static final int PSTRING_VALUE = 10;
-  static final int PLENGTH_INT_VALUE = 11;
-  static final int OBJECT_INDEX = 12;
+  static final int PLENGTH_DOUBLE_VALUE = 11;
+  static final int PLENGTH_INT_VALUE = 12;
+  static final int OBJECT_INDEX = 13;
 
   int[] listArray = new int[8];
 
@@ -246,6 +247,21 @@ class CssRecorder extends CssTemplateApi {
   }
 
   @Override
+  final PropertyValue.Length addLength(LengthUnit unit, double value) {
+    long bits = Double.doubleToLongBits(value);
+    int high = (int) (bits >> 32);
+    int low = (int) bits;
+
+    protoAdd(
+      ByteProto.LENGTH_DOUBLE,
+      unit.ordinal(), high, low,
+      ByteProto.LENGTH_DOUBLE
+    );
+
+    return InternalInstruction.VALUE5;
+  }
+
+  @Override
   final PropertyValue.Length addLength(LengthUnit unit, int value) {
     protoAdd(
       ByteProto.LENGTH_INT,
@@ -306,6 +322,10 @@ class CssRecorder extends CssTemplateApi {
         contents -= 4;
 
         listAdd(MARK_INTERNAL);
+      } else if (value == InternalInstruction.VALUE5) {
+        contents -= 5;
+
+        listAdd(MARK_INTERNAL);
       } else if (value instanceof Keyword keyword) {
         listAdd(MARK_VALUE2, ByteProto.KEYWORD, keyword.ordinal());
       } else {
@@ -335,13 +355,27 @@ class CssRecorder extends CssTemplateApi {
           int proto = protoArray[internal];
 
           switch (proto) {
+            case ByteProto.LENGTH_DOUBLE -> {
+              protoArray[internal] = ByteProto.MARKED5;
+
+              protoAdd(
+                proto,
+                protoArray[internal + 1],
+                protoArray[internal + 2],
+                protoArray[internal + 3]
+              );
+
+              internal += 5;
+            }
+
             case ByteProto.LENGTH_INT -> {
-              int unit = protoArray[internal + 1];
-              int value = protoArray[internal + 2];
-
-              protoAdd(proto, unit, value);
-
               protoArray[internal] = ByteProto.MARKED4;
+
+              protoAdd(
+                proto,
+                protoArray[internal + 1],
+                protoArray[internal + 2]
+              );
 
               internal += 4;
             }
@@ -466,6 +500,12 @@ class CssRecorder extends CssTemplateApi {
 
               case ByteProto.MARKED4 -> {
                 internal += 4;
+
+                proto = protoArray[internal];
+              }
+
+              case ByteProto.MARKED5 -> {
+                internal += 5;
 
                 proto = protoArray[internal];
               }

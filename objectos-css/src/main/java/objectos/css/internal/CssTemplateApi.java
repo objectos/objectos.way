@@ -36,6 +36,8 @@ public abstract class CssTemplateApi {
 
   abstract InternalInstruction addInternal(int type, int value0, int value1);
 
+  abstract PropertyValue.Length addLength(LengthUnit unit, double value);
+
   abstract PropertyValue.Length addLength(LengthUnit unit, int value);
 
   abstract int addObject(Object value);

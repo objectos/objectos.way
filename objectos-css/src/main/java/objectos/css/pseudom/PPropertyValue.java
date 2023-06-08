@@ -18,6 +18,7 @@ package objectos.css.pseudom;
 import objectos.css.internal.Keyword;
 import objectos.css.internal.PDoubleValueImpl;
 import objectos.css.internal.PIntValueImpl;
+import objectos.css.internal.PLengthDoubleValueImpl;
 import objectos.css.internal.PLengthIntValueImpl;
 import objectos.css.internal.PStringValueImpl;
 import objectos.css.tmpl.LengthUnit;
@@ -34,6 +35,11 @@ public sealed interface PPropertyValue {
 
   sealed interface PKeyword extends PPropertyValue permits Keyword {
     String keywordName();
+  }
+
+  sealed interface PLengthDoubleValue extends PPropertyValue permits PLengthDoubleValueImpl {
+    LengthUnit unit();
+    double value();
   }
 
   sealed interface PLengthIntValue extends PPropertyValue permits PLengthIntValueImpl {

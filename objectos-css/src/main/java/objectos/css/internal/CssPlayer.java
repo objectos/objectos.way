@@ -98,6 +98,10 @@ public class CssPlayer extends CssRecorder {
     return pseudoFactory(PSELECTOR, PSelectorImpl::new);
   }
 
+  final PLengthDoubleValueImpl pseudoLengthDoubleValue() {
+    return pseudoFactory(PLENGTH_DOUBLE_VALUE, PLengthDoubleValueImpl::new);
+  }
+
   final PLengthIntValueImpl pseudoLengthIntValue() {
     return pseudoFactory(PLENGTH_INT_VALUE, PLengthIntValueImpl::new);
   }

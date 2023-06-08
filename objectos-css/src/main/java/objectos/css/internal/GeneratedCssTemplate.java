@@ -59,6 +59,10 @@ abstract class GeneratedCssTemplate {
     return api().addDeclaration(Property.LINE_HEIGHT, value);
   }
 
+  protected final StyleRuleElement lineHeight(Length value) {
+    return api().addDeclaration(Property.LINE_HEIGHT, value);
+  }
+
   protected final StyleRuleElement minHeight(Length value) {
     return api().addDeclaration(Property.MIN_HEIGHT, value.self());
   }
@@ -69,6 +73,10 @@ abstract class GeneratedCssTemplate {
 
   protected final Length px(int value) {
     return api().addLength(LengthUnit.PX, value);
+  }
+
+  protected final Length pt(double value) {
+    return api().addLength(LengthUnit.PT, value);
   }
 
   abstract CssTemplateApi api();
