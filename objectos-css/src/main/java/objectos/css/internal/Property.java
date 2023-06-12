@@ -21,28 +21,26 @@ import objectos.css.pseudom.PProperty;
 // generate me
 public enum Property implements PProperty {
 
+  BACKGROUND_COLOR,
+
   BORDER,
 
   CONTENT,
 
   DISPLAY,
 
-  LINE_HEIGHT("line-height"),
+  LINE_HEIGHT,
 
-  MIN_HEIGHT("min-height"),
+  MIN_HEIGHT,
 
-  Z_INDEX("z-index");
+  Z_INDEX;
 
   private static final Property[] VALUES = Property.values();
 
   private final String propertyName;
 
   private Property() {
-    propertyName = name().toLowerCase(Locale.US);
-  }
-
-  private Property(String propertyName) {
-    this.propertyName = propertyName;
+    propertyName = name().toLowerCase(Locale.US).replace('_', '-');
   }
 
   public static Property ofOrdinal(int value) {

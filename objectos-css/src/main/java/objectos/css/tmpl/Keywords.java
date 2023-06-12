@@ -17,9 +17,12 @@ package objectos.css.tmpl;
 
 import objectos.css.internal.Keyword;
 
+// generate me!
 public final class Keywords {
 
   public sealed interface Block extends PropertyValue.Display1 permits Keyword {}
+
+  public sealed interface ColorKeyword extends PropertyValue.Color permits Keyword {}
 
   private Keywords() {}
 

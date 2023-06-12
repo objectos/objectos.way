@@ -20,9 +20,11 @@ import objectos.css.pseudom.PPropertyValue.PKeyword;
 import objectos.css.tmpl.Keywords;
 
 // generate me
-public enum Keyword implements PKeyword, Keywords.Block {
+public enum Keyword implements PKeyword, Keywords.Block, Keywords.ColorKeyword {
 
-  BLOCK;
+  BLOCK,
+
+  TRANSPARENT;
 
   private static final Keyword[] VALUES = Keyword.values();
 

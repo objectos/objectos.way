@@ -348,6 +348,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void testCase14() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ANY,
+
+            backgroundColor(transparent)
+          );
+        }
+      },
+
+      """
+      * {
+        background-color: transparent;
+      }
+      """,
+
+      """
+      *{background-color:transparent}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     stringBuilder.setLength(0);
 

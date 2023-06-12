@@ -46,6 +46,12 @@ abstract class GeneratedCssTemplate {
 
   protected static final Keywords.Block BLOCK = Keyword.BLOCK;
 
+  protected static final Keywords.ColorKeyword transparent = Keyword.TRANSPARENT;
+
+  protected final StyleRuleElement backgroundColor(PropertyValue.Color color) {
+    return api().addDeclaration(Property.BACKGROUND_COLOR, color.self());
+  }
+
   protected final StyleRuleElement content(String value) {
     Objects.requireNonNull(value, "value == null");
     return api().addDeclaration(Property.CONTENT, value);
