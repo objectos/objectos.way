@@ -39,10 +39,6 @@ public class CssTemplateTest {
 
       """
       * {}
-      """,
-
-      """
-      *{}
       """
     );
   }
@@ -67,17 +63,46 @@ public class CssTemplateTest {
 
       """
       *, ::after, ::before {}
-      """,
-
-      """
-      *,::after,::before{}
       """
     );
   }
 
-  private void test(CssTemplate template, String pretty, String minified) {
-    var sheet = template.toStyleSheet();
+  @Test(description = """
+  Preflight 01
 
+  - box-sizing
+  """)
+  public void testCase03() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            any,
+
+            boxSizing(borderBox),
+            boxSizing(contentBox),
+            boxSizing(inherit),
+            boxSizing(initial),
+            boxSizing(unset)
+          );
+        }
+      },
+
+      """
+      * {
+        box-sizing: border-box;
+        box-sizing: content-box;
+        box-sizing: inherit;
+        box-sizing: initial;
+        box-sizing: unset;
+      }
+      """
+    );
+  }
+
+  private void test(CssTemplate template, String pretty) {
+    var sheet = template.toStyleSheet();
     assertEquals(sheet.toString(), pretty);
   }
 

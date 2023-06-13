@@ -15,42 +15,45 @@
  */
 package objectos.css.internal;
 
-import java.util.Locale;
-import objectos.css.om.PropertyName;
-import objectos.css.om.PropertyValue;
+import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 
-public enum Property implements PropertyName {
+public final class StyleRuleN {
 
-  BACKGROUND_COLOR,
+  private final Selector selector;
 
-  BORDER,
+  private final StyleDeclaration[] declarations;
 
-  BOX_SIZING,
-
-  CONTENT,
-
-  DISPLAY,
-
-  LINE_HEIGHT,
-
-  MIN_HEIGHT,
-
-  Z_INDEX;
-
-  private final String propertyName;
-
-  private Property() {
-    propertyName = name().toLowerCase(Locale.US).replace('_', '-');
+  public StyleRuleN(Selector selector, StyleDeclaration[] declarations) {
+    this.selector = selector;
+    this.declarations = declarations;
   }
 
   @Override
   public final String toString() {
-    return propertyName;
-  }
+    var nl = System.lineSeparator();
 
-  public final StyleDeclaration declaration(PropertyValue value) {
-    return new StyleDeclaration1(this, value);
+    var sb = new StringBuilder();
+
+    sb.append(selector);
+
+    sb.append(" {");
+
+    for (var declaration : declarations) {
+      sb.append(nl);
+
+      sb.append("  ");
+
+      sb.append(declaration);
+
+      sb.append(';');
+    }
+
+    sb.append(nl);
+
+    sb.append("}");
+
+    return sb.toString();
   }
 
 }

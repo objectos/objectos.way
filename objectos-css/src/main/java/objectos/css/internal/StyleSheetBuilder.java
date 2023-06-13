@@ -15,26 +15,52 @@
  */
 package objectos.css.internal;
 
+import java.util.Objects;
 import objectos.css.om.Selector;
+import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
+import objectos.lang.Check;
 import objectos.util.GrowableList;
 
 public class StyleSheetBuilder {
 
   private final GrowableList<Object> rules = new GrowableList<>();
 
-  public final void addStyleRule(Selector selector) {
-    var rule = new StyleRule0(selector);
+  public final void addStyleRule(Selector selector,
+      StyleDeclaration[] declarations) {
+    int length = declarations.length;
+
+    var rule = switch (length) {
+      case 0 -> new StyleRule0(selector);
+
+      case 1 -> new StyleRule1(
+        selector,
+        Objects.requireNonNull(declarations[0], "declarations[0] == null")
+      );
+
+      default -> {
+        var copy = new StyleDeclaration[length];
+
+        for (int i = 0; i < length; i++) {
+          copy[i] = Check.notNull(declarations[i], "declarations[", i, "] == null");
+        }
+
+        yield new StyleRuleN(selector, copy);
+      }
+    };
 
     rules.add(rule);
   }
 
-  public final void addStyleRule(Selector selector1, Selector selector2, Selector selector3) {
+  public final void addStyleRule(Selector selector1, Selector selector2, Selector selector3,
+      StyleDeclaration[] declarations) {
+
     addStyleRule(
       Combinator.LIST.combine(
         Combinator.LIST.combine(selector1, selector2),
         selector3
-      )
+      ),
+      declarations
     );
   }
 

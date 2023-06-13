@@ -15,30 +15,27 @@
  */
 package objectos.css.internal;
 
-import java.util.Locale;
+import objectos.css.om.Selector;
+import objectos.css.om.StyleDeclaration;
 
-// generate me
-public enum Keyword {
+public final class StyleRule1 {
 
-  BLOCK,
+  private final Selector selector;
 
-  TRANSPARENT;
+  private final StyleDeclaration declaration;
 
-  private static final Keyword[] VALUES = Keyword.values();
-
-  private final String keywordName;
-
-  private Keyword() {
-    this.keywordName = name().toLowerCase(Locale.US);
-  }
-
-  public static Keyword ofOrdinal(int value) {
-    return VALUES[value];
+  public StyleRule1(Selector selector, StyleDeclaration declaration) {
+    this.selector = selector;
+    this.declaration = declaration;
   }
 
   @Override
   public final String toString() {
-    return keywordName;
+    var nl = System.lineSeparator();
+
+    return selector + " {" + nl
+        + "  " + declaration + ";" + nl
+        + "}";
   }
 
 }

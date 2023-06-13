@@ -17,8 +17,11 @@ package objectos.css;
 
 import java.util.Objects;
 import objectos.css.internal.NamedSelector;
+import objectos.css.internal.Property;
 import objectos.css.internal.StyleSheetBuilder;
+import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
+import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
 
 public abstract class CssTemplate {
@@ -43,12 +46,40 @@ public abstract class CssTemplate {
 
   protected static final Selector any = named("*");
 
+  // keywords
+
+  protected interface GlobalKeyword extends BoxSizingValue {}
+
+  private record Keyword(String name) implements GlobalKeyword {
+    @Override
+    public final String toString() {
+      return name;
+    }
+  }
+
+  // B
+  protected static final BoxSizingValue borderBox = kw("border-box");
+
+  // C
+  protected static final BoxSizingValue contentBox = kw("content-box");
+
+  // I
+  protected static final GlobalKeyword inherit = kw("inherit");
+  protected static final GlobalKeyword initial = kw("initial");
+
+  // U
+  protected static final GlobalKeyword unset = kw("unset");
+
   private StyleSheetBuilder builder;
 
   protected CssTemplate() {}
 
   private static final NamedSelector named(String name) {
     return new NamedSelector(name);
+  }
+
+  private static final Keyword kw(String name) {
+    return new Keyword(name);
   }
 
   public final StyleSheet toStyleSheet() {
@@ -65,22 +96,40 @@ public abstract class CssTemplate {
 
   protected abstract void definition();
 
+  // selector methods
+
   protected final IdSelector id(String id) {
     return IdSelector.of(id);
   }
 
-  protected final void style(Selector selector) {
-    Objects.requireNonNull(selector, "selector == null");
+  // property methods
 
-    builder.addStyleRule(selector);
+  // property methods: box-sizing
+
+  protected interface BoxSizingValue extends PropertyValue {}
+
+  protected final StyleDeclaration boxSizing(BoxSizingValue value) {
+    Objects.requireNonNull(value, "value == null");
+
+    return Property.BOX_SIZING.declaration(value);
   }
 
-  protected final void style(Selector selector1, Selector selector2, Selector selector3) {
+  protected final void style(Selector selector,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector, "selector == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(selector, declarations);
+  }
+
+  protected final void style(Selector selector1, Selector selector2, Selector selector3,
+      StyleDeclaration... declarations) {
     Objects.requireNonNull(selector1, "selector1 == null");
     Objects.requireNonNull(selector2, "selector2 == null");
     Objects.requireNonNull(selector3, "selector3 == null");
+    Objects.requireNonNull(declarations, "declarations == null");
 
-    builder.addStyleRule(selector1, selector2, selector3);
+    builder.addStyleRule(selector1, selector2, selector3, declarations);
   }
 
 }
