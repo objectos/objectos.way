@@ -17,12 +17,12 @@ package objectos.css.tmpl;
 
 import objectos.css.ClassSelector;
 import objectos.css.IdSelector;
-import objectos.css.internal.Combinator;
-import objectos.css.internal.InternalInstruction;
-import objectos.css.internal.PseudoClassSelector;
-import objectos.css.internal.PseudoElementSelector;
-import objectos.css.internal.TypeSelector;
-import objectos.css.internal.UniversalSelector;
+import objectos.css.internalold.Combinator;
+import objectos.css.internalold.InternalInstruction;
+import objectos.css.internalold.PseudoClassSelector;
+import objectos.css.internalold.PseudoElementSelector;
+import objectos.css.internalold.TypeSelector;
+import objectos.css.internalold.UniversalSelector;
 
 public sealed interface StyleRuleElement
     permits

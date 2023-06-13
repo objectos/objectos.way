@@ -22,9 +22,9 @@ public class TestCase15 extends AbstractStyleSheet {
   @Override
   protected final void definition() {
     style(
-        any(),
+      any(),
 
-        color(hex("#ff0099"))
+      color(hex("#ff0099"))
     );
   }
 

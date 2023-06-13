@@ -17,9 +17,9 @@ package objectos.css;
 
 import java.io.IOException;
 import java.util.Objects;
-import objectos.css.internal.CssPlayer;
-import objectos.css.internal.PrettyPrintWriter;
-import objectos.css.internal.Writer;
+import objectos.css.internalold.CssPlayer;
+import objectos.css.internalold.PrettyPrintWriter;
+import objectos.css.internalold.Writer;
 
 /**
  * @since 0.7.0

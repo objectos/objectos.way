@@ -16,11 +16,9 @@
 package objectos.css.internal;
 
 import java.util.Locale;
-import objectos.css.pseudom.PSelectorElement.PTypeSelector;
-import objectos.css.tmpl.StyleRuleElement;
 
 // generate me
-public enum TypeSelector implements StyleRuleElement, PTypeSelector {
+enum TypeSelector {
 
   A,
 

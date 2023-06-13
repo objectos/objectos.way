@@ -15,7 +15,7 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.Property;
+import objectos.css.internalold.Property;
 
 public sealed interface PProperty permits Property {
 

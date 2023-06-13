@@ -15,7 +15,7 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.PDeclarationImpl;
+import objectos.css.internalold.PDeclarationImpl;
 
 public sealed interface PDeclaration permits PDeclarationImpl {
 

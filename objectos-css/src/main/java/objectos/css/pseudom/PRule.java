@@ -15,7 +15,7 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.PStyleRuleImpl;
+import objectos.css.internalold.PStyleRuleImpl;
 
 public sealed interface PRule {
 

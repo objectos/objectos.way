@@ -15,7 +15,7 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.PStyleSheetImpl;
+import objectos.css.internalold.PStyleSheetImpl;
 
 public sealed interface PStyleSheet permits PStyleSheetImpl {
 

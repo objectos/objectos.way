@@ -15,12 +15,12 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.Keyword;
-import objectos.css.internal.PDoubleValueImpl;
-import objectos.css.internal.PIntValueImpl;
-import objectos.css.internal.PLengthDoubleValueImpl;
-import objectos.css.internal.PLengthIntValueImpl;
-import objectos.css.internal.PStringValueImpl;
+import objectos.css.internalold.Keyword;
+import objectos.css.internalold.PDoubleValueImpl;
+import objectos.css.internalold.PIntValueImpl;
+import objectos.css.internalold.PLengthDoubleValueImpl;
+import objectos.css.internalold.PLengthIntValueImpl;
+import objectos.css.internalold.PStringValueImpl;
 import objectos.css.tmpl.LengthUnit;
 
 public sealed interface PPropertyValue {

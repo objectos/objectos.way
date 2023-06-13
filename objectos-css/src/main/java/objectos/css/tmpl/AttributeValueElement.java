@@ -15,6 +15,6 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.InternalInstruction;
+import objectos.css.internalold.InternalInstruction;
 
 public sealed interface AttributeValueElement permits InternalInstruction {}

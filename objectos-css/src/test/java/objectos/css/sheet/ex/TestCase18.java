@@ -22,9 +22,9 @@ public class TestCase18 extends AbstractStyleSheet {
   @Override
   protected final void definition() {
     style(
-        any(),
+      any(),
 
-        margin(zero(), auto)
+      margin(zero(), auto)
     );
   }
 

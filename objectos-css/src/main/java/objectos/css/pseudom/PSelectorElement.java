@@ -15,16 +15,16 @@
  */
 package objectos.css.pseudom;
 
-import objectos.css.internal.AttributeValueOperator;
-import objectos.css.internal.Combinator;
-import objectos.css.internal.PAttributeSelectorImpl;
-import objectos.css.internal.PAttributeValueSelectorImpl;
-import objectos.css.internal.PClassSelectorImpl;
-import objectos.css.internal.PIdSelectorImpl;
-import objectos.css.internal.PseudoClassSelector;
-import objectos.css.internal.PseudoElementSelector;
-import objectos.css.internal.TypeSelector;
-import objectos.css.internal.UniversalSelector;
+import objectos.css.internalold.AttributeValueOperator;
+import objectos.css.internalold.Combinator;
+import objectos.css.internalold.PAttributeSelectorImpl;
+import objectos.css.internalold.PAttributeValueSelectorImpl;
+import objectos.css.internalold.PClassSelectorImpl;
+import objectos.css.internalold.PIdSelectorImpl;
+import objectos.css.internalold.PseudoClassSelector;
+import objectos.css.internalold.PseudoElementSelector;
+import objectos.css.internalold.TypeSelector;
+import objectos.css.internalold.UniversalSelector;
 
 public sealed interface PSelectorElement {
 

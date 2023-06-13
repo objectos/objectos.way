@@ -15,7 +15,7 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.Keyword;
+import objectos.css.internalold.Keyword;
 
 // generate me!
 public final class Keywords {

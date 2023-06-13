@@ -15,7 +15,7 @@
  */
 package objectos.css;
 
-import objectos.css.internal.InternalCssTemplate;
+import objectos.css.internalold.InternalCssTemplate;
 
 public abstract class CssTemplate extends InternalCssTemplate {
 
