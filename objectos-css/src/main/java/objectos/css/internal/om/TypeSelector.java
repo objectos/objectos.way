@@ -13,11 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.internal.om;
 
-public interface Selector {
+import java.util.Locale;
+import objectos.css.om.Selector;
+
+// generate me
+public enum TypeSelector implements Selector {
+
+  A,
+
+  BODY,
+
+  LI,
+
+  UL;
+
+  private static final TypeSelector[] VALUES = TypeSelector.values();
+
+  private final String toString;
+
+  private TypeSelector() {
+    toString = name().toLowerCase(Locale.US);
+  }
+
+  public static TypeSelector ofOrdinal(int value) {
+    return VALUES[value];
+  }
 
   @Override
-  String toString();
+  public final String toString() {
+    return toString;
+  }
 
 }

@@ -27,7 +27,7 @@ public class StyleDeclarationTest {
   StyleDeclaration: Keyword
   """)
   public void testCase01() {
-    var decl = StyleDeclaration.create(
+    var decl = StyleDeclaration.of(
       Property.DISPLAY,
       Keyword.BLOCK
     );

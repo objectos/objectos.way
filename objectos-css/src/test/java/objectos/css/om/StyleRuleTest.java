@@ -15,9 +15,33 @@
  */
 package objectos.css.om;
 
-public interface Selector {
+import static org.testng.Assert.assertEquals;
 
-  @Override
-  String toString();
+import objectos.css.internal.om.Keyword;
+import objectos.css.internal.om.Property;
+import objectos.css.internal.om.TypeSelector;
+import org.testng.annotations.Test;
+
+public class StyleRuleTest {
+
+  @Test
+  public void testCase01() {
+    var rule = StyleRule.create(
+      TypeSelector.LI,
+
+      StyleDeclaration.of(
+        Property.DISPLAY,
+        Keyword.BLOCK
+      )
+    );
+
+    assertEquals(
+      rule.toString(),
+      """
+      li {
+        display: block;
+      }"""
+    );
+  }
 
 }

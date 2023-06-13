@@ -15,12 +15,18 @@
  */
 package objectos.css.om;
 
-import java.util.List;
+import java.util.Objects;
+import objectos.css.internal.om.StyleRule1;
 
 public non-sealed interface StyleRule extends Rule {
 
-  Selector selector();
+  static StyleRule create(Selector selector, StyleDeclaration declaration) {
+    Objects.requireNonNull(selector, "selector == null");
+    Objects.requireNonNull(declaration, "declaration == null");
+    return new StyleRule1(selector, declaration);
+  }
 
-  List<StyleDeclaration> declarations();
+  @Override
+  String toString();
 
 }

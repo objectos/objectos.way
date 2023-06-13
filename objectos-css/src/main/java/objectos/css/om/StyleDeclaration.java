@@ -20,10 +20,13 @@ import objectos.css.internal.om.StyleDeclaration1;
 
 public interface StyleDeclaration {
 
-  static StyleDeclaration create(PropertyName name, PropertyValue value) {
+  static StyleDeclaration of(PropertyName name, PropertyValue value) {
     Objects.requireNonNull(name, "name == null");
     Objects.requireNonNull(value, "value == null");
     return new StyleDeclaration1(name, value);
   }
+
+  @Override
+  String toString();
 
 }

@@ -13,11 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.internal.om;
 
-public interface Selector {
+import objectos.css.om.Selector;
+import objectos.css.om.StyleDeclaration;
+import objectos.css.om.StyleRule;
+
+public final class StyleRule1 implements StyleRule {
+
+  private final Selector selector;
+
+  private final StyleDeclaration declaration;
+
+  public StyleRule1(Selector selector, StyleDeclaration declaration) {
+    this.selector = selector;
+    this.declaration = declaration;
+  }
 
   @Override
-  String toString();
+  public final String toString() {
+    var nl = System.lineSeparator();
+
+    return selector + " {" + nl
+        + "  " + declaration + ";" + nl
+        + "}";
+  }
 
 }
