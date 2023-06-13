@@ -20,7 +20,7 @@ import objectos.css.internal.om.StyleRule1;
 
 public non-sealed interface StyleRule extends Rule {
 
-  static StyleRule create(Selector selector, StyleDeclaration declaration) {
+  static StyleRule of(Selector selector, StyleDeclaration declaration) {
     Objects.requireNonNull(selector, "selector == null");
     Objects.requireNonNull(declaration, "declaration == null");
     return new StyleRule1(selector, declaration);

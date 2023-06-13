@@ -35,16 +35,10 @@ public enum Property implements PropertyName {
 
   Z_INDEX;
 
-  private static final Property[] VALUES = Property.values();
-
   private final String propertyName;
 
   private Property() {
     propertyName = name().toLowerCase(Locale.US).replace('_', '-');
-  }
-
-  public static Property ofOrdinal(int value) {
-    return VALUES[value];
   }
 
   @Override

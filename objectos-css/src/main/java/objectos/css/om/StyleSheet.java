@@ -15,10 +15,14 @@
  */
 package objectos.css.om;
 
-import java.util.List;
+import java.util.Objects;
+import objectos.css.internal.om.StyleSheetImpl;
 
 public interface StyleSheet {
 
-  List<Rule> rules();
+  static StyleSheet of(Rule rule) {
+    Objects.requireNonNull(rule, "rule == null");
+    return new StyleSheetImpl(rule);
+  }
 
 }

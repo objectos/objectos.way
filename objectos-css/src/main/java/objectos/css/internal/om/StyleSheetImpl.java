@@ -15,15 +15,22 @@
  */
 package objectos.css.internal.om;
 
-import java.util.List;
 import objectos.css.om.Rule;
 import objectos.css.om.StyleSheet;
+import objectos.util.UnmodifiableList;
 
 public final class StyleSheetImpl implements StyleSheet {
 
+  private final UnmodifiableList<Rule> rules;
+
+  public StyleSheetImpl(Rule... rules) {
+    this.rules = UnmodifiableList.copyOf(rules);
+  }
+
   @Override
-  public final List<Rule> rules() {
-    throw new UnsupportedOperationException("Implement me");
+  public final String toString() {
+    var nl = System.lineSeparator();
+    return rules.join(nl, "", nl);
   }
 
 }

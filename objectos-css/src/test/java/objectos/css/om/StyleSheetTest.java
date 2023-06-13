@@ -13,31 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal.om;
+package objectos.css.om;
 
-import java.util.Locale;
-import objectos.css.om.Selector;
+import static org.testng.Assert.assertEquals;
 
-// generate me
-public enum TypeSelector implements Selector {
+import objectos.css.internal.om.Keyword;
+import objectos.css.internal.om.Property;
+import objectos.css.internal.om.TypeSelector;
+import org.testng.annotations.Test;
 
-  A,
+public class StyleSheetTest {
 
-  BODY,
+  @Test
+  public void testCase01() {
+    var sheet = StyleSheet.of(
+      StyleRule.of(
+        TypeSelector.LI,
 
-  LI,
+        StyleDeclaration.of(
+          Property.DISPLAY,
+          Keyword.BLOCK
+        )
+      )
+    );
 
-  UL;
-
-  private final String toString;
-
-  private TypeSelector() {
-    toString = name().toLowerCase(Locale.US);
-  }
-
-  @Override
-  public final String toString() {
-    return toString;
+    assertEquals(
+      sheet.toString(),
+      """
+      li {
+        display: block;
+      }
+      """
+    );
   }
 
 }

@@ -26,7 +26,7 @@ public class StyleRuleTest {
 
   @Test
   public void testCase01() {
-    var rule = StyleRule.create(
+    var rule = StyleRule.of(
       TypeSelector.LI,
 
       StyleDeclaration.of(
