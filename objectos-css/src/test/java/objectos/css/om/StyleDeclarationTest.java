@@ -15,15 +15,28 @@
  */
 package objectos.css.om;
 
-import java.util.Objects;
-import objectos.css.internal.om.StyleDeclaration1;
+import static org.testng.Assert.assertEquals;
 
-public interface StyleDeclaration {
+import objectos.css.internal.om.Keyword;
+import objectos.css.internal.om.Property;
+import org.testng.annotations.Test;
 
-  static StyleDeclaration create(PropertyName name, PropertyValue value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-    return new StyleDeclaration1(name, value);
+public class StyleDeclarationTest {
+
+  @Test(description = """
+  StyleDeclaration: Keyword
+  """)
+  public void testCase01() {
+    var decl = StyleDeclaration.create(
+      Property.DISPLAY,
+      Keyword.BLOCK
+    );
+
+    assertEquals(
+      decl.toString(),
+      """
+      display: block"""
+    );
   }
 
 }

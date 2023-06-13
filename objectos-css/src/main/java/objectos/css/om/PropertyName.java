@@ -15,15 +15,9 @@
  */
 package objectos.css.om;
 
-import java.util.Objects;
-import objectos.css.internal.om.StyleDeclaration1;
+public interface PropertyName {
 
-public interface StyleDeclaration {
-
-  static StyleDeclaration create(PropertyName name, PropertyValue value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-    return new StyleDeclaration1(name, value);
-  }
+  @Override
+  String toString();
 
 }

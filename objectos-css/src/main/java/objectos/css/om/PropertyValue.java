@@ -17,4 +17,7 @@ package objectos.css.om;
 
 public interface PropertyValue {
 
+  @Override
+  String toString();
+
 }

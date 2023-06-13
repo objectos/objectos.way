@@ -13,17 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.internal.om;
 
-import java.util.Objects;
-import objectos.css.internal.om.StyleDeclaration1;
+import java.util.Locale;
+import objectos.css.om.PropertyName;
 
-public interface StyleDeclaration {
+// generate me
+public enum Property implements PropertyName {
 
-  static StyleDeclaration create(PropertyName name, PropertyValue value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-    return new StyleDeclaration1(name, value);
+  BACKGROUND_COLOR,
+
+  BORDER,
+
+  CONTENT,
+
+  DISPLAY,
+
+  LINE_HEIGHT,
+
+  MIN_HEIGHT,
+
+  Z_INDEX;
+
+  private static final Property[] VALUES = Property.values();
+
+  private final String propertyName;
+
+  private Property() {
+    propertyName = name().toLowerCase(Locale.US).replace('_', '-');
+  }
+
+  public static Property ofOrdinal(int value) {
+    return VALUES[value];
+  }
+
+  @Override
+  public final String toString() {
+    return propertyName;
   }
 
 }

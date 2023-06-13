@@ -13,17 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.internal.om;
 
-import java.util.Objects;
-import objectos.css.internal.om.StyleDeclaration1;
+import objectos.css.om.PropertyName;
+import objectos.css.om.PropertyValue;
+import objectos.css.om.StyleDeclaration;
 
-public interface StyleDeclaration {
+public final class StyleDeclaration1 implements StyleDeclaration {
 
-  static StyleDeclaration create(PropertyName name, PropertyValue value) {
-    Objects.requireNonNull(name, "name == null");
-    Objects.requireNonNull(value, "value == null");
-    return new StyleDeclaration1(name, value);
+  private final PropertyName name;
+
+  private final PropertyValue value;
+
+  public StyleDeclaration1(PropertyName name, PropertyValue value) {
+    this.name = name;
+    this.value = value;
+  }
+
+  @Override
+  public final String toString() {
+    return name + ": " + value;
   }
 
 }

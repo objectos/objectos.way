@@ -13,10 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.internal.om;
 
-public interface Property {
+import java.util.Locale;
+import objectos.css.om.PropertyValue;
 
-  String propertyName();
+// generate me
+public enum Keyword implements PropertyValue {
+
+  BLOCK,
+
+  TRANSPARENT;
+
+  private static final Keyword[] VALUES = Keyword.values();
+
+  private final String keywordName;
+
+  private Keyword() {
+    this.keywordName = name().toLowerCase(Locale.US);
+  }
+
+  public static Keyword ofOrdinal(int value) {
+    return VALUES[value];
+  }
+
+  @Override
+  public final String toString() {
+    return keywordName;
+  }
 
 }
