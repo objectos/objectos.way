@@ -13,8 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css;
 
-abstract class GeneratedCssTemplate {
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
+public class CssTemplate2Test {
+
+  @Test
+  public void testCase00() {
+    test(
+      new CssTemplate2() {
+        @Override
+        protected void definition() {
+          style(body);
+        }
+      },
+
+      """
+      body {}
+      """,
+
+      """
+      body{}
+      """
+    );
+  }
+
+  private void test(CssTemplate2 template, String pretty, String minified) {
+    var sheet = template.toStyleSheet();
+
+    assertEquals(sheet.toString(), pretty);
+  }
 
 }

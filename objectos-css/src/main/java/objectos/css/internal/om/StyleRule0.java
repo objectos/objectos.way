@@ -13,8 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.internal.om;
 
-public abstract class InternalCssTemplate extends GeneratedCssTemplate {
+import objectos.css.om.Selector;
+import objectos.css.om.StyleRule;
+
+public final class StyleRule0 implements StyleRule {
+
+  private final Selector selector;
+
+  public StyleRule0(Selector selector) {
+    this.selector = selector;
+  }
+
+  @Override
+  public final String toString() {
+    return selector + " {}";
+  }
 
 }

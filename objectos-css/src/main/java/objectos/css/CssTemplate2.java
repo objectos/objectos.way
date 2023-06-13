@@ -15,10 +15,46 @@
  */
 package objectos.css;
 
+import objectos.css.internal.om.StyleSheetBuilder;
+import objectos.css.internal.om.TypeSelector;
+import objectos.css.om.Selector;
+import objectos.css.om.StyleRule;
+import objectos.css.om.StyleSheet;
+
 public abstract class CssTemplate2 {
+
+  // type selectors
+
+  protected static final Selector a = TypeSelector.A;
+
+  protected static final Selector body = TypeSelector.BODY;
+
+  protected static final Selector li = TypeSelector.LI;
+
+  protected static final Selector UL = TypeSelector.UL;
+
+  private StyleSheetBuilder builder;
 
   protected CssTemplate2() {}
 
+  public final StyleSheet toStyleSheet() {
+    try {
+      builder = new StyleSheetBuilder();
+
+      definition();
+
+      return builder.build();
+    } finally {
+      builder = null;
+    }
+  }
+
   protected abstract void definition();
+
+  protected final void style(Selector selector) {
+    builder.addRule(
+      StyleRule.of(selector)
+    );
+  }
 
 }

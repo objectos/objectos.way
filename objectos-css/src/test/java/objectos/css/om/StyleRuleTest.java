@@ -44,4 +44,17 @@ public class StyleRuleTest {
     );
   }
 
+  @Test
+  public void testCase02() {
+    var rule = StyleRule.of(
+      TypeSelector.BODY
+    );
+
+    assertEquals(
+      rule.toString(),
+      """
+      body {}"""
+    );
+  }
+
 }

@@ -27,6 +27,10 @@ public final class StyleSheetImpl implements StyleSheet {
     this.rules = UnmodifiableList.copyOf(rules);
   }
 
+  StyleSheetImpl(UnmodifiableList<Rule> rules) {
+    this.rules = rules;
+  }
+
   @Override
   public final String toString() {
     var nl = System.lineSeparator();

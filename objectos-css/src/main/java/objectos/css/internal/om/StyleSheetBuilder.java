@@ -13,36 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.internal.om;
 
-import java.util.Locale;
+import objectos.css.om.Rule;
+import objectos.css.om.StyleSheet;
+import objectos.util.GrowableList;
 
-// generate me
-enum TypeSelector {
+public class StyleSheetBuilder {
 
-  A,
+  private final GrowableList<Rule> rules = new GrowableList<>();
 
-  BODY,
+  public final StyleSheetBuilder addRule(Rule rule) {
+    rules.addWithNullMessage(rule, "rule == null");
 
-  LI,
-
-  UL;
-
-  private static final TypeSelector[] VALUES = TypeSelector.values();
-
-  private final String toString;
-
-  private TypeSelector() {
-    toString = name().toLowerCase(Locale.US);
+    return this;
   }
 
-  public static TypeSelector ofOrdinal(int value) {
-    return VALUES[value];
-  }
-
-  @Override
-  public final String toString() {
-    return toString;
+  public final StyleSheet build() {
+    return new StyleSheetImpl(
+      rules.toUnmodifiableList()
+    );
   }
 
 }

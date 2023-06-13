@@ -391,6 +391,18 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
+  protected static final TypeSelector a = Css.a;
+
+  protected static final TypeSelector summary = Css.summary;
+
+  protected static final TypeSelector b = Css.b;
+
+  protected static final TypeSelector textarea = Css.textarea;
+
+  protected static final TypeSelector g = Css.g;
+
+  protected static final TypeSelector svg = Css.svg;
+
   protected static final TypeSelector table = Css.table;
 
   protected static final TypeSelector main = Css.main;
@@ -524,18 +536,6 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector option = Css.option;
 
   protected static final TypeSelector li = Css.li;
-
-  protected static final TypeSelector a = Css.a;
-
-  protected static final TypeSelector summary = Css.summary;
-
-  protected static final TypeSelector b = Css.b;
-
-  protected static final TypeSelector textarea = Css.textarea;
-
-  protected static final TypeSelector g = Css.g;
-
-  protected static final TypeSelector svg = Css.svg;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 

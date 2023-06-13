@@ -16,9 +16,15 @@
 package objectos.css.om;
 
 import java.util.Objects;
+import objectos.css.internal.om.StyleRule0;
 import objectos.css.internal.om.StyleRule1;
 
 public non-sealed interface StyleRule extends Rule {
+
+  static StyleRule of(Selector selector) {
+    Objects.requireNonNull(selector, "selector == null");
+    return new StyleRule0(selector);
+  }
 
   static StyleRule of(Selector selector, StyleDeclaration declaration) {
     Objects.requireNonNull(selector, "selector == null");
