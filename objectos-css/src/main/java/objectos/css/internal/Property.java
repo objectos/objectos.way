@@ -16,10 +16,9 @@
 package objectos.css.internal;
 
 import java.util.Locale;
-import objectos.css.om.PropertyName;
 
 // generate me
-public enum Property implements PropertyName {
+public enum Property {
 
   BACKGROUND_COLOR,
 

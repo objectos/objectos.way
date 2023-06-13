@@ -23,6 +23,7 @@ module objectos.css {
   exports objectos.css.config.framework;
   exports objectos.css.function;
   exports objectos.css.keyword;
+  exports objectos.css.internal;
   exports objectos.css.om;
   exports objectos.css.parser;
   exports objectos.css.select;

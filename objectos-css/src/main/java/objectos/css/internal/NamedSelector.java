@@ -18,10 +18,8 @@ package objectos.css.internal;
 import objectos.css.om.Selector;
 
 public record NamedSelector(String name) implements Selector {
-
   @Override
   public final String toString() {
     return name;
   }
-
 }

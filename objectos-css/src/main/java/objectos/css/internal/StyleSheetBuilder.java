@@ -15,18 +15,27 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.Rule;
+import objectos.css.om.Selector;
 import objectos.css.om.StyleSheet;
 import objectos.util.GrowableList;
 
 public class StyleSheetBuilder {
 
-  private final GrowableList<Rule> rules = new GrowableList<>();
+  private final GrowableList<Object> rules = new GrowableList<>();
 
-  public final StyleSheetBuilder addRule(Rule rule) {
-    rules.addWithNullMessage(rule, "rule == null");
+  public final void addStyleRule(Selector selector) {
+    var rule = new StyleRule0(selector);
 
-    return this;
+    rules.add(rule);
+  }
+
+  public final void addStyleRule(Selector selector1, Selector selector2, Selector selector3) {
+    addStyleRule(
+      Combinator.LIST.combine(
+        Combinator.LIST.combine(selector1, selector2),
+        selector3
+      )
+    );
   }
 
   public final StyleSheet build() {

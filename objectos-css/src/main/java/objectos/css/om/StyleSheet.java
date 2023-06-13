@@ -15,14 +15,9 @@
  */
 package objectos.css.om;
 
-import java.util.Objects;
-import objectos.css.internal.StyleSheetImpl;
-
 public interface StyleSheet {
 
-  static StyleSheet of(Rule rule) {
-    Objects.requireNonNull(rule, "rule == null");
-    return new StyleSheetImpl(rule);
-  }
+  @Override
+  String toString();
 
 }

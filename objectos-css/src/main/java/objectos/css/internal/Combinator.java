@@ -13,6 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.internal;
 
-public sealed interface Rule permits StyleRule {}
+import objectos.css.om.Selector;
+
+public enum Combinator {
+
+  ADJACENT_SIBLING('+'),
+
+  CHILD('>'),
+
+  DESCENDANT(' '),
+
+  GENERAL_SIBLING('~'),
+
+  LIST(',');
+
+  private final String toString;
+
+  private Combinator(char symbol) {
+    this.toString = Character.toString(symbol);
+  }
+
+  @Override
+  public final String toString() {
+    return toString;
+  }
+
+  final Selector combine(Selector first, Selector second) {
+    return new CombinedSelector(this, first, second);
+  }
+
+}

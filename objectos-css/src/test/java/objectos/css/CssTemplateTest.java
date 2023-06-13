@@ -47,6 +47,34 @@ public class CssTemplateTest {
     );
   }
 
+  @Test(description = """
+  Preflight 01
+
+  - selector list
+  """)
+  public void testCase02() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            any,
+            __after,
+            __before
+          );
+        }
+      },
+
+      """
+      *, ::after, ::before {}
+      """,
+
+      """
+      *,::after,::before{}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty, String minified) {
     var sheet = template.toStyleSheet();
 

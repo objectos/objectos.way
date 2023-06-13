@@ -15,25 +15,21 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.Rule;
 import objectos.css.om.StyleSheet;
 import objectos.util.UnmodifiableList;
 
 public final class StyleSheetImpl implements StyleSheet {
 
-  private final UnmodifiableList<Rule> rules;
+  private final UnmodifiableList<Object> rules;
 
-  public StyleSheetImpl(Rule... rules) {
-    this.rules = UnmodifiableList.copyOf(rules);
-  }
-
-  StyleSheetImpl(UnmodifiableList<Rule> rules) {
+  StyleSheetImpl(UnmodifiableList<Object> rules) {
     this.rules = rules;
   }
 
   @Override
   public final String toString() {
     var nl = System.lineSeparator();
+
     return rules.join(nl, "", nl);
   }
 

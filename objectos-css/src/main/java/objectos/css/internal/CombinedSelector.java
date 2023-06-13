@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.internal;
 
-import java.util.Objects;
-import objectos.css.internal.StyleRule0;
-import objectos.css.internal.StyleRule1;
+import objectos.css.om.Selector;
 
-public non-sealed interface StyleRule extends Rule {
-
-  static StyleRule of(Selector selector) {
-    Objects.requireNonNull(selector, "selector == null");
-    return new StyleRule0(selector);
-  }
-
-  static StyleRule of(Selector selector, StyleDeclaration declaration) {
-    Objects.requireNonNull(selector, "selector == null");
-    Objects.requireNonNull(declaration, "declaration == null");
-    return new StyleRule1(selector, declaration);
-  }
+public record CombinedSelector(Combinator combinator,
+                               Selector first,
+                               Selector second)
+    implements Selector {
 
   @Override
-  String toString();
+  public final String toString() {
+    return switch (combinator) {
+      case LIST -> first.toString() + combinator + " " + second;
+
+      default -> first.toString() + combinator + second;
+    };
+  }
 
 }

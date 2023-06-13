@@ -16,9 +16,8 @@
 package objectos.css.internal;
 
 import objectos.css.om.Selector;
-import objectos.css.om.StyleRule;
 
-public final class StyleRule0 implements StyleRule {
+public final class StyleRule0 {
 
   private final Selector selector;
 

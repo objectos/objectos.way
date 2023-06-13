@@ -16,10 +16,9 @@
 package objectos.css.internal;
 
 import java.util.Locale;
-import objectos.css.om.PropertyValue;
 
 // generate me
-public enum Keyword implements PropertyValue {
+public enum Keyword {
 
   BLOCK,
 

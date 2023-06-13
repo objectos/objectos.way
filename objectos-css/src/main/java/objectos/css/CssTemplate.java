@@ -15,10 +15,10 @@
  */
 package objectos.css;
 
+import java.util.Objects;
 import objectos.css.internal.NamedSelector;
 import objectos.css.internal.StyleSheetBuilder;
 import objectos.css.om.Selector;
-import objectos.css.om.StyleRule;
 import objectos.css.om.StyleSheet;
 
 public abstract class CssTemplate {
@@ -43,13 +43,13 @@ public abstract class CssTemplate {
 
   protected static final Selector any = named("*");
 
-  private static final NamedSelector named(String name) {
-    return new NamedSelector(name);
-  }
-
   private StyleSheetBuilder builder;
 
   protected CssTemplate() {}
+
+  private static final NamedSelector named(String name) {
+    return new NamedSelector(name);
+  }
 
   public final StyleSheet toStyleSheet() {
     try {
@@ -70,9 +70,17 @@ public abstract class CssTemplate {
   }
 
   protected final void style(Selector selector) {
-    builder.addRule(
-      StyleRule.of(selector)
-    );
+    Objects.requireNonNull(selector, "selector == null");
+
+    builder.addStyleRule(selector);
+  }
+
+  protected final void style(Selector selector1, Selector selector2, Selector selector3) {
+    Objects.requireNonNull(selector1, "selector1 == null");
+    Objects.requireNonNull(selector2, "selector2 == null");
+    Objects.requireNonNull(selector3, "selector3 == null");
+
+    builder.addStyleRule(selector1, selector2, selector3);
   }
 
 }
