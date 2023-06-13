@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal.om;
+package objectos.css.internal;
 
 import java.util.Locale;
 import objectos.css.om.PropertyName;

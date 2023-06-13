@@ -17,8 +17,8 @@ package objectos.css.om;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.css.internal.om.Keyword;
-import objectos.css.internal.om.Property;
+import objectos.css.internal.Keyword;
+import objectos.css.internal.Property;
 import org.testng.annotations.Test;
 
 public class StyleDeclarationTest {

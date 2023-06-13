@@ -13,33 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internalold;
+package objectos.css.internal;
 
-import objectos.css.pseudom.PSelectorElement.PPseudoClassSelector;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.om.PropertyName;
+import objectos.css.om.PropertyValue;
+import objectos.css.om.StyleDeclaration;
 
-// generate me
-public enum PseudoClassSelector implements StyleRuleElement, PPseudoClassSelector {
+public final class StyleDeclaration1 implements StyleDeclaration {
 
-  ACTIVE(":active"),
+  private final PropertyName name;
 
-  VISITED(":visited");
+  private final PropertyValue value;
 
-  private static final PseudoClassSelector[] VALUES = PseudoClassSelector.values();
-
-  private final String toString;
-
-  private PseudoClassSelector(String toString) {
-    this.toString = toString;
-  }
-
-  public static PseudoClassSelector ofOrdinal(int value) {
-    return VALUES[value];
+  public StyleDeclaration1(PropertyName name, PropertyValue value) {
+    this.name = name;
+    this.value = value;
   }
 
   @Override
   public final String toString() {
-    return toString;
+    return name + ": " + value;
   }
 
 }

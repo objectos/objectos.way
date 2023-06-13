@@ -13,33 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal.om;
+package objectos.css;
 
-import java.util.Locale;
-import objectos.css.om.PropertyValue;
-
-// generate me
-public enum Keyword implements PropertyValue {
-
-  BLOCK,
-
-  TRANSPARENT;
-
-  private static final Keyword[] VALUES = Keyword.values();
-
-  private final String keywordName;
-
-  private Keyword() {
-    this.keywordName = name().toLowerCase(Locale.US);
-  }
-
-  public static Keyword ofOrdinal(int value) {
-    return VALUES[value];
-  }
+final class Preflight extends CssTemplate {
 
   @Override
-  public final String toString() {
-    return keywordName;
+  protected final void definition() {
+    //    *,
+    //    ::before,
+    //    ::after {
+    //      box-sizing: border-box; /* 1 */
+    //      border-width: 0; /* 2 */
+    //      border-style: solid; /* 2 */
+    //      border-color: theme('borderColor.DEFAULT', currentColor); /* 2 */
+    //    }
   }
 
 }

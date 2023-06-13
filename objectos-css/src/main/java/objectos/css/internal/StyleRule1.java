@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal.om;
+package objectos.css.internal;
 
-import java.util.Locale;
 import objectos.css.om.Selector;
+import objectos.css.om.StyleDeclaration;
+import objectos.css.om.StyleRule;
 
-// generate me
-public enum TypeSelector implements Selector {
+public final class StyleRule1 implements StyleRule {
 
-  A,
+  private final Selector selector;
 
-  BODY,
+  private final StyleDeclaration declaration;
 
-  LI,
-
-  UL;
-
-  private final String toString;
-
-  private TypeSelector() {
-    toString = name().toLowerCase(Locale.US);
+  public StyleRule1(Selector selector, StyleDeclaration declaration) {
+    this.selector = selector;
+    this.declaration = declaration;
   }
 
   @Override
   public final String toString() {
-    return toString;
+    var nl = System.lineSeparator();
+
+    return selector + " {" + nl
+        + "  " + declaration + ";" + nl
+        + "}";
   }
 
 }

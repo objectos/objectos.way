@@ -16,8 +16,8 @@
 package objectos.css.om;
 
 import java.util.Objects;
-import objectos.css.internal.om.StyleRule0;
-import objectos.css.internal.om.StyleRule1;
+import objectos.css.internal.StyleRule0;
+import objectos.css.internal.StyleRule1;
 
 public non-sealed interface StyleRule extends Rule {
 

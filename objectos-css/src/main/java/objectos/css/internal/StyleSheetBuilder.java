@@ -13,28 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal.om;
+package objectos.css.internal;
 
 import objectos.css.om.Rule;
 import objectos.css.om.StyleSheet;
-import objectos.util.UnmodifiableList;
+import objectos.util.GrowableList;
 
-public final class StyleSheetImpl implements StyleSheet {
+public class StyleSheetBuilder {
 
-  private final UnmodifiableList<Rule> rules;
+  private final GrowableList<Rule> rules = new GrowableList<>();
 
-  public StyleSheetImpl(Rule... rules) {
-    this.rules = UnmodifiableList.copyOf(rules);
+  public final StyleSheetBuilder addRule(Rule rule) {
+    rules.addWithNullMessage(rule, "rule == null");
+
+    return this;
   }
 
-  StyleSheetImpl(UnmodifiableList<Rule> rules) {
-    this.rules = rules;
-  }
-
-  @Override
-  public final String toString() {
-    var nl = System.lineSeparator();
-    return rules.join(nl, "", nl);
+  public final StyleSheet build() {
+    return new StyleSheetImpl(
+      rules.toUnmodifiableList()
+    );
   }
 
 }

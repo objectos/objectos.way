@@ -16,10 +16,9 @@
 package objectos.css;
 
 import java.util.Objects;
-import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
 
-public record ClassSelector(String className) implements StyleRuleElement {
+public record ClassSelector(String className) {
 
   public ClassSelector {
     Objects.requireNonNull(className, "className == null");

@@ -16,10 +16,10 @@
 package objectos.css;
 
 import java.util.Objects;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.om.Selector;
 import objectos.lang.Check;
 
-public final record IdSelector(String id) implements StyleRuleElement {
+public final record IdSelector(String id) implements Selector {
 
   public IdSelector {
     Objects.requireNonNull(id, "id == null");
@@ -29,6 +29,11 @@ public final record IdSelector(String id) implements StyleRuleElement {
 
   public static IdSelector of(String id) {
     return new IdSelector(id);
+  }
+
+  @Override
+  public final String toString() {
+    return "#" + id;
   }
 
 }

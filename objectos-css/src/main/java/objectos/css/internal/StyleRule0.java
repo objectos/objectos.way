@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.internal;
 
-import objectos.css.internalold.PDeclarationImpl;
+import objectos.css.om.Selector;
+import objectos.css.om.StyleRule;
 
-public sealed interface PDeclaration permits PDeclarationImpl {
+public final class StyleRule0 implements StyleRule {
 
-  PProperty property();
+  private final Selector selector;
 
-  IterableOnce<PPropertyValue> values();
+  public StyleRule0(Selector selector) {
+    this.selector = selector;
+  }
+
+  @Override
+  public final String toString() {
+    return selector + " {}";
+  }
 
 }

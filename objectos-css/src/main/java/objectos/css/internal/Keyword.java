@@ -13,24 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.internal;
 
-import java.util.Iterator;
+import java.util.Locale;
+import objectos.css.om.PropertyValue;
 
-/**
- * An {@link Iterable} which can be traversed only once.
- */
-public interface IterableOnce<T> extends Iterable<T> {
+// generate me
+public enum Keyword implements PropertyValue {
 
-  /**
-   * Returns an iterator over elements of type T.
-   *
-   * @return an iterator
-   *
-   * @throws IllegalStateException
-   *         if this {@code Iterable} has already been traversed
-   */
+  BLOCK,
+
+  TRANSPARENT;
+
+  private static final Keyword[] VALUES = Keyword.values();
+
+  private final String keywordName;
+
+  private Keyword() {
+    this.keywordName = name().toLowerCase(Locale.US);
+  }
+
+  public static Keyword ofOrdinal(int value) {
+    return VALUES[value];
+  }
+
   @Override
-  Iterator<T> iterator();
+  public final String toString() {
+    return keywordName;
+  }
 
 }

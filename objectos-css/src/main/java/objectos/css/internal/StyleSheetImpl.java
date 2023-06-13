@@ -13,25 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internalold;
+package objectos.css.internal;
 
-import objectos.css.pseudom.PPropertyValue.PLengthDoubleValue;
-import objectos.css.tmpl.LengthUnit;
+import objectos.css.om.Rule;
+import objectos.css.om.StyleSheet;
+import objectos.util.UnmodifiableList;
 
-public final class PLengthDoubleValueImpl implements PLengthDoubleValue {
+public final class StyleSheetImpl implements StyleSheet {
 
-  LengthUnit unit;
+  private final UnmodifiableList<Rule> rules;
 
-  double value;
+  public StyleSheetImpl(Rule... rules) {
+    this.rules = UnmodifiableList.copyOf(rules);
+  }
 
-  @Override
-  public final LengthUnit unit() {
-    return unit;
+  StyleSheetImpl(UnmodifiableList<Rule> rules) {
+    this.rules = rules;
   }
 
   @Override
-  public final double value() {
-    return value;
+  public final String toString() {
+    var nl = System.lineSeparator();
+    return rules.join(nl, "", nl);
   }
 
 }

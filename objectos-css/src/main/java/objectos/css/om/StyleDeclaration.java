@@ -16,7 +16,7 @@
 package objectos.css.om;
 
 import java.util.Objects;
-import objectos.css.internal.om.StyleDeclaration1;
+import objectos.css.internal.StyleDeclaration1;
 
 public interface StyleDeclaration {
 

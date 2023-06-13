@@ -15,12 +15,64 @@
  */
 package objectos.css;
 
-import objectos.css.internalold.InternalCssTemplate;
+import objectos.css.internal.NamedSelector;
+import objectos.css.internal.StyleSheetBuilder;
+import objectos.css.om.Selector;
+import objectos.css.om.StyleRule;
+import objectos.css.om.StyleSheet;
 
-public abstract class CssTemplate extends InternalCssTemplate {
+public abstract class CssTemplate {
+
+  // type selectors
+
+  protected static final Selector a = named("a");
+
+  protected static final Selector body = named("body");
+
+  protected static final Selector li = named("li");
+
+  protected static final Selector ul = named("ul");
+
+  // pseudo element selectors
+
+  protected static final Selector __after = named("::after");
+
+  protected static final Selector __before = named("::before");
+
+  // universal selector
+
+  protected static final Selector any = named("*");
+
+  private static final NamedSelector named(String name) {
+    return new NamedSelector(name);
+  }
+
+  private StyleSheetBuilder builder;
 
   protected CssTemplate() {}
 
+  public final StyleSheet toStyleSheet() {
+    try {
+      builder = new StyleSheetBuilder();
+
+      definition();
+
+      return builder.build();
+    } finally {
+      builder = null;
+    }
+  }
+
   protected abstract void definition();
+
+  protected final IdSelector id(String id) {
+    return IdSelector.of(id);
+  }
+
+  protected final void style(Selector selector) {
+    builder.addRule(
+      StyleRule.of(selector)
+    );
+  }
 
 }

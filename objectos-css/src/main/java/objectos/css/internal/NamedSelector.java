@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.pseudom;
+package objectos.css.internal;
 
-import objectos.css.internalold.PStyleSheetImpl;
+import objectos.css.om.Selector;
 
-public sealed interface PStyleSheet permits PStyleSheetImpl {
+public record NamedSelector(String name) implements Selector {
 
-  IterableOnce<PRule> rules();
+  @Override
+  public final String toString() {
+    return name;
+  }
 
 }

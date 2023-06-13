@@ -17,9 +17,9 @@ package objectos.css.om;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.css.internal.om.Keyword;
-import objectos.css.internal.om.Property;
-import objectos.css.internal.om.TypeSelector;
+import objectos.css.internal.Keyword;
+import objectos.css.internal.NamedSelector;
+import objectos.css.internal.Property;
 import org.testng.annotations.Test;
 
 public class StyleRuleTest {
@@ -27,7 +27,7 @@ public class StyleRuleTest {
   @Test
   public void testCase01() {
     var rule = StyleRule.of(
-      TypeSelector.LI,
+      new NamedSelector("li"),
 
       StyleDeclaration.of(
         Property.DISPLAY,
@@ -47,7 +47,7 @@ public class StyleRuleTest {
   @Test
   public void testCase02() {
     var rule = StyleRule.of(
-      TypeSelector.BODY
+      new NamedSelector("body")
     );
 
     assertEquals(

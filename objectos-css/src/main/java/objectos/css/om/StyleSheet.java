@@ -16,7 +16,7 @@
 package objectos.css.om;
 
 import java.util.Objects;
-import objectos.css.internal.om.StyleSheetImpl;
+import objectos.css.internal.StyleSheetImpl;
 
 public interface StyleSheet {
 
