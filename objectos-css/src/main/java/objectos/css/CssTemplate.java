@@ -179,6 +179,11 @@ public abstract class CssTemplate {
     }
   }
 
+  @Override
+  public String toString() {
+    return toStyleSheet().toString();
+  }
+
   protected abstract void definition();
 
   // selector methods
