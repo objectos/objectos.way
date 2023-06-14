@@ -27,6 +27,8 @@ public enum Property implements PropertyName {
 
   BORDER,
 
+  BORDER_COLOR,
+
   BORDER_STYLE,
 
   BORDER_WIDTH,

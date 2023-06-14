@@ -53,6 +53,9 @@ public abstract class CssTemplate {
       // B
       BoxSizingValue,
 
+      // C
+      Color,
+
       // L
       LineStyle,
       LineWidth {}
@@ -77,18 +80,30 @@ public abstract class CssTemplate {
 
   protected static final Zero $0 = Zero.INSTANCE;
 
+  // A
+
+  protected static final Color aqua = kw("aqua");
+
   // B
   protected static final BoxSizingValue borderBox = kw("border-box");
+  protected static final Color black = kw("black");
+  protected static final Color blue = kw("blue");
 
   // C
   protected static final BoxSizingValue contentBox = kw("content-box");
+  protected static final Color currentcolor = kw("currentcolor");
 
   // D
   protected static final LineStyle dashed = kw("dashed");
   protected static final LineStyle dotted = kw("dotted");
   protected static final LineStyle double$ = kw("double");
 
+  // F
+  protected static final Color fuchsia = kw("fuchsia");
+
   // G
+  protected static final Color gray = kw("gray");
+  protected static final Color green = kw("green");
   protected static final LineStyle groove = kw("groove");
 
   // H
@@ -99,27 +114,46 @@ public abstract class CssTemplate {
   protected static final GlobalKeyword initial = kw("initial");
   protected static final LineStyle inset = kw("inset");
 
+  // L
+  protected static final Color lime = kw("lime");
+
   // M
+  protected static final Color maroon = kw("maroon");
   protected static final LineWidth medium = kw("medium");
 
   // N
+  protected static final Color navy = kw("navy");
   protected static final LineStyle none = kw("none");
 
   // O
+  protected static final Color olive = kw("olive");
   protected static final LineStyle outset = kw("outset");
 
+  // P
+  protected static final Color purple = kw("purple");
+
   // R
+  protected static final Color red = kw("red");
   protected static final LineStyle ridge = kw("ridge");
 
   // S
+  protected static final Color silver = kw("silver");
   protected static final LineStyle solid = kw("solid");
 
   // T
+  protected static final Color teal = kw("teal");
   protected static final LineWidth thick = kw("thick");
   protected static final LineWidth thin = kw("thin");
+  protected static final Color transparent = kw("transparent");
 
   // U
   protected static final GlobalKeyword unset = kw("unset");
+
+  // W
+  protected static final Color white = kw("white");
+
+  // Y
+  protected static final Color yellow = kw("yellow");
 
   private StyleSheetBuilder builder;
 
@@ -154,6 +188,28 @@ public abstract class CssTemplate {
   }
 
   // property methods
+
+  // property methods: border-color
+
+  protected sealed interface Color extends PropertyValue {}
+
+  protected final StyleDeclaration borderColor(Color all) {
+    return Property.BORDER_COLOR.sides1(all);
+  }
+
+  protected final StyleDeclaration borderColor(Color vertical, Color horizontal) {
+    return Property.BORDER_COLOR.sides2(vertical, horizontal);
+  }
+
+  protected final StyleDeclaration borderColor(Color top, Color horizontal,
+      Color bottom) {
+    return Property.BORDER_COLOR.sides3(top, horizontal, bottom);
+  }
+
+  protected final StyleDeclaration borderColor(Color top, Color right, Color bottom,
+      Color left) {
+    return Property.BORDER_COLOR.sides4(top, right, bottom, left);
+  }
 
   // property methods: border-style
 

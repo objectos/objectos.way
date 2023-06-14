@@ -16,17 +16,15 @@
 package objectos.css;
 
 final class Preflight extends CssTemplate {
-
   @Override
   protected final void definition() {
-    //    *,
-    //    ::before,
-    //    ::after {
-    //      box-sizing: border-box; /* 1 */
-    //      border-width: 0; /* 2 */
-    //      border-style: solid; /* 2 */
-    //      border-color: theme('borderColor.DEFAULT', currentColor); /* 2 */
-    //    }
-  }
+    style(
+      any, __before, __after,
 
+      boxSizing(borderBox),
+      borderWidth($0),
+      borderStyle(solid),
+      borderColor(currentcolor)
+    );
+  }
 }

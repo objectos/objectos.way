@@ -22,7 +22,43 @@ import org.testng.annotations.Test;
 public class CssTemplateTest {
 
   @Test(description = """
-  Preflight 01
+  [#394] Preflight 01
+
+  - border-color
+  """)
+  public void propertyBorderColor() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            any,
+
+            borderColor(currentcolor),
+            borderColor(black, white),
+            borderColor(blue, red, green),
+            borderColor(teal, yellow, aqua, fuchsia),
+            borderColor(transparent, inherit, gray, maroon),
+            borderColor(navy)
+          );
+        }
+      },
+
+      """
+      * {
+        border-color: currentcolor;
+        border-color: black white;
+        border-color: blue red green;
+        border-color: teal yellow aqua fuchsia;
+        border-color: transparent inherit gray maroon;
+        border-color: navy;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#394] Preflight 01
 
   - border-style
   """)
@@ -56,7 +92,7 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
-  Preflight 01
+  [#394] Preflight 01
 
   - border-width
   """)
@@ -88,7 +124,7 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
-  Preflight 01
+  [#394] Preflight 01
 
   - box-sizing
   """)
@@ -122,7 +158,7 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
-  Preflight 01
+  [#394] Preflight 01
 
   - selector list
   """)
@@ -146,7 +182,7 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
-  Preflight 01
+  [#394] Preflight 01
 
   - universal selector
   """)
