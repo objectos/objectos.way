@@ -61,9 +61,12 @@ public abstract class CssTemplate {
       // L
       LineHeightValue,
       LineStyle,
-      LineWidth {}
+      LineWidth,
 
-  private record Keyword(String name) implements GlobalKeyword {
+      // T
+      TextSizeAdjustValue {}
+
+  private record Keyword(String name) implements GlobalKeyword, NoneKeyword {
     @Override
     public final String toString() {
       return name;
@@ -84,8 +87,8 @@ public abstract class CssTemplate {
   protected static final Zero $0 = Zero.INSTANCE;
 
   // A
-
   protected static final Color aqua = kw("aqua");
+  protected static final TextSizeAdjustValue auto = kw("auto");
 
   // B
   protected static final BoxSizingValue borderBox = kw("border-box");
@@ -125,8 +128,10 @@ public abstract class CssTemplate {
   protected static final LineWidth medium = kw("medium");
 
   // N
+  protected sealed interface NoneKeyword extends LineStyle, TextSizeAdjustValue {}
+
   protected static final Color navy = kw("navy");
-  protected static final LineStyle none = kw("none");
+  protected static final NoneKeyword none = kw("none");
   protected static final LineHeightValue normal = kw("normal");
 
   // O
@@ -247,7 +252,7 @@ public abstract class CssTemplate {
 
   // percentage method
 
-  protected static final class Percentage implements LineHeightValue {
+  protected static final class Percentage implements LineHeightValue, TextSizeAdjustValue {
     static final Percentage ZERO = new Percentage("0");
 
     final String value;
@@ -368,6 +373,14 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
     return Property.LINE_HEIGHT.value(value);
+  }
+
+  // property methods: text-size-adjust
+
+  protected sealed interface TextSizeAdjustValue extends PropertyValue {}
+
+  protected final StyleDeclaration webkitTextSizeAdjust(TextSizeAdjustValue value) {
+    return Property._WEBKIT_TEXT_SIZE_ADJUST.value(value);
   }
 
   protected final void style(Selector selector,

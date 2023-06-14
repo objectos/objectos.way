@@ -23,6 +23,8 @@ import objectos.css.om.StyleDeclaration;
 
 public enum Property implements PropertyName {
 
+  _WEBKIT_TEXT_SIZE_ADJUST,
+
   BACKGROUND_COLOR,
 
   BORDER,
@@ -49,10 +51,6 @@ public enum Property implements PropertyName {
 
   private Property() {
     propertyName = name().toLowerCase(Locale.US).replace('_', '-');
-  }
-
-  public final StyleDeclaration declaration(PropertyValue value1, PropertyValue value2) {
-    return new StyleDeclaration2(this, value1, value2);
   }
 
   public final StyleDeclaration sides1(PropertyValue all) {

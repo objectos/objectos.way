@@ -198,6 +198,38 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#395] Preflight 02
+
+  - -webkit-text-size-adjust
+  """)
+  public void propertyWebkitTextSizeAdjust() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            html,
+
+            webkitTextSizeAdjust(pct(100)),
+            webkitTextSizeAdjust(auto),
+            webkitTextSizeAdjust(none),
+            webkitTextSizeAdjust(inherit)
+          );
+        }
+      },
+
+      """
+      html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-text-size-adjust: auto;
+        -webkit-text-size-adjust: none;
+        -webkit-text-size-adjust: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - selector list
