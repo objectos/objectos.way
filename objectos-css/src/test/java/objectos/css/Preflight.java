@@ -26,5 +26,24 @@ final class Preflight extends CssTemplate {
       borderStyle(solid),
       borderColor(currentcolor)
     );
+
+    //    /*
+    //    1. Use a consistent sensible line-height in all browsers.
+    //    2. Prevent adjustments of font size after orientation changes in iOS.
+    //    3. Use a more readable tab size.
+    //    4. Use the user's configured `sans` font-family by default.
+    //    5. Use the user's configured `sans` font-feature-settings by default.
+    //    6. Use the user's configured `sans` font-variation-settings by default.
+    //    */
+    //
+    //    html {
+    //      line-height: 1.5; /* 1 */
+    //      -webkit-text-size-adjust: 100%; /* 2 */
+    //      -moz-tab-size: 4; /* 3 */
+    //      tab-size: 4; /* 3 */
+    //      font-family: theme('fontFamily.sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"); /* 4 */
+    //      font-feature-settings: theme('fontFamily.sans[1].fontFeatureSettings', normal); /* 5 */
+    //      font-variation-settings: theme('fontFamily.sans[1].fontVariationSettings', normal); /* 6 */
+    //    }
   }
 }

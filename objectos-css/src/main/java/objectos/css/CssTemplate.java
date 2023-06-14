@@ -32,6 +32,8 @@ public abstract class CssTemplate {
 
   protected static final Selector body = named("body");
 
+  protected static final Selector html = named("html");
+
   protected static final Selector li = named("li");
 
   protected static final Selector ul = named("ul");
@@ -57,6 +59,7 @@ public abstract class CssTemplate {
       Color,
 
       // L
+      LineHeightValue,
       LineStyle,
       LineWidth {}
 
@@ -124,6 +127,7 @@ public abstract class CssTemplate {
   // N
   protected static final Color navy = kw("navy");
   protected static final LineStyle none = kw("none");
+  protected static final LineHeightValue normal = kw("normal");
 
   // O
   protected static final Color olive = kw("olive");
@@ -190,6 +194,55 @@ public abstract class CssTemplate {
 
   protected final IdSelector id(String id) {
     return IdSelector.of(id);
+  }
+
+  // length methods
+
+  protected static final class Length implements LineHeightValue {
+    static final Length ZERO = new Length("0");
+
+    final String value;
+
+    public Length(String value) { this.value = value; }
+
+    @Override
+    public final String toString() { return value; }
+  }
+
+  private enum LengthUnit {
+    ch,
+    cm,
+    em,
+    ex,
+    in,
+    mm,
+    pc,
+    pt,
+    px,
+    q,
+    rem,
+    vh,
+    vmax,
+    vmin,
+    vw;
+
+    final Length of(int value) {
+      if (value == 0) {
+        return Length.ZERO;
+      } else {
+        var s = Integer.toString(value);
+
+        return new Length(s + name());
+      }
+    }
+  }
+
+  protected final Length em(int value) {
+    return LengthUnit.em.of(value);
+  }
+
+  protected final Length px(int value) {
+    return LengthUnit.px.of(value);
   }
 
   // property methods
@@ -265,9 +318,23 @@ public abstract class CssTemplate {
   protected sealed interface BoxSizingValue extends PropertyValue {}
 
   protected final StyleDeclaration boxSizing(BoxSizingValue value) {
-    Objects.requireNonNull(value, "value == null");
+    return Property.BOX_SIZING.value(value);
+  }
 
-    return Property.BOX_SIZING.declaration(value);
+  // property methods: line-height
+
+  protected sealed interface LineHeightValue extends PropertyValue {}
+
+  protected final StyleDeclaration lineHeight(int value) {
+    return Property.LINE_HEIGHT.value(value);
+  }
+
+  protected final StyleDeclaration lineHeight(double value) {
+    return Property.LINE_HEIGHT.value(value);
+  }
+
+  protected final StyleDeclaration lineHeight(LineHeightValue value) {
+    return Property.LINE_HEIGHT.value(value);
   }
 
   protected final void style(Selector selector,

@@ -158,6 +158,40 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#395] Preflight 02
+
+  - line-height
+  """)
+  public void propertyLineHeight() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            html,
+
+            lineHeight(normal),
+            lineHeight(1.5),
+            lineHeight(px(14)),
+            lineHeight(em(3)),
+            lineHeight(inherit)
+          );
+        }
+      },
+
+      """
+      html {
+        line-height: normal;
+        line-height: 1.5;
+        line-height: 14px;
+        line-height: 3em;
+        line-height: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - selector list

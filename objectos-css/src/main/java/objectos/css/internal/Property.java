@@ -51,15 +51,6 @@ public enum Property implements PropertyName {
     propertyName = name().toLowerCase(Locale.US).replace('_', '-');
   }
 
-  @Override
-  public final String toString() {
-    return propertyName;
-  }
-
-  public final StyleDeclaration declaration(PropertyValue value) {
-    return new StyleDeclaration1(this, value);
-  }
-
   public final StyleDeclaration declaration(PropertyValue value1, PropertyValue value2) {
     return new StyleDeclaration2(this, value1, value2);
   }
@@ -94,6 +85,25 @@ public enum Property implements PropertyName {
     Objects.requireNonNull(left, "left == null");
 
     return new StyleDeclaration4(this, top, right, bottom, left);
+  }
+
+  @Override
+  public final String toString() {
+    return propertyName;
+  }
+
+  public final StyleDeclaration value(PropertyValue value) {
+    Objects.requireNonNull(value, "value == null");
+
+    return new StyleDeclaration1(this, value);
+  }
+
+  public final StyleDeclaration value(int value) {
+    return new StyleDeclarationInt(this, value);
+  }
+
+  public final StyleDeclaration value(double value) {
+    return new StyleDeclarationDouble(this, value);
   }
 
 }
