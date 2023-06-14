@@ -375,6 +375,32 @@ public abstract class CssTemplate {
     return Property.LINE_HEIGHT.value(value);
   }
 
+  // property methods: tab-size
+
+  protected final StyleDeclaration tabSize(int value) {
+    return Property.TAB_SIZE.value(value);
+  }
+
+  protected final StyleDeclaration tabSize(Length value) {
+    return Property.TAB_SIZE.value(value);
+  }
+
+  protected final StyleDeclaration tabSize(GlobalKeyword value) {
+    return Property.TAB_SIZE.value(value);
+  }
+
+  protected final StyleDeclaration mozTabSize(int value) {
+    return Property._MOZ_TAB_SIZE.value(value);
+  }
+
+  protected final StyleDeclaration mozTabSize(Length value) {
+    return Property._MOZ_TAB_SIZE.value(value);
+  }
+
+  protected final StyleDeclaration mozTabSize(GlobalKeyword value) {
+    return Property._MOZ_TAB_SIZE.value(value);
+  }
+
   // property methods: text-size-adjust
 
   protected sealed interface TextSizeAdjustValue extends PropertyValue {}

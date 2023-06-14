@@ -23,18 +23,11 @@ import objectos.css.om.StyleDeclaration;
 
 public enum Property implements PropertyName {
 
-  _WEBKIT_TEXT_SIZE_ADJUST,
-
   BACKGROUND_COLOR,
-
   BORDER,
-
   BORDER_COLOR,
-
   BORDER_STYLE,
-
   BORDER_WIDTH,
-
   BOX_SIZING,
 
   CONTENT,
@@ -44,6 +37,11 @@ public enum Property implements PropertyName {
   LINE_HEIGHT,
 
   MIN_HEIGHT,
+
+  // T
+  TAB_SIZE,
+  _MOZ_TAB_SIZE,
+  _WEBKIT_TEXT_SIZE_ADJUST,
 
   Z_INDEX;
 

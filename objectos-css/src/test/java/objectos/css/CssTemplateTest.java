@@ -200,9 +200,42 @@ public class CssTemplateTest {
   @Test(description = """
   [#395] Preflight 02
 
+  - tab-size
+  - -moz-tab-size
+  """)
+  public void propertyTabSize() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            html,
+
+            tabSize(4),
+            tabSize(px(10)),
+            mozTabSize(4),
+            tabSize(inherit)
+          );
+        }
+      },
+
+      """
+      html {
+        tab-size: 4;
+        tab-size: 10px;
+        -moz-tab-size: 4;
+        tab-size: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#395] Preflight 02
+
   - -webkit-text-size-adjust
   """)
-  public void propertyWebkitTextSizeAdjust() {
+  public void propertyTextSizeAdjust() {
     test(
       new CssTemplate() {
         @Override

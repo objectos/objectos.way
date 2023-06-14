@@ -391,16 +391,6 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
-  protected static final TypeSelector script = Css.script;
-
-  protected static final TypeSelector p = Css.p;
-
-  protected static final TypeSelector kbd = Css.kbd;
-
-  protected static final TypeSelector tbody = Css.tbody;
-
-  protected static final TypeSelector legend = Css.legend;
-
   protected static final TypeSelector progress = Css.progress;
 
   protected static final TypeSelector header = Css.header;
@@ -536,6 +526,16 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector main = Css.main;
 
   protected static final TypeSelector template = Css.template;
+
+  protected static final TypeSelector script = Css.script;
+
+  protected static final TypeSelector p = Css.p;
+
+  protected static final TypeSelector kbd = Css.kbd;
+
+  protected static final TypeSelector tbody = Css.tbody;
+
+  protected static final TypeSelector legend = Css.legend;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 
