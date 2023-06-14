@@ -172,8 +172,11 @@ public class CssTemplateTest {
 
             lineHeight(normal),
             lineHeight(1.5),
+            lineHeight(2),
             lineHeight(px(14)),
             lineHeight(em(3)),
+            lineHeight(pct(40.5)),
+            lineHeight(pct(23)),
             lineHeight(inherit)
           );
         }
@@ -183,8 +186,11 @@ public class CssTemplateTest {
       html {
         line-height: normal;
         line-height: 1.5;
+        line-height: 2;
         line-height: 14px;
         line-height: 3em;
+        line-height: 40.5%;
+        line-height: 23%;
         line-height: inherit;
       }
       """

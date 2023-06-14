@@ -245,6 +245,39 @@ public abstract class CssTemplate {
     return LengthUnit.px.of(value);
   }
 
+  // percentage method
+
+  protected static final class Percentage implements LineHeightValue {
+    static final Percentage ZERO = new Percentage("0");
+
+    final String value;
+
+    public Percentage(String value) { this.value = value; }
+
+    @Override
+    public final String toString() { return value; }
+  }
+
+  protected final Percentage pct(double value) {
+    if (value == 0) {
+      return Percentage.ZERO;
+    } else {
+      var s = Double.toString(value);
+
+      return new Percentage(s + "%");
+    }
+  }
+
+  protected final Percentage pct(int value) {
+    if (value == 0) {
+      return Percentage.ZERO;
+    } else {
+      var s = Integer.toString(value);
+
+      return new Percentage(s + "%");
+    }
+  }
+
   // property methods
 
   // property methods: border-color
