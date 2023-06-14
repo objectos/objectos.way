@@ -48,7 +48,13 @@ public abstract class CssTemplate {
 
   // keywords
 
-  protected interface GlobalKeyword extends BoxSizingValue {}
+  protected sealed interface GlobalKeyword
+      extends
+      // B
+      BoxSizingValue,
+
+      // L
+      LineWidth {}
 
   private record Keyword(String name) implements GlobalKeyword {
     @Override
@@ -56,6 +62,19 @@ public abstract class CssTemplate {
       return name;
     }
   }
+
+  // zero
+
+  protected static final class Zero implements LineWidth {
+    static final Zero INSTANCE = new Zero();
+
+    private Zero() {}
+
+    @Override
+    public final String toString() { return "0"; }
+  }
+
+  protected static final Zero $0 = Zero.INSTANCE;
 
   // B
   protected static final BoxSizingValue borderBox = kw("border-box");
@@ -66,6 +85,13 @@ public abstract class CssTemplate {
   // I
   protected static final GlobalKeyword inherit = kw("inherit");
   protected static final GlobalKeyword initial = kw("initial");
+
+  // M
+  protected static final LineWidth medium = kw("medium");
+
+  // T
+  protected static final LineWidth thick = kw("thick");
+  protected static final LineWidth thin = kw("thin");
 
   // U
   protected static final GlobalKeyword unset = kw("unset");
@@ -104,9 +130,31 @@ public abstract class CssTemplate {
 
   // property methods
 
+  // property methods: border-width
+
+  protected sealed interface LineWidth extends PropertyValue {}
+
+  protected final StyleDeclaration borderWidth(LineWidth all) {
+    return Property.BORDER_WIDTH.four1(all);
+  }
+
+  protected final StyleDeclaration borderWidth(LineWidth vertical, LineWidth horizontal) {
+    return Property.BORDER_WIDTH.four2(vertical, horizontal);
+  }
+
+  protected final StyleDeclaration borderWidth(LineWidth top, LineWidth horizontal,
+      LineWidth bottom) {
+    return Property.BORDER_WIDTH.four3(top, horizontal, bottom);
+  }
+
+  protected final StyleDeclaration borderWidth(LineWidth top, LineWidth right, LineWidth bottom,
+      LineWidth left) {
+    return Property.BORDER_WIDTH.four4(top, right, bottom, left);
+  }
+
   // property methods: box-sizing
 
-  protected interface BoxSizingValue extends PropertyValue {}
+  protected sealed interface BoxSizingValue extends PropertyValue {}
 
   protected final StyleDeclaration boxSizing(BoxSizingValue value) {
     Objects.requireNonNull(value, "value == null");

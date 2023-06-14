@@ -19,11 +19,12 @@ import objectos.css.om.PropertyName;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.StyleDeclaration;
 
-public record StyleDeclaration1(PropertyName name,
-                                PropertyValue value)
+public record StyleDeclaration2(PropertyName name,
+                                PropertyValue value1,
+                                PropertyValue value2)
     implements StyleDeclaration {
   @Override
   public final String toString() {
-    return name + ": " + value;
+    return name + ": " + value1 + " " + value2;
   }
 }

@@ -101,6 +101,38 @@ public class CssTemplateTest {
     );
   }
 
+  @Test(description = """
+  Preflight 01
+
+  - border-width
+  """)
+  public void testCase04() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            any,
+
+            borderWidth($0),
+            borderWidth(medium, thick),
+            borderWidth(medium, thick, thin),
+            borderWidth(medium, thick, thin, unset)
+          );
+        }
+      },
+
+      """
+      * {
+        border-width: 0;
+        border-width: medium thick;
+        border-width: medium thick thin;
+        border-width: medium thick thin unset;
+      }
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty) {
     var sheet = template.toStyleSheet();
     assertEquals(sheet.toString(), pretty);

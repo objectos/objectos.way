@@ -16,6 +16,7 @@
 package objectos.css.internal;
 
 import java.util.Locale;
+import java.util.Objects;
 import objectos.css.om.PropertyName;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.StyleDeclaration;
@@ -25,6 +26,8 @@ public enum Property implements PropertyName {
   BACKGROUND_COLOR,
 
   BORDER,
+
+  BORDER_WIDTH,
 
   BOX_SIZING,
 
@@ -51,6 +54,42 @@ public enum Property implements PropertyName {
 
   public final StyleDeclaration declaration(PropertyValue value) {
     return new StyleDeclaration1(this, value);
+  }
+
+  public final StyleDeclaration declaration(PropertyValue value1, PropertyValue value2) {
+    return new StyleDeclaration2(this, value1, value2);
+  }
+
+  public final StyleDeclaration four1(PropertyValue all) {
+    Objects.requireNonNull(all, "all == null");
+
+    return new StyleDeclaration1(this, all);
+  }
+
+  public final StyleDeclaration four2(PropertyValue vertical, PropertyValue horizontal) {
+    Objects.requireNonNull(vertical, "vertical == null");
+    Objects.requireNonNull(horizontal, "horizontal == null");
+
+    return new StyleDeclaration2(this, vertical, horizontal);
+  }
+
+  public final StyleDeclaration four3(
+      PropertyValue top, PropertyValue horizontal, PropertyValue bottom) {
+    Objects.requireNonNull(top, "top == null");
+    Objects.requireNonNull(horizontal, "horizontal == null");
+    Objects.requireNonNull(bottom, "bottom == null");
+
+    return new StyleDeclaration3(this, top, horizontal, bottom);
+  }
+
+  public final StyleDeclaration four4(
+      PropertyValue top, PropertyValue right, PropertyValue bottom, PropertyValue left) {
+    Objects.requireNonNull(top, "top == null");
+    Objects.requireNonNull(right, "right == null");
+    Objects.requireNonNull(bottom, "bottom == null");
+    Objects.requireNonNull(left, "left == null");
+
+    return new StyleDeclaration4(this, top, right, bottom, left);
   }
 
 }
