@@ -54,6 +54,7 @@ public abstract class CssTemplate {
       BoxSizingValue,
 
       // L
+      LineStyle,
       LineWidth {}
 
   private record Keyword(String name) implements GlobalKeyword {
@@ -82,12 +83,36 @@ public abstract class CssTemplate {
   // C
   protected static final BoxSizingValue contentBox = kw("content-box");
 
+  // D
+  protected static final LineStyle dashed = kw("dashed");
+  protected static final LineStyle dotted = kw("dotted");
+  protected static final LineStyle double$ = kw("double");
+
+  // G
+  protected static final LineStyle groove = kw("groove");
+
+  // H
+  protected static final LineStyle hidden = kw("hidden");
+
   // I
   protected static final GlobalKeyword inherit = kw("inherit");
   protected static final GlobalKeyword initial = kw("initial");
+  protected static final LineStyle inset = kw("inset");
 
   // M
   protected static final LineWidth medium = kw("medium");
+
+  // N
+  protected static final LineStyle none = kw("none");
+
+  // O
+  protected static final LineStyle outset = kw("outset");
+
+  // R
+  protected static final LineStyle ridge = kw("ridge");
+
+  // S
+  protected static final LineStyle solid = kw("solid");
 
   // T
   protected static final LineWidth thick = kw("thick");
@@ -130,26 +155,48 @@ public abstract class CssTemplate {
 
   // property methods
 
+  // property methods: border-style
+
+  protected sealed interface LineStyle extends PropertyValue {}
+
+  protected final StyleDeclaration borderStyle(LineStyle all) {
+    return Property.BORDER_STYLE.sides1(all);
+  }
+
+  protected final StyleDeclaration borderStyle(LineStyle vertical, LineStyle horizontal) {
+    return Property.BORDER_STYLE.sides2(vertical, horizontal);
+  }
+
+  protected final StyleDeclaration borderStyle(LineStyle top, LineStyle horizontal,
+      LineStyle bottom) {
+    return Property.BORDER_STYLE.sides3(top, horizontal, bottom);
+  }
+
+  protected final StyleDeclaration borderStyle(LineStyle top, LineStyle right, LineStyle bottom,
+      LineStyle left) {
+    return Property.BORDER_STYLE.sides4(top, right, bottom, left);
+  }
+
   // property methods: border-width
 
   protected sealed interface LineWidth extends PropertyValue {}
 
   protected final StyleDeclaration borderWidth(LineWidth all) {
-    return Property.BORDER_WIDTH.four1(all);
+    return Property.BORDER_WIDTH.sides1(all);
   }
 
   protected final StyleDeclaration borderWidth(LineWidth vertical, LineWidth horizontal) {
-    return Property.BORDER_WIDTH.four2(vertical, horizontal);
+    return Property.BORDER_WIDTH.sides2(vertical, horizontal);
   }
 
   protected final StyleDeclaration borderWidth(LineWidth top, LineWidth horizontal,
       LineWidth bottom) {
-    return Property.BORDER_WIDTH.four3(top, horizontal, bottom);
+    return Property.BORDER_WIDTH.sides3(top, horizontal, bottom);
   }
 
   protected final StyleDeclaration borderWidth(LineWidth top, LineWidth right, LineWidth bottom,
       LineWidth left) {
-    return Property.BORDER_WIDTH.four4(top, right, bottom, left);
+    return Property.BORDER_WIDTH.sides4(top, right, bottom, left);
   }
 
   // property methods: box-sizing

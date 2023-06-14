@@ -27,6 +27,8 @@ public enum Property implements PropertyName {
 
   BORDER,
 
+  BORDER_STYLE,
+
   BORDER_WIDTH,
 
   BOX_SIZING,
@@ -60,20 +62,20 @@ public enum Property implements PropertyName {
     return new StyleDeclaration2(this, value1, value2);
   }
 
-  public final StyleDeclaration four1(PropertyValue all) {
+  public final StyleDeclaration sides1(PropertyValue all) {
     Objects.requireNonNull(all, "all == null");
 
     return new StyleDeclaration1(this, all);
   }
 
-  public final StyleDeclaration four2(PropertyValue vertical, PropertyValue horizontal) {
+  public final StyleDeclaration sides2(PropertyValue vertical, PropertyValue horizontal) {
     Objects.requireNonNull(vertical, "vertical == null");
     Objects.requireNonNull(horizontal, "horizontal == null");
 
     return new StyleDeclaration2(this, vertical, horizontal);
   }
 
-  public final StyleDeclaration four3(
+  public final StyleDeclaration sides3(
       PropertyValue top, PropertyValue horizontal, PropertyValue bottom) {
     Objects.requireNonNull(top, "top == null");
     Objects.requireNonNull(horizontal, "horizontal == null");
@@ -82,7 +84,7 @@ public enum Property implements PropertyName {
     return new StyleDeclaration3(this, top, horizontal, bottom);
   }
 
-  public final StyleDeclaration four4(
+  public final StyleDeclaration sides4(
       PropertyValue top, PropertyValue right, PropertyValue bottom, PropertyValue left) {
     Objects.requireNonNull(top, "top == null");
     Objects.requireNonNull(right, "right == null");

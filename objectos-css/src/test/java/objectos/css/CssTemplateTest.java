@@ -24,21 +24,33 @@ public class CssTemplateTest {
   @Test(description = """
   Preflight 01
 
-  - universal selector
+  - border-style
   """)
-  public void testCase01() {
+  public void propertyBorderStyle() {
     test(
       new CssTemplate() {
         @Override
         protected void definition() {
           style(
-            any
+            any,
+
+            borderStyle(none),
+            borderStyle(hidden, dotted),
+            borderStyle(dashed, solid, double$),
+            borderStyle(groove, ridge, inset, outset),
+            borderStyle(inherit)
           );
         }
       },
 
       """
-      * {}
+      * {
+        border-style: none;
+        border-style: hidden dotted;
+        border-style: dashed solid double;
+        border-style: groove ridge inset outset;
+        border-style: inherit;
+      }
       """
     );
   }
@@ -46,23 +58,31 @@ public class CssTemplateTest {
   @Test(description = """
   Preflight 01
 
-  - selector list
+  - border-width
   """)
-  public void testCase02() {
+  public void propertyBorderWidth() {
     test(
       new CssTemplate() {
         @Override
         protected void definition() {
           style(
             any,
-            __after,
-            __before
+
+            borderWidth($0),
+            borderWidth(medium, thick),
+            borderWidth(medium, thick, thin),
+            borderWidth(medium, thick, thin, unset)
           );
         }
       },
 
       """
-      *, ::after, ::before {}
+      * {
+        border-width: 0;
+        border-width: medium thick;
+        border-width: medium thick thin;
+        border-width: medium thick thin unset;
+      }
       """
     );
   }
@@ -72,7 +92,7 @@ public class CssTemplateTest {
 
   - box-sizing
   """)
-  public void testCase03() {
+  public void propertyBoxSizing() {
     test(
       new CssTemplate() {
         @Override
@@ -104,31 +124,45 @@ public class CssTemplateTest {
   @Test(description = """
   Preflight 01
 
-  - border-width
+  - selector list
   """)
-  public void testCase04() {
+  public void selectorList() {
     test(
       new CssTemplate() {
         @Override
         protected void definition() {
           style(
             any,
-
-            borderWidth($0),
-            borderWidth(medium, thick),
-            borderWidth(medium, thick, thin),
-            borderWidth(medium, thick, thin, unset)
+            __after,
+            __before
           );
         }
       },
 
       """
-      * {
-        border-width: 0;
-        border-width: medium thick;
-        border-width: medium thick thin;
-        border-width: medium thick thin unset;
-      }
+      *, ::after, ::before {}
+      """
+    );
+  }
+
+  @Test(description = """
+  Preflight 01
+
+  - universal selector
+  """)
+  public void selectorUniversal() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            any
+          );
+        }
+      },
+
+      """
+      * {}
       """
     );
   }
