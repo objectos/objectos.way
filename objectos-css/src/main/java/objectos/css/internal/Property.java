@@ -44,6 +44,7 @@ public enum Property implements PropertyName {
   // F
   FONT_FAMILY,
   FONT_FEATURE_SETTINGS,
+  FONT_SIZE,
   FONT_VARIATION_SETTINGS,
 
   // H

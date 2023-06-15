@@ -282,6 +282,61 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#398] Preflight 06
+
+  - font-size
+  """)
+  public void propertyFontSize() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            h1, h2, h3, h4, h5, h6,
+
+            fontSize(xxSmall),
+            fontSize(xSmall),
+            fontSize(small),
+            fontSize(medium),
+            fontSize(large),
+            fontSize(xLarge),
+            fontSize(xxLarge),
+            fontSize(xxxLarge),
+
+            fontSize(smaller),
+            fontSize(larger),
+
+            fontSize(px(12)),
+            fontSize(em(0.8)),
+            fontSize(pct(80)),
+
+            fontSize(inherit)
+          );
+        }
+      },
+
+      """
+      h1, h2, h3, h4, h5, h6 {
+        font-size: xx-small;
+        font-size: x-small;
+        font-size: small;
+        font-size: medium;
+        font-size: large;
+        font-size: x-large;
+        font-size: xx-large;
+        font-size: xxx-large;
+        font-size: smaller;
+        font-size: larger;
+        font-size: 12px;
+        font-size: 0.8em;
+        font-size: 80%;
+        font-size: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - font-variation-settings

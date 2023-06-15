@@ -36,6 +36,12 @@ public abstract class CssTemplate {
 
   protected static final Selector body = named("body");
 
+  protected static final Selector h1 = named("h1");
+  protected static final Selector h2 = named("h2");
+  protected static final Selector h3 = named("h3");
+  protected static final Selector h4 = named("h4");
+  protected static final Selector h5 = named("h5");
+  protected static final Selector h6 = named("h6");
   protected static final Selector hr = named("hr");
   protected static final Selector html = named("html");
 
@@ -66,6 +72,7 @@ public abstract class CssTemplate {
       // F
       FontFamilyValue,
       FontFeatureSettingsValue,
+      FontSizeValue,
       FontVariationSettingsValue,
 
       // H
@@ -86,7 +93,13 @@ public abstract class CssTemplate {
       implements
       GlobalKeyword,
 
+      // A
       AutoKeyword,
+
+      // M
+      MediumKeyword,
+
+      // N
       NoneKeyword,
       NormalKeyword {
     @Override
@@ -179,13 +192,17 @@ public abstract class CssTemplate {
   protected static final LineStyle inset = kw("inset");
 
   // L
+  protected static final FontSizeValue large = kw("large");
+  protected static final FontSizeValue larger = kw("larger");
   protected static final Color lime = kw("lime");
 
   // M
+  protected sealed interface MediumKeyword extends FontSizeValue, LineWidth {}
+
   protected static final Color maroon = kw("maroon");
   protected static final FontFamilyValue math = kw("math");
   protected static final HeightValue maxContent = kw("max-content");
-  protected static final LineWidth medium = kw("medium");
+  protected static final MediumKeyword medium = kw("medium");
   protected static final HeightValue minContent = kw("min-content");
   protected static final FontFamilyValue monospace = kw("monospace");
 
@@ -216,6 +233,8 @@ public abstract class CssTemplate {
   protected static final FontFamilyValue sansSerif = kw("sans-serif");
   protected static final FontFamilyValue serif = kw("serif");
   protected static final Color silver = kw("silver");
+  protected static final FontSizeValue small = kw("small");
+  protected static final FontSizeValue smaller = kw("smaller");
   protected static final LineStyle solid = kw("solid");
   protected static final FontFamilyValue systemUi = kw("system-ui");
 
@@ -234,6 +253,13 @@ public abstract class CssTemplate {
 
   // W
   protected static final Color white = kw("white");
+
+  // X
+  protected static final FontSizeValue xLarge = kw("x-large");
+  protected static final FontSizeValue xxLarge = kw("xx-large");
+  protected static final FontSizeValue xxxLarge = kw("xxx-large");
+  protected static final FontSizeValue xSmall = kw("x-small");
+  protected static final FontSizeValue xxSmall = kw("xx-small");
 
   // Y
   protected static final Color yellow = kw("yellow");
@@ -277,7 +303,12 @@ public abstract class CssTemplate {
 
   // length methods
 
-  protected sealed interface LengthPercentage extends HeightValue, LineHeightValue, MarginValue {}
+  protected sealed interface LengthPercentage
+      extends
+      FontSizeValue,
+      HeightValue,
+      LineHeightValue,
+      MarginValue {}
 
   protected static final class Length implements LengthPercentage, LineWidth {
     static final Length ZERO = new Length("0");
@@ -307,6 +338,16 @@ public abstract class CssTemplate {
     vmin,
     vw;
 
+    final Length of(double value) {
+      if (value == 0) {
+        return Length.ZERO;
+      } else {
+        var s = Double.toString(value);
+
+        return new Length(s + name());
+      }
+    }
+
     final Length of(int value) {
       if (value == 0) {
         return Length.ZERO;
@@ -318,8 +359,16 @@ public abstract class CssTemplate {
     }
   }
 
+  protected final Length em(double value) {
+    return LengthUnit.em.of(value);
+  }
+
   protected final Length em(int value) {
     return LengthUnit.em.of(value);
+  }
+
+  protected final Length px(double value) {
+    return LengthUnit.px.of(value);
   }
 
   protected final Length px(int value) {
@@ -506,6 +555,16 @@ public abstract class CssTemplate {
     return Property.FONT_FEATURE_SETTINGS.value(value);
   }
 
+  // property methods: font-size
+
+  protected sealed interface FontSizeValue extends PropertyValue {}
+
+  protected final StyleDeclaration fontSize(FontSizeValue value) {
+    return Property.FONT_SIZE.value(value);
+  }
+
+  // property methods: font-variation-settings
+
   protected sealed interface FontVariationSettingsValue extends PropertyValue {}
 
   protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
@@ -600,7 +659,8 @@ public abstract class CssTemplate {
     builder.addStyleRule(selector, declarations);
   }
 
-  protected final void style(Selector selector1, Selector selector2, Selector selector3,
+  protected final void style(
+      Selector selector1, Selector selector2, Selector selector3,
       StyleDeclaration... declarations) {
     Objects.requireNonNull(selector1, "selector1 == null");
     Objects.requireNonNull(selector2, "selector2 == null");
@@ -608,6 +668,25 @@ public abstract class CssTemplate {
     Objects.requireNonNull(declarations, "declarations == null");
 
     builder.addStyleRule(selector1, selector2, selector3, declarations);
+  }
+
+  protected final void style(
+      Selector selector1, Selector selector2, Selector selector3,
+      Selector selector4, Selector selector5, Selector selector6,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector1, "selector1 == null");
+    Objects.requireNonNull(selector2, "selector2 == null");
+    Objects.requireNonNull(selector3, "selector3 == null");
+    Objects.requireNonNull(selector4, "selector4 == null");
+    Objects.requireNonNull(selector5, "selector5 == null");
+    Objects.requireNonNull(selector6, "selector6 == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(
+      selector1, selector2, selector3,
+      selector4, selector5, selector6,
+      declarations
+    );
   }
 
 }
