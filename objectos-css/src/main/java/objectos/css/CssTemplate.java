@@ -90,6 +90,7 @@ public abstract class CssTemplate {
       // T
       TextDecorationLineValue,
       TextDecorationStyleValue,
+      TextDecorationThicknessValue,
       TextSizeAdjustValue {}
 
   private record Keyword(String name)
@@ -160,7 +161,8 @@ public abstract class CssTemplate {
   protected static final Zero $0 = Zero.INSTANCE;
 
   // A
-  protected sealed interface AutoKeyword extends HeightValue, MarginValue, TextSizeAdjustValue {}
+  protected sealed interface AutoKeyword
+      extends HeightValue, MarginValue, TextDecorationThicknessValue, TextSizeAdjustValue {}
 
   protected static final Color aqua = kw("aqua");
   protected static final AutoKeyword auto = kw("auto");
@@ -194,6 +196,7 @@ public abstract class CssTemplate {
   protected static final FontFamilyValue fangsong = kw("fangsong");
   protected static final FontFamilyValue fantasy = kw("fantasy");
   protected static final HeightValue fitContent = kw("fit-content");
+  protected static final TextDecorationThicknessValue fromFont = kw("from-font");
   protected static final Color fuchsia = kw("fuchsia");
 
   // G
@@ -334,7 +337,8 @@ public abstract class CssTemplate {
       FontSizeValue,
       HeightValue,
       LineHeightValue,
-      MarginValue {}
+      MarginValue,
+      TextDecorationThicknessValue {}
 
   protected static final class Length implements LengthPercentage, LineWidth {
     static final Length ZERO = new Length("0");
@@ -716,6 +720,14 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration textDecorationStyle(TextDecorationStyleValue value) {
     return Property.TEXT_DECORATION_STYLE.value(value);
+  }
+
+  // property methods: text-decoration-thickness
+
+  protected sealed interface TextDecorationThicknessValue extends PropertyValue {}
+
+  protected final StyleDeclaration textDecorationThickness(TextDecorationThicknessValue value) {
+    return Property.TEXT_DECORATION_THICKNESS.value(value);
   }
 
   // property methods: text-size-adjust

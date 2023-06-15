@@ -58,6 +58,38 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#397] Preflight 04
+
+  - border-[side]-width
+  """)
+  public void propertyBorderSideWidth() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            hr,
+
+            borderTopWidth($0),
+            borderRightWidth(px(20)),
+            borderBottomWidth(medium),
+            borderLeftWidth(inherit)
+          );
+        }
+      },
+
+      """
+      hr {
+        border-top-width: 0;
+        border-right-width: 20px;
+        border-bottom-width: medium;
+        border-left-width: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - border-style
@@ -118,38 +150,6 @@ public class CssTemplateTest {
         border-width: medium thick;
         border-width: medium thick thin;
         border-width: medium thick thin unset;
-      }
-      """
-    );
-  }
-
-  @Test(description = """
-  [#397] Preflight 04
-
-  - border-[side]-width
-  """)
-  public void propertyBorderSideWidth() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            hr,
-
-            borderTopWidth($0),
-            borderRightWidth(px(20)),
-            borderBottomWidth(medium),
-            borderLeftWidth(inherit)
-          );
-        }
-      },
-
-      """
-      hr {
-        border-top-width: 0;
-        border-right-width: 20px;
-        border-bottom-width: medium;
-        border-left-width: inherit;
       }
       """
     );
@@ -337,6 +337,34 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#395] Preflight 02
+
+  - font-variation-settings
+  """)
+  public void propertyFontVariationSettings() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            html,
+
+            fontVariationSettings(normal),
+            fontVariationSettings(inherit)
+          );
+        }
+      },
+
+      """
+      html {
+        font-variation-settings: normal;
+        font-variation-settings: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#398] Preflight 06
 
   - font-weight
@@ -371,34 +399,6 @@ public class CssTemplateTest {
         font-weight: 100;
         font-weight: 400;
         font-weight: inherit;
-      }
-      """
-    );
-  }
-
-  @Test(description = """
-  [#395] Preflight 02
-
-  - font-variation-settings
-  """)
-  public void propertyFontVariationSettings() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            html,
-
-            fontVariationSettings(normal),
-            fontVariationSettings(inherit)
-          );
-        }
-      },
-
-      """
-      html {
-        font-variation-settings: normal;
-        font-variation-settings: inherit;
       }
       """
     );
@@ -654,6 +654,42 @@ public class CssTemplateTest {
         text-decoration-style: dashed;
         text-decoration-style: wavy;
         text-decoration-style: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#399] Preflight 06
+
+  - text-decoration-thickness
+  """)
+  public void propertyTextDecorationThickness() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            a,
+
+            textDecorationThickness(auto),
+            textDecorationThickness(fromFont),
+            textDecorationThickness(em(0.1)),
+            textDecorationThickness(px(3)),
+            textDecorationThickness(pct(10)),
+            textDecorationThickness(inherit)
+          );
+        }
+      },
+
+      """
+      a {
+        text-decoration-thickness: auto;
+        text-decoration-thickness: from-font;
+        text-decoration-thickness: 0.1em;
+        text-decoration-thickness: 3px;
+        text-decoration-thickness: 10%;
+        text-decoration-thickness: inherit;
       }
       """
     );
