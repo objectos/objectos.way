@@ -279,7 +279,7 @@ public abstract class CssTemplate {
 
   protected sealed interface LengthPercentage extends HeightValue, LineHeightValue, MarginValue {}
 
-  protected static final class Length implements LengthPercentage {
+  protected static final class Length implements LengthPercentage, LineWidth {
     static final Length ZERO = new Length("0");
 
     final String value;
@@ -425,6 +425,22 @@ public abstract class CssTemplate {
   protected final StyleDeclaration borderWidth(LineWidth top, LineWidth right, LineWidth bottom,
       LineWidth left) {
     return Property.BORDER_WIDTH.sides4(top, right, bottom, left);
+  }
+
+  protected final StyleDeclaration borderTopWidth(LineWidth value) {
+    return Property.BORDER_TOP_WIDTH.value(value);
+  }
+
+  protected final StyleDeclaration borderRightWidth(LineWidth value) {
+    return Property.BORDER_RIGHT_WIDTH.value(value);
+  }
+
+  protected final StyleDeclaration borderBottomWidth(LineWidth value) {
+    return Property.BORDER_BOTTOM_WIDTH.value(value);
+  }
+
+  protected final StyleDeclaration borderLeftWidth(LineWidth value) {
+    return Property.BORDER_LEFT_WIDTH.value(value);
   }
 
   // property methods: box-sizing

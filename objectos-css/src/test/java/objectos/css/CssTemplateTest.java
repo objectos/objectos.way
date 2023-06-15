@@ -124,6 +124,38 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#397] Preflight 04
+
+  - border-[side]-width
+  """)
+  public void propertyBorderSideWidth() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            hr,
+
+            borderTopWidth($0),
+            borderRightWidth(px(20)),
+            borderBottomWidth(medium),
+            borderLeftWidth(inherit)
+          );
+        }
+      },
+
+      """
+      hr {
+        border-top-width: 0;
+        border-right-width: 20px;
+        border-bottom-width: medium;
+        border-left-width: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - box-sizing

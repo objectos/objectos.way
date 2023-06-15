@@ -29,6 +29,10 @@ public enum Property implements PropertyName {
   BORDER_COLOR,
   BORDER_STYLE,
   BORDER_WIDTH,
+  BORDER_TOP_WIDTH,
+  BORDER_RIGHT_WIDTH,
+  BORDER_BOTTOM_WIDTH,
+  BORDER_LEFT_WIDTH,
   BOX_SIZING,
 
   // C
