@@ -53,5 +53,12 @@ final class Preflight extends CssTemplate {
       fontFeatureSettings(normal),
       fontVariationSettings(normal)
     );
+
+    style(
+      body,
+
+      margin($0),
+      lineHeight(inherit)
+    );
   }
 }

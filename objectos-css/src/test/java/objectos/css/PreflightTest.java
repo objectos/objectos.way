@@ -42,6 +42,10 @@ public class PreflightTest {
         font-feature-settings: normal;
         font-variation-settings: normal;
       }
+      body {
+        margin: 0;
+        line-height: inherit;
+      }
       """
     );
   }
