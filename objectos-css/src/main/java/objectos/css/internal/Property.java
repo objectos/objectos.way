@@ -23,6 +23,7 @@ import objectos.css.om.StyleDeclaration;
 
 public enum Property implements PropertyName {
 
+  // B
   BACKGROUND_COLOR,
   BORDER,
   BORDER_COLOR,
@@ -34,7 +35,10 @@ public enum Property implements PropertyName {
 
   DISPLAY,
 
+  // F
   FONT_FAMILY,
+  FONT_FEATURE_SETTINGS,
+  FONT_VARIATION_SETTINGS,
 
   LINE_HEIGHT,
 

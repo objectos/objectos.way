@@ -64,6 +64,8 @@ public abstract class CssTemplate {
 
       // F
       FontFamilyValue,
+      FontFeatureSettingsValue,
+      FontVariationSettingsValue,
 
       // L
       LineHeightValue,
@@ -73,7 +75,7 @@ public abstract class CssTemplate {
       // T
       TextSizeAdjustValue {}
 
-  private record Keyword(String name) implements GlobalKeyword, NoneKeyword {
+  private record Keyword(String name) implements GlobalKeyword, NoneKeyword, NormalKeyword {
     @Override
     public final String toString() { return name; }
   }
@@ -171,10 +173,15 @@ public abstract class CssTemplate {
 
   // N
   protected sealed interface NoneKeyword extends LineStyle, TextSizeAdjustValue {}
+  protected sealed interface NormalKeyword
+      extends
+      FontFeatureSettingsValue,
+      FontVariationSettingsValue,
+      LineHeightValue {}
 
   protected static final Color navy = kw("navy");
   protected static final NoneKeyword none = kw("none");
-  protected static final LineHeightValue normal = kw("normal");
+  protected static final NormalKeyword normal = kw("normal");
 
   // O
   protected static final Color olive = kw("olive");
@@ -447,6 +454,20 @@ public abstract class CssTemplate {
     } else {
       return value;
     }
+  }
+
+  // property methods: font-feature-settings
+
+  protected sealed interface FontFeatureSettingsValue extends PropertyValue {}
+
+  protected final StyleDeclaration fontFeatureSettings(FontFeatureSettingsValue value) {
+    return Property.FONT_FEATURE_SETTINGS.value(value);
+  }
+
+  protected sealed interface FontVariationSettingsValue extends PropertyValue {}
+
+  protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
+    return Property.FONT_VARIATION_SETTINGS.value(value);
   }
 
   // property methods: line-height

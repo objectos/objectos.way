@@ -196,6 +196,62 @@ public class CssTemplateTest {
   @Test(description = """
   [#395] Preflight 02
 
+  - font-feature-settings
+  """)
+  public void propertyFontFeatureSettings() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            html,
+
+            fontFeatureSettings(normal),
+            fontFeatureSettings(unset)
+          );
+        }
+      },
+
+      """
+      html {
+        font-feature-settings: normal;
+        font-feature-settings: unset;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#395] Preflight 02
+
+  - font-variation-settings
+  """)
+  public void propertyFontVariationSettings() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            html,
+
+            fontVariationSettings(normal),
+            fontVariationSettings(inherit)
+          );
+        }
+      },
+
+      """
+      html {
+        font-variation-settings: normal;
+        font-variation-settings: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#395] Preflight 02
+
   - line-height
   """)
   public void propertyLineHeight() {
