@@ -290,6 +290,44 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#396] Preflight 03
+
+  - margin
+  """)
+  public void propertyMargin() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            body,
+
+            margin($0),
+            margin(em(1)),
+            margin(px(-3)),
+            margin(pct(5), auto),
+            margin(em(1), auto, em(2)),
+            margin(px(2), em(1), $0, auto),
+            margin(inherit)
+          );
+        }
+      },
+
+      """
+      body {
+        margin: 0;
+        margin: 1em;
+        margin: -3px;
+        margin: 5% auto;
+        margin: 1em auto 2em;
+        margin: 2px 1em 0 auto;
+        margin: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - tab-size

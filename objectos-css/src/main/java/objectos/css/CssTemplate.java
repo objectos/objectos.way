@@ -72,10 +72,19 @@ public abstract class CssTemplate {
       LineStyle,
       LineWidth,
 
+      // M
+      MarginValue,
+
       // T
       TextSizeAdjustValue {}
 
-  private record Keyword(String name) implements GlobalKeyword, NoneKeyword, NormalKeyword {
+  private record Keyword(String name)
+      implements
+      GlobalKeyword,
+
+      AutoKeyword,
+      NoneKeyword,
+      NormalKeyword {
     @Override
     public final String toString() { return name; }
   }
@@ -111,7 +120,7 @@ public abstract class CssTemplate {
 
   // zero
 
-  protected static final class Zero implements LineWidth {
+  protected static final class Zero implements LineWidth, MarginValue {
     static final Zero INSTANCE = new Zero();
 
     private Zero() {}
@@ -123,8 +132,10 @@ public abstract class CssTemplate {
   protected static final Zero $0 = Zero.INSTANCE;
 
   // A
+  protected sealed interface AutoKeyword extends MarginValue, TextSizeAdjustValue {}
+
   protected static final Color aqua = kw("aqua");
-  protected static final TextSizeAdjustValue auto = kw("auto");
+  protected static final AutoKeyword auto = kw("auto");
 
   // B
   protected static final BoxSizingValue borderBox = kw("border-box");
@@ -259,7 +270,7 @@ public abstract class CssTemplate {
 
   // length methods
 
-  protected static final class Length implements LineHeightValue {
+  protected static final class Length implements LineHeightValue, MarginValue {
     static final Length ZERO = new Length("0");
 
     final String value;
@@ -308,7 +319,8 @@ public abstract class CssTemplate {
 
   // percentage method
 
-  protected static final class Percentage implements LineHeightValue, TextSizeAdjustValue {
+  protected static final class Percentage
+      implements LineHeightValue, MarginValue, TextSizeAdjustValue {
     static final Percentage ZERO = new Percentage("0");
 
     final String value;
@@ -484,6 +496,28 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
     return Property.LINE_HEIGHT.value(value);
+  }
+
+  // property methods: margin
+
+  protected sealed interface MarginValue extends PropertyValue {}
+
+  protected final StyleDeclaration margin(MarginValue all) {
+    return Property.MARGIN.sides1(all);
+  }
+
+  protected final StyleDeclaration margin(MarginValue vertical, MarginValue horizontal) {
+    return Property.MARGIN.sides2(vertical, horizontal);
+  }
+
+  protected final StyleDeclaration margin(MarginValue top, MarginValue horizontal,
+      MarginValue bottom) {
+    return Property.MARGIN.sides3(top, horizontal, bottom);
+  }
+
+  protected final StyleDeclaration margin(MarginValue top, MarginValue right, MarginValue bottom,
+      MarginValue left) {
+    return Property.MARGIN.sides4(top, right, bottom, left);
   }
 
   // property methods: tab-size

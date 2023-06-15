@@ -42,6 +42,8 @@ public enum Property implements PropertyName {
 
   LINE_HEIGHT,
 
+  // M
+  MARGIN,
   MIN_HEIGHT,
 
   // T
