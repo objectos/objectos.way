@@ -250,6 +250,46 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#397] Preflight 04
+
+  - height
+  """)
+  public void propertyHeight() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            hr,
+
+            height($0),
+            height(px(120)),
+            height(pct(75)),
+            height(maxContent),
+            height(minContent),
+            height(fitContent),
+            height(auto),
+            height(inherit)
+          );
+        }
+      },
+
+      """
+      hr {
+        height: 0;
+        height: 120px;
+        height: 75%;
+        height: max-content;
+        height: min-content;
+        height: fit-content;
+        height: auto;
+        height: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - line-height

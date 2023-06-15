@@ -40,6 +40,9 @@ public enum Property implements PropertyName {
   FONT_FEATURE_SETTINGS,
   FONT_VARIATION_SETTINGS,
 
+  // H
+  HEIGHT,
+
   LINE_HEIGHT,
 
   // M

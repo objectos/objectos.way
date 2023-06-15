@@ -36,6 +36,7 @@ public abstract class CssTemplate {
 
   protected static final Selector body = named("body");
 
+  protected static final Selector hr = named("hr");
   protected static final Selector html = named("html");
 
   protected static final Selector li = named("li");
@@ -66,6 +67,9 @@ public abstract class CssTemplate {
       FontFamilyValue,
       FontFeatureSettingsValue,
       FontVariationSettingsValue,
+
+      // H
+      HeightValue,
 
       // L
       LineHeightValue,
@@ -120,7 +124,7 @@ public abstract class CssTemplate {
 
   // zero
 
-  protected static final class Zero implements LineWidth, MarginValue {
+  protected static final class Zero implements HeightValue, LineWidth, MarginValue {
     static final Zero INSTANCE = new Zero();
 
     private Zero() {}
@@ -132,7 +136,7 @@ public abstract class CssTemplate {
   protected static final Zero $0 = Zero.INSTANCE;
 
   // A
-  protected sealed interface AutoKeyword extends MarginValue, TextSizeAdjustValue {}
+  protected sealed interface AutoKeyword extends HeightValue, MarginValue, TextSizeAdjustValue {}
 
   protected static final Color aqua = kw("aqua");
   protected static final AutoKeyword auto = kw("auto");
@@ -158,6 +162,7 @@ public abstract class CssTemplate {
   // F
   protected static final FontFamilyValue fangsong = kw("fangsong");
   protected static final FontFamilyValue fantasy = kw("fantasy");
+  protected static final HeightValue fitContent = kw("fit-content");
   protected static final Color fuchsia = kw("fuchsia");
 
   // G
@@ -179,7 +184,9 @@ public abstract class CssTemplate {
   // M
   protected static final Color maroon = kw("maroon");
   protected static final FontFamilyValue math = kw("math");
+  protected static final HeightValue maxContent = kw("max-content");
   protected static final LineWidth medium = kw("medium");
+  protected static final HeightValue minContent = kw("min-content");
   protected static final FontFamilyValue monospace = kw("monospace");
 
   // N
@@ -270,7 +277,9 @@ public abstract class CssTemplate {
 
   // length methods
 
-  protected static final class Length implements LineHeightValue, MarginValue {
+  protected sealed interface LengthPercentage extends HeightValue, LineHeightValue, MarginValue {}
+
+  protected static final class Length implements LengthPercentage {
     static final Length ZERO = new Length("0");
 
     final String value;
@@ -319,8 +328,7 @@ public abstract class CssTemplate {
 
   // percentage method
 
-  protected static final class Percentage
-      implements LineHeightValue, MarginValue, TextSizeAdjustValue {
+  protected static final class Percentage implements LengthPercentage, TextSizeAdjustValue {
     static final Percentage ZERO = new Percentage("0");
 
     final String value;
@@ -480,6 +488,14 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
     return Property.FONT_VARIATION_SETTINGS.value(value);
+  }
+
+  // property methods: height
+
+  protected sealed interface HeightValue extends PropertyValue {}
+
+  protected final StyleDeclaration height(HeightValue value) {
+    return Property.HEIGHT.value(value);
   }
 
   // property methods: line-height
