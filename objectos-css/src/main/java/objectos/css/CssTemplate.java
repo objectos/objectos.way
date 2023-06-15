@@ -88,6 +88,8 @@ public abstract class CssTemplate {
       MarginValue,
 
       // T
+      TextDecorationLineValue,
+      TextDecorationStyleValue,
       TextSizeAdjustValue {}
 
   private record Keyword(String name)
@@ -97,12 +99,20 @@ public abstract class CssTemplate {
       // A
       AutoKeyword,
 
+      // D
+      DashedKeyword,
+      DottedKeyword,
+      DoubleKeyword,
+
       // M
       MediumKeyword,
 
       // N
       NoneKeyword,
-      NormalKeyword {
+      NormalKeyword,
+
+      // S
+      SolidKeyword {
     @Override
     public final String toString() { return name; }
   }
@@ -158,6 +168,7 @@ public abstract class CssTemplate {
   // B
   protected static final BoxSizingValue borderBox = kw("border-box");
   protected static final Color black = kw("black");
+  protected static final TextDecorationLineValue blink = kw("blink");
   protected static final Color blue = kw("blue");
   protected static final FontWeightValue bold = kw("bold");
   protected static final FontWeightValue bolder = kw("bolder");
@@ -168,9 +179,13 @@ public abstract class CssTemplate {
   protected static final FontFamilyValue cursive = kw("cursive");
 
   // D
-  protected static final LineStyle dashed = kw("dashed");
-  protected static final LineStyle dotted = kw("dotted");
-  protected static final LineStyle double$ = kw("double");
+  protected sealed interface DashedKeyword extends LineStyle, TextDecorationStyleValue {}
+  protected sealed interface DottedKeyword extends LineStyle, TextDecorationStyleValue {}
+  protected sealed interface DoubleKeyword extends LineStyle, TextDecorationStyleValue {}
+
+  protected static final DashedKeyword dashed = kw("dashed");
+  protected static final DottedKeyword dotted = kw("dotted");
+  protected static final DoubleKeyword double$ = kw("double");
 
   // E
   protected static final FontFamilyValue emoji = kw("emoji");
@@ -199,6 +214,7 @@ public abstract class CssTemplate {
   protected static final FontSizeValue larger = kw("larger");
   protected static final FontWeightValue lighter = kw("lighter");
   protected static final Color lime = kw("lime");
+  protected static final TextDecorationLineValue lineThrough = kw("line-through");
 
   // M
   protected sealed interface MediumKeyword extends FontSizeValue, LineWidth {}
@@ -226,6 +242,7 @@ public abstract class CssTemplate {
   // O
   protected static final Color olive = kw("olive");
   protected static final LineStyle outset = kw("outset");
+  protected static final TextDecorationLineValue overline = kw("overline");
 
   // P
   protected static final Color purple = kw("purple");
@@ -235,12 +252,14 @@ public abstract class CssTemplate {
   protected static final LineStyle ridge = kw("ridge");
 
   // S
+  protected sealed interface SolidKeyword extends LineStyle, TextDecorationStyleValue {}
+
   protected static final FontFamilyValue sansSerif = kw("sans-serif");
   protected static final FontFamilyValue serif = kw("serif");
   protected static final Color silver = kw("silver");
   protected static final FontSizeValue small = kw("small");
   protected static final FontSizeValue smaller = kw("smaller");
-  protected static final LineStyle solid = kw("solid");
+  protected static final SolidKeyword solid = kw("solid");
   protected static final FontFamilyValue systemUi = kw("system-ui");
 
   // T
@@ -254,9 +273,11 @@ public abstract class CssTemplate {
   protected static final FontFamilyValue uiRounded = kw("ui-rounded");
   protected static final FontFamilyValue uiSansSerif = kw("ui-sans-serif");
   protected static final FontFamilyValue uiSerif = kw("ui-serif");
+  protected static final TextDecorationLineValue underline = kw("underline");
   protected static final GlobalKeyword unset = kw("unset");
 
   // W
+  protected static final TextDecorationStyleValue wavy = kw("wavy");
   protected static final Color white = kw("white");
 
   // X
@@ -658,6 +679,43 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration mozTabSize(GlobalKeyword value) {
     return Property._MOZ_TAB_SIZE.value(value);
+  }
+
+  // property methods: text-decoration-color
+
+  protected final StyleDeclaration textDecorationColor(Color value) {
+    return Property.TEXT_DECORATION_COLOR.value(value);
+  }
+
+  // property methods: text-decoration-line
+
+  protected sealed interface TextDecorationLineValue extends PropertyValue {}
+
+  protected final StyleDeclaration textDecorationLine(NoneKeyword value) {
+    return Property.TEXT_DECORATION_LINE.value(value);
+  }
+
+  protected final StyleDeclaration textDecorationLine(TextDecorationLineValue value) {
+    return Property.TEXT_DECORATION_LINE.value(value);
+  }
+
+  protected final StyleDeclaration textDecorationLine(
+      TextDecorationLineValue value1, TextDecorationLineValue value2) {
+    return Property.TEXT_DECORATION_LINE.value(value1, value2);
+  }
+
+  protected final StyleDeclaration textDecorationLine(
+      TextDecorationLineValue value1,
+      TextDecorationLineValue value2, TextDecorationLineValue value3) {
+    return Property.TEXT_DECORATION_LINE.value(value1, value2, value3);
+  }
+
+  // property methods: text-decoration-style
+
+  protected sealed interface TextDecorationStyleValue extends PropertyValue {}
+
+  protected final StyleDeclaration textDecorationStyle(TextDecorationStyleValue value) {
+    return Property.TEXT_DECORATION_STYLE.value(value);
   }
 
   // property methods: text-size-adjust

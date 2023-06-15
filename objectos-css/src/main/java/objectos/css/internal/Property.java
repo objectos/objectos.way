@@ -60,6 +60,9 @@ public enum Property implements PropertyName {
   // T
   TAB_SIZE,
   _MOZ_TAB_SIZE,
+  TEXT_DECORATION_COLOR,
+  TEXT_DECORATION_LINE,
+  TEXT_DECORATION_STYLE,
   _WEBKIT_TEXT_SIZE_ADJUST,
 
   Z_INDEX;
@@ -107,18 +110,34 @@ public enum Property implements PropertyName {
     return propertyName;
   }
 
-  public final StyleDeclaration value(PropertyValue value) {
-    Objects.requireNonNull(value, "value == null");
-
-    return new StyleDeclaration1(this, value);
+  public final StyleDeclaration value(double value) {
+    return new StyleDeclarationDouble(this, value);
   }
 
   public final StyleDeclaration value(int value) {
     return new StyleDeclarationInt(this, value);
   }
 
-  public final StyleDeclaration value(double value) {
-    return new StyleDeclarationDouble(this, value);
+  public final StyleDeclaration value(PropertyValue value) {
+    Objects.requireNonNull(value, "value == null");
+
+    return new StyleDeclaration1(this, value);
+  }
+
+  public final StyleDeclaration value(PropertyValue value1, PropertyValue value2) {
+    Objects.requireNonNull(value1, "value1 == null");
+    Objects.requireNonNull(value2, "value2 == null");
+
+    return new StyleDeclaration2(this, value1, value2);
+  }
+
+  public final StyleDeclaration value(
+      PropertyValue value1, PropertyValue value2, PropertyValue value3) {
+    Objects.requireNonNull(value1, "value1 == null");
+    Objects.requireNonNull(value2, "value2 == null");
+    Objects.requireNonNull(value3, "value3 == null");
+
+    return new StyleDeclaration3(this, value1, value2, value3);
   }
 
 }

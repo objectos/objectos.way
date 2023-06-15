@@ -556,6 +556,110 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#399] Preflight 06
+
+  - text-decoration-color
+  """)
+  public void propertyTextDecorationColor() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            a,
+
+            textDecorationColor(blue),
+            textDecorationColor(inherit)
+          );
+        }
+      },
+
+      """
+      a {
+        text-decoration-color: blue;
+        text-decoration-color: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#399] Preflight 06
+
+  - text-decoration-line
+  """)
+  public void propertyTextDecorationLine() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            a,
+
+            textDecorationLine(none),
+            textDecorationLine(underline),
+            textDecorationLine(overline),
+            textDecorationLine(lineThrough),
+            textDecorationLine(blink),
+            textDecorationLine(underline, overline),
+            textDecorationLine(overline, underline, lineThrough),
+            textDecorationLine(inherit)
+          );
+        }
+      },
+
+      """
+      a {
+        text-decoration-line: none;
+        text-decoration-line: underline;
+        text-decoration-line: overline;
+        text-decoration-line: line-through;
+        text-decoration-line: blink;
+        text-decoration-line: underline overline;
+        text-decoration-line: overline underline line-through;
+        text-decoration-line: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#399] Preflight 06
+
+  - text-decoration-style
+  """)
+  public void propertyTextDecorationStyle() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            a,
+
+            textDecorationStyle(solid),
+            textDecorationStyle(double$),
+            textDecorationStyle(dotted),
+            textDecorationStyle(dashed),
+            textDecorationStyle(wavy),
+            textDecorationStyle(inherit)
+          );
+        }
+      },
+
+      """
+      a {
+        text-decoration-style: solid;
+        text-decoration-style: double;
+        text-decoration-style: dotted;
+        text-decoration-style: dashed;
+        text-decoration-style: wavy;
+        text-decoration-style: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - -webkit-text-size-adjust

@@ -391,6 +391,12 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
+  protected static final TypeSelector h5 = Css.h5;
+
+  protected static final TypeSelector h6 = Css.h6;
+
+  protected static final TypeSelector sub = Css.sub;
+
   protected static final TypeSelector hgroup = Css.hgroup;
 
   protected static final TypeSelector details = Css.details;
@@ -530,12 +536,6 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector h4 = Css.h4;
 
   protected static final TypeSelector nav = Css.nav;
-
-  protected static final TypeSelector h5 = Css.h5;
-
-  protected static final TypeSelector h6 = Css.h6;
-
-  protected static final TypeSelector sub = Css.sub;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 
