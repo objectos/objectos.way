@@ -74,6 +74,7 @@ public abstract class CssTemplate {
       FontFeatureSettingsValue,
       FontSizeValue,
       FontVariationSettingsValue,
+      FontWeightValue,
 
       // H
       HeightValue,
@@ -158,6 +159,8 @@ public abstract class CssTemplate {
   protected static final BoxSizingValue borderBox = kw("border-box");
   protected static final Color black = kw("black");
   protected static final Color blue = kw("blue");
+  protected static final FontWeightValue bold = kw("bold");
+  protected static final FontWeightValue bolder = kw("bolder");
 
   // C
   protected static final BoxSizingValue contentBox = kw("content-box");
@@ -194,6 +197,7 @@ public abstract class CssTemplate {
   // L
   protected static final FontSizeValue large = kw("large");
   protected static final FontSizeValue larger = kw("larger");
+  protected static final FontWeightValue lighter = kw("lighter");
   protected static final Color lime = kw("lime");
 
   // M
@@ -212,6 +216,7 @@ public abstract class CssTemplate {
       extends
       FontFeatureSettingsValue,
       FontVariationSettingsValue,
+      FontWeightValue,
       LineHeightValue {}
 
   protected static final Color navy = kw("navy");
@@ -569,6 +574,18 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
     return Property.FONT_VARIATION_SETTINGS.value(value);
+  }
+
+  // property methods: font-weight
+
+  protected sealed interface FontWeightValue extends PropertyValue {}
+
+  protected final StyleDeclaration fontWeight(int value) {
+    return Property.FONT_WEIGHT.value(value);
+  }
+
+  protected final StyleDeclaration fontWeight(FontWeightValue value) {
+    return Property.FONT_WEIGHT.value(value);
   }
 
   // property methods: height

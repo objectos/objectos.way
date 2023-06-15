@@ -337,6 +337,46 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#398] Preflight 06
+
+  - font-weight
+  """)
+  public void propertyFontWeight() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            h1, h2, h3, h4, h5, h6,
+
+            fontWeight(normal),
+            fontWeight(bold),
+            fontWeight(lighter),
+            fontWeight(bolder),
+
+            fontWeight(100),
+            fontWeight(400),
+
+            fontWeight(inherit)
+          );
+        }
+      },
+
+      """
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: normal;
+        font-weight: bold;
+        font-weight: lighter;
+        font-weight: bolder;
+        font-weight: 100;
+        font-weight: 400;
+        font-weight: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - font-variation-settings
