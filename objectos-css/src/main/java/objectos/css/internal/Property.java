@@ -34,6 +34,8 @@ public enum Property implements PropertyName {
 
   DISPLAY,
 
+  FONT_FAMILY,
+
   LINE_HEIGHT,
 
   MIN_HEIGHT,

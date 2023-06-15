@@ -160,6 +160,42 @@ public class CssTemplateTest {
   @Test(description = """
   [#395] Preflight 02
 
+  - font-family
+  """)
+  public void propertyFontFamily() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            html,
+
+            fontFamily(l("Gill Sans Extrabold"), sansSerif),
+            fontFamily(serif),
+            fontFamily(l("-apple-system")),
+            fontFamily(l("Arial"), l("Roboto"), l("Noto Sans")),
+            fontFamily(l("Red/Black")),
+            fontFamily(inherit)
+          );
+        }
+      },
+
+      """
+      html {
+        font-family: "Gill Sans Extrabold", sans-serif;
+        font-family: serif;
+        font-family: -apple-system;
+        font-family: Arial, Roboto, "Noto Sans";
+        font-family: "Red/Black";
+        font-family: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#395] Preflight 02
+
   - line-height
   """)
   public void propertyLineHeight() {

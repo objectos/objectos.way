@@ -16,13 +16,17 @@
 package objectos.css;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 import objectos.css.internal.NamedSelector;
 import objectos.css.internal.Property;
+import objectos.css.internal.StyleDeclaration1;
+import objectos.css.internal.StyleDeclarationCommaSeparated;
 import objectos.css.internal.StyleSheetBuilder;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
+import objectos.lang.Check;
 
 public abstract class CssTemplate {
 
@@ -58,6 +62,9 @@ public abstract class CssTemplate {
       // C
       Color,
 
+      // F
+      FontFamilyValue,
+
       // L
       LineHeightValue,
       LineStyle,
@@ -68,9 +75,36 @@ public abstract class CssTemplate {
 
   private record Keyword(String name) implements GlobalKeyword, NoneKeyword {
     @Override
-    public final String toString() {
-      return name;
+    public final String toString() { return name; }
+  }
+
+  // string
+
+  protected static final class StringLiteral implements FontFamilyValue {
+    private static final Pattern FONT_FAMILY = Pattern.compile("-?[a-zA-Z_][a-zA-Z0-9_-]*");
+
+    final String value;
+
+    public StringLiteral(String value) { this.value = value; }
+
+    @Override
+    public final String toString() { return "\"" + value + "\""; }
+
+    final PropertyValue asFontFamilyValue() {
+      var matcher = FONT_FAMILY.matcher(value);
+
+      if (!matcher.matches()) {
+        return this;
+      } else {
+        return new Keyword(value);
+      }
     }
+  }
+
+  protected final StringLiteral l(String value) {
+    return new StringLiteral(
+      Objects.requireNonNull(value, "value == null")
+    );
   }
 
   // zero
@@ -98,13 +132,19 @@ public abstract class CssTemplate {
   // C
   protected static final BoxSizingValue contentBox = kw("content-box");
   protected static final Color currentcolor = kw("currentcolor");
+  protected static final FontFamilyValue cursive = kw("cursive");
 
   // D
   protected static final LineStyle dashed = kw("dashed");
   protected static final LineStyle dotted = kw("dotted");
   protected static final LineStyle double$ = kw("double");
 
+  // E
+  protected static final FontFamilyValue emoji = kw("emoji");
+
   // F
+  protected static final FontFamilyValue fangsong = kw("fangsong");
+  protected static final FontFamilyValue fantasy = kw("fantasy");
   protected static final Color fuchsia = kw("fuchsia");
 
   // G
@@ -125,7 +165,9 @@ public abstract class CssTemplate {
 
   // M
   protected static final Color maroon = kw("maroon");
+  protected static final FontFamilyValue math = kw("math");
   protected static final LineWidth medium = kw("medium");
+  protected static final FontFamilyValue monospace = kw("monospace");
 
   // N
   protected sealed interface NoneKeyword extends LineStyle, TextSizeAdjustValue {}
@@ -146,8 +188,11 @@ public abstract class CssTemplate {
   protected static final LineStyle ridge = kw("ridge");
 
   // S
+  protected static final FontFamilyValue sansSerif = kw("sans-serif");
+  protected static final FontFamilyValue serif = kw("serif");
   protected static final Color silver = kw("silver");
   protected static final LineStyle solid = kw("solid");
+  protected static final FontFamilyValue systemUi = kw("system-ui");
 
   // T
   protected static final Color teal = kw("teal");
@@ -156,6 +201,10 @@ public abstract class CssTemplate {
   protected static final Color transparent = kw("transparent");
 
   // U
+  protected static final FontFamilyValue uiMonospace = kw("ui-monospace");
+  protected static final FontFamilyValue uiRounded = kw("ui-rounded");
+  protected static final FontFamilyValue uiSansSerif = kw("ui-sans-serif");
+  protected static final FontFamilyValue uiSerif = kw("ui-serif");
   protected static final GlobalKeyword unset = kw("unset");
 
   // W
@@ -357,6 +406,47 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration boxSizing(BoxSizingValue value) {
     return Property.BOX_SIZING.value(value);
+  }
+
+  // property methods: font-family
+
+  protected sealed interface FontFamilyValue extends PropertyValue {}
+
+  protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
+    Objects.requireNonNull(values, "values == null");
+
+    int length = values.length;
+
+    return switch (length) {
+      case 0 -> throw new IllegalArgumentException("The font-family property cannot be empty");
+
+      case 1 -> {
+        var source0 = Objects.requireNonNull(values[0], "values[0] == null");
+        var value0 = fontFamilyValue(source0);
+
+        yield new StyleDeclaration1(Property.FONT_FAMILY, value0);
+      }
+
+      default -> {
+        var copy = new PropertyValue[length];
+
+        for (int i = 0; i < length; i++) {
+          var source = Check.notNull(values[i], "values[", i, "] == null");
+
+          copy[i] = fontFamilyValue(source);
+        }
+
+        yield new StyleDeclarationCommaSeparated(Property.FONT_FAMILY, copy);
+      }
+    };
+  }
+
+  private PropertyValue fontFamilyValue(FontFamilyValue value) {
+    if (value instanceof StringLiteral l) {
+      return l.asFontFamilyValue();
+    } else {
+      return value;
+    }
   }
 
   // property methods: line-height
