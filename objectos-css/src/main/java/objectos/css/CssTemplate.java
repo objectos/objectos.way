@@ -435,6 +435,12 @@ public abstract class CssTemplate {
     return Property.BOX_SIZING.value(value);
   }
 
+  // property methods: color
+
+  protected final StyleDeclaration color(Color value) {
+    return Property.COLOR.value(value);
+  }
+
   // property methods: font-family
 
   protected sealed interface FontFamilyValue extends PropertyValue {}

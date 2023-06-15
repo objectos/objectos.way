@@ -158,6 +158,34 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#397] Preflight 04
+
+  - color
+  """)
+  public void propertyColor() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            hr,
+
+            color(red),
+            color(inherit)
+          );
+        }
+      },
+
+      """
+      hr {
+        color: red;
+        color: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - font-family

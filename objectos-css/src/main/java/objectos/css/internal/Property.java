@@ -31,6 +31,8 @@ public enum Property implements PropertyName {
   BORDER_WIDTH,
   BOX_SIZING,
 
+  // C
+  COLOR,
   CONTENT,
 
   DISPLAY,
