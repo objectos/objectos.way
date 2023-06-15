@@ -51,6 +51,10 @@ public class PreflightTest {
         color: inherit;
         border-top-width: 1px;
       }
+      h1, h2, h3, h4, h5, h6 {
+        font-size: inherit;
+        font-weight: inherit;
+      }
       """
     );
   }
