@@ -60,5 +60,13 @@ final class Preflight extends CssTemplate {
       margin($0),
       lineHeight(inherit)
     );
+
+    style(
+      hr,
+
+      height($0),
+      color(inherit),
+      borderTopWidth(px(1))
+    );
   }
 }

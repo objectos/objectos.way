@@ -46,6 +46,11 @@ public class PreflightTest {
         margin: 0;
         line-height: inherit;
       }
+      hr {
+        height: 0;
+        color: inherit;
+        border-top-width: 1px;
+      }
       """
     );
   }
