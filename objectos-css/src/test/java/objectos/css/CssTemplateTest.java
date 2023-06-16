@@ -166,6 +166,40 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#404] Preflight 10
+
+  - bottom
+  """)
+  public void propertyBottom() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            sub, sup,
+
+            bottom(auto),
+            bottom(px(3)),
+            bottom(em(2.4)),
+            bottom(pct(10)),
+            bottom(inherit)
+          );
+        }
+      },
+
+      """
+      sub, sup {
+        bottom: auto;
+        bottom: 3px;
+        bottom: 2.4em;
+        bottom: 10%;
+        bottom: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - box-sizing
@@ -533,6 +567,42 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#404] Preflight 10
+
+  - position
+  """)
+  public void propertyPosition() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            sub, sup,
+
+            position(static$),
+            position(relative),
+            position(absolute),
+            position(fixed),
+            position(sticky),
+            position(inherit)
+          );
+        }
+      },
+
+      """
+      sub, sup {
+        position: static;
+        position: relative;
+        position: absolute;
+        position: fixed;
+        position: sticky;
+        position: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - tab-size
@@ -776,6 +846,88 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#404] Preflight 10
+
+  - top
+  """)
+  public void propertyTop() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            sub, sup,
+
+            top(auto),
+            top(px(3)),
+            top(em(2.4)),
+            top(pct(10)),
+            top(inherit)
+          );
+        }
+      },
+
+      """
+      sub, sup {
+        top: auto;
+        top: 3px;
+        top: 2.4em;
+        top: 10%;
+        top: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#404] Preflight 10
+
+  - vertical-align
+  """)
+  public void propertyVerticalAlign() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            sub, sup,
+
+            verticalAlign(baseline),
+            verticalAlign(sub),
+            verticalAlign(super$),
+            verticalAlign(textTop),
+            verticalAlign(textBottom),
+            verticalAlign(middle),
+            verticalAlign(top),
+            verticalAlign(bottom),
+            verticalAlign(em(10)),
+            verticalAlign(px(4)),
+            verticalAlign(pct(20)),
+            verticalAlign(inherit)
+          );
+        }
+      },
+
+      """
+      sub, sup {
+        vertical-align: baseline;
+        vertical-align: sub;
+        vertical-align: super;
+        vertical-align: text-top;
+        vertical-align: text-bottom;
+        vertical-align: middle;
+        vertical-align: top;
+        vertical-align: bottom;
+        vertical-align: 10em;
+        vertical-align: 4px;
+        vertical-align: 20%;
+        vertical-align: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - selector list
@@ -795,28 +947,6 @@ public class CssTemplateTest {
 
       """
       *, ::after, ::before {}
-      """
-    );
-  }
-
-  @Test(description = """
-  [#394] Preflight 01
-
-  - universal selector
-  """)
-  public void selectorUniversal() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            any
-          );
-        }
-      },
-
-      """
-      * {}
       """
     );
   }
@@ -851,6 +981,28 @@ public class CssTemplateTest {
       b, strong {}
       code, kbd, samp, pre {}
       small {}
+      """
+    );
+  }
+
+  @Test(description = """
+  [#394] Preflight 01
+
+  - universal selector
+  """)
+  public void selectorUniversal() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            any
+          );
+        }
+      },
+
+      """
+      * {}
       """
     );
   }

@@ -56,6 +56,7 @@ public abstract class CssTemplate {
 
   protected static final Selector samp = named("samp");
   protected static final Selector strong = named("strong");
+  protected static final Selector sup = named("sup");
 
   protected static final Selector ul = named("ul");
 
@@ -114,15 +115,22 @@ public abstract class CssTemplate {
       NoneKeyword,
       NormalKeyword,
 
+      // P
+      PositionValue,
+
       // S
       SmallKeyword,
       SolidKeyword,
+      SubKeyword,
 
       // T
       TextDecorationLineValue,
       TextDecorationStyleValue,
       TextDecorationThicknessValue,
-      TextSizeAdjustValue {
+      TextSizeAdjustValue,
+
+      // V
+      VerticalAlignValue {
     @Override
     public final String toString() { return name; }
   }
@@ -171,18 +179,22 @@ public abstract class CssTemplate {
 
   // A
   protected sealed interface AutoKeyword
-      extends HeightValue, MarginValue, TextDecorationThicknessValue, TextSizeAdjustValue {}
+      extends BottomValue, HeightValue, MarginValue, TextDecorationThicknessValue,
+      TextSizeAdjustValue, TopValue {}
 
+  protected static final PositionValue absolute = kw("absolute");
   protected static final Color aqua = kw("aqua");
   protected static final AutoKeyword auto = kw("auto");
 
   // B
+  protected static final VerticalAlignValue baseline = kw("baseline");
   protected static final BoxSizingValue borderBox = kw("border-box");
   protected static final Color black = kw("black");
   protected static final TextDecorationLineValue blink = kw("blink");
   protected static final Color blue = kw("blue");
   protected static final FontWeightValue bold = kw("bold");
   protected static final FontWeightValue bolder = kw("bolder");
+  protected static final VerticalAlignValue bottom = kw("bottom");
 
   // C
   protected static final BoxSizingValue contentBox = kw("content-box");
@@ -205,6 +217,7 @@ public abstract class CssTemplate {
   protected static final FontFamilyValue fangsong = kw("fangsong");
   protected static final FontFamilyValue fantasy = kw("fantasy");
   protected static final HeightValue fitContent = kw("fit-content");
+  protected static final PositionValue fixed = kw("fixed");
   protected static final TextDecorationThicknessValue fromFont = kw("from-font");
   protected static final Color fuchsia = kw("fuchsia");
 
@@ -235,6 +248,7 @@ public abstract class CssTemplate {
   protected static final FontFamilyValue math = kw("math");
   protected static final HeightValue maxContent = kw("max-content");
   protected static final MediumKeyword medium = kw("medium");
+  protected static final VerticalAlignValue middle = kw("middle");
   protected static final HeightValue minContent = kw("min-content");
   protected static final FontFamilyValue monospace = kw("monospace");
 
@@ -262,11 +276,13 @@ public abstract class CssTemplate {
 
   // R
   protected static final Color red = kw("red");
+  protected static final PositionValue relative = kw("relative");
   protected static final LineStyle ridge = kw("ridge");
 
   // S
   protected sealed interface SmallKeyword extends FontSizeValue, Selector {}
   protected sealed interface SolidKeyword extends LineStyle, TextDecorationStyleValue {}
+  protected sealed interface SubKeyword extends VerticalAlignValue, Selector {}
 
   protected static final FontFamilyValue sansSerif = kw("sans-serif");
   protected static final FontFamilyValue serif = kw("serif");
@@ -274,12 +290,19 @@ public abstract class CssTemplate {
   protected static final SmallKeyword small = kw("small");
   protected static final FontSizeValue smaller = kw("smaller");
   protected static final SolidKeyword solid = kw("solid");
+  protected static final PositionValue static$ = kw("static");
+  protected static final PositionValue sticky = kw("sticky");
+  protected static final SubKeyword sub = kw("sub");
+  protected static final VerticalAlignValue super$ = kw("super");
   protected static final FontFamilyValue systemUi = kw("system-ui");
 
   // T
   protected static final Color teal = kw("teal");
+  protected static final VerticalAlignValue textBottom = kw("text-bottom");
+  protected static final VerticalAlignValue textTop = kw("text-top");
   protected static final LineWidth thick = kw("thick");
   protected static final LineWidth thin = kw("thin");
+  protected static final VerticalAlignValue top = kw("top");
   protected static final Color transparent = kw("transparent");
 
   // U
@@ -345,11 +368,14 @@ public abstract class CssTemplate {
 
   protected sealed interface LengthPercentage
       extends
+      BottomValue,
       FontSizeValue,
       HeightValue,
       LineHeightValue,
       MarginValue,
-      TextDecorationThicknessValue {}
+      TextDecorationThicknessValue,
+      TopValue,
+      VerticalAlignValue {}
 
   protected static final class Length implements LengthPercentage, LineWidth {
     static final Length ZERO = new Length("0");
@@ -561,6 +587,18 @@ public abstract class CssTemplate {
     return Property.BORDER_LEFT_WIDTH.value(value);
   }
 
+  // property methods: bottom
+
+  protected sealed interface BottomValue extends PropertyValue {}
+
+  protected final StyleDeclaration bottom(GlobalKeyword value) {
+    return Property.BOTTOM.value(value);
+  }
+
+  protected final StyleDeclaration bottom(BottomValue value) {
+    return Property.BOTTOM.value(value);
+  }
+
   // property methods: box-sizing
 
   protected sealed interface BoxSizingValue extends PropertyValue {}
@@ -743,6 +781,18 @@ public abstract class CssTemplate {
     return Property.MARGIN.value(value);
   }
 
+  // property methods: position
+
+  protected sealed interface PositionValue extends PropertyValue {}
+
+  protected final StyleDeclaration position(GlobalKeyword value) {
+    return Property.POSITION.value(value);
+  }
+
+  protected final StyleDeclaration position(PositionValue value) {
+    return Property.POSITION.value(value);
+  }
+
   // property methods: tab-size
 
   protected final StyleDeclaration tabSize(int value) {
@@ -868,6 +918,30 @@ public abstract class CssTemplate {
 
   protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {
     return Property._WEBKIT_TEXT_SIZE_ADJUST.value(value);
+  }
+
+  // property methods: top
+
+  protected sealed interface TopValue extends PropertyValue {}
+
+  protected final StyleDeclaration top(GlobalKeyword value) {
+    return Property.TOP.value(value);
+  }
+
+  protected final StyleDeclaration top(TopValue value) {
+    return Property.TOP.value(value);
+  }
+
+  // property methods: vertical-align
+
+  protected sealed interface VerticalAlignValue extends PropertyValue {}
+
+  protected final StyleDeclaration verticalAlign(VerticalAlignValue value) {
+    return Property.VERTICAL_ALIGN.value(value);
+  }
+
+  protected final StyleDeclaration verticalAlign(GlobalKeyword value) {
+    return Property.VERTICAL_ALIGN.value(value);
   }
 
   protected final void style(Selector selector,

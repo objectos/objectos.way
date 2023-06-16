@@ -33,6 +33,7 @@ public enum Property implements PropertyName {
   BORDER_RIGHT_WIDTH,
   BORDER_BOTTOM_WIDTH,
   BORDER_LEFT_WIDTH,
+  BOTTOM,
   BOX_SIZING,
 
   // C
@@ -57,6 +58,9 @@ public enum Property implements PropertyName {
   MARGIN,
   MIN_HEIGHT,
 
+  // P
+  POSITION,
+
   // T
   TAB_SIZE,
   _MOZ_TAB_SIZE,
@@ -66,7 +70,12 @@ public enum Property implements PropertyName {
   TEXT_DECORATION_STYLE,
   TEXT_DECORATION_THICKNESS,
   _WEBKIT_TEXT_SIZE_ADJUST,
+  TOP,
 
+  // V
+  VERTICAL_ALIGN,
+
+  // Z
   Z_INDEX;
 
   private final String propertyName;

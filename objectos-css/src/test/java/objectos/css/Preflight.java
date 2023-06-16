@@ -110,5 +110,23 @@ final class Preflight extends CssTemplate {
 
       fontSize(pct(80))
     );
+
+    style(
+      sub, sup,
+      fontSize(pct(75)),
+      lineHeight(0),
+      position(relative),
+      verticalAlign(baseline)
+    );
+
+    style(
+      sub,
+      bottom(em(-0.25))
+    );
+
+    style(
+      sup,
+      top(em(-0.5))
+    );
   }
 }
