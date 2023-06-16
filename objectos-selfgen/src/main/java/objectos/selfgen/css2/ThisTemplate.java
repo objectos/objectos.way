@@ -1,0 +1,51 @@
+/*
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectos.selfgen.css2;
+
+import java.io.IOException;
+import objectos.code.ClassTypeName;
+import objectos.code.JavaSink;
+import objectos.code.JavaTemplate;
+import objectos.lang.Generated;
+import objectos.selfgen.CssSpec;
+
+abstract class ThisTemplate extends JavaTemplate {
+
+  static final String CSS = "objectos.css";
+
+  static final String CSS_INTERNAL = "objectos.css.internal";
+
+  static final String CSS_OM = "objectos.css.om";
+
+  static final String GENERATOR = CssSpec.class.getCanonicalName();
+
+  static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);
+
+  static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
+
+  static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
+
+  static final ClassTypeName STRING = ClassTypeName.of(String.class);
+
+  CompiledSpec spec;
+
+  public void write(JavaSink sink, CompiledSpec spec) throws IOException {
+    this.spec = spec;
+
+    sink.write(this);
+  }
+
+}
