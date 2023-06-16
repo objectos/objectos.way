@@ -38,8 +38,8 @@ public class CssTemplateTest {
             borderColor(black, white),
             borderColor(blue, red, green),
             borderColor(teal, yellow, aqua, fuchsia),
-            borderColor(transparent, inherit, gray, maroon),
-            borderColor(navy)
+            borderColor(transparent, navy, gray, maroon),
+            borderColor(inherit)
           );
         }
       },
@@ -50,8 +50,8 @@ public class CssTemplateTest {
         border-color: black white;
         border-color: blue red green;
         border-color: teal yellow aqua fuchsia;
-        border-color: transparent inherit gray maroon;
-        border-color: navy;
+        border-color: transparent navy gray maroon;
+        border-color: inherit;
       }
       """
     );
@@ -71,8 +71,12 @@ public class CssTemplateTest {
             hr,
 
             borderTopWidth($0),
+            borderTopWidth(unset),
             borderRightWidth(px(20)),
+            borderRightWidth(initial),
             borderBottomWidth(medium),
+            borderBottomWidth(inherit),
+            borderLeftWidth(em(1)),
             borderLeftWidth(inherit)
           );
         }
@@ -81,8 +85,12 @@ public class CssTemplateTest {
       """
       hr {
         border-top-width: 0;
+        border-top-width: unset;
         border-right-width: 20px;
+        border-right-width: initial;
         border-bottom-width: medium;
+        border-bottom-width: inherit;
+        border-left-width: 1em;
         border-left-width: inherit;
       }
       """
@@ -139,7 +147,8 @@ public class CssTemplateTest {
             borderWidth($0),
             borderWidth(medium, thick),
             borderWidth(medium, thick, thin),
-            borderWidth(medium, thick, thin, unset)
+            borderWidth(medium, thick, thin, $0),
+            borderWidth(unset)
           );
         }
       },
@@ -149,7 +158,8 @@ public class CssTemplateTest {
         border-width: 0;
         border-width: medium thick;
         border-width: medium thick thin;
-        border-width: medium thick thin unset;
+        border-width: medium thick thin 0;
+        border-width: unset;
       }
       """
     );
