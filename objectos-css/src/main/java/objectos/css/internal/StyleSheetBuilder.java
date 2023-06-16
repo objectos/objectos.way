@@ -78,6 +78,26 @@ public class StyleSheetBuilder {
 
   public final void addStyleRule(
       Selector selector1, Selector selector2, Selector selector3,
+      Selector selector4,
+      StyleDeclaration[] declarations) {
+
+    addStyleRule(
+      Combinator.LIST.combine(
+        selector1,
+        Combinator.LIST.combine(
+          selector2,
+          Combinator.LIST.combine(
+            selector3,
+            selector4
+          )
+        )
+      ),
+      declarations
+    );
+  }
+
+  public final void addStyleRule(
+      Selector selector1, Selector selector2, Selector selector3,
       Selector selector4, Selector selector5, Selector selector6,
       StyleDeclaration[] declarations) {
 

@@ -62,6 +62,10 @@ public class PreflightTest {
       b, strong {
         font-weight: bolder;
       }
+      code, kbd, samp, pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 1em;
+      }
       """
     );
   }

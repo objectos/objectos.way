@@ -88,5 +88,21 @@ final class Preflight extends CssTemplate {
 
       fontWeight(bolder)
     );
+
+    style(
+      code, kbd, samp, pre,
+
+      fontFamily(
+        uiMonospace,
+        l("SFMono-Regular"),
+        l("Menlo"),
+        l("Monaco"),
+        l("Consolas"),
+        l("Liberation Mono"),
+        l("Courier New"),
+        monospace
+      ),
+      fontSize(em(1))
+    );
   }
 }

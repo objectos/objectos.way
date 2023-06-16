@@ -37,6 +37,8 @@ public abstract class CssTemplate {
   protected static final Selector b = named("b");
   protected static final Selector body = named("body");
 
+  protected static final Selector code = named("code");
+
   protected static final Selector h1 = named("h1");
   protected static final Selector h2 = named("h2");
   protected static final Selector h3 = named("h3");
@@ -46,8 +48,13 @@ public abstract class CssTemplate {
   protected static final Selector hr = named("hr");
   protected static final Selector html = named("html");
 
+  protected static final Selector kbd = named("kbd");
+
   protected static final Selector li = named("li");
 
+  protected static final Selector pre = named("pre");
+
+  protected static final Selector samp = named("samp");
   protected static final Selector strong = named("strong");
 
   protected static final Selector ul = named("ul");
@@ -887,6 +894,23 @@ public abstract class CssTemplate {
     Objects.requireNonNull(declarations, "declarations == null");
 
     builder.addStyleRule(selector1, selector2, selector3, declarations);
+  }
+
+  protected final void style(
+      Selector selector1, Selector selector2, Selector selector3,
+      Selector selector4,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector1, "selector1 == null");
+    Objects.requireNonNull(selector2, "selector2 == null");
+    Objects.requireNonNull(selector3, "selector3 == null");
+    Objects.requireNonNull(selector4, "selector4 == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(
+      selector1, selector2, selector3,
+      selector4,
+      declarations
+    );
   }
 
   protected final void style(

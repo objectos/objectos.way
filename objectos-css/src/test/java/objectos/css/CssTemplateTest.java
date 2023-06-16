@@ -823,6 +823,7 @@ public class CssTemplateTest {
 
   @Test(description = """
   [#401] Preflight 07
+  [#402] Preflight 08
 
   - type selectors
   """)
@@ -834,11 +835,16 @@ public class CssTemplateTest {
           style(
             b, strong
           );
+
+          style(
+            code, kbd, samp, pre
+          );
         }
       },
 
       """
       b, strong {}
+      code, kbd, samp, pre {}
       """
     );
   }
