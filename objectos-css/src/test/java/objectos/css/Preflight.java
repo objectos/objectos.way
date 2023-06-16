@@ -104,5 +104,11 @@ final class Preflight extends CssTemplate {
       ),
       fontSize(em(1))
     );
+
+    style(
+      small,
+
+      fontSize(pct(80))
+    );
   }
 }

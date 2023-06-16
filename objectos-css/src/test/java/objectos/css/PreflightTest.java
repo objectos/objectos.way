@@ -66,6 +66,9 @@ public class PreflightTest {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         font-size: 1em;
       }
+      small {
+        font-size: 80%;
+      }
       """
     );
   }

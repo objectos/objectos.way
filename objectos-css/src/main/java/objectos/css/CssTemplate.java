@@ -115,6 +115,7 @@ public abstract class CssTemplate {
       NormalKeyword,
 
       // S
+      SmallKeyword,
       SolidKeyword,
 
       // T
@@ -264,12 +265,13 @@ public abstract class CssTemplate {
   protected static final LineStyle ridge = kw("ridge");
 
   // S
+  protected sealed interface SmallKeyword extends FontSizeValue, Selector {}
   protected sealed interface SolidKeyword extends LineStyle, TextDecorationStyleValue {}
 
   protected static final FontFamilyValue sansSerif = kw("sans-serif");
   protected static final FontFamilyValue serif = kw("serif");
   protected static final Color silver = kw("silver");
-  protected static final FontSizeValue small = kw("small");
+  protected static final SmallKeyword small = kw("small");
   protected static final FontSizeValue smaller = kw("smaller");
   protected static final SolidKeyword solid = kw("solid");
   protected static final FontFamilyValue systemUi = kw("system-ui");
