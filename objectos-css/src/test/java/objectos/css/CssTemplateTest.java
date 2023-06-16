@@ -568,6 +568,44 @@ public class CssTemplateTest {
   @Test(description = """
   [#399] Preflight 06
 
+  - text-decoration
+  """)
+  public void propertyTextDecoration() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            a,
+
+            textDecoration(blue),
+            textDecoration(underline),
+            textDecoration(underline, dotted),
+            textDecoration(underline, dotted, red),
+            textDecoration(underline, overline, green),
+            textDecoration(none),
+            textDecoration(inherit)
+          );
+        }
+      },
+
+      """
+      a {
+        text-decoration: blue;
+        text-decoration: underline;
+        text-decoration: underline dotted;
+        text-decoration: underline dotted red;
+        text-decoration: underline overline green;
+        text-decoration: none;
+        text-decoration: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#399] Preflight 06
+
   - text-decoration-color
   """)
   public void propertyTextDecorationColor() {

@@ -60,6 +60,7 @@ public enum Property implements PropertyName {
   // T
   TAB_SIZE,
   _MOZ_TAB_SIZE,
+  TEXT_DECORATION,
   TEXT_DECORATION_COLOR,
   TEXT_DECORATION_LINE,
   TEXT_DECORATION_STYLE,
@@ -139,6 +140,16 @@ public enum Property implements PropertyName {
     Objects.requireNonNull(value3, "value3 == null");
 
     return new StyleDeclaration3(this, value1, value2, value3);
+  }
+
+  public final StyleDeclaration value(
+      PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4) {
+    Objects.requireNonNull(value1, "value1 == null");
+    Objects.requireNonNull(value2, "value2 == null");
+    Objects.requireNonNull(value3, "value3 == null");
+    Objects.requireNonNull(value4, "value4 == null");
+
+    return new StyleDeclaration4(this, value1, value2, value3, value4);
   }
 
 }
