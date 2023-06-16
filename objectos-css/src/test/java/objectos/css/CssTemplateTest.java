@@ -821,6 +821,28 @@ public class CssTemplateTest {
     );
   }
 
+  @Test(description = """
+  [#401] Preflight 07
+
+  - type selectors
+  """)
+  public void selectorTypes() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            b, strong
+          );
+        }
+      },
+
+      """
+      b, strong {}
+      """
+    );
+  }
+
   private void test(CssTemplate template, String pretty) {
     var sheet = template.toStyleSheet();
     assertEquals(sheet.toString(), pretty);

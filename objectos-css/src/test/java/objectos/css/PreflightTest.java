@@ -59,6 +59,9 @@ public class PreflightTest {
         color: inherit;
         text-decoration: inherit;
       }
+      b, strong {
+        font-weight: bolder;
+      }
       """
     );
   }

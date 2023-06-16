@@ -34,6 +34,7 @@ public abstract class CssTemplate {
 
   protected static final Selector a = named("a");
 
+  protected static final Selector b = named("b");
   protected static final Selector body = named("body");
 
   protected static final Selector h1 = named("h1");
@@ -46,6 +47,8 @@ public abstract class CssTemplate {
   protected static final Selector html = named("html");
 
   protected static final Selector li = named("li");
+
+  protected static final Selector strong = named("strong");
 
   protected static final Selector ul = named("ul");
 
@@ -864,6 +867,15 @@ public abstract class CssTemplate {
     Objects.requireNonNull(declarations, "declarations == null");
 
     builder.addStyleRule(selector, declarations);
+  }
+
+  protected final void style(Selector selector1, Selector selector2,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector1, "selector1 == null");
+    Objects.requireNonNull(selector2, "selector2 == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(selector1, selector2, declarations);
   }
 
   protected final void style(

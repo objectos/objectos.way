@@ -82,5 +82,11 @@ final class Preflight extends CssTemplate {
       color(inherit),
       textDecoration(inherit)
     );
+
+    style(
+      b, strong,
+
+      fontWeight(bolder)
+    );
   }
 }
