@@ -15,9 +15,16 @@
  */
 package objectos.selfgen;
 
+import java.io.IOException;
 import objectos.selfgen.css2.CssSelfGen;
 
 public final class CssSpec extends CssSelfGen {
+
+  public static void main(String[] args) throws IOException {
+    var spec = new CssSpec();
+
+    spec.execute(args);
+  }
 
   @Override
   protected final void definition() {

@@ -15,16 +15,27 @@
  */
 package objectos.selfgen.css2;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import objectos.code.JavaSink;
+
 public abstract class CssSelfGen {
 
   private CompiledSpecBuilder builder;
 
-  protected abstract void definition();
+  public final void execute(String[] args) throws IOException {
+    var srcDir = args[0];
 
-  protected final void selectors(String... names) {
-    for (var name : names) {
-      builder.addSelector(name);
-    }
+    var directory = Path.of(srcDir);
+
+    var sink = JavaSink.ofDirectory(
+      directory,
+      JavaSink.overwriteExisting()
+    );
+
+    var spec = compile();
+
+    spec.write(sink, new GeneratedCssTemplateStep());
   }
 
   protected final CompiledSpec compile() {
@@ -36,6 +47,14 @@ public abstract class CssSelfGen {
       return builder.build();
     } finally {
       builder = null;
+    }
+  }
+
+  protected abstract void definition();
+
+  protected final void selectors(String... names) {
+    for (var name : names) {
+      builder.addSelector(name);
     }
   }
 

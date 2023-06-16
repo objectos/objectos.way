@@ -15,6 +15,12 @@
  */
 package objectos.selfgen.css2;
 
+import java.io.IOException;
+import objectos.code.JavaSink;
 import objectos.util.UnmodifiableList;
 
-record CompiledSpec(UnmodifiableList<Selector> selectors) {}
+record CompiledSpec(UnmodifiableList<Selector> selectors) {
+  public void write(JavaSink sink, ThisTemplate template) throws IOException {
+    template.write(sink, this);
+  }
+}
