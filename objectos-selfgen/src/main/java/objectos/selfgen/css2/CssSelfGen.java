@@ -28,6 +28,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   private final Map<String, KeywordName> keywords = new HashMap<>();
 
+  private LengthType lengthType;
+
   private final Map<String, Property> properties = new HashMap<>();
 
   private final Map<String, SelectorName> selectors = new HashMap<>();
@@ -47,6 +49,8 @@ public abstract class CssSelfGen extends CompiledSpec {
     var spec = compile();
 
     spec.write(sink, new GeneratedCssTemplateStep());
+
+    spec.write(sink, new LengthTypeStep());
 
     spec.write(sink, new NamedElementStep());
 
@@ -70,15 +74,13 @@ public abstract class CssSelfGen extends CompiledSpec {
   protected final ValueType def(String simpleName, Value... values) {
     Check.argument(!valueTypes.containsKey(simpleName), "Duplicate ValueType name ", simpleName);
 
-    var valuetype = valueTypes.computeIfAbsent(simpleName, ValueType::of);
-
-    var className = valuetype.className;
+    var valueType = valueTypes.computeIfAbsent(simpleName, ValueType::of);
 
     for (var value : values) {
-      value.addInterface(className);
+      value.addValueType(valueType);
     }
 
-    return valuetype;
+    return valueType;
   }
 
   protected abstract void definition();
@@ -109,16 +111,28 @@ public abstract class CssSelfGen extends CompiledSpec {
     );
   }
 
-  protected final void pval(String propertyName, ParameterType value) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
+  protected final LengthType length(String... units) {
+    if (lengthType == null) {
+      lengthType = new LengthType();
+    }
 
-    property.addSignature(Style.VALUE, value);
+    for (var unit : units) {
+      lengthType.addUnit(unit);
+    }
+
+    return lengthType;
   }
 
   protected final void pbox(String propertyName, ParameterType value) {
     var property = properties.computeIfAbsent(propertyName, Property::of);
 
     property.addSignature(Style.BOX, value);
+  }
+
+  protected final void pval(String propertyName, ParameterType value) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(Style.VALUE, value);
   }
 
   protected final void selectors(String... names) {
@@ -130,6 +144,11 @@ public abstract class CssSelfGen extends CompiledSpec {
   @Override
   final Collection<KeywordName> keywords() {
     return keywords.values();
+  }
+
+  @Override
+  final LengthType lengthType() {
+    return lengthType;
   }
 
   @Override

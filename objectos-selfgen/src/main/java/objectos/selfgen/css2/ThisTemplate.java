@@ -36,6 +36,10 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);
 
+  static final ClassTypeName INTERNAL_LENGTH = ClassTypeName.of(CSS_INTERNAL, "InternalLength");
+
+  static final ClassTypeName LENGTH = ClassTypeName.of(CSS_TMPL, "Length");
+
   static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
 
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);

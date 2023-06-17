@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css2;
+package objectos.css.tmpl;
 
-import java.io.IOException;
-import java.util.Collection;
-import objectos.code.JavaSink;
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
+import objectos.lang.Generated;
 
-abstract class CompiledSpec {
-
-  abstract LengthType lengthType();
-
-  abstract Collection<KeywordName> keywords();
-
-  abstract Collection<Property> properties();
-
-  abstract Collection<SelectorName> selectors();
-
-  abstract Collection<ValueType> valueTypes();
-
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
-  }
-
-}
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface LineWidth extends PropertyValue permits NamedElement, Length {}

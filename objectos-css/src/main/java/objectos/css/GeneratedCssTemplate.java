@@ -15,6 +15,7 @@
  */
 package objectos.css;
 
+import objectos.css.internal.InternalLength;
 import objectos.css.internal.NamedElement;
 import objectos.css.internal.Property;
 import objectos.css.internal.StyleDeclaration1;
@@ -26,6 +27,8 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.GlobalKeyword;
+import objectos.css.tmpl.Length;
+import objectos.css.tmpl.LineWidth;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -104,6 +107,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color maroon = named("maroon");
 
+  protected static final LineWidth medium = named("medium");
+
   protected static final Color navy = named("navy");
 
   protected static final Color olive = named("olive");
@@ -116,6 +121,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color teal = named("teal");
 
+  protected static final LineWidth thick = named("thick");
+
+  protected static final LineWidth thin = named("thin");
+
   protected static final Color transparent = named("transparent");
 
   protected static final GlobalKeyword unset = named("unset");
@@ -126,6 +135,126 @@ abstract class GeneratedCssTemplate {
 
   private static NamedElement named(String name) {
     return new NamedElement(name);
+  }
+
+  protected final Length ch(double value) {
+    return InternalLength.of("ch", value);
+  }
+
+  protected final Length ch(int value) {
+    return InternalLength.of("ch", value);
+  }
+
+  protected final Length cm(double value) {
+    return InternalLength.of("cm", value);
+  }
+
+  protected final Length cm(int value) {
+    return InternalLength.of("cm", value);
+  }
+
+  protected final Length em(double value) {
+    return InternalLength.of("em", value);
+  }
+
+  protected final Length em(int value) {
+    return InternalLength.of("em", value);
+  }
+
+  protected final Length ex(double value) {
+    return InternalLength.of("ex", value);
+  }
+
+  protected final Length ex(int value) {
+    return InternalLength.of("ex", value);
+  }
+
+  protected final Length in(double value) {
+    return InternalLength.of("in", value);
+  }
+
+  protected final Length in(int value) {
+    return InternalLength.of("in", value);
+  }
+
+  protected final Length mm(double value) {
+    return InternalLength.of("mm", value);
+  }
+
+  protected final Length mm(int value) {
+    return InternalLength.of("mm", value);
+  }
+
+  protected final Length pc(double value) {
+    return InternalLength.of("pc", value);
+  }
+
+  protected final Length pc(int value) {
+    return InternalLength.of("pc", value);
+  }
+
+  protected final Length pt(double value) {
+    return InternalLength.of("pt", value);
+  }
+
+  protected final Length pt(int value) {
+    return InternalLength.of("pt", value);
+  }
+
+  protected final Length px(double value) {
+    return InternalLength.of("px", value);
+  }
+
+  protected final Length px(int value) {
+    return InternalLength.of("px", value);
+  }
+
+  protected final Length q(double value) {
+    return InternalLength.of("q", value);
+  }
+
+  protected final Length q(int value) {
+    return InternalLength.of("q", value);
+  }
+
+  protected final Length rem(double value) {
+    return InternalLength.of("rem", value);
+  }
+
+  protected final Length rem(int value) {
+    return InternalLength.of("rem", value);
+  }
+
+  protected final Length vh(double value) {
+    return InternalLength.of("vh", value);
+  }
+
+  protected final Length vh(int value) {
+    return InternalLength.of("vh", value);
+  }
+
+  protected final Length vmax(double value) {
+    return InternalLength.of("vmax", value);
+  }
+
+  protected final Length vmax(int value) {
+    return InternalLength.of("vmax", value);
+  }
+
+  protected final Length vmin(double value) {
+    return InternalLength.of("vmin", value);
+  }
+
+  protected final Length vmin(int value) {
+    return InternalLength.of("vmin", value);
+  }
+
+  protected final Length vw(double value) {
+    return InternalLength.of("vw", value);
+  }
+
+  protected final Length vw(int value) {
+    return InternalLength.of("vw", value);
   }
 
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
@@ -146,6 +275,26 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration borderColor(Color top, Color right, Color bottom, Color left) {
     return new StyleDeclaration4(Property.BORDER_COLOR, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration borderWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BORDER_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration borderWidth(LineWidth all) {
+    return new StyleDeclaration1(Property.BORDER_WIDTH, all.self());
+  }
+
+  protected final StyleDeclaration borderWidth(LineWidth vertical, LineWidth horizontal) {
+    return new StyleDeclaration2(Property.BORDER_WIDTH, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration borderWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
+    return new StyleDeclaration3(Property.BORDER_WIDTH, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration borderWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
+    return new StyleDeclaration4(Property.BORDER_WIDTH, top.self(), right.self(), bottom.self(), left.self());
   }
 
   protected final StyleDeclaration boxSizing(GlobalKeyword value) {

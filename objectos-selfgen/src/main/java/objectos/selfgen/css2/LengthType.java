@@ -15,24 +15,25 @@
  */
 package objectos.selfgen.css2;
 
-import java.io.IOException;
-import java.util.Collection;
-import objectos.code.JavaSink;
+import objectos.code.ClassTypeName;
+import objectos.util.GrowableList;
+import objectos.util.GrowableSet;
 
-abstract class CompiledSpec {
+public final class LengthType implements Value {
 
-  abstract LengthType lengthType();
+  public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
-  abstract Collection<KeywordName> keywords();
+  public final GrowableList<String> units = new GrowableList<>();
 
-  abstract Collection<Property> properties();
+  @Override
+  public final void addValueType(ValueType valueType) {
+    interfaces.add(valueType.className);
 
-  abstract Collection<SelectorName> selectors();
+    valueType.addPermitted(ThisTemplate.LENGTH);
+  }
 
-  abstract Collection<ValueType> valueTypes();
-
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
+  public final void addUnit(String unit) {
+    units.addWithNullMessage(unit, "unit == null");
   }
 
 }

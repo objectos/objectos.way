@@ -15,9 +15,12 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 import objectos.code.ClassTypeName;
+import objectos.util.GrowableSet;
+import objectos.util.UnmodifiableSet;
 
 public final class ValueType implements ParameterType {
 
@@ -25,6 +28,8 @@ public final class ValueType implements ParameterType {
       = (self, that) -> self.className.simpleName().compareTo(that.className.simpleName());
 
   public final ClassTypeName className;
+
+  private GrowableSet<ClassTypeName> subTypes;
 
   ValueType(ClassTypeName className) {
     this.className = className;
@@ -38,9 +43,21 @@ public final class ValueType implements ParameterType {
     return new ValueType(className);
   }
 
+  public final void addPermitted(ClassTypeName className) {
+    if (subTypes == null) {
+      subTypes = new GrowableSet<>();
+    }
+
+    subTypes.add(className);
+  }
+
   @Override
   public final ClassTypeName className() {
     return className;
+  }
+
+  final Collection<ClassTypeName> permitted() {
+    return subTypes != null ? subTypes : UnmodifiableSet.of();
   }
 
 }

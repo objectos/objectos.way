@@ -17,9 +17,9 @@ package objectos.selfgen.css2;
 
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.TreeMap;
 import objectos.code.ClassTypeName;
 import objectos.selfgen.util.JavaNames;
+import objectos.util.GrowableSet;
 
 public final class KeywordName implements Value {
   static final Comparator<? super KeywordName> ORDER_BY_FIELD_NAME
@@ -29,7 +29,7 @@ public final class KeywordName implements Value {
 
   public final String keywordName;
 
-  private final TreeMap<String, ClassTypeName> interfaces = new TreeMap<>();
+  private final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
   KeywordName(String fieldName, String keywordName) {
     this.fieldName = fieldName;
@@ -45,21 +45,15 @@ public final class KeywordName implements Value {
   }
 
   @Override
-  public final void addInterface(ClassTypeName className) {
-    var key = className.simpleName();
-
-    interfaces.put(key, className);
+  public final void addValueType(ValueType valueType) {
+    interfaces.add(valueType.className);
   }
 
   public final ClassTypeName fieldType() {
     return switch (interfaces.size()) {
-      case 0 -> throw new IllegalStateException(
-        """
+      case 0 -> throw new IllegalStateException();
 
-        """
-      );
-
-      case 1 -> interfaces.firstEntry().getValue();
+      case 1 -> interfaces.iterator().next();
 
       default -> throw new UnsupportedOperationException("Implement me");
     };

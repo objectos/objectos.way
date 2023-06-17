@@ -15,10 +15,8 @@
  */
 package objectos.selfgen.css2;
 
-import objectos.code.ClassTypeName;
-
 public interface Value {
 
-  void addInterface(ClassTypeName className);
+  void addValueType(ValueType valueType);
 
 }

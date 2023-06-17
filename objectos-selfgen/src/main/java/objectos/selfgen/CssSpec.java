@@ -45,11 +45,13 @@ public final class CssSpec extends CssSelfGen {
     );
 
     // global keywords
+
     var globalKeyword = def("GlobalKeyword",
       kw("inherit"), kw("initial"), kw("unset")
     );
 
     // color
+
     var color = def("Color",
       kw("currentcolor"), kw("transparent"),
 
@@ -58,9 +60,25 @@ public final class CssSpec extends CssSelfGen {
       kw("teal"), kw("aqua")
     );
 
+    // length
+
+    var length = length(
+      "em", "ex", "ch", "rem", "vw", "vh", "vmin", "vmax", "cm", "mm", "q", "in",
+      "pt", "pc", "px"
+    );
+
     // B
+
     pval("border-color", globalKeyword);
     pbox("border-color", color);
+
+    var lineWidth = def("LineWidth",
+      length,
+      kw("thin"), kw("medium"), kw("thick")
+    );
+
+    pval("border-width", globalKeyword);
+    pbox("border-width", lineWidth);
 
     pval("box-sizing", globalKeyword);
     pval("box-sizing", def("BoxSizingValue",

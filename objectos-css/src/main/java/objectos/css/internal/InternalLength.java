@@ -15,25 +15,27 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.PropertyName;
-import objectos.lang.Generated;
+import objectos.css.tmpl.Length;
 
-@Generated("objectos.selfgen.CssSpec")
-public enum Property implements PropertyName {
-  BORDER_COLOR("border-color"),
+public final class InternalLength implements Length {
 
-  BORDER_WIDTH("border-width"),
+  private final String value;
 
-  BOX_SIZING("box-sizing");
+  public InternalLength(String value) {
+    this.value = value;
+  }
 
-  private final String propertyName;
+  public static InternalLength of(String unit, double value) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
-  private Property(String propertyName) {
-    this.propertyName = propertyName;
+  public static InternalLength of(String unit, int value) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   public final String toString() {
-    return propertyName;
+    return value;
   }
+
 }

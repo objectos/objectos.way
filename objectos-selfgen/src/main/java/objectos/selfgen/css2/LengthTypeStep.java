@@ -19,9 +19,9 @@ import java.io.IOException;
 import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 
-final class PropertyValueStep extends ThisTemplate {
+final class LengthTypeStep extends ThisTemplate {
 
-  private ValueType valueType;
+  private LengthType lengthType;
 
   @Override
   protected final void definition() {
@@ -31,30 +31,29 @@ final class PropertyValueStep extends ThisTemplate {
 
     interfaceDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
-      PUBLIC, SEALED, name(valueType.className),
-      extendsClause(PROPERTY_VALUE),
-      permitsClause(NAMED_ELEMENT),
-      include(this::permitted)
+      PUBLIC, SEALED, name(LENGTH),
+      include(this::interfaces),
+      permitsClause(INTERNAL_LENGTH)
     );
   }
 
   @Override
   final void writeHook(JavaSink sink) throws IOException {
-    for (var valueType : spec.valueTypes()) {
-      this.valueType = valueType;
+    lengthType = spec.lengthType();
 
+    if (lengthType != null) {
       super.writeHook(sink);
     }
   }
 
-  private void permitted() {
-    valueType.permitted().stream()
+  private void interfaces() {
+    lengthType.interfaces.stream()
         .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
-        .forEach(this::permittedImpl);
+        .forEach(this::interfacesImpl);
   }
 
-  private void permittedImpl(ClassTypeName className) {
-    permitsClause(className);
+  private void interfacesImpl(ClassTypeName className) {
+    extendsClause(NL, className);
   }
 
 }

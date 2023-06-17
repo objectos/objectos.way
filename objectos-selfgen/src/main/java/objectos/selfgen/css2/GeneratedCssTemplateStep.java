@@ -39,6 +39,8 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         p(RETURN, NEW, NAMED_ELEMENT, argument(n("name")))
       ),
 
+      include(this::length),
+
       include(this::properties)
     );
   }
@@ -70,6 +72,30 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     field(
       PROTECTED, STATIC, FINAL, type, name(keyword.fieldName),
       v("named"), argument(s(keyword.keywordName))
+    );
+  }
+
+  private void length() {
+    var lengthType = spec.lengthType();
+
+    if (lengthType != null) {
+      lengthType.units.stream()
+          .sorted()
+          .forEach(this::lengthMethods);
+    }
+  }
+
+  private void lengthMethods(String unit) {
+    method(
+      PROTECTED, FINAL, LENGTH, name(unit),
+      parameter(DOUBLE, name("value")),
+      p(RETURN, INTERNAL_LENGTH, v("of"), argument(s(unit)), argument(n("value")))
+    );
+
+    method(
+      PROTECTED, FINAL, LENGTH, name(unit),
+      parameter(INT, name("value")),
+      p(RETURN, INTERNAL_LENGTH, v("of"), argument(s(unit)), argument(n("value")))
     );
   }
 
