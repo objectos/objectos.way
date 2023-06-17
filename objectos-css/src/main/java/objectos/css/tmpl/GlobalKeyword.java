@@ -13,23 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.om.Selector;
-import objectos.css.tmpl.GlobalKeyword;
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public final class NamedElement implements Selector,
-    GlobalKeyword {
-  private final String name;
-
-  public NamedElement(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public final String toString() {
-    return name;
-  }
-}
+public sealed interface GlobalKeyword extends PropertyValue permits NamedElement {}

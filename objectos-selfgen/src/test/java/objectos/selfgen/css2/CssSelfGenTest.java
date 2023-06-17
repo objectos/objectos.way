@@ -47,7 +47,7 @@ public class CssSelfGenTest {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 3);
+    assertEquals(result.size(), 4);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),
@@ -110,6 +110,32 @@ public class CssSelfGenTest {
     );
 
     assertEquals(
+      result.get("objectos/css/internal/Property.java"),
+      """
+      package objectos.css.internal;
+
+      import objectos.css.om.PropertyName;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public enum Property implements PropertyName {
+        BORDER_COLOR("border-color");
+
+        private final String propertyName;
+
+        private Property(String propertyName) {
+          this.propertyName = propertyName;
+        }
+
+        @Override
+        public final String toString() {
+          return propertyName;
+        }
+      }
+      """
+    );
+
+    assertEquals(
       result.get("objectos/css/tmpl/GlobalKeyword.java"),
       """
       package objectos.css.tmpl;
@@ -142,7 +168,7 @@ public class CssSelfGenTest {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 2);
+    assertEquals(result.size(), 3);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),
@@ -168,6 +194,30 @@ public class CssSelfGenTest {
 
         private static NamedElement named(String name) {
           return new NamedElement(name);
+        }
+      }
+      """
+    );
+
+    assertEquals(
+      result.get("objectos/css/internal/Property.java"),
+      """
+      package objectos.css.internal;
+
+      import objectos.css.om.PropertyName;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public enum Property implements PropertyName {
+        private final String propertyName;
+
+        private Property(String propertyName) {
+          this.propertyName = propertyName;
+        }
+
+        @Override
+        public final String toString() {
+          return propertyName;
         }
       }
       """

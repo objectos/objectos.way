@@ -51,6 +51,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     spec.write(sink, new NamedElementStep());
 
+    spec.write(sink, new PropertyStep());
+
     spec.write(sink, new PropertyValueStep());
   }
 

@@ -24,6 +24,9 @@ import objectos.util.GrowableList;
 
 final class Property {
 
+  static final Comparator<? super Property> ORDER_BY_CONSTANT_NAME
+      = (self, that) -> self.constantName.compareTo(that.constantName);
+
   static final Comparator<? super Property> ORDER_BY_METHOD_NAME
       = (self, that) -> self.methodName.compareTo(that.methodName);
 

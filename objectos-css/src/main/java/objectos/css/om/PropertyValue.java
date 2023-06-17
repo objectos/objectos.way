@@ -17,6 +17,10 @@ package objectos.css.om;
 
 public interface PropertyValue {
 
+  default PropertyValue self() {
+    return this;
+  }
+
   @Override
   String toString();
 

@@ -18,7 +18,7 @@ package objectos.css;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import objectos.css.internal.NamedSelector;
-import objectos.css.internal.Property;
+import objectos.css.internal.XProperty;
 import objectos.css.internal.StyleDeclaration1;
 import objectos.css.internal.StyleDeclarationCommaSeparated;
 import objectos.css.internal.StyleSheetBuilder;
@@ -482,25 +482,25 @@ public abstract class CssTemplate {
   protected sealed interface Color extends TextDecorationValue {}
 
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
-    return Property.BORDER_COLOR.value(value);
+    return XProperty.BORDER_COLOR.value(value);
   }
 
   protected final StyleDeclaration borderColor(Color all) {
-    return Property.BORDER_COLOR.sides1(all);
+    return XProperty.BORDER_COLOR.sides1(all);
   }
 
   protected final StyleDeclaration borderColor(Color vertical, Color horizontal) {
-    return Property.BORDER_COLOR.sides2(vertical, horizontal);
+    return XProperty.BORDER_COLOR.sides2(vertical, horizontal);
   }
 
   protected final StyleDeclaration borderColor(Color top, Color horizontal,
       Color bottom) {
-    return Property.BORDER_COLOR.sides3(top, horizontal, bottom);
+    return XProperty.BORDER_COLOR.sides3(top, horizontal, bottom);
   }
 
   protected final StyleDeclaration borderColor(Color top, Color right, Color bottom,
       Color left) {
-    return Property.BORDER_COLOR.sides4(top, right, bottom, left);
+    return XProperty.BORDER_COLOR.sides4(top, right, bottom, left);
   }
 
   // property methods: border-style
@@ -508,25 +508,25 @@ public abstract class CssTemplate {
   protected sealed interface LineStyle extends PropertyValue {}
 
   protected final StyleDeclaration borderStyle(GlobalKeyword value) {
-    return Property.BORDER_STYLE.value(value);
+    return XProperty.BORDER_STYLE.value(value);
   }
 
   protected final StyleDeclaration borderStyle(LineStyle all) {
-    return Property.BORDER_STYLE.sides1(all);
+    return XProperty.BORDER_STYLE.sides1(all);
   }
 
   protected final StyleDeclaration borderStyle(LineStyle vertical, LineStyle horizontal) {
-    return Property.BORDER_STYLE.sides2(vertical, horizontal);
+    return XProperty.BORDER_STYLE.sides2(vertical, horizontal);
   }
 
   protected final StyleDeclaration borderStyle(LineStyle top, LineStyle horizontal,
       LineStyle bottom) {
-    return Property.BORDER_STYLE.sides3(top, horizontal, bottom);
+    return XProperty.BORDER_STYLE.sides3(top, horizontal, bottom);
   }
 
   protected final StyleDeclaration borderStyle(LineStyle top, LineStyle right, LineStyle bottom,
       LineStyle left) {
-    return Property.BORDER_STYLE.sides4(top, right, bottom, left);
+    return XProperty.BORDER_STYLE.sides4(top, right, bottom, left);
   }
 
   // property methods: border-width
@@ -534,57 +534,57 @@ public abstract class CssTemplate {
   protected sealed interface LineWidth extends PropertyValue {}
 
   protected final StyleDeclaration borderWidth(GlobalKeyword value) {
-    return Property.BORDER_WIDTH.value(value);
+    return XProperty.BORDER_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderWidth(LineWidth all) {
-    return Property.BORDER_WIDTH.sides1(all);
+    return XProperty.BORDER_WIDTH.sides1(all);
   }
 
   protected final StyleDeclaration borderWidth(LineWidth vertical, LineWidth horizontal) {
-    return Property.BORDER_WIDTH.sides2(vertical, horizontal);
+    return XProperty.BORDER_WIDTH.sides2(vertical, horizontal);
   }
 
   protected final StyleDeclaration borderWidth(LineWidth top, LineWidth horizontal,
       LineWidth bottom) {
-    return Property.BORDER_WIDTH.sides3(top, horizontal, bottom);
+    return XProperty.BORDER_WIDTH.sides3(top, horizontal, bottom);
   }
 
   protected final StyleDeclaration borderWidth(LineWidth top, LineWidth right, LineWidth bottom,
       LineWidth left) {
-    return Property.BORDER_WIDTH.sides4(top, right, bottom, left);
+    return XProperty.BORDER_WIDTH.sides4(top, right, bottom, left);
   }
 
   protected final StyleDeclaration borderTopWidth(GlobalKeyword value) {
-    return Property.BORDER_TOP_WIDTH.value(value);
+    return XProperty.BORDER_TOP_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderTopWidth(LineWidth value) {
-    return Property.BORDER_TOP_WIDTH.value(value);
+    return XProperty.BORDER_TOP_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderRightWidth(GlobalKeyword value) {
-    return Property.BORDER_RIGHT_WIDTH.value(value);
+    return XProperty.BORDER_RIGHT_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderRightWidth(LineWidth value) {
-    return Property.BORDER_RIGHT_WIDTH.value(value);
+    return XProperty.BORDER_RIGHT_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderBottomWidth(GlobalKeyword value) {
-    return Property.BORDER_BOTTOM_WIDTH.value(value);
+    return XProperty.BORDER_BOTTOM_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderBottomWidth(LineWidth value) {
-    return Property.BORDER_BOTTOM_WIDTH.value(value);
+    return XProperty.BORDER_BOTTOM_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderLeftWidth(GlobalKeyword value) {
-    return Property.BORDER_LEFT_WIDTH.value(value);
+    return XProperty.BORDER_LEFT_WIDTH.value(value);
   }
 
   protected final StyleDeclaration borderLeftWidth(LineWidth value) {
-    return Property.BORDER_LEFT_WIDTH.value(value);
+    return XProperty.BORDER_LEFT_WIDTH.value(value);
   }
 
   // property methods: bottom
@@ -592,11 +592,11 @@ public abstract class CssTemplate {
   protected sealed interface BottomValue extends PropertyValue {}
 
   protected final StyleDeclaration bottom(GlobalKeyword value) {
-    return Property.BOTTOM.value(value);
+    return XProperty.BOTTOM.value(value);
   }
 
   protected final StyleDeclaration bottom(BottomValue value) {
-    return Property.BOTTOM.value(value);
+    return XProperty.BOTTOM.value(value);
   }
 
   // property methods: box-sizing
@@ -604,21 +604,21 @@ public abstract class CssTemplate {
   protected sealed interface BoxSizingValue extends PropertyValue {}
 
   protected final StyleDeclaration boxSizing(GlobalKeyword value) {
-    return Property.BOX_SIZING.value(value);
+    return XProperty.BOX_SIZING.value(value);
   }
 
   protected final StyleDeclaration boxSizing(BoxSizingValue value) {
-    return Property.BOX_SIZING.value(value);
+    return XProperty.BOX_SIZING.value(value);
   }
 
   // property methods: color
 
   protected final StyleDeclaration color(GlobalKeyword value) {
-    return Property.COLOR.value(value);
+    return XProperty.COLOR.value(value);
   }
 
   protected final StyleDeclaration color(Color value) {
-    return Property.COLOR.value(value);
+    return XProperty.COLOR.value(value);
   }
 
   // property methods: font-family
@@ -631,7 +631,7 @@ public abstract class CssTemplate {
   }
 
   protected final StyleDeclaration fontFamily(GlobalKeyword value) {
-    return Property.FONT_FAMILY.value(value);
+    return XProperty.FONT_FAMILY.value(value);
   }
 
   protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
@@ -646,7 +646,7 @@ public abstract class CssTemplate {
         var source0 = Objects.requireNonNull(values[0], "values[0] == null");
         var value0 = fontFamilyValue(source0);
 
-        yield new StyleDeclaration1(Property.FONT_FAMILY, value0);
+        yield new StyleDeclaration1(XProperty.FONT_FAMILY, value0);
       }
 
       default -> {
@@ -658,7 +658,7 @@ public abstract class CssTemplate {
           copy[i] = fontFamilyValue(source);
         }
 
-        yield new StyleDeclarationCommaSeparated(Property.FONT_FAMILY, copy);
+        yield new StyleDeclarationCommaSeparated(XProperty.FONT_FAMILY, copy);
       }
     };
   }
@@ -676,11 +676,11 @@ public abstract class CssTemplate {
   protected sealed interface FontFeatureSettingsValue extends PropertyValue {}
 
   protected final StyleDeclaration fontFeatureSettings(GlobalKeyword value) {
-    return Property.FONT_FEATURE_SETTINGS.value(value);
+    return XProperty.FONT_FEATURE_SETTINGS.value(value);
   }
 
   protected final StyleDeclaration fontFeatureSettings(FontFeatureSettingsValue value) {
-    return Property.FONT_FEATURE_SETTINGS.value(value);
+    return XProperty.FONT_FEATURE_SETTINGS.value(value);
   }
 
   // property methods: font-size
@@ -688,11 +688,11 @@ public abstract class CssTemplate {
   protected sealed interface FontSizeValue extends PropertyValue {}
 
   protected final StyleDeclaration fontSize(GlobalKeyword value) {
-    return Property.FONT_SIZE.value(value);
+    return XProperty.FONT_SIZE.value(value);
   }
 
   protected final StyleDeclaration fontSize(FontSizeValue value) {
-    return Property.FONT_SIZE.value(value);
+    return XProperty.FONT_SIZE.value(value);
   }
 
   // property methods: font-variation-settings
@@ -700,11 +700,11 @@ public abstract class CssTemplate {
   protected sealed interface FontVariationSettingsValue extends PropertyValue {}
 
   protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
-    return Property.FONT_VARIATION_SETTINGS.value(value);
+    return XProperty.FONT_VARIATION_SETTINGS.value(value);
   }
 
   protected final StyleDeclaration fontVariationSettings(GlobalKeyword value) {
-    return Property.FONT_VARIATION_SETTINGS.value(value);
+    return XProperty.FONT_VARIATION_SETTINGS.value(value);
   }
 
   // property methods: font-weight
@@ -712,15 +712,15 @@ public abstract class CssTemplate {
   protected sealed interface FontWeightValue extends PropertyValue {}
 
   protected final StyleDeclaration fontWeight(int value) {
-    return Property.FONT_WEIGHT.value(value);
+    return XProperty.FONT_WEIGHT.value(value);
   }
 
   protected final StyleDeclaration fontWeight(FontWeightValue value) {
-    return Property.FONT_WEIGHT.value(value);
+    return XProperty.FONT_WEIGHT.value(value);
   }
 
   protected final StyleDeclaration fontWeight(GlobalKeyword value) {
-    return Property.FONT_WEIGHT.value(value);
+    return XProperty.FONT_WEIGHT.value(value);
   }
 
   // property methods: height
@@ -728,11 +728,11 @@ public abstract class CssTemplate {
   protected sealed interface HeightValue extends PropertyValue {}
 
   protected final StyleDeclaration height(HeightValue value) {
-    return Property.HEIGHT.value(value);
+    return XProperty.HEIGHT.value(value);
   }
 
   protected final StyleDeclaration height(GlobalKeyword value) {
-    return Property.HEIGHT.value(value);
+    return XProperty.HEIGHT.value(value);
   }
 
   // property methods: line-height
@@ -740,19 +740,19 @@ public abstract class CssTemplate {
   protected sealed interface LineHeightValue extends PropertyValue {}
 
   protected final StyleDeclaration lineHeight(int value) {
-    return Property.LINE_HEIGHT.value(value);
+    return XProperty.LINE_HEIGHT.value(value);
   }
 
   protected final StyleDeclaration lineHeight(double value) {
-    return Property.LINE_HEIGHT.value(value);
+    return XProperty.LINE_HEIGHT.value(value);
   }
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
-    return Property.LINE_HEIGHT.value(value);
+    return XProperty.LINE_HEIGHT.value(value);
   }
 
   protected final StyleDeclaration lineHeight(GlobalKeyword value) {
-    return Property.LINE_HEIGHT.value(value);
+    return XProperty.LINE_HEIGHT.value(value);
   }
 
   // property methods: margin
@@ -760,25 +760,25 @@ public abstract class CssTemplate {
   protected sealed interface MarginValue extends PropertyValue {}
 
   protected final StyleDeclaration margin(MarginValue all) {
-    return Property.MARGIN.sides1(all);
+    return XProperty.MARGIN.sides1(all);
   }
 
   protected final StyleDeclaration margin(MarginValue vertical, MarginValue horizontal) {
-    return Property.MARGIN.sides2(vertical, horizontal);
+    return XProperty.MARGIN.sides2(vertical, horizontal);
   }
 
   protected final StyleDeclaration margin(MarginValue top, MarginValue horizontal,
       MarginValue bottom) {
-    return Property.MARGIN.sides3(top, horizontal, bottom);
+    return XProperty.MARGIN.sides3(top, horizontal, bottom);
   }
 
   protected final StyleDeclaration margin(MarginValue top, MarginValue right, MarginValue bottom,
       MarginValue left) {
-    return Property.MARGIN.sides4(top, right, bottom, left);
+    return XProperty.MARGIN.sides4(top, right, bottom, left);
   }
 
   protected final StyleDeclaration margin(GlobalKeyword value) {
-    return Property.MARGIN.value(value);
+    return XProperty.MARGIN.value(value);
   }
 
   // property methods: position
@@ -786,37 +786,37 @@ public abstract class CssTemplate {
   protected sealed interface PositionValue extends PropertyValue {}
 
   protected final StyleDeclaration position(GlobalKeyword value) {
-    return Property.POSITION.value(value);
+    return XProperty.POSITION.value(value);
   }
 
   protected final StyleDeclaration position(PositionValue value) {
-    return Property.POSITION.value(value);
+    return XProperty.POSITION.value(value);
   }
 
   // property methods: tab-size
 
   protected final StyleDeclaration tabSize(int value) {
-    return Property.TAB_SIZE.value(value);
+    return XProperty.TAB_SIZE.value(value);
   }
 
   protected final StyleDeclaration tabSize(Length value) {
-    return Property.TAB_SIZE.value(value);
+    return XProperty.TAB_SIZE.value(value);
   }
 
   protected final StyleDeclaration tabSize(GlobalKeyword value) {
-    return Property.TAB_SIZE.value(value);
+    return XProperty.TAB_SIZE.value(value);
   }
 
   protected final StyleDeclaration mozTabSize(int value) {
-    return Property._MOZ_TAB_SIZE.value(value);
+    return XProperty._MOZ_TAB_SIZE.value(value);
   }
 
   protected final StyleDeclaration mozTabSize(Length value) {
-    return Property._MOZ_TAB_SIZE.value(value);
+    return XProperty._MOZ_TAB_SIZE.value(value);
   }
 
   protected final StyleDeclaration mozTabSize(GlobalKeyword value) {
-    return Property._MOZ_TAB_SIZE.value(value);
+    return XProperty._MOZ_TAB_SIZE.value(value);
   }
 
   // property methods: text-decoration
@@ -824,37 +824,37 @@ public abstract class CssTemplate {
   protected sealed interface TextDecorationValue extends PropertyValue {}
 
   protected final StyleDeclaration textDecoration(GlobalKeyword value) {
-    return Property.TEXT_DECORATION.value(value);
+    return XProperty.TEXT_DECORATION.value(value);
   }
 
   protected final StyleDeclaration textDecoration(TextDecorationValue value) {
-    return Property.TEXT_DECORATION.value(value);
+    return XProperty.TEXT_DECORATION.value(value);
   }
 
   protected final StyleDeclaration textDecoration(
       TextDecorationValue value1, TextDecorationValue value2) {
-    return Property.TEXT_DECORATION.value(value1, value2);
+    return XProperty.TEXT_DECORATION.value(value1, value2);
   }
 
   protected final StyleDeclaration textDecoration(
       TextDecorationValue value1, TextDecorationValue value2, TextDecorationValue value3) {
-    return Property.TEXT_DECORATION.value(value1, value2, value3);
+    return XProperty.TEXT_DECORATION.value(value1, value2, value3);
   }
 
   protected final StyleDeclaration textDecoration(
       TextDecorationValue value1, TextDecorationValue value2, TextDecorationValue value3,
       TextDecorationValue value4) {
-    return Property.TEXT_DECORATION.value(value1, value2, value3, value4);
+    return XProperty.TEXT_DECORATION.value(value1, value2, value3, value4);
   }
 
   // property methods: text-decoration-color
 
   protected final StyleDeclaration textDecorationColor(GlobalKeyword value) {
-    return Property.TEXT_DECORATION_COLOR.value(value);
+    return XProperty.TEXT_DECORATION_COLOR.value(value);
   }
 
   protected final StyleDeclaration textDecorationColor(Color value) {
-    return Property.TEXT_DECORATION_COLOR.value(value);
+    return XProperty.TEXT_DECORATION_COLOR.value(value);
   }
 
   // property methods: text-decoration-line
@@ -862,26 +862,26 @@ public abstract class CssTemplate {
   protected sealed interface TextDecorationLineValue extends TextDecorationValue {}
 
   protected final StyleDeclaration textDecorationLine(GlobalKeyword value) {
-    return Property.TEXT_DECORATION_LINE.value(value);
+    return XProperty.TEXT_DECORATION_LINE.value(value);
   }
 
   protected final StyleDeclaration textDecorationLine(NoneKeyword value) {
-    return Property.TEXT_DECORATION_LINE.value(value);
+    return XProperty.TEXT_DECORATION_LINE.value(value);
   }
 
   protected final StyleDeclaration textDecorationLine(TextDecorationLineValue value) {
-    return Property.TEXT_DECORATION_LINE.value(value);
+    return XProperty.TEXT_DECORATION_LINE.value(value);
   }
 
   protected final StyleDeclaration textDecorationLine(
       TextDecorationLineValue value1, TextDecorationLineValue value2) {
-    return Property.TEXT_DECORATION_LINE.value(value1, value2);
+    return XProperty.TEXT_DECORATION_LINE.value(value1, value2);
   }
 
   protected final StyleDeclaration textDecorationLine(
       TextDecorationLineValue value1,
       TextDecorationLineValue value2, TextDecorationLineValue value3) {
-    return Property.TEXT_DECORATION_LINE.value(value1, value2, value3);
+    return XProperty.TEXT_DECORATION_LINE.value(value1, value2, value3);
   }
 
   // property methods: text-decoration-style
@@ -889,11 +889,11 @@ public abstract class CssTemplate {
   protected sealed interface TextDecorationStyleValue extends TextDecorationValue {}
 
   protected final StyleDeclaration textDecorationStyle(TextDecorationStyleValue value) {
-    return Property.TEXT_DECORATION_STYLE.value(value);
+    return XProperty.TEXT_DECORATION_STYLE.value(value);
   }
 
   protected final StyleDeclaration textDecorationStyle(GlobalKeyword value) {
-    return Property.TEXT_DECORATION_STYLE.value(value);
+    return XProperty.TEXT_DECORATION_STYLE.value(value);
   }
 
   // property methods: text-decoration-thickness
@@ -901,11 +901,11 @@ public abstract class CssTemplate {
   protected sealed interface TextDecorationThicknessValue extends TextDecorationValue {}
 
   protected final StyleDeclaration textDecorationThickness(TextDecorationThicknessValue value) {
-    return Property.TEXT_DECORATION_THICKNESS.value(value);
+    return XProperty.TEXT_DECORATION_THICKNESS.value(value);
   }
 
   protected final StyleDeclaration textDecorationThickness(GlobalKeyword value) {
-    return Property.TEXT_DECORATION_THICKNESS.value(value);
+    return XProperty.TEXT_DECORATION_THICKNESS.value(value);
   }
 
   // property methods: text-size-adjust
@@ -913,11 +913,11 @@ public abstract class CssTemplate {
   protected sealed interface TextSizeAdjustValue extends PropertyValue {}
 
   protected final StyleDeclaration webkitTextSizeAdjust(TextSizeAdjustValue value) {
-    return Property._WEBKIT_TEXT_SIZE_ADJUST.value(value);
+    return XProperty._WEBKIT_TEXT_SIZE_ADJUST.value(value);
   }
 
   protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {
-    return Property._WEBKIT_TEXT_SIZE_ADJUST.value(value);
+    return XProperty._WEBKIT_TEXT_SIZE_ADJUST.value(value);
   }
 
   // property methods: top
@@ -925,11 +925,11 @@ public abstract class CssTemplate {
   protected sealed interface TopValue extends PropertyValue {}
 
   protected final StyleDeclaration top(GlobalKeyword value) {
-    return Property.TOP.value(value);
+    return XProperty.TOP.value(value);
   }
 
   protected final StyleDeclaration top(TopValue value) {
-    return Property.TOP.value(value);
+    return XProperty.TOP.value(value);
   }
 
   // property methods: vertical-align
@@ -937,11 +937,11 @@ public abstract class CssTemplate {
   protected sealed interface VerticalAlignValue extends PropertyValue {}
 
   protected final StyleDeclaration verticalAlign(VerticalAlignValue value) {
-    return Property.VERTICAL_ALIGN.value(value);
+    return XProperty.VERTICAL_ALIGN.value(value);
   }
 
   protected final StyleDeclaration verticalAlign(GlobalKeyword value) {
-    return Property.VERTICAL_ALIGN.value(value);
+    return XProperty.VERTICAL_ALIGN.value(value);
   }
 
   protected final void style(Selector selector,

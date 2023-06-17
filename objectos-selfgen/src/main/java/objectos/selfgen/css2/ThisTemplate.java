@@ -42,6 +42,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName PROPERTY = ClassTypeName.of(CSS_INTERNAL, "Property");
 
+  static final ClassTypeName PROPERTY_NAME = ClassTypeName.of(CSS_OM, "PropertyName");
+
   static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_OM, "PropertyValue");
 
   static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
