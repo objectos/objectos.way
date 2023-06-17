@@ -15,12 +15,14 @@
  */
 package objectos.selfgen.css2;
 
-import java.io.IOException;
-import java.util.List;
-import objectos.code.JavaSink;
+import java.util.Objects;
 
-record CompiledSpec(List<SelectorName> selectors) {
-  public void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
+record SelectorName(String fieldName, String selectorName) {
+  public static SelectorName of(String name) {
+    Objects.requireNonNull(name, "name == null");
+
+    var fieldName = name.replace(':', '_');
+
+    return new SelectorName(fieldName, name);
   }
 }

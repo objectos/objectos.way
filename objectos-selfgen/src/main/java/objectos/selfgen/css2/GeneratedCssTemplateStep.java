@@ -17,7 +17,7 @@ package objectos.selfgen.css2;
 
 final class GeneratedCssTemplateStep extends ThisTemplate {
 
-  private static final Selector UNIVERSAL = new Selector("any", "*");
+  private static final SelectorName UNIVERSAL = new SelectorName("any", "*");
 
   @Override
   protected final void definition() {
@@ -49,7 +49,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     selectorField(UNIVERSAL);
   }
 
-  private void selectorField(Selector selector) {
+  private void selectorField(SelectorName selector) {
     field(
       PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName()),
       v("named"), argument(s(selector.selectorName()))

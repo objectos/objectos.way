@@ -19,30 +19,22 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class CssSelfGenTest {
+public class SelectorNameTest {
 
-  @Test(description = """
-  CssSelfGen selectors TC01
+  @Test
+  public void ofTypeSelector() {
+    var sel = SelectorName.of("a");
 
-  - selectors should be sorted alphabetically
-  """)
-  public void selectors01() {
-    var spec = new CssSelfGen() {
-      @Override
-      protected void definition() {
-        selectors(
-          "a", "pre", "body", "::after"
-        );
-      }
-    }.compile();
+    assertEquals(sel.fieldName(), "a");
+    assertEquals(sel.selectorName(), "a");
+  }
 
-    var selectors = spec.selectors();
+  @Test
+  public void ofPseudoElementSelector() {
+    var sel = SelectorName.of("::after");
 
-    assertEquals(selectors.size(), 4);
-    assertEquals(selectors.get(0), new Selector("__after", "::after"));
-    assertEquals(selectors.get(1), new Selector("a", "a"));
-    assertEquals(selectors.get(2), new Selector("body", "body"));
-    assertEquals(selectors.get(3), new Selector("pre", "pre"));
+    assertEquals(sel.fieldName(), "__after");
+    assertEquals(sel.selectorName(), "::after");
   }
 
 }

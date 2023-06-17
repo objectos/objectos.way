@@ -15,24 +15,6 @@
  */
 package objectos.selfgen.css2;
 
-import static org.testng.Assert.assertEquals;
-
-import org.testng.annotations.Test;
-
-public class SelectorTest {
-
-  @Test
-  public void ofTypeSelector() {
-    var sel = Selector.of("a");
-
-    assertEquals(sel, new Selector("a", "a"));
-  }
-
-  @Test
-  public void ofPseudoElementSelector() {
-    var sel = Selector.of("::after");
-
-    assertEquals(sel, new Selector("__after", "::after"));
-  }
+public interface PropertyTypeDef {
 
 }

@@ -15,23 +15,36 @@
  */
 package objectos.selfgen.css2;
 
-import java.util.TreeSet;
-import objectos.util.UnmodifiableList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 final class CompiledSpecBuilder {
 
-  private final TreeSet<Selector> selectors = new TreeSet<>();
+  private final Map<String, SelectorName> selectors = new TreeMap<>();
 
   public final void addSelector(String name) {
-    var selector = Selector.of(name);
+    var selector = SelectorName.of(name);
 
-    selectors.add(selector);
+    var key = selector.fieldName();
+
+    if (selectors.containsKey(key)) {
+      throw new UnsupportedOperationException(
+        "Implement me :: duplicate selector field name=" + key
+      );
+    }
+
+    selectors.put(key, selector);
   }
 
   public final CompiledSpec build() {
     return new CompiledSpec(
-      UnmodifiableList.copyOf(selectors)
+      selectors()
     );
+  }
+
+  private List<SelectorName> selectors() {
+    return selectors.values().stream().toList();
   }
 
 }

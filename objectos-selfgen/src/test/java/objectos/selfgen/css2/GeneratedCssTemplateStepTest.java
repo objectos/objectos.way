@@ -19,12 +19,12 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class GeneratedCssTemplateTest {
+public class GeneratedCssTemplateStepTest {
 
   private final GeneratedCssTemplateStep template = new GeneratedCssTemplateStep();
 
   @Test
-  public void generate() {
+  public void selectors01() {
     template.spec = new CssSelfGen() {
       @Override
       protected final void definition() {

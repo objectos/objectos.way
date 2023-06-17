@@ -43,6 +43,18 @@ public final class CssSpec extends CssSelfGen {
       // pseudo elements
       "::after", "::before"
     );
+
+    //    // global keywords
+    //    var global = def("GlobalKeyword",
+    //      kw("inherit"), kw("initial"), kw("unset")
+    //    );
+    //
+    //    // color
+    //    var color = def("Color", kw("transparent"));
+    //
+    //    // B
+    //    prop("border-color", global);
+    //    propSides("border-color", color);
   }
 
 }

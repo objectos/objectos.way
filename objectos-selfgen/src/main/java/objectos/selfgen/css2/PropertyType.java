@@ -15,19 +15,6 @@
  */
 package objectos.selfgen.css2;
 
-import java.util.Objects;
+public interface PropertyType {
 
-record Selector(String fieldName, String selectorName) implements Comparable<Selector> {
-  public static Selector of(String name) {
-    Objects.requireNonNull(name, "name == null");
-
-    var fieldName = name.replace(':', '_');
-
-    return new Selector(fieldName, name);
-  }
-
-  @Override
-  public final int compareTo(Selector o) {
-    return fieldName.compareTo(o.fieldName);
-  }
 }
