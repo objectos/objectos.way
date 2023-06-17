@@ -47,11 +47,10 @@ public class CssSelfGenTest {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 1);
+    assertEquals(result.size(), 2);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),
-
       """
       package objectos.css;
 
@@ -74,6 +73,20 @@ public class CssSelfGenTest {
           return new NamedElement(name);
         }
       }
+      """
+    );
+
+    assertEquals(
+      result.get("objectos/css/tmpl/GlobalKeyword.java"),
+      """
+      package objectos.css.tmpl;
+
+      import objectos.css.internal.NamedElement;
+      import objectos.css.om.PropertyValue;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public sealed interface GlobalKeyword extends PropertyValue permits NamedElement {}
       """
     );
   }

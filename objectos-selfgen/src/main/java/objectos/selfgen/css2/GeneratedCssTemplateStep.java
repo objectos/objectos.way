@@ -42,11 +42,9 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   }
 
   private void selectors() {
-    var selectors = spec.selectors();
-
-    for (var selector : selectors) {
-      selectorField(selector);
-    }
+    spec.selectors().stream()
+        .sorted(SelectorName.ORDER_BY_FIELD_NAME)
+        .forEach(this::selectorField);
 
     selectorField(UNIVERSAL);
   }
@@ -59,11 +57,9 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   }
 
   private void keywords() {
-    var keywords = spec.keywords();
-
-    for (var keyword : keywords) {
-      keywordField(keyword);
-    }
+    spec.keywords().stream()
+        .sorted(KeywordName.ORDER_BY_FIELD_NAME)
+        .forEach(this::keywordField);
   }
 
   private void keywordField(KeywordName keyword) {

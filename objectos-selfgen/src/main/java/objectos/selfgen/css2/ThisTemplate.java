@@ -38,15 +38,21 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
 
+  static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_OM, "PropertyValue");
+
   static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
 
   static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
   CompiledSpec spec;
 
-  public void write(JavaSink sink, CompiledSpec spec) throws IOException {
+  public final void write(JavaSink sink, CompiledSpec spec) throws IOException {
     this.spec = spec;
 
+    writeHook(sink);
+  }
+
+  void writeHook(JavaSink sink) throws IOException {
     sink.write(this);
   }
 

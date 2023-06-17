@@ -15,9 +15,13 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 record SelectorName(String fieldName, String selectorName) {
+  static final Comparator<? super SelectorName> ORDER_BY_FIELD_NAME
+      = (self, that) -> self.fieldName.compareTo(that.fieldName);
+
   public static SelectorName of(String name) {
     Objects.requireNonNull(name, "name == null");
 

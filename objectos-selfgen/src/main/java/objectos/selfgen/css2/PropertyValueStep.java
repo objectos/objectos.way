@@ -16,19 +16,33 @@
 package objectos.selfgen.css2;
 
 import java.io.IOException;
-import java.util.Collection;
 import objectos.code.JavaSink;
 
-abstract class CompiledSpec {
+final class PropertyValueStep extends ThisTemplate {
 
-  abstract Collection<KeywordName> keywords();
+  private ValueType valueType;
 
-  abstract Collection<SelectorName> selectors();
+  @Override
+  protected final void definition() {
+    packageDeclaration(CSS_TMPL);
 
-  abstract Collection<ValueType> valueTypes();
+    autoImports();
 
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
+    interfaceDeclaration(
+      annotation(GENERATED, annotationValue(s(GENERATOR))),
+      PUBLIC, SEALED, name(valueType.className),
+      extendsClause(PROPERTY_VALUE),
+      permitsClause(NAMED_ELEMENT)
+    );
+  }
+
+  @Override
+  final void writeHook(JavaSink sink) throws IOException {
+    for (var valueType : spec.valueTypes()) {
+      this.valueType = valueType;
+
+      super.writeHook(sink);
+    }
   }
 
 }
