@@ -47,7 +47,7 @@ public class CssSelfGenTest {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 2);
+    assertEquals(result.size(), 3);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),
@@ -71,6 +71,32 @@ public class CssSelfGenTest {
 
         private static NamedElement named(String name) {
           return new NamedElement(name);
+        }
+      }
+      """
+    );
+
+    assertEquals(
+      result.get("objectos/css/internal/NamedElement.java"),
+      """
+      package objectos.css.internal;
+
+      import objectos.css.om.Selector;
+      import objectos.css.tmpl.GlobalKeyword;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public final class NamedElement implements Selector,
+          GlobalKeyword {
+        private final String name;
+
+        public NamedElement(String name) {
+          this.name = name;
+        }
+
+        @Override
+        public final String toString() {
+          return name;
         }
       }
       """
@@ -109,7 +135,7 @@ public class CssSelfGenTest {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 1);
+    assertEquals(result.size(), 2);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),
@@ -135,6 +161,30 @@ public class CssSelfGenTest {
 
         private static NamedElement named(String name) {
           return new NamedElement(name);
+        }
+      }
+      """
+    );
+
+    assertEquals(
+      result.get("objectos/css/internal/NamedElement.java"),
+      """
+      package objectos.css.internal;
+
+      import objectos.css.om.Selector;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public final class NamedElement implements Selector {
+        private final String name;
+
+        public NamedElement(String name) {
+          this.name = name;
+        }
+
+        @Override
+        public final String toString() {
+          return name;
         }
       }
       """

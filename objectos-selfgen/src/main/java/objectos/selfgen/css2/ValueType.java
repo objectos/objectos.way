@@ -15,10 +15,14 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Comparator;
 import objectos.code.ClassTypeName;
 import objectos.util.UnmodifiableList;
 
 public final class ValueType implements ParameterType {
+
+  static final Comparator<? super ValueType> ORDER_BY_SIMPLE_NAME
+      = (self, that) -> self.className.simpleName().compareTo(that.className.simpleName());
 
   public final ClassTypeName className;
 

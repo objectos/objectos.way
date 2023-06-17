@@ -16,8 +16,16 @@
 package objectos.css.internal;
 
 import objectos.css.om.Selector;
+import objectos.lang.Generated;
 
-public record NamedElement(String name) implements Selector {
+@Generated("objectos.selfgen.CssSpec")
+public final class NamedElement implements Selector {
+  private final String name;
+
+  public NamedElement(String name) {
+    this.name = name;
+  }
+
   @Override
   public final String toString() {
     return name;

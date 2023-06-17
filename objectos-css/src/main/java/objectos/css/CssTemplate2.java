@@ -13,25 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos CSS API.
- *
- * @since 0.7.0
- */
-module objectos.css {
-  exports objectos.css;
-  exports objectos.css.config.framework;
-  exports objectos.css.function;
-  exports objectos.css.keyword;
-  exports objectos.css.om;
-  exports objectos.css.parser;
-  exports objectos.css.select;
-  exports objectos.css.property;
-  exports objectos.css.sheet;
-  exports objectos.css.tmpl;
-  exports objectos.css.type;
+package objectos.css;
 
-  requires objectos.html;
-  requires objectos.lang;
-  requires objectos.util;
+public abstract class CssTemplate2 extends GeneratedCssTemplate {
+
 }

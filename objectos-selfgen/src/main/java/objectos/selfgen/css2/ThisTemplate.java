@@ -38,6 +38,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
 
+  static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
+
   static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_OM, "PropertyValue");
 
   static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
