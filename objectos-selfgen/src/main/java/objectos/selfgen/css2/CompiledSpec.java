@@ -16,11 +16,16 @@
 package objectos.selfgen.css2;
 
 import java.io.IOException;
-import java.util.List;
 import objectos.code.JavaSink;
 
-record CompiledSpec(List<SelectorName> selectors) {
-  public void write(JavaSink sink, ThisTemplate template) throws IOException {
+abstract class CompiledSpec {
+
+  abstract Iterable<KeywordName> keywords();
+
+  abstract Iterable<SelectorName> selectors();
+
+  final void write(JavaSink sink, ThisTemplate template) throws IOException {
     template.write(sink, this);
   }
+
 }

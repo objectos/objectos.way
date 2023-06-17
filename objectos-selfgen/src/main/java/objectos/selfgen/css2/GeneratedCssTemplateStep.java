@@ -31,6 +31,8 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
       include(this::selectors),
 
+      include(this::keywords),
+
       method(
         PRIVATE, STATIC, NAMED_ELEMENT, name("named"),
         parameter(STRING, name("name")),
@@ -53,6 +55,23 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     field(
       PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName()),
       v("named"), argument(s(selector.selectorName()))
+    );
+  }
+
+  private void keywords() {
+    var keywords = spec.keywords();
+
+    for (var keyword : keywords) {
+      keywordField(keyword);
+    }
+  }
+
+  private void keywordField(KeywordName keyword) {
+    var type = keyword.fieldType();
+
+    field(
+      PROTECTED, STATIC, FINAL, type, name(keyword.fieldName),
+      v("named"), argument(s(keyword.keywordName))
     );
   }
 

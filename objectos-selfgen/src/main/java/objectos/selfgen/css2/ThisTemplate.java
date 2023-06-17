@@ -30,6 +30,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final String CSS_OM = "objectos.css.om";
 
+  static final String CSS_TMPL = "objectos.css.tmpl";
+
   static final String GENERATOR = CssSpec.class.getCanonicalName();
 
   static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);

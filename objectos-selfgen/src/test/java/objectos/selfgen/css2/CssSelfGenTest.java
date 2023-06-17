@@ -31,6 +31,54 @@ import org.testng.annotations.Test;
 public class CssSelfGenTest {
 
   @Test
+  public void propertyBorderColor() throws IOException {
+    var spec = new CssSelfGen() {
+      @Override
+      protected void definition() {
+        // global keywords
+        var globalKeyword = def("GlobalKeyword",
+          kw("inherit"), kw("initial"), kw("unset")
+        );
+
+        // B
+        prop("border-color", globalKeyword);
+      }
+    };
+
+    var result = generate(spec);
+
+    assertEquals(result.size(), 1);
+
+    assertEquals(
+      result.get("objectos/css/GeneratedCssTemplate.java"),
+
+      """
+      package objectos.css;
+
+      import objectos.css.internal.NamedElement;
+      import objectos.css.om.Selector;
+      import objectos.css.tmpl.GlobalKeyword;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      abstract class GeneratedCssTemplate {
+        protected static final Selector any = named("*");
+
+        protected static final GlobalKeyword inherit = named("inherit");
+
+        protected static final GlobalKeyword initial = named("initial");
+
+        protected static final GlobalKeyword unset = named("unset");
+
+        private static NamedElement named(String name) {
+          return new NamedElement(name);
+        }
+      }
+      """
+    );
+  }
+
+  @Test
   public void selectors01() throws IOException {
     var spec = new CssSelfGen() {
       @Override
