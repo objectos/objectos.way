@@ -55,7 +55,10 @@ public class CssSelfGenTest {
       package objectos.css;
 
       import objectos.css.internal.NamedElement;
+      import objectos.css.internal.Property;
+      import objectos.css.internal.StyleDeclaration1;
       import objectos.css.om.Selector;
+      import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.GlobalKeyword;
       import objectos.lang.Generated;
 
@@ -71,6 +74,10 @@ public class CssSelfGenTest {
 
         private static NamedElement named(String name) {
           return new NamedElement(name);
+        }
+
+        protected final StyleDeclaration borderColor(GlobalKeyword value) {
+          return new StyleDeclaration1(Property.BORDER_COLOR, value.self());
         }
       }
       """

@@ -33,4 +33,9 @@ public final class ValueType implements ParameterType {
     this.values = values;
   }
 
+  @Override
+  public final ClassTypeName className() {
+    return className;
+  }
+
 }

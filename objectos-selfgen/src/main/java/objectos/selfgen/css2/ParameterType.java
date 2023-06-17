@@ -15,4 +15,10 @@
  */
 package objectos.selfgen.css2;
 
-public interface ParameterType {}
+import objectos.code.ClassTypeName;
+
+interface ParameterType {
+
+  ClassTypeName className();
+
+}

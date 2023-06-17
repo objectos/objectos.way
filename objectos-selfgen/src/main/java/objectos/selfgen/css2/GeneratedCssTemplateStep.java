@@ -37,7 +37,9 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         PRIVATE, STATIC, NAMED_ELEMENT, name("named"),
         parameter(STRING, name("name")),
         p(RETURN, NEW, NAMED_ELEMENT, argument(n("name")))
-      )
+      ),
+
+      include(this::properties)
     );
   }
 
@@ -69,6 +71,32 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       PROTECTED, STATIC, FINAL, type, name(keyword.fieldName),
       v("named"), argument(s(keyword.keywordName))
     );
+  }
+
+  private void properties() {
+    spec.properties().stream()
+        .sorted(Property.ORDER_BY_METHOD_NAME)
+        .forEach(this::propertyMethods);
+  }
+
+  private void propertyMethods(Property property) {
+    for (var signature : property.signatures()) {
+      if (signature instanceof MethodSig.Sig1 sig1) {
+        method(
+          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+          parameter(sig1.type().className(), name(sig1.name())),
+          p(
+            RETURN, NEW, STYLE_DECLARATION1,
+            argument(PROPERTY, n(property.constantName)),
+            argument(n(sig1.name()), v("self"))
+          )
+        );
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: type=" + signature.getClass()
+        );
+      }
+    }
   }
 
 }

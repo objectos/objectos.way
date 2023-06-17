@@ -40,11 +40,18 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
 
+  static final ClassTypeName PROPERTY = ClassTypeName.of(CSS_INTERNAL, "Property");
+
   static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_OM, "PropertyValue");
 
   static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
 
   static final ClassTypeName STRING = ClassTypeName.of(String.class);
+
+  static final ClassTypeName STYLE_DECLARATION = ClassTypeName.of(CSS_OM, "StyleDeclaration");
+
+  static final ClassTypeName STYLE_DECLARATION1
+      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration1");
 
   CompiledSpec spec;
 

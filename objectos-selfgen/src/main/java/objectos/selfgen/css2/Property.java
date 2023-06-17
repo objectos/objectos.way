@@ -15,17 +15,25 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import objectos.selfgen.util.JavaNames;
+import objectos.util.GrowableList;
 
 final class Property {
+
+  static final Comparator<? super Property> ORDER_BY_METHOD_NAME
+      = (self, that) -> self.methodName.compareTo(that.methodName);
 
   public final String propertyName;
 
   public final String methodName;
 
   public final String constantName;
+
+  private final List<MethodSig> signatures = new GrowableList<>();
 
   private Property(String propertyName, String methodName, String constantName) {
     this.propertyName = propertyName;
@@ -41,6 +49,14 @@ final class Property {
     var constantName = propertyName.replace('-', '_').toUpperCase(Locale.US);
 
     return new Property(propertyName, methodName, constantName);
+  }
+
+  public final void addSignature(MethodSig signature) {
+    signatures.add(signature);
+  }
+
+  public final Iterable<MethodSig> signatures() {
+    return signatures;
   }
 
 }

@@ -121,8 +121,11 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   protected final void prop(String propertyName, ParameterType value) {
-    @SuppressWarnings("unused")
     var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(
+      new MethodSig.Sig1(value, "value")
+    );
   }
 
   protected final void selectors(String... names) {
@@ -134,6 +137,11 @@ public abstract class CssSelfGen extends CompiledSpec {
   @Override
   final Collection<KeywordName> keywords() {
     return keywords.values();
+  }
+
+  @Override
+  final Collection<Property> properties() {
+    return properties.values();
   }
 
   @Override

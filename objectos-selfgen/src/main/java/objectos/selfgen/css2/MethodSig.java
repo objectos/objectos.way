@@ -15,22 +15,8 @@
  */
 package objectos.selfgen.css2;
 
-import java.io.IOException;
-import java.util.Collection;
-import objectos.code.JavaSink;
+sealed interface MethodSig {
 
-abstract class CompiledSpec {
-
-  abstract Collection<KeywordName> keywords();
-
-  abstract Collection<SelectorName> selectors();
-
-  abstract Collection<Property> properties();
-
-  abstract Collection<ValueType> valueTypes();
-
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
-  }
+  record Sig1(ParameterType type, String name) implements MethodSig {}
 
 }
