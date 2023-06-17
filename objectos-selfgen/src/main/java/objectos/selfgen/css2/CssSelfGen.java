@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
+import objectos.selfgen.css2.Signature.Style;
 import objectos.util.UnmodifiableList;
 
 public abstract class CssSelfGen extends CompiledSpec {
@@ -125,9 +126,13 @@ public abstract class CssSelfGen extends CompiledSpec {
   protected final void prop(String propertyName, ParameterType value) {
     var property = properties.computeIfAbsent(propertyName, Property::of);
 
-    property.addSignature(
-      new MethodSig.Sig1(value, "value")
-    );
+    property.addSignature(Style.VALUE, value);
+  }
+
+  protected final void propBox(String propertyName, ParameterType value) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(Style.BOX, value);
   }
 
   protected final void selectors(String... names) {

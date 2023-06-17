@@ -55,6 +55,15 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName STYLE_DECLARATION1
       = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration1");
 
+  static final ClassTypeName STYLE_DECLARATION2
+      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration2");
+
+  static final ClassTypeName STYLE_DECLARATION3
+      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration3");
+
+  static final ClassTypeName STYLE_DECLARATION4
+      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration4");
+
   CompiledSpec spec;
 
   public final void write(JavaSink sink, CompiledSpec spec) throws IOException {

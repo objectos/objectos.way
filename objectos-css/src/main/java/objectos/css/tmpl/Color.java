@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css2;
+package objectos.css.tmpl;
 
-sealed interface MethodSig {
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
+import objectos.lang.Generated;
 
-  record Sig1(ParameterType type, String name) implements MethodSig {}
-
-}
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface Color extends PropertyValue permits NamedElement {}

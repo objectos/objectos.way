@@ -40,14 +40,21 @@ public class CssSelfGenTest {
           kw("inherit"), kw("initial"), kw("unset")
         );
 
+        // color
+        var color = def(
+          "Color",
+          kw("currentcolor"), kw("transparent")
+        );
+
         // B
         prop("border-color", globalKeyword);
+        propBox("border-color", color);
       }
     };
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 4);
+    assertEquals(result.size(), 5);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),
@@ -57,8 +64,12 @@ public class CssSelfGenTest {
       import objectos.css.internal.NamedElement;
       import objectos.css.internal.Property;
       import objectos.css.internal.StyleDeclaration1;
+      import objectos.css.internal.StyleDeclaration2;
+      import objectos.css.internal.StyleDeclaration3;
+      import objectos.css.internal.StyleDeclaration4;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
+      import objectos.css.tmpl.Color;
       import objectos.css.tmpl.GlobalKeyword;
       import objectos.lang.Generated;
 
@@ -66,9 +77,13 @@ public class CssSelfGenTest {
       abstract class GeneratedCssTemplate {
         protected static final Selector any = named("*");
 
+        protected static final Color currentcolor = named("currentcolor");
+
         protected static final GlobalKeyword inherit = named("inherit");
 
         protected static final GlobalKeyword initial = named("initial");
+
+        protected static final Color transparent = named("transparent");
 
         protected static final GlobalKeyword unset = named("unset");
 
@@ -78,6 +93,22 @@ public class CssSelfGenTest {
 
         protected final StyleDeclaration borderColor(GlobalKeyword value) {
           return new StyleDeclaration1(Property.BORDER_COLOR, value.self());
+        }
+
+        protected final StyleDeclaration borderColor(Color all) {
+          return new StyleDeclaration1(Property.BORDER_COLOR, all.self());
+        }
+
+        protected final StyleDeclaration borderColor(Color vertical, Color horizontal) {
+          return new StyleDeclaration2(Property.BORDER_COLOR, vertical.self(), horizontal.self());
+        }
+
+        protected final StyleDeclaration borderColor(Color top, Color horizontal, Color bottom) {
+          return new StyleDeclaration3(Property.BORDER_COLOR, top.self(), horizontal.self(), bottom.self());
+        }
+
+        protected final StyleDeclaration borderColor(Color top, Color right, Color bottom, Color left) {
+          return new StyleDeclaration4(Property.BORDER_COLOR, top.self(), right.self(), bottom.self(), left.self());
         }
       }
       """
@@ -89,11 +120,13 @@ public class CssSelfGenTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
+      import objectos.css.tmpl.Color;
       import objectos.css.tmpl.GlobalKeyword;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public final class NamedElement implements Selector,
+          Color,
           GlobalKeyword {
         private final String name;
 
@@ -132,6 +165,20 @@ public class CssSelfGenTest {
           return propertyName;
         }
       }
+      """
+    );
+
+    assertEquals(
+      result.get("objectos/css/tmpl/Color.java"),
+      """
+      package objectos.css.tmpl;
+
+      import objectos.css.internal.NamedElement;
+      import objectos.css.om.PropertyValue;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public sealed interface Color extends PropertyValue permits NamedElement {}
       """
     );
 

@@ -81,20 +81,74 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private void propertyMethods(Property property) {
     for (var signature : property.signatures()) {
-      if (signature instanceof MethodSig.Sig1 sig1) {
-        method(
-          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-          parameter(sig1.type().className(), name(sig1.name())),
-          p(
-            RETURN, NEW, STYLE_DECLARATION1,
-            argument(PROPERTY, n(property.constantName)),
-            argument(n(sig1.name()), v("self"))
-          )
-        );
-      } else {
-        throw new UnsupportedOperationException(
-          "Implement me :: type=" + signature.getClass()
-        );
+      var className = signature.type.className();
+
+      switch (signature.style) {
+        case BOX -> {
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(className, name("all")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION1,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("all"), v("self"))
+            )
+          );
+
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(className, name("vertical")),
+            parameter(className, name("horizontal")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION2,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("vertical"), v("self")),
+              argument(n("horizontal"), v("self"))
+            )
+          );
+
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(className, name("top")),
+            parameter(className, name("horizontal")),
+            parameter(className, name("bottom")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION3,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("top"), v("self")),
+              argument(n("horizontal"), v("self")),
+              argument(n("bottom"), v("self"))
+            )
+          );
+
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(className, name("top")),
+            parameter(className, name("right")),
+            parameter(className, name("bottom")),
+            parameter(className, name("left")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION4,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("top"), v("self")),
+              argument(n("right"), v("self")),
+              argument(n("bottom"), v("self")),
+              argument(n("left"), v("self"))
+            )
+          );
+        }
+
+        case VALUE -> {
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(className, name("value")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION1,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("value"), v("self"))
+            )
+          );
+        }
       }
     }
   }

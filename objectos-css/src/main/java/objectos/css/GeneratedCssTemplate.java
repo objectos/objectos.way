@@ -18,8 +18,12 @@ package objectos.css;
 import objectos.css.internal.NamedElement;
 import objectos.css.internal.Property;
 import objectos.css.internal.StyleDeclaration1;
+import objectos.css.internal.StyleDeclaration2;
+import objectos.css.internal.StyleDeclaration3;
+import objectos.css.internal.StyleDeclaration4;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
+import objectos.css.tmpl.Color;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.lang.Generated;
 
@@ -73,11 +77,47 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector any = named("*");
 
+  protected static final Color aqua = named("aqua");
+
+  protected static final Color black = named("black");
+
+  protected static final Color blue = named("blue");
+
+  protected static final Color currentcolor = named("currentcolor");
+
+  protected static final Color fuchsia = named("fuchsia");
+
+  protected static final Color gray = named("gray");
+
+  protected static final Color green = named("green");
+
   protected static final GlobalKeyword inherit = named("inherit");
 
   protected static final GlobalKeyword initial = named("initial");
 
+  protected static final Color lime = named("lime");
+
+  protected static final Color maroon = named("maroon");
+
+  protected static final Color navy = named("navy");
+
+  protected static final Color olive = named("olive");
+
+  protected static final Color purple = named("purple");
+
+  protected static final Color red = named("red");
+
+  protected static final Color silver = named("silver");
+
+  protected static final Color teal = named("teal");
+
+  protected static final Color transparent = named("transparent");
+
   protected static final GlobalKeyword unset = named("unset");
+
+  protected static final Color white = named("white");
+
+  protected static final Color yellow = named("yellow");
 
   private static NamedElement named(String name) {
     return new NamedElement(name);
@@ -85,5 +125,21 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
     return new StyleDeclaration1(Property.BORDER_COLOR, value.self());
+  }
+
+  protected final StyleDeclaration borderColor(Color all) {
+    return new StyleDeclaration1(Property.BORDER_COLOR, all.self());
+  }
+
+  protected final StyleDeclaration borderColor(Color vertical, Color horizontal) {
+    return new StyleDeclaration2(Property.BORDER_COLOR, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration borderColor(Color top, Color horizontal, Color bottom) {
+    return new StyleDeclaration3(Property.BORDER_COLOR, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration borderColor(Color top, Color right, Color bottom, Color left) {
+    return new StyleDeclaration4(Property.BORDER_COLOR, top.self(), right.self(), bottom.self(), left.self());
   }
 }

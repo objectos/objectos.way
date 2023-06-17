@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import objectos.selfgen.css2.Signature.Style;
 import objectos.selfgen.util.JavaNames;
 import objectos.util.GrowableList;
 
@@ -36,7 +37,7 @@ final class Property {
 
   public final String constantName;
 
-  private final List<MethodSig> signatures = new GrowableList<>();
+  private final List<Signature> signatures = new GrowableList<>();
 
   private Property(String propertyName, String methodName, String constantName) {
     this.propertyName = propertyName;
@@ -54,12 +55,18 @@ final class Property {
     return new Property(propertyName, methodName, constantName);
   }
 
-  public final void addSignature(MethodSig signature) {
+  public final void addSignature(Signature signature) {
     signatures.add(signature);
   }
 
-  public final Iterable<MethodSig> signatures() {
+  public final Iterable<Signature> signatures() {
     return signatures;
+  }
+
+  public final void addSignature(Style style, ParameterType parameterType) {
+    signatures.add(
+      new Signature(style, parameterType)
+    );
   }
 
 }

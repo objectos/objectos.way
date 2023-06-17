@@ -48,13 +48,19 @@ public final class CssSpec extends CssSelfGen {
     var globalKeyword = def("GlobalKeyword",
       kw("inherit"), kw("initial"), kw("unset")
     );
-    //
-    //    // color
-    //    var color = def("Color", kw("transparent"));
-    //
+
+    // color
+    var color = def("Color",
+      kw("currentcolor"), kw("transparent"),
+
+      kw("black"), kw("silver"), kw("gray"), kw("white"), kw("maroon"), kw("red"), kw("purple"),
+      kw("fuchsia"), kw("green"), kw("lime"), kw("olive"), kw("yellow"), kw("navy"), kw("blue"),
+      kw("teal"), kw("aqua")
+    );
+
     // B
     prop("border-color", globalKeyword);
-    //    propSides("border-color", color);
+    propBox("border-color", color);
   }
 
 }

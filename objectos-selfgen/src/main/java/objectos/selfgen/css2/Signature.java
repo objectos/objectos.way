@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.selfgen.css2;
 
-import objectos.css.om.Selector;
-import objectos.css.tmpl.Color;
-import objectos.css.tmpl.GlobalKeyword;
-import objectos.lang.Generated;
+final class Signature {
 
-@Generated("objectos.selfgen.CssSpec")
-public final class NamedElement implements Selector,
-    Color,
-    GlobalKeyword {
-  private final String name;
+  enum Style {
+    VALUE,
 
-  public NamedElement(String name) {
-    this.name = name;
+    BOX;
   }
 
-  @Override
-  public final String toString() {
-    return name;
+  final Style style;
+
+  final ParameterType type;
+
+  public Signature(Style style, ParameterType type) {
+    this.style = style;
+    this.type = type;
   }
+
 }
