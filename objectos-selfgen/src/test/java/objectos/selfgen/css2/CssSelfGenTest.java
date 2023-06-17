@@ -216,7 +216,7 @@ public class CssSelfGenTest {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 5);
+    assertEquals(result.size(), 6);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),
@@ -347,7 +347,7 @@ public class CssSelfGenTest {
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Length extends
-          LineWidth permits InternalLength {}
+          LineWidth permits InternalLength, Zero {}
       """
     );
 
@@ -362,6 +362,19 @@ public class CssSelfGenTest {
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface LineWidth extends PropertyValue permits NamedElement, Length {}
+      """
+    );
+
+    assertEquals(
+      result.get("objectos/css/tmpl/Zero.java"),
+      """
+      package objectos.css.tmpl;
+
+      import objectos.css.internal.InternalZero;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public sealed interface Zero extends Length permits InternalZero {}
       """
     );
   }

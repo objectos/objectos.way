@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import objectos.css.internal.InternalLength;
-import objectos.lang.Generated;
+import objectos.css.tmpl.Zero;
 
-@Generated("objectos.selfgen.CssSpec")
-public sealed interface Length extends
-    LineWidth permits InternalLength, Zero {}
+public enum InternalZero implements Zero {
+
+  INSTANCE;
+
+  @Override
+  public final String toString() {
+    return "0";
+  }
+
+}

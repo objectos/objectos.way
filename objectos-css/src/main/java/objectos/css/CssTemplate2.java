@@ -16,12 +16,16 @@
 package objectos.css;
 
 import java.util.Objects;
+import objectos.css.internal.InternalZero;
 import objectos.css.internal.StyleSheetBuilder;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
+import objectos.css.tmpl.Zero;
 
 public abstract class CssTemplate2 extends GeneratedCssTemplate {
+
+  protected static final Zero $0 = InternalZero.INSTANCE;
 
   private StyleSheetBuilder builder;
 

@@ -138,7 +138,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderWidth() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

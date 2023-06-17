@@ -21,9 +21,9 @@ import objectos.code.JavaSink;
 
 abstract class CompiledSpec {
 
-  abstract LengthType lengthType();
-
   abstract Collection<KeywordName> keywords();
+
+  abstract LengthType lengthType();
 
   abstract Collection<Property> properties();
 
@@ -34,5 +34,7 @@ abstract class CompiledSpec {
   final void write(JavaSink sink, ThisTemplate template) throws IOException {
     template.write(sink, this);
   }
+
+  abstract ZeroType zeroType();
 
 }

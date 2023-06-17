@@ -15,9 +15,8 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.InternalLength;
+import objectos.css.internal.InternalZero;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface Length extends
-    LineWidth permits InternalLength, Zero {}
+public sealed interface Zero extends Length permits InternalZero {}

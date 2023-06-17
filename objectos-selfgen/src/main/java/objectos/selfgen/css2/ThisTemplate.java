@@ -38,6 +38,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName INTERNAL_LENGTH = ClassTypeName.of(CSS_INTERNAL, "InternalLength");
 
+  static final ClassTypeName INTERNAL_ZERO = ClassTypeName.of(CSS_INTERNAL, "InternalZero");
+
   static final ClassTypeName LENGTH = ClassTypeName.of(CSS_TMPL, "Length");
 
   static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
@@ -67,6 +69,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STYLE_DECLARATION4
       = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration4");
+
+  static final ClassTypeName ZERO = ClassTypeName.of(CSS_TMPL, "Zero");
 
   CompiledSpec spec;
 

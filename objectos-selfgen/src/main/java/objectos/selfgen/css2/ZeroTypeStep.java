@@ -16,12 +16,11 @@
 package objectos.selfgen.css2;
 
 import java.io.IOException;
-import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 
-final class LengthTypeStep extends ThisTemplate {
+final class ZeroTypeStep extends ThisTemplate {
 
-  private LengthType lengthType;
+  private ZeroType zeroType;
 
   @Override
   protected final void definition() {
@@ -31,29 +30,25 @@ final class LengthTypeStep extends ThisTemplate {
 
     interfaceDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
-      PUBLIC, SEALED, name(LENGTH),
+      PUBLIC, SEALED, name(ZERO),
       include(this::interfaces),
-      permitsClause(INTERNAL_LENGTH, ZERO)
+      permitsClause(INTERNAL_ZERO)
     );
   }
 
   @Override
   final void writeHook(JavaSink sink) throws IOException {
-    lengthType = spec.lengthType();
+    zeroType = spec.zeroType();
 
-    if (lengthType != null) {
+    if (zeroType != null) {
       super.writeHook(sink);
     }
   }
 
   private void interfaces() {
-    lengthType.interfaces.stream()
-        .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
-        .forEach(this::interfacesImpl);
-  }
-
-  private void interfacesImpl(ClassTypeName className) {
-    extendsClause(NL, className);
+    if (zeroType.lengthType) {
+      extendsClause(LENGTH);
+    }
   }
 
 }

@@ -36,6 +36,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   private final Map<String, ValueType> valueTypes = new HashMap<>();
 
+  private ZeroType zeroType;
+
   public final void execute(String[] args) throws IOException {
     var srcDir = args[0];
 
@@ -57,6 +59,8 @@ public abstract class CssSelfGen extends CompiledSpec {
     spec.write(sink, new PropertyStep());
 
     spec.write(sink, new PropertyValueStep());
+
+    spec.write(sink, new ZeroTypeStep());
   }
 
   protected final CompiledSpec compile() {
@@ -114,6 +118,8 @@ public abstract class CssSelfGen extends CompiledSpec {
   protected final LengthType length(String... units) {
     if (lengthType == null) {
       lengthType = new LengthType();
+
+      zeroTypeIfNecessary().lengthType();
     }
 
     for (var unit : units) {
@@ -166,6 +172,11 @@ public abstract class CssSelfGen extends CompiledSpec {
     return valueTypes.values();
   }
 
+  @Override
+  final ZeroType zeroType() {
+    return zeroType;
+  }
+
   private void selector(String name) {
     var selector = SelectorName.of(name);
 
@@ -182,6 +193,14 @@ public abstract class CssSelfGen extends CompiledSpec {
     }
 
     selectors.put(key, selector);
+  }
+
+  private ZeroType zeroTypeIfNecessary() {
+    if (zeroType == null) {
+      zeroType = new ZeroType();
+    }
+
+    return zeroType;
   }
 
 }
