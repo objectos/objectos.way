@@ -47,8 +47,8 @@ public class CssSelfGenTest {
         );
 
         // B
-        prop("border-color", globalKeyword);
-        propBox("border-color", color);
+        pval("border-color", globalKeyword);
+        pbox("border-color", color);
       }
     };
 

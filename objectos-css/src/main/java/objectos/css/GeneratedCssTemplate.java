@@ -23,6 +23,7 @@ import objectos.css.internal.StyleDeclaration3;
 import objectos.css.internal.StyleDeclaration4;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
+import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.lang.Generated;
@@ -83,6 +84,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color blue = named("blue");
 
+  protected static final BoxSizingValue borderBox = named("border-box");
+
+  protected static final BoxSizingValue contentBox = named("content-box");
+
   protected static final Color currentcolor = named("currentcolor");
 
   protected static final Color fuchsia = named("fuchsia");
@@ -141,5 +146,13 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration borderColor(Color top, Color right, Color bottom, Color left) {
     return new StyleDeclaration4(Property.BORDER_COLOR, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration boxSizing(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BOX_SIZING, value.self());
+  }
+
+  protected final StyleDeclaration boxSizing(BoxSizingValue value) {
+    return new StyleDeclaration1(Property.BOX_SIZING, value.self());
   }
 }

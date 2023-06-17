@@ -59,8 +59,13 @@ public final class CssSpec extends CssSelfGen {
     );
 
     // B
-    prop("border-color", globalKeyword);
-    propBox("border-color", color);
+    pval("border-color", globalKeyword);
+    pbox("border-color", color);
+
+    pval("box-sizing", globalKeyword);
+    pval("box-sizing", def("BoxSizingValue",
+      kw("border-box"), kw("content-box")
+    ));
   }
 
 }

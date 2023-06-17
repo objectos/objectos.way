@@ -28,7 +28,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderColor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -206,7 +206,7 @@ public class CssTemplateTest {
   """)
   public void propertyBoxSizing() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1008,6 +1008,11 @@ public class CssTemplateTest {
   }
 
   private void test(CssTemplate template, String pretty) {
+    var sheet = template.toStyleSheet();
+    assertEquals(sheet.toString(), pretty);
+  }
+
+  private void test(CssTemplate2 template, String pretty) {
     var sheet = template.toStyleSheet();
     assertEquals(sheet.toString(), pretty);
   }

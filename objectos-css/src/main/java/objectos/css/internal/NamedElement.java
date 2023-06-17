@@ -16,12 +16,14 @@
 package objectos.css.internal;
 
 import objectos.css.om.Selector;
+import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public final class NamedElement implements Selector,
+    BoxSizingValue,
     Color,
     GlobalKeyword {
   private final String name;

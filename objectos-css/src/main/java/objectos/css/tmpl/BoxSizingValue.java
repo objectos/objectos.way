@@ -13,25 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.om.PropertyName;
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public enum Property implements PropertyName {
-  BORDER_COLOR("border-color"),
-
-  BOX_SIZING("box-sizing");
-
-  private final String propertyName;
-
-  private Property(String propertyName) {
-    this.propertyName = propertyName;
-  }
-
-  @Override
-  public final String toString() {
-    return propertyName;
-  }
-}
+public sealed interface BoxSizingValue extends PropertyValue permits NamedElement {}

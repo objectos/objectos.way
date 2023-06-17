@@ -16,8 +16,8 @@
 package objectos.selfgen.css2;
 
 import java.util.Comparator;
+import java.util.Objects;
 import objectos.code.ClassTypeName;
-import objectos.util.UnmodifiableList;
 
 public final class ValueType implements ParameterType {
 
@@ -26,11 +26,16 @@ public final class ValueType implements ParameterType {
 
   public final ClassTypeName className;
 
-  public final UnmodifiableList<Value> values;
-
-  ValueType(ClassTypeName className, UnmodifiableList<Value> values) {
+  ValueType(ClassTypeName className) {
     this.className = className;
-    this.values = values;
+  }
+
+  public static ValueType of(String simpleName) {
+    Objects.requireNonNull(simpleName, "simpleName == null");
+
+    var className = ClassTypeName.of(ThisTemplate.CSS_TMPL, simpleName);
+
+    return new ValueType(className);
   }
 
   @Override

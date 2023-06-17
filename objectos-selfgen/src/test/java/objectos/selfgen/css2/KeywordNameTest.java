@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.selfgen.css2;
 
-import objectos.css.om.PropertyName;
-import objectos.lang.Generated;
+import static org.testng.Assert.assertEquals;
 
-@Generated("objectos.selfgen.CssSpec")
-public enum Property implements PropertyName {
-  BORDER_COLOR("border-color"),
+import org.testng.annotations.Test;
 
-  BOX_SIZING("box-sizing");
+public class KeywordNameTest {
 
-  private final String propertyName;
+  @Test
+  public void of() {
+    var name = KeywordName.of("border-box");
 
-  private Property(String propertyName) {
-    this.propertyName = propertyName;
+    assertEquals(name.fieldName, "borderBox");
+    assertEquals(name.keywordName, "border-box");
   }
 
-  @Override
-  public final String toString() {
-    return propertyName;
-  }
 }

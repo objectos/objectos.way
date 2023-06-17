@@ -20,11 +20,9 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
+import objectos.lang.Check;
 import objectos.selfgen.css2.Signature.Style;
-import objectos.util.UnmodifiableList;
 
 public abstract class CssSelfGen extends CompiledSpec {
 
@@ -70,29 +68,17 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   protected final ValueType def(String simpleName, Value... values) {
-    Objects.requireNonNull(simpleName, "simpleName == null");
+    Check.argument(!valueTypes.containsKey(simpleName), "Duplicate ValueType name ", simpleName);
 
-    var existing = valueTypes.get(simpleName);
+    var valuetype = valueTypes.computeIfAbsent(simpleName, ValueType::of);
 
-    if (existing != null) {
-      throw new IllegalArgumentException(
-        """
-        Duplicate ValueType name '%s'
-        """.formatted(simpleName)
-      );
-    }
-
-    var className = ClassTypeName.of(ThisTemplate.CSS_TMPL, simpleName);
+    var className = valuetype.className;
 
     for (var value : values) {
       value.addInterface(className);
     }
 
-    var value = new ValueType(className, UnmodifiableList.copyOf(values));
-
-    valueTypes.put(simpleName, value);
-
-    return value;
+    return valuetype;
   }
 
   protected abstract void definition();
@@ -123,13 +109,13 @@ public abstract class CssSelfGen extends CompiledSpec {
     );
   }
 
-  protected final void prop(String propertyName, ParameterType value) {
+  protected final void pval(String propertyName, ParameterType value) {
     var property = properties.computeIfAbsent(propertyName, Property::of);
 
     property.addSignature(Style.VALUE, value);
   }
 
-  protected final void propBox(String propertyName, ParameterType value) {
+  protected final void pbox(String propertyName, ParameterType value) {
     var property = properties.computeIfAbsent(propertyName, Property::of);
 
     property.addSignature(Style.BOX, value);

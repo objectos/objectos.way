@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import java.util.TreeMap;
 import objectos.code.ClassTypeName;
+import objectos.selfgen.util.JavaNames;
 
 public final class KeywordName implements Value {
   static final Comparator<? super KeywordName> ORDER_BY_FIELD_NAME
@@ -38,7 +39,7 @@ public final class KeywordName implements Value {
   public static KeywordName of(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    var fieldName = name;
+    var fieldName = JavaNames.toValidMethodName(name);
 
     return new KeywordName(fieldName, name);
   }
