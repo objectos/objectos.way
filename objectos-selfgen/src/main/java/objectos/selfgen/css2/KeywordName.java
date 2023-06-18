@@ -46,6 +46,8 @@ public final class KeywordName implements Value {
 
   @Override
   public final void addValueType(ValueType valueType) {
+    valueType.addPermitted(ThisTemplate.NAMED_ELEMENT);
+
     interfaces.add(valueType.className);
   }
 

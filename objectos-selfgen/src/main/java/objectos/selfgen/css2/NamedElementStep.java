@@ -49,6 +49,7 @@ final class NamedElementStep extends ThisTemplate {
 
   private void superInterfaces() {
     spec.valueTypes().stream()
+        .filter(ValueType::permitsNamedElement)
         .sorted(ValueType.ORDER_BY_SIMPLE_NAME)
         .forEach(this::valueTypeImpl);
   }

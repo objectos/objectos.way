@@ -32,8 +32,7 @@ final class PropertyValueStep extends ThisTemplate {
     interfaceDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
       PUBLIC, SEALED, name(valueType.className),
-      extendsClause(PROPERTY_VALUE),
-      permitsClause(NAMED_ELEMENT),
+      include(this::superTypes),
       include(this::permitted)
     );
   }
@@ -44,6 +43,22 @@ final class PropertyValueStep extends ThisTemplate {
       this.valueType = valueType;
 
       super.writeHook(sink);
+    }
+  }
+
+  private void superTypes() {
+    var types = valueType.superTypes();
+
+    if (types.isEmpty()) {
+      extendsClause(PROPERTY_VALUE);
+    } else {
+      var iter = types.stream()
+          .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+          .iterator();
+
+      while (iter.hasNext()) {
+        extendsClause(NL, iter.next());
+      }
     }
   }
 

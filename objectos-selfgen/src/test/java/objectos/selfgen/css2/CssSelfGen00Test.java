@@ -354,7 +354,7 @@ public class CssSelfGen00Test {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LineWidth extends PropertyValue permits NamedElement, Length {}
+      public sealed interface LineWidth extends PropertyValue permits Length, NamedElement {}
       """
     );
 

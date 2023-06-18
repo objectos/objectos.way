@@ -72,7 +72,7 @@ public final class CssSpec extends CssSelfGen {
       )
     );
 
-    // length
+    // length/percentage
 
     var length = length(
       "ch", "cm",
@@ -84,6 +84,10 @@ public final class CssSpec extends CssSelfGen {
       "rem",
       "vh", "vmax", "vmin", "vw"
     );
+
+    var percentage = percentage();
+
+    var lengthPercentage = def("LengthPercentage", length, percentage);
 
     // keyword name clashes
     keywordFieldName("double", "_double");
@@ -124,6 +128,10 @@ public final class CssSpec extends CssSelfGen {
 
     pdbl("line-height");
     pint("line-height");
+    pval("line-height", def("LineHeightValue",
+      lengthPercentage,
+      kw("normal")
+    ));
   }
 
 }

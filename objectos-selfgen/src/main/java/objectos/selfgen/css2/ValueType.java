@@ -22,7 +22,7 @@ import objectos.code.ClassTypeName;
 import objectos.util.GrowableSet;
 import objectos.util.UnmodifiableSet;
 
-public final class ValueType implements ParameterType {
+public final class ValueType implements ParameterType, Value {
 
   static final Comparator<? super ValueType> ORDER_BY_SIMPLE_NAME
       = (self, that) -> self.className.simpleName().compareTo(that.className.simpleName());
@@ -30,6 +30,8 @@ public final class ValueType implements ParameterType {
   public final ClassTypeName className;
 
   private GrowableSet<ClassTypeName> subTypes;
+
+  private GrowableSet<ClassTypeName> superTypes;
 
   ValueType(ClassTypeName className) {
     this.className = className;
@@ -52,12 +54,31 @@ public final class ValueType implements ParameterType {
   }
 
   @Override
+  public final void addValueType(ValueType valueType) {
+    if (superTypes == null) {
+      superTypes = new GrowableSet<>();
+    }
+
+    superTypes.add(valueType.className);
+
+    valueType.addPermitted(className);
+  }
+
+  public final boolean permitsNamedElement() {
+    return permitted().contains(ThisTemplate.NAMED_ELEMENT);
+  }
+
+  @Override
   public final ClassTypeName typeName() {
     return className;
   }
 
   final Collection<ClassTypeName> permitted() {
     return subTypes != null ? subTypes : UnmodifiableSet.of();
+  }
+
+  final Collection<ClassTypeName> superTypes() {
+    return superTypes != null ? superTypes : UnmodifiableSet.of();
   }
 
 }
