@@ -22,6 +22,8 @@ import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.NoneKeyword;
+import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -31,7 +33,9 @@ public final class NamedElement implements Selector,
     GlobalKeyword,
     LineHeightValue,
     LineStyle,
-    LineWidth {
+    LineWidth,
+    TextSizeAdjustValue,
+    NoneKeyword {
   private final String name;
 
   public NamedElement(String name) {

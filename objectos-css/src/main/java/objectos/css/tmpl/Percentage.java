@@ -20,4 +20,5 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface Percentage extends
-    LengthPercentage permits InternalPercentage, Zero {}
+    LengthPercentage,
+    TextSizeAdjustValue permits InternalPercentage, Zero {}

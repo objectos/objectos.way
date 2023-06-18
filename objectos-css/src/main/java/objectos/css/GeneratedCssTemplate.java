@@ -34,7 +34,9 @@ import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.Percentage;
+import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -91,6 +93,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color aqua = named("aqua");
 
+  protected static final TextSizeAdjustValue auto = named("auto");
+
   protected static final Color black = named("black");
 
   protected static final Color blue = named("blue");
@@ -129,7 +133,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color navy = named("navy");
 
-  protected static final LineStyle none = named("none");
+  protected static final NoneKeyword none = named("none");
 
   protected static final LineHeightValue normal = named("normal");
 
@@ -375,5 +379,13 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
     return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {
+    return new StyleDeclaration1(Property._WEBKIT_TEXT_SIZE_ADJUST, value.self());
+  }
+
+  protected final StyleDeclaration webkitTextSizeAdjust(TextSizeAdjustValue value) {
+    return new StyleDeclaration1(Property._WEBKIT_TEXT_SIZE_ADJUST, value.self());
   }
 }

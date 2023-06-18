@@ -820,13 +820,14 @@ public class CssTemplateTest {
   """)
   public void propertyTextSizeAdjust() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
             html,
 
             webkitTextSizeAdjust(pct(100)),
+            webkitTextSizeAdjust($0),
             webkitTextSizeAdjust(auto),
             webkitTextSizeAdjust(none),
             webkitTextSizeAdjust(inherit)
@@ -837,6 +838,7 @@ public class CssTemplateTest {
       """
       html {
         -webkit-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 0;
         -webkit-text-size-adjust: auto;
         -webkit-text-size-adjust: none;
         -webkit-text-size-adjust: inherit;
