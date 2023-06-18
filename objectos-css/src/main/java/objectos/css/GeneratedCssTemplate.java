@@ -381,6 +381,30 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
   }
 
+  protected final StyleDeclaration mozTabSize(int value) {
+    return new StyleDeclarationInt(Property._MOZ_TAB_SIZE, value);
+  }
+
+  protected final StyleDeclaration mozTabSize(GlobalKeyword value) {
+    return new StyleDeclaration1(Property._MOZ_TAB_SIZE, value.self());
+  }
+
+  protected final StyleDeclaration mozTabSize(Length value) {
+    return new StyleDeclaration1(Property._MOZ_TAB_SIZE, value.self());
+  }
+
+  protected final StyleDeclaration tabSize(int value) {
+    return new StyleDeclarationInt(Property.TAB_SIZE, value);
+  }
+
+  protected final StyleDeclaration tabSize(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TAB_SIZE, value.self());
+  }
+
+  protected final StyleDeclaration tabSize(Length value) {
+    return new StyleDeclaration1(Property.TAB_SIZE, value.self());
+  }
+
   protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {
     return new StyleDeclaration1(Property._WEBKIT_TEXT_SIZE_ADJUST, value.self());
   }

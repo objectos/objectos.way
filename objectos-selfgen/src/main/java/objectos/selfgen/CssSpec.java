@@ -136,6 +136,14 @@ public final class CssSpec extends CssSelfGen {
 
     // T
 
+    pint("-moz-tab-size");
+    pval("-moz-tab-size", globalKeyword);
+    pval("-moz-tab-size", length);
+
+    pint("tab-size");
+    pval("tab-size", globalKeyword);
+    pval("tab-size", length);
+
     var textSizeAdjustValue = def("TextSizeAdjustValue",
       keywords("auto", "none"),
       percentage

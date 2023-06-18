@@ -30,6 +30,10 @@ public enum Property implements PropertyName {
 
   LINE_HEIGHT("line-height"),
 
+  TAB_SIZE("tab-size"),
+
+  _MOZ_TAB_SIZE("-moz-tab-size"),
+
   _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
 
   private final String propertyName;

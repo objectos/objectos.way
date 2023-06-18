@@ -610,7 +610,7 @@ public class CssTemplateTest {
   """)
   public void propertyTabSize() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

@@ -16,14 +16,19 @@
 package objectos.selfgen.css2;
 
 import objectos.code.ClassTypeName;
+import objectos.code.tmpl.TypeName;
 import objectos.util.GrowableList;
 import objectos.util.GrowableSet;
 
-public final class LengthType implements Value {
+public final class LengthType implements ParameterType, Value {
 
   public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
   public final GrowableList<String> units = new GrowableList<>();
+
+  public final void addUnit(String unit) {
+    units.addWithNullMessage(unit, "unit == null");
+  }
 
   @Override
   public final void addValueType(ValueType valueType) {
@@ -32,8 +37,9 @@ public final class LengthType implements Value {
     valueType.addPermitted(ThisTemplate.LENGTH);
   }
 
-  public final void addUnit(String unit) {
-    units.addWithNullMessage(unit, "unit == null");
+  @Override
+  public final TypeName typeName() {
+    return ThisTemplate.LENGTH;
   }
 
 }
