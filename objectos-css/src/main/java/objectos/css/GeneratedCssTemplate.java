@@ -28,6 +28,7 @@ import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.Length;
+import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
 import objectos.lang.Generated;
 
@@ -81,6 +82,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector any = named("*");
 
+  protected static final LineStyle _double = named("double");
+
   protected static final Color aqua = named("aqua");
 
   protected static final Color black = named("black");
@@ -93,15 +96,25 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color currentcolor = named("currentcolor");
 
+  protected static final LineStyle dashed = named("dashed");
+
+  protected static final LineStyle dotted = named("dotted");
+
   protected static final Color fuchsia = named("fuchsia");
 
   protected static final Color gray = named("gray");
 
   protected static final Color green = named("green");
 
+  protected static final LineStyle groove = named("groove");
+
+  protected static final LineStyle hidden = named("hidden");
+
   protected static final GlobalKeyword inherit = named("inherit");
 
   protected static final GlobalKeyword initial = named("initial");
+
+  protected static final LineStyle inset = named("inset");
 
   protected static final Color lime = named("lime");
 
@@ -111,13 +124,21 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color navy = named("navy");
 
+  protected static final LineStyle none = named("none");
+
   protected static final Color olive = named("olive");
+
+  protected static final LineStyle outset = named("outset");
 
   protected static final Color purple = named("purple");
 
   protected static final Color red = named("red");
 
+  protected static final LineStyle ridge = named("ridge");
+
   protected static final Color silver = named("silver");
+
+  protected static final LineStyle solid = named("solid");
 
   protected static final Color teal = named("teal");
 
@@ -275,6 +296,26 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration borderColor(Color top, Color right, Color bottom, Color left) {
     return new StyleDeclaration4(Property.BORDER_COLOR, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration borderStyle(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BORDER_STYLE, value.self());
+  }
+
+  protected final StyleDeclaration borderStyle(LineStyle all) {
+    return new StyleDeclaration1(Property.BORDER_STYLE, all.self());
+  }
+
+  protected final StyleDeclaration borderStyle(LineStyle vertical, LineStyle horizontal) {
+    return new StyleDeclaration2(Property.BORDER_STYLE, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration borderStyle(LineStyle top, LineStyle horizontal, LineStyle bottom) {
+    return new StyleDeclaration3(Property.BORDER_STYLE, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration borderStyle(LineStyle top, LineStyle right, LineStyle bottom, LineStyle left) {
+    return new StyleDeclaration4(Property.BORDER_STYLE, top.self(), right.self(), bottom.self(), left.self());
   }
 
   protected final StyleDeclaration borderWidth(GlobalKeyword value) {

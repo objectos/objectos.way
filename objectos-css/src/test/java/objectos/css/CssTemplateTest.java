@@ -104,7 +104,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderStyle() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -112,7 +112,7 @@ public class CssTemplateTest {
 
             borderStyle(none),
             borderStyle(hidden, dotted),
-            borderStyle(dashed, solid, double$),
+            borderStyle(dashed, solid, _double),
             borderStyle(groove, ridge, inset, outset),
             borderStyle(inherit)
           );
