@@ -89,30 +89,34 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   protected abstract void definition();
 
+  protected final void keywordFieldName(String keywordName, String fieldName) {
+    if (keywords.containsKey(keywordName)) {
+      throw new IllegalArgumentException(
+        """
+        Keyword %s was already defined.
+        """.formatted(keywordName)
+      );
+    }
+
+    var value = new KeywordName(fieldName, keywordName);
+
+    keywords.put(keywordName, value);
+  }
+
+  protected final KeywordNameSet keywords(String... names) {
+    var array = new KeywordName[names.length];
+
+    for (int i = 0; i < names.length; i++) {
+      var name = names[i];
+
+      array[i] = kw(name);
+    }
+
+    return new KeywordNameSet(array);
+  }
+
   protected final KeywordName kw(String name) {
-    var keyword = KeywordName.of(name);
-
-    var key = keyword.fieldName;
-
-    var existing = keywords.get(key);
-
-    if (existing == null) {
-      keywords.put(key, keyword);
-
-      return keyword;
-    }
-
-    if (existing.keywordName.equals(name)) {
-      return existing;
-    }
-
-    throw new IllegalArgumentException(
-      """
-      Duplicate keyword field name
-      keyword=%s
-      existing=%s
-      """.formatted(name, existing.keywordName)
-    );
+    return keywords.computeIfAbsent(name, KeywordName::of);
   }
 
   protected final LengthType length(String... units) {

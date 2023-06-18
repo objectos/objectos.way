@@ -47,25 +47,46 @@ public final class CssSpec extends CssSelfGen {
     // global keywords
 
     var globalKeyword = def("GlobalKeyword",
-      kw("inherit"), kw("initial"), kw("unset")
+      keywords("inherit", "initial", "unset")
     );
 
     // color
-
     var color = def("Color",
-      kw("currentcolor"), kw("transparent"),
+      keywords("currentcolor", "transparent"),
 
-      kw("black"), kw("silver"), kw("gray"), kw("white"), kw("maroon"), kw("red"), kw("purple"),
-      kw("fuchsia"), kw("green"), kw("lime"), kw("olive"), kw("yellow"), kw("navy"), kw("blue"),
-      kw("teal"), kw("aqua")
+      keywords(
+        "aqua",
+        "black", "blue",
+        "fuchsia",
+        "gray", "green",
+        "maroon",
+        "lime",
+        "navy",
+        "olive",
+        "purple",
+        "red",
+        "silver",
+        "teal",
+        "white",
+        "yellow"
+      )
     );
 
     // length
 
     var length = length(
-      "em", "ex", "ch", "rem", "vw", "vh", "vmin", "vmax", "cm", "mm", "q", "in",
-      "pt", "pc", "px"
+      "ch", "cm",
+      "em", "ex",
+      "in",
+      "mm",
+      "pc", "pt", "px",
+      "q",
+      "rem",
+      "vh", "vmax", "vmin", "vw"
     );
+
+    // keyword name clashes
+    keywordFieldName("double", "_double");
 
     // B
 
@@ -74,7 +95,7 @@ public final class CssSpec extends CssSelfGen {
 
     var lineWidth = def("LineWidth",
       length,
-      kw("thin"), kw("medium"), kw("thick")
+      keywords("medium", "thick", "thin")
     );
 
     pval("border-width", globalKeyword);
@@ -82,8 +103,22 @@ public final class CssSpec extends CssSelfGen {
 
     pval("box-sizing", globalKeyword);
     pval("box-sizing", def("BoxSizingValue",
-      kw("border-box"), kw("content-box")
+      keywords("border-box", "content-box")
     ));
+
+    var lineStyle = def("LineStyle",
+      keywords(
+        "dashed", "dotted", "double",
+        "groove", "hidden",
+        "inset",
+        "none",
+        "outset",
+        "ridge", "solid"
+      )
+    );
+
+    pval("border-style", globalKeyword);
+    pbox("border-style", lineStyle);
   }
 
 }
