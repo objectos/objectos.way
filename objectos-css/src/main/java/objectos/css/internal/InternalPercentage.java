@@ -15,31 +15,41 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.Selector;
-import objectos.css.tmpl.BoxSizingValue;
-import objectos.css.tmpl.Color;
-import objectos.css.tmpl.GlobalKeyword;
-import objectos.css.tmpl.LineHeightValue;
-import objectos.css.tmpl.LineStyle;
-import objectos.css.tmpl.LineWidth;
-import objectos.lang.Generated;
+import objectos.css.tmpl.Percentage;
 
-@Generated("objectos.selfgen.CssSpec")
-public final class NamedElement implements Selector,
-    BoxSizingValue,
-    Color,
-    GlobalKeyword,
-    LineHeightValue,
-    LineStyle,
-    LineWidth {
-  private final String name;
+public final class InternalPercentage implements Percentage {
 
-  public NamedElement(String name) {
-    this.name = name;
+  private static final InternalPercentage ZERO = new InternalPercentage("0");
+
+  private final String value;
+
+  public InternalPercentage(String value) {
+    this.value = value;
+  }
+
+  public static InternalPercentage of(double value) {
+    if (value == 0) {
+      return ZERO;
+    }
+
+    var s = Double.toString(value);
+
+    return new InternalPercentage(s + "%");
+  }
+
+  public static InternalPercentage of(int value) {
+    if (value == 0) {
+      return ZERO;
+    }
+
+    var s = Integer.toString(value);
+
+    return new InternalPercentage(s + "%");
   }
 
   @Override
   public final String toString() {
-    return name;
+    return value;
   }
+
 }

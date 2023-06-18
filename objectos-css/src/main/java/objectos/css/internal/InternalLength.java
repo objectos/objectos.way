@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.tmpl.Length;
 
 public final class InternalLength implements Length {
+  static final InternalLength ZERO = new InternalLength("0");
 
   private final String value;
 
@@ -26,11 +27,23 @@ public final class InternalLength implements Length {
   }
 
   public static InternalLength of(String unit, double value) {
-    throw new UnsupportedOperationException("Implement me");
+    if (value == 0) {
+      return ZERO;
+    }
+
+    var s = Double.toString(value);
+
+    return new InternalLength(s + unit);
   }
 
   public static InternalLength of(String unit, int value) {
-    throw new UnsupportedOperationException("Implement me");
+    if (value == 0) {
+      return ZERO;
+    }
+
+    var s = Integer.toString(value);
+
+    return new InternalLength(s + unit);
   }
 
   @Override

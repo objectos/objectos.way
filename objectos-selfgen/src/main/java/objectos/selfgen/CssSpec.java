@@ -128,6 +128,7 @@ public final class CssSpec extends CssSelfGen {
 
     pdbl("line-height");
     pint("line-height");
+    pval("line-height", globalKeyword);
     pval("line-height", def("LineHeightValue",
       lengthPercentage,
       kw("normal")

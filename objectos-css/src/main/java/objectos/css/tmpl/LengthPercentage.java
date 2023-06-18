@@ -13,33 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.om.Selector;
-import objectos.css.tmpl.BoxSizingValue;
-import objectos.css.tmpl.Color;
-import objectos.css.tmpl.GlobalKeyword;
-import objectos.css.tmpl.LineHeightValue;
-import objectos.css.tmpl.LineStyle;
-import objectos.css.tmpl.LineWidth;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public final class NamedElement implements Selector,
-    BoxSizingValue,
-    Color,
-    GlobalKeyword,
-    LineHeightValue,
-    LineStyle,
-    LineWidth {
-  private final String name;
-
-  public NamedElement(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public final String toString() {
-    return name;
-  }
-}
+public sealed interface LengthPercentage extends
+    LineHeightValue permits Length, Percentage {}

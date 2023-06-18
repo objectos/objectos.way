@@ -16,6 +16,7 @@
 package objectos.css;
 
 import objectos.css.internal.InternalLength;
+import objectos.css.internal.InternalPercentage;
 import objectos.css.internal.NamedElement;
 import objectos.css.internal.Property;
 import objectos.css.internal.StyleDeclaration1;
@@ -30,8 +31,10 @@ import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.Length;
+import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.Percentage;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -127,6 +130,8 @@ abstract class GeneratedCssTemplate {
   protected static final Color navy = named("navy");
 
   protected static final LineStyle none = named("none");
+
+  protected static final LineHeightValue normal = named("normal");
 
   protected static final Color olive = named("olive");
 
@@ -280,6 +285,14 @@ abstract class GeneratedCssTemplate {
     return InternalLength.of("vw", value);
   }
 
+  protected final Percentage pct(double value) {
+    return InternalPercentage.of(value);
+  }
+
+  protected final Percentage pct(int value) {
+    return InternalPercentage.of(value);
+  }
+
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
     return new StyleDeclaration1(Property.BORDER_COLOR, value.self());
   }
@@ -354,5 +367,13 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration lineHeight(int value) {
     return new StyleDeclarationInt(Property.LINE_HEIGHT, value);
+  }
+
+  protected final StyleDeclaration lineHeight(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration lineHeight(LineHeightValue value) {
+    return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
   }
 }
