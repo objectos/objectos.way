@@ -54,6 +54,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     spec.write(sink, new GeneratedCssTemplateStep());
 
+    spec.write(sink, new KeywordNameStep());
+
     spec.write(sink, new LengthTypeStep());
 
     spec.write(sink, new NamedElementStep());
@@ -75,6 +77,10 @@ public abstract class CssSelfGen extends CompiledSpec {
     valueTypes.clear();
 
     definition();
+
+    for (var keyword : keywords.values()) {
+      keyword.compile();
+    }
 
     return this;
   }

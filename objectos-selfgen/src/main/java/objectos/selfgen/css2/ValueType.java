@@ -64,6 +64,16 @@ public final class ValueType implements ParameterType, Value {
     valueType.addPermitted(className);
   }
 
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof ValueType that && className.equals(that.className);
+  }
+
+  @Override
+  public final int hashCode() {
+    return className.hashCode();
+  }
+
   public final boolean permitsNamedElement() {
     return permitted().contains(ThisTemplate.NAMED_ELEMENT);
   }

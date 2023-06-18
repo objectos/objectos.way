@@ -69,7 +69,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   }
 
   private void keywordField(KeywordName keyword) {
-    var type = keyword.fieldType();
+    var type = keyword.className();
 
     field(
       PROTECTED, STATIC, FINAL, type, name(keyword.fieldName),

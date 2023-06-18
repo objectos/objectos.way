@@ -133,6 +133,16 @@ public final class CssSpec extends CssSelfGen {
       lengthPercentage,
       kw("normal")
     ));
+
+    // T
+
+    var textSizeAdjustValue = def("TextSizeAdjustValue",
+      keywords("auto", "none"),
+      percentage
+    );
+
+    pval("-webkit-text-size-adjust", globalKeyword);
+    pval("-webkit-text-size-adjust", textSizeAdjustValue);
   }
 
 }

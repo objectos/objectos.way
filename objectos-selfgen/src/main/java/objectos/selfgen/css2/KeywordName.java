@@ -15,6 +15,7 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 import objectos.code.ClassTypeName;
@@ -25,11 +26,16 @@ public final class KeywordName implements Value {
   static final Comparator<? super KeywordName> ORDER_BY_FIELD_NAME
       = (self, that) -> self.fieldName.compareTo(that.fieldName);
 
+  static final Comparator<? super KeywordName> ORDER_BY_SIMPLE_NAME
+      = (self, that) -> self.className.simpleName().compareTo(that.className.simpleName());
+
   public final String fieldName;
 
   public final String keywordName;
 
-  private final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
+  private final GrowableSet<ValueType> valueTypes = new GrowableSet<>();
+
+  private ClassTypeName className;
 
   KeywordName(String fieldName, String keywordName) {
     this.fieldName = fieldName;
@@ -48,17 +54,47 @@ public final class KeywordName implements Value {
   public final void addValueType(ValueType valueType) {
     valueType.addPermitted(ThisTemplate.NAMED_ELEMENT);
 
-    interfaces.add(valueType.className);
+    valueTypes.add(valueType);
   }
 
-  public final ClassTypeName fieldType() {
-    return switch (interfaces.size()) {
+  public final ClassTypeName className() {
+    return className;
+  }
+
+  public final boolean shouldGenerate() {
+    return valueTypes.size() > 1;
+  }
+
+  final void compile() {
+    int size = valueTypes.size();
+
+    switch (size) {
       case 0 -> throw new IllegalStateException();
 
-      case 1 -> interfaces.iterator().next();
+      case 1 -> {
+        var iterator = valueTypes.iterator();
 
-      default -> throw new UnsupportedOperationException("Implement me");
-    };
+        var element = iterator.next();
+
+        className = element.className;
+
+        element.addPermitted(ThisTemplate.NAMED_ELEMENT);
+      }
+
+      default -> {
+        var simpleName = JavaNames.toValidClassName(keywordName) + "Keyword";
+
+        className = ClassTypeName.of(ThisTemplate.CSS_TMPL, simpleName);
+
+        for (var type : valueTypes) {
+          type.addPermitted(className);
+        }
+      }
+    }
+  }
+
+  final Collection<ValueType> valueTypes() {
+    return valueTypes;
   }
 
 }

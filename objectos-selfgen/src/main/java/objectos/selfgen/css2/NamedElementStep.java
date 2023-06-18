@@ -52,6 +52,15 @@ final class NamedElementStep extends ThisTemplate {
         .filter(ValueType::permitsNamedElement)
         .sorted(ValueType.ORDER_BY_SIMPLE_NAME)
         .forEach(this::valueTypeImpl);
+
+    spec.keywords().stream()
+        .filter(KeywordName::shouldGenerate)
+        .sorted(KeywordName.ORDER_BY_SIMPLE_NAME)
+        .forEach(this::keywordNameImpl);
+  }
+
+  private void keywordNameImpl(KeywordName kw) {
+    implementsClause(NL, kw.className());
   }
 
   private void valueTypeImpl(ValueType type) {
