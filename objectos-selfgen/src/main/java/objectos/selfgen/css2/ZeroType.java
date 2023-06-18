@@ -19,8 +19,14 @@ final class ZeroType {
 
   public boolean lengthType;
 
+  public boolean percentageType;
+
   final void lengthType() {
     lengthType = true;
+  }
+
+  final void percentageType() {
+    percentageType = true;
   }
 
 }

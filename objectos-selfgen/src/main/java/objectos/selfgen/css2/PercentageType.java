@@ -15,28 +15,18 @@
  */
 package objectos.selfgen.css2;
 
-import java.io.IOException;
-import java.util.Collection;
-import objectos.code.JavaSink;
+import objectos.code.ClassTypeName;
+import objectos.util.GrowableSet;
 
-abstract class CompiledSpec {
+public final class PercentageType implements Value {
 
-  abstract Collection<KeywordName> keywords();
+  public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
-  abstract LengthType lengthType();
+  @Override
+  public final void addValueType(ValueType valueType) {
+    interfaces.add(valueType.className);
 
-  abstract PercentageType percentageType();
-
-  abstract Collection<Property> properties();
-
-  abstract Collection<SelectorName> selectors();
-
-  abstract Collection<ValueType> valueTypes();
-
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
+    valueType.addPermitted(ThisTemplate.PERCENTAGE);
   }
-
-  abstract ZeroType zeroType();
 
 }

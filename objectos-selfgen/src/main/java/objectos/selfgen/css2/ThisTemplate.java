@@ -38,6 +38,9 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName INTERNAL_LENGTH = ClassTypeName.of(CSS_INTERNAL, "InternalLength");
 
+  static final ClassTypeName INTERNAL_PERCENTAGE
+      = ClassTypeName.of(CSS_INTERNAL, "InternalPercentage");
+
   static final ClassTypeName INTERNAL_ZERO = ClassTypeName.of(CSS_INTERNAL, "InternalZero");
 
   static final ClassTypeName LENGTH = ClassTypeName.of(CSS_TMPL, "Length");
@@ -45,6 +48,8 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
 
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
+
+  static final ClassTypeName PERCENTAGE = ClassTypeName.of(CSS_TMPL, "Percentage");
 
   static final ClassTypeName PROPERTY = ClassTypeName.of(CSS_INTERNAL, "Property");
 

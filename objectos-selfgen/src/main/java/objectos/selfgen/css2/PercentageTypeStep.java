@@ -16,11 +16,12 @@
 package objectos.selfgen.css2;
 
 import java.io.IOException;
+import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 
-final class ZeroTypeStep extends ThisTemplate {
+final class PercentageTypeStep extends ThisTemplate {
 
-  private ZeroType zeroType;
+  private PercentageType percentageType;
 
   @Override
   protected final void definition() {
@@ -30,29 +31,29 @@ final class ZeroTypeStep extends ThisTemplate {
 
     interfaceDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
-      PUBLIC, SEALED, name(ZERO),
+      PUBLIC, SEALED, name(PERCENTAGE),
       include(this::interfaces),
-      permitsClause(INTERNAL_ZERO)
+      permitsClause(INTERNAL_PERCENTAGE, ZERO)
     );
   }
 
   @Override
   final void writeHook(JavaSink sink) throws IOException {
-    zeroType = spec.zeroType();
+    percentageType = spec.percentageType();
 
-    if (zeroType != null) {
+    if (percentageType != null) {
       super.writeHook(sink);
     }
   }
 
   private void interfaces() {
-    if (zeroType.lengthType) {
-      extendsClause(LENGTH);
-    }
+    percentageType.interfaces.stream()
+        .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+        .forEach(this::interfacesImpl);
+  }
 
-    if (zeroType.percentageType) {
-      extendsClause(PERCENTAGE);
-    }
+  private void interfacesImpl(ClassTypeName className) {
+    extendsClause(NL, className);
   }
 
 }

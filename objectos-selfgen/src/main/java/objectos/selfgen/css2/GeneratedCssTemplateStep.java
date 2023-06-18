@@ -41,6 +41,8 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
       include(this::length),
 
+      include(this::percentage),
+
       include(this::properties)
     );
   }
@@ -97,6 +99,24 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       parameter(INT, name("value")),
       p(RETURN, INTERNAL_LENGTH, v("of"), argument(s(unit)), argument(n("value")))
     );
+  }
+
+  private void percentage() {
+    var percentageType = spec.percentageType();
+
+    if (percentageType != null) {
+      method(
+        PROTECTED, FINAL, PERCENTAGE, name("pct"),
+        parameter(DOUBLE, name("value")),
+        p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
+      );
+
+      method(
+        PROTECTED, FINAL, PERCENTAGE, name("pct"),
+        parameter(INT, name("value")),
+        p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
+      );
+    }
   }
 
   private void properties() {

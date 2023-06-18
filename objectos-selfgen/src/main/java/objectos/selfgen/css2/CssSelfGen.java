@@ -28,13 +28,15 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   private final Map<String, KeywordName> keywords = new HashMap<>();
 
-  private LengthType lengthType;
-
   private final Map<String, Property> properties = new HashMap<>();
 
   private final Map<String, SelectorName> selectors = new HashMap<>();
 
   private final Map<String, ValueType> valueTypes = new HashMap<>();
+
+  private LengthType lengthType;
+
+  private PercentageType percentageType;
 
   private ZeroType zeroType;
 
@@ -55,6 +57,8 @@ public abstract class CssSelfGen extends CompiledSpec {
     spec.write(sink, new LengthTypeStep());
 
     spec.write(sink, new NamedElementStep());
+
+    spec.write(sink, new PercentageTypeStep());
 
     spec.write(sink, new PropertyStep());
 
@@ -145,6 +149,16 @@ public abstract class CssSelfGen extends CompiledSpec {
     property.addSignature(Style.DOUBLE, ParameterType.DOUBLE);
   }
 
+  protected final PercentageType percentage() {
+    if (percentageType == null) {
+      percentageType = new PercentageType();
+
+      zeroTypeIfNecessary().percentageType();
+    }
+
+    return percentageType;
+  }
+
   protected final void pint(String propertyName) {
     var property = properties.computeIfAbsent(propertyName, Property::of);
 
@@ -171,6 +185,11 @@ public abstract class CssSelfGen extends CompiledSpec {
   @Override
   final LengthType lengthType() {
     return lengthType;
+  }
+
+  @Override
+  final PercentageType percentageType() {
+    return percentageType;
   }
 
   @Override
