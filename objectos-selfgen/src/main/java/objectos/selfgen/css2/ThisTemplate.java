@@ -70,6 +70,12 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName STYLE_DECLARATION4
       = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration4");
 
+  static final ClassTypeName STYLE_DECLARATION_DOUBLE
+      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationDouble");
+
+  static final ClassTypeName STYLE_DECLARATION_INT
+      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationInt");
+
   static final ClassTypeName ZERO = ClassTypeName.of(CSS_TMPL, "Zero");
 
   CompiledSpec spec;

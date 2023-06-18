@@ -107,13 +107,13 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private void propertyMethods(Property property) {
     for (var signature : property.signatures()) {
-      var className = signature.type.className();
+      var typeName = signature.type.typeName();
 
       switch (signature.style) {
         case BOX -> {
           method(
             PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(className, name("all")),
+            parameter(typeName, name("all")),
             p(
               RETURN, NEW, STYLE_DECLARATION1,
               argument(PROPERTY, n(property.constantName)),
@@ -123,8 +123,8 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
           method(
             PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(className, name("vertical")),
-            parameter(className, name("horizontal")),
+            parameter(typeName, name("vertical")),
+            parameter(typeName, name("horizontal")),
             p(
               RETURN, NEW, STYLE_DECLARATION2,
               argument(PROPERTY, n(property.constantName)),
@@ -135,9 +135,9 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
           method(
             PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(className, name("top")),
-            parameter(className, name("horizontal")),
-            parameter(className, name("bottom")),
+            parameter(typeName, name("top")),
+            parameter(typeName, name("horizontal")),
+            parameter(typeName, name("bottom")),
             p(
               RETURN, NEW, STYLE_DECLARATION3,
               argument(PROPERTY, n(property.constantName)),
@@ -149,10 +149,10 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
           method(
             PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(className, name("top")),
-            parameter(className, name("right")),
-            parameter(className, name("bottom")),
-            parameter(className, name("left")),
+            parameter(typeName, name("top")),
+            parameter(typeName, name("right")),
+            parameter(typeName, name("bottom")),
+            parameter(typeName, name("left")),
             p(
               RETURN, NEW, STYLE_DECLARATION4,
               argument(PROPERTY, n(property.constantName)),
@@ -164,10 +164,34 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           );
         }
 
+        case DOUBLE -> {
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(typeName, name("value")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION_DOUBLE,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("value"))
+            )
+          );
+        }
+
+        case INT -> {
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(typeName, name("value")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION_INT,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("value"))
+            )
+          );
+        }
+
         case VALUE -> {
           method(
             PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(className, name("value")),
+            parameter(typeName, name("value")),
             p(
               RETURN, NEW, STYLE_DECLARATION1,
               argument(PROPERTY, n(property.constantName)),

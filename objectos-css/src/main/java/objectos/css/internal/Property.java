@@ -26,7 +26,9 @@ public enum Property implements PropertyName {
 
   BORDER_WIDTH("border-width"),
 
-  BOX_SIZING("box-sizing");
+  BOX_SIZING("box-sizing"),
+
+  LINE_HEIGHT("line-height");
 
   private final String propertyName;
 

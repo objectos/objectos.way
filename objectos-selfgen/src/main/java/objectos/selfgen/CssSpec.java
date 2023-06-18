@@ -119,6 +119,11 @@ public final class CssSpec extends CssSelfGen {
 
     pval("border-style", globalKeyword);
     pbox("border-style", lineStyle);
+
+    // L
+
+    pdbl("line-height");
+    pint("line-height");
   }
 
 }

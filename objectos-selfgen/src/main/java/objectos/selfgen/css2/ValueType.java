@@ -52,7 +52,7 @@ public final class ValueType implements ParameterType {
   }
 
   @Override
-  public final ClassTypeName className() {
+  public final ClassTypeName typeName() {
     return className;
   }
 

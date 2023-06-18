@@ -15,10 +15,21 @@
  */
 package objectos.selfgen.css2;
 
-import objectos.code.ClassTypeName;
+import objectos.code.PrimitiveTypeName;
+import objectos.code.tmpl.TypeName;
 
 interface ParameterType {
 
-  ClassTypeName className();
+  ParameterType DOUBLE = new ParameterType() {
+    @Override
+    public final TypeName typeName() { return PrimitiveTypeName.DOUBLE; }
+  };
+
+  ParameterType INT = new ParameterType() {
+    @Override
+    public final TypeName typeName() { return PrimitiveTypeName.INT; }
+  };
+
+  TypeName typeName();
 
 }

@@ -20,7 +20,11 @@ final class Signature {
   enum Style {
     VALUE,
 
-    BOX;
+    BOX,
+
+    DOUBLE,
+
+    INT;
   }
 
   final Style style;

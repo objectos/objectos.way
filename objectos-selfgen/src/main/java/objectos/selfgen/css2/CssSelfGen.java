@@ -139,6 +139,18 @@ public abstract class CssSelfGen extends CompiledSpec {
     property.addSignature(Style.BOX, value);
   }
 
+  protected final void pdbl(String propertyName) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(Style.DOUBLE, ParameterType.DOUBLE);
+  }
+
+  protected final void pint(String propertyName) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(Style.INT, ParameterType.INT);
+  }
+
   protected final void pval(String propertyName, ParameterType value) {
     var property = properties.computeIfAbsent(propertyName, Property::of);
 

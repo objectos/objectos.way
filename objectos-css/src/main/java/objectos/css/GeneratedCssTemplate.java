@@ -22,6 +22,8 @@ import objectos.css.internal.StyleDeclaration1;
 import objectos.css.internal.StyleDeclaration2;
 import objectos.css.internal.StyleDeclaration3;
 import objectos.css.internal.StyleDeclaration4;
+import objectos.css.internal.StyleDeclarationDouble;
+import objectos.css.internal.StyleDeclarationInt;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.BoxSizingValue;
@@ -344,5 +346,13 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration boxSizing(BoxSizingValue value) {
     return new StyleDeclaration1(Property.BOX_SIZING, value.self());
+  }
+
+  protected final StyleDeclaration lineHeight(double value) {
+    return new StyleDeclarationDouble(Property.LINE_HEIGHT, value);
+  }
+
+  protected final StyleDeclaration lineHeight(int value) {
+    return new StyleDeclarationInt(Property.LINE_HEIGHT, value);
   }
 }
