@@ -332,7 +332,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontSize() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -415,7 +415,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontWeight() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

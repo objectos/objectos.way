@@ -22,4 +22,5 @@ import objectos.lang.Generated;
 public sealed interface NormalKeyword extends
     FontFeatureSettingsValue,
     FontVariationSettingsValue,
+    FontWeightValue,
     LineHeightValue permits NamedElement {}

@@ -33,7 +33,9 @@ import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
+import objectos.css.tmpl.FontSizeValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
+import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.HeightValue;
 import objectos.css.tmpl.Length;
@@ -41,9 +43,11 @@ import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
 import objectos.css.tmpl.MarginValue;
+import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.Percentage;
+import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
@@ -86,8 +90,6 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector samp = named("samp");
 
-  protected static final Selector small = named("small");
-
   protected static final Selector strong = named("strong");
 
   protected static final Selector sub = named("sub");
@@ -107,6 +109,10 @@ abstract class GeneratedCssTemplate {
   protected static final Color black = named("black");
 
   protected static final Color blue = named("blue");
+
+  protected static final FontWeightValue bold = named("bold");
+
+  protected static final FontWeightValue bolder = named("bolder");
 
   protected static final BoxSizingValue borderBox = named("border-box");
 
@@ -144,6 +150,12 @@ abstract class GeneratedCssTemplate {
 
   protected static final LineStyle inset = named("inset");
 
+  protected static final FontSizeValue large = named("large");
+
+  protected static final FontSizeValue larger = named("larger");
+
+  protected static final FontWeightValue lighter = named("lighter");
+
   protected static final Color lime = named("lime");
 
   protected static final Color maroon = named("maroon");
@@ -152,7 +164,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final HeightValue maxContent = named("max-content");
 
-  protected static final LineWidth medium = named("medium");
+  protected static final MediumKeyword medium = named("medium");
 
   protected static final HeightValue minContent = named("min-content");
 
@@ -180,6 +192,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color silver = named("silver");
 
+  protected static final SmallKeyword small = named("small");
+
+  protected static final FontSizeValue smaller = named("smaller");
+
   protected static final LineStyle solid = named("solid");
 
   protected static final FontFamilyValue systemUi = named("system-ui");
@@ -203,6 +219,16 @@ abstract class GeneratedCssTemplate {
   protected static final GlobalKeyword unset = named("unset");
 
   protected static final Color white = named("white");
+
+  protected static final FontSizeValue xLarge = named("x-large");
+
+  protected static final FontSizeValue xSmall = named("x-small");
+
+  protected static final FontSizeValue xxLarge = named("xx-large");
+
+  protected static final FontSizeValue xxSmall = named("xx-small");
+
+  protected static final FontSizeValue xxxLarge = named("xxx-large");
 
   protected static final Color yellow = named("yellow");
 
@@ -512,12 +538,32 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.FONT_FEATURE_SETTINGS, value.self());
   }
 
+  protected final StyleDeclaration fontSize(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.FONT_SIZE, value.self());
+  }
+
+  protected final StyleDeclaration fontSize(FontSizeValue value) {
+    return new StyleDeclaration1(Property.FONT_SIZE, value.self());
+  }
+
   protected final StyleDeclaration fontVariationSettings(GlobalKeyword value) {
     return new StyleDeclaration1(Property.FONT_VARIATION_SETTINGS, value.self());
   }
 
   protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
     return new StyleDeclaration1(Property.FONT_VARIATION_SETTINGS, value.self());
+  }
+
+  protected final StyleDeclaration fontWeight(int value) {
+    return new StyleDeclarationInt(Property.FONT_WEIGHT, value);
+  }
+
+  protected final StyleDeclaration fontWeight(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.FONT_WEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration fontWeight(FontWeightValue value) {
+    return new StyleDeclaration1(Property.FONT_WEIGHT, value.self());
   }
 
   protected final StyleDeclaration height(GlobalKeyword value) {

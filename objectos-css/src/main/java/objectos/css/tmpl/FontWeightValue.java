@@ -15,11 +15,9 @@
  */
 package objectos.css.tmpl;
 
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LengthPercentage extends
-    FontSizeValue,
-    HeightValue,
-    LineHeightValue,
-    MarginValue permits Length, Percentage {}
+public sealed interface FontWeightValue extends PropertyValue permits NamedElement, NormalKeyword {}

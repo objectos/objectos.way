@@ -20,4 +20,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LineWidth extends PropertyValue permits Length, NamedElement {}
+public sealed interface LineWidth extends PropertyValue permits Length, MediumKeyword, NamedElement {}

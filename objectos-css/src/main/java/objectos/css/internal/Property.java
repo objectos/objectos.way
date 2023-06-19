@@ -42,7 +42,11 @@ public enum Property implements PropertyName {
 
   FONT_FEATURE_SETTINGS("font-feature-settings"),
 
+  FONT_SIZE("font-size"),
+
   FONT_VARIATION_SETTINGS("font-variation-settings"),
+
+  FONT_WEIGHT("font-weight"),
 
   HEIGHT("height"),
 

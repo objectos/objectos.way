@@ -21,15 +21,19 @@ import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
+import objectos.css.tmpl.FontSizeValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
+import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.HeightValue;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
 import objectos.css.tmpl.MarginValue;
+import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
+import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
@@ -39,7 +43,9 @@ public final class NamedElement implements Selector,
     Color,
     FontFamilyValue,
     FontFeatureSettingsValue,
+    FontSizeValue,
     FontVariationSettingsValue,
+    FontWeightValue,
     GlobalKeyword,
     HeightValue,
     LineHeightValue,
@@ -48,8 +54,10 @@ public final class NamedElement implements Selector,
     MarginValue,
     TextSizeAdjustValue,
     AutoKeyword,
+    MediumKeyword,
     NoneKeyword,
-    NormalKeyword {
+    NormalKeyword,
+    SmallKeyword {
   private final String name;
 
   public NamedElement(String name) {
