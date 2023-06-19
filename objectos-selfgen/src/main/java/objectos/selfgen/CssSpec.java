@@ -98,6 +98,10 @@ public final class CssSpec extends CssSelfGen {
 
     // B
 
+    var borderCollapseVale = def("BorderCollapseValue",
+      keywords("collapse", "separate")
+    );
+
     var bottomValue = def("BottomValue",
       kw("auto"),
       lengthPercentage
@@ -118,6 +122,9 @@ public final class CssSpec extends CssSelfGen {
         "ridge", "solid"
       )
     );
+
+    pval("border-collapse", globalKeyword);
+    pval("border-collapse", borderCollapseVale);
 
     pval("border-color", globalKeyword);
     pbox("border-color", color);

@@ -22,6 +22,8 @@ import objectos.lang.Generated;
 public enum Property implements PropertyName {
   BORDER_BOTTOM_WIDTH("border-bottom-width"),
 
+  BORDER_COLLAPSE("border-collapse"),
+
   BORDER_COLOR("border-color"),
 
   BORDER_LEFT_WIDTH("border-left-width"),

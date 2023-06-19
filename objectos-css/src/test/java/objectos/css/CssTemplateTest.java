@@ -22,6 +22,36 @@ import org.testng.annotations.Test;
 public class CssTemplateTest {
 
   @Test(description = """
+  [#417] Preflight 11
+
+  - border-collapse
+  """)
+  public void propertyBorderCollapse() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            table,
+
+            borderCollapse(collapse),
+            borderCollapse(separate),
+            borderCollapse(inherit)
+          );
+        }
+      },
+
+      """
+      table {
+        border-collapse: collapse;
+        border-collapse: separate;
+        border-collapse: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - border-color
@@ -52,48 +82,6 @@ public class CssTemplateTest {
         border-color: teal yellow aqua fuchsia;
         border-color: transparent navy gray maroon;
         border-color: inherit;
-      }
-      """
-    );
-  }
-
-  @Test(description = """
-  [#417] Preflight 11
-
-  - text-indent
-  """)
-  public void propertyTextIndent() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            table,
-
-            textIndent($0),
-            textIndent(mm(3)),
-            textIndent(px(40)),
-            textIndent(pct(15)),
-
-            textIndent(em(5), eachLine),
-            textIndent(em(5), hanging),
-            textIndent(em(5), hanging, eachLine),
-
-            textIndent(inherit)
-          );
-        }
-      },
-
-      """
-      table {
-        text-indent: 0;
-        text-indent: 3mm;
-        text-indent: 40px;
-        text-indent: 15%;
-        text-indent: 5em each-line;
-        text-indent: 5em hanging;
-        text-indent: 5em hanging each-line;
-        text-indent: inherit;
       }
       """
     );
@@ -850,6 +838,48 @@ public class CssTemplateTest {
         text-decoration-thickness: 3px;
         text-decoration-thickness: 10%;
         text-decoration-thickness: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#417] Preflight 11
+
+  - text-indent
+  """)
+  public void propertyTextIndent() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            table,
+
+            textIndent($0),
+            textIndent(mm(3)),
+            textIndent(px(40)),
+            textIndent(pct(15)),
+
+            textIndent(em(5), eachLine),
+            textIndent(em(5), hanging),
+            textIndent(em(5), hanging, eachLine),
+
+            textIndent(inherit)
+          );
+        }
+      },
+
+      """
+      table {
+        text-indent: 0;
+        text-indent: 3mm;
+        text-indent: 40px;
+        text-indent: 15%;
+        text-indent: 5em each-line;
+        text-indent: 5em hanging;
+        text-indent: 5em hanging each-line;
+        text-indent: inherit;
       }
       """
     );

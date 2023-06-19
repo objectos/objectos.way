@@ -29,6 +29,7 @@ import objectos.css.internal.StyleDeclarationInt;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.AutoKeyword;
+import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
@@ -144,6 +145,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final VerticalAlignValue bottom = named("bottom");
 
+  protected static final BorderCollapseValue collapse = named("collapse");
+
   protected static final BoxSizingValue contentBox = named("content-box");
 
   protected static final Color currentcolor = named("currentcolor");
@@ -231,6 +234,8 @@ abstract class GeneratedCssTemplate {
   protected static final LineStyle ridge = named("ridge");
 
   protected static final FontFamilyValue sansSerif = named("sans-serif");
+
+  protected static final BorderCollapseValue separate = named("separate");
 
   protected static final FontFamilyValue serif = named("serif");
 
@@ -444,6 +449,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration borderBottomWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
     return new StyleDeclaration4(Property.BORDER_BOTTOM_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration borderCollapse(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BORDER_COLLAPSE, value.self());
+  }
+
+  protected final StyleDeclaration borderCollapse(BorderCollapseValue value) {
+    return new StyleDeclaration1(Property.BORDER_COLLAPSE, value.self());
   }
 
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
