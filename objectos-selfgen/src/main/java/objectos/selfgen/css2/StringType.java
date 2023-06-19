@@ -15,15 +15,18 @@
  */
 package objectos.selfgen.css2;
 
-final class Signature {
+import objectos.code.ClassTypeName;
+import objectos.util.GrowableSet;
 
-  final Style style;
+public final class StringType implements Value {
 
-  final ParameterType type;
+  public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
-  public Signature(Style style, ParameterType type) {
-    this.style = style;
-    this.type = type;
+  @Override
+  public final void addValueType(ValueType valueType) {
+    interfaces.add(valueType.className);
+
+    valueType.addPermitted(ThisTemplate.STRING_LITERAL);
   }
 
 }

@@ -43,6 +43,8 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
       include(this::percentage),
 
+      include(this::string),
+
       include(this::properties)
     );
   }
@@ -104,19 +106,35 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   private void percentage() {
     var percentageType = spec.percentageType();
 
-    if (percentageType != null) {
-      method(
-        PROTECTED, FINAL, PERCENTAGE, name("pct"),
-        parameter(DOUBLE, name("value")),
-        p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
-      );
-
-      method(
-        PROTECTED, FINAL, PERCENTAGE, name("pct"),
-        parameter(INT, name("value")),
-        p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
-      );
+    if (percentageType == null) {
+      return;
     }
+
+    method(
+      PROTECTED, FINAL, PERCENTAGE, name("pct"),
+      parameter(DOUBLE, name("value")),
+      p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
+    );
+
+    method(
+      PROTECTED, FINAL, PERCENTAGE, name("pct"),
+      parameter(INT, name("value")),
+      p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
+    );
+  }
+
+  private void string() {
+    var stringType = spec.stringType();
+
+    if (stringType == null) {
+      return;
+    }
+
+    method(
+      PROTECTED, FINAL, STRING_LITERAL, name("l"),
+      parameter(STRING, name("value")),
+      p(RETURN, INTERNAL_STRING_LITERAL, v("of"), argument(n("value")))
+    );
   }
 
   private void properties() {
@@ -217,6 +235,13 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
               argument(PROPERTY, n(property.constantName)),
               argument(n("value"), v("self"))
             )
+          );
+        }
+
+        case VARARGS -> {
+          method(
+            PROTECTED, ABSTRACT, STYLE_DECLARATION, name(property.methodName),
+            parameter(typeName, ELLIPSIS, name("values"))
           );
         }
       }

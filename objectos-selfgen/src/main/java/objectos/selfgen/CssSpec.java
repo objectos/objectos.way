@@ -124,6 +124,25 @@ public final class CssSpec extends CssSelfGen {
     pval("border-style", globalKeyword);
     pbox("border-style", lineStyle);
 
+    // F
+    var fontFamilyValue = def("FontFamilyValue",
+      keywords(
+        "cursive",
+        "emoji",
+        "fangsong", "fantasy",
+        "math", "monospace",
+        "sans-serif", "serif", "system-ui",
+        "ui-monospace",
+        "ui-rounded",
+        "ui-sans-serif",
+        "ui-serif"
+      ),
+      string()
+    );
+
+    pval("font-family", globalKeyword);
+    pvar("font-family", fontFamilyValue);
+
     // L
 
     pdbl("line-height");

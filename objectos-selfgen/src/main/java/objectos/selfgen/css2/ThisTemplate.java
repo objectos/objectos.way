@@ -41,6 +41,9 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName INTERNAL_PERCENTAGE
       = ClassTypeName.of(CSS_INTERNAL, "InternalPercentage");
 
+  static final ClassTypeName INTERNAL_STRING_LITERAL
+      = ClassTypeName.of(CSS_INTERNAL, "InternalStringLiteral");
+
   static final ClassTypeName INTERNAL_ZERO = ClassTypeName.of(CSS_INTERNAL, "InternalZero");
 
   static final ClassTypeName LENGTH = ClassTypeName.of(CSS_TMPL, "Length");
@@ -60,6 +63,8 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
 
   static final ClassTypeName STRING = ClassTypeName.of(String.class);
+
+  static final ClassTypeName STRING_LITERAL = ClassTypeName.of(CSS_TMPL, "StringLiteral");
 
   static final ClassTypeName STYLE_DECLARATION = ClassTypeName.of(CSS_OM, "StyleDeclaration");
 

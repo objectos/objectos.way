@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import objectos.code.JavaSink;
 import objectos.lang.Check;
-import objectos.selfgen.css2.Signature.Style;
 
 public abstract class CssSelfGen extends CompiledSpec {
 
@@ -37,6 +36,8 @@ public abstract class CssSelfGen extends CompiledSpec {
   private LengthType lengthType;
 
   private PercentageType percentageType;
+
+  private StringType stringType;
 
   private ZeroType zeroType;
 
@@ -65,6 +66,8 @@ public abstract class CssSelfGen extends CompiledSpec {
     spec.write(sink, new PropertyStep());
 
     spec.write(sink, new PropertyValueStep());
+
+    spec.write(sink, new StringTypeStep());
 
     spec.write(sink, new ZeroTypeStep());
   }
@@ -177,10 +180,24 @@ public abstract class CssSelfGen extends CompiledSpec {
     property.addSignature(Style.VALUE, value);
   }
 
+  protected final void pvar(String propertyName, ParameterType value) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(Style.VARARGS, value);
+  }
+
   protected final void selectors(String... names) {
     for (var name : names) {
       selector(name);
     }
+  }
+
+  protected final StringType string() {
+    if (stringType == null) {
+      stringType = new StringType();
+    }
+
+    return stringType;
   }
 
   @Override
@@ -206,6 +223,11 @@ public abstract class CssSelfGen extends CompiledSpec {
   @Override
   final Collection<SelectorName> selectors() {
     return selectors.values();
+  }
+
+  @Override
+  final StringType stringType() {
+    return stringType;
   }
 
   @Override

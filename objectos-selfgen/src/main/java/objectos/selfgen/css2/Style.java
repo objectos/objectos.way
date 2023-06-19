@@ -15,15 +15,14 @@
  */
 package objectos.selfgen.css2;
 
-final class Signature {
+enum Style {
+  VALUE,
 
-  final Style style;
+  BOX,
 
-  final ParameterType type;
+  DOUBLE,
 
-  public Signature(Style style, ParameterType type) {
-    this.style = style;
-    this.type = type;
-  }
+  INT,
 
+  VARARGS;
 }

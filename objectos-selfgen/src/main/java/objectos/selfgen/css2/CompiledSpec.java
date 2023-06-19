@@ -31,6 +31,8 @@ abstract class CompiledSpec {
 
   abstract Collection<SelectorName> selectors();
 
+  abstract StringType stringType();
+
   abstract Collection<ValueType> valueTypes();
 
   final void write(JavaSink sink, ThisTemplate template) throws IOException {

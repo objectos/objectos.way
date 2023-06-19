@@ -19,7 +19,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import objectos.selfgen.css2.Signature.Style;
 import objectos.selfgen.util.JavaNames;
 import objectos.util.GrowableList;
 
