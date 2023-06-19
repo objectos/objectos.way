@@ -64,7 +64,7 @@ final class Property {
 
   public final void addSignature(Style style, ParameterType parameterType) {
     signatures.add(
-      new Signature(style, parameterType)
+      new Signature.Standard(style, parameterType)
     );
   }
 

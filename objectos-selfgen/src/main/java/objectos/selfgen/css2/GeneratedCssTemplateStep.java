@@ -15,6 +15,9 @@
  */
 package objectos.selfgen.css2;
 
+import objectos.selfgen.css2.Signature.Custom2;
+import objectos.selfgen.css2.Signature.Custom3;
+
 final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private static final SelectorName UNIVERSAL = new SelectorName("any", "*");
@@ -146,9 +149,9 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private void propertyMethods(Property property) {
     for (var signature : property.signatures()) {
-      var typeName = signature.type.typeName();
+      var typeName = signature.typeName1();
 
-      switch (signature.style) {
+      switch (signature.style()) {
         case BOX -> {
           method(
             PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
@@ -199,6 +202,40 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
               argument(n("right"), v("self")),
               argument(n("bottom"), v("self")),
               argument(n("left"), v("self"))
+            )
+          );
+        }
+
+        case CUSTOM2 -> {
+          var c2 = (Custom2) signature;
+
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(c2.typeName1(), name("value1")),
+            parameter(c2.typeName2(), name("value2")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION2,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("value1"), v("self")),
+              argument(n("value2"), v("self"))
+            )
+          );
+        }
+
+        case CUSTOM3 -> {
+          var c3 = (Custom3) signature;
+
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(c3.typeName1(), name("value1")),
+            parameter(c3.typeName2(), name("value2")),
+            parameter(c3.typeName3(), name("value3")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION3,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("value1"), v("self")),
+              argument(n("value2"), v("self")),
+              argument(n("value3"), v("self"))
             )
           );
         }

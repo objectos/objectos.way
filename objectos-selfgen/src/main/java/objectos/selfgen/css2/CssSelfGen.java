@@ -186,6 +186,26 @@ public abstract class CssSelfGen extends CompiledSpec {
     pimpl(propertyName, value, Style.VALUE);
   }
 
+  protected final void pval(
+      String propertyName,
+      ParameterType value1, ParameterType value2) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(
+      new Signature.Custom2(value1, value2)
+    );
+  }
+
+  protected final void pval(
+      String propertyName,
+      ParameterType value1, ParameterType value2, ParameterType value3) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    property.addSignature(
+      new Signature.Custom3(value1, value2, value3)
+    );
+  }
+
   protected final void pva2(String propertyName, ParameterType value) {
     pimpl(propertyName, value, Style.VALUE2);
   }

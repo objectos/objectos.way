@@ -15,15 +15,75 @@
  */
 package objectos.selfgen.css2;
 
-final class Signature {
+import objectos.code.tmpl.TypeName;
 
-  final Style style;
+abstract class Signature {
 
-  final ParameterType type;
+  static final class Custom2 extends Signature {
 
-  public Signature(Style style, ParameterType type) {
-    this.style = style;
-    this.type = type;
+    private final ParameterType type1;
+    private final ParameterType type2;
+
+    public Custom2(ParameterType type1, ParameterType type2) {
+      this.type1 = type1;
+      this.type2 = type2;
+    }
+
+    @Override
+    final Style style() { return Style.CUSTOM2; }
+
+    @Override
+    final TypeName typeName1() { return type1.typeName(); }
+
+    final TypeName typeName2() { return type2.typeName(); }
+
   }
+
+  static final class Custom3 extends Signature {
+
+    private final ParameterType type1;
+    private final ParameterType type2;
+    private final ParameterType type3;
+
+    public Custom3(ParameterType type1, ParameterType type2, ParameterType type3) {
+      this.type1 = type1;
+      this.type2 = type2;
+      this.type3 = type3;
+    }
+
+    @Override
+    final Style style() { return Style.CUSTOM3; }
+
+    @Override
+    final TypeName typeName1() { return type1.typeName(); }
+
+    final TypeName typeName2() { return type2.typeName(); }
+
+    final TypeName typeName3() { return type3.typeName(); }
+
+  }
+
+  static final class Standard extends Signature {
+
+    private final Style style;
+
+    private final ParameterType type;
+
+    public Standard(Style style, ParameterType type) {
+      this.style = style;
+      this.type = type;
+    }
+
+    @Override
+    final Style style() { return style; }
+
+    @Override
+    final TypeName typeName1() { return type.typeName(); }
+
+  }
+
+  abstract Style style();
+
+  abstract TypeName typeName1();
 
 }

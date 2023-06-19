@@ -16,9 +16,10 @@
 package objectos.selfgen.css2;
 
 import objectos.code.ClassTypeName;
+import objectos.code.tmpl.TypeName;
 import objectos.util.GrowableSet;
 
-public final class PercentageType implements Value {
+public final class PercentageType implements ParameterType, Value {
 
   public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
@@ -27,6 +28,11 @@ public final class PercentageType implements Value {
     interfaces.add(valueType.className);
 
     valueType.addPermitted(ThisTemplate.PERCENTAGE);
+  }
+
+  @Override
+  public final TypeName typeName() {
+    return ThisTemplate.PERCENTAGE;
   }
 
 }

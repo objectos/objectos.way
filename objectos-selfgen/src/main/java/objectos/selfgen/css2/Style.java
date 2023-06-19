@@ -30,5 +30,9 @@ enum Style {
 
   INT,
 
-  VARARGS;
+  VARARGS,
+
+  CUSTOM2,
+
+  CUSTOM3;
 }

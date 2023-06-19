@@ -38,6 +38,7 @@ public final class CssSpec extends CssSelfGen {
       "li",
       "pre",
       "samp", "small", "strong", "sub", "sup",
+      "table",
       "ul",
 
       // pseudo elements
@@ -268,6 +269,10 @@ public final class CssSpec extends CssSelfGen {
       color, textDecorationLineSingleValue, textDecorationStyleValue, textDecorationThicknessValue
     );
 
+    var textIndentValue = def("TextIndentValue",
+      keywords("each-line", "hanging")
+    );
+
     var topValue = def("TopValue",
       kw("auto"),
       lengthPercentage
@@ -300,6 +305,11 @@ public final class CssSpec extends CssSelfGen {
 
     pval("text-decoration-thickness", globalKeyword);
     pval("text-decoration-thickness", textDecorationThicknessValue);
+
+    pval("text-indent", globalKeyword);
+    pval("text-indent", lengthPercentage);
+    pval("text-indent", lengthPercentage, textIndentValue);
+    pval("text-indent", lengthPercentage, textIndentValue, textIndentValue);
 
     pval("-webkit-text-size-adjust", globalKeyword);
     pval("-webkit-text-size-adjust", textSizeAdjustValue);
