@@ -45,6 +45,7 @@ import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextDecorationStyleValue;
 import objectos.css.tmpl.TextDecorationThicknessValue;
+import objectos.css.tmpl.TextIndentValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.css.tmpl.TopValue;
 import objectos.css.tmpl.VerticalAlignValue;
@@ -71,6 +72,7 @@ public final class NamedElement implements Selector,
     TextDecorationLineSingleValue,
     TextDecorationStyleValue,
     TextDecorationThicknessValue,
+    TextIndentValue,
     TextSizeAdjustValue,
     TopValue,
     VerticalAlignValue,

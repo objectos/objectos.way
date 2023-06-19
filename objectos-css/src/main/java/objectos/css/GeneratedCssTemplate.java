@@ -43,6 +43,7 @@ import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.HeightValue;
 import objectos.css.tmpl.Length;
+import objectos.css.tmpl.LengthPercentage;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
@@ -61,6 +62,7 @@ import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextDecorationStyleValue;
 import objectos.css.tmpl.TextDecorationThicknessValue;
 import objectos.css.tmpl.TextDecorationValue;
+import objectos.css.tmpl.TextIndentValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.css.tmpl.TopValue;
 import objectos.css.tmpl.VerticalAlignValue;
@@ -108,6 +110,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector sup = named("sup");
 
+  protected static final Selector table = named("table");
+
   protected static final Selector ul = named("ul");
 
   protected static final Selector any = named("*");
@@ -150,6 +154,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final DottedKeyword dotted = named("dotted");
 
+  protected static final TextIndentValue eachLine = named("each-line");
+
   protected static final FontFamilyValue emoji = named("emoji");
 
   protected static final FontFamilyValue fangsong = named("fangsong");
@@ -169,6 +175,8 @@ abstract class GeneratedCssTemplate {
   protected static final Color green = named("green");
 
   protected static final LineStyle groove = named("groove");
+
+  protected static final TextIndentValue hanging = named("hanging");
 
   protected static final LineStyle hidden = named("hidden");
 
@@ -758,6 +766,22 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration textDecorationThickness(TextDecorationThicknessValue value) {
     return new StyleDeclaration1(Property.TEXT_DECORATION_THICKNESS, value.self());
+  }
+
+  protected final StyleDeclaration textIndent(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TEXT_INDENT, value.self());
+  }
+
+  protected final StyleDeclaration textIndent(LengthPercentage value) {
+    return new StyleDeclaration1(Property.TEXT_INDENT, value.self());
+  }
+
+  protected final StyleDeclaration textIndent(LengthPercentage value1, TextIndentValue value2) {
+    return new StyleDeclaration2(Property.TEXT_INDENT, value1.self(), value2.self());
+  }
+
+  protected final StyleDeclaration textIndent(LengthPercentage value1, TextIndentValue value2, TextIndentValue value3) {
+    return new StyleDeclaration3(Property.TEXT_INDENT, value1.self(), value2.self(), value3.self());
   }
 
   protected final StyleDeclaration top(GlobalKeyword value) {

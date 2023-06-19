@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.om.Selector;
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
+import objectos.lang.Generated;
 
-public record NamedSelector(String name) implements Selector {
-  @Override
-  public final String toString() {
-    return name;
-  }
-}
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface TextIndentValue extends PropertyValue permits NamedElement {}

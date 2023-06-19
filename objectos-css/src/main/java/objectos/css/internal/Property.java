@@ -70,6 +70,8 @@ public enum Property implements PropertyName {
 
   TEXT_DECORATION_THICKNESS("text-decoration-thickness"),
 
+  TEXT_INDENT("text-indent"),
+
   TOP("top"),
 
   VERTICAL_ALIGN("vertical-align"),

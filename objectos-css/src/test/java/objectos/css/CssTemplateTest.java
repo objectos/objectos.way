@@ -58,6 +58,48 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#417] Preflight 11
+
+  - text-indent
+  """)
+  public void propertyTextIndent() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            table,
+
+            textIndent($0),
+            textIndent(mm(3)),
+            textIndent(px(40)),
+            textIndent(pct(15)),
+
+            textIndent(em(5), eachLine),
+            textIndent(em(5), hanging),
+            textIndent(em(5), hanging, eachLine),
+
+            textIndent(inherit)
+          );
+        }
+      },
+
+      """
+      table {
+        text-indent: 0;
+        text-indent: 3mm;
+        text-indent: 40px;
+        text-indent: 15%;
+        text-indent: 5em each-line;
+        text-indent: 5em hanging;
+        text-indent: 5em hanging each-line;
+        text-indent: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#397] Preflight 04
 
   - border-[side]-width
