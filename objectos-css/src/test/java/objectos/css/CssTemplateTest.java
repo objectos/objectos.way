@@ -708,7 +708,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationLine() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

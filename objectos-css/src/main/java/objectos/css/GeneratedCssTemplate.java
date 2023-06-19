@@ -49,6 +49,8 @@ import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.StringLiteral;
+import objectos.css.tmpl.TextDecorationLineMultiValue;
+import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
@@ -108,6 +110,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color black = named("black");
 
+  protected static final TextDecorationLineMultiValue blink = named("blink");
+
   protected static final Color blue = named("blue");
 
   protected static final FontWeightValue bold = named("bold");
@@ -158,6 +162,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color lime = named("lime");
 
+  protected static final TextDecorationLineMultiValue lineThrough = named("line-through");
+
   protected static final Color maroon = named("maroon");
 
   protected static final FontFamilyValue math = named("math");
@@ -179,6 +185,8 @@ abstract class GeneratedCssTemplate {
   protected static final Color olive = named("olive");
 
   protected static final LineStyle outset = named("outset");
+
+  protected static final TextDecorationLineMultiValue overline = named("overline");
 
   protected static final Color purple = named("purple");
 
@@ -215,6 +223,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontFamilyValue uiSansSerif = named("ui-sans-serif");
 
   protected static final FontFamilyValue uiSerif = named("ui-serif");
+
+  protected static final TextDecorationLineMultiValue underline = named("underline");
 
   protected static final GlobalKeyword unset = named("unset");
 
@@ -632,6 +642,22 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration tabSize(Length value) {
     return new StyleDeclaration1(Property.TAB_SIZE, value.self());
+  }
+
+  protected final StyleDeclaration textDecorationLine(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_LINE, value.self());
+  }
+
+  protected final StyleDeclaration textDecorationLine(TextDecorationLineSingleValue value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_LINE, value.self());
+  }
+
+  protected final StyleDeclaration textDecorationLine(TextDecorationLineMultiValue value1, TextDecorationLineMultiValue value2) {
+    return new StyleDeclaration2(Property.TEXT_DECORATION_LINE, value1.self(), value2.self());
+  }
+
+  protected final StyleDeclaration textDecorationLine(TextDecorationLineMultiValue value1, TextDecorationLineMultiValue value2, TextDecorationLineMultiValue value3) {
+    return new StyleDeclaration3(Property.TEXT_DECORATION_LINE, value1.self(), value2.self(), value3.self());
   }
 
   protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {

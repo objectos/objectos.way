@@ -19,7 +19,5 @@ import objectos.css.internal.NamedElement;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface NoneKeyword extends
-    LineStyle,
-    TextDecorationLineSingleValue,
-    TextSizeAdjustValue permits NamedElement {}
+public sealed interface TextDecorationLineMultiValue extends
+    TextDecorationLineSingleValue permits NamedElement {}

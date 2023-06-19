@@ -16,10 +16,8 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface NoneKeyword extends
-    LineStyle,
-    TextDecorationLineSingleValue,
-    TextSizeAdjustValue permits NamedElement {}
+public sealed interface TextDecorationLineSingleValue extends PropertyValue permits NamedElement, NoneKeyword, TextDecorationLineMultiValue {}

@@ -56,6 +56,8 @@ public enum Property implements PropertyName {
 
   TAB_SIZE("tab-size"),
 
+  TEXT_DECORATION_LINE("text-decoration-line"),
+
   _MOZ_TAB_SIZE("-moz-tab-size"),
 
   _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");

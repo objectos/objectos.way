@@ -34,6 +34,8 @@ import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.SmallKeyword;
+import objectos.css.tmpl.TextDecorationLineMultiValue;
+import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
@@ -52,6 +54,8 @@ public final class NamedElement implements Selector,
     LineStyle,
     LineWidth,
     MarginValue,
+    TextDecorationLineMultiValue,
+    TextDecorationLineSingleValue,
     TextSizeAdjustValue,
     AutoKeyword,
     MediumKeyword,
