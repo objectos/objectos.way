@@ -98,6 +98,33 @@ public final class CssSpec extends CssSelfGen {
     keywordFieldName("static", "_static");
     keywordFieldName("super", "_super");
 
+    // A
+
+    var appearanceValue = def("AppearanceValue",
+      keywords(
+        "auto", "menulist-button", "none", "textfield",
+
+        "button",
+        "checkbox",
+        "listbox",
+        "menulist", "meter",
+        "progress-bar",
+        "push-button",
+        "radio",
+        "searchfield", "slider-horizontal", "square-button",
+        "textarea"
+      )
+    );
+
+    pval("appearance", globalKeyword);
+    pval("appearance", appearanceValue);
+
+    pval("-moz-appearance", globalKeyword);
+    pval("-moz-appearance", appearanceValue);
+
+    pval("-webkit-appearance", globalKeyword);
+    pval("-webkit-appearance", appearanceValue);
+
     // B
 
     var borderCollapseVale = def("BorderCollapseValue",

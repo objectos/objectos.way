@@ -22,6 +22,66 @@ import org.testng.annotations.Test;
 public class CssTemplateTest {
 
   @Test(description = """
+  [#419] Preflight 13
+
+  - appearance
+  """)
+  public void propertyAppearance() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            button,
+
+            appearance(none),
+            appearance(auto),
+            appearance(menulistButton),
+            appearance(textfield),
+
+            appearance(searchfield),
+            appearance(textarea),
+            appearance(pushButton),
+            appearance(sliderHorizontal),
+            appearance(checkbox),
+            appearance(radio),
+            appearance(squareButton),
+            appearance(menulist),
+            appearance(listbox),
+            appearance(meter),
+            appearance(progressBar),
+
+            webkitAppearance(button),
+            appearance(inherit)
+          );
+        }
+      },
+
+      """
+      button {
+        appearance: none;
+        appearance: auto;
+        appearance: menulist-button;
+        appearance: textfield;
+        appearance: searchfield;
+        appearance: textarea;
+        appearance: push-button;
+        appearance: slider-horizontal;
+        appearance: checkbox;
+        appearance: radio;
+        appearance: square-button;
+        appearance: menulist;
+        appearance: listbox;
+        appearance: meter;
+        appearance: progress-bar;
+        -webkit-appearance: button;
+        appearance: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#417] Preflight 11
 
   - border-collapse

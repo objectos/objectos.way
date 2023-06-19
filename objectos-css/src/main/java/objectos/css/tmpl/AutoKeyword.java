@@ -20,6 +20,7 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface AutoKeyword extends
+    AppearanceValue,
     BottomValue,
     HeightValue,
     MarginValue,

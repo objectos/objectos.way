@@ -28,10 +28,12 @@ import objectos.css.internal.StyleDeclarationDouble;
 import objectos.css.internal.StyleDeclarationInt;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
+import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
+import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DottedKeyword;
@@ -66,6 +68,7 @@ import objectos.css.tmpl.TextDecorationValue;
 import objectos.css.tmpl.TextIndentValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.css.tmpl.TextTransformValue;
+import objectos.css.tmpl.TextareaKeyword;
 import objectos.css.tmpl.TopValue;
 import objectos.css.tmpl.VerticalAlignValue;
 import objectos.lang.Generated;
@@ -81,8 +84,6 @@ abstract class GeneratedCssTemplate {
   protected static final Selector b = named("b");
 
   protected static final Selector body = named("body");
-
-  protected static final Selector button = named("button");
 
   protected static final Selector code = named("code");
 
@@ -122,8 +123,6 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector table = named("table");
 
-  protected static final Selector textarea = named("textarea");
-
   protected static final Selector ul = named("ul");
 
   protected static final Selector any = named("*");
@@ -156,7 +155,11 @@ abstract class GeneratedCssTemplate {
 
   protected static final VerticalAlignValue bottom = named("bottom");
 
+  protected static final ButtonKeyword button = named("button");
+
   protected static final TextTransformValue capitalize = named("capitalize");
+
+  protected static final AppearanceValue checkbox = named("checkbox");
 
   protected static final BorderCollapseValue collapse = named("collapse");
 
@@ -216,6 +219,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationLineMultiValue lineThrough = named("line-through");
 
+  protected static final AppearanceValue listbox = named("listbox");
+
   protected static final TextTransformValue lowercase = named("lowercase");
 
   protected static final Color maroon = named("maroon");
@@ -225,6 +230,12 @@ abstract class GeneratedCssTemplate {
   protected static final HeightValue maxContent = named("max-content");
 
   protected static final MediumKeyword medium = named("medium");
+
+  protected static final AppearanceValue menulist = named("menulist");
+
+  protected static final AppearanceValue menulistButton = named("menulist-button");
+
+  protected static final AppearanceValue meter = named("meter");
 
   protected static final VerticalAlignValue middle = named("middle");
 
@@ -244,7 +255,13 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationLineMultiValue overline = named("overline");
 
+  protected static final AppearanceValue progressBar = named("progress-bar");
+
   protected static final Color purple = named("purple");
+
+  protected static final AppearanceValue pushButton = named("push-button");
+
+  protected static final AppearanceValue radio = named("radio");
 
   protected static final Color red = named("red");
 
@@ -254,17 +271,23 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue sansSerif = named("sans-serif");
 
+  protected static final AppearanceValue searchfield = named("searchfield");
+
   protected static final BorderCollapseValue separate = named("separate");
 
   protected static final FontFamilyValue serif = named("serif");
 
   protected static final Color silver = named("silver");
 
+  protected static final AppearanceValue sliderHorizontal = named("slider-horizontal");
+
   protected static final SmallKeyword small = named("small");
 
   protected static final FontSizeValue smaller = named("smaller");
 
   protected static final SolidKeyword solid = named("solid");
+
+  protected static final AppearanceValue squareButton = named("square-button");
 
   protected static final PositionValue sticky = named("sticky");
 
@@ -277,6 +300,10 @@ abstract class GeneratedCssTemplate {
   protected static final VerticalAlignValue textBottom = named("text-bottom");
 
   protected static final VerticalAlignValue textTop = named("text-top");
+
+  protected static final TextareaKeyword textarea = named("textarea");
+
+  protected static final AppearanceValue textfield = named("textfield");
 
   protected static final LineWidth thick = named("thick");
 
@@ -450,6 +477,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StringLiteral l(String value) {
     return InternalStringLiteral.of(value);
+  }
+
+  protected final StyleDeclaration appearance(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.APPEARANCE, value.self());
+  }
+
+  protected final StyleDeclaration appearance(AppearanceValue value) {
+    return new StyleDeclaration1(Property.APPEARANCE, value.self());
   }
 
   protected final StyleDeclaration borderBottomWidth(GlobalKeyword value) {
@@ -662,6 +697,14 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration4(Property.MARGIN, top.self(), right.self(), bottom.self(), left.self());
   }
 
+  protected final StyleDeclaration mozAppearance(GlobalKeyword value) {
+    return new StyleDeclaration1(Property._MOZ_APPEARANCE, value.self());
+  }
+
+  protected final StyleDeclaration mozAppearance(AppearanceValue value) {
+    return new StyleDeclaration1(Property._MOZ_APPEARANCE, value.self());
+  }
+
   protected final StyleDeclaration mozTabSize(int value) {
     return new StyleDeclarationInt(Property._MOZ_TAB_SIZE, value);
   }
@@ -844,6 +887,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration verticalAlign(VerticalAlignValue value) {
     return new StyleDeclaration1(Property.VERTICAL_ALIGN, value.self());
+  }
+
+  protected final StyleDeclaration webkitAppearance(GlobalKeyword value) {
+    return new StyleDeclaration1(Property._WEBKIT_APPEARANCE, value.self());
+  }
+
+  protected final StyleDeclaration webkitAppearance(AppearanceValue value) {
+    return new StyleDeclaration1(Property._WEBKIT_APPEARANCE, value.self());
   }
 
   protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {

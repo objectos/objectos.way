@@ -20,6 +20,8 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public enum Property implements PropertyName {
+  APPEARANCE("appearance"),
+
   BORDER_BOTTOM_WIDTH("border-bottom-width"),
 
   BORDER_COLLAPSE("border-collapse"),
@@ -90,7 +92,11 @@ public enum Property implements PropertyName {
 
   VERTICAL_ALIGN("vertical-align"),
 
+  _MOZ_APPEARANCE("-moz-appearance"),
+
   _MOZ_TAB_SIZE("-moz-tab-size"),
+
+  _WEBKIT_APPEARANCE("-webkit-appearance"),
 
   _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
 

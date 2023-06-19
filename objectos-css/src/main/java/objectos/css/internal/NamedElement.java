@@ -16,10 +16,12 @@
 package objectos.css.internal;
 
 import objectos.css.om.Selector;
+import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
+import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DottedKeyword;
@@ -49,12 +51,14 @@ import objectos.css.tmpl.TextDecorationThicknessValue;
 import objectos.css.tmpl.TextIndentValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.css.tmpl.TextTransformValue;
+import objectos.css.tmpl.TextareaKeyword;
 import objectos.css.tmpl.TopValue;
 import objectos.css.tmpl.VerticalAlignValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public final class NamedElement implements Selector,
+    AppearanceValue,
     BorderCollapseValue,
     BottomValue,
     BoxSizingValue,
@@ -81,6 +85,7 @@ public final class NamedElement implements Selector,
     TopValue,
     VerticalAlignValue,
     AutoKeyword,
+    ButtonKeyword,
     DashedKeyword,
     DottedKeyword,
     DoubleKeyword,
@@ -89,7 +94,8 @@ public final class NamedElement implements Selector,
     NormalKeyword,
     SmallKeyword,
     SolidKeyword,
-    SubKeyword {
+    SubKeyword,
+    TextareaKeyword {
   private final String name;
 
   public NamedElement(String name) {
