@@ -535,7 +535,7 @@ public class CssTemplateTest {
   """)
   public void propertyMargin() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

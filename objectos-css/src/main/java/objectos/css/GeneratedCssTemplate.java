@@ -28,6 +28,7 @@ import objectos.css.internal.StyleDeclarationDouble;
 import objectos.css.internal.StyleDeclarationInt;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
+import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.FontFamilyValue;
@@ -38,6 +39,7 @@ import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.Percentage;
@@ -99,7 +101,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color aqua = named("aqua");
 
-  protected static final TextSizeAdjustValue auto = named("auto");
+  protected static final AutoKeyword auto = named("auto");
 
   protected static final Color black = named("black");
 
@@ -437,6 +439,26 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
     return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration margin(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.MARGIN, value.self());
+  }
+
+  protected final StyleDeclaration margin(MarginValue all) {
+    return new StyleDeclaration1(Property.MARGIN, all.self());
+  }
+
+  protected final StyleDeclaration margin(MarginValue vertical, MarginValue horizontal) {
+    return new StyleDeclaration2(Property.MARGIN, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration margin(MarginValue top, MarginValue horizontal, MarginValue bottom) {
+    return new StyleDeclaration3(Property.MARGIN, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration margin(MarginValue top, MarginValue right, MarginValue bottom, MarginValue left) {
+    return new StyleDeclaration4(Property.MARGIN, top.self(), right.self(), bottom.self(), left.self());
   }
 
   protected final StyleDeclaration mozTabSize(int value) {

@@ -159,6 +159,16 @@ public final class CssSpec extends CssSelfGen {
       kw("normal")
     ));
 
+    // M
+
+    var marginValue = def("MarginValue",
+      lengthPercentage,
+      kw("auto")
+    );
+
+    pval("margin", globalKeyword);
+    pbox("margin", marginValue);
+
     // T
 
     pint("-moz-tab-size");

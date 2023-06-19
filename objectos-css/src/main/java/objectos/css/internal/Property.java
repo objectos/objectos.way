@@ -36,6 +36,8 @@ public enum Property implements PropertyName {
 
   LINE_HEIGHT("line-height"),
 
+  MARGIN("margin"),
+
   TAB_SIZE("tab-size"),
 
   _MOZ_TAB_SIZE("-moz-tab-size"),

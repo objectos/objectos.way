@@ -19,4 +19,5 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface LengthPercentage extends
-    LineHeightValue permits Length, Percentage {}
+    LineHeightValue,
+    MarginValue permits Length, Percentage {}

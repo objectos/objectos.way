@@ -20,4 +20,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface TextSizeAdjustValue extends PropertyValue permits AutoKeyword, NamedElement, NoneKeyword, Percentage {}
+public sealed interface MarginValue extends PropertyValue permits AutoKeyword, LengthPercentage, NamedElement {}

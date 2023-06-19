@@ -16,6 +16,7 @@
 package objectos.css.internal;
 
 import objectos.css.om.Selector;
+import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.FontFamilyValue;
@@ -25,6 +26,7 @@ import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.TextSizeAdjustValue;
@@ -41,7 +43,9 @@ public final class NamedElement implements Selector,
     LineHeightValue,
     LineStyle,
     LineWidth,
+    MarginValue,
     TextSizeAdjustValue,
+    AutoKeyword,
     NoneKeyword,
     NormalKeyword {
   private final String name;
