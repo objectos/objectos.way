@@ -15,15 +15,11 @@
  */
 package objectos.css.tmpl;
 
+import objectos.css.internal.NamedElement;
+import objectos.css.om.Selector;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LengthPercentage extends
-    BottomValue,
-    FontSizeValue,
-    HeightValue,
-    LineHeightValue,
-    MarginValue,
-    TextDecorationThicknessValue,
-    TopValue,
-    VerticalAlignValue permits Length, Percentage {}
+public sealed interface SubKeyword extends
+    Selector,
+    VerticalAlignValue permits NamedElement {}

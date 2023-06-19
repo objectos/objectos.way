@@ -92,8 +92,15 @@ public final class CssSpec extends CssSelfGen {
     // keyword name clashes
 
     keywordFieldName("double", "_double");
+    keywordFieldName("static", "_static");
+    keywordFieldName("super", "_super");
 
     // B
+
+    var bottomValue = def("BottomValue",
+      kw("auto"),
+      lengthPercentage
+    );
 
     var lineWidth = def("LineWidth",
       length,
@@ -124,6 +131,9 @@ public final class CssSpec extends CssSelfGen {
     pbox("border-right-width", lineWidth);
     pval("border-top-width", globalKeyword);
     pbox("border-top-width", lineWidth);
+
+    pval("bottom", globalKeyword);
+    pval("bottom", bottomValue);
 
     pval("box-sizing", globalKeyword);
     pval("box-sizing", def("BoxSizingValue",
@@ -221,6 +231,15 @@ public final class CssSpec extends CssSelfGen {
     pval("margin", globalKeyword);
     pbox("margin", marginValue);
 
+    // P
+
+    var positionValue = def("PositionValue",
+      keywords("absolute", "fixed", "static", "sticky", "relative")
+    );
+
+    pval("position", globalKeyword);
+    pval("position", positionValue);
+
     // T
 
     var textSizeAdjustValue = def("TextSizeAdjustValue",
@@ -247,6 +266,11 @@ public final class CssSpec extends CssSelfGen {
 
     var textDecorationValue = def("TextDecorationValue",
       color, textDecorationLineSingleValue, textDecorationStyleValue, textDecorationThicknessValue
+    );
+
+    var topValue = def("TopValue",
+      kw("auto"),
+      lengthPercentage
     );
 
     pint("-moz-tab-size");
@@ -279,6 +303,24 @@ public final class CssSpec extends CssSelfGen {
 
     pval("-webkit-text-size-adjust", globalKeyword);
     pval("-webkit-text-size-adjust", textSizeAdjustValue);
+
+    pval("top", globalKeyword);
+    pval("top", topValue);
+
+    // V
+
+    var verticalAlignValue = def("VerticalAlignValue",
+      keywords(
+        "baseline", "bottom",
+        "middle",
+        "sub", "super",
+        "text-bottom", "text-top", "top"
+      ),
+      lengthPercentage
+    );
+
+    pval("vertical-align", globalKeyword);
+    pval("vertical-align", verticalAlignValue);
   }
 
 }

@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.om.Selector;
 import objectos.css.tmpl.AutoKeyword;
+import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.DashedKeyword;
@@ -36,17 +37,22 @@ import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
+import objectos.css.tmpl.PositionValue;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
+import objectos.css.tmpl.SubKeyword;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextDecorationStyleValue;
 import objectos.css.tmpl.TextDecorationThicknessValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
+import objectos.css.tmpl.TopValue;
+import objectos.css.tmpl.VerticalAlignValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public final class NamedElement implements Selector,
+    BottomValue,
     BoxSizingValue,
     Color,
     FontFamilyValue,
@@ -60,11 +66,14 @@ public final class NamedElement implements Selector,
     LineStyle,
     LineWidth,
     MarginValue,
+    PositionValue,
     TextDecorationLineMultiValue,
     TextDecorationLineSingleValue,
     TextDecorationStyleValue,
     TextDecorationThicknessValue,
     TextSizeAdjustValue,
+    TopValue,
+    VerticalAlignValue,
     AutoKeyword,
     DashedKeyword,
     DottedKeyword,
@@ -73,7 +82,8 @@ public final class NamedElement implements Selector,
     NoneKeyword,
     NormalKeyword,
     SmallKeyword,
-    SolidKeyword {
+    SolidKeyword,
+    SubKeyword {
   private final String name;
 
   public NamedElement(String name) {

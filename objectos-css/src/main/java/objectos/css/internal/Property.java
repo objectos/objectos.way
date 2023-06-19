@@ -34,6 +34,8 @@ public enum Property implements PropertyName {
 
   BORDER_WIDTH("border-width"),
 
+  BOTTOM("bottom"),
+
   BOX_SIZING("box-sizing"),
 
   COLOR("color"),
@@ -54,6 +56,8 @@ public enum Property implements PropertyName {
 
   MARGIN("margin"),
 
+  POSITION("position"),
+
   TAB_SIZE("tab-size"),
 
   TEXT_DECORATION("text-decoration"),
@@ -65,6 +69,10 @@ public enum Property implements PropertyName {
   TEXT_DECORATION_STYLE("text-decoration-style"),
 
   TEXT_DECORATION_THICKNESS("text-decoration-thickness"),
+
+  TOP("top"),
+
+  VERTICAL_ALIGN("vertical-align"),
 
   _MOZ_TAB_SIZE("-moz-tab-size"),
 
