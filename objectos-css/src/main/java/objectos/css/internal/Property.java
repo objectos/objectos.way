@@ -58,6 +58,16 @@ public enum Property implements PropertyName {
 
   MARGIN("margin"),
 
+  PADDING("padding"),
+
+  PADDING_BOTTOM("padding-bottom"),
+
+  PADDING_LEFT("padding-left"),
+
+  PADDING_RIGHT("padding-right"),
+
+  PADDING_TOP("padding-top"),
+
   POSITION("position"),
 
   TAB_SIZE("tab-size"),
@@ -73,6 +83,8 @@ public enum Property implements PropertyName {
   TEXT_DECORATION_THICKNESS("text-decoration-thickness"),
 
   TEXT_INDENT("text-indent"),
+
+  TEXT_TRANSFORM("text-transform"),
 
   TOP("top"),
 

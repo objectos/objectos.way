@@ -597,6 +597,46 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#418] Preflight 12
+
+  - padding
+  """)
+  public void propertyPadding() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            button,
+            input,
+            optgroup,
+            select,
+            textarea,
+
+            padding($0),
+            padding(em(1)),
+            padding(pct(5), pct(10)),
+            padding(em(1), em(2), em(2)),
+            padding(px(5), em(1), $0, em(2)),
+            padding(inherit)
+          );
+        }
+      },
+
+      """
+      button, input, optgroup, select, textarea {
+        padding: 0;
+        padding: 1em;
+        padding: 5% 10%;
+        padding: 1em 2em 2em;
+        padding: 5px 1em 0 2em;
+        padding: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#404] Preflight 10
 
   - position
@@ -914,6 +954,45 @@ public class CssTemplateTest {
         -webkit-text-size-adjust: auto;
         -webkit-text-size-adjust: none;
         -webkit-text-size-adjust: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#418] Preflight 12
+
+  - text-transform
+  """)
+  public void propertyTextTransform() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            button,
+            select,
+
+            textTransform(none),
+            textTransform(capitalize),
+            textTransform(uppercase),
+            textTransform(lowercase),
+            textTransform(fullWidth),
+            textTransform(fullSizeKana),
+            textTransform(inherit)
+          );
+        }
+      },
+
+      """
+      button, select {
+        text-transform: none;
+        text-transform: capitalize;
+        text-transform: uppercase;
+        text-transform: lowercase;
+        text-transform: full-width;
+        text-transform: full-size-kana;
+        text-transform: inherit;
       }
       """
     );

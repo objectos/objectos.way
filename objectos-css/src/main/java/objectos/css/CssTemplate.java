@@ -143,6 +143,24 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
 
   protected final void style(
       Selector selector1, Selector selector2, Selector selector3,
+      Selector selector4, Selector selector5,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector1, "selector1 == null");
+    Objects.requireNonNull(selector2, "selector2 == null");
+    Objects.requireNonNull(selector3, "selector3 == null");
+    Objects.requireNonNull(selector4, "selector4 == null");
+    Objects.requireNonNull(selector5, "selector5 == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(
+      selector1, selector2, selector3,
+      selector4, selector5,
+      declarations
+    );
+  }
+
+  protected final void style(
+      Selector selector1, Selector selector2, Selector selector3,
       Selector selector4, Selector selector5, Selector selector6,
       StyleDeclaration... declarations) {
     Objects.requireNonNull(selector1, "selector1 == null");

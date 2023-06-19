@@ -31,14 +31,16 @@ public final class CssSpec extends CssSelfGen {
     selectors(
       // type selectors
       "a",
-      "b", "body",
+      "b", "body", "button",
       "code",
       "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html",
+      "input",
       "kbd",
       "li",
+      "optgroup",
       "pre",
-      "samp", "small", "strong", "sub", "sup",
-      "table",
+      "samp", "select", "small", "strong", "sub", "sup",
+      "table", "textarea",
       "ul",
 
       // pseudo elements
@@ -123,22 +125,26 @@ public final class CssSpec extends CssSelfGen {
       )
     );
 
+    pval("border-bottom-width", globalKeyword);
+    pval("border-bottom-width", lineWidth);
+
     pval("border-collapse", globalKeyword);
     pval("border-collapse", borderCollapseVale);
 
     pval("border-color", globalKeyword);
     pbox("border-color", color);
 
+    pval("border-left-width", globalKeyword);
+    pval("border-left-width", lineWidth);
+
+    pval("border-right-width", globalKeyword);
+    pval("border-right-width", lineWidth);
+
+    pval("border-top-width", globalKeyword);
+    pval("border-top-width", lineWidth);
+
     pval("border-width", globalKeyword);
     pbox("border-width", lineWidth);
-    pval("border-bottom-width", globalKeyword);
-    pbox("border-bottom-width", lineWidth);
-    pval("border-left-width", globalKeyword);
-    pbox("border-left-width", lineWidth);
-    pval("border-right-width", globalKeyword);
-    pbox("border-right-width", lineWidth);
-    pval("border-top-width", globalKeyword);
-    pbox("border-top-width", lineWidth);
 
     pval("bottom", globalKeyword);
     pval("bottom", bottomValue);
@@ -245,6 +251,21 @@ public final class CssSpec extends CssSelfGen {
       keywords("absolute", "fixed", "static", "sticky", "relative")
     );
 
+    pval("padding", globalKeyword);
+    pbox("padding", lengthPercentage);
+
+    pval("padding-bottom", globalKeyword);
+    pval("padding-bottom", lengthPercentage);
+
+    pval("padding-left", globalKeyword);
+    pval("padding-left", lengthPercentage);
+
+    pval("padding-right", globalKeyword);
+    pval("padding-right", lengthPercentage);
+
+    pval("padding-top", globalKeyword);
+    pval("padding-top", lengthPercentage);
+
     pval("position", globalKeyword);
     pval("position", positionValue);
 
@@ -278,6 +299,10 @@ public final class CssSpec extends CssSelfGen {
 
     var textIndentValue = def("TextIndentValue",
       keywords("each-line", "hanging")
+    );
+
+    var textTransformValue = def("TextTransformValue",
+      keywords("capitalize", "full-width", "full-size-kana", "lowercase", "none", "uppercase")
     );
 
     var topValue = def("TopValue",
@@ -320,6 +345,9 @@ public final class CssSpec extends CssSelfGen {
 
     pval("-webkit-text-size-adjust", globalKeyword);
     pval("-webkit-text-size-adjust", textSizeAdjustValue);
+
+    pval("text-transform", globalKeyword);
+    pval("text-transform", textTransformValue);
 
     pval("top", globalKeyword);
     pval("top", topValue);

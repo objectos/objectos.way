@@ -65,6 +65,7 @@ import objectos.css.tmpl.TextDecorationThicknessValue;
 import objectos.css.tmpl.TextDecorationValue;
 import objectos.css.tmpl.TextIndentValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
+import objectos.css.tmpl.TextTransformValue;
 import objectos.css.tmpl.TopValue;
 import objectos.css.tmpl.VerticalAlignValue;
 import objectos.lang.Generated;
@@ -80,6 +81,8 @@ abstract class GeneratedCssTemplate {
   protected static final Selector b = named("b");
 
   protected static final Selector body = named("body");
+
+  protected static final Selector button = named("button");
 
   protected static final Selector code = named("code");
 
@@ -99,19 +102,27 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector html = named("html");
 
+  protected static final Selector input = named("input");
+
   protected static final Selector kbd = named("kbd");
 
   protected static final Selector li = named("li");
 
+  protected static final Selector optgroup = named("optgroup");
+
   protected static final Selector pre = named("pre");
 
   protected static final Selector samp = named("samp");
+
+  protected static final Selector select = named("select");
 
   protected static final Selector strong = named("strong");
 
   protected static final Selector sup = named("sup");
 
   protected static final Selector table = named("table");
+
+  protected static final Selector textarea = named("textarea");
 
   protected static final Selector ul = named("ul");
 
@@ -145,6 +156,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final VerticalAlignValue bottom = named("bottom");
 
+  protected static final TextTransformValue capitalize = named("capitalize");
+
   protected static final BorderCollapseValue collapse = named("collapse");
 
   protected static final BoxSizingValue contentBox = named("content-box");
@@ -173,6 +186,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color fuchsia = named("fuchsia");
 
+  protected static final TextTransformValue fullSizeKana = named("full-size-kana");
+
+  protected static final TextTransformValue fullWidth = named("full-width");
+
   protected static final Color gray = named("gray");
 
   protected static final Color green = named("green");
@@ -198,6 +215,8 @@ abstract class GeneratedCssTemplate {
   protected static final Color lime = named("lime");
 
   protected static final TextDecorationLineMultiValue lineThrough = named("line-through");
+
+  protected static final TextTransformValue lowercase = named("lowercase");
 
   protected static final Color maroon = named("maroon");
 
@@ -278,6 +297,8 @@ abstract class GeneratedCssTemplate {
   protected static final TextDecorationLineMultiValue underline = named("underline");
 
   protected static final GlobalKeyword unset = named("unset");
+
+  protected static final TextTransformValue uppercase = named("uppercase");
 
   protected static final TextDecorationStyleValue wavy = named("wavy");
 
@@ -435,20 +456,8 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.BORDER_BOTTOM_WIDTH, value.self());
   }
 
-  protected final StyleDeclaration borderBottomWidth(LineWidth all) {
-    return new StyleDeclaration1(Property.BORDER_BOTTOM_WIDTH, all.self());
-  }
-
-  protected final StyleDeclaration borderBottomWidth(LineWidth vertical, LineWidth horizontal) {
-    return new StyleDeclaration2(Property.BORDER_BOTTOM_WIDTH, vertical.self(), horizontal.self());
-  }
-
-  protected final StyleDeclaration borderBottomWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
-    return new StyleDeclaration3(Property.BORDER_BOTTOM_WIDTH, top.self(), horizontal.self(), bottom.self());
-  }
-
-  protected final StyleDeclaration borderBottomWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
-    return new StyleDeclaration4(Property.BORDER_BOTTOM_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  protected final StyleDeclaration borderBottomWidth(LineWidth value) {
+    return new StyleDeclaration1(Property.BORDER_BOTTOM_WIDTH, value.self());
   }
 
   protected final StyleDeclaration borderCollapse(GlobalKeyword value) {
@@ -483,40 +492,16 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.BORDER_LEFT_WIDTH, value.self());
   }
 
-  protected final StyleDeclaration borderLeftWidth(LineWidth all) {
-    return new StyleDeclaration1(Property.BORDER_LEFT_WIDTH, all.self());
-  }
-
-  protected final StyleDeclaration borderLeftWidth(LineWidth vertical, LineWidth horizontal) {
-    return new StyleDeclaration2(Property.BORDER_LEFT_WIDTH, vertical.self(), horizontal.self());
-  }
-
-  protected final StyleDeclaration borderLeftWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
-    return new StyleDeclaration3(Property.BORDER_LEFT_WIDTH, top.self(), horizontal.self(), bottom.self());
-  }
-
-  protected final StyleDeclaration borderLeftWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
-    return new StyleDeclaration4(Property.BORDER_LEFT_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  protected final StyleDeclaration borderLeftWidth(LineWidth value) {
+    return new StyleDeclaration1(Property.BORDER_LEFT_WIDTH, value.self());
   }
 
   protected final StyleDeclaration borderRightWidth(GlobalKeyword value) {
     return new StyleDeclaration1(Property.BORDER_RIGHT_WIDTH, value.self());
   }
 
-  protected final StyleDeclaration borderRightWidth(LineWidth all) {
-    return new StyleDeclaration1(Property.BORDER_RIGHT_WIDTH, all.self());
-  }
-
-  protected final StyleDeclaration borderRightWidth(LineWidth vertical, LineWidth horizontal) {
-    return new StyleDeclaration2(Property.BORDER_RIGHT_WIDTH, vertical.self(), horizontal.self());
-  }
-
-  protected final StyleDeclaration borderRightWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
-    return new StyleDeclaration3(Property.BORDER_RIGHT_WIDTH, top.self(), horizontal.self(), bottom.self());
-  }
-
-  protected final StyleDeclaration borderRightWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
-    return new StyleDeclaration4(Property.BORDER_RIGHT_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  protected final StyleDeclaration borderRightWidth(LineWidth value) {
+    return new StyleDeclaration1(Property.BORDER_RIGHT_WIDTH, value.self());
   }
 
   protected final StyleDeclaration borderStyle(GlobalKeyword value) {
@@ -543,20 +528,8 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.BORDER_TOP_WIDTH, value.self());
   }
 
-  protected final StyleDeclaration borderTopWidth(LineWidth all) {
-    return new StyleDeclaration1(Property.BORDER_TOP_WIDTH, all.self());
-  }
-
-  protected final StyleDeclaration borderTopWidth(LineWidth vertical, LineWidth horizontal) {
-    return new StyleDeclaration2(Property.BORDER_TOP_WIDTH, vertical.self(), horizontal.self());
-  }
-
-  protected final StyleDeclaration borderTopWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
-    return new StyleDeclaration3(Property.BORDER_TOP_WIDTH, top.self(), horizontal.self(), bottom.self());
-  }
-
-  protected final StyleDeclaration borderTopWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
-    return new StyleDeclaration4(Property.BORDER_TOP_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  protected final StyleDeclaration borderTopWidth(LineWidth value) {
+    return new StyleDeclaration1(Property.BORDER_TOP_WIDTH, value.self());
   }
 
   protected final StyleDeclaration borderWidth(GlobalKeyword value) {
@@ -701,6 +674,58 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property._MOZ_TAB_SIZE, value.self());
   }
 
+  protected final StyleDeclaration padding(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.PADDING, value.self());
+  }
+
+  protected final StyleDeclaration padding(LengthPercentage all) {
+    return new StyleDeclaration1(Property.PADDING, all.self());
+  }
+
+  protected final StyleDeclaration padding(LengthPercentage vertical, LengthPercentage horizontal) {
+    return new StyleDeclaration2(Property.PADDING, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration padding(LengthPercentage top, LengthPercentage horizontal, LengthPercentage bottom) {
+    return new StyleDeclaration3(Property.PADDING, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration padding(LengthPercentage top, LengthPercentage right, LengthPercentage bottom, LengthPercentage left) {
+    return new StyleDeclaration4(Property.PADDING, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration paddingBottom(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.PADDING_BOTTOM, value.self());
+  }
+
+  protected final StyleDeclaration paddingBottom(LengthPercentage value) {
+    return new StyleDeclaration1(Property.PADDING_BOTTOM, value.self());
+  }
+
+  protected final StyleDeclaration paddingLeft(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.PADDING_LEFT, value.self());
+  }
+
+  protected final StyleDeclaration paddingLeft(LengthPercentage value) {
+    return new StyleDeclaration1(Property.PADDING_LEFT, value.self());
+  }
+
+  protected final StyleDeclaration paddingRight(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.PADDING_RIGHT, value.self());
+  }
+
+  protected final StyleDeclaration paddingRight(LengthPercentage value) {
+    return new StyleDeclaration1(Property.PADDING_RIGHT, value.self());
+  }
+
+  protected final StyleDeclaration paddingTop(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.PADDING_TOP, value.self());
+  }
+
+  protected final StyleDeclaration paddingTop(LengthPercentage value) {
+    return new StyleDeclaration1(Property.PADDING_TOP, value.self());
+  }
+
   protected final StyleDeclaration position(GlobalKeyword value) {
     return new StyleDeclaration1(Property.POSITION, value.self());
   }
@@ -795,6 +820,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration textIndent(LengthPercentage value1, TextIndentValue value2, TextIndentValue value3) {
     return new StyleDeclaration3(Property.TEXT_INDENT, value1.self(), value2.self(), value3.self());
+  }
+
+  protected final StyleDeclaration textTransform(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TEXT_TRANSFORM, value.self());
+  }
+
+  protected final StyleDeclaration textTransform(TextTransformValue value) {
+    return new StyleDeclaration1(Property.TEXT_TRANSFORM, value.self());
   }
 
   protected final StyleDeclaration top(GlobalKeyword value) {
