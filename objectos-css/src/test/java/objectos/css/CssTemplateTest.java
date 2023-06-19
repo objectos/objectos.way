@@ -33,6 +33,9 @@ public class CssTemplateTest {
         protected void definition() {
           style(
             button,
+            attr("type", IS, "button"),
+            attr("type", IS, "reset"),
+            attr("type", IS, "submit"),
 
             appearance(none),
             appearance(auto),
@@ -58,7 +61,7 @@ public class CssTemplateTest {
       },
 
       """
-      button {
+      button, [type="button"], [type="reset"], [type="submit"] {
         appearance: none;
         appearance: auto;
         appearance: menulist-button;

@@ -16,7 +16,9 @@
 package objectos.css;
 
 import java.util.Objects;
+import objectos.css.internal.InternalAttributeOperator;
 import objectos.css.internal.InternalZero;
+import objectos.css.internal.NamedElement;
 import objectos.css.internal.Property;
 import objectos.css.internal.StyleDeclaration1;
 import objectos.css.internal.StyleDeclarationCommaSeparated;
@@ -25,6 +27,7 @@ import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
+import objectos.css.tmpl.AttributeOperator;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.Zero;
@@ -33,6 +36,8 @@ import objectos.lang.Check;
 public abstract class CssTemplate extends GeneratedCssTemplate {
 
   protected static final Zero $0 = InternalZero.INSTANCE;
+
+  protected static final AttributeOperator IS = InternalAttributeOperator.EQUALS;
 
   private StyleSheetBuilder builder;
 
@@ -53,6 +58,12 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
   @Override
   public String toString() {
     return toStyleSheet().toString();
+  }
+
+  protected final Selector attr(String name, AttributeOperator operator, String value) {
+    return new NamedElement(
+      "[" + name + operator + "\"" + value + "\"]"
+    );
   }
 
   protected abstract void definition();
