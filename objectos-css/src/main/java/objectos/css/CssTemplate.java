@@ -18,10 +18,10 @@ package objectos.css;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import objectos.css.internal.NamedSelector;
-import objectos.css.internal.XProperty;
 import objectos.css.internal.StyleDeclaration1;
 import objectos.css.internal.StyleDeclarationCommaSeparated;
 import objectos.css.internal.StyleSheetBuilder;
+import objectos.css.internal.XProperty;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
@@ -644,6 +644,7 @@ public abstract class CssTemplate {
 
       case 1 -> {
         var source0 = Objects.requireNonNull(values[0], "values[0] == null");
+
         var value0 = fontFamilyValue(source0);
 
         yield new StyleDeclaration1(XProperty.FONT_FAMILY, value0);

@@ -268,7 +268,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontFamily() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

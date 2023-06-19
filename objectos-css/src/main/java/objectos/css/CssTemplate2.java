@@ -17,11 +17,18 @@ package objectos.css;
 
 import java.util.Objects;
 import objectos.css.internal.InternalZero;
+import objectos.css.internal.Property;
+import objectos.css.internal.StyleDeclaration1;
+import objectos.css.internal.StyleDeclarationCommaSeparated;
 import objectos.css.internal.StyleSheetBuilder;
+import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
+import objectos.css.tmpl.FontFamilyValue;
+import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.Zero;
+import objectos.lang.Check;
 
 public abstract class CssTemplate2 extends GeneratedCssTemplate {
 
@@ -43,11 +50,50 @@ public abstract class CssTemplate2 extends GeneratedCssTemplate {
     }
   }
 
-  protected abstract void definition();
-
   @Override
   public String toString() {
     return toStyleSheet().toString();
+  }
+
+  protected abstract void definition();
+
+  @Override
+  protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
+    Objects.requireNonNull(values, "values == null");
+
+    int length = values.length;
+
+    return switch (length) {
+      case 0 -> throw new IllegalArgumentException("The font-family property cannot be empty");
+
+      case 1 -> {
+        var source0 = Objects.requireNonNull(values[0], "values[0] == null");
+
+        var value0 = fontFamilyValue(source0);
+
+        yield new StyleDeclaration1(Property.FONT_FAMILY, value0);
+      }
+
+      default -> {
+        var copy = new PropertyValue[length];
+
+        for (int i = 0; i < length; i++) {
+          var source = Check.notNull(values[i], "values[", i, "] == null");
+
+          copy[i] = fontFamilyValue(source);
+        }
+
+        yield new StyleDeclarationCommaSeparated(Property.FONT_FAMILY, copy);
+      }
+    };
+  }
+
+  private PropertyValue fontFamilyValue(FontFamilyValue value) {
+    if (value instanceof StringLiteral l) {
+      return l.asFontFamilyValue();
+    } else {
+      return value;
+    }
   }
 
   protected final void style(Selector selector,

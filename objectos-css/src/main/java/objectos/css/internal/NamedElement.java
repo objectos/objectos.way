@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.om.Selector;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
+import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
@@ -30,6 +31,7 @@ import objectos.lang.Generated;
 public final class NamedElement implements Selector,
     BoxSizingValue,
     Color,
+    FontFamilyValue,
     GlobalKeyword,
     LineHeightValue,
     LineStyle,

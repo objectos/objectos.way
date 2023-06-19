@@ -13,39 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.om.PropertyName;
+import objectos.css.internal.InternalStringLiteral;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public enum Property implements PropertyName {
-  BORDER_COLOR("border-color"),
-
-  BORDER_STYLE("border-style"),
-
-  BORDER_WIDTH("border-width"),
-
-  BOX_SIZING("box-sizing"),
-
-  FONT_FAMILY("font-family"),
-
-  LINE_HEIGHT("line-height"),
-
-  TAB_SIZE("tab-size"),
-
-  _MOZ_TAB_SIZE("-moz-tab-size"),
-
-  _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
-
-  private final String propertyName;
-
-  private Property(String propertyName) {
-    this.propertyName = propertyName;
-  }
-
-  @Override
-  public final String toString() {
-    return propertyName;
-  }
+public sealed interface StringLiteral extends
+    FontFamilyValue permits InternalStringLiteral {
+  PropertyValue asFontFamilyValue();
 }

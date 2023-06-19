@@ -17,6 +17,7 @@ package objectos.css;
 
 import objectos.css.internal.InternalLength;
 import objectos.css.internal.InternalPercentage;
+import objectos.css.internal.InternalStringLiteral;
 import objectos.css.internal.NamedElement;
 import objectos.css.internal.Property;
 import objectos.css.internal.StyleDeclaration1;
@@ -29,6 +30,7 @@ import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
+import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LineHeightValue;
@@ -36,6 +38,7 @@ import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.Percentage;
+import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
@@ -105,9 +108,17 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color currentcolor = named("currentcolor");
 
+  protected static final FontFamilyValue cursive = named("cursive");
+
   protected static final LineStyle dashed = named("dashed");
 
   protected static final LineStyle dotted = named("dotted");
+
+  protected static final FontFamilyValue emoji = named("emoji");
+
+  protected static final FontFamilyValue fangsong = named("fangsong");
+
+  protected static final FontFamilyValue fantasy = named("fantasy");
 
   protected static final Color fuchsia = named("fuchsia");
 
@@ -129,7 +140,11 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color maroon = named("maroon");
 
+  protected static final FontFamilyValue math = named("math");
+
   protected static final LineWidth medium = named("medium");
+
+  protected static final FontFamilyValue monospace = named("monospace");
 
   protected static final Color navy = named("navy");
 
@@ -147,9 +162,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final LineStyle ridge = named("ridge");
 
+  protected static final FontFamilyValue sansSerif = named("sans-serif");
+
+  protected static final FontFamilyValue serif = named("serif");
+
   protected static final Color silver = named("silver");
 
   protected static final LineStyle solid = named("solid");
+
+  protected static final FontFamilyValue systemUi = named("system-ui");
 
   protected static final Color teal = named("teal");
 
@@ -158,6 +179,14 @@ abstract class GeneratedCssTemplate {
   protected static final LineWidth thin = named("thin");
 
   protected static final Color transparent = named("transparent");
+
+  protected static final FontFamilyValue uiMonospace = named("ui-monospace");
+
+  protected static final FontFamilyValue uiRounded = named("ui-rounded");
+
+  protected static final FontFamilyValue uiSansSerif = named("ui-sans-serif");
+
+  protected static final FontFamilyValue uiSerif = named("ui-serif");
 
   protected static final GlobalKeyword unset = named("unset");
 
@@ -297,6 +326,10 @@ abstract class GeneratedCssTemplate {
     return InternalPercentage.of(value);
   }
 
+  protected final StringLiteral l(String value) {
+    return InternalStringLiteral.of(value);
+  }
+
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
     return new StyleDeclaration1(Property.BORDER_COLOR, value.self());
   }
@@ -364,6 +397,12 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration boxSizing(BoxSizingValue value) {
     return new StyleDeclaration1(Property.BOX_SIZING, value.self());
   }
+
+  protected final StyleDeclaration fontFamily(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.FONT_FAMILY, value.self());
+  }
+
+  protected abstract StyleDeclaration fontFamily(FontFamilyValue... values);
 
   protected final StyleDeclaration lineHeight(double value) {
     return new StyleDeclarationDouble(Property.LINE_HEIGHT, value);
