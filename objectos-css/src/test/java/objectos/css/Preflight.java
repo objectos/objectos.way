@@ -139,5 +139,30 @@ final class Preflight extends CssTemplate {
       borderColor(inherit),
       borderCollapse(collapse)
     );
+
+    style(
+      button,
+      input,
+      optgroup,
+      select,
+      textarea,
+
+      fontFamily(inherit),
+      fontFeatureSettings(inherit),
+      fontVariationSettings(inherit),
+      fontSize(pct(100)),
+      fontWeight(inherit),
+      lineHeight(inherit),
+      color(inherit),
+      margin($0),
+      padding($0)
+    );
+
+    style(
+      button,
+      select,
+
+      textTransform(none)
+    );
   }
 }
