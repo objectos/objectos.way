@@ -20,4 +20,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LineHeightValue extends PropertyValue permits LengthPercentage, NamedElement, NormalKeyword {}
+public sealed interface FontVariationSettingsValue extends PropertyValue permits NamedElement, NormalKeyword {}

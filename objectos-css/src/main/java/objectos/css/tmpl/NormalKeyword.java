@@ -16,8 +16,10 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
-import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LineHeightValue extends PropertyValue permits LengthPercentage, NamedElement, NormalKeyword {}
+public sealed interface NormalKeyword extends
+    FontFeatureSettingsValue,
+    FontVariationSettingsValue,
+    LineHeightValue permits NamedElement {}

@@ -304,7 +304,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontFeatureSettings() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -387,7 +387,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontVariationSettings() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

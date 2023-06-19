@@ -31,12 +31,15 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.FontFamilyValue;
+import objectos.css.tmpl.FontFeatureSettingsValue;
+import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
 import objectos.css.tmpl.NoneKeyword;
+import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.TextSizeAdjustValue;
@@ -150,7 +153,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final NoneKeyword none = named("none");
 
-  protected static final LineHeightValue normal = named("normal");
+  protected static final NormalKeyword normal = named("normal");
 
   protected static final Color olive = named("olive");
 
@@ -403,6 +406,22 @@ abstract class GeneratedCssTemplate {
   }
 
   protected abstract StyleDeclaration fontFamily(FontFamilyValue... values);
+
+  protected final StyleDeclaration fontFeatureSettings(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.FONT_FEATURE_SETTINGS, value.self());
+  }
+
+  protected final StyleDeclaration fontFeatureSettings(FontFeatureSettingsValue value) {
+    return new StyleDeclaration1(Property.FONT_FEATURE_SETTINGS, value.self());
+  }
+
+  protected final StyleDeclaration fontVariationSettings(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.FONT_VARIATION_SETTINGS, value.self());
+  }
+
+  protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
+    return new StyleDeclaration1(Property.FONT_VARIATION_SETTINGS, value.self());
+  }
 
   protected final StyleDeclaration lineHeight(double value) {
     return new StyleDeclarationDouble(Property.LINE_HEIGHT, value);

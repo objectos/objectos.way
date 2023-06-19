@@ -30,6 +30,10 @@ public enum Property implements PropertyName {
 
   FONT_FAMILY("font-family"),
 
+  FONT_FEATURE_SETTINGS("font-feature-settings"),
+
+  FONT_VARIATION_SETTINGS("font-variation-settings"),
+
   LINE_HEIGHT("line-height"),
 
   TAB_SIZE("tab-size"),

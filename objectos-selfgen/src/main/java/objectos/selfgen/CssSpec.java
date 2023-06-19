@@ -143,6 +143,12 @@ public final class CssSpec extends CssSelfGen {
     pval("font-family", globalKeyword);
     pvar("font-family", fontFamilyValue);
 
+    pval("font-feature-settings", globalKeyword);
+    pval("font-feature-settings", def("FontFeatureSettingsValue", kw("normal")));
+
+    pval("font-variation-settings", globalKeyword);
+    pval("font-variation-settings", def("FontVariationSettingsValue", kw("normal")));
+
     // L
 
     pdbl("line-height");
