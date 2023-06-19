@@ -90,17 +90,29 @@ public final class CssSpec extends CssSelfGen {
     var lengthPercentage = def("LengthPercentage", length, percentage);
 
     // keyword name clashes
+
     keywordFieldName("double", "_double");
 
     // B
-
-    pval("border-color", globalKeyword);
-    pbox("border-color", color);
 
     var lineWidth = def("LineWidth",
       length,
       keywords("medium", "thick", "thin")
     );
+
+    var lineStyle = def("LineStyle",
+      keywords(
+        "dashed", "dotted", "double",
+        "groove", "hidden",
+        "inset",
+        "none",
+        "outset",
+        "ridge", "solid"
+      )
+    );
+
+    pval("border-color", globalKeyword);
+    pbox("border-color", color);
 
     pval("border-width", globalKeyword);
     pbox("border-width", lineWidth);
@@ -117,17 +129,6 @@ public final class CssSpec extends CssSelfGen {
     pval("box-sizing", def("BoxSizingValue",
       keywords("border-box", "content-box")
     ));
-
-    var lineStyle = def("LineStyle",
-      keywords(
-        "dashed", "dotted", "double",
-        "groove", "hidden",
-        "inset",
-        "none",
-        "outset",
-        "ridge", "solid"
-      )
-    );
 
     pval("border-style", globalKeyword);
     pbox("border-style", lineStyle);
@@ -154,32 +155,61 @@ public final class CssSpec extends CssSelfGen {
       string()
     );
 
+    var fontSizeValue = def("FontSizeValue",
+      keywords(
+        "large", "larger",
+        "medium",
+        "small", "smaller",
+        "x-large", "xx-large", "xxx-large", "xx-small", "x-small"
+      ),
+      lengthPercentage
+    );
+
+    var fontWeightValue = def("FontWeightValue",
+      keywords(
+        "bold", "bolder",
+        "lighter",
+        "normal"
+      )
+    );
+
     pval("font-family", globalKeyword);
     pvar("font-family", fontFamilyValue);
 
     pval("font-feature-settings", globalKeyword);
     pval("font-feature-settings", def("FontFeatureSettingsValue", kw("normal")));
 
+    pval("font-size", globalKeyword);
+    pval("font-size", fontSizeValue);
+
     pval("font-variation-settings", globalKeyword);
     pval("font-variation-settings", def("FontVariationSettingsValue", kw("normal")));
 
+    pint("font-weight");
+    pval("font-weight", globalKeyword);
+    pval("font-weight", fontWeightValue);
+
     // H
 
-    pval("height", globalKeyword);
-    pval("height", def("HeightValue",
+    var heightValue = def("HeightValue",
       lengthPercentage,
       keywords("auto", "fit-content", "max-content", "min-content")
-    ));
+    );
+
+    pval("height", globalKeyword);
+    pval("height", heightValue);
 
     // L
+
+    var lineHeightValue = def("LineHeightValue",
+      lengthPercentage,
+      kw("normal")
+    );
 
     pdbl("line-height");
     pint("line-height");
     pval("line-height", globalKeyword);
-    pval("line-height", def("LineHeightValue",
-      lengthPercentage,
-      kw("normal")
-    ));
+    pval("line-height", lineHeightValue);
 
     // M
 
@@ -193,6 +223,11 @@ public final class CssSpec extends CssSelfGen {
 
     // T
 
+    var textSizeAdjustValue = def("TextSizeAdjustValue",
+      keywords("auto", "none"),
+      percentage
+    );
+
     pint("-moz-tab-size");
     pval("-moz-tab-size", globalKeyword);
     pval("-moz-tab-size", length);
@@ -200,11 +235,6 @@ public final class CssSpec extends CssSelfGen {
     pint("tab-size");
     pval("tab-size", globalKeyword);
     pval("tab-size", length);
-
-    var textSizeAdjustValue = def("TextSizeAdjustValue",
-      keywords("auto", "none"),
-      percentage
-    );
 
     pval("-webkit-text-size-adjust", globalKeyword);
     pval("-webkit-text-size-adjust", textSizeAdjustValue);

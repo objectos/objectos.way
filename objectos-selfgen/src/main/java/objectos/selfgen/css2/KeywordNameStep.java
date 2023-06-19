@@ -16,6 +16,7 @@
 package objectos.selfgen.css2;
 
 import java.io.IOException;
+import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 
 final class KeywordNameStep extends ThisTemplate {
@@ -50,13 +51,13 @@ final class KeywordNameStep extends ThisTemplate {
   }
 
   private void superTypes() {
-    keywordName.valueTypes().stream()
-        .sorted(ValueType.ORDER_BY_SIMPLE_NAME)
+    keywordName.superTypes().stream()
+        .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
         .forEach(this::superTypesImpl);
   }
 
-  private void superTypesImpl(ValueType type) {
-    extendsClause(NL, type.className);
+  private void superTypesImpl(ClassTypeName type) {
+    extendsClause(NL, type);
   }
 
 }

@@ -81,6 +81,20 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     definition();
 
+    for (var selector : selectors.values()) {
+      var name = selector.selectorName;
+
+      var clash = keywords.get(name);
+
+      if (clash == null) {
+        continue;
+      }
+
+      selector.disable();
+
+      clash.addSuperType(ThisTemplate.SELECTOR);
+    }
+
     for (var keyword : keywords.values()) {
       keyword.compile();
     }
@@ -241,21 +255,7 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   private void selector(String name) {
-    var selector = SelectorName.of(name);
-
-    var key = selector.fieldName();
-
-    if (selectors.containsKey(key)) {
-      throw new IllegalArgumentException(
-        """
-        Duplicate selector field name
-        fieldName=%s
-        selectorName=%s
-        """.formatted(key, name)
-      );
-    }
-
-    selectors.put(key, selector);
+    selectors.computeIfAbsent(name, SelectorName::of);
   }
 
   private ZeroType zeroTypeIfNecessary() {

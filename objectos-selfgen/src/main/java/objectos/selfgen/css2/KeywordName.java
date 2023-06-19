@@ -33,6 +33,8 @@ public final class KeywordName implements Value {
 
   public final String keywordName;
 
+  private final GrowableSet<ClassTypeName> superTypes = new GrowableSet<>();
+
   private final GrowableSet<ValueType> valueTypes = new GrowableSet<>();
 
   private ClassTypeName className;
@@ -54,6 +56,8 @@ public final class KeywordName implements Value {
   public final void addValueType(ValueType valueType) {
     valueType.addPermitted(ThisTemplate.NAMED_ELEMENT);
 
+    superTypes.add(valueType.className);
+
     valueTypes.add(valueType);
   }
 
@@ -62,23 +66,23 @@ public final class KeywordName implements Value {
   }
 
   public final boolean shouldGenerate() {
-    return valueTypes.size() > 1;
+    return superTypes.size() > 1;
+  }
+
+  final void addSuperType(ClassTypeName type) {
+    superTypes.add(type);
   }
 
   final void compile() {
-    int size = valueTypes.size();
+    int size = superTypes.size();
 
     switch (size) {
       case 0 -> throw new IllegalStateException();
 
       case 1 -> {
-        var iterator = valueTypes.iterator();
+        var iterator = superTypes.iterator();
 
-        var element = iterator.next();
-
-        className = element.className;
-
-        element.addPermitted(ThisTemplate.NAMED_ELEMENT);
+        className = iterator.next();
       }
 
       default -> {
@@ -93,8 +97,8 @@ public final class KeywordName implements Value {
     }
   }
 
-  final Collection<ValueType> valueTypes() {
-    return valueTypes;
+  final Collection<ClassTypeName> superTypes() {
+    return superTypes;
   }
 
 }

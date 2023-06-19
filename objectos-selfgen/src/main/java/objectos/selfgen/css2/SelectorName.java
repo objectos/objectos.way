@@ -18,9 +18,20 @@ package objectos.selfgen.css2;
 import java.util.Comparator;
 import java.util.Objects;
 
-record SelectorName(String fieldName, String selectorName) {
+final class SelectorName {
   static final Comparator<? super SelectorName> ORDER_BY_FIELD_NAME
       = (self, that) -> self.fieldName.compareTo(that.fieldName);
+
+  public final String fieldName;
+
+  public final String selectorName;
+
+  boolean disabled;
+
+  public SelectorName(String fieldName, String selectorName) {
+    this.fieldName = fieldName;
+    this.selectorName = selectorName;
+  }
 
   public static SelectorName of(String name) {
     Objects.requireNonNull(name, "name == null");
@@ -28,5 +39,9 @@ record SelectorName(String fieldName, String selectorName) {
     var fieldName = name.replace(':', '_');
 
     return new SelectorName(fieldName, name);
+  }
+
+  final void disable() {
+    disabled = true;
   }
 }

@@ -25,16 +25,16 @@ public class SelectorNameTest {
   public void ofTypeSelector() {
     var sel = SelectorName.of("a");
 
-    assertEquals(sel.fieldName(), "a");
-    assertEquals(sel.selectorName(), "a");
+    assertEquals(sel.fieldName, "a");
+    assertEquals(sel.selectorName, "a");
   }
 
   @Test
   public void ofPseudoElementSelector() {
     var sel = SelectorName.of("::after");
 
-    assertEquals(sel.fieldName(), "__after");
-    assertEquals(sel.selectorName(), "::after");
+    assertEquals(sel.fieldName, "__after");
+    assertEquals(sel.selectorName, "::after");
   }
 
 }

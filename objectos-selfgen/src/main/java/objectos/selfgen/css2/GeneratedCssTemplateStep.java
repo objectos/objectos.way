@@ -51,6 +51,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private void selectors() {
     spec.selectors().stream()
+        .filter(s -> !s.disabled)
         .sorted(SelectorName.ORDER_BY_FIELD_NAME)
         .forEach(this::selectorField);
 
@@ -59,8 +60,8 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private void selectorField(SelectorName selector) {
     field(
-      PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName()),
-      v("named"), argument(s(selector.selectorName()))
+      PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
+      v("named"), argument(s(selector.selectorName))
     );
   }
 
