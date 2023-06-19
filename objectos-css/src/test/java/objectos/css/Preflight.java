@@ -113,6 +113,7 @@ final class Preflight extends CssTemplate {
 
     style(
       sub, sup,
+
       fontSize(pct(75)),
       lineHeight(0),
       position(relative),
@@ -121,12 +122,22 @@ final class Preflight extends CssTemplate {
 
     style(
       sub,
+
       bottom(em(-0.25))
     );
 
     style(
       sup,
+
       top(em(-0.5))
+    );
+
+    style(
+      table,
+
+      textIndent($0),
+      borderColor(inherit),
+      borderCollapse(collapse)
     );
   }
 }

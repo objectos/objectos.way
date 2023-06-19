@@ -81,6 +81,11 @@ public class PreflightTest {
       sup {
         top: -0.5em;
       }
+      table {
+        text-indent: 0;
+        border-color: inherit;
+        border-collapse: collapse;
+      }
       """
     );
   }
