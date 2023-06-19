@@ -161,15 +161,11 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   protected final void pbox(String propertyName, ParameterType value) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
-
-    property.addSignature(Style.BOX, value);
+    pimpl(propertyName, value, Style.BOX);
   }
 
   protected final void pdbl(String propertyName) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
-
-    property.addSignature(Style.DOUBLE, ParameterType.DOUBLE);
+    pimpl(propertyName, ParameterType.DOUBLE, Style.DOUBLE);
   }
 
   protected final PercentageType percentage() {
@@ -183,21 +179,29 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   protected final void pint(String propertyName) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
-
-    property.addSignature(Style.INT, ParameterType.INT);
+    pimpl(propertyName, ParameterType.INT, Style.INT);
   }
 
   protected final void pval(String propertyName, ParameterType value) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
+    pimpl(propertyName, value, Style.VALUE);
+  }
 
-    property.addSignature(Style.VALUE, value);
+  protected final void pva2(String propertyName, ParameterType value) {
+    pimpl(propertyName, value, Style.VALUE2);
+  }
+
+  protected final void pva3(String propertyName, ParameterType value) {
+    pimpl(propertyName, value, Style.VALUE3);
   }
 
   protected final void pvar(String propertyName, ParameterType value) {
+    pimpl(propertyName, value, Style.VARARGS);
+  }
+
+  private void pimpl(String propertyName, ParameterType value, Style style) {
     var property = properties.computeIfAbsent(propertyName, Property::of);
 
-    property.addSignature(Style.VARARGS, value);
+    property.addSignature(style, value);
   }
 
   protected final void selectors(String... names) {

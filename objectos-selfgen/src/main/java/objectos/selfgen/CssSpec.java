@@ -228,6 +228,14 @@ public final class CssSpec extends CssSelfGen {
       percentage
     );
 
+    var textDecorationLineMultiValue = def("TextDecorationLineMultiValue",
+      keywords("blink", "line-through", "overline", "underline")
+    );
+
+    var textDecorationLineSingleValue = def("TextDecorationLineSingleValue",
+      textDecorationLineMultiValue, kw("none")
+    );
+
     pint("-moz-tab-size");
     pval("-moz-tab-size", globalKeyword);
     pval("-moz-tab-size", length);
@@ -235,6 +243,11 @@ public final class CssSpec extends CssSelfGen {
     pint("tab-size");
     pval("tab-size", globalKeyword);
     pval("tab-size", length);
+
+    pval("text-decoration-line", globalKeyword);
+    pval("text-decoration-line", textDecorationLineSingleValue);
+    pva2("text-decoration-line", textDecorationLineMultiValue);
+    pva3("text-decoration-line", textDecorationLineMultiValue);
 
     pval("-webkit-text-size-adjust", globalKeyword);
     pval("-webkit-text-size-adjust", textSizeAdjustValue);

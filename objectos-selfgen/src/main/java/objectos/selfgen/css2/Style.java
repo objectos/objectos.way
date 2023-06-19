@@ -18,6 +18,10 @@ package objectos.selfgen.css2;
 enum Style {
   VALUE,
 
+  VALUE2,
+
+  VALUE3,
+
   BOX,
 
   DOUBLE,
