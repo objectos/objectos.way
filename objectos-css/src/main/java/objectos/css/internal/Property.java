@@ -20,19 +20,31 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public enum Property implements PropertyName {
+  BORDER_BOTTOM_WIDTH("border-bottom-width"),
+
   BORDER_COLOR("border-color"),
 
+  BORDER_LEFT_WIDTH("border-left-width"),
+
+  BORDER_RIGHT_WIDTH("border-right-width"),
+
   BORDER_STYLE("border-style"),
+
+  BORDER_TOP_WIDTH("border-top-width"),
 
   BORDER_WIDTH("border-width"),
 
   BOX_SIZING("box-sizing"),
+
+  COLOR("color"),
 
   FONT_FAMILY("font-family"),
 
   FONT_FEATURE_SETTINGS("font-feature-settings"),
 
   FONT_VARIATION_SETTINGS("font-variation-settings"),
+
+  HEIGHT("height"),
 
   LINE_HEIGHT("line-height"),
 

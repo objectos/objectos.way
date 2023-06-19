@@ -35,6 +35,7 @@ import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.GlobalKeyword;
+import objectos.css.tmpl.HeightValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
@@ -125,6 +126,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue fantasy = named("fantasy");
 
+  protected static final HeightValue fitContent = named("fit-content");
+
   protected static final Color fuchsia = named("fuchsia");
 
   protected static final Color gray = named("gray");
@@ -147,7 +150,11 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue math = named("math");
 
+  protected static final HeightValue maxContent = named("max-content");
+
   protected static final LineWidth medium = named("medium");
+
+  protected static final HeightValue minContent = named("min-content");
 
   protected static final FontFamilyValue monospace = named("monospace");
 
@@ -335,6 +342,26 @@ abstract class GeneratedCssTemplate {
     return InternalStringLiteral.of(value);
   }
 
+  protected final StyleDeclaration borderBottomWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BORDER_BOTTOM_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration borderBottomWidth(LineWidth all) {
+    return new StyleDeclaration1(Property.BORDER_BOTTOM_WIDTH, all.self());
+  }
+
+  protected final StyleDeclaration borderBottomWidth(LineWidth vertical, LineWidth horizontal) {
+    return new StyleDeclaration2(Property.BORDER_BOTTOM_WIDTH, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration borderBottomWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
+    return new StyleDeclaration3(Property.BORDER_BOTTOM_WIDTH, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration borderBottomWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
+    return new StyleDeclaration4(Property.BORDER_BOTTOM_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  }
+
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
     return new StyleDeclaration1(Property.BORDER_COLOR, value.self());
   }
@@ -355,6 +382,46 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration4(Property.BORDER_COLOR, top.self(), right.self(), bottom.self(), left.self());
   }
 
+  protected final StyleDeclaration borderLeftWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BORDER_LEFT_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration borderLeftWidth(LineWidth all) {
+    return new StyleDeclaration1(Property.BORDER_LEFT_WIDTH, all.self());
+  }
+
+  protected final StyleDeclaration borderLeftWidth(LineWidth vertical, LineWidth horizontal) {
+    return new StyleDeclaration2(Property.BORDER_LEFT_WIDTH, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration borderLeftWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
+    return new StyleDeclaration3(Property.BORDER_LEFT_WIDTH, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration borderLeftWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
+    return new StyleDeclaration4(Property.BORDER_LEFT_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration borderRightWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BORDER_RIGHT_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration borderRightWidth(LineWidth all) {
+    return new StyleDeclaration1(Property.BORDER_RIGHT_WIDTH, all.self());
+  }
+
+  protected final StyleDeclaration borderRightWidth(LineWidth vertical, LineWidth horizontal) {
+    return new StyleDeclaration2(Property.BORDER_RIGHT_WIDTH, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration borderRightWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
+    return new StyleDeclaration3(Property.BORDER_RIGHT_WIDTH, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration borderRightWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
+    return new StyleDeclaration4(Property.BORDER_RIGHT_WIDTH, top.self(), right.self(), bottom.self(), left.self());
+  }
+
   protected final StyleDeclaration borderStyle(GlobalKeyword value) {
     return new StyleDeclaration1(Property.BORDER_STYLE, value.self());
   }
@@ -373,6 +440,26 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration borderStyle(LineStyle top, LineStyle right, LineStyle bottom, LineStyle left) {
     return new StyleDeclaration4(Property.BORDER_STYLE, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration borderTopWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BORDER_TOP_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration borderTopWidth(LineWidth all) {
+    return new StyleDeclaration1(Property.BORDER_TOP_WIDTH, all.self());
+  }
+
+  protected final StyleDeclaration borderTopWidth(LineWidth vertical, LineWidth horizontal) {
+    return new StyleDeclaration2(Property.BORDER_TOP_WIDTH, vertical.self(), horizontal.self());
+  }
+
+  protected final StyleDeclaration borderTopWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
+    return new StyleDeclaration3(Property.BORDER_TOP_WIDTH, top.self(), horizontal.self(), bottom.self());
+  }
+
+  protected final StyleDeclaration borderTopWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
+    return new StyleDeclaration4(Property.BORDER_TOP_WIDTH, top.self(), right.self(), bottom.self(), left.self());
   }
 
   protected final StyleDeclaration borderWidth(GlobalKeyword value) {
@@ -403,6 +490,14 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.BOX_SIZING, value.self());
   }
 
+  protected final StyleDeclaration color(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.COLOR, value.self());
+  }
+
+  protected final StyleDeclaration color(Color value) {
+    return new StyleDeclaration1(Property.COLOR, value.self());
+  }
+
   protected final StyleDeclaration fontFamily(GlobalKeyword value) {
     return new StyleDeclaration1(Property.FONT_FAMILY, value.self());
   }
@@ -423,6 +518,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
     return new StyleDeclaration1(Property.FONT_VARIATION_SETTINGS, value.self());
+  }
+
+  protected final StyleDeclaration height(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration height(HeightValue value) {
+    return new StyleDeclaration1(Property.HEIGHT, value.self());
   }
 
   protected final StyleDeclaration lineHeight(double value) {

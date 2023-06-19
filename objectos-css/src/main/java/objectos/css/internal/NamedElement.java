@@ -23,6 +23,7 @@ import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.GlobalKeyword;
+import objectos.css.tmpl.HeightValue;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
@@ -40,6 +41,7 @@ public final class NamedElement implements Selector,
     FontFeatureSettingsValue,
     FontVariationSettingsValue,
     GlobalKeyword,
+    HeightValue,
     LineHeightValue,
     LineStyle,
     LineWidth,

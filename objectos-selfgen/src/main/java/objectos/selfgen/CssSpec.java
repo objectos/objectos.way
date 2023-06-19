@@ -104,6 +104,14 @@ public final class CssSpec extends CssSelfGen {
 
     pval("border-width", globalKeyword);
     pbox("border-width", lineWidth);
+    pval("border-bottom-width", globalKeyword);
+    pbox("border-bottom-width", lineWidth);
+    pval("border-left-width", globalKeyword);
+    pbox("border-left-width", lineWidth);
+    pval("border-right-width", globalKeyword);
+    pbox("border-right-width", lineWidth);
+    pval("border-top-width", globalKeyword);
+    pbox("border-top-width", lineWidth);
 
     pval("box-sizing", globalKeyword);
     pval("box-sizing", def("BoxSizingValue",
@@ -124,7 +132,13 @@ public final class CssSpec extends CssSelfGen {
     pval("border-style", globalKeyword);
     pbox("border-style", lineStyle);
 
+    // C
+
+    pval("color", globalKeyword);
+    pval("color", color);
+
     // F
+
     var fontFamilyValue = def("FontFamilyValue",
       keywords(
         "cursive",
@@ -148,6 +162,14 @@ public final class CssSpec extends CssSelfGen {
 
     pval("font-variation-settings", globalKeyword);
     pval("font-variation-settings", def("FontVariationSettingsValue", kw("normal")));
+
+    // H
+
+    pval("height", globalKeyword);
+    pval("height", def("HeightValue",
+      lengthPercentage,
+      keywords("auto", "fit-content", "max-content", "min-content")
+    ));
 
     // L
 

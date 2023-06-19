@@ -64,7 +64,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderSideWidth() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -240,7 +240,7 @@ public class CssTemplateTest {
   """)
   public void propertyColor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -455,7 +455,7 @@ public class CssTemplateTest {
   """)
   public void propertyHeight() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

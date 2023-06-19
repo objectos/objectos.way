@@ -391,6 +391,30 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
+  protected static final TypeSelector details = Css.details;
+
+  protected static final TypeSelector thead = Css.thead;
+
+  protected static final TypeSelector button = Css.button;
+
+  protected static final TypeSelector figure = Css.figure;
+
+  protected static final TypeSelector label = Css.label;
+
+  protected static final TypeSelector form = Css.form;
+
+  protected static final TypeSelector tr = Css.tr;
+
+  protected static final TypeSelector footer = Css.footer;
+
+  protected static final TypeSelector style = Css.style;
+
+  protected static final TypeSelector sup = Css.sup;
+
+  protected static final TypeSelector ul = Css.ul;
+
+  protected static final TypeSelector br = Css.br;
+
   protected static final TypeSelector title = Css.title;
 
   protected static final TypeSelector option = Css.option;
@@ -512,30 +536,6 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector sub = Css.sub;
 
   protected static final TypeSelector hgroup = Css.hgroup;
-
-  protected static final TypeSelector details = Css.details;
-
-  protected static final TypeSelector thead = Css.thead;
-
-  protected static final TypeSelector button = Css.button;
-
-  protected static final TypeSelector figure = Css.figure;
-
-  protected static final TypeSelector label = Css.label;
-
-  protected static final TypeSelector form = Css.form;
-
-  protected static final TypeSelector tr = Css.tr;
-
-  protected static final TypeSelector footer = Css.footer;
-
-  protected static final TypeSelector style = Css.style;
-
-  protected static final TypeSelector sup = Css.sup;
-
-  protected static final TypeSelector ul = Css.ul;
-
-  protected static final TypeSelector br = Css.br;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 
