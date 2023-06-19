@@ -31,6 +31,9 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
+import objectos.css.tmpl.DashedKeyword;
+import objectos.css.tmpl.DottedKeyword;
+import objectos.css.tmpl.DoubleKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
@@ -48,9 +51,13 @@ import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.SmallKeyword;
+import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
+import objectos.css.tmpl.TextDecorationStyleValue;
+import objectos.css.tmpl.TextDecorationThicknessValue;
+import objectos.css.tmpl.TextDecorationValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
@@ -102,7 +109,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector any = named("*");
 
-  protected static final LineStyle _double = named("double");
+  protected static final DoubleKeyword _double = named("double");
 
   protected static final Color aqua = named("aqua");
 
@@ -126,9 +133,9 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue cursive = named("cursive");
 
-  protected static final LineStyle dashed = named("dashed");
+  protected static final DashedKeyword dashed = named("dashed");
 
-  protected static final LineStyle dotted = named("dotted");
+  protected static final DottedKeyword dotted = named("dotted");
 
   protected static final FontFamilyValue emoji = named("emoji");
 
@@ -137,6 +144,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontFamilyValue fantasy = named("fantasy");
 
   protected static final HeightValue fitContent = named("fit-content");
+
+  protected static final TextDecorationThicknessValue fromFont = named("from-font");
 
   protected static final Color fuchsia = named("fuchsia");
 
@@ -204,7 +213,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontSizeValue smaller = named("smaller");
 
-  protected static final LineStyle solid = named("solid");
+  protected static final SolidKeyword solid = named("solid");
 
   protected static final FontFamilyValue systemUi = named("system-ui");
 
@@ -227,6 +236,8 @@ abstract class GeneratedCssTemplate {
   protected static final TextDecorationLineMultiValue underline = named("underline");
 
   protected static final GlobalKeyword unset = named("unset");
+
+  protected static final TextDecorationStyleValue wavy = named("wavy");
 
   protected static final Color white = named("white");
 
@@ -644,6 +655,34 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.TAB_SIZE, value.self());
   }
 
+  protected final StyleDeclaration textDecoration(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION, value.self());
+  }
+
+  protected final StyleDeclaration textDecoration(TextDecorationValue value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION, value.self());
+  }
+
+  protected final StyleDeclaration textDecoration(TextDecorationValue value1, TextDecorationValue value2) {
+    return new StyleDeclaration2(Property.TEXT_DECORATION, value1.self(), value2.self());
+  }
+
+  protected final StyleDeclaration textDecoration(TextDecorationValue value1, TextDecorationValue value2, TextDecorationValue value3) {
+    return new StyleDeclaration3(Property.TEXT_DECORATION, value1.self(), value2.self(), value3.self());
+  }
+
+  protected final StyleDeclaration textDecoration(TextDecorationValue value1, TextDecorationValue value2, TextDecorationValue value3, TextDecorationValue value4) {
+    return new StyleDeclaration4(Property.TEXT_DECORATION, value1.self(), value2.self(), value3.self(), value4.self());
+  }
+
+  protected final StyleDeclaration textDecorationColor(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_COLOR, value.self());
+  }
+
+  protected final StyleDeclaration textDecorationColor(Color value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_COLOR, value.self());
+  }
+
   protected final StyleDeclaration textDecorationLine(GlobalKeyword value) {
     return new StyleDeclaration1(Property.TEXT_DECORATION_LINE, value.self());
   }
@@ -658,6 +697,22 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration textDecorationLine(TextDecorationLineMultiValue value1, TextDecorationLineMultiValue value2, TextDecorationLineMultiValue value3) {
     return new StyleDeclaration3(Property.TEXT_DECORATION_LINE, value1.self(), value2.self(), value3.self());
+  }
+
+  protected final StyleDeclaration textDecorationStyle(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_STYLE, value.self());
+  }
+
+  protected final StyleDeclaration textDecorationStyle(TextDecorationStyleValue value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_STYLE, value.self());
+  }
+
+  protected final StyleDeclaration textDecorationThickness(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_THICKNESS, value.self());
+  }
+
+  protected final StyleDeclaration textDecorationThickness(TextDecorationThicknessValue value) {
+    return new StyleDeclaration1(Property.TEXT_DECORATION_THICKNESS, value.self());
   }
 
   protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {

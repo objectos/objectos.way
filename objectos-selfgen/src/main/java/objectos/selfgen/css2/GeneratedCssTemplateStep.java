@@ -269,6 +269,24 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           );
         }
 
+        case VALUE4 -> {
+          method(
+            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+            parameter(typeName, name("value1")),
+            parameter(typeName, name("value2")),
+            parameter(typeName, name("value3")),
+            parameter(typeName, name("value4")),
+            p(
+              RETURN, NEW, STYLE_DECLARATION4,
+              argument(PROPERTY, n(property.constantName)),
+              argument(n("value1"), v("self")),
+              argument(n("value2"), v("self")),
+              argument(n("value3"), v("self")),
+              argument(n("value4"), v("self"))
+            )
+          );
+        }
+
         case VARARGS -> {
           method(
             PROTECTED, ABSTRACT, STYLE_DECLARATION, name(property.methodName),

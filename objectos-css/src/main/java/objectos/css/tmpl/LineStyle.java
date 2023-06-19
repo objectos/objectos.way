@@ -20,4 +20,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LineStyle extends PropertyValue permits NamedElement, NoneKeyword {}
+public sealed interface LineStyle extends PropertyValue permits DashedKeyword, DottedKeyword, DoubleKeyword, NamedElement, NoneKeyword, SolidKeyword {}

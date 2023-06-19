@@ -15,12 +15,8 @@
  */
 package objectos.css.tmpl;
 
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LengthPercentage extends
-    FontSizeValue,
-    HeightValue,
-    LineHeightValue,
-    MarginValue,
-    TextDecorationThicknessValue permits Length, Percentage {}
+public sealed interface TextDecorationValue extends PropertyValue permits Color, TextDecorationLineSingleValue, TextDecorationStyleValue, TextDecorationThicknessValue {}

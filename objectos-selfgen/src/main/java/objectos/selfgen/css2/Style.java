@@ -22,6 +22,8 @@ enum Style {
 
   VALUE3,
 
+  VALUE4,
+
   BOX,
 
   DOUBLE,

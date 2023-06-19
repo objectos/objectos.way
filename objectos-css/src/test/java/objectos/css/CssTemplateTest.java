@@ -642,7 +642,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecoration() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -680,7 +680,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationColor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -748,14 +748,14 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationStyle() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
             a,
 
             textDecorationStyle(solid),
-            textDecorationStyle(double$),
+            textDecorationStyle(_double),
             textDecorationStyle(dotted),
             textDecorationStyle(dashed),
             textDecorationStyle(wavy),
@@ -784,7 +784,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationThickness() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

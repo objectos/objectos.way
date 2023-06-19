@@ -194,6 +194,10 @@ public abstract class CssSelfGen extends CompiledSpec {
     pimpl(propertyName, value, Style.VALUE3);
   }
 
+  protected final void pva4(String propertyName, ParameterType value) {
+    pimpl(propertyName, value, Style.VALUE4);
+  }
+
   protected final void pvar(String propertyName, ParameterType value) {
     pimpl(propertyName, value, Style.VARARGS);
   }

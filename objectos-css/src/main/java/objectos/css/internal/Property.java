@@ -56,7 +56,15 @@ public enum Property implements PropertyName {
 
   TAB_SIZE("tab-size"),
 
+  TEXT_DECORATION("text-decoration"),
+
+  TEXT_DECORATION_COLOR("text-decoration-color"),
+
   TEXT_DECORATION_LINE("text-decoration-line"),
+
+  TEXT_DECORATION_STYLE("text-decoration-style"),
+
+  TEXT_DECORATION_THICKNESS("text-decoration-thickness"),
 
   _MOZ_TAB_SIZE("-moz-tab-size"),
 

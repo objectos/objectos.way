@@ -19,6 +19,9 @@ import objectos.css.om.Selector;
 import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.Color;
+import objectos.css.tmpl.DashedKeyword;
+import objectos.css.tmpl.DottedKeyword;
+import objectos.css.tmpl.DoubleKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
@@ -34,8 +37,11 @@ import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.SmallKeyword;
+import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
+import objectos.css.tmpl.TextDecorationStyleValue;
+import objectos.css.tmpl.TextDecorationThicknessValue;
 import objectos.css.tmpl.TextSizeAdjustValue;
 import objectos.lang.Generated;
 
@@ -56,12 +62,18 @@ public final class NamedElement implements Selector,
     MarginValue,
     TextDecorationLineMultiValue,
     TextDecorationLineSingleValue,
+    TextDecorationStyleValue,
+    TextDecorationThicknessValue,
     TextSizeAdjustValue,
     AutoKeyword,
+    DashedKeyword,
+    DottedKeyword,
+    DoubleKeyword,
     MediumKeyword,
     NoneKeyword,
     NormalKeyword,
-    SmallKeyword {
+    SmallKeyword,
+    SolidKeyword {
   private final String name;
 
   public NamedElement(String name) {

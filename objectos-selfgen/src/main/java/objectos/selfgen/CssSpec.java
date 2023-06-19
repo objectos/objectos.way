@@ -236,6 +236,19 @@ public final class CssSpec extends CssSelfGen {
       textDecorationLineMultiValue, kw("none")
     );
 
+    var textDecorationStyleValue = def("TextDecorationStyleValue",
+      keywords("dashed", "double", "dotted", "solid", "wavy")
+    );
+
+    var textDecorationThicknessValue = def("TextDecorationThicknessValue",
+      keywords("auto", "from-font"),
+      lengthPercentage
+    );
+
+    var textDecorationValue = def("TextDecorationValue",
+      color, textDecorationLineSingleValue, textDecorationStyleValue, textDecorationThicknessValue
+    );
+
     pint("-moz-tab-size");
     pval("-moz-tab-size", globalKeyword);
     pval("-moz-tab-size", length);
@@ -244,10 +257,25 @@ public final class CssSpec extends CssSelfGen {
     pval("tab-size", globalKeyword);
     pval("tab-size", length);
 
+    pval("text-decoration", globalKeyword);
+    pval("text-decoration", textDecorationValue);
+    pva2("text-decoration", textDecorationValue);
+    pva3("text-decoration", textDecorationValue);
+    pva4("text-decoration", textDecorationValue);
+
+    pval("text-decoration-color", globalKeyword);
+    pval("text-decoration-color", color);
+
     pval("text-decoration-line", globalKeyword);
     pval("text-decoration-line", textDecorationLineSingleValue);
     pva2("text-decoration-line", textDecorationLineMultiValue);
     pva3("text-decoration-line", textDecorationLineMultiValue);
+
+    pval("text-decoration-style", globalKeyword);
+    pval("text-decoration-style", textDecorationStyleValue);
+
+    pval("text-decoration-thickness", globalKeyword);
+    pval("text-decoration-thickness", textDecorationThicknessValue);
 
     pval("-webkit-text-size-adjust", globalKeyword);
     pval("-webkit-text-size-adjust", textSizeAdjustValue);

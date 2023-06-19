@@ -22,4 +22,5 @@ import objectos.lang.Generated;
 public sealed interface AutoKeyword extends
     HeightValue,
     MarginValue,
+    TextDecorationThicknessValue,
     TextSizeAdjustValue permits NamedElement {}
