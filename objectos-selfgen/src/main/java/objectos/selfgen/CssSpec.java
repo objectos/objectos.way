@@ -127,6 +127,10 @@ public final class CssSpec extends CssSelfGen {
 
     // B
 
+    var backgroundImageValue = def("BackgroundImageValue",
+      kw("none")
+    );
+
     var borderCollapseVale = def("BorderCollapseValue",
       keywords("collapse", "separate")
     );
@@ -151,6 +155,12 @@ public final class CssSpec extends CssSelfGen {
         "ridge", "solid"
       )
     );
+
+    pval("background-color", globalKeyword);
+    pval("background-color", color);
+
+    pval("background-image", globalKeyword);
+    pval("background-image", backgroundImageValue);
 
     pval("border-bottom-width", globalKeyword);
     pval("border-bottom-width", lineWidth);

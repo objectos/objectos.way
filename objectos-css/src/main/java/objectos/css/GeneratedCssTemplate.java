@@ -30,6 +30,7 @@ import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
+import objectos.css.tmpl.BackgroundImageValue;
 import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
@@ -485,6 +486,22 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration appearance(AppearanceValue value) {
     return new StyleDeclaration1(Property.APPEARANCE, value.self());
+  }
+
+  protected final StyleDeclaration backgroundColor(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BACKGROUND_COLOR, value.self());
+  }
+
+  protected final StyleDeclaration backgroundColor(Color value) {
+    return new StyleDeclaration1(Property.BACKGROUND_COLOR, value.self());
+  }
+
+  protected final StyleDeclaration backgroundImage(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BACKGROUND_IMAGE, value.self());
+  }
+
+  protected final StyleDeclaration backgroundImage(BackgroundImageValue value) {
+    return new StyleDeclaration1(Property.BACKGROUND_IMAGE, value.self());
   }
 
   protected final StyleDeclaration borderBottomWidth(GlobalKeyword value) {

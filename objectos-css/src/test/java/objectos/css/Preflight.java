@@ -164,5 +164,16 @@ final class Preflight extends CssTemplate {
 
       textTransform(none)
     );
+
+    style(
+      button,
+      attr("type", IS, "button"),
+      attr("type", IS, "reset"),
+      attr("type", IS, "submit"),
+
+      webkitAppearance(button),
+      backgroundColor(transparent),
+      backgroundImage(none)
+    );
   }
 }

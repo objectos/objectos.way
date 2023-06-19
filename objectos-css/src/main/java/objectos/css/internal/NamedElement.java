@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.om.Selector;
 import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
+import objectos.css.tmpl.BackgroundImageValue;
 import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
@@ -59,6 +60,7 @@ import objectos.lang.Generated;
 @Generated("objectos.selfgen.CssSpec")
 public final class NamedElement implements Selector,
     AppearanceValue,
+    BackgroundImageValue,
     BorderCollapseValue,
     BottomValue,
     BoxSizingValue,

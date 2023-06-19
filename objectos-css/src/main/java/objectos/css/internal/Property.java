@@ -22,6 +22,10 @@ import objectos.lang.Generated;
 public enum Property implements PropertyName {
   APPEARANCE("appearance"),
 
+  BACKGROUND_COLOR("background-color"),
+
+  BACKGROUND_IMAGE("background-image"),
+
   BORDER_BOTTOM_WIDTH("border-bottom-width"),
 
   BORDER_COLLAPSE("border-collapse"),

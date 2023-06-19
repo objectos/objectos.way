@@ -85,6 +85,37 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#419] Preflight 13
+
+  - background-image
+  """)
+  public void propertyBackgroundImage() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            button,
+            attr("type", IS, "button"),
+            attr("type", IS, "reset"),
+            attr("type", IS, "submit"),
+
+            backgroundImage(none),
+            backgroundImage(inherit)
+          );
+        }
+      },
+
+      """
+      button, [type="button"], [type="reset"], [type="submit"] {
+        background-image: none;
+        background-image: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#417] Preflight 11
 
   - border-collapse
