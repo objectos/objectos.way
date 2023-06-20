@@ -24,6 +24,7 @@ import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.Color;
+import objectos.css.tmpl.CounterStyleValue;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DisplayBoxValue;
 import objectos.css.tmpl.DisplayInsideValue;
@@ -47,6 +48,8 @@ import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
 import objectos.css.tmpl.ListStyleImageValue;
+import objectos.css.tmpl.ListStylePositionValue;
+import objectos.css.tmpl.ListStyleTypeValue;
 import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.MenuKeyword;
@@ -80,6 +83,7 @@ public final class NamedElement implements Selector,
     BottomValue,
     BoxSizingValue,
     Color,
+    CounterStyleValue,
     DisplayBoxValue,
     DisplayInsideValue,
     DisplayInternalValue,
@@ -98,6 +102,8 @@ public final class NamedElement implements Selector,
     LineStyle,
     LineWidth,
     ListStyleImageValue,
+    ListStylePositionValue,
+    ListStyleTypeValue,
     MarginValue,
     OutlineStyleValue,
     PositionValue,

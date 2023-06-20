@@ -223,6 +223,21 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
             argument(n(sig.name()))
           )
         );
+      } else if (signature instanceof SignatureString sig) {
+        method(
+          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+          parameter(sig.type(), name(sig.name())),
+          p(
+            OBJECTS, v("requireNonNull"),
+            argument(n(sig.name())),
+            argument(s(sig.name() + " == null"))
+          ),
+          p(
+            RETURN, NEW, STYLE_DECLARATION_STRING,
+            argument(PROPERTY, n(property.constantName)),
+            argument(n(sig.name()))
+          )
+        );
       } else if (signature instanceof SignatureVarArgs sig) {
         method(
           PROTECTED, ABSTRACT, STYLE_DECLARATION, name(property.methodName),

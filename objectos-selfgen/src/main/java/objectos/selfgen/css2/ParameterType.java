@@ -44,6 +44,18 @@ interface ParameterType {
     }
   };
 
+  ParameterType STRING = new ParameterType() {
+    @Override
+    public final Signature toSignature(String name) {
+      return new SignatureString(typeName(), name);
+    }
+
+    @Override
+    public final TypeName typeName() {
+      return ThisTemplate.STRING;
+    }
+  };
+
   TypeName typeName();
 
   default Signature toSignature(String name) {

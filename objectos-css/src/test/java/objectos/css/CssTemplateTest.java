@@ -772,6 +772,80 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#422] Preflight 16
+
+  - list-style-image
+  """)
+  public void propertyListStyleImage() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            menu,
+
+            listStyleImage(none),
+            listStyleImage(url("starsolid.gif")),
+            listStyleImage(inherit)
+          );
+        }
+      },
+
+      """
+      menu {
+        list-style-image: none;
+        list-style-image: url("starsolid.gif");
+        list-style-image: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#422] Preflight 16
+
+  - list-style-type
+  """)
+  public void propertyListStyleType() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ol, ul, menu,
+
+            listStyleType(disc),
+            listStyleType(circle),
+            listStyleType(square),
+            listStyleType(decimal),
+            listStyleType(georgian),
+            listStyleType(tradChineseInformal),
+            listStyleType(kannada),
+            listStyleType("-"),
+            listStyleType(none),
+            listStyleType(inherit)
+          );
+        }
+      },
+
+      """
+      ol, ul, menu {
+        list-style-type: disc;
+        list-style-type: circle;
+        list-style-type: square;
+        list-style-type: decimal;
+        list-style-type: georgian;
+        list-style-type: trad-chinese-informal;
+        list-style-type: kannada;
+        list-style-type: "-";
+        list-style-type: none;
+        list-style-type: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#396] Preflight 03
 
   - margin
@@ -1412,36 +1486,6 @@ public class CssTemplateTest {
         top: 2.4em;
         top: 10%;
         top: inherit;
-      }
-      """
-    );
-  }
-
-  @Test(description = """
-  [#422] Preflight 16
-
-  - list-style-image
-  """)
-  public void propertyListStyleImage() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            menu,
-
-            listStyleImage(none),
-            listStyleImage(url("starsolid.gif")),
-            listStyleImage(inherit)
-          );
-        }
-      },
-
-      """
-      menu {
-        list-style-image: none;
-        list-style-image: url("starsolid.gif");
-        list-style-image: inherit;
       }
       """
     );

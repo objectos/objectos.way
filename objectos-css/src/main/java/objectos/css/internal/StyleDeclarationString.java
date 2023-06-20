@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import objectos.css.internal.InternalStringLiteral;
-import objectos.css.om.PropertyValue;
-import objectos.lang.Generated;
+import objectos.css.om.PropertyName;
+import objectos.css.om.StyleDeclaration;
 
-@Generated("objectos.selfgen.CssSpec")
-public sealed interface StringLiteral extends
-    FontFamilyValue,
-    ListStyleTypeValue permits InternalStringLiteral {
-  PropertyValue asFontFamilyValue();
+public record StyleDeclarationString(PropertyName name,
+                                     String value)
+    implements StyleDeclaration {
+  @Override
+  public final String toString() {
+    return name + ": \"" + value + "\"";
+  }
 }

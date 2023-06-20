@@ -30,6 +30,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   protected static final ParameterType INT = ParameterType.INT;
 
+  protected static final ParameterType STRING = ParameterType.STRING;
+
   private final Map<String, KeywordName> keywords = new HashMap<>();
 
   private final Map<String, Property> properties = new HashMap<>();

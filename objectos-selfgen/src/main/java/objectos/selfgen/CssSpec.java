@@ -327,6 +327,8 @@ public final class CssSpec extends CssSelfGen {
 
     lineHeight();
     listStyleImage();
+    listStylePosition();
+    listStyleType();
 
     // M
 
@@ -666,6 +668,117 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(listStyleImageValue, "value")
+    );
+  }
+
+  private void listStylePosition() {
+    var listStylePositionValue = t(
+      "ListStylePositionValue",
+
+      k("inside"),
+      k("outside")
+    );
+
+    property(
+      "list-style-position",
+
+      sig(globalKeyword, "value"),
+      sig(listStylePositionValue, "value")
+    );
+  }
+
+  private void listStyleType() {
+    var counterStyleValue = t(
+      "CounterStyleValue",
+
+      k("disc"),
+      k("circle"),
+      k("square"),
+      k("decimal"),
+      k("cjk-decimal"),
+      k("decimal-leading-zero"),
+      k("lower-roman"),
+      k("upper-roman"),
+      k("lower-greek"),
+      k("lower-alpha"),
+      k("lower-latin"),
+      k("upper-alpha"),
+      k("upper-latin"),
+      k("arabic-indic"),
+      k("-moz-arabic-indic"),
+      k("armenian"),
+      k("bengali"),
+      k("-moz-bengali"),
+      k("cambodian"),
+      k("cjk-earthly-branch"),
+      k("-moz-cjk-earthly-branch"),
+      k("cjk-heavenly-stem"),
+      k("-moz-cjk-heavenly-stem"),
+      k("cjk-ideographic"),
+      k("devanagari"),
+      k("-moz-devanagari"),
+      k("ethiopic-numeric"),
+      k("georgian"),
+      k("gujarati"),
+      k("-moz-gujarati"),
+      k("gurmukhi"),
+      k("-moz-gurmukhi"),
+      k("hebrew"),
+      k("hiragana"),
+      k("hiragana-iroha"),
+      k("japanese-formal"),
+      k("japanese-informal"),
+      k("kannada"),
+      k("-moz-kannada"),
+      k("katakana"),
+      k("katakana-iroha"),
+      k("khmer"),
+      k("-moz-khmer"),
+      k("korean-hangul-formal"),
+      k("korean-hanja-formal"),
+      k("korean-hanja-informal"),
+      k("lao"),
+      k("-moz-lao"),
+      k("lower-armenian"),
+      k("malayalam"),
+      k("-moz-malayalam"),
+      k("mongolian"),
+      k("myanmar"),
+      k("-moz-myanmar"),
+      k("oriya"),
+      k("-moz-oriya"),
+      k("persian"),
+      k("-moz-persian"),
+      k("simp-chinese-formal"),
+      k("simp-chinese-informal"),
+      k("tamil"),
+      k("-moz-tamil"),
+      k("telugu"),
+      k("-moz-telugu"),
+      k("thai"),
+      k("-moz-thai"),
+      k("tibetan"),
+      k("trad-chinese-formal"),
+      k("trad-chinese-informal"),
+      k("upper-armenian"),
+      k("disclosure-open"),
+      k("disclosure-closed")
+    );
+
+    var listStyleTypeValue = t(
+      "ListStyleTypeValue",
+
+      counterStyleValue,
+      k("none"),
+      string()
+    );
+
+    property(
+      "list-style-type",
+
+      sig(globalKeyword, "value"),
+      sig(listStyleTypeValue, "value"),
+      sig(STRING, "value")
     );
   }
 

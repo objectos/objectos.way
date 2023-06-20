@@ -70,6 +70,10 @@ public enum Property implements PropertyName {
 
   LIST_STYLE_IMAGE("list-style-image"),
 
+  LIST_STYLE_POSITION("list-style-position"),
+
+  LIST_STYLE_TYPE("list-style-type"),
+
   MARGIN("margin"),
 
   OUTLINE("outline"),

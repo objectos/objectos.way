@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.selfgen.css2;
 
-import objectos.css.internal.InternalStringLiteral;
-import objectos.css.om.PropertyValue;
-import objectos.lang.Generated;
+import objectos.code.tmpl.TypeName;
 
-@Generated("objectos.selfgen.CssSpec")
-public sealed interface StringLiteral extends
-    FontFamilyValue,
-    ListStyleTypeValue permits InternalStringLiteral {
-  PropertyValue asFontFamilyValue();
-}
+record SignatureString(TypeName type, String name) implements Signature {}

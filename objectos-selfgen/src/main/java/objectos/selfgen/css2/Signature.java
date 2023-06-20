@@ -16,4 +16,6 @@
 package objectos.selfgen.css2;
 
 public sealed interface Signature
-    permits Signature1, SignaturePrim, Signature2, Signature3, Signature4, SignatureVarArgs {}
+    permits
+    Signature1, Signature2, Signature3, Signature4,
+    SignaturePrim, SignatureString, SignatureVarArgs {}

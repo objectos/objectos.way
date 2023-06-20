@@ -16,6 +16,7 @@
 package objectos.selfgen.css2;
 
 import java.io.IOException;
+import java.util.Objects;
 import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 import objectos.code.JavaTemplate;
@@ -52,6 +53,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
 
+  static final ClassTypeName OBJECTS = ClassTypeName.of(Objects.class);
+
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
 
   static final ClassTypeName PERCENTAGE = ClassTypeName.of(CSS_TMPL, "Percentage");
@@ -87,6 +90,9 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STYLE_DECLARATION_INT
       = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationInt");
+
+  static final ClassTypeName STYLE_DECLARATION_STRING
+      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationString");
 
   static final ClassTypeName URL = ClassTypeName.of(CSS_TMPL, "Url");
 

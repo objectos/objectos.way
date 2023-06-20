@@ -25,6 +25,7 @@ public sealed interface NoneKeyword extends
     DisplayBoxValue,
     LineStyle,
     ListStyleImageValue,
+    ListStyleTypeValue,
     OutlineStyleValue,
     TextDecorationLineSingleValue,
     TextSizeAdjustValue,

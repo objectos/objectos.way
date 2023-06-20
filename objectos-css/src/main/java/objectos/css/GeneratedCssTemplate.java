@@ -15,6 +15,7 @@
  */
 package objectos.css;
 
+import java.util.Objects;
 import objectos.css.internal.InternalLength;
 import objectos.css.internal.InternalPercentage;
 import objectos.css.internal.InternalStringLiteral;
@@ -26,6 +27,7 @@ import objectos.css.internal.StyleDeclaration3;
 import objectos.css.internal.StyleDeclaration4;
 import objectos.css.internal.StyleDeclarationDouble;
 import objectos.css.internal.StyleDeclarationInt;
+import objectos.css.internal.StyleDeclarationString;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.AppearanceValue;
@@ -36,6 +38,7 @@ import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.Color;
+import objectos.css.tmpl.CounterStyleValue;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DisplayBoxValue;
 import objectos.css.tmpl.DisplayInsideValue;
@@ -63,6 +66,8 @@ import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
 import objectos.css.tmpl.ListStyleImageValue;
+import objectos.css.tmpl.ListStylePositionValue;
+import objectos.css.tmpl.ListStyleTypeValue;
 import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.MenuKeyword;
@@ -186,9 +191,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color aqua = named("aqua");
 
+  protected static final CounterStyleValue arabicIndic = named("arabic-indic");
+
+  protected static final CounterStyleValue armenian = named("armenian");
+
   protected static final AutoKeyword auto = named("auto");
 
   protected static final VerticalAlignValue baseline = named("baseline");
+
+  protected static final CounterStyleValue bengali = named("bengali");
 
   protected static final Color black = named("black");
 
@@ -208,11 +219,23 @@ abstract class GeneratedCssTemplate {
 
   protected static final ButtonKeyword button = named("button");
 
+  protected static final CounterStyleValue cambodian = named("cambodian");
+
   protected static final TextTransformValue capitalize = named("capitalize");
 
   protected static final FontValue caption = named("caption");
 
   protected static final AppearanceValue checkbox = named("checkbox");
+
+  protected static final CounterStyleValue circle = named("circle");
+
+  protected static final CounterStyleValue cjkDecimal = named("cjk-decimal");
+
+  protected static final CounterStyleValue cjkEarthlyBranch = named("cjk-earthly-branch");
+
+  protected static final CounterStyleValue cjkHeavenlyStem = named("cjk-heavenly-stem");
+
+  protected static final CounterStyleValue cjkIdeographic = named("cjk-ideographic");
 
   protected static final BorderCollapseValue collapse = named("collapse");
 
@@ -226,11 +249,25 @@ abstract class GeneratedCssTemplate {
 
   protected static final DashedKeyword dashed = named("dashed");
 
+  protected static final CounterStyleValue decimal = named("decimal");
+
+  protected static final CounterStyleValue decimalLeadingZero = named("decimal-leading-zero");
+
+  protected static final CounterStyleValue devanagari = named("devanagari");
+
+  protected static final CounterStyleValue disc = named("disc");
+
+  protected static final CounterStyleValue disclosureClosed = named("disclosure-closed");
+
+  protected static final CounterStyleValue disclosureOpen = named("disclosure-open");
+
   protected static final DottedKeyword dotted = named("dotted");
 
   protected static final TextIndentValue eachLine = named("each-line");
 
   protected static final FontFamilyValue emoji = named("emoji");
+
+  protected static final CounterStyleValue ethiopicNumeric = named("ethiopic-numeric");
 
   protected static final FontFamilyValue fangsong = named("fangsong");
 
@@ -254,6 +291,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextTransformValue fullWidth = named("full-width");
 
+  protected static final CounterStyleValue georgian = named("georgian");
+
   protected static final Color gray = named("gray");
 
   protected static final Color green = named("green");
@@ -262,9 +301,19 @@ abstract class GeneratedCssTemplate {
 
   protected static final GrooveKeyword groove = named("groove");
 
+  protected static final CounterStyleValue gujarati = named("gujarati");
+
+  protected static final CounterStyleValue gurmukhi = named("gurmukhi");
+
   protected static final TextIndentValue hanging = named("hanging");
 
+  protected static final CounterStyleValue hebrew = named("hebrew");
+
   protected static final LineStyle hidden = named("hidden");
+
+  protected static final CounterStyleValue hiragana = named("hiragana");
+
+  protected static final CounterStyleValue hiraganaIroha = named("hiragana-iroha");
 
   protected static final FontValue icon = named("icon");
 
@@ -284,6 +333,28 @@ abstract class GeneratedCssTemplate {
 
   protected static final InsetKeyword inset = named("inset");
 
+  protected static final ListStylePositionValue inside = named("inside");
+
+  protected static final CounterStyleValue japaneseFormal = named("japanese-formal");
+
+  protected static final CounterStyleValue japaneseInformal = named("japanese-informal");
+
+  protected static final CounterStyleValue kannada = named("kannada");
+
+  protected static final CounterStyleValue katakana = named("katakana");
+
+  protected static final CounterStyleValue katakanaIroha = named("katakana-iroha");
+
+  protected static final CounterStyleValue khmer = named("khmer");
+
+  protected static final CounterStyleValue koreanHangulFormal = named("korean-hangul-formal");
+
+  protected static final CounterStyleValue koreanHanjaFormal = named("korean-hanja-formal");
+
+  protected static final CounterStyleValue koreanHanjaInformal = named("korean-hanja-informal");
+
+  protected static final CounterStyleValue lao = named("lao");
+
   protected static final FontSizeValue large = named("large");
 
   protected static final FontSizeValue larger = named("larger");
@@ -298,7 +369,19 @@ abstract class GeneratedCssTemplate {
 
   protected static final AppearanceValue listbox = named("listbox");
 
+  protected static final CounterStyleValue lowerAlpha = named("lower-alpha");
+
+  protected static final CounterStyleValue lowerArmenian = named("lower-armenian");
+
+  protected static final CounterStyleValue lowerGreek = named("lower-greek");
+
+  protected static final CounterStyleValue lowerLatin = named("lower-latin");
+
+  protected static final CounterStyleValue lowerRoman = named("lower-roman");
+
   protected static final TextTransformValue lowercase = named("lowercase");
+
+  protected static final CounterStyleValue malayalam = named("malayalam");
 
   protected static final Color maroon = named("maroon");
 
@@ -322,7 +405,45 @@ abstract class GeneratedCssTemplate {
 
   protected static final HeightValue minContent = named("min-content");
 
+  protected static final CounterStyleValue mongolian = named("mongolian");
+
   protected static final FontFamilyValue monospace = named("monospace");
+
+  protected static final CounterStyleValue mozArabicIndic = named("-moz-arabic-indic");
+
+  protected static final CounterStyleValue mozBengali = named("-moz-bengali");
+
+  protected static final CounterStyleValue mozCjkEarthlyBranch = named("-moz-cjk-earthly-branch");
+
+  protected static final CounterStyleValue mozCjkHeavenlyStem = named("-moz-cjk-heavenly-stem");
+
+  protected static final CounterStyleValue mozDevanagari = named("-moz-devanagari");
+
+  protected static final CounterStyleValue mozGujarati = named("-moz-gujarati");
+
+  protected static final CounterStyleValue mozGurmukhi = named("-moz-gurmukhi");
+
+  protected static final CounterStyleValue mozKannada = named("-moz-kannada");
+
+  protected static final CounterStyleValue mozKhmer = named("-moz-khmer");
+
+  protected static final CounterStyleValue mozLao = named("-moz-lao");
+
+  protected static final CounterStyleValue mozMalayalam = named("-moz-malayalam");
+
+  protected static final CounterStyleValue mozMyanmar = named("-moz-myanmar");
+
+  protected static final CounterStyleValue mozOriya = named("-moz-oriya");
+
+  protected static final CounterStyleValue mozPersian = named("-moz-persian");
+
+  protected static final CounterStyleValue mozTamil = named("-moz-tamil");
+
+  protected static final CounterStyleValue mozTelugu = named("-moz-telugu");
+
+  protected static final CounterStyleValue mozThai = named("-moz-thai");
+
+  protected static final CounterStyleValue myanmar = named("myanmar");
 
   protected static final Color navy = named("navy");
 
@@ -332,9 +453,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color olive = named("olive");
 
+  protected static final CounterStyleValue oriya = named("oriya");
+
   protected static final OutsetKeyword outset = named("outset");
 
+  protected static final ListStylePositionValue outside = named("outside");
+
   protected static final TextDecorationLineMultiValue overline = named("overline");
+
+  protected static final CounterStyleValue persian = named("persian");
 
   protected static final AppearanceValue progressBar = named("progress-bar");
 
@@ -372,6 +499,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color silver = named("silver");
 
+  protected static final CounterStyleValue simpChineseFormal = named("simp-chinese-formal");
+
+  protected static final CounterStyleValue simpChineseInformal = named("simp-chinese-informal");
+
   protected static final AppearanceValue sliderHorizontal = named("slider-horizontal");
 
   protected static final SmallKeyword small = named("small");
@@ -381,6 +512,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontSizeValue smaller = named("smaller");
 
   protected static final SolidKeyword solid = named("solid");
+
+  protected static final CounterStyleValue square = named("square");
 
   protected static final AppearanceValue squareButton = named("square-button");
 
@@ -410,7 +543,11 @@ abstract class GeneratedCssTemplate {
 
   protected static final DisplayInternalValue tableRowGroup = named("table-row-group");
 
+  protected static final CounterStyleValue tamil = named("tamil");
+
   protected static final Color teal = named("teal");
+
+  protected static final CounterStyleValue telugu = named("telugu");
 
   protected static final VerticalAlignValue textBottom = named("text-bottom");
 
@@ -420,11 +557,19 @@ abstract class GeneratedCssTemplate {
 
   protected static final AppearanceValue textfield = named("textfield");
 
+  protected static final CounterStyleValue thai = named("thai");
+
   protected static final LineWidth thick = named("thick");
 
   protected static final LineWidth thin = named("thin");
 
+  protected static final CounterStyleValue tibetan = named("tibetan");
+
   protected static final VerticalAlignValue top = named("top");
+
+  protected static final CounterStyleValue tradChineseFormal = named("trad-chinese-formal");
+
+  protected static final CounterStyleValue tradChineseInformal = named("trad-chinese-informal");
 
   protected static final Color transparent = named("transparent");
 
@@ -439,6 +584,14 @@ abstract class GeneratedCssTemplate {
   protected static final TextDecorationLineMultiValue underline = named("underline");
 
   protected static final GlobalKeyword unset = named("unset");
+
+  protected static final CounterStyleValue upperAlpha = named("upper-alpha");
+
+  protected static final CounterStyleValue upperArmenian = named("upper-armenian");
+
+  protected static final CounterStyleValue upperLatin = named("upper-latin");
+
+  protected static final CounterStyleValue upperRoman = named("upper-roman");
 
   protected static final TextTransformValue uppercase = named("uppercase");
 
@@ -842,6 +995,27 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration listStyleImage(ListStyleImageValue value) {
     return new StyleDeclaration1(Property.LIST_STYLE_IMAGE, value.self());
+  }
+
+  protected final StyleDeclaration listStylePosition(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.LIST_STYLE_POSITION, value.self());
+  }
+
+  protected final StyleDeclaration listStylePosition(ListStylePositionValue value) {
+    return new StyleDeclaration1(Property.LIST_STYLE_POSITION, value.self());
+  }
+
+  protected final StyleDeclaration listStyleType(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.LIST_STYLE_TYPE, value.self());
+  }
+
+  protected final StyleDeclaration listStyleType(ListStyleTypeValue value) {
+    return new StyleDeclaration1(Property.LIST_STYLE_TYPE, value.self());
+  }
+
+  protected final StyleDeclaration listStyleType(String value) {
+    Objects.requireNonNull(value, "value == null");
+    return new StyleDeclarationString(Property.LIST_STYLE_TYPE, value);
   }
 
   protected final StyleDeclaration margin(GlobalKeyword value) {
