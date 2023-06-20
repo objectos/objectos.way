@@ -190,6 +190,9 @@ public final class CssSpec extends CssSelfGen {
     pval("bottom", globalKeyword);
     pval("bottom", bottomValue);
 
+    pval("box-shadow", globalKeyword);
+    pval("box-shadow", kw("none"));
+
     pval("box-sizing", globalKeyword);
     pval("box-sizing", def("BoxSizingValue",
       keywords("border-box", "content-box")

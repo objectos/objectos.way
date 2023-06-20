@@ -23,7 +23,7 @@ import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class CssSelfGen11KeywordAsParameterTypeTest {
+public class CssSelfGen11Value2AndValue3SigsTest {
 
   private Map<String, String> result;
 

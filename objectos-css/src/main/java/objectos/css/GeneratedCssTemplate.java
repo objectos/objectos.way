@@ -622,6 +622,14 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.BOTTOM, value.self());
   }
 
+  protected final StyleDeclaration boxShadow(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.BOX_SHADOW, value.self());
+  }
+
+  protected final StyleDeclaration boxShadow(NoneKeyword value) {
+    return new StyleDeclaration1(Property.BOX_SHADOW, value.self());
+  }
+
   protected final StyleDeclaration boxSizing(GlobalKeyword value) {
     return new StyleDeclaration1(Property.BOX_SIZING, value.self());
   }

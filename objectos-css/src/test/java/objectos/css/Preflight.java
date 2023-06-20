@@ -175,5 +175,17 @@ final class Preflight extends CssTemplate {
       backgroundColor(transparent),
       backgroundImage(none)
     );
+
+    style(
+      _mozFocusring,
+
+      outline(auto)
+    );
+
+    style(
+      _mozUiInvalid,
+
+      boxShadow(none)
+    );
   }
 }

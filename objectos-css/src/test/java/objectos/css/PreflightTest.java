@@ -105,6 +105,12 @@ public class PreflightTest {
         background-color: transparent;
         background-image: none;
       }
+      :-moz-focusring {
+        outline: auto;
+      }
+      :-moz-ui-invalid {
+        box-shadow: none;
+      }
       """
     );
   }

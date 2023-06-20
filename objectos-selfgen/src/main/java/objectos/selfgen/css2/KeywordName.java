@@ -19,10 +19,11 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 import objectos.code.ClassTypeName;
+import objectos.code.tmpl.TypeName;
 import objectos.selfgen.util.JavaNames;
 import objectos.util.GrowableSet;
 
-public final class KeywordName implements Value {
+public final class KeywordName implements ParameterType, Value {
   static final Comparator<? super KeywordName> ORDER_BY_FIELD_NAME
       = (self, that) -> self.fieldName.compareTo(that.fieldName);
 
@@ -38,6 +39,8 @@ public final class KeywordName implements Value {
   private final GrowableSet<ValueType> valueTypes = new GrowableSet<>();
 
   private ClassTypeName className;
+
+  private boolean shouldGenerate;
 
   KeywordName(String fieldName, String keywordName) {
     this.fieldName = fieldName;
@@ -66,7 +69,14 @@ public final class KeywordName implements Value {
   }
 
   public final boolean shouldGenerate() {
-    return superTypes.size() > 1;
+    return shouldGenerate;
+  }
+
+  @Override
+  public final TypeName typeName() {
+    setClassNameToKeyword();
+
+    return className;
   }
 
   final void addSuperType(ClassTypeName type) {
@@ -77,28 +87,48 @@ public final class KeywordName implements Value {
     int size = superTypes.size();
 
     switch (size) {
-      case 0 -> throw new IllegalStateException();
+      case 0 -> {
+        if (className == null) {
+          throw new IllegalStateException();
+        }
+
+        shouldGenerate = true;
+
+        superTypes.add(ThisTemplate.PROPERTY_VALUE);
+      }
 
       case 1 -> {
-        var iterator = superTypes.iterator();
+        if (className == null) {
+          var iterator = superTypes.iterator();
 
-        className = iterator.next();
+          className = iterator.next();
+        } else {
+          shouldGenerate = true;
+        }
       }
 
       default -> {
-        var simpleName = JavaNames.toValidClassName(keywordName) + "Keyword";
-
-        className = ClassTypeName.of(ThisTemplate.CSS_TMPL, simpleName);
+        setClassNameToKeyword();
 
         for (var type : valueTypes) {
           type.addPermitted(className);
         }
+
+        shouldGenerate = true;
       }
     }
   }
 
   final Collection<ClassTypeName> superTypes() {
     return superTypes;
+  }
+
+  private void setClassNameToKeyword() {
+    if (className == null) {
+      var simpleName = JavaNames.toValidClassName(keywordName) + "Keyword";
+
+      className = ClassTypeName.of(ThisTemplate.CSS_TMPL, simpleName);
+    }
   }
 
 }

@@ -324,6 +324,34 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#420] Preflight 14
+
+  - box-shadow
+  """)
+  public void propertyBoxShadow() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            _mozUiInvalid,
+
+            boxShadow(none),
+            boxShadow(inherit)
+          );
+        }
+      },
+
+      """
+      :-moz-ui-invalid {
+        box-shadow: none;
+        box-shadow: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#394] Preflight 01
 
   - box-sizing

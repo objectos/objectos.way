@@ -44,6 +44,8 @@ public enum Property implements PropertyName {
 
   BOTTOM("bottom"),
 
+  BOX_SHADOW("box-shadow"),
+
   BOX_SIZING("box-sizing"),
 
   COLOR("color"),
