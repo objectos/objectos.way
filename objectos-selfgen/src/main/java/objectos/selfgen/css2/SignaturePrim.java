@@ -15,24 +15,6 @@
  */
 package objectos.selfgen.css2;
 
-enum Style {
-  VALUE,
+import objectos.code.tmpl.TypeName;
 
-  VALUE2,
-
-  VALUE3,
-
-  VALUE4,
-
-  BOX,
-
-  DOUBLE,
-
-  INT,
-
-  VARARGS,
-
-  CUSTOM2,
-
-  CUSTOM3;
-}
+record SignaturePrim(TypeName type, String name) implements Signature {}

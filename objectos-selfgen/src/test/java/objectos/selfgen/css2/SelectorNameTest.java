@@ -30,6 +30,14 @@ public class SelectorNameTest {
   }
 
   @Test
+  public void ofPseudoClassSelector() {
+    var sel = SelectorName.of(":-moz-focusring");
+
+    assertEquals(sel.fieldName, "_mozFocusring");
+    assertEquals(sel.selectorName, ":-moz-focusring");
+  }
+
+  @Test
   public void ofPseudoElementSelector() {
     var sel = SelectorName.of("::after");
 

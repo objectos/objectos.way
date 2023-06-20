@@ -80,6 +80,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector __before = named("::before");
 
+  protected static final Selector _mozFocusring = named(":-moz-focusring");
+
+  protected static final Selector _mozUiInvalid = named(":-moz-ui-invalid");
+
   protected static final Selector a = named("a");
 
   protected static final Selector b = named("b");

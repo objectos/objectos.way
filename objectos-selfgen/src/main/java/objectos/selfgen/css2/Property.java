@@ -62,9 +62,9 @@ final class Property {
     return signatures;
   }
 
-  public final void addSignature(Style style, ParameterType parameterType) {
+  public final void value(ParameterType parameterType) {
     signatures.add(
-      new Signature.Standard(style, parameterType)
+      new Signature1(parameterType.typeName(), "value")
     );
   }
 

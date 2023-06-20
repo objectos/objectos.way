@@ -15,5 +15,14 @@
  */
 package objectos.selfgen.css2;
 
-sealed interface Signature
-    permits Signature1, SignaturePrim, Signature2, Signature3, Signature4, SignatureVarArgs {}
+import objectos.code.tmpl.TypeName;
+
+record Signature4(TypeName type1,
+                  String name1,
+                  TypeName type2,
+                  String name2,
+                  TypeName type3,
+                  String name3,
+                  TypeName type4,
+                  String name4)
+    implements Signature {}

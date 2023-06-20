@@ -17,6 +17,7 @@ package objectos.selfgen.css2;
 
 import java.util.Comparator;
 import java.util.Objects;
+import objectos.selfgen.util.JavaNames;
 
 final class SelectorName {
   static final Comparator<? super SelectorName> ORDER_BY_FIELD_NAME
@@ -36,7 +37,11 @@ final class SelectorName {
   public static SelectorName of(String name) {
     Objects.requireNonNull(name, "name == null");
 
-    var fieldName = name.replace(':', '_');
+    var fieldName = name.replaceFirst("^:-", "_");
+
+    fieldName = fieldName.replace(':', '_');
+
+    fieldName = JavaNames.toValidMethodName(fieldName);
 
     return new SelectorName(fieldName, name);
   }

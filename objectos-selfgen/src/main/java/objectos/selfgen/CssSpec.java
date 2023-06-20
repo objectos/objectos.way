@@ -43,6 +43,10 @@ public final class CssSpec extends CssSelfGen {
       "table", "textarea",
       "ul",
 
+      // pseudo classes
+      ":-moz-focusring",
+      ":-moz-ui-invalid",
+
       // pseudo elements
       "::after", "::before"
     );

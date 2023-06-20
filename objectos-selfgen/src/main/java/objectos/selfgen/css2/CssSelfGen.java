@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import objectos.code.JavaSink;
+import objectos.code.PrimitiveTypeName;
 import objectos.lang.Check;
 
 public abstract class CssSelfGen extends CompiledSpec {
@@ -161,11 +162,40 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   protected final void pbox(String propertyName, ParameterType value) {
-    pimpl(propertyName, value, Style.BOX);
+    var prop = prop(propertyName);
+
+    var typeName = value.typeName();
+
+    prop.addSignature(
+      new Signature1(typeName, "all")
+    );
+    prop.addSignature(
+      new Signature2(
+        typeName, "vertical",
+        typeName, "horizontal"
+      )
+    );
+    prop.addSignature(
+      new Signature3(
+        typeName, "top",
+        typeName, "horizontal",
+        typeName, "bottom"
+      )
+    );
+    prop.addSignature(
+      new Signature4(
+        typeName, "top",
+        typeName, "right",
+        typeName, "bottom",
+        typeName, "left"
+      )
+    );
   }
 
   protected final void pdbl(String propertyName) {
-    pimpl(propertyName, ParameterType.DOUBLE, Style.DOUBLE);
+    prop(propertyName).addSignature(
+      new SignaturePrim(PrimitiveTypeName.DOUBLE, "value")
+    );
   }
 
   protected final PercentageType percentage() {
@@ -179,53 +209,93 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   protected final void pint(String propertyName) {
-    pimpl(propertyName, ParameterType.INT, Style.INT);
+    prop(propertyName).addSignature(
+      new SignaturePrim(PrimitiveTypeName.INT, "value")
+    );
+  }
+
+  protected final Property prop(String propertyName) {
+    return properties.computeIfAbsent(propertyName, Property::of);
+  }
+
+  protected final void pva2(String propertyName, ParameterType value) {
+    var prop = prop(propertyName);
+
+    var typeName = value.typeName();
+
+    prop.addSignature(
+      new Signature2(typeName, "value1", typeName, "value2")
+    );
+  }
+
+  protected final void pva3(String propertyName, ParameterType value) {
+    var prop = prop(propertyName);
+
+    var typeName = value.typeName();
+
+    prop.addSignature(
+      new Signature3(typeName, "value1", typeName, "value2", typeName, "value3")
+    );
+  }
+
+  protected final void pva4(String propertyName, ParameterType value) {
+    var prop = prop(propertyName);
+
+    var typeName = value.typeName();
+
+    prop.addSignature(
+      new Signature4(
+        typeName, "value1",
+        typeName, "value2",
+        typeName, "value3",
+        typeName, "value4"
+      )
+    );
   }
 
   protected final void pval(String propertyName, ParameterType value) {
-    pimpl(propertyName, value, Style.VALUE);
+    var prop = prop(propertyName);
+
+    var typeName = value.typeName();
+
+    prop.addSignature(
+      new Signature1(typeName, "value")
+    );
   }
 
   protected final void pval(
       String propertyName,
       ParameterType value1, ParameterType value2) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
+    var prop = prop(propertyName);
 
-    property.addSignature(
-      new Signature.Custom2(value1, value2)
+    prop.addSignature(
+      new Signature2(
+        value1.typeName(), "value1",
+        value2.typeName(), "value2"
+      )
     );
   }
 
   protected final void pval(
       String propertyName,
       ParameterType value1, ParameterType value2, ParameterType value3) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
+    var prop = prop(propertyName);
 
-    property.addSignature(
-      new Signature.Custom3(value1, value2, value3)
+    prop.addSignature(
+      new Signature3(
+        value1.typeName(), "value1",
+        value2.typeName(), "value2",
+        value3.typeName(), "value3"
+      )
     );
   }
 
-  protected final void pva2(String propertyName, ParameterType value) {
-    pimpl(propertyName, value, Style.VALUE2);
-  }
-
-  protected final void pva3(String propertyName, ParameterType value) {
-    pimpl(propertyName, value, Style.VALUE3);
-  }
-
-  protected final void pva4(String propertyName, ParameterType value) {
-    pimpl(propertyName, value, Style.VALUE4);
-  }
-
   protected final void pvar(String propertyName, ParameterType value) {
-    pimpl(propertyName, value, Style.VARARGS);
-  }
+    var prop = prop(propertyName);
 
-  private void pimpl(String propertyName, ParameterType value, Style style) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
-
-    property.addSignature(style, value);
+    prop.addSignature(
+      new SignatureVarArgs(value.typeName(), "values")
+    );
   }
 
   protected final void selectors(String... names) {

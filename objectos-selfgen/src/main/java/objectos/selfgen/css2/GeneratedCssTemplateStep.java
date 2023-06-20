@@ -15,8 +15,8 @@
  */
 package objectos.selfgen.css2;
 
-import objectos.selfgen.css2.Signature.Custom2;
-import objectos.selfgen.css2.Signature.Custom3;
+import objectos.code.ClassTypeName;
+import objectos.code.PrimitiveTypeName;
 
 final class GeneratedCssTemplateStep extends ThisTemplate {
 
@@ -149,187 +149,89 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private void propertyMethods(Property property) {
     for (var signature : property.signatures()) {
-      var typeName = signature.typeName1();
+      if (signature instanceof Signature1 sig) {
+        method(
+          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+          parameter(sig.type(), name(sig.name())),
+          p(
+            RETURN, NEW, STYLE_DECLARATION1,
+            argument(PROPERTY, n(property.constantName)),
+            argument(n(sig.name()), v("self"))
+          )
+        );
+      } else if (signature instanceof Signature2 sig) {
+        method(
+          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+          parameter(sig.type1(), name(sig.name1())),
+          parameter(sig.type2(), name(sig.name2())),
+          p(
+            RETURN, NEW, STYLE_DECLARATION2,
+            argument(PROPERTY, n(property.constantName)),
+            argument(n(sig.name1()), v("self")),
+            argument(n(sig.name2()), v("self"))
+          )
+        );
+      } else if (signature instanceof Signature3 sig) {
+        method(
+          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+          parameter(sig.type1(), name(sig.name1())),
+          parameter(sig.type2(), name(sig.name2())),
+          parameter(sig.type3(), name(sig.name3())),
+          p(
+            RETURN, NEW, STYLE_DECLARATION3,
+            argument(PROPERTY, n(property.constantName)),
+            argument(n(sig.name1()), v("self")),
+            argument(n(sig.name2()), v("self")),
+            argument(n(sig.name3()), v("self"))
+          )
+        );
+      } else if (signature instanceof Signature4 sig) {
+        method(
+          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+          parameter(sig.type1(), name(sig.name1())),
+          parameter(sig.type2(), name(sig.name2())),
+          parameter(sig.type3(), name(sig.name3())),
+          parameter(sig.type4(), name(sig.name4())),
+          p(
+            RETURN, NEW, STYLE_DECLARATION4,
+            argument(PROPERTY, n(property.constantName)),
+            argument(n(sig.name1()), v("self")),
+            argument(n(sig.name2()), v("self")),
+            argument(n(sig.name3()), v("self")),
+            argument(n(sig.name4()), v("self"))
+          )
+        );
+      } else if (signature instanceof SignaturePrim sig) {
+        var type = sig.type();
 
-      switch (signature.style()) {
-        case BOX -> {
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("all")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION1,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("all"), v("self"))
-            )
-          );
+        ClassTypeName impl;
 
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("vertical")),
-            parameter(typeName, name("horizontal")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION2,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("vertical"), v("self")),
-              argument(n("horizontal"), v("self"))
-            )
-          );
-
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("top")),
-            parameter(typeName, name("horizontal")),
-            parameter(typeName, name("bottom")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION3,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("top"), v("self")),
-              argument(n("horizontal"), v("self")),
-              argument(n("bottom"), v("self"))
-            )
-          );
-
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("top")),
-            parameter(typeName, name("right")),
-            parameter(typeName, name("bottom")),
-            parameter(typeName, name("left")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION4,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("top"), v("self")),
-              argument(n("right"), v("self")),
-              argument(n("bottom"), v("self")),
-              argument(n("left"), v("self"))
-            )
-          );
+        if (type == PrimitiveTypeName.INT) {
+          impl = STYLE_DECLARATION_INT;
+        } else if (type == PrimitiveTypeName.DOUBLE) {
+          impl = STYLE_DECLARATION_DOUBLE;
+        } else {
+          throw new UnsupportedOperationException("Implement me");
         }
 
-        case CUSTOM2 -> {
-          var c2 = (Custom2) signature;
-
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(c2.typeName1(), name("value1")),
-            parameter(c2.typeName2(), name("value2")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION2,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value1"), v("self")),
-              argument(n("value2"), v("self"))
-            )
-          );
-        }
-
-        case CUSTOM3 -> {
-          var c3 = (Custom3) signature;
-
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(c3.typeName1(), name("value1")),
-            parameter(c3.typeName2(), name("value2")),
-            parameter(c3.typeName3(), name("value3")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION3,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value1"), v("self")),
-              argument(n("value2"), v("self")),
-              argument(n("value3"), v("self"))
-            )
-          );
-        }
-
-        case DOUBLE -> {
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("value")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION_DOUBLE,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value"))
-            )
-          );
-        }
-
-        case INT -> {
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("value")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION_INT,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value"))
-            )
-          );
-        }
-
-        case VALUE -> {
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("value")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION1,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value"), v("self"))
-            )
-          );
-        }
-
-        case VALUE2 -> {
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("value1")),
-            parameter(typeName, name("value2")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION2,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value1"), v("self")),
-              argument(n("value2"), v("self"))
-            )
-          );
-        }
-
-        case VALUE3 -> {
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("value1")),
-            parameter(typeName, name("value2")),
-            parameter(typeName, name("value3")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION3,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value1"), v("self")),
-              argument(n("value2"), v("self")),
-              argument(n("value3"), v("self"))
-            )
-          );
-        }
-
-        case VALUE4 -> {
-          method(
-            PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, name("value1")),
-            parameter(typeName, name("value2")),
-            parameter(typeName, name("value3")),
-            parameter(typeName, name("value4")),
-            p(
-              RETURN, NEW, STYLE_DECLARATION4,
-              argument(PROPERTY, n(property.constantName)),
-              argument(n("value1"), v("self")),
-              argument(n("value2"), v("self")),
-              argument(n("value3"), v("self")),
-              argument(n("value4"), v("self"))
-            )
-          );
-        }
-
-        case VARARGS -> {
-          method(
-            PROTECTED, ABSTRACT, STYLE_DECLARATION, name(property.methodName),
-            parameter(typeName, ELLIPSIS, name("values"))
-          );
-        }
+        method(
+          PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
+          parameter(type, name(sig.name())),
+          p(
+            RETURN, NEW, impl,
+            argument(PROPERTY, n(property.constantName)),
+            argument(n(sig.name()))
+          )
+        );
+      } else if (signature instanceof SignatureVarArgs sig) {
+        method(
+          PROTECTED, ABSTRACT, STYLE_DECLARATION, name(property.methodName),
+          parameter(sig.typeName(), ELLIPSIS, name(sig.name()))
+        );
+      } else {
+        throw new UnsupportedOperationException(
+          "Implement me :: sig.type=" + signature.getClass().getSimpleName()
+        );
       }
     }
   }
