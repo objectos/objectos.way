@@ -34,7 +34,7 @@ public class CssSelfGen03PercentageTypeTest {
       protected void definition() {
         var pct = percentage();
 
-        pval("line-height", def("LineHeightValue", pct));
+        pval("line-height", t("LineHeightValue", pct));
       }
     };
 

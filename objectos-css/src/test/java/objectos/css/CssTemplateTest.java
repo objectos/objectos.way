@@ -414,6 +414,71 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#389] Preflight
+
+  - display
+  """)
+  public void propertyDisplay() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected final void definition() {
+          style(
+            summary,
+
+            display(block),
+            display(inline),
+            display(inlineBlock),
+            display(flex),
+            display(inlineFlex),
+            display(grid),
+            display(inlineGrid),
+            display(flowRoot),
+
+            display(none),
+            display(contents),
+
+            display(block, flow),
+            display(inline, flow),
+            display(inline, flowRoot),
+            display(block, flex),
+            display(inline, flex),
+            display(block, grid),
+            display(inline, grid),
+            display(block, flowRoot),
+
+            display(inherit)
+          );
+        }
+      },
+
+      """
+      summary {
+        display: block;
+        display: inline;
+        display: inline-block;
+        display: flex;
+        display: inline-flex;
+        display: grid;
+        display: inline-grid;
+        display: flow-root;
+        display: none;
+        display: contents;
+        display: block flow;
+        display: inline flow;
+        display: inline flow-root;
+        display: block flex;
+        display: inline flex;
+        display: block grid;
+        display: inline grid;
+        display: block flow-root;
+        display: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#419] Preflight 15
 
   - font

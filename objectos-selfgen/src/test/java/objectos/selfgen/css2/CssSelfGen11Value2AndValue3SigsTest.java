@@ -32,12 +32,12 @@ public class CssSelfGen11Value2AndValue3SigsTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        var textDecorationLineMultiValue = def("TextDecorationLineMultiValue",
+        var textDecorationLineMultiValue = t("TextDecorationLineMultiValue",
           keywords("blink", "line-through", "overline", "underline")
         );
 
-        var textDecorationLineSingleValue = def("TextDecorationLineSingleValue",
-          textDecorationLineMultiValue, kw("none")
+        var textDecorationLineSingleValue = t("TextDecorationLineSingleValue",
+          textDecorationLineMultiValue, k("none")
         );
 
         pval("text-decoration-line", textDecorationLineSingleValue);

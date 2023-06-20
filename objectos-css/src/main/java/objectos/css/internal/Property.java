@@ -50,6 +50,8 @@ public enum Property implements PropertyName {
 
   COLOR("color"),
 
+  DISPLAY("display"),
+
   FONT("font"),
 
   FONT_FAMILY("font-family"),

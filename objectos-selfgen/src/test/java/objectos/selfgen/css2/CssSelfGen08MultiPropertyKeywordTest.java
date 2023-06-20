@@ -32,7 +32,7 @@ public class CssSelfGen08MultiPropertyKeywordTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        var lineStyle = def("LineStyle",
+        var lineStyle = t("LineStyle",
           keywords(
             "inset",
             "none",
@@ -42,7 +42,7 @@ public class CssSelfGen08MultiPropertyKeywordTest {
 
         pval("border-style", lineStyle);
 
-        var textSizeAdjustValue = def("TextSizeAdjustValue",
+        var textSizeAdjustValue = t("TextSizeAdjustValue",
           keywords("auto", "none")
         );
 

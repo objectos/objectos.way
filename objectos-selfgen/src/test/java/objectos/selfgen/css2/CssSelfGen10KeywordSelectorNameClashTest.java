@@ -34,7 +34,7 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
       protected void definition() {
         selectors("a", "small");
 
-        pval("font-size", def("FontSizeValue",
+        pval("font-size", t("FontSizeValue",
           keywords("large", "small")
         ));
       }

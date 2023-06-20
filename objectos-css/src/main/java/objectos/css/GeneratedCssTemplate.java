@@ -37,6 +37,14 @@ import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.DashedKeyword;
+import objectos.css.tmpl.DisplayBoxValue;
+import objectos.css.tmpl.DisplayInsideValue;
+import objectos.css.tmpl.DisplayInternalValue;
+import objectos.css.tmpl.DisplayLegacyValue;
+import objectos.css.tmpl.DisplayListItemValue;
+import objectos.css.tmpl.DisplayOutsideValue;
+import objectos.css.tmpl.DisplayValue;
+import objectos.css.tmpl.DisplayValue2;
 import objectos.css.tmpl.DottedKeyword;
 import objectos.css.tmpl.DoubleKeyword;
 import objectos.css.tmpl.FontFamilyValue;
@@ -68,6 +76,7 @@ import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.SubKeyword;
+import objectos.css.tmpl.TableKeyword;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextDecorationStyleValue;
@@ -141,9 +150,9 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector strong = named("strong");
 
-  protected static final Selector sup = named("sup");
+  protected static final Selector summary = named("summary");
 
-  protected static final Selector table = named("table");
+  protected static final Selector sup = named("sup");
 
   protected static final Selector ul = named("ul");
 
@@ -167,6 +176,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationLineMultiValue blink = named("blink");
 
+  protected static final DisplayOutsideValue block = named("block");
+
   protected static final Color blue = named("blue");
 
   protected static final FontWeightValue bold = named("bold");
@@ -189,6 +200,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final BoxSizingValue contentBox = named("content-box");
 
+  protected static final DisplayBoxValue contents = named("contents");
+
   protected static final Color currentcolor = named("currentcolor");
 
   protected static final FontFamilyValue cursive = named("cursive");
@@ -209,6 +222,12 @@ abstract class GeneratedCssTemplate {
 
   protected static final PositionValue fixed = named("fixed");
 
+  protected static final DisplayInsideValue flex = named("flex");
+
+  protected static final DisplayInsideValue flow = named("flow");
+
+  protected static final DisplayInsideValue flowRoot = named("flow-root");
+
   protected static final TextDecorationThicknessValue fromFont = named("from-font");
 
   protected static final Color fuchsia = named("fuchsia");
@@ -220,6 +239,8 @@ abstract class GeneratedCssTemplate {
   protected static final Color gray = named("gray");
 
   protected static final Color green = named("green");
+
+  protected static final DisplayInsideValue grid = named("grid");
 
   protected static final GrooveKeyword groove = named("groove");
 
@@ -233,6 +254,16 @@ abstract class GeneratedCssTemplate {
 
   protected static final GlobalKeyword initial = named("initial");
 
+  protected static final DisplayOutsideValue inline = named("inline");
+
+  protected static final DisplayLegacyValue inlineBlock = named("inline-block");
+
+  protected static final DisplayLegacyValue inlineFlex = named("inline-flex");
+
+  protected static final DisplayLegacyValue inlineGrid = named("inline-grid");
+
+  protected static final DisplayLegacyValue inlineTable = named("inline-table");
+
   protected static final InsetKeyword inset = named("inset");
 
   protected static final FontSizeValue large = named("large");
@@ -244,6 +275,8 @@ abstract class GeneratedCssTemplate {
   protected static final Color lime = named("lime");
 
   protected static final TextDecorationLineMultiValue lineThrough = named("line-through");
+
+  protected static final DisplayListItemValue listItem = named("list-item");
 
   protected static final AppearanceValue listbox = named("listbox");
 
@@ -299,6 +332,18 @@ abstract class GeneratedCssTemplate {
 
   protected static final RidgeKeyword ridge = named("ridge");
 
+  protected static final DisplayInsideValue ruby = named("ruby");
+
+  protected static final DisplayInternalValue rubyBase = named("ruby-base");
+
+  protected static final DisplayInternalValue rubyBaseContainer = named("ruby-base-container");
+
+  protected static final DisplayInternalValue rubyText = named("ruby-text");
+
+  protected static final DisplayInternalValue rubyTextContainer = named("ruby-text-container");
+
+  protected static final DisplayOutsideValue runIn = named("runIn");
+
   protected static final FontFamilyValue sansSerif = named("sans-serif");
 
   protected static final AppearanceValue searchfield = named("searchfield");
@@ -328,6 +373,24 @@ abstract class GeneratedCssTemplate {
   protected static final SubKeyword sub = named("sub");
 
   protected static final FontFamilyValue systemUi = named("system-ui");
+
+  protected static final TableKeyword table = named("table");
+
+  protected static final DisplayInternalValue tableCaption = named("table-caption");
+
+  protected static final DisplayInternalValue tableCell = named("table-cell");
+
+  protected static final DisplayInternalValue tableColumn = named("table-column");
+
+  protected static final DisplayInternalValue tableColumnGroup = named("table-column-group");
+
+  protected static final DisplayInternalValue tableFooterGroup = named("table-footer-group");
+
+  protected static final DisplayInternalValue tableHeaderGroup = named("table-header-group");
+
+  protected static final DisplayInternalValue tableRow = named("table-row");
+
+  protected static final DisplayInternalValue tableRowGroup = named("table-row-group");
 
   protected static final Color teal = named("teal");
 
@@ -667,6 +730,18 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration color(Color value) {
     return new StyleDeclaration1(Property.COLOR, value.self());
+  }
+
+  protected final StyleDeclaration display(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.DISPLAY, value.self());
+  }
+
+  protected final StyleDeclaration display(DisplayValue value) {
+    return new StyleDeclaration1(Property.DISPLAY, value.self());
+  }
+
+  protected final StyleDeclaration display(DisplayValue value, DisplayValue2 value2) {
+    return new StyleDeclaration2(Property.DISPLAY, value.self(), value2.self());
   }
 
   protected final StyleDeclaration font(GlobalKeyword value) {

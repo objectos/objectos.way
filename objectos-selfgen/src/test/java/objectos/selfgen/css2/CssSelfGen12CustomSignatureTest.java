@@ -32,7 +32,7 @@ public class CssSelfGen12CustomSignatureTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        var textIndentValue = def("TextIndentValue",
+        var textIndentValue = t("TextIndentValue",
           keywords("each-line", "hanging")
         );
 

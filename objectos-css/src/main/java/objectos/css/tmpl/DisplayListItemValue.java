@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css2;
+package objectos.css.tmpl;
 
-public sealed interface Signature
-    permits Signature1, SignaturePrim, Signature2, Signature3, Signature4, SignatureVarArgs {}
+import objectos.css.internal.NamedElement;
+import objectos.lang.Generated;
+
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface DisplayListItemValue extends
+    DisplayValue permits NamedElement {}

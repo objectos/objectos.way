@@ -29,14 +29,14 @@ public class CssSelfGen00Test {
       @Override
       protected void definition() {
         // global keywords
-        var globalKeyword = def("GlobalKeyword",
-          kw("inherit"), kw("initial"), kw("unset")
+        var globalKeyword = t("GlobalKeyword",
+          k("inherit"), k("initial"), k("unset")
         );
 
         // color
-        var color = def(
+        var color = t(
           "Color",
-          kw("currentcolor"), kw("transparent")
+          k("currentcolor"), k("transparent")
         );
 
         // B
@@ -197,10 +197,10 @@ public class CssSelfGen00Test {
       protected void definition() {
         var length = length("em", "px");
 
-        var lineWidth = def(
+        var lineWidth = t(
           "LineWidth",
           length,
-          kw("thin"), kw("medium"), kw("thick")
+          k("thin"), k("medium"), k("thick")
         );
 
         pbox("border-width", lineWidth);

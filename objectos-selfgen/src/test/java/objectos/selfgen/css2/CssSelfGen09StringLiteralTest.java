@@ -32,7 +32,7 @@ public class CssSelfGen09StringLiteralTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        var fontFamilyValue = def("FontFamilyValue",
+        var fontFamilyValue = t("FontFamilyValue",
           keywords("sans-serif", "monospace"),
           string()
         );

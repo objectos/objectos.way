@@ -16,9 +16,17 @@
 package objectos.selfgen;
 
 import java.io.IOException;
+import java.util.List;
 import objectos.selfgen.css2.CssSelfGen;
+import objectos.selfgen.css2.ValueType;
 
 public final class CssSpec extends CssSelfGen {
+
+  private ValueType color;
+
+  private ValueType globalKeyword;
+
+  private ValueType lengthPercentage;
 
   public static void main(String[] args) throws IOException {
     var spec = new CssSpec();
@@ -31,16 +39,44 @@ public final class CssSpec extends CssSelfGen {
     selectors(
       // type selectors
       "a",
-      "b", "body", "button",
+
+      "b",
+      "body",
+      "button",
+
       "code",
-      "h1", "h2", "h3", "h4", "h5", "h6", "hr", "html",
+
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "hr",
+      "html",
+
       "input",
+
       "kbd",
+
       "li",
+
       "optgroup",
-      "pre", "progress",
-      "samp", "select", "small", "strong", "sub", "sup",
-      "table", "textarea",
+
+      "pre",
+      "progress",
+
+      "samp",
+      "select",
+      "small",
+      "strong",
+      "sub",
+      "summary",
+      "sup",
+
+      "table",
+      "textarea",
+
       "ul",
 
       // pseudo classes
@@ -58,13 +94,18 @@ public final class CssSpec extends CssSelfGen {
 
     // global keywords
 
-    var globalKeyword = def("GlobalKeyword",
-      keywords("inherit", "initial", "unset")
+    globalKeyword = t(
+      "GlobalKeyword",
+      k("inherit"),
+      k("initial"),
+      k("unset")
     );
 
     // color
-    var color = def("Color",
-      keywords("currentcolor", "transparent"),
+    color = t(
+      "Color",
+      k("currentcolor"),
+      k("transparent"),
 
       keywords(
         "aqua",
@@ -99,7 +140,7 @@ public final class CssSpec extends CssSelfGen {
 
     var percentage = percentage();
 
-    var lengthPercentage = def("LengthPercentage", length, percentage);
+    lengthPercentage = t("LengthPercentage", length, percentage);
 
     // keyword name clashes
 
@@ -109,52 +150,25 @@ public final class CssSpec extends CssSelfGen {
 
     // A
 
-    var appearanceValue = def("AppearanceValue",
-      keywords(
-        "auto", "menulist-button", "none", "textfield",
-
-        "button",
-        "checkbox",
-        "listbox",
-        "menulist", "meter",
-        "progress-bar",
-        "push-button",
-        "radio",
-        "searchfield", "slider-horizontal", "square-button",
-        "textarea"
-      )
-    );
-
-    pval("appearance", globalKeyword);
-    pval("appearance", appearanceValue);
-
-    pval("-moz-appearance", globalKeyword);
-    pval("-moz-appearance", appearanceValue);
-
-    pval("-webkit-appearance", globalKeyword);
-    pval("-webkit-appearance", appearanceValue);
+    appearance();
 
     // B
 
-    var backgroundImageValue = def("BackgroundImageValue",
-      kw("none")
-    );
-
-    var borderCollapseVale = def("BorderCollapseValue",
+    var borderCollapseVale = t("BorderCollapseValue",
       keywords("collapse", "separate")
     );
 
-    var bottomValue = def("BottomValue",
-      kw("auto"),
+    var bottomValue = t("BottomValue",
+      k("auto"),
       lengthPercentage
     );
 
-    var lineWidth = def("LineWidth",
+    var lineWidth = t("LineWidth",
       length,
       keywords("medium", "thick", "thin")
     );
 
-    var lineStyle = def("LineStyle",
+    var lineStyle = t("LineStyle",
       keywords(
         "dashed", "dotted", "double",
         "groove", "hidden",
@@ -165,11 +179,9 @@ public final class CssSpec extends CssSelfGen {
       )
     );
 
-    pval("background-color", globalKeyword);
-    pval("background-color", color);
+    backgroundColor();
 
-    pval("background-image", globalKeyword);
-    pval("background-image", backgroundImageValue);
+    backgroundImage();
 
     pval("border-bottom-width", globalKeyword);
     pval("border-bottom-width", lineWidth);
@@ -196,10 +208,10 @@ public final class CssSpec extends CssSelfGen {
     pval("bottom", bottomValue);
 
     pval("box-shadow", globalKeyword);
-    pval("box-shadow", kw("none"));
+    pval("box-shadow", k("none"));
 
     pval("box-sizing", globalKeyword);
-    pval("box-sizing", def("BoxSizingValue",
+    pval("box-sizing", t("BoxSizingValue",
       keywords("border-box", "content-box")
     ));
 
@@ -208,12 +220,15 @@ public final class CssSpec extends CssSelfGen {
 
     // C
 
-    pval("color", globalKeyword);
-    pval("color", color);
+    color();
+
+    // D
+
+    display();
 
     // F
 
-    var fontValue = def("FontValue",
+    var fontValue = t("FontValue",
       keywords(
         "caption",
         "icon",
@@ -222,7 +237,7 @@ public final class CssSpec extends CssSelfGen {
       )
     );
 
-    var fontFamilyValue = def("FontFamilyValue",
+    var fontFamilyValue = t("FontFamilyValue",
       keywords(
         "cursive",
         "emoji",
@@ -237,7 +252,7 @@ public final class CssSpec extends CssSelfGen {
       string()
     );
 
-    var fontSizeValue = def("FontSizeValue",
+    var fontSizeValue = t("FontSizeValue",
       keywords(
         "large", "larger",
         "medium",
@@ -247,7 +262,7 @@ public final class CssSpec extends CssSelfGen {
       lengthPercentage
     );
 
-    var fontWeightValue = def("FontWeightValue",
+    var fontWeightValue = t("FontWeightValue",
       keywords(
         "bold", "bolder",
         "lighter",
@@ -262,13 +277,13 @@ public final class CssSpec extends CssSelfGen {
     pvar("font-family", fontFamilyValue);
 
     pval("font-feature-settings", globalKeyword);
-    pval("font-feature-settings", def("FontFeatureSettingsValue", kw("normal")));
+    pval("font-feature-settings", t("FontFeatureSettingsValue", k("normal")));
 
     pval("font-size", globalKeyword);
     pval("font-size", fontSizeValue);
 
     pval("font-variation-settings", globalKeyword);
-    pval("font-variation-settings", def("FontVariationSettingsValue", kw("normal")));
+    pval("font-variation-settings", t("FontVariationSettingsValue", k("normal")));
 
     pint("font-weight");
     pval("font-weight", globalKeyword);
@@ -276,7 +291,7 @@ public final class CssSpec extends CssSelfGen {
 
     // H
 
-    var heightValue = def("HeightValue",
+    var heightValue = t("HeightValue",
       lengthPercentage,
       keywords("auto", "fit-content", "max-content", "min-content")
     );
@@ -286,9 +301,9 @@ public final class CssSpec extends CssSelfGen {
 
     // L
 
-    var lineHeightValue = def("LineHeightValue",
+    var lineHeightValue = t("LineHeightValue",
       lengthPercentage,
-      kw("normal")
+      k("normal")
     );
 
     pdbl("line-height");
@@ -298,9 +313,9 @@ public final class CssSpec extends CssSelfGen {
 
     // M
 
-    var marginValue = def("MarginValue",
+    var marginValue = t("MarginValue",
       lengthPercentage,
-      kw("auto")
+      k("auto")
     );
 
     pval("margin", globalKeyword);
@@ -308,7 +323,7 @@ public final class CssSpec extends CssSelfGen {
 
     // P
 
-    var positionValue = def("PositionValue",
+    var positionValue = t("PositionValue",
       keywords("absolute", "fixed", "static", "sticky", "relative")
     );
 
@@ -332,7 +347,7 @@ public final class CssSpec extends CssSelfGen {
 
     // O
 
-    var outlineStyleValue = def("OutlineStyleValue",
+    var outlineStyleValue = t("OutlineStyleValue",
       keywords(
         "auto",
         "dashed", "dotted", "double",
@@ -345,7 +360,7 @@ public final class CssSpec extends CssSelfGen {
       )
     );
 
-    var outlineValue = def("OutlineValue",
+    var outlineValue = t("OutlineValue",
       color,
       lineWidth,
       outlineStyleValue
@@ -370,42 +385,42 @@ public final class CssSpec extends CssSelfGen {
 
     // T
 
-    var textSizeAdjustValue = def("TextSizeAdjustValue",
+    var textSizeAdjustValue = t("TextSizeAdjustValue",
       keywords("auto", "none"),
       percentage
     );
 
-    var textDecorationLineMultiValue = def("TextDecorationLineMultiValue",
+    var textDecorationLineMultiValue = t("TextDecorationLineMultiValue",
       keywords("blink", "line-through", "overline", "underline")
     );
 
-    var textDecorationLineSingleValue = def("TextDecorationLineSingleValue",
-      textDecorationLineMultiValue, kw("none")
+    var textDecorationLineSingleValue = t("TextDecorationLineSingleValue",
+      textDecorationLineMultiValue, k("none")
     );
 
-    var textDecorationStyleValue = def("TextDecorationStyleValue",
+    var textDecorationStyleValue = t("TextDecorationStyleValue",
       keywords("dashed", "double", "dotted", "solid", "wavy")
     );
 
-    var textDecorationThicknessValue = def("TextDecorationThicknessValue",
+    var textDecorationThicknessValue = t("TextDecorationThicknessValue",
       keywords("auto", "from-font"),
       lengthPercentage
     );
 
-    var textDecorationValue = def("TextDecorationValue",
+    var textDecorationValue = t("TextDecorationValue",
       color, textDecorationLineSingleValue, textDecorationStyleValue, textDecorationThicknessValue
     );
 
-    var textIndentValue = def("TextIndentValue",
+    var textIndentValue = t("TextIndentValue",
       keywords("each-line", "hanging")
     );
 
-    var textTransformValue = def("TextTransformValue",
+    var textTransformValue = t("TextTransformValue",
       keywords("capitalize", "full-width", "full-size-kana", "lowercase", "none", "uppercase")
     );
 
-    var topValue = def("TopValue",
-      kw("auto"),
+    var topValue = t("TopValue",
+      k("auto"),
       lengthPercentage
     );
 
@@ -453,18 +468,176 @@ public final class CssSpec extends CssSelfGen {
 
     // V
 
-    var verticalAlignValue = def("VerticalAlignValue",
-      keywords(
-        "baseline", "bottom",
-        "middle",
-        "sub", "super",
-        "text-bottom", "text-top", "top"
-      ),
+    verticalAlign();
+  }
+
+  private void appearance() {
+    var appearanceValue = t(
+      "AppearanceValue",
+
+      k("auto"),
+      k("menulist-button"),
+      k("none"),
+      k("textfield"),
+
+      k("button"),
+      k("checkbox"),
+      k("listbox"),
+      k("menulist"),
+      k("meter"),
+      k("progress-bar"),
+      k("push-button"),
+      k("radio"),
+      k("searchfield"),
+      k("slider-horizontal"),
+      k("square-button"),
+      k("textarea")
+    );
+
+    var names = List.of("appearance", "-moz-appearance", "-webkit-appearance");
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(appearanceValue, "value")
+      );
+    }
+  }
+
+  private void backgroundColor() {
+    property(
+      "background-color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "value")
+    );
+  }
+
+  private void backgroundImage() {
+    var backgroundImageValue = t(
+      "BackgroundImageValue",
+
+      k("none")
+    );
+
+    property(
+      "background-image",
+
+      sig(globalKeyword, "value"),
+      sig(backgroundImageValue, "value")
+    );
+  }
+
+  private void color() {
+    property(
+      "color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "value")
+    );
+  }
+
+  private void display() {
+    var displayOutside = t(
+      "DisplayOutsideValue",
+      k("block"),
+      k("inline"),
+      k("runIn")
+    );
+
+    var displayInside = t(
+      "DisplayInsideValue",
+      k("flow"),
+      k("flow-root"),
+      k("table"),
+      k("flex"),
+      k("grid"),
+      k("ruby")
+    );
+
+    var displayListItem = t(
+      "DisplayListItemValue",
+      k("list-item")
+    );
+
+    var displayInternal = t(
+      "DisplayInternalValue",
+      k("table-row-group"),
+      k("table-header-group"),
+      k("table-footer-group"),
+      k("table-row"),
+      k("table-cell"),
+      k("table-column-group"),
+      k("table-column"),
+      k("table-caption"),
+      k("ruby-base"),
+      k("ruby-text"),
+      k("ruby-base-container"),
+      k("ruby-text-container")
+    );
+
+    var displayBox = t(
+      "DisplayBoxValue",
+      k("contents"),
+      k("none")
+    );
+
+    var displayLegacy = t(
+      "DisplayLegacyValue",
+      k("inline-block"),
+      k("inline-table"),
+      k("inline-flex"),
+      k("inline-grid")
+    );
+
+    var displayValue = t(
+      "DisplayValue",
+      displayOutside,
+      displayInside,
+      displayListItem,
+      displayInternal,
+      displayBox,
+      displayLegacy
+    );
+
+    var displayValue2 = t(
+      "DisplayValue2",
+      displayOutside,
+      displayInside
+    );
+
+    property(
+      "display",
+      sig(globalKeyword, "value"),
+      sig(displayValue, "value"),
+      sig(displayValue, "value", displayValue2, "value2")
+    );
+  }
+
+  private void verticalAlign() {
+    var verticalAlignValue = t(
+      "VerticalAlignValue",
+
+      k("baseline"),
+      k("bottom"),
+      k("middle"),
+      k("sub"),
+      k("super"),
+      k("text-bottom"),
+      k("text-top"),
+      k("top"),
+
       lengthPercentage
     );
 
-    pval("vertical-align", globalKeyword);
-    pval("vertical-align", verticalAlignValue);
+    property(
+      "vertical-align",
+
+      sig(globalKeyword, "value"),
+      sig(verticalAlignValue, "value")
+    );
   }
 
 }

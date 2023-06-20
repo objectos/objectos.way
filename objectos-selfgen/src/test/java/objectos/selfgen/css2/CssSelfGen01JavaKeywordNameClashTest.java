@@ -34,10 +34,10 @@ public class CssSelfGen01JavaKeywordNameClashTest {
       protected void definition() {
         keywordFieldName("double", "_double");
 
-        var lineStyle = def("LineStyle",
-          kw("none"), kw("hidden"), kw("dotted"), kw("dashed"),
-          kw("solid "), kw("double"), kw("groove"), kw("ridge"),
-          kw("inset"), kw("outset")
+        var lineStyle = t("LineStyle",
+          k("none"), k("hidden"), k("dotted"), k("dashed"),
+          k("solid "), k("double"), k("groove"), k("ridge"),
+          k("inset"), k("outset")
         );
 
         pval("border-style", lineStyle);

@@ -25,6 +25,12 @@ import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.Color;
 import objectos.css.tmpl.DashedKeyword;
+import objectos.css.tmpl.DisplayBoxValue;
+import objectos.css.tmpl.DisplayInsideValue;
+import objectos.css.tmpl.DisplayInternalValue;
+import objectos.css.tmpl.DisplayLegacyValue;
+import objectos.css.tmpl.DisplayListItemValue;
+import objectos.css.tmpl.DisplayOutsideValue;
 import objectos.css.tmpl.DottedKeyword;
 import objectos.css.tmpl.DoubleKeyword;
 import objectos.css.tmpl.FontFamilyValue;
@@ -51,6 +57,7 @@ import objectos.css.tmpl.RidgeKeyword;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.SubKeyword;
+import objectos.css.tmpl.TableKeyword;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextDecorationStyleValue;
@@ -71,6 +78,12 @@ public final class NamedElement implements Selector,
     BottomValue,
     BoxSizingValue,
     Color,
+    DisplayBoxValue,
+    DisplayInsideValue,
+    DisplayInternalValue,
+    DisplayLegacyValue,
+    DisplayListItemValue,
+    DisplayOutsideValue,
     FontFamilyValue,
     FontFeatureSettingsValue,
     FontSizeValue,
@@ -109,6 +122,7 @@ public final class NamedElement implements Selector,
     SmallKeyword,
     SolidKeyword,
     SubKeyword,
+    TableKeyword,
     TextareaKeyword {
   private final String name;
 

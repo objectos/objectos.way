@@ -103,19 +103,11 @@ public abstract class CssSelfGen extends CompiledSpec {
     return this;
   }
 
-  protected final ValueType def(String simpleName, Value... values) {
-    Check.argument(!valueTypes.containsKey(simpleName), "Duplicate ValueType name ", simpleName);
-
-    var valueType = valueTypes.computeIfAbsent(simpleName, ValueType::of);
-
-    for (var value : values) {
-      value.addValueType(valueType);
-    }
-
-    return valueType;
-  }
-
   protected abstract void definition();
+
+  protected final KeywordName k(String name) {
+    return keywords.computeIfAbsent(name, KeywordName::of);
+  }
 
   protected final void keywordFieldName(String keywordName, String fieldName) {
     if (keywords.containsKey(keywordName)) {
@@ -137,14 +129,10 @@ public abstract class CssSelfGen extends CompiledSpec {
     for (int i = 0; i < names.length; i++) {
       var name = names[i];
 
-      array[i] = kw(name);
+      array[i] = k(name);
     }
 
     return new KeywordNameSet(array);
-  }
-
-  protected final KeywordName kw(String name) {
-    return keywords.computeIfAbsent(name, KeywordName::of);
   }
 
   protected final LengthType length(String... units) {
@@ -192,6 +180,30 @@ public abstract class CssSelfGen extends CompiledSpec {
     );
   }
 
+  protected final Signature sig(
+      ParameterType type, String name) {
+    return new Signature1(
+      type.typeName(), name);
+  }
+
+  protected final Signature sig(
+      ParameterType type1, String name1,
+      ParameterType type2, String name2) {
+    return new Signature2(
+      type1.typeName(), name1,
+      type2.typeName(), name2);
+  }
+
+  protected final Signature sig(
+      ParameterType type1, String name1,
+      ParameterType type2, String name2,
+      ParameterType type3, String name3) {
+    return new Signature3(
+      type1.typeName(), name1,
+      type2.typeName(), name2,
+      type3.typeName(), name3);
+  }
+
   protected final void pdbl(String propertyName) {
     prop(propertyName).addSignature(
       new SignaturePrim(PrimitiveTypeName.DOUBLE, "value")
@@ -216,6 +228,17 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   protected final Property prop(String propertyName) {
     return properties.computeIfAbsent(propertyName, Property::of);
+  }
+
+  protected final Property property(
+      String propertyName, Signature... signatures) {
+    var property = properties.computeIfAbsent(propertyName, Property::of);
+
+    for (var signature : signatures) {
+      property.addSignature(signature);
+    }
+
+    return property;
   }
 
   protected final void pva2(String propertyName, ParameterType value) {
@@ -310,6 +333,18 @@ public abstract class CssSelfGen extends CompiledSpec {
     }
 
     return stringType;
+  }
+
+  protected final ValueType t(String simpleName, Value... values) {
+    Check.argument(!valueTypes.containsKey(simpleName), "Duplicate ValueType name ", simpleName);
+
+    var valueType = valueTypes.computeIfAbsent(simpleName, ValueType::of);
+
+    for (var value : values) {
+      value.addValueType(valueType);
+    }
+
+    return valueType;
   }
 
   @Override

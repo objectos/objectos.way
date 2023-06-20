@@ -35,10 +35,10 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
         var len = length("em", "px");
         var pct = percentage();
 
-        var lengthPercentage = def("LengthPercentage", len, pct);
+        var lengthPercentage = t("LengthPercentage", len, pct);
 
-        pval("line-height", def("LineHeightValue",
-          lengthPercentage, kw("normal"))
+        pval("line-height", t("LineHeightValue",
+          lengthPercentage, k("normal"))
         );
       }
     };
