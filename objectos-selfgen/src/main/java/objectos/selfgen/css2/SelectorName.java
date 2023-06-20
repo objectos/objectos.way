@@ -39,6 +39,8 @@ final class SelectorName {
 
     var fieldName = name.replaceFirst("^:-", "_");
 
+    fieldName = fieldName.replaceFirst("^::-", "__");
+
     fieldName = fieldName.replace(':', '_');
 
     fieldName = JavaNames.toValidMethodName(fieldName);

@@ -45,4 +45,12 @@ public class SelectorNameTest {
     assertEquals(sel.selectorName, "::after");
   }
 
+  @Test
+  public void ofPseudoElementSelectorWebkit() {
+    var sel = SelectorName.of("::-webkit-file-upload-button");
+
+    assertEquals(sel.fieldName, "__webkitFileUploadButton");
+    assertEquals(sel.selectorName, "::-webkit-file-upload-button");
+  }
+
 }

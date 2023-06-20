@@ -414,6 +414,32 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#419] Preflight 15
+
+  - font
+  """)
+  public void propertyFont() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected final void definition() {
+          style(
+            __webkitFileUploadButton,
+
+            font(inherit)
+          );
+        }
+      },
+
+      """
+      ::-webkit-file-upload-button {
+        font: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#395] Preflight 02
 
   - font-family
@@ -777,6 +803,32 @@ public class CssTemplateTest {
       :-moz-focusring {
         outline-color: blue;
         outline-color: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#419] Preflight 15
+
+  - outline-offset
+  """)
+  public void propertyOutlineOffset() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected final void definition() {
+          style(
+            attr("type", IS, "search"),
+
+            outlineOffset(px(-2))
+          );
+        }
+      },
+
+      """
+      [type="search"] {
+        outline-offset: -2px;
       }
       """
     );

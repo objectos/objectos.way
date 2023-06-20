@@ -30,6 +30,7 @@ import objectos.css.tmpl.DoubleKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
+import objectos.css.tmpl.FontValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
@@ -73,6 +74,7 @@ public final class NamedElement implements Selector,
     FontFamilyValue,
     FontFeatureSettingsValue,
     FontSizeValue,
+    FontValue,
     FontVariationSettingsValue,
     FontWeightValue,
     GlobalKeyword,

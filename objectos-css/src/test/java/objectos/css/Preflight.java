@@ -187,5 +187,37 @@ final class Preflight extends CssTemplate {
 
       boxShadow(none)
     );
+
+    style(
+      progress,
+
+      verticalAlign(baseline)
+    );
+
+    style(
+      __webkitInnerSpinButton,
+      __webkitOuterSpinButton,
+
+      height(auto)
+    );
+
+    style(
+      attr("type", IS, "search"),
+
+      outlineOffset(px(-2))
+    );
+
+    style(
+      __webkitSearchDecoration,
+
+      webkitAppearance(none)
+    );
+
+    style(
+      __webkitFileUploadButton,
+
+      webkitAppearance(button),
+      font(inherit)
+    );
   }
 }

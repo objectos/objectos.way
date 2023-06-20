@@ -111,6 +111,22 @@ public class PreflightTest {
       :-moz-ui-invalid {
         box-shadow: none;
       }
+      progress {
+        vertical-align: baseline;
+      }
+      ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+        height: auto;
+      }
+      [type="search"] {
+        outline-offset: -2px;
+      }
+      ::-webkit-search-decoration {
+        -webkit-appearance: none;
+      }
+      ::-webkit-file-upload-button {
+        -webkit-appearance: button;
+        font: inherit;
+      }
       """
     );
   }

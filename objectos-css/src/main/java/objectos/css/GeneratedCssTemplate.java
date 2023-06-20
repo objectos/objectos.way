@@ -42,6 +42,7 @@ import objectos.css.tmpl.DoubleKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
+import objectos.css.tmpl.FontValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
@@ -86,6 +87,14 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector __before = named("::before");
 
+  protected static final Selector __webkitFileUploadButton = named("::-webkit-file-upload-button");
+
+  protected static final Selector __webkitInnerSpinButton = named("::-webkit-inner-spin-button");
+
+  protected static final Selector __webkitOuterSpinButton = named("::-webkit-outer-spin-button");
+
+  protected static final Selector __webkitSearchDecoration = named("::-webkit-search-decoration");
+
   protected static final Selector _mozFocusring = named(":-moz-focusring");
 
   protected static final Selector _mozUiInvalid = named(":-moz-ui-invalid");
@@ -123,6 +132,8 @@ abstract class GeneratedCssTemplate {
   protected static final Selector optgroup = named("optgroup");
 
   protected static final Selector pre = named("pre");
+
+  protected static final Selector progress = named("progress");
 
   protected static final Selector samp = named("samp");
 
@@ -170,6 +181,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextTransformValue capitalize = named("capitalize");
 
+  protected static final FontValue caption = named("caption");
+
   protected static final AppearanceValue checkbox = named("checkbox");
 
   protected static final BorderCollapseValue collapse = named("collapse");
@@ -214,6 +227,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final LineStyle hidden = named("hidden");
 
+  protected static final FontValue icon = named("icon");
+
   protected static final GlobalKeyword inherit = named("inherit");
 
   protected static final GlobalKeyword initial = named("initial");
@@ -242,9 +257,13 @@ abstract class GeneratedCssTemplate {
 
   protected static final MediumKeyword medium = named("medium");
 
+  protected static final FontValue menu = named("menu");
+
   protected static final AppearanceValue menulist = named("menulist");
 
   protected static final AppearanceValue menulistButton = named("menulist-button");
+
+  protected static final FontValue messageBox = named("message-box");
 
   protected static final AppearanceValue meter = named("meter");
 
@@ -294,11 +313,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final SmallKeyword small = named("small");
 
+  protected static final FontValue smallCaption = named("small-caption");
+
   protected static final FontSizeValue smaller = named("smaller");
 
   protected static final SolidKeyword solid = named("solid");
 
   protected static final AppearanceValue squareButton = named("square-button");
+
+  protected static final FontValue statusBar = named("status-bar");
 
   protected static final PositionValue sticky = named("sticky");
 
@@ -646,6 +669,14 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.COLOR, value.self());
   }
 
+  protected final StyleDeclaration font(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.FONT, value.self());
+  }
+
+  protected final StyleDeclaration font(FontValue value) {
+    return new StyleDeclaration1(Property.FONT, value.self());
+  }
+
   protected final StyleDeclaration fontFamily(GlobalKeyword value) {
     return new StyleDeclaration1(Property.FONT_FAMILY, value.self());
   }
@@ -774,6 +805,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration outlineColor(Color value) {
     return new StyleDeclaration1(Property.OUTLINE_COLOR, value.self());
+  }
+
+  protected final StyleDeclaration outlineOffset(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.OUTLINE_OFFSET, value.self());
+  }
+
+  protected final StyleDeclaration outlineOffset(Length value) {
+    return new StyleDeclaration1(Property.OUTLINE_OFFSET, value.self());
   }
 
   protected final StyleDeclaration outlineStyle(GlobalKeyword value) {

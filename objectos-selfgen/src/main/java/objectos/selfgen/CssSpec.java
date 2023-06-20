@@ -38,7 +38,7 @@ public final class CssSpec extends CssSelfGen {
       "kbd",
       "li",
       "optgroup",
-      "pre",
+      "pre", "progress",
       "samp", "select", "small", "strong", "sub", "sup",
       "table", "textarea",
       "ul",
@@ -48,7 +48,12 @@ public final class CssSpec extends CssSelfGen {
       ":-moz-ui-invalid",
 
       // pseudo elements
-      "::after", "::before"
+      "::after",
+      "::before",
+      "::-webkit-file-upload-button",
+      "::-webkit-inner-spin-button",
+      "::-webkit-outer-spin-button",
+      "::-webkit-search-decoration"
     );
 
     // global keywords
@@ -208,6 +213,15 @@ public final class CssSpec extends CssSelfGen {
 
     // F
 
+    var fontValue = def("FontValue",
+      keywords(
+        "caption",
+        "icon",
+        "menu", "message-box",
+        "small-caption", "status-bar"
+      )
+    );
+
     var fontFamilyValue = def("FontFamilyValue",
       keywords(
         "cursive",
@@ -240,6 +254,9 @@ public final class CssSpec extends CssSelfGen {
         "normal"
       )
     );
+
+    pval("font", globalKeyword);
+    pval("font", fontValue);
 
     pval("font-family", globalKeyword);
     pvar("font-family", fontFamilyValue);
@@ -341,6 +358,9 @@ public final class CssSpec extends CssSelfGen {
 
     pval("outline-color", globalKeyword);
     pval("outline-color", color);
+
+    pval("outline-offset", globalKeyword);
+    pval("outline-offset", length);
 
     pval("outline-style", globalKeyword);
     pval("outline-style", outlineStyleValue);

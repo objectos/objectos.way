@@ -50,6 +50,8 @@ public enum Property implements PropertyName {
 
   COLOR("color"),
 
+  FONT("font"),
+
   FONT_FAMILY("font-family"),
 
   FONT_FEATURE_SETTINGS("font-feature-settings"),
@@ -69,6 +71,8 @@ public enum Property implements PropertyName {
   OUTLINE("outline"),
 
   OUTLINE_COLOR("outline-color"),
+
+  OUTLINE_OFFSET("outline-offset"),
 
   OUTLINE_STYLE("outline-style"),
 
