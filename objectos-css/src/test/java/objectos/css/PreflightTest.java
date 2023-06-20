@@ -127,6 +127,9 @@ public class PreflightTest {
         -webkit-appearance: button;
         font: inherit;
       }
+      summary {
+        display: list-item;
+      }
       """
     );
   }

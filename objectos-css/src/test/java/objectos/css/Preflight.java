@@ -219,5 +219,11 @@ final class Preflight extends CssTemplate {
       webkitAppearance(button),
       font(inherit)
     );
+
+    style(
+      summary,
+
+      display(listItem)
+    );
   }
 }
