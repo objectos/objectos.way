@@ -26,6 +26,8 @@ public final class CssSpec extends CssSelfGen {
 
   private ValueType globalKeyword;
 
+  private ValueType image;
+
   private ValueType lengthPercentage;
 
   public static void main(String[] args) throws IOException {
@@ -42,9 +44,13 @@ public final class CssSpec extends CssSelfGen {
 
       "b",
       "body",
+      "blockquote",
       "button",
 
       "code",
+
+      "dd",
+      "dl",
 
       "h1",
       "h2",
@@ -55,14 +61,22 @@ public final class CssSpec extends CssSelfGen {
       "hr",
       "html",
 
+      "fieldset",
+      "figure",
+
       "input",
 
       "kbd",
 
+      "legend",
       "li",
 
+      "menu",
+
+      "ol",
       "optgroup",
 
+      "p",
       "pre",
       "progress",
 
@@ -96,6 +110,7 @@ public final class CssSpec extends CssSelfGen {
 
     globalKeyword = t(
       "GlobalKeyword",
+
       k("inherit"),
       k("initial"),
       k("unset")
@@ -104,6 +119,7 @@ public final class CssSpec extends CssSelfGen {
     // color
     color = t(
       "Color",
+
       k("currentcolor"),
       k("transparent"),
 
@@ -123,6 +139,14 @@ public final class CssSpec extends CssSelfGen {
         "white",
         "yellow"
       )
+    );
+
+    // image
+
+    image = t(
+      "Image",
+
+      url()
     );
 
     // length/percentage
@@ -301,15 +325,8 @@ public final class CssSpec extends CssSelfGen {
 
     // L
 
-    var lineHeightValue = t("LineHeightValue",
-      lengthPercentage,
-      k("normal")
-    );
-
-    pdbl("line-height");
-    pint("line-height");
-    pval("line-height", globalKeyword);
-    pval("line-height", lineHeightValue);
+    lineHeight();
+    listStyleImage();
 
     // M
 
@@ -613,6 +630,42 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(displayValue, "value"),
       sig(displayValue, "value", displayValue2, "value2")
+    );
+  }
+
+  private void lineHeight() {
+    var lineHeightValue = t(
+      "LineHeightValue",
+
+      k("normal"),
+
+      lengthPercentage
+    );
+
+    property(
+      "line-height",
+
+      sig(DOUBLE, "value"),
+      sig(INT, "value"),
+      sig(globalKeyword, "value"),
+      sig(lineHeightValue, "value")
+    );
+  }
+
+  private void listStyleImage() {
+    var listStyleImageValue = t(
+      "ListStyleImageValue",
+
+      k("none"),
+
+      image
+    );
+
+    property(
+      "list-style-image",
+
+      sig(globalKeyword, "value"),
+      sig(listStyleImageValue, "value")
     );
   }
 

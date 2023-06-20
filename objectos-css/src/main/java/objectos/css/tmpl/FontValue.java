@@ -20,4 +20,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface FontValue extends PropertyValue permits NamedElement {}
+public sealed interface FontValue extends PropertyValue permits MenuKeyword, NamedElement {}

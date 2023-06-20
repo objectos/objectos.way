@@ -17,15 +17,9 @@ package objectos.css.internal;
 
 import objectos.css.tmpl.Percentage;
 
-public final class InternalPercentage implements Percentage {
+public record InternalPercentage(String value) implements Percentage {
 
   private static final InternalPercentage ZERO = new InternalPercentage("0");
-
-  private final String value;
-
-  public InternalPercentage(String value) {
-    this.value = value;
-  }
 
   public static InternalPercentage of(double value) {
     if (value == 0) {

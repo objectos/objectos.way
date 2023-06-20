@@ -26,6 +26,10 @@ import objectos.lang.Check;
 
 public abstract class CssSelfGen extends CompiledSpec {
 
+  protected static final ParameterType DOUBLE = ParameterType.DOUBLE;
+
+  protected static final ParameterType INT = ParameterType.INT;
+
   private final Map<String, KeywordName> keywords = new HashMap<>();
 
   private final Map<String, Property> properties = new HashMap<>();
@@ -39,6 +43,8 @@ public abstract class CssSelfGen extends CompiledSpec {
   private PercentageType percentageType;
 
   private StringType stringType;
+
+  private UrlType urlType;
 
   private ZeroType zeroType;
 
@@ -69,6 +75,8 @@ public abstract class CssSelfGen extends CompiledSpec {
     spec.write(sink, new PropertyValueStep());
 
     spec.write(sink, new StringTypeStep());
+
+    spec.write(sink, new UrlTypeStep());
 
     spec.write(sink, new ZeroTypeStep());
   }
@@ -178,30 +186,6 @@ public abstract class CssSelfGen extends CompiledSpec {
         typeName, "left"
       )
     );
-  }
-
-  protected final Signature sig(
-      ParameterType type, String name) {
-    return new Signature1(
-      type.typeName(), name);
-  }
-
-  protected final Signature sig(
-      ParameterType type1, String name1,
-      ParameterType type2, String name2) {
-    return new Signature2(
-      type1.typeName(), name1,
-      type2.typeName(), name2);
-  }
-
-  protected final Signature sig(
-      ParameterType type1, String name1,
-      ParameterType type2, String name2,
-      ParameterType type3, String name3) {
-    return new Signature3(
-      type1.typeName(), name1,
-      type2.typeName(), name2,
-      type3.typeName(), name3);
   }
 
   protected final void pdbl(String propertyName) {
@@ -327,6 +311,29 @@ public abstract class CssSelfGen extends CompiledSpec {
     }
   }
 
+  protected final Signature sig(
+      ParameterType type, String name) {
+    return type.toSignature(name);
+  }
+
+  protected final Signature sig(
+      ParameterType type1, String name1,
+      ParameterType type2, String name2) {
+    return new Signature2(
+      type1.typeName(), name1,
+      type2.typeName(), name2);
+  }
+
+  protected final Signature sig(
+      ParameterType type1, String name1,
+      ParameterType type2, String name2,
+      ParameterType type3, String name3) {
+    return new Signature3(
+      type1.typeName(), name1,
+      type2.typeName(), name2,
+      type3.typeName(), name3);
+  }
+
   protected final StringType string() {
     if (stringType == null) {
       stringType = new StringType();
@@ -345,6 +352,14 @@ public abstract class CssSelfGen extends CompiledSpec {
     }
 
     return valueType;
+  }
+
+  protected final UrlType url() {
+    if (urlType == null) {
+      urlType = new UrlType();
+    }
+
+    return urlType;
   }
 
   @Override
@@ -375,6 +390,11 @@ public abstract class CssSelfGen extends CompiledSpec {
   @Override
   final StringType stringType() {
     return stringType;
+  }
+
+  @Override
+  final UrlType urlType() {
+    return urlType;
   }
 
   @Override

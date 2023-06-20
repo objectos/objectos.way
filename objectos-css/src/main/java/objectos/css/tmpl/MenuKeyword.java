@@ -16,16 +16,10 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.om.Selector;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface NoneKeyword extends
-    AppearanceValue,
-    BackgroundImageValue,
-    DisplayBoxValue,
-    LineStyle,
-    ListStyleImageValue,
-    OutlineStyleValue,
-    TextDecorationLineSingleValue,
-    TextSizeAdjustValue,
-    TextTransformValue permits NamedElement {}
+public sealed interface MenuKeyword extends
+    FontValue,
+    Selector permits NamedElement {}

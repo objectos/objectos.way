@@ -46,8 +46,10 @@ import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.ListStyleImageValue;
 import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
+import objectos.css.tmpl.MenuKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
@@ -95,6 +97,7 @@ public final class NamedElement implements Selector,
     LineHeightValue,
     LineStyle,
     LineWidth,
+    ListStyleImageValue,
     MarginValue,
     OutlineStyleValue,
     PositionValue,
@@ -115,6 +118,7 @@ public final class NamedElement implements Selector,
     GrooveKeyword,
     InsetKeyword,
     MediumKeyword,
+    MenuKeyword,
     NoneKeyword,
     NormalKeyword,
     OutsetKeyword,

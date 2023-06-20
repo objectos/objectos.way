@@ -17,14 +17,8 @@ package objectos.css.internal;
 
 import objectos.css.tmpl.Length;
 
-public final class InternalLength implements Length {
+public record InternalLength(String value) implements Length {
   static final InternalLength ZERO = new InternalLength("0");
-
-  private final String value;
-
-  public InternalLength(String value) {
-    this.value = value;
-  }
 
   public static InternalLength of(String unit, double value) {
     if (value == 0) {

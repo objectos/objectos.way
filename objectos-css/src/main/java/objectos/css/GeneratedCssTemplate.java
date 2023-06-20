@@ -62,8 +62,10 @@ import objectos.css.tmpl.LengthPercentage;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.ListStyleImageValue;
 import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
+import objectos.css.tmpl.MenuKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
@@ -112,9 +114,19 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector b = named("b");
 
+  protected static final Selector blockquote = named("blockquote");
+
   protected static final Selector body = named("body");
 
   protected static final Selector code = named("code");
+
+  protected static final Selector dd = named("dd");
+
+  protected static final Selector dl = named("dl");
+
+  protected static final Selector fieldset = named("fieldset");
+
+  protected static final Selector figure = named("figure");
 
   protected static final Selector h1 = named("h1");
 
@@ -136,9 +148,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector kbd = named("kbd");
 
+  protected static final Selector legend = named("legend");
+
   protected static final Selector li = named("li");
 
+  protected static final Selector ol = named("ol");
+
   protected static final Selector optgroup = named("optgroup");
+
+  protected static final Selector p = named("p");
 
   protected static final Selector pre = named("pre");
 
@@ -290,7 +308,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final MediumKeyword medium = named("medium");
 
-  protected static final FontValue menu = named("menu");
+  protected static final MenuKeyword menu = named("menu");
 
   protected static final AppearanceValue menulist = named("menulist");
 
@@ -816,6 +834,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
     return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration listStyleImage(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.LIST_STYLE_IMAGE, value.self());
+  }
+
+  protected final StyleDeclaration listStyleImage(ListStyleImageValue value) {
+    return new StyleDeclaration1(Property.LIST_STYLE_IMAGE, value.self());
   }
 
   protected final StyleDeclaration margin(GlobalKeyword value) {

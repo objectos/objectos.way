@@ -68,6 +68,8 @@ public enum Property implements PropertyName {
 
   LINE_HEIGHT("line-height"),
 
+  LIST_STYLE_IMAGE("list-style-image"),
+
   MARGIN("margin"),
 
   OUTLINE("outline"),

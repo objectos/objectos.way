@@ -1418,6 +1418,36 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#422] Preflight 16
+
+  - list-style-image
+  """)
+  public void propertyListStyleImage() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            menu,
+
+            listStyleImage(none),
+            listStyleImage(url("starsolid.gif")),
+            listStyleImage(inherit)
+          );
+        }
+      },
+
+      """
+      menu {
+        list-style-image: none;
+        list-style-image: url("starsolid.gif");
+        list-style-image: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#404] Preflight 10
 
   - vertical-align

@@ -17,6 +17,7 @@ package objectos.css;
 
 import java.util.Objects;
 import objectos.css.internal.InternalAttributeOperator;
+import objectos.css.internal.InternalUrl;
 import objectos.css.internal.InternalZero;
 import objectos.css.internal.NamedElement;
 import objectos.css.internal.Property;
@@ -30,6 +31,7 @@ import objectos.css.om.StyleSheet;
 import objectos.css.tmpl.AttributeOperator;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.StringLiteral;
+import objectos.css.tmpl.Url;
 import objectos.css.tmpl.Zero;
 import objectos.lang.Check;
 
@@ -43,6 +45,11 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
 
   protected CssTemplate() {}
 
+  @Override
+  public String toString() {
+    return toStyleSheet().toString();
+  }
+
   public final StyleSheet toStyleSheet() {
     try {
       builder = new StyleSheetBuilder();
@@ -53,11 +60,6 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     } finally {
       builder = null;
     }
-  }
-
-  @Override
-  public String toString() {
-    return toStyleSheet().toString();
   }
 
   protected final Selector attr(String name, AttributeOperator operator, String value) {
@@ -99,55 +101,21 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     };
   }
 
-  private PropertyValue fontFamilyValue(FontFamilyValue value) {
-    if (value instanceof StringLiteral l) {
-      return l.asFontFamilyValue();
-    } else {
-      return value;
-    }
-  }
-
-  protected final void style(Selector selector,
-      StyleDeclaration... declarations) {
-    Objects.requireNonNull(selector, "selector == null");
-    Objects.requireNonNull(declarations, "declarations == null");
-
-    builder.addStyleRule(selector, declarations);
-  }
-
-  protected final void style(Selector selector1, Selector selector2,
-      StyleDeclaration... declarations) {
-    Objects.requireNonNull(selector1, "selector1 == null");
-    Objects.requireNonNull(selector2, "selector2 == null");
-    Objects.requireNonNull(declarations, "declarations == null");
-
-    builder.addStyleRule(selector1, selector2, declarations);
-  }
-
   protected final void style(
       Selector selector1, Selector selector2, Selector selector3,
-      StyleDeclaration... declarations) {
-    Objects.requireNonNull(selector1, "selector1 == null");
-    Objects.requireNonNull(selector2, "selector2 == null");
-    Objects.requireNonNull(selector3, "selector3 == null");
-    Objects.requireNonNull(declarations, "declarations == null");
-
-    builder.addStyleRule(selector1, selector2, selector3, declarations);
-  }
-
-  protected final void style(
-      Selector selector1, Selector selector2, Selector selector3,
-      Selector selector4,
+      Selector selector4, Selector selector5, Selector selector6,
       StyleDeclaration... declarations) {
     Objects.requireNonNull(selector1, "selector1 == null");
     Objects.requireNonNull(selector2, "selector2 == null");
     Objects.requireNonNull(selector3, "selector3 == null");
     Objects.requireNonNull(selector4, "selector4 == null");
+    Objects.requireNonNull(selector5, "selector5 == null");
+    Objects.requireNonNull(selector6, "selector6 == null");
     Objects.requireNonNull(declarations, "declarations == null");
 
     builder.addStyleRule(
       selector1, selector2, selector3,
-      selector4,
+      selector4, selector5, selector6,
       declarations
     );
   }
@@ -172,21 +140,59 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
 
   protected final void style(
       Selector selector1, Selector selector2, Selector selector3,
-      Selector selector4, Selector selector5, Selector selector6,
+      Selector selector4,
       StyleDeclaration... declarations) {
     Objects.requireNonNull(selector1, "selector1 == null");
     Objects.requireNonNull(selector2, "selector2 == null");
     Objects.requireNonNull(selector3, "selector3 == null");
     Objects.requireNonNull(selector4, "selector4 == null");
-    Objects.requireNonNull(selector5, "selector5 == null");
-    Objects.requireNonNull(selector6, "selector6 == null");
     Objects.requireNonNull(declarations, "declarations == null");
 
     builder.addStyleRule(
       selector1, selector2, selector3,
-      selector4, selector5, selector6,
+      selector4,
       declarations
     );
+  }
+
+  protected final void style(
+      Selector selector1, Selector selector2, Selector selector3,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector1, "selector1 == null");
+    Objects.requireNonNull(selector2, "selector2 == null");
+    Objects.requireNonNull(selector3, "selector3 == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(selector1, selector2, selector3, declarations);
+  }
+
+  protected final void style(Selector selector1, Selector selector2,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector1, "selector1 == null");
+    Objects.requireNonNull(selector2, "selector2 == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(selector1, selector2, declarations);
+  }
+
+  protected final void style(Selector selector,
+      StyleDeclaration... declarations) {
+    Objects.requireNonNull(selector, "selector == null");
+    Objects.requireNonNull(declarations, "declarations == null");
+
+    builder.addStyleRule(selector, declarations);
+  }
+
+  protected final Url url(String value) {
+    return InternalUrl.of(value);
+  }
+
+  private PropertyValue fontFamilyValue(FontFamilyValue value) {
+    if (value instanceof StringLiteral l) {
+      return l.asFontFamilyValue();
+    } else {
+      return value;
+    }
   }
 
 }

@@ -22,14 +22,32 @@ interface ParameterType {
 
   ParameterType DOUBLE = new ParameterType() {
     @Override
-    public final TypeName typeName() { return PrimitiveTypeName.DOUBLE; }
+    public final Signature toSignature(String name) {
+      return new SignaturePrim(typeName(), name);
+    }
+
+    @Override
+    public final TypeName typeName() {
+      return PrimitiveTypeName.DOUBLE;
+    }
   };
 
   ParameterType INT = new ParameterType() {
     @Override
-    public final TypeName typeName() { return PrimitiveTypeName.INT; }
+    public final Signature toSignature(String name) {
+      return new SignaturePrim(typeName(), name);
+    }
+
+    @Override
+    public final TypeName typeName() {
+      return PrimitiveTypeName.INT;
+    }
   };
 
   TypeName typeName();
+
+  default Signature toSignature(String name) {
+    return new Signature1(typeName(), name);
+  }
 
 }

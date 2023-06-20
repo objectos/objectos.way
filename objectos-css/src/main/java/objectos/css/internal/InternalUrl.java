@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.internal;
 
-import objectos.css.internal.NamedElement;
-import objectos.lang.Generated;
+import objectos.css.tmpl.Url;
 
-@Generated("objectos.selfgen.CssSpec")
-public sealed interface NoneKeyword extends
-    AppearanceValue,
-    BackgroundImageValue,
-    DisplayBoxValue,
-    LineStyle,
-    ListStyleImageValue,
-    OutlineStyleValue,
-    TextDecorationLineSingleValue,
-    TextSizeAdjustValue,
-    TextTransformValue permits NamedElement {}
+public record InternalUrl(String value) implements Url {
+
+  public static InternalUrl of(String url) {
+    return new InternalUrl(url);
+  }
+
+  @Override
+  public final String toString() {
+    return "url(\"" + value + "\")";
+  }
+
+}
