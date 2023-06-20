@@ -1199,6 +1199,40 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void propertyResize() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            textarea,
+
+            resize(none),
+            resize(both),
+            resize(horizontal),
+            resize(vertical),
+            resize(block),
+            resize(inline),
+            resize(inherit)
+          );
+        }
+      },
+
+      """
+      textarea {
+        resize: none;
+        resize: both;
+        resize: horizontal;
+        resize: vertical;
+        resize: block;
+        resize: inline;
+        resize: inherit;
+      }
+      """
+    );
+  }
+
   @Test(description = """
   [#395] Preflight 02
 

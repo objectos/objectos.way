@@ -33,6 +33,7 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BackgroundImageValue;
+import objectos.css.tmpl.BlockKeyword;
 import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
@@ -59,6 +60,7 @@ import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.GrooveKeyword;
 import objectos.css.tmpl.HeightValue;
+import objectos.css.tmpl.InlineKeyword;
 import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LengthPercentage;
@@ -79,6 +81,7 @@ import objectos.css.tmpl.OutlineValue;
 import objectos.css.tmpl.OutsetKeyword;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.PositionValue;
+import objectos.css.tmpl.ResizeValue;
 import objectos.css.tmpl.RidgeKeyword;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
@@ -206,7 +209,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationLineMultiValue blink = named("blink");
 
-  protected static final DisplayOutsideValue block = named("block");
+  protected static final BlockKeyword block = named("block");
 
   protected static final Color blue = named("blue");
 
@@ -215,6 +218,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontWeightValue bolder = named("bolder");
 
   protected static final BoxSizingValue borderBox = named("border-box");
+
+  protected static final ResizeValue both = named("both");
 
   protected static final VerticalAlignValue bottom = named("bottom");
 
@@ -316,13 +321,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue hiraganaIroha = named("hiragana-iroha");
 
+  protected static final ResizeValue horizontal = named("horizontal");
+
   protected static final FontValue icon = named("icon");
 
   protected static final GlobalKeyword inherit = named("inherit");
 
   protected static final GlobalKeyword initial = named("initial");
 
-  protected static final DisplayOutsideValue inline = named("inline");
+  protected static final InlineKeyword inline = named("inline");
 
   protected static final DisplayLegacyValue inlineBlock = named("inline-block");
 
@@ -595,6 +602,8 @@ abstract class GeneratedCssTemplate {
   protected static final CounterStyleValue upperRoman = named("upper-roman");
 
   protected static final TextTransformValue uppercase = named("uppercase");
+
+  protected static final ResizeValue vertical = named("vertical");
 
   protected static final TextDecorationStyleValue wavy = named("wavy");
 
@@ -1181,6 +1190,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration position(PositionValue value) {
     return new StyleDeclaration1(Property.POSITION, value.self());
+  }
+
+  protected final StyleDeclaration resize(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.RESIZE, value.self());
+  }
+
+  protected final StyleDeclaration resize(ResizeValue value) {
+    return new StyleDeclaration1(Property.RESIZE, value.self());
   }
 
   protected final StyleDeclaration tabSize(int value) {

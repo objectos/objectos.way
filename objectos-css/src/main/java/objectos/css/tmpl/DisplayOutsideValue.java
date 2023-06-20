@@ -21,4 +21,4 @@ import objectos.lang.Generated;
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface DisplayOutsideValue extends
     DisplayValue,
-    DisplayValue2 permits NamedElement {}
+    DisplayValue2 permits BlockKeyword, InlineKeyword, NamedElement {}

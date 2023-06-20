@@ -19,15 +19,6 @@ import objectos.css.internal.NamedElement;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface NoneKeyword extends
-    AppearanceValue,
-    BackgroundImageValue,
-    DisplayBoxValue,
-    LineStyle,
-    ListStyleImageValue,
-    ListStyleTypeValue,
-    OutlineStyleValue,
-    ResizeValue,
-    TextDecorationLineSingleValue,
-    TextSizeAdjustValue,
-    TextTransformValue permits NamedElement {}
+public sealed interface BlockKeyword extends
+    DisplayOutsideValue,
+    ResizeValue permits NamedElement {}

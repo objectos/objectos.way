@@ -403,6 +403,10 @@ public final class CssSpec extends CssSelfGen {
     pval("outline-width", globalKeyword);
     pval("outline-width", lineWidth);
 
+    // R
+
+    resize();
+
     // T
 
     var textSizeAdjustValue = t("TextSizeAdjustValue",
@@ -489,6 +493,26 @@ public final class CssSpec extends CssSelfGen {
     // V
 
     verticalAlign();
+  }
+
+  private void resize() {
+    var resizeValue = t(
+      "ResizeValue",
+
+      k("block"),
+      k("both"),
+      k("horizontal"),
+      k("inline"),
+      k("none"),
+      k("vertical")
+    );
+
+    property(
+      "resize",
+
+      sig(globalKeyword, "value"),
+      sig(resizeValue, "value")
+    );
   }
 
   private void appearance() {

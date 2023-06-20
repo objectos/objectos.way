@@ -100,6 +100,8 @@ public enum Property implements PropertyName {
 
   POSITION("position"),
 
+  RESIZE("resize"),
+
   TAB_SIZE("tab-size"),
 
   TEXT_DECORATION("text-decoration"),

@@ -19,6 +19,7 @@ import objectos.css.om.Selector;
 import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BackgroundImageValue;
+import objectos.css.tmpl.BlockKeyword;
 import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
@@ -43,6 +44,7 @@ import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.GrooveKeyword;
 import objectos.css.tmpl.HeightValue;
+import objectos.css.tmpl.InlineKeyword;
 import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
@@ -58,6 +60,7 @@ import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
 import objectos.css.tmpl.OutsetKeyword;
 import objectos.css.tmpl.PositionValue;
+import objectos.css.tmpl.ResizeValue;
 import objectos.css.tmpl.RidgeKeyword;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
@@ -107,6 +110,7 @@ public final class NamedElement implements Selector,
     MarginValue,
     OutlineStyleValue,
     PositionValue,
+    ResizeValue,
     TextDecorationLineMultiValue,
     TextDecorationLineSingleValue,
     TextDecorationStyleValue,
@@ -117,11 +121,13 @@ public final class NamedElement implements Selector,
     TopValue,
     VerticalAlignValue,
     AutoKeyword,
+    BlockKeyword,
     ButtonKeyword,
     DashedKeyword,
     DottedKeyword,
     DoubleKeyword,
     GrooveKeyword,
+    InlineKeyword,
     InsetKeyword,
     MediumKeyword,
     MenuKeyword,
