@@ -64,6 +64,14 @@ public enum Property implements PropertyName {
 
   MARGIN("margin"),
 
+  OUTLINE("outline"),
+
+  OUTLINE_COLOR("outline-color"),
+
+  OUTLINE_STYLE("outline-style"),
+
+  OUTLINE_WIDTH("outline-width"),
+
   PADDING("padding"),
 
   PADDING_BOTTOM("padding-bottom"),

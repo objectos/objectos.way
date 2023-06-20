@@ -45,7 +45,9 @@ import objectos.css.tmpl.FontSizeValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
+import objectos.css.tmpl.GrooveKeyword;
 import objectos.css.tmpl.HeightValue;
+import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LengthPercentage;
 import objectos.css.tmpl.LineHeightValue;
@@ -55,8 +57,12 @@ import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
+import objectos.css.tmpl.OutlineStyleValue;
+import objectos.css.tmpl.OutlineValue;
+import objectos.css.tmpl.OutsetKeyword;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.PositionValue;
+import objectos.css.tmpl.RidgeKeyword;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.StringLiteral;
@@ -202,7 +208,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color green = named("green");
 
-  protected static final LineStyle groove = named("groove");
+  protected static final GrooveKeyword groove = named("groove");
 
   protected static final TextIndentValue hanging = named("hanging");
 
@@ -212,7 +218,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final GlobalKeyword initial = named("initial");
 
-  protected static final LineStyle inset = named("inset");
+  protected static final InsetKeyword inset = named("inset");
 
   protected static final FontSizeValue large = named("large");
 
@@ -256,7 +262,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final Color olive = named("olive");
 
-  protected static final LineStyle outset = named("outset");
+  protected static final OutsetKeyword outset = named("outset");
 
   protected static final TextDecorationLineMultiValue overline = named("overline");
 
@@ -272,7 +278,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final PositionValue relative = named("relative");
 
-  protected static final LineStyle ridge = named("ridge");
+  protected static final RidgeKeyword ridge = named("ridge");
 
   protected static final FontFamilyValue sansSerif = named("sans-serif");
 
@@ -736,6 +742,46 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration mozTabSize(Length value) {
     return new StyleDeclaration1(Property._MOZ_TAB_SIZE, value.self());
+  }
+
+  protected final StyleDeclaration outline(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.OUTLINE, value.self());
+  }
+
+  protected final StyleDeclaration outline(OutlineValue value) {
+    return new StyleDeclaration1(Property.OUTLINE, value.self());
+  }
+
+  protected final StyleDeclaration outline(OutlineValue value1, OutlineValue value2) {
+    return new StyleDeclaration2(Property.OUTLINE, value1.self(), value2.self());
+  }
+
+  protected final StyleDeclaration outline(OutlineValue value1, OutlineValue value2, OutlineValue value3) {
+    return new StyleDeclaration3(Property.OUTLINE, value1.self(), value2.self(), value3.self());
+  }
+
+  protected final StyleDeclaration outlineColor(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.OUTLINE_COLOR, value.self());
+  }
+
+  protected final StyleDeclaration outlineColor(Color value) {
+    return new StyleDeclaration1(Property.OUTLINE_COLOR, value.self());
+  }
+
+  protected final StyleDeclaration outlineStyle(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.OUTLINE_STYLE, value.self());
+  }
+
+  protected final StyleDeclaration outlineStyle(OutlineStyleValue value) {
+    return new StyleDeclaration1(Property.OUTLINE_STYLE, value.self());
+  }
+
+  protected final StyleDeclaration outlineWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.OUTLINE_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration outlineWidth(LineWidth value) {
+    return new StyleDeclaration1(Property.OUTLINE_WIDTH, value.self());
   }
 
   protected final StyleDeclaration padding(GlobalKeyword value) {

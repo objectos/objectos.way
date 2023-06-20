@@ -33,7 +33,9 @@ import objectos.css.tmpl.FontSizeValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
+import objectos.css.tmpl.GrooveKeyword;
 import objectos.css.tmpl.HeightValue;
+import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
@@ -41,7 +43,10 @@ import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
+import objectos.css.tmpl.OutlineStyleValue;
+import objectos.css.tmpl.OutsetKeyword;
 import objectos.css.tmpl.PositionValue;
+import objectos.css.tmpl.RidgeKeyword;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.SubKeyword;
@@ -76,6 +81,7 @@ public final class NamedElement implements Selector,
     LineStyle,
     LineWidth,
     MarginValue,
+    OutlineStyleValue,
     PositionValue,
     TextDecorationLineMultiValue,
     TextDecorationLineSingleValue,
@@ -91,9 +97,13 @@ public final class NamedElement implements Selector,
     DashedKeyword,
     DottedKeyword,
     DoubleKeyword,
+    GrooveKeyword,
+    InsetKeyword,
     MediumKeyword,
     NoneKeyword,
     NormalKeyword,
+    OutsetKeyword,
+    RidgeKeyword,
     SmallKeyword,
     SolidKeyword,
     SubKeyword,

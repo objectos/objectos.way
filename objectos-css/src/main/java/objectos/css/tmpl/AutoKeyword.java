@@ -24,6 +24,7 @@ public sealed interface AutoKeyword extends
     BottomValue,
     HeightValue,
     MarginValue,
+    OutlineStyleValue,
     TextDecorationThicknessValue,
     TextSizeAdjustValue,
     TopValue permits NamedElement {}

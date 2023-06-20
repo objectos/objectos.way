@@ -23,6 +23,7 @@ public sealed interface NoneKeyword extends
     AppearanceValue,
     BackgroundImageValue,
     LineStyle,
+    OutlineStyleValue,
     TextDecorationLineSingleValue,
     TextSizeAdjustValue,
     TextTransformValue permits NamedElement {}

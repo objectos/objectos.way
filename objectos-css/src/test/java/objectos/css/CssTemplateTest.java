@@ -691,6 +691,152 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#420] Preflight 14
+
+  - outline
+  """)
+  public void propertyOutline() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            _mozFocusring,
+
+            outline(auto),
+            outline(solid),
+            outline(red, dashed),
+            outline(inset, thick),
+            outline(green, solid, px(3)),
+            outline(inherit)
+          );
+        }
+      },
+
+      """
+      :-moz-focusring {
+        outline: auto;
+        outline: solid;
+        outline: red dashed;
+        outline: inset thick;
+        outline: green solid 3px;
+        outline: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#420] Preflight 14
+
+  - outline-color
+  """)
+  public void propertyOutlineColor() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            _mozFocusring,
+
+            outlineColor(blue),
+            outlineColor(inherit)
+          );
+        }
+      },
+
+      """
+      :-moz-focusring {
+        outline-color: blue;
+        outline-color: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#420] Preflight 14
+
+  - outline-style
+  """)
+  public void propertyOutlineStyle() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            _mozFocusring,
+
+            outlineStyle(auto),
+            outlineStyle(none),
+            outlineStyle(dotted),
+            outlineStyle(dashed),
+            outlineStyle(solid),
+            outlineStyle(_double),
+            outlineStyle(groove),
+            outlineStyle(ridge),
+            outlineStyle(inset),
+            outlineStyle(outset),
+            outlineStyle(inherit)
+          );
+        }
+      },
+
+      """
+      :-moz-focusring {
+        outline-style: auto;
+        outline-style: none;
+        outline-style: dotted;
+        outline-style: dashed;
+        outline-style: solid;
+        outline-style: double;
+        outline-style: groove;
+        outline-style: ridge;
+        outline-style: inset;
+        outline-style: outset;
+        outline-style: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#420] Preflight 14
+
+  - outline-width
+  """)
+  public void propertyOutlineWidth() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            _mozFocusring,
+
+            outlineWidth(thin),
+            outlineWidth(medium),
+            outlineWidth(thick),
+            outlineWidth(px(1)),
+            outlineWidth(em(0.1)),
+            outlineWidth(inherit)
+          );
+        }
+      },
+
+      """
+      :-moz-focusring {
+        outline-width: thin;
+        outline-width: medium;
+        outline-width: thick;
+        outline-width: 1px;
+        outline-width: 0.1em;
+        outline-width: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#418] Preflight 12
 
   - padding

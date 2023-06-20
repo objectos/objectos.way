@@ -21,4 +21,5 @@ import objectos.lang.Generated;
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface DoubleKeyword extends
     LineStyle,
+    OutlineStyleValue,
     TextDecorationStyleValue permits NamedElement {}

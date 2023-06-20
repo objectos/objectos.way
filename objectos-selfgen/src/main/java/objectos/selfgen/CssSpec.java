@@ -310,6 +310,41 @@ public final class CssSpec extends CssSelfGen {
     pval("position", globalKeyword);
     pval("position", positionValue);
 
+    // O
+
+    var outlineStyleValue = def("OutlineStyleValue",
+      keywords(
+        "auto",
+        "dashed", "dotted", "double",
+        "inset",
+        "groove",
+        "none",
+        "outset",
+        "ridge",
+        "solid"
+      )
+    );
+
+    var outlineValue = def("OutlineValue",
+      color,
+      lineWidth,
+      outlineStyleValue
+    );
+
+    pval("outline", globalKeyword);
+    pval("outline", outlineValue);
+    pva2("outline", outlineValue);
+    pva3("outline", outlineValue);
+
+    pval("outline-color", globalKeyword);
+    pval("outline-color", color);
+
+    pval("outline-style", globalKeyword);
+    pval("outline-style", outlineStyleValue);
+
+    pval("outline-width", globalKeyword);
+    pval("outline-width", lineWidth);
+
     // T
 
     var textSizeAdjustValue = def("TextSizeAdjustValue",
