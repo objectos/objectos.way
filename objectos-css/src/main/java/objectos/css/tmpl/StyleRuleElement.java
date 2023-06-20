@@ -13,29 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 
-public final class StyleRule1 {
-
-  private final Selector selector;
-
-  private final StyleDeclaration declaration;
-
-  public StyleRule1(Selector selector, StyleDeclaration declaration) {
-    this.selector = selector;
-    this.declaration = declaration;
-  }
-
-  @Override
-  public final String toString() {
-    var nl = System.lineSeparator();
-
-    return selector + " {" + nl
-        + "  " + declaration + ";" + nl
-        + "}";
-  }
-
-}
+public sealed interface StyleRuleElement permits Selector, StyleDeclaration {}

@@ -329,6 +329,7 @@ public final class CssSpec extends CssSelfGen {
     listStyleImage();
     listStylePosition();
     listStyleType();
+    listStyle();
 
     // M
 
@@ -651,6 +652,24 @@ public final class CssSpec extends CssSelfGen {
       sig(INT, "value"),
       sig(globalKeyword, "value"),
       sig(lineHeightValue, "value")
+    );
+  }
+
+  private void listStyle() {
+    var shorthand = t(
+      "ListStyleValue",
+      t("ListStyleTypeValue"),
+      t("ListStylePositionValue"),
+      t("ListStyleImageValue")
+    );
+
+    property(
+      "list-style",
+
+      sig(globalKeyword, "value"),
+      sig(shorthand, "value"),
+      sig(shorthand, "value1", shorthand, "value2"),
+      sig(shorthand, "value1", shorthand, "value2", shorthand, "value3")
     );
   }
 

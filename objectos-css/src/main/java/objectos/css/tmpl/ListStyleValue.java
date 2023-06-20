@@ -13,22 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.om.Selector;
+import objectos.css.om.PropertyValue;
+import objectos.lang.Generated;
 
-public record CombinedSelector(Combinator combinator,
-                               Selector first,
-                               Selector second)
-    implements Selector {
-
-  @Override
-  public final String toString() {
-    return switch (combinator) {
-      case LIST -> first.toString() + combinator + " " + second;
-
-      default -> first.toString() + combinator + second;
-    };
-  }
-
-}
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface ListStyleValue extends PropertyValue permits ListStyleImageValue, ListStylePositionValue, ListStyleTypeValue {}

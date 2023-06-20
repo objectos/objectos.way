@@ -68,6 +68,7 @@ import objectos.css.tmpl.LineWidth;
 import objectos.css.tmpl.ListStyleImageValue;
 import objectos.css.tmpl.ListStylePositionValue;
 import objectos.css.tmpl.ListStyleTypeValue;
+import objectos.css.tmpl.ListStyleValue;
 import objectos.css.tmpl.MarginValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.MenuKeyword;
@@ -987,6 +988,22 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
     return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration listStyle(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.LIST_STYLE, value.self());
+  }
+
+  protected final StyleDeclaration listStyle(ListStyleValue value) {
+    return new StyleDeclaration1(Property.LIST_STYLE, value.self());
+  }
+
+  protected final StyleDeclaration listStyle(ListStyleValue value1, ListStyleValue value2) {
+    return new StyleDeclaration2(Property.LIST_STYLE, value1.self(), value2.self());
+  }
+
+  protected final StyleDeclaration listStyle(ListStyleValue value1, ListStyleValue value2, ListStyleValue value3) {
+    return new StyleDeclaration3(Property.LIST_STYLE, value1.self(), value2.self(), value3.self());
   }
 
   protected final StyleDeclaration listStyleImage(GlobalKeyword value) {

@@ -16,8 +16,8 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
-import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface ListStyleImageValue extends PropertyValue permits Image, NamedElement, NoneKeyword {}
+public sealed interface ListStyleImageValue extends
+    ListStyleValue permits Image, NamedElement, NoneKeyword {}

@@ -15,7 +15,9 @@
  */
 package objectos.css.om;
 
-public interface StyleDeclaration {
+import objectos.css.tmpl.StyleRuleElement;
+
+public non-sealed interface StyleDeclaration extends StyleRuleElement {
 
   @Override
   String toString();

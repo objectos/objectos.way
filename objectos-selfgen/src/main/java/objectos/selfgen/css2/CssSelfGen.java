@@ -344,6 +344,18 @@ public abstract class CssSelfGen extends CompiledSpec {
     return stringType;
   }
 
+  protected final ValueType t(String simpleName) {
+    var valueType = valueTypes.get(simpleName);
+
+    if (valueType == null) {
+      throw new IllegalArgumentException(
+        "The %s value type was not found".formatted(simpleName)
+      );
+    }
+
+    return valueType;
+  }
+
   protected final ValueType t(String simpleName, Value... values) {
     Check.argument(!valueTypes.containsKey(simpleName), "Duplicate ValueType name ", simpleName);
 

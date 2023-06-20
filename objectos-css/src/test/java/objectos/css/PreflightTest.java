@@ -130,6 +130,21 @@ public class PreflightTest {
       summary {
         display: list-item;
       }
+      blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre {
+        margin: 0;
+      }
+      fieldset {
+        margin: 0;
+        padding: 0;
+      }
+      legend {
+        padding: 0;
+      }
+      ol, ul, menu {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
       """
     );
   }

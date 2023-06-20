@@ -15,8 +15,6 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.Selector;
-
 public enum Combinator {
 
   ADJACENT_SIBLING('+'),
@@ -38,10 +36,6 @@ public enum Combinator {
   @Override
   public final String toString() {
     return toString;
-  }
-
-  final Selector combine(Selector first, Selector second) {
-    return new CombinedSelector(this, first, second);
   }
 
 }

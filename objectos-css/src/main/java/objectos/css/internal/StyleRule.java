@@ -15,45 +15,9 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.Selector;
-import objectos.css.om.StyleDeclaration;
-
-public final class StyleRuleN {
-
-  private final Selector selector;
-
-  private final StyleDeclaration[] declarations;
-
-  public StyleRuleN(Selector selector, StyleDeclaration[] declarations) {
-    this.selector = selector;
-    this.declarations = declarations;
-  }
-
+record StyleRule(String selector, String block) {
   @Override
   public final String toString() {
-    var nl = System.lineSeparator();
-
-    var sb = new StringBuilder();
-
-    sb.append(selector);
-
-    sb.append(" {");
-
-    for (var declaration : declarations) {
-      sb.append(nl);
-
-      sb.append("  ");
-
-      sb.append(declaration);
-
-      sb.append(';');
-    }
-
-    sb.append(nl);
-
-    sb.append("}");
-
-    return sb.toString();
+    return selector + block;
   }
-
 }

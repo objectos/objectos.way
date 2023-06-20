@@ -15,140 +15,58 @@
  */
 package objectos.css.internal;
 
-import java.util.Objects;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
-import objectos.lang.Check;
 import objectos.util.GrowableList;
 
 public class StyleSheetBuilder {
 
   private final GrowableList<Object> rules = new GrowableList<>();
 
-  public final void addStyleRule(Selector selector,
-      StyleDeclaration[] declarations) {
-    int length = declarations.length;
+  private final StringBuilder block = new StringBuilder();
 
-    var rule = switch (length) {
-      case 0 -> new StyleRule0(selector);
+  private final StringBuilder selector = new StringBuilder();
 
-      case 1 -> new StyleRule1(
-        selector,
-        Objects.requireNonNull(declarations[0], "declarations[0] == null")
-      );
+  public final void addSelector(Selector s) {
+    if (selector.length() > 0) {
+      selector.append(", ");
+    }
 
-      default -> {
-        var copy = new StyleDeclaration[length];
-
-        for (int i = 0; i < length; i++) {
-          copy[i] = Check.notNull(declarations[i], "declarations[", i, "] == null");
-        }
-
-        yield new StyleRuleN(selector, copy);
-      }
-    };
-
-    rules.add(rule);
+    selector.append(s);
   }
 
-  public final void addStyleRule(Selector selector1, Selector selector2,
-      StyleDeclaration[] declarations) {
-
-    addStyleRule(
-      Combinator.LIST.combine(
-        selector1,
-        selector2
-      ),
-      declarations
-    );
+  public final void addStyleDeclaration(StyleDeclaration declaration) {
+    block.append(System.lineSeparator());
+    block.append("  ");
+    block.append(declaration);
+    block.append(';');
   }
 
-  public final void addStyleRule(Selector selector1, Selector selector2, Selector selector3,
-      StyleDeclaration[] declarations) {
+  public final void beginStyleRule() {
+    block.setLength(0);
 
-    addStyleRule(
-      Combinator.LIST.combine(
-        selector1,
-        Combinator.LIST.combine(selector2, selector3)
-      ),
-      declarations
-    );
-  }
+    block.append(" {");
 
-  public final void addStyleRule(
-      Selector selector1, Selector selector2, Selector selector3,
-      Selector selector4,
-      StyleDeclaration[] declarations) {
-
-    addStyleRule(
-      Combinator.LIST.combine(
-        selector1,
-        Combinator.LIST.combine(
-          selector2,
-          Combinator.LIST.combine(
-            selector3,
-            selector4
-          )
-        )
-      ),
-      declarations
-    );
-  }
-
-  public final void addStyleRule(
-      Selector selector1, Selector selector2, Selector selector3,
-      Selector selector4, Selector selector5,
-      StyleDeclaration[] declarations) {
-
-    addStyleRule(
-      Combinator.LIST.combine(
-        selector1,
-        Combinator.LIST.combine(
-          selector2,
-          Combinator.LIST.combine(
-            selector3,
-            Combinator.LIST.combine(
-              selector4,
-              selector5
-            )
-          )
-        )
-      ),
-      declarations
-    );
-  }
-
-  public final void addStyleRule(
-      Selector selector1, Selector selector2, Selector selector3,
-      Selector selector4, Selector selector5, Selector selector6,
-      StyleDeclaration[] declarations) {
-
-    addStyleRule(
-      Combinator.LIST.combine(
-        selector1,
-        Combinator.LIST.combine(
-          selector2,
-          Combinator.LIST.combine(
-            selector3,
-            Combinator.LIST.combine(
-              selector4,
-              Combinator.LIST.combine(
-                selector5,
-                selector6
-              )
-            )
-          )
-        )
-      ),
-      declarations
-    );
+    selector.setLength(0);
   }
 
   public final StyleSheet build() {
     return new StyleSheetImpl(
       rules.toUnmodifiableList()
     );
+  }
+
+  public final void buildStyleRule() {
+    if (block.length() != 2) {
+      block.append(System.lineSeparator());
+    }
+
+    block.append('}');
+
+    var rule = new StyleRule(selector.toString(), block.toString());
+
+    rules.add(rule);
   }
 
 }

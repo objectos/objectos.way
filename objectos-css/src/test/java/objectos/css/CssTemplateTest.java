@@ -776,6 +776,44 @@ public class CssTemplateTest {
 
   - list-style-image
   """)
+  public void propertyListStyle() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            menu,
+
+            listStyle(square),
+            listStyle(url("../img/shape.png")),
+            listStyle(inside),
+            listStyle(georgian, inside),
+            listStyle(lowerRoman, url("../img/shape.png"), outside),
+            listStyle(none),
+            listStyle(inherit)
+          );
+        }
+      },
+
+      """
+      menu {
+        list-style: square;
+        list-style: url("../img/shape.png");
+        list-style: inside;
+        list-style: georgian inside;
+        list-style: lower-roman url("../img/shape.png") outside;
+        list-style: none;
+        list-style: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#422] Preflight 16
+
+  - list-style-image
+  """)
   public void propertyListStyleImage() {
     test(
       new CssTemplate() {
@@ -796,6 +834,36 @@ public class CssTemplateTest {
         list-style-image: none;
         list-style-image: url("starsolid.gif");
         list-style-image: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#422] Preflight 16
+
+  - list-style-position
+  """)
+  public void propertyListStylePosition() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            menu,
+
+            listStylePosition(inside),
+            listStylePosition(outside),
+            listStylePosition(inherit)
+          );
+        }
+      },
+
+      """
+      menu {
+        list-style-position: inside;
+        list-style-position: outside;
+        list-style-position: inherit;
       }
       """
     );
