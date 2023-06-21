@@ -1671,6 +1671,24 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void selectorJoined() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            sel(input, __placeholder)
+          );
+        }
+      },
+
+      """
+      input::placeholder {}
+      """
+    );
+  }
+
   @Test(description = """
   [#394] Preflight 01
 

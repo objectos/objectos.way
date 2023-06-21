@@ -13,14 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.tmpl;
 
-import objectos.css.tmpl.SelectorElement;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.om.Selector;
 
-public non-sealed interface Selector extends SelectorElement, StyleRuleElement {
-
-  @Override
-  String toString();
-
-}
+public sealed interface SelectorElement permits Selector {}

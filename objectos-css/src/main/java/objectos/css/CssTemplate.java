@@ -30,6 +30,7 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
 import objectos.css.tmpl.AttributeOperator;
 import objectos.css.tmpl.FontFamilyValue;
+import objectos.css.tmpl.SelectorElement;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.css.tmpl.Url;
@@ -128,6 +129,24 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     }
 
     builder.buildStyleRule();
+  }
+
+  protected final Selector sel(SelectorElement... elements) {
+    builder.beginSelector();
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+
+      if (element == null) {
+        throw new NullPointerException(
+          "elements[" + i + "] == null"
+        );
+      }
+
+      builder.addSelectorElement(element);
+    }
+
+    return builder.buildSelector();
   }
 
   protected final Url url(String value) {

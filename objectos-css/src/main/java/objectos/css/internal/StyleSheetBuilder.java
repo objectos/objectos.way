@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
+import objectos.css.tmpl.SelectorElement;
 import objectos.util.GrowableList;
 
 public class StyleSheetBuilder {
@@ -36,11 +37,19 @@ public class StyleSheetBuilder {
     selector.append(s);
   }
 
+  public final void addSelectorElement(SelectorElement element) {
+    selector.append(element);
+  }
+
   public final void addStyleDeclaration(StyleDeclaration declaration) {
     block.append(System.lineSeparator());
     block.append("  ");
     block.append(declaration);
     block.append(';');
+  }
+
+  public final void beginSelector() {
+    selector.setLength(0);
   }
 
   public final void beginStyleRule() {
@@ -54,6 +63,12 @@ public class StyleSheetBuilder {
   public final StyleSheet build() {
     return new StyleSheetImpl(
       rules.toUnmodifiableList()
+    );
+  }
+
+  public final Selector buildSelector() {
+    return new NamedElement(
+      selector.toString()
     );
   }
 

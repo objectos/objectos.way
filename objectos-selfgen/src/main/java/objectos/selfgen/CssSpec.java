@@ -97,12 +97,14 @@ public final class CssSpec extends CssSelfGen {
       "ul",
 
       // pseudo classes
+      ":disabled",
       ":-moz-focusring",
       ":-moz-ui-invalid",
 
       // pseudo elements
       "::after",
       "::before",
+      "::placeholder",
       "::-webkit-file-upload-button",
       "::-webkit-inner-spin-button",
       "::-webkit-outer-spin-button",
@@ -457,7 +459,8 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(percentage(), "value"),
-      sig(DOUBLE, "value")
+      sig(DOUBLE, "value"),
+      sig(INT, "value")
     );
   }
 

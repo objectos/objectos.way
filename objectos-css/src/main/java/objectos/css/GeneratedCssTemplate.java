@@ -107,6 +107,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector __before = named("::before");
 
+  protected static final Selector __placeholder = named("::placeholder");
+
   protected static final Selector __webkitFileUploadButton = named("::-webkit-file-upload-button");
 
   protected static final Selector __webkitInnerSpinButton = named("::-webkit-inner-spin-button");
@@ -114,6 +116,8 @@ abstract class GeneratedCssTemplate {
   protected static final Selector __webkitOuterSpinButton = named("::-webkit-outer-spin-button");
 
   protected static final Selector __webkitSearchDecoration = named("::-webkit-search-decoration");
+
+  protected static final Selector _disabled = named(":disabled");
 
   protected static final Selector _mozFocusring = named(":-moz-focusring");
 
@@ -1094,6 +1098,10 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration opacity(double value) {
     return new StyleDeclarationDouble(Property.OPACITY, value);
+  }
+
+  protected final StyleDeclaration opacity(int value) {
+    return new StyleDeclarationInt(Property.OPACITY, value);
   }
 
   protected final StyleDeclaration outline(GlobalKeyword value) {
