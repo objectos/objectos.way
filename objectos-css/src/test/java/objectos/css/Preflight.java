@@ -315,5 +315,11 @@ final class Preflight extends CssTemplate {
       maxWidth(pct(100)),
       height(auto)
     );
+
+    style(
+      attr("hidden"),
+
+      display(none)
+    );
   }
 }

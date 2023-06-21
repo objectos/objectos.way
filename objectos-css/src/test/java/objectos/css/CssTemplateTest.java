@@ -1741,6 +1741,24 @@ public class CssTemplateTest {
   }
 
   @Test
+  public void selectorAttribute() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            attr("hidden")
+          );
+        }
+      },
+
+      """
+      [hidden] {}
+      """
+    );
+  }
+
+  @Test
   public void selectorJoined() {
     test(
       new CssTemplate() {

@@ -62,6 +62,12 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     }
   }
 
+  protected final Selector attr(String name) {
+    return new NamedElement(
+      "[" + name + "]"
+    );
+  }
+
   protected final Selector attr(String name, AttributeOperator operator, String value) {
     return new NamedElement(
       "[" + name + operator + "\"" + value + "\"]"

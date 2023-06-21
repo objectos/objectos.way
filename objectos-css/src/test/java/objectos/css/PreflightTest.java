@@ -166,6 +166,9 @@ public class PreflightTest {
         max-width: 100%;
         height: auto;
       }
+      [hidden] {
+        display: none;
+      }
       """
     );
   }
