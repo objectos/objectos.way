@@ -152,6 +152,12 @@ public class PreflightTest {
         opacity: 1;
         color: #9ca3af;
       }
+      button, [role="button"] {
+        cursor: pointer;
+      }
+      :disabled {
+        cursor: default;
+      }
       """
     );
   }

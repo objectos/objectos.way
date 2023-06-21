@@ -280,5 +280,18 @@ final class Preflight extends CssTemplate {
       opacity(1),
       color(hex("#9ca3af"))
     );
+
+    style(
+      button,
+      attr("role", IS, "button"),
+
+      cursor(pointer)
+    );
+
+    style(
+      _disabled,
+
+      cursor(_default)
+    );
   }
 }
