@@ -19,4 +19,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface OutlineValue extends PropertyValue permits Color, LineWidth, OutlineStyleValue {}
+public sealed interface OutlineValue extends PropertyValue permits ColorValue, LineWidth, OutlineStyleValue {}

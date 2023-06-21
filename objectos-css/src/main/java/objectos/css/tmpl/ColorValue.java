@@ -15,7 +15,10 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.om.Selector;
-import objectos.css.om.StyleDeclaration;
+import objectos.css.internal.NamedElement;
+import objectos.lang.Generated;
 
-public sealed interface StyleRuleElement permits Selector, StyleDeclaration {}
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface ColorValue extends
+    OutlineValue,
+    TextDecorationValue permits NamedElement {}

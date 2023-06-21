@@ -38,7 +38,7 @@ import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
-import objectos.css.tmpl.Color;
+import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.CounterStyleValue;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DisplayBoxValue;
@@ -197,7 +197,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final PositionValue absolute = named("absolute");
 
-  protected static final Color aqua = named("aqua");
+  protected static final ColorValue aqua = named("aqua");
 
   protected static final CounterStyleValue arabicIndic = named("arabic-indic");
 
@@ -209,13 +209,13 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue bengali = named("bengali");
 
-  protected static final Color black = named("black");
+  protected static final ColorValue black = named("black");
 
   protected static final TextDecorationLineMultiValue blink = named("blink");
 
   protected static final BlockKeyword block = named("block");
 
-  protected static final Color blue = named("blue");
+  protected static final ColorValue blue = named("blue");
 
   protected static final FontWeightValue bold = named("bold");
 
@@ -253,7 +253,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final DisplayBoxValue contents = named("contents");
 
-  protected static final Color currentcolor = named("currentcolor");
+  protected static final ColorValue currentcolor = named("currentcolor");
 
   protected static final FontFamilyValue cursive = named("cursive");
 
@@ -295,7 +295,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationThicknessValue fromFont = named("from-font");
 
-  protected static final Color fuchsia = named("fuchsia");
+  protected static final ColorValue fuchsia = named("fuchsia");
 
   protected static final TextTransformValue fullSizeKana = named("full-size-kana");
 
@@ -303,9 +303,9 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue georgian = named("georgian");
 
-  protected static final Color gray = named("gray");
+  protected static final ColorValue gray = named("gray");
 
-  protected static final Color green = named("green");
+  protected static final ColorValue green = named("green");
 
   protected static final DisplayInsideValue grid = named("grid");
 
@@ -373,7 +373,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontWeightValue lighter = named("lighter");
 
-  protected static final Color lime = named("lime");
+  protected static final ColorValue lime = named("lime");
 
   protected static final TextDecorationLineMultiValue lineThrough = named("line-through");
 
@@ -395,7 +395,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue malayalam = named("malayalam");
 
-  protected static final Color maroon = named("maroon");
+  protected static final ColorValue maroon = named("maroon");
 
   protected static final FontFamilyValue math = named("math");
 
@@ -457,13 +457,13 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue myanmar = named("myanmar");
 
-  protected static final Color navy = named("navy");
+  protected static final ColorValue navy = named("navy");
 
   protected static final NoneKeyword none = named("none");
 
   protected static final NormalKeyword normal = named("normal");
 
-  protected static final Color olive = named("olive");
+  protected static final ColorValue olive = named("olive");
 
   protected static final CounterStyleValue oriya = named("oriya");
 
@@ -477,13 +477,13 @@ abstract class GeneratedCssTemplate {
 
   protected static final AppearanceValue progressBar = named("progress-bar");
 
-  protected static final Color purple = named("purple");
+  protected static final ColorValue purple = named("purple");
 
   protected static final AppearanceValue pushButton = named("push-button");
 
   protected static final AppearanceValue radio = named("radio");
 
-  protected static final Color red = named("red");
+  protected static final ColorValue red = named("red");
 
   protected static final PositionValue relative = named("relative");
 
@@ -509,7 +509,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue serif = named("serif");
 
-  protected static final Color silver = named("silver");
+  protected static final ColorValue silver = named("silver");
 
   protected static final CounterStyleValue simpChineseFormal = named("simp-chinese-formal");
 
@@ -557,7 +557,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue tamil = named("tamil");
 
-  protected static final Color teal = named("teal");
+  protected static final ColorValue teal = named("teal");
 
   protected static final CounterStyleValue telugu = named("telugu");
 
@@ -583,7 +583,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue tradChineseInformal = named("trad-chinese-informal");
 
-  protected static final Color transparent = named("transparent");
+  protected static final ColorValue transparent = named("transparent");
 
   protected static final FontFamilyValue uiMonospace = named("ui-monospace");
 
@@ -611,7 +611,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationStyleValue wavy = named("wavy");
 
-  protected static final Color white = named("white");
+  protected static final ColorValue white = named("white");
 
   protected static final FontSizeValue xLarge = named("x-large");
 
@@ -623,7 +623,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontSizeValue xxxLarge = named("xxx-large");
 
-  protected static final Color yellow = named("yellow");
+  protected static final ColorValue yellow = named("yellow");
 
   private static NamedElement named(String name) {
     return new NamedElement(name);
@@ -773,7 +773,7 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.BACKGROUND_COLOR, value.self());
   }
 
-  protected final StyleDeclaration backgroundColor(Color value) {
+  protected final StyleDeclaration backgroundColor(ColorValue value) {
     return new StyleDeclaration1(Property.BACKGROUND_COLOR, value.self());
   }
 
@@ -805,19 +805,19 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.BORDER_COLOR, value.self());
   }
 
-  protected final StyleDeclaration borderColor(Color all) {
+  protected final StyleDeclaration borderColor(ColorValue all) {
     return new StyleDeclaration1(Property.BORDER_COLOR, all.self());
   }
 
-  protected final StyleDeclaration borderColor(Color vertical, Color horizontal) {
+  protected final StyleDeclaration borderColor(ColorValue vertical, ColorValue horizontal) {
     return new StyleDeclaration2(Property.BORDER_COLOR, vertical.self(), horizontal.self());
   }
 
-  protected final StyleDeclaration borderColor(Color top, Color horizontal, Color bottom) {
+  protected final StyleDeclaration borderColor(ColorValue top, ColorValue horizontal, ColorValue bottom) {
     return new StyleDeclaration3(Property.BORDER_COLOR, top.self(), horizontal.self(), bottom.self());
   }
 
-  protected final StyleDeclaration borderColor(Color top, Color right, Color bottom, Color left) {
+  protected final StyleDeclaration borderColor(ColorValue top, ColorValue right, ColorValue bottom, ColorValue left) {
     return new StyleDeclaration4(Property.BORDER_COLOR, top.self(), right.self(), bottom.self(), left.self());
   }
 
@@ -913,7 +913,7 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.COLOR, value.self());
   }
 
-  protected final StyleDeclaration color(Color value) {
+  protected final StyleDeclaration color(ColorValue value) {
     return new StyleDeclaration1(Property.COLOR, value.self());
   }
 
@@ -1124,7 +1124,7 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.OUTLINE_COLOR, value.self());
   }
 
-  protected final StyleDeclaration outlineColor(Color value) {
+  protected final StyleDeclaration outlineColor(ColorValue value) {
     return new StyleDeclaration1(Property.OUTLINE_COLOR, value.self());
   }
 
@@ -1256,7 +1256,7 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.TEXT_DECORATION_COLOR, value.self());
   }
 
-  protected final StyleDeclaration textDecorationColor(Color value) {
+  protected final StyleDeclaration textDecorationColor(ColorValue value) {
     return new StyleDeclaration1(Property.TEXT_DECORATION_COLOR, value.self());
   }
 

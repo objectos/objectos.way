@@ -123,7 +123,7 @@ public final class CssSpec extends CssSelfGen {
 
     // color
     color = t(
-      "Color",
+      "ColorValue",
 
       k("currentcolor"),
       k("transparent"),

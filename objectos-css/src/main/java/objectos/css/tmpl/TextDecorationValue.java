@@ -19,4 +19,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface TextDecorationValue extends PropertyValue permits Color, TextDecorationLineSingleValue, TextDecorationStyleValue, TextDecorationThicknessValue {}
+public sealed interface TextDecorationValue extends PropertyValue permits ColorValue, TextDecorationLineSingleValue, TextDecorationStyleValue, TextDecorationThicknessValue {}

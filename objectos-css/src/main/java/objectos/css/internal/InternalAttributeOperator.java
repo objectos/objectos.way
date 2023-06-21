@@ -15,7 +15,7 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.AttributeOperator;
+import objectos.css.AttributeOperator;
 
 public enum InternalAttributeOperator implements AttributeOperator {
 

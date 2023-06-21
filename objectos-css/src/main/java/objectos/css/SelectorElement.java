@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css;
 
-import objectos.css.internal.InternalAttributeOperator;
+import objectos.css.om.Selector;
 
-public sealed interface AttributeOperator permits InternalAttributeOperator {}
+public sealed interface SelectorElement permits Selector {}

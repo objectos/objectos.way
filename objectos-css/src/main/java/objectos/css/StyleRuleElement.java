@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css;
 
-import objectos.css.internal.NamedElement;
-import objectos.lang.Generated;
+import objectos.css.om.Selector;
+import objectos.css.om.StyleDeclaration;
 
-@Generated("objectos.selfgen.CssSpec")
-public sealed interface Color extends
-    OutlineValue,
-    TextDecorationValue permits NamedElement {}
+public sealed interface StyleRuleElement permits Selector, StyleDeclaration {}

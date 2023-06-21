@@ -24,7 +24,7 @@ import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
-import objectos.css.tmpl.Color;
+import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.CounterStyleValue;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DisplayBoxValue;
@@ -85,7 +85,7 @@ public final class NamedElement implements Selector,
     BorderCollapseValue,
     BottomValue,
     BoxSizingValue,
-    Color,
+    ColorValue,
     CounterStyleValue,
     DisplayBoxValue,
     DisplayInsideValue,

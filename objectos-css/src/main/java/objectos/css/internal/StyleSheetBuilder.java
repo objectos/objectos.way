@@ -15,10 +15,10 @@
  */
 package objectos.css.internal;
 
+import objectos.css.SelectorElement;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleSheet;
-import objectos.css.tmpl.SelectorElement;
 import objectos.util.GrowableList;
 
 public class StyleSheetBuilder {
