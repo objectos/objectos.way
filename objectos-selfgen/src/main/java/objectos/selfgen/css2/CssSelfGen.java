@@ -336,6 +336,18 @@ public abstract class CssSelfGen extends CompiledSpec {
       type3.typeName(), name3);
   }
 
+  protected final Signature sig(
+      ParameterType type1, String name1,
+      ParameterType type2, String name2,
+      ParameterType type3, String name3,
+      ParameterType type4, String name4) {
+    return new Signature4(
+      type1.typeName(), name1,
+      type2.typeName(), name2,
+      type3.typeName(), name3,
+      type4.typeName(), name4);
+  }
+
   protected final StringType string() {
     if (stringType == null) {
       stringType = new StringType();

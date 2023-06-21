@@ -18,6 +18,7 @@ package objectos.selfgen;
 import java.io.IOException;
 import java.util.List;
 import objectos.selfgen.css2.CssSelfGen;
+import objectos.selfgen.css2.LengthType;
 import objectos.selfgen.css2.ValueType;
 
 public final class CssSpec extends CssSelfGen {
@@ -27,6 +28,8 @@ public final class CssSpec extends CssSelfGen {
   private ValueType globalKeyword;
 
   private ValueType image;
+
+  private LengthType length;
 
   private ValueType lengthPercentage;
 
@@ -151,7 +154,7 @@ public final class CssSpec extends CssSelfGen {
 
     // length/percentage
 
-    var length = length(
+    length = length(
       "ch", "cm",
       "em", "ex",
       "in",
@@ -187,11 +190,6 @@ public final class CssSpec extends CssSelfGen {
       lengthPercentage
     );
 
-    var lineWidth = t("LineWidth",
-      length,
-      keywords("medium", "thick", "thin")
-    );
-
     var lineStyle = t("LineStyle",
       keywords(
         "dashed", "dotted", "double",
@@ -207,26 +205,13 @@ public final class CssSpec extends CssSelfGen {
 
     backgroundImage();
 
-    pval("border-bottom-width", globalKeyword);
-    pval("border-bottom-width", lineWidth);
+    borderWidth();
 
     pval("border-collapse", globalKeyword);
     pval("border-collapse", borderCollapseVale);
 
     pval("border-color", globalKeyword);
     pbox("border-color", color);
-
-    pval("border-left-width", globalKeyword);
-    pval("border-left-width", lineWidth);
-
-    pval("border-right-width", globalKeyword);
-    pval("border-right-width", lineWidth);
-
-    pval("border-top-width", globalKeyword);
-    pval("border-top-width", lineWidth);
-
-    pval("border-width", globalKeyword);
-    pbox("border-width", lineWidth);
 
     pval("bottom", globalKeyword);
     pval("bottom", bottomValue);
@@ -341,6 +326,15 @@ public final class CssSpec extends CssSelfGen {
     pval("margin", globalKeyword);
     pbox("margin", marginValue);
 
+    // O
+
+    opacity();
+    outlineColor();
+    outlineOffset();
+    outlineStyle();
+    outlineWidth();
+    outline();
+
     // P
 
     var positionValue = t("PositionValue",
@@ -364,44 +358,6 @@ public final class CssSpec extends CssSelfGen {
 
     pval("position", globalKeyword);
     pval("position", positionValue);
-
-    // O
-
-    var outlineStyleValue = t("OutlineStyleValue",
-      keywords(
-        "auto",
-        "dashed", "dotted", "double",
-        "inset",
-        "groove",
-        "none",
-        "outset",
-        "ridge",
-        "solid"
-      )
-    );
-
-    var outlineValue = t("OutlineValue",
-      color,
-      lineWidth,
-      outlineStyleValue
-    );
-
-    pval("outline", globalKeyword);
-    pval("outline", outlineValue);
-    pva2("outline", outlineValue);
-    pva3("outline", outlineValue);
-
-    pval("outline-color", globalKeyword);
-    pval("outline-color", color);
-
-    pval("outline-offset", globalKeyword);
-    pval("outline-offset", length);
-
-    pval("outline-style", globalKeyword);
-    pval("outline-style", outlineStyleValue);
-
-    pval("outline-width", globalKeyword);
-    pval("outline-width", lineWidth);
 
     // R
 
@@ -495,23 +451,13 @@ public final class CssSpec extends CssSelfGen {
     verticalAlign();
   }
 
-  private void resize() {
-    var resizeValue = t(
-      "ResizeValue",
-
-      k("block"),
-      k("both"),
-      k("horizontal"),
-      k("inline"),
-      k("none"),
-      k("vertical")
-    );
-
+  private void opacity() {
     property(
-      "resize",
+      "opacity",
 
       sig(globalKeyword, "value"),
-      sig(resizeValue, "value")
+      sig(percentage(), "value"),
+      sig(DOUBLE, "value")
     );
   }
 
@@ -571,6 +517,44 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(backgroundImageValue, "value")
+    );
+  }
+
+  private void borderWidth() {
+    var lineWidth = t(
+      "LineWidth",
+
+      length,
+
+      k("medium"),
+      k("thick"),
+      k("thin")
+    );
+
+    var names = List.of(
+      "border-top-width",
+      "border-right-width",
+      "border-bottom-width",
+      "border-left-width"
+    );
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(lineWidth, "value")
+      );
+    }
+
+    property(
+      "border-width",
+
+      sig(globalKeyword, "value"),
+      sig(lineWidth, "all"),
+      sig(lineWidth, "vertical", lineWidth, "horizontal"),
+      sig(lineWidth, "top", lineWidth, "horizontal", lineWidth, "bottom"),
+      sig(lineWidth, "top", lineWidth, "right", lineWidth, "bottom", lineWidth, "left")
     );
   }
 
@@ -822,6 +806,99 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(listStyleTypeValue, "value"),
       sig(STRING, "value")
+    );
+  }
+
+  private void outline() {
+    var outlineValue = t(
+      "OutlineValue",
+
+      color,
+
+      t("LineWidth"),
+      t("OutlineStyleValue")
+    );
+
+    property(
+      "outline",
+
+      sig(globalKeyword, "value"),
+      sig(outlineValue, "value"),
+      sig(outlineValue, "value1", outlineValue, "value2"),
+      sig(outlineValue, "value1", outlineValue, "value2", outlineValue, "value3")
+    );
+  }
+
+  private void outlineColor() {
+    property(
+      "outline-color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "value")
+    );
+  }
+
+  private void outlineOffset() {
+    property(
+      "outline-offset",
+
+      sig(globalKeyword, "value"),
+      sig(length, "value")
+    );
+  }
+
+  private void outlineStyle() {
+    var outlineStyleValue = t(
+      "OutlineStyleValue",
+
+      k("auto"),
+      k("dashed"),
+      k("dotted"),
+      k("double"),
+      k("inset"),
+      k("groove"),
+      k("none"),
+      k("outset"),
+      k("ridge"),
+      k("solid")
+    );
+
+    property(
+      "outline-style",
+
+      sig(globalKeyword, "value"),
+      sig(outlineStyleValue, "value")
+    );
+  }
+
+  private void outlineWidth() {
+    var lineWidth = t("LineWidth");
+
+    property(
+      "outline-width",
+
+      sig(globalKeyword, "value"),
+      sig(lineWidth, "value")
+    );
+  }
+
+  private void resize() {
+    var resizeValue = t(
+      "ResizeValue",
+
+      k("block"),
+      k("both"),
+      k("horizontal"),
+      k("inline"),
+      k("none"),
+      k("vertical")
+    );
+
+    property(
+      "resize",
+
+      sig(globalKeyword, "value"),
+      sig(resizeValue, "value")
     );
   }
 

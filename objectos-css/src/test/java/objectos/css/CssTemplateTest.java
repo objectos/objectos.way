@@ -951,6 +951,36 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void propertyOpacity() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            textarea,
+
+            opacity(0.9),
+            opacity(1),
+            opacity(0),
+            opacity(pct(90)),
+            opacity(inherit)
+          );
+        }
+      },
+
+      """
+      textarea {
+        opacity: 0.9;
+        opacity: 1;
+        opacity: 0;
+        opacity: 90%;
+        opacity: inherit;
+      }
+      """
+    );
+  }
+
   @Test(description = """
   [#420] Preflight 14
 

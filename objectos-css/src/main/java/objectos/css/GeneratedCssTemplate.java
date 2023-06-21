@@ -1084,6 +1084,18 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property._MOZ_TAB_SIZE, value.self());
   }
 
+  protected final StyleDeclaration opacity(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.OPACITY, value.self());
+  }
+
+  protected final StyleDeclaration opacity(Percentage value) {
+    return new StyleDeclaration1(Property.OPACITY, value.self());
+  }
+
+  protected final StyleDeclaration opacity(double value) {
+    return new StyleDeclarationDouble(Property.OPACITY, value);
+  }
+
   protected final StyleDeclaration outline(GlobalKeyword value) {
     return new StyleDeclaration1(Property.OUTLINE, value.self());
   }

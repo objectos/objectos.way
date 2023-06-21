@@ -78,6 +78,8 @@ public enum Property implements PropertyName {
 
   MARGIN("margin"),
 
+  OPACITY("opacity"),
+
   OUTLINE("outline"),
 
   OUTLINE_COLOR("outline-color"),
