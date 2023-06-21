@@ -80,6 +80,10 @@ public enum Property implements PropertyName {
 
   MARGIN("margin"),
 
+  MAX_HEIGHT("max-height"),
+
+  MAX_WIDTH("max-width"),
+
   OPACITY("opacity"),
 
   OUTLINE("outline"),
@@ -125,6 +129,8 @@ public enum Property implements PropertyName {
   TOP("top"),
 
   VERTICAL_ALIGN("vertical-align"),
+
+  WIDTH("width"),
 
   _MOZ_APPEARANCE("-moz-appearance"),
 

@@ -27,6 +27,7 @@ public sealed interface NoneKeyword extends
     LineStyle,
     ListStyleImageValue,
     ListStyleTypeValue,
+    MaxHeightOrWidthValue,
     OutlineStyleValue,
     ResizeValue,
     TextDecorationLineSingleValue,

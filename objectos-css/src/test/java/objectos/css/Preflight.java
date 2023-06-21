@@ -293,5 +293,27 @@ final class Preflight extends CssTemplate {
 
       cursor(_default)
     );
+
+    style(
+      img,
+      svg,
+      video,
+      canvas,
+      audio,
+      iframe,
+      embed,
+      object,
+
+      display(block),
+      verticalAlign(middle)
+    );
+
+    style(
+      img,
+      video,
+
+      maxWidth(pct(100)),
+      height(auto)
+    );
   }
 }

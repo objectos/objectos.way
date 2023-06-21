@@ -35,6 +35,7 @@ import objectos.css.tmpl.DisplayListItemValue;
 import objectos.css.tmpl.DisplayOutsideValue;
 import objectos.css.tmpl.DottedKeyword;
 import objectos.css.tmpl.DoubleKeyword;
+import objectos.css.tmpl.FitContentKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
@@ -43,7 +44,7 @@ import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.GrooveKeyword;
-import objectos.css.tmpl.HeightValue;
+import objectos.css.tmpl.HeightOrWidthValue;
 import objectos.css.tmpl.InlineKeyword;
 import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.LineHeightValue;
@@ -53,8 +54,11 @@ import objectos.css.tmpl.ListStyleImageValue;
 import objectos.css.tmpl.ListStylePositionValue;
 import objectos.css.tmpl.ListStyleTypeValue;
 import objectos.css.tmpl.MarginValue;
+import objectos.css.tmpl.MaxContentKeyword;
+import objectos.css.tmpl.MaxHeightOrWidthValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.MenuKeyword;
+import objectos.css.tmpl.MinContentKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
@@ -101,7 +105,7 @@ public final class NamedElement implements Selector,
     FontVariationSettingsValue,
     FontWeightValue,
     GlobalKeyword,
-    HeightValue,
+    HeightOrWidthValue,
     LineHeightValue,
     LineStyle,
     LineWidth,
@@ -109,6 +113,7 @@ public final class NamedElement implements Selector,
     ListStylePositionValue,
     ListStyleTypeValue,
     MarginValue,
+    MaxHeightOrWidthValue,
     OutlineStyleValue,
     PositionValue,
     ResizeValue,
@@ -127,11 +132,14 @@ public final class NamedElement implements Selector,
     DashedKeyword,
     DottedKeyword,
     DoubleKeyword,
+    FitContentKeyword,
     GrooveKeyword,
     InlineKeyword,
     InsetKeyword,
+    MaxContentKeyword,
     MediumKeyword,
     MenuKeyword,
+    MinContentKeyword,
     NoneKeyword,
     NormalKeyword,
     OutsetKeyword,

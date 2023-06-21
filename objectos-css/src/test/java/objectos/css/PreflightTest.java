@@ -158,6 +158,14 @@ public class PreflightTest {
       :disabled {
         cursor: default;
       }
+      img, svg, video, canvas, audio, iframe, embed, object {
+        display: block;
+        vertical-align: middle;
+      }
+      img, video {
+        max-width: 100%;
+        height: auto;
+      }
       """
     );
   }

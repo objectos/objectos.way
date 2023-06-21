@@ -4,156 +4,153 @@ import objectos.util.GrowableMap;
 import objectos.util.UnmodifiableMap;
 
 public final class TypeSelectors {
-  public static final TypeSelector ul = new TypeSelector(0, "ul");
+  public static final TypeSelector option = new TypeSelector(0, "option");
 
-  public static final TypeSelector br = new TypeSelector(1, "br");
+  public static final TypeSelector li = new TypeSelector(1, "li");
 
-  public static final TypeSelector title = new TypeSelector(2, "title");
+  public static final TypeSelector a = new TypeSelector(2, "a");
 
-  public static final TypeSelector option = new TypeSelector(3, "option");
+  public static final TypeSelector summary = new TypeSelector(3, "summary");
 
-  public static final TypeSelector li = new TypeSelector(4, "li");
+  public static final TypeSelector b = new TypeSelector(4, "b");
 
-  public static final TypeSelector a = new TypeSelector(5, "a");
+  public static final TypeSelector textarea = new TypeSelector(5, "textarea");
 
-  public static final TypeSelector summary = new TypeSelector(6, "summary");
+  public static final TypeSelector g = new TypeSelector(6, "g");
 
-  public static final TypeSelector b = new TypeSelector(7, "b");
+  public static final TypeSelector svg = new TypeSelector(7, "svg");
 
-  public static final TypeSelector textarea = new TypeSelector(8, "textarea");
+  public static final TypeSelector table = new TypeSelector(8, "table");
 
-  public static final TypeSelector g = new TypeSelector(9, "g");
+  public static final TypeSelector main = new TypeSelector(9, "main");
 
-  public static final TypeSelector svg = new TypeSelector(10, "svg");
+  public static final TypeSelector template = new TypeSelector(10, "template");
 
-  public static final TypeSelector table = new TypeSelector(11, "table");
+  public static final TypeSelector script = new TypeSelector(11, "script");
 
-  public static final TypeSelector main = new TypeSelector(12, "main");
+  public static final TypeSelector p = new TypeSelector(12, "p");
 
-  public static final TypeSelector template = new TypeSelector(13, "template");
+  public static final TypeSelector kbd = new TypeSelector(13, "kbd");
 
-  public static final TypeSelector script = new TypeSelector(14, "script");
+  public static final TypeSelector tbody = new TypeSelector(14, "tbody");
 
-  public static final TypeSelector p = new TypeSelector(15, "p");
+  public static final TypeSelector legend = new TypeSelector(15, "legend");
 
-  public static final TypeSelector kbd = new TypeSelector(16, "kbd");
+  public static final TypeSelector progress = new TypeSelector(16, "progress");
 
-  public static final TypeSelector tbody = new TypeSelector(17, "tbody");
+  public static final TypeSelector header = new TypeSelector(17, "header");
 
-  public static final TypeSelector legend = new TypeSelector(18, "legend");
+  public static final TypeSelector hr = new TypeSelector(18, "hr");
 
-  public static final TypeSelector progress = new TypeSelector(19, "progress");
+  public static final TypeSelector optgroup = new TypeSelector(19, "optgroup");
 
-  public static final TypeSelector header = new TypeSelector(20, "header");
+  public static final TypeSelector samp = new TypeSelector(20, "samp");
 
-  public static final TypeSelector hr = new TypeSelector(21, "hr");
+  public static final TypeSelector dd = new TypeSelector(21, "dd");
 
-  public static final TypeSelector optgroup = new TypeSelector(22, "optgroup");
+  public static final TypeSelector dl = new TypeSelector(22, "dl");
 
-  public static final TypeSelector samp = new TypeSelector(23, "samp");
+  public static final TypeSelector img = new TypeSelector(23, "img");
 
-  public static final TypeSelector dd = new TypeSelector(24, "dd");
+  public static final TypeSelector strong = new TypeSelector(24, "strong");
 
-  public static final TypeSelector dl = new TypeSelector(25, "dl");
+  public static final TypeSelector dt = new TypeSelector(25, "dt");
 
-  public static final TypeSelector img = new TypeSelector(26, "img");
+  public static final TypeSelector defs = new TypeSelector(26, "defs");
 
-  public static final TypeSelector strong = new TypeSelector(27, "strong");
+  public static final TypeSelector head = new TypeSelector(27, "head");
 
-  public static final TypeSelector dt = new TypeSelector(28, "dt");
+  public static final TypeSelector span = new TypeSelector(28, "span");
 
-  public static final TypeSelector defs = new TypeSelector(29, "defs");
+  public static final TypeSelector section = new TypeSelector(29, "section");
 
-  public static final TypeSelector head = new TypeSelector(30, "head");
+  public static final TypeSelector pre = new TypeSelector(30, "pre");
 
-  public static final TypeSelector span = new TypeSelector(31, "span");
+  public static final TypeSelector input = new TypeSelector(31, "input");
 
-  public static final TypeSelector section = new TypeSelector(32, "section");
+  public static final TypeSelector path = new TypeSelector(32, "path");
 
-  public static final TypeSelector pre = new TypeSelector(33, "pre");
+  public static final TypeSelector em = new TypeSelector(33, "em");
 
-  public static final TypeSelector input = new TypeSelector(34, "input");
+  public static final TypeSelector menu = new TypeSelector(34, "menu");
 
-  public static final TypeSelector path = new TypeSelector(35, "path");
+  public static final TypeSelector article = new TypeSelector(35, "article");
 
-  public static final TypeSelector em = new TypeSelector(36, "em");
+  public static final TypeSelector blockquote = new TypeSelector(36, "blockquote");
 
-  public static final TypeSelector menu = new TypeSelector(37, "menu");
+  public static final TypeSelector clipPath = new TypeSelector(37, "clipPath");
 
-  public static final TypeSelector article = new TypeSelector(38, "article");
+  public static final TypeSelector small = new TypeSelector(38, "small");
 
-  public static final TypeSelector blockquote = new TypeSelector(39, "blockquote");
+  public static final TypeSelector abbr = new TypeSelector(39, "abbr");
 
-  public static final TypeSelector clipPath = new TypeSelector(40, "clipPath");
+  public static final TypeSelector code = new TypeSelector(40, "code");
 
-  public static final TypeSelector small = new TypeSelector(41, "small");
+  public static final TypeSelector ol = new TypeSelector(41, "ol");
 
-  public static final TypeSelector abbr = new TypeSelector(42, "abbr");
+  public static final TypeSelector div = new TypeSelector(42, "div");
 
-  public static final TypeSelector code = new TypeSelector(43, "code");
+  public static final TypeSelector meta = new TypeSelector(43, "meta");
 
-  public static final TypeSelector ol = new TypeSelector(44, "ol");
+  public static final TypeSelector td = new TypeSelector(44, "td");
 
-  public static final TypeSelector div = new TypeSelector(45, "div");
+  public static final TypeSelector th = new TypeSelector(45, "th");
 
-  public static final TypeSelector meta = new TypeSelector(46, "meta");
+  public static final TypeSelector select = new TypeSelector(46, "select");
 
-  public static final TypeSelector td = new TypeSelector(47, "td");
+  public static final TypeSelector body = new TypeSelector(47, "body");
 
-  public static final TypeSelector th = new TypeSelector(48, "th");
+  public static final TypeSelector link = new TypeSelector(48, "link");
 
-  public static final TypeSelector select = new TypeSelector(49, "select");
+  public static final TypeSelector html = new TypeSelector(49, "html");
 
-  public static final TypeSelector body = new TypeSelector(50, "body");
+  public static final TypeSelector fieldset = new TypeSelector(50, "fieldset");
 
-  public static final TypeSelector link = new TypeSelector(51, "link");
+  public static final TypeSelector h1 = new TypeSelector(51, "h1");
 
-  public static final TypeSelector html = new TypeSelector(52, "html");
+  public static final TypeSelector h2 = new TypeSelector(52, "h2");
 
-  public static final TypeSelector fieldset = new TypeSelector(53, "fieldset");
+  public static final TypeSelector h3 = new TypeSelector(53, "h3");
 
-  public static final TypeSelector h1 = new TypeSelector(54, "h1");
+  public static final TypeSelector h4 = new TypeSelector(54, "h4");
 
-  public static final TypeSelector h2 = new TypeSelector(55, "h2");
+  public static final TypeSelector nav = new TypeSelector(55, "nav");
 
-  public static final TypeSelector h3 = new TypeSelector(56, "h3");
+  public static final TypeSelector h5 = new TypeSelector(56, "h5");
 
-  public static final TypeSelector h4 = new TypeSelector(57, "h4");
+  public static final TypeSelector h6 = new TypeSelector(57, "h6");
 
-  public static final TypeSelector nav = new TypeSelector(58, "nav");
+  public static final TypeSelector sub = new TypeSelector(58, "sub");
 
-  public static final TypeSelector h5 = new TypeSelector(59, "h5");
+  public static final TypeSelector hgroup = new TypeSelector(59, "hgroup");
 
-  public static final TypeSelector h6 = new TypeSelector(60, "h6");
+  public static final TypeSelector details = new TypeSelector(60, "details");
 
-  public static final TypeSelector sub = new TypeSelector(61, "sub");
+  public static final TypeSelector thead = new TypeSelector(61, "thead");
 
-  public static final TypeSelector hgroup = new TypeSelector(62, "hgroup");
+  public static final TypeSelector button = new TypeSelector(62, "button");
 
-  public static final TypeSelector details = new TypeSelector(63, "details");
+  public static final TypeSelector figure = new TypeSelector(63, "figure");
 
-  public static final TypeSelector thead = new TypeSelector(64, "thead");
+  public static final TypeSelector label = new TypeSelector(64, "label");
 
-  public static final TypeSelector button = new TypeSelector(65, "button");
+  public static final TypeSelector form = new TypeSelector(65, "form");
 
-  public static final TypeSelector figure = new TypeSelector(66, "figure");
+  public static final TypeSelector tr = new TypeSelector(66, "tr");
 
-  public static final TypeSelector label = new TypeSelector(67, "label");
+  public static final TypeSelector footer = new TypeSelector(67, "footer");
 
-  public static final TypeSelector form = new TypeSelector(68, "form");
+  public static final TypeSelector style = new TypeSelector(68, "style");
 
-  public static final TypeSelector tr = new TypeSelector(69, "tr");
+  public static final TypeSelector sup = new TypeSelector(69, "sup");
 
-  public static final TypeSelector footer = new TypeSelector(70, "footer");
+  public static final TypeSelector ul = new TypeSelector(70, "ul");
 
-  public static final TypeSelector style = new TypeSelector(71, "style");
+  public static final TypeSelector br = new TypeSelector(71, "br");
 
-  public static final TypeSelector sup = new TypeSelector(72, "sup");
+  public static final TypeSelector title = new TypeSelector(72, "title");
 
   private static final TypeSelector[] ARRAY = {
-    ul,
-    br,
-    title,
     option,
     li,
     a,
@@ -223,7 +220,10 @@ public final class TypeSelectors {
     tr,
     footer,
     style,
-    sup
+    sup,
+    ul,
+    br,
+    title
   };
 
   private static final UnmodifiableMap<String, TypeSelector> MAP = buildMap();
@@ -240,9 +240,6 @@ public final class TypeSelectors {
 
   private static UnmodifiableMap<String, TypeSelector> buildMap() {
     var m = new GrowableMap<String, TypeSelector>();
-    m.put("ul", ul);
-    m.put("br", br);
-    m.put("title", title);
     m.put("option", option);
     m.put("li", li);
     m.put("a", a);
@@ -313,6 +310,9 @@ public final class TypeSelectors {
     m.put("footer", footer);
     m.put("style", style);
     m.put("sup", sup);
+    m.put("ul", ul);
+    m.put("br", br);
+    m.put("title", title);
     return m.toUnmodifiableMap();
   }
 }

@@ -45,16 +45,23 @@ public final class CssSpec extends CssSelfGen {
     selectors(
       // type selectors
       "a",
+      "audio",
 
       "b",
       "body",
       "blockquote",
       "button",
 
+      "canvas",
       "code",
 
       "dd",
       "dl",
+
+      "embed",
+
+      "fieldset",
+      "figure",
 
       "h1",
       "h2",
@@ -65,9 +72,8 @@ public final class CssSpec extends CssSelfGen {
       "hr",
       "html",
 
-      "fieldset",
-      "figure",
-
+      "iframe",
+      "img",
       "input",
 
       "kbd",
@@ -77,6 +83,7 @@ public final class CssSpec extends CssSelfGen {
 
       "menu",
 
+      "object",
       "ol",
       "optgroup",
 
@@ -91,11 +98,14 @@ public final class CssSpec extends CssSelfGen {
       "sub",
       "summary",
       "sup",
+      "svg",
 
       "table",
       "textarea",
 
       "ul",
+
+      "video",
 
       // pseudo classes
       ":disabled",
@@ -304,13 +314,7 @@ public final class CssSpec extends CssSelfGen {
 
     // H
 
-    var heightValue = t("HeightValue",
-      lengthPercentage,
-      keywords("auto", "fit-content", "max-content", "min-content")
-    );
-
-    pval("height", globalKeyword);
-    pval("height", heightValue);
+    height();
 
     // L
 
@@ -322,13 +326,9 @@ public final class CssSpec extends CssSelfGen {
 
     // M
 
-    var marginValue = t("MarginValue",
-      lengthPercentage,
-      k("auto")
-    );
-
-    pval("margin", globalKeyword);
-    pbox("margin", marginValue);
+    margin();
+    maxHeight();
+    maxWidth();
 
     // O
 
@@ -453,6 +453,10 @@ public final class CssSpec extends CssSelfGen {
     // V
 
     verticalAlign();
+
+    // W
+
+    width();
   }
 
   private void appearance() {
@@ -688,6 +692,26 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
+  private void height() {
+    var heightOrWidthValue = t(
+      "HeightOrWidthValue",
+
+      k("auto"),
+      k("fit-content"),
+      k("max-content"),
+      k("min-content"),
+
+      lengthPercentage
+    );
+
+    property(
+      "height",
+
+      sig(globalKeyword, "value"),
+      sig(heightOrWidthValue, "value")
+    );
+  }
+
   private void lineHeight() {
     var lineHeightValue = t(
       "LineHeightValue",
@@ -853,6 +877,56 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
+  private void margin() {
+    var marginValue = t(
+      "MarginValue",
+
+      k("auto"),
+      lengthPercentage
+    );
+
+    property(
+      "margin",
+
+      sig(globalKeyword, "value"),
+      sig(marginValue, "all"),
+      sig(marginValue, "vertical", marginValue, "horizontal"),
+      sig(marginValue, "top", marginValue, "horizontal", marginValue, "bottom"),
+      sig(marginValue, "top", marginValue, "right", marginValue, "bottom", marginValue, "left")
+    );
+  }
+
+  private void maxHeight() {
+    var value = t(
+      "MaxHeightOrWidthValue",
+
+      k("none"),
+      k("fit-content"),
+      k("max-content"),
+      k("min-content"),
+
+      lengthPercentage
+    );
+
+    property(
+      "max-height",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
+  private void maxWidth() {
+    var value = t("MaxHeightOrWidthValue");
+
+    property(
+      "max-width",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
   private void opacity() {
     property(
       "opacity",
@@ -978,6 +1052,17 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(verticalAlignValue, "value")
+    );
+  }
+
+  private void width() {
+    var value = t("HeightOrWidthValue");
+
+    property(
+      "width",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
     );
   }
 

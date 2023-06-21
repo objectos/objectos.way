@@ -15,16 +15,9 @@
  */
 package objectos.css.tmpl;
 
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LengthPercentage extends
-    BottomValue,
-    FontSizeValue,
-    HeightOrWidthValue,
-    LineHeightValue,
-    MarginValue,
-    MaxHeightOrWidthValue,
-    TextDecorationThicknessValue,
-    TopValue,
-    VerticalAlignValue permits Length, Percentage {}
+public sealed interface MaxHeightOrWidthValue extends PropertyValue permits FitContentKeyword, LengthPercentage, MaxContentKeyword, MinContentKeyword, NamedElement, NoneKeyword {}

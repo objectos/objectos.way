@@ -985,6 +985,42 @@ public class CssTemplateTest {
   }
 
   @Test
+  public void propertyMaxWidth() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            img, video,
+
+            maxWidth($0),
+            maxWidth(em(3.5)),
+            maxWidth(pct(75)),
+            maxWidth(none),
+            maxWidth(fitContent),
+            maxWidth(minContent),
+            maxWidth(maxContent),
+            maxWidth(inherit)
+          );
+        }
+      },
+
+      """
+      img, video {
+        max-width: 0;
+        max-width: 3.5em;
+        max-width: 75%;
+        max-width: none;
+        max-width: fit-content;
+        max-width: min-content;
+        max-width: max-content;
+        max-width: inherit;
+      }
+      """
+    );
+  }
+
+  @Test
   public void propertyOpacity() {
     test(
       new CssTemplate() {

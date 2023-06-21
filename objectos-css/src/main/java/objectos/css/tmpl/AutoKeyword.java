@@ -23,7 +23,7 @@ public sealed interface AutoKeyword extends
     AppearanceValue,
     BottomValue,
     CursorValue,
-    HeightValue,
+    HeightOrWidthValue,
     MarginValue,
     OutlineStyleValue,
     TextDecorationThicknessValue,

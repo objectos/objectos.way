@@ -52,6 +52,7 @@ import objectos.css.tmpl.DisplayValue;
 import objectos.css.tmpl.DisplayValue2;
 import objectos.css.tmpl.DottedKeyword;
 import objectos.css.tmpl.DoubleKeyword;
+import objectos.css.tmpl.FitContentKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
@@ -60,7 +61,7 @@ import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
 import objectos.css.tmpl.GlobalKeyword;
 import objectos.css.tmpl.GrooveKeyword;
-import objectos.css.tmpl.HeightValue;
+import objectos.css.tmpl.HeightOrWidthValue;
 import objectos.css.tmpl.InlineKeyword;
 import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.Length;
@@ -73,8 +74,11 @@ import objectos.css.tmpl.ListStylePositionValue;
 import objectos.css.tmpl.ListStyleTypeValue;
 import objectos.css.tmpl.ListStyleValue;
 import objectos.css.tmpl.MarginValue;
+import objectos.css.tmpl.MaxContentKeyword;
+import objectos.css.tmpl.MaxHeightOrWidthValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.MenuKeyword;
+import objectos.css.tmpl.MinContentKeyword;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
@@ -128,17 +132,23 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector a = named("a");
 
+  protected static final Selector audio = named("audio");
+
   protected static final Selector b = named("b");
 
   protected static final Selector blockquote = named("blockquote");
 
   protected static final Selector body = named("body");
 
+  protected static final Selector canvas = named("canvas");
+
   protected static final Selector code = named("code");
 
   protected static final Selector dd = named("dd");
 
   protected static final Selector dl = named("dl");
+
+  protected static final Selector embed = named("embed");
 
   protected static final Selector fieldset = named("fieldset");
 
@@ -160,6 +170,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector html = named("html");
 
+  protected static final Selector iframe = named("iframe");
+
+  protected static final Selector img = named("img");
+
   protected static final Selector input = named("input");
 
   protected static final Selector kbd = named("kbd");
@@ -167,6 +181,8 @@ abstract class GeneratedCssTemplate {
   protected static final Selector legend = named("legend");
 
   protected static final Selector li = named("li");
+
+  protected static final Selector object = named("object");
 
   protected static final Selector ol = named("ol");
 
@@ -186,7 +202,11 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector sup = named("sup");
 
+  protected static final Selector svg = named("svg");
+
   protected static final Selector ul = named("ul");
+
+  protected static final Selector video = named("video");
 
   protected static final Selector any = named("*");
 
@@ -332,7 +352,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue fantasy = named("fantasy");
 
-  protected static final HeightValue fitContent = named("fit-content");
+  protected static final FitContentKeyword fitContent = named("fit-content");
 
   protected static final PositionValue fixed = named("fixed");
 
@@ -444,7 +464,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue math = named("math");
 
-  protected static final HeightValue maxContent = named("max-content");
+  protected static final MaxContentKeyword maxContent = named("max-content");
 
   protected static final MediumKeyword medium = named("medium");
 
@@ -460,7 +480,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final VerticalAlignValue middle = named("middle");
 
-  protected static final HeightValue minContent = named("min-content");
+  protected static final MinContentKeyword minContent = named("min-content");
 
   protected static final CounterStyleValue mongolian = named("mongolian");
 
@@ -1060,7 +1080,7 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration1(Property.HEIGHT, value.self());
   }
 
-  protected final StyleDeclaration height(HeightValue value) {
+  protected final StyleDeclaration height(HeightOrWidthValue value) {
     return new StyleDeclaration1(Property.HEIGHT, value.self());
   }
 
@@ -1143,6 +1163,22 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration margin(MarginValue top, MarginValue right, MarginValue bottom, MarginValue left) {
     return new StyleDeclaration4(Property.MARGIN, top.self(), right.self(), bottom.self(), left.self());
+  }
+
+  protected final StyleDeclaration maxHeight(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.MAX_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration maxHeight(MaxHeightOrWidthValue value) {
+    return new StyleDeclaration1(Property.MAX_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration maxWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.MAX_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration maxWidth(MaxHeightOrWidthValue value) {
+    return new StyleDeclaration1(Property.MAX_WIDTH, value.self());
   }
 
   protected final StyleDeclaration mozAppearance(GlobalKeyword value) {
@@ -1423,5 +1459,13 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration webkitTextSizeAdjust(TextSizeAdjustValue value) {
     return new StyleDeclaration1(Property._WEBKIT_TEXT_SIZE_ADJUST, value.self());
+  }
+
+  protected final StyleDeclaration width(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration width(HeightOrWidthValue value) {
+    return new StyleDeclaration1(Property.WIDTH, value.self());
   }
 }
