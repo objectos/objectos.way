@@ -22,6 +22,7 @@ import objectos.lang.Generated;
 public sealed interface NoneKeyword extends
     AppearanceValue,
     BackgroundImageValue,
+    CursorValue,
     DisplayBoxValue,
     LineStyle,
     ListStyleImageValue,

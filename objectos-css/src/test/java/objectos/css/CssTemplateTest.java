@@ -413,6 +413,39 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void propertyCursor() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            button,
+            attr("role", IS, "button"),
+
+            cursor(auto),
+            cursor(none),
+            cursor(_default),
+            cursor(pointer),
+            cursor(zoomOut),
+            cursor(inherit)
+          );
+        }
+      },
+
+      """
+      button, [role="button"] {
+        cursor: auto;
+        cursor: none;
+        cursor: default;
+        cursor: pointer;
+        cursor: zoom-out;
+        cursor: inherit;
+      }
+      """
+    );
+  }
+
   @Test(description = """
   [#389] Preflight
 

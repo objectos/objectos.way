@@ -266,5 +266,19 @@ final class Preflight extends CssTemplate {
       margin($0),
       padding($0)
     );
+
+    style(
+      textarea,
+
+      resize(vertical)
+    );
+
+    style(
+      sel(input, __placeholder),
+      sel(textarea, __placeholder),
+
+      opacity(1),
+      color(hex("#9ca3af"))
+    );
   }
 }

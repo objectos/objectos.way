@@ -32,6 +32,7 @@ import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.Url;
 import objectos.css.tmpl.Zero;
+import objectos.css.util.Color;
 import objectos.lang.Check;
 
 public abstract class CssTemplate extends GeneratedCssTemplate {
@@ -100,6 +101,28 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     };
   }
 
+  protected final Color hex(String hex) {
+    return Color.ofHex(hex);
+  }
+
+  protected final Selector sel(SelectorElement... elements) {
+    builder.beginSelector();
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+
+      if (element == null) {
+        throw new NullPointerException(
+          "elements[" + i + "] == null"
+        );
+      }
+
+      builder.addSelectorElement(element);
+    }
+
+    return builder.buildSelector();
+  }
+
   protected final void style(StyleRuleElement... elements) {
     Objects.requireNonNull(elements, "elements == null");
 
@@ -126,24 +149,6 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     }
 
     builder.buildStyleRule();
-  }
-
-  protected final Selector sel(SelectorElement... elements) {
-    builder.beginSelector();
-
-    for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
-
-      if (element == null) {
-        throw new NullPointerException(
-          "elements[" + i + "] == null"
-        );
-      }
-
-      builder.addSelectorElement(element);
-    }
-
-    return builder.buildSelector();
   }
 
   protected final Url url(String value) {

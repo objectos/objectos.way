@@ -25,6 +25,7 @@ import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.CounterStyleValue;
+import objectos.css.tmpl.CursorValue;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DisplayBoxValue;
 import objectos.css.tmpl.DisplayInsideValue;
@@ -59,6 +60,7 @@ import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
 import objectos.css.tmpl.OutsetKeyword;
 import objectos.css.tmpl.PositionValue;
+import objectos.css.tmpl.ProgressKeyword;
 import objectos.css.tmpl.ResizeValue;
 import objectos.css.tmpl.RidgeKeyword;
 import objectos.css.tmpl.SmallKeyword;
@@ -85,6 +87,7 @@ public final class NamedElement implements Selector,
     BottomValue,
     BoxSizingValue,
     CounterStyleValue,
+    CursorValue,
     DisplayBoxValue,
     DisplayInsideValue,
     DisplayInternalValue,
@@ -132,6 +135,7 @@ public final class NamedElement implements Selector,
     NoneKeyword,
     NormalKeyword,
     OutsetKeyword,
+    ProgressKeyword,
     RidgeKeyword,
     SmallKeyword,
     SolidKeyword,

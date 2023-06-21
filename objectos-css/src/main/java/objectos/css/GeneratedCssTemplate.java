@@ -40,6 +40,7 @@ import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
 import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.CounterStyleValue;
+import objectos.css.tmpl.CursorValue;
 import objectos.css.tmpl.DashedKeyword;
 import objectos.css.tmpl.DisplayBoxValue;
 import objectos.css.tmpl.DisplayInsideValue;
@@ -81,6 +82,7 @@ import objectos.css.tmpl.OutlineValue;
 import objectos.css.tmpl.OutsetKeyword;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.PositionValue;
+import objectos.css.tmpl.ProgressKeyword;
 import objectos.css.tmpl.ResizeValue;
 import objectos.css.tmpl.RidgeKeyword;
 import objectos.css.tmpl.SmallKeyword;
@@ -174,8 +176,6 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector pre = named("pre");
 
-  protected static final Selector progress = named("progress");
-
   protected static final Selector samp = named("samp");
 
   protected static final Selector select = named("select");
@@ -226,6 +226,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final ColorValue yellow = Color.YELLOW;
 
+  protected static final CursorValue _default = named("default");
+
   protected static final DoubleKeyword _double = named("double");
 
   protected static final PositionValue _static = named("static");
@@ -233,6 +235,10 @@ abstract class GeneratedCssTemplate {
   protected static final VerticalAlignValue _super = named("super");
 
   protected static final PositionValue absolute = named("absolute");
+
+  protected static final CursorValue alias = named("alias");
+
+  protected static final CursorValue allScroll = named("all-scroll");
 
   protected static final CounterStyleValue arabicIndic = named("arabic-indic");
 
@@ -266,6 +272,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontValue caption = named("caption");
 
+  protected static final CursorValue cell = named("cell");
+
   protected static final AppearanceValue checkbox = named("checkbox");
 
   protected static final CounterStyleValue circle = named("circle");
@@ -278,11 +286,19 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue cjkIdeographic = named("cjk-ideographic");
 
+  protected static final CursorValue colResize = named("col-resize");
+
   protected static final BorderCollapseValue collapse = named("collapse");
 
   protected static final BoxSizingValue contentBox = named("content-box");
 
   protected static final DisplayBoxValue contents = named("contents");
+
+  protected static final CursorValue contextMenu = named("context-menu");
+
+  protected static final CursorValue copy = named("copy");
+
+  protected static final CursorValue crosshair = named("crosshair");
 
   protected static final FontFamilyValue cursive = named("cursive");
 
@@ -302,11 +318,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final DottedKeyword dotted = named("dotted");
 
+  protected static final CursorValue eResize = named("e-resize");
+
   protected static final TextIndentValue eachLine = named("each-line");
 
   protected static final FontFamilyValue emoji = named("emoji");
 
   protected static final CounterStyleValue ethiopicNumeric = named("ethiopic-numeric");
+
+  protected static final CursorValue ewResize = named("ew-resize");
 
   protected static final FontFamilyValue fangsong = named("fangsong");
 
@@ -330,6 +350,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue georgian = named("georgian");
 
+  protected static final CursorValue grab = named("grab");
+
+  protected static final CursorValue grabbing = named("grabbing");
+
   protected static final DisplayInsideValue grid = named("grid");
 
   protected static final GrooveKeyword groove = named("groove");
@@ -341,6 +365,8 @@ abstract class GeneratedCssTemplate {
   protected static final TextIndentValue hanging = named("hanging");
 
   protected static final CounterStyleValue hebrew = named("hebrew");
+
+  protected static final CursorValue help = named("help");
 
   protected static final LineStyle hidden = named("hidden");
 
@@ -440,6 +466,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue monospace = named("monospace");
 
+  protected static final CursorValue move = named("move");
+
   protected static final CounterStyleValue mozArabicIndic = named("-moz-arabic-indic");
 
   protected static final CounterStyleValue mozBengali = named("-moz-bengali");
@@ -476,9 +504,25 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue myanmar = named("myanmar");
 
+  protected static final CursorValue nResize = named("n-resize");
+
+  protected static final CursorValue neResize = named("ne-resize");
+
+  protected static final CursorValue neswResize = named("nesw-resize");
+
+  protected static final CursorValue noDrop = named("no-drop");
+
   protected static final NoneKeyword none = named("none");
 
   protected static final NormalKeyword normal = named("normal");
+
+  protected static final CursorValue notAllowed = named("not-allowed");
+
+  protected static final CursorValue nsResize = named("ns-resize");
+
+  protected static final CursorValue nwResize = named("nw-resize");
+
+  protected static final CursorValue nwseResize = named("nwse-resize");
 
   protected static final CounterStyleValue oriya = named("oriya");
 
@@ -490,6 +534,10 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue persian = named("persian");
 
+  protected static final CursorValue pointer = named("pointer");
+
+  protected static final ProgressKeyword progress = named("progress");
+
   protected static final AppearanceValue progressBar = named("progress-bar");
 
   protected static final AppearanceValue pushButton = named("push-button");
@@ -499,6 +547,8 @@ abstract class GeneratedCssTemplate {
   protected static final PositionValue relative = named("relative");
 
   protected static final RidgeKeyword ridge = named("ridge");
+
+  protected static final CursorValue rowResize = named("row-resize");
 
   protected static final DisplayInsideValue ruby = named("ruby");
 
@@ -512,7 +562,11 @@ abstract class GeneratedCssTemplate {
 
   protected static final DisplayOutsideValue runIn = named("runIn");
 
+  protected static final CursorValue sResize = named("s-resize");
+
   protected static final FontFamilyValue sansSerif = named("sans-serif");
+
+  protected static final CursorValue seResize = named("se-resize");
 
   protected static final AppearanceValue searchfield = named("searchfield");
 
@@ -544,6 +598,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final SubKeyword sub = named("sub");
 
+  protected static final CursorValue swResize = named("sw-resize");
+
   protected static final FontFamilyValue systemUi = named("system-ui");
 
   protected static final TableKeyword table = named("table");
@@ -567,6 +623,8 @@ abstract class GeneratedCssTemplate {
   protected static final CounterStyleValue tamil = named("tamil");
 
   protected static final CounterStyleValue telugu = named("telugu");
+
+  protected static final CursorValue text = named("text");
 
   protected static final VerticalAlignValue textBottom = named("text-bottom");
 
@@ -614,6 +672,12 @@ abstract class GeneratedCssTemplate {
 
   protected static final ResizeValue vertical = named("vertical");
 
+  protected static final CursorValue verticalText = named("vertical-text");
+
+  protected static final CursorValue wResize = named("w-resize");
+
+  protected static final CursorValue wait = named("wait");
+
   protected static final TextDecorationStyleValue wavy = named("wavy");
 
   protected static final FontSizeValue xLarge = named("x-large");
@@ -625,6 +689,10 @@ abstract class GeneratedCssTemplate {
   protected static final FontSizeValue xxSmall = named("xx-small");
 
   protected static final FontSizeValue xxxLarge = named("xxx-large");
+
+  protected static final CursorValue zoomIn = named("zoom-in");
+
+  protected static final CursorValue zoomOut = named("zoom-out");
 
   private static NamedElement named(String name) {
     return new NamedElement(name);
@@ -916,6 +984,14 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration color(ColorValue value) {
     return new StyleDeclaration1(Property.COLOR, value.self());
+  }
+
+  protected final StyleDeclaration cursor(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.CURSOR, value.self());
+  }
+
+  protected final StyleDeclaration cursor(CursorValue value) {
+    return new StyleDeclaration1(Property.CURSOR, value.self());
   }
 
   protected final StyleDeclaration display(GlobalKeyword value) {

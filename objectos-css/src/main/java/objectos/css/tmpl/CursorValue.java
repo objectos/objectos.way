@@ -16,16 +16,8 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface AutoKeyword extends
-    AppearanceValue,
-    BottomValue,
-    CursorValue,
-    HeightValue,
-    MarginValue,
-    OutlineStyleValue,
-    TextDecorationThicknessValue,
-    TextSizeAdjustValue,
-    TopValue permits NamedElement {}
+public sealed interface CursorValue extends PropertyValue permits AutoKeyword, NamedElement, NoneKeyword, ProgressKeyword {}

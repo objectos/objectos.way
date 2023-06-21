@@ -173,6 +173,7 @@ public final class CssSpec extends CssSelfGen {
 
     // keyword name clashes
 
+    keywordFieldName("default", "_default");
     keywordFieldName("double", "_double");
     keywordFieldName("static", "_static");
     keywordFieldName("super", "_super");
@@ -232,6 +233,7 @@ public final class CssSpec extends CssSelfGen {
     // C
 
     color();
+    cursor();
 
     // D
 
@@ -453,17 +455,6 @@ public final class CssSpec extends CssSelfGen {
     verticalAlign();
   }
 
-  private void opacity() {
-    property(
-      "opacity",
-
-      sig(globalKeyword, "value"),
-      sig(percentage(), "value"),
-      sig(DOUBLE, "value"),
-      sig(INT, "value")
-    );
-  }
-
   private void appearance() {
     var appearanceValue = t(
       "AppearanceValue",
@@ -567,6 +558,56 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(color, "value")
+    );
+  }
+
+  private void cursor() {
+    var cursor = t(
+      "CursorValue",
+
+      k("alias"),
+      k("all-scroll"),
+      k("auto"),
+      k("cell"),
+      k("col-resize"),
+      k("context-menu"),
+      k("copy"),
+      k("crosshair"),
+      k("default"),
+      k("e-resize"),
+      k("ew-resize"),
+      k("grab"),
+      k("grabbing"),
+      k("help"),
+      k("move"),
+      k("n-resize"),
+      k("ne-resize"),
+      k("nesw-resize"),
+      k("no-drop"),
+      k("none"),
+      k("not-allowed"),
+      k("ns-resize"),
+      k("nw-resize"),
+      k("nwse-resize"),
+      k("pointer"),
+      k("progress"),
+      k("row-resize"),
+      k("s-resize"),
+      k("se-resize"),
+      k("sw-resize"),
+      k("text"),
+      k("vertical-text"),
+      k("w-resize"),
+      k("wait"),
+      k("zoom-in"),
+      k("zoom-out")
+    );
+
+    property(
+      "cursor",
+
+      sig(globalKeyword, "value"),
+      sig(cursor, "value")
     );
   }
 
@@ -809,6 +850,17 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(listStyleTypeValue, "value"),
       sig(STRING, "value")
+    );
+  }
+
+  private void opacity() {
+    property(
+      "opacity",
+
+      sig(globalKeyword, "value"),
+      sig(percentage(), "value"),
+      sig(DOUBLE, "value"),
+      sig(INT, "value")
     );
   }
 

@@ -50,6 +50,8 @@ public enum Property implements PropertyName {
 
   COLOR("color"),
 
+  CURSOR("cursor"),
+
   DISPLAY("display"),
 
   FONT("font"),

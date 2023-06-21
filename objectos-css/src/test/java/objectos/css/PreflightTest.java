@@ -145,6 +145,13 @@ public class PreflightTest {
         margin: 0;
         padding: 0;
       }
+      textarea {
+        resize: vertical;
+      }
+      input::placeholder, textarea::placeholder {
+        opacity: 1;
+        color: #9ca3af;
+      }
       """
     );
   }
