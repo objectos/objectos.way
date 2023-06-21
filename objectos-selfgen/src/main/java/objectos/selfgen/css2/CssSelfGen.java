@@ -40,6 +40,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   private final Map<String, ValueType> valueTypes = new HashMap<>();
 
+  private ColorValue colorValue;
+
   private LengthType lengthType;
 
   private PercentageType percentageType;
@@ -62,6 +64,10 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     var spec = compile();
 
+    spec.write(sink, new ColorValueStep());
+
+    spec.write(sink, new GeneratedColorStep());
+
     spec.write(sink, new GeneratedCssTemplateStep());
 
     spec.write(sink, new KeywordNameStep());
@@ -81,6 +87,18 @@ public abstract class CssSelfGen extends CompiledSpec {
     spec.write(sink, new UrlTypeStep());
 
     spec.write(sink, new ZeroTypeStep());
+  }
+
+  protected final ColorValue color(String... names) {
+    if (colorValue == null) {
+      colorValue = new ColorValue();
+    }
+
+    for (var name : names) {
+      colorValue.addName(name);
+    }
+
+    return colorValue;
   }
 
   protected final CompiledSpec compile() {
@@ -386,6 +404,11 @@ public abstract class CssSelfGen extends CompiledSpec {
     }
 
     return urlType;
+  }
+
+  @Override
+  final ColorValue colorValue() {
+    return colorValue;
   }
 
   @Override

@@ -15,34 +15,18 @@
  */
 package objectos.selfgen.css2;
 
-import java.io.IOException;
-import java.util.Collection;
-import objectos.code.JavaSink;
+import java.util.Locale;
+import java.util.Objects;
+import objectos.selfgen.util.JavaNames;
 
-abstract class CompiledSpec {
+record ColorName(String constantName, String fieldName, String colorName) {
+  public static ColorName of(String name) {
+    Objects.requireNonNull(name, "name == null");
 
-  abstract ColorValue colorValue();
-
-  abstract Collection<KeywordName> keywords();
-
-  abstract LengthType lengthType();
-
-  abstract PercentageType percentageType();
-
-  abstract Collection<Property> properties();
-
-  abstract Collection<SelectorName> selectors();
-
-  abstract StringType stringType();
-
-  abstract UrlType urlType();
-
-  abstract Collection<ValueType> valueTypes();
-
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
+    return new ColorName(
+      JavaNames.toIdentifier(name.toUpperCase(Locale.US)),
+      JavaNames.toValidMethodName(name),
+      name
+    );
   }
-
-  abstract ZeroType zeroType();
-
 }

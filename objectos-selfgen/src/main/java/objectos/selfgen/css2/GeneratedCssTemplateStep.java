@@ -34,6 +34,8 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
       include(this::selectors),
 
+      include(this::colors),
+
       include(this::keywords),
 
       method(
@@ -59,6 +61,21 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         .forEach(this::selectorField);
 
     selectorField(UNIVERSAL);
+  }
+
+  private void colors() {
+    var colorValue = spec.colorValue();
+
+    if (colorValue == null) {
+      return;
+    }
+
+    colorValue.names.stream()
+        .sorted((self, that) -> (self.fieldName().compareTo(that.fieldName())))
+        .forEach(name -> field(
+          PROTECTED, STATIC, FINAL, COLOR_VALUE, name(name.fieldName()),
+          COLOR, n(name.constantName())
+        ));
   }
 
   private void selectorField(SelectorName selector) {

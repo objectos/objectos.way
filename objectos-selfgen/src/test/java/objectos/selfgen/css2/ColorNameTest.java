@@ -15,34 +15,19 @@
  */
 package objectos.selfgen.css2;
 
-import java.io.IOException;
-import java.util.Collection;
-import objectos.code.JavaSink;
+import static org.testng.Assert.assertEquals;
 
-abstract class CompiledSpec {
+import org.testng.annotations.Test;
 
-  abstract ColorValue colorValue();
+public class ColorNameTest {
 
-  abstract Collection<KeywordName> keywords();
+  @Test
+  public void transparent() {
+    var res = ColorName.of("transparent");
 
-  abstract LengthType lengthType();
-
-  abstract PercentageType percentageType();
-
-  abstract Collection<Property> properties();
-
-  abstract Collection<SelectorName> selectors();
-
-  abstract StringType stringType();
-
-  abstract UrlType urlType();
-
-  abstract Collection<ValueType> valueTypes();
-
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
+    assertEquals(res.constantName(), "TRANSPARENT");
+    assertEquals(res.fieldName(), "transparent");
+    assertEquals(res.colorName(), "transparent");
   }
-
-  abstract ZeroType zeroType();
 
 }

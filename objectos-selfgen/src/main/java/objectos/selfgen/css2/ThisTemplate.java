@@ -33,7 +33,13 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final String CSS_TMPL = "objectos.css.tmpl";
 
+  static final String CSS_UTIL = "objectos.css.util";
+
   static final String GENERATOR = CssSpec.class.getCanonicalName();
+
+  static final ClassTypeName COLOR = ClassTypeName.of(CSS_UTIL, "Color");
+
+  static final ClassTypeName COLOR_VALUE = ClassTypeName.of(CSS_TMPL, "ColorValue");
 
   static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);
 

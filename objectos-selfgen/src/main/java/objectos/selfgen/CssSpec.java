@@ -17,13 +17,14 @@ package objectos.selfgen;
 
 import java.io.IOException;
 import java.util.List;
+import objectos.selfgen.css2.ColorValue;
 import objectos.selfgen.css2.CssSelfGen;
 import objectos.selfgen.css2.LengthType;
 import objectos.selfgen.css2.ValueType;
 
 public final class CssSpec extends CssSelfGen {
 
-  private ValueType color;
+  private ColorValue color;
 
   private ValueType globalKeyword;
 
@@ -122,28 +123,27 @@ public final class CssSpec extends CssSelfGen {
     );
 
     // color
-    color = t(
-      "ColorValue",
 
-      k("currentcolor"),
-      k("transparent"),
+    color = color(
+      "currentcolor",
+      "transparent",
 
-      keywords(
-        "aqua",
-        "black", "blue",
-        "fuchsia",
-        "gray", "green",
-        "maroon",
-        "lime",
-        "navy",
-        "olive",
-        "purple",
-        "red",
-        "silver",
-        "teal",
-        "white",
-        "yellow"
-      )
+      "aqua",
+      "black",
+      "blue",
+      "fuchsia",
+      "gray",
+      "green",
+      "maroon",
+      "lime",
+      "navy",
+      "olive",
+      "purple",
+      "red",
+      "silver",
+      "teal",
+      "white",
+      "yellow"
     );
 
     // image

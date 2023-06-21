@@ -13,26 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos CSS API.
- *
- * @since 0.7.0
- */
-module objectos.css {
-  exports objectos.css;
-  exports objectos.css.config.framework;
-  exports objectos.css.function;
-  exports objectos.css.keyword;
-  exports objectos.css.om;
-  exports objectos.css.parser;
-  exports objectos.css.select;
-  exports objectos.css.property;
-  exports objectos.css.sheet;
-  exports objectos.css.tmpl;
-  exports objectos.css.type;
-  exports objectos.css.util;
+package objectos.css.util;
 
-  requires objectos.html;
-  requires objectos.lang;
-  requires objectos.util;
+import objectos.css.tmpl.ColorValue;
+
+public final class Color extends GeneratedColor implements ColorValue {
+
+  private final String value;
+
+  private Color(String value) {
+    this.value = value;
+  }
+
+  public static Color named(String name) {
+    return new Color(name.toString());
+  }
+
+  public static Color ofHex(String hex) {
+    return new Color(hex.toString());
+  }
+
+  @Override
+  public final String toString() {
+    return value;
+  }
+
 }

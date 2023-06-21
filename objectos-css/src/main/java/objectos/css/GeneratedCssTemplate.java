@@ -99,6 +99,7 @@ import objectos.css.tmpl.TextTransformValue;
 import objectos.css.tmpl.TextareaKeyword;
 import objectos.css.tmpl.TopValue;
 import objectos.css.tmpl.VerticalAlignValue;
+import objectos.css.util.Color;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -189,6 +190,42 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector any = named("*");
 
+  protected static final ColorValue aqua = Color.AQUA;
+
+  protected static final ColorValue black = Color.BLACK;
+
+  protected static final ColorValue blue = Color.BLUE;
+
+  protected static final ColorValue currentcolor = Color.CURRENTCOLOR;
+
+  protected static final ColorValue fuchsia = Color.FUCHSIA;
+
+  protected static final ColorValue gray = Color.GRAY;
+
+  protected static final ColorValue green = Color.GREEN;
+
+  protected static final ColorValue lime = Color.LIME;
+
+  protected static final ColorValue maroon = Color.MAROON;
+
+  protected static final ColorValue navy = Color.NAVY;
+
+  protected static final ColorValue olive = Color.OLIVE;
+
+  protected static final ColorValue purple = Color.PURPLE;
+
+  protected static final ColorValue red = Color.RED;
+
+  protected static final ColorValue silver = Color.SILVER;
+
+  protected static final ColorValue teal = Color.TEAL;
+
+  protected static final ColorValue transparent = Color.TRANSPARENT;
+
+  protected static final ColorValue white = Color.WHITE;
+
+  protected static final ColorValue yellow = Color.YELLOW;
+
   protected static final DoubleKeyword _double = named("double");
 
   protected static final PositionValue _static = named("static");
@@ -196,8 +233,6 @@ abstract class GeneratedCssTemplate {
   protected static final VerticalAlignValue _super = named("super");
 
   protected static final PositionValue absolute = named("absolute");
-
-  protected static final ColorValue aqua = named("aqua");
 
   protected static final CounterStyleValue arabicIndic = named("arabic-indic");
 
@@ -209,13 +244,9 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue bengali = named("bengali");
 
-  protected static final ColorValue black = named("black");
-
   protected static final TextDecorationLineMultiValue blink = named("blink");
 
   protected static final BlockKeyword block = named("block");
-
-  protected static final ColorValue blue = named("blue");
 
   protected static final FontWeightValue bold = named("bold");
 
@@ -252,8 +283,6 @@ abstract class GeneratedCssTemplate {
   protected static final BoxSizingValue contentBox = named("content-box");
 
   protected static final DisplayBoxValue contents = named("contents");
-
-  protected static final ColorValue currentcolor = named("currentcolor");
 
   protected static final FontFamilyValue cursive = named("cursive");
 
@@ -295,17 +324,11 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationThicknessValue fromFont = named("from-font");
 
-  protected static final ColorValue fuchsia = named("fuchsia");
-
   protected static final TextTransformValue fullSizeKana = named("full-size-kana");
 
   protected static final TextTransformValue fullWidth = named("full-width");
 
   protected static final CounterStyleValue georgian = named("georgian");
-
-  protected static final ColorValue gray = named("gray");
-
-  protected static final ColorValue green = named("green");
 
   protected static final DisplayInsideValue grid = named("grid");
 
@@ -373,8 +396,6 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontWeightValue lighter = named("lighter");
 
-  protected static final ColorValue lime = named("lime");
-
   protected static final TextDecorationLineMultiValue lineThrough = named("line-through");
 
   protected static final DisplayListItemValue listItem = named("list-item");
@@ -394,8 +415,6 @@ abstract class GeneratedCssTemplate {
   protected static final TextTransformValue lowercase = named("lowercase");
 
   protected static final CounterStyleValue malayalam = named("malayalam");
-
-  protected static final ColorValue maroon = named("maroon");
 
   protected static final FontFamilyValue math = named("math");
 
@@ -457,13 +476,9 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue myanmar = named("myanmar");
 
-  protected static final ColorValue navy = named("navy");
-
   protected static final NoneKeyword none = named("none");
 
   protected static final NormalKeyword normal = named("normal");
-
-  protected static final ColorValue olive = named("olive");
 
   protected static final CounterStyleValue oriya = named("oriya");
 
@@ -477,13 +492,9 @@ abstract class GeneratedCssTemplate {
 
   protected static final AppearanceValue progressBar = named("progress-bar");
 
-  protected static final ColorValue purple = named("purple");
-
   protected static final AppearanceValue pushButton = named("push-button");
 
   protected static final AppearanceValue radio = named("radio");
-
-  protected static final ColorValue red = named("red");
 
   protected static final PositionValue relative = named("relative");
 
@@ -508,8 +519,6 @@ abstract class GeneratedCssTemplate {
   protected static final BorderCollapseValue separate = named("separate");
 
   protected static final FontFamilyValue serif = named("serif");
-
-  protected static final ColorValue silver = named("silver");
 
   protected static final CounterStyleValue simpChineseFormal = named("simp-chinese-formal");
 
@@ -557,8 +566,6 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue tamil = named("tamil");
 
-  protected static final ColorValue teal = named("teal");
-
   protected static final CounterStyleValue telugu = named("telugu");
 
   protected static final VerticalAlignValue textBottom = named("text-bottom");
@@ -582,8 +589,6 @@ abstract class GeneratedCssTemplate {
   protected static final CounterStyleValue tradChineseFormal = named("trad-chinese-formal");
 
   protected static final CounterStyleValue tradChineseInformal = named("trad-chinese-informal");
-
-  protected static final ColorValue transparent = named("transparent");
 
   protected static final FontFamilyValue uiMonospace = named("ui-monospace");
 
@@ -611,8 +616,6 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationStyleValue wavy = named("wavy");
 
-  protected static final ColorValue white = named("white");
-
   protected static final FontSizeValue xLarge = named("x-large");
 
   protected static final FontSizeValue xSmall = named("x-small");
@@ -622,8 +625,6 @@ abstract class GeneratedCssTemplate {
   protected static final FontSizeValue xxSmall = named("xx-small");
 
   protected static final FontSizeValue xxxLarge = named("xxx-large");
-
-  protected static final ColorValue yellow = named("yellow");
 
   private static NamedElement named(String name) {
     return new NamedElement(name);

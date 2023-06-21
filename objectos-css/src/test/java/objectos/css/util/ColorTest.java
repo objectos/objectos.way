@@ -13,26 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos CSS API.
- *
- * @since 0.7.0
- */
-module objectos.css {
-  exports objectos.css;
-  exports objectos.css.config.framework;
-  exports objectos.css.function;
-  exports objectos.css.keyword;
-  exports objectos.css.om;
-  exports objectos.css.parser;
-  exports objectos.css.select;
-  exports objectos.css.property;
-  exports objectos.css.sheet;
-  exports objectos.css.tmpl;
-  exports objectos.css.type;
-  exports objectos.css.util;
+package objectos.css.util;
 
-  requires objectos.html;
-  requires objectos.lang;
-  requires objectos.util;
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
+public class ColorTest {
+
+  @Test
+  public void ofHex() {
+    assertEquals(
+      Color.ofHex("#71f2C9").toString(),
+      "#71f2C9"
+    );
+
+    assertEquals(
+      Color.ofHex("#f00").toString(),
+      "#f00"
+    );
+
+    assertEquals(
+      Color.ofHex("#33AA3380").toString(),
+      "#33AA3380"
+    );
+  }
+
 }
