@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+public interface BodyVisitor {
+
+  void visitBody(Body.Ignored ignored);
+
+  void visitBody(Body.Text text);
+
 }

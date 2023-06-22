@@ -13,10 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+public interface RequestVisitor {
+
+  void visitRequestBody(Body.Ignored ignored);
+
+  void visitRequestBody(Body.Text text);
+
+  void visitRequestHeader(Header.Accept accept);
+
+  void visitRequestHeader(Header.ContentLength contentLength);
+
+  void visitRequestHeader(Header.ContentType contentType);
+
+  void visitRequestHeader(Header.Cookie cookie);
+
+  void visitRequestHeader(Header.Host host);
+
+  void visitRequestHeader(Header.Unknown unknown);
+
+  void visitRequestLine(Method method, String target, Version version);
+
 }

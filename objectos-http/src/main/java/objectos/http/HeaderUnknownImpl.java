@@ -13,10 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+final class HeaderUnknownImpl
+    extends AbstractStringHeader<Header.Unknown> implements Header.Unknown {
+
+  private final String name;
+
+  public HeaderUnknownImpl(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public final void acceptRequestVisitor(RequestVisitor visitor) {
+    visitor.visitRequestHeader(this);
+  }
+
+  @Override
+  public final void acceptResponseVisitor(ResponseVisitor visitor) {
+    visitor.visitResponseHeader(this);
+  }
+
+  @Override
+  public final String getHeaderName() {
+    return name;
+  }
+
 }

@@ -13,10 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+final class BodyIgnoredImpl implements Body.Ignored {
+
+  public static final BodyIgnoredImpl INSTANCE = new BodyIgnoredImpl();
+
+  private BodyIgnoredImpl() {}
+
+  @Override
+  public final void acceptBodyVisitor(BodyVisitor visitor) {
+    visitor.visitBody(this);
+  }
+
+  @Override
+  public final void acceptRequestVisitor(RequestVisitor visitor) {
+    visitor.visitRequestBody(this);
+  }
+
+  @Override
+  public final void acceptResponseVisitor(ResponseVisitor visitor) {
+    visitor.visitResponseBody(this);
+  }
+
+  @Override
+  public final String toString() {
+    return "";
+  }
+
 }

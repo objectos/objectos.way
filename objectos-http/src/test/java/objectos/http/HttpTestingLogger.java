@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+import objectos.lang.NoOpNoteSink;
+import objectos.lang.Note;
+
+final class HttpTestingLogger extends NoOpNoteSink {
+
+  @Override
+  public final boolean isEnabled(Note event) {
+    return super.isEnabled(event);
+  }
+
 }

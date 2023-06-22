@@ -13,10 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
+public class HeaderSetCookieImplTest {
+
+  @Test(description = "cookie-pair only")
+  public void testCase01() {
+    HeaderSetCookieImpl result;
+    result = parse("foo=bar\r\n");
+
+    assertEquals(result.getCookieName(), "foo");
+
+    assertEquals(result.getCookieValue(), "bar");
+  }
+
+  private HeaderSetCookieImpl parse(String source) {
+    HeaderSetCookieImpl setCookie;
+    setCookie = new HeaderSetCookieImpl();
+
+    return HeaderTesting.parse(setCookie, source);
+  }
+
 }

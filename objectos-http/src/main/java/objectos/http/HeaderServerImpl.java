@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+final class HeaderServerImpl extends AbstractStringHeader<Header.Server> implements Header.Server {
+  @Override
+  public final void acceptResponseVisitor(ResponseVisitor visitor) {
+    visitor.visitResponseHeader(this);
+  }
+
+  @Override
+  public final String getHeaderName() {
+    return "Server";
+  }
 }

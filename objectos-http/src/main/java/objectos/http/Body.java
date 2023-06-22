@@ -13,10 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+import java.nio.charset.Charset;
+
+/**
+ * The body of a HTTP request or response.
+ */
+public interface Body {
+
+  void acceptBodyVisitor(BodyVisitor visitor);
+
+  void acceptRequestVisitor(RequestVisitor visitor);
+
+  void acceptResponseVisitor(ResponseVisitor visitor);
+
+  interface Ignored extends Body {}
+
+  interface Text extends Body {
+
+    Charset getCharset();
+
+    String getContents();
+
+  }
+
 }

@@ -13,10 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
+package objectos.http;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+import java.util.HashMap;
+import java.util.Map;
+
+final class HashMapStringDeduplicator implements StringDeduplicator {
+
+  private final Map<String, String> map = new HashMap<>();
+
+  @Override
+  public final String dedup(String name) {
+    String s;
+    s = map.get(name);
+
+    if (s == null) {
+      map.put(name, name);
+
+      s = name;
+    }
+
+    return s;
+  }
+
 }
