@@ -56,6 +56,11 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>objectos-http</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>objectos-lang</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -192,11 +197,6 @@
 				<version>${project.version}</version>
 			</dependency>
 			
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>http</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>http-replay</artifactId>

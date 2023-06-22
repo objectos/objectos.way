@@ -71,6 +71,7 @@
 		<module>objectos-code</module>
 		<module>objectos-css</module>
 		<module>objectos-html</module>
+		<module>objectos-http</module>
 		<module>objectos-lang</module>
 		<module>objectos-selfgen</module>
 		<module>objectos-specgen</module>
