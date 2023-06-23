@@ -80,11 +80,11 @@
 
 	<properties>
 		<m2e.apt.activation>disabled</m2e.apt.activation>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-		<maven.surefire.version>3.0.0</maven.surefire.version>
-		<maven.toolchains.jdk-vendor>openjdk</maven.toolchains.jdk-vendor>
-		<maven.toolchains.jdk-version>17</maven.toolchains.jdk-version>
+		<maven.compiler.source>20</maven.compiler.source>
+		<maven.compiler.target>20</maven.compiler.target>
+		<maven.surefire.version>3.1.2</maven.surefire.version>
+		<maven.toolchains.jdk-vendor>default</maven.toolchains.jdk-vendor>
+		<maven.toolchains.jdk-version>20</maven.toolchains.jdk-version>
 
 		<objectos.license.copyrightYears>${project.inceptionYear}-2023</objectos.license.copyrightYears>
 		<objectos.license.headerMain><![CDATA[
@@ -264,6 +264,7 @@ limitations under the License.
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.11.0</version>
 					<configuration>
+						<enablePreview>true</enablePreview>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>

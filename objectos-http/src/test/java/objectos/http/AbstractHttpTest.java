@@ -19,7 +19,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -79,11 +80,14 @@ public abstract class AbstractHttpTest {
 
   protected final URLConnection GET(String path) {
     try {
+      URI uri;
+      uri = new URI("http", null, "127.0.0.1", 5678, path, null, null);
+
       URL url;
-      url = new URL("http", "127.0.0.1", 5678, path);
+      url = uri.toURL();
 
       return url.openConnection();
-    } catch (MalformedURLException e) {
+    } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
       throw new RuntimeException(e);
