@@ -15,8 +15,8 @@
  */
 package objectos.http;
 
+import java.net.Socket;
 import java.net.SocketAddress;
-import java.nio.channels.SocketChannel;
 import objectos.lang.Check;
 import objectos.lang.NoteSink;
 
@@ -33,7 +33,7 @@ public final class HttpService {
 
   private final HttpProcessorProvider processorProvider;
 
-  private SelectorThread thread;
+  private ServerSocketThread thread;
 
   HttpService(SocketAddress address,
               int bufferSize,
@@ -93,7 +93,7 @@ public final class HttpService {
     ThisSelectorThreadAdapter adapter;
     adapter = new ThisSelectorThreadAdapter();
 
-    thread = SelectorThread.create(adapter, address);
+    thread = ServerSocketThread.create(adapter, address);
 
     thread.start();
   }
@@ -113,10 +113,10 @@ public final class HttpService {
 
   }
 
-  private class ThisSelectorThreadAdapter implements SelectorThreadAdapter {
+  private class ThisSelectorThreadAdapter implements ServerSocketThreadAdapter {
 
     @Override
-    public final void acceptSocketChannel(SocketChannel socketChannel) {
+    public final void acceptSocket(Socket socket) {
       HttpProcessor processor;
       processor = processorProvider.create();
 
@@ -126,7 +126,7 @@ public final class HttpService {
       HttpEngine engine;
       engine = new HttpEngine(bufferSize, logger, processor, stringDeduplicator);
 
-      engine.setInput(socketChannel);
+      engine.setInput(socket);
 
       Thread t;
       t = new Thread(engine);

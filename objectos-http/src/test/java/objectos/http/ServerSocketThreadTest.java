@@ -19,20 +19,21 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import org.testng.annotations.Test;
 
-public class SelectorThreadTest extends AbstractHttpTest implements SelectorThreadAdapter {
+public class ServerSocketThreadTest extends AbstractHttpTest implements ServerSocketThreadAdapter {
 
   private volatile boolean accepted;
 
   @Override
-  public final void acceptSocketChannel(SocketChannel socketChannel) {
+  public final void acceptSocket(Socket socket) {
     synchronized (this) {
       try {
         accepted = true;
 
-        socketChannel.close();
+        socket.close();
       } catch (IOException e) {
         throw new RuntimeException(e);
       } finally {
@@ -46,8 +47,8 @@ public class SelectorThreadTest extends AbstractHttpTest implements SelectorThre
     InetSocketAddress loopback;
     loopback = nextLoopbackSocketAddress();
 
-    SelectorThread thread;
-    thread = SelectorThread.create(this, loopback);
+    ServerSocketThread thread;
+    thread = ServerSocketThread.create(this, loopback);
 
     thread.start();
 

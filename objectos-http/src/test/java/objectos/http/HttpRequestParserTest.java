@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 
 public class HttpRequestParserTest extends AbstractHttpTest implements HttpProcessor {
 
-  private TestableSocketChannel channel;
+  private TestableSocket socket;
 
   private boolean executed;
 
@@ -46,7 +46,7 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
   @BeforeClass
   public void _beforeClass() {
-    channel = new TestableSocketChannel();
+    socket = new TestableSocket();
 
     headerMap = new HashMap<String, String>();
 
@@ -63,7 +63,7 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
   @BeforeMethod
   public void _beforeMethod() {
-    channel.clear();
+    socket.clear();
 
     executed = false;
 
@@ -104,9 +104,9 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
   @Test(description = TestCase0001.DESCRIPTION)
   public void testCase01() throws Throwable {
-    channel.setRequest(TestCase0001.REQUEST);
+    socket.setRequest(TestCase0001.REQUEST);
 
-    parser.setInput(channel);
+    parser.setInput(socket);
 
     assertEquals(parser.state, HttpEngine._START);
 

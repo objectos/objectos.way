@@ -16,9 +16,14 @@
 package objectos.http;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -28,7 +33,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import objectos.lang.Check;
 import objectos.lang.NoteSink;
 
 /**
@@ -88,8 +92,6 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   byte state;
 
-  private SocketChannel channel;
-
   private long channelDecodePosition;
 
   private int channelReadCount;
@@ -121,7 +123,11 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   private final HttpProcessor processor;
 
+  private ReadableByteChannel readableByteChannel;
+
   private ResponseTask responseTask;
+
+  private Socket socket;
 
   private final StringBuilder stringBuilder;
 
@@ -195,7 +201,14 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   @Override
   public final WritableByteChannel getChannel() {
-    return channel;
+    try {
+      OutputStream outputStream;
+      outputStream = socket.getOutputStream();
+
+      return Channels.newChannel(outputStream);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   @Override
@@ -228,16 +241,10 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
     }
   }
 
-  public final void setInput(SocketChannel channel) {
-    this.channel = Check.notNull(channel, "channel == null");
+  public final void setInput(Socket socket) {
+    this.socket = socket;
 
     state = _START;
-  }
-
-  public final void unset() {
-    channel = null;
-
-    state = _STOP;
   }
 
   final String stringValue() {
@@ -344,6 +351,12 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
   }
 
   private byte executeFinally() {
+    try {
+      socket.close();
+    } catch (IOException e) {
+      error = e;
+    }
+
     byteBuffer.clear();
 
     channelDecodePosition = 0;
@@ -406,7 +419,14 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
       byteBuffer.compact();
     }
 
-    channelReadCount = channel.read(byteBuffer);
+    if (readableByteChannel == null) {
+      InputStream inputStream;
+      inputStream = socket.getInputStream();
+
+      readableByteChannel = Channels.newChannel(inputStream);
+    }
+
+    channelReadCount = readableByteChannel.read(byteBuffer);
 
     if (channelReadCount > 0) {
       channelReadTotal += channelReadCount;

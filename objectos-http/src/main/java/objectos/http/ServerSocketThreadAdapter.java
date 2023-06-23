@@ -15,10 +15,10 @@
  */
 package objectos.http;
 
-import java.nio.channels.SocketChannel;
+import java.net.Socket;
 
-interface SelectorThreadAdapter {
+interface ServerSocketThreadAdapter {
 
-  void acceptSocketChannel(SocketChannel socketChannel);
+  void acceptSocket(Socket socket);
 
 }
