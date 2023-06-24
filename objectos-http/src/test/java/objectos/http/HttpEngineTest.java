@@ -26,9 +26,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class HttpRequestParserTest extends AbstractHttpTest implements HttpProcessor {
+public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
-  private TestableSocket socket;
+  private HttpEngine engine;
 
   private boolean executed;
 
@@ -38,7 +38,7 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
   private Method method;
 
-  private HttpEngine parser;
+  private TestableSocket socket;
 
   private RequestTarget target;
 
@@ -50,7 +50,7 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
     headerMap = new HashMap<String, String>();
 
-    parser = new HttpEngine(
+    engine = new HttpEngine(
       64,
 
       logger,
@@ -106,38 +106,38 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
   public void testCase01() throws Throwable {
     socket.setRequest(TestCase0001.REQUEST);
 
-    parser.setInput(socket);
+    engine.setInput(socket);
 
-    assertEquals(parser.state, HttpEngine._START);
-
-    executeOne();
-
-    assertEquals(parser.channelEof, false);
-
-    assertEquals(parser.channelReadTotal, 64);
-
-    assertEquals(parser.decodeAction, HttpEngine._PARSE);
-
-    assertEquals(parser.ioReady, HttpEngine._DECODE);
-
-    assertEquals(parser.ioTask, HttpEngine.IO_READ);
-
-    assertEquals(parser.state, HttpEngine._WAIT_IO);
+    assertEquals(engine.state, HttpEngine._START);
 
     executeOne();
 
-    assertEquals(parser.state, HttpEngine._DECODE);
+    assertEquals(engine.channelEof, false);
+
+    assertEquals(engine.channelReadTotal, 64);
+
+    assertEquals(engine.decodeAction, HttpEngine._PARSE);
+
+    assertEquals(engine.ioReady, HttpEngine._DECODE);
+
+    assertEquals(engine.ioTask, HttpEngine.IO_READ);
+
+    assertEquals(engine.state, HttpEngine._WAIT_IO);
 
     executeOne();
 
-    assertEquals(parser.byteBuffer.hasRemaining(), false);
+    assertEquals(engine.state, HttpEngine._DECODE);
 
-    assertEquals(parser.charBuffer.hasRemaining(), false);
+    executeOne();
 
-    assertEquals(parser.state, HttpEngine._PARSE);
+    assertEquals(engine.byteBuffer.hasRemaining(), false);
+
+    assertEquals(engine.charBuffer.hasRemaining(), false);
+
+    assertEquals(engine.state, HttpEngine._PARSE);
 
     assertEquals(
-      parser.stringValue(),
+      engine.stringValue(),
 
       crlf(
         "GET / HTTP/1.1",
@@ -149,24 +149,24 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
     executeOne();
 
-    assertEquals(parser.channelEof, false);
+    assertEquals(engine.channelEof, false);
 
-    assertEquals(parser.channelReadTotal, 64 + 64);
+    assertEquals(engine.channelReadTotal, 64 + 64);
 
-    assertEquals(parser.decodeAction, HttpEngine._PARSE_HEADER_NAME);
+    assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER_NAME);
 
     assertEquals(headerMap.size(), 2);
     assertEquals(headerMap.get("host"), "localhost:7001");
     assertEquals(headerMap.get("connection"), "keep-alive");
     headerMap.clear();
 
-    assertEquals(parser.ioReady, HttpEngine._DECODE);
+    assertEquals(engine.ioReady, HttpEngine._DECODE);
 
-    assertEquals(parser.ioTask, HttpEngine.IO_READ);
+    assertEquals(engine.ioTask, HttpEngine.IO_READ);
 
     assertEquals(method, Method.GET);
 
-    assertEquals(parser.state, HttpEngine._WAIT_IO);
+    assertEquals(engine.state, HttpEngine._WAIT_IO);
 
     assertEquals(target.pathEquals("/"), true);
 
@@ -174,52 +174,52 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
     executeOne();
 
-    assertEquals(parser.state, HttpEngine._DECODE);
+    assertEquals(engine.state, HttpEngine._DECODE);
 
     executeOne();
 
-    assertEquals(parser.byteBuffer.hasRemaining(), true);
+    assertEquals(engine.byteBuffer.hasRemaining(), true);
 
-    assertEquals(parser.charBuffer.hasRemaining(), false);
+    assertEquals(engine.charBuffer.hasRemaining(), false);
 
-    assertEquals(parser.state, HttpEngine._PARSE_HEADER_NAME);
+    assertEquals(engine.state, HttpEngine._PARSE_HEADER_NAME);
 
     assertEquals(
-      parser.stringValue(),
+      engine.stringValue(),
 
       "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"97\", \"Chrom"
     );
 
     executeOne();
 
-    assertEquals(parser.channelEof, false);
+    assertEquals(engine.channelEof, false);
 
-    assertEquals(parser.channelReadTotal, 64 + 64 + 62);
+    assertEquals(engine.channelReadTotal, 64 + 64 + 62);
 
-    assertEquals(parser.decodeAction, HttpEngine._PARSE_HEADER_VALUE);
+    assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER_VALUE);
 
     assertEquals(headerMap.size(), 0);
 
-    assertEquals(parser.ioReady, HttpEngine._DECODE);
+    assertEquals(engine.ioReady, HttpEngine._DECODE);
 
-    assertEquals(parser.ioTask, HttpEngine.IO_READ);
+    assertEquals(engine.ioTask, HttpEngine.IO_READ);
 
-    assertEquals(parser.state, HttpEngine._WAIT_IO);
-
-    executeOne();
-
-    assertEquals(parser.state, HttpEngine._DECODE);
+    assertEquals(engine.state, HttpEngine._WAIT_IO);
 
     executeOne();
 
-    assertEquals(parser.byteBuffer.hasRemaining(), false);
+    assertEquals(engine.state, HttpEngine._DECODE);
 
-    assertEquals(parser.charBuffer.hasRemaining(), false);
+    executeOne();
 
-    assertEquals(parser.state, HttpEngine._PARSE_HEADER_VALUE);
+    assertEquals(engine.byteBuffer.hasRemaining(), false);
+
+    assertEquals(engine.charBuffer.hasRemaining(), false);
+
+    assertEquals(engine.state, HttpEngine._PARSE_HEADER_VALUE);
 
     assertEquals(
-      parser.stringValue(),
+      engine.stringValue(),
 
       crlf(
         "ium\";v=\"97\"",
@@ -231,11 +231,11 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
 
     executeOne();
 
-    assertEquals(parser.channelEof, false);
+    assertEquals(engine.channelEof, false);
 
-    assertEquals(parser.channelReadTotal, 64 + 64 + 62 + 64);
+    assertEquals(engine.channelReadTotal, 64 + 64 + 62 + 64);
 
-    assertEquals(parser.decodeAction, HttpEngine._PARSE_HEADER);
+    assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER);
 
     assertEquals(headerMap.size(), 3);
     assertEquals(headerMap.get("sec-ch-ua"),
@@ -244,16 +244,16 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
     assertEquals(headerMap.get("sec-ch-ua-platform"), "\"Linux\"");
     headerMap.clear();
 
-    assertEquals(parser.ioReady, HttpEngine._DECODE);
+    assertEquals(engine.ioReady, HttpEngine._DECODE);
 
-    assertEquals(parser.ioTask, HttpEngine.IO_READ);
+    assertEquals(engine.ioTask, HttpEngine.IO_READ);
 
-    assertEquals(parser.state, HttpEngine._WAIT_IO);
+    assertEquals(engine.state, HttpEngine._WAIT_IO);
 
-    exhaust(parser);
+    exhaust(engine);
 
-    if (parser.error != null) {
-      throw parser.error;
+    if (engine.error != null) {
+      throw engine.error;
     }
 
     assertNotNull(handle);
@@ -262,9 +262,7 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
   }
 
   private void exhaust(HttpEngine engine) {
-    while (engine.isActive()) {
-      engine.executeOne();
-    }
+    engine.run();
   }
 
   private String crlf(String... strings) {
@@ -275,10 +273,10 @@ public class HttpRequestParserTest extends AbstractHttpTest implements HttpProce
   }
 
   private void executeOne() throws Throwable {
-    parser.executeOne();
+    engine.executeOne();
 
-    if (parser.error != null) {
-      throw parser.error;
+    if (engine.error != null) {
+      throw engine.error;
     }
   }
 
