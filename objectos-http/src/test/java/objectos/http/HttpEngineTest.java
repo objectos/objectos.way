@@ -19,6 +19,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import objectos.util.UnmodifiableList;
@@ -104,18 +105,19 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
   @Test(description = TestCase0001.DESCRIPTION)
   public void testCase01() throws Throwable {
-    ByteSource byteSource;
-    byteSource = TestCase0001.byteSource(64);
+    Socket socket;
+    socket = TestCase0001.testableSocket();
 
-    assertEquals(byteSource.isClosed(), false);
+    assertEquals(socket.isClosed(), false);
 
     HttpEngine subject;
-    subject = new HttpEngine(byteSource, noteSink, this, stringDeduplicator);
+    subject = new HttpEngine(64, noteSink, this, socket, stringDeduplicator);
 
-    subject.run();
+    subject.run0();
 
+    assertEquals(socket.isClosed(), true);
     assertEquals(subject.method, Method.GET);
-    assertEquals(byteSource.isClosed(), true);
+    assertEquals(subject.requestTarget, "/");
   }
 
   @Test(description = TestCase0001.DESCRIPTION)

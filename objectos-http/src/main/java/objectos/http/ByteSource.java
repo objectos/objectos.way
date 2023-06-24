@@ -18,6 +18,7 @@ package objectos.http;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Objects;
@@ -39,7 +40,7 @@ final class ByteSource implements Closeable {
     this.buffer = buffer;
   }
 
-  public static ByteSource ofInputStream(InputStream inputStream, int bufferSize) {
+  public static ByteSource ofInputStream(int bufferSize, InputStream inputStream) {
     Objects.requireNonNull(inputStream, "inputStream == null");
 
     byte[] buffer;
@@ -104,6 +105,21 @@ final class ByteSource implements Closeable {
     );
   }
 
+  public final boolean readUntil(byte value, OutputStream to) throws IOException {
+    while (hasMore(1)) {
+      byte b;
+      b = get();
+
+      if (b == value) {
+        return true;
+      }
+
+      to.write(b);
+    }
+
+    return false;
+  }
+
   private void compact() {
     if (bufferIndex == bufferLimit) {
       bufferIndex = bufferLimit = 0;
@@ -111,7 +127,13 @@ final class ByteSource implements Closeable {
       return;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    int length = bufferLimit - bufferIndex;
+
+    System.arraycopy(buffer, bufferIndex, buffer, 0, length);
+
+    bufferIndex = 0;
+
+    bufferLimit = length;
   }
 
   private void readIntoWritable(int bytesToWrite) throws IOException {

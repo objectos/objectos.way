@@ -18,6 +18,7 @@ package objectos.http;
 import static org.testng.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.testng.annotations.Test;
@@ -25,15 +26,27 @@ import org.testng.annotations.Test;
 public class ByteSourceTest {
 
   @Test
-  public void hasMore() throws IOException {
-    byte[] bytes;
-    bytes = bytes(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-
-    InputStream inputStream;
-    inputStream = new ByteArrayInputStream(bytes);
-
+  public void readUntil() throws IOException {
     ByteSource source;
-    source = ByteSource.ofInputStream(inputStream, 5);
+    source = ByteSource.ofInputStream(4, in(0, 1, 2, 3, 4, ' ', 6, 7, 8, 9));
+
+    ByteArrayOutputStream out;
+    out = new ByteArrayOutputStream();
+
+    boolean result;
+    result = source.readUntil((byte) ' ', out);
+
+    assertEquals(result, true);
+    assertEquals(out.toByteArray(), bytes(0, 1, 2, 3, 4));
+    assertEquals(source.hasMore(4), true);
+    assertEquals(source.matches(bytes(6, 7, 8, 9)), true);
+    assertEquals(source.hasMore(1), false);
+  }
+
+  @Test
+  public void hasMore() throws IOException {
+    ByteSource source;
+    source = ByteSource.ofInputStream(5, in(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
 
     assertEquals(source.hasMore(1), true);
     assertEquals(source.get(), 0);
@@ -41,6 +54,11 @@ public class ByteSourceTest {
     assertEquals(source.matches(bytes(1, 2, 3, 4)), true);
     assertEquals(source.hasMore(5), true);
     assertEquals(source.matches(bytes(5, 6, 7, 8, 9)), true);
+    assertEquals(source.hasMore(1), false);
+  }
+
+  private InputStream in(int... values) {
+    return new ByteArrayInputStream(bytes(values));
   }
 
   private byte[] bytes(int... values) {
