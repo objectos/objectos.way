@@ -58,15 +58,17 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   static final byte _PARSE_REQUEST_TARGET = 9;
 
-  static final byte _RESPONSE = 10;
+  static final byte _REFACTOR = 10;
 
-  static final byte _SKIP_HEADER_VALUE_OWS = 11;
+  static final byte _RESPONSE = 11;
 
-  static final byte _START = 12;
+  static final byte _SKIP_HEADER_VALUE_OWS = 12;
+
+  static final byte _START = 13;
 
   static final byte _STOP = 0;
 
-  static final byte _WAIT_IO = 13;
+  static final byte _WAIT_IO = 14;
 
   static final byte IO_READ = 1;
 
@@ -74,13 +76,15 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   private static final char[] HTTP_1_1 = "HTTP/1.1".toCharArray();
 
-  final ByteBuffer byteBuffer;
+  ByteBuffer byteBuffer;
+
+  private final ByteSource byteSource;
 
   boolean channelEof;
 
   long channelReadTotal;
 
-  final CharBuffer charBuffer;
+  CharBuffer charBuffer;
 
   byte decodeAction;
 
@@ -104,9 +108,9 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   private final DateFormat dateFormat = Http.createDateFormat();
 
-  private final CharsetDecoder decoder;
+  private CharsetDecoder decoder;
 
-  private final CharsetEncoder encoder;
+  private CharsetEncoder encoder;
 
   private String headerName;
 
@@ -116,10 +120,10 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   private boolean ioRunning;
 
-  @SuppressWarnings("unused")
-  private final NoteSink logger;
+  Method method;
 
-  private Method method;
+  @SuppressWarnings("unused")
+  private final NoteSink noteSink;
 
   private final HttpProcessor processor;
 
@@ -135,11 +139,30 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   private Version version;
 
+  HttpEngine(ByteSource byteSource,
+             NoteSink noteSink,
+             HttpProcessor processor,
+             StringDeduplicator stringDeduplicator) {
+    this.byteSource = byteSource;
+
+    this.noteSink = noteSink;
+
+    this.processor = processor;
+
+    state = _REFACTOR;
+
+    stringBuilder = new StringBuilder(128);
+
+    this.stringDeduplicator = stringDeduplicator;
+  }
+
   HttpEngine(int bufferSize,
-             NoteSink logger,
+             NoteSink noteSink,
              HttpProcessor processor,
              StringDeduplicator stringDeduplicator) {
     byteBuffer = ByteBuffer.allocate(bufferSize);
+
+    byteSource = null;
 
     charBuffer = CharBuffer.allocate(bufferSize);
 
@@ -150,7 +173,7 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
     encoder = charset.newEncoder();
 
-    this.logger = logger;
+    this.noteSink = noteSink;
 
     this.processor = processor;
 
@@ -271,6 +294,8 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
         return executeParseHttpVersion();
       case _PARSE_REQUEST_TARGET:
         return executeParseRequestTarget();
+      case _REFACTOR:
+        return executeRefactor();
       case _RESPONSE:
         return executeResponse();
       case _SKIP_HEADER_VALUE_OWS:
@@ -637,6 +662,47 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
     return executeInline(_PARSE_HEADER);
   }
 
+  private void executeParseMethod() throws IOException {
+    if (!byteSource.hasMore(1)) {
+      return;
+    }
+
+    byte b;
+    b = byteSource.get();
+
+    Method candidate;
+    candidate = switch (b) {
+      case 'G' -> Method.GET;
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: byte=" + b
+      );
+    };
+
+    byte[] suffix;
+    suffix = candidate.byteSuffix;
+
+    // suffix + SP
+    int suffixLengthPlusSpace;
+    suffixLengthPlusSpace = suffix.length + 1;
+
+    if (!byteSource.hasMore(suffixLengthPlusSpace)) {
+      return;
+    }
+
+    if (!byteSource.matches(suffix)) {
+      return;
+    }
+
+    b = byteSource.get();
+
+    if (b != HttpParser.SP) {
+      return;
+    }
+
+    method = candidate;
+  }
+
   private byte executeParseRequestTarget() {
     boolean found;
     found = false;
@@ -659,6 +725,18 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
     } else {
       return executeInline(_PARSE_HTTP_VERSION);
     }
+  }
+
+  private byte executeRefactor() {
+    processor.requestStart(this);
+
+    try (byteSource) {
+      executeParseMethod();
+    } catch (IOException e) {
+      error = e;
+    }
+
+    return _STOP;
   }
 
   private byte executeResponse() {

@@ -60,7 +60,13 @@ final class ByteSource implements Closeable {
 
   @Override
   public final void close() throws IOException {
-    inputStream.close();
+    try {
+      inputStream.close();
+    } finally {
+      bufferIndex = bufferLimit = -1;
+
+      eof = true;
+    }
   }
 
   public final byte get() {
@@ -85,6 +91,10 @@ final class ByteSource implements Closeable {
     readIntoWritable(bytesToWrite);
 
     return bufferLimit - bufferIndex >= required;
+  }
+
+  public final boolean isClosed() {
+    return bufferIndex == -1 && bufferLimit == -1 && eof;
   }
 
   public final boolean matches(byte[] expected) {

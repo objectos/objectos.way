@@ -60,17 +60,16 @@ final class ServerSocketThread extends Thread {
   @Override
   public final void run() {
     while (!isInterrupted()) {
-      Socket socket;
-
       try {
+        Socket socket;
         socket = serverSocket.accept();
+
+        adapter.acceptSocket(socket);
       } catch (IOException e) {
         error = e;
 
         break;
       }
-
-      adapter.acceptSocket(socket);
     }
 
     if (!serverSocket.isClosed()) {

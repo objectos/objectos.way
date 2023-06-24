@@ -30,7 +30,7 @@ import org.testng.annotations.BeforeSuite;
 
 public abstract class AbstractHttpTest {
 
-  protected static HttpTestingLogger logger;
+  protected static HttpTestingLogger noteSink;
 
   protected static HttpService service;
 
@@ -51,7 +51,7 @@ public abstract class AbstractHttpTest {
 
     stringDeduplicator = new HashMapStringDeduplicator();
 
-    logger = new HttpTestingLogger();
+    noteSink = new HttpTestingLogger();
 
     InetSocketAddress address;
     address = nextLoopbackSocketAddress();
@@ -63,7 +63,7 @@ public abstract class AbstractHttpTest {
 
       HttpService.bufferSize(64),
 
-      HttpService.logger(logger)
+      HttpService.logger(noteSink)
     );
 
     service.startService();

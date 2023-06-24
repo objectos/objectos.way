@@ -15,6 +15,9 @@
  */
 package objectos.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import objectos.util.UnmodifiableList;
 
 final class TestCase0001 {
@@ -53,5 +56,20 @@ final class TestCase0001 {
     "ETag: \"61f7d470-264\"",
     "Accept-Ranges: bytes"
   );
+
+  private TestCase0001() {}
+
+  public static ByteSource byteSource(int bufferSize) {
+    String text;
+    text = REQUEST.join(Http.CRLF);
+
+    byte[] bytes;
+    bytes = text.getBytes(StandardCharsets.UTF_8);
+
+    InputStream inputStream;
+    inputStream = new ByteArrayInputStream(bytes);
+
+    return ByteSource.ofInputStream(inputStream, bufferSize);
+  }
 
 }

@@ -53,7 +53,7 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
     engine = new HttpEngine(
       64,
 
-      logger,
+      noteSink,
 
       this,
 
@@ -104,6 +104,22 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
   @Test(description = TestCase0001.DESCRIPTION)
   public void testCase01() throws Throwable {
+    ByteSource byteSource;
+    byteSource = TestCase0001.byteSource(64);
+
+    assertEquals(byteSource.isClosed(), false);
+
+    HttpEngine subject;
+    subject = new HttpEngine(byteSource, noteSink, this, stringDeduplicator);
+
+    subject.run();
+
+    assertEquals(subject.method, Method.GET);
+    assertEquals(byteSource.isClosed(), true);
+  }
+
+  @Test(description = TestCase0001.DESCRIPTION)
+  public void testCase01ToRemove() throws Throwable {
     socket.setRequest(TestCase0001.REQUEST);
 
     engine.setInput(socket);

@@ -15,11 +15,15 @@
  */
 package objectos.http;
 
+import java.nio.charset.StandardCharsets;
+
 public enum Method {
 
   GET,
 
   POST;
+
+  public final byte[] byteSuffix = name().substring(1).getBytes(StandardCharsets.UTF_8);
 
   public final char[] parseSuffix = name().substring(1).toCharArray();
 
