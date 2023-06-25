@@ -15,8 +15,6 @@
  */
 package objectos.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -106,9 +104,9 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
   private final DateFormat dateFormat = Http.createDateFormat();
 
-  private CharsetDecoder decoder;
+  private final CharsetDecoder decoder;
 
-  private CharsetEncoder encoder;
+  private final CharsetEncoder encoder;
 
   private String headerName;
 
@@ -136,28 +134,6 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
   private final StringDeduplicator stringDeduplicator;
 
   private Version version;
-
-  private int bufferSize;
-
-  String requestTarget;
-
-  HttpEngine(int bufferSize,
-             NoteSink noteSink,
-             HttpProcessor processor,
-             Socket socket,
-             StringDeduplicator stringDeduplicator) {
-    this.bufferSize = bufferSize;
-
-    this.noteSink = noteSink;
-
-    this.processor = processor;
-
-    this.socket = socket;
-
-    stringBuilder = new StringBuilder(128);
-
-    this.stringDeduplicator = stringDeduplicator;
-  }
 
   HttpEngine(int bufferSize,
              NoteSink noteSink,
@@ -262,19 +238,6 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
   public final void run() {
     while (isActive()) {
       executeOne();
-    }
-  }
-
-  public final void run0() {
-    processor.requestStart(this);
-
-    final Closeable c;
-    c = socket;
-
-    try (c) {
-      parseRequest();
-    } catch (IOException e) {
-      error = e;
     }
   }
 
@@ -769,92 +732,6 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
     remaining = charArrayLength - charArrayIndex;
 
     return remaining >= expected;
-  }
-
-  private void parseRequest() throws IOException {
-    ByteSource source;
-    source = ByteSource.ofSocket(socket, bufferSize);
-
-    parseRequest0Method(source);
-
-    if (method == null) {
-      resultResultBadRequest();
-
-      return;
-    }
-
-    ByteArrayOutputStream out;
-    out = new ByteArrayOutputStream();
-
-    parseRequest1Target(source, out);
-  }
-
-  private void parseRequest0Method(ByteSource source) throws IOException {
-    if (!source.hasMore(1)) {
-      resultResultBadRequest();
-
-      return;
-    }
-
-    byte b;
-    b = source.get();
-
-    Method candidate;
-    candidate = switch (b) {
-      case 'G' -> Method.GET;
-
-      default -> throw new UnsupportedOperationException(
-        "Implement me :: byte=" + b
-      );
-    };
-
-    byte[] suffix;
-    suffix = candidate.byteSuffix;
-
-    // suffix + SP
-    int suffixLengthPlusSpace;
-    suffixLengthPlusSpace = suffix.length + 1;
-
-    if (!source.hasMore(suffixLengthPlusSpace)) {
-      resultResultBadRequest();
-
-      return;
-    }
-
-    if (!source.matches(suffix)) {
-      resultResultBadRequest();
-
-      return;
-    }
-
-    b = source.get();
-
-    if (b != HttpParser.SP) {
-      return;
-    }
-
-    method = candidate;
-  }
-
-  private void parseRequest1Target(ByteSource source, ByteArrayOutputStream out)
-      throws IOException {
-    boolean found;
-    found = source.readUntil((byte) ' ', out);
-
-    if (!found) {
-      resultResultBadRequest();
-
-      return;
-    }
-
-    byte[] bytes;
-    bytes = out.toByteArray();
-
-    requestTarget = new String(bytes, StandardCharsets.ISO_8859_1);
-  }
-
-  private void resultResultBadRequest() {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   private byte toDecode(byte onReady) {

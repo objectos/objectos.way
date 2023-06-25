@@ -29,11 +29,15 @@ public final class Http {
 
   public static final char CR = '\r';
 
+  static final byte CR_BYTE = CR;
+
   public static final String CRLF = "\r\n";
 
   public static final Method GET = Method.GET;
 
   public static final char LF = '\n';
+
+  static final byte LF_BYTE = LF;
 
   public static final Method POST = Method.POST;
 
@@ -48,6 +52,8 @@ public final class Http {
   static final char HTAB = '\t';
 
   static final char SP = ' ';
+
+  static final byte SP_BYTE = SP;
 
   private Http() {}
 

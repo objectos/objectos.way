@@ -23,7 +23,7 @@ public enum Method {
 
   POST;
 
-  public final byte[] byteSuffix = name().substring(1).getBytes(StandardCharsets.UTF_8);
+  public final byte[] bytes = name().getBytes(StandardCharsets.UTF_8);
 
   public final char[] parseSuffix = name().substring(1).toCharArray();
 

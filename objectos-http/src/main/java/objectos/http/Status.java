@@ -25,10 +25,11 @@ public enum Status {
 
   // 4.x.x
   BAD_REQUEST(400),
+  URI_TOO_LONG(414),
 
   // 5.x.x
   INTERNAL_SERVER_ERROR(500),
-
+  NOT_IMPLEMENTED(501),
   HTTP_VERSION_NOT_SUPPORTED(505);
 
   private final int code;
@@ -38,20 +39,17 @@ public enum Status {
   }
 
   public static Status ofCode(int code) {
-    switch (code) {
-      case 200:
-        return OK;
-      case 302:
-        return FOUND;
-      case 400:
-        return BAD_REQUEST;
-      case 500:
-        return INTERNAL_SERVER_ERROR;
-      case 505:
-        return HTTP_VERSION_NOT_SUPPORTED;
-      default:
-        throw new UnsupportedOperationException("Implement me = " + code);
-    }
+    return switch (code) {
+      case 200 -> OK;
+
+      case 302 -> FOUND;
+
+      case 400 -> BAD_REQUEST;
+
+      case 500 -> INTERNAL_SERVER_ERROR;
+      case 505 -> HTTP_VERSION_NOT_SUPPORTED;
+      default -> throw new UnsupportedOperationException("Implement me = " + code);
+    };
   }
 
   public final int getCode() {

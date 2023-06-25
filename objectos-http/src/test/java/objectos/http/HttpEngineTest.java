@@ -110,14 +110,15 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
     assertEquals(socket.isClosed(), false);
 
-    HttpEngine subject;
-    subject = new HttpEngine(64, noteSink, this, socket, stringDeduplicator);
+    HttpEngine2 subject;
+    subject = new HttpEngine2(64, noteSink, this, socket);
 
-    subject.run0();
+    subject.run();
 
     assertEquals(socket.isClosed(), true);
-    assertEquals(subject.method, Method.GET);
-    assertEquals(subject.requestTarget, "/");
+    assertEquals(method, Method.GET);
+    assertEquals(target.pathEquals("/"), true);
+    assertEquals(version, Version.V1_1);
   }
 
   @Test(description = TestCase0001.DESCRIPTION)

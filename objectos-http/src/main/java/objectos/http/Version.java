@@ -15,16 +15,18 @@
  */
 package objectos.http;
 
+import java.nio.charset.StandardCharsets;
+
 public enum Version {
 
   V1_0("HTTP/1.0"),
 
   V1_1("HTTP/1.1");
 
-  public final String signature;
+  final byte[] bytes;
 
   private Version(String signature) {
-    this.signature = signature;
+    bytes = signature.getBytes(StandardCharsets.UTF_8);
   }
 
 }
