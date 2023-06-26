@@ -25,7 +25,11 @@ public enum Version {
 
   final byte[] bytes;
 
+  public final String signature;
+
   private Version(String signature) {
+    this.signature = signature;
+
     bytes = signature.getBytes(StandardCharsets.UTF_8);
   }
 

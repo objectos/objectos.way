@@ -47,6 +47,8 @@ public final class Http {
 
   static final char COLON = ':';
 
+  static final byte COLON_BYTE = COLON;
+
   static final int DEFAULT_BUFFER_SIZE = 4096;
 
   static final char HTAB = '\t';

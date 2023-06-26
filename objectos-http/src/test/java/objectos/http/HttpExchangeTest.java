@@ -27,7 +27,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
+public class HttpExchangeTest extends AbstractHttpTest implements HttpProcessor {
 
   private HttpEngine engine;
 
@@ -35,7 +35,7 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
   private HttpResponseHandle handle;
 
-  private Map<String, String> headerMap;
+  private Map<String, String> headers;
 
   private Method method;
 
@@ -49,7 +49,7 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
   public void _beforeClass() {
     socket = new TestableSocket();
 
-    headerMap = new HashMap<String, String>();
+    headers = new HashMap<String, String>();
 
     engine = new HttpEngine(
       64,
@@ -70,7 +70,7 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
     handle = null;
 
-    headerMap.clear();
+    headers.clear();
 
     method = null;
 
@@ -81,7 +81,7 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
   @Override
   public final void requestHeader(String name, String value) {
-    headerMap.put(name, value);
+    headers.put(name, value);
   }
 
   @Override
@@ -110,15 +110,32 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
     assertEquals(socket.isClosed(), false);
 
-    HttpEngine2 subject;
-    subject = new HttpEngine2(64, noteSink, this, socket);
+    HttpExchange exchange;
+    exchange = new HttpExchange(64, noteSink, this, socket);
 
-    subject.run();
+    assertEquals(exchange.state, HttpExchange._START);
 
-    assertEquals(socket.isClosed(), true);
-    assertEquals(method, Method.GET);
-    assertEquals(target.pathEquals("/"), true);
-    assertEquals(version, Version.V1_1);
+    exchange.stepOne();
+
+    assertEquals(exchange.state, HttpExchange._SOCKET_READ);
+
+    assertEquals(exchange.socketReadAction, HttpExchange._REQUEST_METHOD);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+
+    assertEquals(exchange.bufferLimit, 64);
+
+    assertEquals(exchange.state, HttpExchange._REQUEST_METHOD);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 4);
+
+    assertEquals(exchange.method, Method.GET);
+
+    assertEquals(exchange.state, HttpExchange._REQUEST_TARGET);
   }
 
   @Test(description = TestCase0001.DESCRIPTION)
@@ -174,10 +191,10 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
     assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER_NAME);
 
-    assertEquals(headerMap.size(), 2);
-    assertEquals(headerMap.get("host"), "localhost:7001");
-    assertEquals(headerMap.get("connection"), "keep-alive");
-    headerMap.clear();
+    assertEquals(headers.size(), 2);
+    assertEquals(headers.get("host"), "localhost:7001");
+    assertEquals(headers.get("connection"), "keep-alive");
+    headers.clear();
 
     assertEquals(engine.ioReady, HttpEngine._DECODE);
 
@@ -217,7 +234,7 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
     assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER_VALUE);
 
-    assertEquals(headerMap.size(), 0);
+    assertEquals(headers.size(), 0);
 
     assertEquals(engine.ioReady, HttpEngine._DECODE);
 
@@ -256,12 +273,12 @@ public class HttpEngineTest extends AbstractHttpTest implements HttpProcessor {
 
     assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER);
 
-    assertEquals(headerMap.size(), 3);
-    assertEquals(headerMap.get("sec-ch-ua"),
+    assertEquals(headers.size(), 3);
+    assertEquals(headers.get("sec-ch-ua"),
       "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"97\", \"Chromium\";v=\"97\"");
-    assertEquals(headerMap.get("sec-ch-ua-mobile"), "?0");
-    assertEquals(headerMap.get("sec-ch-ua-platform"), "\"Linux\"");
-    headerMap.clear();
+    assertEquals(headers.get("sec-ch-ua-mobile"), "?0");
+    assertEquals(headers.get("sec-ch-ua-platform"), "\"Linux\"");
+    headers.clear();
 
     assertEquals(engine.ioReady, HttpEngine._DECODE);
 
