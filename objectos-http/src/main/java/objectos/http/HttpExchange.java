@@ -34,6 +34,21 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
     record StatusResult(Status status) implements Result {}
   }
 
+  private static class ThisRequestTarget implements RequestTarget {
+
+    private final byte[] bytes;
+
+    public ThisRequestTarget(byte[] bytes) {
+      this.bytes = bytes;
+    }
+
+    @Override
+    public final boolean pathEquals(String string) {
+      return new String(bytes).equals(string);
+    }
+
+  }
+
   static final byte _STOP = 0,
 
       _BAD_REQUEST = -1,
@@ -42,15 +57,19 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
       _FINALLY = -3,
 
-      _REQUEST_METHOD = -4,
+      _REQUEST_HEADER_NAME = -4,
 
-      _REQUEST_TARGET = -5,
+      _REQUEST_HEADER_VALUE = -5,
 
-      _REQUEST_VERSION = -6,
+      _REQUEST_METHOD = -6,
 
-      _SOCKET_READ = -7,
+      _REQUEST_TARGET = -7,
 
-      _START = -8;
+      _REQUEST_VERSION = -8,
+
+      _SOCKET_READ = -9,
+
+      _START = -10;
 
   private final byte[] buffer;
 
@@ -68,6 +87,8 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
   private final HttpProcessor processor;
 
+  RequestTarget requestTarget;
+
   private Result result;
 
   private final Socket socket;
@@ -77,6 +98,8 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
   private byte socketReadEofAction;
 
   byte state;
+
+  Version version;
 
   // public stuff
 
@@ -147,6 +170,10 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
     state = switch (state) {
       case _REQUEST_METHOD -> executeRequestMethod();
 
+      case _REQUEST_TARGET -> executeRequestTarget();
+
+      case _REQUEST_VERSION -> executeRequestVersion();
+
       case _SOCKET_READ -> executeSocketRead();
 
       case _START -> executeStart();
@@ -175,23 +202,23 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
     );
   }
 
-  private byte bufferRead(int index) {
+  private byte bufferGet(int index) {
     return buffer[index];
   }
 
-  private boolean bufferReadable(int index) {
+  private boolean bufferHasIndex(int index) {
     return index < bufferLimit;
   }
 
   private byte executeRequestMethod() {
     int start = bufferIndex;
 
-    if (!bufferReadable(start)) {
+    if (!bufferHasIndex(start)) {
       return toSocketRead(state, _CLOSE);
     }
 
     byte first;
-    first = bufferRead(start);
+    first = bufferGet(start);
 
     Method maybeMethod;
     maybeMethod = switch (first) {
@@ -214,12 +241,12 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
     int spaceIndex;
     spaceIndex = start + methodBytes.length;
 
-    if (!bufferReadable(spaceIndex)) {
+    if (!bufferHasIndex(spaceIndex)) {
       return toSocketRead(state, _CLOSE);
     }
 
     byte maybeSpace;
-    maybeSpace = bufferRead(spaceIndex);
+    maybeSpace = bufferGet(spaceIndex);
 
     if (maybeSpace != Http.SP_BYTE) {
       return toResult(Status.BAD_REQUEST);
@@ -230,6 +257,86 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
     method = maybeMethod;
 
     return _REQUEST_TARGET;
+  }
+
+  private byte executeRequestTarget() {
+    int index;
+    index = bufferIndex;
+
+    boolean found;
+    found = false;
+
+    for (; bufferHasIndex(index); index++) {
+      byte b;
+      b = bufferGet(index);
+
+      if (b == Http.SP_BYTE) {
+        found = true;
+
+        break;
+      }
+    }
+
+    if (!found) {
+      return toSocketRead(state, _CLOSE);
+    }
+
+    byte[] bytes;
+    bytes = Arrays.copyOfRange(buffer, bufferIndex, index);
+
+    // after SP
+    bufferIndex = index + 1;
+
+    requestTarget = new ThisRequestTarget(bytes);
+
+    return _REQUEST_VERSION;
+  }
+
+  private byte executeRequestVersion() {
+    int index;
+    index = bufferIndex;
+
+    int versionLength;
+    versionLength = Version.V1_1.bytes.length;
+
+    int versionEnd;
+    versionEnd = index + versionLength;
+
+    int lineEnd;
+    lineEnd = versionEnd + 1;
+
+    if (!bufferHasIndex(lineEnd)) {
+      return toSocketRead(state, _CLOSE);
+    }
+
+    int minorIndex;
+    minorIndex = versionEnd - 1;
+
+    byte minor;
+    minor = bufferGet(minorIndex);
+
+    Version maybe;
+    maybe = switch (minor) {
+      case '0' -> Version.V1_0;
+
+      case '1' -> Version.V1_1;
+
+      default -> null;
+    };
+
+    if (maybe == null || !bufferEquals(maybe.bytes, index)) {
+      return toResult(Status.HTTP_VERSION_NOT_SUPPORTED);
+    }
+
+    if (bufferGet(versionEnd) != Http.CR_BYTE || bufferGet(lineEnd) != Http.LF_BYTE) {
+      return toResult(Status.BAD_REQUEST);
+    }
+
+    bufferIndex = lineEnd + 1;
+
+    version = maybe;
+
+    return _REQUEST_HEADER_NAME;
   }
 
   private byte executeSocketRead() {

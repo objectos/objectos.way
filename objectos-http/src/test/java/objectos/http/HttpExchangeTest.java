@@ -131,11 +131,30 @@ public class HttpExchangeTest extends AbstractHttpTest implements HttpProcessor 
 
     exchange.stepOne();
 
+    // 'G' 'E' 'T' SP = 4
     assertEquals(exchange.bufferIndex, 4);
 
     assertEquals(exchange.method, Method.GET);
 
     assertEquals(exchange.state, HttpExchange._REQUEST_TARGET);
+
+    exchange.stepOne();
+
+    // '/' SP = 2
+    assertEquals(exchange.bufferIndex, 6);
+
+    assertEquals(exchange.requestTarget.pathEquals("/"), true);
+
+    assertEquals(exchange.state, HttpExchange._REQUEST_VERSION);
+
+    exchange.stepOne();
+
+    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' CR LF = 10
+    assertEquals(exchange.bufferIndex, 16);
+
+    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_NAME);
+
+    assertEquals(exchange.version, Version.V1_1);
   }
 
   @Test(description = TestCase0001.DESCRIPTION)
