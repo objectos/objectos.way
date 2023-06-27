@@ -473,7 +473,7 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
 
     c = charArray[charArrayIndex++];
 
-    if (c != HttpParser.SP) {
+    if (c != Http.SP) {
       return toError(Status.BAD_REQUEST, "Bad request line");
     }
 
@@ -645,7 +645,7 @@ final class HttpEngine implements HttpResponseHandle, Runnable {
       char c;
       c = charArray[charArrayIndex++];
 
-      if (c == HttpParser.SP) {
+      if (c == Http.SP) {
         found = true;
 
         break;

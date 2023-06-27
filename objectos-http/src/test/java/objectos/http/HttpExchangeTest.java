@@ -16,103 +16,28 @@
 package objectos.http;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-import objectos.util.UnmodifiableList;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest extends AbstractHttpTest implements HttpProcessor {
-
-  private HttpEngine engine;
-
-  private boolean executed;
-
-  private HttpResponseHandle handle;
-
-  private Map<String, String> headers;
-
-  private Method method;
-
-  private TestableSocket socket;
-
-  private RequestTarget target;
-
-  private Version version;
-
-  @BeforeClass
-  public void _beforeClass() {
-    socket = new TestableSocket();
-
-    headers = new HashMap<String, String>();
-
-    engine = new HttpEngine(
-      64,
-
-      noteSink,
-
-      this,
-
-      stringDeduplicator
-    );
-  }
-
-  @BeforeMethod
-  public void _beforeMethod() {
-    socket.clear();
-
-    executed = false;
-
-    handle = null;
-
-    headers.clear();
-
-    method = null;
-
-    target = null;
-
-    version = null;
-  }
-
-  @Override
-  public final void requestHeader(String name, String value) {
-    headers.put(name, value);
-  }
-
-  @Override
-  public final void requestLine(Method method, RequestTarget target, Version version) {
-    this.method = method;
-
-    this.target = target;
-
-    this.version = version;
-  }
-
-  @Override
-  public final void requestStart(HttpResponseHandle handle) {
-    this.handle = handle;
-  }
-
-  @Override
-  public final ResponseTask responseTask() {
-    return new ExecuteOneTask();
-  }
+public class HttpExchangeTest extends AbstractHttpTest {
 
   @Test(description = TestCase0001.DESCRIPTION)
   public void testCase01() throws Throwable {
+    final class ThisProcessor implements HttpProcessor {
+
+    }
+
     Socket socket;
     socket = TestCase0001.testableSocket();
 
-    assertEquals(socket.isClosed(), false);
+    ThisProcessor processor;
+    processor = new ThisProcessor();
 
     HttpExchange exchange;
-    exchange = new HttpExchange(64, noteSink, this, socket);
+    exchange = new HttpExchange(64, noteSink, processor, socket);
 
+    assertEquals(socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._START);
 
     exchange.stepOne();
@@ -144,8 +69,13 @@ public class HttpExchangeTest extends AbstractHttpTest implements HttpProcessor 
 
     // 'H' 'T' 'T' 'P' '/' '1' '.' '1' CR LF = 10
     assertEquals(exchange.bufferIndex, 16);
-    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_NAME);
+    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER);
     assertEquals(exchange.version, Version.V1_1);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 16);
+    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_NAME);
 
     exchange.stepOne();
 
@@ -158,202 +88,9 @@ public class HttpExchangeTest extends AbstractHttpTest implements HttpProcessor 
 
     // SP 'l' 'o' 'c' 'a' 'l' 'h' 'o' 's' 't' = 10
     // ':' '7' '0' '0' '1' CR LF = 7
-
     assertEquals(exchange.bufferIndex, 38);
     assertEquals(exchange.headerValue, "localhost:7001");
-    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_NAME);
-  }
-
-  @Test(description = TestCase0001.DESCRIPTION)
-  public void testCase01ToRemove() throws Throwable {
-    socket.setRequest(TestCase0001.REQUEST);
-
-    engine.setInput(socket);
-
-    assertEquals(engine.state, HttpEngine._START);
-
-    executeOne();
-
-    assertEquals(engine.channelEof, false);
-
-    assertEquals(engine.channelReadTotal, 64);
-
-    assertEquals(engine.decodeAction, HttpEngine._PARSE);
-
-    assertEquals(engine.ioReady, HttpEngine._DECODE);
-
-    assertEquals(engine.ioTask, HttpEngine.IO_READ);
-
-    assertEquals(engine.state, HttpEngine._WAIT_IO);
-
-    executeOne();
-
-    assertEquals(engine.state, HttpEngine._DECODE);
-
-    executeOne();
-
-    assertEquals(engine.byteBuffer.hasRemaining(), false);
-
-    assertEquals(engine.charBuffer.hasRemaining(), false);
-
-    assertEquals(engine.state, HttpEngine._PARSE);
-
-    assertEquals(
-      engine.stringValue(),
-
-      crlf(
-        "GET / HTTP/1.1",
-        "Host: localhost:7001",
-        "Connection: keep-alive",
-        "se"
-      )
-    );
-
-    executeOne();
-
-    assertEquals(engine.channelEof, false);
-
-    assertEquals(engine.channelReadTotal, 64 + 64);
-
-    assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER_NAME);
-
-    assertEquals(headers.size(), 2);
-    assertEquals(headers.get("host"), "localhost:7001");
-    assertEquals(headers.get("connection"), "keep-alive");
-    headers.clear();
-
-    assertEquals(engine.ioReady, HttpEngine._DECODE);
-
-    assertEquals(engine.ioTask, HttpEngine.IO_READ);
-
-    assertEquals(method, Method.GET);
-
-    assertEquals(engine.state, HttpEngine._WAIT_IO);
-
-    assertEquals(target.pathEquals("/"), true);
-
-    assertEquals(version, Version.V1_1);
-
-    executeOne();
-
-    assertEquals(engine.state, HttpEngine._DECODE);
-
-    executeOne();
-
-    assertEquals(engine.byteBuffer.hasRemaining(), true);
-
-    assertEquals(engine.charBuffer.hasRemaining(), false);
-
-    assertEquals(engine.state, HttpEngine._PARSE_HEADER_NAME);
-
-    assertEquals(
-      engine.stringValue(),
-
-      "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"97\", \"Chrom"
-    );
-
-    executeOne();
-
-    assertEquals(engine.channelEof, false);
-
-    assertEquals(engine.channelReadTotal, 64 + 64 + 62);
-
-    assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER_VALUE);
-
-    assertEquals(headers.size(), 0);
-
-    assertEquals(engine.ioReady, HttpEngine._DECODE);
-
-    assertEquals(engine.ioTask, HttpEngine.IO_READ);
-
-    assertEquals(engine.state, HttpEngine._WAIT_IO);
-
-    executeOne();
-
-    assertEquals(engine.state, HttpEngine._DECODE);
-
-    executeOne();
-
-    assertEquals(engine.byteBuffer.hasRemaining(), false);
-
-    assertEquals(engine.charBuffer.hasRemaining(), false);
-
-    assertEquals(engine.state, HttpEngine._PARSE_HEADER_VALUE);
-
-    assertEquals(
-      engine.stringValue(),
-
-      crlf(
-        "ium\";v=\"97\"",
-        "sec-ch-ua-mobile: ?0",
-        "sec-ch-ua-platform: \"Linux\"",
-        ""
-      )
-    );
-
-    executeOne();
-
-    assertEquals(engine.channelEof, false);
-
-    assertEquals(engine.channelReadTotal, 64 + 64 + 62 + 64);
-
-    assertEquals(engine.decodeAction, HttpEngine._PARSE_HEADER);
-
-    assertEquals(headers.size(), 3);
-    assertEquals(headers.get("sec-ch-ua"),
-      "\" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"97\", \"Chromium\";v=\"97\"");
-    assertEquals(headers.get("sec-ch-ua-mobile"), "?0");
-    assertEquals(headers.get("sec-ch-ua-platform"), "\"Linux\"");
-    headers.clear();
-
-    assertEquals(engine.ioReady, HttpEngine._DECODE);
-
-    assertEquals(engine.ioTask, HttpEngine.IO_READ);
-
-    assertEquals(engine.state, HttpEngine._WAIT_IO);
-
-    exhaust(engine);
-
-    if (engine.error != null) {
-      throw engine.error;
-    }
-
-    assertNotNull(handle);
-
-    assertTrue(executed);
-  }
-
-  private void exhaust(HttpEngine engine) {
-    engine.run();
-  }
-
-  private String crlf(String... strings) {
-    UnmodifiableList<String> list;
-    list = UnmodifiableList.copyOf(strings);
-
-    return list.join(Http.CRLF);
-  }
-
-  private void executeOne() throws Throwable {
-    engine.executeOne();
-
-    if (engine.error != null) {
-      throw engine.error;
-    }
-  }
-
-  private class ExecuteOneTask implements ResponseTask {
-
-    @Override
-    public final void executeOne() {
-      executed = true;
-    }
-
-    @Override
-    public final boolean isActive() {
-      return !executed;
-    }
-
+    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER);
   }
 
 }

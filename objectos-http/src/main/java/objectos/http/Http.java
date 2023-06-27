@@ -15,14 +15,11 @@
  */
 package objectos.http;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Locale;
 import java.util.TimeZone;
-import objectos.http.Header.ContentType;
 import objectos.lang.Check;
 
 public final class Http {
@@ -59,45 +56,6 @@ public final class Http {
 
   private Http() {}
 
-  public static HeaderParser<ContentType> createContentTypeParser() {
-    return new HeaderContentTypeImpl();
-  }
-
-  public static RequestParser createRequestParser(ByteBuffer byteBuffer, CharBuffer charBuffer) {
-    return RequestParser.create(byteBuffer, charBuffer);
-  }
-
-  public static boolean isTokenChar(char c) {
-    if (Character.isAlphabetic(c)) {
-      return true;
-    }
-
-    if (Character.isDigit(c)) {
-      return true;
-    }
-
-    switch (c) {
-      case '!':
-      case '#':
-      case '$':
-      case '%':
-      case '&':
-      case '\'':
-      case '*':
-      case '+':
-      case '-':
-      case '.':
-      case '^':
-      case '_':
-      case '`':
-      case '|':
-      case '~':
-        return true;
-      default:
-        return false;
-    }
-  }
-
   static int checkBufferSize(int size) {
     Check.argument(size >= 64, "bufferSize minimum value is 64 bytes");
 
@@ -126,10 +84,6 @@ public final class Http {
 
   static <E> ArrayDeque<E> newArrayDeque(int capacity) {
     return new ArrayDeque<E>(capacity);
-  }
-
-  static int toUsAsciiDigit(char c) {
-    return c - 48;
   }
 
 }

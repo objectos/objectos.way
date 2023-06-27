@@ -18,18 +18,12 @@ package objectos.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.channels.WritableByteChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Date;
 import objectos.http.HttpExchange.Result.StatusResult;
 import objectos.lang.NoteSink;
 
-final class HttpExchange implements HttpResponseHandle, Runnable {
+final class HttpExchange implements Runnable {
 
   sealed interface Result {
     record StatusResult(Status status) implements Result {}
@@ -52,25 +46,27 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
   static final byte _STOP = 0,
 
-      _BAD_REQUEST = -1,
+      _BAD_REQUEST = 1,
 
-      _CLOSE = -2,
+      _CLOSE = 2,
 
-      _FINALLY = -3,
+      _FINALLY = 3,
 
-      _REQUEST_HEADER_NAME = -4,
+      _REQUEST_HEADER = 4,
 
-      _REQUEST_HEADER_VALUE = -5,
+      _REQUEST_HEADER_NAME = 5,
 
-      _REQUEST_METHOD = -6,
+      _REQUEST_HEADER_VALUE = 6,
 
-      _REQUEST_TARGET = -7,
+      _REQUEST_METHOD = 7,
 
-      _REQUEST_VERSION = -8,
+      _REQUEST_TARGET = 8,
 
-      _SOCKET_READ = -9,
+      _REQUEST_VERSION = 9,
 
-      _START = -10;
+      _SOCKET_READ = 10,
+
+      _START = 11;
 
   private final byte[] buffer;
 
@@ -90,6 +86,7 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
   @SuppressWarnings("unused")
   private final NoteSink noteSink;
 
+  @SuppressWarnings("unused")
   private final HttpProcessor processor;
 
   RequestTarget requestTarget;
@@ -124,41 +121,6 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
   }
 
   @Override
-  public final String formatDate(Date date) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final String formatDate(long millis) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final ByteBuffer getByteBuffer() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final WritableByteChannel getChannel() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final CharBuffer getCharBuffer() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final CharsetEncoder getEncoder(Charset charset) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final StringBuilder getStringBuilder() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public final void run() {
     while (isActive()) {
       stepOne();
@@ -173,6 +135,8 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
   final void stepOne() {
     state = switch (state) {
+      case _REQUEST_HEADER -> executeRequestHeader();
+
       case _REQUEST_HEADER_NAME -> executeRequestHeaderName();
 
       case _REQUEST_HEADER_VALUE -> executeRequestHeaderValue();
@@ -217,6 +181,24 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
   private boolean bufferHasIndex(int index) {
     return index < bufferLimit;
+  }
+
+  private byte executeRequestHeader() {
+    final int firstIndex;
+    firstIndex = bufferIndex;
+
+    if (!bufferHasIndex(firstIndex)) {
+      return toSocketRead(state, _CLOSE);
+    }
+
+    final byte first;
+    first = bufferGet(firstIndex);
+
+    if (first != Http.CR_BYTE) {
+      return _REQUEST_HEADER_NAME;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private byte executeRequestHeaderName() {
@@ -334,11 +316,7 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
     bufferIndex = lineFeedIndex + 1;
 
-    return _REQUEST_HEADER_NAME;
-  }
-
-  private String makeString(int start, int end) {
-    return new String(buffer, start, end - start, StandardCharsets.ISO_8859_1);
+    return _REQUEST_HEADER;
   }
 
   private byte executeRequestMethod() {
@@ -467,7 +445,7 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
     version = maybe;
 
-    return _REQUEST_HEADER_NAME;
+    return _REQUEST_HEADER;
   }
 
   private byte executeSocketRead() {
@@ -504,11 +482,15 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
   }
 
   private byte executeStart() {
-    processor.requestStart(this);
+    // processor.requestStart(this);
 
     // TODO set timeout
 
     return toSocketRead(_REQUEST_METHOD, _CLOSE);
+  }
+
+  private String makeString(int start, int end) {
+    return new String(buffer, start, end - start, StandardCharsets.ISO_8859_1);
   }
 
   private byte toClose(IOException e) {

@@ -20,12 +20,20 @@ package objectos.http;
  */
 public interface HttpProcessor {
 
-  void requestHeader(String name, String value);
+  default void requestHeader(String name, String value) {
+    throw new UnsupportedOperationException();
+  }
 
-  void requestLine(Method method, RequestTarget target, Version version);
+  default void requestLine(Method method, RequestTarget target, Version version) {
+    throw new UnsupportedOperationException();
+  }
 
-  void requestStart(HttpResponseHandle handle);
+  default void requestStart(HttpResponseHandle handle) {
+    throw new UnsupportedOperationException();
+  }
 
-  ResponseTask responseTask();
+  default ResponseTask responseTask() {
+    throw new UnsupportedOperationException();
+  }
 
 }
