@@ -23,7 +23,7 @@ final class HttpServiceBuilder {
 
   private final SocketAddress address;
 
-  private int bufferSize = Http.DEFAULT_BUFFER_SIZE;
+  private int bufferSize = 1024;
 
   private NoteSink logger = NoOpNoteSink.getInstance();
 

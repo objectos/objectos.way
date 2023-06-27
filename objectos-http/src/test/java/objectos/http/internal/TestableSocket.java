@@ -13,19 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import objectos.util.UnmodifiableList;
 
 final class TestableSocket extends Socket {
 
   private byte[] requestBytes;
 
   private int requestIndex;
+
+  public static TestableSocket parse(String string) {
+    TestableSocket result;
+    result = new TestableSocket();
+
+    String normalized;
+    normalized = string.replaceAll("\n", "\r\n");
+
+    result.requestBytes = normalized.getBytes(StandardCharsets.UTF_8);
+
+    return result;
+  }
 
   public final void clear() {
     requestBytes = null;
@@ -45,15 +56,6 @@ final class TestableSocket extends Socket {
         }
       }
     };
-  }
-
-  public final void setRequest(UnmodifiableList<String> request) {
-    String text;
-    text = request.join(Http.CRLF);
-
-    requestBytes = text.getBytes(StandardCharsets.UTF_8);
-
-    requestIndex = 0;
   }
 
 }

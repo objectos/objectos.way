@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-final class ServerSocketThread extends Thread {
+public final class ServerSocketThread extends Thread {
 
   private final ServerSocketThreadAdapter adapter;
 

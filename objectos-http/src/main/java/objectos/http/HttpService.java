@@ -17,6 +17,9 @@ package objectos.http;
 
 import java.net.Socket;
 import java.net.SocketAddress;
+import objectos.http.internal.HttpExchange;
+import objectos.http.internal.ServerSocketThread;
+import objectos.http.internal.ServerSocketThreadAdapter;
 import objectos.lang.Check;
 import objectos.lang.NoteSink;
 
@@ -29,7 +32,7 @@ public final class HttpService {
 
   private final int bufferSize;
 
-  private final NoteSink logger;
+  private final NoteSink noteSink;
 
   private final HttpProcessorProvider processorProvider;
 
@@ -37,17 +40,15 @@ public final class HttpService {
 
   HttpService(SocketAddress address,
               int bufferSize,
-              NoteSink logger,
+              NoteSink noteSink,
               HttpProcessorProvider processorProvider) {
     this.address = address;
     this.bufferSize = bufferSize;
-    this.logger = logger;
+    this.noteSink = noteSink;
     this.processorProvider = processorProvider;
   }
 
   public static Option bufferSize(final int size) {
-    Http.checkBufferSize(size);
-
     return new Option() {
       @Override
       final void acceptBuilder(HttpServiceBuilder builder) {
@@ -115,23 +116,16 @@ public final class HttpService {
 
   private class ThisSelectorThreadAdapter implements ServerSocketThreadAdapter {
 
+    @SuppressWarnings("preview")
     @Override
     public final void acceptSocket(Socket socket) {
       HttpProcessor processor;
       processor = processorProvider.create();
 
-      StringDeduplicator stringDeduplicator;
-      stringDeduplicator = new HashMapStringDeduplicator();
+      HttpExchange exchange;
+      exchange = new HttpExchange(bufferSize, noteSink, processor, socket);
 
-      HttpEngine engine;
-      engine = new HttpEngine(bufferSize, logger, processor, stringDeduplicator);
-
-      engine.setInput(socket);
-
-      Thread t;
-      t = new Thread(engine);
-
-      t.start();
+      Thread.ofVirtual().start(exchange);
     }
 
   }

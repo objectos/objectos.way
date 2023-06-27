@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-sealed interface HeaderName permits ThisHeader {}
+public enum HeaderName {
+
+  ACCEPT_ENCODING("Accept-Encoding"),
+
+  CONNECTION("Connection"),
+
+  HOST("Host"),
+
+  USER_AGENT("User-Agent");
+
+  final byte[] bytes;
+
+  private HeaderName(String name) {
+    bytes = Bytes.utf8(name);
+  }
+
+}

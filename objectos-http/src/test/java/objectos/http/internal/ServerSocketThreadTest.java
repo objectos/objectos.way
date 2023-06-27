@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
 import static org.testng.Assert.assertTrue;
 
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
+import objectos.http.AbstractHttpTest;
 import org.testng.annotations.Test;
 
 public class ServerSocketThreadTest extends AbstractHttpTest implements ServerSocketThreadAdapter {
@@ -42,7 +43,7 @@ public class ServerSocketThreadTest extends AbstractHttpTest implements ServerSo
     }
   }
 
-  @Test(description = TestCase0001.DESCRIPTION)
+  @Test
   public void testCase01() throws IOException, InterruptedException {
     InetSocketAddress loopback;
     loopback = nextLoopbackSocketAddress();

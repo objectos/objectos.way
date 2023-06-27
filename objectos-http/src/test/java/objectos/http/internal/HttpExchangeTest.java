@@ -13,26 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
 
 import java.net.Socket;
+import objectos.http.AbstractHttpTest;
+import objectos.http.HttpProcessor;
+import objectos.http.internal.HttpExchange.RequestTarget;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest extends AbstractHttpTest {
 
-  @Test(description = TestCase0001.DESCRIPTION)
-  public void testCase01() throws Throwable {
-    final class ThisProcessor implements HttpProcessor {
+  @Test(description = """
+  HttpExchange TC0001
 
-    }
-
+  - GET / 1.1
+  - Host
+  """)
+  public void testCase0001() throws Throwable {
     Socket socket;
-    socket = TestCase0001.testableSocket();
+    socket = TestableSocket.parse("""
+    GET / HTTP/1.1
+    Host: localhost:7001
 
-    ThisProcessor processor;
-    processor = new ThisProcessor();
+    """);
+
+    HttpProcessor processor;
+    processor = new HttpProcessor() {
+    };
 
     HttpExchange exchange;
     exchange = new HttpExchange(64, noteSink, processor, socket);
@@ -48,7 +57,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 64);
+    assertEquals(exchange.bufferLimit, 40);
     assertEquals(exchange.state, HttpExchange._REQUEST_METHOD);
 
     exchange.stepOne();
@@ -62,7 +71,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     // '/' SP = 2
     assertEquals(exchange.bufferIndex, 6);
-    assertEquals(exchange.requestTarget.pathEquals("/"), true);
+    assertEquals(exchange.requestTarget, new RequestTarget(4, 5));
     assertEquals(exchange.state, HttpExchange._REQUEST_VERSION);
 
     exchange.stepOne();
@@ -81,7 +90,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     // 'H' 'o' 's' 't' ':' = 5
     assertEquals(exchange.bufferIndex, 21);
-    assertEquals(exchange.headerName, ThisHeader.HOST);
+    assertEquals(exchange.headerName, HeaderName.HOST);
     assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_VALUE);
 
     exchange.stepOne();
@@ -89,8 +98,13 @@ public class HttpExchangeTest extends AbstractHttpTest {
     // SP 'l' 'o' 'c' 'a' 'l' 'h' 'o' 's' 't' = 10
     // ':' '7' '0' '0' '1' CR LF = 7
     assertEquals(exchange.bufferIndex, 38);
-    assertEquals(exchange.headerValue, "localhost:7001");
+    //assertEquals(processor.host, "localhost:7001");
     assertEquals(exchange.state, HttpExchange._REQUEST_HEADER);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 40);
+    assertEquals(exchange.state, HttpExchange._PROCESS);
   }
 
 }

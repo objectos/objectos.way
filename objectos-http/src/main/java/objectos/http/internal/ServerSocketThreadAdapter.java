@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-import java.nio.charset.StandardCharsets;
+import java.net.Socket;
 
-public enum Version {
+public interface ServerSocketThreadAdapter {
 
-  V1_0("HTTP/1.0"),
-
-  V1_1("HTTP/1.1");
-
-  final byte[] bytes;
-
-  public final String signature;
-
-  private Version(String signature) {
-    this.signature = signature;
-
-    bytes = signature.getBytes(StandardCharsets.UTF_8);
-  }
+  void acceptSocket(Socket socket);
 
 }

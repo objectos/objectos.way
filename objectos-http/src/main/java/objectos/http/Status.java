@@ -48,6 +48,7 @@ public enum Status {
 
       case 500 -> INTERNAL_SERVER_ERROR;
       case 505 -> HTTP_VERSION_NOT_SUPPORTED;
+
       default -> throw new UnsupportedOperationException("Implement me = " + code);
     };
   }

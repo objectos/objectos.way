@@ -13,27 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 
-final class HashMapStringDeduplicator implements StringDeduplicator {
+public enum Method {
 
-  private final Map<String, String> map = new HashMap<>();
+  GET,
 
-  @Override
-  public final String dedup(String name) {
-    String s;
-    s = map.get(name);
+  POST;
 
-    if (s == null) {
-      map.put(name, name);
+  public final byte[] bytes = name().getBytes(StandardCharsets.UTF_8);
 
-      s = name;
-    }
-
-    return s;
-  }
+  public final char[] parseSuffix = name().substring(1).toCharArray();
 
 }

@@ -30,11 +30,9 @@ import org.testng.annotations.BeforeSuite;
 
 public abstract class AbstractHttpTest {
 
-  protected static HttpTestingLogger noteSink;
+  protected static HttpTestingNoteSink noteSink;
 
   protected static HttpService service;
-
-  protected static HashMapStringDeduplicator stringDeduplicator;
 
   private static AtomicInteger portGenerator = new AtomicInteger(5678);
 
@@ -49,9 +47,7 @@ public abstract class AbstractHttpTest {
     HttpRequestProcessorProvider provider;
     provider = new HttpRequestProcessorProvider(siteDirectory);
 
-    stringDeduplicator = new HashMapStringDeduplicator();
-
-    noteSink = new HttpTestingLogger();
+    noteSink = new HttpTestingNoteSink();
 
     InetSocketAddress address;
     address = nextLoopbackSocketAddress();

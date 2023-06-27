@@ -13,12 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
-
-public interface ResponseTask {
-
-  void executeOne();
-
-  boolean isActive();
-
-}
+package objectos.http.internal;

@@ -13,10 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-interface StringDeduplicator {
+import java.nio.charset.StandardCharsets;
 
-  String dedup(String name);
+final class Bytes {
+
+  public static final byte HTAB = '\t';
+
+  public static final byte LF = '\n';
+
+  public static final byte CR = '\r';
+
+  public static final byte SP = ' ';
+
+  public static final byte COLON = ':';
+
+  private Bytes() {}
+
+  public static boolean isOptionalWhitespace(byte value) {
+    return switch (value) {
+      case SP, HTAB -> true;
+
+      default -> false;
+    };
+  }
+
+  public static byte[] utf8(String value) {
+    return value.getBytes(StandardCharsets.UTF_8);
+  }
 
 }

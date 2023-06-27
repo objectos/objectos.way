@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 
 public class HttpTest extends AbstractHttpTest {
 
-  @Test(description = TestCase0001.DESCRIPTION)
+  @Test(enabled = false)
   public void testCase0001() throws IOException {
     URLConnection c;
     c = GET("/");

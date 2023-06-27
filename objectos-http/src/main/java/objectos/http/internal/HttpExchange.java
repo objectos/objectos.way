@@ -13,36 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import objectos.http.HttpExchange.Result.StatusResult;
+import objectos.http.HttpProcessor;
+import objectos.http.Status;
+import objectos.http.internal.HttpExchange.Result.StatusResult;
 import objectos.lang.NoteSink;
 
-final class HttpExchange implements Runnable {
+public final class HttpExchange implements Runnable {
 
   sealed interface Result {
     record StatusResult(Status status) implements Result {}
   }
 
-  private static class ThisRequestTarget implements RequestTarget {
-
-    private final byte[] bytes;
-
-    public ThisRequestTarget(byte[] bytes) {
-      this.bytes = bytes;
-    }
-
-    @Override
-    public final boolean pathEquals(String string) {
-      return new String(bytes).equals(string);
-    }
-
-  }
+  record RequestTarget(int start, int end) {}
 
   static final byte _STOP = 0,
 
@@ -52,21 +41,23 @@ final class HttpExchange implements Runnable {
 
       _FINALLY = 3,
 
-      _REQUEST_HEADER = 4,
+      _PROCESS = 4,
 
-      _REQUEST_HEADER_NAME = 5,
+      _REQUEST_HEADER = 5,
 
-      _REQUEST_HEADER_VALUE = 6,
+      _REQUEST_HEADER_NAME = 6,
 
-      _REQUEST_METHOD = 7,
+      _REQUEST_HEADER_VALUE = 7,
 
-      _REQUEST_TARGET = 8,
+      _REQUEST_METHOD = 8,
 
-      _REQUEST_VERSION = 9,
+      _REQUEST_TARGET = 9,
 
-      _SOCKET_READ = 10,
+      _REQUEST_VERSION = 10,
 
-      _START = 11;
+      _SOCKET_READ = 11,
+
+      _START = 12;
 
   private final byte[] buffer;
 
@@ -78,8 +69,6 @@ final class HttpExchange implements Runnable {
   private Throwable error;
 
   HeaderName headerName;
-
-  String headerValue;
 
   Method method;
 
@@ -103,12 +92,10 @@ final class HttpExchange implements Runnable {
 
   Version version;
 
-  // public stuff
-
-  HttpExchange(int bufferSize,
-               NoteSink noteSink,
-               HttpProcessor processor,
-               Socket socket) {
+  public HttpExchange(int bufferSize,
+                      NoteSink noteSink,
+                      HttpProcessor processor,
+                      Socket socket) {
     this.buffer = new byte[bufferSize];
 
     this.noteSink = noteSink;
@@ -127,14 +114,14 @@ final class HttpExchange implements Runnable {
     }
   }
 
-  // non-public stuff
-
   final boolean isActive() {
     return state != _STOP;
   }
 
   final void stepOne() {
     state = switch (state) {
+      case _PROCESS -> executeProcess();
+
       case _REQUEST_HEADER -> executeRequestHeader();
 
       case _REQUEST_HEADER_NAME -> executeRequestHeaderName();
@@ -155,6 +142,10 @@ final class HttpExchange implements Runnable {
         "Implement me :: state=" + state
       );
     };
+  }
+
+  private byte executeProcess() {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private void bufferCompact() {
@@ -184,21 +175,53 @@ final class HttpExchange implements Runnable {
   }
 
   private byte executeRequestHeader() {
-    final int firstIndex;
-    firstIndex = bufferIndex;
+    int index;
+    index = bufferIndex;
 
-    if (!bufferHasIndex(firstIndex)) {
+    if (!bufferHasIndex(index)) {
       return toSocketRead(state, _CLOSE);
     }
 
-    final byte first;
-    first = bufferGet(firstIndex);
+    // we'll check if the current char is CR
 
-    if (first != Http.CR_BYTE) {
+    final byte first;
+    first = bufferGet(index);
+
+    if (first != Bytes.CR) {
+      // not CR, process as field name
+
       return _REQUEST_HEADER_NAME;
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    index++;
+
+    if (!bufferHasIndex(index)) {
+      return toSocketRead(state, _CLOSE);
+    }
+
+    // we'll check if CR is followed by LF
+
+    final byte second;
+    second = bufferGet(index);
+
+    if (second != Bytes.LF) {
+      // not LF, reject as a bad request
+
+      return toResult(Status.BAD_REQUEST);
+    }
+
+    // ok, we are at the end of header
+    // bufferIndex will resume immediately after the LF
+
+    bufferIndex = index + 1;
+
+    // next action depends on the method
+
+    return switch (method) {
+      case GET -> _PROCESS;
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
   }
 
   private byte executeRequestHeaderName() {
@@ -215,7 +238,7 @@ final class HttpExchange implements Runnable {
       byte b;
       b = bufferGet(index);
 
-      if (b == Http.COLON_BYTE) {
+      if (b == Bytes.COLON) {
         found = true;
 
         break;
@@ -231,9 +254,9 @@ final class HttpExchange implements Runnable {
     byte first;
     first = bufferGet(nameStart);
 
-    ThisHeader maybe;
+    HeaderName maybe;
     maybe = switch (first) {
-      case 'H' -> ThisHeader.HOST;
+      case 'H' -> HeaderName.HOST;
 
       default -> null;
     };
@@ -265,7 +288,7 @@ final class HttpExchange implements Runnable {
       byte b;
       b = bufferGet(index);
 
-      if (b == Http.LF_BYTE) {
+      if (b == Bytes.LF) {
         found = true;
 
         break;
@@ -287,7 +310,7 @@ final class HttpExchange implements Runnable {
     int carriageIndex;
     carriageIndex = lineFeedIndex - 1;
 
-    if (bufferGet(carriageIndex) != Http.CR_BYTE) {
+    if (bufferGet(carriageIndex) != Bytes.CR) {
       return toResult(Status.BAD_REQUEST);
     }
 
@@ -298,7 +321,7 @@ final class HttpExchange implements Runnable {
     byte maybeOws;
     maybeOws = bufferGet(maybeStart);
 
-    if (Http.isOptionalWhitespace(maybeOws)) {
+    if (Bytes.isOptionalWhitespace(maybeOws)) {
       valueStart = maybeStart + 1;
     } else {
       valueStart = maybeStart;
@@ -309,6 +332,8 @@ final class HttpExchange implements Runnable {
     final int valueEnd;
     valueEnd = carriageIndex;
 
+    @SuppressWarnings("unused")
+    String headerValue;
     headerValue = makeString(valueStart, valueEnd);
 
     // we have found the value.
@@ -357,7 +382,7 @@ final class HttpExchange implements Runnable {
     byte maybeSpace;
     maybeSpace = bufferGet(spaceIndex);
 
-    if (maybeSpace != Http.SP_BYTE) {
+    if (maybeSpace != Bytes.SP) {
       return toResult(Status.BAD_REQUEST);
     }
 
@@ -379,7 +404,7 @@ final class HttpExchange implements Runnable {
       byte b;
       b = bufferGet(index);
 
-      if (b == Http.SP_BYTE) {
+      if (b == Bytes.SP) {
         found = true;
 
         break;
@@ -390,13 +415,10 @@ final class HttpExchange implements Runnable {
       return toSocketRead(state, _CLOSE);
     }
 
-    byte[] bytes;
-    bytes = Arrays.copyOfRange(buffer, bufferIndex, index);
+    requestTarget = new RequestTarget(bufferIndex, index);
 
     // after SP
     bufferIndex = index + 1;
-
-    requestTarget = new ThisRequestTarget(bytes);
 
     return _REQUEST_VERSION;
   }
@@ -437,7 +459,7 @@ final class HttpExchange implements Runnable {
       return toResult(Status.HTTP_VERSION_NOT_SUPPORTED);
     }
 
-    if (bufferGet(versionEnd) != Http.CR_BYTE || bufferGet(lineEnd) != Http.LF_BYTE) {
+    if (bufferGet(versionEnd) != Bytes.CR || bufferGet(lineEnd) != Bytes.LF) {
       return toResult(Status.BAD_REQUEST);
     }
 

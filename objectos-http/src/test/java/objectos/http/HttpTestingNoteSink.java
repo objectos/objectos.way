@@ -15,16 +15,14 @@
  */
 package objectos.http;
 
-import java.nio.charset.StandardCharsets;
+import objectos.lang.NoOpNoteSink;
+import objectos.lang.Note;
 
-public enum ThisHeader implements HeaderName {
+final class HttpTestingNoteSink extends NoOpNoteSink {
 
-  HOST("Host");
-
-  final byte[] bytes;
-
-  ThisHeader(String name) {
-    bytes = name.getBytes(StandardCharsets.UTF_8);
+  @Override
+  public final boolean isEnabled(Note event) {
+    return super.isEnabled(event);
   }
 
 }

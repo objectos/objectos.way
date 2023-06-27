@@ -15,25 +15,11 @@
  */
 package objectos.http;
 
-/**
- * @since 4
- */
-public interface HttpProcessor {
+public abstract class HttpProcessor {
 
-  default void requestHeader(String name, String value) {
-    throw new UnsupportedOperationException();
-  }
-
-  default void requestLine(Method method, RequestTarget target, Version version) {
-    throw new UnsupportedOperationException();
-  }
-
-  default void requestStart(HttpResponseHandle handle) {
-    throw new UnsupportedOperationException();
-  }
-
-  default ResponseTask responseTask() {
-    throw new UnsupportedOperationException();
-  }
+  /**
+   * Sole constructor.
+   */
+  protected HttpProcessor() {}
 
 }

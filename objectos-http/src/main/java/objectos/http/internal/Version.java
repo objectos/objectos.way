@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-import java.nio.charset.StandardCharsets;
+public enum Version {
 
-public enum Method {
+  V1_0("HTTP/1.0"),
 
-  GET,
+  V1_1("HTTP/1.1");
 
-  POST;
+  final byte[] bytes;
 
-  public final byte[] bytes = name().getBytes(StandardCharsets.UTF_8);
-
-  public final char[] parseSuffix = name().substring(1).toCharArray();
+  private Version(String signature) {
+    bytes = Bytes.utf8(signature);
+  }
 
 }
