@@ -17,7 +17,7 @@ package objectos.http;
 
 import java.nio.file.Path;
 
-final class HttpRequestProcessorImpl extends HttpProcessor {
+final class HttpRequestProcessorImpl implements HttpProcessor {
 
   @SuppressWarnings("unused")
   private final Path directory;

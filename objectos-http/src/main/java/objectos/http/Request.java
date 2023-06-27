@@ -15,6 +15,6 @@
  */
 package objectos.http;
 
-public interface HttpProcessor {
+public interface Request {
 
 }

@@ -16,10 +16,13 @@
 package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.net.Socket;
+import java.util.Map;
 import objectos.http.AbstractHttpTest;
 import objectos.http.HttpProcessor;
+import objectos.http.internal.HttpExchange.HeaderValue;
 import objectos.http.internal.HttpExchange.RequestTarget;
 import org.testng.annotations.Test;
 
@@ -98,13 +101,25 @@ public class HttpExchangeTest extends AbstractHttpTest {
     // SP 'l' 'o' 'c' 'a' 'l' 'h' 'o' 's' 't' = 10
     // ':' '7' '0' '0' '1' CR LF = 7
     assertEquals(exchange.bufferIndex, 38);
-    //assertEquals(processor.host, "localhost:7001");
+    assertHeaderValue(exchange, HeaderName.HOST, "localhost:7001");
     assertEquals(exchange.state, HttpExchange._REQUEST_HEADER);
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 40);
     assertEquals(exchange.state, HttpExchange._PROCESS);
+  }
+
+  private void assertHeaderValue(HttpExchange exchange, HeaderName name, String expected) {
+    Map<HeaderName, HeaderValue> headers;
+    headers = exchange.headers;
+
+    HeaderValue value;
+    value = headers.get(name);
+
+    assertNotNull(value, "Header " + name + " was not found");
+
+    assertEquals(value.toString(), expected);
   }
 
 }

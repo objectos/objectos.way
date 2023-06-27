@@ -20,12 +20,32 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
 import objectos.http.HttpProcessor;
 import objectos.http.Status;
 import objectos.http.internal.HttpExchange.Result.StatusResult;
 import objectos.lang.NoteSink;
 
 public final class HttpExchange implements Runnable {
+
+  class HeaderValue {
+
+    final int start;
+
+    final int end;
+
+    HeaderValue(int start, int end) {
+      this.start = start;
+      this.end = end;
+    }
+
+    @Override
+    public final String toString() {
+      return new String(buffer, start, end - start, StandardCharsets.UTF_8);
+    }
+
+  }
 
   sealed interface Result {
     record StatusResult(Status status) implements Result {}
@@ -70,6 +90,8 @@ public final class HttpExchange implements Runnable {
 
   HeaderName headerName;
 
+  final Map<HeaderName, HeaderValue> headers;
+
   Method method;
 
   @SuppressWarnings("unused")
@@ -97,6 +119,8 @@ public final class HttpExchange implements Runnable {
                       HttpProcessor processor,
                       Socket socket) {
     this.buffer = new byte[bufferSize];
+
+    headers = new EnumMap<>(HeaderName.class);
 
     this.noteSink = noteSink;
 
@@ -332,9 +356,15 @@ public final class HttpExchange implements Runnable {
     final int valueEnd;
     valueEnd = carriageIndex;
 
-    @SuppressWarnings("unused")
-    String headerValue;
-    headerValue = makeString(valueStart, valueEnd);
+    HeaderValue headerValue;
+    headerValue = new HeaderValue(valueStart, valueEnd);
+
+    HeaderValue previousValue;
+    previousValue = headers.put(headerName, headerValue);
+
+    if (previousValue != null) {
+      throw new UnsupportedOperationException("Implement me");
+    }
 
     // we have found the value.
     // bufferIndex should point to the position immediately after the LF char
@@ -509,10 +539,6 @@ public final class HttpExchange implements Runnable {
     // TODO set timeout
 
     return toSocketRead(_REQUEST_METHOD, _CLOSE);
-  }
-
-  private String makeString(int start, int end) {
-    return new String(buffer, start, end - start, StandardCharsets.ISO_8859_1);
   }
 
   private byte toClose(IOException e) {
