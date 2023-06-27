@@ -15,4 +15,16 @@
  */
 package objectos.http;
 
-sealed interface HeaderName permits ThisHeader {}
+import java.nio.charset.StandardCharsets;
+
+public enum ThisHeader implements HeaderName {
+
+  HOST("Host");
+
+  final byte[] bytes;
+
+  ThisHeader(String name) {
+    bytes = name.getBytes(StandardCharsets.UTF_8);
+  }
+
+}

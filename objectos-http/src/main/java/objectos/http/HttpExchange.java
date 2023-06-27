@@ -23,6 +23,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import objectos.http.HttpExchange.Result.StatusResult;
@@ -79,6 +80,10 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
   @SuppressWarnings("unused")
   private Throwable error;
+
+  HeaderName headerName;
+
+  String headerValue;
 
   Method method;
 
@@ -168,6 +173,10 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
   final void stepOne() {
     state = switch (state) {
+      case _REQUEST_HEADER_NAME -> executeRequestHeaderName();
+
+      case _REQUEST_HEADER_VALUE -> executeRequestHeaderValue();
+
       case _REQUEST_METHOD -> executeRequestMethod();
 
       case _REQUEST_TARGET -> executeRequestTarget();
@@ -208,6 +217,128 @@ final class HttpExchange implements HttpResponseHandle, Runnable {
 
   private boolean bufferHasIndex(int index) {
     return index < bufferLimit;
+  }
+
+  private byte executeRequestHeaderName() {
+    final int nameStart;
+    nameStart = bufferIndex;
+
+    int index;
+    index = nameStart;
+
+    boolean found;
+    found = false;
+
+    for (; bufferHasIndex(index); index++) {
+      byte b;
+      b = bufferGet(index);
+
+      if (b == Http.COLON_BYTE) {
+        found = true;
+
+        break;
+      }
+    }
+
+    if (!found) {
+      // TODO header name limit
+
+      return toSocketRead(state, _CLOSE);
+    }
+
+    byte first;
+    first = bufferGet(nameStart);
+
+    ThisHeader maybe;
+    maybe = switch (first) {
+      case 'H' -> ThisHeader.HOST;
+
+      default -> null;
+    };
+
+    if (maybe != null && bufferEquals(maybe.bytes, nameStart)) {
+      headerName = maybe;
+
+      bufferIndex = index + 1;
+
+      return _REQUEST_HEADER_VALUE;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  private byte executeRequestHeaderValue() {
+    int maybeStart;
+    maybeStart = bufferIndex;
+
+    // we search for the LF char that marks the end-of-line
+
+    int index;
+    index = maybeStart;
+
+    boolean found;
+    found = false;
+
+    for (; bufferHasIndex(index); index++) {
+      byte b;
+      b = bufferGet(index);
+
+      if (b == Http.LF_BYTE) {
+        found = true;
+
+        break;
+      }
+    }
+
+    if (!found) {
+      // LF was not found
+      // TODO field length limit
+
+      return toSocketRead(state, _CLOSE);
+    }
+
+    // we check if CR is found before the LF
+
+    int lineFeedIndex;
+    lineFeedIndex = index;
+
+    int carriageIndex;
+    carriageIndex = lineFeedIndex - 1;
+
+    if (bufferGet(carriageIndex) != Http.CR_BYTE) {
+      return toResult(Status.BAD_REQUEST);
+    }
+
+    // we trim the OWS, if found, from the start of the value
+
+    final int valueStart;
+
+    byte maybeOws;
+    maybeOws = bufferGet(maybeStart);
+
+    if (Http.isOptionalWhitespace(maybeOws)) {
+      valueStart = maybeStart + 1;
+    } else {
+      valueStart = maybeStart;
+    }
+
+    // the value string ends immediately before the CR char
+
+    final int valueEnd;
+    valueEnd = carriageIndex;
+
+    headerValue = makeString(valueStart, valueEnd);
+
+    // we have found the value.
+    // bufferIndex should point to the position immediately after the LF char
+
+    bufferIndex = lineFeedIndex + 1;
+
+    return _REQUEST_HEADER_NAME;
+  }
+
+  private String makeString(int start, int end) {
+    return new String(buffer, start, end - start, StandardCharsets.ISO_8859_1);
   }
 
   private byte executeRequestMethod() {

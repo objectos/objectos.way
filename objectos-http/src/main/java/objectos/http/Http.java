@@ -116,6 +116,14 @@ public final class Http {
     return format;
   }
 
+  static boolean isOptionalWhitespace(byte value) {
+    return switch (value) {
+      case ' ', '\t' -> true;
+
+      default -> false;
+    };
+  }
+
   static <E> ArrayDeque<E> newArrayDeque(int capacity) {
     return new ArrayDeque<E>(capacity);
   }
