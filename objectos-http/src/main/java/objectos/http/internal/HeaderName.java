@@ -21,13 +21,23 @@ public enum HeaderName {
 
   CONNECTION("Connection"),
 
+  CONTENT_LENGTH("Content-Length"),
+
+  CONTENT_TYPE("Content-Type"),
+
+  DATE("Date"),
+
   HOST("Host"),
 
   USER_AGENT("User-Agent");
 
   final byte[] bytes;
 
+  public final String name;
+
   private HeaderName(String name) {
+    this.name = name;
+
     bytes = Bytes.utf8(name);
   }
 

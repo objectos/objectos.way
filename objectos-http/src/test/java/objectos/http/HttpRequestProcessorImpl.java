@@ -26,4 +26,9 @@ final class HttpRequestProcessorImpl implements HttpProcessor {
     this.directory = directory;
   }
 
+  @Override
+  public final void process(Request request, Response response) throws Exception {
+
+  }
+
 }

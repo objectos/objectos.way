@@ -17,4 +17,6 @@ package objectos.http;
 
 public interface HttpProcessor {
 
+  void process(Request request, Response response) throws Exception;
+
 }

@@ -15,33 +15,33 @@
  */
 package objectos.http.internal;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 final class TestableSocket extends Socket {
 
-  private byte[] requestBytes;
+  private final byte[] inputStreamBytes;
 
-  private int requestIndex;
+  private int inputStreamIndex;
+
+  private ByteArrayOutputStream outputStream;
+
+  private TestableSocket(byte[] requestBytes) {
+    this.inputStreamBytes = requestBytes;
+  }
 
   public static TestableSocket parse(String string) {
-    TestableSocket result;
-    result = new TestableSocket();
-
     String normalized;
     normalized = string.replaceAll("\n", "\r\n");
 
-    result.requestBytes = normalized.getBytes(StandardCharsets.UTF_8);
+    byte[] bytes;
+    bytes = normalized.getBytes(StandardCharsets.UTF_8);
 
-    return result;
-  }
-
-  public final void clear() {
-    requestBytes = null;
-
-    requestIndex = -1;
+    return new TestableSocket(bytes);
   }
 
   @Override
@@ -49,13 +49,29 @@ final class TestableSocket extends Socket {
     return new InputStream() {
       @Override
       public int read() throws IOException {
-        if (requestIndex < requestBytes.length) {
-          return requestBytes[requestIndex++];
+        if (inputStreamIndex < inputStreamBytes.length) {
+          return inputStreamBytes[inputStreamIndex++];
         } else {
           return -1;
         }
       }
     };
+  }
+
+  @Override
+  public final OutputStream getOutputStream() throws IOException {
+    if (outputStream == null) {
+      outputStream = new ByteArrayOutputStream();
+    }
+
+    return outputStream;
+  }
+
+  public final String outputAsString() {
+    byte[] bytes;
+    bytes = outputStream.toByteArray();
+
+    return new String(bytes, StandardCharsets.UTF_8);
   }
 
 }

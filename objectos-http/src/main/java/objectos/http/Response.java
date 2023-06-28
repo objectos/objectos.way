@@ -15,6 +15,16 @@
  */
 package objectos.http;
 
+import java.time.ZonedDateTime;
+
 public interface Response {
+
+  void contentLength(long length);
+
+  void contentType(String value);
+
+  void date(ZonedDateTime date);
+
+  void send(byte[] bytes);
 
 }

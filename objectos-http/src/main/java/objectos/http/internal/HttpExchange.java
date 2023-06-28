@@ -17,15 +17,22 @@ package objectos.http.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import objectos.http.Http;
 import objectos.http.HttpProcessor;
+import objectos.http.Response;
 import objectos.http.Status;
 import objectos.http.internal.HttpExchange.Result.StatusResult;
 import objectos.lang.NoteSink;
+import objectos.util.GrowableList;
 
 public final class HttpExchange implements Runnable {
 
@@ -53,6 +60,58 @@ public final class HttpExchange implements Runnable {
 
   record RequestTarget(int start, int end) {}
 
+  private record ResponseHeader(HeaderName name, String value) {
+    public final byte[] bytes() {
+      String text;
+      text = name.name + ": " + value + "\r\n";
+
+      return text.getBytes(StandardCharsets.UTF_8);
+    }
+  }
+
+  private class ThisResponse implements Response {
+
+    @Override
+    public final void contentLength(long length) {
+      if (length < 0) {
+        throw new IllegalArgumentException("Length must be >= 0");
+      }
+
+      responseHeaders.add(
+        new ResponseHeader(HeaderName.CONTENT_LENGTH, Long.toString(length))
+      );
+    }
+
+    @Override
+    public final void contentType(String value) {
+      Objects.requireNonNull(value, "value == null");
+
+      responseHeaders.add(
+        new ResponseHeader(HeaderName.CONTENT_TYPE, value)
+      );
+    }
+
+    @Override
+    public final void date(ZonedDateTime date) {
+      Objects.requireNonNull(date, "date == null");
+
+      String value;
+      value = Http.formatDate(date);
+
+      responseHeaders.add(
+        new ResponseHeader(HeaderName.DATE, value)
+      );
+    }
+
+    @Override
+    public final void send(byte[] bytes) {
+      Objects.requireNonNull(bytes, "bytes == null");
+
+      responseBytes = bytes;
+    }
+
+  }
+
   static final byte _STOP = 0,
 
       _BAD_REQUEST = 1,
@@ -75,9 +134,19 @@ public final class HttpExchange implements Runnable {
 
       _REQUEST_VERSION = 10,
 
-      _SOCKET_READ = 11,
+      _RESPONSE_BODY = 11,
 
-      _START = 12;
+      _RESPONSE_HEADER_BUFFER = 12,
+
+      _RESPONSE_HEADER_WRITE_FULL = 13,
+
+      _RESPONSE_HEADER_WRITE_PARTIAL = 14,
+
+      _SOCKET_READ = 15,
+
+      _SOCKET_WRITE = 16,
+
+      _START = 17;
 
   private final byte[] buffer;
 
@@ -88,19 +157,26 @@ public final class HttpExchange implements Runnable {
   @SuppressWarnings("unused")
   private Throwable error;
 
-  HeaderName headerName;
-
-  final Map<HeaderName, HeaderValue> headers;
-
   Method method;
 
   @SuppressWarnings("unused")
   private final NoteSink noteSink;
 
-  @SuppressWarnings("unused")
   private final HttpProcessor processor;
 
+  HeaderName requestHeaderName;
+
+  Map<HeaderName, HeaderValue> requestHeaders;
+
   RequestTarget requestTarget;
+
+  private ThisResponse response;
+
+  byte[] responseBytes;
+
+  List<ResponseHeader> responseHeaders;
+
+  int responseHeadersIndex;
 
   private Result result;
 
@@ -119,8 +195,6 @@ public final class HttpExchange implements Runnable {
                       HttpProcessor processor,
                       Socket socket) {
     this.buffer = new byte[bufferSize];
-
-    headers = new EnumMap<>(HeaderName.class);
 
     this.noteSink = noteSink;
 
@@ -158,6 +232,12 @@ public final class HttpExchange implements Runnable {
 
       case _REQUEST_VERSION -> executeRequestVersion();
 
+      case _RESPONSE_HEADER_BUFFER -> executeResponseHeaderBuffer();
+
+      case _RESPONSE_HEADER_WRITE_FULL -> executeResponseHeaderWriteFull();
+
+      case _RESPONSE_HEADER_WRITE_PARTIAL -> executeResponseHeaderWritePartial();
+
       case _SOCKET_READ -> executeSocketRead();
 
       case _START -> executeStart();
@@ -166,10 +246,6 @@ public final class HttpExchange implements Runnable {
         "Implement me :: state=" + state
       );
     };
-  }
-
-  private byte executeProcess() {
-    throw new UnsupportedOperationException("Implement me");
   }
 
   private void bufferCompact() {
@@ -196,6 +272,30 @@ public final class HttpExchange implements Runnable {
 
   private boolean bufferHasIndex(int index) {
     return index < bufferLimit;
+  }
+
+  private byte executeProcess() {
+    response = new ThisResponse();
+
+    responseHeaders = new GrowableList<>();
+
+    try {
+      processor.process(null, response);
+    } catch (Exception e) {
+      error = e;
+
+      return toResult(Status.INTERNAL_SERVER_ERROR);
+    }
+
+    if (responseHeaders.isEmpty()) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    // we'll start at the first response header
+
+    responseHeadersIndex = 0;
+
+    return toResponseHeaderBuffer();
   }
 
   private byte executeRequestHeader() {
@@ -286,7 +386,7 @@ public final class HttpExchange implements Runnable {
     };
 
     if (maybe != null && bufferEquals(maybe.bytes, nameStart)) {
-      headerName = maybe;
+      requestHeaderName = maybe;
 
       bufferIndex = index + 1;
 
@@ -360,7 +460,7 @@ public final class HttpExchange implements Runnable {
     headerValue = new HeaderValue(valueStart, valueEnd);
 
     HeaderValue previousValue;
-    previousValue = headers.put(headerName, headerValue);
+    previousValue = requestHeaders.put(requestHeaderName, headerValue);
 
     if (previousValue != null) {
       throw new UnsupportedOperationException("Implement me");
@@ -497,7 +597,107 @@ public final class HttpExchange implements Runnable {
 
     version = maybe;
 
+    // we create the map to store the eventual request headers
+
+    requestHeaders = new EnumMap<>(HeaderName.class);
+
     return _REQUEST_HEADER;
+  }
+
+  private byte executeResponseHeaderBuffer() {
+    // we reset out buffer
+
+    bufferIndex = bufferLimit = 0;
+
+    // assume buffer will be large enough for headers
+
+    byte nextStep;
+    nextStep = _RESPONSE_HEADER_WRITE_FULL;
+
+    int responseHeadersSize;
+    responseHeadersSize = responseHeaders.size();
+
+    while (responseHeadersIndex < responseHeadersSize) {
+      ResponseHeader header;
+      header = responseHeaders.get(responseHeadersIndex);
+
+      byte[] bytes;
+      bytes = header.bytes();
+
+      if (bytes.length > buffer.length) {
+        // TODO handle response header too large
+
+        throw new UnsupportedOperationException(
+          "Implement me :: buffer not large enough"
+        );
+      }
+
+      int newLimit;
+      newLimit = bufferLimit + bytes.length;
+
+      if (newLimit > buffer.length) {
+        // buffer is full so we write out the current contents
+
+        nextStep = _RESPONSE_HEADER_WRITE_PARTIAL;
+
+        break;
+      }
+
+      System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
+
+      bufferLimit = newLimit;
+
+      responseHeadersIndex++;
+    }
+
+    return nextStep;
+  }
+
+  private byte executeResponseHeaderWriteFull() {
+    boolean separatorWritten;
+
+    int bufferRemaining;
+    bufferRemaining = buffer.length - bufferLimit;
+
+    if (bufferRemaining < 2) {
+      separatorWritten = false;
+    } else {
+      buffer[bufferLimit++] = Bytes.CR;
+      buffer[bufferLimit++] = Bytes.LF;
+
+      separatorWritten = true;
+    }
+
+    try {
+      OutputStream outputStream;
+      outputStream = socket.getOutputStream();
+
+      outputStream.write(buffer, 0, bufferLimit);
+
+      if (!separatorWritten) {
+        buffer[0] = Bytes.CR;
+        buffer[1] = Bytes.LF;
+
+        outputStream.write(buffer, 0, 2);
+      }
+
+      return toResponseHeaderBuffer();
+    } catch (IOException e) {
+      return toClose(e);
+    }
+  }
+
+  private byte executeResponseHeaderWritePartial() {
+    try {
+      OutputStream outputStream;
+      outputStream = socket.getOutputStream();
+
+      outputStream.write(buffer, 0, bufferLimit);
+
+      return toResponseHeaderBuffer();
+    } catch (IOException e) {
+      return toClose(e);
+    }
   }
 
   private byte executeSocketRead() {
@@ -545,6 +745,14 @@ public final class HttpExchange implements Runnable {
     error = e;
 
     return _CLOSE;
+  }
+
+  private byte toResponseHeaderBuffer() {
+    // we reset our buffer
+
+    bufferIndex = bufferLimit = 0;
+
+    return _RESPONSE_HEADER_BUFFER;
   }
 
   private byte toResult(Status status) {

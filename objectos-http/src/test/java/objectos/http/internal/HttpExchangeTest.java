@@ -18,10 +18,17 @@ package objectos.http.internal;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import objectos.http.AbstractHttpTest;
 import objectos.http.HttpProcessor;
+import objectos.http.Request;
+import objectos.http.Response;
 import objectos.http.internal.HttpExchange.HeaderValue;
 import objectos.http.internal.HttpExchange.RequestTarget;
 import org.testng.annotations.Test;
@@ -35,7 +42,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
   - Host
   """)
   public void testCase0001() throws Throwable {
-    Socket socket;
+    TestableSocket socket;
     socket = TestableSocket.parse("""
     GET / HTTP/1.1
     Host: localhost:7001
@@ -44,6 +51,31 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     HttpProcessor processor;
     processor = new HttpProcessor() {
+      ZonedDateTime date = ZonedDateTime.of(
+        LocalDate.of(2023, 6, 28),
+        LocalTime.of(9, 8, 43),
+        ZoneId.of("GMT-3")
+      );
+
+      @Override
+      public final void process(Request request, Response response) {
+        Charset charset;
+        charset = StandardCharsets.UTF_8;
+
+        String text;
+        text = "Hello world!\n";
+
+        byte[] bytes;
+        bytes = text.getBytes(charset);
+
+        response.contentType("text/plain; charset=utf-8");
+
+        response.contentLength(bytes.length);
+
+        response.date(date);
+
+        response.send(bytes);
+      }
     };
 
     HttpExchange exchange;
@@ -93,7 +125,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     // 'H' 'o' 's' 't' ':' = 5
     assertEquals(exchange.bufferIndex, 21);
-    assertEquals(exchange.headerName, HeaderName.HOST);
+    assertEquals(exchange.requestHeaderName, HeaderName.HOST);
     assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_VALUE);
 
     exchange.stepOne();
@@ -108,11 +140,58 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     assertEquals(exchange.bufferIndex, 40);
     assertEquals(exchange.state, HttpExchange._PROCESS);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.responseHeaders.size(), 3);
+    assertEquals(exchange.responseHeadersIndex, 0);
+    assertNotNull(exchange.responseBytes);
+    assertEquals(exchange.state, HttpExchange._RESPONSE_HEADER_BUFFER);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 61);
+    assertEquals(exchange.responseHeadersIndex, 2);
+    assertEquals(exchange.state, HttpExchange._RESPONSE_HEADER_WRITE_PARTIAL);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.responseHeadersIndex, 2);
+    assertEquals(exchange.state, HttpExchange._RESPONSE_HEADER_BUFFER);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 39);
+    assertEquals(exchange.responseHeadersIndex, 3);
+    assertEquals(exchange.state, HttpExchange._RESPONSE_HEADER_WRITE_FULL);
+
+    /*
+    exchange.stepOne();
+    
+    assertEquals(
+      socket.outputAsString(),
+    
+      """
+      HTTP/1.1 200 OK<CRLF>
+      Content-Type: text/plain; charset=utf-8<CRLF>
+      Content-Length: 13<CRLF>
+      Date: Wed, 28 Jun 2023 12:08:43 GMT<CRLF>
+      <CRLF>
+      Hello World!
+      """.replace("<CRLF>\n", "\r\n")
+    );
+    */
   }
 
   private void assertHeaderValue(HttpExchange exchange, HeaderName name, String expected) {
     Map<HeaderName, HeaderValue> headers;
-    headers = exchange.headers;
+    headers = exchange.requestHeaders;
 
     HeaderValue value;
     value = headers.get(name);
