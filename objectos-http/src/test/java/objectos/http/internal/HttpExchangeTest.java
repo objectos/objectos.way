@@ -43,18 +43,36 @@ public class HttpExchangeTest extends AbstractHttpTest {
   };
 
   @Test(description = """
-  [#425] HTTP 001: START --> IO_READ
+  [#427] HTTP 001: IO_READ --> PARSE_METHOD
+  """)
+  public void executeIoRead01() {
+    TestableSocket socket;
+    socket = socket(http001Request());
+
+    HttpExchange exchange;
+    exchange = new HttpExchange(64, noteSink, NOOP_PROCESSOR, socket);
+
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.nextAction = HttpExchange._PARSE_METHOD;
+    exchange.state = HttpExchange._IO_READ;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 41);
+    assertEquals(exchange.state, HttpExchange._PARSE_METHOD);
+  }
+
+  @Test(description = """
+  [#426] HTTP 001: START --> IO_READ
 
   - buffer must be reset
   - next action -> PARSE_METHOD
   """)
-  public void executeStart() {
+  public void executeStart01() {
     TestableSocket socket;
-    socket = TestableSocket.parse("""
-    GET / HTTP/1.1
-    Host: www.example.com
-
-    """);
+    socket = socket(http001Request());
 
     HttpExchange exchange;
     exchange = new HttpExchange(64, noteSink, NOOP_PROCESSOR, socket);
@@ -67,8 +85,8 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.state, HttpExchange._IO_READ);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD);
+    assertEquals(exchange.state, HttpExchange._IO_READ);
   }
 
   @Test(description = """
@@ -209,10 +227,10 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     /*
     exchange.stepOne();
-
+    
     assertEquals(
       socket.outputAsString(),
-
+    
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
@@ -236,5 +254,15 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     assertEquals(value.toString(), expected);
   }
+
+  private String http001Request() {
+    return """
+      GET / HTTP/1.1
+      Host: www.example.com
+
+      """;
+  }
+
+  private TestableSocket socket(String s) { return TestableSocket.parse(s); }
 
 }

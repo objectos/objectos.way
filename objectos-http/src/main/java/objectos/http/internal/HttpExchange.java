@@ -253,17 +253,6 @@ public final class HttpExchange implements Runnable {
     };
   }
 
-  private void bufferCompact() {
-    int redableLength;
-    redableLength = bufferLimit - bufferIndex;
-
-    System.arraycopy(buffer, bufferIndex, buffer, 0, redableLength);
-
-    bufferIndex = 0;
-
-    bufferLimit = redableLength;
-  }
-
   private boolean bufferEquals(byte[] target, int start) {
     return Arrays.equals(
       buffer, start, start + target.length,
@@ -280,10 +269,6 @@ public final class HttpExchange implements Runnable {
   }
 
   private byte executeIoRead() {
-    if (bufferIndex > 0) {
-      bufferCompact();
-    }
-
     InputStream inputStream;
 
     try {
