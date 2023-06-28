@@ -158,6 +158,7 @@ limitations under the License.
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
+							<additionalOptions>--enable-preview</additionalOptions>
 							<destDir>api</destDir>
 							<doctitle>The Objectos ${project.version} API</doctitle>
 							<windowtitle>The Objectos ${project.version} API</windowtitle>
