@@ -39,11 +39,8 @@ final class TestableSocket extends Socket {
   }
 
   public static TestableSocket parse(String string) {
-    String normalized;
-    normalized = string.replaceAll("\n", "\r\n");
-
     byte[] bytes;
-    bytes = normalized.getBytes(StandardCharsets.UTF_8);
+    bytes = string.getBytes(StandardCharsets.UTF_8);
 
     return new TestableSocket(bytes);
   }

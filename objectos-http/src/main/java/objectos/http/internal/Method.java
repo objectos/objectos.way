@@ -19,9 +19,23 @@ import java.nio.charset.StandardCharsets;
 
 public enum Method {
 
+  CONNECT,
+
+  DELETE,
+
   GET,
 
-  POST;
+  HEAD,
+
+  OPTIONS,
+
+  PATCH,
+
+  POST,
+
+  PUT,
+
+  TRACE;
 
   public final byte[] bytes = name().getBytes(StandardCharsets.UTF_8);
 

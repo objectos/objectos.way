@@ -125,33 +125,37 @@ public final class HttpExchange implements Runnable {
 
       _IO_READ = 4,
 
-      _PARSE_METHOD = 9,
+      _PARSE_METHOD = 5,
 
-      _PROCESS = 5,
+      _PARSE_METHOD_CANDIDATE = 6,
 
-      _REQUEST_HEADER = 6,
+      _PARSE_METHOD_P = 7,
 
-      _REQUEST_HEADER_NAME = 7,
+      _PARSE_REQUEST_TARGET = 8,
 
-      _REQUEST_HEADER_VALUE = 8,
+      _PROCESS = 9,
 
-      _REQUEST_TARGET = 10,
+      _REQUEST_HEADER = 10,
 
-      _REQUEST_VERSION = 11,
+      _REQUEST_HEADER_NAME = 11,
 
-      _RESPONSE_BODY = 12,
+      _REQUEST_HEADER_VALUE = 12,
 
-      _RESPONSE_HEADER_BUFFER = 13,
+      _REQUEST_VERSION = 13,
 
-      _RESPONSE_HEADER_WRITE_FULL = 14,
+      _RESPONSE_BODY = 14,
 
-      _RESPONSE_HEADER_WRITE_PARTIAL = 15,
+      _RESPONSE_HEADER_BUFFER = 15,
 
-      _SOCKET_WRITE = 16,
+      _RESPONSE_HEADER_WRITE_FULL = 16,
 
-      _START = 17;
+      _RESPONSE_HEADER_WRITE_PARTIAL = 17,
 
-  private final byte[] buffer;
+      _SOCKET_WRITE = 18,
+
+      _START = 19;
+
+  byte[] buffer;
 
   int bufferIndex;
 
@@ -163,9 +167,9 @@ public final class HttpExchange implements Runnable {
 
   byte nextAction;
 
-  private final NoteSink noteSink;
+  NoteSink noteSink;
 
-  private final HttpProcessor processor;
+  HttpProcessor processor;
 
   HeaderName requestHeaderName;
 
@@ -183,7 +187,7 @@ public final class HttpExchange implements Runnable {
 
   private Result result;
 
-  private final Socket socket;
+  Socket socket;
 
   byte state;
 
@@ -195,13 +199,6 @@ public final class HttpExchange implements Runnable {
                       Socket socket) {
     this.buffer = new byte[bufferSize];
 
-    // we set the buffer values to -1
-    // to check if the START state works correctly
-
-    bufferIndex = -1;
-
-    bufferLimit = -1;
-
     this.noteSink = noteSink;
 
     this.processor = processor;
@@ -210,6 +207,8 @@ public final class HttpExchange implements Runnable {
 
     state = _START;
   }
+
+  HttpExchange() {}
 
   @Override
   public final void run() {
@@ -234,9 +233,9 @@ public final class HttpExchange implements Runnable {
 
       case _REQUEST_HEADER_VALUE -> executeRequestHeaderValue();
 
-      case _PARSE_METHOD -> executeRequestMethod();
+      case _PARSE_METHOD -> executeParseMethod();
 
-      case _REQUEST_TARGET -> executeRequestTarget();
+      case _PARSE_REQUEST_TARGET -> executeRequestTarget();
 
       case _REQUEST_VERSION -> executeRequestVersion();
 
@@ -296,6 +295,43 @@ public final class HttpExchange implements Runnable {
     bufferLimit += bytesRead;
 
     return nextAction;
+  }
+
+  private byte executeParseMethod() {
+    int methodStart;
+    methodStart = bufferIndex;
+
+    // the next call is safe.
+    //
+    // if we got here, InputStream::read returned at least 1 byte
+    // InputStream::read only returns 0 when len == 0 in read(array, off, len)
+    // otherwise it returns > 0, or -1 when EOF or throws IOException
+
+    byte first;
+    first = bufferGet(methodStart);
+
+    // based on the first char, we select out method candidate
+
+    return switch (first) {
+      case 'C' -> toParseMethodCandidate(Method.CONNECT);
+
+      case 'D' -> toParseMethodCandidate(Method.DELETE);
+
+      case 'G' -> toParseMethodCandidate(Method.GET);
+
+      case 'H' -> toParseMethodCandidate(Method.HEAD);
+
+      case 'O' -> toParseMethodCandidate(Method.OPTIONS);
+
+      case 'P' -> _PARSE_METHOD_P;
+
+      case 'T' -> toParseMethodCandidate(Method.TRACE);
+
+      // first char does not match any candidate
+      // we are sure this is a bad request
+
+      default -> toResult(Status.BAD_REQUEST);
+    };
   }
 
   private byte executeProcess() {
@@ -496,55 +532,6 @@ public final class HttpExchange implements Runnable {
     bufferIndex = lineFeedIndex + 1;
 
     return _REQUEST_HEADER;
-  }
-
-  private byte executeRequestMethod() {
-    int start = bufferIndex;
-
-    if (!bufferHasIndex(start)) {
-      return toIoRead(state);
-    }
-
-    byte first;
-    first = bufferGet(start);
-
-    Method maybeMethod;
-    maybeMethod = switch (first) {
-      case 'G' -> Method.GET;
-
-      default -> null;
-    };
-
-    if (maybeMethod == null) {
-      return toResult(Status.BAD_REQUEST);
-    }
-
-    byte[] methodBytes;
-    methodBytes = maybeMethod.bytes;
-
-    if (!bufferEquals(methodBytes, start)) {
-      return toResult(Status.NOT_IMPLEMENTED);
-    }
-
-    int spaceIndex;
-    spaceIndex = start + methodBytes.length;
-
-    if (!bufferHasIndex(spaceIndex)) {
-      return toIoRead(state);
-    }
-
-    byte maybeSpace;
-    maybeSpace = bufferGet(spaceIndex);
-
-    if (maybeSpace != Bytes.SP) {
-      return toResult(Status.BAD_REQUEST);
-    }
-
-    bufferIndex = spaceIndex + 1;
-
-    method = maybeMethod;
-
-    return _REQUEST_TARGET;
   }
 
   private byte executeRequestTarget() {
@@ -752,6 +739,12 @@ public final class HttpExchange implements Runnable {
     noteSink.send(EIO_READ_ERROR, e);
 
     return _CLOSE;
+  }
+
+  private byte toParseMethodCandidate(Method maybe) {
+    method = maybe;
+
+    return _PARSE_METHOD_CANDIDATE;
   }
 
   private byte toResponseHeaderBuffer() {

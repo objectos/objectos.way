@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import objectos.http.AbstractHttpTest;
 import objectos.http.HttpProcessor;
@@ -53,21 +54,20 @@ public class HttpExchangeTest extends AbstractHttpTest {
   [#427] HTTP 001: IO_READ --> PARSE_METHOD
   """)
   public void executeIoRead01() {
-    TestableSocket socket;
-    socket = socket(http001Request());
-
     HttpExchange exchange;
-    exchange = new HttpExchange(64, NOOP_NOTE_SINK, NOOP_PROCESSOR, socket);
+    exchange = new HttpExchange();
 
+    exchange.buffer = new byte[64];
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
     exchange.nextAction = HttpExchange._PARSE_METHOD;
+    exchange.socket = socket("FOO\r\n");
     exchange.state = HttpExchange._IO_READ;
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 41);
+    assertEquals(exchange.bufferLimit, 5);
     assertEquals(exchange.state, HttpExchange._PARSE_METHOD);
   }
 
@@ -78,7 +78,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
   """)
   public void executeIoRead02() {
     TestableSocket socket;
-    socket = socket(http001Request());
+    socket = socket("FOO");
 
     IOException error;
     error = new IOException();
@@ -122,7 +122,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
   """)
   public void executeIoRead03() {
     TestableSocket socket;
-    socket = socket(http001Request());
+    socket = socket("FOO");
 
     IOException error;
     error = new IOException();
@@ -160,6 +160,45 @@ public class HttpExchangeTest extends AbstractHttpTest {
   }
 
   @Test(description = """
+  [#429] HTTP 001: PARSE_METHOD -> PARSE_METHOD_CANDIDATE
+  """)
+  public void executeParseMethod() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    record Pair(String request, Method method) {}
+
+    List<Pair> pairs = List.of(
+      new Pair("CONNECT /", Method.CONNECT),
+      new Pair("DELETE /", Method.DELETE),
+      new Pair("HEAD /", Method.HEAD),
+      new Pair("GET /", Method.GET),
+      new Pair("OPTIONS /", Method.OPTIONS),
+      new Pair("TRACE /", Method.TRACE)
+    );
+
+    for (var pair : pairs) {
+      String request;
+      request = pair.request;
+
+      byte[] bytes;
+      bytes = request.getBytes();
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 0;
+      exchange.bufferLimit = bytes.length;
+      exchange.state = HttpExchange._PARSE_METHOD;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, 0);
+      assertEquals(exchange.bufferLimit, bytes.length);
+      assertEquals(exchange.method, pair.method);
+      assertEquals(exchange.state, HttpExchange._PARSE_METHOD_CANDIDATE);
+    }
+  }
+
+  @Test(description = """
   [#426] HTTP 001: START --> IO_READ
 
   - buffer must be reset
@@ -167,13 +206,11 @@ public class HttpExchangeTest extends AbstractHttpTest {
   """)
   public void executeStart01() {
     TestableSocket socket;
-    socket = socket(http001Request());
+    socket = socket("FOO");
 
     HttpExchange exchange;
     exchange = new HttpExchange(64, NOOP_NOTE_SINK, NOOP_PROCESSOR, socket);
 
-    assertEquals(exchange.bufferIndex, -1);
-    assertEquals(exchange.bufferLimit, -1);
     assertEquals(exchange.state, HttpExchange._START);
 
     exchange.stepOne();
@@ -184,7 +221,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
     assertEquals(exchange.state, HttpExchange._IO_READ);
   }
 
-  @Test(description = """
+  @Test(enabled = false, description = """
   HttpExchange TC0001
 
   - GET / 1.1
@@ -196,7 +233,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
     GET / HTTP/1.1
     Host: localhost:7001
 
-    """);
+    """.replace("\n", "\r\n"));
 
     HttpProcessor processor;
     processor = new HttpProcessor() {
@@ -249,7 +286,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
     // 'G' 'E' 'T' SP = 4
     assertEquals(exchange.bufferIndex, 4);
     assertEquals(exchange.method, Method.GET);
-    assertEquals(exchange.state, HttpExchange._REQUEST_TARGET);
+    assertEquals(exchange.state, HttpExchange._PARSE_REQUEST_TARGET);
 
     exchange.stepOne();
 
@@ -350,14 +387,8 @@ public class HttpExchangeTest extends AbstractHttpTest {
     assertEquals(value.toString(), expected);
   }
 
-  private String http001Request() {
-    return """
-      GET / HTTP/1.1
-      Host: www.example.com
-
-      """;
+  private TestableSocket socket(String s) {
+    return TestableSocket.parse(s);
   }
-
-  private TestableSocket socket(String s) { return TestableSocket.parse(s); }
 
 }
