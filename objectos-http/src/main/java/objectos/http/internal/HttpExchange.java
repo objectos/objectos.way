@@ -120,29 +120,29 @@ public final class HttpExchange implements Runnable {
 
       _FINALLY = 3,
 
-      _PROCESS = 4,
+      _IO_READ = 4,
 
-      _REQUEST_HEADER = 5,
+      _PARSE_METHOD = 9,
 
-      _REQUEST_HEADER_NAME = 6,
+      _PROCESS = 5,
 
-      _REQUEST_HEADER_VALUE = 7,
+      _REQUEST_HEADER = 6,
 
-      _REQUEST_METHOD = 8,
+      _REQUEST_HEADER_NAME = 7,
 
-      _REQUEST_TARGET = 9,
+      _REQUEST_HEADER_VALUE = 8,
 
-      _REQUEST_VERSION = 10,
+      _REQUEST_TARGET = 10,
 
-      _RESPONSE_BODY = 11,
+      _REQUEST_VERSION = 11,
 
-      _RESPONSE_HEADER_BUFFER = 12,
+      _RESPONSE_BODY = 12,
 
-      _RESPONSE_HEADER_WRITE_FULL = 13,
+      _RESPONSE_HEADER_BUFFER = 13,
 
-      _RESPONSE_HEADER_WRITE_PARTIAL = 14,
+      _RESPONSE_HEADER_WRITE_FULL = 14,
 
-      _SOCKET_READ = 15,
+      _RESPONSE_HEADER_WRITE_PARTIAL = 15,
 
       _SOCKET_WRITE = 16,
 
@@ -158,6 +158,8 @@ public final class HttpExchange implements Runnable {
   private Throwable error;
 
   Method method;
+
+  byte nextAction;
 
   @SuppressWarnings("unused")
   private final NoteSink noteSink;
@@ -182,10 +184,6 @@ public final class HttpExchange implements Runnable {
 
   private final Socket socket;
 
-  byte socketReadAction;
-
-  private byte socketReadEofAction;
-
   byte state;
 
   Version version;
@@ -195,6 +193,13 @@ public final class HttpExchange implements Runnable {
                       HttpProcessor processor,
                       Socket socket) {
     this.buffer = new byte[bufferSize];
+
+    // we set the buffer values to -1
+    // to check if the START state works correctly
+
+    bufferIndex = -1;
+
+    bufferLimit = -1;
 
     this.noteSink = noteSink;
 
@@ -218,6 +223,8 @@ public final class HttpExchange implements Runnable {
 
   final void stepOne() {
     state = switch (state) {
+      case _IO_READ -> executeIoRead();
+
       case _PROCESS -> executeProcess();
 
       case _REQUEST_HEADER -> executeRequestHeader();
@@ -226,7 +233,7 @@ public final class HttpExchange implements Runnable {
 
       case _REQUEST_HEADER_VALUE -> executeRequestHeaderValue();
 
-      case _REQUEST_METHOD -> executeRequestMethod();
+      case _PARSE_METHOD -> executeRequestMethod();
 
       case _REQUEST_TARGET -> executeRequestTarget();
 
@@ -237,8 +244,6 @@ public final class HttpExchange implements Runnable {
       case _RESPONSE_HEADER_WRITE_FULL -> executeResponseHeaderWriteFull();
 
       case _RESPONSE_HEADER_WRITE_PARTIAL -> executeResponseHeaderWritePartial();
-
-      case _SOCKET_READ -> executeSocketRead();
 
       case _START -> executeStart();
 
@@ -274,6 +279,39 @@ public final class HttpExchange implements Runnable {
     return index < bufferLimit;
   }
 
+  private byte executeIoRead() {
+    if (bufferIndex > 0) {
+      bufferCompact();
+    }
+
+    InputStream inputStream;
+
+    try {
+      inputStream = socket.getInputStream();
+    } catch (IOException e) {
+      return toClose(e);
+    }
+
+    int bufferWritable;
+    bufferWritable = buffer.length - bufferLimit;
+
+    int bytesRead;
+
+    try {
+      bytesRead = inputStream.read(buffer, bufferLimit, bufferWritable);
+    } catch (IOException e) {
+      return toClose(e);
+    }
+
+    if (bytesRead < 0) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    bufferLimit += bytesRead;
+
+    return nextAction;
+  }
+
   private byte executeProcess() {
     response = new ThisResponse();
 
@@ -303,7 +341,7 @@ public final class HttpExchange implements Runnable {
     index = bufferIndex;
 
     if (!bufferHasIndex(index)) {
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     // we'll check if the current char is CR
@@ -320,7 +358,7 @@ public final class HttpExchange implements Runnable {
     index++;
 
     if (!bufferHasIndex(index)) {
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     // we'll check if CR is followed by LF
@@ -372,7 +410,7 @@ public final class HttpExchange implements Runnable {
     if (!found) {
       // TODO header name limit
 
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     byte first;
@@ -423,7 +461,7 @@ public final class HttpExchange implements Runnable {
       // LF was not found
       // TODO field length limit
 
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     // we check if CR is found before the LF
@@ -478,7 +516,7 @@ public final class HttpExchange implements Runnable {
     int start = bufferIndex;
 
     if (!bufferHasIndex(start)) {
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     byte first;
@@ -506,7 +544,7 @@ public final class HttpExchange implements Runnable {
     spaceIndex = start + methodBytes.length;
 
     if (!bufferHasIndex(spaceIndex)) {
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     byte maybeSpace;
@@ -542,7 +580,7 @@ public final class HttpExchange implements Runnable {
     }
 
     if (!found) {
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     requestTarget = new RequestTarget(bufferIndex, index);
@@ -567,7 +605,7 @@ public final class HttpExchange implements Runnable {
     lineEnd = versionEnd + 1;
 
     if (!bufferHasIndex(lineEnd)) {
-      return toSocketRead(state, _CLOSE);
+      return toIoRead(state);
     }
 
     int minorIndex;
@@ -700,51 +738,26 @@ public final class HttpExchange implements Runnable {
     }
   }
 
-  private byte executeSocketRead() {
-    if (bufferIndex > 0) {
-      bufferCompact();
-    }
-
-    InputStream inputStream;
-
-    try {
-      inputStream = socket.getInputStream();
-    } catch (IOException e) {
-      return toClose(e);
-    }
-
-    int bufferWritable;
-    bufferWritable = buffer.length - bufferLimit;
-
-    int bytesRead;
-
-    try {
-      bytesRead = inputStream.read(buffer, bufferLimit, bufferWritable);
-    } catch (IOException e) {
-      return toClose(e);
-    }
-
-    if (bytesRead < 0) {
-      return socketReadEofAction;
-    }
-
-    bufferLimit += bytesRead;
-
-    return socketReadAction;
-  }
-
   private byte executeStart() {
-    // processor.requestStart(this);
-
     // TODO set timeout
 
-    return toSocketRead(_REQUEST_METHOD, _CLOSE);
+    // we ensure the buffer is reset
+
+    bufferIndex = bufferLimit = 0;
+
+    return toIoRead(_PARSE_METHOD);
   }
 
   private byte toClose(IOException e) {
     error = e;
 
     return _CLOSE;
+  }
+
+  private byte toIoRead(byte onRead) {
+    nextAction = onRead;
+
+    return _IO_READ;
   }
 
   private byte toResponseHeaderBuffer() {
@@ -763,14 +776,6 @@ public final class HttpExchange implements Runnable {
     result = new StatusResult(status);
 
     return _CLOSE;
-  }
-
-  private byte toSocketRead(byte onRead, byte onEof) {
-    socketReadAction = onRead;
-
-    socketReadEofAction = onEof;
-
-    return _SOCKET_READ;
   }
 
 }

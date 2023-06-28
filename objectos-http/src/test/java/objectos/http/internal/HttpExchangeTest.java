@@ -35,6 +35,42 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeTest extends AbstractHttpTest {
 
+  private static final HttpProcessor NOOP_PROCESSOR = new HttpProcessor() {
+    @Override
+    public void process(Request request, Response response) throws Exception {
+      // no-op
+    }
+  };
+
+  @Test(description = """
+  [#425] HTTP 001: START --> IO_READ
+
+  - buffer must be reset
+  - next action -> PARSE_METHOD
+  """)
+  public void executeStart() {
+    TestableSocket socket;
+    socket = TestableSocket.parse("""
+    GET / HTTP/1.1
+    Host: www.example.com
+
+    """);
+
+    HttpExchange exchange;
+    exchange = new HttpExchange(64, noteSink, NOOP_PROCESSOR, socket);
+
+    assertEquals(exchange.bufferIndex, -1);
+    assertEquals(exchange.bufferLimit, -1);
+    assertEquals(exchange.state, HttpExchange._START);
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.state, HttpExchange._IO_READ);
+    assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD);
+  }
+
   @Test(description = """
   HttpExchange TC0001
 
@@ -51,7 +87,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     HttpProcessor processor;
     processor = new HttpProcessor() {
-      ZonedDateTime date = ZonedDateTime.of(
+      static final ZonedDateTime DATE = ZonedDateTime.of(
         LocalDate.of(2023, 6, 28),
         LocalTime.of(9, 8, 43),
         ZoneId.of("GMT-3")
@@ -72,7 +108,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
         response.contentLength(bytes.length);
 
-        response.date(date);
+        response.date(DATE);
 
         response.send(bytes);
       }
@@ -86,14 +122,14 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.state, HttpExchange._SOCKET_READ);
-    assertEquals(exchange.socketReadAction, HttpExchange._REQUEST_METHOD);
+    assertEquals(exchange.state, HttpExchange._IO_READ);
+    assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD);
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 40);
-    assertEquals(exchange.state, HttpExchange._REQUEST_METHOD);
+    assertEquals(exchange.state, HttpExchange._PARSE_METHOD);
 
     exchange.stepOne();
 
@@ -173,10 +209,10 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
