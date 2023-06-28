@@ -26,11 +26,13 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
+import objectos.lang.NoOpNoteSink;
+import objectos.lang.NoteSink;
 import org.testng.annotations.BeforeSuite;
 
 public abstract class AbstractHttpTest {
 
-  protected static HttpTestingNoteSink noteSink;
+  protected static NoteSink noteSink;
 
   protected static HttpService service;
 
@@ -47,7 +49,7 @@ public abstract class AbstractHttpTest {
     HttpRequestProcessorProvider provider;
     provider = new HttpRequestProcessorProvider(siteDirectory);
 
-    noteSink = new HttpTestingNoteSink();
+    noteSink = NoOpNoteSink.getInstance();
 
     InetSocketAddress address;
     address = nextLoopbackSocketAddress();

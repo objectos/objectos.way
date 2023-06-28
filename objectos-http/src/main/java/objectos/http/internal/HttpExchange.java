@@ -31,6 +31,7 @@ import objectos.http.HttpProcessor;
 import objectos.http.Response;
 import objectos.http.Status;
 import objectos.http.internal.HttpExchange.Result.StatusResult;
+import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 
@@ -112,6 +113,8 @@ public final class HttpExchange implements Runnable {
 
   }
 
+  public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
+
   static final byte _STOP = 0,
 
       _BAD_REQUEST = 1,
@@ -154,14 +157,12 @@ public final class HttpExchange implements Runnable {
 
   int bufferLimit;
 
-  @SuppressWarnings("unused")
-  private Throwable error;
+  Throwable error;
 
   Method method;
 
   byte nextAction;
 
-  @SuppressWarnings("unused")
   private final NoteSink noteSink;
 
   private final HttpProcessor processor;
@@ -274,7 +275,7 @@ public final class HttpExchange implements Runnable {
     try {
       inputStream = socket.getInputStream();
     } catch (IOException e) {
-      return toClose(e);
+      return toIoReadError(e);
     }
 
     int bufferWritable;
@@ -285,7 +286,7 @@ public final class HttpExchange implements Runnable {
     try {
       bytesRead = inputStream.read(buffer, bufferLimit, bufferWritable);
     } catch (IOException e) {
-      return toClose(e);
+      return toIoReadError(e);
     }
 
     if (bytesRead < 0) {
@@ -743,6 +744,14 @@ public final class HttpExchange implements Runnable {
     nextAction = onRead;
 
     return _IO_READ;
+  }
+
+  private byte toIoReadError(IOException e) {
+    error = e;
+
+    noteSink.send(EIO_READ_ERROR, e);
+
+    return _CLOSE;
   }
 
   private byte toResponseHeaderBuffer() {

@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.Note;
 
-final class HttpTestingNoteSink extends NoOpNoteSink {
+class TestableNoteSink extends NoOpNoteSink {
 
   @Override
-  public final boolean isEnabled(Note event) {
-    return super.isEnabled(event);
+  public boolean isEnabled(Note note) {
+    return true;
   }
 
 }

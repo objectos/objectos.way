@@ -24,9 +24,13 @@ import java.nio.charset.StandardCharsets;
 
 final class TestableSocket extends Socket {
 
+  IOException getInputStream;
+
   private final byte[] inputStreamBytes;
 
   private int inputStreamIndex;
+
+  IOException inputStreamRead;
 
   private ByteArrayOutputStream outputStream;
 
@@ -46,9 +50,17 @@ final class TestableSocket extends Socket {
 
   @Override
   public final InputStream getInputStream() throws IOException {
+    if (getInputStream != null) {
+      throw getInputStream;
+    }
+
     return new InputStream() {
       @Override
       public int read() throws IOException {
+        if (inputStreamRead != null) {
+          throw inputStreamRead;
+        }
+
         if (inputStreamIndex < inputStreamBytes.length) {
           return inputStreamBytes[inputStreamIndex++];
         } else {
