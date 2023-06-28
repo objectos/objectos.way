@@ -162,7 +162,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
   @Test(description = """
   [#429] HTTP 001: PARSE_METHOD -> PARSE_METHOD_CANDIDATE
   """)
-  public void executeParseMethod() {
+  public void executeParseMethod01() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -196,6 +196,28 @@ public class HttpExchangeTest extends AbstractHttpTest {
       assertEquals(exchange.method, pair.method);
       assertEquals(exchange.state, HttpExchange._PARSE_METHOD_CANDIDATE);
     }
+  }
+
+  @Test(description = """
+  [#430] HTTP 001: PARSE_METHOD -> BAD_REQUEST
+  """)
+  public void executeParseMethod02() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "(GET) /".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_METHOD;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, bytes.length);
+    assertEquals(exchange.state, HttpExchange._BAD_REQUEST);
   }
 
   @Test(description = """
@@ -359,10 +381,10 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     /*
     exchange.stepOne();
-
+    
     assertEquals(
       socket.outputAsString(),
-
+    
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

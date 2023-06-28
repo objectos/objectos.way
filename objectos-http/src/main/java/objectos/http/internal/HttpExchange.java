@@ -30,7 +30,6 @@ import objectos.http.Http;
 import objectos.http.HttpProcessor;
 import objectos.http.Response;
 import objectos.http.Status;
-import objectos.http.internal.HttpExchange.Result.StatusResult;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
@@ -53,10 +52,6 @@ public final class HttpExchange implements Runnable {
       return new String(buffer, start, end - start, StandardCharsets.UTF_8);
     }
 
-  }
-
-  sealed interface Result {
-    record StatusResult(Status status) implements Result {}
   }
 
   record RequestTarget(int start, int end) {}
@@ -184,8 +179,6 @@ public final class HttpExchange implements Runnable {
   List<ResponseHeader> responseHeaders;
 
   int responseHeadersIndex;
-
-  private Result result;
 
   Socket socket;
 
@@ -330,7 +323,7 @@ public final class HttpExchange implements Runnable {
       // first char does not match any candidate
       // we are sure this is a bad request
 
-      default -> toResult(Status.BAD_REQUEST);
+      default -> _BAD_REQUEST;
     };
   }
 
@@ -756,12 +749,6 @@ public final class HttpExchange implements Runnable {
   }
 
   private byte toResult(Status status) {
-    if (result != null) {
-      throw new IllegalStateException("Result was already set");
-    }
-
-    result = new StatusResult(status);
-
     return _CLOSE;
   }
 
