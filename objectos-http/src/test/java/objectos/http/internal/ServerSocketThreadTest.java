@@ -18,13 +18,13 @@ package objectos.http.internal;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
-import objectos.http.AbstractHttpTest;
 import org.testng.annotations.Test;
 
-public class ServerSocketThreadTest extends AbstractHttpTest implements ServerSocketThreadAdapter {
+public class ServerSocketThreadTest implements ServerSocketThreadAdapter {
 
   private volatile boolean accepted;
 
@@ -45,8 +45,11 @@ public class ServerSocketThreadTest extends AbstractHttpTest implements ServerSo
 
   @Test
   public void testCase01() throws IOException, InterruptedException {
+    InetAddress loAddress;
+    loAddress = InetAddress.getLoopbackAddress();
+
     InetSocketAddress loopback;
-    loopback = nextLoopbackSocketAddress();
+    loopback = new InetSocketAddress(loAddress, 5550);
 
     ServerSocketThread thread;
     thread = ServerSocketThread.create(this, loopback);

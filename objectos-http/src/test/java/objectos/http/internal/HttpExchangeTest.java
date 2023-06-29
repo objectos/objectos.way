@@ -434,26 +434,25 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
-  [#426] HTTP 001: START --> IO_READ
+  [#426] HTTP 001: START --> NEXT_LINE
 
-  - buffer must be reset
+  - line indices must be reset
   - next action -> PARSE_METHOD
   """)
   public void executeStart01() {
-    TestableSocket socket;
-    socket = socket("FOO");
-
     HttpExchange exchange;
-    exchange = new HttpExchange(64, NOOP_NOTE_SINK, NOOP_PROCESSOR, socket);
+    exchange = new HttpExchange();
 
-    assertEquals(exchange.state, HttpExchange._START);
+    exchange.lineIndex = 123;
+    exchange.lineLimit = 256;
+    exchange.state = HttpExchange._START;
 
     exchange.stepOne();
 
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.lineIndex, 0);
+    assertEquals(exchange.lineLimit, 0);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD);
-    assertEquals(exchange.state, HttpExchange._IO_READ);
+    assertEquals(exchange.state, HttpExchange._NEXT_LINE);
   }
 
   @Test(enabled = false, description = """
@@ -593,10 +592,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

@@ -118,23 +118,25 @@ public final class HttpExchange implements Runnable {
 
       _IO_READ = 4,
 
-      _PARSE_HEADER = 11,
-      _PARSE_HEADER_NAME = 12,
-      _PARSE_HEADER_VALUE = 13,
-      _PARSE_METHOD = 5,
-      _PARSE_METHOD_CANDIDATE = 6,
-      _PARSE_METHOD_P = 7,
-      _PARSE_REQUEST_TARGET = 8,
-      _PARSE_VERSION = 9,
+      _NEXT_LINE = 5,
 
-      _PROCESS = 10,
+      _PARSE_HEADER = 6,
+      _PARSE_HEADER_NAME = 7,
+      _PARSE_HEADER_VALUE = 8,
+      _PARSE_METHOD = 9,
+      _PARSE_METHOD_CANDIDATE = 10,
+      _PARSE_METHOD_P = 11,
+      _PARSE_REQUEST_TARGET = 12,
+      _PARSE_VERSION = 13,
 
-      _RESPONSE_BODY = 14,
-      _RESPONSE_HEADER_BUFFER = 15,
-      _RESPONSE_HEADER_WRITE_FULL = 16,
-      _RESPONSE_HEADER_WRITE_PARTIAL = 17,
+      _PROCESS = 14,
 
-      _SOCKET_WRITE = 18,
+      _RESPONSE_BODY = 15,
+      _RESPONSE_HEADER_BUFFER = 16,
+      _RESPONSE_HEADER_WRITE_FULL = 17,
+      _RESPONSE_HEADER_WRITE_PARTIAL = 18,
+
+      _SOCKET_WRITE = 19,
       _START = 19;
 
   byte[] buffer;
@@ -144,6 +146,10 @@ public final class HttpExchange implements Runnable {
   int bufferLimit;
 
   Throwable error;
+
+  int lineIndex;
+
+  int lineLimit;
 
   Method method;
 
@@ -779,11 +785,17 @@ public final class HttpExchange implements Runnable {
   private byte executeStart() {
     // TODO set timeout
 
-    // we ensure the buffer is reset
+    return toNextLine(_PARSE_METHOD);
+  }
 
-    bufferIndex = bufferLimit = 0;
+  private byte toNextLine(byte onSuccess) {
+    // we reset the lines indices
 
-    return toIoRead(_PARSE_METHOD);
+    lineIndex = lineLimit = 0;
+
+    nextAction = onSuccess;
+
+    return _NEXT_LINE;
   }
 
   private byte toClientError(Status error) {
