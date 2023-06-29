@@ -267,6 +267,29 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
+  [#433] HTTP 001: PARSE_METHOD_CANDIDATE --> IO_READ
+  """)
+  public void executeParseMethodCandidate03IoRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GE".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.method = Method.GET;
+    exchange.state = HttpExchange._PARSE_METHOD_CANDIDATE;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD_CANDIDATE);
+    assertEquals(exchange.state, HttpExchange._IO_READ);
+  }
+
+  @Test(description = """
   [#426] HTTP 001: START --> IO_READ
 
   - buffer must be reset
@@ -427,10 +450,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-
+    
     assertEquals(
       socket.outputAsString(),
-
+    
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

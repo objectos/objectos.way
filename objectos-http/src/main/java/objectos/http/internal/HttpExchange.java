@@ -350,7 +350,7 @@ public final class HttpExchange implements Runnable {
       // clear method candidate just in case...
       method = null;
 
-      throw new UnsupportedOperationException("Implement me");
+      return toIoRead(state);
     }
 
     if (!bufferEquals(candidateBytes, candidateStart)) {
