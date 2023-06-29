@@ -112,8 +112,7 @@ public final class HttpExchange implements Runnable {
 
   static final byte _STOP = 0,
 
-      _BAD_REQUEST = 1,
-
+      _CLIENT_ERROR = 1,
       _CLOSE = 2,
 
       _FINALLY = 3,
@@ -171,6 +170,8 @@ public final class HttpExchange implements Runnable {
   Socket socket;
 
   byte state;
+
+  Status status;
 
   Version version;
 
@@ -313,7 +314,7 @@ public final class HttpExchange implements Runnable {
       // first char does not match any candidate
       // we are sure this is a bad request
 
-      default -> _BAD_REQUEST;
+      default -> toClientError(Status.BAD_REQUEST);
     };
   }
 
@@ -348,7 +349,7 @@ public final class HttpExchange implements Runnable {
       // clear method candidate just in case...
       method = null;
 
-      return _BAD_REQUEST;
+      return toClientError(Status.BAD_REQUEST);
     }
 
     // request OK so far...
@@ -384,10 +385,70 @@ public final class HttpExchange implements Runnable {
       }
     }
 
-    // SP char was not found
-    // assume client is slow on sending data...
+    // SP char was not found...
 
-    return toIoRead(state);
+    if (bufferLimit < buffer.length) {
+      // buffer can still hold data
+      // assume client is slow
+
+      return toIoRead(state);
+    }
+
+    // buffer is full
+    // URI is too long to process
+
+    return toClientError(Status.URI_TOO_LONG);
+  }
+
+  private byte executeParseVersion() {
+    int index;
+    index = bufferIndex;
+
+    int versionLength;
+    versionLength = Version.V1_1.bytes.length;
+
+    int versionEnd;
+    versionEnd = index + versionLength;
+
+    int lineEnd;
+    lineEnd = versionEnd + 1;
+
+    if (!bufferHasIndex(lineEnd)) {
+      return toIoRead(state);
+    }
+
+    int minorIndex;
+    minorIndex = versionEnd - 1;
+
+    byte minor;
+    minor = bufferGet(minorIndex);
+
+    Version maybe;
+    maybe = switch (minor) {
+      case '0' -> Version.V1_0;
+
+      case '1' -> Version.V1_1;
+
+      default -> null;
+    };
+
+    if (maybe == null || !bufferEquals(maybe.bytes, index)) {
+      return toResult(Status.HTTP_VERSION_NOT_SUPPORTED);
+    }
+
+    if (bufferGet(versionEnd) != Bytes.CR || bufferGet(lineEnd) != Bytes.LF) {
+      return toResult(Status.BAD_REQUEST);
+    }
+
+    bufferIndex = lineEnd + 1;
+
+    version = maybe;
+
+    // we create the map to store the eventual request headers
+
+    requestHeaders = new EnumMap<>(HeaderName.class);
+
+    return _REQUEST_HEADER;
   }
 
   private byte executeProcess() {
@@ -590,57 +651,6 @@ public final class HttpExchange implements Runnable {
     return _REQUEST_HEADER;
   }
 
-  private byte executeParseVersion() {
-    int index;
-    index = bufferIndex;
-
-    int versionLength;
-    versionLength = Version.V1_1.bytes.length;
-
-    int versionEnd;
-    versionEnd = index + versionLength;
-
-    int lineEnd;
-    lineEnd = versionEnd + 1;
-
-    if (!bufferHasIndex(lineEnd)) {
-      return toIoRead(state);
-    }
-
-    int minorIndex;
-    minorIndex = versionEnd - 1;
-
-    byte minor;
-    minor = bufferGet(minorIndex);
-
-    Version maybe;
-    maybe = switch (minor) {
-      case '0' -> Version.V1_0;
-
-      case '1' -> Version.V1_1;
-
-      default -> null;
-    };
-
-    if (maybe == null || !bufferEquals(maybe.bytes, index)) {
-      return toResult(Status.HTTP_VERSION_NOT_SUPPORTED);
-    }
-
-    if (bufferGet(versionEnd) != Bytes.CR || bufferGet(lineEnd) != Bytes.LF) {
-      return toResult(Status.BAD_REQUEST);
-    }
-
-    bufferIndex = lineEnd + 1;
-
-    version = maybe;
-
-    // we create the map to store the eventual request headers
-
-    requestHeaders = new EnumMap<>(HeaderName.class);
-
-    return _REQUEST_HEADER;
-  }
-
   private byte executeResponseHeaderBuffer() {
     // we reset out buffer
 
@@ -745,6 +755,12 @@ public final class HttpExchange implements Runnable {
     bufferIndex = bufferLimit = 0;
 
     return toIoRead(_PARSE_METHOD);
+  }
+
+  private byte toClientError(Status error) {
+    status = error;
+
+    return _CLIENT_ERROR;
   }
 
   private byte toClose(IOException e) {

@@ -27,11 +27,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import objectos.http.HttpProcessor;
 import objectos.http.Request;
 import objectos.http.Response;
+import objectos.http.Status;
 import objectos.http.internal.HttpExchange.HeaderValue;
 import objectos.http.internal.HttpExchange.RequestTarget;
 import objectos.lang.NoOpNoteSink;
@@ -216,7 +218,8 @@ public class HttpExchangeTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._BAD_REQUEST);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.BAD_REQUEST);
   }
 
   @Test(description = """
@@ -264,7 +267,8 @@ public class HttpExchangeTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._BAD_REQUEST);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.BAD_REQUEST);
   }
 
   @Test(description = """
@@ -329,7 +333,8 @@ public class HttpExchangeTest {
     byte[] bytes;
     bytes = "GET /".getBytes();
 
-    exchange.buffer = bytes;
+    // buffer is not full
+    exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
     exchange.bufferIndex = 4;
     exchange.bufferLimit = bytes.length;
     exchange.state = HttpExchange._PARSE_REQUEST_TARGET;
@@ -339,6 +344,30 @@ public class HttpExchangeTest {
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestTarget);
     assertEquals(exchange.state, HttpExchange._IO_READ);
+  }
+
+  @Test(description = """
+  [#436] HTTP 001: PARSE_REQUEST_TARGET --> URI_TOO_LONG
+  """)
+  public void executeParseRequestTarget03UriTooLong() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET /attack!".getBytes();
+
+    // buffer is full
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 4;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_REQUEST_TARGET;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 4);
+    assertNull(exchange.requestTarget);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.URI_TOO_LONG);
   }
 
   @Test(description = """
@@ -502,10 +531,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
