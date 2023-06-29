@@ -37,8 +37,6 @@ public enum Method {
 
   TRACE;
 
-  public final byte[] bytes = name().getBytes(StandardCharsets.UTF_8);
-
-  public final char[] parseSuffix = name().substring(1).toCharArray();
+  final byte[] nameAndSpace = (name() + " ").getBytes(StandardCharsets.UTF_8);
 
 }

@@ -228,6 +228,8 @@ public final class HttpExchange implements Runnable {
 
       case _PARSE_METHOD -> executeParseMethod();
 
+      case _PARSE_METHOD_CANDIDATE -> executeParseMethodCandidate();
+
       case _PARSE_REQUEST_TARGET -> executeRequestTarget();
 
       case _REQUEST_VERSION -> executeRequestVersion();
@@ -325,6 +327,27 @@ public final class HttpExchange implements Runnable {
 
       default -> _BAD_REQUEST;
     };
+  }
+
+  private byte executeParseMethodCandidate() {
+    // we'll check if the buffer contents matches 'METHOD SP'
+
+    byte[] candidateBytes;
+    candidateBytes = method.nameAndSpace;
+
+    int requiredIndex;
+    requiredIndex = bufferIndex + candidateBytes.length;
+
+    if (bufferHasIndex(requiredIndex) && bufferEquals(candidateBytes, bufferIndex)) {
+      // match successful.
+      // update bufferIndex to be immediately after the SP char
+
+      bufferIndex = requiredIndex;
+
+      return _PARSE_REQUEST_TARGET;
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private byte executeProcess() {

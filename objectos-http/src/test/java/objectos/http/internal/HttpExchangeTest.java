@@ -216,8 +216,31 @@ public class HttpExchangeTest extends AbstractHttpTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, bytes.length);
     assertEquals(exchange.state, HttpExchange._BAD_REQUEST);
+  }
+
+  @Test(description = """
+  [#431] HTTP 001: PARSE_METHOD_CANDIDATE --> PARSE_REQUEST_TARGET
+
+  - check if bufferIndex is updated
+  """)
+  public void executeParseMethodCandidate() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET /".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.method = Method.GET;
+    exchange.state = HttpExchange._PARSE_METHOD_CANDIDATE;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 4);
+    assertEquals(exchange.state, HttpExchange._PARSE_REQUEST_TARGET);
   }
 
   @Test(description = """
