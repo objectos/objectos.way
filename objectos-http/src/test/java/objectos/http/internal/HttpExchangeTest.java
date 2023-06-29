@@ -434,7 +434,7 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
-  [#438] HTTP 001: PARSE_VERSION --> IO_READ
+  [#439] HTTP 001: PARSE_VERSION --> IO_READ
   """)
   public void executeParseVersion03IoRead() {
     HttpExchange exchange;
@@ -453,6 +453,28 @@ public class HttpExchangeTest {
     assertEquals(exchange.bufferIndex, 6);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_VERSION);
     assertEquals(exchange.state, HttpExchange._IO_READ);
+  }
+
+  @Test(description = """
+  [#440] HTTP 001: PARSE_VERSION --> URI_TOO_LONG
+  """)
+  public void executeParseVersion04UriTooLong() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 6;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_VERSION;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 6);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.URI_TOO_LONG);
   }
 
   @Test(description = """
@@ -615,10 +637,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-
+    
     assertEquals(
       socket.outputAsString(),
-
+    
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

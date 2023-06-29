@@ -428,7 +428,10 @@ public final class HttpExchange implements Runnable {
         return toIoRead(state);
       }
 
-      throw new UnsupportedOperationException("Implement me");
+      // buffer is full
+      // assume URI was too long to process
+
+      return toClientError(Status.URI_TOO_LONG);
     }
 
     int index;
