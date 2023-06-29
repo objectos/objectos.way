@@ -290,6 +290,33 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
+  [#434] HTTP 001: PARSE_REQUEST_TARGET --> PARSE_VERSION
+
+  - bufferIndex should be after SP
+  - requestTarget should contain the correct indices
+  """)
+  public void executeParseRequestTarget01() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.1".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 4;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_REQUEST_TARGET;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 6);
+    assertNotNull(exchange.requestTarget);
+    assertEquals(exchange.requestTarget.start(), 4);
+    assertEquals(exchange.requestTarget.end(), 5);
+    assertEquals(exchange.state, HttpExchange._PARSE_VERSION);
+  }
+
+  @Test(description = """
   [#426] HTTP 001: START --> IO_READ
 
   - buffer must be reset
@@ -384,7 +411,7 @@ public class HttpExchangeTest {
     // '/' SP = 2
     assertEquals(exchange.bufferIndex, 6);
     assertEquals(exchange.requestTarget, new RequestTarget(4, 5));
-    assertEquals(exchange.state, HttpExchange._REQUEST_VERSION);
+    assertEquals(exchange.state, HttpExchange._PARSE_VERSION);
 
     exchange.stepOne();
 

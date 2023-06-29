@@ -121,33 +121,21 @@ public final class HttpExchange implements Runnable {
       _IO_READ = 4,
 
       _PARSE_METHOD = 5,
-
       _PARSE_METHOD_CANDIDATE = 6,
-
       _PARSE_METHOD_P = 7,
-
       _PARSE_REQUEST_TARGET = 8,
+      _PARSE_VERSION = 9,
+      _PROCESS = 10,
 
-      _PROCESS = 9,
-
-      _REQUEST_HEADER = 10,
-
-      _REQUEST_HEADER_NAME = 11,
-
-      _REQUEST_HEADER_VALUE = 12,
-
-      _REQUEST_VERSION = 13,
-
+      _REQUEST_HEADER = 11,
+      _REQUEST_HEADER_NAME = 12,
+      _REQUEST_HEADER_VALUE = 13,
       _RESPONSE_BODY = 14,
-
       _RESPONSE_HEADER_BUFFER = 15,
-
       _RESPONSE_HEADER_WRITE_FULL = 16,
-
       _RESPONSE_HEADER_WRITE_PARTIAL = 17,
 
       _SOCKET_WRITE = 18,
-
       _START = 19;
 
   byte[] buffer;
@@ -218,6 +206,14 @@ public final class HttpExchange implements Runnable {
     state = switch (state) {
       case _IO_READ -> executeIoRead();
 
+      case _PARSE_METHOD -> executeParseMethod();
+
+      case _PARSE_METHOD_CANDIDATE -> executeParseMethodCandidate();
+
+      case _PARSE_REQUEST_TARGET -> executeParseRequestTarget();
+
+      case _PARSE_VERSION -> executeParseVersion();
+
       case _PROCESS -> executeProcess();
 
       case _REQUEST_HEADER -> executeRequestHeader();
@@ -225,14 +221,6 @@ public final class HttpExchange implements Runnable {
       case _REQUEST_HEADER_NAME -> executeRequestHeaderName();
 
       case _REQUEST_HEADER_VALUE -> executeRequestHeaderValue();
-
-      case _PARSE_METHOD -> executeParseMethod();
-
-      case _PARSE_METHOD_CANDIDATE -> executeParseMethodCandidate();
-
-      case _PARSE_REQUEST_TARGET -> executeRequestTarget();
-
-      case _REQUEST_VERSION -> executeRequestVersion();
 
       case _RESPONSE_HEADER_BUFFER -> executeResponseHeaderBuffer();
 
@@ -371,6 +359,32 @@ public final class HttpExchange implements Runnable {
     // continue to request target
 
     return _PARSE_REQUEST_TARGET;
+  }
+
+  private byte executeParseRequestTarget() {
+    // we will look for the first SP char
+
+    int targetStart;
+    targetStart = bufferIndex;
+
+    for (int index = targetStart; bufferHasIndex(index); index++) {
+      byte b;
+      b = bufferGet(index);
+
+      if (b == Bytes.SP) {
+        // SP found, store the indices
+
+        requestTarget = new RequestTarget(targetStart, index);
+
+        // bufferIndex immediately after the SP char
+
+        bufferIndex = index + 1;
+
+        return _PARSE_VERSION;
+      }
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private byte executeProcess() {
@@ -573,37 +587,7 @@ public final class HttpExchange implements Runnable {
     return _REQUEST_HEADER;
   }
 
-  private byte executeRequestTarget() {
-    int index;
-    index = bufferIndex;
-
-    boolean found;
-    found = false;
-
-    for (; bufferHasIndex(index); index++) {
-      byte b;
-      b = bufferGet(index);
-
-      if (b == Bytes.SP) {
-        found = true;
-
-        break;
-      }
-    }
-
-    if (!found) {
-      return toIoRead(state);
-    }
-
-    requestTarget = new RequestTarget(bufferIndex, index);
-
-    // after SP
-    bufferIndex = index + 1;
-
-    return _REQUEST_VERSION;
-  }
-
-  private byte executeRequestVersion() {
+  private byte executeParseVersion() {
     int index;
     index = bufferIndex;
 
