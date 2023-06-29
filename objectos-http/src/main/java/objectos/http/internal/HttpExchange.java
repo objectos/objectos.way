@@ -330,24 +330,47 @@ public final class HttpExchange implements Runnable {
   }
 
   private byte executeParseMethodCandidate() {
+    // method candidate @ start of the buffer
+
+    int candidateStart;
+    candidateStart = bufferIndex;
+
     // we'll check if the buffer contents matches 'METHOD SP'
 
     byte[] candidateBytes;
     candidateBytes = method.nameAndSpace;
 
     int requiredIndex;
-    requiredIndex = bufferIndex + candidateBytes.length;
+    requiredIndex = candidateStart + candidateBytes.length;
 
-    if (bufferHasIndex(requiredIndex) && bufferEquals(candidateBytes, bufferIndex)) {
-      // match successful.
-      // update bufferIndex to be immediately after the SP char
+    if (!bufferHasIndex(requiredIndex)) {
+      // we don't have enough bytes in the buffer...
+      // assuming the client is slow on sending data
 
-      bufferIndex = requiredIndex;
+      // clear method candidate just in case...
+      method = null;
 
-      return _PARSE_REQUEST_TARGET;
+      throw new UnsupportedOperationException("Implement me");
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    if (!bufferEquals(candidateBytes, candidateStart)) {
+      // we have enough bytes and they don't match our 'method name + SP'
+      // respond with bad request
+
+      // clear method candidate just in case...
+      method = null;
+
+      return _BAD_REQUEST;
+    }
+
+    // request OK so far...
+    // update the bufferIndex
+
+    bufferIndex = requiredIndex;
+
+    // continue to request target
+
+    return _PARSE_REQUEST_TARGET;
   }
 
   private byte executeProcess() {

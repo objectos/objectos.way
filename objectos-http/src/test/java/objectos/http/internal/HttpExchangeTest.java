@@ -28,7 +28,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
-import objectos.http.AbstractHttpTest;
 import objectos.http.HttpProcessor;
 import objectos.http.Request;
 import objectos.http.Response;
@@ -39,7 +38,7 @@ import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import org.testng.annotations.Test;
 
-public class HttpExchangeTest extends AbstractHttpTest {
+public class HttpExchangeTest {
 
   private static final NoteSink NOOP_NOTE_SINK = NoOpNoteSink.getInstance();
 
@@ -224,7 +223,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
   - check if bufferIndex is updated
   """)
-  public void executeParseMethodCandidate() {
+  public void executeParseMethodCandidate01() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -241,6 +240,30 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     assertEquals(exchange.bufferIndex, 4);
     assertEquals(exchange.state, HttpExchange._PARSE_REQUEST_TARGET);
+  }
+
+  @Test(description = """
+  [#432] HTTP 001: PARSE_METHOD_CANDIDATE --> BAD_REQUEST
+
+  - bufferIndex is NOT updated
+  """)
+  public void executeParseMethodCandidate02BadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GOT /".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.method = Method.GET;
+    exchange.state = HttpExchange._PARSE_METHOD_CANDIDATE;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.state, HttpExchange._BAD_REQUEST);
   }
 
   @Test(description = """
@@ -310,7 +333,7 @@ public class HttpExchangeTest extends AbstractHttpTest {
     };
 
     HttpExchange exchange;
-    exchange = new HttpExchange(64, noteSink, processor, socket);
+    exchange = new HttpExchange(64, NOOP_NOTE_SINK, processor, socket);
 
     assertEquals(socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._START);
@@ -404,10 +427,10 @@ public class HttpExchangeTest extends AbstractHttpTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
