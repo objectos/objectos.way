@@ -421,6 +421,13 @@ public final class HttpExchange implements Runnable {
     lineEnd = versionEnd + 1;
 
     if (!bufferHasIndex(lineEnd)) {
+      if (bufferLimit < buffer.length) {
+        // buffer can still hold data
+        // assume client is slow
+
+        return toIoRead(state);
+      }
+
       throw new UnsupportedOperationException("Implement me");
     }
 

@@ -434,6 +434,28 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
+  [#438] HTTP 001: PARSE_VERSION --> IO_READ
+  """)
+  public void executeParseVersion03IoRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.".getBytes();
+
+    exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
+    exchange.bufferIndex = 6;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_VERSION;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 6);
+    assertEquals(exchange.nextAction, HttpExchange._PARSE_VERSION);
+    assertEquals(exchange.state, HttpExchange._IO_READ);
+  }
+
+  @Test(description = """
   [#426] HTTP 001: START --> IO_READ
 
   - buffer must be reset
@@ -593,10 +615,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
