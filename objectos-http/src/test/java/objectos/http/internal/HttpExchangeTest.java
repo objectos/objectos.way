@@ -17,6 +17,7 @@ package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 
 import java.io.IOException;
@@ -314,6 +315,30 @@ public class HttpExchangeTest {
     assertEquals(exchange.requestTarget.start(), 4);
     assertEquals(exchange.requestTarget.end(), 5);
     assertEquals(exchange.state, HttpExchange._PARSE_VERSION);
+  }
+
+  @Test(description = """
+  [#435] HTTP 001: PARSE_REQUEST_TARGET --> IO_READ
+
+  - bufferIndex should not have been updated
+  """)
+  public void executeParseRequestTarget02IoRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET /".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 4;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_REQUEST_TARGET;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 4);
+    assertNull(exchange.requestTarget);
+    assertEquals(exchange.state, HttpExchange._IO_READ);
   }
 
   @Test(description = """

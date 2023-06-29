@@ -384,7 +384,10 @@ public final class HttpExchange implements Runnable {
       }
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    // SP char was not found
+    // assume client is slow on sending data...
+
+    return toIoRead(state);
   }
 
   private byte executeProcess() {
