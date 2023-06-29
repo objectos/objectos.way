@@ -22,7 +22,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -119,16 +118,17 @@ public final class HttpExchange implements Runnable {
 
       _IO_READ = 4,
 
+      _PARSE_HEADER = 11,
+      _PARSE_HEADER_NAME = 12,
+      _PARSE_HEADER_VALUE = 13,
       _PARSE_METHOD = 5,
       _PARSE_METHOD_CANDIDATE = 6,
       _PARSE_METHOD_P = 7,
       _PARSE_REQUEST_TARGET = 8,
       _PARSE_VERSION = 9,
+
       _PROCESS = 10,
 
-      _REQUEST_HEADER = 11,
-      _REQUEST_HEADER_NAME = 12,
-      _REQUEST_HEADER_VALUE = 13,
       _RESPONSE_BODY = 14,
       _RESPONSE_HEADER_BUFFER = 15,
       _RESPONSE_HEADER_WRITE_FULL = 16,
@@ -173,7 +173,9 @@ public final class HttpExchange implements Runnable {
 
   Status status;
 
-  Version version;
+  byte versionMajor;
+
+  byte versionMinor;
 
   public HttpExchange(int bufferSize,
                       NoteSink noteSink,
@@ -207,6 +209,8 @@ public final class HttpExchange implements Runnable {
     state = switch (state) {
       case _IO_READ -> executeIoRead();
 
+      case _PARSE_HEADER -> executeParseHeader();
+
       case _PARSE_METHOD -> executeParseMethod();
 
       case _PARSE_METHOD_CANDIDATE -> executeParseMethodCandidate();
@@ -217,11 +221,9 @@ public final class HttpExchange implements Runnable {
 
       case _PROCESS -> executeProcess();
 
-      case _REQUEST_HEADER -> executeRequestHeader();
+      case _PARSE_HEADER_NAME -> executeRequestHeaderName();
 
-      case _REQUEST_HEADER_NAME -> executeRequestHeaderName();
-
-      case _REQUEST_HEADER_VALUE -> executeRequestHeaderValue();
+      case _PARSE_HEADER_VALUE -> executeRequestHeaderValue();
 
       case _RESPONSE_HEADER_BUFFER -> executeResponseHeaderBuffer();
 
@@ -401,54 +403,81 @@ public final class HttpExchange implements Runnable {
   }
 
   private byte executeParseVersion() {
-    int index;
-    index = bufferIndex;
+    int versionStart;
+    versionStart = bufferIndex;
+
+    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
 
     int versionLength;
-    versionLength = Version.V1_1.bytes.length;
+    versionLength = 8;
 
     int versionEnd;
-    versionEnd = index + versionLength;
+    versionEnd = versionStart + versionLength;
+
+    // versionEnd is @ CR
+    // lineEnd is @ LF
 
     int lineEnd;
     lineEnd = versionEnd + 1;
 
     if (!bufferHasIndex(lineEnd)) {
-      return toIoRead(state);
+      throw new UnsupportedOperationException("Implement me");
     }
 
-    int minorIndex;
-    minorIndex = versionEnd - 1;
+    int index;
+    index = versionStart;
 
-    byte minor;
-    minor = bufferGet(minorIndex);
+    if (buffer[index++] != 'H' ||
+        buffer[index++] != 'T' ||
+        buffer[index++] != 'T' ||
+        buffer[index++] != 'P' ||
+        buffer[index++] != '/') {
 
-    Version maybe;
-    maybe = switch (minor) {
-      case '0' -> Version.V1_0;
+      // buffer does not start with 'HTTP/' => bad request
 
-      case '1' -> Version.V1_1;
-
-      default -> null;
-    };
-
-    if (maybe == null || !bufferEquals(maybe.bytes, index)) {
-      return toResult(Status.HTTP_VERSION_NOT_SUPPORTED);
+      throw new UnsupportedOperationException("Implement me");
     }
 
-    if (bufferGet(versionEnd) != Bytes.CR || bufferGet(lineEnd) != Bytes.LF) {
-      return toResult(Status.BAD_REQUEST);
+    byte maybeMajor;
+    maybeMajor = buffer[index++];
+
+    if (!Bytes.isDigit(maybeMajor)) {
+      // major version is not a digit => bad request
+
+      throw new UnsupportedOperationException("Implement me");
     }
 
-    bufferIndex = lineEnd + 1;
+    if (buffer[index++] != '.') {
+      // major version not followed by a DOT => bad request
 
-    version = maybe;
+      throw new UnsupportedOperationException("Implement me");
+    }
 
-    // we create the map to store the eventual request headers
+    versionMajor = (byte) (maybeMajor - 0x30);
 
-    requestHeaders = new EnumMap<>(HeaderName.class);
+    byte maybeMinor;
+    maybeMinor = buffer[index++];
 
-    return _REQUEST_HEADER;
+    if (!Bytes.isDigit(maybeMinor)) {
+      // minor version is not a digit => bad request
+
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    versionMinor = (byte) (maybeMinor - 0x30);
+
+    if (buffer[index++] != Bytes.CR ||
+        buffer[index++] != Bytes.LF) {
+      // no line terminator after version => bad request
+
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    // bufferIndex resumes immediately after CR LF
+
+    bufferIndex = index;
+
+    return _PARSE_HEADER;
   }
 
   private byte executeProcess() {
@@ -475,7 +504,7 @@ public final class HttpExchange implements Runnable {
     return toResponseHeaderBuffer();
   }
 
-  private byte executeRequestHeader() {
+  private byte executeParseHeader() {
     int index;
     index = bufferIndex;
 
@@ -491,7 +520,7 @@ public final class HttpExchange implements Runnable {
     if (first != Bytes.CR) {
       // not CR, process as field name
 
-      return _REQUEST_HEADER_NAME;
+      return _PARSE_HEADER_NAME;
     }
 
     index++;
@@ -567,7 +596,7 @@ public final class HttpExchange implements Runnable {
 
       bufferIndex = index + 1;
 
-      return _REQUEST_HEADER_VALUE;
+      return _PARSE_HEADER_VALUE;
     }
 
     throw new UnsupportedOperationException("Implement me");
@@ -648,7 +677,7 @@ public final class HttpExchange implements Runnable {
 
     bufferIndex = lineFeedIndex + 1;
 
-    return _REQUEST_HEADER;
+    return _PARSE_HEADER;
   }
 
   private byte executeResponseHeaderBuffer() {

@@ -29,7 +29,15 @@ final class Bytes {
 
   public static final byte COLON = ':';
 
+  public static final byte DIGIT_0 = '0';
+
+  public static final byte DIGIT_9 = '9';
+
   private Bytes() {}
+
+  public static boolean isDigit(byte value) {
+    return DIGIT_0 <= value && value <= DIGIT_9;
+  }
 
   public static boolean isOptionalWhitespace(byte value) {
     return switch (value) {

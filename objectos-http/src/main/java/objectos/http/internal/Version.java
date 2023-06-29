@@ -21,10 +21,10 @@ public enum Version {
 
   V1_1("HTTP/1.1");
 
-  final byte[] bytes;
+  final byte[] nameAndLineTerminator;
 
   private Version(String signature) {
-    bytes = Bytes.utf8(signature);
+    nameAndLineTerminator = Bytes.utf8(signature + "\r\n");
   }
 
 }

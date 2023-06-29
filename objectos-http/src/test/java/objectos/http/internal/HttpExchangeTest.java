@@ -371,6 +371,32 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
+  [#437] HTTP 001: PARSE_VERSION --> PARSE_HEADER
+
+  - bufferIndex is after CRLF
+  - version has correct values
+  """)
+  public void executeParseVersion01() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.1\r\n".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 6;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_VERSION;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, bytes.length);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
+
+  @Test(description = """
   [#426] HTTP 001: START --> IO_READ
 
   - buffer must be reset
@@ -471,20 +497,19 @@ public class HttpExchangeTest {
 
     // 'H' 'T' 'T' 'P' '/' '1' '.' '1' CR LF = 10
     assertEquals(exchange.bufferIndex, 16);
-    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER);
-    assertEquals(exchange.version, Version.V1_1);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
 
     exchange.stepOne();
 
     assertEquals(exchange.bufferIndex, 16);
-    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_NAME);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER_NAME);
 
     exchange.stepOne();
 
     // 'H' 'o' 's' 't' ':' = 5
     assertEquals(exchange.bufferIndex, 21);
     assertEquals(exchange.requestHeaderName, HeaderName.HOST);
-    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER_VALUE);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER_VALUE);
 
     exchange.stepOne();
 
@@ -492,7 +517,7 @@ public class HttpExchangeTest {
     // ':' '7' '0' '0' '1' CR LF = 7
     assertEquals(exchange.bufferIndex, 38);
     assertHeaderValue(exchange, HeaderName.HOST, "localhost:7001");
-    assertEquals(exchange.state, HttpExchange._REQUEST_HEADER);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
 
     exchange.stepOne();
 
@@ -531,10 +556,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-
+    
     assertEquals(
       socket.outputAsString(),
-
+    
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
