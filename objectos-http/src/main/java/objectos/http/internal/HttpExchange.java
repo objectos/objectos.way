@@ -435,7 +435,7 @@ public final class HttpExchange implements Runnable {
 
       // buffer does not start with 'HTTP/' => bad request
 
-      throw new UnsupportedOperationException("Implement me");
+      return toClientError(Status.BAD_REQUEST);
     }
 
     byte maybeMajor;
@@ -444,13 +444,13 @@ public final class HttpExchange implements Runnable {
     if (!Bytes.isDigit(maybeMajor)) {
       // major version is not a digit => bad request
 
-      throw new UnsupportedOperationException("Implement me");
+      return toClientError(Status.BAD_REQUEST);
     }
 
     if (buffer[index++] != '.') {
       // major version not followed by a DOT => bad request
 
-      throw new UnsupportedOperationException("Implement me");
+      return toClientError(Status.BAD_REQUEST);
     }
 
     versionMajor = (byte) (maybeMajor - 0x30);
@@ -461,7 +461,7 @@ public final class HttpExchange implements Runnable {
     if (!Bytes.isDigit(maybeMinor)) {
       // minor version is not a digit => bad request
 
-      throw new UnsupportedOperationException("Implement me");
+      return toClientError(Status.BAD_REQUEST);
     }
 
     versionMinor = (byte) (maybeMinor - 0x30);
@@ -470,7 +470,7 @@ public final class HttpExchange implements Runnable {
         buffer[index++] != Bytes.LF) {
       // no line terminator after version => bad request
 
-      throw new UnsupportedOperationException("Implement me");
+      return toClientError(Status.BAD_REQUEST);
     }
 
     // bufferIndex resumes immediately after CR LF

@@ -397,6 +397,43 @@ public class HttpExchangeTest {
   }
 
   @Test(description = """
+  [#438] HTTP 001: PARSE_VERSION --> BAD_REQUEST
+  """)
+  public void executeParseVersion02BadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    List<String> requests;
+    requests = List.of(
+      "GET / Http/1.1\r\n", // does not start with HTTP/
+      "GET / HTTP-1.1\r\n", // does not start with HTTP/
+      "GET / HTTP-x.1\r\n", // major is not a digit
+      "GET / HTTP-1.y\r\n", // minor is not a digit
+      "GET / HTTP-1-1\r\n", // no dot
+      "GET / HTTP-1-1\n\n" // does not end with CRLF
+    );
+
+    for (var request : requests) {
+      byte[] bytes;
+      bytes = request.getBytes();
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 6;
+      exchange.bufferLimit = bytes.length;
+      exchange.state = HttpExchange._PARSE_VERSION;
+      exchange.status = null;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, 6);
+      assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+      assertEquals(exchange.status, Status.BAD_REQUEST);
+      assertEquals(exchange.versionMajor, 0);
+      assertEquals(exchange.versionMinor, 0);
+    }
+  }
+
+  @Test(description = """
   [#426] HTTP 001: START --> IO_READ
 
   - buffer must be reset
