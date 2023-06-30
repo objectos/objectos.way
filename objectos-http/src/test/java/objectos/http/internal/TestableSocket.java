@@ -26,16 +26,41 @@ final class TestableSocket extends Socket {
 
   IOException getInputStream;
 
-  private final byte[] inputStreamBytes;
-
-  private int inputStreamIndex;
-
   IOException inputStreamRead;
 
   private ByteArrayOutputStream outputStream;
 
+  private final InputStream inputStream;
+
   private TestableSocket(byte[] requestBytes) {
-    this.inputStreamBytes = requestBytes;
+    this.inputStream = new InputStream() {
+      private final byte[] bytes = requestBytes;
+
+      private int index;
+
+      @Override
+      public int read() throws IOException {
+        if (inputStreamRead != null) {
+          throw inputStreamRead;
+        }
+
+        if (index < bytes.length) {
+          return bytes[index++];
+        } else {
+          return -1;
+        }
+      }
+    };
+  }
+
+  private TestableSocket(InputStream inputStream) {
+    this.inputStream = inputStream;
+  }
+
+  public static TestableSocket of(Object... data) {
+    return new TestableSocket(
+      TestableInputStream.of(data)
+    );
   }
 
   public static TestableSocket parse(String string) {
@@ -51,20 +76,7 @@ final class TestableSocket extends Socket {
       throw getInputStream;
     }
 
-    return new InputStream() {
-      @Override
-      public int read() throws IOException {
-        if (inputStreamRead != null) {
-          throw inputStreamRead;
-        }
-
-        if (inputStreamIndex < inputStreamBytes.length) {
-          return inputStreamBytes[inputStreamIndex++];
-        } else {
-          return -1;
-        }
-      }
-    };
+    return inputStream;
   }
 
   @Override

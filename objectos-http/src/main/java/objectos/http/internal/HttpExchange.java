@@ -120,6 +120,10 @@ public final class HttpExchange implements Runnable {
       _INPUT = 2,
       _INPUT_IO = 4,
 
+      // Input / Request Line phase
+
+      _REQUEST_LINE = 5,
+
       _CLIENT_ERROR = 1,
       _CLOSE = 2,
 
@@ -217,7 +221,9 @@ public final class HttpExchange implements Runnable {
 
       case _SETUP -> setup();
 
-      case _INPUT_IO -> executeIoRead();
+      case _INPUT -> input();
+
+      case _INPUT_IO -> inputIo();
 
       case _PARSE_HEADER -> executeParseHeader();
 
@@ -262,7 +268,7 @@ public final class HttpExchange implements Runnable {
     return index < bufferLimit;
   }
 
-  private byte executeIoRead() {
+  private byte inputIo() {
     InputStream inputStream;
 
     try {
@@ -289,6 +295,56 @@ public final class HttpExchange implements Runnable {
     bufferLimit += bytesRead;
 
     return nextAction;
+  }
+
+  private byte executeParseHeader() {
+    int index;
+    index = bufferIndex;
+
+    if (!bufferHasIndex(index)) {
+      return toInputIo(state);
+    }
+
+    // we'll check if the current char is CR
+
+    final byte first;
+    first = bufferGet(index);
+
+    if (first != Bytes.CR) {
+      // not CR, process as field name
+
+      return _PARSE_HEADER_NAME;
+    }
+
+    index++;
+
+    if (!bufferHasIndex(index)) {
+      return toInputIo(state);
+    }
+
+    // we'll check if CR is followed by LF
+
+    final byte second;
+    second = bufferGet(index);
+
+    if (second != Bytes.LF) {
+      // not LF, reject as a bad request
+
+      return toResult(Status.BAD_REQUEST);
+    }
+
+    // ok, we are at the end of header
+    // bufferIndex will resume immediately after the LF
+
+    bufferIndex = index + 1;
+
+    // next action depends on the method
+
+    return switch (method) {
+      case GET -> _PROCESS;
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
   }
 
   private byte executeParseMethod() {
@@ -522,56 +578,6 @@ public final class HttpExchange implements Runnable {
     return toResponseHeaderBuffer();
   }
 
-  private byte executeParseHeader() {
-    int index;
-    index = bufferIndex;
-
-    if (!bufferHasIndex(index)) {
-      return toInputIo(state);
-    }
-
-    // we'll check if the current char is CR
-
-    final byte first;
-    first = bufferGet(index);
-
-    if (first != Bytes.CR) {
-      // not CR, process as field name
-
-      return _PARSE_HEADER_NAME;
-    }
-
-    index++;
-
-    if (!bufferHasIndex(index)) {
-      return toInputIo(state);
-    }
-
-    // we'll check if CR is followed by LF
-
-    final byte second;
-    second = bufferGet(index);
-
-    if (second != Bytes.LF) {
-      // not LF, reject as a bad request
-
-      return toResult(Status.BAD_REQUEST);
-    }
-
-    // ok, we are at the end of header
-    // bufferIndex will resume immediately after the LF
-
-    bufferIndex = index + 1;
-
-    // next action depends on the method
-
-    return switch (method) {
-      case GET -> _PROCESS;
-
-      default -> throw new UnsupportedOperationException("Implement me");
-    };
-  }
-
   private byte executeRequestHeaderName() {
     final int nameStart;
     nameStart = bufferIndex;
@@ -792,6 +798,12 @@ public final class HttpExchange implements Runnable {
     } catch (IOException e) {
       return toClose(e);
     }
+  }
+
+  private byte input() {
+    nextAction = _REQUEST_LINE;
+
+    return inputIo();
   }
 
   private byte setup() {

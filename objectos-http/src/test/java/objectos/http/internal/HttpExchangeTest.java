@@ -53,27 +53,6 @@ public class HttpExchangeTest {
   };
 
   @Test(description = """
-  [#427] HTTP 001: IO_READ --> PARSE_METHOD
-  """)
-  public void executeIoRead01() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    exchange.buffer = new byte[64];
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._PARSE_METHOD;
-    exchange.socket = socket("FOO\r\n");
-    exchange.state = HttpExchange._INPUT_IO;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 5);
-    assertEquals(exchange.state, HttpExchange._PARSE_METHOD);
-  }
-
-  @Test(description = """
   [#428] HTTP 001: IO_READ --> IO_EXCEPTION
 
   - Socket::getInputStream throws
