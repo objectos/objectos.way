@@ -43,78 +43,6 @@ public class HttpExchangeTest {
   private static final NoteSink NOOP_NOTE_SINK = NoOpNoteSink.getInstance();
 
   @Test(description = """
-  [#431] HTTP 001: PARSE_METHOD_CANDIDATE --> PARSE_REQUEST_TARGET
-
-  - check if bufferIndex is updated
-  """)
-  public void executeParseMethodCandidate01() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    byte[] bytes;
-    bytes = "GET /".getBytes();
-
-    exchange.buffer = bytes;
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = bytes.length;
-    exchange.method = Method.GET;
-    exchange.state = HttpExchange._PARSE_METHOD_CANDIDATE;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 4);
-    assertEquals(exchange.state, HttpExchange._PARSE_REQUEST_TARGET);
-  }
-
-  @Test(description = """
-  [#432] HTTP 001: PARSE_METHOD_CANDIDATE --> BAD_REQUEST
-
-  - bufferIndex is NOT updated
-  """)
-  public void executeParseMethodCandidate02BadRequest() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    byte[] bytes;
-    bytes = "GOT /".getBytes();
-
-    exchange.buffer = bytes;
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = bytes.length;
-    exchange.method = Method.GET;
-    exchange.state = HttpExchange._PARSE_METHOD_CANDIDATE;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.BAD_REQUEST);
-  }
-
-  @Test(description = """
-  [#433] HTTP 001: PARSE_METHOD_CANDIDATE --> IO_READ
-  """)
-  public void executeParseMethodCandidate03IoRead() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    byte[] bytes;
-    bytes = "GE".getBytes();
-
-    exchange.buffer = bytes;
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = bytes.length;
-    exchange.method = Method.GET;
-    exchange.state = HttpExchange._PARSE_METHOD_CANDIDATE;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD_CANDIDATE);
-    assertEquals(exchange.state, HttpExchange._INPUT_READ);
-  }
-
-  @Test(description = """
   [#434] HTTP 001: PARSE_REQUEST_TARGET --> PARSE_VERSION
 
   - bufferIndex should be after SP
@@ -434,10 +362,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-
+    
     assertEquals(
       socket.outputAsString(),
-
+    
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

@@ -63,11 +63,11 @@ public class HttpExchangeRequestLineTest {
   }
 
   @Test(description = """
-  [#430] REQUEST_LINE --> RESPONSE::BAD_REQUEST
+  [#430] REQUEST_LINE --> CLIENT_ERROR::BAD_REQUEST
 
   - buffer should remain untouched
   """)
-  public void requestLineToResponseBadRequest() {
+  public void requestLineToClientErrorBadRequest() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -84,6 +84,78 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, Status.BAD_REQUEST);
+  }
+
+  @Test(description = """
+  [#431] HTTP 001: REQUEST_LINE_METHOD --> REQUEST_LINE_TARGET
+
+  - check if bufferIndex is updated
+  """)
+  public void requestLineMethod() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET /".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.method = Method.GET;
+    exchange.state = HttpExchange._REQUEST_LINE_METHOD;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 4);
+    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_TARGET);
+  }
+
+  @Test(description = """
+  [#432] HTTP 001: REQUEST_LINE_METHOD --> CLIENT_ERROR::BAD_REQUEST
+
+  - bufferIndex is NOT updated
+  """)
+  public void requestLineMethodToClientErrorBadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GOT /".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.method = Method.GET;
+    exchange.state = HttpExchange._REQUEST_LINE_METHOD;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.BAD_REQUEST);
+  }
+
+  @Test(description = """
+  [#433] HTTP 001: REQUEST_LINE_METHOD --> INPUT_READ
+  """)
+  public void requestLineMethodToInputRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GE".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.method = Method.GET;
+    exchange.state = HttpExchange._REQUEST_LINE_METHOD;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_METHOD);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
   }
 
 }
