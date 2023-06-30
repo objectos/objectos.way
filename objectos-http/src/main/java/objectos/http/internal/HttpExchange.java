@@ -118,11 +118,14 @@ public final class HttpExchange implements Runnable {
       // Input phase
 
       _INPUT = 2,
-      _INPUT_READ = 4,
+      _INPUT_READ = 3,
 
       // Input / Request Line phase
 
-      _REQUEST_LINE = 5,
+      _REQUEST_LINE = 4,
+      _REQUEST_LINE_METHOD = 5,
+
+      //
 
       _CLIENT_ERROR = 1,
       _CLOSE = 2,
@@ -221,13 +224,19 @@ public final class HttpExchange implements Runnable {
 
       case _SETUP -> setup();
 
+      // Input phase
+
       case _INPUT -> input();
 
       case _INPUT_READ -> inputIo();
 
-      case _PARSE_HEADER -> executeParseHeader();
+      // Input / Request Line phase
 
-      case _PARSE_METHOD -> executeParseMethod();
+      case _REQUEST_LINE -> requestLine();
+
+      //
+
+      case _PARSE_HEADER -> executeParseHeader();
 
       case _PARSE_METHOD_CANDIDATE -> executeParseMethodCandidate();
 
@@ -268,41 +277,12 @@ public final class HttpExchange implements Runnable {
     return index < bufferLimit;
   }
 
-  private byte inputIo() {
-    InputStream inputStream;
-
-    try {
-      inputStream = socket.getInputStream();
-    } catch (IOException e) {
-      return toIoReadError(e);
-    }
-
-    int bufferWritable;
-    bufferWritable = buffer.length - bufferLimit;
-
-    int bytesRead;
-
-    try {
-      bytesRead = inputStream.read(buffer, bufferLimit, bufferWritable);
-    } catch (IOException e) {
-      return toIoReadError(e);
-    }
-
-    if (bytesRead < 0) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    bufferLimit += bytesRead;
-
-    return nextAction;
-  }
-
   private byte executeParseHeader() {
     int index;
     index = bufferIndex;
 
     if (!bufferHasIndex(index)) {
-      return toInputIo(state);
+      return toInputRead(state);
     }
 
     // we'll check if the current char is CR
@@ -319,7 +299,7 @@ public final class HttpExchange implements Runnable {
     index++;
 
     if (!bufferHasIndex(index)) {
-      return toInputIo(state);
+      return toInputRead(state);
     }
 
     // we'll check if CR is followed by LF
@@ -347,43 +327,6 @@ public final class HttpExchange implements Runnable {
     };
   }
 
-  private byte executeParseMethod() {
-    int methodStart;
-    methodStart = bufferIndex;
-
-    // the next call is safe.
-    //
-    // if we got here, InputStream::read returned at least 1 byte
-    // InputStream::read only returns 0 when len == 0 in read(array, off, len)
-    // otherwise it returns > 0, or -1 when EOF or throws IOException
-
-    byte first;
-    first = bufferGet(methodStart);
-
-    // based on the first char, we select out method candidate
-
-    return switch (first) {
-      case 'C' -> toParseMethodCandidate(Method.CONNECT);
-
-      case 'D' -> toParseMethodCandidate(Method.DELETE);
-
-      case 'G' -> toParseMethodCandidate(Method.GET);
-
-      case 'H' -> toParseMethodCandidate(Method.HEAD);
-
-      case 'O' -> toParseMethodCandidate(Method.OPTIONS);
-
-      case 'P' -> _PARSE_METHOD_P;
-
-      case 'T' -> toParseMethodCandidate(Method.TRACE);
-
-      // first char does not match any candidate
-      // we are sure this is a bad request
-
-      default -> toClientError(Status.BAD_REQUEST);
-    };
-  }
-
   private byte executeParseMethodCandidate() {
     // method candidate @ start of the buffer
 
@@ -405,7 +348,7 @@ public final class HttpExchange implements Runnable {
       // clear method candidate just in case...
       method = null;
 
-      return toInputIo(state);
+      return toInputRead(state);
     }
 
     if (!bufferEquals(candidateBytes, candidateStart)) {
@@ -457,7 +400,7 @@ public final class HttpExchange implements Runnable {
       // buffer can still hold data
       // assume client is slow
 
-      return toInputIo(state);
+      return toInputRead(state);
     }
 
     // buffer is full
@@ -489,7 +432,7 @@ public final class HttpExchange implements Runnable {
         // buffer can still hold data
         // assume client is slow
 
-        return toInputIo(state);
+        return toInputRead(state);
       }
 
       // buffer is full
@@ -602,7 +545,7 @@ public final class HttpExchange implements Runnable {
     if (!found) {
       // TODO header name limit
 
-      return toInputIo(state);
+      return toInputRead(state);
     }
 
     byte first;
@@ -653,7 +596,7 @@ public final class HttpExchange implements Runnable {
       // LF was not found
       // TODO field length limit
 
-      return toInputIo(state);
+      return toInputRead(state);
     }
 
     // we check if CR is found before the LF
@@ -800,10 +743,78 @@ public final class HttpExchange implements Runnable {
     }
   }
 
+  //
+
   private byte input() {
     nextAction = _REQUEST_LINE;
 
     return inputIo();
+  }
+
+  private byte inputIo() {
+    InputStream inputStream;
+
+    try {
+      inputStream = socket.getInputStream();
+    } catch (IOException e) {
+      return toIoReadError(e);
+    }
+
+    int writableLength;
+    writableLength = buffer.length - bufferLimit;
+
+    int bytesRead;
+
+    try {
+      bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
+    } catch (IOException e) {
+      return toIoReadError(e);
+    }
+
+    if (bytesRead < 0) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    bufferLimit += bytesRead;
+
+    return nextAction;
+  }
+
+  private byte requestLine() {
+    int methodStart;
+    methodStart = bufferIndex;
+
+    // the next call is safe.
+    //
+    // if we got here, InputStream::read returned at least 1 byte
+    // InputStream::read only returns 0 when len == 0 in read(array, off, len)
+    // otherwise it returns > 0, or -1 when EOF or throws IOException
+
+    byte first;
+    first = bufferGet(methodStart);
+
+    // based on the first char, we select out method candidate
+
+    return switch (first) {
+      case 'C' -> toRequestLineMethod(Method.CONNECT);
+
+      case 'D' -> toRequestLineMethod(Method.DELETE);
+
+      case 'G' -> toRequestLineMethod(Method.GET);
+
+      case 'H' -> toRequestLineMethod(Method.HEAD);
+
+      case 'O' -> toRequestLineMethod(Method.OPTIONS);
+
+      case 'P' -> _PARSE_METHOD_P;
+
+      case 'T' -> toRequestLineMethod(Method.TRACE);
+
+      // first char does not match any candidate
+      // we are sure this is a bad request
+
+      default -> toClientError(Status.BAD_REQUEST);
+    };
   }
 
   private byte setup() {
@@ -815,6 +826,22 @@ public final class HttpExchange implements Runnable {
 
     return _INPUT;
   }
+
+  //
+
+  private byte toInputRead(byte onRead) {
+    nextAction = onRead;
+
+    return _INPUT_READ;
+  }
+
+  private byte toRequestLineMethod(Method maybe) {
+    method = maybe;
+
+    return _REQUEST_LINE_METHOD;
+  }
+
+  //
 
   private byte toClientError(Status error) {
     status = error;
@@ -828,24 +855,12 @@ public final class HttpExchange implements Runnable {
     return _CLOSE;
   }
 
-  private byte toInputIo(byte onRead) {
-    nextAction = onRead;
-
-    return _INPUT_READ;
-  }
-
   private byte toIoReadError(IOException e) {
     error = e;
 
     noteSink.send(EIO_READ_ERROR, e);
 
     return _CLOSE;
-  }
-
-  private byte toParseMethodCandidate(Method maybe) {
-    method = maybe;
-
-    return _PARSE_METHOD_CANDIDATE;
   }
 
   private byte toResponseHeaderBuffer() {
