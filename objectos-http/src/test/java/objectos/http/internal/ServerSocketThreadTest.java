@@ -49,7 +49,7 @@ public class ServerSocketThreadTest implements ServerSocketThreadAdapter {
     loAddress = InetAddress.getLoopbackAddress();
 
     InetSocketAddress loopback;
-    loopback = new InetSocketAddress(loAddress, 5550);
+    loopback = new InetSocketAddress(loAddress, 8765);
 
     ServerSocketThread thread;
     thread = ServerSocketThread.create(this, loopback);

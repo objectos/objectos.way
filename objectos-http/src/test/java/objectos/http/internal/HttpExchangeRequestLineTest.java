@@ -216,7 +216,7 @@ public class HttpExchangeRequestLineTest {
   @Test(description = """
   [#436] HTTP 001: REQUEST_LINE_TARGET --> CLIENT_ERROR::URI_TOO_LONG
   """)
-  public void executeParseRequestTarget03UriTooLong() {
+  public void requestLineTargetToClientErrorUriTooLong() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -233,6 +233,113 @@ public class HttpExchangeRequestLineTest {
 
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestTarget);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.URI_TOO_LONG);
+  }
+
+  @Test(description = """
+  [#437] HTTP 001: REQUEST_LINE_VERSION --> PARSE_HEADER
+
+  - bufferIndex is after CRLF
+  - version has correct values
+  """)
+  public void requestLineVersion() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.1\r\n".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 6;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, bytes.length);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
+
+  @Test(description = """
+  [#438] HTTP 001: REQUEST_LINE_VERSION --> CLIENT_ERROR::BAD_REQUEST
+  """)
+  public void requestLineVersionToClientErrorBadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    List<String> requests;
+    requests = List.of(
+      "GET / Http/1.1\r\n", // does not start with HTTP/
+      "GET / HTTP-1.1\r\n", // does not start with HTTP/
+      "GET / HTTP-x.1\r\n", // major is not a digit
+      "GET / HTTP-1.y\r\n", // minor is not a digit
+      "GET / HTTP-1-1\r\n", // no dot
+      "GET / HTTP-1-1\n\n" // does not end with CRLF
+    );
+
+    for (var request : requests) {
+      byte[] bytes;
+      bytes = request.getBytes();
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 6;
+      exchange.bufferLimit = bytes.length;
+      exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+      exchange.status = null;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, 6);
+      assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+      assertEquals(exchange.status, Status.BAD_REQUEST);
+      assertEquals(exchange.versionMajor, 0);
+      assertEquals(exchange.versionMinor, 0);
+    }
+  }
+
+  @Test(description = """
+  [#439] HTTP 001: REQUEST_LINE_VERSION --> INPUT_READ
+  """)
+  public void requestLineVersionToInputRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.".getBytes();
+
+    exchange.buffer = Arrays.copyOf(bytes, bytes.length + 1);
+    exchange.bufferIndex = 6;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 6);
+    assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_VERSION);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
+  @Test(description = """
+  [#440] HTTP 001: REQUEST_LINE_VERSION --> CLIENT_ERROR::URI_TOO_LONG
+  """)
+  public void requestLineVersionToClientErrorUriTooLong() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 6;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 6);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, Status.URI_TOO_LONG);
   }

@@ -124,12 +124,17 @@ public final class HttpExchange implements Runnable {
 
       _REQUEST_LINE = 4,
       _REQUEST_LINE_METHOD = 5,
-      _REQUEST_LINE_TARGET = 6,
-      _REQUEST_LINE_VERSION = 7,
+      _REQUEST_LINE_METHOD_P = 6,
+      _REQUEST_LINE_TARGET = 7,
+      _REQUEST_LINE_VERSION = 8,
+
+      // Input / Parse header phase
+
+      _PARSE_HEADER = 9,
 
       // Output phase
 
-      _CLIENT_ERROR = 8,
+      _CLIENT_ERROR = 10,
 
       //
 
@@ -137,14 +142,8 @@ public final class HttpExchange implements Runnable {
 
       _FINALLY = 3,
 
-      _PARSE_HEADER = 11,
       _PARSE_HEADER_NAME = 12,
       _PARSE_HEADER_VALUE = 13,
-      _PARSE_METHOD = 5,
-      _PARSE_METHOD_CANDIDATE = 6,
-      _PARSE_METHOD_P = 7,
-      _PARSE_REQUEST_TARGET = 8,
-      _PARSE_VERSION = 9,
 
       _PROCESS = 10,
 
@@ -239,12 +238,13 @@ public final class HttpExchange implements Runnable {
       case _REQUEST_LINE -> requestLine();
       case _REQUEST_LINE_METHOD -> requestLineMethod();
       case _REQUEST_LINE_TARGET -> requestLineTarget();
+      case _REQUEST_LINE_VERSION -> requestLineVersion();
+
+      // Input / Parse Header phase
+
+      case _PARSE_HEADER -> parseHeader();
 
       //
-
-      case _PARSE_HEADER -> executeParseHeader();
-
-      case _PARSE_VERSION -> executeParseVersion();
 
       case _PROCESS -> executeProcess();
 
@@ -277,144 +277,6 @@ public final class HttpExchange implements Runnable {
 
   private boolean bufferHasIndex(int index) {
     return index < bufferLimit;
-  }
-
-  private byte executeParseHeader() {
-    int index;
-    index = bufferIndex;
-
-    if (!bufferHasIndex(index)) {
-      return toInputRead(state);
-    }
-
-    // we'll check if the current char is CR
-
-    final byte first;
-    first = bufferGet(index);
-
-    if (first != Bytes.CR) {
-      // not CR, process as field name
-
-      return _PARSE_HEADER_NAME;
-    }
-
-    index++;
-
-    if (!bufferHasIndex(index)) {
-      return toInputRead(state);
-    }
-
-    // we'll check if CR is followed by LF
-
-    final byte second;
-    second = bufferGet(index);
-
-    if (second != Bytes.LF) {
-      // not LF, reject as a bad request
-
-      return toResult(Status.BAD_REQUEST);
-    }
-
-    // ok, we are at the end of header
-    // bufferIndex will resume immediately after the LF
-
-    bufferIndex = index + 1;
-
-    // next action depends on the method
-
-    return switch (method) {
-      case GET -> _PROCESS;
-
-      default -> throw new UnsupportedOperationException("Implement me");
-    };
-  }
-
-  private byte executeParseVersion() {
-    int versionStart;
-    versionStart = bufferIndex;
-
-    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
-
-    int versionLength;
-    versionLength = 8;
-
-    int versionEnd;
-    versionEnd = versionStart + versionLength;
-
-    // versionEnd is @ CR
-    // lineEnd is @ LF
-
-    int lineEnd;
-    lineEnd = versionEnd + 1;
-
-    if (!bufferHasIndex(lineEnd)) {
-      if (bufferLimit < buffer.length) {
-        // buffer can still hold data
-        // assume client is slow
-
-        return toInputRead(state);
-      }
-
-      // buffer is full
-      // assume URI was too long to process
-
-      return toClientError(Status.URI_TOO_LONG);
-    }
-
-    int index;
-    index = versionStart;
-
-    if (buffer[index++] != 'H' ||
-        buffer[index++] != 'T' ||
-        buffer[index++] != 'T' ||
-        buffer[index++] != 'P' ||
-        buffer[index++] != '/') {
-
-      // buffer does not start with 'HTTP/' => bad request
-
-      return toClientError(Status.BAD_REQUEST);
-    }
-
-    byte maybeMajor;
-    maybeMajor = buffer[index++];
-
-    if (!Bytes.isDigit(maybeMajor)) {
-      // major version is not a digit => bad request
-
-      return toClientError(Status.BAD_REQUEST);
-    }
-
-    if (buffer[index++] != '.') {
-      // major version not followed by a DOT => bad request
-
-      return toClientError(Status.BAD_REQUEST);
-    }
-
-    versionMajor = (byte) (maybeMajor - 0x30);
-
-    byte maybeMinor;
-    maybeMinor = buffer[index++];
-
-    if (!Bytes.isDigit(maybeMinor)) {
-      // minor version is not a digit => bad request
-
-      return toClientError(Status.BAD_REQUEST);
-    }
-
-    versionMinor = (byte) (maybeMinor - 0x30);
-
-    if (buffer[index++] != Bytes.CR ||
-        buffer[index++] != Bytes.LF) {
-      // no line terminator after version => bad request
-
-      return toClientError(Status.BAD_REQUEST);
-    }
-
-    // bufferIndex resumes immediately after CR LF
-
-    bufferIndex = index;
-
-    return _PARSE_HEADER;
   }
 
   private byte executeProcess() {
@@ -700,6 +562,58 @@ public final class HttpExchange implements Runnable {
     return nextAction;
   }
 
+  private byte parseHeader() {
+    // if the buffer matches CR + LF then header has ended
+    // otherwise, we will try to parse the header field name
+
+    int index;
+    index = bufferIndex;
+
+    int requiredIndex;
+    requiredIndex = index + 1;
+
+    if (!bufferHasIndex(requiredIndex)) {
+      // ask for more data
+
+      return toInputRead(state);
+    }
+
+    // we'll check if the current char is CR
+
+    final byte first;
+    first = bufferGet(index++);
+
+    if (first != Bytes.CR) {
+      // not CR, process as field name
+
+      return _PARSE_HEADER_NAME;
+    }
+
+    // we'll check if CR is followed by LF
+
+    final byte second;
+    second = bufferGet(index++);
+
+    if (second != Bytes.LF) {
+      // not LF, reject as a bad request
+
+      return toResult(Status.BAD_REQUEST);
+    }
+
+    // ok, we are at the end of header
+    // bufferIndex will resume immediately after the LF
+
+    bufferIndex = index;
+
+    // next action depends on the method
+
+    return switch (method) {
+      case GET -> _PROCESS;
+
+      default -> throw new UnsupportedOperationException("Implement me");
+    };
+  }
+
   private byte requestLine() {
     int methodStart;
     methodStart = bufferIndex;
@@ -726,7 +640,7 @@ public final class HttpExchange implements Runnable {
 
       case 'O' -> toRequestLineMethod(Method.OPTIONS);
 
-      case 'P' -> _PARSE_METHOD_P;
+      case 'P' -> _REQUEST_LINE_METHOD_P;
 
       case 'T' -> toRequestLineMethod(Method.TRACE);
 
@@ -819,6 +733,93 @@ public final class HttpExchange implements Runnable {
     return toClientError(Status.URI_TOO_LONG);
   }
 
+  private byte requestLineVersion() {
+    int versionStart;
+    versionStart = bufferIndex;
+
+    // 'H' 'T' 'T' 'P' '/' '1' '.' '1' = 8 bytes
+
+    int versionLength;
+    versionLength = 8;
+
+    int versionEnd;
+    versionEnd = versionStart + versionLength;
+
+    // versionEnd is @ CR
+    // lineEnd is @ LF
+
+    int lineEnd;
+    lineEnd = versionEnd + 1;
+
+    if (!bufferHasIndex(lineEnd)) {
+      if (bufferLimit < buffer.length) {
+        // buffer can still hold data
+        // assume client is slow
+
+        return toInputRead(state);
+      }
+
+      // buffer is full
+      // assume URI was too long to process
+
+      return toClientError(Status.URI_TOO_LONG);
+    }
+
+    int index;
+    index = versionStart;
+
+    if (buffer[index++] != 'H' ||
+        buffer[index++] != 'T' ||
+        buffer[index++] != 'T' ||
+        buffer[index++] != 'P' ||
+        buffer[index++] != '/') {
+
+      // buffer does not start with 'HTTP/' => bad request
+
+      return toClientError(Status.BAD_REQUEST);
+    }
+
+    byte maybeMajor;
+    maybeMajor = buffer[index++];
+
+    if (!Bytes.isDigit(maybeMajor)) {
+      // major version is not a digit => bad request
+
+      return toClientError(Status.BAD_REQUEST);
+    }
+
+    if (buffer[index++] != '.') {
+      // major version not followed by a DOT => bad request
+
+      return toClientError(Status.BAD_REQUEST);
+    }
+
+    versionMajor = (byte) (maybeMajor - 0x30);
+
+    byte maybeMinor;
+    maybeMinor = buffer[index++];
+
+    if (!Bytes.isDigit(maybeMinor)) {
+      // minor version is not a digit => bad request
+
+      return toClientError(Status.BAD_REQUEST);
+    }
+
+    versionMinor = (byte) (maybeMinor - 0x30);
+
+    if (buffer[index++] != Bytes.CR ||
+        buffer[index++] != Bytes.LF) {
+      // no line terminator after version => bad request
+
+      return toClientError(Status.BAD_REQUEST);
+    }
+
+    // bufferIndex resumes immediately after CR LF
+
+    bufferIndex = index;
+
+    return _PARSE_HEADER;
+  }
   private byte setup() {
     // TODO set timeout
 
@@ -830,6 +831,12 @@ public final class HttpExchange implements Runnable {
   }
 
   //
+
+  private byte toClientError(Status error) {
+    status = error;
+
+    return _CLIENT_ERROR;
+  }
 
   private byte toInputRead(byte onRead) {
     nextAction = onRead;
@@ -844,12 +851,6 @@ public final class HttpExchange implements Runnable {
   }
 
   //
-
-  private byte toClientError(Status error) {
-    status = error;
-
-    return _CLIENT_ERROR;
-  }
 
   private byte toClose(IOException e) {
     error = e;
