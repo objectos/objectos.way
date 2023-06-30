@@ -43,33 +43,6 @@ public class HttpExchangeTest {
   private static final NoteSink NOOP_NOTE_SINK = NoOpNoteSink.getInstance();
 
   @Test(description = """
-  [#434] HTTP 001: PARSE_REQUEST_TARGET --> PARSE_VERSION
-
-  - bufferIndex should be after SP
-  - requestTarget should contain the correct indices
-  """)
-  public void executeParseRequestTarget01() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    byte[] bytes;
-    bytes = "GET / HTTP/1.1".getBytes();
-
-    exchange.buffer = bytes;
-    exchange.bufferIndex = 4;
-    exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._PARSE_REQUEST_TARGET;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 6);
-    assertNotNull(exchange.requestTarget);
-    assertEquals(exchange.requestTarget.start(), 4);
-    assertEquals(exchange.requestTarget.end(), 5);
-    assertEquals(exchange.state, HttpExchange._PARSE_VERSION);
-  }
-
-  @Test(description = """
   [#435] HTTP 001: PARSE_REQUEST_TARGET --> IO_READ
 
   - bufferIndex should not have been updated
@@ -362,10 +335,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

@@ -16,6 +16,7 @@
 package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.util.List;
 import objectos.http.Status;
@@ -156,6 +157,33 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_METHOD);
     assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
+  @Test(description = """
+  [#434] HTTP 001: REQUEST_LINE_TARGET --> REQUEST_LINE_VERSION
+
+  - bufferIndex should be after SP
+  - requestTarget should contain the correct indices
+  """)
+  public void requestLineTarget() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.1".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 4;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_TARGET;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 6);
+    assertNotNull(exchange.requestTarget);
+    assertEquals(exchange.requestTarget.start(), 4);
+    assertEquals(exchange.requestTarget.end(), 5);
+    assertEquals(exchange.state, HttpExchange._REQUEST_LINE_VERSION);
   }
 
 }

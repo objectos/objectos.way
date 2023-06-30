@@ -125,10 +125,11 @@ public final class HttpExchange implements Runnable {
       _REQUEST_LINE = 4,
       _REQUEST_LINE_METHOD = 5,
       _REQUEST_LINE_TARGET = 6,
+      _REQUEST_LINE_VERSION = 7,
 
       // Output phase
 
-      _CLIENT_ERROR = 7,
+      _CLIENT_ERROR = 8,
 
       //
 
@@ -237,12 +238,11 @@ public final class HttpExchange implements Runnable {
 
       case _REQUEST_LINE -> requestLine();
       case _REQUEST_LINE_METHOD -> requestLineMethod();
+      case _REQUEST_LINE_TARGET -> requestLineTarget();
 
       //
 
       case _PARSE_HEADER -> executeParseHeader();
-
-      case _PARSE_REQUEST_TARGET -> executeParseRequestTarget();
 
       case _PARSE_VERSION -> executeParseVersion();
 
@@ -327,44 +327,6 @@ public final class HttpExchange implements Runnable {
 
       default -> throw new UnsupportedOperationException("Implement me");
     };
-  }
-
-  private byte executeParseRequestTarget() {
-    // we will look for the first SP char
-
-    int targetStart;
-    targetStart = bufferIndex;
-
-    for (int index = targetStart; bufferHasIndex(index); index++) {
-      byte b;
-      b = bufferGet(index);
-
-      if (b == Bytes.SP) {
-        // SP found, store the indices
-
-        requestTarget = new RequestTarget(targetStart, index);
-
-        // bufferIndex immediately after the SP char
-
-        bufferIndex = index + 1;
-
-        return _PARSE_VERSION;
-      }
-    }
-
-    // SP char was not found...
-
-    if (bufferLimit < buffer.length) {
-      // buffer can still hold data
-      // assume client is slow
-
-      return toInputRead(state);
-    }
-
-    // buffer is full
-    // URI is too long to process
-
-    return toClientError(Status.URI_TOO_LONG);
   }
 
   private byte executeParseVersion() {
@@ -817,6 +779,44 @@ public final class HttpExchange implements Runnable {
     // continue to request target
 
     return _REQUEST_LINE_TARGET;
+  }
+
+  private byte requestLineTarget() {
+    // we will look for the first SP char
+
+    int targetStart;
+    targetStart = bufferIndex;
+
+    for (int index = targetStart; bufferHasIndex(index); index++) {
+      byte b;
+      b = bufferGet(index);
+
+      if (b == Bytes.SP) {
+        // SP found, store the indices
+
+        requestTarget = new RequestTarget(targetStart, index);
+
+        // bufferIndex immediately after the SP char
+
+        bufferIndex = index + 1;
+
+        return _REQUEST_LINE_VERSION;
+      }
+    }
+
+    // SP char was not found...
+
+    if (bufferLimit < buffer.length) {
+      // buffer can still hold data
+      // assume client is slow
+
+      return toInputRead(state);
+    }
+
+    // buffer is full
+    // URI is too long to process
+
+    return toClientError(Status.URI_TOO_LONG);
   }
 
   private byte setup() {
