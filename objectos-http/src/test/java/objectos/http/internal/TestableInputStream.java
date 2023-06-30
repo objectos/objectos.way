@@ -21,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 
 final class TestableInputStream extends InputStream {
 
+  public static final TestableInputStream EMPTY = new TestableInputStream(new Object[] {});
+
   static final Object THROW = new Object() {};
 
   private final Object[] data;
@@ -66,6 +68,8 @@ final class TestableInputStream extends InputStream {
       System.arraycopy(bytes, 0, b, off, bytes.length);
 
       return bytes.length;
+    } else if (next instanceof IOException ioe) {
+      throw ioe;
     } else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + next.getClass()

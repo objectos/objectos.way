@@ -24,10 +24,6 @@ import java.nio.charset.StandardCharsets;
 
 final class TestableSocket extends Socket {
 
-  IOException getInputStream;
-
-  IOException inputStreamRead;
-
   private ByteArrayOutputStream outputStream;
 
   private final InputStream inputStream;
@@ -40,10 +36,6 @@ final class TestableSocket extends Socket {
 
       @Override
       public int read() throws IOException {
-        if (inputStreamRead != null) {
-          throw inputStreamRead;
-        }
-
         if (index < bytes.length) {
           return bytes[index++];
         } else {
@@ -53,8 +45,14 @@ final class TestableSocket extends Socket {
     };
   }
 
-  private TestableSocket(InputStream inputStream) {
+  public TestableSocket(InputStream inputStream) {
     this.inputStream = inputStream;
+  }
+
+  public static TestableSocket empty() {
+    return new TestableSocket(
+      TestableInputStream.EMPTY
+    );
   }
 
   public static TestableSocket of(Object... data) {
@@ -71,11 +69,7 @@ final class TestableSocket extends Socket {
   }
 
   @Override
-  public final InputStream getInputStream() throws IOException {
-    if (getInputStream != null) {
-      throw getInputStream;
-    }
-
+  public InputStream getInputStream() throws IOException {
     return inputStream;
   }
 

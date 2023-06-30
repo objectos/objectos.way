@@ -18,9 +18,7 @@ package objectos.http.internal;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -37,108 +35,12 @@ import objectos.http.Status;
 import objectos.http.internal.HttpExchange.HeaderValue;
 import objectos.http.internal.HttpExchange.RequestTarget;
 import objectos.lang.NoOpNoteSink;
-import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import org.testng.annotations.Test;
 
 public class HttpExchangeTest {
 
   private static final NoteSink NOOP_NOTE_SINK = NoOpNoteSink.getInstance();
-
-  private static final HttpProcessor NOOP_PROCESSOR = new HttpProcessor() {
-    @Override
-    public void process(Request request, Response response) throws Exception {
-      // no-op
-    }
-  };
-
-  @Test(description = """
-  [#428] HTTP 001: IO_READ --> IO_EXCEPTION
-
-  - Socket::getInputStream throws
-  """)
-  public void executeIoRead02() {
-    TestableSocket socket;
-    socket = socket("FOO");
-
-    IOException error;
-    error = new IOException();
-
-    socket.getInputStream = error;
-
-    var noteSink = new TestableNoteSink() {
-      Note1<?> note1;
-      Object value1;
-
-      @Override
-      public <T1> void send(Note1<T1> note, T1 v1) {
-        note1 = note;
-        value1 = v1;
-      }
-    };
-
-    HttpExchange exchange;
-    exchange = new HttpExchange(64, noteSink, NOOP_PROCESSOR, socket);
-
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._PARSE_METHOD;
-    exchange.state = HttpExchange._INPUT_IO;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
-    assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._CLOSE);
-
-    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
-    assertSame(noteSink.value1, error);
-  }
-
-  @Test(description = """
-  [#428] HTTP 001: IO_READ --> IO_EXCEPTION
-
-  - InputStream::read throws
-  """)
-  public void executeIoRead03() {
-    TestableSocket socket;
-    socket = socket("FOO");
-
-    IOException error;
-    error = new IOException();
-
-    socket.inputStreamRead = error;
-
-    var noteSink = new TestableNoteSink() {
-      Note1<?> note1;
-      Object value1;
-
-      @Override
-      public <T1> void send(Note1<T1> note, T1 v1) {
-        note1 = note;
-        value1 = v1;
-      }
-    };
-
-    HttpExchange exchange;
-    exchange = new HttpExchange(64, noteSink, NOOP_PROCESSOR, socket);
-
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = 0;
-    exchange.nextAction = HttpExchange._PARSE_METHOD;
-    exchange.state = HttpExchange._INPUT_IO;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
-    assertSame(exchange.error, error);
-    assertEquals(exchange.state, HttpExchange._CLOSE);
-
-    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
-    assertSame(noteSink.value1, error);
-  }
 
   @Test(description = """
   [#429] HTTP 001: PARSE_METHOD -> PARSE_METHOD_CANDIDATE
@@ -270,7 +172,7 @@ public class HttpExchangeTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD_CANDIDATE);
-    assertEquals(exchange.state, HttpExchange._INPUT_IO);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
   }
 
   @Test(description = """
@@ -322,7 +224,7 @@ public class HttpExchangeTest {
 
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestTarget);
-    assertEquals(exchange.state, HttpExchange._INPUT_IO);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
   }
 
   @Test(description = """
@@ -431,7 +333,7 @@ public class HttpExchangeTest {
 
     assertEquals(exchange.bufferIndex, 6);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_VERSION);
-    assertEquals(exchange.state, HttpExchange._INPUT_IO);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
   }
 
   @Test(description = """
@@ -507,7 +409,7 @@ public class HttpExchangeTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.state, HttpExchange._INPUT_IO);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD);
 
     exchange.stepOne();
@@ -619,10 +521,6 @@ public class HttpExchangeTest {
     assertNotNull(value, "Header " + name + " was not found");
 
     assertEquals(value.toString(), expected);
-  }
-
-  private TestableSocket socket(String s) {
-    return TestableSocket.parse(s);
   }
 
 }

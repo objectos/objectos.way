@@ -118,7 +118,7 @@ public final class HttpExchange implements Runnable {
       // Input phase
 
       _INPUT = 2,
-      _INPUT_IO = 4,
+      _INPUT_READ = 4,
 
       // Input / Request Line phase
 
@@ -223,7 +223,7 @@ public final class HttpExchange implements Runnable {
 
       case _INPUT -> input();
 
-      case _INPUT_IO -> inputIo();
+      case _INPUT_READ -> inputIo();
 
       case _PARSE_HEADER -> executeParseHeader();
 
@@ -831,7 +831,7 @@ public final class HttpExchange implements Runnable {
   private byte toInputIo(byte onRead) {
     nextAction = onRead;
 
-    return _INPUT_IO;
+    return _INPUT_READ;
   }
 
   private byte toIoReadError(IOException e) {

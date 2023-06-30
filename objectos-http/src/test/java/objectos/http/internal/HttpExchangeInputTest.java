@@ -16,7 +16,12 @@
 package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import objectos.lang.Note1;
 import org.testng.annotations.Test;
 
 public class HttpExchangeInputTest {
@@ -39,6 +44,94 @@ public class HttpExchangeInputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 5);
     assertEquals(exchange.state, HttpExchange._REQUEST_LINE);
+  }
+
+  @Test(description = """
+  [#428] HTTP 001: INPUT_READ --> CLOSE
+
+  - Socket::getInputStream throws
+  """)
+  public void inputRead01() {
+    IOException error;
+    error = new IOException();
+
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    var noteSink = new TestableNoteSink() {
+      Note1<?> note1;
+      Object value1;
+
+      @Override
+      public <T1> void send(Note1<T1> note, T1 v1) {
+        note1 = note;
+        value1 = v1;
+      }
+    };
+
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.noteSink = noteSink;
+    exchange.socket = new Socket() {
+      @Override
+      public InputStream getInputStream() throws IOException {
+        throw error;
+      }
+    };
+    exchange.state = HttpExchange._INPUT_READ;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertSame(exchange.error, error);
+    assertEquals(exchange.state, HttpExchange._CLOSE);
+
+    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
+    assertSame(noteSink.value1, error);
+  }
+
+  @Test(description = """
+  [#428] HTTP 001: INPUT_READ --> CLOSE
+
+  - InputStream::read throws
+  """)
+  public void inputRead02() {
+    IOException error;
+    error = new IOException();
+
+    var noteSink = new TestableNoteSink() {
+      Note1<?> note1;
+      Object value1;
+
+      @Override
+      public <T1> void send(Note1<T1> note, T1 v1) {
+        note1 = note;
+        value1 = v1;
+      }
+    };
+
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.buffer = new byte[64];
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.noteSink = noteSink;
+    exchange.socket = TestableSocket.of(error);
+    exchange.state = HttpExchange._INPUT_READ;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertSame(exchange.error, error);
+    assertEquals(exchange.state, HttpExchange._CLOSE);
+
+    assertSame(noteSink.note1, HttpExchange.EIO_READ_ERROR);
+    assertSame(noteSink.value1, error);
   }
 
 }
