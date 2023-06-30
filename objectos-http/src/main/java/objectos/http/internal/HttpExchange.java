@@ -125,9 +125,12 @@ public final class HttpExchange implements Runnable {
       _REQUEST_LINE = 4,
       _REQUEST_LINE_METHOD = 5,
 
+      // Output phase
+
+      _CLIENT_ERROR = 6,
+
       //
 
-      _CLIENT_ERROR = 1,
       _CLOSE = 2,
 
       _FINALLY = 3,

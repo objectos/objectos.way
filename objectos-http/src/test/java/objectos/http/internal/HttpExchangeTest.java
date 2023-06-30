@@ -42,28 +42,6 @@ public class HttpExchangeTest {
 
   private static final NoteSink NOOP_NOTE_SINK = NoOpNoteSink.getInstance();
 
-  @Test(enabled = false, description = """
-  [#430] HTTP 001: PARSE_METHOD -> BAD_REQUEST
-  """)
-  public void executeParseMethod02() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    byte[] bytes;
-    bytes = "(GET) /".getBytes();
-
-    exchange.buffer = bytes;
-    exchange.bufferIndex = 0;
-    exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._PARSE_METHOD;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.BAD_REQUEST);
-  }
-
   @Test(description = """
   [#431] HTTP 001: PARSE_METHOD_CANDIDATE --> PARSE_REQUEST_TARGET
 
@@ -456,10 +434,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

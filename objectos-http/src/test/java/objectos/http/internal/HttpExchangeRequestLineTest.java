@@ -18,6 +18,7 @@ package objectos.http.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
+import objectos.http.Status;
 import org.testng.annotations.Test;
 
 public class HttpExchangeRequestLineTest {
@@ -59,6 +60,30 @@ public class HttpExchangeRequestLineTest {
       assertEquals(exchange.method, pair.method);
       assertEquals(exchange.state, HttpExchange._REQUEST_LINE_METHOD);
     }
+  }
+
+  @Test(description = """
+  [#430] REQUEST_LINE --> RESPONSE::BAD_REQUEST
+
+  - buffer should remain untouched
+  """)
+  public void requestLineToResponseBadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "(GET) /".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.BAD_REQUEST);
   }
 
 }
