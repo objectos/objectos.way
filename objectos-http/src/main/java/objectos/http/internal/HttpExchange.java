@@ -111,12 +111,19 @@ public final class HttpExchange implements Runnable {
 
   static final byte _STOP = 0,
 
+      // Setup phase
+
+      _SETUP = 1,
+
+      // Input phase
+
+      _INPUT = 2,
+      _INPUT_IO = 4,
+
       _CLIENT_ERROR = 1,
       _CLOSE = 2,
 
       _FINALLY = 3,
-
-      _IO_READ = 4,
 
       _PARSE_HEADER = 11,
       _PARSE_HEADER_NAME = 12,
@@ -134,8 +141,7 @@ public final class HttpExchange implements Runnable {
       _RESPONSE_HEADER_WRITE_FULL = 16,
       _RESPONSE_HEADER_WRITE_PARTIAL = 17,
 
-      _SOCKET_WRITE = 18,
-      _START = 19;
+      _SOCKET_WRITE = 18;
 
   byte[] buffer;
 
@@ -189,7 +195,7 @@ public final class HttpExchange implements Runnable {
 
     this.socket = socket;
 
-    state = _START;
+    state = _SETUP;
   }
 
   HttpExchange() {}
@@ -207,7 +213,11 @@ public final class HttpExchange implements Runnable {
 
   final void stepOne() {
     state = switch (state) {
-      case _IO_READ -> executeIoRead();
+      // Setup phase
+
+      case _SETUP -> setup();
+
+      case _INPUT_IO -> executeIoRead();
 
       case _PARSE_HEADER -> executeParseHeader();
 
@@ -230,8 +240,6 @@ public final class HttpExchange implements Runnable {
       case _RESPONSE_HEADER_WRITE_FULL -> executeResponseHeaderWriteFull();
 
       case _RESPONSE_HEADER_WRITE_PARTIAL -> executeResponseHeaderWritePartial();
-
-      case _START -> executeStart();
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -341,7 +349,7 @@ public final class HttpExchange implements Runnable {
       // clear method candidate just in case...
       method = null;
 
-      return toIoRead(state);
+      return toInputIo(state);
     }
 
     if (!bufferEquals(candidateBytes, candidateStart)) {
@@ -393,7 +401,7 @@ public final class HttpExchange implements Runnable {
       // buffer can still hold data
       // assume client is slow
 
-      return toIoRead(state);
+      return toInputIo(state);
     }
 
     // buffer is full
@@ -425,7 +433,7 @@ public final class HttpExchange implements Runnable {
         // buffer can still hold data
         // assume client is slow
 
-        return toIoRead(state);
+        return toInputIo(state);
       }
 
       // buffer is full
@@ -519,7 +527,7 @@ public final class HttpExchange implements Runnable {
     index = bufferIndex;
 
     if (!bufferHasIndex(index)) {
-      return toIoRead(state);
+      return toInputIo(state);
     }
 
     // we'll check if the current char is CR
@@ -536,7 +544,7 @@ public final class HttpExchange implements Runnable {
     index++;
 
     if (!bufferHasIndex(index)) {
-      return toIoRead(state);
+      return toInputIo(state);
     }
 
     // we'll check if CR is followed by LF
@@ -588,7 +596,7 @@ public final class HttpExchange implements Runnable {
     if (!found) {
       // TODO header name limit
 
-      return toIoRead(state);
+      return toInputIo(state);
     }
 
     byte first;
@@ -639,7 +647,7 @@ public final class HttpExchange implements Runnable {
       // LF was not found
       // TODO field length limit
 
-      return toIoRead(state);
+      return toInputIo(state);
     }
 
     // we check if CR is found before the LF
@@ -786,14 +794,14 @@ public final class HttpExchange implements Runnable {
     }
   }
 
-  private byte executeStart() {
+  private byte setup() {
     // TODO set timeout
 
     // we ensure the buffer is reset
 
     bufferIndex = bufferLimit = 0;
 
-    return toIoRead(_PARSE_METHOD);
+    return _INPUT;
   }
 
   private byte toClientError(Status error) {
@@ -808,10 +816,10 @@ public final class HttpExchange implements Runnable {
     return _CLOSE;
   }
 
-  private byte toIoRead(byte onRead) {
+  private byte toInputIo(byte onRead) {
     nextAction = onRead;
 
-    return _IO_READ;
+    return _INPUT_IO;
   }
 
   private byte toIoReadError(IOException e) {

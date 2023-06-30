@@ -64,7 +64,7 @@ public class HttpExchangeTest {
     exchange.bufferLimit = 0;
     exchange.nextAction = HttpExchange._PARSE_METHOD;
     exchange.socket = socket("FOO\r\n");
-    exchange.state = HttpExchange._IO_READ;
+    exchange.state = HttpExchange._INPUT_IO;
 
     exchange.stepOne();
 
@@ -104,7 +104,7 @@ public class HttpExchangeTest {
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
     exchange.nextAction = HttpExchange._PARSE_METHOD;
-    exchange.state = HttpExchange._IO_READ;
+    exchange.state = HttpExchange._INPUT_IO;
 
     exchange.stepOne();
 
@@ -148,7 +148,7 @@ public class HttpExchangeTest {
     exchange.bufferIndex = 0;
     exchange.bufferLimit = 0;
     exchange.nextAction = HttpExchange._PARSE_METHOD;
-    exchange.state = HttpExchange._IO_READ;
+    exchange.state = HttpExchange._INPUT_IO;
 
     exchange.stepOne();
 
@@ -291,7 +291,7 @@ public class HttpExchangeTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD_CANDIDATE);
-    assertEquals(exchange.state, HttpExchange._IO_READ);
+    assertEquals(exchange.state, HttpExchange._INPUT_IO);
   }
 
   @Test(description = """
@@ -343,7 +343,7 @@ public class HttpExchangeTest {
 
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestTarget);
-    assertEquals(exchange.state, HttpExchange._IO_READ);
+    assertEquals(exchange.state, HttpExchange._INPUT_IO);
   }
 
   @Test(description = """
@@ -452,7 +452,7 @@ public class HttpExchangeTest {
 
     assertEquals(exchange.bufferIndex, 6);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_VERSION);
-    assertEquals(exchange.state, HttpExchange._IO_READ);
+    assertEquals(exchange.state, HttpExchange._INPUT_IO);
   }
 
   @Test(description = """
@@ -475,29 +475,6 @@ public class HttpExchangeTest {
     assertEquals(exchange.bufferIndex, 6);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, Status.URI_TOO_LONG);
-  }
-
-  @Test(description = """
-  [#426] HTTP 001: START --> IO_READ
-
-  - buffer must be reset
-  - next action -> PARSE_METHOD
-  """)
-  public void executeStart01() {
-    TestableSocket socket;
-    socket = socket("FOO");
-
-    HttpExchange exchange;
-    exchange = new HttpExchange(64, NOOP_NOTE_SINK, NOOP_PROCESSOR, socket);
-
-    assertEquals(exchange.state, HttpExchange._START);
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD);
-    assertEquals(exchange.state, HttpExchange._IO_READ);
   }
 
   @Test(enabled = false, description = """
@@ -547,11 +524,11 @@ public class HttpExchangeTest {
     exchange = new HttpExchange(64, NOOP_NOTE_SINK, processor, socket);
 
     assertEquals(socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._START);
+    assertEquals(exchange.state, HttpExchange._SETUP);
 
     exchange.stepOne();
 
-    assertEquals(exchange.state, HttpExchange._IO_READ);
+    assertEquals(exchange.state, HttpExchange._INPUT_IO);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_METHOD);
 
     exchange.stepOne();
