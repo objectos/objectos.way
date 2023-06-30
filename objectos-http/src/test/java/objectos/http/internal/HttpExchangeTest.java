@@ -17,7 +17,6 @@ package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -41,30 +40,6 @@ import org.testng.annotations.Test;
 public class HttpExchangeTest {
 
   private static final NoteSink NOOP_NOTE_SINK = NoOpNoteSink.getInstance();
-
-  @Test(description = """
-  [#436] HTTP 001: PARSE_REQUEST_TARGET --> URI_TOO_LONG
-  """)
-  public void executeParseRequestTarget03UriTooLong() {
-    HttpExchange exchange;
-    exchange = new HttpExchange();
-
-    byte[] bytes;
-    bytes = "GET /attack!".getBytes();
-
-    // buffer is full
-    exchange.buffer = bytes;
-    exchange.bufferIndex = 4;
-    exchange.bufferLimit = bytes.length;
-    exchange.state = HttpExchange._PARSE_REQUEST_TARGET;
-
-    exchange.stepOne();
-
-    assertEquals(exchange.bufferIndex, 4);
-    assertNull(exchange.requestTarget);
-    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.URI_TOO_LONG);
-  }
 
   @Test(description = """
   [#437] HTTP 001: PARSE_VERSION --> PARSE_HEADER
@@ -310,10 +285,10 @@ public class HttpExchangeTest {
 
     /*
     exchange.stepOne();
-    
+
     assertEquals(
       socket.outputAsString(),
-    
+
       """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>

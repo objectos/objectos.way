@@ -213,4 +213,28 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.state, HttpExchange._INPUT_READ);
   }
 
+  @Test(description = """
+  [#436] HTTP 001: REQUEST_LINE_TARGET --> CLIENT_ERROR::URI_TOO_LONG
+  """)
+  public void executeParseRequestTarget03UriTooLong() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "GET /attack!".getBytes();
+
+    // buffer is full
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 4;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_TARGET;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 4);
+    assertNull(exchange.requestTarget);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.URI_TOO_LONG);
+  }
+
 }
