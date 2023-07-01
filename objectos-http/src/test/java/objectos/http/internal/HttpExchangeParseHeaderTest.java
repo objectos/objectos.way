@@ -27,6 +27,8 @@ public class HttpExchangeParseHeaderTest {
 
   @Test(description = """
   [#445] HTTP 001: PARSE_HEADER --> PARSE_HEADER_NAME
+
+  - resets header name
   """)
   public void parseHeader() {
     HttpExchange exchange;
@@ -135,6 +137,60 @@ public class HttpExchangeParseHeaderTest {
       assertEquals(exchange.requestHeaderName, headerName);
       assertEquals(exchange.state, HttpExchange._PARSE_HEADER_VALUE);
     }
+  }
+
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER_NAME --> INPUT_READ
+
+  - buffer index remains unchanged
+  - not header name set
+  """)
+  public void parseHeaderNameToInputRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = Bytes.utf8("Connectio");
+
+    exchange.buffer = Arrays.copyOf(bytes, 20); /* buffer is not full */
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.requestHeaderName = HeaderName.ACCEPT_ENCODING;
+    exchange.state = HttpExchange._PARSE_HEADER_NAME;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.nextAction, HttpExchange._PARSE_HEADER_NAME);
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER_NAME --> CLIENT_ERROR::BAD_REQUEST
+
+  - buffer index remains unchanged
+  - not header name set
+  """)
+  public void parseHeaderNameToClientErrorBadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = Bytes.utf8("Connectio");
+
+    exchange.buffer = bytes; /* buffer is full */
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.requestHeaderName = HeaderName.ACCEPT_ENCODING;
+    exchange.state = HttpExchange._PARSE_HEADER_NAME;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.BAD_REQUEST);
   }
 
 }

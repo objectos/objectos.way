@@ -572,6 +572,10 @@ public final class HttpExchange implements Runnable {
   }
 
   private byte parseHeaderName() {
+    // we reset any previous found header name
+
+    requestHeaderName = null;
+
     // we will search the buffer for a ':' char
 
     final int nameStart;
