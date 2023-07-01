@@ -243,12 +243,14 @@ public class HttpExchangeRequestLineTest {
   - bufferIndex is after CRLF
   - version has correct values
   """)
-  public void requestLineVersion() {
+  public void requestLineVersion01() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
+    // CRLF line terminator
+
     byte[] bytes;
-    bytes = "GET / HTTP/1.1\r\n".getBytes();
+    bytes = "GET / HTTP/1.1\r\nHost:".getBytes();
 
     exchange.buffer = bytes;
     exchange.bufferIndex = 6;
@@ -257,7 +259,34 @@ public class HttpExchangeRequestLineTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.bufferIndex, bytes.length);
+    assertEquals(exchange.bufferIndex, 16);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
+
+  @Test(description = """
+  [#437] HTTP 001: REQUEST_LINE_VERSION --> PARSE_HEADER
+
+  - client line terminator is LF only
+  """)
+  public void requestLineVersion02LF() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    // LF line terminator
+
+    byte[] bytes;
+    bytes = "GET / HTTP/1.1\nHost:".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 6;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_VERSION;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 15);
     assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
     assertEquals(exchange.versionMajor, 1);
     assertEquals(exchange.versionMinor, 1);

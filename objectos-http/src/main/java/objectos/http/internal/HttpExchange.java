@@ -743,13 +743,13 @@ public final class HttpExchange implements Runnable {
     versionLength = 8;
 
     int versionEnd;
-    versionEnd = versionStart + versionLength;
+    versionEnd = versionStart + versionLength - 1;
 
     // versionEnd is @ CR
     // lineEnd is @ LF
 
     int lineEnd;
-    lineEnd = versionEnd + 1;
+    lineEnd = versionEnd + 2;
 
     if (!bufferHasIndex(lineEnd)) {
       if (bufferLimit < buffer.length) {
@@ -807,19 +807,30 @@ public final class HttpExchange implements Runnable {
 
     versionMinor = (byte) (maybeMinor - 0x30);
 
-    if (buffer[index++] != Bytes.CR ||
-        buffer[index++] != Bytes.LF) {
-      // no line terminator after version => bad request
+    byte crOrLf;
+    crOrLf = buffer[index++];
 
-      return toClientError(Status.BAD_REQUEST);
+    if (crOrLf == Bytes.CR && buffer[index++] == Bytes.LF) {
+      // bufferIndex resumes immediately after CRLF
+
+      bufferIndex = index;
+
+      return _PARSE_HEADER;
     }
 
-    // bufferIndex resumes immediately after CR LF
+    if (crOrLf == Bytes.LF) {
+      // bufferIndex resumes immediately after LF
 
-    bufferIndex = index;
+      bufferIndex = index;
 
-    return _PARSE_HEADER;
+      return _PARSE_HEADER;
+    }
+
+    // no line terminator after version => bad request
+
+    return toClientError(Status.BAD_REQUEST);
   }
+
   private byte setup() {
     // TODO set timeout
 
