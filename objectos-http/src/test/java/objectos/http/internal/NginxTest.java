@@ -38,13 +38,13 @@ public class NginxTest {
   }
 
   /*
-
+  
   Normal request (it also accepts LF only line terminators)
-
+  
   GET /index.html HTTP/1.1
   Host: localhost
   Connection: close
-
+  
   HTTP/1.1 200 OK
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 22:57:48 GMT
@@ -54,21 +54,21 @@ public class NginxTest {
   Connection: close
   ETag: "63da4c59-61d5"
   Accept-Ranges: bytes
-
+  
   ---
-
+  
   No Host
-
+  
   GET /index.html HTTP/1.1
   Connection: close
-
+  
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:01:05 GMT
   Content-Type: text/html
   Content-Length: 157
   Connection: close
-
+  
   <html>
   <head><title>400 Bad Request</title></head>
   <body>
@@ -76,16 +76,16 @@ public class NginxTest {
   <hr><center>nginx/1.23.3</center>
   </body>
   </html>
-
-  ---
-
-  Invalid header/invalid header char
   
+  ---
+  
+  Invalid header/invalid header char
+
   GET /index.html HTTP/1.1
   Host: localhost
   Connection: close
   Ação: fechar
-  
+
   HTTP/1.1 200 OK
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:03:48 GMT
@@ -95,50 +95,50 @@ public class NginxTest {
   Connection: close
   ETag: "63da4c59-61d5"
   Accept-Ranges: bytes
-  
+
   <!doctype html><html lang="en">
-  
+
   2023/06/30 20:03:48 [info] 20850#0: *6 client sent invalid header line: "Ação: fechar" while reading client request headers, client: 127.0.0.1, server: localhost, request: "GET /index.html HTTP/1.1", host: "localhost"
-
+  
   ---
-
+  
   Invalid method name
-
+  
   GOT /index.html HTTP/1.1
   Host: localhost
   Connection: close
-
+  
   HTTP/1.1 405 Not Allowed
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:06:11 GMT
   Content-Type: text/html
   Content-Length: 157
   Connection: close
-
-  ---
   
-  Invalid request line
+  ---
 
+  Invalid request line
+  
   FOOBAR
   Host: localhost
   Connection: close
-
+  
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:08:03 GMT
   Content-Type: text/html
   Content-Length: 157
   Connection: close
-  
-  ---
 
-  Body in GET
+  ---
   
+  Body in GET
+
   GET /index.html HTTP/1.1
   Host: localhost
-  
-  Hello world!
 
+  Hello world!
+  
   HTTP/1.1 200 OK
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:10:37 GMT
@@ -149,49 +149,49 @@ public class NginxTest {
   Keep-Alive: timeout=20
   ETag: "63da4c59-61d5"
   Accept-Ranges: bytes
-  
+
   <html>....
-  
+
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:10:37 GMT
   Content-Type: text/html
   Content-Length: 157
   Connection: close
-  
+
   <html>...
-
-  ---
-
-  Invalid char in URI -> accepted the request
   
+  ---
+  
+  Invalid char in URI -> accepted the request
+
   GET /café HTTP/1.1
   Host: localhost
   Connection: close
-  
+
   HTTP/1.1 404 Not Found
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:15:14 GMT
   Content-Type: text/html
   Content-Length: 153
   Connection: close
-  
+
   ---
-
+  
   Large request header
-
+  
   GET /café HTTP/1.1
   Host: localhost
   Referer: 080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue
   Connection: close
-
+  
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:21:18 GMT
   Content-Type: text/html
   Content-Length: 233
   Connection: close
-
+  
   <html>
   <head><title>400 Request Header Or Cookie Too Large</title></head>
   <body>
@@ -200,59 +200,107 @@ public class NginxTest {
   <hr><center>nginx/1.23.3</center>
   </body>
   </html>
-  
-  2023/06/30 20:21:18 [info] 2592#0: *3 client sent too long header line: "Referer: 080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsld..." while reading client request headers, client: 127.0.0.1, server: localhost, request: "GET /café HTTP/1.1", host: "localhost"
-  
-  ---
 
-  Method lower case
+  2023/06/30 20:21:18 [info] 2592#0: *3 client sent too long header line: "Referer: 080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsldjdlfdjslf08d0s808f0sd8fssdfljsdlfjasldjkfsljflsdjoueorue080980808ASDFJSLDJFLSJDLFJSLJxljdlsjflsjljsld..." while reading client request headers, client: 127.0.0.1, server: localhost, request: "GET /café HTTP/1.1", host: "localhost"
+
+  ---
   
+  Method lower case
+
   get /index.html HTTP/1.1
   Host: localhost
   Connection: close
-  
+
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:33:49 GMT
   Content-Type: text/html
   Content-Length: 157
   Connection: close
-
-  ---
-
-  Protocol version lower case
   
+  ---
+  
+  Protocol version lower case
+
   get /index.html http/1.1
   Host: localhost
   Connection: close
-  
+
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
   Date: Fri, 30 Jun 2023 23:34:55 GMT
   Content-Type: text/html
   Content-Length: 157
   Connection: close
-
-  ---
   
+  ---
+
   Garbage
-
+  
   Hello World!(no line terminator)
-
+  
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
   Date: Sat, 01 Jul 2023 00:16:41 GMT
   Content-Type: text/html
   Content-Length: 157
   Connection: close
+
+  ---
+
+  No space after colon
+
+  GET /index.html HTTP/1.1
+  Host:localhost
+  Connection:Close
+
+  HTTP/1.1 200 OK
+  Server: nginx/1.23.3
+
+  ---
+
+  More than 1 space after colon
   
-   */
+  GET /index.html HTTP/1.1
+  Host:   localhost
+  Connection:  close
+
+  HTTP/1.1 200 OK
+  Server: nginx/1.23.3
+
+  ---
+  
+  Header value w/ trailing spaces
+  
+  GET /index.html HTTP/1.1
+  Host:   localhost\040\040\040
+  Connection:  close
+
+  HTTP/1.1 200 OK
+  Server: nginx/1.23.3
+
+  ---
+  
+  Header value w/ trailing whitespace
+  
+  GET /index.html HTTP/1.1
+  Host:   localhost\040\t\040
+  Connection:  close
+
+  HTTP/1.1 400 Bad Request
+  Server: nginx/1.23.3
+
+  */
 
   @Test(enabled = false)
   public void getOk() throws IOException {
     try (Socket socket = new Socket(address, port)) {
       req(socket, """
-      GET /index.html http/1.1""".replace("\r", "\r\n"));
+      GET /index.html HTTP/1.1
+      Host: localhost\040
+      Connection: close
+
+      """.replace("\n", "\r\n"));
 
       String resp;
       resp = resp(socket);

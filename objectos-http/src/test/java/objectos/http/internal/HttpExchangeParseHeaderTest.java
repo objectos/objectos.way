@@ -18,6 +18,7 @@ package objectos.http.internal;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.List;
 import objectos.http.Status;
 import org.testng.annotations.Test;
 
@@ -191,6 +192,48 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.requestHeaderName, null);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, Status.BAD_REQUEST);
+  }
+
+  // PARSE_HEADER_VALUE
+
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER_VALUE --> PARSE_HEADER
+
+  - happy path
+  """)
+  public void parseHeaderValue() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    List<String> requests = List.of(
+      "Host: foobar\r\n",
+      "Host: foobar\n",
+      "Host:   foobar \r\n",
+      "Host:   foobar \n",
+      "Host: \t  foobar \t\r\n",
+      "Host: \t  foobar \t\n",
+      "Host:foobar\r\n",
+      "Host:foobar\n"
+    );
+
+    for (var request : requests) {
+      byte[] bytes;
+      bytes = Bytes.utf8(request);
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 5;
+      exchange.bufferLimit = bytes.length;
+      exchange.requestHeaders = null;
+      exchange.requestHeaderName = HeaderName.HOST;
+      exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, bytes.length);
+      assertEquals(exchange.requestHeaders.size(), 1);
+      assertEquals(exchange.requestHeaders.get(HeaderName.HOST).toString(), "foobar");
+      assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    }
   }
 
 }

@@ -22,6 +22,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -132,7 +133,7 @@ public final class HttpExchange implements Runnable {
 
       _PARSE_HEADER = 9,
       _PARSE_HEADER_NAME = 10,
-      _PARSE_HEADER_NAME_UNKNOWN = 11,
+      _PARSE_HEADER_NAME_CASE_INSENSITIVE = 11,
       _PARSE_HEADER_VALUE = 12,
 
       // Output phase
@@ -244,12 +245,11 @@ public final class HttpExchange implements Runnable {
 
       case _PARSE_HEADER -> parseHeader();
       case _PARSE_HEADER_NAME -> parseHeaderName();
+      case _PARSE_HEADER_VALUE -> parseHeaderValue();
 
       //
 
       case _PROCESS -> executeProcess();
-
-      case _PARSE_HEADER_VALUE -> executeRequestHeaderValue();
 
       case _RESPONSE_HEADER_BUFFER -> executeResponseHeaderBuffer();
 
@@ -306,84 +306,6 @@ public final class HttpExchange implements Runnable {
     responseHeadersIndex = 0;
 
     return toResponseHeaderBuffer();
-  }
-
-  private byte executeRequestHeaderValue() {
-    int maybeStart;
-    maybeStart = bufferIndex;
-
-    // we search for the LF char that marks the end-of-line
-
-    int index;
-    index = maybeStart;
-
-    boolean found;
-    found = false;
-
-    for (; bufferHasIndex(index); index++) {
-      byte b;
-      b = bufferGet(index);
-
-      if (b == Bytes.LF) {
-        found = true;
-
-        break;
-      }
-    }
-
-    if (!found) {
-      // LF was not found
-      // TODO field length limit
-
-      return toInputRead(state);
-    }
-
-    // we check if CR is found before the LF
-
-    int lineFeedIndex;
-    lineFeedIndex = index;
-
-    int carriageIndex;
-    carriageIndex = lineFeedIndex - 1;
-
-    if (bufferGet(carriageIndex) != Bytes.CR) {
-      return toResult(Status.BAD_REQUEST);
-    }
-
-    // we trim the OWS, if found, from the start of the value
-
-    final int valueStart;
-
-    byte maybeOws;
-    maybeOws = bufferGet(maybeStart);
-
-    if (Bytes.isOptionalWhitespace(maybeOws)) {
-      valueStart = maybeStart + 1;
-    } else {
-      valueStart = maybeStart;
-    }
-
-    // the value string ends immediately before the CR char
-
-    final int valueEnd;
-    valueEnd = carriageIndex;
-
-    HeaderValue headerValue;
-    headerValue = new HeaderValue(valueStart, valueEnd);
-
-    HeaderValue previousValue;
-    previousValue = requestHeaders.put(requestHeaderName, headerValue);
-
-    if (previousValue != null) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    // we have found the value.
-    // bufferIndex should point to the position immediately after the LF char
-
-    bufferIndex = lineFeedIndex + 1;
-
-    return _PARSE_HEADER;
   }
 
   private byte executeResponseHeaderBuffer() {
@@ -635,7 +557,7 @@ public final class HttpExchange implements Runnable {
         HeaderName.USER_AGENT
       );
 
-      default -> _PARSE_HEADER_NAME_UNKNOWN;
+      default -> _PARSE_HEADER_NAME_CASE_INSENSITIVE;
     };
   }
 
@@ -653,7 +575,7 @@ public final class HttpExchange implements Runnable {
       return _PARSE_HEADER_VALUE;
     }
 
-    return _PARSE_HEADER_NAME_UNKNOWN;
+    return _PARSE_HEADER_NAME_CASE_INSENSITIVE;
   }
 
   private byte parseHeaderName0(int colonIndex, HeaderName c0, HeaderName c1, HeaderName c2) {
@@ -671,6 +593,87 @@ public final class HttpExchange implements Runnable {
     }
 
     return parseHeaderName0(colonIndex, c2);
+  }
+
+  private byte parseHeaderValue() {
+    int valueStart;
+    valueStart = bufferIndex;
+
+    // we search for the LF char that marks the end-of-line
+
+    int lfIndex = valueStart;
+
+    boolean found;
+    found = false;
+
+    for (; bufferHasIndex(lfIndex); lfIndex++) {
+      byte b;
+      b = bufferGet(lfIndex);
+
+      if (b == Bytes.LF) {
+        found = true;
+
+        break;
+      }
+    }
+
+    if (!found) {
+      // LF was not found
+
+      return toInputRead(state);
+    }
+
+    // we'll trim any SP, HTAB or CR from the end of the value
+
+    int valueEnd;
+    valueEnd = lfIndex;
+
+    loop: for (; valueEnd > valueStart; valueEnd--) {
+      byte b;
+      b = bufferGet(valueEnd - 1);
+
+      switch (b) {
+        case Bytes.SP, Bytes.HTAB, Bytes.CR -> {
+          continue loop;
+        }
+
+        default -> {
+          break loop;
+        }
+      }
+    }
+
+    // we'll trim any OWS, if found, from the start of the value
+
+    for (; valueStart < valueEnd; valueStart++) {
+      byte b;
+      b = bufferGet(valueStart);
+
+      if (!Bytes.isOptionalWhitespace(b)) {
+        break;
+      }
+    }
+
+    HeaderValue headerValue;
+    headerValue = new HeaderValue(valueStart, valueEnd);
+
+    if (requestHeaders == null) {
+      requestHeaders = new EnumMap<>(HeaderName.class);
+    }
+
+    HeaderValue previousValue;
+    previousValue = requestHeaders.put(requestHeaderName, headerValue);
+
+    if (previousValue != null) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    // we have found the value.
+    // bufferIndex should point to the position immediately after the LF char
+
+    bufferIndex = lfIndex + 1;
+
+    return _PARSE_HEADER;
   }
 
   private byte requestLine() {
