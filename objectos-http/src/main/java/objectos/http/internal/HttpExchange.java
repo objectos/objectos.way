@@ -131,10 +131,13 @@ public final class HttpExchange implements Runnable {
       // Input / Parse header phase
 
       _PARSE_HEADER = 9,
+      _PARSE_HEADER_NAME = 10,
+      _PARSE_HEADER_NAME_UNKNOWN = 11,
+      _PARSE_HEADER_VALUE = 12,
 
       // Output phase
 
-      _CLIENT_ERROR = 10,
+      _CLIENT_ERROR = 13,
 
       //
 
@@ -142,10 +145,7 @@ public final class HttpExchange implements Runnable {
 
       _FINALLY = 3,
 
-      _PARSE_HEADER_NAME = 12,
-      _PARSE_HEADER_VALUE = 13,
-
-      _PROCESS = 10,
+      _PROCESS = 30,
 
       _RESPONSE_BODY = 14,
       _RESPONSE_HEADER_BUFFER = 15,
@@ -243,12 +243,11 @@ public final class HttpExchange implements Runnable {
       // Input / Parse Header phase
 
       case _PARSE_HEADER -> parseHeader();
+      case _PARSE_HEADER_NAME -> parseHeaderName();
 
       //
 
       case _PROCESS -> executeProcess();
-
-      case _PARSE_HEADER_NAME -> executeRequestHeaderName();
 
       case _PARSE_HEADER_VALUE -> executeRequestHeaderValue();
 
@@ -265,10 +264,16 @@ public final class HttpExchange implements Runnable {
   }
 
   private boolean bufferEquals(byte[] target, int start) {
+    int requiredIndex;
+    requiredIndex = start + target.length;
+
+    if (!bufferHasIndex(requiredIndex)) {
+      return false;
+    }
+
     return Arrays.equals(
-      buffer, start, start + target.length,
-      target, 0, target.length
-    );
+      buffer, start, requiredIndex,
+      target, 0, target.length);
   }
 
   private byte bufferGet(int index) {
@@ -301,54 +306,6 @@ public final class HttpExchange implements Runnable {
     responseHeadersIndex = 0;
 
     return toResponseHeaderBuffer();
-  }
-
-  private byte executeRequestHeaderName() {
-    final int nameStart;
-    nameStart = bufferIndex;
-
-    int index;
-    index = nameStart;
-
-    boolean found;
-    found = false;
-
-    for (; bufferHasIndex(index); index++) {
-      byte b;
-      b = bufferGet(index);
-
-      if (b == Bytes.COLON) {
-        found = true;
-
-        break;
-      }
-    }
-
-    if (!found) {
-      // TODO header name limit
-
-      return toInputRead(state);
-    }
-
-    byte first;
-    first = bufferGet(nameStart);
-
-    HeaderName maybe;
-    maybe = switch (first) {
-      case 'H' -> HeaderName.HOST;
-
-      default -> null;
-    };
-
-    if (maybe != null && bufferEquals(maybe.bytes, nameStart)) {
-      requestHeaderName = maybe;
-
-      bufferIndex = index + 1;
-
-      return _PARSE_HEADER_VALUE;
-    }
-
-    throw new UnsupportedOperationException("Implement me");
   }
 
   private byte executeRequestHeaderValue() {
@@ -612,6 +569,104 @@ public final class HttpExchange implements Runnable {
 
       default -> throw new UnsupportedOperationException("Implement me");
     };
+  }
+
+  private byte parseHeaderName() {
+    // we will search the buffer for a ':' char
+
+    final int nameStart;
+    nameStart = bufferIndex;
+
+    int colonIndex;
+    colonIndex = nameStart;
+
+    boolean found;
+    found = false;
+
+    for (; bufferHasIndex(colonIndex); colonIndex++) {
+      byte b;
+      b = bufferGet(colonIndex);
+
+      if (b == Bytes.COLON) {
+        found = true;
+
+        break;
+      }
+    }
+
+    if (!found) {
+      // ':' was not found
+      // read more data if possible
+
+      return toInputReadIfPossible(state, Status.BAD_REQUEST);
+    }
+
+    // we will use the first char as hash code
+
+    final byte first;
+    first = bufferGet(nameStart);
+
+    // ad-hoc hash map
+
+    return switch (first) {
+      case 'A' -> parseHeaderName0(colonIndex,
+        HeaderName.ACCEPT_ENCODING
+      );
+
+      case 'C' -> parseHeaderName0(colonIndex,
+        HeaderName.CONNECTION,
+        HeaderName.CONTENT_LENGTH,
+        HeaderName.CONTENT_TYPE
+      );
+
+      case 'D' -> parseHeaderName0(colonIndex,
+        HeaderName.DATE
+      );
+
+      case 'H' -> parseHeaderName0(colonIndex,
+        HeaderName.HOST
+      );
+
+      case 'U' -> parseHeaderName0(colonIndex,
+        HeaderName.USER_AGENT
+      );
+
+      default -> _PARSE_HEADER_NAME_UNKNOWN;
+    };
+  }
+
+  private byte parseHeaderName0(int colonIndex, HeaderName candidate) {
+    final byte[] candidateBytes;
+    candidateBytes = candidate.bytes;
+
+    if (bufferEquals(candidateBytes, bufferIndex)) {
+      requestHeaderName = candidate;
+
+      // bufferIndex will resume immediately after colon
+
+      bufferIndex = colonIndex + 1;
+
+      return _PARSE_HEADER_VALUE;
+    }
+
+    return _PARSE_HEADER_NAME_UNKNOWN;
+  }
+
+  private byte parseHeaderName0(int colonIndex, HeaderName c0, HeaderName c1, HeaderName c2) {
+    byte result;
+    result = parseHeaderName0(colonIndex, c0);
+
+    if (result == _PARSE_HEADER_VALUE) {
+      return result;
+    }
+
+    result = parseHeaderName0(colonIndex, c1);
+
+    if (result == _PARSE_HEADER_VALUE) {
+      return result;
+    }
+
+    return parseHeaderName0(colonIndex, c2);
   }
 
   private byte requestLine() {

@@ -23,6 +23,8 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeParseHeaderTest {
 
+  // PARSE_HEADER
+
   @Test(description = """
   [#445] HTTP 001: PARSE_HEADER --> PARSE_HEADER_NAME
   """)
@@ -92,6 +94,47 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.bufferLimit, 1);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, Status.BAD_REQUEST);
+  }
+
+  // PARSE_HEADER_NAME
+
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER_NAME --> PARSE_HEADER_VALUE
+
+  - bufferIndex ends after colon
+  """)
+  public void parseHeaderName() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    StringBuilder sb;
+    sb = new StringBuilder();
+
+    for (var headerName : HeaderName.values()) {
+      if (headerName.type == HeaderType.RESPONSE) {
+        continue;
+      }
+
+      sb.setLength(0);
+
+      sb.append(headerName.name);
+      sb.append(':');
+      sb.append(" some value\r\n");
+
+      byte[] bytes;
+      bytes = Bytes.utf8(sb.toString());
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 0;
+      exchange.bufferLimit = bytes.length;
+      exchange.state = HttpExchange._PARSE_HEADER_NAME;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, headerName.bytes.length + 1);
+      assertEquals(exchange.requestHeaderName, headerName);
+      assertEquals(exchange.state, HttpExchange._PARSE_HEADER_VALUE);
+    }
   }
 
 }

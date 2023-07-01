@@ -15,34 +15,12 @@
  */
 package objectos.http.internal;
 
-public enum HeaderName {
+public enum HeaderType {
 
-  ACCEPT_ENCODING("Accept-Encoding", HeaderType.REQUEST),
+  REQUEST,
 
-  CONNECTION("Connection", HeaderType.BOTH),
+  RESPONSE,
 
-  CONTENT_LENGTH("Content-Length", HeaderType.BOTH),
-
-  CONTENT_TYPE("Content-Type", HeaderType.BOTH),
-
-  DATE("Date", HeaderType.BOTH),
-
-  HOST("Host", HeaderType.REQUEST),
-
-  USER_AGENT("User-Agent", HeaderType.REQUEST);
-
-  final byte[] bytes;
-
-  public final String name;
-
-  public final HeaderType type;
-
-  private HeaderName(String name, HeaderType type) {
-    this.name = name;
-
-    this.type = type;
-
-    bytes = Bytes.utf8(name);
-  }
+  BOTH;
 
 }
