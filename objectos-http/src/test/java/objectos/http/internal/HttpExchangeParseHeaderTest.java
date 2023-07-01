@@ -17,6 +17,8 @@ package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Arrays;
+import objectos.http.Status;
 import org.testng.annotations.Test;
 
 public class HttpExchangeParseHeaderTest {
@@ -56,9 +58,9 @@ public class HttpExchangeParseHeaderTest {
     byte[] bytes;
     bytes = Bytes.utf8("\r");
 
-    exchange.buffer = bytes;
+    exchange.buffer = Arrays.copyOf(bytes, 20); /* buffer is not full */
     exchange.bufferIndex = 0;
-    exchange.bufferLimit = bytes.length;
+    exchange.bufferLimit = bytes.length; /* buffer is not full */
     exchange.state = HttpExchange._PARSE_HEADER;
 
     exchange.stepOne();
@@ -67,6 +69,29 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.bufferLimit, bytes.length);
     assertEquals(exchange.nextAction, HttpExchange._PARSE_HEADER);
     assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
+  @Test(description = """
+  [#446] HTTP 001: PARSE_HEADER --> CLIENT_ERROR::BAD_REQUEST
+  """)
+  public void parseHeaderToClientErrorBadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = Bytes.utf8("\r");
+
+    exchange.buffer = bytes; /* buffer is full */
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 1; /* buffer is full */
+    exchange.state = HttpExchange._PARSE_HEADER;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 1);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.BAD_REQUEST);
   }
 
 }

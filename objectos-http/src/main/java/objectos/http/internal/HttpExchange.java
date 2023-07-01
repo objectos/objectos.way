@@ -575,7 +575,7 @@ public final class HttpExchange implements Runnable {
     if (!bufferHasIndex(requiredIndex)) {
       // ask for more data
 
-      return toInputRead(state);
+      return toInputReadIfPossible(state, Status.BAD_REQUEST);
     }
 
     // we'll check if the current char is CR
@@ -718,19 +718,10 @@ public final class HttpExchange implements Runnable {
       }
     }
 
-    // SP char was not found...
+    // SP char was not found.
+    // Read more data if possible
 
-    if (bufferLimit < buffer.length) {
-      // buffer can still hold data
-      // assume client is slow
-
-      return toInputRead(state);
-    }
-
-    // buffer is full
-    // URI is too long to process
-
-    return toClientError(Status.URI_TOO_LONG);
+    return toInputReadIfPossible(state, Status.URI_TOO_LONG);
   }
 
   private byte requestLineVersion() {
@@ -752,17 +743,7 @@ public final class HttpExchange implements Runnable {
     lineEnd = versionEnd + 2;
 
     if (!bufferHasIndex(lineEnd)) {
-      if (bufferLimit < buffer.length) {
-        // buffer can still hold data
-        // assume client is slow
-
-        return toInputRead(state);
-      }
-
-      // buffer is full
-      // assume URI was too long to process
-
-      return toClientError(Status.URI_TOO_LONG);
+      return toInputReadIfPossible(state, Status.URI_TOO_LONG);
     }
 
     int index;
@@ -853,6 +834,23 @@ public final class HttpExchange implements Runnable {
     nextAction = onRead;
 
     return _INPUT_READ;
+  }
+
+  private byte toInputReadIfPossible(byte onRead, Status onBufferFull) {
+    if (bufferLimit < buffer.length) {
+      return toInputRead(onRead);
+    }
+
+    if (bufferLimit == buffer.length) {
+      return toClientError(onBufferFull);
+    }
+
+    // buffer limit overflow!!!
+    // programming error
+
+    throw new UnsupportedOperationException(
+      "Implement me :: Internal Server Error"
+    );
   }
 
   private byte toRequestLineMethod(Method maybe) {
