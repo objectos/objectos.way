@@ -236,4 +236,94 @@ public class HttpExchangeParseHeaderTest {
     }
   }
 
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER_VALUE --> PARSE_HEADER
+
+  - semi-happy path: empty value
+  """)
+  public void parseHeaderValueEmptyValue() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    List<String> requests = List.of(
+      "Host:\r\n",
+      "Host:\n",
+      "Host: \r\n",
+      "Host: \n",
+      "Host: \t\r\n",
+      "Host: \t\n",
+      "Host: \t \r\n",
+      "Host: \t \n"
+    );
+
+    for (var request : requests) {
+      byte[] bytes;
+      bytes = Bytes.utf8(request);
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 5;
+      exchange.bufferLimit = bytes.length;
+      exchange.requestHeaders = null;
+      exchange.requestHeaderName = HeaderName.HOST;
+      exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, bytes.length);
+      assertEquals(exchange.requestHeaders.size(), 1);
+      assertEquals(exchange.requestHeaders.get(HeaderName.HOST).toString(), "");
+      assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    }
+  }
+
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER_VALUE --> INPUT_READ
+  """)
+  public void parseHeaderValueToInputRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = Bytes.utf8("Host: localh");
+
+    exchange.buffer = Arrays.copyOf(bytes, 20);
+    exchange.bufferIndex = 5;
+    exchange.bufferLimit = bytes.length;
+    exchange.requestHeaders = null;
+    exchange.requestHeaderName = HeaderName.HOST;
+    exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 5);
+    assertEquals(exchange.nextAction, HttpExchange._PARSE_HEADER_VALUE);
+    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER_VALUE --> CLIENT_ERROR::BAD_REQUEST
+  """)
+  public void parseHeaderValueToClientErrorBadRequest() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = Bytes.utf8("Host: localh");
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 5;
+    exchange.bufferLimit = bytes.length;
+    exchange.requestHeaders = null;
+    exchange.requestHeaderName = HeaderName.HOST;
+    exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 5);
+    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
+    assertEquals(exchange.status, Status.BAD_REQUEST);
+  }
+
 }

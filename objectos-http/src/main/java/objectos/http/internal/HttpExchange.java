@@ -620,7 +620,7 @@ public final class HttpExchange implements Runnable {
     if (!found) {
       // LF was not found
 
-      return toInputRead(state);
+      return toInputReadIfPossible(state, Status.BAD_REQUEST);
     }
 
     // we'll trim any SP, HTAB or CR from the end of the value
