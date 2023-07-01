@@ -43,4 +43,30 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.state, HttpExchange._PARSE_HEADER_NAME);
   }
 
+  @Test(description = """
+  [#446] HTTP 001: PARSE_HEADER --> INPUT_READ
+  """)
+  public void parseHeaderToInputRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    // input resembles an empty line
+    // client is very slow...
+
+    byte[] bytes;
+    bytes = Bytes.utf8("\r");
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_HEADER;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, bytes.length);
+    assertEquals(exchange.nextAction, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
 }
