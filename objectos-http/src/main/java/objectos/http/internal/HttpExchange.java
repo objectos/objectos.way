@@ -136,17 +136,19 @@ public final class HttpExchange implements Runnable {
       _PARSE_HEADER_NAME_CASE_INSENSITIVE = 11,
       _PARSE_HEADER_VALUE = 12,
 
+      // Handle phase
+
+      _HANDLE = 13,
+
       // Output phase
 
-      _CLIENT_ERROR = 13,
+      _CLIENT_ERROR = 14,
 
       //
 
       _CLOSE = 2,
 
       _FINALLY = 3,
-
-      _PROCESS = 30,
 
       _RESPONSE_BODY = 14,
       _RESPONSE_HEADER_BUFFER = 15,
@@ -249,7 +251,7 @@ public final class HttpExchange implements Runnable {
 
       //
 
-      case _PROCESS -> executeProcess();
+      case _HANDLE -> executeProcess();
 
       case _RESPONSE_HEADER_BUFFER -> executeResponseHeaderBuffer();
 
@@ -442,55 +444,53 @@ public final class HttpExchange implements Runnable {
   }
 
   private byte parseHeader() {
-    // if the buffer matches CR + LF then header has ended
+    // if the buffer matches CRLF or LF then header has ended
     // otherwise, we will try to parse the header field name
 
     int index;
     index = bufferIndex;
 
-    int requiredIndex;
-    requiredIndex = index + 1;
-
-    if (!bufferHasIndex(requiredIndex)) {
+    if (!bufferHasIndex(index)) {
       // ask for more data
 
       return toInputReadIfPossible(state, Status.BAD_REQUEST);
     }
 
-    // we'll check if the current char is CR
+    // we'll check if buffer is CRLF
 
     final byte first;
     first = bufferGet(index++);
 
-    if (first != Bytes.CR) {
-      // not CR, process as field name
+    if (first == Bytes.CR) {
+      // ok, first is CR
+
+      if (!bufferHasIndex(index)) {
+        // ask for more data
+
+        return toInputReadIfPossible(state, Status.BAD_REQUEST);
+      }
+
+      final byte second;
+      second = bufferGet(index++);
+
+      if (second == Bytes.LF) {
+        bufferIndex = index;
+
+        return _HANDLE;
+      }
+
+      // not sure the best way to handle this case
 
       return _PARSE_HEADER_NAME;
     }
 
-    // we'll check if CR is followed by LF
+    if (first == Bytes.LF) {
+      bufferIndex = index;
 
-    final byte second;
-    second = bufferGet(index++);
-
-    if (second != Bytes.LF) {
-      // not LF, reject as a bad request
-
-      return toResult(Status.BAD_REQUEST);
+      return _HANDLE;
     }
 
-    // ok, we are at the end of header
-    // bufferIndex will resume immediately after the LF
-
-    bufferIndex = index;
-
-    // next action depends on the method
-
-    return switch (method) {
-      case GET -> _PROCESS;
-
-      default -> throw new UnsupportedOperationException("Implement me");
-    };
+    return _PARSE_HEADER_NAME;
   }
 
   private byte parseHeaderName() {

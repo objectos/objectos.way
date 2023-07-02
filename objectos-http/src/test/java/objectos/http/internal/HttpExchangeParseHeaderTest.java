@@ -99,6 +99,37 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.status, Status.BAD_REQUEST);
   }
 
+  @Test(description = """
+  [#444] HTTP 001: PARSE_HEADER --> HANDLE
+  """)
+  public void parseHeaderToHandle() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    record Test(String request, int bufferIndex) {}
+
+    List<Test> tests = List.of(
+      new Test("\r\nbody", 2),
+      new Test("\nbody", 1)
+    );
+
+    for (var test : tests) {
+      byte[] bytes;
+      bytes = Bytes.utf8(test.request);
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 0;
+      exchange.bufferLimit = bytes.length;
+      exchange.state = HttpExchange._PARSE_HEADER;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, test.bufferIndex);
+      assertEquals(exchange.bufferLimit, bytes.length);
+      assertEquals(exchange.state, HttpExchange._HANDLE);
+    }
+  }
+
   // PARSE_HEADER_NAME
 
   @Test(description = """
