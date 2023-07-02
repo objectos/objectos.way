@@ -19,7 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
-import objectos.http.Status;
 import org.testng.annotations.Test;
 
 public class HttpExchangeParseHeaderTest {
@@ -96,7 +95,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 1);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.BAD_REQUEST);
+    assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
   @Test(description = """
@@ -222,7 +221,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.requestHeaderName, null);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.BAD_REQUEST);
+    assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
   // PARSE_HEADER_VALUE
@@ -354,7 +353,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.bufferIndex, 5);
     assertEquals(exchange.requestHeaders, null);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.BAD_REQUEST);
+    assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
 }

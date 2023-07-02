@@ -16,6 +16,8 @@
 package objectos.http;
 
 import java.net.SocketAddress;
+import java.util.function.Supplier;
+import objectos.http.Http.Handler;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
 
@@ -25,19 +27,18 @@ final class HttpServiceBuilder {
 
   private int bufferSize = 1024;
 
-  private NoteSink logger = NoOpNoteSink.getInstance();
+  private final Supplier<Handler> handlerSupplier;
 
-  private final HttpProcessorProvider processorProvider;
+  private NoteSink noteSink = NoOpNoteSink.getInstance();
 
-  HttpServiceBuilder(SocketAddress address,
-                     HttpProcessorProvider processorProvider) {
+  HttpServiceBuilder(SocketAddress address, Supplier<Http.Handler> handlerSupplier) {
     this.address = address;
 
-    this.processorProvider = processorProvider;
+    this.handlerSupplier = handlerSupplier;
   }
 
   public final HttpService build() {
-    return new HttpService(address, bufferSize, logger, processorProvider);
+    return new HttpService(address, bufferSize, handlerSupplier, noteSink);
   }
 
   final void setBufferSize(int size) {
@@ -45,7 +46,7 @@ final class HttpServiceBuilder {
   }
 
   final void setLogger(NoteSink logger) {
-    this.logger = logger;
+    this.noteSink = logger;
   }
 
 }

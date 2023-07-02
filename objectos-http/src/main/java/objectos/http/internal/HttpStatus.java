@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-public enum Status {
+import objectos.http.Http;
+
+public enum HttpStatus implements Http.Status {
 
   // 2.x.x
   OK(200),
@@ -34,26 +36,11 @@ public enum Status {
 
   private final int code;
 
-  private Status(int code) {
+  private HttpStatus(int code) {
     this.code = code;
   }
 
-  public static Status ofCode(int code) {
-    return switch (code) {
-      case 200 -> OK;
-
-      case 302 -> FOUND;
-
-      case 400 -> BAD_REQUEST;
-
-      case 500 -> INTERNAL_SERVER_ERROR;
-      case 505 -> HTTP_VERSION_NOT_SUPPORTED;
-
-      default -> throw new UnsupportedOperationException("Implement me = " + code);
-    };
-  }
-
-  public final int getCode() {
+  public final int code() {
     return code;
   }
 

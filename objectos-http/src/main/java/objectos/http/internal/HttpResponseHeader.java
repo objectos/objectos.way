@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-/**
- * @since 4
- */
-public interface HttpProcessorProvider {
+import java.nio.charset.StandardCharsets;
+import objectos.http.Http;
 
-  HttpProcessor create();
+record HttpResponseHeader(Http.Header.Name name, String value) {
+
+  public final byte[] bytes() {
+    String text;
+    text = toString() + "\r\n";
+
+    return text.getBytes(StandardCharsets.UTF_8);
+  }
+
+  @Override
+  public final String toString() {
+    return name.capitalized() + ": " + value;
+  }
 
 }

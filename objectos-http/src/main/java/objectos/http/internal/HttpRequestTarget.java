@@ -13,22 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http;
+package objectos.http.internal;
 
-import java.nio.file.Path;
-
-final class HttpRequestProcessorImpl implements HttpProcessor {
-
-  @SuppressWarnings("unused")
-  private final Path directory;
-
-  HttpRequestProcessorImpl(Path directory) {
-    this.directory = directory;
-  }
-
-  @Override
-  public final void process(Request request, Response response) throws Exception {
-
-  }
-
-}
+record HttpRequestTarget(int start, int end) {}

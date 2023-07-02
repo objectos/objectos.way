@@ -23,14 +23,70 @@ import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
 import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 import static java.time.temporal.ChronoField.YEAR;
 
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import objectos.http.Http.Header.Name;
+import objectos.http.internal.HeaderName;
+import objectos.http.internal.HttpStatus;
 
 public final class Http {
+
+  public interface Exchange {
+
+    Response response();
+
+  }
+
+  public interface Handler {
+
+    void handle(Exchange exchange);
+
+  }
+
+  public static final class Header {
+
+    public interface Name {
+      String capitalized();
+    }
+
+    public static final Name ACCEPT_ENCODING = HeaderName.ACCEPT_ENCODING;
+
+    public static final Name CONNECTION = HeaderName.CONNECTION;
+
+    public static final Name CONTENT_LENGTH = HeaderName.CONTENT_LENGTH;
+
+    public static final Name CONTENT_TYPE = HeaderName.CONTENT_TYPE;
+
+    public static final Name DATE = HeaderName.DATE;
+
+    public static final Name HOST = HeaderName.HOST;
+
+    public static final Name USER_AGENT = HeaderName.USER_AGENT;
+
+  }
+
+  public interface Response {
+
+    void header(Name name, String value);
+
+    void send(byte[] data);
+
+    void status(Status status);
+
+  }
+
+  public interface Status {
+
+    Status OK_200 = HttpStatus.OK;
+
+    int code();
+
+  }
 
   private static final DateTimeFormatter IMF_FIXDATE;
 
@@ -100,7 +156,10 @@ public final class Http {
   private Http() {}
 
   public static String formatDate(ZonedDateTime date) {
-    return IMF_FIXDATE.format(date);
+    ZonedDateTime normalized;
+    normalized = date.withZoneSameInstant(ZoneOffset.UTC);
+
+    return IMF_FIXDATE.format(normalized);
   }
 
 }

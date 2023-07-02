@@ -17,6 +17,8 @@ package objectos.http;
 
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.function.Supplier;
+import objectos.http.Http.Handler;
 import objectos.http.internal.HttpExchange;
 import objectos.http.internal.ServerSocketThread;
 import objectos.http.internal.ServerSocketThreadAdapter;
@@ -32,20 +34,20 @@ public final class HttpService {
 
   private final int bufferSize;
 
-  private final NoteSink noteSink;
+  private final Supplier<Http.Handler> handlerSupplier;
 
-  private final HttpProcessorProvider processorProvider;
+  private final NoteSink noteSink;
 
   private ServerSocketThread thread;
 
   HttpService(SocketAddress address,
               int bufferSize,
-              NoteSink noteSink,
-              HttpProcessorProvider processorProvider) {
+              Supplier<Http.Handler> handlerSupplier,
+              NoteSink noteSink) {
     this.address = address;
     this.bufferSize = bufferSize;
+    this.handlerSupplier = handlerSupplier;
     this.noteSink = noteSink;
-    this.processorProvider = processorProvider;
   }
 
   public static Option bufferSize(final int size) {
@@ -58,13 +60,13 @@ public final class HttpService {
   }
 
   public static HttpService create(
-      SocketAddress address, HttpProcessorProvider processorProvider, Option... options) {
+      SocketAddress address, Supplier<Http.Handler> handlerSupplier, Option... options) {
     Check.notNull(address, "address == null");
-    Check.notNull(processorProvider, "processorProvider == null");
+    Check.notNull(handlerSupplier, "handlerSupplier == null");
     Check.notNull(options, "options == null");
 
     HttpServiceBuilder builder;
-    builder = new HttpServiceBuilder(address, processorProvider);
+    builder = new HttpServiceBuilder(address, handlerSupplier);
 
     Option o;
 
@@ -119,11 +121,11 @@ public final class HttpService {
     @SuppressWarnings("preview")
     @Override
     public final void acceptSocket(Socket socket) {
-      HttpProcessor processor;
-      processor = processorProvider.create();
+      Handler handler;
+      handler = handlerSupplier.get();
 
       HttpExchange exchange;
-      exchange = new HttpExchange(bufferSize, noteSink, processor, socket);
+      exchange = new HttpExchange(bufferSize, handler, noteSink, socket);
 
       Thread.ofVirtual().start(exchange);
     }

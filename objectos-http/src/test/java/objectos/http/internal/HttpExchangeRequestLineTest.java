@@ -21,7 +21,6 @@ import static org.testng.Assert.assertNull;
 
 import java.util.Arrays;
 import java.util.List;
-import objectos.http.Status;
 import org.testng.annotations.Test;
 
 public class HttpExchangeRequestLineTest {
@@ -86,7 +85,7 @@ public class HttpExchangeRequestLineTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.BAD_REQUEST);
+    assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
   @Test(description = """
@@ -135,7 +134,7 @@ public class HttpExchangeRequestLineTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.BAD_REQUEST);
+    assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
   @Test(description = """
@@ -234,7 +233,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.bufferIndex, 4);
     assertNull(exchange.requestTarget);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.URI_TOO_LONG);
+    assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);
   }
 
   @Test(description = """
@@ -323,7 +322,7 @@ public class HttpExchangeRequestLineTest {
 
       assertEquals(exchange.bufferIndex, 6);
       assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-      assertEquals(exchange.status, Status.BAD_REQUEST);
+      assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
       assertEquals(exchange.versionMajor, 0);
       assertEquals(exchange.versionMinor, 0);
     }
@@ -370,7 +369,7 @@ public class HttpExchangeRequestLineTest {
 
     assertEquals(exchange.bufferIndex, 6);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
-    assertEquals(exchange.status, Status.URI_TOO_LONG);
+    assertEquals(exchange.status, HttpStatus.URI_TOO_LONG);
   }
 
 }

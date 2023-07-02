@@ -17,24 +17,19 @@ package objectos.http.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import objectos.http.Http;
-import objectos.http.HttpProcessor;
-import objectos.http.Response;
-import objectos.http.Status;
+import objectos.http.Http.Handler;
+import objectos.http.Http.Response;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 
-public final class HttpExchange implements Runnable {
+public final class HttpExchange implements Http.Exchange, Runnable {
 
   class HeaderValue {
 
@@ -50,60 +45,6 @@ public final class HttpExchange implements Runnable {
     @Override
     public final String toString() {
       return new String(buffer, start, end - start, StandardCharsets.UTF_8);
-    }
-
-  }
-
-  record RequestTarget(int start, int end) {}
-
-  private record ResponseHeader(HeaderName name, String value) {
-    public final byte[] bytes() {
-      String text;
-      text = name.name + ": " + value + "\r\n";
-
-      return text.getBytes(StandardCharsets.UTF_8);
-    }
-  }
-
-  private class ThisResponse implements Response {
-
-    @Override
-    public final void contentLength(long length) {
-      if (length < 0) {
-        throw new IllegalArgumentException("Length must be >= 0");
-      }
-
-      responseHeaders.add(
-        new ResponseHeader(HeaderName.CONTENT_LENGTH, Long.toString(length))
-      );
-    }
-
-    @Override
-    public final void contentType(String value) {
-      Objects.requireNonNull(value, "value == null");
-
-      responseHeaders.add(
-        new ResponseHeader(HeaderName.CONTENT_TYPE, value)
-      );
-    }
-
-    @Override
-    public final void date(ZonedDateTime date) {
-      Objects.requireNonNull(date, "date == null");
-
-      String value;
-      value = Http.formatDate(date);
-
-      responseHeaders.add(
-        new ResponseHeader(HeaderName.DATE, value)
-      );
-    }
-
-    @Override
-    public final void send(byte[] bytes) {
-      Objects.requireNonNull(bytes, "bytes == null");
-
-      responseBytes = bytes;
     }
 
   }
@@ -143,19 +84,13 @@ public final class HttpExchange implements Runnable {
       // Output phase
 
       _CLIENT_ERROR = 14,
+      _OUTPUT = 15,
 
       //
 
       _CLOSE = 2,
 
-      _FINALLY = 3,
-
-      _RESPONSE_BODY = 14,
-      _RESPONSE_HEADER_BUFFER = 15,
-      _RESPONSE_HEADER_WRITE_FULL = 16,
-      _RESPONSE_HEADER_WRITE_PARTIAL = 17,
-
-      _SOCKET_WRITE = 18;
+      _FINALLY = 3;
 
   byte[] buffer;
 
@@ -165,25 +100,25 @@ public final class HttpExchange implements Runnable {
 
   Throwable error;
 
+  Handler handler;
+
   Method method;
 
   byte nextAction;
 
   NoteSink noteSink;
 
-  HttpProcessor processor;
-
   HeaderName requestHeaderName;
 
   Map<HeaderName, HeaderValue> requestHeaders;
 
-  RequestTarget requestTarget;
+  HttpRequestTarget requestTarget;
 
-  private ThisResponse response;
+  private HttpResponse response;
 
   byte[] responseBytes;
 
-  List<ResponseHeader> responseHeaders;
+  GrowableList<HttpResponseHeader> responseHeaders;
 
   int responseHeadersIndex;
 
@@ -191,21 +126,21 @@ public final class HttpExchange implements Runnable {
 
   byte state;
 
-  Status status;
+  Http.Status status;
 
   byte versionMajor;
 
   byte versionMinor;
 
   public HttpExchange(int bufferSize,
+                      Handler handler,
                       NoteSink noteSink,
-                      HttpProcessor processor,
                       Socket socket) {
     this.buffer = new byte[bufferSize];
 
-    this.noteSink = noteSink;
+    this.handler = handler;
 
-    this.processor = processor;
+    this.noteSink = noteSink;
 
     this.socket = socket;
 
@@ -213,6 +148,17 @@ public final class HttpExchange implements Runnable {
   }
 
   HttpExchange() {}
+
+  @Override
+  public final Response response() {
+    // TODO check state
+
+    if (response == null) {
+      response = new HttpResponse(this);
+    }
+
+    return response;
+  }
 
   @Override
   public final void run() {
@@ -249,15 +195,9 @@ public final class HttpExchange implements Runnable {
       case _PARSE_HEADER_NAME -> parseHeaderName();
       case _PARSE_HEADER_VALUE -> parseHeaderValue();
 
-      //
+      // Handle phase
 
-      case _HANDLE -> executeProcess();
-
-      case _RESPONSE_HEADER_BUFFER -> executeResponseHeaderBuffer();
-
-      case _RESPONSE_HEADER_WRITE_FULL -> executeResponseHeaderWriteFull();
-
-      case _RESPONSE_HEADER_WRITE_PARTIAL -> executeResponseHeaderWritePartial();
+      case _HANDLE -> handle();
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -286,127 +226,25 @@ public final class HttpExchange implements Runnable {
     return index < bufferLimit;
   }
 
-  private byte executeProcess() {
-    response = new ThisResponse();
-
-    responseHeaders = new GrowableList<>();
-
+  private byte handle() {
     try {
-      processor.process(null, response);
-    } catch (Exception e) {
-      error = e;
+      responseBytes = null;
 
-      return toResult(Status.INTERNAL_SERVER_ERROR);
-    }
-
-    if (responseHeaders.isEmpty()) {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
-    // we'll start at the first response header
-
-    responseHeadersIndex = 0;
-
-    return toResponseHeaderBuffer();
-  }
-
-  private byte executeResponseHeaderBuffer() {
-    // we reset out buffer
-
-    bufferIndex = bufferLimit = 0;
-
-    // assume buffer will be large enough for headers
-
-    byte nextStep;
-    nextStep = _RESPONSE_HEADER_WRITE_FULL;
-
-    int responseHeadersSize;
-    responseHeadersSize = responseHeaders.size();
-
-    while (responseHeadersIndex < responseHeadersSize) {
-      ResponseHeader header;
-      header = responseHeaders.get(responseHeadersIndex);
-
-      byte[] bytes;
-      bytes = header.bytes();
-
-      if (bytes.length > buffer.length) {
-        // TODO handle response header too large
-
-        throw new UnsupportedOperationException(
-          "Implement me :: buffer not large enough"
-        );
+      if (responseHeaders == null) {
+        responseHeaders = new GrowableList<>();
+      } else {
+        responseHeaders.clear();
       }
 
-      int newLimit;
-      newLimit = bufferLimit + bytes.length;
+      handler.handle(this);
 
-      if (newLimit > buffer.length) {
-        // buffer is full so we write out the current contents
+      return _OUTPUT;
+    } catch (Throwable t) {
+      error = t;
 
-        nextStep = _RESPONSE_HEADER_WRITE_PARTIAL;
-
-        break;
-      }
-
-      System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
-
-      bufferLimit = newLimit;
-
-      responseHeadersIndex++;
-    }
-
-    return nextStep;
-  }
-
-  private byte executeResponseHeaderWriteFull() {
-    boolean separatorWritten;
-
-    int bufferRemaining;
-    bufferRemaining = buffer.length - bufferLimit;
-
-    if (bufferRemaining < 2) {
-      separatorWritten = false;
-    } else {
-      buffer[bufferLimit++] = Bytes.CR;
-      buffer[bufferLimit++] = Bytes.LF;
-
-      separatorWritten = true;
-    }
-
-    try {
-      OutputStream outputStream;
-      outputStream = socket.getOutputStream();
-
-      outputStream.write(buffer, 0, bufferLimit);
-
-      if (!separatorWritten) {
-        buffer[0] = Bytes.CR;
-        buffer[1] = Bytes.LF;
-
-        outputStream.write(buffer, 0, 2);
-      }
-
-      return toResponseHeaderBuffer();
-    } catch (IOException e) {
-      return toClose(e);
+      return toClientError(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-  private byte executeResponseHeaderWritePartial() {
-    try {
-      OutputStream outputStream;
-      outputStream = socket.getOutputStream();
-
-      outputStream.write(buffer, 0, bufferLimit);
-
-      return toResponseHeaderBuffer();
-    } catch (IOException e) {
-      return toClose(e);
-    }
-  }
-
-  //
 
   private byte input() {
     nextAction = _REQUEST_LINE;
@@ -453,7 +291,7 @@ public final class HttpExchange implements Runnable {
     if (!bufferHasIndex(index)) {
       // ask for more data
 
-      return toInputReadIfPossible(state, Status.BAD_REQUEST);
+      return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
     }
 
     // we'll check if buffer is CRLF
@@ -467,7 +305,7 @@ public final class HttpExchange implements Runnable {
       if (!bufferHasIndex(index)) {
         // ask for more data
 
-        return toInputReadIfPossible(state, Status.BAD_REQUEST);
+        return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
       }
 
       final byte second;
@@ -524,7 +362,7 @@ public final class HttpExchange implements Runnable {
       // ':' was not found
       // read more data if possible
 
-      return toInputReadIfPossible(state, Status.BAD_REQUEST);
+      return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
     }
 
     // we will use the first char as hash code
@@ -620,7 +458,7 @@ public final class HttpExchange implements Runnable {
     if (!found) {
       // LF was not found
 
-      return toInputReadIfPossible(state, Status.BAD_REQUEST);
+      return toInputReadIfPossible(state, HttpStatus.BAD_REQUEST);
     }
 
     // we'll trim any SP, HTAB or CR from the end of the value
@@ -709,7 +547,7 @@ public final class HttpExchange implements Runnable {
       // first char does not match any candidate
       // we are sure this is a bad request
 
-      default -> toClientError(Status.BAD_REQUEST);
+      default -> toClientError(HttpStatus.BAD_REQUEST);
     };
   }
 
@@ -744,7 +582,7 @@ public final class HttpExchange implements Runnable {
       // clear method candidate just in case...
       method = null;
 
-      return toClientError(Status.BAD_REQUEST);
+      return toClientError(HttpStatus.BAD_REQUEST);
     }
 
     // request OK so far...
@@ -770,7 +608,7 @@ public final class HttpExchange implements Runnable {
       if (b == Bytes.SP) {
         // SP found, store the indices
 
-        requestTarget = new RequestTarget(targetStart, index);
+        requestTarget = new HttpRequestTarget(targetStart, index);
 
         // bufferIndex immediately after the SP char
 
@@ -783,7 +621,7 @@ public final class HttpExchange implements Runnable {
     // SP char was not found.
     // Read more data if possible
 
-    return toInputReadIfPossible(state, Status.URI_TOO_LONG);
+    return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
   }
 
   private byte requestLineVersion() {
@@ -805,7 +643,7 @@ public final class HttpExchange implements Runnable {
     lineEnd = versionEnd + 2;
 
     if (!bufferHasIndex(lineEnd)) {
-      return toInputReadIfPossible(state, Status.URI_TOO_LONG);
+      return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);
     }
 
     int index;
@@ -819,7 +657,7 @@ public final class HttpExchange implements Runnable {
 
       // buffer does not start with 'HTTP/' => bad request
 
-      return toClientError(Status.BAD_REQUEST);
+      return toClientError(HttpStatus.BAD_REQUEST);
     }
 
     byte maybeMajor;
@@ -828,13 +666,13 @@ public final class HttpExchange implements Runnable {
     if (!Bytes.isDigit(maybeMajor)) {
       // major version is not a digit => bad request
 
-      return toClientError(Status.BAD_REQUEST);
+      return toClientError(HttpStatus.BAD_REQUEST);
     }
 
     if (buffer[index++] != '.') {
       // major version not followed by a DOT => bad request
 
-      return toClientError(Status.BAD_REQUEST);
+      return toClientError(HttpStatus.BAD_REQUEST);
     }
 
     versionMajor = (byte) (maybeMajor - 0x30);
@@ -845,7 +683,7 @@ public final class HttpExchange implements Runnable {
     if (!Bytes.isDigit(maybeMinor)) {
       // minor version is not a digit => bad request
 
-      return toClientError(Status.BAD_REQUEST);
+      return toClientError(HttpStatus.BAD_REQUEST);
     }
 
     versionMinor = (byte) (maybeMinor - 0x30);
@@ -871,8 +709,10 @@ public final class HttpExchange implements Runnable {
 
     // no line terminator after version => bad request
 
-    return toClientError(Status.BAD_REQUEST);
+    return toClientError(HttpStatus.BAD_REQUEST);
   }
+
+  //
 
   private byte setup() {
     // TODO set timeout
@@ -884,9 +724,7 @@ public final class HttpExchange implements Runnable {
     return _INPUT;
   }
 
-  //
-
-  private byte toClientError(Status error) {
+  private byte toClientError(Http.Status error) {
     status = error;
 
     return _CLIENT_ERROR;
@@ -898,7 +736,7 @@ public final class HttpExchange implements Runnable {
     return _INPUT_READ;
   }
 
-  private byte toInputReadIfPossible(byte onRead, Status onBufferFull) {
+  private byte toInputReadIfPossible(byte onRead, Http.Status onBufferFull) {
     if (bufferLimit < buffer.length) {
       return toInputRead(onRead);
     }
@@ -915,19 +753,7 @@ public final class HttpExchange implements Runnable {
     );
   }
 
-  private byte toRequestLineMethod(Method maybe) {
-    method = maybe;
-
-    return _REQUEST_LINE_METHOD;
-  }
-
   //
-
-  private byte toClose(IOException e) {
-    error = e;
-
-    return _CLOSE;
-  }
 
   private byte toIoReadError(IOException e) {
     error = e;
@@ -937,16 +763,10 @@ public final class HttpExchange implements Runnable {
     return _CLOSE;
   }
 
-  private byte toResponseHeaderBuffer() {
-    // we reset our buffer
+  private byte toRequestLineMethod(Method maybe) {
+    method = maybe;
 
-    bufferIndex = bufferLimit = 0;
-
-    return _RESPONSE_HEADER_BUFFER;
-  }
-
-  private byte toResult(Status status) {
-    return _CLOSE;
+    return _REQUEST_LINE_METHOD;
   }
 
 }

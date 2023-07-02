@@ -15,7 +15,9 @@
  */
 package objectos.http.internal;
 
-public enum HeaderName {
+import objectos.http.Http;
+
+public enum HeaderName implements Http.Header.Name {
 
   ACCEPT_ENCODING("Accept-Encoding", HeaderType.REQUEST),
 
@@ -44,5 +46,8 @@ public enum HeaderName {
 
     bytes = Bytes.utf8(name);
   }
+
+  @Override
+  public final String capitalized() { return name; }
 
 }
