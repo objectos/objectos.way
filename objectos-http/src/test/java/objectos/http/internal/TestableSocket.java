@@ -24,9 +24,30 @@ import java.nio.charset.StandardCharsets;
 
 class TestableSocket extends Socket {
 
+  private static class ThrowsOnGetOutput extends TestableSocket {
+    @Override
+    public final OutputStream getOutputStream() throws IOException {
+      throw thrown = new IOException();
+    }
+  }
+
+  private static class ThrowsOnWrite extends TestableSocket {
+    @Override
+    public final OutputStream getOutputStream() throws IOException {
+      return new OutputStream() {
+        @Override
+        public void write(int b) throws IOException {
+          throw thrown = new IOException();
+        }
+      };
+    }
+  }
+
   private ByteArrayOutputStream outputStream;
 
-  private InputStream inputStream;
+  private final InputStream inputStream;
+
+  IOException thrown;
 
   public TestableSocket(InputStream inputStream) {
     this.inputStream = inputStream;
@@ -34,23 +55,6 @@ class TestableSocket extends Socket {
 
   TestableSocket() {
     inputStream = null;
-  }
-
-  private TestableSocket(byte[] requestBytes) {
-    this.inputStream = new InputStream() {
-      private final byte[] bytes = requestBytes;
-
-      private int index;
-
-      @Override
-      public int read() throws IOException {
-        if (index < bytes.length) {
-          return bytes[index++];
-        } else {
-          return -1;
-        }
-      }
-    };
   }
 
   public static TestableSocket empty() {
@@ -65,11 +69,12 @@ class TestableSocket extends Socket {
     );
   }
 
-  public static TestableSocket parse(String string) {
-    byte[] bytes;
-    bytes = string.getBytes(StandardCharsets.UTF_8);
+  public static TestableSocket throwsOnGetOutput() {
+    return new ThrowsOnGetOutput();
+  }
 
-    return new TestableSocket(bytes);
+  public static TestableSocket throwsOnWrite() {
+    return new ThrowsOnWrite();
   }
 
   @Override

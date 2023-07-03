@@ -92,10 +92,11 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       _OUTPUT_HEADER = 18,
       _OUTPUT_TERMINATOR = 19,
 
-      //
+      // Result phase
 
+      _SUCCESS = 20,
+      _ERROR_WRITE = 21,
       _CLOSE = 2,
-
       _FINALLY = 3;
 
   byte[] buffer;
@@ -213,6 +214,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       // Output phase
 
       case _OUTPUT -> output();
+      case _OUTPUT_BODY -> outputBody();
       case _OUTPUT_BUFFER -> outputBuffer();
       case _OUTPUT_HEADER -> outputHeader();
       case _OUTPUT_TERMINATOR -> outputTerminator();
@@ -305,6 +307,27 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return _OUTPUT_HEADER;
   }
 
+  private byte outputBody() {
+    if (responseBody instanceof byte[] bytes) {
+      try {
+        OutputStream outputStream;
+        outputStream = socket.getOutputStream();
+
+        outputStream.write(buffer, 0, bufferLimit);
+
+        outputStream.write(bytes, 0, bytes.length);
+
+        return _SUCCESS;
+      } catch (IOException e) {
+        error = e;
+
+        return _ERROR_WRITE;
+      }
+    }
+
+    throw new UnsupportedOperationException("Implement me");
+  }
+
   private byte outputBuffer() {
     try {
       OutputStream outputStream;
@@ -318,7 +341,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     } catch (IOException e) {
       error = e;
 
-      return _CLOSE;
+      return _ERROR_WRITE;
     }
   }
 

@@ -18,8 +18,6 @@ package objectos.http.internal;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import objectos.http.Http;
@@ -155,22 +153,14 @@ public class HttpExchangeOutputTest {
   }
 
   @Test(description = """
-  [#449] OUTPUT_BUFFER --> CLOSE::fails to get output stream
+  [#449] OUTPUT_BUFFER --> ERROR_WRITE::fails to get output stream
   """)
   public void outputBufferToClose() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    // it should be fine. Not a real socket...
-    @SuppressWarnings("resource")
-    var socket = new TestableSocket() {
-      IOException error;
-
-      @Override
-      public OutputStream getOutputStream() throws IOException {
-        throw error = new IOException();
-      }
-    };
+    TestableSocket socket;
+    socket = TestableSocket.throwsOnGetOutput();
 
     exchange.buffer = Bytes.utf8("12345xxx");
     exchange.bufferLimit = 5;
@@ -181,39 +171,19 @@ public class HttpExchangeOutputTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferLimit, 5);
-    assertSame(exchange.error, socket.error);
-    assertEquals(exchange.state, HttpExchange._CLOSE);
+    assertSame(exchange.error, socket.thrown);
+    assertEquals(exchange.state, HttpExchange._ERROR_WRITE);
   }
 
   @Test(description = """
-  [#449] OUTPUT_BUFFER --> CLOSE::output stream throws on write
+  [#449] OUTPUT_BUFFER --> ERROR_WRITE::output stream throws on write
   """)
   public void outputBufferToCloseOnWrite() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    var outputStream = new OutputStream() {
-      IOException error;
-
-      @Override
-      public void write(int b) throws IOException {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public void write(byte[] b, int off, int len) throws IOException {
-        throw error = new IOException();
-      }
-    };
-
-    // it should be fine. Not a real socket...
-    @SuppressWarnings("resource")
-    var socket = new TestableSocket() {
-      @Override
-      public OutputStream getOutputStream() throws IOException {
-        return outputStream;
-      }
-    };
+    TestableSocket socket;
+    socket = TestableSocket.throwsOnWrite();
 
     exchange.buffer = Bytes.utf8("12345xxx");
     exchange.bufferLimit = 5;
@@ -224,8 +194,8 @@ public class HttpExchangeOutputTest {
     exchange.stepOne();
 
     assertEquals(exchange.bufferLimit, 5);
-    assertSame(exchange.error, outputStream.error);
-    assertEquals(exchange.state, HttpExchange._CLOSE);
+    assertSame(exchange.error, socket.thrown);
+    assertEquals(exchange.state, HttpExchange._ERROR_WRITE);
   }
 
   // OUTPUT_TERMINATOR
@@ -237,10 +207,12 @@ public class HttpExchangeOutputTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    byte[] bytes = Bytes.utf8("last header\r\n");
+    byte[] bytes;
+    bytes = Bytes.utf8("last header\r\n");
 
     exchange.buffer = Arrays.copyOf(bytes, 20);
     exchange.bufferLimit = bytes.length;
+    exchange.responseBody = new byte[0];
     exchange.state = HttpExchange._OUTPUT_TERMINATOR;
 
     exchange.stepOne();
@@ -259,7 +231,8 @@ public class HttpExchangeOutputTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    byte[] bytes = Bytes.utf8("last header\r\n");
+    byte[] bytes;
+    bytes = Bytes.utf8("last header\r\n");
 
     exchange.buffer = bytes; // buffer is full
     exchange.bufferLimit = bytes.length;
@@ -269,6 +242,58 @@ public class HttpExchangeOutputTest {
 
     assertEquals(exchange.nextAction, HttpExchange._OUTPUT_TERMINATOR);
     assertEquals(exchange.state, HttpExchange._OUTPUT_BUFFER);
+  }
+
+  // OUTPUT_BODY
+
+  @Test(description = """
+  [#449] OUTPUT_BODY --> SUCCESS
+  """)
+  public void outputBody() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestableSocket socket;
+    socket = TestableSocket.empty();
+
+    byte[] headers;
+    headers = Bytes.utf8("headers\r\n\r\n");
+
+    exchange.buffer = headers;
+    exchange.bufferLimit = headers.length;
+    exchange.responseBody = Bytes.utf8("Hello world!\n");
+    exchange.socket = socket;
+    exchange.state = HttpExchange._OUTPUT_BODY;
+
+    exchange.stepOne();
+
+    assertEquals(socket.outputAsString(), "headers\r\n\r\nHello world!\n");
+    assertEquals(exchange.state, HttpExchange._SUCCESS);
+  }
+
+  @Test(description = """
+  [#449] OUTPUT_BODY --> ERROR_WRITE
+  """)
+  public void outputBodyToErrorWrite() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestableSocket socket;
+    socket = TestableSocket.throwsOnGetOutput();
+
+    byte[] headers;
+    headers = Bytes.utf8("headers\r\n\r\n");
+
+    exchange.buffer = headers;
+    exchange.bufferLimit = headers.length;
+    exchange.responseBody = Bytes.utf8("Hello world!\n");
+    exchange.socket = socket;
+    exchange.state = HttpExchange._OUTPUT_BODY;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.error, socket.thrown);
+    assertEquals(exchange.state, HttpExchange._ERROR_WRITE);
   }
 
   private HttpResponseHeader hrh(Http.Header.Name name, String value) {
