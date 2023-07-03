@@ -110,9 +110,9 @@ public class HttpExchangeOutputTest {
   }
 
   @Test(description = """
-  [#449] OUTPUT_HEADER --> OUTPUT_BUFFER (no more headers)
+  [#449] OUTPUT_HEADER --> OUTPUT_TERMINATOR
   """)
-  public void outputHeaderToOutputBufferNoMoreHeader() {
+  public void outputHeaderToOutputTerminator() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -125,9 +125,8 @@ public class HttpExchangeOutputTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.nextAction, HttpExchange._OUTPUT_BODY);
     assertEquals(exchange.responseHeadersIndex, 2);
-    assertEquals(exchange.state, HttpExchange._OUTPUT_BUFFER);
+    assertEquals(exchange.state, HttpExchange._OUTPUT_TERMINATOR);
   }
 
   // OUTPUT_BUFFER
@@ -227,6 +226,49 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.bufferLimit, 5);
     assertSame(exchange.error, outputStream.error);
     assertEquals(exchange.state, HttpExchange._CLOSE);
+  }
+
+  // OUTPUT_TERMINATOR
+
+  @Test(description = """
+  [#449] OUTPUT_TERMINATOR --> OUTPUT_BODY
+  """)
+  public void outputTerminator() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes = Bytes.utf8("last header\r\n");
+
+    exchange.buffer = Arrays.copyOf(bytes, 20);
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._OUTPUT_TERMINATOR;
+
+    exchange.stepOne();
+
+    assertEquals(
+      Arrays.copyOf(exchange.buffer, exchange.bufferLimit),
+      Bytes.utf8("last header\r\n\r\n")
+    );
+    assertEquals(exchange.state, HttpExchange._OUTPUT_BODY);
+  }
+
+  @Test(description = """
+  [#449] OUTPUT_TERMINATOR --> OUTPUT_BUFFER
+  """)
+  public void outputTerminatorToOutputBuffer() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes = Bytes.utf8("last header\r\n");
+
+    exchange.buffer = bytes; // buffer is full
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._OUTPUT_TERMINATOR;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.nextAction, HttpExchange._OUTPUT_TERMINATOR);
+    assertEquals(exchange.state, HttpExchange._OUTPUT_BUFFER);
   }
 
   private HttpResponseHeader hrh(Http.Header.Name name, String value) {

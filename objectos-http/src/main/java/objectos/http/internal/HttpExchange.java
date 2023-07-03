@@ -90,6 +90,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       _OUTPUT_BODY = 16,
       _OUTPUT_BUFFER = 17,
       _OUTPUT_HEADER = 18,
+      _OUTPUT_TERMINATOR = 19,
 
       //
 
@@ -121,7 +122,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   private HttpResponse response;
 
-  byte[] responseBytes;
+  Object responseBody;
 
   List<HttpResponseHeader> responseHeaders;
 
@@ -141,6 +142,8 @@ public final class HttpExchange implements Http.Exchange, Runnable {
                       Handler handler,
                       NoteSink noteSink,
                       Socket socket) {
+    // there's a small chance we won't use the buffer
+    // but, as it is used in many places in this class, we create it eagerly
     this.buffer = new byte[bufferSize];
 
     this.handler = handler;
@@ -152,6 +155,9 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     state = _SETUP;
   }
 
+  /**
+   * For testing purposes only.
+   */
   HttpExchange() {}
 
   @Override
@@ -209,6 +215,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       case _OUTPUT -> output();
       case _OUTPUT_BUFFER -> outputBuffer();
       case _OUTPUT_HEADER -> outputHeader();
+      case _OUTPUT_TERMINATOR -> outputTerminator();
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -239,7 +246,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   private byte handle() {
     try {
-      responseBytes = null;
+      responseBody = null;
 
       if (responseHeaders == null) {
         responseHeaders = new GrowableList<>();
@@ -317,9 +324,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   private byte outputHeader() {
     if (responseHeadersIndex == responseHeaders.size()) {
-      nextAction = _OUTPUT_BODY;
-
-      return _OUTPUT_BUFFER;
+      return _OUTPUT_TERMINATOR;
     }
 
     HttpResponseHeader header;
@@ -331,10 +336,10 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     int headerLength;
     headerLength = headerBytes.length;
 
-    int bufferRequiredIndex;
-    bufferRequiredIndex = bufferLimit + headerLength;
+    int requiredLength;
+    requiredLength = bufferLimit + headerLength;
 
-    if (bufferRequiredIndex >= buffer.length) {
+    if (buffer.length < requiredLength) {
       nextAction = _OUTPUT_HEADER;
 
       return _OUTPUT_BUFFER;
@@ -347,6 +352,28 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     responseHeadersIndex++;
 
     return _OUTPUT_HEADER;
+  }
+
+  private byte outputTerminator() {
+    // buffer must be large enough to hold CR + LF
+
+    int requiredLength;
+    requiredLength = bufferLimit + 2;
+
+    if (buffer.length < requiredLength) {
+      // buffer is not large enough
+      // flush buffer and try again
+
+      nextAction = _OUTPUT_TERMINATOR;
+
+      return _OUTPUT_BUFFER;
+    }
+
+    buffer[bufferLimit++] = Bytes.CR;
+
+    buffer[bufferLimit++] = Bytes.LF;
+
+    return _OUTPUT_BODY;
   }
 
   private byte parseHeader() {

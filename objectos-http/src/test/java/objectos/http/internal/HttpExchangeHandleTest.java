@@ -60,13 +60,13 @@ public class HttpExchangeHandleTest {
         response.send(bytes);
       }
     };
-    exchange.responseBytes = new byte[0];
+    exchange.responseBody = new byte[0];
     exchange.responseHeaders = null;
     exchange.state = HttpExchange._HANDLE;
 
     exchange.stepOne();
 
-    assertEquals(exchange.responseBytes, bytes);
+    assertEquals(exchange.responseBody, bytes);
     assertEquals(
       exchange.responseHeaders.stream()
           .map(Object::toString)

@@ -43,7 +43,7 @@ final class HttpResponse implements Http.Response {
 
   @Override
   public final void send(byte[] data) {
-    outer.responseBytes = Objects.requireNonNull(data, "data == null");
+    outer.responseBody = Objects.requireNonNull(data, "data == null");
   }
 
   @Override
