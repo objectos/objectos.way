@@ -17,6 +17,7 @@ package objectos.http.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -206,6 +207,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       // Output phase
 
       case _OUTPUT -> output();
+      case _OUTPUT_BUFFER -> outputBuffer();
       case _OUTPUT_HEADER -> outputHeader();
 
       default -> throw new UnsupportedOperationException(
@@ -294,6 +296,23 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     bufferIndex = bufferLimit = responseHeadersIndex = 0;
 
     return _OUTPUT_HEADER;
+  }
+
+  private byte outputBuffer() {
+    try {
+      OutputStream outputStream;
+      outputStream = socket.getOutputStream();
+
+      outputStream.write(buffer, 0, bufferLimit);
+
+      bufferLimit = 0;
+
+      return nextAction;
+    } catch (IOException e) {
+      error = e;
+
+      return _CLOSE;
+    }
   }
 
   private byte outputHeader() {

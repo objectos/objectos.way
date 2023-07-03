@@ -22,11 +22,19 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-final class TestableSocket extends Socket {
+class TestableSocket extends Socket {
 
   private ByteArrayOutputStream outputStream;
 
-  private final InputStream inputStream;
+  private InputStream inputStream;
+
+  public TestableSocket(InputStream inputStream) {
+    this.inputStream = inputStream;
+  }
+
+  TestableSocket() {
+    inputStream = null;
+  }
 
   private TestableSocket(byte[] requestBytes) {
     this.inputStream = new InputStream() {
@@ -43,10 +51,6 @@ final class TestableSocket extends Socket {
         }
       }
     };
-  }
-
-  public TestableSocket(InputStream inputStream) {
-    this.inputStream = inputStream;
   }
 
   public static TestableSocket empty() {
@@ -74,7 +78,7 @@ final class TestableSocket extends Socket {
   }
 
   @Override
-  public final OutputStream getOutputStream() throws IOException {
+  public OutputStream getOutputStream() throws IOException {
     if (outputStream == null) {
       outputStream = new ByteArrayOutputStream();
     }

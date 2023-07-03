@@ -16,13 +16,18 @@
 package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import objectos.http.Http;
 import org.testng.annotations.Test;
 
 public class HttpExchangeOutputTest {
+
+  // OUTPUT
 
   @Test(description = """
   [#449] OUTPUT --> OUTPUT_HEADER
@@ -47,6 +52,8 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.state, HttpExchange._OUTPUT_HEADER);
   }
 
+  // OUTPUT_HEADER
+
   @Test(description = """
   [#449] OUTPUT_HEADER --> OUTPUT_HEADER
 
@@ -70,7 +77,7 @@ public class HttpExchangeOutputTest {
 
     exchange.stepOne();
 
-    assertEquals(Arrays.copyOf(exchange.buffer, 19), "Connection: close\r\n".getBytes());
+    assertEquals(Arrays.copyOf(exchange.buffer, 19), Bytes.utf8("Connection: close\r\n"));
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 19);
     assertEquals(exchange.responseHeadersIndex, 1);
@@ -121,6 +128,105 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.nextAction, HttpExchange._OUTPUT_BODY);
     assertEquals(exchange.responseHeadersIndex, 2);
     assertEquals(exchange.state, HttpExchange._OUTPUT_BUFFER);
+  }
+
+  // OUTPUT_BUFFER
+
+  @Test(description = """
+  [#449] OUTPUT_BUFFER --> next action
+  """)
+  public void outputBuffer() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestableSocket socket;
+    socket = TestableSocket.empty();
+
+    exchange.buffer = Bytes.utf8("12345xxx");
+    exchange.bufferLimit = 5;
+    exchange.nextAction = HttpExchange._STOP;
+    exchange.socket = socket;
+    exchange.state = HttpExchange._OUTPUT_BUFFER;
+
+    exchange.stepOne();
+
+    assertEquals(socket.outputAsString(), "12345");
+    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.state, HttpExchange._STOP);
+  }
+
+  @Test(description = """
+  [#449] OUTPUT_BUFFER --> CLOSE::fails to get output stream
+  """)
+  public void outputBufferToClose() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    // it should be fine. Not a real socket...
+    @SuppressWarnings("resource")
+    var socket = new TestableSocket() {
+      IOException error;
+
+      @Override
+      public OutputStream getOutputStream() throws IOException {
+        throw error = new IOException();
+      }
+    };
+
+    exchange.buffer = Bytes.utf8("12345xxx");
+    exchange.bufferLimit = 5;
+    exchange.error = null;
+    exchange.socket = socket;
+    exchange.state = HttpExchange._OUTPUT_BUFFER;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferLimit, 5);
+    assertSame(exchange.error, socket.error);
+    assertEquals(exchange.state, HttpExchange._CLOSE);
+  }
+
+  @Test(description = """
+  [#449] OUTPUT_BUFFER --> CLOSE::output stream throws on write
+  """)
+  public void outputBufferToCloseOnWrite() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    var outputStream = new OutputStream() {
+      IOException error;
+
+      @Override
+      public void write(int b) throws IOException {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public void write(byte[] b, int off, int len) throws IOException {
+        throw error = new IOException();
+      }
+    };
+
+    // it should be fine. Not a real socket...
+    @SuppressWarnings("resource")
+    var socket = new TestableSocket() {
+      @Override
+      public OutputStream getOutputStream() throws IOException {
+        return outputStream;
+      }
+    };
+
+    exchange.buffer = Bytes.utf8("12345xxx");
+    exchange.bufferLimit = 5;
+    exchange.error = null;
+    exchange.socket = socket;
+    exchange.state = HttpExchange._OUTPUT_BUFFER;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferLimit, 5);
+    assertSame(exchange.error, outputStream.error);
+    assertEquals(exchange.state, HttpExchange._CLOSE);
   }
 
   private HttpResponseHeader hrh(Http.Header.Name name, String value) {
