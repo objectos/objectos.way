@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.stream.Collectors;
 import objectos.http.Http;
 import objectos.http.Http.Exchange;
 import org.testng.annotations.Test;
@@ -67,7 +68,9 @@ public class HttpExchangeHandleTest {
 
     assertEquals(exchange.responseBytes, bytes);
     assertEquals(
-      exchange.responseHeaders.join("\n", "", "\n"),
+      exchange.responseHeaders.stream()
+          .map(Object::toString)
+          .collect(Collectors.joining("\n", "", "\n")),
 
       """
       Content-Type: text/plain; charset=utf-8

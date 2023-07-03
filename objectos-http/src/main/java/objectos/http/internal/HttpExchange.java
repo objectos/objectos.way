@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import objectos.http.Http;
 import objectos.http.Http.Handler;
@@ -85,6 +86,9 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
       _CLIENT_ERROR = 14,
       _OUTPUT = 15,
+      _OUTPUT_BODY = 16,
+      _OUTPUT_BUFFER = 17,
+      _OUTPUT_HEADER = 18,
 
       //
 
@@ -118,7 +122,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   byte[] responseBytes;
 
-  GrowableList<HttpResponseHeader> responseHeaders;
+  List<HttpResponseHeader> responseHeaders;
 
   int responseHeadersIndex;
 
@@ -199,6 +203,11 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
       case _HANDLE -> handle();
 
+      // Output phase
+
+      case _OUTPUT -> output();
+      case _OUTPUT_HEADER -> outputHeader();
+
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
       );
@@ -258,7 +267,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     try {
       inputStream = socket.getInputStream();
     } catch (IOException e) {
-      return toIoReadError(e);
+      return toInputReadError(e);
     }
 
     int writableLength;
@@ -269,7 +278,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     try {
       bytesRead = inputStream.read(buffer, bufferLimit, writableLength);
     } catch (IOException e) {
-      return toIoReadError(e);
+      return toInputReadError(e);
     }
 
     if (bytesRead < 0) {
@@ -279,6 +288,46 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     bufferLimit += bytesRead;
 
     return nextAction;
+  }
+
+  private byte output() {
+    bufferIndex = bufferLimit = responseHeadersIndex = 0;
+
+    return _OUTPUT_HEADER;
+  }
+
+  private byte outputHeader() {
+    if (responseHeadersIndex == responseHeaders.size()) {
+      nextAction = _OUTPUT_BODY;
+
+      return _OUTPUT_BUFFER;
+    }
+
+    HttpResponseHeader header;
+    header = responseHeaders.get(responseHeadersIndex);
+
+    byte[] headerBytes;
+    headerBytes = header.bytes();
+
+    int headerLength;
+    headerLength = headerBytes.length;
+
+    int bufferRequiredIndex;
+    bufferRequiredIndex = bufferLimit + headerLength;
+
+    if (bufferRequiredIndex >= buffer.length) {
+      nextAction = _OUTPUT_HEADER;
+
+      return _OUTPUT_BUFFER;
+    }
+
+    System.arraycopy(headerBytes, 0, buffer, bufferLimit, headerLength);
+
+    bufferLimit += headerLength;
+
+    responseHeadersIndex++;
+
+    return _OUTPUT_HEADER;
   }
 
   private byte parseHeader() {
@@ -370,7 +419,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     final byte first;
     first = bufferGet(nameStart);
 
-    // ad-hoc hash map
+    // ad hoc hash map
 
     return switch (first) {
       case 'A' -> parseHeaderName0(colonIndex,
@@ -712,8 +761,6 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return toClientError(HttpStatus.BAD_REQUEST);
   }
 
-  //
-
   private byte setup() {
     // TODO set timeout
 
@@ -736,6 +783,14 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return _INPUT_READ;
   }
 
+  private byte toInputReadError(IOException e) {
+    error = e;
+
+    noteSink.send(EIO_READ_ERROR, e);
+
+    return _CLOSE;
+  }
+
   private byte toInputReadIfPossible(byte onRead, Http.Status onBufferFull) {
     if (bufferLimit < buffer.length) {
       return toInputRead(onRead);
@@ -751,16 +806,6 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     throw new UnsupportedOperationException(
       "Implement me :: Internal Server Error"
     );
-  }
-
-  //
-
-  private byte toIoReadError(IOException e) {
-    error = e;
-
-    noteSink.send(EIO_READ_ERROR, e);
-
-    return _CLOSE;
   }
 
   private byte toRequestLineMethod(Method maybe) {
