@@ -17,14 +17,11 @@ package objectos.http.internal;
 
 public enum Version {
 
-  V1_0("HTTP/1.0"),
+  HTTP_1_0("HTTP/1.0"),
 
-  V1_1("HTTP/1.1");
-
-  final byte[] nameAndLineTerminator;
+  HTTP_1_1("HTTP/1.1");
 
   private Version(String signature) {
-    nameAndLineTerminator = Bytes.utf8(signature + "\r\n");
   }
 
 }

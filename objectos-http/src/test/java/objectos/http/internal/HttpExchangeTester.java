@@ -15,11 +15,14 @@
  */
 package objectos.http.internal;
 
-import java.nio.charset.StandardCharsets;
+interface HttpExchangeTester {
 
-record HttpRequestTarget(byte[] buffer, int start, int end) {
-  @Override
-  public final String toString() {
-    return new String(buffer, start, end - start, StandardCharsets.UTF_8);
+  interface Input {
+    void accept(HttpExchange exchange);
   }
+
+  interface Output {
+    void accept(HttpExchange exchange);
+  }
+
 }

@@ -172,7 +172,7 @@ public class HttpExchangeOutputTest {
 
     assertEquals(exchange.bufferLimit, 5);
     assertSame(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._ERROR_WRITE);
+    assertEquals(exchange.state, HttpExchange._RESULT_ERROR_WRITE);
   }
 
   @Test(description = """
@@ -195,7 +195,7 @@ public class HttpExchangeOutputTest {
 
     assertEquals(exchange.bufferLimit, 5);
     assertSame(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._ERROR_WRITE);
+    assertEquals(exchange.state, HttpExchange._RESULT_ERROR_WRITE);
   }
 
   // OUTPUT_TERMINATOR
@@ -247,7 +247,7 @@ public class HttpExchangeOutputTest {
   // OUTPUT_BODY
 
   @Test(description = """
-  [#449] OUTPUT_BODY --> SUCCESS
+  [#449] OUTPUT_BODY --> RESULT
   """)
   public void outputBody() {
     HttpExchange exchange;
@@ -268,7 +268,7 @@ public class HttpExchangeOutputTest {
     exchange.stepOne();
 
     assertEquals(socket.outputAsString(), "headers\r\n\r\nHello world!\n");
-    assertEquals(exchange.state, HttpExchange._SUCCESS);
+    assertEquals(exchange.state, HttpExchange._RESULT);
   }
 
   @Test(description = """
@@ -293,7 +293,7 @@ public class HttpExchangeOutputTest {
     exchange.stepOne();
 
     assertEquals(exchange.error, socket.thrown);
-    assertEquals(exchange.state, HttpExchange._ERROR_WRITE);
+    assertEquals(exchange.state, HttpExchange._RESULT_ERROR_WRITE);
   }
 
   private HttpResponseHeader hrh(Http.Header.Name name, String value) {

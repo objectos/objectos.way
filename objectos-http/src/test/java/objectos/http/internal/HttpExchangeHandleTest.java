@@ -16,11 +16,14 @@
 package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.stream.Collectors;
 import objectos.http.Http;
 import objectos.http.Http.Exchange;
@@ -28,8 +31,33 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeHandleTest {
 
-  @Test
-  public void handleHttp001() {
+  @Test(enabled = false, description = """
+  [#448] HANDLE --> HANDLE_INVOKE
+
+  - sets closeConnection
+  - resets responseBody
+  - creates responseHeaders
+  """)
+  public void handle() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.closeConnection = false;
+    exchange.requestHeaders = Map.of(HeaderName.CONNECTION, hv("Close"));
+    exchange.responseBody = Bytes.utf8("body");
+    exchange.responseHeaders = null;
+    exchange.state = HttpExchange._HANDLE;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.closeConnection, true);
+    assertEquals(exchange.responseBody, null);
+    assertNotNull(exchange.responseHeaders);
+    assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
+  }
+
+  @Test(enabled = false)
+  public void handleInvoke() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
@@ -62,7 +90,7 @@ public class HttpExchangeHandleTest {
     };
     exchange.responseBody = new byte[0];
     exchange.responseHeaders = null;
-    exchange.state = HttpExchange._HANDLE;
+    exchange.state = HttpExchange._HANDLE_INVOKE;
 
     exchange.stepOne();
 
@@ -80,6 +108,13 @@ public class HttpExchangeHandleTest {
     );
     assertEquals(exchange.state, HttpExchange._OUTPUT);
     assertEquals(exchange.status, HttpStatus.OK);
+  }
+
+  private HeaderValue hv(String string) {
+    byte[] bytes;
+    bytes = string.getBytes(StandardCharsets.UTF_8);
+
+    return new HeaderValue(bytes, 0, bytes.length);
   }
 
 }

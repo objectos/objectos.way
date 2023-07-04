@@ -17,9 +17,23 @@ package objectos.http.internal;
 
 import java.nio.charset.StandardCharsets;
 
-record HttpRequestTarget(byte[] buffer, int start, int end) {
+final class HeaderValue {
+
+  final byte[] buffer;
+
+  final int start;
+
+  final int end;
+
+  public HeaderValue(byte[] buffer, int start, int end) {
+    this.buffer = buffer;
+    this.start = start;
+    this.end = end;
+  }
+
   @Override
   public final String toString() {
     return new String(buffer, start, end - start, StandardCharsets.UTF_8);
   }
+
 }

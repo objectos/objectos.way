@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -32,24 +31,6 @@ import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 
 public final class HttpExchange implements Http.Exchange, Runnable {
-
-  class HeaderValue {
-
-    final int start;
-
-    final int end;
-
-    HeaderValue(int start, int end) {
-      this.start = start;
-      this.end = end;
-    }
-
-    @Override
-    public final String toString() {
-      return new String(buffer, start, end - start, StandardCharsets.UTF_8);
-    }
-
-  }
 
   public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
 
@@ -82,20 +63,21 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       // Handle phase
 
       _HANDLE = 13,
+      _HANDLE_INVOKE = 14,
 
       // Output phase
 
-      _CLIENT_ERROR = 14,
-      _OUTPUT = 15,
-      _OUTPUT_BODY = 16,
-      _OUTPUT_BUFFER = 17,
-      _OUTPUT_HEADER = 18,
-      _OUTPUT_TERMINATOR = 19,
+      _CLIENT_ERROR = 15,
+      _OUTPUT = 16,
+      _OUTPUT_BODY = 17,
+      _OUTPUT_BUFFER = 18,
+      _OUTPUT_HEADER = 19,
+      _OUTPUT_TERMINATOR = 20,
 
       // Result phase
 
-      _SUCCESS = 20,
-      _ERROR_WRITE = 21,
+      _RESULT = 21,
+      _RESULT_ERROR_WRITE = 22,
       _CLOSE = 2,
       _FINALLY = 3;
 
@@ -104,6 +86,8 @@ public final class HttpExchange implements Http.Exchange, Runnable {
   int bufferIndex;
 
   int bufferLimit;
+
+  boolean closeConnection;
 
   Throwable error;
 
@@ -114,6 +98,8 @@ public final class HttpExchange implements Http.Exchange, Runnable {
   byte nextAction;
 
   NoteSink noteSink;
+
+  int parser;
 
   HeaderName requestHeaderName;
 
@@ -183,6 +169,10 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return state != _STOP;
   }
 
+  final boolean isRequestLinePhase() {
+    return _REQUEST_LINE <= state && state <= _REQUEST_LINE_VERSION;
+  }
+
   final void stepOne() {
     state = switch (state) {
       // Setup phase
@@ -210,6 +200,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       // Handle phase
 
       case _HANDLE -> handle();
+      case _HANDLE_INVOKE -> handleInvoke();
 
       // Output phase
 
@@ -247,15 +238,19 @@ public final class HttpExchange implements Http.Exchange, Runnable {
   }
 
   private byte handle() {
+    responseBody = null;
+
+    if (responseHeaders == null) {
+      responseHeaders = new GrowableList<>();
+    } else {
+      responseHeaders.clear();
+    }
+
+    return _HANDLE_INVOKE;
+  }
+
+  private byte handleInvoke() {
     try {
-      responseBody = null;
-
-      if (responseHeaders == null) {
-        responseHeaders = new GrowableList<>();
-      } else {
-        responseHeaders.clear();
-      }
-
       handler.handle(this);
 
       return _OUTPUT;
@@ -263,6 +258,10 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       error = t;
 
       return toClientError(HttpStatus.INTERNAL_SERVER_ERROR);
+    } finally {
+      if (requestHeaders != null) {
+        requestHeaders.clear();
+      }
     }
   }
 
@@ -308,24 +307,44 @@ public final class HttpExchange implements Http.Exchange, Runnable {
   }
 
   private byte outputBody() {
-    if (responseBody instanceof byte[] bytes) {
-      try {
-        OutputStream outputStream;
-        outputStream = socket.getOutputStream();
+    try {
+      return outputBody0();
+    } catch (IOException e) {
+      error = e;
 
-        outputStream.write(buffer, 0, bufferLimit);
+      return _RESULT_ERROR_WRITE;
+    } finally {
+      responseBody = null;
 
-        outputStream.write(bytes, 0, bytes.length);
-
-        return _SUCCESS;
-      } catch (IOException e) {
-        error = e;
-
-        return _ERROR_WRITE;
+      if (responseHeaders != null) {
+        responseHeaders.clear();
       }
     }
+  }
 
-    throw new UnsupportedOperationException("Implement me");
+  private byte outputBody0() throws IOException {
+    OutputStream outputStream;
+    outputStream = socket.getOutputStream();
+
+    if (responseBody == null) {
+      // write headers + terminator only
+      outputStream.write(buffer, 0, bufferLimit);
+
+      return _RESULT;
+    }
+
+    if (responseBody instanceof byte[] bytes) {
+      // write headers + terminator
+      outputStream.write(buffer, 0, bufferLimit);
+
+      outputStream.write(bytes, 0, bytes.length);
+
+      return _RESULT;
+    }
+
+    throw new UnsupportedOperationException(
+      "Implement me :: type=" + responseBody.getClass()
+    );
   }
 
   private byte outputBuffer() {
@@ -341,7 +360,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     } catch (IOException e) {
       error = e;
 
-      return _ERROR_WRITE;
+      return _RESULT_ERROR_WRITE;
     }
   }
 
@@ -611,7 +630,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     }
 
     HeaderValue headerValue;
-    headerValue = new HeaderValue(valueStart, valueEnd);
+    headerValue = new HeaderValue(buffer, valueStart, valueEnd);
 
     if (requestHeaders == null) {
       requestHeaders = new EnumMap<>(HeaderName.class);
@@ -628,6 +647,8 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     // bufferIndex should point to the position immediately after the LF char
 
     bufferIndex = lfIndex + 1;
+
+    requestHeaderName = null;
 
     return _PARSE_HEADER;
   }
@@ -726,7 +747,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       if (b == Bytes.SP) {
         // SP found, store the indices
 
-        requestTarget = new HttpRequestTarget(targetStart, index);
+        requestTarget = new HttpRequestTarget(buffer, targetStart, index);
 
         // bufferIndex immediately after the SP char
 
@@ -758,7 +779,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     // lineEnd is @ LF
 
     int lineEnd;
-    lineEnd = versionEnd + 2;
+    lineEnd = versionEnd + 1;
 
     if (!bufferHasIndex(lineEnd)) {
       return toInputReadIfPossible(state, HttpStatus.URI_TOO_LONG);

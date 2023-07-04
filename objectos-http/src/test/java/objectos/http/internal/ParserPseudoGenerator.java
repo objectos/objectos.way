@@ -15,11 +15,8 @@
  */
 package objectos.http.internal;
 
-import java.nio.charset.StandardCharsets;
+public class ParserPseudoGenerator {
+  public static void main(String[] args) {
 
-record HttpRequestTarget(byte[] buffer, int start, int end) {
-  @Override
-  public final String toString() {
-    return new String(buffer, start, end - start, StandardCharsets.UTF_8);
   }
 }

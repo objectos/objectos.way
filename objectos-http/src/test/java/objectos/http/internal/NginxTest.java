@@ -289,15 +289,35 @@ public class NginxTest {
 
   HTTP/1.1 400 Bad Request
   Server: nginx/1.23.3
+  
+  ---
+  
+  HTTP version 1.2
 
+  GET /index.html HTTP/1.2
+  Host: localhost
+  Connection: close
+
+  HTTP/1.1 200 OK
+
+  ---
+
+  HTTP version 0.9
+  
+  GET /index.html HTTP/0.9
+  Host: localhost
+  Connection: close
+  
+  HTTP/1.1 400 Bad Request
+  
   */
 
   @Test(enabled = false)
   public void getOk() throws IOException {
     try (Socket socket = new Socket(address, port)) {
       req(socket, """
-      GET /index.html HTTP/1.1
-      Host: localhost\040
+      GET /index.html HTTP/0.9
+      Host: localhost
       Connection: close
 
       """.replace("\n", "\r\n"));
