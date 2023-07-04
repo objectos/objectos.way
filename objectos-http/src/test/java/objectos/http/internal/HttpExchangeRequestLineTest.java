@@ -19,74 +19,42 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class HttpExchangeRequestLineTest {
 
-  private record RegularInput(String request)
-      implements HttpExchangeTester.Input {
-    @Override
-    public final void accept(HttpExchange exchange) {
-      byte[] bytes;
-      bytes = toByteArray();
-
-      exchange.buffer = bytes;
-      exchange.bufferIndex = 0;
-      exchange.bufferLimit = bytes.length;
-      exchange.method = null;
-      exchange.requestTarget = null;
-      exchange.state = HttpExchange._REQUEST_LINE;
-      exchange.versionMajor = 0;
-      exchange.versionMinor = 0;
-    }
-
-    private byte[] toByteArray() {
-      return request.getBytes(StandardCharsets.UTF_8);
-    }
-  }
-
-  private record Success(Method method, String requestLine, Version version)
-      implements HttpExchangeTester.Output {
-    @Override
-    public final void accept(HttpExchange exchange) {
-      assertEquals(exchange.bufferIndex, exchange.bufferLimit);
-      assertEquals(exchange.method, method);
-      assertEquals(exchange.requestTarget.toString(), requestLine);
-      assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
-      switch (version) {
-        case HTTP_1_1 -> {
-          assertEquals(exchange.versionMajor, 1);
-          assertEquals(exchange.versionMinor, 1);
-        }
-
-        default -> throw new UnsupportedOperationException("Implement me");
-      }
-    }
-  }
-
-  @DataProvider
-  public Object[][] test() {
-    return new Object[][] {
-        {new RegularInput("GET / HTTP/1.1\r\n"), new Success(Method.GET, "/", Version.HTTP_1_1)}
-    };
-  }
-
-  @Test(dataProvider = "test")
-  public void test(HttpExchangeTester.Input input, HttpExchangeTester.Output output) {
+  @Test
+  public void http001() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    input.accept(exchange);
+    TestingInput.HTTP_001.accept(exchange);
 
-    while (exchange.isRequestLinePhase()) {
+    while (exchange.state < HttpExchange._PARSE_HEADER) {
       exchange.stepOne();
     }
 
-    output.accept(exchange);
+    // first line consumed
+    assertEquals(exchange.bufferIndex, "GET / HTTP/1.1\r\n".length());
+    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    // expect correct method
+    assertEquals(exchange.method, Method.GET);
+    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.requestHeaderName, null);
+    // expect correct parsed target
+    assertEquals(exchange.requestTarget.toString(), "/");
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, null);
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.status, null);
+    // expect correct parsed version major.minor
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
   }
 
   @Test(description = """

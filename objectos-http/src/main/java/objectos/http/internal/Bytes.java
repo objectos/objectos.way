@@ -47,6 +47,14 @@ final class Bytes {
     };
   }
 
+  public static byte toLowerCase(byte ch) {
+    if (ch >= 'A' && ch <= 'Z') {
+      return (byte) (ch ^ 0x20);
+    }
+
+    return ch;
+  }
+
   public static byte[] utf8(String value) {
     return value.getBytes(StandardCharsets.UTF_8);
   }

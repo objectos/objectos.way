@@ -16,19 +16,44 @@
 package objectos.http.internal;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import objectos.util.ByteArrays;
 
-final class HeaderValue {
+record HeaderValue(byte[] buffer, int start, int end) {
 
-  final byte[] buffer;
+  public static final HeaderValue EMPTY = new HeaderValue(ByteArrays.empty(), 0, 0);
 
-  final int start;
+  public final boolean contentEquals(String string) {
+    int thatLength;
+    thatLength = string.length();
 
-  final int end;
+    int thisLength;
+    thisLength = end - start;
 
-  public HeaderValue(byte[] buffer, int start, int end) {
-    this.buffer = buffer;
-    this.start = start;
-    this.end = end;
+    if (thisLength != thatLength) {
+      return false;
+    }
+
+    for (int i = start; i < end; i++) {
+      byte ch;
+      ch = buffer[i];
+
+      byte low;
+      low = Bytes.toLowerCase(ch);
+
+      if (ch != low) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this ||
+        obj instanceof HeaderValue that
+            && Arrays.equals(buffer, start, end, that.buffer, that.start, that.end);
   }
 
   @Override

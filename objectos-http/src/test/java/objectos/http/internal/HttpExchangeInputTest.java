@@ -26,6 +26,34 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeInputTest {
 
+  @Test
+  public void http001() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestingInput.HTTP_001.accept(exchange);
+
+    while (exchange.state < HttpExchange._REQUEST_LINE) {
+      exchange.stepOne();
+    }
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, null);
+    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, null);
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.state, HttpExchange._REQUEST_LINE);
+    assertEquals(exchange.status, null);
+    assertEquals(exchange.versionMajor, -1);
+    assertEquals(exchange.versionMinor, -1);
+  }
+
   @Test(description = """
   [#427] HTTP 001: INPUT alias to INPUT_READ --> REQUEST_LINE
   """)

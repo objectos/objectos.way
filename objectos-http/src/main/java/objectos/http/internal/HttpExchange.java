@@ -67,12 +67,13 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
       // Output phase
 
-      _CLIENT_ERROR = 15,
-      _OUTPUT = 16,
-      _OUTPUT_BODY = 17,
-      _OUTPUT_BUFFER = 18,
-      _OUTPUT_HEADER = 19,
-      _OUTPUT_TERMINATOR = 20,
+      _OUTPUT = 15,
+      _OUTPUT_BODY = 16,
+      _OUTPUT_BUFFER = 17,
+      _OUTPUT_HEADER = 18,
+      _OUTPUT_TERMINATOR = 19,
+
+      _CLIENT_ERROR = 20,
 
       // Result phase
 
@@ -87,19 +88,17 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   int bufferLimit;
 
-  boolean closeConnection;
-
   Throwable error;
 
   Handler handler;
+
+  boolean keepAlive;
 
   Method method;
 
   byte nextAction;
 
   NoteSink noteSink;
-
-  int parser;
 
   HeaderName requestHeaderName;
 
@@ -169,10 +168,6 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return state != _STOP;
   }
 
-  final boolean isRequestLinePhase() {
-    return _REQUEST_LINE <= state && state <= _REQUEST_LINE_VERSION;
-  }
-
   final void stepOne() {
     state = switch (state) {
       // Setup phase
@@ -238,6 +233,8 @@ public final class HttpExchange implements Http.Exchange, Runnable {
   }
 
   private byte handle() {
+    keepAlive = handle0KeepAlive();
+
     responseBody = null;
 
     if (responseHeaders == null) {
@@ -247,6 +244,21 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     }
 
     return _HANDLE_INVOKE;
+  }
+
+  private boolean handle0KeepAlive() {
+    HeaderValue connection;
+    connection = requestHeaders.getOrDefault(HeaderName.CONNECTION, HeaderValue.EMPTY);
+
+    if (connection.contentEquals("keep-alive")) {
+      return true;
+    }
+
+    if (connection.contentEquals("close")) {
+      return false;
+    }
+
+    return versionMajor == 1 && versionMinor >= 1;
   }
 
   private byte handleInvoke() {

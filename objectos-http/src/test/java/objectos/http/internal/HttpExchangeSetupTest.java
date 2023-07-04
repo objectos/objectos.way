@@ -21,6 +21,35 @@ import org.testng.annotations.Test;
 
 public class HttpExchangeSetupTest {
 
+  @Test
+  public void http001() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestingInput.HTTP_001.accept(exchange);
+
+    while (exchange.state < HttpExchange._INPUT) {
+      exchange.stepOne();
+    }
+
+    // buffer index/limit should have been reset
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, null);
+    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, null);
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.state, HttpExchange._INPUT);
+    assertEquals(exchange.status, null);
+    assertEquals(exchange.versionMajor, -1);
+    assertEquals(exchange.versionMinor, -1);
+  }
+
   @Test(description = """
   [#426] HTTP 001: SETUP --> INPUT
 

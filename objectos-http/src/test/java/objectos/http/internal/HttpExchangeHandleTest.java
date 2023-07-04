@@ -23,15 +23,53 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import objectos.http.Http;
 import objectos.http.Http.Exchange;
+import objectos.util.GrowableList;
 import org.testng.annotations.Test;
 
 public class HttpExchangeHandleTest {
 
-  @Test(enabled = false, description = """
+  @Test
+  public void http001() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestingInput.HTTP_001.accept(exchange);
+
+    while (exchange.state < HttpExchange._OUTPUT) {
+      exchange.stepOne();
+    }
+
+    assertEquals(exchange.bufferIndex, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.error, null);
+    // "Connection: close" should set the property
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, Method.GET);
+    assertEquals(exchange.requestHeaders, Map.of());
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget.toString(), "/");
+    // response body set
+    assertEquals(exchange.responseBody, Bytes.utf8("Hello world!\n"));
+    // response headers set
+    assertEquals(exchange.responseHeaders, List.of(
+      new HttpResponseHeader(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8"),
+      new HttpResponseHeader(HeaderName.CONTENT_LENGTH, "13"),
+      new HttpResponseHeader(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT")
+    ));
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.state, HttpExchange._OUTPUT);
+    // response status set
+    assertEquals(exchange.status, HttpStatus.OK);
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
+
+  @Test(description = """
   [#448] HANDLE --> HANDLE_INVOKE
 
   - sets closeConnection
@@ -42,7 +80,7 @@ public class HttpExchangeHandleTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    exchange.closeConnection = false;
+    exchange.keepAlive = false;
     exchange.requestHeaders = Map.of(HeaderName.CONNECTION, hv("Close"));
     exchange.responseBody = Bytes.utf8("body");
     exchange.responseHeaders = null;
@@ -50,13 +88,13 @@ public class HttpExchangeHandleTest {
 
     exchange.stepOne();
 
-    assertEquals(exchange.closeConnection, true);
+    assertEquals(exchange.keepAlive, false);
     assertEquals(exchange.responseBody, null);
     assertNotNull(exchange.responseHeaders);
     assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
   }
 
-  @Test(enabled = false)
+  @Test
   public void handleInvoke() {
     HttpExchange exchange;
     exchange = new HttpExchange();
@@ -89,7 +127,7 @@ public class HttpExchangeHandleTest {
       }
     };
     exchange.responseBody = new byte[0];
-    exchange.responseHeaders = null;
+    exchange.responseHeaders = new GrowableList<>();
     exchange.state = HttpExchange._HANDLE_INVOKE;
 
     exchange.stepOne();

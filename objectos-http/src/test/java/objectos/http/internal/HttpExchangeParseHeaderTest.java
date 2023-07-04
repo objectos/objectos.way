@@ -19,9 +19,43 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.testng.annotations.Test;
 
 public class HttpExchangeParseHeaderTest {
+
+  @Test
+  public void http001() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestingInput.HTTP_001.accept(exchange);
+
+    while (exchange.state < HttpExchange._HANDLE) {
+      exchange.stepOne();
+    }
+
+    // buffer should have been exhausted
+    assertEquals(exchange.bufferIndex, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, Method.GET);
+    // request headers parsed
+    assertEquals(exchange.requestHeaders, Map.of(
+      HeaderName.HOST, TestingInput.hv("www.example.com"),
+      HeaderName.CONNECTION, TestingInput.hv("close")
+    ));
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget.toString(), "/");
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, null);
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.state, HttpExchange._HANDLE);
+    assertEquals(exchange.status, null);
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
 
   // PARSE_HEADER
 
