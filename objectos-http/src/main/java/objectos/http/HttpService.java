@@ -51,6 +51,8 @@ public final class HttpService {
   }
 
   public static Option bufferSize(final int size) {
+    Check.argument(size > 128, "buffer size must be > 128");
+
     return new Option() {
       @Override
       final void acceptBuilder(HttpServiceBuilder builder) {

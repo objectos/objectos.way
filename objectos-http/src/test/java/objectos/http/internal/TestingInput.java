@@ -15,7 +15,7 @@
  */
 package objectos.http.internal;
 
-interface TestingInput {
+public interface TestingInput {
 
   void accept(HttpExchange exchange);
 

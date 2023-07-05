@@ -20,6 +20,7 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import org.testng.annotations.Test;
@@ -48,8 +49,14 @@ public class ServerSocketThreadTest implements ServerSocketThreadAdapter {
     InetAddress loAddress;
     loAddress = InetAddress.getLoopbackAddress();
 
+    int port;
+
+    try (ServerSocket socket = new ServerSocket(0)) {
+      port = socket.getLocalPort();
+    }
+
     InetSocketAddress loopback;
-    loopback = new InetSocketAddress(loAddress, 8765);
+    loopback = new InetSocketAddress(loAddress, port);
 
     ServerSocketThread thread;
     thread = ServerSocketThread.create(this, loopback);

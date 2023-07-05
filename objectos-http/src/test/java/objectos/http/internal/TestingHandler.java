@@ -19,10 +19,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.function.Supplier;
 import objectos.http.Http;
 import objectos.http.Http.Exchange;
+import objectos.http.Http.Handler;
 
-final class TestingHandler implements Http.Handler {
+public final class TestingHandler implements Http.Handler, Supplier<Http.Handler> {
 
   public static final String HTTP001 = """
       HTTP/1.1 200 OK<CRLF>
@@ -39,7 +41,7 @@ final class TestingHandler implements Http.Handler {
     ZoneId.of("GMT-3")
   );
 
-  public static final Http.Handler INSTANCE = new TestingHandler();
+  public static final TestingHandler INSTANCE = new TestingHandler();
 
   private TestingHandler() {}
 
@@ -61,5 +63,8 @@ final class TestingHandler implements Http.Handler {
 
     response.send(bytes);
   }
+
+  @Override
+  public final Handler get() { return this; }
 
 }
