@@ -86,6 +86,8 @@ public final class Http {
 
     int code();
 
+    String description();
+
   }
 
   private static final DateTimeFormatter IMF_FIXDATE;

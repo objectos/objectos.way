@@ -21,7 +21,13 @@ public enum Version {
 
   HTTP_1_1("HTTP/1.1");
 
+  final byte[] responseBytes;
+
   private Version(String signature) {
+    String response;
+    response = signature + " ";
+
+    responseBytes = Bytes.utf8(response);
   }
 
 }

@@ -24,6 +24,15 @@ import objectos.http.Http.Exchange;
 
 final class TestingHandler implements Http.Handler {
 
+  public static final String HTTP001 = """
+      HTTP/1.1 200 OK<CRLF>
+      Content-Type: text/plain; charset=utf-8<CRLF>
+      Content-Length: 13<CRLF>
+      Date: Wed, 28 Jun 2023 12:08:43 GMT<CRLF>
+      <CRLF>
+      Hello World!
+      """.replace("<CRLF>\n", "\r\n");
+
   public static final ZonedDateTime DATE = ZonedDateTime.of(
     LocalDate.of(2023, 6, 28),
     LocalTime.of(9, 8, 43),
@@ -37,7 +46,7 @@ final class TestingHandler implements Http.Handler {
   @Override
   public final void handle(Exchange exchange) {
     final byte[] bytes;
-    bytes = Bytes.utf8("Hello world!\n");
+    bytes = Bytes.utf8("Hello World!\n");
 
     Http.Response response;
     response = exchange.response();

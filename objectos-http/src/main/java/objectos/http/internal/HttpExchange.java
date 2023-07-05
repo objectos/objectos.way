@@ -34,11 +34,11 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
 
-  static final byte _STOP = 0,
+  static final byte
 
-      // Setup phase
+  // Setup phase
 
-      _SETUP = 1,
+  _SETUP = 1,
 
       // Input phase
 
@@ -72,15 +72,18 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       _OUTPUT_BUFFER = 17,
       _OUTPUT_HEADER = 18,
       _OUTPUT_TERMINATOR = 19,
+      _OUTPUT_STATUS = 20,
 
-      _CLIENT_ERROR = 20,
+      _CLIENT_ERROR = 21,
 
       // Result phase
 
-      _RESULT = 21,
-      _RESULT_ERROR_WRITE = 22,
+      _RESULT = 22,
+      _RESULT_ERROR_WRITE = 23,
       _CLOSE = 2,
-      _FINALLY = 3;
+      _FINALLY = 3,
+
+      _STOP = 0;
 
   byte[] buffer;
 
@@ -204,6 +207,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       case _OUTPUT_BUFFER -> outputBuffer();
       case _OUTPUT_HEADER -> outputHeader();
       case _OUTPUT_TERMINATOR -> outputTerminator();
+      case _OUTPUT_STATUS -> outputStatus();
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -271,9 +275,15 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
       return toClientError(HttpStatus.INTERNAL_SERVER_ERROR);
     } finally {
+      // TODO log handle phase
+
+      method = null;
+
       if (requestHeaders != null) {
         requestHeaders.clear();
       }
+
+      requestTarget = null;
     }
   }
 
@@ -315,7 +325,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
   private byte output() {
     bufferIndex = bufferLimit = responseHeadersIndex = 0;
 
-    return _OUTPUT_HEADER;
+    return _OUTPUT_STATUS;
   }
 
   private byte outputBody() {
@@ -326,11 +336,19 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
       return _RESULT_ERROR_WRITE;
     } finally {
+      bufferIndex = bufferLimit = -1;
+
       responseBody = null;
 
       if (responseHeaders != null) {
         responseHeaders.clear();
       }
+
+      responseHeadersIndex = -1;
+
+      status = null;
+
+      versionMajor = versionMinor = -1;
     }
   }
 
@@ -428,6 +446,53 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     buffer[bufferLimit++] = Bytes.LF;
 
     return _OUTPUT_BODY;
+  }
+
+  private byte outputStatus() {
+    // Buffer will be large enough for status line.
+    // Enforced during server creation (in theory).
+    // In any case, let's be sure...
+
+    int requiredLength;
+
+    Version version;
+    version = Version.HTTP_1_1;
+
+    requiredLength = version.responseBytes.length;
+
+    byte[] statusBytes;
+
+    if (status instanceof HttpStatus internal) {
+      statusBytes = internal.responseBytes;
+    } else {
+      statusBytes = HttpStatus.responseBytes(status);
+    }
+
+    requiredLength += statusBytes.length;
+
+    if (buffer.length < requiredLength) {
+      // we could send the response unbuffered.
+      // Instead this should be considered a bug in the library
+
+      // TODO log irrecoverable error
+
+      return _CLOSE;
+    }
+
+    byte[] bytes;
+    bytes = version.responseBytes;
+
+    System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
+
+    bufferLimit += bytes.length;
+
+    bytes = statusBytes;
+
+    System.arraycopy(bytes, 0, buffer, bufferLimit, bytes.length);
+
+    bufferLimit += bytes.length;
+
+    return _OUTPUT_HEADER;
   }
 
   private byte parseHeader() {
@@ -873,7 +938,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return _INPUT;
   }
 
-  private byte toClientError(Http.Status error) {
+  private byte toClientError(HttpStatus error) {
     status = error;
 
     return _CLIENT_ERROR;
@@ -893,7 +958,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return _CLOSE;
   }
 
-  private byte toInputReadIfPossible(byte onRead, Http.Status onBufferFull) {
+  private byte toInputReadIfPossible(byte onRead, HttpStatus onBufferFull) {
     if (bufferLimit < buffer.length) {
       return toInputRead(onRead);
     }

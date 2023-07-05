@@ -36,12 +36,29 @@ public enum HttpStatus implements Http.Status {
 
   private final int code;
 
+  final byte[] responseBytes;
+
   private HttpStatus(int code) {
     this.code = code;
+
+    responseBytes = responseBytes(this);
   }
 
+  public static byte[] responseBytes(Http.Status status) {
+    String response;
+    response = Integer.toString(status.code()) + " " + status.description() + "\r\n";
+
+    return Bytes.utf8(response);
+  }
+
+  @Override
   public final int code() {
     return code;
+  }
+
+  @Override
+  public final String description() {
+    return name().replace('_', ' ');
   }
 
 }

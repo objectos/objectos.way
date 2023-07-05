@@ -20,15 +20,52 @@ import static org.testng.Assert.assertSame;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import objectos.http.Http;
 import org.testng.annotations.Test;
 
 public class HttpExchangeOutputTest {
 
+  @Test
+  public void http001() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    TestingInput.HTTP_001.accept(exchange);
+
+    while (exchange.state < HttpExchange._RESULT) {
+      exchange.stepOne();
+    }
+
+    // buffer exhausted and reset
+    assertEquals(exchange.bufferIndex, -1);
+    assertEquals(exchange.bufferLimit, -1);
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, null);
+    assertEquals(exchange.requestHeaders, Map.of());
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, List.of());
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.state, HttpExchange._RESULT);
+    // status won't be used from this point forward
+    assertEquals(exchange.status, null);
+    // version won't be used from this point forward
+    assertEquals(exchange.versionMajor, -1);
+    assertEquals(exchange.versionMinor, -1);
+
+    TestableSocket socket;
+    socket = (TestableSocket) exchange.socket;
+
+    assertEquals(socket.outputAsString(), TestingHandler.HTTP001);
+  }
+
   // OUTPUT
 
   @Test(description = """
-  [#449] OUTPUT --> OUTPUT_HEADER
+  [#449] OUTPUT --> OUTPUT_STATUS
 
   - buffer reset
   - responseHeaderIndex reset
@@ -47,6 +84,34 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.bufferLimit, 0);
     assertEquals(exchange.responseHeadersIndex, 0);
+    assertEquals(exchange.state, HttpExchange._OUTPUT_STATUS);
+  }
+
+  // OUTPUT_STATUS
+
+  @Test(description = """
+  [#449] OUTPUT_STATUS --> OUTPUT_HEADER
+
+  - buffer reset
+  - responseHeaderIndex reset
+  """)
+  public void outputStatus() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.buffer = new byte[64];
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.state = HttpExchange._OUTPUT_STATUS;
+    exchange.status = HttpStatus.OK;
+    exchange.versionMajor = 1;
+    exchange.versionMinor = 1;
+
+    exchange.stepOne();
+
+    assertEquals(Arrays.copyOf(exchange.buffer, 17), Bytes.utf8("HTTP/1.1 200 OK\r\n"));
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 17);
     assertEquals(exchange.state, HttpExchange._OUTPUT_HEADER);
   }
 

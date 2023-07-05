@@ -49,12 +49,15 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.error, null);
     // "Connection: close" should set the property
     assertEquals(exchange.keepAlive, false);
-    assertEquals(exchange.method, Method.GET);
+    // method won't be used from this point forward
+    assertEquals(exchange.method, null);
+    // request headers won't be used from this point forward
     assertEquals(exchange.requestHeaders, Map.of());
     assertEquals(exchange.requestHeaderName, null);
-    assertEquals(exchange.requestTarget.toString(), "/");
+    // request target won't be used from this point forward
+    assertEquals(exchange.requestTarget, null);
     // response body set
-    assertEquals(exchange.responseBody, Bytes.utf8("Hello world!\n"));
+    assertEquals(exchange.responseBody, Bytes.utf8("Hello World!\n"));
     // response headers set
     assertEquals(exchange.responseHeaders, List.of(
       new HttpResponseHeader(HeaderName.CONTENT_TYPE, "text/plain; charset=utf-8"),
