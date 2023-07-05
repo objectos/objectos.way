@@ -49,6 +49,7 @@ public class HttpExchangeOutputTest {
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._RESULT);
     // status won't be used from this point forward
     assertEquals(exchange.status, null);

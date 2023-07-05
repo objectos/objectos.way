@@ -51,6 +51,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._HANDLE);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, 1);

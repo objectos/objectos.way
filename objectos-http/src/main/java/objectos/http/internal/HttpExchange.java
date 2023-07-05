@@ -34,56 +34,53 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
 
-  static final byte
-
   // Setup phase
 
-  _SETUP = 1,
+  static final byte _SETUP = 1;
 
-      // Input phase
+  // Input phase
 
-      _INPUT = 2,
-      _INPUT_READ = 3,
+  static final byte _INPUT = 2;
+  static final byte _INPUT_READ = 3;
 
-      // Input / Request Line phase
+  // Input / Request Line phase
 
-      _REQUEST_LINE = 4,
-      _REQUEST_LINE_METHOD = 5,
-      _REQUEST_LINE_METHOD_P = 6,
-      _REQUEST_LINE_TARGET = 7,
-      _REQUEST_LINE_VERSION = 8,
+  static final byte _REQUEST_LINE = 4;
+  static final byte _REQUEST_LINE_METHOD = 5;
+  static final byte _REQUEST_LINE_METHOD_P = 6;
+  static final byte _REQUEST_LINE_TARGET = 7;
+  static final byte _REQUEST_LINE_VERSION = 8;
 
-      // Input / Parse header phase
+  // Input / Parse header phase
 
-      _PARSE_HEADER = 9,
-      _PARSE_HEADER_NAME = 10,
-      _PARSE_HEADER_NAME_CASE_INSENSITIVE = 11,
-      _PARSE_HEADER_VALUE = 12,
+  static final byte _PARSE_HEADER = 9;
+  static final byte _PARSE_HEADER_NAME = 10;
+  static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 11;
+  static final byte _PARSE_HEADER_VALUE = 12;
 
-      // Handle phase
+  // Handle phase
 
-      _HANDLE = 13,
-      _HANDLE_INVOKE = 14,
+  static final byte _HANDLE = 13;
+  static final byte _HANDLE_INVOKE = 14;
 
-      // Output phase
+  // Output phase
 
-      _OUTPUT = 15,
-      _OUTPUT_BODY = 16,
-      _OUTPUT_BUFFER = 17,
-      _OUTPUT_HEADER = 18,
-      _OUTPUT_TERMINATOR = 19,
-      _OUTPUT_STATUS = 20,
+  static final byte _OUTPUT = 15;
+  static final byte _OUTPUT_BODY = 16;
+  static final byte _OUTPUT_BUFFER = 17;
+  static final byte _OUTPUT_HEADER = 18;
+  static final byte _OUTPUT_TERMINATOR = 19;
+  static final byte _OUTPUT_STATUS = 20;
+  static final byte _CLIENT_ERROR = 21;
 
-      _CLIENT_ERROR = 21,
+  // Result phase
 
-      // Result phase
+  static final byte _RESULT = 22;
+  static final byte _RESULT_CLOSE = 23;
+  static final byte _RESULT_ERROR_WRITE = 24;
+  static final byte _FINALLY = 3;
 
-      _RESULT = 22,
-      _RESULT_ERROR_WRITE = 23,
-      _CLOSE = 2,
-      _FINALLY = 3,
-
-      _STOP = 0;
+  static final byte _STOP = 0;
 
   byte[] buffer;
 
@@ -208,6 +205,11 @@ public final class HttpExchange implements Http.Exchange, Runnable {
       case _OUTPUT_HEADER -> outputHeader();
       case _OUTPUT_TERMINATOR -> outputTerminator();
       case _OUTPUT_STATUS -> outputStatus();
+
+      // Result phase
+
+      case _RESULT -> result();
+      case _RESULT_CLOSE -> resultClose();
 
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
@@ -476,7 +478,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
       // TODO log irrecoverable error
 
-      return _CLOSE;
+      return _RESULT_CLOSE;
     }
 
     byte[] bytes;
@@ -928,6 +930,26 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     return toClientError(HttpStatus.BAD_REQUEST);
   }
 
+  private byte result() {
+    if (keepAlive) {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    return resultClose();
+  }
+
+  private byte resultClose() {
+    try {
+      socket.close();
+    } catch (IOException e) {
+      throw new UnsupportedOperationException(
+        "We should log this"
+      );
+    }
+
+    return _STOP;
+  }
+
   private byte setup() {
     // TODO set timeout
 
@@ -955,7 +977,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
     noteSink.send(EIO_READ_ERROR, e);
 
-    return _CLOSE;
+    return _RESULT_CLOSE;
   }
 
   private byte toInputReadIfPossible(byte onRead, HttpStatus onBufferFull) {

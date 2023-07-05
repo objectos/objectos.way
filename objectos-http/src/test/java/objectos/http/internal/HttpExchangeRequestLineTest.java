@@ -50,6 +50,7 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.responseBody, null);
     assertEquals(exchange.responseHeaders, null);
     assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
     assertEquals(exchange.status, null);
     // expect correct parsed version major.minor

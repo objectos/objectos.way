@@ -17,9 +17,11 @@ package objectos.http.internal;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
+import java.util.Map;
 import org.testng.annotations.Test;
 
-public class HttpExchangeSetupTest {
+public class HttpExchangeResultTest {
 
   @Test
   public void http001() {
@@ -28,47 +30,44 @@ public class HttpExchangeSetupTest {
 
     TestingInput.HTTP_001.accept(exchange);
 
-    while (exchange.state < HttpExchange._INPUT) {
+    while (exchange.isActive()) {
       exchange.stepOne();
     }
 
-    // buffer index/limit should have been reset
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.bufferIndex, -1);
+    assertEquals(exchange.bufferLimit, -1);
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, false);
     assertEquals(exchange.method, null);
-    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.requestHeaders, Map.of());
     assertEquals(exchange.requestHeaderName, null);
     assertEquals(exchange.requestTarget, null);
     assertEquals(exchange.responseBody, null);
-    assertEquals(exchange.responseHeaders, null);
+    assertEquals(exchange.responseHeaders, List.of());
     assertEquals(exchange.responseHeadersIndex, -1);
-    assertEquals(exchange.socket.isClosed(), false);
-    assertEquals(exchange.state, HttpExchange._INPUT);
+    // socket closed
+    assertEquals(exchange.socket.isClosed(), true);
+    assertEquals(exchange.state, HttpExchange._STOP);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, -1);
     assertEquals(exchange.versionMinor, -1);
   }
 
   @Test(description = """
-  [#426] HTTP 001: SETUP --> INPUT
-
-  - buffer must be reset
+  [#450] RESULT --> STOP
   """)
-  public void setup01() {
+  public void result() {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    exchange.bufferIndex = -1;
-    exchange.bufferLimit = -1;
-    exchange.state = HttpExchange._SETUP;
+    exchange.keepAlive = false;
+    exchange.socket = TestableSocket.empty();
+    exchange.state = HttpExchange._RESULT;
 
     exchange.stepOne();
 
-    assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, 0);
-    assertEquals(exchange.state, HttpExchange._INPUT);
+    assertEquals(exchange.socket.isClosed(), true);
+    assertEquals(exchange.state, HttpExchange._STOP);
   }
 
 }

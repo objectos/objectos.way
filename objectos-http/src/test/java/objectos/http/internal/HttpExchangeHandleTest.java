@@ -65,6 +65,7 @@ public class HttpExchangeHandleTest {
       new HttpResponseHeader(HeaderName.DATE, "Wed, 28 Jun 2023 12:08:43 GMT")
     ));
     assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._OUTPUT);
     // response status set
     assertEquals(exchange.status, HttpStatus.OK);
