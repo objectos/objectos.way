@@ -22,7 +22,7 @@ public interface TestingInput {
   public record RegularInput(String request) implements TestingInput {
     @Override
     public final void accept(HttpExchange exchange) {
-      exchange.buffer = new byte[1024];
+      exchange.buffer = new byte[512];
       exchange.bufferIndex = -1;
       exchange.bufferLimit = -1;
       exchange.keepAlive = false;

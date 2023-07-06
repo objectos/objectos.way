@@ -13,21 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectos.http.io;
 
-import java.nio.charset.Charset;
-import objectos.http.Http.Header;
-import objectos.http.Http.Status;
-import objectos.http.io.CharWritable;
+@FunctionalInterface
+public interface ByteSinkable {
 
-public interface Response {
-
-  void header(Header.Name name, String value);
-
-  void send(byte[] data);
-
-  void send(CharWritable entity, Charset charset);
-
-  void status(Status status);
+  void writeTo(ByteSink sink);
 
 }

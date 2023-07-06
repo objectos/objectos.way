@@ -199,7 +199,7 @@ public class HttpExchangeParseHeaderTest {
 
       exchange.stepOne();
 
-      assertEquals(exchange.bufferIndex, headerName.bytes.length + 1);
+      assertEquals(exchange.bufferIndex, headerName.bytes.length + 1, headerName.toString());
       assertEquals(exchange.requestHeaderName, headerName);
       assertEquals(exchange.state, HttpExchange._PARSE_HEADER_VALUE);
     }

@@ -46,6 +46,8 @@ public final class Http {
 
     public static final Name HOST = HeaderName.HOST;
 
+    public static final Name TRANSFER_ENCODING = HeaderName.TRANSFER_ENCODING;
+
     public static final Name USER_AGENT = HeaderName.USER_AGENT;
 
   }

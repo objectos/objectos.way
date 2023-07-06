@@ -373,18 +373,23 @@ public final class HttpExchange implements Exchange, Runnable {
     OutputStream outputStream;
     outputStream = socket.getOutputStream();
 
-    if (responseBody == null) {
-      // write headers + terminator only
-      outputStream.write(buffer, 0, bufferLimit);
+    // write headers + terminator
+    outputStream.write(buffer, 0, bufferLimit);
 
+    if (responseBody == null) {
       return _RESULT;
     }
 
     if (responseBody instanceof byte[] bytes) {
-      // write headers + terminator
-      outputStream.write(buffer, 0, bufferLimit);
-
       outputStream.write(bytes, 0, bytes.length);
+
+      return _RESULT;
+    }
+
+    if (responseBody instanceof HttpChunkedChars entity) {
+      bufferLimit = 0;
+
+      entity.write();
 
       return _RESULT;
     }
@@ -620,6 +625,10 @@ public final class HttpExchange implements Exchange, Runnable {
 
       case 'H' -> parseHeaderName0(colonIndex,
         HeaderName.HOST
+      );
+
+      case 'T' -> parseHeaderName0(colonIndex,
+        HeaderName.TRANSFER_ENCODING
       );
 
       case 'U' -> parseHeaderName0(colonIndex,

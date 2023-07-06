@@ -15,6 +15,7 @@
  */
 module objectos.http {
   exports objectos.http;
+  exports objectos.http.io;
   exports objectos.http.media;
   exports objectos.http.server;
 

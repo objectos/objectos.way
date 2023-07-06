@@ -15,10 +15,12 @@
  */
 package objectos.http.internal;
 
+import java.nio.charset.Charset;
 import java.util.Objects;
 import objectos.http.Http.Header.Name;
-import objectos.http.server.Response;
 import objectos.http.Http.Status;
+import objectos.http.io.CharWritable;
+import objectos.http.server.Response;
 
 final class HttpResponse implements Response {
 
@@ -44,6 +46,14 @@ final class HttpResponse implements Response {
   @Override
   public final void send(byte[] data) {
     outer.responseBody = Objects.requireNonNull(data, "data == null");
+  }
+
+  @Override
+  public final void send(CharWritable entity, Charset charset) {
+    Objects.requireNonNull(entity, "entity == null");
+    Objects.requireNonNull(charset, "charset == null");
+
+    outer.responseBody = new HttpChunkedChars(outer, entity, charset);
   }
 
   @Override

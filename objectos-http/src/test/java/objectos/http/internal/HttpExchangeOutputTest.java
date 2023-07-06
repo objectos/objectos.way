@@ -63,6 +63,43 @@ public class HttpExchangeOutputTest {
     assertEquals(socket.outputAsString(), Http001.OUTPUT);
   }
 
+  @Test
+  public void http002() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    Http002.INPUT.accept(exchange);
+
+    while (exchange.state < HttpExchange._RESULT) {
+      exchange.stepOne();
+    }
+
+    // buffer exhausted and reset
+    assertEquals(exchange.bufferIndex, -1);
+    assertEquals(exchange.bufferLimit, -1);
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, null);
+    assertEquals(exchange.requestHeaders, Map.of());
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, List.of());
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
+    assertEquals(exchange.state, HttpExchange._RESULT);
+    // status won't be used from this point forward
+    assertEquals(exchange.status, null);
+    // version won't be used from this point forward
+    assertEquals(exchange.versionMajor, -1);
+    assertEquals(exchange.versionMinor, -1);
+
+    TestableSocket socket;
+    socket = (TestableSocket) exchange.socket;
+
+    assertEquals(socket.outputAsString(), Http002.OUTPUT);
+  }
+
   // OUTPUT
 
   @Test(description = """

@@ -31,6 +31,8 @@ public enum HeaderName implements Http.Header.Name {
 
   HOST("Host", HeaderType.REQUEST),
 
+  TRANSFER_ENCODING("Transfer-Encoding", HeaderType.BOTH),
+
   USER_AGENT("User-Agent", HeaderType.REQUEST);
 
   final byte[] bytes;

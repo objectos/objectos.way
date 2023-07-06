@@ -33,6 +33,8 @@ final class Bytes {
 
   public static final byte DIGIT_9 = '9';
 
+  public static final byte[] CRLF = {CR, LF};
+
   private Bytes() {}
 
   public static boolean isDigit(byte value) {
