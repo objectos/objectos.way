@@ -24,13 +24,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import objectos.http.Http;
-import objectos.http.Http.Handler;
-import objectos.http.Http.Response;
+import objectos.http.server.Exchange;
+import objectos.http.server.Handler;
+import objectos.http.server.Request;
+import objectos.http.server.Response;
 import objectos.lang.Note1;
 import objectos.lang.NoteSink;
 import objectos.util.GrowableList;
 
-public final class HttpExchange implements Http.Exchange, Runnable {
+public final class HttpExchange implements Exchange, Runnable {
 
   public static final Note1<IOException> EIO_READ_ERROR = Note1.error();
 
@@ -94,11 +96,13 @@ public final class HttpExchange implements Http.Exchange, Runnable {
 
   boolean keepAlive;
 
-  Method method;
+  HttpMethod method;
 
   byte nextAction;
 
   NoteSink noteSink;
+
+  Request request;
 
   HeaderName requestHeaderName;
 
@@ -145,6 +149,17 @@ public final class HttpExchange implements Http.Exchange, Runnable {
    * For testing purposes only.
    */
   HttpExchange() {}
+
+  @Override
+  public final Request request() {
+    // TODO check state
+
+    if (request == null) {
+      request = new HttpRequest(this);
+    }
+
+    return request;
+  }
 
   @Override
   public final Response response() {
@@ -748,19 +763,19 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     // based on the first char, we select out method candidate
 
     return switch (first) {
-      case 'C' -> toRequestLineMethod(Method.CONNECT);
+      case 'C' -> toRequestLineMethod(HttpMethod.CONNECT);
 
-      case 'D' -> toRequestLineMethod(Method.DELETE);
+      case 'D' -> toRequestLineMethod(HttpMethod.DELETE);
 
-      case 'G' -> toRequestLineMethod(Method.GET);
+      case 'G' -> toRequestLineMethod(HttpMethod.GET);
 
-      case 'H' -> toRequestLineMethod(Method.HEAD);
+      case 'H' -> toRequestLineMethod(HttpMethod.HEAD);
 
-      case 'O' -> toRequestLineMethod(Method.OPTIONS);
+      case 'O' -> toRequestLineMethod(HttpMethod.OPTIONS);
 
       case 'P' -> _REQUEST_LINE_METHOD_P;
 
-      case 'T' -> toRequestLineMethod(Method.TRACE);
+      case 'T' -> toRequestLineMethod(HttpMethod.TRACE);
 
       // first char does not match any candidate
       // we are sure this is a bad request
@@ -997,7 +1012,7 @@ public final class HttpExchange implements Http.Exchange, Runnable {
     );
   }
 
-  private byte toRequestLineMethod(Method maybe) {
+  private byte toRequestLineMethod(HttpMethod maybe) {
     method = maybe;
 
     return _REQUEST_LINE_METHOD;

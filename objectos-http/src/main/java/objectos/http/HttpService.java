@@ -18,10 +18,10 @@ package objectos.http;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.function.Supplier;
-import objectos.http.Http.Handler;
 import objectos.http.internal.HttpExchange;
 import objectos.http.internal.ServerSocketThread;
 import objectos.http.internal.ServerSocketThreadAdapter;
+import objectos.http.server.Handler;
 import objectos.lang.Check;
 import objectos.lang.NoteSink;
 
@@ -34,7 +34,7 @@ public final class HttpService {
 
   private final int bufferSize;
 
-  private final Supplier<Http.Handler> handlerSupplier;
+  private final Supplier<Handler> handlerSupplier;
 
   private final NoteSink noteSink;
 
@@ -42,7 +42,7 @@ public final class HttpService {
 
   HttpService(SocketAddress address,
               int bufferSize,
-              Supplier<Http.Handler> handlerSupplier,
+              Supplier<Handler> handlerSupplier,
               NoteSink noteSink) {
     this.address = address;
     this.bufferSize = bufferSize;
@@ -62,7 +62,7 @@ public final class HttpService {
   }
 
   public static HttpService create(
-      SocketAddress address, Supplier<Http.Handler> handlerSupplier, Option... options) {
+      SocketAddress address, Supplier<Handler> handlerSupplier, Option... options) {
     Check.notNull(address, "address == null");
     Check.notNull(handlerSupplier, "handlerSupplier == null");
     Check.notNull(options, "options == null");
@@ -120,7 +120,6 @@ public final class HttpService {
 
   private class ThisSelectorThreadAdapter implements ServerSocketThreadAdapter {
 
-    @SuppressWarnings("preview")
     @Override
     public final void acceptSocket(Socket socket) {
       Handler handler;

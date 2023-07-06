@@ -28,7 +28,7 @@ public class HttpExchangeResultTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    TestingInput.HTTP_001.accept(exchange);
+    Http001.INPUT.accept(exchange);
 
     while (exchange.isActive()) {
       exchange.stepOne();

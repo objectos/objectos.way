@@ -15,38 +15,18 @@
  */
 package objectos.http;
 
-import static java.time.temporal.ChronoField.DAY_OF_MONTH;
-import static java.time.temporal.ChronoField.DAY_OF_WEEK;
-import static java.time.temporal.ChronoField.HOUR_OF_DAY;
-import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
-import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
-import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
-import static java.time.temporal.ChronoField.YEAR;
-
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import objectos.http.Http.Header.Name;
 import objectos.http.internal.HeaderName;
 import objectos.http.internal.HttpStatus;
 
 public final class Http {
-
-  public interface Exchange {
-
-    Response response();
-
-  }
-
-  public interface Handler {
-
-    void handle(Exchange exchange);
-
-  }
 
   public static final class Header {
 
@@ -70,19 +50,15 @@ public final class Http {
 
   }
 
-  public interface Response {
-
-    void header(Name name, String value);
-
-    void send(byte[] data);
-
-    void status(Status status);
+  public sealed interface Method permits objectos.http.internal.HttpMethod {
 
   }
 
   public interface Status {
 
     Status OK_200 = HttpStatus.OK;
+
+    Status NOT_ALLOWED_405 = HttpStatus.NOT_ALLOWED;
 
     int code();
 
@@ -106,11 +82,11 @@ public final class Http {
     dow.put(6L, "Sat");
     dow.put(7L, "Sun");
 
-    b.appendText(DAY_OF_WEEK, dow);
+    b.appendText(ChronoField.DAY_OF_WEEK, dow);
 
     b.appendLiteral(", ");
 
-    b.appendValue(DAY_OF_MONTH, 2);
+    b.appendValue(ChronoField.DAY_OF_MONTH, 2);
 
     b.appendLiteral(' ');
 
@@ -130,23 +106,23 @@ public final class Http {
     moy.put(11L, "Nov");
     moy.put(12L, "Dec");
 
-    b.appendText(MONTH_OF_YEAR, moy);
+    b.appendText(ChronoField.MONTH_OF_YEAR, moy);
 
     b.appendLiteral(' ');
 
-    b.appendValue(YEAR, 4);
+    b.appendValue(ChronoField.YEAR, 4);
 
     b.appendLiteral(' ');
 
-    b.appendValue(HOUR_OF_DAY, 2);
+    b.appendValue(ChronoField.HOUR_OF_DAY, 2);
 
     b.appendLiteral(':');
 
-    b.appendValue(MINUTE_OF_HOUR, 2);
+    b.appendValue(ChronoField.MINUTE_OF_HOUR, 2);
 
     b.appendLiteral(':');
 
-    b.appendValue(SECOND_OF_MINUTE, 2);
+    b.appendValue(ChronoField.SECOND_OF_MINUTE, 2);
 
     b.appendLiteral(' ');
 

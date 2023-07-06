@@ -25,8 +25,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import objectos.http.internal.Http001;
+import objectos.http.internal.Http002;
 import objectos.http.internal.TestingHandler;
-import objectos.http.internal.TestingInput;
 import objectos.http.internal.TestingInput.RegularInput;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -62,12 +63,25 @@ public class HttpTest {
   @Test
   public void http001() throws IOException {
     try (Socket socket = new Socket(address, port)) {
-      req(socket, TestingInput.HTTP_001);
+      req(socket, Http001.INPUT);
 
       assertEquals(
         resp(socket),
 
-        TestingHandler.HTTP001
+        Http001.OUTPUT
+      );
+    }
+  }
+
+  @Test
+  public void http002() throws IOException {
+    try (Socket socket = new Socket(address, port)) {
+      req(socket, Http002.INPUT);
+
+      assertEquals(
+        resp(socket),
+
+        Http002.OUTPUT
       );
     }
   }

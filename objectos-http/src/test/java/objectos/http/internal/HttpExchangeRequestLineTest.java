@@ -30,7 +30,7 @@ public class HttpExchangeRequestLineTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    TestingInput.HTTP_001.accept(exchange);
+    Http001.INPUT.accept(exchange);
 
     while (exchange.state < HttpExchange._PARSE_HEADER) {
       exchange.stepOne();
@@ -38,11 +38,11 @@ public class HttpExchangeRequestLineTest {
 
     // first line consumed
     assertEquals(exchange.bufferIndex, "GET / HTTP/1.1\r\n".length());
-    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, false);
     // expect correct method
-    assertEquals(exchange.method, Method.GET);
+    assertEquals(exchange.method, HttpMethod.GET);
     assertEquals(exchange.requestHeaders, null);
     assertEquals(exchange.requestHeaderName, null);
     // expect correct parsed target
@@ -65,15 +65,15 @@ public class HttpExchangeRequestLineTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    record Pair(String request, Method method) {}
+    record Pair(String request, HttpMethod method) {}
 
     List<Pair> pairs = List.of(
-      new Pair("CONNECT /", Method.CONNECT),
-      new Pair("DELETE /", Method.DELETE),
-      new Pair("HEAD /", Method.HEAD),
-      new Pair("GET /", Method.GET),
-      new Pair("OPTIONS /", Method.OPTIONS),
-      new Pair("TRACE /", Method.TRACE)
+      new Pair("CONNECT /", HttpMethod.CONNECT),
+      new Pair("DELETE /", HttpMethod.DELETE),
+      new Pair("HEAD /", HttpMethod.HEAD),
+      new Pair("GET /", HttpMethod.GET),
+      new Pair("OPTIONS /", HttpMethod.OPTIONS),
+      new Pair("TRACE /", HttpMethod.TRACE)
     );
 
     for (var pair : pairs) {
@@ -136,7 +136,7 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.method = Method.GET;
+    exchange.method = HttpMethod.GET;
     exchange.state = HttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
@@ -160,7 +160,7 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.method = Method.GET;
+    exchange.method = HttpMethod.GET;
     exchange.state = HttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();
@@ -183,7 +183,7 @@ public class HttpExchangeRequestLineTest {
     exchange.buffer = bytes;
     exchange.bufferIndex = 0;
     exchange.bufferLimit = bytes.length;
-    exchange.method = Method.GET;
+    exchange.method = HttpMethod.GET;
     exchange.state = HttpExchange._REQUEST_LINE_METHOD;
 
     exchange.stepOne();

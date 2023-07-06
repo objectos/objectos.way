@@ -15,56 +15,30 @@
  */
 package objectos.http.internal;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.function.Supplier;
-import objectos.http.Http;
-import objectos.http.Http.Exchange;
-import objectos.http.Http.Handler;
+import objectos.http.server.Exchange;
+import objectos.http.server.Handler;
+import objectos.http.server.Request;
 
-public final class TestingHandler implements Http.Handler, Supplier<Http.Handler> {
-
-  public static final String HTTP001 = """
-      HTTP/1.1 200 OK<CRLF>
-      Content-Type: text/plain; charset=utf-8<CRLF>
-      Content-Length: 13<CRLF>
-      Date: Wed, 28 Jun 2023 12:08:43 GMT<CRLF>
-      <CRLF>
-      Hello World!
-      """.replace("<CRLF>\n", "\r\n");
-
-  public static final ZonedDateTime DATE = ZonedDateTime.of(
-    LocalDate.of(2023, 6, 28),
-    LocalTime.of(9, 8, 43),
-    ZoneId.of("GMT-3")
-  );
+public final class TestingHandler implements Handler, Supplier<Handler> {
 
   public static final TestingHandler INSTANCE = new TestingHandler();
 
   private TestingHandler() {}
 
   @Override
-  public final void handle(Exchange exchange) {
-    final byte[] bytes;
-    bytes = Bytes.utf8("Hello World!\n");
-
-    Http.Response response;
-    response = exchange.response();
-
-    response.status(Http.Status.OK_200);
-
-    response.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
-
-    response.header(Http.Header.CONTENT_LENGTH, Long.toString(bytes.length));
-
-    response.header(Http.Header.DATE, Http.formatDate(DATE));
-
-    response.send(bytes);
-  }
+  public final Handler get() { return this; }
 
   @Override
-  public final Handler get() { return this; }
+  public final void handle(Exchange exchange) {
+    Request request;
+    request = exchange.request();
+
+    switch (request.path()) {
+      case "/" -> Http001.INSTANCE.handle(exchange);
+
+      case "/chunked.txt" -> Http002.INSTANCE.handle(exchange);
+    }
+  }
 
 }

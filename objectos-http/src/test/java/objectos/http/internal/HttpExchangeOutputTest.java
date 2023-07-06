@@ -31,7 +31,7 @@ public class HttpExchangeOutputTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    TestingInput.HTTP_001.accept(exchange);
+    Http001.INPUT.accept(exchange);
 
     while (exchange.state < HttpExchange._RESULT) {
       exchange.stepOne();
@@ -60,7 +60,7 @@ public class HttpExchangeOutputTest {
     TestableSocket socket;
     socket = (TestableSocket) exchange.socket;
 
-    assertEquals(socket.outputAsString(), TestingHandler.HTTP001);
+    assertEquals(socket.outputAsString(), Http001.OUTPUT);
   }
 
   // OUTPUT

@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import objectos.http.Http;
-import objectos.http.Http.Exchange;
+import objectos.http.server.Exchange;
+import objectos.http.server.Handler;
+import objectos.http.server.Response;
 import objectos.util.GrowableList;
 import org.testng.annotations.Test;
 
@@ -38,14 +40,14 @@ public class HttpExchangeHandleTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    TestingInput.HTTP_001.accept(exchange);
+    Http001.INPUT.accept(exchange);
 
     while (exchange.state < HttpExchange._OUTPUT) {
       exchange.stepOne();
     }
 
-    assertEquals(exchange.bufferIndex, TestingInput.HTTP_001.requestLength());
-    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.bufferIndex, Http001.INPUT.requestLength());
+    assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
     // "Connection: close" should set the property
     assertEquals(exchange.keepAlive, false);
@@ -113,10 +115,10 @@ public class HttpExchangeHandleTest {
       ZoneId.of("GMT-3")
     );
 
-    exchange.handler = new Http.Handler() {
+    exchange.handler = new Handler() {
       @Override
       public void handle(Exchange exchange) {
-        Http.Response response;
+        Response response;
         response = exchange.response();
 
         response.status(Http.Status.OK_200);

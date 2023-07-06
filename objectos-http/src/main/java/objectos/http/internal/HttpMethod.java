@@ -13,11 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
-  exports objectos.http.server;
+package objectos.http.internal;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+import java.nio.charset.StandardCharsets;
+import objectos.http.Http;
+
+public enum HttpMethod implements Http.Method {
+
+  CONNECT,
+
+  DELETE,
+
+  GET,
+
+  HEAD,
+
+  OPTIONS,
+
+  PATCH,
+
+  POST,
+
+  PUT,
+
+  TRACE;
+
+  final byte[] nameAndSpace = (name() + " ").getBytes(StandardCharsets.UTF_8);
+
 }

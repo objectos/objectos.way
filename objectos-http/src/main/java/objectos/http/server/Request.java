@@ -13,30 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.internal;
+package objectos.http.server;
 
-import java.nio.charset.StandardCharsets;
+public interface Request {
 
-public enum Method {
-
-  CONNECT,
-
-  DELETE,
-
-  GET,
-
-  HEAD,
-
-  OPTIONS,
-
-  PATCH,
-
-  POST,
-
-  PUT,
-
-  TRACE;
-
-  final byte[] nameAndSpace = (name() + " ").getBytes(StandardCharsets.UTF_8);
+  String path();
 
 }

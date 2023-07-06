@@ -16,11 +16,11 @@
 package objectos.http.internal;
 
 import java.util.Objects;
-import objectos.http.Http;
 import objectos.http.Http.Header.Name;
+import objectos.http.server.Response;
 import objectos.http.Http.Status;
 
-final class HttpResponse implements Http.Response {
+final class HttpResponse implements Response {
 
   private final HttpExchange outer;
 

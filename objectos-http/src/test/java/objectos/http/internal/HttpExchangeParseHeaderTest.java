@@ -29,18 +29,18 @@ public class HttpExchangeParseHeaderTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    TestingInput.HTTP_001.accept(exchange);
+    Http001.INPUT.accept(exchange);
 
     while (exchange.state < HttpExchange._HANDLE) {
       exchange.stepOne();
     }
 
     // buffer should have been exhausted
-    assertEquals(exchange.bufferIndex, TestingInput.HTTP_001.requestLength());
-    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.bufferIndex, Http001.INPUT.requestLength());
+    assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, false);
-    assertEquals(exchange.method, Method.GET);
+    assertEquals(exchange.method, HttpMethod.GET);
     // request headers parsed
     assertEquals(exchange.requestHeaders, Map.of(
       HeaderName.HOST, TestingInput.hv("www.example.com"),

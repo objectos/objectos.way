@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
-  exports objectos.http.server;
-
-  requires transitive objectos.lang;
-  requires objectos.util;
-}
+/**
+ * @since 0.7
+ */
+package objectos.http.server;

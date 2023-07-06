@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.http {
-  exports objectos.http;
-  exports objectos.http.media;
-  exports objectos.http.server;
+package objectos.http.internal;
 
-  requires transitive objectos.lang;
-  requires objectos.util;
+import objectos.http.server.Request;
+
+final class HttpRequest implements Request {
+
+  private final HttpExchange outer;
+
+  HttpRequest(HttpExchange outer) {
+    this.outer = outer;
+  }
+
+  @Override
+  public final String path() {
+    return outer.requestTarget.toString();
+  }
+
 }

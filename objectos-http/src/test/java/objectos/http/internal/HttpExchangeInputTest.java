@@ -31,14 +31,14 @@ public class HttpExchangeInputTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    TestingInput.HTTP_001.accept(exchange);
+    Http001.INPUT.accept(exchange);
 
     while (exchange.state < HttpExchange._REQUEST_LINE) {
       exchange.stepOne();
     }
 
     assertEquals(exchange.bufferIndex, 0);
-    assertEquals(exchange.bufferLimit, TestingInput.HTTP_001.requestLength());
+    assertEquals(exchange.bufferLimit, Http001.INPUT.requestLength());
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, false);
     assertEquals(exchange.method, null);

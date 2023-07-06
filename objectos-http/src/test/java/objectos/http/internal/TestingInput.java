@@ -47,15 +47,6 @@ public interface TestingInput {
     }
   }
 
-  RegularInput HTTP_001 = new RegularInput(
-    """
-    GET / HTTP/1.1
-    Host: www.example.com
-    Connection: close
-
-    """.replace("\n", "\r\n")
-  );
-
   public static HeaderValue hv(String string) {
     final byte[] bytes;
     bytes = Bytes.utf8(string);

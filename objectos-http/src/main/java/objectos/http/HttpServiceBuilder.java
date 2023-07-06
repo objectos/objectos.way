@@ -17,7 +17,7 @@ package objectos.http;
 
 import java.net.SocketAddress;
 import java.util.function.Supplier;
-import objectos.http.Http.Handler;
+import objectos.http.server.Handler;
 import objectos.lang.NoOpNoteSink;
 import objectos.lang.NoteSink;
 
@@ -31,7 +31,7 @@ final class HttpServiceBuilder {
 
   private NoteSink noteSink = NoOpNoteSink.getInstance();
 
-  HttpServiceBuilder(SocketAddress address, Supplier<Http.Handler> handlerSupplier) {
+  HttpServiceBuilder(SocketAddress address, Supplier<Handler> handlerSupplier) {
     this.address = address;
 
     this.handlerSupplier = handlerSupplier;
