@@ -158,7 +158,6 @@ limitations under the License.
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
-							<additionalOptions>--enable-preview</additionalOptions>
 							<destDir>api</destDir>
 							<doctitle>The Objectos ${project.version} API</doctitle>
 							<windowtitle>The Objectos ${project.version} API</windowtitle>
@@ -305,6 +304,7 @@ limitations under the License.
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.5.0</version>
 					<configuration>
+						<additionalOptions>--enable-preview</additionalOptions>
 						<debug>true</debug>
 						<minmemory>1g</minmemory>
 						<maxmemory>2g</maxmemory>
