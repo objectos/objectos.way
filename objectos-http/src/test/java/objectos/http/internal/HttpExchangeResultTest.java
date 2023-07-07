@@ -70,4 +70,21 @@ public class HttpExchangeResultTest {
     assertEquals(exchange.state, HttpExchange._STOP);
   }
 
+  @Test(description = """
+  [#453] RESULT --> SETUP
+  """)
+  public void resultToSetup() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.keepAlive = true;
+    exchange.socket = TestableSocket.empty();
+    exchange.state = HttpExchange._RESULT;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.socket.isClosed(), false);
+    assertEquals(exchange.state, HttpExchange._SETUP);
+  }
+
 }

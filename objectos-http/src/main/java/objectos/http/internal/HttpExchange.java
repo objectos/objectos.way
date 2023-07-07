@@ -271,11 +271,11 @@ public final class HttpExchange implements Exchange, Runnable {
     HeaderValue connection;
     connection = requestHeaders.getOrDefault(HeaderName.CONNECTION, HeaderValue.EMPTY);
 
-    if (connection.contentEquals("keep-alive")) {
+    if (connection.contentEquals(Bytes.KEEP_ALIVE)) {
       return true;
     }
 
-    if (connection.contentEquals("close")) {
+    if (connection.contentEquals(Bytes.CLOSE)) {
       return false;
     }
 
@@ -958,7 +958,7 @@ public final class HttpExchange implements Exchange, Runnable {
 
   private byte result() {
     if (keepAlive) {
-      throw new UnsupportedOperationException("Implement me");
+      return _SETUP;
     }
 
     return resultClose();

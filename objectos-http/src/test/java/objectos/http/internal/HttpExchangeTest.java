@@ -57,4 +57,38 @@ public class HttpExchangeTest {
     assertEquals(socket.outputAsString(), Http003.OUTPUT);
   }
 
+  @Test
+  public void http004() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    Http004.INPUT.accept(exchange);
+
+    while (exchange.isActive()) {
+      exchange.stepOne();
+    }
+
+    assertEquals(exchange.bufferIndex, -1);
+    assertEquals(exchange.bufferLimit, -1);
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, null);
+    assertEquals(exchange.requestHeaders, Map.of());
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget, null);
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, List.of());
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), true);
+    assertEquals(exchange.state, HttpExchange._STOP);
+    assertEquals(exchange.status, null);
+    assertEquals(exchange.versionMajor, -1);
+    assertEquals(exchange.versionMinor, -1);
+
+    TestableSocket socket;
+    socket = (TestableSocket) exchange.socket;
+
+    assertEquals(socket.outputAsString(), Http004.OUTPUT);
+  }
+
 }

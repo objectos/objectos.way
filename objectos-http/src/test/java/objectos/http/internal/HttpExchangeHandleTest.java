@@ -75,6 +75,46 @@ public class HttpExchangeHandleTest {
     assertEquals(exchange.versionMinor, 1);
   }
 
+  @Test
+  public void http004() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    Http004.INPUT.accept(exchange);
+
+    while (exchange.state < HttpExchange._OUTPUT) {
+      exchange.stepOne();
+    }
+
+    assertEquals(exchange.bufferIndex, Http004.INPUT01.length());
+    assertEquals(exchange.bufferLimit, Http004.INPUT01.length());
+    assertEquals(exchange.error, null);
+    // "Connection: close" should set the property
+    assertEquals(exchange.keepAlive, true);
+    // method won't be used from this point forward
+    assertEquals(exchange.method, null);
+    // request headers won't be used from this point forward
+    assertEquals(exchange.requestHeaders, Map.of());
+    assertEquals(exchange.requestHeaderName, null);
+    // request target won't be used from this point forward
+    assertEquals(exchange.requestTarget, null);
+    // response body set
+    assertEquals(exchange.responseBody, Bytes.utf8(Http004.BODY01));
+    // response headers set
+    assertEquals(exchange.responseHeaders, List.of(
+      new HttpResponseHeader(HeaderName.CONTENT_TYPE, "text/html; charset=utf-8"),
+      new HttpResponseHeader(HeaderName.CONTENT_LENGTH, "171"),
+      new HttpResponseHeader(HeaderName.DATE, "Fri, 07 Jul 2023 14:11:45 GMT")
+    ));
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
+    assertEquals(exchange.state, HttpExchange._OUTPUT);
+    // response status set
+    assertEquals(exchange.status, HttpStatus.OK);
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
+
   @Test(description = """
   [#448] HANDLE --> HANDLE_INVOKE
 
@@ -86,18 +126,30 @@ public class HttpExchangeHandleTest {
     HttpExchange exchange;
     exchange = new HttpExchange();
 
-    exchange.keepAlive = false;
-    exchange.requestHeaders = Map.of(HeaderName.CONNECTION, hv("Close"));
-    exchange.responseBody = Bytes.utf8("body");
-    exchange.responseHeaders = null;
-    exchange.state = HttpExchange._HANDLE;
+    record Test(String connection, boolean keepAlive) {}
 
-    exchange.stepOne();
+    List<Test> tests;
+    tests = List.of(
+      new Test("Close", false),
+      new Test("close", false),
+      new Test("Keep-Alive", true),
+      new Test("keep-alive", true)
+    );
 
-    assertEquals(exchange.keepAlive, false);
-    assertEquals(exchange.responseBody, null);
-    assertNotNull(exchange.responseHeaders);
-    assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
+    for (Test test : tests) {
+      exchange.keepAlive = false;
+      exchange.requestHeaders = Map.of(HeaderName.CONNECTION, hv(test.connection));
+      exchange.responseBody = Bytes.utf8("body");
+      exchange.responseHeaders = null;
+      exchange.state = HttpExchange._HANDLE;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.keepAlive, test.keepAlive);
+      assertEquals(exchange.responseBody, null);
+      assertNotNull(exchange.responseHeaders);
+      assertEquals(exchange.state, HttpExchange._HANDLE_INVOKE);
+    }
   }
 
   @Test

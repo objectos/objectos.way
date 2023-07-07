@@ -35,6 +35,10 @@ final class Bytes {
 
   public static final byte[] CRLF = {CR, LF};
 
+  public static final byte[] CLOSE = utf8("close");
+
+  public static final byte[] KEEP_ALIVE = utf8("keep-alive");
+
   private Bytes() {}
 
   public static boolean isDigit(byte value) {

@@ -23,25 +23,25 @@ record HeaderValue(byte[] buffer, int start, int end) {
 
   public static final HeaderValue EMPTY = new HeaderValue(ByteArrays.empty(), 0, 0);
 
-  public final boolean contentEquals(String string) {
-    int thatLength;
-    thatLength = string.length();
-
+  public final boolean contentEquals(byte[] that) {
     int thisLength;
     thisLength = end - start;
 
-    if (thisLength != thatLength) {
+    if (thisLength != that.length) {
       return false;
     }
 
-    for (int i = start; i < end; i++) {
+    for (int offset = 0; offset < thisLength; offset++) {
       byte ch;
-      ch = buffer[i];
+      ch = buffer[start + offset];
 
-      byte low;
-      low = Bytes.toLowerCase(ch);
+      byte thisLow;
+      thisLow = Bytes.toLowerCase(ch);
 
-      if (ch != low) {
+      byte thatLow;
+      thatLow = that[offset];
+
+      if (thisLow != thatLow) {
         return false;
       }
     }

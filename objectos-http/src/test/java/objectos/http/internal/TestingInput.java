@@ -22,24 +22,8 @@ public interface TestingInput {
   public record RegularInput(String request) implements TestingInput {
     @Override
     public final void accept(HttpExchange exchange) {
-      exchange.buffer = new byte[512];
-      exchange.bufferIndex = -1;
-      exchange.bufferLimit = -1;
-      exchange.keepAlive = false;
-      exchange.error = null;
-      exchange.handler = TestingHandler.INSTANCE;
-      exchange.method = null;
-      exchange.requestHeaders = null;
-      exchange.requestHeaderName = null;
-      exchange.requestTarget = null;
-      exchange.responseBody = null;
-      exchange.responseHeaders = null;
-      exchange.responseHeadersIndex = -1;
+      TestingInput.regularAccept(exchange);
       exchange.socket = TestableSocket.of(request);
-      exchange.state = HttpExchange._SETUP;
-      exchange.status = null;
-      exchange.versionMajor = -1;
-      exchange.versionMinor = -1;
     }
 
     public int requestLength() {
@@ -47,11 +31,44 @@ public interface TestingInput {
     }
   }
 
-  public static HeaderValue hv(String string) {
+  public record KeepAliveInput(String... requests) implements TestingInput {
+    public KeepAliveInput(String... requests) {
+      this.requests = requests.clone();
+    }
+    @Override
+    public final void accept(HttpExchange exchange) {
+      TestingInput.regularAccept(exchange);
+      Object[] data = requests.clone();
+      exchange.socket = TestableSocket.of(data);
+    }
+  }
+
+  static HeaderValue hv(String string) {
     final byte[] bytes;
     bytes = Bytes.utf8(string);
 
     return new HeaderValue(bytes, 0, bytes.length);
+  }
+
+  private static void regularAccept(HttpExchange exchange) {
+    exchange.buffer = new byte[512];
+    exchange.bufferIndex = -1;
+    exchange.bufferLimit = -1;
+    exchange.keepAlive = false;
+    exchange.error = null;
+    exchange.handler = TestingHandler.INSTANCE;
+    exchange.method = null;
+    exchange.requestHeaders = null;
+    exchange.requestHeaderName = null;
+    exchange.requestTarget = null;
+    exchange.responseBody = null;
+    exchange.responseHeaders = null;
+    exchange.responseHeadersIndex = -1;
+    exchange.socket = null;
+    exchange.state = HttpExchange._SETUP;
+    exchange.status = null;
+    exchange.versionMajor = -1;
+    exchange.versionMinor = -1;
   }
 
 }

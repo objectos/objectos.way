@@ -38,6 +38,8 @@ public final class TestingHandler implements Handler, Supplier<Handler> {
       case "/" -> Http001.INSTANCE.handle(exchange);
 
       case "/chunked.txt" -> Http002.INSTANCE.handle(exchange);
+
+      case "/login", "/login.css" -> Http004.INSTANCE.handle(exchange);
     }
   }
 

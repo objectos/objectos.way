@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import objectos.http.internal.Http001;
 import objectos.http.internal.Http002;
 import objectos.http.internal.Http003;
+import objectos.http.internal.Http004;
 import objectos.http.internal.TestingHandler;
 import objectos.http.internal.TestingInput.RegularInput;
 import org.testng.annotations.AfterClass;
@@ -100,6 +101,19 @@ public class HttpTest {
     }
   }
 
+  @Test(timeOut = 1000)
+  public void http004() throws IOException {
+    try (Socket socket = new Socket(address, port)) {
+      req(socket, Http004.INPUT01);
+
+      resp(socket, Http004.OUTPUT01);
+
+      req(socket, Http004.INPUT02);
+
+      resp(socket, Http004.OUTPUT02);
+    }
+  }
+
   @AfterClass(alwaysRun = true)
   public void stop() throws Exception {
     if (server != null) {
@@ -129,6 +143,18 @@ public class HttpTest {
     bytes = in.readAllBytes();
 
     return new String(bytes, StandardCharsets.UTF_8);
+  }
+
+  private void resp(Socket socket, String expected) throws IOException {
+    InputStream in;
+    in = socket.getInputStream();
+
+    byte[] bytes;
+    bytes = in.readNBytes(expected.length());
+
+    var res = new String(bytes, StandardCharsets.UTF_8);
+
+    assertEquals(res, expected);
   }
 
 }
