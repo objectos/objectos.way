@@ -27,6 +27,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import objectos.http.internal.Http001;
 import objectos.http.internal.Http002;
+import objectos.http.internal.Http003;
 import objectos.http.internal.TestingHandler;
 import objectos.http.internal.TestingInput.RegularInput;
 import org.testng.annotations.AfterClass;
@@ -82,6 +83,19 @@ public class HttpTest {
         resp(socket),
 
         Http002.OUTPUT
+      );
+    }
+  }
+
+  @Test
+  public void http003() throws IOException {
+    try (Socket socket = new Socket(address, port)) {
+      req(socket, Http003.INPUT);
+
+      assertEquals(
+        resp(socket),
+
+        Http003.OUTPUT
       );
     }
   }

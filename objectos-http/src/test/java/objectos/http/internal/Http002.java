@@ -28,6 +28,9 @@ import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Response;
 
+/**
+ * Transfer-Encoding: Chunked
+ */
 public final class Http002 implements Handler {
 
   public static final RegularInput INPUT = new RegularInput(

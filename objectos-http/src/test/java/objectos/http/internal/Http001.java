@@ -25,6 +25,9 @@ import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Response;
 
+/**
+ * Minimal GET request
+ */
 public final class Http001 implements Handler {
 
   public static final RegularInput INPUT = new RegularInput(

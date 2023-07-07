@@ -259,6 +259,30 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
   }
 
+  @Test(description = """
+  [#452] HTTP 001: PARSE_HEADER_NAME --> PARSE_HEADER_VALUE (not found)
+
+  - header name is unknown
+  """)
+  public void parseHeaderNameToParseHeaderValue() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = Bytes.utf8("Foo: Bar\r\n");
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._PARSE_HEADER_NAME;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 4);
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER_VALUE);
+  }
+
   // PARSE_HEADER_VALUE
 
   @Test(description = """
@@ -337,6 +361,45 @@ public class HttpExchangeParseHeaderTest {
       assertEquals(exchange.bufferIndex, bytes.length);
       assertEquals(exchange.requestHeaders.size(), 1);
       assertEquals(exchange.requestHeaders.get(HeaderName.HOST).toString(), "");
+      assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    }
+  }
+
+  @Test(description = """
+  [#452] HTTP 001: PARSE_HEADER_VALUE --> PARSE_HEADER
+
+  - semi-happy path: header name is unknown
+  """)
+  public void parseHeaderValueHeaderNameIsUnknown() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    List<String> requests = List.of(
+      "Foo: foobar\r\n",
+      "Foo: foobar\n",
+      "Foo:   foobar \r\n",
+      "Foo:   foobar \n",
+      "Foo: \t  foobar \t\r\n",
+      "Foo: \t  foobar \t\n",
+      "Foo:foobar\r\n",
+      "Foo:foobar\n"
+    );
+
+    for (var request : requests) {
+      byte[] bytes;
+      bytes = Bytes.utf8(request);
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 4;
+      exchange.bufferLimit = bytes.length;
+      exchange.requestHeaders = null;
+      exchange.requestHeaderName = null;
+      exchange.state = HttpExchange._PARSE_HEADER_VALUE;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, bytes.length);
+      assertEquals(exchange.requestHeaders, null);
       assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
     }
   }

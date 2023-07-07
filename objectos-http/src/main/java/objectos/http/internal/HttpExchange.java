@@ -606,71 +606,69 @@ public final class HttpExchange implements Exchange, Runnable {
     final byte first;
     first = bufferGet(nameStart);
 
+    // bufferIndex will resume immediately after colon
+
+    bufferIndex = colonIndex + 1;
+
     // ad hoc hash map
 
     return switch (first) {
-      case 'A' -> parseHeaderName0(colonIndex,
+      case 'A' -> parseHeaderName0(nameStart,
         HeaderName.ACCEPT_ENCODING
       );
 
-      case 'C' -> parseHeaderName0(colonIndex,
+      case 'C' -> parseHeaderName0(nameStart,
         HeaderName.CONNECTION,
         HeaderName.CONTENT_LENGTH,
         HeaderName.CONTENT_TYPE
       );
 
-      case 'D' -> parseHeaderName0(colonIndex,
+      case 'D' -> parseHeaderName0(nameStart,
         HeaderName.DATE
       );
 
-      case 'H' -> parseHeaderName0(colonIndex,
+      case 'H' -> parseHeaderName0(nameStart,
         HeaderName.HOST
       );
 
-      case 'T' -> parseHeaderName0(colonIndex,
+      case 'T' -> parseHeaderName0(nameStart,
         HeaderName.TRANSFER_ENCODING
       );
 
-      case 'U' -> parseHeaderName0(colonIndex,
+      case 'U' -> parseHeaderName0(nameStart,
         HeaderName.USER_AGENT
       );
 
-      default -> _PARSE_HEADER_NAME_CASE_INSENSITIVE;
+      default -> _PARSE_HEADER_VALUE;
     };
   }
 
-  private byte parseHeaderName0(int colonIndex, HeaderName candidate) {
+  private byte parseHeaderName0(int nameStart, HeaderName candidate) {
     final byte[] candidateBytes;
     candidateBytes = candidate.bytes;
 
-    if (bufferEquals(candidateBytes, bufferIndex)) {
+    if (bufferEquals(candidateBytes, nameStart)) {
       requestHeaderName = candidate;
-
-      // bufferIndex will resume immediately after colon
-
-      bufferIndex = colonIndex + 1;
-
-      return _PARSE_HEADER_VALUE;
     }
 
-    return _PARSE_HEADER_NAME_CASE_INSENSITIVE;
+    return _PARSE_HEADER_VALUE;
   }
 
-  private byte parseHeaderName0(int colonIndex, HeaderName c0, HeaderName c1, HeaderName c2) {
+  private byte parseHeaderName0(int nameStart, HeaderName c0, HeaderName c1, HeaderName c2) {
     byte result;
-    result = parseHeaderName0(colonIndex, c0);
+    result = parseHeaderName0(nameStart, c0);
 
-    if (result == _PARSE_HEADER_VALUE) {
+    if (requestHeaderName != null) {
       return result;
     }
 
-    result = parseHeaderName0(colonIndex, c1);
+    result = parseHeaderName0(nameStart, c1);
 
-    if (result == _PARSE_HEADER_VALUE) {
+    if (requestHeaderName != null) {
       return result;
     }
 
-    return parseHeaderName0(colonIndex, c2);
+    return parseHeaderName0(nameStart, c2);
   }
 
   private byte parseHeaderValue() {
@@ -732,26 +730,30 @@ public final class HttpExchange implements Exchange, Runnable {
       }
     }
 
-    HeaderValue headerValue;
-    headerValue = new HeaderValue(buffer, valueStart, valueEnd);
+    if (requestHeaderName != null) {
+      HeaderValue headerValue;
+      headerValue = new HeaderValue(buffer, valueStart, valueEnd);
 
-    if (requestHeaders == null) {
-      requestHeaders = new EnumMap<>(HeaderName.class);
-    }
+      if (requestHeaders == null) {
+        requestHeaders = new EnumMap<>(HeaderName.class);
+      }
 
-    HeaderValue previousValue;
-    previousValue = requestHeaders.put(requestHeaderName, headerValue);
+      HeaderValue previousValue;
+      previousValue = requestHeaders.put(requestHeaderName, headerValue);
 
-    if (previousValue != null) {
-      throw new UnsupportedOperationException("Implement me");
+      if (previousValue != null) {
+        throw new UnsupportedOperationException("Implement me");
+      }
+
+      // reset header name just in case
+
+      requestHeaderName = null;
     }
 
     // we have found the value.
     // bufferIndex should point to the position immediately after the LF char
 
     bufferIndex = lfIndex + 1;
-
-    requestHeaderName = null;
 
     return _PARSE_HEADER;
   }
