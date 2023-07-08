@@ -162,4 +162,27 @@ public class HttpExchangeInputTest {
     assertSame(noteSink.value1, error);
   }
 
+  @Test(description = """
+  [#428] HTTP 001: INPUT_READ --> CLOSE
+
+  - EOF
+  """)
+  public void inputRead03() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    exchange.buffer = new byte[64];
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = 0;
+    exchange.nextAction = HttpExchange._REQUEST_LINE;
+    exchange.socket = TestableSocket.empty();
+    exchange.state = HttpExchange._INPUT_READ;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.bufferLimit, 0);
+    assertEquals(exchange.state, HttpExchange._RESULT_CLOSE);
+  }
+
 }

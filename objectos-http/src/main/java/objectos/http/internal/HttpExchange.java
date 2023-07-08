@@ -226,6 +226,12 @@ public final class HttpExchange implements Exchange, Runnable {
       case _RESULT -> result();
       case _RESULT_CLOSE -> resultClose();
 
+      case _CLIENT_ERROR -> {
+        throw new UnsupportedOperationException(
+          "status=" + status, error
+        );
+      }
+
       default -> throw new UnsupportedOperationException(
         "Implement me :: state=" + state
       );
@@ -331,7 +337,7 @@ public final class HttpExchange implements Exchange, Runnable {
     }
 
     if (bytesRead < 0) {
-      throw new UnsupportedOperationException("Implement me");
+      return _RESULT_CLOSE;
     }
 
     bufferLimit += bytesRead;
