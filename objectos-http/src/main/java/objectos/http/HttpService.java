@@ -38,7 +38,7 @@ public final class HttpService {
 
   private final NoteSink noteSink;
 
-  private ServerSocketThread thread;
+  private ServerSocketThread serverThread;
 
   HttpService(SocketAddress address,
               int bufferSize,
@@ -98,13 +98,13 @@ public final class HttpService {
     ThisSelectorThreadAdapter adapter;
     adapter = new ThisSelectorThreadAdapter();
 
-    thread = ServerSocketThread.create(adapter, address);
+    serverThread = ServerSocketThread.create(adapter, address);
 
-    thread.start();
+    serverThread.start();
   }
 
   public final void stopService() throws Exception {
-    thread.interrupt();
+    serverThread.interrupt();
   }
 
   /**
@@ -120,12 +120,14 @@ public final class HttpService {
 
   private class ThisSelectorThreadAdapter implements ServerSocketThreadAdapter {
 
+    private final Thread.Builder threadBuilder = Thread.ofVirtual().name("http-", 1);
+
     @Override
     public final void acceptSocket(Socket socket) {
       HttpExchange exchange;
       exchange = new HttpExchange(bufferSize, handlerSupplier, noteSink, socket);
 
-      Thread.ofVirtual().start(exchange);
+      threadBuilder.start(exchange);
     }
 
   }
