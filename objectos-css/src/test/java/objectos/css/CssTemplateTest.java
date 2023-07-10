@@ -512,6 +512,38 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#459] flex-direction
+  """)
+  public void propertyFlexDirection() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            label,
+
+            flexDirection(row),
+            flexDirection(rowReverse),
+            flexDirection(column),
+            flexDirection(columnReverse),
+            flexDirection(inherit)
+          );
+        }
+      },
+
+      """
+      label {
+        flex-direction: row;
+        flex-direction: row-reverse;
+        flex-direction: column;
+        flex-direction: column-reverse;
+        flex-direction: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#419] Preflight 15
 
   - font
@@ -759,6 +791,61 @@ public class CssTemplateTest {
         height: fit-content;
         height: auto;
         height: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#459] justify-content
+  """)
+  public void propertyJustifyContent() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            label,
+
+            justifyContent(center),
+            justifyContent(start),
+            justifyContent(end),
+            justifyContent(flexStart),
+            justifyContent(flexEnd),
+            justifyContent(left),
+            justifyContent(right),
+
+            justifyContent(normal),
+            justifyContent(spaceBetween),
+            justifyContent(spaceAround),
+            justifyContent(spaceEvenly),
+            justifyContent(stretch),
+
+            justifyContent(safe, center),
+            justifyContent(unsafe, center),
+
+            justifyContent(inherit)
+          );
+        }
+      },
+
+      """
+      label {
+        justify-content: center;
+        justify-content: start;
+        justify-content: end;
+        justify-content: flex-start;
+        justify-content: flex-end;
+        justify-content: left;
+        justify-content: right;
+        justify-content: normal;
+        justify-content: space-between;
+        justify-content: space-around;
+        justify-content: space-evenly;
+        justify-content: stretch;
+        justify-content: safe center;
+        justify-content: unsafe center;
+        justify-content: inherit;
       }
       """
     );

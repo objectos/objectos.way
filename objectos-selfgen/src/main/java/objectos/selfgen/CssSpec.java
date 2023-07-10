@@ -253,70 +253,21 @@ public final class CssSpec extends CssSelfGen {
 
     // F
 
-    var fontValue = t("FontValue",
-      keywords(
-        "caption",
-        "icon",
-        "menu", "message-box",
-        "small-caption", "status-bar"
-      )
-    );
-
-    var fontFamilyValue = t("FontFamilyValue",
-      keywords(
-        "cursive",
-        "emoji",
-        "fangsong", "fantasy",
-        "math", "monospace",
-        "sans-serif", "serif", "system-ui",
-        "ui-monospace",
-        "ui-rounded",
-        "ui-sans-serif",
-        "ui-serif"
-      ),
-      string()
-    );
-
-    var fontSizeValue = t("FontSizeValue",
-      keywords(
-        "large", "larger",
-        "medium",
-        "small", "smaller",
-        "x-large", "xx-large", "xxx-large", "xx-small", "x-small"
-      ),
-      lengthPercentage
-    );
-
-    var fontWeightValue = t("FontWeightValue",
-      keywords(
-        "bold", "bolder",
-        "lighter",
-        "normal"
-      )
-    );
-
-    pval("font", globalKeyword);
-    pval("font", fontValue);
-
-    pval("font-family", globalKeyword);
-    pvar("font-family", fontFamilyValue);
-
-    pval("font-feature-settings", globalKeyword);
-    pval("font-feature-settings", t("FontFeatureSettingsValue", k("normal")));
-
-    pval("font-size", globalKeyword);
-    pval("font-size", fontSizeValue);
-
-    pval("font-variation-settings", globalKeyword);
-    pval("font-variation-settings", t("FontVariationSettingsValue", k("normal")));
-
-    pint("font-weight");
-    pval("font-weight", globalKeyword);
-    pval("font-weight", fontWeightValue);
+    flexDirection();
+    font();
+    fontFamily();
+    fontFeatureSettings();
+    fontSize();
+    fontVariationSettings();
+    fontWeight();
 
     // H
 
     height();
+
+    // J
+
+    justifyContent();
 
     // L
 
@@ -696,6 +647,148 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
+  private void flexDirection() {
+    var flexDirectionValue = t(
+      "FlexDirectionValue",
+
+      k("row"),
+      k("row-reverse"),
+      k("column"),
+      k("column-reverse")
+    );
+
+    property(
+      "flex-direction",
+
+      sig(globalKeyword, "value"),
+      sig(flexDirectionValue, "value")
+    );
+  }
+
+  private void font() {
+    var fontValue = t(
+      "FontValue",
+
+      k("caption"),
+      k("icon"),
+      k("menu"),
+      k("message-box"),
+      k("small-caption"),
+      k("status-bar")
+    );
+
+    property(
+      "font",
+      sig(globalKeyword, "value"),
+      sig(fontValue, "value")
+    );
+  }
+
+  private void fontFamily() {
+    var fontFamilyValue = t(
+      "FontFamilyValue",
+
+      k("cursive"),
+      k("emoji"),
+      k("fangsong"),
+      k("fantasy"),
+      k("math"),
+      k("monospace"),
+      k("sans-serif"),
+      k("serif"),
+      k("system-ui"),
+      k("ui-monospace"),
+      k("ui-rounded"),
+      k("ui-sans-serif"),
+      k("ui-serif"),
+
+      string()
+    );
+
+    property(
+      "font-family",
+
+      sig(globalKeyword, "value"),
+      sigVar(fontFamilyValue, "values")
+    );
+  }
+
+  private void fontFeatureSettings() {
+    var value = t(
+      "FontFeatureSettingsValue",
+
+      k("normal")
+    );
+
+    property(
+      "font-feature-settings",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
+  private void fontSize() {
+    var fontSizeValue = t(
+      "FontSizeValue",
+
+      k("large"),
+      k("larger"),
+      k("medium"),
+      k("small"),
+      k("smaller"),
+      k("x-large"),
+      k("xx-large"),
+      k("xxx-large"),
+      k("xx-small"),
+      k("x-small"),
+
+      lengthPercentage
+    );
+
+    property(
+      "font-size",
+
+      sig(globalKeyword, "value"),
+      sig(fontSizeValue, "value")
+    );
+  }
+
+  private void fontVariationSettings() {
+    var value = t(
+      "FontVariationSettingsValue",
+
+      k("normal")
+    );
+
+    property(
+      "font-variation-settings",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
+  private void fontWeight() {
+    var fontWeightValue = t(
+      "FontWeightValue",
+
+      keywords(
+        "bold", "bolder",
+        "lighter",
+        "normal"
+      )
+    );
+
+    property(
+      "font-weight",
+
+      sig(INT, "value"),
+      sig(globalKeyword, "value"),
+      sig(fontWeightValue, "value")
+    );
+  }
+
   private void height() {
     var heightOrWidthValue = t(
       "HeightOrWidthValue",
@@ -713,6 +806,56 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(heightOrWidthValue, "value")
+    );
+  }
+
+  private void justifyContent() {
+    var justifyContent = t(
+      "JustifyContentValue",
+
+      k("normal"),
+
+      k("space-between"),
+      k("space-around"),
+      k("space-evenly"),
+      k("stretch"),
+
+      k("center"),
+      k("start"),
+      k("end"),
+      k("flex-start"),
+      k("flex-end"),
+
+      k("left"),
+      k("right")
+    );
+
+    var overflow = t(
+      "OverflowPosition",
+
+      k("safe"),
+      k("unsafe")
+    );
+
+    var justifyContentPosition = t(
+      "JustifyContentPosition",
+
+      k("center"),
+      k("start"),
+      k("end"),
+      k("flex-start"),
+      k("flex-end"),
+
+      k("left"),
+      k("right")
+    );
+
+    property(
+      "justify-content",
+
+      sig(globalKeyword, "value"),
+      sig(justifyContent, "value"),
+      sig(overflow, "safeOrUnsafe", justifyContentPosition, "position")
     );
   }
 

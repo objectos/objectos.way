@@ -13,27 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.tmpl;
 
-import java.util.Objects;
-import objectos.html.tmpl.Instruction.ExternalAttribute;
-import objectos.lang.Check;
+import objectos.css.internal.NamedElement;
+import objectos.css.om.PropertyValue;
+import objectos.lang.Generated;
 
-public record ClassSelector(String className) implements ExternalAttribute.StyleClass {
-
-  public ClassSelector {
-    Objects.requireNonNull(className, "className == null");
-
-    Check.argument(!className.isBlank(), "className must not be blank");
-  }
-
-  public static ClassSelector of(String className) {
-    return new ClassSelector(className);
-  }
-
-  @Override
-  public final String value() {
-    return className;
-  }
-
-}
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface JustifyContentValue extends PropertyValue permits CenterKeyword, EndKeyword, FlexEndKeyword, FlexStartKeyword, LeftKeyword, NamedElement, NormalKeyword, RightKeyword, StartKeyword {}

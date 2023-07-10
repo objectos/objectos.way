@@ -24,6 +24,7 @@ import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
+import objectos.css.tmpl.CenterKeyword;
 import objectos.css.tmpl.CounterStyleValue;
 import objectos.css.tmpl.CursorValue;
 import objectos.css.tmpl.DashedKeyword;
@@ -35,7 +36,11 @@ import objectos.css.tmpl.DisplayListItemValue;
 import objectos.css.tmpl.DisplayOutsideValue;
 import objectos.css.tmpl.DottedKeyword;
 import objectos.css.tmpl.DoubleKeyword;
+import objectos.css.tmpl.EndKeyword;
 import objectos.css.tmpl.FitContentKeyword;
+import objectos.css.tmpl.FlexDirectionValue;
+import objectos.css.tmpl.FlexEndKeyword;
+import objectos.css.tmpl.FlexStartKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
@@ -47,6 +52,9 @@ import objectos.css.tmpl.GrooveKeyword;
 import objectos.css.tmpl.HeightOrWidthValue;
 import objectos.css.tmpl.InlineKeyword;
 import objectos.css.tmpl.InsetKeyword;
+import objectos.css.tmpl.JustifyContentPosition;
+import objectos.css.tmpl.JustifyContentValue;
+import objectos.css.tmpl.LeftKeyword;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
@@ -64,12 +72,15 @@ import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
 import objectos.css.tmpl.OutsetKeyword;
+import objectos.css.tmpl.OverflowPosition;
 import objectos.css.tmpl.PositionValue;
 import objectos.css.tmpl.ProgressKeyword;
 import objectos.css.tmpl.ResizeValue;
 import objectos.css.tmpl.RidgeKeyword;
+import objectos.css.tmpl.RightKeyword;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
+import objectos.css.tmpl.StartKeyword;
 import objectos.css.tmpl.SubKeyword;
 import objectos.css.tmpl.TableKeyword;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
@@ -99,6 +110,7 @@ public final class NamedElement implements Selector,
     DisplayLegacyValue,
     DisplayListItemValue,
     DisplayOutsideValue,
+    FlexDirectionValue,
     FontFamilyValue,
     FontFeatureSettingsValue,
     FontSizeValue,
@@ -107,6 +119,8 @@ public final class NamedElement implements Selector,
     FontWeightValue,
     GlobalKeyword,
     HeightOrWidthValue,
+    JustifyContentPosition,
+    JustifyContentValue,
     LineHeightValue,
     LineStyle,
     LineWidth,
@@ -117,6 +131,7 @@ public final class NamedElement implements Selector,
     MaxHeightOrWidthValue,
     MinHeightOrWidthValue,
     OutlineStyleValue,
+    OverflowPosition,
     PositionValue,
     ResizeValue,
     TextDecorationLineMultiValue,
@@ -131,13 +146,18 @@ public final class NamedElement implements Selector,
     AutoKeyword,
     BlockKeyword,
     ButtonKeyword,
+    CenterKeyword,
     DashedKeyword,
     DottedKeyword,
     DoubleKeyword,
+    EndKeyword,
     FitContentKeyword,
+    FlexEndKeyword,
+    FlexStartKeyword,
     GrooveKeyword,
     InlineKeyword,
     InsetKeyword,
+    LeftKeyword,
     MaxContentKeyword,
     MediumKeyword,
     MenuKeyword,
@@ -147,8 +167,10 @@ public final class NamedElement implements Selector,
     OutsetKeyword,
     ProgressKeyword,
     RidgeKeyword,
+    RightKeyword,
     SmallKeyword,
     SolidKeyword,
+    StartKeyword,
     SubKeyword,
     TableKeyword,
     TextareaKeyword {

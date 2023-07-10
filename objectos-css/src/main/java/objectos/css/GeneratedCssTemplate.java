@@ -38,6 +38,7 @@ import objectos.css.tmpl.BorderCollapseValue;
 import objectos.css.tmpl.BottomValue;
 import objectos.css.tmpl.BoxSizingValue;
 import objectos.css.tmpl.ButtonKeyword;
+import objectos.css.tmpl.CenterKeyword;
 import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.CounterStyleValue;
 import objectos.css.tmpl.CursorValue;
@@ -52,7 +53,11 @@ import objectos.css.tmpl.DisplayValue;
 import objectos.css.tmpl.DisplayValue2;
 import objectos.css.tmpl.DottedKeyword;
 import objectos.css.tmpl.DoubleKeyword;
+import objectos.css.tmpl.EndKeyword;
 import objectos.css.tmpl.FitContentKeyword;
+import objectos.css.tmpl.FlexDirectionValue;
+import objectos.css.tmpl.FlexEndKeyword;
+import objectos.css.tmpl.FlexStartKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
@@ -64,6 +69,9 @@ import objectos.css.tmpl.GrooveKeyword;
 import objectos.css.tmpl.HeightOrWidthValue;
 import objectos.css.tmpl.InlineKeyword;
 import objectos.css.tmpl.InsetKeyword;
+import objectos.css.tmpl.JustifyContentPosition;
+import objectos.css.tmpl.JustifyContentValue;
+import objectos.css.tmpl.LeftKeyword;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LengthPercentage;
 import objectos.css.tmpl.LineHeightValue;
@@ -85,13 +93,16 @@ import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
 import objectos.css.tmpl.OutlineValue;
 import objectos.css.tmpl.OutsetKeyword;
+import objectos.css.tmpl.OverflowPosition;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.PositionValue;
 import objectos.css.tmpl.ProgressKeyword;
 import objectos.css.tmpl.ResizeValue;
 import objectos.css.tmpl.RidgeKeyword;
+import objectos.css.tmpl.RightKeyword;
 import objectos.css.tmpl.SmallKeyword;
 import objectos.css.tmpl.SolidKeyword;
+import objectos.css.tmpl.StartKeyword;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.SubKeyword;
 import objectos.css.tmpl.TableKeyword;
@@ -299,6 +310,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final CursorValue cell = named("cell");
 
+  protected static final CenterKeyword center = named("center");
+
   protected static final AppearanceValue checkbox = named("checkbox");
 
   protected static final CounterStyleValue circle = named("circle");
@@ -314,6 +327,10 @@ abstract class GeneratedCssTemplate {
   protected static final CursorValue colResize = named("col-resize");
 
   protected static final BorderCollapseValue collapse = named("collapse");
+
+  protected static final FlexDirectionValue column = named("column");
+
+  protected static final FlexDirectionValue columnReverse = named("column-reverse");
 
   protected static final BoxSizingValue contentBox = named("content-box");
 
@@ -349,6 +366,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue emoji = named("emoji");
 
+  protected static final EndKeyword end = named("end");
+
   protected static final CounterStyleValue ethiopicNumeric = named("ethiopic-numeric");
 
   protected static final CursorValue ewResize = named("ew-resize");
@@ -362,6 +381,10 @@ abstract class GeneratedCssTemplate {
   protected static final PositionValue fixed = named("fixed");
 
   protected static final DisplayInsideValue flex = named("flex");
+
+  protected static final FlexEndKeyword flexEnd = named("flex-end");
+
+  protected static final FlexStartKeyword flexStart = named("flex-start");
 
   protected static final DisplayInsideValue flow = named("flow");
 
@@ -444,6 +467,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontSizeValue large = named("large");
 
   protected static final FontSizeValue larger = named("larger");
+
+  protected static final LeftKeyword left = named("left");
 
   protected static final FontWeightValue lighter = named("lighter");
 
@@ -573,7 +598,13 @@ abstract class GeneratedCssTemplate {
 
   protected static final RidgeKeyword ridge = named("ridge");
 
+  protected static final RightKeyword right = named("right");
+
+  protected static final FlexDirectionValue row = named("row");
+
   protected static final CursorValue rowResize = named("row-resize");
+
+  protected static final FlexDirectionValue rowReverse = named("row-reverse");
 
   protected static final DisplayInsideValue ruby = named("ruby");
 
@@ -588,6 +619,8 @@ abstract class GeneratedCssTemplate {
   protected static final DisplayOutsideValue runIn = named("runIn");
 
   protected static final CursorValue sResize = named("s-resize");
+
+  protected static final OverflowPosition safe = named("safe");
 
   protected static final FontFamilyValue sansSerif = named("sans-serif");
 
@@ -613,13 +646,23 @@ abstract class GeneratedCssTemplate {
 
   protected static final SolidKeyword solid = named("solid");
 
+  protected static final JustifyContentValue spaceAround = named("space-around");
+
+  protected static final JustifyContentValue spaceBetween = named("space-between");
+
+  protected static final JustifyContentValue spaceEvenly = named("space-evenly");
+
   protected static final CounterStyleValue square = named("square");
 
   protected static final AppearanceValue squareButton = named("square-button");
 
+  protected static final StartKeyword start = named("start");
+
   protected static final FontValue statusBar = named("status-bar");
 
   protected static final PositionValue sticky = named("sticky");
+
+  protected static final JustifyContentValue stretch = named("stretch");
 
   protected static final SubKeyword sub = named("sub");
 
@@ -682,6 +725,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontFamilyValue uiSerif = named("ui-serif");
 
   protected static final TextDecorationLineMultiValue underline = named("underline");
+
+  protected static final OverflowPosition unsafe = named("unsafe");
 
   protected static final GlobalKeyword unset = named("unset");
 
@@ -1031,6 +1076,14 @@ abstract class GeneratedCssTemplate {
     return new StyleDeclaration2(Property.DISPLAY, value.self(), value2.self());
   }
 
+  protected final StyleDeclaration flexDirection(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.FLEX_DIRECTION, value.self());
+  }
+
+  protected final StyleDeclaration flexDirection(FlexDirectionValue value) {
+    return new StyleDeclaration1(Property.FLEX_DIRECTION, value.self());
+  }
+
   protected final StyleDeclaration font(GlobalKeyword value) {
     return new StyleDeclaration1(Property.FONT, value.self());
   }
@@ -1087,6 +1140,18 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration height(HeightOrWidthValue value) {
     return new StyleDeclaration1(Property.HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration justifyContent(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.JUSTIFY_CONTENT, value.self());
+  }
+
+  protected final StyleDeclaration justifyContent(JustifyContentValue value) {
+    return new StyleDeclaration1(Property.JUSTIFY_CONTENT, value.self());
+  }
+
+  protected final StyleDeclaration justifyContent(OverflowPosition safeOrUnsafe, JustifyContentPosition position) {
+    return new StyleDeclaration2(Property.JUSTIFY_CONTENT, safeOrUnsafe.self(), position.self());
   }
 
   protected final StyleDeclaration lineHeight(double value) {

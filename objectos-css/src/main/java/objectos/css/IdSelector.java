@@ -17,9 +17,10 @@ package objectos.css;
 
 import java.util.Objects;
 import objectos.css.om.Selector;
+import objectos.html.tmpl.Instruction.ExternalAttribute;
 import objectos.lang.Check;
 
-public final record IdSelector(String id) implements Selector {
+public record IdSelector(String id) implements ExternalAttribute.Id, Selector {
 
   public IdSelector {
     Objects.requireNonNull(id, "id == null");
@@ -34,6 +35,11 @@ public final record IdSelector(String id) implements Selector {
   @Override
   public final String toString() {
     return "#" + id;
+  }
+
+  @Override
+  public final String value() {
+    return id;
   }
 
 }

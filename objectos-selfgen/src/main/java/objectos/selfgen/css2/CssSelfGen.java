@@ -366,6 +366,11 @@ public abstract class CssSelfGen extends CompiledSpec {
       type4.typeName(), name4);
   }
 
+  protected final Signature sigVar(
+      ParameterType type, String name) {
+    return new SignatureVarArgs(type.typeName(), "values");
+  }
+
   protected final StringType string() {
     if (stringType == null) {
       stringType = new StringType();

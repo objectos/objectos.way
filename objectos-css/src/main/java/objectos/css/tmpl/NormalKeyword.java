@@ -23,4 +23,5 @@ public sealed interface NormalKeyword extends
     FontFeatureSettingsValue,
     FontVariationSettingsValue,
     FontWeightValue,
+    JustifyContentValue,
     LineHeightValue permits NamedElement {}

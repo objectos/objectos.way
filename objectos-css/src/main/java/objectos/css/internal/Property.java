@@ -54,6 +54,8 @@ public enum Property implements PropertyName {
 
   DISPLAY("display"),
 
+  FLEX_DIRECTION("flex-direction"),
+
   FONT("font"),
 
   FONT_FAMILY("font-family"),
@@ -67,6 +69,8 @@ public enum Property implements PropertyName {
   FONT_WEIGHT("font-weight"),
 
   HEIGHT("height"),
+
+  JUSTIFY_CONTENT("justify-content"),
 
   LINE_HEIGHT("line-height"),
 
