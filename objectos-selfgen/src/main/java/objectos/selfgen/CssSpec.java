@@ -62,6 +62,7 @@ public final class CssSpec extends CssSelfGen {
 
       "fieldset",
       "figure",
+      "form",
 
       "h1",
       "h2",
@@ -78,6 +79,7 @@ public final class CssSpec extends CssSelfGen {
 
       "kbd",
 
+      "label",
       "legend",
       "li",
 
@@ -329,6 +331,8 @@ public final class CssSpec extends CssSelfGen {
     margin();
     maxHeight();
     maxWidth();
+    minHeight();
+    minWidth();
 
     // O
 
@@ -921,6 +925,37 @@ public final class CssSpec extends CssSelfGen {
 
     property(
       "max-width",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
+  private void minHeight() {
+    var value = t(
+      "MinHeightOrWidthValue",
+
+      k("auto"),
+      k("fit-content"),
+      k("max-content"),
+      k("min-content"),
+
+      lengthPercentage
+    );
+
+    property(
+      "min-height",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
+  private void minWidth() {
+    var value = t("MinHeightOrWidthValue");
+
+    property(
+      "min-width",
 
       sig(globalKeyword, "value"),
       sig(value, "value")

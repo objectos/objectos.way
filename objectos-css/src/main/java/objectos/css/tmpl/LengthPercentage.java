@@ -25,6 +25,7 @@ public sealed interface LengthPercentage extends
     LineHeightValue,
     MarginValue,
     MaxHeightOrWidthValue,
+    MinHeightOrWidthValue,
     TextDecorationThicknessValue,
     TopValue,
     VerticalAlignValue permits Length, Percentage {}

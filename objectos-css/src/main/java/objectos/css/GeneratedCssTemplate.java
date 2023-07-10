@@ -79,6 +79,7 @@ import objectos.css.tmpl.MaxHeightOrWidthValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.MenuKeyword;
 import objectos.css.tmpl.MinContentKeyword;
+import objectos.css.tmpl.MinHeightOrWidthValue;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
@@ -154,6 +155,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector figure = named("figure");
 
+  protected static final Selector form = named("form");
+
   protected static final Selector h1 = named("h1");
 
   protected static final Selector h2 = named("h2");
@@ -177,6 +180,8 @@ abstract class GeneratedCssTemplate {
   protected static final Selector input = named("input");
 
   protected static final Selector kbd = named("kbd");
+
+  protected static final Selector label = named("label");
 
   protected static final Selector legend = named("legend");
 
@@ -1179,6 +1184,22 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration maxWidth(MaxHeightOrWidthValue value) {
     return new StyleDeclaration1(Property.MAX_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration minHeight(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.MIN_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration minHeight(MinHeightOrWidthValue value) {
+    return new StyleDeclaration1(Property.MIN_HEIGHT, value.self());
+  }
+
+  protected final StyleDeclaration minWidth(GlobalKeyword value) {
+    return new StyleDeclaration1(Property.MIN_WIDTH, value.self());
+  }
+
+  protected final StyleDeclaration minWidth(MinHeightOrWidthValue value) {
+    return new StyleDeclaration1(Property.MIN_WIDTH, value.self());
   }
 
   protected final StyleDeclaration mozAppearance(GlobalKeyword value) {

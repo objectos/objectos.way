@@ -84,6 +84,10 @@ public enum Property implements PropertyName {
 
   MAX_WIDTH("max-width"),
 
+  MIN_HEIGHT("min-height"),
+
+  MIN_WIDTH("min-width"),
+
   OPACITY("opacity"),
 
   OUTLINE("outline"),

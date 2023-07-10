@@ -21,4 +21,5 @@ import objectos.lang.Generated;
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface FitContentKeyword extends
     HeightOrWidthValue,
-    MaxHeightOrWidthValue permits NamedElement {}
+    MaxHeightOrWidthValue,
+    MinHeightOrWidthValue permits NamedElement {}

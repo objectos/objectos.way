@@ -59,6 +59,7 @@ import objectos.css.tmpl.MaxHeightOrWidthValue;
 import objectos.css.tmpl.MediumKeyword;
 import objectos.css.tmpl.MenuKeyword;
 import objectos.css.tmpl.MinContentKeyword;
+import objectos.css.tmpl.MinHeightOrWidthValue;
 import objectos.css.tmpl.NoneKeyword;
 import objectos.css.tmpl.NormalKeyword;
 import objectos.css.tmpl.OutlineStyleValue;
@@ -114,6 +115,7 @@ public final class NamedElement implements Selector,
     ListStyleTypeValue,
     MarginValue,
     MaxHeightOrWidthValue,
+    MinHeightOrWidthValue,
     OutlineStyleValue,
     PositionValue,
     ResizeValue,

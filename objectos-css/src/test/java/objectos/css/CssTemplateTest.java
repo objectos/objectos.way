@@ -1020,6 +1020,82 @@ public class CssTemplateTest {
     );
   }
 
+  @Test(description = """
+  [#459] min-height
+  """)
+  public void propertyMinHeight() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            form,
+
+            minHeight($0),
+            minHeight(em(3.5)),
+            minHeight(pct(75)),
+            minHeight(auto),
+            minHeight(fitContent),
+            minHeight(minContent),
+            minHeight(maxContent),
+            minHeight(inherit)
+          );
+        }
+      },
+
+      """
+      form {
+        min-height: 0;
+        min-height: 3.5em;
+        min-height: 75%;
+        min-height: auto;
+        min-height: fit-content;
+        min-height: min-content;
+        min-height: max-content;
+        min-height: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#459] min-width
+  """)
+  public void propertyMinWidth() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            form,
+
+            minWidth($0),
+            minWidth(em(3.5)),
+            minWidth(pct(75)),
+            minWidth(auto),
+            minWidth(fitContent),
+            minWidth(minContent),
+            minWidth(maxContent),
+            minWidth(inherit)
+          );
+        }
+      },
+
+      """
+      form {
+        min-width: 0;
+        min-width: 3.5em;
+        min-width: 75%;
+        min-width: auto;
+        min-width: fit-content;
+        min-width: min-content;
+        min-width: max-content;
+        min-width: inherit;
+      }
+      """
+    );
+  }
+
   @Test
   public void propertyOpacity() {
     test(
