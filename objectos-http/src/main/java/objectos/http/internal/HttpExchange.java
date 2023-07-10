@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import objectos.http.Http;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
@@ -92,7 +93,7 @@ public final class HttpExchange implements Exchange, Runnable {
 
   Throwable error;
 
-  Handler handler;
+  Supplier<Handler> handlerSupplier;
 
   boolean keepAlive;
 
@@ -129,14 +130,14 @@ public final class HttpExchange implements Exchange, Runnable {
   byte versionMinor;
 
   public HttpExchange(int bufferSize,
-                      Handler handler,
+                      Supplier<Handler> handlerSupplier,
                       NoteSink noteSink,
                       Socket socket) {
     // there's a small chance we won't use the buffer
     // but, as it is used in many places in this class, we create it eagerly
     this.buffer = new byte[bufferSize];
 
-    this.handler = handler;
+    this.handlerSupplier = handlerSupplier;
 
     this.noteSink = noteSink;
 
@@ -290,6 +291,9 @@ public final class HttpExchange implements Exchange, Runnable {
 
   private byte handleInvoke() {
     try {
+      Handler handler;
+      handler = handlerSupplier.get();
+
       handler.handle(this);
 
       return _OUTPUT;

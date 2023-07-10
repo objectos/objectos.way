@@ -25,6 +25,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import objectos.http.Http;
 import objectos.http.server.Exchange;
@@ -167,7 +168,10 @@ public class HttpExchangeHandleTest {
       ZoneId.of("GMT-3")
     );
 
-    exchange.handler = new Handler() {
+    class ThisHandler implements Handler, Supplier<Handler> {
+      @Override
+      public Handler get() { return this; }
+
       @Override
       public void handle(Exchange exchange) {
         Response response;
@@ -183,7 +187,9 @@ public class HttpExchangeHandleTest {
 
         response.send(bytes);
       }
-    };
+    }
+
+    exchange.handlerSupplier = new ThisHandler();
     exchange.responseBody = new byte[0];
     exchange.responseHeaders = new GrowableList<>();
     exchange.state = HttpExchange._HANDLE_INVOKE;

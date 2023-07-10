@@ -56,7 +56,7 @@ public interface TestingInput {
     exchange.bufferLimit = -1;
     exchange.keepAlive = false;
     exchange.error = null;
-    exchange.handler = TestingHandler.INSTANCE;
+    exchange.handlerSupplier = TestingHandler.INSTANCE;
     exchange.method = null;
     exchange.requestHeaders = null;
     exchange.requestHeaderName = null;

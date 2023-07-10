@@ -122,11 +122,8 @@ public final class HttpService {
 
     @Override
     public final void acceptSocket(Socket socket) {
-      Handler handler;
-      handler = handlerSupplier.get();
-
       HttpExchange exchange;
-      exchange = new HttpExchange(bufferSize, handler, noteSink, socket);
+      exchange = new HttpExchange(bufferSize, handlerSupplier, noteSink, socket);
 
       Thread.ofVirtual().start(exchange);
     }
