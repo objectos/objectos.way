@@ -16,12 +16,11 @@
 package objectos.css.internal;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import objectos.css.om.StyleSheet;
-import objectos.util.UnmodifiableIterator;
-import objectos.util.UnmodifiableList;
 
-public record InternalStyleSheet(UnmodifiableList<TopLevelElement> elements)
-    implements StyleSheet {
+public record InternalStyleSheet(List<TopLevelElement> elements) implements StyleSheet {
 
   @Override
   public final String toString() {
@@ -37,12 +36,11 @@ public record InternalStyleSheet(UnmodifiableList<TopLevelElement> elements)
     }
   }
 
-  @Override
   public final void writeTo(Appendable dest) throws IOException {
     String nl;
     nl = System.lineSeparator();
 
-    UnmodifiableIterator<TopLevelElement> iterator;
+    Iterator<TopLevelElement> iterator;
     iterator = elements.iterator();
 
     if (iterator.hasNext()) {

@@ -15,7 +15,6 @@
  */
 package objectos.css;
 
-import java.io.IOException;
 import java.util.Objects;
 import objectos.css.om.Selector;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
@@ -44,12 +43,6 @@ public record IdSelector(String id) implements ExternalAttribute.Id, Selector {
   @Override
   public final String value() {
     return id;
-  }
-
-  @Override
-  public final void writeTo(Appendable dest) throws IOException {
-    dest.append('#');
-    dest.append(id);
   }
 
 }

@@ -15,9 +15,13 @@
  */
 package objectos.css;
 
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import objectos.css.internal.InternalAttributeOperator;
 import objectos.css.internal.InternalLength;
+import objectos.css.internal.InternalMediaRule;
 import objectos.css.internal.InternalSelector;
 import objectos.css.internal.InternalStyleRule;
 import objectos.css.internal.InternalStyleSheet;
@@ -36,6 +40,7 @@ import objectos.css.om.StyleRule;
 import objectos.css.om.StyleSheet;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
+import objectos.css.tmpl.MediaQuery;
 import objectos.css.tmpl.MediaRuleElement;
 import objectos.css.tmpl.SelectorElement;
 import objectos.css.tmpl.StringLiteral;
@@ -96,6 +101,8 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
 
   private GrowableList<TopLevelElement> topLevelElements;
 
+  private Map<Object, Object> nonTopLevel;
+
   protected CssTemplate() {}
 
   private static Length v(double unit) {
@@ -117,11 +124,21 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
 
       definition();
 
-      return new InternalStyleSheet(
-        topLevelElements.toUnmodifiableList()
-      );
+      List<TopLevelElement> elements;
+
+      if (nonTopLevel == null) {
+        elements = topLevelElements.toUnmodifiableList();
+      } else {
+        elements = topLevelElements.stream()
+            .filter(e -> !nonTopLevel.containsKey(e))
+            .toList();
+      }
+
+      return new InternalStyleSheet(elements);
     } finally {
       topLevelElements = null;
+
+      nonTopLevel = null;
     }
   }
 
@@ -174,8 +191,52 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     return Color.ofHex(hex);
   }
 
-  protected final Object media(MediaRuleElement... elements) {
-    throw new UnsupportedOperationException("Implement me");
+  protected final void media(MediaRuleElement... elements) {
+    GrowableList<MediaQuery> queries;
+    queries = new GrowableList<>();
+
+    GrowableList<StyleRule> styleRules;
+    styleRules = new GrowableList<>();
+
+    for (int i = 0; i < elements.length; i++) {
+      var element = elements[i];
+
+      if (element == null) {
+        throw new NullPointerException(
+          "elements[" + i + "] == null"
+        );
+      }
+
+      if (element instanceof MediaQuery query) {
+        queries.add(query);
+
+        continue;
+      }
+
+      if (element instanceof StyleRule styleRule) {
+        if (nonTopLevel == null) {
+          nonTopLevel = new IdentityHashMap<>();
+        }
+
+        nonTopLevel.put(styleRule, null);
+
+        styleRules.add(styleRule);
+
+        continue;
+      }
+
+      throw new IllegalArgumentException(
+        "Unsupported element type = " + element.getClass()
+      );
+    }
+
+    InternalMediaRule mediaRule;
+    mediaRule = new InternalMediaRule(
+      queries.toUnmodifiableList(),
+      styleRules.toUnmodifiableList()
+    );
+
+    topLevelElements.add(mediaRule);
   }
 
   protected final Selector sel(SelectorElement... elements) {
@@ -193,7 +254,7 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     );
   }
 
-  protected final StyleRule style(StyleRuleElement... elements) {
+  protected final void style(StyleRuleElement... elements) {
     GrowableList<Selector> selectors;
     selectors = new GrowableList<>();
 
@@ -233,8 +294,6 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
     );
 
     topLevelElements.add(rule);
-
-    return rule;
   }
 
   protected final Url url(String value) {

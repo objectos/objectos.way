@@ -13,25 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.om;
 
-import java.io.IOException;
-import java.util.Locale;
-import objectos.css.tmpl.MediaQuery;
-
-public enum MediaType implements MediaQuery {
-
-  ALL,
-
-  PRINT,
-
-  SCREEN;
-
-  final String cssName = name().toLowerCase(Locale.US);
-
-  @Override
-  public final void writeTo(Appendable dest) throws IOException {
-    dest.append(cssName);
-  }
-
-}
+/**
+ * @since 0.7.1
+ */
+public non-sealed interface MediaRule extends Rule {}

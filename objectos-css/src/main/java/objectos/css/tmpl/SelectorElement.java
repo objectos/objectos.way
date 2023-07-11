@@ -15,7 +15,13 @@
  */
 package objectos.css.tmpl;
 
+import java.io.IOException;
 import objectos.css.om.Selector;
-import objectos.lang.CharWritable;
 
-public sealed interface SelectorElement extends CharWritable permits Selector {}
+public sealed interface SelectorElement permits Selector {
+
+  default void writeTo(Appendable dest) throws IOException {
+    dest.append(toString());
+  };
+
+}

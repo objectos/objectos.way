@@ -17,6 +17,5 @@ package objectos.css.tmpl;
 
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
-import objectos.lang.CharWritable;
 
-public sealed interface StyleRuleElement extends CharWritable permits Selector, StyleDeclaration {}
+public sealed interface StyleRuleElement permits Selector, StyleDeclaration {}

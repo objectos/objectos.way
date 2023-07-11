@@ -31,17 +31,12 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           media(
-            screen,
-
-            style(
-              body,
-              padding(rem(1), $0)
-            )
+            screen
           );
 
           style(
-            label,
-            margin($0)
+            body,
+            padding(rem(1), $0)
           );
         }
       },
@@ -51,10 +46,6 @@ public class CssTemplateTest {
         body {
           padding: 1rem 0;
         }
-      }
-
-      label {
-        margin: 0;
       }
       """
     );

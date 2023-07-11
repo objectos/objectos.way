@@ -15,6 +15,10 @@
  */
 package objectos.css.internal;
 
-import objectos.lang.CharWritable;
+import java.io.IOException;
 
-public interface TopLevelElement extends CharWritable {}
+public interface TopLevelElement {
+
+  void writeTo(Appendable dest) throws IOException;
+
+}

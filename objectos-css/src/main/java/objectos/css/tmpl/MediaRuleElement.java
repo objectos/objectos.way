@@ -15,7 +15,6 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.MediaType;
 import objectos.css.om.StyleRule;
 
-public sealed interface MediaRuleElement permits MediaType, StyleRule {}
+public sealed interface MediaRuleElement permits MediaQuery, StyleRule {}
