@@ -13,9 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.internal;
 
-import objectos.css.om.Selector;
-import objectos.css.om.StyleDeclaration;
+import objectos.css.tmpl.MediaRuleElement;
 
-public sealed interface StyleRuleElement permits Selector, StyleDeclaration {}
+public enum MediaType implements MediaRuleElement {
+
+  ALL,
+
+  PRINT,
+
+  SCREEN
+
+}

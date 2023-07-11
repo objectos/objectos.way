@@ -15,11 +15,16 @@
  */
 package objectos.css;
 
+import java.io.IOException;
 import java.util.Objects;
+import objectos.css.om.Selector;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 import objectos.lang.Check;
 
-public record ClassSelector(String className) implements ExternalAttribute.StyleClass {
+/**
+ * @since 0.7
+ */
+public record ClassSelector(String className) implements ExternalAttribute.StyleClass, Selector {
 
   public ClassSelector {
     Objects.requireNonNull(className, "className == null");
@@ -32,8 +37,19 @@ public record ClassSelector(String className) implements ExternalAttribute.Style
   }
 
   @Override
+  public final String toString() {
+    return "." + className;
+  }
+
+  @Override
   public final String value() {
     return className;
+  }
+
+  @Override
+  public final void writeTo(Appendable dest) throws IOException {
+    dest.append('.');
+    dest.append(className);
   }
 
 }

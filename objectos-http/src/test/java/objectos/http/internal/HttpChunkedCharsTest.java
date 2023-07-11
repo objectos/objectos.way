@@ -19,7 +19,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import objectos.http.io.CharWritable;
+import objectos.lang.CharWritable;
 import org.testng.annotations.Test;
 
 public class HttpChunkedCharsTest {

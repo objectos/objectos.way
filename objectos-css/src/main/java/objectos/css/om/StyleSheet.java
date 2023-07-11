@@ -15,7 +15,9 @@
  */
 package objectos.css.om;
 
-public interface StyleSheet {
+import objectos.lang.CharWritable;
+
+public interface StyleSheet extends CharWritable {
 
   @Override
   String toString();

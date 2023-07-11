@@ -15,7 +15,7 @@
  */
 package objectos.css.om;
 
-import objectos.css.StyleRuleElement;
+import objectos.css.tmpl.StyleRuleElement;
 
 public non-sealed interface StyleDeclaration extends StyleRuleElement {
 

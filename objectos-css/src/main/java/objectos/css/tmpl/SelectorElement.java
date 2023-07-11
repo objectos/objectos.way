@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.io;
+package objectos.css.tmpl;
 
-@FunctionalInterface
-public interface ByteSinkable {
+import objectos.css.om.Selector;
+import objectos.lang.CharWritable;
 
-  void writeTo(ByteSink sink);
-
-}
+public sealed interface SelectorElement extends CharWritable permits Selector {}

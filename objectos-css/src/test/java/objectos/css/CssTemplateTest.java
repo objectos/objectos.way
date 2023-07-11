@@ -17,9 +17,48 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.om.StyleSheet;
 import org.testng.annotations.Test;
 
 public class CssTemplateTest {
+
+  @Test(enabled = false, description = """
+  [#460] @media screen {}
+  """)
+  public void media01() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          media(
+            screen,
+
+            style(
+              body,
+              padding(rem(1), $0)
+            )
+          );
+
+          style(
+            label,
+            margin($0)
+          );
+        }
+      },
+
+      """
+      @media screen {
+        body {
+          padding: 1rem 0;
+        }
+      }
+
+      label {
+        margin: 0;
+      }
+      """
+    );
+  }
 
   @Test(description = """
   [#419] Preflight 13
@@ -1991,7 +2030,9 @@ public class CssTemplateTest {
 
       """
       b, strong {}
+
       code, kbd, samp, pre {}
+
       small {}
       """
     );
@@ -2020,7 +2061,9 @@ public class CssTemplateTest {
   }
 
   private void test(CssTemplate template, String pretty) {
-    var sheet = template.toStyleSheet();
+    StyleSheet sheet;
+    sheet = template.toStyleSheet();
+
     assertEquals(sheet.toString(), pretty);
   }
 

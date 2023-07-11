@@ -23,10 +23,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import objectos.http.Http;
 import objectos.http.internal.TestingInput.RegularInput;
-import objectos.http.io.CharWritable;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Response;
+import objectos.lang.CharWritable;
 
 /**
  * Transfer-Encoding: Chunked

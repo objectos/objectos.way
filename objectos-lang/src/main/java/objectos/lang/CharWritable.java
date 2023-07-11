@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2022-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.lang;
 
-record StyleRule(String selector, String block) {
-  @Override
-  public final String toString() {
-    return selector + block;
+import java.io.IOException;
+
+/**
+ * An object that can write out its string representation.
+ *
+ * @since 0.7.1
+ */
+public interface CharWritable {
+
+  /**
+   * Writes this object's textual representation to the appendable.
+   *
+   * @param dest the appendable where to write characters into.
+   *
+   * @throws IOException if an I/O error occurs
+   */
+  default void writeTo(Appendable dest) throws IOException {
+    dest.append(toString());
   }
+
 }

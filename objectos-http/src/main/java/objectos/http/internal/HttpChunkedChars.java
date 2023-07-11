@@ -20,7 +20,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import objectos.http.io.CharWritable;
+import objectos.lang.CharWritable;
 
 final class HttpChunkedChars implements Appendable {
 

@@ -13,12 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.io;
+package objectos.css.internal;
 
 import java.io.IOException;
+import objectos.css.om.Selector;
+import objectos.css.tmpl.SelectorElement;
+import objectos.util.UnmodifiableList;
 
-public interface CharWritable {
-
-  void writeTo(Appendable appendable) throws IOException;
-
+public record InternalSelector(UnmodifiableList<SelectorElement> elements) implements Selector {
+  @Override
+  public final void writeTo(Appendable dest) throws IOException {
+    for (SelectorElement element : elements) {
+      element.writeTo(dest);
+    }
+  }
 }

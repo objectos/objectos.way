@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.tmpl;
 
-import objectos.css.om.Selector;
+import objectos.css.internal.MediaType;
+import objectos.css.om.StyleRule;
 
-public sealed interface SelectorElement permits Selector {}
+public sealed interface MediaRuleElement permits MediaType, StyleRule {}

@@ -13,24 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.css.tmpl;
 
-import objectos.css.om.StyleSheet;
-import objectos.util.UnmodifiableList;
+import objectos.css.om.Selector;
+import objectos.css.om.StyleDeclaration;
+import objectos.lang.CharWritable;
 
-public final class StyleSheetImpl implements StyleSheet {
-
-  private final UnmodifiableList<Object> rules;
-
-  StyleSheetImpl(UnmodifiableList<Object> rules) {
-    this.rules = rules;
-  }
-
-  @Override
-  public final String toString() {
-    var nl = System.lineSeparator();
-
-    return rules.join(nl, "", nl);
-  }
-
-}
+public sealed interface StyleRuleElement extends CharWritable permits Selector, StyleDeclaration {}

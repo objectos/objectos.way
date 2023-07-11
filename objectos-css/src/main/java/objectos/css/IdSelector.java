@@ -15,11 +15,15 @@
  */
 package objectos.css;
 
+import java.io.IOException;
 import java.util.Objects;
 import objectos.css.om.Selector;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 import objectos.lang.Check;
 
+/**
+ * @since 0.7
+ */
 public record IdSelector(String id) implements ExternalAttribute.Id, Selector {
 
   public IdSelector {
@@ -40,6 +44,12 @@ public record IdSelector(String id) implements ExternalAttribute.Id, Selector {
   @Override
   public final String value() {
     return id;
+  }
+
+  @Override
+  public final void writeTo(Appendable dest) throws IOException {
+    dest.append('#');
+    dest.append(id);
   }
 
 }

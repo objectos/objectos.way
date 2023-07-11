@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Defines the Objectos HTTP API.
+ *
+ * @since 0.7
+ */
 module objectos.http {
   exports objectos.http;
-  exports objectos.http.io;
   exports objectos.http.media;
   exports objectos.http.server;
 

@@ -19,8 +19,8 @@ import java.nio.charset.Charset;
 import java.util.Objects;
 import objectos.http.Http.Header.Name;
 import objectos.http.Http.Status;
-import objectos.http.io.CharWritable;
 import objectos.http.server.Response;
+import objectos.lang.CharWritable;
 
 final class HttpResponse implements Response {
 

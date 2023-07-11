@@ -17,6 +17,9 @@ package objectos.css.util;
 
 import objectos.css.tmpl.ColorValue;
 
+/**
+ * @since 0.7
+ */
 public final class Color extends GeneratedColor implements ColorValue {
 
   private final String value;

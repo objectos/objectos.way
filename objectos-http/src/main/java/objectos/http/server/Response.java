@@ -18,7 +18,7 @@ package objectos.http.server;
 import java.nio.charset.Charset;
 import objectos.http.Http.Header;
 import objectos.http.Http.Status;
-import objectos.http.io.CharWritable;
+import objectos.lang.CharWritable;
 
 public interface Response {
 
