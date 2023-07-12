@@ -60,13 +60,14 @@ public class CssSelfGen01BorderColorTest {
       """
       package objectos.css.tmpl;
 
+      import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.css.util.Color;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface ColorValue extends
-          PropertyValue permits Color {}
+          PropertyValue permits Color, StandardName {}
       """
     );
   }
@@ -163,11 +164,12 @@ public class CssSelfGen01BorderColorTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.NamedElement;
+      import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface GlobalKeyword extends PropertyValue permits NamedElement {}
+      public sealed interface GlobalKeyword extends PropertyValue permits NamedElement, StandardName {}
       """
     );
   }

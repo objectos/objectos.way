@@ -16,9 +16,10 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface DisplayOutsideValue extends
     DisplayValue,
-    DisplayValue2 permits BlockKeyword, InlineKeyword, NamedElement {}
+    DisplayValue2 permits BlockKeyword, InlineKeyword, NamedElement, StandardName {}

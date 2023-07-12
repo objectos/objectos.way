@@ -108,11 +108,12 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.NamedElement;
+      import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LineStyle extends PropertyValue permits NamedElement, NoneKeyword {}
+      public sealed interface LineStyle extends PropertyValue permits NamedElement, NoneKeyword, StandardName {}
       """
     );
   }
@@ -160,12 +161,13 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.NamedElement;
+      import objectos.css.internal.StandardName;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface NoneKeyword extends
           LineStyle,
-          TextSizeAdjustValue permits NamedElement {}
+          TextSizeAdjustValue permits NamedElement, StandardName {}
       """
     );
   }
@@ -179,11 +181,12 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.NamedElement;
+      import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface TextSizeAdjustValue extends PropertyValue permits NamedElement, NoneKeyword {}
+      public sealed interface TextSizeAdjustValue extends PropertyValue permits NamedElement, NoneKeyword, StandardName {}
       """
     );
   }

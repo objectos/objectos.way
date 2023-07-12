@@ -16,8 +16,9 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.internal.StandardName;
 import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface AppearanceValue extends PropertyValue permits AutoKeyword, ButtonKeyword, NamedElement, NoneKeyword, TextareaKeyword {}
+public sealed interface AppearanceValue extends PropertyValue permits AutoKeyword, ButtonKeyword, NamedElement, NoneKeyword, StandardName, TextareaKeyword {}

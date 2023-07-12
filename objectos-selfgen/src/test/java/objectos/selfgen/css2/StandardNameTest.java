@@ -40,6 +40,25 @@ public class StandardNameTest {
           // pseudo elements
           "::after", "::before"
         );
+
+        // global keywords
+        var globalKeyword = t("GlobalKeyword",
+          k("inherit"), k("initial"), k("unset")
+        );
+
+        // color
+        var color = color(
+          "currentcolor",
+          "transparent"
+        );
+
+        // B
+        property(
+          "border-color",
+
+          sig(globalKeyword, "value"),
+          sig(color, "value")
+        );
       }
     };
 
@@ -54,11 +73,16 @@ public class StandardNameTest {
       """
       package objectos.css.internal;
 
+      import objectos.css.om.PropertyName;
       import objectos.css.om.Selector;
+      import objectos.css.tmpl.ColorValue;
+      import objectos.css.tmpl.GlobalKeyword;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public enum StandardName implements Selector {
+      public enum StandardName implements Selector, ColorValue,
+          PropertyName,
+          GlobalKeyword {
         __after("::after"),
 
         __before("::before"),
@@ -67,12 +91,29 @@ public class StandardNameTest {
 
         pre("pre"),
 
-        any("*");
+        any("*"),
+
+        currentcolor("currentcolor"),
+
+        transparent("transparent"),
+
+        inherit("inherit"),
+
+        initial("initial"),
+
+        unset("unset"),
+
+        BORDER_COLOR("border-color");
 
         public final String cssName;
 
         private StandardName(String cssName) {
           this.cssName = cssName;
+        }
+
+        @Override
+        public final String toString() {
+          return cssName;
         }
       }
       """

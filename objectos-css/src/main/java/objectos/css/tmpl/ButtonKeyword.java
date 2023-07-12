@@ -16,10 +16,11 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.internal.StandardName;
 import objectos.css.om.Selector;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface ButtonKeyword extends
     AppearanceValue,
-    Selector permits NamedElement {}
+    Selector permits NamedElement, StandardName {}

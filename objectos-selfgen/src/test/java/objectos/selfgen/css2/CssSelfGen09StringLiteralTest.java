@@ -91,11 +91,12 @@ public class CssSelfGen09StringLiteralTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.NamedElement;
+      import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface FontFamilyValue extends PropertyValue permits NamedElement, StringLiteral {}
+      public sealed interface FontFamilyValue extends PropertyValue permits NamedElement, StandardName, StringLiteral {}
       """
     );
   }

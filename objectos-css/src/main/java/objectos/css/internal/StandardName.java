@@ -15,11 +15,168 @@
  */
 package objectos.css.internal;
 
+import objectos.css.om.PropertyName;
 import objectos.css.om.Selector;
+import objectos.css.tmpl.AppearanceValue;
+import objectos.css.tmpl.AutoKeyword;
+import objectos.css.tmpl.BackgroundImageValue;
+import objectos.css.tmpl.BlockKeyword;
+import objectos.css.tmpl.BorderCollapseValue;
+import objectos.css.tmpl.BottomValue;
+import objectos.css.tmpl.BoxSizingValue;
+import objectos.css.tmpl.ButtonKeyword;
+import objectos.css.tmpl.CenterKeyword;
+import objectos.css.tmpl.ColorValue;
+import objectos.css.tmpl.CounterStyleValue;
+import objectos.css.tmpl.CursorValue;
+import objectos.css.tmpl.DashedKeyword;
+import objectos.css.tmpl.DisplayBoxValue;
+import objectos.css.tmpl.DisplayInsideValue;
+import objectos.css.tmpl.DisplayInternalValue;
+import objectos.css.tmpl.DisplayLegacyValue;
+import objectos.css.tmpl.DisplayListItemValue;
+import objectos.css.tmpl.DisplayOutsideValue;
+import objectos.css.tmpl.DottedKeyword;
+import objectos.css.tmpl.DoubleKeyword;
+import objectos.css.tmpl.EndKeyword;
+import objectos.css.tmpl.FitContentKeyword;
+import objectos.css.tmpl.FlexDirectionValue;
+import objectos.css.tmpl.FlexEndKeyword;
+import objectos.css.tmpl.FlexStartKeyword;
+import objectos.css.tmpl.FontFamilyValue;
+import objectos.css.tmpl.FontFeatureSettingsValue;
+import objectos.css.tmpl.FontSizeValue;
+import objectos.css.tmpl.FontValue;
+import objectos.css.tmpl.FontVariationSettingsValue;
+import objectos.css.tmpl.FontWeightValue;
+import objectos.css.tmpl.GlobalKeyword;
+import objectos.css.tmpl.GrooveKeyword;
+import objectos.css.tmpl.HeightOrWidthValue;
+import objectos.css.tmpl.InlineKeyword;
+import objectos.css.tmpl.InsetKeyword;
+import objectos.css.tmpl.JustifyContentPosition;
+import objectos.css.tmpl.JustifyContentValue;
+import objectos.css.tmpl.LeftKeyword;
+import objectos.css.tmpl.LineHeightValue;
+import objectos.css.tmpl.LineStyle;
+import objectos.css.tmpl.LineWidth;
+import objectos.css.tmpl.ListStyleImageValue;
+import objectos.css.tmpl.ListStylePositionValue;
+import objectos.css.tmpl.ListStyleTypeValue;
+import objectos.css.tmpl.MarginValue;
+import objectos.css.tmpl.MaxContentKeyword;
+import objectos.css.tmpl.MaxHeightOrWidthValue;
+import objectos.css.tmpl.MediumKeyword;
+import objectos.css.tmpl.MenuKeyword;
+import objectos.css.tmpl.MinContentKeyword;
+import objectos.css.tmpl.MinHeightOrWidthValue;
+import objectos.css.tmpl.NoneKeyword;
+import objectos.css.tmpl.NormalKeyword;
+import objectos.css.tmpl.OutlineStyleValue;
+import objectos.css.tmpl.OutsetKeyword;
+import objectos.css.tmpl.OverflowPosition;
+import objectos.css.tmpl.PositionValue;
+import objectos.css.tmpl.ProgressKeyword;
+import objectos.css.tmpl.ResizeValue;
+import objectos.css.tmpl.RidgeKeyword;
+import objectos.css.tmpl.RightKeyword;
+import objectos.css.tmpl.SmallKeyword;
+import objectos.css.tmpl.SolidKeyword;
+import objectos.css.tmpl.StartKeyword;
+import objectos.css.tmpl.SubKeyword;
+import objectos.css.tmpl.TableKeyword;
+import objectos.css.tmpl.TextDecorationLineMultiValue;
+import objectos.css.tmpl.TextDecorationLineSingleValue;
+import objectos.css.tmpl.TextDecorationStyleValue;
+import objectos.css.tmpl.TextDecorationThicknessValue;
+import objectos.css.tmpl.TextIndentValue;
+import objectos.css.tmpl.TextSizeAdjustValue;
+import objectos.css.tmpl.TextTransformValue;
+import objectos.css.tmpl.TextareaKeyword;
+import objectos.css.tmpl.TopValue;
+import objectos.css.tmpl.VerticalAlignValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public enum StandardName implements Selector {
+public enum StandardName implements Selector, ColorValue,
+    PropertyName,
+    AppearanceValue,
+    BackgroundImageValue,
+    BorderCollapseValue,
+    BottomValue,
+    BoxSizingValue,
+    CounterStyleValue,
+    CursorValue,
+    DisplayBoxValue,
+    DisplayInsideValue,
+    DisplayInternalValue,
+    DisplayLegacyValue,
+    DisplayListItemValue,
+    DisplayOutsideValue,
+    FlexDirectionValue,
+    FontFamilyValue,
+    FontFeatureSettingsValue,
+    FontSizeValue,
+    FontValue,
+    FontVariationSettingsValue,
+    FontWeightValue,
+    GlobalKeyword,
+    HeightOrWidthValue,
+    JustifyContentPosition,
+    JustifyContentValue,
+    LineHeightValue,
+    LineStyle,
+    LineWidth,
+    ListStyleImageValue,
+    ListStylePositionValue,
+    ListStyleTypeValue,
+    MarginValue,
+    MaxHeightOrWidthValue,
+    MinHeightOrWidthValue,
+    OutlineStyleValue,
+    OverflowPosition,
+    PositionValue,
+    ResizeValue,
+    TextDecorationLineMultiValue,
+    TextDecorationLineSingleValue,
+    TextDecorationStyleValue,
+    TextDecorationThicknessValue,
+    TextIndentValue,
+    TextSizeAdjustValue,
+    TextTransformValue,
+    TopValue,
+    VerticalAlignValue,
+    AutoKeyword,
+    BlockKeyword,
+    ButtonKeyword,
+    CenterKeyword,
+    DashedKeyword,
+    DottedKeyword,
+    DoubleKeyword,
+    EndKeyword,
+    FitContentKeyword,
+    FlexEndKeyword,
+    FlexStartKeyword,
+    GrooveKeyword,
+    InlineKeyword,
+    InsetKeyword,
+    LeftKeyword,
+    MaxContentKeyword,
+    MediumKeyword,
+    MenuKeyword,
+    MinContentKeyword,
+    NoneKeyword,
+    NormalKeyword,
+    OutsetKeyword,
+    ProgressKeyword,
+    RidgeKeyword,
+    RightKeyword,
+    SmallKeyword,
+    SolidKeyword,
+    StartKeyword,
+    SubKeyword,
+    TableKeyword,
+    TextareaKeyword {
   __after("::after"),
 
   __before("::before"),
@@ -122,11 +279,682 @@ public enum StandardName implements Selector {
 
   video("video"),
 
-  any("*");
+  any("*"),
+
+  aqua("aqua"),
+
+  black("black"),
+
+  blue("blue"),
+
+  currentcolor("currentcolor"),
+
+  fuchsia("fuchsia"),
+
+  gray("gray"),
+
+  green("green"),
+
+  lime("lime"),
+
+  maroon("maroon"),
+
+  navy("navy"),
+
+  olive("olive"),
+
+  purple("purple"),
+
+  red("red"),
+
+  silver("silver"),
+
+  teal("teal"),
+
+  transparent("transparent"),
+
+  white("white"),
+
+  yellow("yellow"),
+
+  _default("default"),
+
+  _double("double"),
+
+  _static("static"),
+
+  _super("super"),
+
+  absolute("absolute"),
+
+  alias("alias"),
+
+  allScroll("all-scroll"),
+
+  arabicIndic("arabic-indic"),
+
+  armenian("armenian"),
+
+  auto("auto"),
+
+  baseline("baseline"),
+
+  bengali("bengali"),
+
+  blink("blink"),
+
+  block("block"),
+
+  bold("bold"),
+
+  bolder("bolder"),
+
+  borderBox("border-box"),
+
+  both("both"),
+
+  bottom("bottom"),
+
+  button("button"),
+
+  cambodian("cambodian"),
+
+  capitalize("capitalize"),
+
+  caption("caption"),
+
+  cell("cell"),
+
+  center("center"),
+
+  checkbox("checkbox"),
+
+  circle("circle"),
+
+  cjkDecimal("cjk-decimal"),
+
+  cjkEarthlyBranch("cjk-earthly-branch"),
+
+  cjkHeavenlyStem("cjk-heavenly-stem"),
+
+  cjkIdeographic("cjk-ideographic"),
+
+  colResize("col-resize"),
+
+  collapse("collapse"),
+
+  column("column"),
+
+  columnReverse("column-reverse"),
+
+  contentBox("content-box"),
+
+  contents("contents"),
+
+  contextMenu("context-menu"),
+
+  copy("copy"),
+
+  crosshair("crosshair"),
+
+  cursive("cursive"),
+
+  dashed("dashed"),
+
+  decimal("decimal"),
+
+  decimalLeadingZero("decimal-leading-zero"),
+
+  devanagari("devanagari"),
+
+  disc("disc"),
+
+  disclosureClosed("disclosure-closed"),
+
+  disclosureOpen("disclosure-open"),
+
+  dotted("dotted"),
+
+  eResize("e-resize"),
+
+  eachLine("each-line"),
+
+  emoji("emoji"),
+
+  end("end"),
+
+  ethiopicNumeric("ethiopic-numeric"),
+
+  ewResize("ew-resize"),
+
+  fangsong("fangsong"),
+
+  fantasy("fantasy"),
+
+  fitContent("fit-content"),
+
+  fixed("fixed"),
+
+  flex("flex"),
+
+  flexEnd("flex-end"),
+
+  flexStart("flex-start"),
+
+  flow("flow"),
+
+  flowRoot("flow-root"),
+
+  fromFont("from-font"),
+
+  fullSizeKana("full-size-kana"),
+
+  fullWidth("full-width"),
+
+  georgian("georgian"),
+
+  grab("grab"),
+
+  grabbing("grabbing"),
+
+  grid("grid"),
+
+  groove("groove"),
+
+  gujarati("gujarati"),
+
+  gurmukhi("gurmukhi"),
+
+  hanging("hanging"),
+
+  hebrew("hebrew"),
+
+  help("help"),
+
+  hidden("hidden"),
+
+  hiragana("hiragana"),
+
+  hiraganaIroha("hiragana-iroha"),
+
+  horizontal("horizontal"),
+
+  icon("icon"),
+
+  inherit("inherit"),
+
+  initial("initial"),
+
+  inline("inline"),
+
+  inlineBlock("inline-block"),
+
+  inlineFlex("inline-flex"),
+
+  inlineGrid("inline-grid"),
+
+  inlineTable("inline-table"),
+
+  inset("inset"),
+
+  inside("inside"),
+
+  japaneseFormal("japanese-formal"),
+
+  japaneseInformal("japanese-informal"),
+
+  kannada("kannada"),
+
+  katakana("katakana"),
+
+  katakanaIroha("katakana-iroha"),
+
+  khmer("khmer"),
+
+  koreanHangulFormal("korean-hangul-formal"),
+
+  koreanHanjaFormal("korean-hanja-formal"),
+
+  koreanHanjaInformal("korean-hanja-informal"),
+
+  lao("lao"),
+
+  large("large"),
+
+  larger("larger"),
+
+  left("left"),
+
+  lighter("lighter"),
+
+  lineThrough("line-through"),
+
+  listItem("list-item"),
+
+  listbox("listbox"),
+
+  lowerAlpha("lower-alpha"),
+
+  lowerArmenian("lower-armenian"),
+
+  lowerGreek("lower-greek"),
+
+  lowerLatin("lower-latin"),
+
+  lowerRoman("lower-roman"),
+
+  lowercase("lowercase"),
+
+  malayalam("malayalam"),
+
+  math("math"),
+
+  maxContent("max-content"),
+
+  medium("medium"),
+
+  menu("menu"),
+
+  menulist("menulist"),
+
+  menulistButton("menulist-button"),
+
+  messageBox("message-box"),
+
+  meter("meter"),
+
+  middle("middle"),
+
+  minContent("min-content"),
+
+  mongolian("mongolian"),
+
+  monospace("monospace"),
+
+  move("move"),
+
+  mozArabicIndic("-moz-arabic-indic"),
+
+  mozBengali("-moz-bengali"),
+
+  mozCjkEarthlyBranch("-moz-cjk-earthly-branch"),
+
+  mozCjkHeavenlyStem("-moz-cjk-heavenly-stem"),
+
+  mozDevanagari("-moz-devanagari"),
+
+  mozGujarati("-moz-gujarati"),
+
+  mozGurmukhi("-moz-gurmukhi"),
+
+  mozKannada("-moz-kannada"),
+
+  mozKhmer("-moz-khmer"),
+
+  mozLao("-moz-lao"),
+
+  mozMalayalam("-moz-malayalam"),
+
+  mozMyanmar("-moz-myanmar"),
+
+  mozOriya("-moz-oriya"),
+
+  mozPersian("-moz-persian"),
+
+  mozTamil("-moz-tamil"),
+
+  mozTelugu("-moz-telugu"),
+
+  mozThai("-moz-thai"),
+
+  myanmar("myanmar"),
+
+  nResize("n-resize"),
+
+  neResize("ne-resize"),
+
+  neswResize("nesw-resize"),
+
+  noDrop("no-drop"),
+
+  none("none"),
+
+  normal("normal"),
+
+  notAllowed("not-allowed"),
+
+  nsResize("ns-resize"),
+
+  nwResize("nw-resize"),
+
+  nwseResize("nwse-resize"),
+
+  oriya("oriya"),
+
+  outset("outset"),
+
+  outside("outside"),
+
+  overline("overline"),
+
+  persian("persian"),
+
+  pointer("pointer"),
+
+  progress("progress"),
+
+  progressBar("progress-bar"),
+
+  pushButton("push-button"),
+
+  radio("radio"),
+
+  relative("relative"),
+
+  ridge("ridge"),
+
+  right("right"),
+
+  row("row"),
+
+  rowResize("row-resize"),
+
+  rowReverse("row-reverse"),
+
+  ruby("ruby"),
+
+  rubyBase("ruby-base"),
+
+  rubyBaseContainer("ruby-base-container"),
+
+  rubyText("ruby-text"),
+
+  rubyTextContainer("ruby-text-container"),
+
+  runIn("runIn"),
+
+  sResize("s-resize"),
+
+  safe("safe"),
+
+  sansSerif("sans-serif"),
+
+  seResize("se-resize"),
+
+  searchfield("searchfield"),
+
+  separate("separate"),
+
+  serif("serif"),
+
+  simpChineseFormal("simp-chinese-formal"),
+
+  simpChineseInformal("simp-chinese-informal"),
+
+  sliderHorizontal("slider-horizontal"),
+
+  small("small"),
+
+  smallCaption("small-caption"),
+
+  smaller("smaller"),
+
+  solid("solid"),
+
+  spaceAround("space-around"),
+
+  spaceBetween("space-between"),
+
+  spaceEvenly("space-evenly"),
+
+  square("square"),
+
+  squareButton("square-button"),
+
+  start("start"),
+
+  statusBar("status-bar"),
+
+  sticky("sticky"),
+
+  stretch("stretch"),
+
+  sub("sub"),
+
+  swResize("sw-resize"),
+
+  systemUi("system-ui"),
+
+  table("table"),
+
+  tableCaption("table-caption"),
+
+  tableCell("table-cell"),
+
+  tableColumn("table-column"),
+
+  tableColumnGroup("table-column-group"),
+
+  tableFooterGroup("table-footer-group"),
+
+  tableHeaderGroup("table-header-group"),
+
+  tableRow("table-row"),
+
+  tableRowGroup("table-row-group"),
+
+  tamil("tamil"),
+
+  telugu("telugu"),
+
+  text("text"),
+
+  textBottom("text-bottom"),
+
+  textTop("text-top"),
+
+  textarea("textarea"),
+
+  textfield("textfield"),
+
+  thai("thai"),
+
+  thick("thick"),
+
+  thin("thin"),
+
+  tibetan("tibetan"),
+
+  top("top"),
+
+  tradChineseFormal("trad-chinese-formal"),
+
+  tradChineseInformal("trad-chinese-informal"),
+
+  uiMonospace("ui-monospace"),
+
+  uiRounded("ui-rounded"),
+
+  uiSansSerif("ui-sans-serif"),
+
+  uiSerif("ui-serif"),
+
+  underline("underline"),
+
+  unsafe("unsafe"),
+
+  unset("unset"),
+
+  upperAlpha("upper-alpha"),
+
+  upperArmenian("upper-armenian"),
+
+  upperLatin("upper-latin"),
+
+  upperRoman("upper-roman"),
+
+  uppercase("uppercase"),
+
+  vertical("vertical"),
+
+  verticalText("vertical-text"),
+
+  wResize("w-resize"),
+
+  wait("wait"),
+
+  wavy("wavy"),
+
+  xLarge("x-large"),
+
+  xSmall("x-small"),
+
+  xxLarge("xx-large"),
+
+  xxSmall("xx-small"),
+
+  xxxLarge("xxx-large"),
+
+  zoomIn("zoom-in"),
+
+  zoomOut("zoom-out"),
+
+  APPEARANCE("appearance"),
+
+  BACKGROUND_COLOR("background-color"),
+
+  BACKGROUND_IMAGE("background-image"),
+
+  BORDER_BOTTOM_WIDTH("border-bottom-width"),
+
+  BORDER_COLLAPSE("border-collapse"),
+
+  BORDER_COLOR("border-color"),
+
+  BORDER_LEFT_WIDTH("border-left-width"),
+
+  BORDER_RIGHT_WIDTH("border-right-width"),
+
+  BORDER_STYLE("border-style"),
+
+  BORDER_TOP_WIDTH("border-top-width"),
+
+  BORDER_WIDTH("border-width"),
+
+  BOTTOM("bottom"),
+
+  BOX_SHADOW("box-shadow"),
+
+  BOX_SIZING("box-sizing"),
+
+  COLOR("color"),
+
+  CURSOR("cursor"),
+
+  DISPLAY("display"),
+
+  FLEX_DIRECTION("flex-direction"),
+
+  FONT("font"),
+
+  FONT_FAMILY("font-family"),
+
+  FONT_FEATURE_SETTINGS("font-feature-settings"),
+
+  FONT_SIZE("font-size"),
+
+  FONT_VARIATION_SETTINGS("font-variation-settings"),
+
+  FONT_WEIGHT("font-weight"),
+
+  HEIGHT("height"),
+
+  JUSTIFY_CONTENT("justify-content"),
+
+  LINE_HEIGHT("line-height"),
+
+  LIST_STYLE("list-style"),
+
+  LIST_STYLE_IMAGE("list-style-image"),
+
+  LIST_STYLE_POSITION("list-style-position"),
+
+  LIST_STYLE_TYPE("list-style-type"),
+
+  MARGIN("margin"),
+
+  MAX_HEIGHT("max-height"),
+
+  MAX_WIDTH("max-width"),
+
+  MIN_HEIGHT("min-height"),
+
+  MIN_WIDTH("min-width"),
+
+  OPACITY("opacity"),
+
+  OUTLINE("outline"),
+
+  OUTLINE_COLOR("outline-color"),
+
+  OUTLINE_OFFSET("outline-offset"),
+
+  OUTLINE_STYLE("outline-style"),
+
+  OUTLINE_WIDTH("outline-width"),
+
+  PADDING("padding"),
+
+  PADDING_BOTTOM("padding-bottom"),
+
+  PADDING_LEFT("padding-left"),
+
+  PADDING_RIGHT("padding-right"),
+
+  PADDING_TOP("padding-top"),
+
+  POSITION("position"),
+
+  RESIZE("resize"),
+
+  TAB_SIZE("tab-size"),
+
+  TEXT_DECORATION("text-decoration"),
+
+  TEXT_DECORATION_COLOR("text-decoration-color"),
+
+  TEXT_DECORATION_LINE("text-decoration-line"),
+
+  TEXT_DECORATION_STYLE("text-decoration-style"),
+
+  TEXT_DECORATION_THICKNESS("text-decoration-thickness"),
+
+  TEXT_INDENT("text-indent"),
+
+  TEXT_TRANSFORM("text-transform"),
+
+  TOP("top"),
+
+  VERTICAL_ALIGN("vertical-align"),
+
+  WIDTH("width"),
+
+  _MOZ_APPEARANCE("-moz-appearance"),
+
+  _MOZ_TAB_SIZE("-moz-tab-size"),
+
+  _WEBKIT_APPEARANCE("-webkit-appearance"),
+
+  _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
 
   public final String cssName;
 
   private StandardName(String cssName) {
     this.cssName = cssName;
+  }
+
+  @Override
+  public final String toString() {
+    return cssName;
   }
 }

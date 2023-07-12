@@ -16,8 +16,9 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface TextDecorationThicknessValue extends
-    TextDecorationValue permits AutoKeyword, LengthPercentage, NamedElement {}
+    TextDecorationValue permits AutoKeyword, LengthPercentage, NamedElement, StandardName {}

@@ -16,6 +16,7 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -24,4 +25,4 @@ public sealed interface NormalKeyword extends
     FontVariationSettingsValue,
     FontWeightValue,
     JustifyContentValue,
-    LineHeightValue permits NamedElement {}
+    LineHeightValue permits NamedElement, StandardName {}

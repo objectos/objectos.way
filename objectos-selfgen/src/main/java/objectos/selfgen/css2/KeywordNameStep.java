@@ -33,7 +33,7 @@ final class KeywordNameStep extends ThisTemplate {
       annotation(GENERATED, annotationValue(s(GENERATOR))),
       PUBLIC, SEALED, name(keywordName.className()),
       include(this::superTypes),
-      permitsClause(NAMED_ELEMENT)
+      permitsClause(NAMED_ELEMENT, STANDARD_NAME)
     );
   }
 

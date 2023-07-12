@@ -91,13 +91,14 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.NamedElement;
+      import objectos.css.internal.StandardName;
       import objectos.css.om.Selector;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface SmallKeyword extends
           FontSizeValue,
-          Selector permits NamedElement {}
+          Selector permits NamedElement, StandardName {}
       """
     );
   }

@@ -16,10 +16,11 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.NamedElement;
+import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface DashedKeyword extends
     LineStyle,
     OutlineStyleValue,
-    TextDecorationStyleValue permits NamedElement {}
+    TextDecorationStyleValue permits NamedElement, StandardName {}
