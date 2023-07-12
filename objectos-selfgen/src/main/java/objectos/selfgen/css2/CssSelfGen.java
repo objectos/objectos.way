@@ -70,6 +70,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     spec.write(sink, new GeneratedCssTemplateStep());
 
+    spec.write(sink, new GeneratedCssTemplateStep2());
+
     spec.write(sink, new KeywordNameStep());
 
     spec.write(sink, new LengthTypeStep());
