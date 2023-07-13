@@ -15,26 +15,45 @@
  */
 package objectos.css.internal;
 
+import objectos.lang.Check;
+
 final class Bytes {
 
-  public static final byte NULL = -1;
-
-  public static final byte ROOT = -2;
-
-  public static final byte ROOT_END = -3;
-
-  public static final byte DECLARATION = -4;
-
-  public static final byte DECLARATION_END = -5;
-
-  public static final byte STANDARD_NAME = -6;
-
-  public static final byte STYLE_RULE = -7;
-
-  public static final byte STYLE_RULE_END = -8;
-
-  public static final byte MARKED = -9;
+  private static final int MAX_INDEX = 1 << 24 - 1;
 
   private Bytes() {}
+
+  // we use 3 bytes for internal indices
+  public static byte idx0(int value) {
+    Check.argument(value <= MAX_INDEX, "CssTemplate is too large.");
+
+    return (byte) value;
+  }
+
+  // we use 3 bytes for internal indices
+  public static byte idx1(int value) {
+    return (byte) (value >>> 8);
+  }
+
+  // we use 3 bytes for internal indices
+  public static byte idx2(int value) {
+    return (byte) (value >>> 16);
+  }
+
+  // we use 2 bytes for the StandardName enum
+  public static byte name0(StandardName name) {
+    int ordinal;
+    ordinal = name.ordinal();
+
+    return (byte) ordinal;
+  }
+
+  // we use 2 bytes for the StandardName enum
+  public static byte name1(StandardName name) {
+    int ordinal;
+    ordinal = name.ordinal();
+
+    return (byte) (ordinal >>> 8);
+  }
 
 }

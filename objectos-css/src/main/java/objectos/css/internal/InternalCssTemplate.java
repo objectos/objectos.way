@@ -31,7 +31,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   public final StyleSheet compile() {
     try {
-      api = new CssCompiler();
+      api = new Compiler01();
 
       api.compilationStart();
 

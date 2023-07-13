@@ -16,16 +16,12 @@
 package objectos.css.internal;
 
 import java.util.Arrays;
-import objectos.css.StyleSheet;
 import objectos.css.om.PropertyName;
 import objectos.css.om.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
-import objectos.lang.Check;
 import objectos.util.ByteArrays;
 
-final class CssCompiler extends CssTemplateApi {
-
-  private static final int MAX_INDEX = 1 << 24 - 1;
+class Compiler01 extends CssTemplateApi {
 
   private static final byte MARK_INTERNAL = -1;
   private static final byte MARK_VALUE3 = -4;
@@ -45,9 +41,9 @@ final class CssCompiler extends CssTemplateApi {
   int mainStart;
 
   @Override
-  public final StyleSheet compile() {
+  public CompiledStyleSheet compile() {
     return new CompiledStyleSheet(
-      Arrays.copyOf(main, mainIndex)
+      Arrays.copyOf(aux, auxIndex)
     );
   }
 
@@ -70,10 +66,11 @@ final class CssCompiler extends CssTemplateApi {
       mainContents = mainStart = mainIndex;
 
       mainAdd(
-        Bytes.DECLARATION,
+        ByteProto.DECLARATION,
         // indices take 3 bytes
-        Bytes.NULL, Bytes.NULL, Bytes.NULL,
-        name0(name), name1(name)
+        ByteProto.NULL, ByteProto.NULL, ByteProto.NULL,
+        Bytes.name0(name),
+        Bytes.name1(name)
       );
     }
 
@@ -91,8 +88,9 @@ final class CssCompiler extends CssTemplateApi {
       // store the enum ordinal
       auxAdd(
         MARK_VALUE3,
-        Bytes.STANDARD_NAME,
-        name0(name), name1(name)
+        ByteProto.STANDARD_NAME,
+        Bytes.name0(name),
+        Bytes.name1(name)
       );
     }
 
@@ -127,11 +125,17 @@ final class CssCompiler extends CssTemplateApi {
     }
 
     mainAdd(
-      Bytes.DECLARATION_END,
+      ByteProto.DECLARATION_END,
 
-      idx0(mainContents), idx1(mainContents), idx2(mainContents),
-      idx0(mainStart), idx1(mainStart), idx2(mainStart),
-      Bytes.DECLARATION
+      Bytes.idx0(mainContents),
+      Bytes.idx1(mainContents),
+      Bytes.idx2(mainContents),
+
+      Bytes.idx0(mainStart),
+      Bytes.idx1(mainStart),
+      Bytes.idx2(mainStart),
+
+      ByteProto.DECLARATION
     );
 
     setEndIndex();
@@ -145,9 +149,9 @@ final class CssCompiler extends CssTemplateApi {
     endIndex = mainIndex;
 
     // we skip the first byte proto
-    main[mainStart + 1] = idx0(endIndex);
-    main[mainStart + 2] = idx1(endIndex);
-    main[mainStart + 3] = idx2(endIndex);
+    main[mainStart + 1] = Bytes.idx0(endIndex);
+    main[mainStart + 2] = Bytes.idx1(endIndex);
+    main[mainStart + 3] = Bytes.idx2(endIndex);
   }
 
   @Override
@@ -161,9 +165,9 @@ final class CssCompiler extends CssTemplateApi {
     mainContents = mainStart = mainIndex;
 
     mainAdd(
-      Bytes.STYLE_RULE,
+      ByteProto.STYLE_RULE,
       // indices take 3 bytes
-      Bytes.NULL, Bytes.NULL, Bytes.NULL
+      ByteProto.NULL, ByteProto.NULL, ByteProto.NULL
     );
   }
 
@@ -174,8 +178,9 @@ final class CssCompiler extends CssTemplateApi {
       // store the enum ordinal
       auxAdd(
         MARK_VALUE3,
-        Bytes.STANDARD_NAME,
-        name0(name), name1(name)
+        ByteProto.STANDARD_NAME,
+        Bytes.name0(name),
+        Bytes.name1(name)
       );
     }
 
@@ -192,7 +197,7 @@ final class CssCompiler extends CssTemplateApi {
     }
   }
 
-  private int mainIndex(int offset) {
+  final int mainIndex(int offset) {
     int idx0 = main[offset + 0];
     int idx1 = main[offset + 1] << 8;
     int idx2 = main[offset + 2] << 16;
@@ -230,12 +235,14 @@ final class CssCompiler extends CssTemplateApi {
 
           while (true) {
             switch (proto) {
-              case Bytes.DECLARATION -> {
-                main[internal] = Bytes.MARKED;
+              case ByteProto.DECLARATION -> {
+                main[internal] = ByteProto.MARKED;
 
                 mainAdd(
                   proto,
-                  idx0(internal), idx1(internal), idx2(internal)
+                  Bytes.idx0(internal),
+                  Bytes.idx1(internal),
+                  Bytes.idx2(internal)
                 );
 
                 internal = mainIndex(internal + 1);
@@ -263,11 +270,17 @@ final class CssCompiler extends CssTemplateApi {
     }
 
     mainAdd(
-      Bytes.STYLE_RULE_END,
+      ByteProto.STYLE_RULE_END,
 
-      idx0(mainContents), idx1(mainContents), idx2(mainContents),
-      idx0(mainStart), idx1(mainStart), idx2(mainStart),
-      Bytes.STYLE_RULE
+      Bytes.idx0(mainContents),
+      Bytes.idx1(mainContents),
+      Bytes.idx2(mainContents),
+
+      Bytes.idx0(mainStart),
+      Bytes.idx1(mainStart),
+      Bytes.idx2(mainStart),
+
+      ByteProto.STYLE_RULE
     );
 
     setEndIndex();
@@ -284,7 +297,7 @@ final class CssCompiler extends CssTemplateApi {
       byte proto = main[--rootIndex];
 
       switch (proto) {
-        case Bytes.STYLE_RULE -> {
+        case ByteProto.STYLE_RULE -> {
           // root @ element start index
           byte elemStart2 = main[--rootIndex];
           byte elemStart1 = main[--rootIndex];
@@ -308,46 +321,44 @@ final class CssCompiler extends CssTemplateApi {
 
     int rootStart = mainIndex;
 
-    mainAdd(Bytes.ROOT);
+    mainAdd(ByteProto.ROOT);
 
     while (auxIndex > 0) {
       mainAdd(aux[--auxIndex]);
     }
 
     mainAdd(
-      Bytes.ROOT_END,
-      idx0(rootStart), idx1(rootStart), idx2(rootStart)
+      ByteProto.ROOT_END,
+      Bytes.idx0(rootStart),
+      Bytes.idx1(rootStart),
+      Bytes.idx2(rootStart)
     );
   }
 
-  private void auxAdd(byte b0) {
+  final void auxAdd(byte b0) {
     aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
     aux[auxIndex++] = b0;
   }
 
-  private void auxAdd(byte b0, byte b1, byte b2, byte b3) {
+  final void auxAdd(byte b0, byte b1) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 2);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3) {
     aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
     aux[auxIndex++] = b0;
     aux[auxIndex++] = b1;
     aux[auxIndex++] = b2;
     aux[auxIndex++] = b3;
-  }
-
-  // we use 3 bytes for internal indices
-  private byte idx0(int value) {
-    Check.argument(value <= MAX_INDEX, "CssTemplate is too large.");
-
-    return (byte) value;
-  }
-
-  // we use 3 bytes for internal indices
-  private byte idx1(int value) {
-    return (byte) (value >>> 8);
-  }
-
-  // we use 3 bytes for internal indices
-  private byte idx2(int value) {
-    return (byte) (value >>> 16);
   }
 
   private void mainAdd(byte b0) {
@@ -390,22 +401,6 @@ final class CssCompiler extends CssTemplateApi {
     main[mainIndex++] = b5;
     main[mainIndex++] = b6;
     main[mainIndex++] = b7;
-  }
-
-  // we use 2 bytes for the StandardName enum
-  private byte name0(StandardName name) {
-    int ordinal;
-    ordinal = name.ordinal();
-
-    return (byte) ordinal;
-  }
-
-  // we use 2 bytes for the StandardName enum
-  private byte name1(StandardName name) {
-    int ordinal;
-    ordinal = name.ordinal();
-
-    return (byte) (ordinal >>> 8);
   }
 
 }

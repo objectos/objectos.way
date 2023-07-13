@@ -21,7 +21,7 @@ import objectos.css.StyleSheetWriter;
 
 public final class CompiledStyleSheet implements StyleSheet {
 
-  private final byte[] main;
+  final byte[] main;
 
   public CompiledStyleSheet(byte[] main) {
     this.main = main;
@@ -38,13 +38,13 @@ public final class CompiledStyleSheet implements StyleSheet {
       byte proto = main[rootIndex++];
 
       switch (proto) {
-        case Bytes.ROOT -> {}
+        case ByteProto.ROOT -> {}
 
-        case Bytes.ROOT_END -> {
+        case ByteProto.ROOT_END -> {
           break loop;
         }
 
-        case Bytes.STYLE_RULE -> {
+        case ByteProto.STYLE_RULE -> {
           int index = mainIndex(rootIndex);
 
           rootIndex += 3;
@@ -81,13 +81,13 @@ public final class CompiledStyleSheet implements StyleSheet {
       byte proto = main[index++];
 
       switch (proto) {
-        case Bytes.DECLARATION_END -> {
+        case ByteProto.DECLARATION_END -> {
           writer.declarationEnd();
 
           break loop;
         }
 
-        case Bytes.MARKED -> {
+        case ByteProto.MARKED -> {
           // skip end index
           index += 3;
 
@@ -99,7 +99,7 @@ public final class CompiledStyleSheet implements StyleSheet {
           index += 2;
         }
 
-        case Bytes.STANDARD_NAME -> {
+        case ByteProto.STANDARD_NAME -> {
           String name;
           name = standardName(index);
 
@@ -142,7 +142,7 @@ public final class CompiledStyleSheet implements StyleSheet {
       byte proto = main[index++];
 
       switch (proto) {
-        case Bytes.DECLARATION -> {
+        case ByteProto.DECLARATION -> {
           int elemIndex = mainIndex(index);
 
           index += 3;
@@ -150,7 +150,7 @@ public final class CompiledStyleSheet implements StyleSheet {
           declaration(writer, elemIndex);
         }
 
-        case Bytes.STANDARD_NAME -> {
+        case ByteProto.STANDARD_NAME -> {
           String name;
           name = standardName(index);
 
@@ -159,12 +159,12 @@ public final class CompiledStyleSheet implements StyleSheet {
           index += 2;
         }
 
-        case Bytes.STYLE_RULE -> {
+        case ByteProto.STYLE_RULE -> {
           // skip end index
           index += 3;
         }
 
-        case Bytes.STYLE_RULE_END -> {
+        case ByteProto.STYLE_RULE_END -> {
           break loop;
         }
 
