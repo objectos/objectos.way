@@ -20,6 +20,7 @@ import java.util.Objects;
 import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 import objectos.code.JavaTemplate;
+import objectos.lang.Check;
 import objectos.lang.Generated;
 import objectos.selfgen.CssSpec;
 
@@ -36,6 +37,8 @@ abstract class ThisTemplate extends JavaTemplate {
   static final String CSS_UTIL = "objectos.css.util";
 
   static final String GENERATOR = CssSpec.class.getCanonicalName();
+
+  static final ClassTypeName CHECK = ClassTypeName.of(Check.class);
 
   static final ClassTypeName COLOR = ClassTypeName.of(CSS_UTIL, "Color");
 

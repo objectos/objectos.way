@@ -57,7 +57,7 @@ public class GeneratedCssTemplateStep2Test {
           "border-color",
 
           sig(globalKeyword, "value"),
-          sig(color, "value")
+          sig(color, "all")
         );
       }
     };
@@ -73,9 +73,13 @@ public class GeneratedCssTemplateStep2Test {
       """
       package objectos.css.internal;
 
+      import objectos.css.om.PropertyName;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
+      import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.ColorValue;
       import objectos.css.tmpl.GlobalKeyword;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -99,6 +103,30 @@ public class GeneratedCssTemplateStep2Test {
         protected static final GlobalKeyword initial = StandardName.initial;
 
         protected static final GlobalKeyword unset = StandardName.unset;
+
+        protected final StyleDeclaration borderColor(GlobalKeyword value) {
+          Check.notNull(value, "value == null");
+          return declaration(StandardName.BORDER_COLOR, value);
+        }
+
+        protected final StyleDeclaration borderColor(ColorValue all) {
+          Check.notNull(all, "all == null");
+          return declaration(StandardName.BORDER_COLOR, all);
+        }
+
+        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(PropertyName name, int value);
+
+        abstract StyleDeclaration declaration(PropertyName name, double value);
+
+        abstract StyleDeclaration declaration(PropertyName name, String value);
       }
       """
     );
