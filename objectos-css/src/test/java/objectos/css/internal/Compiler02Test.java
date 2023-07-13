@@ -29,7 +29,6 @@ public class Compiler02Test {
 
     compiler.compilationStart();
 
-    // label { \{previous} }
     compiler.styleRuleStart();
     compiler.styleRuleElement(StandardName.html);
     compiler.styleRuleEnd();
@@ -48,6 +47,52 @@ public class Compiler02Test {
       Bytes.name0(StandardName.html),
       Bytes.name1(StandardName.html),
       ByteCode.BLOCK_START,
+      ByteCode.BLOCK_END
+    );
+  }
+
+  @Test(description = """
+  * {
+    box-sizing: border-box;
+  }
+  """)
+  public void testCase02() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationStart();
+
+    compiler.declarationStart(StandardName.BOX_SIZING);
+    compiler.declarationValue(StandardName.borderBox);
+    compiler.declarationEnd();
+
+    compiler.styleRuleStart();
+    compiler.styleRuleElement(StandardName.any);
+    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR,
+      Bytes.name0(StandardName.any),
+      Bytes.name1(StandardName.any),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_NAME,
+      Bytes.name0(StandardName.BOX_SIZING),
+      Bytes.name1(StandardName.BOX_SIZING),
+      ByteCode.KEYWORD,
+      Bytes.name0(StandardName.borderBox),
+      Bytes.name1(StandardName.borderBox),
+      ByteCode.SEMICOLON_OPTIONAL,
       ByteCode.BLOCK_END
     );
   }

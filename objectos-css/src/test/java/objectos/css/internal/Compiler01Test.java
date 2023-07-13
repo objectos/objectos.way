@@ -29,7 +29,6 @@ public class Compiler01Test {
 
     compiler.compilationStart();
 
-    // label { \{previous} }
     compiler.styleRuleStart();
     compiler.styleRuleElement(StandardName.html);
     compiler.styleRuleEnd();
@@ -51,6 +50,61 @@ public class Compiler01Test {
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.ROOT_END, Bytes.idx0(15), Bytes.idx1(15), Bytes.idx2(15)
+    );
+  }
+
+  @Test(description = """
+  * {
+    box-sizing: border-box;
+  }
+  """)
+  public void testCase02() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationStart();
+
+    compiler.declarationStart(StandardName.BOX_SIZING);
+    compiler.declarationValue(StandardName.borderBox);
+    compiler.declarationEnd();
+
+    compiler.styleRuleStart();
+    compiler.styleRuleElement(StandardName.any);
+    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
+      Bytes.name0(StandardName.BOX_SIZING),
+      Bytes.name1(StandardName.BOX_SIZING),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.borderBox),
+      Bytes.name1(StandardName.borderBox),
+      ByteProto.DECLARATION_END,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.idx0(36), Bytes.idx1(36), Bytes.idx2(36),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.any),
+      Bytes.name1(StandardName.any),
+      ByteProto.DECLARATION,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      ByteProto.STYLE_RULE_END,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
+      ByteProto.STYLE_RULE,
+
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
+      ByteProto.ROOT_END, Bytes.idx0(36), Bytes.idx1(36), Bytes.idx2(36)
     );
   }
 

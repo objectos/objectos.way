@@ -23,6 +23,16 @@ final class ByteCode {
 
   public static final byte BLOCK_END = -3;
 
+  public static final byte TAB = -4;
+
+  public static final byte PROPERTY_NAME = -5;
+
+  public static final byte KEYWORD = -6;
+
+  public static final byte SEMICOLON = -7;
+
+  public static final byte SEMICOLON_OPTIONAL = -8;
+
   private ByteCode() {}
 
 }
