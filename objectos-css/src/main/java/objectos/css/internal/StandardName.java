@@ -947,10 +947,16 @@ public enum StandardName implements Selector, ColorValue,
 
   _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
 
+  private static final StandardName[] VALUES = values();
+
   public final String cssName;
 
   private StandardName(String cssName) {
     this.cssName = cssName;
+  }
+
+  public static StandardName byOrdinal(int ordinal) {
+    return VALUES[ordinal];
   }
 
   @Override

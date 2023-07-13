@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import objectos.css.om.StyleSheet;
 
-public record InternalStyleSheet(List<TopLevelElement> elements) implements StyleSheet {
+public record InternalStyleSheet2(List<TopLevelElement> elements) implements StyleSheet {
 
   @Override
   public final String toString() {

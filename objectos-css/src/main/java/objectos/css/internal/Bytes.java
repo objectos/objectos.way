@@ -15,29 +15,26 @@
  */
 package objectos.css.internal;
 
-import objectos.css.StyleSheet;
-import objectos.css.om.PropertyName;
-import objectos.css.om.PropertyValue;
-import objectos.css.tmpl.StyleRuleElement;
+final class Bytes {
 
-public abstract class CssTemplateApi {
+  public static final byte NULL = -1;
 
-  public abstract void compilationStart();
+  public static final byte ROOT = -2;
 
-  public abstract void declarationEnd();
+  public static final byte ROOT_END = -3;
 
-  public abstract void declarationStart(PropertyName name);
+  public static final byte DECLARATION = -4;
 
-  public abstract void declarationValue(PropertyValue value);
+  public static final byte DECLARATION_END = -5;
 
-  public abstract void styleRuleElement(StyleRuleElement element);
+  public static final byte STANDARD_NAME = -6;
 
-  public abstract void styleRuleEnd();
+  public static final byte STYLE_RULE = -7;
 
-  public abstract void styleRuleStart();
+  public static final byte STYLE_RULE_END = -8;
 
-  public abstract void compilationEnd();
+  public static final byte MARKED = -9;
 
-  public abstract StyleSheet compile();
+  private Bytes() {}
 
 }

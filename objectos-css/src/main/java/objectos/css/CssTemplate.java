@@ -24,7 +24,7 @@ import objectos.css.internal.InternalLength;
 import objectos.css.internal.InternalMediaRule;
 import objectos.css.internal.InternalSelector;
 import objectos.css.internal.InternalStyleRule;
-import objectos.css.internal.InternalStyleSheet;
+import objectos.css.internal.InternalStyleSheet2;
 import objectos.css.internal.InternalUrl;
 import objectos.css.internal.InternalZero;
 import objectos.css.internal.MediaType;
@@ -134,7 +134,7 @@ public abstract class CssTemplate extends GeneratedCssTemplate {
             .toList();
       }
 
-      return new InternalStyleSheet(elements);
+      return new InternalStyleSheet2(elements);
     } finally {
       topLevelElements = null;
 

@@ -15,29 +15,19 @@
  */
 package objectos.css.internal;
 
-import objectos.css.StyleSheet;
-import objectos.css.om.PropertyName;
-import objectos.css.om.PropertyValue;
-import objectos.css.tmpl.StyleRuleElement;
+import java.io.IOException;
+import objectos.css.om.StyleDeclaration;
+import objectos.css.om.StyleRule;
 
-public abstract class CssTemplateApi {
+public enum InternalInstruction implements StyleDeclaration, StyleRule {
 
-  public abstract void compilationStart();
+  DECLARATION,
 
-  public abstract void declarationEnd();
+  STYLE_RULE;
 
-  public abstract void declarationStart(PropertyName name);
-
-  public abstract void declarationValue(PropertyValue value);
-
-  public abstract void styleRuleElement(StyleRuleElement element);
-
-  public abstract void styleRuleEnd();
-
-  public abstract void styleRuleStart();
-
-  public abstract void compilationEnd();
-
-  public abstract StyleSheet compile();
+  @Override
+  public void writeTo(Appendable dest) throws IOException {
+    throw new UnsupportedOperationException();
+  }
 
 }

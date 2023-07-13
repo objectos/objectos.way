@@ -2058,4 +2058,12 @@ public class CssTemplateTest {
     assertEquals(sheet.toString(), pretty);
   }
 
+  @SuppressWarnings("unused")
+  private void test(CssTemplate2 template, String pretty) {
+    String result;
+    result = template.toString();
+
+    assertEquals(result, pretty);
+  }
+
 }
