@@ -32,6 +32,10 @@ public class StandardNameTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
+        length("px", "rem");
+
+        percentage();
+
         selectors(
           // type selectors
           "a",
@@ -83,6 +87,12 @@ public class StandardNameTest {
       public enum StandardName implements Selector, ColorValue,
           PropertyName,
           GlobalKeyword {
+        PX("px"),
+
+        REM("rem"),
+
+        PCT("%"),
+
         __after("::after"),
 
         __before("::before"),

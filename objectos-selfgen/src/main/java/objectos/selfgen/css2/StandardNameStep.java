@@ -15,6 +15,7 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Locale;
 import objectos.code.ArrayTypeName;
 
 final class StandardNameStep extends ThisTemplate {
@@ -31,6 +32,10 @@ final class StandardNameStep extends ThisTemplate {
       annotation(GENERATED, annotationValue(s(GENERATOR))),
       PUBLIC, name(STANDARD_NAME),
       include(this::superInterfaces),
+
+      include(this::lengthUnits),
+
+      include(this::percentage),
 
       include(this::selectors),
 
@@ -85,6 +90,30 @@ final class StandardNameStep extends ThisTemplate {
         .filter(KeywordName::shouldGenerate)
         .sorted(KeywordName.ORDER_BY_SIMPLE_NAME)
         .forEach(kw -> implementsClause(NL, kw.className()));
+  }
+
+  private void lengthUnits() {
+    LengthType lengthType;
+    lengthType = spec.lengthType();
+
+    if (lengthType == null) {
+      return;
+    }
+
+    lengthType.units.stream()
+        .sorted()
+        .forEach(unit -> enumConstant(name(unit.toUpperCase(Locale.US)), argument(s(unit))));
+  }
+
+  private void percentage() {
+    PercentageType percentageType;
+    percentageType = spec.percentageType();
+
+    if (percentageType == null) {
+      return;
+    }
+
+    enumConstant(name("PCT"), argument(s("%")));
   }
 
   private void selectors() {
