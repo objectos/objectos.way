@@ -131,6 +131,10 @@ final class Compiler02 extends Compiler01 {
             indentationWrite();
           }
 
+          else {
+            auxAdd(ByteCode.COMMA);
+          }
+
           selectorCount++;
 
           auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);

@@ -29,9 +29,11 @@ final class ByteCode {
 
   public static final byte KEYWORD = -6;
 
-  public static final byte SEMICOLON = -7;
+  public static final byte COMMA = -7;
 
-  public static final byte SEMICOLON_OPTIONAL = -8;
+  public static final byte SEMICOLON = -8;
+
+  public static final byte SEMICOLON_OPTIONAL = -9;
 
   private ByteCode() {}
 

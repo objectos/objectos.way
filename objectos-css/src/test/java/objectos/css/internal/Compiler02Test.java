@@ -97,6 +97,47 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  h1,h2,h3 {}
+  """)
+  public void testCase03() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationStart();
+
+    compiler.styleRuleStart();
+    compiler.styleRuleElement(StandardName.h1);
+    compiler.styleRuleElement(StandardName.h2);
+    compiler.styleRuleElement(StandardName.h3);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR,
+      Bytes.name0(StandardName.h1),
+      Bytes.name1(StandardName.h1),
+      ByteCode.COMMA,
+      ByteCode.SELECTOR,
+      Bytes.name0(StandardName.h2),
+      Bytes.name1(StandardName.h2),
+      ByteCode.COMMA,
+      ByteCode.SELECTOR,
+      Bytes.name0(StandardName.h3),
+      Bytes.name1(StandardName.h3),
+      ByteCode.BLOCK_START,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;
