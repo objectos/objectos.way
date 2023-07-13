@@ -182,7 +182,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderColor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -2058,7 +2058,6 @@ public class CssTemplateTest {
     assertEquals(sheet.toString(), pretty);
   }
 
-  @SuppressWarnings("unused")
   private void test(CssTemplate2 template, String pretty) {
     String result;
     result = template.toString();

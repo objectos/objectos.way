@@ -46,8 +46,7 @@ public class Compiler02Test {
       ByteCode.SELECTOR,
       Bytes.name0(StandardName.html),
       Bytes.name1(StandardName.html),
-      ByteCode.BLOCK_START,
-      ByteCode.BLOCK_END
+      ByteCode.BLOCK_EMPTY
     );
   }
 
@@ -89,6 +88,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_NAME,
       Bytes.name0(StandardName.BOX_SIZING),
       Bytes.name1(StandardName.BOX_SIZING),
+      ByteCode.SPACE_OPTIONAL,
       ByteCode.KEYWORD,
       Bytes.name0(StandardName.borderBox),
       Bytes.name1(StandardName.borderBox),
@@ -133,8 +133,7 @@ public class Compiler02Test {
       ByteCode.SELECTOR,
       Bytes.name0(StandardName.h3),
       Bytes.name1(StandardName.h3),
-      ByteCode.BLOCK_START,
-      ByteCode.BLOCK_END
+      ByteCode.BLOCK_EMPTY
     );
   }
 

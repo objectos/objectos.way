@@ -15,32 +15,23 @@
  */
 package objectos.css.internal;
 
-final class ByteCode {
+import static org.testng.Assert.assertEquals;
 
-  public static final byte SELECTOR = -1;
+import org.testng.annotations.Test;
 
-  public static final byte BLOCK_START = -2;
+public class BytesTest {
 
-  public static final byte BLOCK_END = -3;
+  @Test
+  public void standardName() {
+    for (StandardName name : StandardName.values()) {
+      byte name0 = Bytes.name0(name);
+      byte name1 = Bytes.name1(name);
 
-  public static final byte BLOCK_EMPTY = -4;
-
-  public static final byte TAB = -5;
-
-  public static final byte PROPERTY_NAME = -6;
-
-  public static final byte KEYWORD = -7;
-
-  public static final byte COMMA = -8;
-
-  public static final byte SEMICOLON = -9;
-
-  public static final byte SEMICOLON_OPTIONAL = -10;
-
-  public static final byte SPACE = -11;
-
-  public static final byte SPACE_OPTIONAL = -12;
-
-  private ByteCode() {}
+      assertEquals(
+        Bytes.standardNameValue(name0, name1),
+        name.cssName
+      );
+    }
+  }
 
 }

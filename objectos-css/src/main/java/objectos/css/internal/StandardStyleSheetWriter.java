@@ -27,62 +27,8 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
 
   private final Appendable appendable;
 
-  private int indentation;
-
-  private int declarationCount;
-
-  private int selectorCount;
-
   public StandardStyleSheetWriter(Appendable appendable) {
     this.appendable = appendable;
-  }
-
-  public final void declarationEnd() throws IOException {
-    appendable.append(';');
-    appendable.append(NL);
-  }
-
-  public final void declarationStart(String name) throws IOException {
-    if (declarationCount == 0) {
-      appendable.append(" {");
-      appendable.append(NL);
-      indentation++;
-    }
-
-    declarationCount++;
-
-    writeIndentation();
-    appendable.append(name);
-    appendable.append(':');
-  }
-
-  public final void keyword(String name) throws IOException {
-    appendable.append(' ');
-    appendable.append(name);
-  }
-
-  public final void selector(String name) throws IOException {
-    if (selectorCount == 0) {
-      writeIndentation();
-    }
-
-    selectorCount++;
-
-    appendable.append(name);
-  }
-
-  public final void styleRuleEnd() throws IOException {
-    indentation--;
-
-    writeIndentation();
-    appendable.append('}');
-    appendable.append(NL);
-  }
-
-  public final void styleRuleStart() {
-    declarationCount = 0;
-
-    selectorCount = 0;
   }
 
   @Override
@@ -90,12 +36,64 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
     CompiledStyleSheet compiled;
     compiled = (CompiledStyleSheet) sheet;
 
-    compiled.accept(this);
-  }
+    int index;
+    index = 0;
 
-  private void writeIndentation() throws IOException {
-    for (int i = 0; i < indentation; i++) {
-      appendable.append(INDENTATION);
+    byte[] data;
+    data = compiled.main;
+
+    while (index < data.length) {
+      byte code;
+      code = data[index++];
+
+      switch (code) {
+        case ByteCode.BLOCK_END -> {
+          appendable.append('}');
+          appendable.append(NL);
+        }
+
+        case ByteCode.BLOCK_START -> {
+          appendable.append(" {");
+          appendable.append(NL);
+        }
+
+        case ByteCode.KEYWORD,
+             ByteCode.SELECTOR -> {
+          String name;
+          name = Bytes.standardNameValue(data[index++], data[index++]);
+
+          appendable.append(name);
+        }
+
+        case ByteCode.PROPERTY_NAME -> {
+          String name;
+          name = Bytes.standardNameValue(data[index++], data[index++]);
+
+          appendable.append(name);
+          appendable.append(':');
+        }
+
+        case ByteCode.SEMICOLON, ByteCode.SEMICOLON_OPTIONAL -> {
+          appendable.append(';');
+          appendable.append(NL);
+        }
+
+        case ByteCode.SPACE, ByteCode.SPACE_OPTIONAL -> {
+          appendable.append(' ');
+        }
+
+        case ByteCode.TAB -> {
+          int level = data[index++];
+
+          for (int i = 0; i < level; i++) {
+            appendable.append(INDENTATION);
+          }
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: code=" + code
+        );
+      }
     }
   }
 

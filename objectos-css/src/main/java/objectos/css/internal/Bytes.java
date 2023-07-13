@@ -19,6 +19,8 @@ import objectos.lang.Check;
 
 final class Bytes {
 
+  private static final int BYTE_MASK = 0xFF;
+
   private static final int MAX_INDEX = 1 << 24 - 1;
 
   private Bytes() {}
@@ -54,6 +56,22 @@ final class Bytes {
     ordinal = name.ordinal();
 
     return (byte) (ordinal >>> 8);
+  }
+
+  public static String standardNameValue(byte b0, byte b1) {
+    int ordinal0 = Bytes.toInt(b0, 0);
+    int ordinal1 = Bytes.toInt(b1, 8);
+
+    int ordinal = ordinal1 | ordinal0;
+
+    StandardName name;
+    name = StandardName.byOrdinal(ordinal);
+
+    return name.cssName;
+  }
+
+  public static int toInt(byte b, int shift) {
+    return (b & BYTE_MASK) << shift;
   }
 
 }

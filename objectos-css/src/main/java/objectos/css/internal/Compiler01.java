@@ -15,7 +15,6 @@
  */
 package objectos.css.internal;
 
-import java.util.Arrays;
 import objectos.css.om.PropertyName;
 import objectos.css.om.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
@@ -39,13 +38,6 @@ class Compiler01 extends CssTemplateApi {
   int mainIndex;
 
   int mainStart;
-
-  @Override
-  public CompiledStyleSheet compile() {
-    return new CompiledStyleSheet(
-      Arrays.copyOf(aux, auxIndex)
-    );
-  }
 
   @Override
   public final void compilationStart() {
@@ -198,9 +190,9 @@ class Compiler01 extends CssTemplateApi {
   }
 
   final int mainIndex(int offset) {
-    int idx0 = main[offset + 0];
-    int idx1 = main[offset + 1] << 8;
-    int idx2 = main[offset + 2] << 16;
+    int idx0 = Bytes.toInt(main[offset + 0], 0);
+    int idx1 = Bytes.toInt(main[offset + 1], 8);
+    int idx2 = Bytes.toInt(main[offset + 2], 16);
 
     return idx2 | idx1 | idx0;
   }
@@ -213,7 +205,7 @@ class Compiler01 extends CssTemplateApi {
     mainContents -= 3;
 
     // @ contents index
-    mainContents -= 2;
+    mainContents -= 3;
 
     mainContents = mainIndex(mainContents);
   }

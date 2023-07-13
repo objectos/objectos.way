@@ -38,6 +38,12 @@ public abstract class CssTemplateApi {
 
   public abstract void compilationEnd();
 
-  public abstract StyleSheet compile();
+  public void optimize() {
+    throw new UnsupportedOperationException();
+  }
+
+  public StyleSheet compile() {
+    throw new UnsupportedOperationException();
+  }
 
 }

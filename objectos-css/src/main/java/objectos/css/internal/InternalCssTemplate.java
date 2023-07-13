@@ -30,13 +30,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   public final StyleSheet compile() {
     try {
-      api = new Compiler01();
+      api = new Compiler02();
 
       api.compilationStart();
 
       definition();
 
       api.compilationEnd();
+
+      api.optimize();
 
       return api.compile();
     } finally {
@@ -64,7 +66,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.styleRuleStart();
     for (int i = 0; i < elements.length; i++) {
       api.styleRuleElement(
-        Check.notNull(elements[i], "elements[" + i + "] == null")
+        Check.notNull(elements[i], "elements[", i, "] == null")
       );
     }
     api.styleRuleEnd();

@@ -15,8 +15,18 @@
  */
 package objectos.css.internal;
 
+import java.util.Arrays;
+
 final class Compiler02 extends Compiler01 {
 
+  @Override
+  public CompiledStyleSheet compile() {
+    return new CompiledStyleSheet(
+      Arrays.copyOf(aux, auxIndex)
+    );
+  }
+
+  @Override
   public final void optimize() {
     // we will use the aux list to store our byte code
     auxIndex = 0;
@@ -56,6 +66,8 @@ final class Compiler02 extends Compiler01 {
   }
 
   private void declaration(int index) {
+    int valueCount = 0;
+
     loop: while (index < main.length) {
       byte proto = main[index++];
 
@@ -71,9 +83,16 @@ final class Compiler02 extends Compiler01 {
           index += 3;
 
           auxAdd(ByteCode.PROPERTY_NAME, main[index++], main[index++]);
+          auxAdd(ByteCode.SPACE_OPTIONAL);
         }
 
         case ByteProto.STANDARD_NAME -> {
+          if (valueCount > 0) {
+            auxAdd(ByteCode.SPACE);
+          }
+
+          valueCount++;
+
           auxAdd(ByteCode.KEYWORD, main[index++], main[index++]);
         }
 
@@ -156,7 +175,7 @@ final class Compiler02 extends Compiler01 {
     }
 
     if (declarationCount == 0) {
-      auxAdd(ByteCode.BLOCK_START, ByteCode.BLOCK_END);
+      auxAdd(ByteCode.BLOCK_EMPTY);
     }
 
     else {
