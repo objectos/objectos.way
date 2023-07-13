@@ -15,6 +15,8 @@
  */
 package objectos.selfgen.css2;
 
+import objectos.code.ArrayTypeName;
+
 final class StandardNameStep extends ThisTemplate {
 
   private static final SelectorName UNIVERSAL = new SelectorName("any", "*");
@@ -39,6 +41,11 @@ final class StandardNameStep extends ThisTemplate {
       include(this::properties),
 
       field(
+        PRIVATE, STATIC, FINAL, ArrayTypeName.of(STANDARD_NAME), name("VALUES"),
+        v("values")
+      ),
+
+      field(
         PUBLIC, FINAL, STRING, name("cssName")
       ),
 
@@ -46,6 +53,12 @@ final class StandardNameStep extends ThisTemplate {
         PRIVATE,
         parameter(STRING, name("cssName")),
         p(THIS, n("cssName"), IS, n("cssName"))
+      ),
+
+      method(
+        PUBLIC, STATIC, STANDARD_NAME, name("byOrdinal"),
+        parameter(INT, name("ordinal")),
+        p(RETURN, n("VALUES"), dim(n("ordinal")))
       ),
 
       method(

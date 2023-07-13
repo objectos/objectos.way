@@ -105,10 +105,16 @@ public class StandardNameTest {
 
         BORDER_COLOR("border-color");
 
+        private static final StandardName[] VALUES = values();
+
         public final String cssName;
 
         private StandardName(String cssName) {
           this.cssName = cssName;
+        }
+
+        public static StandardName byOrdinal(int ordinal) {
+          return VALUES[ordinal];
         }
 
         @Override
