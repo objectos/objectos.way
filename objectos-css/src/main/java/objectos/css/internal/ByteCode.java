@@ -35,15 +35,17 @@ final class ByteCode {
 
   public static final byte LENGTH_INT = -9;
 
-  public static final byte COMMA = -10;
+  public static final byte ZERO = -10;
 
-  public static final byte SEMICOLON = -11;
+  public static final byte COMMA = -11;
 
-  public static final byte SEMICOLON_OPTIONAL = -12;
+  public static final byte SEMICOLON = -12;
 
-  public static final byte SPACE = -13;
+  public static final byte SEMICOLON_OPTIONAL = -13;
 
-  public static final byte SPACE_OPTIONAL = -14;
+  public static final byte SPACE = -14;
+
+  public static final byte SPACE_OPTIONAL = -15;
 
   private ByteCode() {}
 

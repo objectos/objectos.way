@@ -25,6 +25,20 @@ final class Bytes {
 
   private Bytes() {}
 
+  public static double doubleValue(
+      byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
+    int v0 = toInt(b0, 0);
+    int v1 = toInt(b1, 8);
+    int v2 = toInt(b2, 16);
+    int v3 = toInt(b3, 24);
+    int v4 = toInt(b4, 32);
+    int v5 = toInt(b5, 40);
+    int v6 = toInt(b6, 48);
+    int v7 = toInt(b7, 56);
+
+    return v7 | v6 | v5 | v4 | v3 | v2 | v1 | v0;
+  }
+
   // we use 3 bytes for internal indices
   public static byte idx0(int value) {
     Check.argument(value <= MAX_INDEX, "CssTemplate is too large.");
@@ -56,6 +70,15 @@ final class Bytes {
 
   public static byte int3(int value) {
     return (byte) (value >>> 24);
+  }
+
+  public static int intValue(byte b0, byte b1, byte b2, byte b3) {
+    int v0 = toInt(b0, 0);
+    int v1 = toInt(b1, 8);
+    int v2 = toInt(b2, 16);
+    int v3 = toInt(b3, 24);
+
+    return v3 | v2 | v1 | v0;
   }
 
   public static byte lng0(long value) {

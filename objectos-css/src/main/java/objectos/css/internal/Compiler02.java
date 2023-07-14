@@ -124,6 +124,12 @@ final class Compiler02 extends Compiler01 {
           auxAdd(ByteCode.KEYWORD, main[index++], main[index++]);
         }
 
+        case ByteProto.ZERO -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          auxAdd(ByteCode.ZERO);
+        }
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );

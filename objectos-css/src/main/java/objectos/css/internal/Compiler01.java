@@ -23,6 +23,7 @@ import objectos.util.ByteArrays;
 class Compiler01 extends CssTemplateApi {
 
   private static final byte MARK_INTERNAL = -1;
+  private static final byte MARK_VALUE1 = -2;
   private static final byte MARK_VALUE3 = -4;
 
   byte[] aux;
@@ -107,6 +108,10 @@ class Compiler01 extends CssTemplateApi {
       auxAdd(MARK_INTERNAL, (byte) length);
     }
 
+    else if (value instanceof InternalZero) {
+      auxAdd(MARK_VALUE1, ByteProto.ZERO);
+    }
+
     else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + value.getClass()
@@ -185,6 +190,10 @@ class Compiler01 extends CssTemplateApi {
           );
 
           internal += length;
+        }
+
+        case MARK_VALUE1 -> {
+          mainAdd(aux[idx++]);
         }
 
         case MARK_VALUE3 -> {

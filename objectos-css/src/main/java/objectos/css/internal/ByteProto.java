@@ -33,15 +33,17 @@ final class ByteProto {
 
   public static final byte STANDARD_NAME = -8;
 
-  public static final byte STYLE_RULE = -9;
+  public static final byte ZERO = -9;
 
-  public static final byte STYLE_RULE_END = -10;
+  public static final byte STYLE_RULE = -10;
 
-  public static final byte MARKED = -11;
+  public static final byte STYLE_RULE_END = -11;
 
-  public static final byte MARKED6 = -12;
+  public static final byte MARKED = -12;
 
-  public static final byte MARKED10 = -13;
+  public static final byte MARKED6 = -13;
+
+  public static final byte MARKED10 = -14;
 
   private ByteProto() {}
 

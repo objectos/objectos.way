@@ -65,6 +65,33 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(name);
         }
 
+        case ByteCode.LENGTH_DOUBLE -> {
+          double value;
+          value = Bytes.doubleValue(
+            data[index++], data[index++], data[index++], data[index++],
+            data[index++], data[index++], data[index++], data[index++]
+          );
+
+          appendable.append(Double.toString(value));
+
+          LengthUnit unit;
+          unit = LengthUnit.byOrdinal(data[index++]);
+
+          appendable.append(unit.cssName);
+        }
+
+        case ByteCode.LENGTH_INT -> {
+          int value;
+          value = Bytes.intValue(data[index++], data[index++], data[index++], data[index++]);
+
+          appendable.append(Integer.toString(value));
+
+          LengthUnit unit;
+          unit = LengthUnit.byOrdinal(data[index++]);
+
+          appendable.append(unit.cssName);
+        }
+
         case ByteCode.PROPERTY_NAME -> {
           String name;
           name = Bytes.standardNameValue(data[index++], data[index++]);
@@ -88,6 +115,10 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           for (int i = 0; i < level; i++) {
             appendable.append(INDENTATION);
           }
+        }
+
+        case ByteCode.ZERO -> {
+          appendable.append('0');
         }
 
         default -> throw new UnsupportedOperationException(
