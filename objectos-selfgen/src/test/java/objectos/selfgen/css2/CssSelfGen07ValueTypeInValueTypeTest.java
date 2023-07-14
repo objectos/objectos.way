@@ -116,12 +116,13 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       """
       package objectos.css.tmpl;
 
+      import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.InternalLength;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Length extends
-          LengthPercentage permits InternalLength, Zero {}
+          LengthPercentage permits InternalInstruction, InternalLength, Zero {}
       """
     );
   }

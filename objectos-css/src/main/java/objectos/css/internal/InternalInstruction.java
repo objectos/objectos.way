@@ -18,10 +18,13 @@ package objectos.css.internal;
 import java.io.IOException;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
+import objectos.css.tmpl.Length;
 
-public enum InternalInstruction implements StyleDeclaration, StyleRule {
+public enum InternalInstruction implements Length, StyleDeclaration, StyleRule {
 
   DECLARATION,
+
+  LENGTH,
 
   STYLE_RULE;
 

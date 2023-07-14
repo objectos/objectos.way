@@ -168,12 +168,13 @@ public class CssSelfGen00Test {
       """
       package objectos.css.tmpl;
 
+      import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.InternalLength;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Length extends
-          LineWidth permits InternalLength, Zero {}
+          LineWidth permits InternalInstruction, InternalLength, Zero {}
       """
     );
 
