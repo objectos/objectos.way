@@ -23,7 +23,7 @@ import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class StandardNameTest {
+public class LengthUnitStepTest {
 
   private Map<String, String> result;
 
@@ -32,33 +32,7 @@ public class StandardNameTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        selectors(
-          // type selectors
-          "a",
-          "pre",
-
-          // pseudo elements
-          "::after", "::before"
-        );
-
-        // global keywords
-        var globalKeyword = t("GlobalKeyword",
-          k("inherit"), k("initial"), k("unset")
-        );
-
-        // color
-        var color = color(
-          "currentcolor",
-          "transparent"
-        );
-
-        // B
-        property(
-          "border-color",
-
-          sig(globalKeyword, "value"),
-          sig(color, "value")
-        );
+        length("px", "em");
       }
     };
 
@@ -68,52 +42,28 @@ public class StandardNameTest {
   @Test
   public void all() {
     assertEquals(
-      result.get("objectos/css/internal/StandardName.java"),
+      result.get("objectos/css/internal/LengthUnit.java"),
 
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyName;
-      import objectos.css.om.Selector;
-      import objectos.css.tmpl.ColorValue;
-      import objectos.css.tmpl.GlobalKeyword;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public enum StandardName implements Selector, ColorValue,
-          PropertyName,
-          GlobalKeyword {
-        __after("::after"),
+      public enum LengthUnit {
+        EM("em"),
 
-        __before("::before"),
+        PX("px");
 
-        a("a"),
-
-        pre("pre"),
-
-        any("*"),
-
-        currentcolor("currentcolor"),
-
-        transparent("transparent"),
-
-        inherit("inherit"),
-
-        initial("initial"),
-
-        unset("unset"),
-
-        BORDER_COLOR("border-color");
-
-        private static final StandardName[] VALUES = values();
+        private static final LengthUnit[] VALUES = values();
 
         public final String cssName;
 
-        private StandardName(String cssName) {
+        private LengthUnit(String cssName) {
           this.cssName = cssName;
         }
 
-        public static StandardName byOrdinal(int ordinal) {
+        public static LengthUnit byOrdinal(int ordinal) {
           return VALUES[ordinal];
         }
 

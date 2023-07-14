@@ -60,6 +60,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName LENGTH = ClassTypeName.of(CSS_TMPL, "Length");
 
+  static final ClassTypeName LENGTH_UNIT = ClassTypeName.of(CSS_INTERNAL, "LengthUnit");
+
   static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
 
   static final ClassTypeName OBJECTS = ClassTypeName.of(Objects.class);

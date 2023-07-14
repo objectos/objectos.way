@@ -94,6 +94,11 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void unitValue(int value, StandardName unit) {
+
+  }
+
+  @Override
   public final void declarationEnd() {
     // we iterate over each value added via declarationValue(PropertyValue)
     int auxMax = auxIndex;

@@ -42,7 +42,7 @@ public class CssSelfGen00Test {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 8);
+    assertEquals(result.size(), 9);
 
     assertEquals(
       result.get("objectos/css/GeneratedCssTemplate.java"),

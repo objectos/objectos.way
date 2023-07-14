@@ -177,6 +177,38 @@ public enum StandardName implements Selector, ColorValue,
     SubKeyword,
     TableKeyword,
     TextareaKeyword {
+  CH("ch"),
+
+  CM("cm"),
+
+  EM("em"),
+
+  EX("ex"),
+
+  IN("in"),
+
+  MM("mm"),
+
+  PC("pc"),
+
+  PT("pt"),
+
+  PX("px"),
+
+  Q("q"),
+
+  REM("rem"),
+
+  VH("vh"),
+
+  VMAX("vmax"),
+
+  VMIN("vmin"),
+
+  VW("vw"),
+
+  PCT("%"),
+
   __after("::after"),
 
   __before("::before"),
