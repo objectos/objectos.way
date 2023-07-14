@@ -32,6 +32,8 @@ public class GeneratedCssTemplateStep2Test {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
+        length("px", "em");
+
         selectors(
           // type selectors
           "a",
@@ -79,6 +81,7 @@ public class GeneratedCssTemplateStep2Test {
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.ColorValue;
       import objectos.css.tmpl.GlobalKeyword;
+      import objectos.css.tmpl.Length;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -103,6 +106,26 @@ public class GeneratedCssTemplateStep2Test {
         protected static final GlobalKeyword initial = StandardName.initial;
 
         protected static final GlobalKeyword unset = StandardName.unset;
+
+        protected final Length em(double value) {
+          return length(value, LengthUnit.EM);
+        }
+
+        protected final Length em(int value) {
+          return length(value, LengthUnit.EM);
+        }
+
+        protected final Length px(double value) {
+          return length(value, LengthUnit.PX);
+        }
+
+        protected final Length px(int value) {
+          return length(value, LengthUnit.PX);
+        }
+
+        abstract Length length(double value, LengthUnit unit);
+
+        abstract Length length(int value, LengthUnit unit);
 
         protected final StyleDeclaration borderColor(GlobalKeyword value) {
           Check.notNull(value, "value == null");

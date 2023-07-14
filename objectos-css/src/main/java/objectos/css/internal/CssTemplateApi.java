@@ -30,7 +30,9 @@ public abstract class CssTemplateApi {
 
   public abstract void declarationValue(PropertyValue value);
 
-  public abstract void unitValue(int value, StandardName unit);
+  public abstract void length(double value, LengthUnit unit);
+
+  public abstract void length(int value, LengthUnit unit);
 
   public abstract void styleRuleElement(StyleRuleElement element);
 

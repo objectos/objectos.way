@@ -752,6 +752,130 @@ abstract class GeneratedCssTemplate {
 
   protected static final CursorValue zoomOut = StandardName.zoomOut;
 
+  protected final Length ch(double value) {
+    return length(value, LengthUnit.CH);
+  }
+
+  protected final Length ch(int value) {
+    return length(value, LengthUnit.CH);
+  }
+
+  protected final Length cm(double value) {
+    return length(value, LengthUnit.CM);
+  }
+
+  protected final Length cm(int value) {
+    return length(value, LengthUnit.CM);
+  }
+
+  protected final Length em(double value) {
+    return length(value, LengthUnit.EM);
+  }
+
+  protected final Length em(int value) {
+    return length(value, LengthUnit.EM);
+  }
+
+  protected final Length ex(double value) {
+    return length(value, LengthUnit.EX);
+  }
+
+  protected final Length ex(int value) {
+    return length(value, LengthUnit.EX);
+  }
+
+  protected final Length in(double value) {
+    return length(value, LengthUnit.IN);
+  }
+
+  protected final Length in(int value) {
+    return length(value, LengthUnit.IN);
+  }
+
+  protected final Length mm(double value) {
+    return length(value, LengthUnit.MM);
+  }
+
+  protected final Length mm(int value) {
+    return length(value, LengthUnit.MM);
+  }
+
+  protected final Length pc(double value) {
+    return length(value, LengthUnit.PC);
+  }
+
+  protected final Length pc(int value) {
+    return length(value, LengthUnit.PC);
+  }
+
+  protected final Length pt(double value) {
+    return length(value, LengthUnit.PT);
+  }
+
+  protected final Length pt(int value) {
+    return length(value, LengthUnit.PT);
+  }
+
+  protected final Length px(double value) {
+    return length(value, LengthUnit.PX);
+  }
+
+  protected final Length px(int value) {
+    return length(value, LengthUnit.PX);
+  }
+
+  protected final Length q(double value) {
+    return length(value, LengthUnit.Q);
+  }
+
+  protected final Length q(int value) {
+    return length(value, LengthUnit.Q);
+  }
+
+  protected final Length rem(double value) {
+    return length(value, LengthUnit.REM);
+  }
+
+  protected final Length rem(int value) {
+    return length(value, LengthUnit.REM);
+  }
+
+  protected final Length vh(double value) {
+    return length(value, LengthUnit.VH);
+  }
+
+  protected final Length vh(int value) {
+    return length(value, LengthUnit.VH);
+  }
+
+  protected final Length vmax(double value) {
+    return length(value, LengthUnit.VMAX);
+  }
+
+  protected final Length vmax(int value) {
+    return length(value, LengthUnit.VMAX);
+  }
+
+  protected final Length vmin(double value) {
+    return length(value, LengthUnit.VMIN);
+  }
+
+  protected final Length vmin(int value) {
+    return length(value, LengthUnit.VMIN);
+  }
+
+  protected final Length vw(double value) {
+    return length(value, LengthUnit.VW);
+  }
+
+  protected final Length vw(int value) {
+    return length(value, LengthUnit.VW);
+  }
+
+  abstract Length length(double value, LengthUnit unit);
+
+  abstract Length length(int value, LengthUnit unit);
+
   protected final StyleDeclaration appearance(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     return declaration(StandardName.APPEARANCE, value);

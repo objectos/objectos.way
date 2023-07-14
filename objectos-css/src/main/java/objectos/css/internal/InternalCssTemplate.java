@@ -21,6 +21,7 @@ import objectos.css.om.PropertyValue;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.tmpl.FontFamilyValue;
+import objectos.css.tmpl.Length;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.lang.Check;
 
@@ -142,6 +143,20 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       PropertyName name,
       String value) {
     throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  final Length length(double value, LengthUnit unit) {
+    api().length(value, unit);
+
+    return InternalInstruction.LENGTH;
+  }
+
+  @Override
+  final Length length(int value, LengthUnit unit) {
+    api().length(value, unit);
+
+    return InternalInstruction.LENGTH;
   }
 
   private CssTemplateApi api() {

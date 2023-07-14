@@ -94,8 +94,13 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void unitValue(int value, StandardName unit) {
+  public final void length(double value, LengthUnit unit) {
+    throw new UnsupportedOperationException("Implement me");
+  }
 
+  @Override
+  public final void length(int value, LengthUnit unit) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override

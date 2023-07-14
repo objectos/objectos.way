@@ -15,7 +15,10 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.List;
+import java.util.Locale;
 import objectos.code.ClassTypeName;
+import objectos.code.PrimitiveTypeName;
 import objectos.code.tmpl.BlockInstruction;
 
 final class GeneratedCssTemplateStep2 extends ThisTemplate {
@@ -35,6 +38,8 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
       include(this::colors),
 
       include(this::keywords),
+
+      include(this::lengthUnits),
 
       include(this::properties),
 
@@ -120,6 +125,41 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
     spec.keywords().stream()
         .sorted(KeywordName.ORDER_BY_FIELD_NAME)
         .forEach(kw -> field(kw.className(), kw.fieldName));
+  }
+
+  private void lengthUnits() {
+    LengthType lengthType;
+    lengthType = spec.lengthType();
+
+    if (lengthType == null) {
+      return;
+    }
+
+    List<PrimitiveTypeName> primitives;
+    primitives = List.of(DOUBLE, INT);
+
+    lengthType.units.stream()
+        .sorted()
+        .forEach(unit -> {
+          String enumName;
+          enumName = unit.toUpperCase(Locale.US);
+
+          for (var primitive : primitives) {
+            method(
+              PROTECTED, FINAL, LENGTH, name(unit),
+              parameter(primitive, name("value")),
+              p(RETURN, v("length"), argument(n("value")), argument(LENGTH_UNIT, n(enumName)))
+            );
+          }
+        });
+
+    for (var primitive : primitives) {
+      method(
+        ABSTRACT, LENGTH, name("length"),
+        parameter(primitive, name("value")),
+        parameter(LENGTH_UNIT, name("unit"))
+      );
+    }
   }
 
   private void properties() {
