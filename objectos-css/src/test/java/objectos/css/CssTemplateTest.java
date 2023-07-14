@@ -152,7 +152,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderCollapse() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -258,7 +258,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderStyle() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -292,7 +292,7 @@ public class CssTemplateTest {
   """)
   public void propertyBorderWidth() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -326,7 +326,7 @@ public class CssTemplateTest {
   """)
   public void propertyBottom() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1976,7 +1976,7 @@ public class CssTemplateTest {
   """)
   public void selectorList() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -2036,7 +2036,7 @@ public class CssTemplateTest {
   """)
   public void selectorUniversal() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

@@ -31,25 +31,37 @@ final class ByteProto {
 
   public static final byte LENGTH_INT = -7;
 
-  public static final byte STANDARD_NAME = -8;
+  public static final byte PERCENTAGE_DOUBLE = -8;
 
-  public static final byte ZERO = -9;
+  public static final byte PERCENTAGE_INT = -9;
 
-  public static final byte STYLE_RULE = -10;
+  public static final byte STANDARD_NAME = -10;
 
-  public static final byte STYLE_RULE_END = -11;
+  public static final byte ZERO = -11;
 
-  public static final byte MARKED = -12;
+  public static final byte STYLE_RULE = -12;
 
-  public static final byte MARKED6 = -13;
+  public static final byte STYLE_RULE_END = -13;
 
-  public static final byte MARKED10 = -14;
+  public static final byte MARKED = -14;
+
+  public static final byte MARKED5 = -15;
+
+  public static final byte MARKED6 = -16;
+
+  public static final byte MARKED9 = -17;
+
+  public static final byte MARKED10 = -18;
 
   private ByteProto() {}
 
   public static byte markedOf(int length) {
     return switch (length) {
+      case 5 -> MARKED5;
+
       case 6 -> MARKED6;
+
+      case 9 -> MARKED9;
 
       case 10 -> MARKED10;
 

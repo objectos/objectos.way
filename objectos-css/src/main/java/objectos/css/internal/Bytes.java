@@ -27,16 +27,19 @@ final class Bytes {
 
   public static double doubleValue(
       byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
-    int v0 = toInt(b0, 0);
-    int v1 = toInt(b1, 8);
-    int v2 = toInt(b2, 16);
-    int v3 = toInt(b3, 24);
-    int v4 = toInt(b4, 32);
-    int v5 = toInt(b5, 40);
-    int v6 = toInt(b6, 48);
-    int v7 = toInt(b7, 56);
+    long v0 = toLong(b0, 0);
+    long v1 = toLong(b1, 8);
+    long v2 = toLong(b2, 16);
+    long v3 = toLong(b3, 24);
+    long v4 = toLong(b4, 32);
+    long v5 = toLong(b5, 40);
+    long v6 = toLong(b6, 48);
+    long v7 = toLong(b7, 56);
 
-    return v7 | v6 | v5 | v4 | v3 | v2 | v1 | v0;
+    long bits;
+    bits = v7 | v6 | v5 | v4 | v3 | v2 | v1 | v0;
+
+    return Double.longBitsToDouble(bits);
   }
 
   // we use 3 bytes for internal indices
@@ -143,6 +146,10 @@ final class Bytes {
 
   public static int toInt(byte b, int shift) {
     return (b & BYTE_MASK) << shift;
+  }
+
+  public static long toLong(byte b, int shift) {
+    return (b & (long) BYTE_MASK) << shift;
   }
 
   public static byte unit(LengthUnit unit) {

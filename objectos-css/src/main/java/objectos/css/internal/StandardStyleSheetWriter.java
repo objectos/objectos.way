@@ -57,6 +57,15 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(NL);
         }
 
+        case ByteCode.BLOCK_EMPTY -> {
+          appendable.append(" {}");
+          appendable.append(NL);
+        }
+
+        case ByteCode.COMMA -> {
+          appendable.append(", ");
+        }
+
         case ByteCode.KEYWORD,
              ByteCode.SELECTOR -> {
           String name;
@@ -90,6 +99,25 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           unit = LengthUnit.byOrdinal(data[index++]);
 
           appendable.append(unit.cssName);
+        }
+
+        case ByteCode.PERCENTAGE_DOUBLE -> {
+          double value;
+          value = Bytes.doubleValue(
+            data[index++], data[index++], data[index++], data[index++],
+            data[index++], data[index++], data[index++], data[index++]
+          );
+
+          appendable.append(Double.toString(value));
+          appendable.append('%');
+        }
+
+        case ByteCode.PERCENTAGE_INT -> {
+          int value;
+          value = Bytes.intValue(data[index++], data[index++], data[index++], data[index++]);
+
+          appendable.append(Integer.toString(value));
+          appendable.append('%');
         }
 
         case ByteCode.PROPERTY_NAME -> {

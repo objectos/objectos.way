@@ -118,6 +118,38 @@ final class Compiler02 extends Compiler01 {
           auxAdd(ByteCode.SPACE_OPTIONAL);
         }
 
+        case ByteProto.PERCENTAGE_DOUBLE -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          int thisIndex = mainIndex(index) + 1;
+
+          index += 3;
+
+          auxAdd(ByteCode.PERCENTAGE_DOUBLE);
+
+          int length = 8;
+
+          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+
+          auxIndex += length;
+        }
+
+        case ByteProto.PERCENTAGE_INT -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          int thisIndex = mainIndex(index) + 1;
+
+          index += 3;
+
+          auxAdd(ByteCode.PERCENTAGE_INT);
+
+          int length = 4;
+
+          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+
+          auxIndex += length;
+        }
+
         case ByteProto.STANDARD_NAME -> {
           valueCount = spaceIfNecessary(valueCount);
 

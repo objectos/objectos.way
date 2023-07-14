@@ -34,6 +34,10 @@ public abstract class CssTemplateApi {
 
   public abstract void length(int value, LengthUnit unit);
 
+  public abstract void percentage(double value);
+
+  public abstract void percentage(int value);
+
   public abstract void styleRuleElement(StyleRuleElement element);
 
   public abstract void styleRuleEnd();

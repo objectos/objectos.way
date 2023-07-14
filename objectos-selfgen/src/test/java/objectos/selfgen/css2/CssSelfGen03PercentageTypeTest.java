@@ -91,12 +91,13 @@ public class CssSelfGen03PercentageTypeTest {
       """
       package objectos.css.tmpl;
 
+      import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.InternalPercentage;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Percentage extends
-          LineHeightValue permits InternalPercentage, Zero {}
+          LineHeightValue permits InternalInstruction, InternalPercentage, Zero {}
       """
     );
   }

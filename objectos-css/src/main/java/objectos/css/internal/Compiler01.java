@@ -158,6 +158,38 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void percentage(double value) {
+    long bits = Double.doubleToLongBits(value);
+
+    byte b0 = (byte) (bits >>> 0);
+    byte b1 = (byte) (bits >>> 8);
+    byte b2 = (byte) (bits >>> 16);
+    byte b3 = (byte) (bits >>> 24);
+    byte b4 = (byte) (bits >>> 32);
+    byte b5 = (byte) (bits >>> 40);
+    byte b6 = (byte) (bits >>> 48);
+    byte b7 = (byte) (bits >>> 56);
+
+    mainAdd(
+      ByteProto.PERCENTAGE_DOUBLE,
+      b0, b1, b2, b3, b4, b5, b6, b7
+    );
+  }
+
+  @Override
+  public final void percentage(int value) {
+    byte b0 = (byte) (value >>> 0);
+    byte b1 = (byte) (value >>> 8);
+    byte b2 = (byte) (value >>> 16);
+    byte b3 = (byte) (value >>> 24);
+
+    mainAdd(
+      ByteProto.PERCENTAGE_INT,
+      b0, b1, b2, b3
+    );
+  }
+
+  @Override
   public final void declarationEnd() {
     // we iterate over each value added via declarationValue(PropertyValue)
     int auxMax = auxIndex;
@@ -333,7 +365,11 @@ class Compiler01 extends CssTemplateApi {
                 continue loop;
               }
 
+              case ByteProto.MARKED5 -> internal += 5;
+
               case ByteProto.MARKED6 -> internal += 6;
+
+              case ByteProto.MARKED9 -> internal += 9;
 
               case ByteProto.MARKED10 -> internal += 10;
 
@@ -468,6 +504,15 @@ class Compiler01 extends CssTemplateApi {
     main[mainIndex++] = b3;
   }
 
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 4);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+  }
+
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 5);
     main[mainIndex++] = b0;
@@ -488,6 +533,20 @@ class Compiler01 extends CssTemplateApi {
     main[mainIndex++] = b5;
     main[mainIndex++] = b6;
     main[mainIndex++] = b7;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 8);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+    main[mainIndex++] = b5;
+    main[mainIndex++] = b6;
+    main[mainIndex++] = b7;
+    main[mainIndex++] = b8;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,

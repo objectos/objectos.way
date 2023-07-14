@@ -19,14 +19,19 @@ import java.io.IOException;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.tmpl.Length;
+import objectos.css.tmpl.Percentage;
 
-public enum InternalInstruction implements Length, StyleDeclaration, StyleRule {
+public enum InternalInstruction implements Length, Percentage, StyleDeclaration, StyleRule {
 
   DECLARATION(-1),
 
   LENGTH_DOUBLE(10),
 
   LENGTH_INT(6),
+
+  PERCENTAGE_DOUBLE(9),
+
+  PERCENTAGE_INT(5),
 
   STYLE_RULE(-1);
 

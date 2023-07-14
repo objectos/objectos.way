@@ -201,12 +201,13 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       """
       package objectos.css.tmpl;
 
+      import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.InternalPercentage;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Percentage extends
-          LengthPercentage permits InternalPercentage, Zero {}
+          LengthPercentage permits InternalInstruction, InternalPercentage, Zero {}
       """
     );
   }

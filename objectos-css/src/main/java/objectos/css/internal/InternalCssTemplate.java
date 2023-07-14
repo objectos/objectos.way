@@ -22,6 +22,7 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
+import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.css.tmpl.Zero;
 import objectos.lang.Check;
@@ -63,6 +64,18 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   @Override
   protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
     throw new UnsupportedOperationException("Implement me");
+  }
+
+  protected final Percentage pct(double value) {
+    api().percentage(value);
+
+    return InternalInstruction.PERCENTAGE_DOUBLE;
+  }
+
+  protected final Percentage pct(int value) {
+    api().percentage(value);
+
+    return InternalInstruction.PERCENTAGE_INT;
   }
 
   protected final StyleRule style(StyleRuleElement... elements) {
