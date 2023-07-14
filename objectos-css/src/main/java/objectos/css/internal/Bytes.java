@@ -42,6 +42,54 @@ final class Bytes {
     return (byte) (value >>> 16);
   }
 
+  public static byte int0(int value) {
+    return (byte) (value >>> 0);
+  }
+
+  public static byte int1(int value) {
+    return (byte) (value >>> 8);
+  }
+
+  public static byte int2(int value) {
+    return (byte) (value >>> 16);
+  }
+
+  public static byte int3(int value) {
+    return (byte) (value >>> 24);
+  }
+
+  public static byte lng0(long value) {
+    return (byte) (value >>> 0);
+  }
+
+  public static byte lng1(long value) {
+    return (byte) (value >>> 8);
+  }
+
+  public static byte lng2(long value) {
+    return (byte) (value >>> 16);
+  }
+
+  public static byte lng3(long value) {
+    return (byte) (value >>> 24);
+  }
+
+  public static byte lng4(long value) {
+    return (byte) (value >>> 32);
+  }
+
+  public static byte lng5(long value) {
+    return (byte) (value >>> 40);
+  }
+
+  public static byte lng6(long value) {
+    return (byte) (value >>> 48);
+  }
+
+  public static byte lng7(long value) {
+    return (byte) (value >>> 56);
+  }
+
   // we use 2 bytes for the StandardName enum
   public static byte name0(StandardName name) {
     int ordinal;
@@ -72,6 +120,10 @@ final class Bytes {
 
   public static int toInt(byte b, int shift) {
     return (b & BYTE_MASK) << shift;
+  }
+
+  public static byte unit(LengthUnit unit) {
+    return int0(unit.ordinal());
   }
 
 }

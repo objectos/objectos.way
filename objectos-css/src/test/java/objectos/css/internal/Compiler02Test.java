@@ -137,6 +137,73 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  ul {
+    margin: 20px 1.5rem;
+  }
+  """)
+  public void testCase04() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationStart();
+
+    compiler.length(20, LengthUnit.PX);
+    compiler.length(1.5, LengthUnit.REM);
+
+    compiler.declarationStart(StandardName.MARGIN);
+    compiler.declarationValue(InternalInstruction.LENGTH_INT);
+    compiler.declarationValue(InternalInstruction.LENGTH_DOUBLE);
+    compiler.declarationEnd();
+
+    compiler.styleRuleStart();
+    compiler.styleRuleElement(StandardName.ul);
+    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    long dbl = Double.doubleToLongBits(1.5);
+
+    test(
+      result,
+
+      ByteCode.SELECTOR,
+      Bytes.name0(StandardName.ul),
+      Bytes.name1(StandardName.ul),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_NAME,
+      Bytes.name0(StandardName.MARGIN),
+      Bytes.name1(StandardName.MARGIN),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.LENGTH_INT,
+      Bytes.int0(20),
+      Bytes.int1(20),
+      Bytes.int2(20),
+      Bytes.int3(20),
+      Bytes.unit(LengthUnit.PX),
+      ByteCode.SPACE,
+      ByteCode.LENGTH_DOUBLE,
+      Bytes.lng0(dbl),
+      Bytes.lng1(dbl),
+      Bytes.lng2(dbl),
+      Bytes.lng3(dbl),
+      Bytes.lng4(dbl),
+      Bytes.lng5(dbl),
+      Bytes.lng6(dbl),
+      Bytes.lng7(dbl),
+      Bytes.unit(LengthUnit.REM),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

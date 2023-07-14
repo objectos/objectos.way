@@ -22,11 +22,19 @@ import objectos.css.tmpl.Length;
 
 public enum InternalInstruction implements Length, StyleDeclaration, StyleRule {
 
-  DECLARATION,
+  DECLARATION(-1),
 
-  LENGTH,
+  LENGTH_DOUBLE(10),
 
-  STYLE_RULE;
+  LENGTH_INT(6),
+
+  STYLE_RULE(-1);
+
+  public final int length;
+
+  private InternalInstruction(int length) {
+    this.length = length;
+  }
 
   @Override
   public void writeTo(Appendable dest) throws IOException {

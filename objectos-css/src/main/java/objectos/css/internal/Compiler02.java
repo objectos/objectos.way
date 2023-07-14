@@ -78,6 +78,38 @@ final class Compiler02 extends Compiler01 {
           break loop;
         }
 
+        case ByteProto.LENGTH_DOUBLE -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          int thisIndex = mainIndex(index) + 1;
+
+          index += 3;
+
+          auxAdd(ByteCode.LENGTH_DOUBLE);
+
+          int length = 9;
+
+          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+
+          auxIndex += length;
+        }
+
+        case ByteProto.LENGTH_INT -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          int thisIndex = mainIndex(index) + 1;
+
+          index += 3;
+
+          auxAdd(ByteCode.LENGTH_INT);
+
+          int length = 5;
+
+          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+
+          auxIndex += length;
+        }
+
         case ByteProto.MARKED -> {
           // skip end index
           index += 3;
@@ -87,11 +119,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.STANDARD_NAME -> {
-          if (valueCount > 0) {
-            auxAdd(ByteCode.SPACE);
-          }
-
-          valueCount++;
+          valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(ByteCode.KEYWORD, main[index++], main[index++]);
         }
@@ -117,6 +145,33 @@ final class Compiler02 extends Compiler01 {
     }
 
     auxAdd(ByteCode.TAB, (byte) mainStart);
+  }
+
+  private void semicolonOptional() {
+    if (auxIndex <= 0) {
+      return;
+    }
+
+    int lastIndex;
+    lastIndex = auxIndex - 1;
+
+    byte last;
+    last = aux[lastIndex];
+
+    if (last != ByteCode.SEMICOLON) {
+      return;
+    }
+
+    aux[lastIndex] = ByteCode.SEMICOLON_OPTIONAL;
+  }
+
+  private int spaceIfNecessary(int valueCount) {
+    if (valueCount > 0) {
+      auxAdd(ByteCode.SPACE);
+    }
+
+    valueCount++;
+    return valueCount;
   }
 
   private void styleRule(int index) {
@@ -184,24 +239,6 @@ final class Compiler02 extends Compiler01 {
       indentationWrite();
       auxAdd(ByteCode.BLOCK_END);
     }
-  }
-
-  private void semicolonOptional() {
-    if (auxIndex <= 0) {
-      return;
-    }
-
-    int lastIndex;
-    lastIndex = auxIndex - 1;
-
-    byte last;
-    last = aux[lastIndex];
-
-    if (last != ByteCode.SEMICOLON) {
-      return;
-    }
-
-    aux[lastIndex] = ByteCode.SEMICOLON_OPTIONAL;
   }
 
 }

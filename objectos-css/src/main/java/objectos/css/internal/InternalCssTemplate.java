@@ -23,9 +23,12 @@ import objectos.css.om.StyleRule;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.tmpl.Zero;
 import objectos.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
+
+  protected static final Zero $0 = InternalZero.INSTANCE;
 
   private CssTemplateApi api;
 
@@ -149,14 +152,14 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final Length length(double value, LengthUnit unit) {
     api().length(value, unit);
 
-    return InternalInstruction.LENGTH;
+    return InternalInstruction.LENGTH_DOUBLE;
   }
 
   @Override
   final Length length(int value, LengthUnit unit) {
     api().length(value, unit);
 
-    return InternalInstruction.LENGTH;
+    return InternalInstruction.LENGTH_INT;
   }
 
   private CssTemplateApi api() {

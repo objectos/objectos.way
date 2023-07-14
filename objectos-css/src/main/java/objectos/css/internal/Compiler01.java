@@ -86,6 +86,27 @@ class Compiler01 extends CssTemplateApi {
       );
     }
 
+    else if (value instanceof InternalInstruction internal) {
+      int length;
+      length = internal.length;
+
+      if (length < 0) {
+        throw new UnsupportedOperationException(
+          "Implement me :: internal=" + internal.name()
+        );
+      }
+
+      mainContents -= length;
+
+      if (length > 255) {
+        throw new AssertionError(
+          "Length is too large. Cannot store it in 1 byte."
+        );
+      }
+
+      auxAdd(MARK_INTERNAL, (byte) length);
+    }
+
     else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + value.getClass()
@@ -95,12 +116,40 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void length(double value, LengthUnit unit) {
-    throw new UnsupportedOperationException("Implement me");
+    long bits = Double.doubleToLongBits(value);
+
+    byte b0 = (byte) (bits >>> 0);
+    byte b1 = (byte) (bits >>> 8);
+    byte b2 = (byte) (bits >>> 16);
+    byte b3 = (byte) (bits >>> 24);
+    byte b4 = (byte) (bits >>> 32);
+    byte b5 = (byte) (bits >>> 40);
+    byte b6 = (byte) (bits >>> 48);
+    byte b7 = (byte) (bits >>> 56);
+
+    int unitOrdinal = unit.ordinal();
+
+    mainAdd(
+      ByteProto.LENGTH_DOUBLE,
+      b0, b1, b2, b3, b4, b5, b6, b7,
+      (byte) unitOrdinal
+    );
   }
 
   @Override
   public final void length(int value, LengthUnit unit) {
-    throw new UnsupportedOperationException("Implement me");
+    byte b0 = (byte) (value >>> 0);
+    byte b1 = (byte) (value >>> 8);
+    byte b2 = (byte) (value >>> 16);
+    byte b3 = (byte) (value >>> 24);
+
+    int unitOrdinal = unit.ordinal();
+
+    mainAdd(
+      ByteProto.LENGTH_INT,
+      b0, b1, b2, b3,
+      (byte) unitOrdinal
+    );
   }
 
   @Override
@@ -110,12 +159,34 @@ class Compiler01 extends CssTemplateApi {
 
     int idx = auxStart;
 
-    // int internal = mainContents;
+    int internal = mainContents;
 
     while (idx < auxMax) {
       byte marker = aux[idx++];
 
       switch (marker) {
+        case MARK_INTERNAL -> {
+          byte lengthByte;
+          lengthByte = aux[idx++];
+
+          int length;
+          length = lengthByte & 0xFF;
+
+          byte proto;
+          proto = main[internal];
+
+          main[internal] = ByteProto.markedOf(length);
+
+          mainAdd(
+            proto,
+            Bytes.idx0(internal),
+            Bytes.idx1(internal),
+            Bytes.idx2(internal)
+          );
+
+          internal += length;
+        }
+
         case MARK_VALUE3 -> {
           mainAdd(aux[idx++], aux[idx++], aux[idx++]);
         }
@@ -233,9 +304,10 @@ class Compiler01 extends CssTemplateApi {
 
       switch (marker) {
         case MARK_INTERNAL -> {
-          byte proto = main[internal];
-
           while (true) {
+            byte proto;
+            proto = main[internal];
+
             switch (proto) {
               case ByteProto.DECLARATION -> {
                 main[internal] = ByteProto.MARKED;
@@ -251,6 +323,10 @@ class Compiler01 extends CssTemplateApi {
 
                 continue loop;
               }
+
+              case ByteProto.MARKED6 -> internal += 6;
+
+              case ByteProto.MARKED10 -> internal += 10;
 
               default -> {
                 throw new UnsupportedOperationException(
@@ -403,6 +479,21 @@ class Compiler01 extends CssTemplateApi {
     main[mainIndex++] = b5;
     main[mainIndex++] = b6;
     main[mainIndex++] = b7;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8, byte b9) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 9);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+    main[mainIndex++] = b5;
+    main[mainIndex++] = b6;
+    main[mainIndex++] = b7;
+    main[mainIndex++] = b8;
+    main[mainIndex++] = b9;
   }
 
 }

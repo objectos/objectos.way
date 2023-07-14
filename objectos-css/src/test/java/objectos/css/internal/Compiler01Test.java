@@ -15,6 +15,8 @@
  */
 package objectos.css.internal;
 
+import static org.testng.Assert.assertEquals;
+
 import java.util.Arrays;
 import org.testng.annotations.Test;
 
@@ -105,6 +107,102 @@ public class Compiler01Test {
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
       ByteProto.ROOT_END, Bytes.idx0(36), Bytes.idx1(36), Bytes.idx2(36)
+    );
+  }
+
+  @Test(description = """
+  ul {
+    margin: 20px 1.5rem;
+  }
+  """)
+  public void testCase04() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationStart();
+
+    assertEquals(compiler.mainIndex, 0);
+
+    compiler.length(20, LengthUnit.PX);
+
+    assertEquals(compiler.mainIndex, 6);
+
+    compiler.length(1.5, LengthUnit.REM);
+
+    assertEquals(compiler.mainIndex, 6 + 10);
+
+    compiler.declarationStart(StandardName.MARGIN);
+
+    assertEquals(compiler.mainContents, 6 + 10);
+
+    compiler.declarationValue(InternalInstruction.LENGTH_INT);
+
+    assertEquals(compiler.mainContents, 10);
+
+    compiler.declarationValue(InternalInstruction.LENGTH_DOUBLE);
+
+    assertEquals(compiler.mainContents, 0);
+
+    compiler.declarationEnd();
+
+    compiler.styleRuleStart();
+    compiler.styleRuleElement(StandardName.ul);
+    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    long dbl = Double.doubleToLongBits(1.5);
+
+    test(
+      compiler,
+
+      ByteProto.MARKED6,
+      Bytes.int0(20),
+      Bytes.int1(20),
+      Bytes.int2(20),
+      Bytes.int3(20),
+      Bytes.unit(LengthUnit.PX),
+
+      ByteProto.MARKED10,
+      Bytes.lng0(dbl),
+      Bytes.lng1(dbl),
+      Bytes.lng2(dbl),
+      Bytes.lng3(dbl),
+      Bytes.lng4(dbl),
+      Bytes.lng5(dbl),
+      Bytes.lng6(dbl),
+      Bytes.lng7(dbl),
+      Bytes.unit(LengthUnit.REM),
+
+      ByteProto.MARKED,
+      Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
+      Bytes.name0(StandardName.MARGIN),
+      Bytes.name1(StandardName.MARGIN),
+      ByteProto.LENGTH_INT,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      ByteProto.LENGTH_DOUBLE,
+      Bytes.idx0(6), Bytes.idx1(6), Bytes.idx2(6),
+      ByteProto.DECLARATION_END,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.idx0(57), Bytes.idx1(57), Bytes.idx2(57),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.ul),
+      Bytes.name1(StandardName.ul),
+      ByteProto.DECLARATION,
+      Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
+      ByteProto.STYLE_RULE_END,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
+      ByteProto.STYLE_RULE,
+
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
+      ByteProto.ROOT_END, Bytes.idx0(57), Bytes.idx1(57), Bytes.idx2(57)
     );
   }
 

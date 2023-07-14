@@ -27,14 +27,34 @@ final class ByteProto {
 
   public static final byte DECLARATION_END = -5;
 
-  public static final byte STANDARD_NAME = -6;
+  public static final byte LENGTH_DOUBLE = -6;
 
-  public static final byte STYLE_RULE = -7;
+  public static final byte LENGTH_INT = -7;
 
-  public static final byte STYLE_RULE_END = -8;
+  public static final byte STANDARD_NAME = -8;
 
-  public static final byte MARKED = -9;
+  public static final byte STYLE_RULE = -9;
+
+  public static final byte STYLE_RULE_END = -10;
+
+  public static final byte MARKED = -11;
+
+  public static final byte MARKED6 = -12;
+
+  public static final byte MARKED10 = -13;
 
   private ByteProto() {}
+
+  public static byte markedOf(int length) {
+    return switch (length) {
+      case 6 -> MARKED6;
+
+      case 10 -> MARKED10;
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: length=" + length
+      );
+    };
+  }
 
 }
