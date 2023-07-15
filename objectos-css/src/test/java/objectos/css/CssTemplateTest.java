@@ -888,7 +888,7 @@ public class CssTemplateTest {
   """)
   public void propertyLineHeight() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

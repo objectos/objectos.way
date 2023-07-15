@@ -165,14 +165,14 @@ public class Compiler01Test {
       Bytes.unit(LengthUnit.PX),
 
       ByteProto.MARKED10,
-      Bytes.lng0(dbl),
-      Bytes.lng1(dbl),
-      Bytes.lng2(dbl),
-      Bytes.lng3(dbl),
-      Bytes.lng4(dbl),
-      Bytes.lng5(dbl),
-      Bytes.lng6(dbl),
-      Bytes.lng7(dbl),
+      Bytes.long0(dbl),
+      Bytes.long1(dbl),
+      Bytes.long2(dbl),
+      Bytes.long3(dbl),
+      Bytes.long4(dbl),
+      Bytes.long5(dbl),
+      Bytes.long6(dbl),
+      Bytes.long7(dbl),
       Bytes.unit(LengthUnit.REM),
 
       ByteProto.MARKED,
@@ -203,6 +203,72 @@ public class Compiler01Test {
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
       ByteProto.ROOT_END, Bytes.idx0(57), Bytes.idx1(57), Bytes.idx2(57)
+    );
+  }
+
+  @Test(description = """
+  TC 05: double value
+
+  p {
+    line-height: 1.5;
+  }
+  """)
+  public void testCase05() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationStart();
+
+    compiler.declarationStart(Property.LINE_HEIGHT);
+    compiler.javaDouble(1.5);
+    compiler.declarationEnd();
+
+    compiler.styleRuleStart();
+    compiler.styleRuleElement(StandardName.p);
+    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    long dbl;
+    dbl = Double.doubleToLongBits(1.5);
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.idx0(23), Bytes.idx1(23), Bytes.idx2(23),
+      Bytes.prop0(Property.LINE_HEIGHT),
+      Bytes.prop1(Property.LINE_HEIGHT),
+      ByteProto.JAVA_DOUBLE,
+      Bytes.long0(dbl),
+      Bytes.long1(dbl),
+      Bytes.long2(dbl),
+      Bytes.long3(dbl),
+      Bytes.long4(dbl),
+      Bytes.long5(dbl),
+      Bytes.long6(dbl),
+      Bytes.long7(dbl),
+      ByteProto.DECLARATION_END,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.idx0(42), Bytes.idx1(42), Bytes.idx2(42),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.p),
+      Bytes.name1(StandardName.p),
+      ByteProto.DECLARATION,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      ByteProto.STYLE_RULE_END,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.idx0(23), Bytes.idx1(23), Bytes.idx2(23),
+      ByteProto.STYLE_RULE,
+
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, Bytes.idx0(23), Bytes.idx1(23), Bytes.idx2(23),
+      ByteProto.ROOT_END, Bytes.idx0(42), Bytes.idx1(42), Bytes.idx2(42)
     );
   }
 

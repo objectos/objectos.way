@@ -31,25 +31,29 @@ final class ByteCode {
 
   public static final byte KEYWORD = -7;
 
-  public static final byte LENGTH_DOUBLE = -8;
+  public static final byte JAVA_DOUBLE = -8;
 
-  public static final byte LENGTH_INT = -9;
+  public static final byte JAVA_INT = -9;
 
-  public static final byte PERCENTAGE_DOUBLE = -10;
+  public static final byte LENGTH_DOUBLE = -10;
 
-  public static final byte PERCENTAGE_INT = -11;
+  public static final byte LENGTH_INT = -11;
 
-  public static final byte ZERO = -12;
+  public static final byte PERCENTAGE_DOUBLE = -12;
 
-  public static final byte COMMA = -13;
+  public static final byte PERCENTAGE_INT = -13;
 
-  public static final byte SEMICOLON = -14;
+  public static final byte ZERO = -14;
 
-  public static final byte SEMICOLON_OPTIONAL = -15;
+  public static final byte COMMA = -15;
 
-  public static final byte SPACE = -16;
+  public static final byte SEMICOLON = -16;
 
-  public static final byte SPACE_OPTIONAL = -17;
+  public static final byte SEMICOLON_OPTIONAL = -17;
+
+  public static final byte SPACE = -18;
+
+  public static final byte SPACE_OPTIONAL = -19;
 
   private ByteCode() {}
 

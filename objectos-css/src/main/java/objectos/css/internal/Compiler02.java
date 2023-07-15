@@ -78,6 +78,32 @@ final class Compiler02 extends Compiler01 {
           break loop;
         }
 
+        case ByteProto.JAVA_DOUBLE -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          auxAdd(ByteCode.JAVA_DOUBLE);
+
+          int length = 8;
+
+          System.arraycopy(main, index, aux, auxIndex, length);
+
+          auxIndex += length;
+          index += length;
+        }
+
+        case ByteProto.JAVA_INT -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          auxAdd(ByteCode.JAVA_INT);
+
+          int length = 4;
+
+          System.arraycopy(main, index, aux, auxIndex, length);
+
+          auxIndex += length;
+          index += length;
+        }
+
         case ByteProto.LENGTH_DOUBLE -> {
           valueCount = spaceIfNecessary(valueCount);
 

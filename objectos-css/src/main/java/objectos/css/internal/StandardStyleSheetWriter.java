@@ -74,6 +74,23 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(name);
         }
 
+        case ByteCode.JAVA_DOUBLE -> {
+          double value;
+          value = Bytes.doubleValue(
+            data[index++], data[index++], data[index++], data[index++],
+            data[index++], data[index++], data[index++], data[index++]
+          );
+
+          appendable.append(Double.toString(value));
+        }
+
+        case ByteCode.JAVA_INT -> {
+          int value;
+          value = Bytes.intValue(data[index++], data[index++], data[index++], data[index++]);
+
+          appendable.append(Integer.toString(value));
+        }
+
         case ByteCode.LENGTH_DOUBLE -> {
           double value;
           value = Bytes.doubleValue(

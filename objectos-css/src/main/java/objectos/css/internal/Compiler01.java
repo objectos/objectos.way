@@ -111,72 +111,103 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void javaDouble(double value) {
+    long bits;
+    bits = Double.doubleToLongBits(value);
+
+    mainAdd(
+      ByteProto.JAVA_DOUBLE,
+
+      Bytes.long0(bits),
+      Bytes.long1(bits),
+      Bytes.long2(bits),
+      Bytes.long3(bits),
+      Bytes.long4(bits),
+      Bytes.long5(bits),
+      Bytes.long6(bits),
+      Bytes.long7(bits)
+    );
+  }
+
+  @Override
+  public final void javaInt(int value) {
+    mainAdd(
+      ByteProto.JAVA_INT,
+
+      Bytes.int0(value),
+      Bytes.int1(value),
+      Bytes.int2(value),
+      Bytes.int3(value)
+    );
+  }
+
+  @Override
   public final void length(double value, LengthUnit unit) {
-    long bits = Double.doubleToLongBits(value);
+    long bits;
+    bits = Double.doubleToLongBits(value);
 
-    byte b0 = (byte) (bits >>> 0);
-    byte b1 = (byte) (bits >>> 8);
-    byte b2 = (byte) (bits >>> 16);
-    byte b3 = (byte) (bits >>> 24);
-    byte b4 = (byte) (bits >>> 32);
-    byte b5 = (byte) (bits >>> 40);
-    byte b6 = (byte) (bits >>> 48);
-    byte b7 = (byte) (bits >>> 56);
-
-    int unitOrdinal = unit.ordinal();
+    int unitOrdinal;
+    unitOrdinal = unit.ordinal();
 
     mainAdd(
       ByteProto.LENGTH_DOUBLE,
-      b0, b1, b2, b3, b4, b5, b6, b7,
+
+      Bytes.long0(bits),
+      Bytes.long1(bits),
+      Bytes.long2(bits),
+      Bytes.long3(bits),
+      Bytes.long4(bits),
+      Bytes.long5(bits),
+      Bytes.long6(bits),
+      Bytes.long7(bits),
       (byte) unitOrdinal
     );
   }
 
   @Override
   public final void length(int value, LengthUnit unit) {
-    byte b0 = (byte) (value >>> 0);
-    byte b1 = (byte) (value >>> 8);
-    byte b2 = (byte) (value >>> 16);
-    byte b3 = (byte) (value >>> 24);
-
-    int unitOrdinal = unit.ordinal();
+    int unitOrdinal;
+    unitOrdinal = unit.ordinal();
 
     mainAdd(
       ByteProto.LENGTH_INT,
-      b0, b1, b2, b3,
+
+      Bytes.int0(value),
+      Bytes.int1(value),
+      Bytes.int2(value),
+      Bytes.int3(value),
       (byte) unitOrdinal
     );
   }
 
   @Override
   public final void percentage(double value) {
-    long bits = Double.doubleToLongBits(value);
-
-    byte b0 = (byte) (bits >>> 0);
-    byte b1 = (byte) (bits >>> 8);
-    byte b2 = (byte) (bits >>> 16);
-    byte b3 = (byte) (bits >>> 24);
-    byte b4 = (byte) (bits >>> 32);
-    byte b5 = (byte) (bits >>> 40);
-    byte b6 = (byte) (bits >>> 48);
-    byte b7 = (byte) (bits >>> 56);
+    long bits;
+    bits = Double.doubleToLongBits(value);
 
     mainAdd(
       ByteProto.PERCENTAGE_DOUBLE,
-      b0, b1, b2, b3, b4, b5, b6, b7
+
+      Bytes.long0(bits),
+      Bytes.long1(bits),
+      Bytes.long2(bits),
+      Bytes.long3(bits),
+      Bytes.long4(bits),
+      Bytes.long5(bits),
+      Bytes.long6(bits),
+      Bytes.long7(bits)
     );
   }
 
   @Override
   public final void percentage(int value) {
-    byte b0 = (byte) (value >>> 0);
-    byte b1 = (byte) (value >>> 8);
-    byte b2 = (byte) (value >>> 16);
-    byte b3 = (byte) (value >>> 24);
-
     mainAdd(
       ByteProto.PERCENTAGE_INT,
-      b0, b1, b2, b3
+
+      Bytes.int0(value),
+      Bytes.int1(value),
+      Bytes.int2(value),
+      Bytes.int3(value)
     );
   }
 

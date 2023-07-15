@@ -84,35 +84,35 @@ final class Bytes {
     return v3 | v2 | v1 | v0;
   }
 
-  public static byte lng0(long value) {
+  public static byte long0(long value) {
     return (byte) (value >>> 0);
   }
 
-  public static byte lng1(long value) {
+  public static byte long1(long value) {
     return (byte) (value >>> 8);
   }
 
-  public static byte lng2(long value) {
+  public static byte long2(long value) {
     return (byte) (value >>> 16);
   }
 
-  public static byte lng3(long value) {
+  public static byte long3(long value) {
     return (byte) (value >>> 24);
   }
 
-  public static byte lng4(long value) {
+  public static byte long4(long value) {
     return (byte) (value >>> 32);
   }
 
-  public static byte lng5(long value) {
+  public static byte long5(long value) {
     return (byte) (value >>> 40);
   }
 
-  public static byte lng6(long value) {
+  public static byte long6(long value) {
     return (byte) (value >>> 48);
   }
 
-  public static byte lng7(long value) {
+  public static byte long7(long value) {
     return (byte) (value >>> 56);
   }
 

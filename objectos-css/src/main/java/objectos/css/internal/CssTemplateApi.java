@@ -23,11 +23,13 @@ public abstract class CssTemplateApi {
 
   public abstract void compilationStart();
 
-  public abstract void declarationEnd();
-
   public abstract void declarationStart(Property name);
 
   public abstract void declarationValue(PropertyValue value);
+
+  public abstract void javaDouble(double value);
+
+  public abstract void javaInt(int value);
 
   public abstract void length(double value, LengthUnit unit);
 
@@ -37,11 +39,13 @@ public abstract class CssTemplateApi {
 
   public abstract void percentage(int value);
 
+  public abstract void declarationEnd();
+
+  public abstract void styleRuleStart();
+
   public abstract void styleRuleElement(StyleRuleElement element);
 
   public abstract void styleRuleEnd();
-
-  public abstract void styleRuleStart();
 
   public abstract void compilationEnd();
 
