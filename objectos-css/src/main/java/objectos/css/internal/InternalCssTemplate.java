@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
@@ -30,6 +31,8 @@ import objectos.lang.Check;
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected static final Zero $0 = InternalZero.INSTANCE;
+
+  protected static final AttributeOperator IS = InternalAttributeOperator.EQUALS;
 
   private CssTemplateApi api;
 
@@ -69,7 +72,20 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     api.selectorAttribute(name);
 
-    return InternalInstruction.SELECTOR_ATTR;
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final Selector attr(String name, AttributeOperator operator, String value) {
+    Check.notNull(name, "name == null");
+    Check.notNull(operator, "operator == null");
+    Check.notNull(value, "value == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.selectorAttribute(name, operator, value);
+
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
@@ -114,7 +130,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationStart(name);
     api.javaDouble(value);
     api.declarationEnd();
-    return InternalInstruction.DECLARATION;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
@@ -125,7 +141,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationStart(name);
     api.javaInt(value);
     api.declarationEnd();
-    return InternalInstruction.DECLARATION;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
@@ -136,7 +152,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationStart(name);
     api.declarationValue(value);
     api.declarationEnd();
-    return InternalInstruction.DECLARATION;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
@@ -148,7 +164,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationValue(value1);
     api.declarationValue(value2);
     api.declarationEnd();
-    return InternalInstruction.DECLARATION;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
@@ -161,7 +177,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationValue(value2);
     api.declarationValue(value3);
     api.declarationEnd();
-    return InternalInstruction.DECLARATION;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
@@ -175,7 +191,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationValue(value3);
     api.declarationValue(value4);
     api.declarationEnd();
-    return InternalInstruction.DECLARATION;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
@@ -186,7 +202,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationStart(name);
     api.javaString(value);
     api.declarationEnd();
-    return InternalInstruction.DECLARATION;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override

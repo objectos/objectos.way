@@ -167,14 +167,36 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           int objectIndex;
           objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
 
-          Object object;
-          object = objects[objectIndex];
-
           String name;
-          name = (String) object;
+          name = (String) objects[objectIndex];
 
           appendable.append('[');
           appendable.append(name);
+          appendable.append(']');
+        }
+
+        case ByteCode.SELECTOR_ATTR_VALUE -> {
+          int nameIndex;
+          nameIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          String name;
+          name = (String) objects[nameIndex];
+
+          InternalAttributeOperator operator;
+          operator = InternalAttributeOperator.ofOrdinal(bytes[index++]);
+
+          int valueIndex;
+          valueIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          String value;
+          value = (String) objects[valueIndex];
+
+          appendable.append('[');
+          appendable.append(name);
+          appendable.append(operator.cssName);
+          appendable.append('"');
+          appendable.append(value);
+          appendable.append('"');
           appendable.append(']');
         }
 

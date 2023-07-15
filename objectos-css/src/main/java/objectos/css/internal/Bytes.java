@@ -32,7 +32,7 @@ final class Bytes {
     index0 = toInt(b0, 0);
 
     int index1;
-    index1 = toInt(b0, 8);
+    index1 = toInt(b1, 8);
 
     return index1 | index0;
   }

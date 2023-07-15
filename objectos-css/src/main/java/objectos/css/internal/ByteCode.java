@@ -59,6 +59,8 @@ final class ByteCode {
 
   public static final byte SELECTOR_ATTR = -21;
 
+  public static final byte SELECTOR_ATTR_VALUE = -22;
+
   private ByteCode() {}
 
 }

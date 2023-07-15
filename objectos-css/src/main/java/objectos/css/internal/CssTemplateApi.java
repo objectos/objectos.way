@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
 import objectos.css.om.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
@@ -54,6 +55,8 @@ public abstract class CssTemplateApi {
   public abstract void percentage(int value);
 
   public abstract void selectorAttribute(String name);
+
+  public abstract void selectorAttribute(String name, AttributeOperator operator, String value);
 
   public abstract void styleRuleElement(StyleRuleElement element);
 

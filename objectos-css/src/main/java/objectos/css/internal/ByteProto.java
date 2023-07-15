@@ -55,13 +55,19 @@ final class ByteProto {
 
   public static final byte MARKED = -19;
 
-  public static final byte MARKED5 = -20;
+  public static final byte MARKED3 = -20;
 
-  public static final byte MARKED6 = -21;
+  public static final byte MARKED5 = -21;
 
-  public static final byte MARKED9 = -22;
+  public static final byte MARKED6 = -22;
 
-  public static final byte MARKED10 = -23;
+  public static final byte MARKED9 = -23;
+
+  public static final byte MARKED10 = -24;
+
+  public static final byte INTERNAL3 = -25;
+
+  public static final byte INTERNAL6 = -26;
 
   private ByteProto() {}
 

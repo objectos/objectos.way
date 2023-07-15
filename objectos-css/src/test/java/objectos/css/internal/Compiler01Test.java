@@ -72,7 +72,7 @@ public class Compiler01Test {
 
     compiler.styleRuleStart();
     compiler.styleRuleElement(StandardName.any);
-    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -147,7 +147,7 @@ public class Compiler01Test {
 
     compiler.styleRuleStart();
     compiler.styleRuleElement(StandardName.ul);
-    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -225,7 +225,7 @@ public class Compiler01Test {
 
     compiler.styleRuleStart();
     compiler.styleRuleElement(StandardName.p);
-    compiler.styleRuleElement(InternalInstruction.DECLARATION);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -286,7 +286,7 @@ public class Compiler01Test {
     compiler.selectorAttribute("hidden");
 
     compiler.styleRuleStart();
-    compiler.styleRuleElement(InternalInstruction.SELECTOR_ATTR);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -294,23 +294,24 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED,
+      ByteProto.MARKED3,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteProto.INTERNAL3,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18),
+      Bytes.idx0(19), Bytes.idx1(19), Bytes.idx2(19),
       ByteProto.SELECTOR_ATTR,
       Bytes.two0(0),
       Bytes.two1(0),
       ByteProto.STYLE_RULE_END,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(3), Bytes.idx1(3), Bytes.idx2(3),
+      Bytes.idx0(4), Bytes.idx1(4), Bytes.idx2(4),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(3), Bytes.idx1(3), Bytes.idx2(3),
-      ByteProto.ROOT_END, Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18)
+      ByteProto.STYLE_RULE, Bytes.idx0(4), Bytes.idx1(4), Bytes.idx2(4),
+      ByteProto.ROOT_END, Bytes.idx0(19), Bytes.idx1(19), Bytes.idx2(19)
     );
   }
 

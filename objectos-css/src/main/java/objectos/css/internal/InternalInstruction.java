@@ -30,7 +30,7 @@ public enum InternalInstruction
     StyleDeclaration,
     StyleRule {
 
-  DECLARATION(-1),
+  INSTANCE(-1),
 
   LENGTH_DOUBLE(10),
 
@@ -39,8 +39,6 @@ public enum InternalInstruction
   PERCENTAGE_DOUBLE(9),
 
   PERCENTAGE_INT(5),
-
-  SELECTOR_ATTR(-1),
 
   STYLE_RULE(-1);
 

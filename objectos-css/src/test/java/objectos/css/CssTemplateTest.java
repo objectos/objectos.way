@@ -58,7 +58,7 @@ public class CssTemplateTest {
   """)
   public void propertyAppearance() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -121,7 +121,7 @@ public class CssTemplateTest {
   """)
   public void propertyBackgroundImage() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -446,7 +446,7 @@ public class CssTemplateTest {
   @Test
   public void propertyCursor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1314,7 +1314,7 @@ public class CssTemplateTest {
   """)
   public void propertyOutlineOffset() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected final void definition() {
           style(

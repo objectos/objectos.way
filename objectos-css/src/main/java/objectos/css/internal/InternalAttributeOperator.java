@@ -21,15 +21,21 @@ public enum InternalAttributeOperator implements AttributeOperator {
 
   EQUALS("=");
 
-  private final String operator;
+  private static final InternalAttributeOperator[] VALUES = values();
 
-  private InternalAttributeOperator(String operator) {
-    this.operator = operator;
+  public final String cssName;
+
+  private InternalAttributeOperator(String cssName) {
+    this.cssName = cssName;
+  }
+
+  public static InternalAttributeOperator ofOrdinal(int ordinal) {
+    return VALUES[ordinal];
   }
 
   @Override
   public final String toString() {
-    return operator;
+    return cssName;
   }
 
 }

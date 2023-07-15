@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import objectos.css.AttributeOperator;
 import objectos.css.om.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.util.ByteArrays;
@@ -317,7 +318,38 @@ class Compiler01 extends CssTemplateApi {
       ByteProto.SELECTOR_ATTR,
 
       Bytes.two0(nameIndex),
-      Bytes.two1(nameIndex)
+      Bytes.two1(nameIndex),
+
+      ByteProto.INTERNAL3
+    );
+  }
+
+  @Override
+  public final void selectorAttribute(String name, AttributeOperator operator, String value) {
+    int nameIndex;
+    nameIndex = objectAdd(name);
+
+    InternalAttributeOperator operatorActual;
+    operatorActual = (InternalAttributeOperator) operator;
+
+    int operatorOrdinal;
+    operatorOrdinal = operatorActual.ordinal();
+
+    int valueIndex;
+    valueIndex = objectAdd(value);
+
+    mainAdd(
+      ByteProto.SELECTOR_ATTR_VALUE,
+
+      Bytes.two0(nameIndex),
+      Bytes.two1(nameIndex),
+
+      (byte) operatorOrdinal,
+
+      Bytes.two0(valueIndex),
+      Bytes.two1(valueIndex),
+
+      ByteProto.INTERNAL6
     );
   }
 
@@ -351,12 +383,15 @@ class Compiler01 extends CssTemplateApi {
       );
     }
 
-    else if (element instanceof InternalInstruction instruction) {
-      switch (instruction) {
-        case DECLARATION -> {
-          // skip ByteProto
-          mainContents--;
+    else if (element == InternalInstruction.INSTANCE) {
+      // @ ByteProto
+      mainContents--;
 
+      byte proto;
+      proto = main[mainContents];
+
+      switch (proto) {
+        case ByteProto.DECLARATION -> {
           // skip element start
           mainContents -= 3;
 
@@ -364,20 +399,18 @@ class Compiler01 extends CssTemplateApi {
           mainContents -= 3;
 
           mainContents = mainIndex(mainContents);
-
-          auxAdd(MARK_INTERNAL);
         }
 
-        case SELECTOR_ATTR -> {
-          mainContents -= 3;
+        case ByteProto.INTERNAL3 -> mainContents -= 3;
 
-          auxAdd(MARK_INTERNAL);
-        }
+        case ByteProto.INTERNAL6 -> mainContents -= 6;
 
         default -> throw new UnsupportedOperationException(
-          "Implement me :: instruction=" + instruction.name()
+          "Implement me :: proto=" + proto
         );
       }
+
+      auxAdd(MARK_INTERNAL);
     }
 
     else {
@@ -423,6 +456,7 @@ class Compiler01 extends CssTemplateApi {
 
                 mainAdd(
                   proto,
+
                   Bytes.idx0(internal),
                   Bytes.idx1(internal),
                   Bytes.idx2(internal)
@@ -442,13 +476,36 @@ class Compiler01 extends CssTemplateApi {
               case ByteProto.MARKED10 -> internal += 10;
 
               case ByteProto.SELECTOR_ATTR -> {
-                main[internal] = ByteProto.MARKED;
+                main[internal++] = ByteProto.MARKED3;
 
                 mainAdd(
                   proto,
-                  main[++internal],
-                  main[++internal]
+
+                  // nameIndex0
+                  main[internal++],
+
+                  // nameIndex1
+                  main[internal++]
                 );
+
+                // ByteProto.INTERNAL3
+                internal++;
+
+                continue loop;
+              }
+
+              case ByteProto.SELECTOR_ATTR_VALUE -> {
+                main[internal] = ByteProto.MARKED6;
+
+                mainAdd(
+                  proto,
+
+                  Bytes.idx0(internal),
+                  Bytes.idx1(internal),
+                  Bytes.idx2(internal)
+                );
+
+                internal += 7;
 
                 continue loop;
               }
@@ -573,6 +630,16 @@ class Compiler01 extends CssTemplateApi {
     aux[auxIndex++] = b4;
   }
 
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 5);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+  }
+
   private void mainAdd(byte b0) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 0);
     main[mainIndex++] = b0;
@@ -610,6 +677,17 @@ class Compiler01 extends CssTemplateApi {
     main[mainIndex++] = b3;
     main[mainIndex++] = b4;
     main[mainIndex++] = b5;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 6);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+    main[mainIndex++] = b5;
+    main[mainIndex++] = b6;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {

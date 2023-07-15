@@ -263,7 +263,8 @@ final class Compiler02 extends Compiler01 {
         selectorCount = 0;
 
     loop: while (index < main.length) {
-      byte proto = main[index++];
+      byte proto;
+      proto = main[index++];
 
       switch (proto) {
         case ByteProto.DECLARATION -> {
@@ -287,7 +288,42 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.SELECTOR_ATTR -> {
           selectorCount = selectorComma(selectorCount);
 
-          auxAdd(ByteCode.SELECTOR_ATTR, main[index++], main[index++]);
+          auxAdd(
+            ByteCode.SELECTOR_ATTR,
+
+            // nameIndex0
+            main[index++],
+
+            // nameIndex1
+            main[index++]
+          );
+        }
+
+        case ByteProto.SELECTOR_ATTR_VALUE -> {
+          selectorCount = selectorComma(selectorCount);
+
+          int elemIndex;
+          elemIndex = mainIndex(index);
+
+          index += 3;
+
+          // skip ByteProto.SELECTOR_ATTR_VALUE
+          elemIndex++;
+
+          auxAdd(
+            ByteCode.SELECTOR_ATTR_VALUE,
+
+            // nameIndex
+            main[elemIndex++],
+            main[elemIndex++],
+
+            // operator
+            main[elemIndex++],
+
+            // valueIndex
+            main[elemIndex++],
+            main[elemIndex++]
+          );
         }
 
         case ByteProto.STANDARD_NAME -> {
