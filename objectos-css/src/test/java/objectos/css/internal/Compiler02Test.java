@@ -204,6 +204,38 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  TC 05: double value
+
+  [hidden] {}
+  """)
+  public void testCase06() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationStart();
+
+    compiler.styleRuleStart();
+    compiler.selectorAttribute("hidden");
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_ATTR,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteCode.BLOCK_EMPTY
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

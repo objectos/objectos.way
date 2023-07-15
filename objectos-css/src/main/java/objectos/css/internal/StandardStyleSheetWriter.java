@@ -163,6 +163,21 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(':');
         }
 
+        case ByteCode.SELECTOR_ATTR -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          Object object;
+          object = objects[objectIndex];
+
+          String name;
+          name = (String) object;
+
+          appendable.append('[');
+          appendable.append(name);
+          appendable.append(']');
+        }
+
         case ByteCode.SEMICOLON, ByteCode.SEMICOLON_OPTIONAL -> {
           appendable.append(';');
           appendable.append(NL);

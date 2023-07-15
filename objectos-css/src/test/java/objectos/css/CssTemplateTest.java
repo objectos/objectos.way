@@ -360,7 +360,7 @@ public class CssTemplateTest {
   """)
   public void propertyBoxShadow() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -388,7 +388,7 @@ public class CssTemplateTest {
   """)
   public void propertyBoxSizing() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -422,7 +422,7 @@ public class CssTemplateTest {
   """)
   public void propertyColor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -483,7 +483,7 @@ public class CssTemplateTest {
   """)
   public void propertyDisplay() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected final void definition() {
           style(
@@ -546,7 +546,7 @@ public class CssTemplateTest {
   """)
   public void propertyFlexDirection() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -580,7 +580,7 @@ public class CssTemplateTest {
   """)
   public void propertyFont() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected final void definition() {
           style(
@@ -642,7 +642,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontFeatureSettings() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -670,7 +670,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontSize() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -725,7 +725,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontVariationSettings() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -753,7 +753,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontWeight() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -793,7 +793,7 @@ public class CssTemplateTest {
   """)
   public void propertyHeight() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -831,7 +831,7 @@ public class CssTemplateTest {
   """)
   public void propertyJustifyContent() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -996,7 +996,7 @@ public class CssTemplateTest {
   """)
   public void propertyListStylePosition() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1070,7 +1070,7 @@ public class CssTemplateTest {
   """)
   public void propertyMargin() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1104,7 +1104,7 @@ public class CssTemplateTest {
   @Test
   public void propertyMaxWidth() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1142,7 +1142,7 @@ public class CssTemplateTest {
   """)
   public void propertyMinHeight() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1180,7 +1180,7 @@ public class CssTemplateTest {
   """)
   public void propertyMinWidth() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1216,7 +1216,7 @@ public class CssTemplateTest {
   @Test
   public void propertyOpacity() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1250,7 +1250,7 @@ public class CssTemplateTest {
   """)
   public void propertyOutline() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1286,7 +1286,7 @@ public class CssTemplateTest {
   """)
   public void propertyOutlineColor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1340,7 +1340,7 @@ public class CssTemplateTest {
   """)
   public void propertyOutlineStyle() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1386,7 +1386,7 @@ public class CssTemplateTest {
   """)
   public void propertyOutlineWidth() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1422,7 +1422,7 @@ public class CssTemplateTest {
   """)
   public void propertyPadding() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1462,7 +1462,7 @@ public class CssTemplateTest {
   """)
   public void propertyPosition() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1494,7 +1494,7 @@ public class CssTemplateTest {
   @Test
   public void propertyResize() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1533,7 +1533,7 @@ public class CssTemplateTest {
   """)
   public void propertyTabSize() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1565,7 +1565,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecoration() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1603,7 +1603,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationColor() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1631,7 +1631,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationLine() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1671,7 +1671,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationStyle() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1707,7 +1707,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextDecorationThickness() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1743,7 +1743,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextIndent() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1785,7 +1785,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextSizeAdjust() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1819,7 +1819,7 @@ public class CssTemplateTest {
   """)
   public void propertyTextTransform() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1858,7 +1858,7 @@ public class CssTemplateTest {
   """)
   public void propertyTop() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1892,7 +1892,7 @@ public class CssTemplateTest {
   """)
   public void propertyVerticalAlign() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -1936,7 +1936,7 @@ public class CssTemplateTest {
   @Test
   public void selectorAttribute() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

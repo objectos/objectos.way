@@ -57,6 +57,8 @@ final class ByteCode {
 
   public static final byte SPACE_OPTIONAL = -20;
 
+  public static final byte SELECTOR_ATTR = -21;
+
   private ByteCode() {}
 
 }

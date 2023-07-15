@@ -45,19 +45,23 @@ final class ByteProto {
 
   public static final byte ZERO = -14;
 
-  public static final byte STYLE_RULE = -15;
+  public static final byte SELECTOR_ATTR = -15;
 
-  public static final byte STYLE_RULE_END = -16;
+  public static final byte SELECTOR_ATTR_VALUE = -16;
 
-  public static final byte MARKED = -17;
+  public static final byte STYLE_RULE = -17;
 
-  public static final byte MARKED5 = -18;
+  public static final byte STYLE_RULE_END = -18;
 
-  public static final byte MARKED6 = -19;
+  public static final byte MARKED = -19;
 
-  public static final byte MARKED9 = -20;
+  public static final byte MARKED5 = -20;
 
-  public static final byte MARKED10 = -21;
+  public static final byte MARKED6 = -21;
+
+  public static final byte MARKED9 = -22;
+
+  public static final byte MARKED10 = -23;
 
   private ByteProto() {}
 

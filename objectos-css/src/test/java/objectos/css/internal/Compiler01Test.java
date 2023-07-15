@@ -272,6 +272,48 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  TC 05: double value
+
+  [hidden] {}
+  """)
+  public void testCase06() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationStart();
+
+    compiler.selectorAttribute("hidden");
+
+    compiler.styleRuleStart();
+    compiler.styleRuleElement(InternalInstruction.SELECTOR_ATTR);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.two0(0),
+      Bytes.two1(0),
+
+      ByteProto.STYLE_RULE,
+      Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18),
+      ByteProto.SELECTOR_ATTR,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteProto.STYLE_RULE_END,
+      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.idx0(3), Bytes.idx1(3), Bytes.idx2(3),
+      ByteProto.STYLE_RULE,
+
+      ByteProto.ROOT,
+      ByteProto.STYLE_RULE, Bytes.idx0(3), Bytes.idx1(3), Bytes.idx2(3),
+      ByteProto.ROOT_END, Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18)
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

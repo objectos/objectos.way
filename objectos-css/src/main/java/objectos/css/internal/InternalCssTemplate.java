@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.StyleSheet;
 import objectos.css.om.PropertyValue;
+import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.tmpl.FontFamilyValue;
@@ -60,6 +61,17 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected abstract void definition();
 
+  protected final Selector attr(String name) {
+    Check.notNull(name, "name == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.selectorAttribute(name);
+
+    return InternalInstruction.SELECTOR_ATTR;
+  }
+
   @Override
   protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
     throw new UnsupportedOperationException("Implement me");
@@ -78,14 +90,19 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   protected final StyleRule style(StyleRuleElement... elements) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.styleRuleStart();
+
     for (int i = 0; i < elements.length; i++) {
       api.styleRuleElement(
         Check.notNull(elements[i], "elements[", i, "] == null")
       );
     }
+
     api.styleRuleEnd();
+
     return InternalInstruction.STYLE_RULE;
   }
 

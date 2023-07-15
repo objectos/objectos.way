@@ -21,7 +21,15 @@ import objectos.css.tmpl.StyleRuleElement;
 
 public abstract class CssTemplateApi {
 
+  public abstract void compilationEnd();
+
   public abstract void compilationStart();
+
+  public StyleSheet compile() {
+    throw new UnsupportedOperationException();
+  }
+
+  public abstract void declarationEnd();
 
   public abstract void declarationStart(Property name);
 
@@ -37,26 +45,20 @@ public abstract class CssTemplateApi {
 
   public abstract void length(int value, LengthUnit unit);
 
+  public void optimize() {
+    throw new UnsupportedOperationException();
+  }
+
   public abstract void percentage(double value);
 
   public abstract void percentage(int value);
 
-  public abstract void declarationEnd();
-
-  public abstract void styleRuleStart();
+  public abstract void selectorAttribute(String name);
 
   public abstract void styleRuleElement(StyleRuleElement element);
 
   public abstract void styleRuleEnd();
 
-  public abstract void compilationEnd();
-
-  public void optimize() {
-    throw new UnsupportedOperationException();
-  }
-
-  public StyleSheet compile() {
-    throw new UnsupportedOperationException();
-  }
+  public abstract void styleRuleStart();
 
 }

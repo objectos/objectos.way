@@ -309,6 +309,19 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void selectorAttribute(String name) {
+    int nameIndex;
+    nameIndex = objectAdd(name);
+
+    mainAdd(
+      ByteProto.SELECTOR_ATTR,
+
+      Bytes.two0(nameIndex),
+      Bytes.two1(nameIndex)
+    );
+  }
+
+  @Override
   public final void styleRuleStart() {
     // we mark the start of our aux list
     auxStart = auxIndex;
@@ -338,38 +351,53 @@ class Compiler01 extends CssTemplateApi {
       );
     }
 
-    else if (element == InternalInstruction.DECLARATION) {
-      updateContents();
+    else if (element instanceof InternalInstruction instruction) {
+      switch (instruction) {
+        case DECLARATION -> {
+          // skip ByteProto
+          mainContents--;
 
-      auxAdd(MARK_INTERNAL);
+          // skip element start
+          mainContents -= 3;
+
+          // @ contents index
+          mainContents -= 3;
+
+          mainContents = mainIndex(mainContents);
+
+          auxAdd(MARK_INTERNAL);
+        }
+
+        case SELECTOR_ATTR -> {
+          mainContents -= 3;
+
+          auxAdd(MARK_INTERNAL);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: instruction=" + instruction.name()
+        );
+      }
     }
 
     else {
       throw new UnsupportedOperationException(
-        "Implement me"
+        "Implement me :: type=" + element.getClass()
       );
     }
   }
 
   final int mainIndex(int offset) {
-    int idx0 = Bytes.toInt(main[offset + 0], 0);
-    int idx1 = Bytes.toInt(main[offset + 1], 8);
-    int idx2 = Bytes.toInt(main[offset + 2], 16);
+    int idx0;
+    idx0 = Bytes.toInt(main[offset + 0], 0);
+
+    int idx1;
+    idx1 = Bytes.toInt(main[offset + 1], 8);
+
+    int idx2;
+    idx2 = Bytes.toInt(main[offset + 2], 16);
 
     return idx2 | idx1 | idx0;
-  }
-
-  private void updateContents() {
-    // skip ByteProto
-    mainContents--;
-
-    // skip element start
-    mainContents -= 3;
-
-    // @ contents index
-    mainContents -= 3;
-
-    mainContents = mainIndex(mainContents);
   }
 
   @Override
@@ -412,6 +440,18 @@ class Compiler01 extends CssTemplateApi {
               case ByteProto.MARKED9 -> internal += 9;
 
               case ByteProto.MARKED10 -> internal += 10;
+
+              case ByteProto.SELECTOR_ATTR -> {
+                main[internal] = ByteProto.MARKED;
+
+                mainAdd(
+                  proto,
+                  main[++internal],
+                  main[++internal]
+                );
+
+                continue loop;
+              }
 
               default -> {
                 throw new UnsupportedOperationException(

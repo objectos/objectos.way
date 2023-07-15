@@ -284,16 +284,14 @@ final class Compiler02 extends Compiler01 {
           declaration(elemIndex);
         }
 
+        case ByteProto.SELECTOR_ATTR -> {
+          selectorCount = selectorComma(selectorCount);
+
+          auxAdd(ByteCode.SELECTOR_ATTR, main[index++], main[index++]);
+        }
+
         case ByteProto.STANDARD_NAME -> {
-          if (selectorCount == 0) {
-            indentationWrite();
-          }
-
-          else {
-            auxAdd(ByteCode.COMMA);
-          }
-
-          selectorCount++;
+          selectorCount = selectorComma(selectorCount);
 
           auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
         }
@@ -323,6 +321,19 @@ final class Compiler02 extends Compiler01 {
       indentationWrite();
       auxAdd(ByteCode.BLOCK_END);
     }
+  }
+
+  private int selectorComma(int selectorCount) {
+    if (selectorCount == 0) {
+      indentationWrite();
+    }
+
+    else {
+      auxAdd(ByteCode.COMMA);
+    }
+
+    selectorCount++;
+    return selectorCount;
   }
 
 }
