@@ -219,15 +219,21 @@ public class CssSelfGen01BorderColorTest {
       public enum Property implements PropertyName {
         BORDER_COLOR("border-color");
 
-        private final String propertyName;
+        private static final Property[] VALUES = values();
 
-        private Property(String propertyName) {
-          this.propertyName = propertyName;
+        public final String cssName;
+
+        private Property(String cssName) {
+          this.cssName = cssName;
+        }
+
+        public static Property byOrdinal(int ordinal) {
+          return VALUES[ordinal];
         }
 
         @Override
         public final String toString() {
-          return propertyName;
+          return cssName;
         }
       }
       """

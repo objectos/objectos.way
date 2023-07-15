@@ -16,7 +16,6 @@
 package objectos.css.internal;
 
 import objectos.css.StyleSheet;
-import objectos.css.om.PropertyName;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
@@ -92,21 +91,21 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   @Override
   final StyleDeclaration declaration(
-      PropertyName name,
+      Property name,
       double value) {
     throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   final StyleDeclaration declaration(
-      PropertyName name,
+      Property name,
       int value) {
     throw new UnsupportedOperationException("Implement me");
   }
 
   @Override
   final StyleDeclaration declaration(
-      PropertyName name,
+      Property name,
       PropertyValue value) {
     CssTemplateApi api = api();
     api.declarationStart(name);
@@ -117,7 +116,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   @Override
   final StyleDeclaration declaration(
-      PropertyName name,
+      Property name,
       PropertyValue value1, PropertyValue value2) {
     CssTemplateApi api = api();
     api.declarationStart(name);
@@ -129,7 +128,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   @Override
   final StyleDeclaration declaration(
-      PropertyName name,
+      Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3) {
     CssTemplateApi api = api();
     api.declarationStart(name);
@@ -142,7 +141,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   @Override
   final StyleDeclaration declaration(
-      PropertyName name,
+      Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4) {
     CssTemplateApi api = api();
     api.declarationStart(name);
@@ -156,7 +155,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   @Override
   final StyleDeclaration declaration(
-      PropertyName name,
+      Property name,
       String value) {
     throw new UnsupportedOperationException("Implement me");
   }

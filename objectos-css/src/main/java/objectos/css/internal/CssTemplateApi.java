@@ -16,7 +16,6 @@
 package objectos.css.internal;
 
 import objectos.css.StyleSheet;
-import objectos.css.om.PropertyName;
 import objectos.css.om.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 
@@ -26,7 +25,7 @@ public abstract class CssTemplateApi {
 
   public abstract void declarationEnd();
 
-  public abstract void declarationStart(PropertyName name);
+  public abstract void declarationStart(Property name);
 
   public abstract void declarationValue(PropertyValue value);
 

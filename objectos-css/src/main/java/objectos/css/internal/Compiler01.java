@@ -15,7 +15,6 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.PropertyName;
 import objectos.css.om.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.util.ByteArrays;
@@ -48,30 +47,22 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void declarationStart(PropertyName propertyName) {
-    if (propertyName instanceof StandardName name) {
-      // we mark the start of our aux list
-      auxStart = auxIndex;
+  public final void declarationStart(Property name) {
+    // we mark the start of our aux list
+    auxStart = auxIndex;
 
-      // we mark:
-      // 1) the start of the contents of the current declaration
-      // 2) the start of our main list
-      mainContents = mainStart = mainIndex;
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    // 2) the start of our main list
+    mainContents = mainStart = mainIndex;
 
-      mainAdd(
-        ByteProto.DECLARATION,
-        // indices take 3 bytes
-        ByteProto.NULL, ByteProto.NULL, ByteProto.NULL,
-        Bytes.name0(name),
-        Bytes.name1(name)
-      );
-    }
-
-    else {
-      throw new UnsupportedOperationException(
-        "Implement me :: type=" + propertyName.getClass()
-      );
-    }
+    mainAdd(
+      ByteProto.DECLARATION,
+      // indices take 3 bytes
+      ByteProto.NULL, ByteProto.NULL, ByteProto.NULL,
+      Bytes.prop0(name),
+      Bytes.prop1(name)
+    );
   }
 
   @Override

@@ -43,8 +43,6 @@ final class StandardNameStep extends ThisTemplate {
 
       include(this::keywords),
 
-      include(this::properties),
-
       field(
         PRIVATE, STATIC, FINAL, ArrayTypeName.of(STANDARD_NAME), name("VALUES"),
         v("values")
@@ -78,8 +76,6 @@ final class StandardNameStep extends ThisTemplate {
     implementsClause(SELECTOR);
 
     implementsClause(COLOR_VALUE);
-
-    implementsClause(NL, PROPERTY_NAME);
 
     spec.valueTypes().stream()
         .filter(ValueType::permitsNamedElement)
@@ -149,14 +145,6 @@ final class StandardNameStep extends ThisTemplate {
         .sorted(KeywordName.ORDER_BY_FIELD_NAME)
         .forEach(kw -> {
           enumConstant(name(kw.fieldName), argument(s(kw.keywordName)));
-        });
-  }
-
-  private void properties() {
-    spec.properties().stream()
-        .sorted(Property.ORDER_BY_CONSTANT_NAME)
-        .forEach(property -> {
-          enumConstant(name(property.constantName), argument(s(property.propertyName)));
         });
   }
 

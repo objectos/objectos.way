@@ -15,6 +15,8 @@
  */
 package objectos.selfgen.css2;
 
+import objectos.code.ArrayTypeName;
+
 final class PropertyStep extends ThisTemplate {
 
   @Override
@@ -30,18 +32,29 @@ final class PropertyStep extends ThisTemplate {
 
       include(this::constants),
 
-      field(PRIVATE, FINAL, STRING, name("propertyName")),
+      field(
+        PRIVATE, STATIC, FINAL, ArrayTypeName.of(PROPERTY), name("VALUES"),
+        v("values")
+      ),
+
+      field(PUBLIC, FINAL, STRING, name("cssName")),
 
       constructor(
         PRIVATE,
-        parameter(STRING, name("propertyName")),
-        p(THIS, n("propertyName"), IS, n("propertyName"))
+        parameter(STRING, name("cssName")),
+        p(THIS, n("cssName"), IS, n("cssName"))
+      ),
+
+      method(
+        PUBLIC, STATIC, PROPERTY, name("byOrdinal"),
+        parameter(INT, name("ordinal")),
+        p(RETURN, n("VALUES"), dim(n("ordinal")))
       ),
 
       method(
         annotation(OVERRIDE),
         PUBLIC, FINAL, STRING, name("toString"),
-        p(RETURN, n("propertyName"))
+        p(RETURN, n("cssName"))
       )
     );
   }

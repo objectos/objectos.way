@@ -15,7 +15,6 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.PropertyName;
 import objectos.css.om.Selector;
 import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
@@ -99,7 +98,6 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public enum StandardName implements Selector, ColorValue,
-    PropertyName,
     AppearanceValue,
     BackgroundImageValue,
     BorderCollapseValue,
@@ -849,135 +847,7 @@ public enum StandardName implements Selector, ColorValue,
 
   zoomIn("zoom-in"),
 
-  zoomOut("zoom-out"),
-
-  APPEARANCE("appearance"),
-
-  BACKGROUND_COLOR("background-color"),
-
-  BACKGROUND_IMAGE("background-image"),
-
-  BORDER_BOTTOM_WIDTH("border-bottom-width"),
-
-  BORDER_COLLAPSE("border-collapse"),
-
-  BORDER_COLOR("border-color"),
-
-  BORDER_LEFT_WIDTH("border-left-width"),
-
-  BORDER_RIGHT_WIDTH("border-right-width"),
-
-  BORDER_STYLE("border-style"),
-
-  BORDER_TOP_WIDTH("border-top-width"),
-
-  BORDER_WIDTH("border-width"),
-
-  BOTTOM("bottom"),
-
-  BOX_SHADOW("box-shadow"),
-
-  BOX_SIZING("box-sizing"),
-
-  COLOR("color"),
-
-  CURSOR("cursor"),
-
-  DISPLAY("display"),
-
-  FLEX_DIRECTION("flex-direction"),
-
-  FONT("font"),
-
-  FONT_FAMILY("font-family"),
-
-  FONT_FEATURE_SETTINGS("font-feature-settings"),
-
-  FONT_SIZE("font-size"),
-
-  FONT_VARIATION_SETTINGS("font-variation-settings"),
-
-  FONT_WEIGHT("font-weight"),
-
-  HEIGHT("height"),
-
-  JUSTIFY_CONTENT("justify-content"),
-
-  LINE_HEIGHT("line-height"),
-
-  LIST_STYLE("list-style"),
-
-  LIST_STYLE_IMAGE("list-style-image"),
-
-  LIST_STYLE_POSITION("list-style-position"),
-
-  LIST_STYLE_TYPE("list-style-type"),
-
-  MARGIN("margin"),
-
-  MAX_HEIGHT("max-height"),
-
-  MAX_WIDTH("max-width"),
-
-  MIN_HEIGHT("min-height"),
-
-  MIN_WIDTH("min-width"),
-
-  OPACITY("opacity"),
-
-  OUTLINE("outline"),
-
-  OUTLINE_COLOR("outline-color"),
-
-  OUTLINE_OFFSET("outline-offset"),
-
-  OUTLINE_STYLE("outline-style"),
-
-  OUTLINE_WIDTH("outline-width"),
-
-  PADDING("padding"),
-
-  PADDING_BOTTOM("padding-bottom"),
-
-  PADDING_LEFT("padding-left"),
-
-  PADDING_RIGHT("padding-right"),
-
-  PADDING_TOP("padding-top"),
-
-  POSITION("position"),
-
-  RESIZE("resize"),
-
-  TAB_SIZE("tab-size"),
-
-  TEXT_DECORATION("text-decoration"),
-
-  TEXT_DECORATION_COLOR("text-decoration-color"),
-
-  TEXT_DECORATION_LINE("text-decoration-line"),
-
-  TEXT_DECORATION_STYLE("text-decoration-style"),
-
-  TEXT_DECORATION_THICKNESS("text-decoration-thickness"),
-
-  TEXT_INDENT("text-indent"),
-
-  TEXT_TRANSFORM("text-transform"),
-
-  TOP("top"),
-
-  VERTICAL_ALIGN("vertical-align"),
-
-  WIDTH("width"),
-
-  _MOZ_APPEARANCE("-moz-appearance"),
-
-  _MOZ_TAB_SIZE("-moz-tab-size"),
-
-  _WEBKIT_APPEARANCE("-webkit-appearance"),
-
-  _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
+  zoomOut("zoom-out");
 
   private static final StandardName[] VALUES = values();
 

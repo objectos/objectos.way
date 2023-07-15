@@ -75,7 +75,6 @@ public class GeneratedCssTemplateStep2Test {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyName;
       import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
@@ -129,27 +128,27 @@ public class GeneratedCssTemplateStep2Test {
 
         protected final StyleDeclaration borderColor(GlobalKeyword value) {
           Check.notNull(value, "value == null");
-          return declaration(StandardName.BORDER_COLOR, value);
+          return declaration(Property.BORDER_COLOR, value);
         }
 
         protected final StyleDeclaration borderColor(ColorValue all) {
           Check.notNull(all, "all == null");
-          return declaration(StandardName.BORDER_COLOR, all);
+          return declaration(Property.BORDER_COLOR, all);
         }
 
-        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value);
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value1, PropertyValue value2);
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(PropertyName name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(PropertyName name, int value);
+        abstract StyleDeclaration declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(PropertyName name, double value);
+        abstract StyleDeclaration declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(PropertyName name, String value);
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );

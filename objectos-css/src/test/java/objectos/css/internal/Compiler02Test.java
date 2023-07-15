@@ -61,7 +61,7 @@ public class Compiler02Test {
 
     compiler.compilationStart();
 
-    compiler.declarationStart(StandardName.BOX_SIZING);
+    compiler.declarationStart(Property.BOX_SIZING);
     compiler.declarationValue(StandardName.borderBox);
     compiler.declarationEnd();
 
@@ -86,8 +86,8 @@ public class Compiler02Test {
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
       ByteCode.PROPERTY_NAME,
-      Bytes.name0(StandardName.BOX_SIZING),
-      Bytes.name1(StandardName.BOX_SIZING),
+      Bytes.prop0(Property.BOX_SIZING),
+      Bytes.prop1(Property.BOX_SIZING),
       ByteCode.SPACE_OPTIONAL,
       ByteCode.KEYWORD,
       Bytes.name0(StandardName.borderBox),
@@ -151,7 +151,7 @@ public class Compiler02Test {
     compiler.length(20, LengthUnit.PX);
     compiler.length(1.5, LengthUnit.REM);
 
-    compiler.declarationStart(StandardName.MARGIN);
+    compiler.declarationStart(Property.MARGIN);
     compiler.declarationValue(InternalInstruction.LENGTH_INT);
     compiler.declarationValue(InternalInstruction.LENGTH_DOUBLE);
     compiler.declarationEnd();
@@ -179,8 +179,8 @@ public class Compiler02Test {
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
       ByteCode.PROPERTY_NAME,
-      Bytes.name0(StandardName.MARGIN),
-      Bytes.name1(StandardName.MARGIN),
+      Bytes.prop0(Property.MARGIN),
+      Bytes.prop1(Property.MARGIN),
       ByteCode.SPACE_OPTIONAL,
       ByteCode.LENGTH_INT,
       Bytes.int0(20),

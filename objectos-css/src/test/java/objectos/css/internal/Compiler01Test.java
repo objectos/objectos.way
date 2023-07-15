@@ -66,7 +66,7 @@ public class Compiler01Test {
 
     compiler.compilationStart();
 
-    compiler.declarationStart(StandardName.BOX_SIZING);
+    compiler.declarationStart(Property.BOX_SIZING);
     compiler.declarationValue(StandardName.borderBox);
     compiler.declarationEnd();
 
@@ -82,8 +82,8 @@ public class Compiler01Test {
 
       ByteProto.MARKED,
       Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
-      Bytes.name0(StandardName.BOX_SIZING),
-      Bytes.name1(StandardName.BOX_SIZING),
+      Bytes.prop0(Property.BOX_SIZING),
+      Bytes.prop1(Property.BOX_SIZING),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.borderBox),
       Bytes.name1(StandardName.borderBox),
@@ -131,7 +131,7 @@ public class Compiler01Test {
 
     assertEquals(compiler.mainIndex, 6 + 10);
 
-    compiler.declarationStart(StandardName.MARGIN);
+    compiler.declarationStart(Property.MARGIN);
 
     assertEquals(compiler.mainContents, 6 + 10);
 
@@ -177,8 +177,8 @@ public class Compiler01Test {
 
       ByteProto.MARKED,
       Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
-      Bytes.name0(StandardName.MARGIN),
-      Bytes.name1(StandardName.MARGIN),
+      Bytes.prop0(Property.MARGIN),
+      Bytes.prop1(Property.MARGIN),
       ByteProto.LENGTH_INT,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.LENGTH_DOUBLE,

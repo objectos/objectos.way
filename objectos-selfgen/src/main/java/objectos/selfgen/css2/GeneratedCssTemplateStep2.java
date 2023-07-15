@@ -45,20 +45,20 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
 
       method(
         ABSTRACT, STYLE_DECLARATION, name("declaration"),
-        parameter(PROPERTY_NAME, name("name")),
+        parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value"))
       ),
 
       method(
         ABSTRACT, STYLE_DECLARATION, name("declaration"),
-        parameter(PROPERTY_NAME, name("name")),
+        parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value1")),
         parameter(PROPERTY_VALUE, name("value2"))
       ),
 
       method(
         ABSTRACT, STYLE_DECLARATION, name("declaration"),
-        parameter(PROPERTY_NAME, name("name")),
+        parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value1")),
         parameter(PROPERTY_VALUE, name("value2")),
         parameter(PROPERTY_VALUE, name("value3"))
@@ -66,7 +66,7 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
 
       method(
         ABSTRACT, STYLE_DECLARATION, name("declaration"),
-        parameter(PROPERTY_NAME, name("name")),
+        parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value1")),
         parameter(PROPERTY_VALUE, name("value2")),
         parameter(PROPERTY_VALUE, name("value3")),
@@ -75,19 +75,19 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
 
       method(
         ABSTRACT, STYLE_DECLARATION, name("declaration"),
-        parameter(PROPERTY_NAME, name("name")),
+        parameter(PROPERTY, name("name")),
         parameter(INT, name("value"))
       ),
 
       method(
         ABSTRACT, STYLE_DECLARATION, name("declaration"),
-        parameter(PROPERTY_NAME, name("name")),
+        parameter(PROPERTY, name("name")),
         parameter(DOUBLE, name("value"))
       ),
 
       method(
         ABSTRACT, STYLE_DECLARATION, name("declaration"),
-        parameter(PROPERTY_NAME, name("name")),
+        parameter(PROPERTY, name("name")),
         parameter(STRING, name("value"))
       )
     );
@@ -177,7 +177,7 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
           propertyCheckNotNull(sig.name()),
           p(
             RETURN, v("declaration"),
-            argument(STANDARD_NAME, n(property.constantName)),
+            argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
           )
         );
@@ -190,7 +190,7 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
           propertyCheckNotNull(sig.name2()),
           p(
             RETURN, v("declaration"),
-            argument(STANDARD_NAME, n(property.constantName)),
+            argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name1())),
             argument(n(sig.name2()))
           )
@@ -206,7 +206,7 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
           propertyCheckNotNull(sig.name3()),
           p(
             RETURN, v("declaration"),
-            argument(STANDARD_NAME, n(property.constantName)),
+            argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name1())),
             argument(n(sig.name2())),
             argument(n(sig.name3()))
@@ -225,7 +225,7 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
           propertyCheckNotNull(sig.name4()),
           p(
             RETURN, v("declaration"),
-            argument(STANDARD_NAME, n(property.constantName)),
+            argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name1())),
             argument(n(sig.name2())),
             argument(n(sig.name3())),
@@ -238,7 +238,7 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
           parameter(sig.type(), name(sig.name())),
           p(
             RETURN, v("declaration"),
-            argument(STANDARD_NAME, n(property.constantName)),
+            argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
           )
         );
@@ -249,7 +249,7 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
           propertyCheckNotNull(sig.name()),
           p(
             RETURN, v("declaration"),
-            argument(STANDARD_NAME, n(property.constantName)),
+            argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
           )
         );

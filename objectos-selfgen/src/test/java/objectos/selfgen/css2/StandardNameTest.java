@@ -73,7 +73,6 @@ public class StandardNameTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyName;
       import objectos.css.om.Selector;
       import objectos.css.tmpl.ColorValue;
       import objectos.css.tmpl.GlobalKeyword;
@@ -81,7 +80,6 @@ public class StandardNameTest {
 
       @Generated("objectos.selfgen.CssSpec")
       public enum StandardName implements Selector, ColorValue,
-          PropertyName,
           GlobalKeyword {
         __after("::after"),
 
@@ -101,9 +99,7 @@ public class StandardNameTest {
 
         initial("initial"),
 
-        unset("unset"),
-
-        BORDER_COLOR("border-color");
+        unset("unset");
 
         private static final StandardName[] VALUES = values();
 

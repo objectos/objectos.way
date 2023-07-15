@@ -148,14 +148,20 @@ public enum Property implements PropertyName {
 
   _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
 
-  private final String propertyName;
+  private static final Property[] VALUES = values();
 
-  private Property(String propertyName) {
-    this.propertyName = propertyName;
+  public final String cssName;
+
+  private Property(String cssName) {
+    this.cssName = cssName;
+  }
+
+  public static Property byOrdinal(int ordinal) {
+    return VALUES[ordinal];
   }
 
   @Override
   public final String toString() {
-    return propertyName;
+    return cssName;
   }
 }

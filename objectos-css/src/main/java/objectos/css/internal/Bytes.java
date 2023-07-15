@@ -132,6 +132,34 @@ final class Bytes {
     return (byte) (ordinal >>> 8);
   }
 
+  // we use 2 bytes for the Property enum
+  public static byte prop0(Property name) {
+    int ordinal;
+    ordinal = name.ordinal();
+
+    return (byte) ordinal;
+  }
+
+  // we use 2 bytes for the Property enum
+  public static byte prop1(Property name) {
+    int ordinal;
+    ordinal = name.ordinal();
+
+    return (byte) (ordinal >>> 8);
+  }
+
+  public static String propertyName(byte b0, byte b1) {
+    int ordinal0 = Bytes.toInt(b0, 0);
+    int ordinal1 = Bytes.toInt(b1, 8);
+
+    int ordinal = ordinal1 | ordinal0;
+
+    Property property;
+    property = Property.byOrdinal(ordinal);
+
+    return property.cssName;
+  }
+
   public static String standardNameValue(byte b0, byte b1) {
     int ordinal0 = Bytes.toInt(b0, 0);
     int ordinal1 = Bytes.toInt(b1, 8);

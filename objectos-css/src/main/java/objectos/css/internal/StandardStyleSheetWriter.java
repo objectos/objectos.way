@@ -122,7 +122,7 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
 
         case ByteCode.PROPERTY_NAME -> {
           String name;
-          name = Bytes.standardNameValue(data[index++], data[index++]);
+          name = Bytes.propertyName(data[index++], data[index++]);
 
           appendable.append(name);
           appendable.append(':');
