@@ -23,8 +23,12 @@ public final class CompiledStyleSheet implements StyleSheet {
 
   final byte[] main;
 
-  public CompiledStyleSheet(byte[] main) {
+  final Object[] objects;
+
+  public CompiledStyleSheet(byte[] main, Object[] objects) {
     this.main = main;
+
+    this.objects = objects;
   }
 
   @Override

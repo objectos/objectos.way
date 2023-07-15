@@ -31,6 +31,8 @@ public abstract class CssTemplateApi {
 
   public abstract void javaInt(int value);
 
+  public abstract void javaString(String value);
+
   public abstract void length(double value, LengthUnit unit);
 
   public abstract void length(int value, LengthUnit unit);

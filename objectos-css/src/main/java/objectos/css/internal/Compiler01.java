@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.om.PropertyValue;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.util.ByteArrays;
+import objectos.util.ObjectArrays;
 
 class Compiler01 extends CssTemplateApi {
 
@@ -38,6 +39,10 @@ class Compiler01 extends CssTemplateApi {
   int mainIndex;
 
   int mainStart;
+
+  Object[] objectArray;
+
+  int objectIndex;
 
   @Override
   public final void compilationStart() {
@@ -138,6 +143,19 @@ class Compiler01 extends CssTemplateApi {
       Bytes.int1(value),
       Bytes.int2(value),
       Bytes.int3(value)
+    );
+  }
+
+  @Override
+  public final void javaString(String value) {
+    int index;
+    index = objectAdd(value);
+
+    mainAdd(
+      ByteProto.JAVA_STRING,
+
+      Bytes.two0(index),
+      Bytes.two1(index)
     );
   }
 
@@ -506,6 +524,15 @@ class Compiler01 extends CssTemplateApi {
     aux[auxIndex++] = b3;
   }
 
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+  }
+
   private void mainAdd(byte b0) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 0);
     main[mainIndex++] = b0;
@@ -584,6 +611,21 @@ class Compiler01 extends CssTemplateApi {
     main[mainIndex++] = b7;
     main[mainIndex++] = b8;
     main[mainIndex++] = b9;
+  }
+
+  private int objectAdd(Object value) {
+    if (objectArray == null) {
+      objectArray = new Object[10];
+    }
+
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    int index;
+    index = objectIndex++;
+
+    objectArray[index] = value;
+
+    return index;
   }
 
 }

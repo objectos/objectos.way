@@ -31,31 +31,33 @@ final class ByteProto {
 
   public static final byte JAVA_INT = -7;
 
-  public static final byte LENGTH_DOUBLE = -8;
+  public static final byte JAVA_STRING = -8;
 
-  public static final byte LENGTH_INT = -9;
+  public static final byte LENGTH_DOUBLE = -9;
 
-  public static final byte PERCENTAGE_DOUBLE = -10;
+  public static final byte LENGTH_INT = -10;
 
-  public static final byte PERCENTAGE_INT = -11;
+  public static final byte PERCENTAGE_DOUBLE = -11;
 
-  public static final byte STANDARD_NAME = -12;
+  public static final byte PERCENTAGE_INT = -12;
 
-  public static final byte ZERO = -13;
+  public static final byte STANDARD_NAME = -13;
 
-  public static final byte STYLE_RULE = -14;
+  public static final byte ZERO = -14;
 
-  public static final byte STYLE_RULE_END = -15;
+  public static final byte STYLE_RULE = -15;
 
-  public static final byte MARKED = -16;
+  public static final byte STYLE_RULE_END = -16;
 
-  public static final byte MARKED5 = -17;
+  public static final byte MARKED = -17;
 
-  public static final byte MARKED6 = -18;
+  public static final byte MARKED5 = -18;
 
-  public static final byte MARKED9 = -19;
+  public static final byte MARKED6 = -19;
 
-  public static final byte MARKED10 = -20;
+  public static final byte MARKED9 = -20;
+
+  public static final byte MARKED10 = -21;
 
   private ByteProto() {}
 

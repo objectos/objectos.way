@@ -165,7 +165,11 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       String value) {
-    throw new UnsupportedOperationException("Implement me");
+    CssTemplateApi api = api();
+    api.declarationStart(name);
+    api.javaString(value);
+    api.declarationEnd();
+    return InternalInstruction.DECLARATION;
   }
 
   @Override

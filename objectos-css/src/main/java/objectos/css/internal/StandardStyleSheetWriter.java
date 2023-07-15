@@ -39,12 +39,15 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
     int index;
     index = 0;
 
-    byte[] data;
-    data = compiled.main;
+    byte[] bytes;
+    bytes = compiled.main;
 
-    while (index < data.length) {
+    Object[] objects;
+    objects = compiled.objects;
+
+    while (index < bytes.length) {
       byte code;
-      code = data[index++];
+      code = bytes[index++];
 
       switch (code) {
         case ByteCode.BLOCK_END -> {
@@ -69,7 +72,7 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
         case ByteCode.KEYWORD,
              ByteCode.SELECTOR -> {
           String name;
-          name = Bytes.standardNameValue(data[index++], data[index++]);
+          name = Bytes.standardNameValue(bytes[index++], bytes[index++]);
 
           appendable.append(name);
         }
@@ -77,8 +80,8 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
         case ByteCode.JAVA_DOUBLE -> {
           double value;
           value = Bytes.doubleValue(
-            data[index++], data[index++], data[index++], data[index++],
-            data[index++], data[index++], data[index++], data[index++]
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++],
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++]
           );
 
           appendable.append(Double.toString(value));
@@ -86,34 +89,49 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
 
         case ByteCode.JAVA_INT -> {
           int value;
-          value = Bytes.intValue(data[index++], data[index++], data[index++], data[index++]);
+          value = Bytes.intValue(bytes[index++], bytes[index++], bytes[index++], bytes[index++]);
 
           appendable.append(Integer.toString(value));
+        }
+
+        case ByteCode.JAVA_STRING -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          Object object;
+          object = objects[objectIndex];
+
+          String s;
+          s = (String) object;
+
+          appendable.append('"');
+          appendable.append(s);
+          appendable.append('"');
         }
 
         case ByteCode.LENGTH_DOUBLE -> {
           double value;
           value = Bytes.doubleValue(
-            data[index++], data[index++], data[index++], data[index++],
-            data[index++], data[index++], data[index++], data[index++]
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++],
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++]
           );
 
           appendable.append(Double.toString(value));
 
           LengthUnit unit;
-          unit = LengthUnit.byOrdinal(data[index++]);
+          unit = LengthUnit.byOrdinal(bytes[index++]);
 
           appendable.append(unit.cssName);
         }
 
         case ByteCode.LENGTH_INT -> {
           int value;
-          value = Bytes.intValue(data[index++], data[index++], data[index++], data[index++]);
+          value = Bytes.intValue(bytes[index++], bytes[index++], bytes[index++], bytes[index++]);
 
           appendable.append(Integer.toString(value));
 
           LengthUnit unit;
-          unit = LengthUnit.byOrdinal(data[index++]);
+          unit = LengthUnit.byOrdinal(bytes[index++]);
 
           appendable.append(unit.cssName);
         }
@@ -121,8 +139,8 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
         case ByteCode.PERCENTAGE_DOUBLE -> {
           double value;
           value = Bytes.doubleValue(
-            data[index++], data[index++], data[index++], data[index++],
-            data[index++], data[index++], data[index++], data[index++]
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++],
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++]
           );
 
           appendable.append(Double.toString(value));
@@ -131,7 +149,7 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
 
         case ByteCode.PERCENTAGE_INT -> {
           int value;
-          value = Bytes.intValue(data[index++], data[index++], data[index++], data[index++]);
+          value = Bytes.intValue(bytes[index++], bytes[index++], bytes[index++], bytes[index++]);
 
           appendable.append(Integer.toString(value));
           appendable.append('%');
@@ -139,7 +157,7 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
 
         case ByteCode.PROPERTY_NAME -> {
           String name;
-          name = Bytes.propertyName(data[index++], data[index++]);
+          name = Bytes.propertyName(bytes[index++], bytes[index++]);
 
           appendable.append(name);
           appendable.append(':');
@@ -155,7 +173,7 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
         }
 
         case ByteCode.TAB -> {
-          int level = data[index++];
+          int level = bytes[index++];
 
           for (int i = 0; i < level; i++) {
             appendable.append(INDENTATION);

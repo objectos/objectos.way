@@ -16,14 +16,23 @@
 package objectos.css.internal;
 
 import java.util.Arrays;
+import objectos.util.ObjectArrays;
 
 final class Compiler02 extends Compiler01 {
 
   @Override
   public CompiledStyleSheet compile() {
     return new CompiledStyleSheet(
-      Arrays.copyOf(aux, auxIndex)
+      Arrays.copyOf(aux, auxIndex), objects()
     );
+  }
+
+  private Object[] objects() {
+    if (objectArray == null) {
+      return ObjectArrays.empty();
+    }
+
+    return Arrays.copyOf(objectArray, objectIndex);
   }
 
   @Override
@@ -94,14 +103,25 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.JAVA_INT -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          auxAdd(ByteCode.JAVA_INT);
+          auxAdd(
+            ByteCode.JAVA_INT,
 
-          int length = 4;
+            main[index++],
+            main[index++],
+            main[index++],
+            main[index++]
+          );
+        }
 
-          System.arraycopy(main, index, aux, auxIndex, length);
+        case ByteProto.JAVA_STRING -> {
+          valueCount = spaceIfNecessary(valueCount);
 
-          auxIndex += length;
-          index += length;
+          auxAdd(
+            ByteCode.JAVA_STRING,
+
+            main[index++],
+            main[index++]
+          );
         }
 
         case ByteProto.LENGTH_DOUBLE -> {

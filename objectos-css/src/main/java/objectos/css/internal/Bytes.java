@@ -21,9 +21,21 @@ final class Bytes {
 
   private static final int BYTE_MASK = 0xFF;
 
-  private static final int MAX_INDEX = 1 << 24 - 1;
+  private static final int MAX2_INDEX = 1 << 16 - 1;
+
+  private static final int MAX3_INDEX = 1 << 24 - 1;
 
   private Bytes() {}
+
+  public static int decodeIndex2(byte b0, byte b1) {
+    int index0;
+    index0 = toInt(b0, 0);
+
+    int index1;
+    index1 = toInt(b0, 8);
+
+    return index1 | index0;
+  }
 
   public static double doubleValue(
       byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
@@ -44,7 +56,7 @@ final class Bytes {
 
   // we use 3 bytes for internal indices
   public static byte idx0(int value) {
-    Check.argument(value <= MAX_INDEX, "CssTemplate is too large.");
+    Check.argument(value <= MAX3_INDEX, "CssTemplate is too large.");
 
     return (byte) value;
   }
@@ -178,6 +190,16 @@ final class Bytes {
 
   public static long toLong(byte b, int shift) {
     return (b & (long) BYTE_MASK) << shift;
+  }
+
+  public static byte two0(int index) {
+    Check.argument(index <= MAX2_INDEX, "CssTemplate is too large.");
+
+    return (byte) index;
+  }
+
+  public static byte two1(int index) {
+    return (byte) (index >>> 8);
   }
 
   public static byte unit(LengthUnit unit) {

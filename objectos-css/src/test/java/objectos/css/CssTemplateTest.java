@@ -1026,7 +1026,7 @@ public class CssTemplateTest {
   """)
   public void propertyListStyleType() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
