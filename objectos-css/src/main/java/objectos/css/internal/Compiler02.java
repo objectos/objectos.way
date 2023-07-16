@@ -157,10 +157,11 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.MARKED -> {
-          // skip end index
-          index += 3;
+          // skip end length
+          index += 2;
 
           auxAdd(ByteCode.PROPERTY_NAME, main[index++], main[index++]);
+
           auxAdd(ByteCode.SPACE_OPTIONAL);
         }
 

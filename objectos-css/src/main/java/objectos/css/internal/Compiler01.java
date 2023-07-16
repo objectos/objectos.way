@@ -64,8 +64,12 @@ class Compiler01 extends CssTemplateApi {
 
     mainAdd(
       ByteProto.DECLARATION,
-      // indices take 3 bytes
-      ByteProto.NULL, ByteProto.NULL, ByteProto.NULL,
+
+      // length takes 2 bytes
+      ByteProto.NULL,
+      ByteProto.NULL,
+
+      // name
       Bytes.prop0(name),
       Bytes.prop1(name)
     );
@@ -233,67 +237,79 @@ class Compiler01 extends CssTemplateApi {
   @Override
   public final void declarationEnd() {
     // we iterate over each value added via declarationValue(PropertyValue)
-    int auxMax = auxIndex;
+    int indexMax;
+    indexMax = auxIndex;
 
-    int idx = auxStart;
+    int index;
+    index = auxStart;
 
-    int internal = mainContents;
+    int contents;
+    contents = mainContents;
 
-    while (idx < auxMax) {
-      byte marker = aux[idx++];
+    while (index < indexMax) {
+      byte mark;
+      mark = aux[index++];
 
-      switch (marker) {
+      switch (mark) {
         case MARK_INTERNAL -> {
           byte lengthByte;
-          lengthByte = aux[idx++];
+          lengthByte = aux[index++];
 
           int length;
           length = lengthByte & 0xFF;
 
           byte proto;
-          proto = main[internal];
+          proto = main[contents];
 
-          main[internal] = ByteProto.markedOf(length);
+          main[contents] = ByteProto.markedOf(length);
 
           mainAdd(
             proto,
-            Bytes.idx0(internal),
-            Bytes.idx1(internal),
-            Bytes.idx2(internal)
+
+            Bytes.idx0(contents),
+            Bytes.idx1(contents),
+            Bytes.idx2(contents)
           );
 
-          internal += length;
+          contents += length;
         }
 
         case MARK_VALUE1 -> {
-          mainAdd(aux[idx++]);
+          mainAdd(aux[index++]);
         }
 
         case MARK_VALUE3 -> {
-          mainAdd(aux[idx++], aux[idx++], aux[idx++]);
+          mainAdd(aux[index++], aux[index++], aux[index++]);
         }
 
         default -> throw new UnsupportedOperationException(
-          "Implement me :: marker=" + marker
+          "Implement me :: mark=" + mark
         );
       }
     }
 
+    int length;
+    length = mainIndex - mainContents;
+
     mainAdd(
       ByteProto.DECLARATION_END,
 
-      Bytes.idx0(mainContents),
-      Bytes.idx1(mainContents),
-      Bytes.idx2(mainContents),
-
-      Bytes.idx0(mainStart),
-      Bytes.idx1(mainStart),
-      Bytes.idx2(mainStart),
+      // length: yes, backwards
+      Bytes.len1(length),
+      Bytes.len0(length),
 
       ByteProto.DECLARATION
     );
 
-    setEndIndex();
+    // set the end index of the declaration
+    length = mainIndex - mainStart;
+
+    // skip ByteProto.DECLARATION + len0 + len1
+    length -= 3;
+
+    // we skip the first byte proto
+    main[mainStart + 1] = Bytes.len0(length);
+    main[mainStart + 2] = Bytes.len1(length);
 
     // we clear the aux list
     auxIndex = auxStart;
@@ -388,22 +404,27 @@ class Compiler01 extends CssTemplateApi {
       mainContents--;
 
       byte proto;
-      proto = main[mainContents];
+      proto = main[mainContents--];
 
       switch (proto) {
         case ByteProto.DECLARATION -> {
-          // skip element start
-          mainContents -= 3;
+          byte len0;
+          len0 = main[mainContents--];
 
-          // @ contents index
-          mainContents -= 3;
+          int length;
+          length = Bytes.toInt(len0, 0);
 
-          mainContents = mainIndex(mainContents);
+          byte len1;
+          len1 = main[mainContents--];
+
+          length |= Bytes.toInt(len1, 8);
+
+          mainContents -= length;
         }
 
-        case ByteProto.INTERNAL3 -> mainContents -= 3;
+        case ByteProto.INTERNAL3 -> mainContents -= 2;
 
-        case ByteProto.INTERNAL6 -> mainContents -= 6;
+        case ByteProto.INTERNAL6 -> mainContents -= 5;
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
@@ -452,8 +473,6 @@ class Compiler01 extends CssTemplateApi {
 
             switch (proto) {
               case ByteProto.DECLARATION -> {
-                main[internal] = ByteProto.MARKED;
-
                 mainAdd(
                   proto,
 
@@ -462,7 +481,20 @@ class Compiler01 extends CssTemplateApi {
                   Bytes.idx2(internal)
                 );
 
-                internal = mainIndex(internal + 1);
+                main[internal++] = ByteProto.MARKED;
+
+                byte len0;
+                len0 = main[internal++];
+
+                int length;
+                length = Bytes.toInt(len0, 0);
+
+                byte len1;
+                len1 = main[internal++];
+
+                length |= Bytes.toInt(len1, 8);
+
+                internal += length;
 
                 continue loop;
               }

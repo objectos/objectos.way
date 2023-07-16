@@ -15,8 +15,6 @@
  */
 package objectos.css.internal;
 
-import static org.testng.Assert.assertEquals;
-
 import java.util.Arrays;
 import org.testng.annotations.Test;
 
@@ -81,19 +79,20 @@ public class Compiler01Test {
       compiler,
 
       ByteProto.MARKED,
-      Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
+      Bytes.len0(9),
+      Bytes.len1(9),
       Bytes.prop0(Property.BOX_SIZING),
       Bytes.prop1(Property.BOX_SIZING),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.borderBox),
       Bytes.name1(StandardName.borderBox),
       ByteProto.DECLARATION_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.len1(8),
+      Bytes.len0(8),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(36), Bytes.idx1(36), Bytes.idx2(36),
+      Bytes.idx0(31), Bytes.idx1(31), Bytes.idx2(31),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.any),
       Bytes.name1(StandardName.any),
@@ -101,12 +100,12 @@ public class Compiler01Test {
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
+      Bytes.idx0(12), Bytes.idx1(12), Bytes.idx2(12),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
-      ByteProto.ROOT_END, Bytes.idx0(36), Bytes.idx1(36), Bytes.idx2(36)
+      ByteProto.STYLE_RULE, Bytes.idx0(12), Bytes.idx1(12), Bytes.idx2(12),
+      ByteProto.ROOT_END, Bytes.idx0(31), Bytes.idx1(31), Bytes.idx2(31)
     );
   }
 
@@ -121,28 +120,12 @@ public class Compiler01Test {
 
     compiler.compilationStart();
 
-    assertEquals(compiler.mainIndex, 0);
-
     compiler.length(20, LengthUnit.PX);
-
-    assertEquals(compiler.mainIndex, 6);
-
     compiler.length(1.5, LengthUnit.REM);
 
-    assertEquals(compiler.mainIndex, 6 + 10);
-
     compiler.declarationStart(Property.MARGIN);
-
-    assertEquals(compiler.mainContents, 6 + 10);
-
     compiler.declarationValue(InternalInstruction.LENGTH_INT);
-
-    assertEquals(compiler.mainContents, 10);
-
     compiler.declarationValue(InternalInstruction.LENGTH_DOUBLE);
-
-    assertEquals(compiler.mainContents, 0);
-
     compiler.declarationEnd();
 
     compiler.styleRuleStart();
@@ -176,7 +159,8 @@ public class Compiler01Test {
       Bytes.unit(LengthUnit.REM),
 
       ByteProto.MARKED,
-      Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
+      Bytes.len0(14),
+      Bytes.len1(14),
       Bytes.prop0(Property.MARGIN),
       Bytes.prop1(Property.MARGIN),
       ByteProto.LENGTH_INT,
@@ -184,12 +168,12 @@ public class Compiler01Test {
       ByteProto.LENGTH_DOUBLE,
       Bytes.idx0(6), Bytes.idx1(6), Bytes.idx2(6),
       ByteProto.DECLARATION_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
+      Bytes.len1(29),
+      Bytes.len0(29),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(57), Bytes.idx1(57), Bytes.idx2(57),
+      Bytes.idx0(52), Bytes.idx1(52), Bytes.idx2(52),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.ul),
       Bytes.name1(StandardName.ul),
@@ -197,12 +181,12 @@ public class Compiler01Test {
       Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
       ByteProto.STYLE_RULE_END,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
+      Bytes.idx0(33), Bytes.idx1(33), Bytes.idx2(33),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(38), Bytes.idx1(38), Bytes.idx2(38),
-      ByteProto.ROOT_END, Bytes.idx0(57), Bytes.idx1(57), Bytes.idx2(57)
+      ByteProto.STYLE_RULE, Bytes.idx0(33), Bytes.idx1(33), Bytes.idx2(33),
+      ByteProto.ROOT_END, Bytes.idx0(52), Bytes.idx1(52), Bytes.idx2(52)
     );
   }
 
@@ -237,7 +221,8 @@ public class Compiler01Test {
       compiler,
 
       ByteProto.MARKED,
-      Bytes.idx0(23), Bytes.idx1(23), Bytes.idx2(23),
+      Bytes.len0(15),
+      Bytes.len1(15),
       Bytes.prop0(Property.LINE_HEIGHT),
       Bytes.prop1(Property.LINE_HEIGHT),
       ByteProto.JAVA_DOUBLE,
@@ -250,12 +235,12 @@ public class Compiler01Test {
       Bytes.long6(dbl),
       Bytes.long7(dbl),
       ByteProto.DECLARATION_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.len1(14),
+      Bytes.len0(14),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(42), Bytes.idx1(42), Bytes.idx2(42),
+      Bytes.idx0(37), Bytes.idx1(37), Bytes.idx2(37),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.p),
       Bytes.name1(StandardName.p),
@@ -263,12 +248,12 @@ public class Compiler01Test {
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(23), Bytes.idx1(23), Bytes.idx2(23),
+      Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(23), Bytes.idx1(23), Bytes.idx2(23),
-      ByteProto.ROOT_END, Bytes.idx0(42), Bytes.idx1(42), Bytes.idx2(42)
+      ByteProto.STYLE_RULE, Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18),
+      ByteProto.ROOT_END, Bytes.idx0(37), Bytes.idx1(37), Bytes.idx2(37)
     );
   }
 

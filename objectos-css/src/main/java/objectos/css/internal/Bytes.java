@@ -96,6 +96,16 @@ final class Bytes {
     return v3 | v2 | v1 | v0;
   }
 
+  public static byte len0(int index) {
+    Check.argument(index <= MAX2_INDEX, "Template or element is too large.");
+
+    return (byte) index;
+  }
+
+  public static byte len1(int index) {
+    return (byte) (index >>> 8);
+  }
+
   public static byte long0(long value) {
     return (byte) (value >>> 0);
   }
