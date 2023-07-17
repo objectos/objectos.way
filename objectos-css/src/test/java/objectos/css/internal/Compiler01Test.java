@@ -39,14 +39,13 @@ public class Compiler01Test {
       compiler,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(7),
-      Bytes.len1(7),
+      Bytes.len0(6),
+      Bytes.len1(6),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.html),
       Bytes.name1(StandardName.html),
       ByteProto.STYLE_RULE_END,
       Bytes.int0(6),
-      Bytes.int0(7),
       ByteProto.STYLE_RULE
     );
   }
@@ -89,8 +88,8 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(11),
-      Bytes.len1(11),
+      Bytes.len0(10),
+      Bytes.len1(10),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.any),
       Bytes.name1(StandardName.any),
@@ -98,7 +97,6 @@ public class Compiler01Test {
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
       Bytes.int0(21),
-      Bytes.int0(11),
       ByteProto.STYLE_RULE
     );
   }
@@ -166,8 +164,8 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(11),
-      Bytes.len1(11),
+      Bytes.len0(10),
+      Bytes.len1(10),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.ul),
       Bytes.name1(StandardName.ul),
@@ -175,7 +173,6 @@ public class Compiler01Test {
       Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
       ByteProto.STYLE_RULE_END,
       Bytes.int0(42),
-      Bytes.int0(11),
       ByteProto.STYLE_RULE
     );
   }
@@ -229,8 +226,8 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(11),
-      Bytes.len1(11),
+      Bytes.len0(10),
+      Bytes.len1(10),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.p),
       Bytes.name1(StandardName.p),
@@ -238,7 +235,6 @@ public class Compiler01Test {
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
       Bytes.int0(27),
-      Bytes.int0(11),
       ByteProto.STYLE_RULE
     );
   }
@@ -271,14 +267,13 @@ public class Compiler01Test {
       ByteProto.INTERNAL4,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(7),
-      Bytes.len1(7),
+      Bytes.len0(6),
+      Bytes.len1(6),
       ByteProto.SELECTOR_ATTR,
       Bytes.two0(0),
       Bytes.two1(0),
       ByteProto.STYLE_RULE_END,
       Bytes.int0(10),
-      Bytes.int0(7),
       ByteProto.STYLE_RULE
     );
   }

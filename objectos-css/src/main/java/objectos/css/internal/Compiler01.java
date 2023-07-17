@@ -553,8 +553,11 @@ class Compiler01 extends CssTemplateApi {
       }
     }
 
-    // ensure main can hold 6 more elements
-    main = ByteArrays.growIfNecessary(main, mainIndex + 5);
+    // ensure main can hold 4 more elements
+    // 0   - ByteProto.STYLE_RULE_END
+    // 1-2 - variable length
+    // 2-3 - ByteProto.STYLE_RULE
+    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
     // mark the end
     main[mainIndex++] = ByteProto.STYLE_RULE_END;
@@ -562,11 +565,6 @@ class Compiler01 extends CssTemplateApi {
     // store the distance to the contents (yes, reversed)
     int length;
     length = mainIndex - mainContents - 1;
-
-    mainIndex = Bytes.encodeVariableLengthR(main, mainIndex, length);
-
-    // store the distance to the start (yes, reversed)
-    length = mainIndex - mainStart - 1;
 
     mainIndex = Bytes.encodeVariableLengthR(main, mainIndex, length);
 
