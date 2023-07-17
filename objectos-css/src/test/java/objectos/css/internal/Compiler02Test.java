@@ -27,9 +27,9 @@ public class Compiler02Test {
     Compiler02 compiler;
     compiler = new Compiler02();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.html);
     compiler.styleRuleEnd();
 
@@ -59,13 +59,13 @@ public class Compiler02Test {
     Compiler02 compiler;
     compiler = new Compiler02();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
-    compiler.declarationStart(Property.BOX_SIZING);
-    compiler.declarationValue(StandardName.borderBox);
+    compiler.declarationBegin(Property.BOX_SIZING);
+    compiler.propertyValue(StandardName.borderBox);
     compiler.declarationEnd();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.any);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
@@ -104,9 +104,9 @@ public class Compiler02Test {
     Compiler02 compiler;
     compiler = new Compiler02();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.h1);
     compiler.styleRuleElement(StandardName.h2);
     compiler.styleRuleElement(StandardName.h3);
@@ -146,17 +146,17 @@ public class Compiler02Test {
     Compiler02 compiler;
     compiler = new Compiler02();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
     compiler.length(20, LengthUnit.PX);
     compiler.length(1.5, LengthUnit.REM);
 
-    compiler.declarationStart(Property.MARGIN);
-    compiler.declarationValue(InternalInstruction.LENGTH_INT);
-    compiler.declarationValue(InternalInstruction.LENGTH_DOUBLE);
+    compiler.declarationBegin(Property.MARGIN);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.LENGTH_DOUBLE);
     compiler.declarationEnd();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.ul);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
@@ -213,11 +213,11 @@ public class Compiler02Test {
     Compiler02 compiler;
     compiler = new Compiler02();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
     compiler.selectorAttribute("hidden");
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 

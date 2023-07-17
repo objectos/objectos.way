@@ -27,9 +27,9 @@ public class Compiler01Test {
     Compiler01 compiler;
     compiler = new Compiler01();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.html);
     compiler.styleRuleEnd();
 
@@ -39,17 +39,20 @@ public class Compiler01Test {
       compiler,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(15), Bytes.idx1(15), Bytes.idx2(15),
+      Bytes.len0(9),
+      Bytes.len1(9),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.html),
       Bytes.name1(StandardName.html),
       ByteProto.STYLE_RULE_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.len1(6),
+      Bytes.len0(6),
+      Bytes.len1(8),
+      Bytes.len0(8),
       ByteProto.STYLE_RULE,
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      ByteProto.ROOT_END, Bytes.idx0(15), Bytes.idx1(15), Bytes.idx2(15)
+      ByteProto.ROOT_END, Bytes.idx0(12), Bytes.idx1(12), Bytes.idx2(12)
     );
   }
 
@@ -62,13 +65,13 @@ public class Compiler01Test {
     Compiler01 compiler;
     compiler = new Compiler01();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
-    compiler.declarationStart(Property.BOX_SIZING);
-    compiler.declarationValue(StandardName.borderBox);
+    compiler.declarationBegin(Property.BOX_SIZING);
+    compiler.propertyValue(StandardName.borderBox);
     compiler.declarationEnd();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.any);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
@@ -92,20 +95,23 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(31), Bytes.idx1(31), Bytes.idx2(31),
+      Bytes.len0(13),
+      Bytes.len1(13),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.any),
       Bytes.name1(StandardName.any),
       ByteProto.DECLARATION,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(12), Bytes.idx1(12), Bytes.idx2(12),
+      Bytes.len1(22),
+      Bytes.len0(22),
+      Bytes.len1(12),
+      Bytes.len0(12),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(12), Bytes.idx1(12), Bytes.idx2(12),
-      ByteProto.ROOT_END, Bytes.idx0(31), Bytes.idx1(31), Bytes.idx2(31)
+      ByteProto.ROOT_END, Bytes.idx0(28), Bytes.idx1(28), Bytes.idx2(28)
     );
   }
 
@@ -118,17 +124,17 @@ public class Compiler01Test {
     Compiler01 compiler;
     compiler = new Compiler01();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
     compiler.length(20, LengthUnit.PX);
     compiler.length(1.5, LengthUnit.REM);
 
-    compiler.declarationStart(Property.MARGIN);
-    compiler.declarationValue(InternalInstruction.LENGTH_INT);
-    compiler.declarationValue(InternalInstruction.LENGTH_DOUBLE);
+    compiler.declarationBegin(Property.MARGIN);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.LENGTH_DOUBLE);
     compiler.declarationEnd();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.ul);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
@@ -173,20 +179,23 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(52), Bytes.idx1(52), Bytes.idx2(52),
+      Bytes.len0(13),
+      Bytes.len1(13),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.ul),
       Bytes.name1(StandardName.ul),
       ByteProto.DECLARATION,
       Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
       ByteProto.STYLE_RULE_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(33), Bytes.idx1(33), Bytes.idx2(33),
+      Bytes.len1(43),
+      Bytes.len0(43),
+      Bytes.len1(12),
+      Bytes.len0(12),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(33), Bytes.idx1(33), Bytes.idx2(33),
-      ByteProto.ROOT_END, Bytes.idx0(52), Bytes.idx1(52), Bytes.idx2(52)
+      ByteProto.ROOT_END, Bytes.idx0(49), Bytes.idx1(49), Bytes.idx2(49)
     );
   }
 
@@ -201,13 +210,13 @@ public class Compiler01Test {
     Compiler01 compiler;
     compiler = new Compiler01();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
-    compiler.declarationStart(Property.LINE_HEIGHT);
+    compiler.declarationBegin(Property.LINE_HEIGHT);
     compiler.javaDouble(1.5);
     compiler.declarationEnd();
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardName.p);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
@@ -240,20 +249,23 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(37), Bytes.idx1(37), Bytes.idx2(37),
+      Bytes.len0(13),
+      Bytes.len1(13),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.p),
       Bytes.name1(StandardName.p),
       ByteProto.DECLARATION,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18),
+      Bytes.len1(28),
+      Bytes.len0(28),
+      Bytes.len1(12),
+      Bytes.len0(12),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18),
-      ByteProto.ROOT_END, Bytes.idx0(37), Bytes.idx1(37), Bytes.idx2(37)
+      ByteProto.ROOT_END, Bytes.idx0(34), Bytes.idx1(34), Bytes.idx2(34)
     );
   }
 
@@ -266,11 +278,11 @@ public class Compiler01Test {
     Compiler01 compiler;
     compiler = new Compiler01();
 
-    compiler.compilationStart();
+    compiler.compilationBegin();
 
     compiler.selectorAttribute("hidden");
 
-    compiler.styleRuleStart();
+    compiler.styleRuleBegin();
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
@@ -285,18 +297,21 @@ public class Compiler01Test {
       ByteProto.INTERNAL3,
 
       ByteProto.STYLE_RULE,
-      Bytes.idx0(19), Bytes.idx1(19), Bytes.idx2(19),
+      Bytes.len0(9),
+      Bytes.len1(9),
       ByteProto.SELECTOR_ATTR,
       Bytes.two0(0),
       Bytes.two1(0),
       ByteProto.STYLE_RULE_END,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      Bytes.idx0(4), Bytes.idx1(4), Bytes.idx2(4),
+      Bytes.len1(10),
+      Bytes.len0(10),
+      Bytes.len1(8),
+      Bytes.len0(8),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
       ByteProto.STYLE_RULE, Bytes.idx0(4), Bytes.idx1(4), Bytes.idx2(4),
-      ByteProto.ROOT_END, Bytes.idx0(19), Bytes.idx1(19), Bytes.idx2(19)
+      ByteProto.ROOT_END, Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16)
     );
   }
 

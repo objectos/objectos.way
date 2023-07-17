@@ -22,19 +22,19 @@ import objectos.css.tmpl.StyleRuleElement;
 
 public abstract class CssTemplateApi {
 
-  public abstract void compilationEnd();
+  CssTemplateApi() {}
 
-  public abstract void compilationStart();
+  public abstract void compilationBegin();
+
+  public abstract void compilationEnd();
 
   public StyleSheet compile() {
     throw new UnsupportedOperationException();
   }
 
+  public abstract void declarationBegin(Property name);
+
   public abstract void declarationEnd();
-
-  public abstract void declarationStart(Property name);
-
-  public abstract void declarationValue(PropertyValue value);
 
   public abstract void javaDouble(double value);
 
@@ -54,14 +54,16 @@ public abstract class CssTemplateApi {
 
   public abstract void percentage(int value);
 
+  public abstract void propertyValue(PropertyValue value);
+
   public abstract void selectorAttribute(String name);
 
   public abstract void selectorAttribute(String name, AttributeOperator operator, String value);
 
+  public abstract void styleRuleBegin();
+
   public abstract void styleRuleElement(StyleRuleElement element);
 
   public abstract void styleRuleEnd();
-
-  public abstract void styleRuleStart();
 
 }

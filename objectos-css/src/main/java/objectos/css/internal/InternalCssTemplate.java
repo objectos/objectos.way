@@ -40,7 +40,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     try {
       api = new Compiler02();
 
-      api.compilationStart();
+      api.compilationBegin();
 
       definition();
 
@@ -109,7 +109,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     CssTemplateApi api;
     api = api();
 
-    api.styleRuleStart();
+    api.styleRuleBegin();
 
     for (int i = 0; i < elements.length; i++) {
       api.styleRuleElement(
@@ -127,7 +127,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       Property name,
       double value) {
     CssTemplateApi api = api();
-    api.declarationStart(name);
+    api.declarationBegin(name);
     api.javaDouble(value);
     api.declarationEnd();
     return InternalInstruction.INSTANCE;
@@ -138,7 +138,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       Property name,
       int value) {
     CssTemplateApi api = api();
-    api.declarationStart(name);
+    api.declarationBegin(name);
     api.javaInt(value);
     api.declarationEnd();
     return InternalInstruction.INSTANCE;
@@ -149,8 +149,8 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       Property name,
       PropertyValue value) {
     CssTemplateApi api = api();
-    api.declarationStart(name);
-    api.declarationValue(value);
+    api.declarationBegin(name);
+    api.propertyValue(value);
     api.declarationEnd();
     return InternalInstruction.INSTANCE;
   }
@@ -160,9 +160,9 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       Property name,
       PropertyValue value1, PropertyValue value2) {
     CssTemplateApi api = api();
-    api.declarationStart(name);
-    api.declarationValue(value1);
-    api.declarationValue(value2);
+    api.declarationBegin(name);
+    api.propertyValue(value1);
+    api.propertyValue(value2);
     api.declarationEnd();
     return InternalInstruction.INSTANCE;
   }
@@ -172,10 +172,10 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3) {
     CssTemplateApi api = api();
-    api.declarationStart(name);
-    api.declarationValue(value1);
-    api.declarationValue(value2);
-    api.declarationValue(value3);
+    api.declarationBegin(name);
+    api.propertyValue(value1);
+    api.propertyValue(value2);
+    api.propertyValue(value3);
     api.declarationEnd();
     return InternalInstruction.INSTANCE;
   }
@@ -185,11 +185,11 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4) {
     CssTemplateApi api = api();
-    api.declarationStart(name);
-    api.declarationValue(value1);
-    api.declarationValue(value2);
-    api.declarationValue(value3);
-    api.declarationValue(value4);
+    api.declarationBegin(name);
+    api.propertyValue(value1);
+    api.propertyValue(value2);
+    api.propertyValue(value3);
+    api.propertyValue(value4);
     api.declarationEnd();
     return InternalInstruction.INSTANCE;
   }
@@ -199,7 +199,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       Property name,
       String value) {
     CssTemplateApi api = api();
-    api.declarationStart(name);
+    api.declarationBegin(name);
     api.javaString(value);
     api.declarationEnd();
     return InternalInstruction.INSTANCE;

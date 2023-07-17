@@ -334,8 +334,8 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.STYLE_RULE -> {
-          // skip end index
-          index += 3;
+          // skip distance to end
+          index += 2;
         }
 
         case ByteProto.STYLE_RULE_END -> {

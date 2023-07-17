@@ -46,14 +46,88 @@ class Compiler01 extends CssTemplateApi {
   int objectIndex;
 
   @Override
-  public final void compilationStart() {
+  public final void compilationBegin() {
     aux = new byte[128];
 
     main = new byte[256];
   }
 
   @Override
-  public final void declarationStart(Property name) {
+  public final void compilationEnd() {
+    // we will iterate over the unmarked elements in the main list
+    int index;
+    index = mainIndex;
+
+    // @ last ByteProto
+    index--;
+
+    while (index > 0) {
+      byte proto;
+      proto = main[index--];
+
+      switch (proto) {
+        case ByteProto.STYLE_RULE -> {
+          // decode the distance to the start
+          byte len0;
+          len0 = main[index--];
+
+          int length;
+          length = Bytes.toInt(len0, 0);
+
+          byte len1;
+          len1 = main[index--];
+
+          length |= Bytes.toInt(len1, 8);
+
+          int indexStart;
+          indexStart = index - length;
+
+          // store indices so they can be retrieved by iterating over aux list from end to start
+          auxAdd(
+            Bytes.idx2(indexStart),
+            Bytes.idx1(indexStart),
+            Bytes.idx0(indexStart),
+
+            proto
+          );
+
+          // decode the distance to the contents
+          len0 = main[index--];
+
+          length = Bytes.toInt(len0, 0);
+
+          len1 = main[index--];
+
+          length |= Bytes.toInt(len1, 8);
+
+          // new root @ this elements' contents index
+          index -= length;
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    int rootStart = mainIndex;
+
+    mainAdd(ByteProto.ROOT);
+
+    while (auxIndex > 0) {
+      mainAdd(aux[--auxIndex]);
+    }
+
+    mainAdd(
+      ByteProto.ROOT_END,
+      Bytes.idx0(rootStart),
+      Bytes.idx1(rootStart),
+      Bytes.idx2(rootStart)
+    );
+  }
+
+  @Override
+  public final void declarationBegin(Property name) {
     // we mark the start of our aux list
     auxStart = auxIndex;
 
@@ -76,48 +150,84 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void declarationValue(PropertyValue value) {
-    if (value instanceof StandardName name) {
-      // value is a keyword like color: currentcolor; or display: block;
-      // store the enum ordinal
-      auxAdd(
-        MARK_VALUE3,
-        ByteProto.STANDARD_NAME,
-        Bytes.name0(name),
-        Bytes.name1(name)
-      );
-    }
+  public final void declarationEnd() {
+    // we iterate over each value added via declarationValue(PropertyValue)
+    int index;
+    index = auxStart;
 
-    else if (value instanceof InternalInstruction internal) {
-      int length;
-      length = internal.length;
+    int indexMax;
+    indexMax = auxIndex;
 
-      if (length < 0) {
-        throw new UnsupportedOperationException(
-          "Implement me :: internal=" + internal.name()
+    int contents;
+    contents = mainContents;
+
+    while (index < indexMax) {
+      byte mark;
+      mark = aux[index++];
+
+      switch (mark) {
+        case MARK_INTERNAL -> {
+          byte lengthByte;
+          lengthByte = aux[index++];
+
+          int length;
+          length = lengthByte & 0xFF;
+
+          byte proto;
+          proto = main[contents];
+
+          main[contents] = ByteProto.markedOf(length);
+
+          mainAdd(
+            proto,
+
+            Bytes.idx0(contents),
+            Bytes.idx1(contents),
+            Bytes.idx2(contents)
+          );
+
+          contents += length;
+        }
+
+        case MARK_VALUE1 -> {
+          mainAdd(aux[index++]);
+        }
+
+        case MARK_VALUE3 -> {
+          mainAdd(aux[index++], aux[index++], aux[index++]);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: mark=" + mark
         );
       }
-
-      mainContents -= length;
-
-      if (length > 255) {
-        throw new AssertionError(
-          "Length is too large. Cannot store it in 1 byte."
-        );
-      }
-
-      auxAdd(MARK_INTERNAL, (byte) length);
     }
 
-    else if (value instanceof InternalZero) {
-      auxAdd(MARK_VALUE1, ByteProto.ZERO);
-    }
+    int length;
+    length = mainIndex - mainContents;
 
-    else {
-      throw new UnsupportedOperationException(
-        "Implement me :: type=" + value.getClass()
-      );
-    }
+    mainAdd(
+      ByteProto.DECLARATION_END,
+
+      // length: yes, backwards
+      Bytes.len1(length),
+      Bytes.len0(length),
+
+      ByteProto.DECLARATION
+    );
+
+    // set the end index of the declaration
+    length = mainIndex - mainStart;
+
+    // skip ByteProto.FOO + len0 + len1
+    length -= 3;
+
+    // we skip the first byte proto
+    main[mainStart + 1] = Bytes.len0(length);
+    main[mainStart + 2] = Bytes.len1(length);
+
+    // we clear the aux list
+    auxIndex = auxStart;
   }
 
   @Override
@@ -235,94 +345,48 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void declarationEnd() {
-    // we iterate over each value added via declarationValue(PropertyValue)
-    int indexMax;
-    indexMax = auxIndex;
-
-    int index;
-    index = auxStart;
-
-    int contents;
-    contents = mainContents;
-
-    while (index < indexMax) {
-      byte mark;
-      mark = aux[index++];
-
-      switch (mark) {
-        case MARK_INTERNAL -> {
-          byte lengthByte;
-          lengthByte = aux[index++];
-
-          int length;
-          length = lengthByte & 0xFF;
-
-          byte proto;
-          proto = main[contents];
-
-          main[contents] = ByteProto.markedOf(length);
-
-          mainAdd(
-            proto,
-
-            Bytes.idx0(contents),
-            Bytes.idx1(contents),
-            Bytes.idx2(contents)
-          );
-
-          contents += length;
-        }
-
-        case MARK_VALUE1 -> {
-          mainAdd(aux[index++]);
-        }
-
-        case MARK_VALUE3 -> {
-          mainAdd(aux[index++], aux[index++], aux[index++]);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: mark=" + mark
-        );
-      }
+  public final void propertyValue(PropertyValue value) {
+    if (value instanceof StandardName name) {
+      // value is a keyword like color: currentcolor; or display: block;
+      // store the enum ordinal
+      auxAdd(
+        MARK_VALUE3,
+        ByteProto.STANDARD_NAME,
+        Bytes.name0(name),
+        Bytes.name1(name)
+      );
     }
 
-    int length;
-    length = mainIndex - mainContents;
+    else if (value instanceof InternalInstruction internal) {
+      int length;
+      length = internal.length;
 
-    mainAdd(
-      ByteProto.DECLARATION_END,
+      if (length < 0) {
+        throw new UnsupportedOperationException(
+          "Implement me :: internal=" + internal.name()
+        );
+      }
 
-      // length: yes, backwards
-      Bytes.len1(length),
-      Bytes.len0(length),
+      mainContents -= length;
 
-      ByteProto.DECLARATION
-    );
+      if (length > 255) {
+        throw new AssertionError(
+          "Length is too large. Cannot store it in 1 byte."
+        );
+      }
 
-    // set the end index of the declaration
-    length = mainIndex - mainStart;
+      auxAdd(MARK_INTERNAL, (byte) length);
+    }
 
-    // skip ByteProto.DECLARATION + len0 + len1
-    length -= 3;
+    else if (value instanceof InternalZero) {
+      auxAdd(MARK_VALUE1, ByteProto.ZERO);
+    }
 
-    // we skip the first byte proto
-    main[mainStart + 1] = Bytes.len0(length);
-    main[mainStart + 2] = Bytes.len1(length);
-
-    // we clear the aux list
-    auxIndex = auxStart;
-  }
-
-  private void setEndIndex() {
-    int endIndex;
-    endIndex = mainIndex;
-
-    // we skip the first byte proto
-    main[mainStart + 1] = Bytes.idx0(endIndex);
-    main[mainStart + 2] = Bytes.idx1(endIndex);
-    main[mainStart + 3] = Bytes.idx2(endIndex);
+    else {
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + value.getClass()
+      );
+    }
   }
 
   @Override
@@ -370,7 +434,7 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void styleRuleStart() {
+  public final void styleRuleBegin() {
     // we mark the start of our aux list
     auxStart = auxIndex;
 
@@ -381,8 +445,10 @@ class Compiler01 extends CssTemplateApi {
 
     mainAdd(
       ByteProto.STYLE_RULE,
-      // indices take 3 bytes
-      ByteProto.NULL, ByteProto.NULL, ByteProto.NULL
+
+      // length takes 2 bytes
+      ByteProto.NULL,
+      ByteProto.NULL
     );
   }
 
@@ -441,103 +507,94 @@ class Compiler01 extends CssTemplateApi {
     }
   }
 
-  final int mainIndex(int offset) {
-    int idx0;
-    idx0 = Bytes.toInt(main[offset + 0], 0);
-
-    int idx1;
-    idx1 = Bytes.toInt(main[offset + 1], 8);
-
-    int idx2;
-    idx2 = Bytes.toInt(main[offset + 2], 16);
-
-    return idx2 | idx1 | idx0;
-  }
-
   @Override
   public final void styleRuleEnd() {
-    int auxMax = auxIndex;
+    // we will iterate over the marked elements
+    int index;
+    index = auxStart;
 
-    int idx = auxStart;
+    int indexMax;
+    indexMax = auxIndex;
 
-    int internal = mainContents;
+    int contents;
+    contents = mainContents;
 
-    loop: while (idx < auxMax) {
-      int marker = aux[idx++];
+    loop: while (index < indexMax) {
+      int marker = aux[index++];
 
       switch (marker) {
         case MARK_INTERNAL -> {
           while (true) {
             byte proto;
-            proto = main[internal];
+            proto = main[contents];
 
             switch (proto) {
               case ByteProto.DECLARATION -> {
                 mainAdd(
                   proto,
 
-                  Bytes.idx0(internal),
-                  Bytes.idx1(internal),
-                  Bytes.idx2(internal)
+                  Bytes.idx0(contents),
+                  Bytes.idx1(contents),
+                  Bytes.idx2(contents)
                 );
 
-                main[internal++] = ByteProto.MARKED;
+                main[contents++] = ByteProto.MARKED;
 
                 byte len0;
-                len0 = main[internal++];
+                len0 = main[contents++];
 
                 int length;
                 length = Bytes.toInt(len0, 0);
 
                 byte len1;
-                len1 = main[internal++];
+                len1 = main[contents++];
 
                 length |= Bytes.toInt(len1, 8);
 
-                internal += length;
+                contents += length;
 
                 continue loop;
               }
 
-              case ByteProto.MARKED5 -> internal += 5;
+              case ByteProto.MARKED5 -> contents += 5;
 
-              case ByteProto.MARKED6 -> internal += 6;
+              case ByteProto.MARKED6 -> contents += 6;
 
-              case ByteProto.MARKED9 -> internal += 9;
+              case ByteProto.MARKED9 -> contents += 9;
 
-              case ByteProto.MARKED10 -> internal += 10;
+              case ByteProto.MARKED10 -> contents += 10;
 
               case ByteProto.SELECTOR_ATTR -> {
-                main[internal++] = ByteProto.MARKED3;
+                main[contents++] = ByteProto.MARKED3;
 
                 mainAdd(
                   proto,
 
                   // nameIndex0
-                  main[internal++],
+                  main[contents++],
 
                   // nameIndex1
-                  main[internal++]
+                  main[contents++]
                 );
 
                 // ByteProto.INTERNAL3
-                internal++;
+                contents++;
 
                 continue loop;
               }
 
               case ByteProto.SELECTOR_ATTR_VALUE -> {
-                main[internal] = ByteProto.MARKED6;
+                main[contents] = ByteProto.MARKED6;
 
                 mainAdd(
                   proto,
 
-                  Bytes.idx0(internal),
-                  Bytes.idx1(internal),
-                  Bytes.idx2(internal)
+                  Bytes.idx0(contents),
+                  Bytes.idx1(contents),
+                  Bytes.idx2(contents)
                 );
 
-                internal += 7;
+                contents += 7;
 
                 continue loop;
               }
@@ -552,7 +609,7 @@ class Compiler01 extends CssTemplateApi {
         }
 
         case MARK_VALUE3 -> {
-          mainAdd(aux[idx++], aux[idx++], aux[idx++]);
+          mainAdd(aux[index++], aux[index++], aux[index++]);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -561,70 +618,43 @@ class Compiler01 extends CssTemplateApi {
       }
     }
 
-    mainAdd(
-      ByteProto.STYLE_RULE_END,
+    // ensure main can hold 6 more elements
+    main = ByteArrays.growIfNecessary(main, mainIndex + 5);
 
-      Bytes.idx0(mainContents),
-      Bytes.idx1(mainContents),
-      Bytes.idx2(mainContents),
+    // mark the end
+    main[mainIndex++] = ByteProto.STYLE_RULE_END;
 
-      Bytes.idx0(mainStart),
-      Bytes.idx1(mainStart),
-      Bytes.idx2(mainStart),
+    // store the distance to the contents (yes, reversed)
+    int length;
+    length = mainIndex - mainContents - 1;
 
-      ByteProto.STYLE_RULE
-    );
+    main[mainIndex++] = Bytes.len1(length);
 
-    setEndIndex();
+    main[mainIndex++] = Bytes.len0(length);
+
+    // store the distance to the start (yes, reversed)
+    length = mainIndex - mainStart - 1;
+
+    main[mainIndex++] = Bytes.len1(length);
+
+    main[mainIndex++] = Bytes.len0(length);
+
+    // trailer proto
+    main[mainIndex++] = ByteProto.STYLE_RULE;
+
+    // set the end index of the declaration
+    length = mainIndex - mainStart;
+
+    // skip ByteProto.FOO + len0 + len1
+    length -= 3;
+
+    // write after the first byte proto
+    main[mainStart + 1] = Bytes.len0(length);
+
+    main[mainStart + 2] = Bytes.len1(length);
 
     // we clear the aux list
     auxIndex = auxStart;
-  }
-
-  @Override
-  public final void compilationEnd() {
-    int rootIndex = mainIndex;
-
-    while (rootIndex > 0) {
-      byte proto = main[--rootIndex];
-
-      switch (proto) {
-        case ByteProto.STYLE_RULE -> {
-          // root @ element start index
-          byte elemStart2 = main[--rootIndex];
-          byte elemStart1 = main[--rootIndex];
-          byte elemStart0 = main[--rootIndex];
-
-          // root @ element contents index
-          rootIndex -= 3;
-
-          // new root @ this elements' contenst index
-          rootIndex = mainIndex(rootIndex);
-
-          // store indices so they can be retrieved by iterating over aux list from end to start
-          auxAdd(elemStart2, elemStart1, elemStart0, proto);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    int rootStart = mainIndex;
-
-    mainAdd(ByteProto.ROOT);
-
-    while (auxIndex > 0) {
-      mainAdd(aux[--auxIndex]);
-    }
-
-    mainAdd(
-      ByteProto.ROOT_END,
-      Bytes.idx0(rootStart),
-      Bytes.idx1(rootStart),
-      Bytes.idx2(rootStart)
-    );
   }
 
   final void auxAdd(byte b0) {
@@ -670,6 +700,19 @@ class Compiler01 extends CssTemplateApi {
     aux[auxIndex++] = b3;
     aux[auxIndex++] = b4;
     aux[auxIndex++] = b5;
+  }
+
+  final int mainIndex(int offset) {
+    int idx0;
+    idx0 = Bytes.toInt(main[offset + 0], 0);
+
+    int idx1;
+    idx1 = Bytes.toInt(main[offset + 1], 8);
+
+    int idx2;
+    idx2 = Bytes.toInt(main[offset + 2], 16);
+
+    return idx2 | idx1 | idx0;
   }
 
   private void mainAdd(byte b0) {
@@ -720,18 +763,6 @@ class Compiler01 extends CssTemplateApi {
     main[mainIndex++] = b4;
     main[mainIndex++] = b5;
     main[mainIndex++] = b6;
-  }
-
-  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
-    main = ByteArrays.growIfNecessary(main, mainIndex + 7);
-    main[mainIndex++] = b0;
-    main[mainIndex++] = b1;
-    main[mainIndex++] = b2;
-    main[mainIndex++] = b3;
-    main[mainIndex++] = b4;
-    main[mainIndex++] = b5;
-    main[mainIndex++] = b6;
-    main[mainIndex++] = b7;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
