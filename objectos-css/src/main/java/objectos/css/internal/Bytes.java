@@ -25,6 +25,10 @@ final class Bytes {
 
   private static final int MAX3_INDEX = 1 << 24 - 1;
 
+  public static final int VARINT_MAX1 = 0x7F;
+
+  public static final int VARINT_MAX2 = 0x7F00 | 0x00FF;
+
   private Bytes() {}
 
   public static int decodeIndex2(byte b0, byte b1) {
@@ -35,6 +39,15 @@ final class Bytes {
     index1 = toInt(b1, 8);
 
     return index1 | index0;
+  }
+
+  public static int decodeLength(byte len0, byte len1) {
+    int length;
+    length = len0 & 0x7F;
+
+    length |= len1 << 7;
+
+    return length;
   }
 
   public static double doubleValue(
@@ -52,6 +65,30 @@ final class Bytes {
     bits = v7 | v6 | v5 | v4 | v3 | v2 | v1 | v0;
 
     return Double.longBitsToDouble(bits);
+  }
+
+  public static int encodeLengthR(byte[] buf, int off, int length) {
+    if (length < 0) {
+      throw new IllegalArgumentException("Length has to be >= 0");
+    }
+
+    if (length <= VARINT_MAX1) {
+      buf[off++] = (byte) length;
+
+      return off;
+    }
+
+    if (length <= VARINT_MAX2) {
+      buf[off++] = var1(length);
+
+      buf[off++] = var0(length);
+
+      return off;
+    }
+
+    throw new IllegalArgumentException(
+      "CssTemplate is too large"
+    );
   }
 
   // we use 3 bytes for internal indices
@@ -214,6 +251,21 @@ final class Bytes {
 
   public static byte unit(LengthUnit unit) {
     return int0(unit.ordinal());
+  }
+
+  public static byte var0(int value) {
+    byte b0;
+    b0 = (byte) (value & 0x7F);
+
+    b0 |= 0x80;
+
+    return b0;
+  }
+
+  public static byte var1(int value) {
+    value = value >>> 7;
+
+    return (byte) value;
   }
 
 }

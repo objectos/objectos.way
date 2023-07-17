@@ -82,16 +82,15 @@ public class Compiler01Test {
       compiler,
 
       ByteProto.MARKED,
-      Bytes.len0(9),
-      Bytes.len1(9),
+      Bytes.len0(8),
+      Bytes.len1(8),
       Bytes.prop0(Property.BOX_SIZING),
       Bytes.prop1(Property.BOX_SIZING),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.borderBox),
       Bytes.name1(StandardName.borderBox),
       ByteProto.DECLARATION_END,
-      Bytes.len1(8),
-      Bytes.len0(8),
+      Bytes.int0(8),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
@@ -103,15 +102,15 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
-      Bytes.len1(22),
-      Bytes.len0(22),
+      Bytes.len1(21),
+      Bytes.len0(21),
       Bytes.len1(12),
       Bytes.len0(12),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(12), Bytes.idx1(12), Bytes.idx2(12),
-      ByteProto.ROOT_END, Bytes.idx0(28), Bytes.idx1(28), Bytes.idx2(28)
+      ByteProto.STYLE_RULE, Bytes.idx0(11), Bytes.idx1(11), Bytes.idx2(11),
+      ByteProto.ROOT_END, Bytes.idx0(27), Bytes.idx1(27), Bytes.idx2(27)
     );
   }
 
@@ -165,8 +164,8 @@ public class Compiler01Test {
       Bytes.unit(LengthUnit.REM),
 
       ByteProto.MARKED,
-      Bytes.len0(14),
-      Bytes.len1(14),
+      Bytes.len0(13),
+      Bytes.len1(13),
       Bytes.prop0(Property.MARGIN),
       Bytes.prop1(Property.MARGIN),
       ByteProto.LENGTH_INT,
@@ -174,8 +173,7 @@ public class Compiler01Test {
       ByteProto.LENGTH_DOUBLE,
       Bytes.idx0(6), Bytes.idx1(6), Bytes.idx2(6),
       ByteProto.DECLARATION_END,
-      Bytes.len1(29),
-      Bytes.len0(29),
+      Bytes.int0(29),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
@@ -187,15 +185,15 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
       Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
       ByteProto.STYLE_RULE_END,
-      Bytes.len1(43),
-      Bytes.len0(43),
+      Bytes.len1(42),
+      Bytes.len0(42),
       Bytes.len1(12),
       Bytes.len0(12),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(33), Bytes.idx1(33), Bytes.idx2(33),
-      ByteProto.ROOT_END, Bytes.idx0(49), Bytes.idx1(49), Bytes.idx2(49)
+      ByteProto.STYLE_RULE, Bytes.idx0(32), Bytes.idx1(32), Bytes.idx2(32),
+      ByteProto.ROOT_END, Bytes.idx0(48), Bytes.idx1(48), Bytes.idx2(48)
     );
   }
 
@@ -230,8 +228,8 @@ public class Compiler01Test {
       compiler,
 
       ByteProto.MARKED,
-      Bytes.len0(15),
-      Bytes.len1(15),
+      Bytes.len0(14),
+      Bytes.len1(14),
       Bytes.prop0(Property.LINE_HEIGHT),
       Bytes.prop1(Property.LINE_HEIGHT),
       ByteProto.JAVA_DOUBLE,
@@ -244,8 +242,7 @@ public class Compiler01Test {
       Bytes.long6(dbl),
       Bytes.long7(dbl),
       ByteProto.DECLARATION_END,
-      Bytes.len1(14),
-      Bytes.len0(14),
+      Bytes.int0(14),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
@@ -257,15 +254,15 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
       Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
       ByteProto.STYLE_RULE_END,
-      Bytes.len1(28),
-      Bytes.len0(28),
+      Bytes.len1(27),
+      Bytes.len0(27),
       Bytes.len1(12),
       Bytes.len0(12),
       ByteProto.STYLE_RULE,
 
       ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(18), Bytes.idx1(18), Bytes.idx2(18),
-      ByteProto.ROOT_END, Bytes.idx0(34), Bytes.idx1(34), Bytes.idx2(34)
+      ByteProto.STYLE_RULE, Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
+      ByteProto.ROOT_END, Bytes.idx0(33), Bytes.idx1(33), Bytes.idx2(33)
     );
   }
 

@@ -34,4 +34,34 @@ public class BytesTest {
     }
   }
 
+  @Test
+  public void varInt() {
+    // max 1 byte
+    assertEquals(Bytes.VARINT_MAX1, 127);
+
+    // max 2 bytes
+    assertEquals(Bytes.VARINT_MAX2, 32767);
+
+    byte[] buf;
+    buf = new byte[2];
+
+    assertEquals(Bytes.encodeLengthR(buf, 0, 1), 1);
+    assertEquals(buf[0], 0x01);
+    assertEquals(buf[1], 0x00);
+
+    assertEquals(Bytes.encodeLengthR(buf, 0, 127), 1);
+    assertEquals(buf[0], 0x7F);
+    assertEquals(buf[1], 0x00);
+
+    assertEquals(Bytes.encodeLengthR(buf, 0, 128), 2);
+    assertEquals(buf[0], 0x01);
+    assertEquals(buf[1] & 0xFF, 0x80);
+
+    assertEquals(Bytes.decodeLength(buf[1], buf[0]), 128);
+
+    assertEquals(Bytes.var0(128) & 0xFF, 0x80);
+    assertEquals(Bytes.var1(128) & 0xFF, 0x01);
+
+  }
+
 }

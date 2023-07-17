@@ -203,18 +203,20 @@ class Compiler01 extends CssTemplateApi {
       }
     }
 
+    // ensure main can hold 4 more elements
+    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+
+    // mark the end
+    main[mainIndex++] = ByteProto.DECLARATION_END;
+
+    // store the distance to the contents (yes, reversed)
     int length;
-    length = mainIndex - mainContents;
+    length = mainIndex - mainContents - 1;
 
-    mainAdd(
-      ByteProto.DECLARATION_END,
+    mainIndex = Bytes.encodeLengthR(main, mainIndex, length);
 
-      // length: yes, backwards
-      Bytes.len1(length),
-      Bytes.len0(length),
-
-      ByteProto.DECLARATION
-    );
+    // trailer proto
+    main[mainIndex++] = ByteProto.DECLARATION;
 
     // set the end index of the declaration
     length = mainIndex - mainStart;
@@ -478,12 +480,14 @@ class Compiler01 extends CssTemplateApi {
           len0 = main[mainContents--];
 
           int length;
-          length = Bytes.toInt(len0, 0);
+          length = len0;
 
-          byte len1;
-          len1 = main[mainContents--];
+          if (length < 0) {
+            byte len1;
+            len1 = main[mainContents--];
 
-          length |= Bytes.toInt(len1, 8);
+            length = Bytes.decodeLength(len0, len1);
+          }
 
           mainContents -= length;
         }
