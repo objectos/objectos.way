@@ -43,28 +43,56 @@ final class Compiler02 extends Compiler01 {
     // holds the indentation level
     mainStart = 0;
 
-    int mainLength;
-    mainLength = mainIndex;
-
+    // we will iterate over the main list looking for unmarked elements
     int index;
-    index = mainIndex(mainLength - 3);
+    index = 0;
 
-    loop: while (index < mainLength) {
-      byte proto = main[index++];
+    int indexMax;
+    indexMax = mainIndex;
+
+    while (index < indexMax) {
+      byte proto;
+      proto = main[index++];
 
       switch (proto) {
-        case ByteProto.ROOT -> {}
+        case ByteProto.MARKED -> {
+          byte len0;
+          len0 = main[index++];
 
-        case ByteProto.ROOT_END -> {
-          break loop;
+          byte len1;
+          len1 = main[index++];
+
+          int length;
+          length = Bytes.decodeFixedLength(len0, len1);
+
+          index += length;
         }
 
+        case ByteProto.MARKED4 -> index += 4 - 1;
+
+        case ByteProto.MARKED5 -> index += 5 - 1;
+
+        case ByteProto.MARKED6 -> index += 6 - 1;
+
+        case ByteProto.MARKED7 -> index += 7 - 1;
+
+        case ByteProto.MARKED9 -> index += 9 - 1;
+
+        case ByteProto.MARKED10 -> index += 10 - 1;
+
         case ByteProto.STYLE_RULE -> {
-          int thisIndex = mainIndex(index);
+          byte len0;
+          len0 = main[index++];
 
-          index += 3;
+          byte len1;
+          len1 = main[index++];
 
-          styleRule(thisIndex);
+          styleRule(index);
+
+          int length;
+          length = Bytes.decodeFixedLength(len0, len1);
+
+          index += length;
         }
 
         default -> throw new UnsupportedOperationException(
@@ -371,6 +399,19 @@ final class Compiler02 extends Compiler01 {
 
     selectorCount++;
     return selectorCount;
+  }
+
+  private int mainIndex(int offset) {
+    int idx0;
+    idx0 = Bytes.toInt(main[offset + 0], 0);
+
+    int idx1;
+    idx1 = Bytes.toInt(main[offset + 1], 8);
+
+    int idx2;
+    idx2 = Bytes.toInt(main[offset + 2], 16);
+
+    return idx2 | idx1 | idx0;
   }
 
 }

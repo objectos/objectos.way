@@ -31,6 +31,10 @@ final class Bytes {
 
   private Bytes() {}
 
+  public static int decodeFixedLength(byte len0, byte len1) {
+    return (len1 << 8) | len0;
+  }
+
   public static int decodeIndex2(byte b0, byte b1) {
     int index0;
     index0 = toInt(b0, 0);
@@ -41,7 +45,7 @@ final class Bytes {
     return index1 | index0;
   }
 
-  public static int decodeLength(byte len0, byte len1) {
+  public static int decodeVariableLength(byte len0, byte len1) {
     int length;
     length = len0 & 0x7F;
 
@@ -67,7 +71,7 @@ final class Bytes {
     return Double.longBitsToDouble(bits);
   }
 
-  public static int encodeLengthR(byte[] buf, int off, int length) {
+  public static int encodeVariableLengthR(byte[] buf, int off, int length) {
     if (length < 0) {
       throw new IllegalArgumentException("Length has to be >= 0");
     }

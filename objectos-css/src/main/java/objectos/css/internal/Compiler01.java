@@ -54,81 +54,6 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void compilationEnd() {
-    // we will iterate over the unmarked elements in the main list
-    int index;
-    index = mainIndex;
-
-    // @ last ByteProto
-    index--;
-
-    while (index > 0) {
-      byte proto;
-      proto = main[index--];
-
-      switch (proto) {
-        case ByteProto.STYLE_RULE -> {
-          // decode the distance to the start
-          byte len0;
-          len0 = main[index--];
-
-          int length;
-          length = len0;
-
-          if (length < 0) {
-            byte len1;
-            len1 = main[index--];
-
-            length = Bytes.decodeLength(len0, len1);
-          }
-
-          int indexStart;
-          indexStart = index - length;
-
-          // store indices so they can be retrieved by iterating over aux list from end to start
-          auxAdd(
-            Bytes.idx2(indexStart),
-            Bytes.idx1(indexStart),
-            Bytes.idx0(indexStart),
-
-            proto
-          );
-
-          // decode the distance to the contents
-          len0 = main[index--];
-
-          length = len0;
-
-          if (length < 0) {
-            byte len1;
-            len1 = main[index--];
-
-            length = Bytes.decodeLength(len0, len1);
-          }
-
-          // new root @ this elements' contents index
-          index -= length;
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-
-    int rootStart = mainIndex;
-
-    mainAdd(ByteProto.ROOT);
-
-    while (auxIndex > 0) {
-      mainAdd(aux[--auxIndex]);
-    }
-
-    mainAdd(
-      ByteProto.ROOT_END,
-      Bytes.idx0(rootStart),
-      Bytes.idx1(rootStart),
-      Bytes.idx2(rootStart)
-    );
   }
 
   @Override
@@ -218,7 +143,7 @@ class Compiler01 extends CssTemplateApi {
     int length;
     length = mainIndex - mainContents - 1;
 
-    mainIndex = Bytes.encodeLengthR(main, mainIndex, length);
+    mainIndex = Bytes.encodeVariableLengthR(main, mainIndex, length);
 
     // trailer proto
     main[mainIndex++] = ByteProto.DECLARATION;
@@ -407,7 +332,7 @@ class Compiler01 extends CssTemplateApi {
       Bytes.two0(nameIndex),
       Bytes.two1(nameIndex),
 
-      ByteProto.INTERNAL3
+      ByteProto.INTERNAL4
     );
   }
 
@@ -436,7 +361,7 @@ class Compiler01 extends CssTemplateApi {
       Bytes.two0(valueIndex),
       Bytes.two1(valueIndex),
 
-      ByteProto.INTERNAL6
+      ByteProto.INTERNAL7
     );
   }
 
@@ -491,15 +416,15 @@ class Compiler01 extends CssTemplateApi {
             byte len1;
             len1 = main[mainContents--];
 
-            length = Bytes.decodeLength(len0, len1);
+            length = Bytes.decodeVariableLength(len0, len1);
           }
 
           mainContents -= length;
         }
 
-        case ByteProto.INTERNAL3 -> mainContents -= 2;
+        case ByteProto.INTERNAL4 -> mainContents -= 4 - 2;
 
-        case ByteProto.INTERNAL6 -> mainContents -= 5;
+        case ByteProto.INTERNAL7 -> mainContents -= 7 - 2;
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
@@ -529,7 +454,8 @@ class Compiler01 extends CssTemplateApi {
     contents = mainContents;
 
     loop: while (index < indexMax) {
-      int marker = aux[index++];
+      int marker;
+      marker = aux[index++];
 
       switch (marker) {
         case MARK_INTERNAL -> {
@@ -574,7 +500,7 @@ class Compiler01 extends CssTemplateApi {
               case ByteProto.MARKED10 -> contents += 10;
 
               case ByteProto.SELECTOR_ATTR -> {
-                main[contents++] = ByteProto.MARKED3;
+                main[contents++] = ByteProto.MARKED4;
 
                 mainAdd(
                   proto,
@@ -593,7 +519,7 @@ class Compiler01 extends CssTemplateApi {
               }
 
               case ByteProto.SELECTOR_ATTR_VALUE -> {
-                main[contents] = ByteProto.MARKED6;
+                main[contents] = ByteProto.MARKED7;
 
                 mainAdd(
                   proto,
@@ -637,12 +563,12 @@ class Compiler01 extends CssTemplateApi {
     int length;
     length = mainIndex - mainContents - 1;
 
-    mainIndex = Bytes.encodeLengthR(main, mainIndex, length);
+    mainIndex = Bytes.encodeVariableLengthR(main, mainIndex, length);
 
     // store the distance to the start (yes, reversed)
     length = mainIndex - mainStart - 1;
 
-    mainIndex = Bytes.encodeLengthR(main, mainIndex, length);
+    mainIndex = Bytes.encodeVariableLengthR(main, mainIndex, length);
 
     // trailer proto
     main[mainIndex++] = ByteProto.STYLE_RULE;
@@ -705,19 +631,6 @@ class Compiler01 extends CssTemplateApi {
     aux[auxIndex++] = b3;
     aux[auxIndex++] = b4;
     aux[auxIndex++] = b5;
-  }
-
-  final int mainIndex(int offset) {
-    int idx0;
-    idx0 = Bytes.toInt(main[offset + 0], 0);
-
-    int idx1;
-    idx1 = Bytes.toInt(main[offset + 1], 8);
-
-    int idx2;
-    idx2 = Bytes.toInt(main[offset + 2], 16);
-
-    return idx2 | idx1 | idx0;
   }
 
   private void mainAdd(byte b0) {

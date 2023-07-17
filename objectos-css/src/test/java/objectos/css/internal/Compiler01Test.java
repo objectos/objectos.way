@@ -47,10 +47,7 @@ public class Compiler01Test {
       ByteProto.STYLE_RULE_END,
       Bytes.int0(6),
       Bytes.int0(7),
-      ByteProto.STYLE_RULE,
-      ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
-      ByteProto.ROOT_END, Bytes.idx0(10), Bytes.idx1(10), Bytes.idx2(10)
+      ByteProto.STYLE_RULE
     );
   }
 
@@ -102,11 +99,7 @@ public class Compiler01Test {
       ByteProto.STYLE_RULE_END,
       Bytes.int0(21),
       Bytes.int0(11),
-      ByteProto.STYLE_RULE,
-
-      ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(11), Bytes.idx1(11), Bytes.idx2(11),
-      ByteProto.ROOT_END, Bytes.idx0(25), Bytes.idx1(25), Bytes.idx2(25)
+      ByteProto.STYLE_RULE
     );
   }
 
@@ -183,11 +176,7 @@ public class Compiler01Test {
       ByteProto.STYLE_RULE_END,
       Bytes.int0(42),
       Bytes.int0(11),
-      ByteProto.STYLE_RULE,
-
-      ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(32), Bytes.idx1(32), Bytes.idx2(32),
-      ByteProto.ROOT_END, Bytes.idx0(46), Bytes.idx1(46), Bytes.idx2(46)
+      ByteProto.STYLE_RULE
     );
   }
 
@@ -250,11 +239,7 @@ public class Compiler01Test {
       ByteProto.STYLE_RULE_END,
       Bytes.int0(27),
       Bytes.int0(11),
-      ByteProto.STYLE_RULE,
-
-      ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(17), Bytes.idx1(17), Bytes.idx2(17),
-      ByteProto.ROOT_END, Bytes.idx0(31), Bytes.idx1(31), Bytes.idx2(31)
+      ByteProto.STYLE_RULE
     );
   }
 
@@ -280,10 +265,10 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED3,
+      ByteProto.MARKED4,
       Bytes.two0(0),
       Bytes.two1(0),
-      ByteProto.INTERNAL3,
+      ByteProto.INTERNAL4,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -294,11 +279,7 @@ public class Compiler01Test {
       ByteProto.STYLE_RULE_END,
       Bytes.int0(10),
       Bytes.int0(7),
-      ByteProto.STYLE_RULE,
-
-      ByteProto.ROOT,
-      ByteProto.STYLE_RULE, Bytes.idx0(4), Bytes.idx1(4), Bytes.idx2(4),
-      ByteProto.ROOT_END, Bytes.idx0(14), Bytes.idx1(14), Bytes.idx2(14)
+      ByteProto.STYLE_RULE
     );
   }
 
