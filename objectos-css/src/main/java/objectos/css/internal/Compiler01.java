@@ -143,7 +143,7 @@ class Compiler01 extends CssTemplateApi {
     int length;
     length = mainIndex - mainContents - 1;
 
-    mainIndex = Bytes.encodeVariableLengthR(main, mainIndex, length);
+    mainIndex = Bytes.encodeVarLengthR(main, mainIndex, length);
 
     // trailer proto
     main[mainIndex++] = ByteProto.DECLARATION;
@@ -465,28 +465,36 @@ class Compiler01 extends CssTemplateApi {
 
             switch (proto) {
               case ByteProto.DECLARATION -> {
-                mainAdd(
-                  proto,
+                // keep the start index handy
+                int startIndex;
+                startIndex = contents;
 
-                  Bytes.idx0(contents),
-                  Bytes.idx1(contents),
-                  Bytes.idx2(contents)
-                );
-
+                // mark this declaration
                 main[contents++] = ByteProto.MARKED;
 
+                // decode the length
                 byte len0;
                 len0 = main[contents++];
-
-                int length;
-                length = Bytes.toInt(len0, 0);
 
                 byte len1;
                 len1 = main[contents++];
 
-                length |= Bytes.toInt(len1, 8);
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
 
+                // point to next element
                 contents += length;
+
+                // ensure main can hold least 3 elements
+                // 0   - ByteProto
+                // 1-2 - variable length
+                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+                main[mainIndex++] = proto;
+
+                length = mainIndex - startIndex;
+
+                mainIndex = Bytes.encodeVarLength(main, mainIndex, length);
 
                 continue loop;
               }
@@ -566,7 +574,7 @@ class Compiler01 extends CssTemplateApi {
     int length;
     length = mainIndex - mainContents - 1;
 
-    mainIndex = Bytes.encodeVariableLengthR(main, mainIndex, length);
+    mainIndex = Bytes.encodeVarLengthR(main, mainIndex, length);
 
     // trailer proto
     main[mainIndex++] = ByteProto.STYLE_RULE;

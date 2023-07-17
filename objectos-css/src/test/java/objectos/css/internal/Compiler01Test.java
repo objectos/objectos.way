@@ -88,15 +88,15 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(10),
-      Bytes.len1(10),
+      Bytes.len0(8),
+      Bytes.len1(8),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.any),
       Bytes.name1(StandardName.any),
       ByteProto.DECLARATION,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.int0(18),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(21),
+      Bytes.int0(19),
       ByteProto.STYLE_RULE
     );
   }
@@ -164,15 +164,15 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(10),
-      Bytes.len1(10),
+      Bytes.len0(8),
+      Bytes.len1(8),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.ul),
       Bytes.name1(StandardName.ul),
       ByteProto.DECLARATION,
-      Bytes.idx0(16), Bytes.idx1(16), Bytes.idx2(16),
+      Bytes.int0(23),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(42),
+      Bytes.int0(40),
       ByteProto.STYLE_RULE
     );
   }
@@ -226,15 +226,15 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(10),
-      Bytes.len1(10),
+      Bytes.len0(8),
+      Bytes.len1(8),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.p),
       Bytes.name1(StandardName.p),
       ByteProto.DECLARATION,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.int0(24),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(27),
+      Bytes.int0(25),
       ByteProto.STYLE_RULE
     );
   }

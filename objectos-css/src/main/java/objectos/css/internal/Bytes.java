@@ -71,7 +71,31 @@ final class Bytes {
     return Double.longBitsToDouble(bits);
   }
 
-  public static int encodeVariableLengthR(byte[] buf, int off, int length) {
+  public static int encodeVarLength(byte[] buf, int off, int length) {
+    if (length < 0) {
+      throw new IllegalArgumentException("Length has to be >= 0");
+    }
+
+    if (length <= VARINT_MAX1) {
+      buf[off++] = (byte) length;
+
+      return off;
+    }
+
+    if (length <= VARINT_MAX2) {
+      buf[off++] = var0(length);
+
+      buf[off++] = var1(length);
+
+      return off;
+    }
+
+    throw new IllegalArgumentException(
+      "CssTemplate is too large"
+    );
+  }
+
+  public static int encodeVarLengthR(byte[] buf, int off, int length) {
     if (length < 0) {
       throw new IllegalArgumentException("Length has to be >= 0");
     }

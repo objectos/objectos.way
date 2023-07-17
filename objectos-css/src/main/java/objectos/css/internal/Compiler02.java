@@ -44,71 +44,66 @@ final class Compiler02 extends Compiler01 {
     mainStart = 0;
 
     // we will iterate over the main list looking for unmarked elements
-    int index;
-    index = 0;
-
     int indexMax;
     indexMax = mainIndex;
 
-    while (index < indexMax) {
+    mainIndex = 0;
+
+    while (mainIndex < indexMax) {
       byte proto;
-      proto = main[index++];
+      proto = nextProto();
 
-      switch (proto) {
-        case ByteProto.MARKED -> {
-          byte len0;
-          len0 = main[index++];
+      int length;
+      length = switch (proto) {
+        case ByteProto.MARKED -> Bytes.decodeFixedLength(nextProto(), nextProto());
 
-          byte len1;
-          len1 = main[index++];
+        case ByteProto.MARKED4 -> 4 - 1;
 
-          int length;
-          length = Bytes.decodeFixedLength(len0, len1);
+        case ByteProto.MARKED5 -> 5 - 1;
 
-          index += length;
-        }
+        case ByteProto.MARKED6 -> 6 - 1;
 
-        case ByteProto.MARKED4 -> index += 4 - 1;
+        case ByteProto.MARKED7 -> 7 - 1;
 
-        case ByteProto.MARKED5 -> index += 5 - 1;
+        case ByteProto.MARKED9 -> 9 - 1;
 
-        case ByteProto.MARKED6 -> index += 6 - 1;
-
-        case ByteProto.MARKED7 -> index += 7 - 1;
-
-        case ByteProto.MARKED9 -> index += 9 - 1;
-
-        case ByteProto.MARKED10 -> index += 10 - 1;
+        case ByteProto.MARKED10 -> 10 - 1;
 
         case ByteProto.STYLE_RULE -> {
-          byte len0;
-          len0 = main[index++];
+          int thisLength;
+          thisLength = Bytes.decodeFixedLength(nextProto(), nextProto());
 
-          byte len1;
-          len1 = main[index++];
+          styleRule();
 
-          styleRule(index);
-
-          int length;
-          length = Bytes.decodeFixedLength(len0, len1);
-
-          index += length;
+          yield thisLength;
         }
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );
-      }
+      };
+
+      mainIndex += length;
     }
+  }
+
+  private byte nextProto() {
+    return main[mainIndex++];
   }
 
   private void declaration(int index) {
     int valueCount = 0;
 
     loop: while (index < main.length) {
-      byte proto = main[index++];
+      byte proto;
+      proto = main[index++];
 
       switch (proto) {
+        case ByteProto.DECLARATION -> {
+          // skip distance to end
+          index += 2;
+        }
+
         case ByteProto.DECLARATION_END -> {
           auxAdd(ByteCode.SEMICOLON);
 
@@ -287,13 +282,13 @@ final class Compiler02 extends Compiler01 {
     return valueCount;
   }
 
-  private void styleRule(int index) {
+  private void styleRule() {
     int declarationCount = 0,
         selectorCount = 0;
 
-    loop: while (index < main.length) {
+    loop: while (mainIndex < main.length) {
       byte proto;
-      proto = main[index++];
+      proto = nextProto();
 
       switch (proto) {
         case ByteProto.DECLARATION -> {
@@ -307,9 +302,24 @@ final class Compiler02 extends Compiler01 {
 
           indentationWrite();
 
-          int elemIndex = mainIndex(index);
+          int index;
+          index = mainIndex;
 
-          index += 3;
+          byte len0;
+          len0 = nextProto();
+
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = nextProto();
+
+            length = Bytes.decodeVariableLength(len0, len1);
+          }
+
+          int elemIndex;
+          elemIndex = index - length;
 
           declaration(elemIndex);
         }
@@ -321,10 +331,10 @@ final class Compiler02 extends Compiler01 {
             ByteCode.SELECTOR_ATTR,
 
             // nameIndex0
-            main[index++],
+            nextProto(),
 
             // nameIndex1
-            main[index++]
+            nextProto()
           );
         }
 
@@ -332,9 +342,9 @@ final class Compiler02 extends Compiler01 {
           selectorCount = selectorComma(selectorCount);
 
           int elemIndex;
-          elemIndex = mainIndex(index);
+          elemIndex = mainIndex(mainIndex);
 
-          index += 3;
+          mainIndex += 3;
 
           // skip ByteProto.SELECTOR_ATTR_VALUE
           elemIndex++;
@@ -358,12 +368,7 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.STANDARD_NAME -> {
           selectorCount = selectorComma(selectorCount);
 
-          auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
-        }
-
-        case ByteProto.STYLE_RULE -> {
-          // skip distance to end
-          index += 2;
+          auxAdd(ByteCode.SELECTOR, nextProto(), nextProto());
         }
 
         case ByteProto.STYLE_RULE_END -> {
