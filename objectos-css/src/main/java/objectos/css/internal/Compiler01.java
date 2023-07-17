@@ -72,12 +72,14 @@ class Compiler01 extends CssTemplateApi {
           len0 = main[index--];
 
           int length;
-          length = Bytes.toInt(len0, 0);
+          length = len0;
 
-          byte len1;
-          len1 = main[index--];
+          if (length < 0) {
+            byte len1;
+            len1 = main[index--];
 
-          length |= Bytes.toInt(len1, 8);
+            length = Bytes.decodeLength(len0, len1);
+          }
 
           int indexStart;
           indexStart = index - length;
@@ -94,11 +96,14 @@ class Compiler01 extends CssTemplateApi {
           // decode the distance to the contents
           len0 = main[index--];
 
-          length = Bytes.toInt(len0, 0);
+          length = len0;
 
-          len1 = main[index--];
+          if (length < 0) {
+            byte len1;
+            len1 = main[index--];
 
-          length |= Bytes.toInt(len1, 8);
+            length = Bytes.decodeLength(len0, len1);
+          }
 
           // new root @ this elements' contents index
           index -= length;
@@ -632,16 +637,12 @@ class Compiler01 extends CssTemplateApi {
     int length;
     length = mainIndex - mainContents - 1;
 
-    main[mainIndex++] = Bytes.len1(length);
-
-    main[mainIndex++] = Bytes.len0(length);
+    mainIndex = Bytes.encodeLengthR(main, mainIndex, length);
 
     // store the distance to the start (yes, reversed)
     length = mainIndex - mainStart - 1;
 
-    main[mainIndex++] = Bytes.len1(length);
-
-    main[mainIndex++] = Bytes.len0(length);
+    mainIndex = Bytes.encodeLengthR(main, mainIndex, length);
 
     // trailer proto
     main[mainIndex++] = ByteProto.STYLE_RULE;
