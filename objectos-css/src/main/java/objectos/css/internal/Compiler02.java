@@ -27,14 +27,6 @@ final class Compiler02 extends Compiler01 {
     );
   }
 
-  private Object[] objects() {
-    if (objectArray == null) {
-      return ObjectArrays.empty();
-    }
-
-    return Arrays.copyOf(objectArray, objectIndex);
-  }
-
   @Override
   public final void optimize() {
     // we will use the aux list to store our byte code
@@ -88,10 +80,6 @@ final class Compiler02 extends Compiler01 {
 
       mainIndex += length;
     }
-  }
-
-  private byte nextProto() {
-    return main[mainIndex++];
   }
 
   private void declaration(int index) {
@@ -296,6 +284,22 @@ final class Compiler02 extends Compiler01 {
     }
   }
 
+  private int decodeLength(int index) {
+    byte len0;
+    len0 = main[index++];
+
+    auxStart = len0;
+
+    if (auxStart < 0) {
+      byte len1;
+      len1 = main[index++];
+
+      auxStart = Bytes.decodeVariableLength(len0, len1);
+    }
+
+    return index;
+  }
+
   private void indentationDec() {
     mainStart--;
   }
@@ -310,6 +314,32 @@ final class Compiler02 extends Compiler01 {
     }
 
     auxAdd(ByteCode.TAB, (byte) mainStart);
+  }
+
+  private byte nextProto() {
+    return main[mainIndex++];
+  }
+
+  private Object[] objects() {
+    if (objectArray == null) {
+      return ObjectArrays.empty();
+    }
+
+    return Arrays.copyOf(objectArray, objectIndex);
+  }
+
+  private int selectorComma(int selectorCount) {
+    if (selectorCount == 0) {
+      indentationWrite();
+    }
+
+    else {
+      auxAdd(ByteCode.COMMA);
+    }
+
+    selectorCount++;
+
+    return selectorCount;
   }
 
   private void semicolonOptional() {
@@ -336,6 +366,7 @@ final class Compiler02 extends Compiler01 {
     }
 
     valueCount++;
+
     return valueCount;
   }
 
@@ -451,35 +482,6 @@ final class Compiler02 extends Compiler01 {
       indentationWrite();
       auxAdd(ByteCode.BLOCK_END);
     }
-  }
-
-  private int selectorComma(int selectorCount) {
-    if (selectorCount == 0) {
-      indentationWrite();
-    }
-
-    else {
-      auxAdd(ByteCode.COMMA);
-    }
-
-    selectorCount++;
-    return selectorCount;
-  }
-
-  private int decodeLength(int index) {
-    byte len0;
-    len0 = main[index++];
-
-    auxStart = len0;
-
-    if (auxStart < 0) {
-      byte len1;
-      len1 = main[index++];
-
-      auxStart = Bytes.decodeVariableLength(len0, len1);
-    }
-
-    return index;
   }
 
 }
