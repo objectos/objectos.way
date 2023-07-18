@@ -540,17 +540,27 @@ class Compiler01 extends CssTemplateApi {
               }
 
               case ByteProto.SELECTOR_ATTR_VALUE -> {
+                // keep the start index handy
+                int startIndex;
+                startIndex = contents;
+
+                // mark this element
                 main[contents] = ByteProto.MARKED7;
 
-                mainAdd(
-                  proto,
-
-                  Bytes.idx0(contents),
-                  Bytes.idx1(contents),
-                  Bytes.idx2(contents)
-                );
-
+                // point to next
                 contents += 7;
+
+                // ensure main can hold least 3 elements
+                // 0   - ByteProto
+                // 1-2 - variable length
+                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+                main[mainIndex++] = proto;
+
+                int length;
+                length = mainIndex - startIndex;
+
+                mainIndex = Bytes.encodeVarLength(main, mainIndex, length);
 
                 continue loop;
               }

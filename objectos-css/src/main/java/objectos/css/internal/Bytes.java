@@ -23,8 +23,6 @@ final class Bytes {
 
   private static final int MAX2_INDEX = 1 << 16 - 1;
 
-  private static final int MAX3_INDEX = 1 << 24 - 1;
-
   public static final int VARINT_MAX1 = 0x7F;
 
   public static final int VARINT_MAX2 = 0x7F00 | 0x00FF;
@@ -117,23 +115,6 @@ final class Bytes {
     throw new IllegalArgumentException(
       "CssTemplate is too large"
     );
-  }
-
-  // we use 3 bytes for internal indices
-  public static byte idx0(int value) {
-    Check.argument(value <= MAX3_INDEX, "CssTemplate is too large.");
-
-    return (byte) value;
-  }
-
-  // we use 3 bytes for internal indices
-  public static byte idx1(int value) {
-    return (byte) (value >>> 8);
-  }
-
-  // we use 3 bytes for internal indices
-  public static byte idx2(int value) {
-    return (byte) (value >>> 16);
   }
 
   public static byte int0(int value) {

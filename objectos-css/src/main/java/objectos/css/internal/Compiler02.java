@@ -398,10 +398,13 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.SELECTOR_ATTR_VALUE -> {
           selectorCount = selectorComma(selectorCount);
 
-          int elemIndex;
-          elemIndex = mainIndex(mainIndex);
+          int baseIndex;
+          baseIndex = mainIndex;
 
-          mainIndex += 3;
+          mainIndex = decodeLength(mainIndex);
+
+          int elemIndex;
+          elemIndex = baseIndex - auxStart;
 
           // skip ByteProto.SELECTOR_ATTR_VALUE
           elemIndex++;
@@ -461,19 +464,6 @@ final class Compiler02 extends Compiler01 {
 
     selectorCount++;
     return selectorCount;
-  }
-
-  private int mainIndex(int offset) {
-    int idx0;
-    idx0 = Bytes.toInt(main[offset + 0], 0);
-
-    int idx1;
-    idx1 = Bytes.toInt(main[offset + 1], 8);
-
-    int idx2;
-    idx2 = Bytes.toInt(main[offset + 2], 16);
-
-    return idx2 | idx1 | idx0;
   }
 
   private int decodeLength(int index) {
