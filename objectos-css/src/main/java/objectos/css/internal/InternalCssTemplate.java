@@ -24,6 +24,7 @@ import objectos.css.om.StyleRule;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
+import objectos.css.tmpl.SelectorElement;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.css.tmpl.Zero;
 import objectos.lang.Check;
@@ -103,6 +104,21 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api().percentage(value);
 
     return InternalInstruction.PERCENTAGE_INT;
+  }
+
+  protected final Selector sel(SelectorElement e1, SelectorElement e2) {
+    Check.notNull(e1, "e1 == null");
+    Check.notNull(e2, "e2 == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.selectorBegin();
+    api.selectorElement(e1);
+    api.selectorElement(e2);
+    api.selectorEnd();
+
+    return InternalInstruction.SELECTOR;
   }
 
   protected final StyleRule style(StyleRuleElement... elements) {

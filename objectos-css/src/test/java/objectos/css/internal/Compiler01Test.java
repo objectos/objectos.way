@@ -30,7 +30,7 @@ public class Compiler01Test {
     compiler.compilationBegin();
 
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(StandardName.html);
+    compiler.styleRuleElement(StandardTypeSelector.html);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -39,13 +39,12 @@ public class Compiler01Test {
       compiler,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(6),
-      Bytes.len1(6),
-      ByteProto.STANDARD_NAME,
-      Bytes.name0(StandardName.html),
-      Bytes.name1(StandardName.html),
+      Bytes.len0(5),
+      Bytes.len1(5),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.html.ordinal(),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(6),
+      Bytes.int0(5),
       ByteProto.STYLE_RULE
     );
   }
@@ -121,7 +120,7 @@ public class Compiler01Test {
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(StandardName.ul);
+    compiler.styleRuleElement(StandardTypeSelector.ul);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
@@ -164,15 +163,14 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(8),
-      Bytes.len1(8),
-      ByteProto.STANDARD_NAME,
-      Bytes.name0(StandardName.ul),
-      Bytes.name1(StandardName.ul),
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.ul.ordinal(),
       ByteProto.DECLARATION,
-      Bytes.int0(19),
+      Bytes.int0(18),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(36),
+      Bytes.int0(35),
       ByteProto.STYLE_RULE
     );
   }
@@ -195,7 +193,7 @@ public class Compiler01Test {
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(StandardName.p);
+    compiler.styleRuleElement(StandardTypeSelector.p);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
@@ -226,21 +224,20 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
-      Bytes.len0(8),
-      Bytes.len1(8),
-      ByteProto.STANDARD_NAME,
-      Bytes.name0(StandardName.p),
-      Bytes.name1(StandardName.p),
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
-      Bytes.int0(24),
+      Bytes.int0(23),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(25),
+      Bytes.int0(24),
       ByteProto.STYLE_RULE
     );
   }
 
   @Test(description = """
-  TC 05: double value
+  TC 06: selector attribute
 
   [hidden] {}
   """)

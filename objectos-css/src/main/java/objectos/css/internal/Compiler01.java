@@ -17,15 +17,12 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.om.PropertyValue;
+import objectos.css.tmpl.SelectorElement;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
 class Compiler01 extends CssTemplateApi {
-
-  private static final byte MARK_INTERNAL = -1;
-  private static final byte MARK_VALUE1 = -2;
-  private static final byte MARK_VALUE3 = -4;
 
   byte[] aux;
 
@@ -96,7 +93,7 @@ class Compiler01 extends CssTemplateApi {
       mark = aux[index++];
 
       switch (mark) {
-        case MARK_INTERNAL -> {
+        case ByteProto.INTERNAL -> {
           // keep startIndex handy
           int startIndex;
           startIndex = contents;
@@ -129,15 +126,15 @@ class Compiler01 extends CssTemplateApi {
           // variable length
           length = mainIndex - startIndex;
 
-          mainIndex = Bytes.encodeVarLength(main, mainIndex, length);
+          mainIndex = Bytes.varInt(main, mainIndex, length);
         }
 
-        case MARK_VALUE1 -> {
-          mainAdd(aux[index++]);
+        case ByteProto.STANDARD_NAME -> {
+          mainAdd(mark, aux[index++], aux[index++]);
         }
 
-        case MARK_VALUE3 -> {
-          mainAdd(aux[index++], aux[index++], aux[index++]);
+        case ByteProto.ZERO -> {
+          mainAdd(mark);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -156,7 +153,7 @@ class Compiler01 extends CssTemplateApi {
     int length;
     length = mainIndex - mainContents - 1;
 
-    mainIndex = Bytes.encodeVarLengthR(main, mainIndex, length);
+    mainIndex = Bytes.varIntR(main, mainIndex, length);
 
     // trailer proto
     main[mainIndex++] = ByteProto.DECLARATION;
@@ -295,7 +292,6 @@ class Compiler01 extends CssTemplateApi {
       // value is a keyword like color: currentcolor; or display: block;
       // store the enum ordinal
       auxAdd(
-        MARK_VALUE3,
         ByteProto.STANDARD_NAME,
         Bytes.name0(name),
         Bytes.name1(name)
@@ -320,11 +316,11 @@ class Compiler01 extends CssTemplateApi {
         );
       }
 
-      auxAdd(MARK_INTERNAL, (byte) length);
+      auxAdd(ByteProto.INTERNAL, (byte) length);
     }
 
     else if (value instanceof InternalZero) {
-      auxAdd(MARK_VALUE1, ByteProto.ZERO);
+      auxAdd(ByteProto.ZERO);
     }
 
     else {
@@ -379,6 +375,21 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void selectorBegin() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void selectorElement(SelectorElement element) {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
+  public final void selectorEnd() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  @Override
   public final void styleRuleBegin() {
     // we mark the start of our aux list
     auxStart = auxIndex;
@@ -403,11 +414,15 @@ class Compiler01 extends CssTemplateApi {
       // element is a selector name
       // store the enum ordinal
       auxAdd(
-        MARK_VALUE3,
         ByteProto.STANDARD_NAME,
         Bytes.name0(name),
         Bytes.name1(name)
       );
+    }
+
+    else if (element instanceof StandardTypeSelector selector) {
+      auxAdd(ByteProto.SELECTOR_TYPE);
+      auxVarInt(selector.ordinal());
     }
 
     else if (element == InternalInstruction.INSTANCE) {
@@ -429,7 +444,7 @@ class Compiler01 extends CssTemplateApi {
             byte len1;
             len1 = main[mainContents--];
 
-            length = Bytes.decodeVariableLength(len0, len1);
+            length = Bytes.toVarInt(len0, len1);
           }
 
           mainContents -= length;
@@ -444,7 +459,7 @@ class Compiler01 extends CssTemplateApi {
         );
       }
 
-      auxAdd(MARK_INTERNAL);
+      auxAdd(ByteProto.INTERNAL);
     }
 
     else {
@@ -467,11 +482,11 @@ class Compiler01 extends CssTemplateApi {
     contents = mainContents;
 
     loop: while (index < indexMax) {
-      int marker;
+      byte marker;
       marker = aux[index++];
 
       switch (marker) {
-        case MARK_INTERNAL -> {
+        case ByteProto.INTERNAL -> {
           while (true) {
             byte proto;
             proto = main[contents];
@@ -507,7 +522,7 @@ class Compiler01 extends CssTemplateApi {
 
                 length = mainIndex - startIndex;
 
-                mainIndex = Bytes.encodeVarLength(main, mainIndex, length);
+                mainIndex = Bytes.varInt(main, mainIndex, length);
 
                 continue loop;
               }
@@ -560,7 +575,7 @@ class Compiler01 extends CssTemplateApi {
                 int length;
                 length = mainIndex - startIndex;
 
-                mainIndex = Bytes.encodeVarLength(main, mainIndex, length);
+                mainIndex = Bytes.varInt(main, mainIndex, length);
 
                 continue loop;
               }
@@ -574,8 +589,19 @@ class Compiler01 extends CssTemplateApi {
           }
         }
 
-        case MARK_VALUE3 -> {
-          mainAdd(aux[index++], aux[index++], aux[index++]);
+        case ByteProto.SELECTOR_TYPE -> {
+          byte b0;
+          b0 = aux[index++];
+
+          if (b0 >= 0) {
+            mainAdd(marker, b0);
+          } else {
+            mainAdd(marker, b0, aux[index++]);
+          }
+        }
+
+        case ByteProto.STANDARD_NAME -> {
+          mainAdd(marker, aux[index++], aux[index++]);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -597,7 +623,7 @@ class Compiler01 extends CssTemplateApi {
     int length;
     length = mainIndex - mainContents - 1;
 
-    mainIndex = Bytes.encodeVarLengthR(main, mainIndex, length);
+    mainIndex = Bytes.varIntR(main, mainIndex, length);
 
     // trailer proto
     main[mainIndex++] = ByteProto.STYLE_RULE;
@@ -691,9 +717,19 @@ class Compiler01 extends CssTemplateApi {
     aux[auxIndex++] = b9;
   }
 
+  private void auxVarInt(int value) {
+    auxIndex = Bytes.varInt(aux, auxIndex, value);
+  }
+
   private void mainAdd(byte b0) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 0);
     main[mainIndex++] = b0;
+  }
+
+  private void mainAdd(byte b0, byte b1) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 1);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2) {

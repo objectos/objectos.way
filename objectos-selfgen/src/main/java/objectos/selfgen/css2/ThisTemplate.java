@@ -86,6 +86,9 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STANDARD_NAME = ClassTypeName.of(CSS_INTERNAL, "StandardName");
 
+  static final ClassTypeName STANDARD_TYPE_SELECTOR
+      = ClassTypeName.of(CSS_INTERNAL, "StandardTypeSelector");
+
   static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
   static final ClassTypeName STRING_LITERAL = ClassTypeName.of(CSS_TMPL, "StringLiteral");
@@ -112,6 +115,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STYLE_DECLARATION_STRING
       = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationString");
+
+  static final ClassTypeName TYPE_SELECTOR = ClassTypeName.of(CSS_OM, "TypeSelector");
 
   static final ClassTypeName URL = ClassTypeName.of(CSS_TMPL, "Url");
 

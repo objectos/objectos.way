@@ -97,9 +97,23 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
     spec.selectors().stream()
         .filter(s -> !s.disabled)
         .sorted(SelectorName.ORDER_BY_FIELD_NAME)
-        .forEach(sel -> field(SELECTOR, sel.fieldName));
+        .forEach(this::selectorField);
 
     field(SELECTOR, "any");
+  }
+
+  private void selectorField(SelectorName selector) {
+    switch (selector.kind) {
+      case TYPE -> field(
+        PROTECTED, STATIC, FINAL, TYPE_SELECTOR, name(selector.fieldName),
+        STANDARD_TYPE_SELECTOR, n(selector.fieldName)
+      );
+
+      default -> field(
+        PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
+        STANDARD_NAME, n(selector.fieldName)
+      );
+    }
   }
 
   private void field(ClassTypeName type, String fieldName) {

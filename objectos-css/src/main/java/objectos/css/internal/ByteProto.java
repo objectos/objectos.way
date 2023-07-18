@@ -17,55 +17,50 @@ package objectos.css.internal;
 
 final class ByteProto {
 
+  //internal instructions
+
   public static final byte NULL = -1;
+  public static final byte MARKED = -2;
+  public static final byte MARKED4 = -3;
+  public static final byte MARKED5 = -4;
+  public static final byte MARKED6 = -5;
+  public static final byte MARKED7 = -6;
+  public static final byte MARKED9 = -7;
+  public static final byte MARKED10 = -8;
+  public static final byte INTERNAL = -9;
+  public static final byte INTERNAL4 = -10;
+  public static final byte INTERNAL7 = -11;
+  public static final byte INTERNAL9 = -12;
 
-  public static final byte DECLARATION = -2;
+  //rules
 
-  public static final byte DECLARATION_END = -3;
+  public static final byte STYLE_RULE = -13;
+  public static final byte STYLE_RULE_END = -14;
 
-  public static final byte JAVA_DOUBLE = -4;
+  //selectors
 
-  public static final byte JAVA_INT = -5;
+  public static final byte SELECTOR_ATTR = -15;
+  public static final byte SELECTOR_ATTR_VALUE = -16;
+  public static final byte SELECTOR_SEL = -17;
+  public static final byte SELECTOR_SEL_END = -18;
+  public static final byte SELECTOR_TYPE = -19;
 
-  public static final byte JAVA_STRING = -6;
+  //properties
 
-  public static final byte LENGTH_DOUBLE = -7;
+  public static final byte DECLARATION = -20;
+  public static final byte DECLARATION_END = -21;
 
-  public static final byte LENGTH_INT = -8;
+  //property values
 
-  public static final byte PERCENTAGE_DOUBLE = -9;
-
-  public static final byte PERCENTAGE_INT = -10;
-
-  public static final byte STANDARD_NAME = -11;
-
-  public static final byte ZERO = -12;
-
-  public static final byte SELECTOR_ATTR = -13;
-
-  public static final byte SELECTOR_ATTR_VALUE = -14;
-
-  public static final byte STYLE_RULE = -15;
-
-  public static final byte STYLE_RULE_END = -16;
-
-  public static final byte MARKED = -17;
-
-  public static final byte MARKED4 = -18;
-
-  public static final byte MARKED5 = -19;
-
-  public static final byte MARKED6 = -20;
-
-  public static final byte MARKED7 = -21;
-
-  public static final byte MARKED9 = -22;
-
-  public static final byte MARKED10 = -23;
-
-  public static final byte INTERNAL4 = -25;
-
-  public static final byte INTERNAL7 = -26;
+  public static final byte JAVA_DOUBLE = -22;
+  public static final byte JAVA_INT = -23;
+  public static final byte JAVA_STRING = -24;
+  public static final byte LENGTH_DOUBLE = -25;
+  public static final byte LENGTH_INT = -26;
+  public static final byte PERCENTAGE_DOUBLE = -27;
+  public static final byte PERCENTAGE_INT = -28;
+  public static final byte STANDARD_NAME = -29;
+  public static final byte ZERO = -30;
 
   private ByteProto() {}
 

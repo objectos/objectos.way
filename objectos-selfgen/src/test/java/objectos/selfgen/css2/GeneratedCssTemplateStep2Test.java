@@ -34,11 +34,12 @@ public class GeneratedCssTemplateStep2Test {
       protected void definition() {
         length("px", "em");
 
-        selectors(
-          // type selectors
+        typeSelectors(
           "a",
-          "pre",
+          "pre"
+        );
 
+        selectors(
           // pseudo elements
           "::after", "::before"
         );
@@ -78,6 +79,7 @@ public class GeneratedCssTemplateStep2Test {
       import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
+      import objectos.css.om.TypeSelector;
       import objectos.css.tmpl.ColorValue;
       import objectos.css.tmpl.GlobalKeyword;
       import objectos.css.tmpl.Length;
@@ -90,9 +92,9 @@ public class GeneratedCssTemplateStep2Test {
 
         protected static final Selector __before = StandardName.__before;
 
-        protected static final Selector a = StandardName.a;
+        protected static final TypeSelector a = StandardTypeSelector.a;
 
-        protected static final Selector pre = StandardName.pre;
+        protected static final TypeSelector pre = StandardTypeSelector.pre;
 
         protected static final Selector any = StandardName.any;
 

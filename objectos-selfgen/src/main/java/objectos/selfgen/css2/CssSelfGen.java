@@ -88,6 +88,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     spec.write(sink, new StandardNameStep());
 
+    spec.write(sink, new StandardTypeSelectorStep());
+
     spec.write(sink, new StringTypeStep());
 
     spec.write(sink, new UrlTypeStep());
@@ -116,10 +118,12 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     definition();
 
-    for (var selector : selectors.values()) {
-      var name = selector.selectorName;
+    for (SelectorName selector : selectors.values()) {
+      String name;
+      name = selector.selectorName;
 
-      var clash = keywords.get(name);
+      KeywordName clash;
+      clash = keywords.get(name);
 
       if (clash == null) {
         continue;
@@ -130,7 +134,7 @@ public abstract class CssSelfGen extends CompiledSpec {
       clash.addSuperType(ThisTemplate.SELECTOR);
     }
 
-    for (var keyword : keywords.values()) {
+    for (KeywordName keyword : keywords.values()) {
       keyword.compile();
     }
 
@@ -334,6 +338,27 @@ public abstract class CssSelfGen extends CompiledSpec {
   protected final void selectors(String... names) {
     for (var name : names) {
       selector(name);
+    }
+  }
+
+  protected final void typeSelectors(String... names) {
+    for (var name : names) {
+      if (selectors.containsKey(name)) {
+        throw new IllegalArgumentException(
+          "Selector name already registered: name=" + name
+        );
+      }
+
+      SelectorKind kind;
+      kind = SelectorKind.TYPE;
+
+      String fieldName;
+      fieldName = SelectorName.generateFieldName(name);
+
+      SelectorName selectorName;
+      selectorName = new SelectorName(kind, fieldName, name);
+
+      selectors.put(name, selectorName);
     }
   }
 

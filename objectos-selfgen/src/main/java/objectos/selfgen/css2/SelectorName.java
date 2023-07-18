@@ -16,12 +16,14 @@
 package objectos.selfgen.css2;
 
 import java.util.Comparator;
-import java.util.Objects;
+import objectos.lang.Check;
 import objectos.selfgen.util.JavaNames;
 
 final class SelectorName {
   static final Comparator<? super SelectorName> ORDER_BY_FIELD_NAME
       = (self, that) -> self.fieldName.compareTo(that.fieldName);
+
+  public final SelectorKind kind;
 
   public final String fieldName;
 
@@ -29,23 +31,30 @@ final class SelectorName {
 
   boolean disabled;
 
-  public SelectorName(String fieldName, String selectorName) {
+  public SelectorName(SelectorKind kind, String fieldName, String selectorName) {
+    this.kind = kind;
     this.fieldName = fieldName;
     this.selectorName = selectorName;
   }
 
-  public static SelectorName of(String name) {
-    Objects.requireNonNull(name, "name == null");
+  public static String generateFieldName(String name) {
+    Check.notNull(name, "name == null");
 
-    var fieldName = name.replaceFirst("^:-", "_");
+    String fieldName;
+    fieldName = name.replaceFirst("^:-", "_");
 
     fieldName = fieldName.replaceFirst("^::-", "__");
 
     fieldName = fieldName.replace(':', '_');
 
-    fieldName = JavaNames.toValidMethodName(fieldName);
+    return JavaNames.toValidMethodName(fieldName);
+  }
 
-    return new SelectorName(fieldName, name);
+  public static SelectorName of(String name) {
+    String fieldName;
+    fieldName = generateFieldName(name);
+
+    return new SelectorName(SelectorKind.OTHER, fieldName, name);
   }
 
   final void disable() {

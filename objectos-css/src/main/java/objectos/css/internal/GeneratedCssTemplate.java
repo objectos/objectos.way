@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
+import objectos.css.om.TypeSelector;
 import objectos.css.tmpl.AppearanceValue;
 import objectos.css.tmpl.AutoKeyword;
 import objectos.css.tmpl.BackgroundImageValue;
@@ -129,87 +130,87 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector _mozUiInvalid = StandardName._mozUiInvalid;
 
-  protected static final Selector a = StandardName.a;
+  protected static final TypeSelector a = StandardTypeSelector.a;
 
-  protected static final Selector audio = StandardName.audio;
+  protected static final TypeSelector audio = StandardTypeSelector.audio;
 
-  protected static final Selector b = StandardName.b;
+  protected static final TypeSelector b = StandardTypeSelector.b;
 
-  protected static final Selector blockquote = StandardName.blockquote;
+  protected static final TypeSelector blockquote = StandardTypeSelector.blockquote;
 
-  protected static final Selector body = StandardName.body;
+  protected static final TypeSelector body = StandardTypeSelector.body;
 
-  protected static final Selector canvas = StandardName.canvas;
+  protected static final TypeSelector canvas = StandardTypeSelector.canvas;
 
-  protected static final Selector code = StandardName.code;
+  protected static final TypeSelector code = StandardTypeSelector.code;
 
-  protected static final Selector dd = StandardName.dd;
+  protected static final TypeSelector dd = StandardTypeSelector.dd;
 
-  protected static final Selector dl = StandardName.dl;
+  protected static final TypeSelector dl = StandardTypeSelector.dl;
 
-  protected static final Selector embed = StandardName.embed;
+  protected static final TypeSelector embed = StandardTypeSelector.embed;
 
-  protected static final Selector fieldset = StandardName.fieldset;
+  protected static final TypeSelector fieldset = StandardTypeSelector.fieldset;
 
-  protected static final Selector figure = StandardName.figure;
+  protected static final TypeSelector figure = StandardTypeSelector.figure;
 
-  protected static final Selector form = StandardName.form;
+  protected static final TypeSelector form = StandardTypeSelector.form;
 
-  protected static final Selector h1 = StandardName.h1;
+  protected static final TypeSelector h1 = StandardTypeSelector.h1;
 
-  protected static final Selector h2 = StandardName.h2;
+  protected static final TypeSelector h2 = StandardTypeSelector.h2;
 
-  protected static final Selector h3 = StandardName.h3;
+  protected static final TypeSelector h3 = StandardTypeSelector.h3;
 
-  protected static final Selector h4 = StandardName.h4;
+  protected static final TypeSelector h4 = StandardTypeSelector.h4;
 
-  protected static final Selector h5 = StandardName.h5;
+  protected static final TypeSelector h5 = StandardTypeSelector.h5;
 
-  protected static final Selector h6 = StandardName.h6;
+  protected static final TypeSelector h6 = StandardTypeSelector.h6;
 
-  protected static final Selector hr = StandardName.hr;
+  protected static final TypeSelector hr = StandardTypeSelector.hr;
 
-  protected static final Selector html = StandardName.html;
+  protected static final TypeSelector html = StandardTypeSelector.html;
 
-  protected static final Selector iframe = StandardName.iframe;
+  protected static final TypeSelector iframe = StandardTypeSelector.iframe;
 
-  protected static final Selector img = StandardName.img;
+  protected static final TypeSelector img = StandardTypeSelector.img;
 
-  protected static final Selector input = StandardName.input;
+  protected static final TypeSelector input = StandardTypeSelector.input;
 
-  protected static final Selector kbd = StandardName.kbd;
+  protected static final TypeSelector kbd = StandardTypeSelector.kbd;
 
-  protected static final Selector label = StandardName.label;
+  protected static final TypeSelector label = StandardTypeSelector.label;
 
-  protected static final Selector legend = StandardName.legend;
+  protected static final TypeSelector legend = StandardTypeSelector.legend;
 
-  protected static final Selector li = StandardName.li;
+  protected static final TypeSelector li = StandardTypeSelector.li;
 
-  protected static final Selector object = StandardName.object;
+  protected static final TypeSelector object = StandardTypeSelector.object;
 
-  protected static final Selector ol = StandardName.ol;
+  protected static final TypeSelector ol = StandardTypeSelector.ol;
 
-  protected static final Selector optgroup = StandardName.optgroup;
+  protected static final TypeSelector optgroup = StandardTypeSelector.optgroup;
 
-  protected static final Selector p = StandardName.p;
+  protected static final TypeSelector p = StandardTypeSelector.p;
 
-  protected static final Selector pre = StandardName.pre;
+  protected static final TypeSelector pre = StandardTypeSelector.pre;
 
-  protected static final Selector samp = StandardName.samp;
+  protected static final TypeSelector samp = StandardTypeSelector.samp;
 
-  protected static final Selector select = StandardName.select;
+  protected static final TypeSelector select = StandardTypeSelector.select;
 
-  protected static final Selector strong = StandardName.strong;
+  protected static final TypeSelector strong = StandardTypeSelector.strong;
 
-  protected static final Selector summary = StandardName.summary;
+  protected static final TypeSelector summary = StandardTypeSelector.summary;
 
-  protected static final Selector sup = StandardName.sup;
+  protected static final TypeSelector sup = StandardTypeSelector.sup;
 
-  protected static final Selector svg = StandardName.svg;
+  protected static final TypeSelector svg = StandardTypeSelector.svg;
 
-  protected static final Selector ul = StandardName.ul;
+  protected static final TypeSelector ul = StandardTypeSelector.ul;
 
-  protected static final Selector video = StandardName.video;
+  protected static final TypeSelector video = StandardTypeSelector.video;
 
   protected static final Selector any = StandardName.any;
 

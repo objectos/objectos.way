@@ -17,49 +17,43 @@ package objectos.css.internal;
 
 final class ByteCode {
 
-  public static final byte SELECTOR = -1;
+  //symbol
 
-  public static final byte BLOCK_START = -2;
+  public static final byte COMMA = -1;
+  public static final byte SEMICOLON = -2;
+  public static final byte SEMICOLON_OPTIONAL = -3;
+  public static final byte SPACE = -4;
+  public static final byte SPACE_OPTIONAL = -5;
+  public static final byte TAB = -6;
 
-  public static final byte BLOCK_END = -3;
+  //selectors
 
-  public static final byte BLOCK_EMPTY = -4;
+  public static final byte SELECTOR = -7;
+  public static final byte SELECTOR_ATTR = -8;
+  public static final byte SELECTOR_ATTR_VALUE = -9;
+  public static final byte SELECTOR_TYPE = -10;
 
-  public static final byte TAB = -5;
+  //blocks
 
-  public static final byte PROPERTY_NAME = -6;
+  public static final byte BLOCK_START = -11;
+  public static final byte BLOCK_END = -12;
+  public static final byte BLOCK_EMPTY = -13;
 
-  public static final byte KEYWORD = -7;
+  //property
 
-  public static final byte JAVA_DOUBLE = -8;
+  public static final byte PROPERTY_NAME = -14;
 
-  public static final byte JAVA_INT = -9;
+  //property values
 
-  public static final byte JAVA_STRING = -10;
-
-  public static final byte LENGTH_DOUBLE = -11;
-
-  public static final byte LENGTH_INT = -12;
-
-  public static final byte PERCENTAGE_DOUBLE = -13;
-
-  public static final byte PERCENTAGE_INT = -14;
-
-  public static final byte ZERO = -15;
-
-  public static final byte COMMA = -16;
-
-  public static final byte SEMICOLON = -17;
-
-  public static final byte SEMICOLON_OPTIONAL = -18;
-
-  public static final byte SPACE = -19;
-
-  public static final byte SPACE_OPTIONAL = -20;
-
-  public static final byte SELECTOR_ATTR = -21;
-
-  public static final byte SELECTOR_ATTR_VALUE = -22;
+  public static final byte JAVA_DOUBLE = -15;
+  public static final byte JAVA_INT = -16;
+  public static final byte JAVA_STRING = -17;
+  public static final byte KEYWORD = -18;
+  public static final byte LENGTH_DOUBLE = -19;
+  public static final byte LENGTH_INT = -20;
+  public static final byte PERCENTAGE_DOUBLE = -21;
+  public static final byte PERCENTAGE_INT = -22;
+  public static final byte ZERO = -23;
 
   private ByteCode() {}
 

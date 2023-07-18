@@ -42,8 +42,7 @@ public final class CssSpec extends CssSelfGen {
 
   @Override
   protected final void definition() {
-    selectors(
-      // type selectors
+    typeSelectors(
       "a",
       "audio",
 
@@ -107,8 +106,10 @@ public final class CssSpec extends CssSelfGen {
 
       "ul",
 
-      "video",
+      "video"
+    );
 
+    selectors(
       // pseudo classes
       ":disabled",
       ":-moz-focusring",

@@ -45,19 +45,19 @@ public class BytesTest {
     byte[] buf;
     buf = new byte[2];
 
-    assertEquals(Bytes.encodeVarLengthR(buf, 0, 1), 1);
+    assertEquals(Bytes.varIntR(buf, 0, 1), 1);
     assertEquals(buf[0], 0x01);
     assertEquals(buf[1], 0x00);
 
-    assertEquals(Bytes.encodeVarLengthR(buf, 0, 127), 1);
+    assertEquals(Bytes.varIntR(buf, 0, 127), 1);
     assertEquals(buf[0], 0x7F);
     assertEquals(buf[1], 0x00);
 
-    assertEquals(Bytes.encodeVarLengthR(buf, 0, 128), 2);
+    assertEquals(Bytes.varIntR(buf, 0, 128), 2);
     assertEquals(buf[0], 0x01);
     assertEquals(buf[1] & 0xFF, 0x80);
 
-    assertEquals(Bytes.decodeVariableLength(buf[1], buf[0]), 128);
+    assertEquals(Bytes.toVarInt(buf[1], buf[0]), 128);
 
     assertEquals(Bytes.var0(128) & 0xFF, 0x80);
     assertEquals(Bytes.var1(128) & 0xFF, 0x01);

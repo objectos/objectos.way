@@ -294,7 +294,7 @@ final class Compiler02 extends Compiler01 {
       byte len1;
       len1 = main[index++];
 
-      auxStart = Bytes.decodeVariableLength(len0, len1);
+      auxStart = Bytes.toVarInt(len0, len1);
     }
 
     return index;
@@ -403,7 +403,7 @@ final class Compiler02 extends Compiler01 {
             byte len1;
             len1 = nextProto();
 
-            length = Bytes.decodeVariableLength(len0, len1);
+            length = Bytes.toVarInt(len0, len1);
           }
 
           int elemIndex;
@@ -454,6 +454,19 @@ final class Compiler02 extends Compiler01 {
             main[elemIndex++],
             main[elemIndex++]
           );
+        }
+
+        case ByteProto.SELECTOR_TYPE -> {
+          selectorCount = selectorComma(selectorCount);
+
+          byte b0;
+          b0 = nextProto();
+
+          if (b0 >= 0) {
+            auxAdd(ByteCode.SELECTOR_TYPE, b0);
+          } else {
+            auxAdd(ByteCode.SELECTOR_TYPE, b0, nextProto());
+          }
         }
 
         case ByteProto.STANDARD_NAME -> {

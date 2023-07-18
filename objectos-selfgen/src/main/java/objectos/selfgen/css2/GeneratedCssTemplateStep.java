@@ -20,7 +20,7 @@ import objectos.code.PrimitiveTypeName;
 
 final class GeneratedCssTemplateStep extends ThisTemplate {
 
-  private static final SelectorName UNIVERSAL = new SelectorName("any", "*");
+  private static final SelectorName UNIVERSAL = new SelectorName(SelectorKind.OTHER, "any", "*");
 
   @Override
   protected final void definition() {

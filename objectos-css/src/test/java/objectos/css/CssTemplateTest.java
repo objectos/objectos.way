@@ -1960,11 +1960,18 @@ public class CssTemplateTest {
           style(
             sel(input, __placeholder)
           );
+
+          // small is both selector and keyword
+          style(
+            sel(small, __after)
+          );
         }
       },
 
       """
       input::placeholder {}
+
+      small::after {}
       """
     );
   }

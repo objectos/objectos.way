@@ -30,7 +30,7 @@ public class Compiler02Test {
     compiler.compilationBegin();
 
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(StandardName.html);
+    compiler.styleRuleElement(StandardTypeSelector.html);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -43,9 +43,8 @@ public class Compiler02Test {
     test(
       result,
 
-      ByteCode.SELECTOR,
-      Bytes.name0(StandardName.html),
-      Bytes.name1(StandardName.html),
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.html.ordinal(),
       ByteCode.BLOCK_EMPTY
     );
   }
@@ -107,9 +106,9 @@ public class Compiler02Test {
     compiler.compilationBegin();
 
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(StandardName.h1);
-    compiler.styleRuleElement(StandardName.h2);
-    compiler.styleRuleElement(StandardName.h3);
+    compiler.styleRuleElement(StandardTypeSelector.h1);
+    compiler.styleRuleElement(StandardTypeSelector.h2);
+    compiler.styleRuleElement(StandardTypeSelector.h3);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -122,17 +121,14 @@ public class Compiler02Test {
     test(
       result,
 
-      ByteCode.SELECTOR,
-      Bytes.name0(StandardName.h1),
-      Bytes.name1(StandardName.h1),
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.h1.ordinal(),
       ByteCode.COMMA,
-      ByteCode.SELECTOR,
-      Bytes.name0(StandardName.h2),
-      Bytes.name1(StandardName.h2),
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.h2.ordinal(),
       ByteCode.COMMA,
-      ByteCode.SELECTOR,
-      Bytes.name0(StandardName.h3),
-      Bytes.name1(StandardName.h3),
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.h3.ordinal(),
       ByteCode.BLOCK_EMPTY
     );
   }
@@ -157,7 +153,7 @@ public class Compiler02Test {
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(StandardName.ul);
+    compiler.styleRuleElement(StandardTypeSelector.ul);
     compiler.styleRuleElement(InternalInstruction.INSTANCE);
     compiler.styleRuleEnd();
 
@@ -173,9 +169,8 @@ public class Compiler02Test {
     test(
       result,
 
-      ByteCode.SELECTOR,
-      Bytes.name0(StandardName.ul),
-      Bytes.name1(StandardName.ul),
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.ul.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
       ByteCode.PROPERTY_NAME,

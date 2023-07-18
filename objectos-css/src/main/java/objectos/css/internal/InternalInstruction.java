@@ -40,6 +40,8 @@ public enum InternalInstruction
 
   PERCENTAGE_INT(5),
 
+  SELECTOR(-1),
+
   STYLE_RULE(-1);
 
   public final int length;

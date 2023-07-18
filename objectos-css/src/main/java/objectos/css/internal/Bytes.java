@@ -43,15 +43,6 @@ final class Bytes {
     return index1 | index0;
   }
 
-  public static int decodeVariableLength(byte len0, byte len1) {
-    int length;
-    length = len0 & 0x7F;
-
-    length |= len1 << 7;
-
-    return length;
-  }
-
   public static double doubleValue(
       byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
     long v0 = toLong(b0, 0);
@@ -67,54 +58,6 @@ final class Bytes {
     bits = v7 | v6 | v5 | v4 | v3 | v2 | v1 | v0;
 
     return Double.longBitsToDouble(bits);
-  }
-
-  public static int encodeVarLength(byte[] buf, int off, int length) {
-    if (length < 0) {
-      throw new IllegalArgumentException("Length has to be >= 0");
-    }
-
-    if (length <= VARINT_MAX1) {
-      buf[off++] = (byte) length;
-
-      return off;
-    }
-
-    if (length <= VARINT_MAX2) {
-      buf[off++] = var0(length);
-
-      buf[off++] = var1(length);
-
-      return off;
-    }
-
-    throw new IllegalArgumentException(
-      "CssTemplate is too large"
-    );
-  }
-
-  public static int encodeVarLengthR(byte[] buf, int off, int length) {
-    if (length < 0) {
-      throw new IllegalArgumentException("Length has to be >= 0");
-    }
-
-    if (length <= VARINT_MAX1) {
-      buf[off++] = (byte) length;
-
-      return off;
-    }
-
-    if (length <= VARINT_MAX2) {
-      buf[off++] = var1(length);
-
-      buf[off++] = var0(length);
-
-      return off;
-    }
-
-    throw new IllegalArgumentException(
-      "CssTemplate is too large"
-    );
   }
 
   public static byte int0(int value) {
@@ -248,6 +191,15 @@ final class Bytes {
     return (b & (long) BYTE_MASK) << shift;
   }
 
+  public static int toVarInt(byte b0, byte b1) {
+    int intValue;
+    intValue = b0 & 0x7F;
+
+    intValue |= b1 << 7;
+
+    return intValue;
+  }
+
   public static byte two0(int index) {
     Check.argument(index <= MAX2_INDEX, "CssTemplate is too large.");
 
@@ -275,6 +227,54 @@ final class Bytes {
     value = value >>> 7;
 
     return (byte) value;
+  }
+
+  public static int varInt(byte[] buf, int off, int length) {
+    if (length < 0) {
+      throw new IllegalArgumentException("Length has to be >= 0");
+    }
+
+    if (length <= VARINT_MAX1) {
+      buf[off++] = (byte) length;
+
+      return off;
+    }
+
+    if (length <= VARINT_MAX2) {
+      buf[off++] = var0(length);
+
+      buf[off++] = var1(length);
+
+      return off;
+    }
+
+    throw new IllegalArgumentException(
+      "CssTemplate is too large"
+    );
+  }
+
+  public static int varIntR(byte[] buf, int off, int length) {
+    if (length < 0) {
+      throw new IllegalArgumentException("Length has to be >= 0");
+    }
+
+    if (length <= VARINT_MAX1) {
+      buf[off++] = (byte) length;
+
+      return off;
+    }
+
+    if (length <= VARINT_MAX2) {
+      buf[off++] = var1(length);
+
+      buf[off++] = var0(length);
+
+      return off;
+    }
+
+    throw new IllegalArgumentException(
+      "CssTemplate is too large"
+    );
   }
 
 }

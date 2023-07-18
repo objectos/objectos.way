@@ -175,38 +175,6 @@ public enum StandardName implements Selector, ColorValue,
     SubKeyword,
     TableKeyword,
     TextareaKeyword {
-  CH("ch"),
-
-  CM("cm"),
-
-  EM("em"),
-
-  EX("ex"),
-
-  IN("in"),
-
-  MM("mm"),
-
-  PC("pc"),
-
-  PT("pt"),
-
-  PX("px"),
-
-  Q("q"),
-
-  REM("rem"),
-
-  VH("vh"),
-
-  VMAX("vmax"),
-
-  VMIN("vmin"),
-
-  VW("vw"),
-
-  PCT("%"),
-
   __after("::after"),
 
   __before("::before"),
@@ -226,88 +194,6 @@ public enum StandardName implements Selector, ColorValue,
   _mozFocusring(":-moz-focusring"),
 
   _mozUiInvalid(":-moz-ui-invalid"),
-
-  a("a"),
-
-  audio("audio"),
-
-  b("b"),
-
-  blockquote("blockquote"),
-
-  body("body"),
-
-  canvas("canvas"),
-
-  code("code"),
-
-  dd("dd"),
-
-  dl("dl"),
-
-  embed("embed"),
-
-  fieldset("fieldset"),
-
-  figure("figure"),
-
-  form("form"),
-
-  h1("h1"),
-
-  h2("h2"),
-
-  h3("h3"),
-
-  h4("h4"),
-
-  h5("h5"),
-
-  h6("h6"),
-
-  hr("hr"),
-
-  html("html"),
-
-  iframe("iframe"),
-
-  img("img"),
-
-  input("input"),
-
-  kbd("kbd"),
-
-  label("label"),
-
-  legend("legend"),
-
-  li("li"),
-
-  object("object"),
-
-  ol("ol"),
-
-  optgroup("optgroup"),
-
-  p("p"),
-
-  pre("pre"),
-
-  samp("samp"),
-
-  select("select"),
-
-  strong("strong"),
-
-  summary("summary"),
-
-  sup("sup"),
-
-  svg("svg"),
-
-  ul("ul"),
-
-  video("video"),
 
   any("*"),
 
