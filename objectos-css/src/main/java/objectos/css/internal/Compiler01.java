@@ -97,26 +97,39 @@ class Compiler01 extends CssTemplateApi {
 
       switch (mark) {
         case MARK_INTERNAL -> {
+          // keep startIndex handy
+          int startIndex;
+          startIndex = contents;
+
+          // decode the element's length
           byte lengthByte;
           lengthByte = aux[index++];
 
           int length;
-          length = lengthByte & 0xFF;
+          length = Bytes.toInt(lengthByte, 0);
 
-          byte proto;
-          proto = main[contents];
-
-          main[contents] = ByteProto.markedOf(length);
-
-          mainAdd(
-            proto,
-
-            Bytes.idx0(contents),
-            Bytes.idx1(contents),
-            Bytes.idx2(contents)
-          );
-
+          // point to next element
           contents += length;
+
+          // keep the old proto handy
+          byte proto;
+          proto = main[startIndex];
+
+          // mark this element
+          main[startIndex] = ByteProto.markedOf(length);
+
+          // ensure main can hold at least 3 elements
+          // 0   - ByteProto
+          // 1-2 - variable length
+          main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+          // byte proto
+          main[mainIndex++] = proto;
+
+          // variable length
+          length = mainIndex - startIndex;
+
+          mainIndex = Bytes.encodeVarLength(main, mainIndex, length);
         }
 
         case MARK_VALUE1 -> {
@@ -637,6 +650,35 @@ class Compiler01 extends CssTemplateApi {
     aux[auxIndex++] = b3;
     aux[auxIndex++] = b4;
     aux[auxIndex++] = b5;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 8);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+    aux[auxIndex++] = b6;
+    aux[auxIndex++] = b7;
+    aux[auxIndex++] = b8;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8, byte b9) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 9);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+    aux[auxIndex++] = b6;
+    aux[auxIndex++] = b7;
+    aux[auxIndex++] = b8;
+    aux[auxIndex++] = b9;
   }
 
   private void mainAdd(byte b0) {

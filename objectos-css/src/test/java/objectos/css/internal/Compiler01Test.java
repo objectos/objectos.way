@@ -151,16 +151,16 @@ public class Compiler01Test {
       Bytes.unit(LengthUnit.REM),
 
       ByteProto.MARKED,
-      Bytes.len0(13),
-      Bytes.len1(13),
+      Bytes.len0(9),
+      Bytes.len1(9),
       Bytes.prop0(Property.MARGIN),
       Bytes.prop1(Property.MARGIN),
       ByteProto.LENGTH_INT,
-      Bytes.idx0(0), Bytes.idx1(0), Bytes.idx2(0),
+      Bytes.int0(22),
       ByteProto.LENGTH_DOUBLE,
-      Bytes.idx0(6), Bytes.idx1(6), Bytes.idx2(6),
+      Bytes.int0(18),
       ByteProto.DECLARATION_END,
-      Bytes.int0(29),
+      Bytes.int0(25),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
@@ -170,9 +170,9 @@ public class Compiler01Test {
       Bytes.name0(StandardName.ul),
       Bytes.name1(StandardName.ul),
       ByteProto.DECLARATION,
-      Bytes.int0(23),
+      Bytes.int0(19),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(40),
+      Bytes.int0(36),
       ByteProto.STYLE_RULE
     );
   }

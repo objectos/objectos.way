@@ -40,6 +40,9 @@ final class Compiler02 extends Compiler01 {
     // we will use the aux list to store our byte code
     auxIndex = 0;
 
+    // holds decoded length
+    auxStart = 0;
+
     // holds the indentation level
     mainStart = 0;
 
@@ -150,33 +153,63 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.LENGTH_DOUBLE -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int thisIndex = mainIndex(index) + 1;
+          int baseIndex;
+          baseIndex = index;
 
-          index += 3;
+          index = decodeLength(index);
 
-          auxAdd(ByteCode.LENGTH_DOUBLE);
+          int contents;
+          contents = baseIndex - auxStart;
 
-          int length = 9;
+          // skip ByteProto
+          contents++;
 
-          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+          auxAdd(
+            ByteCode.LENGTH_DOUBLE,
 
-          auxIndex += length;
+            // long pt1
+            main[contents++],
+            main[contents++],
+            main[contents++],
+            main[contents++],
+
+            // long pt2
+            main[contents++],
+            main[contents++],
+            main[contents++],
+            main[contents++],
+
+            // unit
+            main[contents++]
+          );
         }
 
         case ByteProto.LENGTH_INT -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int thisIndex = mainIndex(index) + 1;
+          int baseIndex;
+          baseIndex = index;
 
-          index += 3;
+          index = decodeLength(index);
 
-          auxAdd(ByteCode.LENGTH_INT);
+          int contents;
+          contents = baseIndex - auxStart;
 
-          int length = 5;
+          // skip ByteProto
+          contents++;
 
-          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+          auxAdd(
+            ByteCode.LENGTH_INT,
 
-          auxIndex += length;
+            // int
+            main[contents++],
+            main[contents++],
+            main[contents++],
+            main[contents++],
+
+            // unit
+            main[contents++]
+          );
         }
 
         case ByteProto.MARKED -> {
@@ -191,33 +224,57 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.PERCENTAGE_DOUBLE -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int thisIndex = mainIndex(index) + 1;
+          int baseIndex;
+          baseIndex = index;
 
-          index += 3;
+          index = decodeLength(index);
 
-          auxAdd(ByteCode.PERCENTAGE_DOUBLE);
+          int contents;
+          contents = baseIndex - auxStart;
 
-          int length = 8;
+          // skip ByteProto
+          contents++;
 
-          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+          auxAdd(
+            ByteCode.PERCENTAGE_DOUBLE,
 
-          auxIndex += length;
+            // long pt1
+            main[contents++],
+            main[contents++],
+            main[contents++],
+            main[contents++],
+
+            // long pt2
+            main[contents++],
+            main[contents++],
+            main[contents++],
+            main[contents++]
+          );
         }
 
         case ByteProto.PERCENTAGE_INT -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int thisIndex = mainIndex(index) + 1;
+          int baseIndex;
+          baseIndex = index;
 
-          index += 3;
+          index = decodeLength(index);
 
-          auxAdd(ByteCode.PERCENTAGE_INT);
+          int contents;
+          contents = baseIndex - auxStart;
 
-          int length = 4;
+          // skip ByteProto
+          contents++;
 
-          System.arraycopy(main, thisIndex, aux, auxIndex, length);
+          auxAdd(
+            ByteCode.PERCENTAGE_INT,
 
-          auxIndex += length;
+            // int
+            main[contents++],
+            main[contents++],
+            main[contents++],
+            main[contents++]
+          );
         }
 
         case ByteProto.STANDARD_NAME -> {
@@ -417,6 +474,22 @@ final class Compiler02 extends Compiler01 {
     idx2 = Bytes.toInt(main[offset + 2], 16);
 
     return idx2 | idx1 | idx0;
+  }
+
+  private int decodeLength(int index) {
+    byte len0;
+    len0 = main[index++];
+
+    auxStart = len0;
+
+    if (auxStart < 0) {
+      byte len1;
+      len1 = main[index++];
+
+      auxStart = Bytes.decodeVariableLength(len0, len1);
+    }
+
+    return index;
   }
 
 }
