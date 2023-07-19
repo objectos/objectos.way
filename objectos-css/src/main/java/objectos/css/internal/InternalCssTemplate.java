@@ -21,6 +21,7 @@ import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
+import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
@@ -115,6 +116,14 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationEnd();
 
     return InternalInstruction.INSTANCE;
+  }
+
+  protected final ColorValue hex(String value) {
+    Check.notNull(value, "value == null");
+
+    api().colorHex(value);
+
+    return InternalInstruction.COLOR_HEX;
   }
 
   protected final StringLiteral l(String value) {

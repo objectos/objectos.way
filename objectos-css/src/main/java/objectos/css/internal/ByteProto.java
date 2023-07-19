@@ -55,18 +55,19 @@ final class ByteProto {
 
   //property values
 
-  public static final byte COMMA = -25;
-  public static final byte JAVA_DOUBLE = -26;
-  public static final byte JAVA_INT = -27;
-  public static final byte JAVA_STRING = -28;
-  public static final byte LENGTH_DOUBLE = -29;
-  public static final byte LENGTH_INT = -30;
-  public static final byte PERCENTAGE_DOUBLE = -31;
-  public static final byte PERCENTAGE_INT = -32;
-  public static final byte STANDARD_NAME = -33;
-  public static final byte STRING_LITERAL = -34;
-  public static final byte URL = -35;
-  public static final byte ZERO = -36;
+  public static final byte COLOR_HEX = -25;
+  public static final byte COMMA = -26;
+  public static final byte JAVA_DOUBLE = -27;
+  public static final byte JAVA_INT = -28;
+  public static final byte JAVA_STRING = -29;
+  public static final byte LENGTH_DOUBLE = -30;
+  public static final byte LENGTH_INT = -31;
+  public static final byte PERCENTAGE_DOUBLE = -32;
+  public static final byte PERCENTAGE_INT = -33;
+  public static final byte STANDARD_NAME = -34;
+  public static final byte STRING_LITERAL = -35;
+  public static final byte URL = -36;
+  public static final byte ZERO = -37;
 
   private ByteProto() {}
 

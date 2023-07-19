@@ -15,6 +15,7 @@
  */
 package objectos.css.tmpl;
 
+import objectos.css.internal.InternalInstruction;
 import objectos.css.internal.StandardName;
 import objectos.css.util.Color;
 import objectos.lang.Generated;
@@ -22,4 +23,4 @@ import objectos.lang.Generated;
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface ColorValue extends
     OutlineValue,
-    TextDecorationValue permits Color, StandardName {}
+    TextDecorationValue permits Color, InternalInstruction, StandardName {}

@@ -20,6 +20,7 @@ import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
+import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.StringLiteral;
@@ -27,6 +28,7 @@ import objectos.css.tmpl.Url;
 
 public enum InternalInstruction
     implements
+    ColorValue,
     Length,
     Percentage,
     Selector,
@@ -38,6 +40,8 @@ public enum InternalInstruction
   INSTANCE(-1),
 
   STYLE_RULE(-1),
+
+  COLOR_HEX(3),
 
   LENGTH_DOUBLE(10),
 

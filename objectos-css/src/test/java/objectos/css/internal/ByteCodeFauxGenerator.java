@@ -55,6 +55,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("property values");
 
+    value("COLOR_HEX");
     value("DOUBLE_LITERAL");
     value("INT_LITERAL");
     value("KEYWORD");

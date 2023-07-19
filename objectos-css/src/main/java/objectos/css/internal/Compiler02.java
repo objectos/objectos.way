@@ -106,6 +106,14 @@ final class Compiler02 extends Compiler01 {
       proto = main[index++];
 
       switch (proto) {
+        case ByteProto.COLOR_HEX -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          index = jmp(index);
+
+          auxAdd(ByteCode.COLOR_HEX, main[mainContents++], main[mainContents++]);
+        }
+
         case ByteProto.COMMA -> {
           auxAdd(ByteCode.COMMA);
 
@@ -305,13 +313,7 @@ final class Compiler02 extends Compiler01 {
 
           index = jmp(index);
 
-          auxAdd(
-            ByteCode.URL,
-
-            // value index
-            main[mainContents++],
-            main[mainContents++]
-          );
+          auxAdd(ByteCode.URL, main[mainContents++], main[mainContents++]);
         }
 
         case ByteProto.ZERO -> {

@@ -33,7 +33,7 @@ final class ColorValueStep extends ThisTemplate {
       annotation(GENERATED, annotationValue(s(GENERATOR))),
       PUBLIC, SEALED, name(COLOR_VALUE),
       include(this::interfaces),
-      permitsClause(COLOR, STANDARD_NAME)
+      permitsClause(COLOR, INTERNAL_INSTRUCTION, STANDARD_NAME)
     );
   }
 

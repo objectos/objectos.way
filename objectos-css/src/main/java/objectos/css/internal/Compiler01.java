@@ -43,6 +43,19 @@ class Compiler01 extends CssTemplateApi {
   int objectIndex;
 
   @Override
+  public final void colorHex(String value) {
+    int index;
+    index = objectAdd(value);
+
+    mainAdd(
+      ByteProto.COLOR_HEX,
+
+      Bytes.two0(index),
+      Bytes.two1(index)
+    );
+  }
+
+  @Override
   public final void compilationBegin() {
     aux = new byte[128];
 

@@ -25,6 +25,8 @@ public abstract class CssTemplateApi {
 
   CssTemplateApi() {}
 
+  public abstract void colorHex(String value);
+
   public abstract void compilationBegin();
 
   public abstract void compilationEnd();

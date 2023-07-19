@@ -60,6 +60,7 @@ public class CssSelfGen01BorderColorTest {
       """
       package objectos.css.tmpl;
 
+      import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.css.util.Color;
@@ -67,7 +68,7 @@ public class CssSelfGen01BorderColorTest {
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface ColorValue extends
-          PropertyValue permits Color, StandardName {}
+          PropertyValue permits Color, InternalInstruction, StandardName {}
       """
     );
   }

@@ -253,7 +253,8 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append('"');
         }
 
-        case ByteCode.STRING_QUOTES_OPTIONAL -> {
+        case ByteCode.COLOR_HEX,
+             ByteCode.STRING_QUOTES_OPTIONAL -> {
           int objectIndex;
           objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
 

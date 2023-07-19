@@ -48,17 +48,18 @@ final class ByteCode {
 
   //property values
 
-  public static final byte DOUBLE_LITERAL = -18;
-  public static final byte INT_LITERAL = -19;
-  public static final byte KEYWORD = -20;
-  public static final byte LENGTH_DOUBLE = -21;
-  public static final byte LENGTH_INT = -22;
-  public static final byte PERCENTAGE_DOUBLE = -23;
-  public static final byte PERCENTAGE_INT = -24;
-  public static final byte STRING_LITERAL = -25;
-  public static final byte STRING_QUOTES_OPTIONAL = -26;
-  public static final byte URL = -27;
-  public static final byte ZERO = -28;
+  public static final byte COLOR_HEX = -18;
+  public static final byte DOUBLE_LITERAL = -19;
+  public static final byte INT_LITERAL = -20;
+  public static final byte KEYWORD = -21;
+  public static final byte LENGTH_DOUBLE = -22;
+  public static final byte LENGTH_INT = -23;
+  public static final byte PERCENTAGE_DOUBLE = -24;
+  public static final byte PERCENTAGE_INT = -25;
+  public static final byte STRING_LITERAL = -26;
+  public static final byte STRING_QUOTES_OPTIONAL = -27;
+  public static final byte URL = -28;
+  public static final byte ZERO = -29;
 
   private ByteCode() {}
 

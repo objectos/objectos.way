@@ -458,6 +458,54 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  input {
+    color: #9ca3af
+  }
+  """)
+  public void testCase12() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.colorHex("#9ca3af");
+
+    compiler.declarationBegin(Property.COLOR);
+    compiler.propertyValue(InternalInstruction.COLOR_HEX);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.input);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.input.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.COLOR),
+      Bytes.prop1(Property.COLOR),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.COLOR_HEX,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;
