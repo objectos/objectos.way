@@ -25,6 +25,7 @@ import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.SelectorElement;
+import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.StyleRuleElement;
 import objectos.css.tmpl.Url;
 import objectos.css.tmpl.Zero;
@@ -92,7 +93,36 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   @Override
   protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
-    throw new UnsupportedOperationException("Implement me");
+    Check.argument(values.length > 0, "font-family requires at least one value");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(Property.FONT_FAMILY);
+
+    api.propertyValue(
+      Check.notNull(values[0], "values[0] == null")
+    );
+
+    for (int i = 1; i < values.length; i++) {
+      api.propertyValueComma();
+
+      api.propertyValue(
+        Check.notNull(values[i], "values[", i, "] == null")
+      );
+    }
+
+    api.declarationEnd();
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StringLiteral l(String value) {
+    Check.notNull(value, "value == null");
+
+    api().stringLiteral(value);
+
+    return InternalInstruction.STRING_LITERAL;
   }
 
   protected final Percentage pct(double value) {
@@ -142,10 +172,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   protected final Url url(String value) {
     Check.notNull(value, "value == null");
 
-    CssTemplateApi api;
-    api = api();
-
-    api.url(value);
+    api().url(value);
 
     return InternalInstruction.URL;
   }

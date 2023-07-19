@@ -93,6 +93,8 @@ class Compiler01 extends CssTemplateApi {
       mark = aux[index++];
 
       switch (mark) {
+        case ByteProto.COMMA -> mainAdd(mark);
+
         case ByteProto.INTERNAL -> {
           // keep startIndex handy
           int startIndex;
@@ -331,6 +333,11 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void propertyValueComma() {
+    auxAdd(ByteProto.COMMA);
+  }
+
+  @Override
   public final void selectorAttribute(String name) {
     int nameIndex;
     nameIndex = objectAdd(name);
@@ -407,6 +414,19 @@ class Compiler01 extends CssTemplateApi {
     endProto = ByteProto.SELECTOR_SEL_END;
 
     commonEnd(trailerProto, endProto);
+  }
+
+  @Override
+  public final void stringLiteral(String value) {
+    int index;
+    index = objectAdd(value);
+
+    mainAdd(
+      ByteProto.STRING_LITERAL,
+
+      Bytes.two0(index),
+      Bytes.two1(index)
+    );
   }
 
   @Override

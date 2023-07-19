@@ -417,6 +417,122 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  p {
+    font-family: "Foo Bar";
+  }
+  """)
+  public void testCase10() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.stringLiteral("Foo Bar");
+
+    compiler.declarationBegin(Property.FONT_FAMILY);
+    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED3,
+      Bytes.two0(0),
+      Bytes.two1(0),
+
+      ByteProto.MARKED,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      Bytes.prop0(Property.FONT_FAMILY),
+      Bytes.prop1(Property.FONT_FAMILY),
+      ByteProto.STRING_LITERAL,
+      Bytes.int0(9),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(10),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(16),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(20),
+      ByteProto.STYLE_RULE
+    );
+  }
+
+  @Test(description = """
+  p {
+    font-family: "Foo Bar", sans-serif;
+  }
+  """)
+  public void testCase11() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.stringLiteral("Foo Bar");
+
+    compiler.declarationBegin(Property.FONT_FAMILY);
+    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.propertyValueComma();
+    compiler.propertyValue(StandardName.sansSerif);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED3,
+      Bytes.two0(0),
+      Bytes.two1(0),
+
+      ByteProto.MARKED,
+      Bytes.len0(11),
+      Bytes.len1(11),
+      Bytes.prop0(Property.FONT_FAMILY),
+      Bytes.prop1(Property.FONT_FAMILY),
+      ByteProto.STRING_LITERAL,
+      Bytes.int0(9),
+      ByteProto.COMMA,
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.sansSerif),
+      Bytes.name1(StandardName.sansSerif),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(14),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(20),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(24),
+      ByteProto.STYLE_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

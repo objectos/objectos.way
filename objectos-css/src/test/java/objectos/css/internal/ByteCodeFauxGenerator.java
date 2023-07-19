@@ -55,14 +55,15 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("property values");
 
-    value("JAVA_DOUBLE");
-    value("JAVA_INT");
-    value("JAVA_STRING");
+    value("DOUBLE_LITERAL");
+    value("INT_LITERAL");
     value("KEYWORD");
     value("LENGTH_DOUBLE");
     value("LENGTH_INT");
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
+    value("STRING_LITERAL");
+    value("STRING_QUOTES_OPTIONAL");
     value("URL");
     value("ZERO");
   }

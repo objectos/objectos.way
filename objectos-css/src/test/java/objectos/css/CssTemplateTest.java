@@ -606,7 +606,7 @@ public class CssTemplateTest {
   """)
   public void propertyFontFamily() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -2009,7 +2009,7 @@ public class CssTemplateTest {
   """)
   public void selectorTypes() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

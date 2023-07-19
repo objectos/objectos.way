@@ -62,6 +62,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("property values");
 
+    value("COMMA");
     value("JAVA_DOUBLE");
     value("JAVA_INT");
     value("JAVA_STRING");
@@ -70,6 +71,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
     value("STANDARD_NAME"); // keyword
+    value("STRING_LITERAL");
     value("URL");
     value("ZERO");
   }

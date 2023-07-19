@@ -77,7 +77,7 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(name);
         }
 
-        case ByteCode.JAVA_DOUBLE -> {
+        case ByteCode.DOUBLE_LITERAL -> {
           double value;
           value = Bytes.doubleValue(
             bytes[index++], bytes[index++], bytes[index++], bytes[index++],
@@ -87,26 +87,11 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(Double.toString(value));
         }
 
-        case ByteCode.JAVA_INT -> {
+        case ByteCode.INT_LITERAL -> {
           int value;
           value = Bytes.intValue(bytes[index++], bytes[index++], bytes[index++], bytes[index++]);
 
           appendable.append(Integer.toString(value));
-        }
-
-        case ByteCode.JAVA_STRING -> {
-          int objectIndex;
-          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
-
-          Object object;
-          object = objects[objectIndex];
-
-          String s;
-          s = (String) object;
-
-          appendable.append('"');
-          appendable.append(s);
-          appendable.append('"');
         }
 
         case ByteCode.LENGTH_DOUBLE -> {
@@ -251,6 +236,34 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
 
         case ByteCode.SPACE, ByteCode.SPACE_OPTIONAL -> {
           appendable.append(' ');
+        }
+
+        case ByteCode.STRING_LITERAL -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          Object object;
+          object = objects[objectIndex];
+
+          String s;
+          s = (String) object;
+
+          appendable.append('"');
+          appendable.append(s);
+          appendable.append('"');
+        }
+
+        case ByteCode.STRING_QUOTES_OPTIONAL -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          Object object;
+          object = objects[objectIndex];
+
+          String s;
+          s = (String) object;
+
+          appendable.append(s);
         }
 
         case ByteCode.URL -> {

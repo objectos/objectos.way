@@ -15,6 +15,7 @@
  */
 package objectos.css.tmpl;
 
+import objectos.css.internal.InternalInstruction;
 import objectos.css.internal.InternalStringLiteral;
 import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
@@ -22,6 +23,6 @@ import objectos.lang.Generated;
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface StringLiteral extends
     FontFamilyValue,
-    ListStyleTypeValue permits InternalStringLiteral {
+    ListStyleTypeValue permits InternalInstruction, InternalStringLiteral {
   PropertyValue asFontFamilyValue();
 }

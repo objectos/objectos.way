@@ -33,6 +33,7 @@ final class StringTypeStep extends ThisTemplate {
       annotation(GENERATED, annotationValue(s(GENERATOR))),
       PUBLIC, SEALED, name(STRING_LITERAL),
       include(this::interfaces),
+      permitsClause(INTERNAL_INSTRUCTION),
       permitsClause(INTERNAL_STRING_LITERAL),
 
       method(

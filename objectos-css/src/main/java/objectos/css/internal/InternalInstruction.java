@@ -16,11 +16,13 @@
 package objectos.css.internal;
 
 import java.io.IOException;
+import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
+import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.Url;
 
 public enum InternalInstruction
@@ -28,11 +30,14 @@ public enum InternalInstruction
     Length,
     Percentage,
     Selector,
+    StringLiteral,
     StyleDeclaration,
     StyleRule,
     Url {
 
   INSTANCE(-1),
+
+  STYLE_RULE(-1),
 
   LENGTH_DOUBLE(10),
 
@@ -42,7 +47,7 @@ public enum InternalInstruction
 
   PERCENTAGE_INT(5),
 
-  STYLE_RULE(-1),
+  STRING_LITERAL(3),
 
   URL(3);
 
@@ -54,6 +59,11 @@ public enum InternalInstruction
 
   @Override
   public void writeTo(Appendable dest) throws IOException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public final PropertyValue asFontFamilyValue() {
     throw new UnsupportedOperationException();
   }
 

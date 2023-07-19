@@ -57,7 +57,7 @@ public abstract class CssTemplateApi {
 
   public abstract void propertyValue(PropertyValue value);
 
-  public abstract void url(String value);
+  public abstract void propertyValueComma();
 
   public abstract void selectorAttribute(String name);
 
@@ -69,10 +69,14 @@ public abstract class CssTemplateApi {
 
   public abstract void selectorEnd();
 
+  public abstract void stringLiteral(String value);
+
   public abstract void styleRuleBegin();
 
   public abstract void styleRuleElement(StyleRuleElement element);
 
   public abstract void styleRuleEnd();
+
+  public abstract void url(String value);
 
 }

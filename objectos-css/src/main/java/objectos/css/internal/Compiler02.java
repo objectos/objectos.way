@@ -16,9 +16,13 @@
 package objectos.css.internal;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import objectos.util.ObjectArrays;
 
 final class Compiler02 extends Compiler01 {
+
+  private static final Pattern FONT_FAMILY = Pattern.compile("-?[a-zA-Z_][a-zA-Z0-9_-]*");
 
   @Override
   public CompiledStyleSheet compile() {
@@ -34,6 +38,9 @@ final class Compiler02 extends Compiler01 {
 
     // holds decoded length
     auxStart = 0;
+
+    // jmp auxiliary
+    mainContents = 0;
 
     // holds the indentation level
     mainStart = 0;
@@ -88,13 +95,23 @@ final class Compiler02 extends Compiler01 {
   }
 
   private void declaration(int index) {
-    int valueCount = 0;
+    Property property;
+    property = null;
+
+    int valueCount;
+    valueCount = 0;
 
     loop: while (index < mainIndex) {
       byte proto;
       proto = main[index++];
 
       switch (proto) {
+        case ByteProto.COMMA -> {
+          auxAdd(ByteCode.COMMA);
+
+          valueCount = 0;
+        }
+
         case ByteProto.DECLARATION -> {
           // skip distance to end
           index += 2;
@@ -109,7 +126,7 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.JAVA_DOUBLE -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          auxAdd(ByteCode.JAVA_DOUBLE);
+          auxAdd(ByteCode.DOUBLE_LITERAL);
 
           int length = 8;
 
@@ -123,7 +140,7 @@ final class Compiler02 extends Compiler01 {
           valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(
-            ByteCode.JAVA_INT,
+            ByteCode.INT_LITERAL,
 
             main[index++],
             main[index++],
@@ -136,7 +153,7 @@ final class Compiler02 extends Compiler01 {
           valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(
-            ByteCode.JAVA_STRING,
+            ByteCode.STRING_LITERAL,
 
             main[index++],
             main[index++]
@@ -146,62 +163,44 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.LENGTH_DOUBLE -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int baseIndex;
-          baseIndex = index;
-
-          index = decodeLength(index);
-
-          int contents;
-          contents = baseIndex - auxStart;
-
-          // skip ByteProto
-          contents++;
+          index = jmp(index);
 
           auxAdd(
             ByteCode.LENGTH_DOUBLE,
 
             // long pt1
-            main[contents++],
-            main[contents++],
-            main[contents++],
-            main[contents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
 
             // long pt2
-            main[contents++],
-            main[contents++],
-            main[contents++],
-            main[contents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
 
             // unit
-            main[contents++]
+            main[mainContents++]
           );
         }
 
         case ByteProto.LENGTH_INT -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int baseIndex;
-          baseIndex = index;
-
-          index = decodeLength(index);
-
-          int contents;
-          contents = baseIndex - auxStart;
-
-          // skip ByteProto
-          contents++;
+          index = jmp(index);
 
           auxAdd(
             ByteCode.LENGTH_INT,
 
             // int
-            main[contents++],
-            main[contents++],
-            main[contents++],
-            main[contents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
 
             // unit
-            main[contents++]
+            main[mainContents++]
           );
         }
 
@@ -209,7 +208,15 @@ final class Compiler02 extends Compiler01 {
           // skip end length
           index += 2;
 
-          auxAdd(ByteCode.PROPERTY_NAME, main[index++], main[index++]);
+          byte b0;
+          b0 = main[index++];
+
+          byte b1;
+          b1 = main[index++];
+
+          property = Bytes.property(b0, b1);
+
+          auxAdd(ByteCode.PROPERTY_NAME, b0, b1);
 
           auxAdd(ByteCode.SPACE_OPTIONAL);
         }
@@ -217,56 +224,38 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.PERCENTAGE_DOUBLE -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int baseIndex;
-          baseIndex = index;
-
-          index = decodeLength(index);
-
-          int contents;
-          contents = baseIndex - auxStart;
-
-          // skip ByteProto
-          contents++;
+          index = jmp(index);
 
           auxAdd(
             ByteCode.PERCENTAGE_DOUBLE,
 
             // long pt1
-            main[contents++],
-            main[contents++],
-            main[contents++],
-            main[contents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
 
             // long pt2
-            main[contents++],
-            main[contents++],
-            main[contents++],
-            main[contents++]
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++]
           );
         }
 
         case ByteProto.PERCENTAGE_INT -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int baseIndex;
-          baseIndex = index;
-
-          index = decodeLength(index);
-
-          int contents;
-          contents = baseIndex - auxStart;
-
-          // skip ByteProto
-          contents++;
+          index = jmp(index);
 
           auxAdd(
             ByteCode.PERCENTAGE_INT,
 
             // int
-            main[contents++],
-            main[contents++],
-            main[contents++],
-            main[contents++]
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++]
           );
         }
 
@@ -276,26 +265,52 @@ final class Compiler02 extends Compiler01 {
           auxAdd(ByteCode.KEYWORD, main[index++], main[index++]);
         }
 
+        case ByteProto.STRING_LITERAL -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          index = jmp(index);
+
+          byte byteCode;
+          byteCode = ByteCode.STRING_LITERAL;
+
+          byte b0;
+          b0 = main[mainContents++];
+
+          byte b1;
+          b1 = main[mainContents++];
+
+          if (property == Property.FONT_FAMILY) {
+            int objectIndex;
+            objectIndex = Bytes.decodeIndex2(b0, b1);
+
+            Object object;
+            object = objectArray[objectIndex];
+
+            String s;
+            s = (String) object;
+
+            Matcher matcher;
+            matcher = FONT_FAMILY.matcher(s);
+
+            if (matcher.matches()) {
+              byteCode = ByteCode.STRING_QUOTES_OPTIONAL;
+            }
+          }
+
+          auxAdd(byteCode, b0, b1);
+        }
+
         case ByteProto.URL -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          int baseIndex;
-          baseIndex = index;
-
-          index = decodeLength(index);
-
-          int contents;
-          contents = baseIndex - auxStart;
-
-          // skip ByteProto
-          contents++;
+          index = jmp(index);
 
           auxAdd(
             ByteCode.URL,
 
             // value index
-            main[contents++],
-            main[contents++]
+            main[mainContents++],
+            main[mainContents++]
           );
         }
 
@@ -344,6 +359,20 @@ final class Compiler02 extends Compiler01 {
     auxAdd(ByteCode.TAB, (byte) mainStart);
   }
 
+  private int jmp(int index) {
+    int baseIndex;
+    baseIndex = index;
+
+    index = decodeLength(index);
+
+    mainContents = baseIndex - auxStart;
+
+    // skip ByteProto
+    mainContents++;
+
+    return index;
+  }
+
   private int nextRuleIf(int ruleCount) {
     if (ruleCount > 0) {
       auxAdd(ByteCode.NEXT_RULE);
@@ -374,6 +403,11 @@ final class Compiler02 extends Compiler01 {
     selectorCount++;
 
     return selectorCount;
+  }
+
+  private int selectorKeyword(int index) {
+    auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
+    return index;
   }
 
   private int selectorPseudoClass(int index) {
@@ -611,11 +645,6 @@ final class Compiler02 extends Compiler01 {
       indentationWrite();
       auxAdd(ByteCode.BLOCK_END);
     }
-  }
-
-  private int selectorKeyword(int index) {
-    auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
-    return index;
   }
 
 }

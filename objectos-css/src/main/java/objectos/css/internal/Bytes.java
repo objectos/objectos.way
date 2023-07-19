@@ -159,14 +159,21 @@ final class Bytes {
     return (byte) (ordinal >>> 8);
   }
 
-  public static String propertyName(byte b0, byte b1) {
-    int ordinal0 = Bytes.toInt(b0, 0);
-    int ordinal1 = Bytes.toInt(b1, 8);
+  public static Property property(byte b0, byte b1) {
+    int ordinal0;
+    ordinal0 = Bytes.toInt(b0, 0);
+
+    int ordinal1;
+    ordinal1 = Bytes.toInt(b1, 8);
 
     int ordinal = ordinal1 | ordinal0;
 
+    return Property.byOrdinal(ordinal);
+  }
+
+  public static String propertyName(byte b0, byte b1) {
     Property property;
-    property = Property.byOrdinal(ordinal);
+    property = property(b0, b1);
 
     return property.cssName;
   }

@@ -356,6 +356,108 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  p {
+    font-family: "Foo Bar";
+  }
+  """)
+  public void testCase10() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.stringLiteral("Foo Bar");
+
+    compiler.declarationBegin(Property.FONT_FAMILY);
+    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.FONT_FAMILY),
+      Bytes.prop1(Property.FONT_FAMILY),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.STRING_LITERAL,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
+  @Test(description = """
+  p {
+    font-family: "Foo Bar", sans-serif;
+  }
+  """)
+  public void testCase11() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.stringLiteral("Foo Bar");
+
+    compiler.declarationBegin(Property.FONT_FAMILY);
+    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.propertyValueComma();
+    compiler.propertyValue(StandardName.sansSerif);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.FONT_FAMILY),
+      Bytes.prop1(Property.FONT_FAMILY),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.STRING_LITERAL,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteCode.COMMA,
+      ByteCode.KEYWORD,
+      Bytes.name0(StandardName.sansSerif),
+      Bytes.name1(StandardName.sansSerif),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;
