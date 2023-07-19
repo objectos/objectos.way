@@ -175,26 +175,6 @@ public enum StandardName implements Selector, ColorValue,
     SubKeyword,
     TableKeyword,
     TextareaKeyword {
-  __after("::after"),
-
-  __before("::before"),
-
-  __placeholder("::placeholder"),
-
-  __webkitFileUploadButton("::-webkit-file-upload-button"),
-
-  __webkitInnerSpinButton("::-webkit-inner-spin-button"),
-
-  __webkitOuterSpinButton("::-webkit-outer-spin-button"),
-
-  __webkitSearchDecoration("::-webkit-search-decoration"),
-
-  _disabled(":disabled"),
-
-  _mozFocusring(":-moz-focusring"),
-
-  _mozUiInvalid(":-moz-ui-invalid"),
-
   any("*"),
 
   aqua("aqua"),

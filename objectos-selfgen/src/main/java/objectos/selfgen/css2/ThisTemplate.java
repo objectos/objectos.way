@@ -82,9 +82,21 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_OM, "PropertyValue");
 
+  static final ClassTypeName PSEUDO_CLASS_SELECTOR
+      = ClassTypeName.of(CSS_OM, "PseudoClassSelector");
+
+  static final ClassTypeName PSEUDO_ELEMENT_SELECTOR
+      = ClassTypeName.of(CSS_OM, "PseudoElementSelector");
+
   static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
 
   static final ClassTypeName STANDARD_NAME = ClassTypeName.of(CSS_INTERNAL, "StandardName");
+
+  static final ClassTypeName STANDARD_PSEUDO_CLASS_SELECTOR
+      = ClassTypeName.of(CSS_INTERNAL, "StandardPseudoClassSelector");
+
+  static final ClassTypeName STANDARD_PSEUDO_ELEMENT_SELECTOR
+      = ClassTypeName.of(CSS_INTERNAL, "StandardPseudoElementSelector");
 
   static final ClassTypeName STANDARD_TYPE_SELECTOR
       = ClassTypeName.of(CSS_INTERNAL, "StandardTypeSelector");

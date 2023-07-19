@@ -16,6 +16,8 @@
 package objectos.css.internal;
 
 import objectos.css.om.PropertyValue;
+import objectos.css.om.PseudoClassSelector;
+import objectos.css.om.PseudoElementSelector;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.TypeSelector;
@@ -110,25 +112,25 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 abstract class GeneratedCssTemplate {
-  protected static final Selector __after = StandardName.__after;
+  protected static final PseudoElementSelector __after = StandardPseudoElementSelector.__after;
 
-  protected static final Selector __before = StandardName.__before;
+  protected static final PseudoElementSelector __before = StandardPseudoElementSelector.__before;
 
-  protected static final Selector __placeholder = StandardName.__placeholder;
+  protected static final PseudoElementSelector __placeholder = StandardPseudoElementSelector.__placeholder;
 
-  protected static final Selector __webkitFileUploadButton = StandardName.__webkitFileUploadButton;
+  protected static final PseudoElementSelector __webkitFileUploadButton = StandardPseudoElementSelector.__webkitFileUploadButton;
 
-  protected static final Selector __webkitInnerSpinButton = StandardName.__webkitInnerSpinButton;
+  protected static final PseudoElementSelector __webkitInnerSpinButton = StandardPseudoElementSelector.__webkitInnerSpinButton;
 
-  protected static final Selector __webkitOuterSpinButton = StandardName.__webkitOuterSpinButton;
+  protected static final PseudoElementSelector __webkitOuterSpinButton = StandardPseudoElementSelector.__webkitOuterSpinButton;
 
-  protected static final Selector __webkitSearchDecoration = StandardName.__webkitSearchDecoration;
+  protected static final PseudoElementSelector __webkitSearchDecoration = StandardPseudoElementSelector.__webkitSearchDecoration;
 
-  protected static final Selector _disabled = StandardName._disabled;
+  protected static final PseudoClassSelector _disabled = StandardPseudoClassSelector._disabled;
 
-  protected static final Selector _mozFocusring = StandardName._mozFocusring;
+  protected static final PseudoClassSelector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
 
-  protected static final Selector _mozUiInvalid = StandardName._mozUiInvalid;
+  protected static final PseudoClassSelector _mozUiInvalid = StandardPseudoClassSelector._mozUiInvalid;
 
   protected static final TypeSelector a = StandardTypeSelector.a;
 

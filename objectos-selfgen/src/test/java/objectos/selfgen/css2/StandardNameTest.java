@@ -81,14 +81,6 @@ public class StandardNameTest {
       @Generated("objectos.selfgen.CssSpec")
       public enum StandardName implements Selector, ColorValue,
           GlobalKeyword {
-        __after("::after"),
-
-        __before("::before"),
-
-        a("a"),
-
-        pre("pre"),
-
         any("*"),
 
         currentcolor("currentcolor"),

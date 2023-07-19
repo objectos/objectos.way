@@ -200,6 +200,26 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(']');
         }
 
+        case ByteCode.SELECTOR_PSEUDO_CLASS -> {
+          int ordinal;
+          ordinal = bytes[index++];
+
+          StandardPseudoClassSelector selector;
+          selector = StandardPseudoClassSelector.ofOrdinal(ordinal);
+
+          appendable.append(selector.cssName);
+        }
+
+        case ByteCode.SELECTOR_PSEUDO_ELEMENT -> {
+          int ordinal;
+          ordinal = bytes[index++];
+
+          StandardPseudoElementSelector selector;
+          selector = StandardPseudoElementSelector.ofOrdinal(ordinal);
+
+          appendable.append(selector.cssName);
+        }
+
         case ByteCode.SELECTOR_TYPE -> {
           byte b0;
           b0 = bytes[index++];

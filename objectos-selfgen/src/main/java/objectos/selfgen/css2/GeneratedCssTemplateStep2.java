@@ -109,6 +109,16 @@ final class GeneratedCssTemplateStep2 extends ThisTemplate {
         STANDARD_TYPE_SELECTOR, n(selector.fieldName)
       );
 
+      case PSEUDO_CLASS -> field(
+        PROTECTED, STATIC, FINAL, PSEUDO_CLASS_SELECTOR, name(selector.fieldName),
+        STANDARD_PSEUDO_CLASS_SELECTOR, n(selector.fieldName)
+      );
+
+      case PSEUDO_ELEMENT -> field(
+        PROTECTED, STATIC, FINAL, PSEUDO_ELEMENT_SELECTOR, name(selector.fieldName),
+        STANDARD_PSEUDO_ELEMENT_SELECTOR, n(selector.fieldName)
+      );
+
       default -> field(
         PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
         STANDARD_NAME, n(selector.fieldName)

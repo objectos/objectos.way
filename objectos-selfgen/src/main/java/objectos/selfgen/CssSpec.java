@@ -20,6 +20,7 @@ import java.util.List;
 import objectos.selfgen.css2.ColorValue;
 import objectos.selfgen.css2.CssSelfGen;
 import objectos.selfgen.css2.LengthType;
+import objectos.selfgen.css2.SelectorKind;
 import objectos.selfgen.css2.ValueType;
 
 public final class CssSpec extends CssSelfGen {
@@ -42,7 +43,9 @@ public final class CssSpec extends CssSelfGen {
 
   @Override
   protected final void definition() {
-    typeSelectors(
+    selectors(
+      SelectorKind.TYPE,
+
       "a",
       "audio",
 
@@ -110,12 +113,16 @@ public final class CssSpec extends CssSelfGen {
     );
 
     selectors(
-      // pseudo classes
+      SelectorKind.PSEUDO_CLASS,
+
       ":disabled",
       ":-moz-focusring",
-      ":-moz-ui-invalid",
+      ":-moz-ui-invalid"
+    );
 
-      // pseudo elements
+    selectors(
+      SelectorKind.PSEUDO_ELEMENT,
+
       "::after",
       "::before",
       "::placeholder",

@@ -88,7 +88,7 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     spec.write(sink, new StandardNameStep());
 
-    spec.write(sink, new StandardTypeSelectorStep());
+    spec.write(sink, new StandardSelectorStep());
 
     spec.write(sink, new StringTypeStep());
 
@@ -341,16 +341,13 @@ public abstract class CssSelfGen extends CompiledSpec {
     }
   }
 
-  protected final void typeSelectors(String... names) {
+  protected final void selectors(SelectorKind kind, String... names) {
     for (var name : names) {
       if (selectors.containsKey(name)) {
         throw new IllegalArgumentException(
           "Selector name already registered: name=" + name
         );
       }
-
-      SelectorKind kind;
-      kind = SelectorKind.TYPE;
 
       String fieldName;
       fieldName = SelectorName.generateFieldName(name);

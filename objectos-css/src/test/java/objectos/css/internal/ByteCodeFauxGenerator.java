@@ -27,6 +27,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     comment("symbol");
 
     value("COMMA");
+    value("NEXT_RULE");
     value("SEMICOLON");
     value("SEMICOLON_OPTIONAL");
     value("SPACE");
@@ -38,6 +39,8 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("SELECTOR");
     value("SELECTOR_ATTR");
     value("SELECTOR_ATTR_VALUE");
+    value("SELECTOR_PSEUDO_CLASS");
+    value("SELECTOR_PSEUDO_ELEMENT");
     value("SELECTOR_TYPE");
 
     comment("blocks");

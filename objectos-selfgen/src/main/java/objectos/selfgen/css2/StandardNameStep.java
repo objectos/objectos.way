@@ -84,12 +84,6 @@ final class StandardNameStep extends ThisTemplate {
   }
 
   private void selectors() {
-    spec.selectors().stream()
-        .filter(s -> !s.disabled)
-        .filter(s -> s.kind != SelectorKind.TYPE)
-        .sorted(SelectorName.ORDER_BY_FIELD_NAME)
-        .forEach(this::selectorConstant);
-
     selectorConstant(UNIVERSAL);
   }
 

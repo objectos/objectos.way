@@ -420,6 +420,20 @@ class Compiler01 extends CssTemplateApi {
       );
     }
 
+    else if (element instanceof StandardPseudoClassSelector selector) {
+      auxAdd(
+        ByteProto.SELECTOR_PSEUDO_CLASS,
+        (byte) selector.ordinal()
+      );
+    }
+
+    else if (element instanceof StandardPseudoElementSelector selector) {
+      auxAdd(
+        ByteProto.SELECTOR_PSEUDO_ELEMENT,
+        (byte) selector.ordinal()
+      );
+    }
+
     else if (element instanceof StandardTypeSelector selector) {
       auxAdd(ByteProto.SELECTOR_TYPE);
       auxVarInt(selector.ordinal());
@@ -587,6 +601,14 @@ class Compiler01 extends CssTemplateApi {
               }
             }
           }
+        }
+
+        case ByteProto.SELECTOR_PSEUDO_CLASS,
+             ByteProto.SELECTOR_PSEUDO_ELEMENT -> {
+          byte ordinal;
+          ordinal = aux[index++];
+
+          mainAdd(marker, ordinal);
         }
 
         case ByteProto.SELECTOR_TYPE -> {

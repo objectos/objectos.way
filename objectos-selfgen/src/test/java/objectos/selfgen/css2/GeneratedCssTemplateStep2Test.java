@@ -34,14 +34,25 @@ public class GeneratedCssTemplateStep2Test {
       protected void definition() {
         length("px", "em");
 
-        typeSelectors(
+        selectors(
+          SelectorKind.TYPE,
+
           "a",
           "pre"
         );
 
         selectors(
-          // pseudo elements
-          "::after", "::before"
+          SelectorKind.PSEUDO_CLASS,
+
+          ":checked",
+          ":-moz-focusring"
+        );
+
+        selectors(
+          SelectorKind.PSEUDO_ELEMENT,
+
+          "::after",
+          "::-moz-focus-inner"
         );
 
         // global keywords
@@ -77,6 +88,8 @@ public class GeneratedCssTemplateStep2Test {
       package objectos.css.internal;
 
       import objectos.css.om.PropertyValue;
+      import objectos.css.om.PseudoClassSelector;
+      import objectos.css.om.PseudoElementSelector;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.om.TypeSelector;
@@ -88,9 +101,13 @@ public class GeneratedCssTemplateStep2Test {
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector __after = StandardName.__after;
+        protected static final PseudoElementSelector __after = StandardPseudoElementSelector.__after;
 
-        protected static final Selector __before = StandardName.__before;
+        protected static final PseudoElementSelector __mozFocusInner = StandardPseudoElementSelector.__mozFocusInner;
+
+        protected static final PseudoClassSelector _checked = StandardPseudoClassSelector._checked;
+
+        protected static final PseudoClassSelector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
 
         protected static final TypeSelector a = StandardTypeSelector.a;
 

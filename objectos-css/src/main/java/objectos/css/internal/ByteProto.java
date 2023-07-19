@@ -41,26 +41,28 @@ final class ByteProto {
 
   public static final byte SELECTOR_ATTR = -15;
   public static final byte SELECTOR_ATTR_VALUE = -16;
-  public static final byte SELECTOR_SEL = -17;
-  public static final byte SELECTOR_SEL_END = -18;
-  public static final byte SELECTOR_TYPE = -19;
+  public static final byte SELECTOR_PSEUDO_CLASS = -17;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -18;
+  public static final byte SELECTOR_SEL = -19;
+  public static final byte SELECTOR_SEL_END = -20;
+  public static final byte SELECTOR_TYPE = -21;
 
   //properties
 
-  public static final byte DECLARATION = -20;
-  public static final byte DECLARATION_END = -21;
+  public static final byte DECLARATION = -22;
+  public static final byte DECLARATION_END = -23;
 
   //property values
 
-  public static final byte JAVA_DOUBLE = -22;
-  public static final byte JAVA_INT = -23;
-  public static final byte JAVA_STRING = -24;
-  public static final byte LENGTH_DOUBLE = -25;
-  public static final byte LENGTH_INT = -26;
-  public static final byte PERCENTAGE_DOUBLE = -27;
-  public static final byte PERCENTAGE_INT = -28;
-  public static final byte STANDARD_NAME = -29;
-  public static final byte ZERO = -30;
+  public static final byte JAVA_DOUBLE = -24;
+  public static final byte JAVA_INT = -25;
+  public static final byte JAVA_STRING = -26;
+  public static final byte LENGTH_DOUBLE = -27;
+  public static final byte LENGTH_INT = -28;
+  public static final byte PERCENTAGE_DOUBLE = -29;
+  public static final byte PERCENTAGE_INT = -30;
+  public static final byte STANDARD_NAME = -31;
+  public static final byte ZERO = -32;
 
   private ByteProto() {}
 

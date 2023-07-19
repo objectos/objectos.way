@@ -233,6 +233,45 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  TC 07: selector pseudo class/element
+  """)
+  public void testCase07() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardPseudoClassSelector._disabled);
+    compiler.styleRuleEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardPseudoElementSelector.__after);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_PSEUDO_CLASS,
+      (byte) StandardPseudoClassSelector._disabled.ordinal(),
+      ByteCode.BLOCK_EMPTY,
+
+      ByteCode.NEXT_RULE,
+
+      ByteCode.SELECTOR_PSEUDO_ELEMENT,
+      (byte) StandardPseudoElementSelector.__after.ordinal(),
+      ByteCode.BLOCK_EMPTY
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

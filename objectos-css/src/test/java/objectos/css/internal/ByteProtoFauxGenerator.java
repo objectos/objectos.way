@@ -48,6 +48,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("SELECTOR_ATTR");
     value("SELECTOR_ATTR_VALUE");
+    value("SELECTOR_PSEUDO_CLASS");
+    value("SELECTOR_PSEUDO_ELEMENT");
     value("SELECTOR_SEL");
     value("SELECTOR_SEL_END");
     value("SELECTOR_TYPE");

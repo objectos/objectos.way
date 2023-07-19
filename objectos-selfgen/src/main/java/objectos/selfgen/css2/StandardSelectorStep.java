@@ -15,9 +15,18 @@
  */
 package objectos.selfgen.css2;
 
+import java.io.IOException;
 import objectos.code.ArrayTypeName;
+import objectos.code.ClassTypeName;
+import objectos.code.JavaSink;
 
-final class StandardTypeSelectorStep extends ThisTemplate {
+final class StandardSelectorStep extends ThisTemplate {
+
+  private SelectorKind kind;
+
+  private ClassTypeName standardName;
+
+  private ClassTypeName selectorName;
 
   @Override
   protected final void definition() {
@@ -27,13 +36,13 @@ final class StandardTypeSelectorStep extends ThisTemplate {
 
     enumDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
-      PUBLIC, name(STANDARD_TYPE_SELECTOR),
-      implementsClause(TYPE_SELECTOR),
+      PUBLIC, name(standardName),
+      implementsClause(selectorName),
 
       include(this::names),
 
       field(
-        PRIVATE, STATIC, FINAL, ArrayTypeName.of(STANDARD_TYPE_SELECTOR), name("VALUES"),
+        PRIVATE, STATIC, FINAL, ArrayTypeName.of(standardName), name("VALUES"),
         v("values")
       ),
 
@@ -48,7 +57,7 @@ final class StandardTypeSelectorStep extends ThisTemplate {
       ),
 
       method(
-        PUBLIC, STATIC, STANDARD_TYPE_SELECTOR, name("ofOrdinal"),
+        PUBLIC, STATIC, standardName, name("ofOrdinal"),
         parameter(INT, name("ordinal")),
         p(RETURN, n("VALUES"), dim(n("ordinal")))
       ),
@@ -61,10 +70,41 @@ final class StandardTypeSelectorStep extends ThisTemplate {
     );
   }
 
+  @Override
+  final void writeHook(JavaSink sink) throws IOException {
+    execute(
+      sink,
+      SelectorKind.TYPE, STANDARD_TYPE_SELECTOR, TYPE_SELECTOR
+    );
+
+    execute(
+      sink,
+      SelectorKind.PSEUDO_CLASS, STANDARD_PSEUDO_CLASS_SELECTOR, PSEUDO_CLASS_SELECTOR
+    );
+
+    execute(
+      sink,
+      SelectorKind.PSEUDO_ELEMENT, STANDARD_PSEUDO_ELEMENT_SELECTOR, PSEUDO_ELEMENT_SELECTOR
+    );
+  }
+
+  private void execute(
+      JavaSink sink,
+      SelectorKind kind, ClassTypeName standardName, ClassTypeName selectorName)
+      throws IOException {
+    this.kind = kind;
+
+    this.standardName = standardName;
+
+    this.selectorName = selectorName;
+
+    super.writeHook(sink);
+  }
+
   private void names() {
     spec.selectors().stream()
         .filter(s -> !s.disabled)
-        .filter(s -> s.kind == SelectorKind.TYPE)
+        .filter(s -> s.kind == kind)
         .sorted(SelectorName.ORDER_BY_FIELD_NAME)
         .forEach(name -> {
           enumConstant(name(name.fieldName), argument(s(name.selectorName)));
