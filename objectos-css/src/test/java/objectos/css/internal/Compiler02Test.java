@@ -308,6 +308,54 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  ul {
+    list-style-image: url("foo");
+  }
+  """)
+  public void testCase09() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.url("foo");
+
+    compiler.declarationBegin(Property.LIST_STYLE_IMAGE);
+    compiler.propertyValue(InternalInstruction.URL);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.ul);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.ul.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.LIST_STYLE_IMAGE),
+      Bytes.prop1(Property.LIST_STYLE_IMAGE),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.URL,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

@@ -928,7 +928,7 @@ public class CssTemplateTest {
   """)
   public void propertyListStyle() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(
@@ -966,7 +966,7 @@ public class CssTemplateTest {
   """)
   public void propertyListStyleImage() {
     test(
-      new CssTemplate() {
+      new CssTemplate2() {
         @Override
         protected void definition() {
           style(

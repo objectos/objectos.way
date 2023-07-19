@@ -21,53 +21,57 @@ final class ByteProto {
 
   public static final byte NULL = -1;
   public static final byte MARKED = -2;
-  public static final byte MARKED4 = -3;
-  public static final byte MARKED5 = -4;
-  public static final byte MARKED6 = -5;
-  public static final byte MARKED7 = -6;
-  public static final byte MARKED9 = -7;
-  public static final byte MARKED10 = -8;
-  public static final byte INTERNAL = -9;
-  public static final byte INTERNAL4 = -10;
-  public static final byte INTERNAL7 = -11;
-  public static final byte INTERNAL9 = -12;
+  public static final byte MARKED3 = -3;
+  public static final byte MARKED4 = -4;
+  public static final byte MARKED5 = -5;
+  public static final byte MARKED6 = -6;
+  public static final byte MARKED7 = -7;
+  public static final byte MARKED9 = -8;
+  public static final byte MARKED10 = -9;
+  public static final byte INTERNAL = -10;
+  public static final byte INTERNAL4 = -11;
+  public static final byte INTERNAL7 = -12;
+  public static final byte INTERNAL9 = -13;
 
   //rules
 
-  public static final byte STYLE_RULE = -13;
-  public static final byte STYLE_RULE_END = -14;
+  public static final byte STYLE_RULE = -14;
+  public static final byte STYLE_RULE_END = -15;
 
   //selectors
 
-  public static final byte SELECTOR_ATTR = -15;
-  public static final byte SELECTOR_ATTR_VALUE = -16;
-  public static final byte SELECTOR_PSEUDO_CLASS = -17;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -18;
-  public static final byte SELECTOR_SEL = -19;
-  public static final byte SELECTOR_SEL_END = -20;
-  public static final byte SELECTOR_TYPE = -21;
+  public static final byte SELECTOR_ATTR = -16;
+  public static final byte SELECTOR_ATTR_VALUE = -17;
+  public static final byte SELECTOR_PSEUDO_CLASS = -18;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -19;
+  public static final byte SELECTOR_SEL = -20;
+  public static final byte SELECTOR_SEL_END = -21;
+  public static final byte SELECTOR_TYPE = -22;
 
   //properties
 
-  public static final byte DECLARATION = -22;
-  public static final byte DECLARATION_END = -23;
+  public static final byte DECLARATION = -23;
+  public static final byte DECLARATION_END = -24;
 
   //property values
 
-  public static final byte JAVA_DOUBLE = -24;
-  public static final byte JAVA_INT = -25;
-  public static final byte JAVA_STRING = -26;
-  public static final byte LENGTH_DOUBLE = -27;
-  public static final byte LENGTH_INT = -28;
-  public static final byte PERCENTAGE_DOUBLE = -29;
-  public static final byte PERCENTAGE_INT = -30;
-  public static final byte STANDARD_NAME = -31;
-  public static final byte ZERO = -32;
+  public static final byte JAVA_DOUBLE = -25;
+  public static final byte JAVA_INT = -26;
+  public static final byte JAVA_STRING = -27;
+  public static final byte LENGTH_DOUBLE = -28;
+  public static final byte LENGTH_INT = -29;
+  public static final byte PERCENTAGE_DOUBLE = -30;
+  public static final byte PERCENTAGE_INT = -31;
+  public static final byte STANDARD_NAME = -32;
+  public static final byte URL = -33;
+  public static final byte ZERO = -34;
 
   private ByteProto() {}
 
   public static byte markedOf(int length) {
     return switch (length) {
+      case 3 -> MARKED3;
+
       case 5 -> MARKED5;
 
       case 6 -> MARKED6;

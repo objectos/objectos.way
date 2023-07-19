@@ -53,6 +53,8 @@ final class Compiler02 extends Compiler01 {
       length = switch (proto) {
         case ByteProto.MARKED -> Bytes.decodeFixedLength(main[index++], main[index++]);
 
+        case ByteProto.MARKED3 -> 3 - 1;
+
         case ByteProto.MARKED4 -> 4 - 1;
 
         case ByteProto.MARKED5 -> 5 - 1;
@@ -272,6 +274,29 @@ final class Compiler02 extends Compiler01 {
           valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(ByteCode.KEYWORD, main[index++], main[index++]);
+        }
+
+        case ByteProto.URL -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          int baseIndex;
+          baseIndex = index;
+
+          index = decodeLength(index);
+
+          int contents;
+          contents = baseIndex - auxStart;
+
+          // skip ByteProto
+          contents++;
+
+          auxAdd(
+            ByteCode.URL,
+
+            // value index
+            main[contents++],
+            main[contents++]
+          );
         }
 
         case ByteProto.ZERO -> {

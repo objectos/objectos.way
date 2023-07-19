@@ -444,6 +444,19 @@ class Compiler01 extends CssTemplateApi {
     commonEnd(trailerProto, endProto);
   }
 
+  @Override
+  public final void url(String value) {
+    int index;
+    index = objectAdd(value);
+
+    mainAdd(
+      ByteProto.URL,
+
+      Bytes.two0(index),
+      Bytes.two1(index)
+    );
+  }
+
   final void auxAdd(byte b0) {
     aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
     aux[auxIndex++] = b0;
@@ -653,6 +666,8 @@ class Compiler01 extends CssTemplateApi {
 
                 continue loop;
               }
+
+              case ByteProto.MARKED3 -> contents += 3;
 
               case ByteProto.MARKED5 -> contents += 5;
 

@@ -57,6 +57,8 @@ public abstract class CssTemplateApi {
 
   public abstract void propertyValue(PropertyValue value);
 
+  public abstract void url(String value);
+
   public abstract void selectorAttribute(String name);
 
   public abstract void selectorAttribute(String name, AttributeOperator operator, String value);

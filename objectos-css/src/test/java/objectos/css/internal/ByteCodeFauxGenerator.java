@@ -63,6 +63,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("LENGTH_INT");
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
+    value("URL");
     value("ZERO");
   }
 }

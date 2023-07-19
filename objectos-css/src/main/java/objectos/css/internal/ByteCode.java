@@ -56,7 +56,8 @@ final class ByteCode {
   public static final byte LENGTH_INT = -23;
   public static final byte PERCENTAGE_DOUBLE = -24;
   public static final byte PERCENTAGE_INT = -25;
-  public static final byte ZERO = -26;
+  public static final byte URL = -26;
+  public static final byte ZERO = -27;
 
   private ByteCode() {}
 

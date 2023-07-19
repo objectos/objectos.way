@@ -28,6 +28,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("NULL");
     value("MARKED");
+    value("MARKED3");
     value("MARKED4");
     value("MARKED5");
     value("MARKED6");
@@ -69,6 +70,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
     value("STANDARD_NAME"); // keyword
+    value("URL");
     value("ZERO");
   }
 }

@@ -26,6 +26,7 @@ import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.SelectorElement;
 import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.tmpl.Url;
 import objectos.css.tmpl.Zero;
 import objectos.lang.Check;
 
@@ -136,6 +137,17 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.styleRuleEnd();
 
     return InternalInstruction.STYLE_RULE;
+  }
+
+  protected final Url url(String value) {
+    Check.notNull(value, "value == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.url(value);
+
+    return InternalInstruction.URL;
   }
 
   @Override

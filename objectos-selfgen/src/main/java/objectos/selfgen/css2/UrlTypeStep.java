@@ -33,6 +33,7 @@ final class UrlTypeStep extends ThisTemplate {
       annotation(GENERATED, annotationValue(s(GENERATOR))),
       PUBLIC, SEALED, name(URL),
       include(this::interfaces),
+      permitsClause(INTERNAL_INSTRUCTION),
       permitsClause(INTERNAL_URL)
     );
   }

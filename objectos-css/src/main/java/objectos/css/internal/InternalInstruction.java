@@ -21,6 +21,7 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
+import objectos.css.tmpl.Url;
 
 public enum InternalInstruction
     implements
@@ -28,7 +29,8 @@ public enum InternalInstruction
     Percentage,
     Selector,
     StyleDeclaration,
-    StyleRule {
+    StyleRule,
+    Url {
 
   INSTANCE(-1),
 
@@ -40,7 +42,9 @@ public enum InternalInstruction
 
   PERCENTAGE_INT(5),
 
-  STYLE_RULE(-1);
+  STYLE_RULE(-1),
+
+  URL(3);
 
   public final int length;
 

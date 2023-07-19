@@ -362,6 +362,61 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  ul {
+    list-style-image: url("foo");
+  }
+  """)
+  public void testCase09() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.url("foo");
+
+    compiler.declarationBegin(Property.LIST_STYLE_IMAGE);
+    compiler.propertyValue(InternalInstruction.URL);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.ul);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED3,
+      Bytes.two0(0),
+      Bytes.two1(0),
+
+      ByteProto.MARKED,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      Bytes.prop0(Property.LIST_STYLE_IMAGE),
+      Bytes.prop1(Property.LIST_STYLE_IMAGE),
+      ByteProto.URL,
+      Bytes.int0(9),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(10),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.ul.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(16),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(20),
+      ByteProto.STYLE_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);
