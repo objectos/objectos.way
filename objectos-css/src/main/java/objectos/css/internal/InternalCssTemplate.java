@@ -118,7 +118,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.selectorElement(e2);
     api.selectorEnd();
 
-    return InternalInstruction.SELECTOR;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleRule style(StyleRuleElement... elements) {

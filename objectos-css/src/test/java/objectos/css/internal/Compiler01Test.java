@@ -317,6 +317,51 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  TC 08: selector joined
+  """)
+  public void testCase08() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.selectorBegin();
+    compiler.selectorElement(StandardTypeSelector.input);
+    compiler.selectorElement(StandardPseudoElementSelector.__placeholder);
+    compiler.selectorEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.input.ordinal(),
+      ByteProto.SELECTOR_PSEUDO_ELEMENT,
+      (byte) StandardPseudoElementSelector.__placeholder.ordinal(),
+      ByteProto.SELECTOR_SEL_END,
+      Bytes.int0(7),
+      ByteProto.SELECTOR_SEL,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(5),
+      Bytes.len1(5),
+      ByteProto.SELECTOR_SEL,
+      Bytes.int0(14),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(15),
+      ByteProto.STYLE_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

@@ -136,6 +136,10 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(unit.cssName);
         }
 
+        case ByteCode.NEXT_RULE -> {
+          appendable.append(NL);
+        }
+
         case ByteCode.PERCENTAGE_DOUBLE -> {
           double value;
           value = Bytes.doubleValue(

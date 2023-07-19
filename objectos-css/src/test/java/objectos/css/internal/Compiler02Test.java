@@ -272,6 +272,42 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  TC 08: selector joined
+  """)
+  public void testCase08() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.selectorBegin();
+    compiler.selectorElement(StandardTypeSelector.input);
+    compiler.selectorElement(StandardPseudoElementSelector.__placeholder);
+    compiler.selectorEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.input.ordinal(),
+      ByteCode.SELECTOR_PSEUDO_ELEMENT,
+      (byte) StandardPseudoElementSelector.__placeholder.ordinal(),
+      ByteCode.BLOCK_EMPTY
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

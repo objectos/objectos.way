@@ -376,17 +376,37 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void selectorBegin() {
-    throw new UnsupportedOperationException("Implement me");
+    // we mark the start of our aux list
+    auxStart = auxIndex;
+
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    // 2) the start of our main list
+    mainContents = mainStart = mainIndex;
+
+    mainAdd(
+      ByteProto.SELECTOR_SEL,
+
+      // length takes 2 bytes
+      ByteProto.NULL,
+      ByteProto.NULL
+    );
   }
 
   @Override
   public final void selectorElement(SelectorElement element) {
-    throw new UnsupportedOperationException("Implement me");
+    commonElement(element);
   }
 
   @Override
   public final void selectorEnd() {
-    throw new UnsupportedOperationException("Implement me");
+    byte trailerProto;
+    trailerProto = ByteProto.SELECTOR_SEL;
+
+    byte endProto;
+    endProto = ByteProto.SELECTOR_SEL_END;
+
+    commonEnd(trailerProto, endProto);
   }
 
   @Override
@@ -410,6 +430,99 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void styleRuleElement(StyleRuleElement element) {
+    commonElement(element);
+  }
+
+  @Override
+  public final void styleRuleEnd() {
+    byte trailerProto;
+    trailerProto = ByteProto.STYLE_RULE;
+
+    byte endProto;
+    endProto = ByteProto.STYLE_RULE_END;
+
+    commonEnd(trailerProto, endProto);
+  }
+
+  final void auxAdd(byte b0) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
+    aux[auxIndex++] = b0;
+  }
+
+  final void auxAdd(byte b0, byte b1) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 2);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 5);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 8);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+    aux[auxIndex++] = b6;
+    aux[auxIndex++] = b7;
+    aux[auxIndex++] = b8;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8, byte b9) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 9);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+    aux[auxIndex++] = b6;
+    aux[auxIndex++] = b7;
+    aux[auxIndex++] = b8;
+    aux[auxIndex++] = b9;
+  }
+
+  private void auxVarInt(int value) {
+    auxIndex = Bytes.varInt(aux, auxIndex, value);
+  }
+
+  private void commonElement(Object element) {
     if (element instanceof StandardName name) {
       // element is a selector name
       // store the enum ordinal
@@ -447,7 +560,8 @@ class Compiler01 extends CssTemplateApi {
       proto = main[mainContents--];
 
       switch (proto) {
-        case ByteProto.DECLARATION -> {
+        case ByteProto.DECLARATION,
+             ByteProto.SELECTOR_SEL -> {
           byte len0;
           len0 = main[mainContents--];
 
@@ -483,9 +597,7 @@ class Compiler01 extends CssTemplateApi {
     }
   }
 
-  @Override
-  public final void styleRuleEnd() {
-    // we will iterate over the marked elements
+  private void commonEnd(byte trailerProto, byte endProto) { // we will iterate over the marked elements
     int index;
     index = auxStart;
 
@@ -506,7 +618,8 @@ class Compiler01 extends CssTemplateApi {
             proto = main[contents];
 
             switch (proto) {
-              case ByteProto.DECLARATION -> {
+              case ByteProto.DECLARATION,
+                   ByteProto.SELECTOR_SEL -> {
                 // keep the start index handy
                 int startIndex;
                 startIndex = contents;
@@ -639,7 +752,7 @@ class Compiler01 extends CssTemplateApi {
     main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
     // mark the end
-    main[mainIndex++] = ByteProto.STYLE_RULE_END;
+    main[mainIndex++] = endProto;
 
     // store the distance to the contents (yes, reversed)
     int length;
@@ -648,7 +761,7 @@ class Compiler01 extends CssTemplateApi {
     mainIndex = Bytes.varIntR(main, mainIndex, length);
 
     // trailer proto
-    main[mainIndex++] = ByteProto.STYLE_RULE;
+    main[mainIndex++] = trailerProto;
 
     // set the end index of the declaration
     length = mainIndex - mainStart;
@@ -663,84 +776,6 @@ class Compiler01 extends CssTemplateApi {
 
     // we clear the aux list
     auxIndex = auxStart;
-  }
-
-  final void auxAdd(byte b0) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
-    aux[auxIndex++] = b0;
-  }
-
-  final void auxAdd(byte b0, byte b1) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 2);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-    aux[auxIndex++] = b4;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 5);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-    aux[auxIndex++] = b4;
-    aux[auxIndex++] = b5;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
-      byte b8) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 8);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-    aux[auxIndex++] = b4;
-    aux[auxIndex++] = b5;
-    aux[auxIndex++] = b6;
-    aux[auxIndex++] = b7;
-    aux[auxIndex++] = b8;
-  }
-
-  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
-      byte b8, byte b9) {
-    aux = ByteArrays.growIfNecessary(aux, auxIndex + 9);
-    aux[auxIndex++] = b0;
-    aux[auxIndex++] = b1;
-    aux[auxIndex++] = b2;
-    aux[auxIndex++] = b3;
-    aux[auxIndex++] = b4;
-    aux[auxIndex++] = b5;
-    aux[auxIndex++] = b6;
-    aux[auxIndex++] = b7;
-    aux[auxIndex++] = b8;
-    aux[auxIndex++] = b9;
-  }
-
-  private void auxVarInt(int value) {
-    auxIndex = Bytes.varInt(aux, auxIndex, value);
   }
 
   private void mainAdd(byte b0) {
