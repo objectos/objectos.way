@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.om;
 
-import java.io.IOException;
-import objectos.css.internal.MediaType;
-
-public sealed interface MediaQuery extends MediaRuleElement permits MediaType {
-
-  void writeTo(Appendable dest) throws IOException;
-
-}
+public sealed interface MediaRuleElement permits MediaQuery, StyleRule {}

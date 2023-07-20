@@ -17,9 +17,10 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
+import objectos.css.om.MediaRuleElement;
 import objectos.css.om.PropertyValue;
-import objectos.css.tmpl.SelectorElement;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.om.SelectorElement;
+import objectos.css.om.StyleRuleElement;
 
 public abstract class CssTemplateApi {
 
@@ -48,6 +49,12 @@ public abstract class CssTemplateApi {
   public abstract void length(double value, LengthUnit unit);
 
   public abstract void length(int value, LengthUnit unit);
+
+  public abstract void mediaRuleBegin();
+
+  public abstract void mediaRuleElement(MediaRuleElement element);
+
+  public abstract void mediaRuleEnd();
 
   public void optimize() {
     throw new UnsupportedOperationException();

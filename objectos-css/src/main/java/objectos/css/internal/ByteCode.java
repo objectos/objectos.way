@@ -27,39 +27,44 @@ final class ByteCode {
   public static final byte SPACE_OPTIONAL = -6;
   public static final byte TAB = -7;
 
+  //media query
+
+  public static final byte AT_MEDIA = -8;
+  public static final byte MEDIA_QUERY = -9;
+
   //selectors
 
-  public static final byte SELECTOR = -8;
-  public static final byte SELECTOR_ATTR = -9;
-  public static final byte SELECTOR_ATTR_VALUE = -10;
-  public static final byte SELECTOR_PSEUDO_CLASS = -11;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -12;
-  public static final byte SELECTOR_TYPE = -13;
+  public static final byte SELECTOR = -10;
+  public static final byte SELECTOR_ATTR = -11;
+  public static final byte SELECTOR_ATTR_VALUE = -12;
+  public static final byte SELECTOR_PSEUDO_CLASS = -13;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -14;
+  public static final byte SELECTOR_TYPE = -15;
 
   //blocks
 
-  public static final byte BLOCK_START = -14;
-  public static final byte BLOCK_END = -15;
-  public static final byte BLOCK_EMPTY = -16;
+  public static final byte BLOCK_START = -16;
+  public static final byte BLOCK_END = -17;
+  public static final byte BLOCK_EMPTY = -18;
 
   //property
 
-  public static final byte PROPERTY_NAME = -17;
+  public static final byte PROPERTY_NAME = -19;
 
   //property values
 
-  public static final byte COLOR_HEX = -18;
-  public static final byte DOUBLE_LITERAL = -19;
-  public static final byte INT_LITERAL = -20;
-  public static final byte KEYWORD = -21;
-  public static final byte LENGTH_DOUBLE = -22;
-  public static final byte LENGTH_INT = -23;
-  public static final byte PERCENTAGE_DOUBLE = -24;
-  public static final byte PERCENTAGE_INT = -25;
-  public static final byte STRING_LITERAL = -26;
-  public static final byte STRING_QUOTES_OPTIONAL = -27;
-  public static final byte URL = -28;
-  public static final byte ZERO = -29;
+  public static final byte COLOR_HEX = -20;
+  public static final byte DOUBLE_LITERAL = -21;
+  public static final byte INT_LITERAL = -22;
+  public static final byte KEYWORD = -23;
+  public static final byte LENGTH_DOUBLE = -24;
+  public static final byte LENGTH_INT = -25;
+  public static final byte PERCENTAGE_DOUBLE = -26;
+  public static final byte PERCENTAGE_INT = -27;
+  public static final byte STRING_LITERAL = -28;
+  public static final byte STRING_QUOTES_OPTIONAL = -29;
+  public static final byte URL = -30;
+  public static final byte ZERO = -31;
 
   private ByteCode() {}
 

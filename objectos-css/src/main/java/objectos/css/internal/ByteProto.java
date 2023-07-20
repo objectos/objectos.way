@@ -35,39 +35,45 @@ final class ByteProto {
 
   //rules
 
-  public static final byte STYLE_RULE = -14;
-  public static final byte STYLE_RULE_END = -15;
+  public static final byte MEDIA_RULE = -14;
+  public static final byte MEDIA_RULE_END = -15;
+  public static final byte STYLE_RULE = -16;
+  public static final byte STYLE_RULE_END = -17;
+
+  //media query
+
+  public static final byte MEDIA_TYPE = -18;
 
   //selectors
 
-  public static final byte SELECTOR_ATTR = -16;
-  public static final byte SELECTOR_ATTR_VALUE = -17;
-  public static final byte SELECTOR_PSEUDO_CLASS = -18;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -19;
-  public static final byte SELECTOR_SEL = -20;
-  public static final byte SELECTOR_SEL_END = -21;
-  public static final byte SELECTOR_TYPE = -22;
+  public static final byte SELECTOR_ATTR = -19;
+  public static final byte SELECTOR_ATTR_VALUE = -20;
+  public static final byte SELECTOR_PSEUDO_CLASS = -21;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -22;
+  public static final byte SELECTOR_SEL = -23;
+  public static final byte SELECTOR_SEL_END = -24;
+  public static final byte SELECTOR_TYPE = -25;
 
   //properties
 
-  public static final byte DECLARATION = -23;
-  public static final byte DECLARATION_END = -24;
+  public static final byte DECLARATION = -26;
+  public static final byte DECLARATION_END = -27;
 
   //property values
 
-  public static final byte COLOR_HEX = -25;
-  public static final byte COMMA = -26;
-  public static final byte JAVA_DOUBLE = -27;
-  public static final byte JAVA_INT = -28;
-  public static final byte JAVA_STRING = -29;
-  public static final byte LENGTH_DOUBLE = -30;
-  public static final byte LENGTH_INT = -31;
-  public static final byte PERCENTAGE_DOUBLE = -32;
-  public static final byte PERCENTAGE_INT = -33;
-  public static final byte STANDARD_NAME = -34;
-  public static final byte STRING_LITERAL = -35;
-  public static final byte URL = -36;
-  public static final byte ZERO = -37;
+  public static final byte COLOR_HEX = -28;
+  public static final byte COMMA = -29;
+  public static final byte JAVA_DOUBLE = -30;
+  public static final byte JAVA_INT = -31;
+  public static final byte JAVA_STRING = -32;
+  public static final byte LENGTH_DOUBLE = -33;
+  public static final byte LENGTH_INT = -34;
+  public static final byte PERCENTAGE_DOUBLE = -35;
+  public static final byte PERCENTAGE_INT = -36;
+  public static final byte STANDARD_NAME = -37;
+  public static final byte STRING_LITERAL = -38;
+  public static final byte URL = -39;
+  public static final byte ZERO = -40;
 
   private ByteProto() {}
 

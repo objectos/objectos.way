@@ -17,17 +17,19 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
+import objectos.css.om.MediaQuery;
+import objectos.css.om.MediaRuleElement;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
+import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
+import objectos.css.om.StyleRuleElement;
 import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
-import objectos.css.tmpl.SelectorElement;
 import objectos.css.tmpl.StringLiteral;
-import objectos.css.tmpl.StyleRuleElement;
 import objectos.css.tmpl.Url;
 import objectos.css.tmpl.Zero;
 import objectos.lang.Check;
@@ -36,7 +38,9 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected static final Zero $0 = InternalZero.INSTANCE;
 
-  protected static final AttributeOperator IS = InternalAttributeOperator.EQUALS;
+  protected static final AttributeOperator EQ = InternalAttributeOperator.EQUALS;
+
+  protected static final MediaQuery screen = MediaType.SCREEN;
 
   private CssTemplateApi api;
 
@@ -161,6 +165,21 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final void media(MediaRuleElement... elements) {
+    CssTemplateApi api;
+    api = api();
+
+    api.mediaRuleBegin();
+
+    for (int i = 0; i < elements.length; i++) {
+      api.mediaRuleElement(
+        Check.notNull(elements[i], "elements[", i, "] == null")
+      );
+    }
+
+    api.mediaRuleEnd();
+  }
+
   protected final StyleRule style(StyleRuleElement... elements) {
     CssTemplateApi api;
     api = api();
@@ -175,7 +194,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     api.styleRuleEnd();
 
-    return InternalInstruction.STYLE_RULE;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final Url url(String value) {
@@ -190,10 +209,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       double value) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.declarationBegin(name);
+
     api.javaDouble(value);
+
     api.declarationEnd();
+
     return InternalInstruction.INSTANCE;
   }
 
@@ -201,10 +225,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       int value) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.declarationBegin(name);
+
     api.javaInt(value);
+
     api.declarationEnd();
+
     return InternalInstruction.INSTANCE;
   }
 
@@ -212,10 +241,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       PropertyValue value) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.declarationBegin(name);
+
     api.propertyValue(value);
+
     api.declarationEnd();
+
     return InternalInstruction.INSTANCE;
   }
 
@@ -223,11 +257,16 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       PropertyValue value1, PropertyValue value2) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.declarationBegin(name);
+
     api.propertyValue(value1);
     api.propertyValue(value2);
+
     api.declarationEnd();
+
     return InternalInstruction.INSTANCE;
   }
 
@@ -235,12 +274,17 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.declarationBegin(name);
+
     api.propertyValue(value1);
     api.propertyValue(value2);
     api.propertyValue(value3);
+
     api.declarationEnd();
+
     return InternalInstruction.INSTANCE;
   }
 
@@ -248,13 +292,18 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.declarationBegin(name);
+
     api.propertyValue(value1);
     api.propertyValue(value2);
     api.propertyValue(value3);
     api.propertyValue(value4);
+
     api.declarationEnd();
+
     return InternalInstruction.INSTANCE;
   }
 
@@ -262,10 +311,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final StyleDeclaration declaration(
       Property name,
       String value) {
-    CssTemplateApi api = api();
+    CssTemplateApi api;
+    api = api();
+
     api.declarationBegin(name);
+
     api.javaString(value);
+
     api.declarationEnd();
+
     return InternalInstruction.INSTANCE;
   }
 

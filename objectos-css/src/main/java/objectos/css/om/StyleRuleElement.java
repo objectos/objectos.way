@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
-
-import objectos.css.om.Selector;
-import objectos.css.om.StyleDeclaration;
+package objectos.css.om;
 
 public sealed interface StyleRuleElement permits Selector, StyleDeclaration {}

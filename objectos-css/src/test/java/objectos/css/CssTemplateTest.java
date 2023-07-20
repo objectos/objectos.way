@@ -21,33 +21,38 @@ import org.testng.annotations.Test;
 
 public class CssTemplateTest {
 
-  @Test(enabled = false, description = """
-  [#460] @media screen {}
+  @Test(description = """
+  [#460] @media screen {
+    p {
+      display: flex;
+    }
+  }
   """)
   public void media01() {
-    //    test(
-    //      new CssTemplate() {
-    //        @Override
-    //        protected void definition() {
-    //          media(
-    //            screen
-    //          );
-    //
-    //          style(
-    //            body,
-    //            padding(rem(1), $0)
-    //          );
-    //        }
-    //      },
-    //
-    //      """
-    //      @media screen {
-    //        body {
-    //          padding: 1rem 0;
-    //        }
-    //      }
-    //      """
-    //    );
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          media(
+            screen,
+
+            style(
+              p,
+
+              display(flex)
+            )
+          );
+        }
+      },
+
+      """
+      @media screen {
+        p {
+          display: flex;
+        }
+      }
+      """
+    );
   }
 
   @Test(description = """
@@ -62,9 +67,9 @@ public class CssTemplateTest {
         protected void definition() {
           style(
             button,
-            attr("type", IS, "button"),
-            attr("type", IS, "reset"),
-            attr("type", IS, "submit"),
+            attr("type", EQ, "button"),
+            attr("type", EQ, "reset"),
+            attr("type", EQ, "submit"),
 
             appearance(none),
             appearance(auto),
@@ -125,9 +130,9 @@ public class CssTemplateTest {
         protected void definition() {
           style(
             button,
-            attr("type", IS, "button"),
-            attr("type", IS, "reset"),
-            attr("type", IS, "submit"),
+            attr("type", EQ, "button"),
+            attr("type", EQ, "reset"),
+            attr("type", EQ, "submit"),
 
             backgroundImage(none),
             backgroundImage(inherit)
@@ -450,7 +455,7 @@ public class CssTemplateTest {
         protected void definition() {
           style(
             button,
-            attr("role", IS, "button"),
+            attr("role", EQ, "button"),
 
             cursor(auto),
             cursor(none),
@@ -1317,7 +1322,7 @@ public class CssTemplateTest {
         @Override
         protected final void definition() {
           style(
-            attr("type", IS, "search"),
+            attr("type", EQ, "search"),
 
             outlineOffset(px(-2))
           );

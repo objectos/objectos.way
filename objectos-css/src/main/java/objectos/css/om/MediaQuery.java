@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.om;
 
-import objectos.css.om.StyleRule;
+import objectos.css.internal.MediaType;
 
-public sealed interface MediaRuleElement permits MediaQuery, StyleRule {}
+public sealed interface MediaQuery extends MediaRuleElement permits MediaType {
+
+}

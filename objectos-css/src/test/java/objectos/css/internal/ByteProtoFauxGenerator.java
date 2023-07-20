@@ -42,8 +42,14 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("rules");
 
+    value("MEDIA_RULE");
+    value("MEDIA_RULE_END");
     value("STYLE_RULE");
     value("STYLE_RULE_END");
+
+    comment("media query");
+
+    value("MEDIA_TYPE");
 
     comment("selectors");
 

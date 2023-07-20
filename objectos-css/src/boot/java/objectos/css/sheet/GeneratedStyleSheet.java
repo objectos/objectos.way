@@ -391,10 +391,6 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
-  protected static final TypeSelector footer = Css.footer;
-
-  protected static final TypeSelector tr = Css.tr;
-
   protected static final TypeSelector form = Css.form;
 
   protected static final TypeSelector label = Css.label;
@@ -536,6 +532,10 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector sup = Css.sup;
 
   protected static final TypeSelector style = Css.style;
+
+  protected static final TypeSelector footer = Css.footer;
+
+  protected static final TypeSelector tr = Css.tr;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 

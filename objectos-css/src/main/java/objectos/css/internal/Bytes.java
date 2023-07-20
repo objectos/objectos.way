@@ -61,7 +61,7 @@ final class Bytes {
   }
 
   public static byte int0(int value) {
-    return (byte) (value >>> 0);
+    return (byte) value;
   }
 
   public static byte int1(int value) {

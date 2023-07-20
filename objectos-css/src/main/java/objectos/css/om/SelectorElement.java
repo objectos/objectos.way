@@ -13,15 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.om;
 
-import java.io.IOException;
-import objectos.css.om.Selector;
-
-public sealed interface SelectorElement permits Selector {
-
-  default void writeTo(Appendable dest) throws IOException {
-    dest.append(toString());
-  };
-
-}
+public sealed interface SelectorElement permits Selector {}

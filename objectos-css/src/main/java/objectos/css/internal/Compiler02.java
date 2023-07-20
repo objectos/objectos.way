@@ -74,6 +74,17 @@ final class Compiler02 extends Compiler01 {
 
         case ByteProto.MARKED10 -> 10 - 1;
 
+        case ByteProto.MEDIA_RULE -> {
+          ruleCount = nextRuleIf(ruleCount);
+
+          int thisLength;
+          thisLength = Bytes.decodeFixedLength(main[index++], main[index++]);
+
+          mediaRule(index);
+
+          yield thisLength;
+        }
+
         case ByteProto.STYLE_RULE -> {
           ruleCount = nextRuleIf(ruleCount);
 
@@ -375,6 +386,83 @@ final class Compiler02 extends Compiler01 {
     return index;
   }
 
+  private void mediaRule(int index) {
+    auxAdd(
+      ByteCode.AT_MEDIA,
+      ByteCode.SPACE
+    );
+
+    int ruleCount;
+    ruleCount = 0;
+
+    loop: while (index < main.length) {
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case ByteProto.MEDIA_RULE_END -> {
+          break loop;
+        }
+
+        case ByteProto.MEDIA_TYPE -> {
+          auxAdd(ByteCode.MEDIA_QUERY, main[index++]);
+        }
+
+        case ByteProto.STYLE_RULE -> {
+          if (ruleCount == 0) {
+            auxAdd(ByteCode.BLOCK_START);
+
+            indentationInc();
+          }
+
+          ruleCount++;
+
+          // keep index handy
+          int thisIndex;
+          thisIndex = index;
+
+          // decode length
+          byte len0;
+          len0 = main[index++];
+
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = main[index++];
+
+            length = Bytes.toVarInt(len0, len1);
+          }
+
+          // compute rule index
+          int elemIndex;
+          elemIndex = thisIndex - length;
+
+          // skip ByteProto + length to the end
+          elemIndex += 3;
+
+          styleRule(elemIndex);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    if (ruleCount == 0) {
+      auxAdd(ByteCode.BLOCK_EMPTY);
+    }
+
+    else {
+      semicolonOptional();
+      indentationDec();
+      indentationWrite();
+      auxAdd(ByteCode.BLOCK_END);
+    }
+  }
+
   private int nextRuleIf(int ruleCount) {
     if (ruleCount > 0) {
       auxAdd(ByteCode.NEXT_RULE);
@@ -461,6 +549,7 @@ final class Compiler02 extends Compiler01 {
     } else {
       auxAdd(ByteCode.SELECTOR_TYPE, b0, main[index++]);
     }
+
     return index;
   }
 
@@ -512,9 +601,11 @@ final class Compiler02 extends Compiler01 {
 
           indentationWrite();
 
+          // keep index handy
           int thisIndex;
           thisIndex = index;
 
+          // decode length
           byte len0;
           len0 = main[index++];
 
@@ -528,6 +619,7 @@ final class Compiler02 extends Compiler01 {
             length = Bytes.toVarInt(len0, len1);
           }
 
+          // compute declaration index
           int elemIndex;
           elemIndex = thisIndex - length;
 

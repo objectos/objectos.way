@@ -15,16 +15,9 @@
  */
 package objectos.css.om;
 
-import java.io.IOException;
-import objectos.css.tmpl.StyleRuleElement;
-
 public non-sealed interface StyleDeclaration extends StyleRuleElement {
 
   @Override
   String toString();
-
-  default void writeTo(Appendable dest) throws IOException {
-    dest.append(toString());
-  }
 
 }

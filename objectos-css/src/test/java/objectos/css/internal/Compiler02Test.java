@@ -506,6 +506,67 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  @media screen {
+    p {
+      display: flex;
+    }
+  }
+  """)
+  public void testCase13() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.declarationBegin(Property.DISPLAY);
+    compiler.propertyValue(StandardName.flex);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.mediaRuleBegin();
+    compiler.mediaRuleElement(MediaType.SCREEN);
+    compiler.mediaRuleElement(InternalInstruction.INSTANCE);
+    compiler.mediaRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.AT_MEDIA,
+      ByteCode.SPACE,
+      ByteCode.MEDIA_QUERY,
+      (byte) MediaType.SCREEN.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 2,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.DISPLAY),
+      Bytes.prop1(Property.DISPLAY),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.KEYWORD,
+      Bytes.name0(StandardName.flex),
+      Bytes.name1(StandardName.flex),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.BLOCK_END,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

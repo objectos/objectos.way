@@ -16,9 +16,10 @@
 package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
+import objectos.css.om.MediaRuleElement;
 import objectos.css.om.PropertyValue;
-import objectos.css.tmpl.SelectorElement;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.om.SelectorElement;
+import objectos.css.om.StyleRuleElement;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
@@ -271,6 +272,21 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void mediaRuleBegin() {
+    commonBegin(ByteProto.MEDIA_RULE);
+  }
+
+  @Override
+  public final void mediaRuleElement(MediaRuleElement element) {
+    commonElement(element);
+  }
+
+  @Override
+  public final void mediaRuleEnd() {
+    commonEnd(ByteProto.MEDIA_RULE, ByteProto.MEDIA_RULE_END);
+  }
+
+  @Override
   public final void percentage(double value) {
     long bits;
     bits = Double.doubleToLongBits(value);
@@ -444,21 +460,10 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void styleRuleBegin() {
-    // we mark the start of our aux list
-    auxStart = auxIndex;
+    byte proto;
+    proto = ByteProto.STYLE_RULE;
 
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    // 2) the start of our main list
-    mainContents = mainStart = mainIndex;
-
-    mainAdd(
-      ByteProto.STYLE_RULE,
-
-      // length takes 2 bytes
-      ByteProto.NULL,
-      ByteProto.NULL
-    );
+    commonBegin(proto);
   }
 
   @Override
@@ -568,6 +573,24 @@ class Compiler01 extends CssTemplateApi {
     auxIndex = Bytes.varInt(aux, auxIndex, value);
   }
 
+  private void commonBegin(byte proto) {
+    // we mark the start of our aux list
+    auxStart = auxIndex;
+
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    // 2) the start of our main list
+    mainContents = mainStart = mainIndex;
+
+    mainAdd(
+      proto,
+
+      // length takes 2 bytes
+      ByteProto.NULL,
+      ByteProto.NULL
+    );
+  }
+
   private void commonElement(Object element) {
     if (element instanceof StandardName name) {
       // element is a selector name
@@ -607,7 +630,8 @@ class Compiler01 extends CssTemplateApi {
 
       switch (proto) {
         case ByteProto.DECLARATION,
-             ByteProto.SELECTOR_SEL -> {
+             ByteProto.SELECTOR_SEL,
+             ByteProto.STYLE_RULE -> {
           byte len0;
           len0 = main[mainContents--];
 
@@ -636,6 +660,16 @@ class Compiler01 extends CssTemplateApi {
       auxAdd(ByteProto.INTERNAL);
     }
 
+    else if (element instanceof MediaType type) {
+      int ordinal;
+      ordinal = type.ordinal();
+
+      auxAdd(
+        ByteProto.MEDIA_TYPE,
+        Bytes.int0(ordinal)
+      );
+    }
+
     else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + element.getClass()
@@ -643,7 +677,8 @@ class Compiler01 extends CssTemplateApi {
     }
   }
 
-  private void commonEnd(byte trailerProto, byte endProto) { // we will iterate over the marked elements
+  private void commonEnd(byte trailerProto, byte endProto) {
+    // we will iterate over the marked elements
     int index;
     index = auxStart;
 
@@ -665,7 +700,8 @@ class Compiler01 extends CssTemplateApi {
 
             switch (proto) {
               case ByteProto.DECLARATION,
-                   ByteProto.SELECTOR_SEL -> {
+                   ByteProto.SELECTOR_SEL,
+                   ByteProto.STYLE_RULE -> {
                 // keep the start index handy
                 int startIndex;
                 startIndex = contents;
@@ -698,6 +734,23 @@ class Compiler01 extends CssTemplateApi {
                 mainIndex = Bytes.varInt(main, mainIndex, length);
 
                 continue loop;
+              }
+
+              case ByteProto.MARKED -> {
+                contents++;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
+
+                // point to next element
+                contents += length;
               }
 
               case ByteProto.MARKED3 -> contents += 3;
@@ -764,7 +817,8 @@ class Compiler01 extends CssTemplateApi {
           }
         }
 
-        case ByteProto.SELECTOR_PSEUDO_CLASS,
+        case ByteProto.MEDIA_TYPE,
+             ByteProto.SELECTOR_PSEUDO_CLASS,
              ByteProto.SELECTOR_PSEUDO_ELEMENT -> {
           byte ordinal;
           ordinal = aux[index++];

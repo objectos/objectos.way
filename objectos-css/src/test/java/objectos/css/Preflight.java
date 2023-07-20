@@ -167,9 +167,9 @@ final class Preflight extends CssTemplate {
 
     style(
       button,
-      attr("type", IS, "button"),
-      attr("type", IS, "reset"),
-      attr("type", IS, "submit"),
+      attr("type", EQ, "button"),
+      attr("type", EQ, "reset"),
+      attr("type", EQ, "submit"),
 
       webkitAppearance(button),
       backgroundColor(transparent),
@@ -202,7 +202,7 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      attr("type", IS, "search"),
+      attr("type", EQ, "search"),
 
       outlineOffset(px(-2))
     );
@@ -283,7 +283,7 @@ final class Preflight extends CssTemplate {
 
     style(
       button,
-      attr("role", IS, "button"),
+      attr("role", EQ, "button"),
 
       cursor(pointer)
     );

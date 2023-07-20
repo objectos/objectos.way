@@ -15,7 +15,6 @@
  */
 package objectos.css.internal;
 
-import java.io.IOException;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
@@ -38,8 +37,6 @@ public enum InternalInstruction
 
   INSTANCE(-1),
 
-  STYLE_RULE(-1),
-
   COLOR_HEX(3),
 
   LENGTH_DOUBLE(10),
@@ -58,11 +55,6 @@ public enum InternalInstruction
 
   private InternalInstruction(int length) {
     this.length = length;
-  }
-
-  @Override
-  public void writeTo(Appendable dest) throws IOException {
-    throw new UnsupportedOperationException();
   }
 
 }

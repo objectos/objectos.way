@@ -34,6 +34,11 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("SPACE_OPTIONAL");
     value("TAB");
 
+    comment("media query");
+
+    value("AT_MEDIA");
+    value("MEDIA_QUERY");
+
     comment("selectors");
 
     value("SELECTOR");

@@ -15,14 +15,7 @@
  */
 package objectos.css.om;
 
-import java.io.IOException;
-import objectos.css.tmpl.MediaRuleElement;
-
 /**
  * @since 0.7.1
  */
-public non-sealed interface StyleRule extends Rule, MediaRuleElement {
-
-  void writeTo(Appendable dest) throws IOException;
-
-}
+public non-sealed interface StyleRule extends Rule, MediaRuleElement {}

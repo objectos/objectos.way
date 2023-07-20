@@ -15,9 +15,8 @@
  */
 package objectos.css.internal;
 
-import java.io.IOException;
 import java.util.Locale;
-import objectos.css.tmpl.MediaQuery;
+import objectos.css.om.MediaQuery;
 
 public enum MediaType implements MediaQuery {
 
@@ -27,11 +26,12 @@ public enum MediaType implements MediaQuery {
 
   SCREEN;
 
+  private static final MediaType[] VALUES = values();
+
   final String cssName = name().toLowerCase(Locale.US);
 
-  @Override
-  public final void writeTo(Appendable dest) throws IOException {
-    dest.append(cssName);
+  public static MediaType ofOrdinal(int ordinal) {
+    return VALUES[ordinal];
   }
 
 }

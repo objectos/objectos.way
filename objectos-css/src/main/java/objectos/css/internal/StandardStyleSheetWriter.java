@@ -50,6 +50,10 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
       code = bytes[index++];
 
       switch (code) {
+        case ByteCode.AT_MEDIA -> {
+          appendable.append("@media");
+        }
+
         case ByteCode.BLOCK_END -> {
           appendable.append('}');
           appendable.append(NL);
@@ -119,6 +123,16 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           unit = LengthUnit.byOrdinal(bytes[index++]);
 
           appendable.append(unit.cssName);
+        }
+
+        case ByteCode.MEDIA_QUERY -> {
+          byte ordinal;
+          ordinal = bytes[index++];
+
+          MediaType value;
+          value = MediaType.ofOrdinal(ordinal);
+
+          appendable.append(value.cssName);
         }
 
         case ByteCode.NEXT_RULE -> {
