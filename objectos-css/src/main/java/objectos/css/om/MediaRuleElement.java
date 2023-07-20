@@ -15,4 +15,4 @@
  */
 package objectos.css.om;
 
-public sealed interface MediaRuleElement permits MediaQuery, StyleRule {}
+public sealed interface MediaRuleElement permits MediaFeature, MediaQuery, StyleRule {}

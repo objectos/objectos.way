@@ -17,6 +17,4 @@ package objectos.css.om;
 
 import objectos.css.internal.MediaType;
 
-public sealed interface MediaQuery extends MediaRuleElement permits MediaType {
-
-}
+public sealed interface MediaQuery extends MediaRuleElement permits MediaType {}

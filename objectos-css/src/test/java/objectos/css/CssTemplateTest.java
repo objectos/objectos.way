@@ -56,6 +56,40 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#460] @media (min-width: 640px) {
+    p {
+      display: flex;
+    }
+  }
+  """)
+  public void media02() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          media(
+            minWidth(px(640)),
+
+            style(
+              p,
+
+              display(flex)
+            )
+          );
+        }
+      },
+
+      """
+      @media (min-width: 640px) {
+        p {
+          display: flex;
+        }
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#419] Preflight 13
 
   - appearance

@@ -15,6 +15,7 @@
  */
 package objectos.css.internal;
 
+import objectos.css.om.MediaFeatureOrStyleDeclaration;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
@@ -28,6 +29,7 @@ public enum InternalInstruction
     implements
     ColorValue,
     Length,
+    MediaFeatureOrStyleDeclaration,
     Percentage,
     Selector,
     StringLiteral,

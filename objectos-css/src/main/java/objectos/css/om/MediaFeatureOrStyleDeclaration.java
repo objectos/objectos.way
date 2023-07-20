@@ -13,18 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.tmpl;
+package objectos.css.om;
 
-import objectos.lang.Generated;
-
-@Generated("objectos.selfgen.CssSpec")
-public sealed interface LengthPercentage extends
-    BottomValue,
-    FontSizeValue,
-    HeightOrWidthValue,
-    LineHeightValue,
-    MarginValue,
-    MaxHeightOrWidthValue,
-    TextDecorationThicknessValue,
-    TopValue,
-    VerticalAlignValue permits Length, Percentage {}
+public interface MediaFeatureOrStyleDeclaration extends MediaFeature, StyleDeclaration {}

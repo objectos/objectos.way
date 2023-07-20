@@ -19,52 +19,51 @@ final class ByteCode {
 
   //symbol
 
-  public static final byte COMMA = -1;
-  public static final byte NEXT_RULE = -2;
-  public static final byte SEMICOLON = -3;
-  public static final byte SEMICOLON_OPTIONAL = -4;
-  public static final byte SPACE = -5;
-  public static final byte SPACE_OPTIONAL = -6;
-  public static final byte TAB = -7;
+  public static final byte BLOCK_START = -1;
+  public static final byte BLOCK_END = -2;
+  public static final byte BLOCK_EMPTY = -3;
+  public static final byte COMMA = -4;
+  public static final byte NEXT_RULE = -5;
+  public static final byte PARENS_OPEN = -6;
+  public static final byte PARENS_CLOSE = -7;
+  public static final byte SEMICOLON = -8;
+  public static final byte SEMICOLON_OPTIONAL = -9;
+  public static final byte SPACE = -10;
+  public static final byte SPACE_OPTIONAL = -11;
+  public static final byte TAB = -12;
 
   //media query
 
-  public static final byte AT_MEDIA = -8;
-  public static final byte MEDIA_QUERY = -9;
+  public static final byte AT_MEDIA = -13;
+  public static final byte MEDIA_QUERY = -14;
 
   //selectors
 
-  public static final byte SELECTOR = -10;
-  public static final byte SELECTOR_ATTR = -11;
-  public static final byte SELECTOR_ATTR_VALUE = -12;
-  public static final byte SELECTOR_PSEUDO_CLASS = -13;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -14;
-  public static final byte SELECTOR_TYPE = -15;
-
-  //blocks
-
-  public static final byte BLOCK_START = -16;
-  public static final byte BLOCK_END = -17;
-  public static final byte BLOCK_EMPTY = -18;
+  public static final byte SELECTOR = -15;
+  public static final byte SELECTOR_ATTR = -16;
+  public static final byte SELECTOR_ATTR_VALUE = -17;
+  public static final byte SELECTOR_PSEUDO_CLASS = -18;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -19;
+  public static final byte SELECTOR_TYPE = -20;
 
   //property
 
-  public static final byte PROPERTY_NAME = -19;
+  public static final byte PROPERTY_NAME = -21;
 
   //property values
 
-  public static final byte COLOR_HEX = -20;
-  public static final byte DOUBLE_LITERAL = -21;
-  public static final byte INT_LITERAL = -22;
-  public static final byte KEYWORD = -23;
-  public static final byte LENGTH_DOUBLE = -24;
-  public static final byte LENGTH_INT = -25;
-  public static final byte PERCENTAGE_DOUBLE = -26;
-  public static final byte PERCENTAGE_INT = -27;
-  public static final byte STRING_LITERAL = -28;
-  public static final byte STRING_QUOTES_OPTIONAL = -29;
-  public static final byte URL = -30;
-  public static final byte ZERO = -31;
+  public static final byte COLOR_HEX = -22;
+  public static final byte DOUBLE_LITERAL = -23;
+  public static final byte INT_LITERAL = -24;
+  public static final byte KEYWORD = -25;
+  public static final byte LENGTH_DOUBLE = -26;
+  public static final byte LENGTH_INT = -27;
+  public static final byte PERCENTAGE_DOUBLE = -28;
+  public static final byte PERCENTAGE_INT = -29;
+  public static final byte STRING_LITERAL = -30;
+  public static final byte STRING_QUOTES_OPTIONAL = -31;
+  public static final byte URL = -32;
+  public static final byte ZERO = -33;
 
   private ByteCode() {}
 

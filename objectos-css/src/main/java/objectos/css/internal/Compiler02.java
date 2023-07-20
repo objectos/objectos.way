@@ -137,8 +137,6 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.DECLARATION_END -> {
-          auxAdd(ByteCode.SEMICOLON);
-
           break loop;
         }
 
@@ -400,6 +398,36 @@ final class Compiler02 extends Compiler01 {
       proto = main[index++];
 
       switch (proto) {
+        case ByteProto.DECLARATION -> {
+          auxAdd(ByteCode.PARENS_OPEN);
+
+          // keep index handy
+          int thisIndex;
+          thisIndex = index;
+
+          // decode length
+          byte len0;
+          len0 = main[index++];
+
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = main[index++];
+
+            length = Bytes.toVarInt(len0, len1);
+          }
+
+          // compute declaration index
+          int elemIndex;
+          elemIndex = thisIndex - length;
+
+          declaration(elemIndex);
+
+          auxAdd(ByteCode.PARENS_CLOSE);
+        }
+
         case ByteProto.MEDIA_RULE_END -> {
           break loop;
         }
@@ -624,6 +652,8 @@ final class Compiler02 extends Compiler01 {
           elemIndex = thisIndex - length;
 
           declaration(elemIndex);
+
+          auxAdd(ByteCode.SEMICOLON);
         }
 
         case ByteProto.SELECTOR_ATTR -> {

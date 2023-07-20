@@ -567,6 +567,83 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  @media (min-width: 640px) {
+    p {
+      display: flex;
+    }
+  }
+  """)
+  public void testCase14() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.length(640, LengthUnit.PX);
+
+    compiler.declarationBegin(Property.MIN_WIDTH);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.declarationEnd();
+
+    compiler.declarationBegin(Property.DISPLAY);
+    compiler.propertyValue(StandardName.flex);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.mediaRuleBegin();
+    compiler.mediaRuleElement(InternalInstruction.INSTANCE);
+    compiler.mediaRuleElement(InternalInstruction.INSTANCE);
+    compiler.mediaRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.AT_MEDIA,
+      ByteCode.SPACE,
+      ByteCode.PARENS_OPEN,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.MIN_WIDTH),
+      Bytes.prop1(Property.MIN_WIDTH),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.LENGTH_INT,
+      Bytes.int0(640),
+      Bytes.int1(640),
+      Bytes.int2(640),
+      Bytes.int3(640),
+      Bytes.unit(LengthUnit.PX),
+      ByteCode.PARENS_CLOSE,
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 2,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.DISPLAY),
+      Bytes.prop1(Property.DISPLAY),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.KEYWORD,
+      Bytes.name0(StandardName.flex),
+      Bytes.name1(StandardName.flex),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.BLOCK_END,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

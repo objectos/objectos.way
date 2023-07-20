@@ -20,6 +20,7 @@ import java.util.List;
 import objectos.selfgen.css2.ColorValue;
 import objectos.selfgen.css2.CssSelfGen;
 import objectos.selfgen.css2.LengthType;
+import objectos.selfgen.css2.PercentageType;
 import objectos.selfgen.css2.SelectorKind;
 import objectos.selfgen.css2.ValueType;
 
@@ -34,6 +35,8 @@ public final class CssSpec extends CssSelfGen {
   private LengthType length;
 
   private ValueType lengthPercentage;
+
+  private PercentageType percentage;
 
   public static void main(String[] args) throws IOException {
     var spec = new CssSpec();
@@ -187,7 +190,7 @@ public final class CssSpec extends CssSelfGen {
       "vh", "vmax", "vmin", "vw"
     );
 
-    var percentage = percentage();
+    percentage = percentage();
 
     lengthPercentage = t("LengthPercentage", length, percentage);
 
@@ -1083,33 +1086,38 @@ public final class CssSpec extends CssSelfGen {
   }
 
   private void minHeight() {
-    var value = t(
+    ValueType value;
+    value = t(
       "MinHeightOrWidthValue",
 
       k("auto"),
       k("fit-content"),
       k("max-content"),
-      k("min-content"),
-
-      lengthPercentage
+      k("min-content")
     );
 
     property(
       "min-height",
 
       sig(globalKeyword, "value"),
-      sig(value, "value")
+      sig(value, "value"),
+      sig(lengthPercentage, "value")
     );
   }
 
   private void minWidth() {
-    var value = t("MinHeightOrWidthValue");
+    ValueType value;
+    value = t("MinHeightOrWidthValue");
+
+    // we leave out the length type as
+    // min-width(length) is also a media feature
 
     property(
       "min-width",
 
       sig(globalKeyword, "value"),
-      sig(value, "value")
+      sig(value, "value"),
+      sig(percentage, "value")
     );
   }
 

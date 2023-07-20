@@ -1351,12 +1351,22 @@ abstract class GeneratedCssTemplate {
     return declaration(Property.MIN_HEIGHT, value);
   }
 
+  protected final StyleDeclaration minHeight(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MIN_HEIGHT, value);
+  }
+
   protected final StyleDeclaration minWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     return declaration(Property.MIN_WIDTH, value);
   }
 
   protected final StyleDeclaration minWidth(MinHeightOrWidthValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MIN_WIDTH, value);
+  }
+
+  protected final StyleDeclaration minWidth(Percentage value) {
     Check.notNull(value, "value == null");
     return declaration(Property.MIN_WIDTH, value);
   }

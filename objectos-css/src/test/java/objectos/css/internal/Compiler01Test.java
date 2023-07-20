@@ -656,6 +656,98 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  @media (min-width: 640px) {
+    p {
+      display: flex;
+    }
+  }
+  """)
+  public void testCase14() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.length(640, LengthUnit.PX);
+
+    compiler.declarationBegin(Property.MIN_WIDTH);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.declarationEnd();
+
+    compiler.declarationBegin(Property.DISPLAY);
+    compiler.propertyValue(StandardName.flex);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.mediaRuleBegin();
+    compiler.mediaRuleElement(InternalInstruction.INSTANCE);
+    compiler.mediaRuleElement(InternalInstruction.INSTANCE);
+    compiler.mediaRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED6,
+      Bytes.int0(640),
+      Bytes.int1(640),
+      Bytes.int2(640),
+      Bytes.int3(640),
+      Bytes.unit(LengthUnit.PX),
+
+      ByteProto.MARKED,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      Bytes.prop0(Property.MIN_WIDTH),
+      Bytes.prop1(Property.MIN_WIDTH),
+      ByteProto.LENGTH_INT,
+      Bytes.int0(12),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(13),
+      ByteProto.DECLARATION,
+
+      ByteProto.MARKED,
+      Bytes.len0(8),
+      Bytes.len1(8),
+      Bytes.prop0(Property.DISPLAY),
+      Bytes.prop1(Property.DISPLAY),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.flex),
+      Bytes.name1(StandardName.flex),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(8),
+      ByteProto.DECLARATION,
+
+      ByteProto.MARKED,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(17),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(18),
+      ByteProto.STYLE_RULE,
+
+      ByteProto.MEDIA_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.DECLARATION,
+      Bytes.int0(35),
+      ByteProto.STYLE_RULE,
+      Bytes.int0(16),
+      ByteProto.MEDIA_RULE_END,
+      Bytes.int0(44),
+      ByteProto.MEDIA_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

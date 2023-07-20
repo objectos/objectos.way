@@ -20,4 +20,4 @@ import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface MinHeightOrWidthValue extends PropertyValue permits AutoKeyword, FitContentKeyword, LengthPercentage, MaxContentKeyword, MinContentKeyword, StandardName {}
+public sealed interface MinHeightOrWidthValue extends PropertyValue permits AutoKeyword, FitContentKeyword, MaxContentKeyword, MinContentKeyword, StandardName {}

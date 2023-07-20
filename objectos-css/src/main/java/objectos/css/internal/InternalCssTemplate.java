@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
+import objectos.css.om.MediaFeatureOrStyleDeclaration;
 import objectos.css.om.MediaQuery;
 import objectos.css.om.MediaRuleElement;
 import objectos.css.om.PropertyValue;
@@ -120,6 +121,18 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.declarationEnd();
 
     return InternalInstruction.INSTANCE;
+  }
+
+  protected final MediaFeatureOrStyleDeclaration minWidth(Length value) {
+    Check.notNull(value, "value == null");
+
+    return declaration(Property.MIN_WIDTH, value);
+  }
+
+  protected final MediaFeatureOrStyleDeclaration minWidth(Zero value) {
+    Check.notNull(value, "value == null");
+
+    return declaration(Property.MIN_WIDTH, value);
   }
 
   protected final ColorValue hex(String value) {
@@ -238,7 +251,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final StyleDeclaration declaration(
+  final InternalInstruction declaration(
       Property name,
       PropertyValue value) {
     CssTemplateApi api;
@@ -254,7 +267,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final StyleDeclaration declaration(
+  final InternalInstruction declaration(
       Property name,
       PropertyValue value1, PropertyValue value2) {
     CssTemplateApi api;
@@ -271,7 +284,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final StyleDeclaration declaration(
+  final InternalInstruction declaration(
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3) {
     CssTemplateApi api;
@@ -289,7 +302,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final StyleDeclaration declaration(
+  final InternalInstruction declaration(
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4) {
     CssTemplateApi api;
@@ -308,7 +321,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final StyleDeclaration declaration(
+  final InternalInstruction declaration(
       Property name,
       String value) {
     CssTemplateApi api;

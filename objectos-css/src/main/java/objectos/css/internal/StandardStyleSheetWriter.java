@@ -139,6 +139,10 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(NL);
         }
 
+        case ByteCode.PARENS_CLOSE -> appendable.append(')');
+
+        case ByteCode.PARENS_OPEN -> appendable.append('(');
+
         case ByteCode.PERCENTAGE_DOUBLE -> {
           double value;
           value = Bytes.doubleValue(

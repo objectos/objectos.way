@@ -26,8 +26,13 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
   public final void execute() {
     comment("symbol");
 
+    value("BLOCK_START");
+    value("BLOCK_END");
+    value("BLOCK_EMPTY");
     value("COMMA");
     value("NEXT_RULE");
+    value("PARENS_OPEN");
+    value("PARENS_CLOSE");
     value("SEMICOLON");
     value("SEMICOLON_OPTIONAL");
     value("SPACE");
@@ -47,12 +52,6 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("SELECTOR_PSEUDO_CLASS");
     value("SELECTOR_PSEUDO_ELEMENT");
     value("SELECTOR_TYPE");
-
-    comment("blocks");
-
-    value("BLOCK_START");
-    value("BLOCK_END");
-    value("BLOCK_EMPTY");
 
     comment("property");
 
