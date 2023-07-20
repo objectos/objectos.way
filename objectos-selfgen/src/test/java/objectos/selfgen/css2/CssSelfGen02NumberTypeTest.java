@@ -43,34 +43,41 @@ public class CssSelfGen02NumberTypeTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclarationDouble;
-      import objectos.css.internal.StyleDeclarationInt;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
+        protected static final Selector any = StandardName.any;
 
         protected final StyleDeclaration lineHeight(double value) {
-          return new StyleDeclarationDouble(Property.LINE_HEIGHT, value);
+          return declaration(Property.LINE_HEIGHT, value);
         }
 
         protected final StyleDeclaration lineHeight(int value) {
-          return new StyleDeclarationInt(Property.LINE_HEIGHT, value);
+          return declaration(Property.LINE_HEIGHT, value);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );

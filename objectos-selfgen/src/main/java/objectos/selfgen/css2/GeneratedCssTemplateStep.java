@@ -15,16 +15,17 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.List;
+import java.util.Locale;
 import objectos.code.ClassTypeName;
 import objectos.code.PrimitiveTypeName;
+import objectos.code.tmpl.BlockInstruction;
 
 final class GeneratedCssTemplateStep extends ThisTemplate {
 
-  private static final SelectorName UNIVERSAL = new SelectorName(SelectorKind.OTHER, "any", "*");
-
   @Override
   protected final void definition() {
-    packageDeclaration(CSS);
+    packageDeclaration(CSS_INTERNAL);
 
     autoImports();
 
@@ -38,19 +39,57 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
       include(this::keywords),
 
+      include(this::lengthUnits),
+
+      include(this::properties),
+
       method(
-        PRIVATE, STATIC, NAMED_ELEMENT, name("named"),
-        parameter(STRING, name("name")),
-        p(RETURN, NEW, NAMED_ELEMENT, argument(n("name")))
+        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        parameter(PROPERTY, name("name")),
+        parameter(PROPERTY_VALUE, name("value"))
       ),
 
-      include(this::length),
+      method(
+        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        parameter(PROPERTY, name("name")),
+        parameter(PROPERTY_VALUE, name("value1")),
+        parameter(PROPERTY_VALUE, name("value2"))
+      ),
 
-      include(this::percentage),
+      method(
+        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        parameter(PROPERTY, name("name")),
+        parameter(PROPERTY_VALUE, name("value1")),
+        parameter(PROPERTY_VALUE, name("value2")),
+        parameter(PROPERTY_VALUE, name("value3"))
+      ),
 
-      include(this::string),
+      method(
+        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        parameter(PROPERTY, name("name")),
+        parameter(PROPERTY_VALUE, name("value1")),
+        parameter(PROPERTY_VALUE, name("value2")),
+        parameter(PROPERTY_VALUE, name("value3")),
+        parameter(PROPERTY_VALUE, name("value4"))
+      ),
 
-      include(this::properties)
+      method(
+        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        parameter(PROPERTY, name("name")),
+        parameter(INT, name("value"))
+      ),
+
+      method(
+        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        parameter(PROPERTY, name("name")),
+        parameter(DOUBLE, name("value"))
+      ),
+
+      method(
+        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        parameter(PROPERTY, name("name")),
+        parameter(STRING, name("value"))
+      )
     );
   }
 
@@ -60,7 +99,38 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         .sorted(SelectorName.ORDER_BY_FIELD_NAME)
         .forEach(this::selectorField);
 
-    selectorField(UNIVERSAL);
+    field(SELECTOR, "any");
+  }
+
+  private void selectorField(SelectorName selector) {
+    switch (selector.kind) {
+      case TYPE -> field(
+        PROTECTED, STATIC, FINAL, TYPE_SELECTOR, name(selector.fieldName),
+        STANDARD_TYPE_SELECTOR, n(selector.fieldName)
+      );
+
+      case PSEUDO_CLASS -> field(
+        PROTECTED, STATIC, FINAL, PSEUDO_CLASS_SELECTOR, name(selector.fieldName),
+        STANDARD_PSEUDO_CLASS_SELECTOR, n(selector.fieldName)
+      );
+
+      case PSEUDO_ELEMENT -> field(
+        PROTECTED, STATIC, FINAL, PSEUDO_ELEMENT_SELECTOR, name(selector.fieldName),
+        STANDARD_PSEUDO_ELEMENT_SELECTOR, n(selector.fieldName)
+      );
+
+      default -> field(
+        PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
+        STANDARD_NAME, n(selector.fieldName)
+      );
+    }
+  }
+
+  private void field(ClassTypeName type, String fieldName) {
+    field(
+      PROTECTED, STATIC, FINAL, type, name(fieldName),
+      STANDARD_NAME, n(fieldName)
+    );
   }
 
   private void colors() {
@@ -72,90 +142,48 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
     colorValue.names.stream()
         .sorted((self, that) -> (self.fieldName().compareTo(that.fieldName())))
-        .forEach(name -> field(
-          PROTECTED, STATIC, FINAL, COLOR_VALUE, name(name.fieldName()),
-          COLOR, n(name.constantName())
-        ));
-  }
-
-  private void selectorField(SelectorName selector) {
-    field(
-      PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
-      v("named"), argument(s(selector.selectorName))
-    );
+        .forEach(name -> field(COLOR_VALUE, name.fieldName()));
   }
 
   private void keywords() {
     spec.keywords().stream()
         .sorted(KeywordName.ORDER_BY_FIELD_NAME)
-        .forEach(this::keywordField);
+        .forEach(kw -> field(kw.className(), kw.fieldName));
   }
 
-  private void keywordField(KeywordName keyword) {
-    var type = keyword.className();
+  private void lengthUnits() {
+    LengthType lengthType;
+    lengthType = spec.lengthType();
 
-    field(
-      PROTECTED, STATIC, FINAL, type, name(keyword.fieldName),
-      v("named"), argument(s(keyword.keywordName))
-    );
-  }
-
-  private void length() {
-    var lengthType = spec.lengthType();
-
-    if (lengthType != null) {
-      lengthType.units.stream()
-          .sorted()
-          .forEach(this::lengthMethods);
-    }
-  }
-
-  private void lengthMethods(String unit) {
-    method(
-      PROTECTED, FINAL, LENGTH, name(unit),
-      parameter(DOUBLE, name("value")),
-      p(RETURN, INTERNAL_LENGTH, v("of"), argument(s(unit)), argument(n("value")))
-    );
-
-    method(
-      PROTECTED, FINAL, LENGTH, name(unit),
-      parameter(INT, name("value")),
-      p(RETURN, INTERNAL_LENGTH, v("of"), argument(s(unit)), argument(n("value")))
-    );
-  }
-
-  private void percentage() {
-    var percentageType = spec.percentageType();
-
-    if (percentageType == null) {
+    if (lengthType == null) {
       return;
     }
 
-    method(
-      PROTECTED, FINAL, PERCENTAGE, name("pct"),
-      parameter(DOUBLE, name("value")),
-      p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
-    );
+    List<PrimitiveTypeName> primitives;
+    primitives = List.of(DOUBLE, INT);
 
-    method(
-      PROTECTED, FINAL, PERCENTAGE, name("pct"),
-      parameter(INT, name("value")),
-      p(RETURN, INTERNAL_PERCENTAGE, v("of"), argument(n("value")))
-    );
-  }
+    lengthType.units.stream()
+        .sorted()
+        .forEach(unit -> {
+          String enumName;
+          enumName = unit.toUpperCase(Locale.US);
 
-  private void string() {
-    var stringType = spec.stringType();
+          for (var primitive : primitives) {
+            method(
+              PROTECTED, FINAL, LENGTH, name(unit),
+              parameter(primitive, name("value")),
+              p(RETURN, v("length"), argument(n("value")), argument(LENGTH_UNIT, n(enumName)))
+            );
+          }
+        });
 
-    if (stringType == null) {
-      return;
+    for (var primitive : primitives) {
+      method(
+        ABSTRACT, LENGTH, name("length"),
+        parameter(primitive, name("value")),
+        parameter(LENGTH_UNIT, name("unit"))
+      );
     }
-
-    method(
-      PROTECTED, FINAL, STRING_LITERAL, name("l"),
-      parameter(STRING, name("value")),
-      p(RETURN, INTERNAL_STRING_LITERAL, v("of"), argument(n("value")))
-    );
   }
 
   private void properties() {
@@ -170,10 +198,11 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         method(
           PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
           parameter(sig.type(), name(sig.name())),
+          propertyCheckNotNull(sig.name()),
           p(
-            RETURN, NEW, STYLE_DECLARATION1,
+            RETURN, v("declaration"),
             argument(PROPERTY, n(property.constantName)),
-            argument(n(sig.name()), v("self"))
+            argument(n(sig.name()))
           )
         );
       } else if (signature instanceof Signature2 sig) {
@@ -181,11 +210,13 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
           parameter(sig.type1(), name(sig.name1())),
           parameter(sig.type2(), name(sig.name2())),
+          propertyCheckNotNull(sig.name1()),
+          propertyCheckNotNull(sig.name2()),
           p(
-            RETURN, NEW, STYLE_DECLARATION2,
+            RETURN, v("declaration"),
             argument(PROPERTY, n(property.constantName)),
-            argument(n(sig.name1()), v("self")),
-            argument(n(sig.name2()), v("self"))
+            argument(n(sig.name1())),
+            argument(n(sig.name2()))
           )
         );
       } else if (signature instanceof Signature3 sig) {
@@ -194,12 +225,15 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           parameter(sig.type1(), name(sig.name1())),
           parameter(sig.type2(), name(sig.name2())),
           parameter(sig.type3(), name(sig.name3())),
+          propertyCheckNotNull(sig.name1()),
+          propertyCheckNotNull(sig.name2()),
+          propertyCheckNotNull(sig.name3()),
           p(
-            RETURN, NEW, STYLE_DECLARATION3,
+            RETURN, v("declaration"),
             argument(PROPERTY, n(property.constantName)),
-            argument(n(sig.name1()), v("self")),
-            argument(n(sig.name2()), v("self")),
-            argument(n(sig.name3()), v("self"))
+            argument(n(sig.name1())),
+            argument(n(sig.name2())),
+            argument(n(sig.name3()))
           )
         );
       } else if (signature instanceof Signature4 sig) {
@@ -209,33 +243,25 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           parameter(sig.type2(), name(sig.name2())),
           parameter(sig.type3(), name(sig.name3())),
           parameter(sig.type4(), name(sig.name4())),
+          propertyCheckNotNull(sig.name1()),
+          propertyCheckNotNull(sig.name2()),
+          propertyCheckNotNull(sig.name3()),
+          propertyCheckNotNull(sig.name4()),
           p(
-            RETURN, NEW, STYLE_DECLARATION4,
+            RETURN, v("declaration"),
             argument(PROPERTY, n(property.constantName)),
-            argument(n(sig.name1()), v("self")),
-            argument(n(sig.name2()), v("self")),
-            argument(n(sig.name3()), v("self")),
-            argument(n(sig.name4()), v("self"))
+            argument(n(sig.name1())),
+            argument(n(sig.name2())),
+            argument(n(sig.name3())),
+            argument(n(sig.name4()))
           )
         );
       } else if (signature instanceof SignaturePrim sig) {
-        var type = sig.type();
-
-        ClassTypeName impl;
-
-        if (type == PrimitiveTypeName.INT) {
-          impl = STYLE_DECLARATION_INT;
-        } else if (type == PrimitiveTypeName.DOUBLE) {
-          impl = STYLE_DECLARATION_DOUBLE;
-        } else {
-          throw new UnsupportedOperationException("Implement me");
-        }
-
         method(
           PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
-          parameter(type, name(sig.name())),
+          parameter(sig.type(), name(sig.name())),
           p(
-            RETURN, NEW, impl,
+            RETURN, v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
           )
@@ -244,13 +270,9 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         method(
           PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
           parameter(sig.type(), name(sig.name())),
+          propertyCheckNotNull(sig.name()),
           p(
-            OBJECTS, v("requireNonNull"),
-            argument(n(sig.name())),
-            argument(s(sig.name() + " == null"))
-          ),
-          p(
-            RETURN, NEW, STYLE_DECLARATION_STRING,
+            RETURN, v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
           )
@@ -266,6 +288,10 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         );
       }
     }
+  }
+
+  private BlockInstruction propertyCheckNotNull(String name) {
+    return p(CHECK, v("notNull"), argument(n(name)), argument(s(name + " == null")));
   }
 
 }

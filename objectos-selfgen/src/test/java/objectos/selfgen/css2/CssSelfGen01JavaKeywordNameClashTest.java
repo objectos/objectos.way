@@ -34,13 +34,26 @@ public class CssSelfGen01JavaKeywordNameClashTest {
       protected void definition() {
         keywordFieldName("double", "_double");
 
-        var lineStyle = t("LineStyle",
-          k("none"), k("hidden"), k("dotted"), k("dashed"),
-          k("solid "), k("double"), k("groove"), k("ridge"),
-          k("inset"), k("outset")
+        var lineStyle = t(
+          "LineStyle",
+
+          k("none"),
+          k("hidden"),
+          k("dotted"),
+          k("dashed"),
+          k("solid "),
+          k("double"),
+          k("groove"),
+          k("ridge"),
+          k("inset"),
+          k("outset")
         );
 
-        pval("border-style", lineStyle);
+        property(
+          "border-style",
+
+          sig(lineStyle, "value")
+        );
       }
     };
 
@@ -50,50 +63,60 @@ public class CssSelfGen01JavaKeywordNameClashTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclaration1;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.LineStyle;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
+        protected static final Selector any = StandardName.any;
 
-        protected static final LineStyle _double = named("double");
+        protected static final LineStyle _double = StandardName._double;
 
-        protected static final LineStyle dashed = named("dashed");
+        protected static final LineStyle dashed = StandardName.dashed;
 
-        protected static final LineStyle dotted = named("dotted");
+        protected static final LineStyle dotted = StandardName.dotted;
 
-        protected static final LineStyle groove = named("groove");
+        protected static final LineStyle groove = StandardName.groove;
 
-        protected static final LineStyle hidden = named("hidden");
+        protected static final LineStyle hidden = StandardName.hidden;
 
-        protected static final LineStyle inset = named("inset");
+        protected static final LineStyle inset = StandardName.inset;
 
-        protected static final LineStyle none = named("none");
+        protected static final LineStyle none = StandardName.none;
 
-        protected static final LineStyle outset = named("outset");
+        protected static final LineStyle outset = StandardName.outset;
 
-        protected static final LineStyle ridge = named("ridge");
+        protected static final LineStyle ridge = StandardName.ridge;
 
-        protected static final LineStyle solid = named("solid ");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
+        protected static final LineStyle solid = StandardName.solid;
 
         protected final StyleDeclaration borderStyle(LineStyle value) {
-          return new StyleDeclaration1(Property.BORDER_STYLE, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.BORDER_STYLE, value);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );

@@ -52,30 +52,40 @@ public class CssSelfGen14UrlTypeTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclaration1;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.Image;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
+        protected static final Selector any = StandardName.any;
 
         protected final StyleDeclaration listStyleImage(Image value) {
-          return new StyleDeclaration1(Property.LIST_STYLE_IMAGE, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.LIST_STYLE_IMAGE, value);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );
@@ -107,12 +117,11 @@ public class CssSelfGen14UrlTypeTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.css.internal.InternalUrl;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Url extends
-          Image permits InternalInstruction, InternalUrl {}
+          Image permits InternalInstruction {}
       """
     );
   }

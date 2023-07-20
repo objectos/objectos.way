@@ -33,7 +33,7 @@ final class PercentageTypeStep extends ThisTemplate {
       annotation(GENERATED, annotationValue(s(GENERATOR))),
       PUBLIC, SEALED, name(PERCENTAGE),
       include(this::interfaces),
-      permitsClause(INTERNAL_INSTRUCTION, INTERNAL_PERCENTAGE, ZERO)
+      permitsClause(INTERNAL_INSTRUCTION, ZERO)
     );
   }
 

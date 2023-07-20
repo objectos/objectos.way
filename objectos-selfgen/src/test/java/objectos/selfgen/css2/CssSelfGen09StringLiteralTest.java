@@ -32,8 +32,13 @@ public class CssSelfGen09StringLiteralTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        var fontFamilyValue = t("FontFamilyValue",
-          keywords("sans-serif", "monospace"),
+        var fontFamilyValue = t(
+          "FontFamilyValue",
+
+          keywords(
+            "sans-serif",
+            "monospace"
+          ),
           string()
         );
 
@@ -47,36 +52,40 @@ public class CssSelfGen09StringLiteralTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.InternalStringLiteral;
-      import objectos.css.internal.NamedElement;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.FontFamilyValue;
-      import objectos.css.tmpl.StringLiteral;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
+        protected static final Selector any = StandardName.any;
 
-        protected static final FontFamilyValue monospace = named("monospace");
+        protected static final FontFamilyValue monospace = StandardName.monospace;
 
-        protected static final FontFamilyValue sansSerif = named("sans-serif");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
-
-        protected final StringLiteral l(String value) {
-          return InternalStringLiteral.of(value);
-        }
+        protected static final FontFamilyValue sansSerif = StandardName.sansSerif;
 
         protected abstract StyleDeclaration fontFamily(FontFamilyValue... values);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );
@@ -90,13 +99,12 @@ public class CssSelfGen09StringLiteralTest {
       """
       package objectos.css.tmpl;
 
-      import objectos.css.internal.NamedElement;
       import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface FontFamilyValue extends PropertyValue permits NamedElement, StandardName, StringLiteral {}
+      public sealed interface FontFamilyValue extends PropertyValue permits StandardName, StringLiteral {}
       """
     );
   }
@@ -110,15 +118,11 @@ public class CssSelfGen09StringLiteralTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.css.internal.InternalStringLiteral;
-      import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface StringLiteral extends
-          FontFamilyValue permits InternalInstruction, InternalStringLiteral {
-        PropertyValue asFontFamilyValue();
-      }
+          FontFamilyValue permits InternalInstruction {}
       """
     );
   }

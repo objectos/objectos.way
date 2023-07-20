@@ -15,10 +15,9 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface DisplayInternalValue extends
-    DisplayValue permits NamedElement, StandardName {}
+    DisplayValue permits StandardName {}

@@ -32,7 +32,9 @@ public class CssSelfGen08MultiPropertyKeywordTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        var lineStyle = t("LineStyle",
+        var lineStyle = t(
+          "LineStyle",
+
           keywords(
             "inset",
             "none",
@@ -40,13 +42,21 @@ public class CssSelfGen08MultiPropertyKeywordTest {
           )
         );
 
-        pval("border-style", lineStyle);
+        property(
+          "border-style",
+
+          sig(lineStyle, "value")
+        );
 
         var textSizeAdjustValue = t("TextSizeAdjustValue",
           keywords("auto", "none")
         );
 
-        pval("text-size-adjust", textSizeAdjustValue);
+        property(
+          "text-size-adjust",
+
+          sig(textSizeAdjustValue, "value")
+        );
       }
     };
 
@@ -56,44 +66,55 @@ public class CssSelfGen08MultiPropertyKeywordTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclaration1;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.LineStyle;
       import objectos.css.tmpl.NoneKeyword;
       import objectos.css.tmpl.TextSizeAdjustValue;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
+        protected static final Selector any = StandardName.any;
 
-        protected static final TextSizeAdjustValue auto = named("auto");
+        protected static final TextSizeAdjustValue auto = StandardName.auto;
 
-        protected static final LineStyle inset = named("inset");
+        protected static final LineStyle inset = StandardName.inset;
 
-        protected static final NoneKeyword none = named("none");
+        protected static final NoneKeyword none = StandardName.none;
 
-        protected static final LineStyle outset = named("outset");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
+        protected static final LineStyle outset = StandardName.outset;
 
         protected final StyleDeclaration borderStyle(LineStyle value) {
-          return new StyleDeclaration1(Property.BORDER_STYLE, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.BORDER_STYLE, value);
         }
 
         protected final StyleDeclaration textSizeAdjust(TextSizeAdjustValue value) {
-          return new StyleDeclaration1(Property.TEXT_SIZE_ADJUST, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.TEXT_SIZE_ADJUST, value);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );
@@ -107,47 +128,12 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       """
       package objectos.css.tmpl;
 
-      import objectos.css.internal.NamedElement;
       import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LineStyle extends PropertyValue permits NamedElement, NoneKeyword, StandardName {}
-      """
-    );
-  }
-
-  @Test
-  public void namedElement() {
-    assertEquals(
-      result.get("objectos/css/internal/NamedElement.java"),
-
-      """
-      package objectos.css.internal;
-
-      import objectos.css.om.Selector;
-      import objectos.css.tmpl.LineStyle;
-      import objectos.css.tmpl.NoneKeyword;
-      import objectos.css.tmpl.TextSizeAdjustValue;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public final class NamedElement implements Selector,
-          LineStyle,
-          TextSizeAdjustValue,
-          NoneKeyword {
-        private final String name;
-
-        public NamedElement(String name) {
-          this.name = name;
-        }
-
-        @Override
-        public final String toString() {
-          return name;
-        }
-      }
+      public sealed interface LineStyle extends PropertyValue permits NoneKeyword, StandardName {}
       """
     );
   }
@@ -160,14 +146,13 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       """
       package objectos.css.tmpl;
 
-      import objectos.css.internal.NamedElement;
       import objectos.css.internal.StandardName;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface NoneKeyword extends
           LineStyle,
-          TextSizeAdjustValue permits NamedElement, StandardName {}
+          TextSizeAdjustValue permits StandardName {}
       """
     );
   }
@@ -180,13 +165,12 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       """
       package objectos.css.tmpl;
 
-      import objectos.css.internal.NamedElement;
       import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface TextSizeAdjustValue extends PropertyValue permits NamedElement, NoneKeyword, StandardName {}
+      public sealed interface TextSizeAdjustValue extends PropertyValue permits NoneKeyword, StandardName {}
       """
     );
   }

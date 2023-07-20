@@ -15,7 +15,6 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
@@ -23,4 +22,4 @@ import objectos.lang.Generated;
 public sealed interface MinContentKeyword extends
     HeightOrWidthValue,
     MaxHeightOrWidthValue,
-    MinHeightOrWidthValue permits NamedElement, StandardName {}
+    MinHeightOrWidthValue permits StandardName {}

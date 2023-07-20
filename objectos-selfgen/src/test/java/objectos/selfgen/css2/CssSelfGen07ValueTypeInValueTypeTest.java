@@ -37,8 +37,10 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
 
         var lengthPercentage = t("LengthPercentage", len, pct);
 
-        pval("line-height", t("LineHeightValue",
-          lengthPercentage, k("normal"))
+        property(
+          "line-height",
+
+          sig(t("LineHeightValue", lengthPercentage, k("normal")), "value")
         );
       }
     };
@@ -49,60 +51,63 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.InternalLength;
-      import objectos.css.internal.InternalPercentage;
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclaration1;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.Length;
       import objectos.css.tmpl.LineHeightValue;
-      import objectos.css.tmpl.Percentage;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
+        protected static final Selector any = StandardName.any;
 
-        protected static final LineHeightValue normal = named("normal");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
+        protected static final LineHeightValue normal = StandardName.normal;
 
         protected final Length em(double value) {
-          return InternalLength.of("em", value);
+          return length(value, LengthUnit.EM);
         }
 
         protected final Length em(int value) {
-          return InternalLength.of("em", value);
+          return length(value, LengthUnit.EM);
         }
 
         protected final Length px(double value) {
-          return InternalLength.of("px", value);
+          return length(value, LengthUnit.PX);
         }
 
         protected final Length px(int value) {
-          return InternalLength.of("px", value);
+          return length(value, LengthUnit.PX);
         }
 
-        protected final Percentage pct(double value) {
-          return InternalPercentage.of(value);
-        }
+        abstract Length length(double value, LengthUnit unit);
 
-        protected final Percentage pct(int value) {
-          return InternalPercentage.of(value);
-        }
+        abstract Length length(int value, LengthUnit unit);
 
         protected final StyleDeclaration lineHeight(LineHeightValue value) {
-          return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.LINE_HEIGHT, value);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );
@@ -117,12 +122,11 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.css.internal.InternalLength;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Length extends
-          LengthPercentage permits InternalInstruction, InternalLength, Zero {}
+          LengthPercentage permits InternalInstruction, Zero {}
       """
     );
   }
@@ -152,43 +156,12 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       """
       package objectos.css.tmpl;
 
-      import objectos.css.internal.NamedElement;
       import objectos.css.internal.StandardName;
       import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LineHeightValue extends PropertyValue permits LengthPercentage, NamedElement, StandardName {}
-      """
-    );
-  }
-
-  @Test
-  public void namedElement() {
-    assertEquals(
-      result.get("objectos/css/internal/NamedElement.java"),
-
-      """
-      package objectos.css.internal;
-
-      import objectos.css.om.Selector;
-      import objectos.css.tmpl.LineHeightValue;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public final class NamedElement implements Selector,
-          LineHeightValue {
-        private final String name;
-
-        public NamedElement(String name) {
-          this.name = name;
-        }
-
-        @Override
-        public final String toString() {
-          return name;
-        }
-      }
+      public sealed interface LineHeightValue extends PropertyValue permits LengthPercentage, StandardName {}
       """
     );
   }
@@ -202,12 +175,11 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.css.internal.InternalPercentage;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Percentage extends
-          LengthPercentage permits InternalInstruction, InternalPercentage, Zero {}
+          LengthPercentage permits InternalInstruction, Zero {}
       """
     );
   }

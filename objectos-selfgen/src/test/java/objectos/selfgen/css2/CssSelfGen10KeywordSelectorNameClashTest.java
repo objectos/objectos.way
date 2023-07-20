@@ -34,9 +34,10 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
       protected void definition() {
         selectors("a", "small");
 
-        pval("font-size", t("FontSizeValue",
-          keywords("large", "small")
-        ));
+        property(
+          "font-size",
+          sig(t("FontSizeValue", keywords("large", "small")), "value")
+        );
       }
     };
 
@@ -46,37 +47,47 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclaration1;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.FontSizeValue;
       import objectos.css.tmpl.SmallKeyword;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector a = named("a");
+        protected static final Selector a = StandardName.a;
 
-        protected static final Selector any = named("*");
+        protected static final Selector any = StandardName.any;
 
-        protected static final FontSizeValue large = named("large");
+        protected static final FontSizeValue large = StandardName.large;
 
-        protected static final SmallKeyword small = named("small");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
+        protected static final SmallKeyword small = StandardName.small;
 
         protected final StyleDeclaration fontSize(FontSizeValue value) {
-          return new StyleDeclaration1(Property.FONT_SIZE, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.FONT_SIZE, value);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );
@@ -90,7 +101,6 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
       """
       package objectos.css.tmpl;
 
-      import objectos.css.internal.NamedElement;
       import objectos.css.internal.StandardName;
       import objectos.css.om.Selector;
       import objectos.lang.Generated;
@@ -98,7 +108,7 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface SmallKeyword extends
           FontSizeValue,
-          Selector permits NamedElement, StandardName {}
+          Selector permits StandardName {}
       """
     );
   }

@@ -15,7 +15,6 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
@@ -30,4 +29,4 @@ public sealed interface AutoKeyword extends
     OutlineStyleValue,
     TextDecorationThicknessValue,
     TextSizeAdjustValue,
-    TopValue permits NamedElement, StandardName {}
+    TopValue permits StandardName {}

@@ -16,7 +16,6 @@
 package objectos.css.internal;
 
 import java.io.IOException;
-import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
@@ -63,11 +62,6 @@ public enum InternalInstruction
 
   @Override
   public void writeTo(Appendable dest) throws IOException {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public final PropertyValue asFontFamilyValue() {
     throw new UnsupportedOperationException();
   }
 

@@ -57,7 +57,6 @@ public final class KeywordName implements ParameterType, Value {
 
   @Override
   public final void addValueType(ValueType valueType) {
-    valueType.addPermitted(ThisTemplate.NAMED_ELEMENT);
     valueType.addPermitted(ThisTemplate.STANDARD_NAME);
 
     superTypes.add(valueType.className);

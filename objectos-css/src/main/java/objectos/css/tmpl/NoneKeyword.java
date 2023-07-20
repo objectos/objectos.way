@@ -15,7 +15,6 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
@@ -33,4 +32,4 @@ public sealed interface NoneKeyword extends
     ResizeValue,
     TextDecorationLineSingleValue,
     TextSizeAdjustValue,
-    TextTransformValue permits NamedElement, StandardName {}
+    TextTransformValue permits StandardName {}

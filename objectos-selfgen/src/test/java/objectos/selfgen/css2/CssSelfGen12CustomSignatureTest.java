@@ -48,54 +48,58 @@ public class CssSelfGen12CustomSignatureTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.InternalPercentage;
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclaration1;
-      import objectos.css.internal.StyleDeclaration2;
-      import objectos.css.internal.StyleDeclaration3;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.Percentage;
       import objectos.css.tmpl.TextIndentValue;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
+        protected static final Selector any = StandardName.any;
 
-        protected static final TextIndentValue eachLine = named("each-line");
+        protected static final TextIndentValue eachLine = StandardName.eachLine;
 
-        protected static final TextIndentValue hanging = named("hanging");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
-
-        protected final Percentage pct(double value) {
-          return InternalPercentage.of(value);
-        }
-
-        protected final Percentage pct(int value) {
-          return InternalPercentage.of(value);
-        }
+        protected static final TextIndentValue hanging = StandardName.hanging;
 
         protected final StyleDeclaration textIndent(Percentage value) {
-          return new StyleDeclaration1(Property.TEXT_INDENT, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.TEXT_INDENT, value);
         }
 
         protected final StyleDeclaration textIndent(Percentage value1, TextIndentValue value2) {
-          return new StyleDeclaration2(Property.TEXT_INDENT, value1.self(), value2.self());
+          Check.notNull(value1, "value1 == null");
+          Check.notNull(value2, "value2 == null");
+          return declaration(Property.TEXT_INDENT, value1, value2);
         }
 
         protected final StyleDeclaration textIndent(Percentage value1, TextIndentValue value2, TextIndentValue value3) {
-          return new StyleDeclaration3(Property.TEXT_INDENT, value1.self(), value2.self(), value3.self());
+          Check.notNull(value1, "value1 == null");
+          Check.notNull(value2, "value2 == null");
+          Check.notNull(value3, "value3 == null");
+          return declaration(Property.TEXT_INDENT, value1, value2, value3);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );

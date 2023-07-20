@@ -15,10 +15,9 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface LineStyle extends PropertyValue permits DashedKeyword, DottedKeyword, DoubleKeyword, GrooveKeyword, InsetKeyword, NamedElement, NoneKeyword, OutsetKeyword, RidgeKeyword, SolidKeyword, StandardName {}
+public sealed interface LineStyle extends PropertyValue permits DashedKeyword, DottedKeyword, DoubleKeyword, GrooveKeyword, InsetKeyword, NoneKeyword, OutsetKeyword, RidgeKeyword, SolidKeyword, StandardName {}

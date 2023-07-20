@@ -49,26 +49,12 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName INTERNAL_INSTRUCTION
       = ClassTypeName.of(CSS_INTERNAL, "InternalInstruction");
 
-  static final ClassTypeName INTERNAL_LENGTH
-      = ClassTypeName.of(CSS_INTERNAL, "InternalLength");
-
-  static final ClassTypeName INTERNAL_PERCENTAGE
-      = ClassTypeName.of(CSS_INTERNAL, "InternalPercentage");
-
-  static final ClassTypeName INTERNAL_STRING_LITERAL
-      = ClassTypeName.of(CSS_INTERNAL, "InternalStringLiteral");
-
-  static final ClassTypeName INTERNAL_URL
-      = ClassTypeName.of(CSS_INTERNAL, "InternalUrl");
-
   static final ClassTypeName INTERNAL_ZERO
       = ClassTypeName.of(CSS_INTERNAL, "InternalZero");
 
   static final ClassTypeName LENGTH = ClassTypeName.of(CSS_TMPL, "Length");
 
   static final ClassTypeName LENGTH_UNIT = ClassTypeName.of(CSS_INTERNAL, "LengthUnit");
-
-  static final ClassTypeName NAMED_ELEMENT = ClassTypeName.of(CSS_INTERNAL, "NamedElement");
 
   static final ClassTypeName OBJECTS = ClassTypeName.of(Objects.class);
 

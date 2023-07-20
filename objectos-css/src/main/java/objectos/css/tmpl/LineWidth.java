@@ -15,10 +15,9 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface LineWidth extends
-    OutlineValue permits Length, MediumKeyword, NamedElement, StandardName {}
+    OutlineValue permits Length, MediumKeyword, StandardName {}

@@ -34,7 +34,11 @@ public class CssSelfGen03PercentageTypeTest {
       protected void definition() {
         var pct = percentage();
 
-        pval("line-height", t("LineHeightValue", pct));
+        property(
+          "line-height",
+
+          sig(t("LineHeightValue", pct), "value")
+        );
       }
     };
 
@@ -44,40 +48,40 @@ public class CssSelfGen03PercentageTypeTest {
   @Test
   public void generatedCssTemplate() {
     assertEquals(
-      result.get("objectos/css/GeneratedCssTemplate.java"),
+      result.get("objectos/css/internal/GeneratedCssTemplate.java"),
 
       """
-      package objectos.css;
+      package objectos.css.internal;
 
-      import objectos.css.internal.InternalPercentage;
-      import objectos.css.internal.NamedElement;
-      import objectos.css.internal.Property;
-      import objectos.css.internal.StyleDeclaration1;
+      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.LineHeightValue;
-      import objectos.css.tmpl.Percentage;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final Selector any = named("*");
-
-        private static NamedElement named(String name) {
-          return new NamedElement(name);
-        }
-
-        protected final Percentage pct(double value) {
-          return InternalPercentage.of(value);
-        }
-
-        protected final Percentage pct(int value) {
-          return InternalPercentage.of(value);
-        }
+        protected static final Selector any = StandardName.any;
 
         protected final StyleDeclaration lineHeight(LineHeightValue value) {
-          return new StyleDeclaration1(Property.LINE_HEIGHT, value.self());
+          Check.notNull(value, "value == null");
+          return declaration(Property.LINE_HEIGHT, value);
         }
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+
+        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+        abstract StyleDeclaration declaration(Property name, int value);
+
+        abstract StyleDeclaration declaration(Property name, double value);
+
+        abstract StyleDeclaration declaration(Property name, String value);
       }
       """
     );
@@ -92,12 +96,11 @@ public class CssSelfGen03PercentageTypeTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.css.internal.InternalPercentage;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public sealed interface Percentage extends
-          LineHeightValue permits InternalInstruction, InternalPercentage, Zero {}
+          LineHeightValue permits InternalInstruction, Zero {}
       """
     );
   }

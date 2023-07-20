@@ -15,10 +15,9 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface FontFeatureSettingsValue extends PropertyValue permits NamedElement, NormalKeyword, StandardName {}
+public sealed interface FontFeatureSettingsValue extends PropertyValue permits NormalKeyword, StandardName {}

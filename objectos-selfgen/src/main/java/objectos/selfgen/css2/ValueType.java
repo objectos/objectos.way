@@ -74,8 +74,8 @@ public final class ValueType implements ParameterType, Value {
     return className.hashCode();
   }
 
-  public final boolean permitsNamedElement() {
-    return permitted().contains(ThisTemplate.NAMED_ELEMENT);
+  public final boolean permitsStandardName() {
+    return permitted().contains(ThisTemplate.STANDARD_NAME);
   }
 
   @Override

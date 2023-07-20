@@ -73,7 +73,7 @@ final class StandardNameStep extends ThisTemplate {
     implementsClause(COLOR_VALUE);
 
     spec.valueTypes().stream()
-        .filter(ValueType::permitsNamedElement)
+        .filter(ValueType::permitsStandardName)
         .sorted(ValueType.ORDER_BY_SIMPLE_NAME)
         .forEach(type -> implementsClause(NL, type.className));
 

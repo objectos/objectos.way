@@ -15,7 +15,7 @@
  */
 package objectos.css;
 
-final class Preflight extends CssTemplate2 {
+final class Preflight extends CssTemplate {
   @Override
   protected final void definition() {
     style(

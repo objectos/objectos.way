@@ -15,10 +15,9 @@
  */
 package objectos.css.tmpl;
 
-import objectos.css.internal.NamedElement;
 import objectos.css.internal.StandardName;
 import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface TextSizeAdjustValue extends PropertyValue permits AutoKeyword, NamedElement, NoneKeyword, Percentage, StandardName {}
+public sealed interface TextSizeAdjustValue extends PropertyValue permits AutoKeyword, NoneKeyword, Percentage, StandardName {}
