@@ -17,6 +17,7 @@ package objectos.css;
 
 import java.util.Locale;
 import java.util.Set;
+import objectos.css.internal.RandomStringGenerator;
 import objectos.css.select.IdSelector;
 import objectos.css.select.SelectorFactory;
 import objectos.lang.Check;
@@ -38,7 +39,7 @@ final class RandomIdSelectorGenerator {
     Check.argument(length > 0, "length must be > 0");
 
     for (int i = 0; i < MAX_TRIES; i++) {
-      var className = RandomStringImpl.next(length);
+      var className = RandomStringGenerator.nextString(length);
 
       char first = className.charAt(0);
 

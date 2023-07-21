@@ -15,6 +15,7 @@
  */
 package objectos.css;
 
+import objectos.css.internal.RandomStringGenerator;
 import objectos.css.select.AttributeSelector;
 import objectos.css.select.AttributeValueElement;
 import objectos.css.select.AttributeValueOperator;
@@ -340,7 +341,7 @@ public final class Css {
   }
 
   public static void randomSeed(long seed) {
-    RandomStringImpl.randomSeed(seed);
+    RandomStringGenerator.randomSeed(seed);
   }
 
   public static UniversalSelector any() {

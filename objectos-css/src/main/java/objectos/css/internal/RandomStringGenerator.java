@@ -13,49 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.internal;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
-import objectos.css.internal.RandomStringGenerator;
-import objectos.css.select.ClassSelector;
-import objectos.css.select.SelectorFactory;
 import objectos.lang.Check;
+import objectos.lang.RandomString;
 import objectos.util.GrowableSet;
 
-final class RandomClassSelectorGenerator {
+public final class RandomStringGenerator {
 
   private static final int MAX_TRIES = 20;
 
+  private static final Random RANDOM = new Random();
+
+  private static final RandomString INSTANCE = new RandomString(RANDOM);
+
   private static final Set<String> NAMES = new GrowableSet<>();
 
-  private RandomClassSelectorGenerator() {}
+  private RandomStringGenerator() {}
 
-  public static ClassSelector randomClassSelector(int length) {
+  public static void randomSeed(long seed) {
+    RANDOM.setSeed(seed);
+  }
+
+  public static String nextName(int length) {
     Check.argument(length > 0, "length must be > 0");
 
     for (int i = 0; i < MAX_TRIES; i++) {
-      var className = RandomStringGenerator.nextString(length);
+      String name;
+      name = RandomStringGenerator.nextString(length);
 
-      char first = className.charAt(0);
+      char first;
+      first = name.charAt(0);
 
       if (Character.isDigit(first)) {
         continue;
       }
 
-      className = className.toLowerCase(Locale.US);
+      name = name.toLowerCase(Locale.US);
 
-      if (NAMES.add(className)) {
-        return SelectorFactory.dot(className);
+      if (NAMES.add(name)) {
+        return name;
       }
     }
 
     throw new IllegalArgumentException(
-      "Could not generate distinct ClassSelector after " + MAX_TRIES + " tries");
+      "Could not generate distinct name after " + MAX_TRIES + " tries");
   }
 
-  public static ClassSelector randomDot(int length) {
-    return randomClassSelector(length);
+  public static String nextString(int length) {
+    return INSTANCE.nextString(length);
   }
 
 }

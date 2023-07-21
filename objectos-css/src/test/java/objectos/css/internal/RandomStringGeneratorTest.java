@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.internal;
 
-import java.util.Random;
-import objectos.lang.RandomString;
+import static org.testng.Assert.assertEquals;
 
-final class RandomStringImpl {
+import org.testng.annotations.Test;
 
-  private static final Random RANDOM = new Random();
+public class RandomStringGeneratorTest {
 
-  private static final RandomString INSTANCE = new RandomString(RANDOM);
+  @Test(description = """
+  Verifies setSeed generates the same sequence of pseudo random every time.
+  """)
+  public void setSeed() {
+    long seed;
+    seed = 1233456789L;
 
-  private RandomStringImpl() {}
+    RandomStringGenerator.randomSeed(seed);
 
-  public static void randomSeed(long seed) {
-    RANDOM.setSeed(seed);
-  }
-
-  static String next(int length) {
-    return INSTANCE.nextString(length);
+    assertEquals(RandomStringGenerator.nextString(3), "Ds2");
+    assertEquals(RandomStringGenerator.nextString(4), "yIny");
+    assertEquals(RandomStringGenerator.nextString(5), "0kdzu");
   }
 
 }

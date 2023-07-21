@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.util;
 
 import java.util.Objects;
+import objectos.css.internal.RandomStringGenerator;
 import objectos.css.om.Selector;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 import objectos.lang.Check;
@@ -33,6 +34,13 @@ public record ClassSelector(String className) implements ExternalAttribute.Style
 
   public static ClassSelector of(String className) {
     return new ClassSelector(className);
+  }
+
+  public static ClassSelector randomClassSelector(int length) {
+    String name;
+    name = RandomStringGenerator.nextName(length);
+
+    return new ClassSelector(name);
   }
 
   @Override

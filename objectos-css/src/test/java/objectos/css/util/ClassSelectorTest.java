@@ -13,25 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.util;
 
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-public class RandomStringImplTest {
+public class ClassSelectorTest {
 
-  @Test(description = """
-  Verifies setSeed generates the same sequence of pseudo random every time.
-  """)
-  public void setSeed() {
-    long seed = 1233456789L;
+  @Test
+  public void nextClassSelector() {
+    ClassSelector selector;
+    selector = ClassSelector.randomClassSelector(5);
 
-    RandomStringImpl.randomSeed(seed);
+    assertEquals(selector.className().length(), 5);
+  }
 
-    assertEquals(RandomStringImpl.next(3), "Ds2");
-    assertEquals(RandomStringImpl.next(4), "yIny");
-    assertEquals(RandomStringImpl.next(5), "0kdzu");
+  @Test(description = "It should add the dot '.' character")
+  public void toStringTest() {
+    ClassSelector selector;
+    selector = ClassSelector.of("abc");
+
+    assertEquals(selector.toString(), ".abc");
   }
 
 }
