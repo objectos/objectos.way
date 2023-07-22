@@ -24,13 +24,19 @@ import objectos.selfgen.CssUtilSpec;
 
 abstract class ThisTemplate extends JavaTemplate {
 
+  static final String CSS = "objectos.css";
+
   static final String CSS_UTIL = "objectos.css.util";
 
   static final String GENERATOR = CssUtilSpec.class.getCanonicalName();
 
   static final ClassTypeName CLASS_SELECTOR = ClassTypeName.of(CSS_UTIL, "ClassSelector");
 
+  static final ClassTypeName CSS_TEMPLATE = ClassTypeName.of(CSS, "CssTemplate");
+
   static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);
+
+  static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
 
   CssUtilSelfGen spec;
 

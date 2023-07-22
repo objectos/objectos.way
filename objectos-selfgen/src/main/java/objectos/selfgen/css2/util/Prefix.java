@@ -22,9 +22,8 @@ public sealed abstract class Prefix {
 
   public final ClassTypeName className;
 
-  private static final class Breakpoint extends Prefix {
-    @SuppressWarnings("unused")
-    private final int length;
+  static final class Breakpoint extends Prefix {
+    public final int length;
 
     private Breakpoint(ClassTypeName className, int length) {
       super(className);

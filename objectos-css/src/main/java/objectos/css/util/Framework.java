@@ -1,0 +1,513 @@
+/*
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectos.css.util;
+
+@objectos.lang.Generated("objectos.selfgen.CssUtilSpec")
+public final class Framework extends objectos.css.CssTemplate {
+  @java.lang.Override
+  protected final void definition() {
+    All();
+    Small();
+    Medium();
+    Large();
+    XLarge();
+    XLarge2();
+  }
+
+  private void All() {
+    AllDisplay();
+  }
+
+  private void Small() {
+    SmallDisplay();
+  }
+
+  private void Medium() {
+    MediumDisplay();
+  }
+
+  private void Large() {
+    LargeDisplay();
+  }
+
+  private void XLarge() {
+    XLargeDisplay();
+  }
+
+  private void XLarge2() {
+    XLarge2Display();
+  }
+
+  private void AllDisplay() {
+    style(
+      objectos.css.util.All.Display.HIDDEN,
+      display(none)
+);
+    style(
+      objectos.css.util.All.Display.BLOCK,
+      display(block)
+);
+    style(
+      objectos.css.util.All.Display.FLOW_ROOT,
+      display(flowRoot)
+);
+    style(
+      objectos.css.util.All.Display.INLINE_BLOCK,
+      display(inlineBlock)
+);
+    style(
+      objectos.css.util.All.Display.INLINE,
+      display(inline)
+);
+    style(
+      objectos.css.util.All.Display.FLEX,
+      display(flex)
+);
+    style(
+      objectos.css.util.All.Display.INLINE_FLEX,
+      display(inlineFlex)
+);
+    style(
+      objectos.css.util.All.Display.GRID,
+      display(grid)
+);
+    style(
+      objectos.css.util.All.Display.INLINE_GRID,
+      display(inlineGrid)
+);
+    style(
+      objectos.css.util.All.Display.TABLE,
+      display(table)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_CAPTION,
+      display(tableCaption)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_CELL,
+      display(tableCell)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_COLUMN,
+      display(tableColumn)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_COLUMN_GROUP,
+      display(tableColumnGroup)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_FOOTER_GROUP,
+      display(tableFooterGroup)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_HEADER_GROUP,
+      display(tableHeaderGroup)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_ROW_GROUP,
+      display(tableRowGroup)
+);
+    style(
+      objectos.css.util.All.Display.TABLE_ROW,
+      display(tableRow)
+);
+  }
+
+  private void SmallDisplay() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.Display.HIDDEN,
+        display(none)
+),
+      style(
+        objectos.css.util.Small.Display.BLOCK,
+        display(block)
+),
+      style(
+        objectos.css.util.Small.Display.FLOW_ROOT,
+        display(flowRoot)
+),
+      style(
+        objectos.css.util.Small.Display.INLINE_BLOCK,
+        display(inlineBlock)
+),
+      style(
+        objectos.css.util.Small.Display.INLINE,
+        display(inline)
+),
+      style(
+        objectos.css.util.Small.Display.FLEX,
+        display(flex)
+),
+      style(
+        objectos.css.util.Small.Display.INLINE_FLEX,
+        display(inlineFlex)
+),
+      style(
+        objectos.css.util.Small.Display.GRID,
+        display(grid)
+),
+      style(
+        objectos.css.util.Small.Display.INLINE_GRID,
+        display(inlineGrid)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE,
+        display(table)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_CAPTION,
+        display(tableCaption)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_CELL,
+        display(tableCell)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_COLUMN,
+        display(tableColumn)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_COLUMN_GROUP,
+        display(tableColumnGroup)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_FOOTER_GROUP,
+        display(tableFooterGroup)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_HEADER_GROUP,
+        display(tableHeaderGroup)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_ROW_GROUP,
+        display(tableRowGroup)
+),
+      style(
+        objectos.css.util.Small.Display.TABLE_ROW,
+        display(tableRow)
+));
+  }
+
+  private void MediumDisplay() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.Display.HIDDEN,
+        display(none)
+),
+      style(
+        objectos.css.util.Medium.Display.BLOCK,
+        display(block)
+),
+      style(
+        objectos.css.util.Medium.Display.FLOW_ROOT,
+        display(flowRoot)
+),
+      style(
+        objectos.css.util.Medium.Display.INLINE_BLOCK,
+        display(inlineBlock)
+),
+      style(
+        objectos.css.util.Medium.Display.INLINE,
+        display(inline)
+),
+      style(
+        objectos.css.util.Medium.Display.FLEX,
+        display(flex)
+),
+      style(
+        objectos.css.util.Medium.Display.INLINE_FLEX,
+        display(inlineFlex)
+),
+      style(
+        objectos.css.util.Medium.Display.GRID,
+        display(grid)
+),
+      style(
+        objectos.css.util.Medium.Display.INLINE_GRID,
+        display(inlineGrid)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE,
+        display(table)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_CAPTION,
+        display(tableCaption)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_CELL,
+        display(tableCell)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_COLUMN,
+        display(tableColumn)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_COLUMN_GROUP,
+        display(tableColumnGroup)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_FOOTER_GROUP,
+        display(tableFooterGroup)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_HEADER_GROUP,
+        display(tableHeaderGroup)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_ROW_GROUP,
+        display(tableRowGroup)
+),
+      style(
+        objectos.css.util.Medium.Display.TABLE_ROW,
+        display(tableRow)
+));
+  }
+
+  private void LargeDisplay() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.Display.HIDDEN,
+        display(none)
+),
+      style(
+        objectos.css.util.Large.Display.BLOCK,
+        display(block)
+),
+      style(
+        objectos.css.util.Large.Display.FLOW_ROOT,
+        display(flowRoot)
+),
+      style(
+        objectos.css.util.Large.Display.INLINE_BLOCK,
+        display(inlineBlock)
+),
+      style(
+        objectos.css.util.Large.Display.INLINE,
+        display(inline)
+),
+      style(
+        objectos.css.util.Large.Display.FLEX,
+        display(flex)
+),
+      style(
+        objectos.css.util.Large.Display.INLINE_FLEX,
+        display(inlineFlex)
+),
+      style(
+        objectos.css.util.Large.Display.GRID,
+        display(grid)
+),
+      style(
+        objectos.css.util.Large.Display.INLINE_GRID,
+        display(inlineGrid)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE,
+        display(table)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_CAPTION,
+        display(tableCaption)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_CELL,
+        display(tableCell)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_COLUMN,
+        display(tableColumn)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_COLUMN_GROUP,
+        display(tableColumnGroup)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_FOOTER_GROUP,
+        display(tableFooterGroup)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_HEADER_GROUP,
+        display(tableHeaderGroup)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_ROW_GROUP,
+        display(tableRowGroup)
+),
+      style(
+        objectos.css.util.Large.Display.TABLE_ROW,
+        display(tableRow)
+));
+  }
+
+  private void XLargeDisplay() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.Display.HIDDEN,
+        display(none)
+),
+      style(
+        objectos.css.util.XLarge.Display.BLOCK,
+        display(block)
+),
+      style(
+        objectos.css.util.XLarge.Display.FLOW_ROOT,
+        display(flowRoot)
+),
+      style(
+        objectos.css.util.XLarge.Display.INLINE_BLOCK,
+        display(inlineBlock)
+),
+      style(
+        objectos.css.util.XLarge.Display.INLINE,
+        display(inline)
+),
+      style(
+        objectos.css.util.XLarge.Display.FLEX,
+        display(flex)
+),
+      style(
+        objectos.css.util.XLarge.Display.INLINE_FLEX,
+        display(inlineFlex)
+),
+      style(
+        objectos.css.util.XLarge.Display.GRID,
+        display(grid)
+),
+      style(
+        objectos.css.util.XLarge.Display.INLINE_GRID,
+        display(inlineGrid)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE,
+        display(table)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_CAPTION,
+        display(tableCaption)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_CELL,
+        display(tableCell)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_COLUMN,
+        display(tableColumn)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_COLUMN_GROUP,
+        display(tableColumnGroup)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_FOOTER_GROUP,
+        display(tableFooterGroup)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_HEADER_GROUP,
+        display(tableHeaderGroup)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_ROW_GROUP,
+        display(tableRowGroup)
+),
+      style(
+        objectos.css.util.XLarge.Display.TABLE_ROW,
+        display(tableRow)
+));
+  }
+
+  private void XLarge2Display() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.Display.HIDDEN,
+        display(none)
+),
+      style(
+        objectos.css.util.XLarge2.Display.BLOCK,
+        display(block)
+),
+      style(
+        objectos.css.util.XLarge2.Display.FLOW_ROOT,
+        display(flowRoot)
+),
+      style(
+        objectos.css.util.XLarge2.Display.INLINE_BLOCK,
+        display(inlineBlock)
+),
+      style(
+        objectos.css.util.XLarge2.Display.INLINE,
+        display(inline)
+),
+      style(
+        objectos.css.util.XLarge2.Display.FLEX,
+        display(flex)
+),
+      style(
+        objectos.css.util.XLarge2.Display.INLINE_FLEX,
+        display(inlineFlex)
+),
+      style(
+        objectos.css.util.XLarge2.Display.GRID,
+        display(grid)
+),
+      style(
+        objectos.css.util.XLarge2.Display.INLINE_GRID,
+        display(inlineGrid)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE,
+        display(table)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_CAPTION,
+        display(tableCaption)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_CELL,
+        display(tableCell)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_COLUMN,
+        display(tableColumn)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_COLUMN_GROUP,
+        display(tableColumnGroup)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_FOOTER_GROUP,
+        display(tableFooterGroup)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_HEADER_GROUP,
+        display(tableHeaderGroup)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_ROW_GROUP,
+        display(tableRowGroup)
+),
+      style(
+        objectos.css.util.XLarge2.Display.TABLE_ROW,
+        display(tableRow)
+));
+  }
+}

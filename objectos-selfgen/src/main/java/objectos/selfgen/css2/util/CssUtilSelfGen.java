@@ -17,7 +17,7 @@ package objectos.selfgen.css2.util;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import objectos.code.JavaSink;
@@ -26,7 +26,7 @@ import objectos.util.GrowableList;
 
 public abstract class CssUtilSelfGen {
 
-  final Map<Prefix, List<Property>> properties = new HashMap<>();
+  final Map<Prefix, List<Property>> properties = new LinkedHashMap<>();
 
   protected CssUtilSelfGen() {}
 
@@ -44,6 +44,8 @@ public abstract class CssUtilSelfGen {
     );
 
     compile();
+
+    write(sink, new FrameworkClassStep());
 
     write(sink, new PrefixClassStep());
   }

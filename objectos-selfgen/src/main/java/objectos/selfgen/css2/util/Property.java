@@ -22,10 +22,15 @@ final class Property {
 
   public final ClassTypeName className;
 
+  public final UnmodifiableList<String> methodNames;
+
   public final UnmodifiableList<NamedArguments> names;
 
-  private Property(ClassTypeName className, UnmodifiableList<NamedArguments> names) {
+  private Property(ClassTypeName className,
+                   UnmodifiableList<String> methodNames,
+                   UnmodifiableList<NamedArguments> names) {
     this.className = className;
+    this.methodNames = methodNames;
     this.names = names;
   }
 
@@ -36,7 +41,7 @@ final class Property {
     ClassTypeName className;
     className = ClassTypeName.of(enclosing, simpleName.name());
 
-    return new Property(className, names.values());
+    return new Property(className, methods.values(), names.values());
   }
 
 }

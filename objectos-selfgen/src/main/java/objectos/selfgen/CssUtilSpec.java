@@ -74,7 +74,7 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       name("INLINE_FLEX", k("inlineFlex")),
       name("GRID", k("grid")),
       name("INLINE_GRID", k("inlineGrid")),
-      name("TABLE", k("tableKw")),
+      name("TABLE", k("table")),
       name("TABLE_CAPTION", k("tableCaption")),
       name("TABLE_CELL", k("tableCell")),
       name("TABLE_COLUMN", k("tableColumn")),
