@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css2;
+package objectos.selfgen.css2.util;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import objectos.selfgen.util.Rmdir;
 
-final class Util {
+final class Generate {
 
-  private Util() {}
+  private Generate() {}
 
-  public static Map<String, String> generate(CssSelfGen gen) throws IOException {
-    var root = Files.createTempDirectory("objectos-selfgen-css-");
+  public static Map<String, String> generate(CssUtilSelfGen gen) throws IOException {
+    Path root;
+    root = Files.createTempDirectory("objectos-selfgen-css-util-");
 
     try {
       gen.execute(new String[] {
           root.toString()
       });
 
-      var result = new HashMap<String, String>();
+      Map<String, String> result;
+      result = new HashMap<String, String>();
 
       try (var walk = Files.walk(root)) {
         walk.filter(Files::isRegularFile)

@@ -39,7 +39,8 @@ public final class CssSpec extends CssSelfGen {
   private PercentageType percentage;
 
   public static void main(String[] args) throws IOException {
-    var spec = new CssSpec();
+    CssSpec spec;
+    spec = new CssSpec();
 
     spec.execute(args);
   }
