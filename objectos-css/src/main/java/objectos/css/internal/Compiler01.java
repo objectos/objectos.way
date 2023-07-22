@@ -20,6 +20,7 @@ import objectos.css.om.MediaRuleElement;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleRuleElement;
+import objectos.css.util.ClassSelector;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
@@ -602,6 +603,20 @@ class Compiler01 extends CssTemplateApi {
       );
     }
 
+    else if (element instanceof ClassSelector selector) {
+      String string;
+      string = selector.toString();
+
+      int index;
+      index = objectAdd(string);
+
+      auxAdd(
+        ByteProto.SELECTOR_CLASS,
+        Bytes.two0(index),
+        Bytes.two1(index)
+      );
+    }
+
     else if (element instanceof StandardPseudoClassSelector selector) {
       auxAdd(
         ByteProto.SELECTOR_PSEUDO_CLASS,
@@ -826,6 +841,11 @@ class Compiler01 extends CssTemplateApi {
           mainAdd(marker, ordinal);
         }
 
+        case ByteProto.SELECTOR_CLASS,
+             ByteProto.STANDARD_NAME -> {
+          mainAdd(marker, aux[index++], aux[index++]);
+        }
+
         case ByteProto.SELECTOR_TYPE -> {
           byte b0;
           b0 = aux[index++];
@@ -835,10 +855,6 @@ class Compiler01 extends CssTemplateApi {
           } else {
             mainAdd(marker, b0, aux[index++]);
           }
-        }
-
-        case ByteProto.STANDARD_NAME -> {
-          mainAdd(marker, aux[index++], aux[index++]);
         }
 
         default -> throw new UnsupportedOperationException(

@@ -17,6 +17,7 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.util.ClassSelector;
 import org.testng.annotations.Test;
 
 public class CssTemplateTest {
@@ -1985,6 +1986,24 @@ public class CssTemplateTest {
 
       """
       [hidden] {}
+      """
+    );
+  }
+
+  @Test
+  public void selectorClass() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            ClassSelector.of("test")
+          );
+        }
+      },
+
+      """
+      .test {}
       """
     );
   }

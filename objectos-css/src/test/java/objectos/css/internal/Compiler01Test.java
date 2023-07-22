@@ -16,6 +16,7 @@
 package objectos.css.internal;
 
 import java.util.Arrays;
+import objectos.css.util.ClassSelector;
 import org.testng.annotations.Test;
 
 public class Compiler01Test {
@@ -745,6 +746,39 @@ public class Compiler01Test {
       ByteProto.MEDIA_RULE_END,
       Bytes.int0(44),
       ByteProto.MEDIA_RULE
+    );
+  }
+
+  @Test(description = """
+  .foo {}
+  """)
+  public void testCase15() {
+    ClassSelector foo;
+    foo = ClassSelector.of("foo");
+
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(foo);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(6),
+      Bytes.len1(6),
+      ByteProto.SELECTOR_CLASS,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(6),
+      ByteProto.STYLE_RULE
     );
   }
 

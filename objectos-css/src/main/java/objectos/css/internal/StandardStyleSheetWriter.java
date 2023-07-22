@@ -207,6 +207,16 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(']');
         }
 
+        case ByteCode.SELECTOR_CLASS -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          String name;
+          name = (String) objects[objectIndex];
+
+          appendable.append(name);
+        }
+
         case ByteCode.SELECTOR_PSEUDO_CLASS -> {
           int ordinal;
           ordinal = bytes[index++];

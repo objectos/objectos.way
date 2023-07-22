@@ -525,16 +525,19 @@ final class Compiler02 extends Compiler01 {
 
   private int selectorKeyword(int index) {
     auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
+
     return index;
   }
 
   private int selectorPseudoClass(int index) {
     auxAdd(ByteCode.SELECTOR_PSEUDO_CLASS, main[index++]);
+
     return index;
   }
 
   private int selectorPseudoElement(int index) {
     auxAdd(ByteCode.SELECTOR_PSEUDO_ELEMENT, main[index++]);
+
     return index;
   }
 
@@ -698,6 +701,12 @@ final class Compiler02 extends Compiler01 {
             main[elemIndex++],
             main[elemIndex++]
           );
+        }
+
+        case ByteProto.SELECTOR_CLASS -> {
+          selectorCount = selectorComma(selectorCount);
+
+          auxAdd(ByteCode.SELECTOR_CLASS, main[index++], main[index++]);
         }
 
         case ByteProto.SELECTOR_PSEUDO_CLASS -> {
