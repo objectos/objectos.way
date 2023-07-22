@@ -58,8 +58,14 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       prefixXLarge2
     );
 
-    // d
+    // D
     display();
+
+    // F
+    flexDirection();
+
+    // J
+    justifyContent();
   }
 
   private void display() {
@@ -90,6 +96,45 @@ public final class CssUtilSpec extends CssUtilSelfGen {
         prefix,
         simpleName("Display"),
         methods("display"),
+        names
+      );
+    }
+  }
+
+  private void flexDirection() {
+    Names names;
+    names = names(
+      name("ROW", k("row")),
+      name("ROW_REVERSE", k("rowReverse")),
+      name("COLUMN", k("column")),
+      name("COLUMN_REVERSE", k("columnReverse"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(
+        prefix,
+        simpleName("FlexDirection"),
+        methods("flexDirection"),
+        names
+      );
+    }
+  }
+
+  private void justifyContent() {
+    Names names;
+    names = names(
+      name("START", k("flexStart")),
+      name("CENTER", k("center")),
+      name("END", k("flexEnd")),
+      name("BETWEEN", k("spaceBetween")),
+      name("AROUND", k("spaceAround"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(
+        prefix,
+        simpleName("JustifyContent"),
+        methods("justifyContent"),
         names
       );
     }

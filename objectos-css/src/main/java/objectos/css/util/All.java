@@ -60,4 +60,30 @@ public final class All {
 
     private Display() {}
   }
+
+  public static final class FlexDirection {
+    public static final ClassSelector ROW = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector ROW_REVERSE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector COLUMN = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector COLUMN_REVERSE = ClassSelector.randomClassSelector(5);
+
+    private FlexDirection() {}
+  }
+
+  public static final class JustifyContent {
+    public static final ClassSelector START = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector CENTER = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector END = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector BETWEEN = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector AROUND = ClassSelector.randomClassSelector(5);
+
+    private JustifyContent() {}
+  }
 }

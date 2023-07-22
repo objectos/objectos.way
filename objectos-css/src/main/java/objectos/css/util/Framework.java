@@ -29,26 +29,38 @@ public final class Framework extends objectos.css.CssTemplate {
 
   private void All() {
     AllDisplay();
+    AllFlexDirection();
+    AllJustifyContent();
   }
 
   private void Small() {
     SmallDisplay();
+    SmallFlexDirection();
+    SmallJustifyContent();
   }
 
   private void Medium() {
     MediumDisplay();
+    MediumFlexDirection();
+    MediumJustifyContent();
   }
 
   private void Large() {
     LargeDisplay();
+    LargeFlexDirection();
+    LargeJustifyContent();
   }
 
   private void XLarge() {
     XLargeDisplay();
+    XLargeFlexDirection();
+    XLargeJustifyContent();
   }
 
   private void XLarge2() {
     XLarge2Display();
+    XLarge2FlexDirection();
+    XLarge2JustifyContent();
   }
 
   private void AllDisplay() {
@@ -123,6 +135,48 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.Display.TABLE_ROW,
       display(tableRow)
+);
+  }
+
+  private void AllFlexDirection() {
+    style(
+      objectos.css.util.All.FlexDirection.ROW,
+      flexDirection(row)
+);
+    style(
+      objectos.css.util.All.FlexDirection.ROW_REVERSE,
+      flexDirection(rowReverse)
+);
+    style(
+      objectos.css.util.All.FlexDirection.COLUMN,
+      flexDirection(column)
+);
+    style(
+      objectos.css.util.All.FlexDirection.COLUMN_REVERSE,
+      flexDirection(columnReverse)
+);
+  }
+
+  private void AllJustifyContent() {
+    style(
+      objectos.css.util.All.JustifyContent.START,
+      justifyContent(flexStart)
+);
+    style(
+      objectos.css.util.All.JustifyContent.CENTER,
+      justifyContent(center)
+);
+    style(
+      objectos.css.util.All.JustifyContent.END,
+      justifyContent(flexEnd)
+);
+    style(
+      objectos.css.util.All.JustifyContent.BETWEEN,
+      justifyContent(spaceBetween)
+);
+    style(
+      objectos.css.util.All.JustifyContent.AROUND,
+      justifyContent(spaceAround)
 );
   }
 
@@ -203,6 +257,52 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void SmallFlexDirection() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.FlexDirection.ROW,
+        flexDirection(row)
+),
+      style(
+        objectos.css.util.Small.FlexDirection.ROW_REVERSE,
+        flexDirection(rowReverse)
+),
+      style(
+        objectos.css.util.Small.FlexDirection.COLUMN,
+        flexDirection(column)
+),
+      style(
+        objectos.css.util.Small.FlexDirection.COLUMN_REVERSE,
+        flexDirection(columnReverse)
+));
+  }
+
+  private void SmallJustifyContent() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.JustifyContent.START,
+        justifyContent(flexStart)
+),
+      style(
+        objectos.css.util.Small.JustifyContent.CENTER,
+        justifyContent(center)
+),
+      style(
+        objectos.css.util.Small.JustifyContent.END,
+        justifyContent(flexEnd)
+),
+      style(
+        objectos.css.util.Small.JustifyContent.BETWEEN,
+        justifyContent(spaceBetween)
+),
+      style(
+        objectos.css.util.Small.JustifyContent.AROUND,
+        justifyContent(spaceAround)
+));
+  }
+
   private void MediumDisplay() {
     media(
       minWidth(px(768)),
@@ -277,6 +377,52 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Medium.Display.TABLE_ROW,
         display(tableRow)
+));
+  }
+
+  private void MediumFlexDirection() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.FlexDirection.ROW,
+        flexDirection(row)
+),
+      style(
+        objectos.css.util.Medium.FlexDirection.ROW_REVERSE,
+        flexDirection(rowReverse)
+),
+      style(
+        objectos.css.util.Medium.FlexDirection.COLUMN,
+        flexDirection(column)
+),
+      style(
+        objectos.css.util.Medium.FlexDirection.COLUMN_REVERSE,
+        flexDirection(columnReverse)
+));
+  }
+
+  private void MediumJustifyContent() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.JustifyContent.START,
+        justifyContent(flexStart)
+),
+      style(
+        objectos.css.util.Medium.JustifyContent.CENTER,
+        justifyContent(center)
+),
+      style(
+        objectos.css.util.Medium.JustifyContent.END,
+        justifyContent(flexEnd)
+),
+      style(
+        objectos.css.util.Medium.JustifyContent.BETWEEN,
+        justifyContent(spaceBetween)
+),
+      style(
+        objectos.css.util.Medium.JustifyContent.AROUND,
+        justifyContent(spaceAround)
 ));
   }
 
@@ -357,6 +503,52 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void LargeFlexDirection() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.FlexDirection.ROW,
+        flexDirection(row)
+),
+      style(
+        objectos.css.util.Large.FlexDirection.ROW_REVERSE,
+        flexDirection(rowReverse)
+),
+      style(
+        objectos.css.util.Large.FlexDirection.COLUMN,
+        flexDirection(column)
+),
+      style(
+        objectos.css.util.Large.FlexDirection.COLUMN_REVERSE,
+        flexDirection(columnReverse)
+));
+  }
+
+  private void LargeJustifyContent() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.JustifyContent.START,
+        justifyContent(flexStart)
+),
+      style(
+        objectos.css.util.Large.JustifyContent.CENTER,
+        justifyContent(center)
+),
+      style(
+        objectos.css.util.Large.JustifyContent.END,
+        justifyContent(flexEnd)
+),
+      style(
+        objectos.css.util.Large.JustifyContent.BETWEEN,
+        justifyContent(spaceBetween)
+),
+      style(
+        objectos.css.util.Large.JustifyContent.AROUND,
+        justifyContent(spaceAround)
+));
+  }
+
   private void XLargeDisplay() {
     media(
       minWidth(px(1280)),
@@ -434,6 +626,52 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeFlexDirection() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.FlexDirection.ROW,
+        flexDirection(row)
+),
+      style(
+        objectos.css.util.XLarge.FlexDirection.ROW_REVERSE,
+        flexDirection(rowReverse)
+),
+      style(
+        objectos.css.util.XLarge.FlexDirection.COLUMN,
+        flexDirection(column)
+),
+      style(
+        objectos.css.util.XLarge.FlexDirection.COLUMN_REVERSE,
+        flexDirection(columnReverse)
+));
+  }
+
+  private void XLargeJustifyContent() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.JustifyContent.START,
+        justifyContent(flexStart)
+),
+      style(
+        objectos.css.util.XLarge.JustifyContent.CENTER,
+        justifyContent(center)
+),
+      style(
+        objectos.css.util.XLarge.JustifyContent.END,
+        justifyContent(flexEnd)
+),
+      style(
+        objectos.css.util.XLarge.JustifyContent.BETWEEN,
+        justifyContent(spaceBetween)
+),
+      style(
+        objectos.css.util.XLarge.JustifyContent.AROUND,
+        justifyContent(spaceAround)
+));
+  }
+
   private void XLarge2Display() {
     media(
       minWidth(px(1536)),
@@ -508,6 +746,52 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.Display.TABLE_ROW,
         display(tableRow)
+));
+  }
+
+  private void XLarge2FlexDirection() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.FlexDirection.ROW,
+        flexDirection(row)
+),
+      style(
+        objectos.css.util.XLarge2.FlexDirection.ROW_REVERSE,
+        flexDirection(rowReverse)
+),
+      style(
+        objectos.css.util.XLarge2.FlexDirection.COLUMN,
+        flexDirection(column)
+),
+      style(
+        objectos.css.util.XLarge2.FlexDirection.COLUMN_REVERSE,
+        flexDirection(columnReverse)
+));
+  }
+
+  private void XLarge2JustifyContent() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.JustifyContent.START,
+        justifyContent(flexStart)
+),
+      style(
+        objectos.css.util.XLarge2.JustifyContent.CENTER,
+        justifyContent(center)
+),
+      style(
+        objectos.css.util.XLarge2.JustifyContent.END,
+        justifyContent(flexEnd)
+),
+      style(
+        objectos.css.util.XLarge2.JustifyContent.BETWEEN,
+        justifyContent(spaceBetween)
+),
+      style(
+        objectos.css.util.XLarge2.JustifyContent.AROUND,
+        justifyContent(spaceAround)
 ));
   }
 }
