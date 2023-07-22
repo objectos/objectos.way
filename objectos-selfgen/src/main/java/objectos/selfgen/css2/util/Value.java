@@ -17,6 +17,8 @@ package objectos.selfgen.css2.util;
 
 public sealed interface Value {
 
-  record Keyword(String fieldName) implements Value {}
+  record ExpressionName(String fieldName) implements Value {}
+
+  record MethodInt(String methodName, int value) implements Value {}
 
 }

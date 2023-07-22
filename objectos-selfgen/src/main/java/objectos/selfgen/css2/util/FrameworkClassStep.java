@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import objectos.selfgen.css2.util.Prefix.Breakpoint;
-import objectos.selfgen.css2.util.Value.Keyword;
 
 final class FrameworkClassStep extends ThisTemplate {
 
@@ -170,8 +169,12 @@ final class FrameworkClassStep extends ThisTemplate {
   }
 
   private void propertyValue(Value value) {
-    if (value instanceof Keyword kw) {
-      argument(n(kw.fieldName()));
+    if (value instanceof Value.ExpressionName expression) {
+      argument(n(expression.fieldName()));
+    }
+
+    else if (value instanceof Value.MethodInt method) {
+      argument(v(method.methodName()), argument(i(method.value())));
     }
 
     else {

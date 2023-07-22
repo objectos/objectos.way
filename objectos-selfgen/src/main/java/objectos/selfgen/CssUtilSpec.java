@@ -66,6 +66,9 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     // J
     justifyContent();
+
+    // M
+    minHeight();
   }
 
   private void display() {
@@ -92,12 +95,7 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     );
 
     for (Prefix prefix : responsive) {
-      generate(
-        prefix,
-        simpleName("Display"),
-        methods("display"),
-        names
-      );
+      generate(prefix, simpleName("Display"), methods("display"), names);
     }
   }
 
@@ -111,12 +109,7 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     );
 
     for (Prefix prefix : responsive) {
-      generate(
-        prefix,
-        simpleName("FlexDirection"),
-        methods("flexDirection"),
-        names
-      );
+      generate(prefix, simpleName("FlexDirection"), methods("flexDirection"), names);
     }
   }
 
@@ -131,12 +124,19 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     );
 
     for (Prefix prefix : responsive) {
-      generate(
-        prefix,
-        simpleName("JustifyContent"),
-        methods("justifyContent"),
-        names
-      );
+      generate(prefix, simpleName("JustifyContent"), methods("justifyContent"), names);
+    }
+  }
+
+  private void minHeight() {
+    Names names = names(
+      name("V0", zero()),
+      name("FULL", pct(100)),
+      name("SCREEN", vh(100))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("MinHeight"), methods("minHeight"), names);
     }
   }
 

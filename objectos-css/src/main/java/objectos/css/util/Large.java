@@ -86,4 +86,14 @@ public final class Large {
 
     private JustifyContent() {}
   }
+
+  public static final class MinHeight {
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector FULL = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector SCREEN = ClassSelector.randomClassSelector(5);
+
+    private MinHeight() {}
+  }
 }

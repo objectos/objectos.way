@@ -70,7 +70,7 @@ public abstract class CssUtilSelfGen {
   protected final Value k(String fieldName) {
     Check.notNull(fieldName, "fieldName == null");
 
-    return new Value.Keyword(fieldName);
+    return new Value.ExpressionName(fieldName);
   }
 
   protected final Methods methods(String... names) {
@@ -108,10 +108,22 @@ public abstract class CssUtilSelfGen {
     return new Names(list.toUnmodifiableList());
   }
 
+  protected final Value pct(int value) {
+    return new Value.MethodInt("pct", value);
+  }
+
   protected final SimpleName simpleName(String name) {
     Check.notNull(name, "name == null");
 
     return new SimpleName(name);
+  }
+
+  protected final Value vh(int value) {
+    return new Value.MethodInt("vh", value);
+  }
+
+  protected final Value zero() {
+    return new Value.ExpressionName("$0");
   }
 
   private void compile() {

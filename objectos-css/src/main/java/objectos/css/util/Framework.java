@@ -31,36 +31,42 @@ public final class Framework extends objectos.css.CssTemplate {
     AllDisplay();
     AllFlexDirection();
     AllJustifyContent();
+    AllMinHeight();
   }
 
   private void Small() {
     SmallDisplay();
     SmallFlexDirection();
     SmallJustifyContent();
+    SmallMinHeight();
   }
 
   private void Medium() {
     MediumDisplay();
     MediumFlexDirection();
     MediumJustifyContent();
+    MediumMinHeight();
   }
 
   private void Large() {
     LargeDisplay();
     LargeFlexDirection();
     LargeJustifyContent();
+    LargeMinHeight();
   }
 
   private void XLarge() {
     XLargeDisplay();
     XLargeFlexDirection();
     XLargeJustifyContent();
+    XLargeMinHeight();
   }
 
   private void XLarge2() {
     XLarge2Display();
     XLarge2FlexDirection();
     XLarge2JustifyContent();
+    XLarge2MinHeight();
   }
 
   private void AllDisplay() {
@@ -177,6 +183,21 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.JustifyContent.AROUND,
       justifyContent(spaceAround)
+);
+  }
+
+  private void AllMinHeight() {
+    style(
+      objectos.css.util.All.MinHeight.V0,
+      minHeight($0)
+);
+    style(
+      objectos.css.util.All.MinHeight.FULL,
+      minHeight(pct(100))
+);
+    style(
+      objectos.css.util.All.MinHeight.SCREEN,
+      minHeight(vh(100))
 );
   }
 
@@ -303,6 +324,23 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void SmallMinHeight() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MinHeight.V0,
+        minHeight($0)
+),
+      style(
+        objectos.css.util.Small.MinHeight.FULL,
+        minHeight(pct(100))
+),
+      style(
+        objectos.css.util.Small.MinHeight.SCREEN,
+        minHeight(vh(100))
+));
+  }
+
   private void MediumDisplay() {
     media(
       minWidth(px(768)),
@@ -423,6 +461,23 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Medium.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void MediumMinHeight() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MinHeight.V0,
+        minHeight($0)
+),
+      style(
+        objectos.css.util.Medium.MinHeight.FULL,
+        minHeight(pct(100))
+),
+      style(
+        objectos.css.util.Medium.MinHeight.SCREEN,
+        minHeight(vh(100))
 ));
   }
 
@@ -549,6 +604,23 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void LargeMinHeight() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MinHeight.V0,
+        minHeight($0)
+),
+      style(
+        objectos.css.util.Large.MinHeight.FULL,
+        minHeight(pct(100))
+),
+      style(
+        objectos.css.util.Large.MinHeight.SCREEN,
+        minHeight(vh(100))
+));
+  }
+
   private void XLargeDisplay() {
     media(
       minWidth(px(1280)),
@@ -672,6 +744,23 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeMinHeight() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MinHeight.V0,
+        minHeight($0)
+),
+      style(
+        objectos.css.util.XLarge.MinHeight.FULL,
+        minHeight(pct(100))
+),
+      style(
+        objectos.css.util.XLarge.MinHeight.SCREEN,
+        minHeight(vh(100))
+));
+  }
+
   private void XLarge2Display() {
     media(
       minWidth(px(1536)),
@@ -792,6 +881,23 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void XLarge2MinHeight() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MinHeight.V0,
+        minHeight($0)
+),
+      style(
+        objectos.css.util.XLarge2.MinHeight.FULL,
+        minHeight(pct(100))
+),
+      style(
+        objectos.css.util.XLarge2.MinHeight.SCREEN,
+        minHeight(vh(100))
 ));
   }
 }
