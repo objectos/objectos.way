@@ -380,15 +380,20 @@ public class InternalApi {
     int count = 0;
 
     for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
+      Object element;
+      element = elements[i];
+
       Check.notNull(element, "elements[", i, "] == null");
+
       count += elemPre(element);
     }
 
     elemCnt(proto, count);
 
     for (int i = 0; i < elements.length; i++) {
-      var element = elements[i];
+      Object element;
+      element = elements[i];
+
       elemItem(element);
     }
 
@@ -456,7 +461,8 @@ public class InternalApi {
   public final int object(Object value) {
     objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
 
-    var result = objectIndex;
+    int result;
+    result = objectIndex;
 
     objectArray[objectIndex++] = value;
 

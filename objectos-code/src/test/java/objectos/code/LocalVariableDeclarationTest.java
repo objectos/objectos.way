@@ -41,7 +41,9 @@ public class LocalVariableDeclarationTest {
 
               p(INT, name("c"), i(0)),
 
-              p(STRING, name("d"), s("d"))
+              p(STRING, name("d"), s("d")),
+
+              p(DOUBLE, name("e"), l(1.23))
             )
           );
         }
@@ -54,6 +56,7 @@ public class LocalVariableDeclarationTest {
           var b = m("java");
           int c = 0;
           java.lang.String d = "d";
+          double e = 1.23;
         }
       }
       """

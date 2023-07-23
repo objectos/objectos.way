@@ -826,7 +826,9 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @since 0.4.4
    */
   protected final ClassDeclaration classDeclaration(ClassDeclarationInstruction... contents) {
-    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    Object[] many;
+    many = Objects.requireNonNull(contents, "contents == null");
+
     return api().elemMany(ByteProto.CLASS_DECLARATION, many);
   }
 
@@ -972,6 +974,15 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
   /**
    * TODO
    */
+  protected final IntegerLiteral l(double value) {
+    var s = Double.toString(value);
+    var api = api();
+    return api.itemAdd(ByteProto.PRIMITIVE_LITERAL, api.object(s));
+  }
+
+  /**
+   * TODO
+   */
   protected final Identifier id(String name) {
     JavaModel.checkIdentifier(name);
     var api = api();
@@ -1088,7 +1099,9 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @since 0.4.2
    */
   protected final MethodDeclaration method(MethodDeclarationInstruction... contents) {
-    Object[] many = Objects.requireNonNull(contents, "contents == null");
+    Object[] many;
+    many = Objects.requireNonNull(contents, "contents == null");
+
     return api().elemMany(ByteProto.METHOD_DECLARATION, many);
   }
 
@@ -1189,7 +1202,10 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    */
   protected final DeclarationName name(String name) {
     JavaModel.checkIdentifier(name);
-    var api = api();
+
+    InternalApi api;
+    api = api();
+
     return api.itemAdd(ByteProto.DECLARATION_NAME, api.object(name));
   }
 
@@ -1199,7 +1215,9 @@ public non-sealed abstract class JavaTemplate extends InternalJavaTemplate {
    * @since 0.4.3.1
    */
   protected final BlockInstruction p(StatementPart... parts) {
-    Object[] many = Objects.requireNonNull(parts, "parts == null");
+    Object[] many;
+    many = Objects.requireNonNull(parts, "parts == null");
+
     return api().elemMany(ByteProto.STATEMENT, many);
   }
 
