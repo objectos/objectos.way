@@ -32,6 +32,8 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
   private List<Prefix> responsive;
 
+  private Names spacing;
+
   public static void main(String[] args) throws IOException {
     CssUtilSpec spec;
     spec = new CssUtilSpec();
@@ -58,6 +60,45 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       prefixXLarge2
     );
 
+    spacing = names(
+      name("PX", px(1)),
+      name("V0", zero()),
+      name("V0_5", rem(0.125)),
+      name("V1", rem(0.25)),
+      name("V1_5", rem(0.375)),
+      name("V2", rem(0.5)),
+      name("V2_5", rem(0.625)),
+      name("V3", rem(0.75)),
+      name("V3_5", rem(0.875)),
+      name("V4", rem(1)),
+      name("V5", rem(1.25)),
+      name("V6", rem(1.5)),
+      name("V7", rem(1.75)),
+      name("V8", rem(2)),
+      name("V9", rem(2.25)),
+      name("V10", rem(2.5)),
+      name("V11", rem(2.75)),
+      name("V12", rem(3)),
+      name("V14", rem(3.5)),
+      name("V16", rem(4)),
+      name("V20", rem(5)),
+      name("V24", rem(6)),
+      name("V28", rem(7)),
+      name("V32", rem(8)),
+      name("V36", rem(9)),
+      name("V40", rem(10)),
+      name("V44", rem(11)),
+      name("V48", rem(12)),
+      name("V52", rem(13)),
+      name("V56", rem(14)),
+      name("V60", rem(15)),
+      name("V64", rem(16)),
+      name("V68", rem(17)),
+      name("V72", rem(18)),
+      name("V80", rem(20)),
+      name("V96", rem(24))
+    );
+
     // D
     display();
 
@@ -69,6 +110,9 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     // M
     minHeight();
+
+    // P
+    padding();
   }
 
   private void display() {
@@ -137,6 +181,24 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("MinHeight"), methods("minHeight"), names);
+    }
+  }
+
+  private void padding() {
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("Padding"), methods("padding"), spacing);
+
+      generate(prefix, simpleName("PaddingX"), methods("paddingRight", "paddingLeft"), spacing);
+
+      generate(prefix, simpleName("PaddingY"), methods("paddingTop", "paddingBottom"), spacing);
+
+      generate(prefix, simpleName("PaddingTop"), methods("paddingTop"), spacing);
+
+      generate(prefix, simpleName("PaddingRight"), methods("paddingRight"), spacing);
+
+      generate(prefix, simpleName("PaddingBottom"), methods("paddingBottom"), spacing);
+
+      generate(prefix, simpleName("PaddingLeft"), methods("paddingLeft"), spacing);
     }
   }
 

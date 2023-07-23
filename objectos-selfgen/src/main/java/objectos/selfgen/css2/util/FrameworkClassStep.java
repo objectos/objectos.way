@@ -173,6 +173,10 @@ final class FrameworkClassStep extends ThisTemplate {
       argument(n(expression.fieldName()));
     }
 
+    else if (value instanceof Value.MethodDouble method) {
+      argument(v(method.methodName()), argument(l(method.value())));
+    }
+
     else if (value instanceof Value.MethodInt method) {
       argument(v(method.methodName()), argument(i(method.value())));
     }

@@ -32,6 +32,13 @@ public final class Framework extends objectos.css.CssTemplate {
     AllFlexDirection();
     AllJustifyContent();
     AllMinHeight();
+    AllPadding();
+    AllPaddingX();
+    AllPaddingY();
+    AllPaddingTop();
+    AllPaddingRight();
+    AllPaddingBottom();
+    AllPaddingLeft();
   }
 
   private void Small() {
@@ -39,6 +46,13 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallFlexDirection();
     SmallJustifyContent();
     SmallMinHeight();
+    SmallPadding();
+    SmallPaddingX();
+    SmallPaddingY();
+    SmallPaddingTop();
+    SmallPaddingRight();
+    SmallPaddingBottom();
+    SmallPaddingLeft();
   }
 
   private void Medium() {
@@ -46,6 +60,13 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumFlexDirection();
     MediumJustifyContent();
     MediumMinHeight();
+    MediumPadding();
+    MediumPaddingX();
+    MediumPaddingY();
+    MediumPaddingTop();
+    MediumPaddingRight();
+    MediumPaddingBottom();
+    MediumPaddingLeft();
   }
 
   private void Large() {
@@ -53,6 +74,13 @@ public final class Framework extends objectos.css.CssTemplate {
     LargeFlexDirection();
     LargeJustifyContent();
     LargeMinHeight();
+    LargePadding();
+    LargePaddingX();
+    LargePaddingY();
+    LargePaddingTop();
+    LargePaddingRight();
+    LargePaddingBottom();
+    LargePaddingLeft();
   }
 
   private void XLarge() {
@@ -60,6 +88,13 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargeFlexDirection();
     XLargeJustifyContent();
     XLargeMinHeight();
+    XLargePadding();
+    XLargePaddingX();
+    XLargePaddingY();
+    XLargePaddingTop();
+    XLargePaddingRight();
+    XLargePaddingBottom();
+    XLargePaddingLeft();
   }
 
   private void XLarge2() {
@@ -67,6 +102,13 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2FlexDirection();
     XLarge2JustifyContent();
     XLarge2MinHeight();
+    XLarge2Padding();
+    XLarge2PaddingX();
+    XLarge2PaddingY();
+    XLarge2PaddingTop();
+    XLarge2PaddingRight();
+    XLarge2PaddingBottom();
+    XLarge2PaddingLeft();
   }
 
   private void AllDisplay() {
@@ -198,6 +240,1107 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.MinHeight.SCREEN,
       minHeight(vh(100))
+);
+  }
+
+  private void AllPadding() {
+    style(
+      objectos.css.util.All.Padding.PX,
+      padding(px(1))
+);
+    style(
+      objectos.css.util.All.Padding.V0,
+      padding($0)
+);
+    style(
+      objectos.css.util.All.Padding.V0_5,
+      padding(rem(0.125))
+);
+    style(
+      objectos.css.util.All.Padding.V1,
+      padding(rem(0.25))
+);
+    style(
+      objectos.css.util.All.Padding.V1_5,
+      padding(rem(0.375))
+);
+    style(
+      objectos.css.util.All.Padding.V2,
+      padding(rem(0.5))
+);
+    style(
+      objectos.css.util.All.Padding.V2_5,
+      padding(rem(0.625))
+);
+    style(
+      objectos.css.util.All.Padding.V3,
+      padding(rem(0.75))
+);
+    style(
+      objectos.css.util.All.Padding.V3_5,
+      padding(rem(0.875))
+);
+    style(
+      objectos.css.util.All.Padding.V4,
+      padding(rem(1))
+);
+    style(
+      objectos.css.util.All.Padding.V5,
+      padding(rem(1.25))
+);
+    style(
+      objectos.css.util.All.Padding.V6,
+      padding(rem(1.5))
+);
+    style(
+      objectos.css.util.All.Padding.V7,
+      padding(rem(1.75))
+);
+    style(
+      objectos.css.util.All.Padding.V8,
+      padding(rem(2))
+);
+    style(
+      objectos.css.util.All.Padding.V9,
+      padding(rem(2.25))
+);
+    style(
+      objectos.css.util.All.Padding.V10,
+      padding(rem(2.5))
+);
+    style(
+      objectos.css.util.All.Padding.V11,
+      padding(rem(2.75))
+);
+    style(
+      objectos.css.util.All.Padding.V12,
+      padding(rem(3))
+);
+    style(
+      objectos.css.util.All.Padding.V14,
+      padding(rem(3.5))
+);
+    style(
+      objectos.css.util.All.Padding.V16,
+      padding(rem(4))
+);
+    style(
+      objectos.css.util.All.Padding.V20,
+      padding(rem(5))
+);
+    style(
+      objectos.css.util.All.Padding.V24,
+      padding(rem(6))
+);
+    style(
+      objectos.css.util.All.Padding.V28,
+      padding(rem(7))
+);
+    style(
+      objectos.css.util.All.Padding.V32,
+      padding(rem(8))
+);
+    style(
+      objectos.css.util.All.Padding.V36,
+      padding(rem(9))
+);
+    style(
+      objectos.css.util.All.Padding.V40,
+      padding(rem(10))
+);
+    style(
+      objectos.css.util.All.Padding.V44,
+      padding(rem(11))
+);
+    style(
+      objectos.css.util.All.Padding.V48,
+      padding(rem(12))
+);
+    style(
+      objectos.css.util.All.Padding.V52,
+      padding(rem(13))
+);
+    style(
+      objectos.css.util.All.Padding.V56,
+      padding(rem(14))
+);
+    style(
+      objectos.css.util.All.Padding.V60,
+      padding(rem(15))
+);
+    style(
+      objectos.css.util.All.Padding.V64,
+      padding(rem(16))
+);
+    style(
+      objectos.css.util.All.Padding.V68,
+      padding(rem(17))
+);
+    style(
+      objectos.css.util.All.Padding.V72,
+      padding(rem(18))
+);
+    style(
+      objectos.css.util.All.Padding.V80,
+      padding(rem(20))
+);
+    style(
+      objectos.css.util.All.Padding.V96,
+      padding(rem(24))
+);
+  }
+
+  private void AllPaddingX() {
+    style(
+      objectos.css.util.All.PaddingX.PX,
+      paddingRight(px(1)),
+      paddingLeft(px(1))
+);
+    style(
+      objectos.css.util.All.PaddingX.V0,
+      paddingRight($0),
+      paddingLeft($0)
+);
+    style(
+      objectos.css.util.All.PaddingX.V0_5,
+      paddingRight(rem(0.125)),
+      paddingLeft(rem(0.125))
+);
+    style(
+      objectos.css.util.All.PaddingX.V1,
+      paddingRight(rem(0.25)),
+      paddingLeft(rem(0.25))
+);
+    style(
+      objectos.css.util.All.PaddingX.V1_5,
+      paddingRight(rem(0.375)),
+      paddingLeft(rem(0.375))
+);
+    style(
+      objectos.css.util.All.PaddingX.V2,
+      paddingRight(rem(0.5)),
+      paddingLeft(rem(0.5))
+);
+    style(
+      objectos.css.util.All.PaddingX.V2_5,
+      paddingRight(rem(0.625)),
+      paddingLeft(rem(0.625))
+);
+    style(
+      objectos.css.util.All.PaddingX.V3,
+      paddingRight(rem(0.75)),
+      paddingLeft(rem(0.75))
+);
+    style(
+      objectos.css.util.All.PaddingX.V3_5,
+      paddingRight(rem(0.875)),
+      paddingLeft(rem(0.875))
+);
+    style(
+      objectos.css.util.All.PaddingX.V4,
+      paddingRight(rem(1)),
+      paddingLeft(rem(1))
+);
+    style(
+      objectos.css.util.All.PaddingX.V5,
+      paddingRight(rem(1.25)),
+      paddingLeft(rem(1.25))
+);
+    style(
+      objectos.css.util.All.PaddingX.V6,
+      paddingRight(rem(1.5)),
+      paddingLeft(rem(1.5))
+);
+    style(
+      objectos.css.util.All.PaddingX.V7,
+      paddingRight(rem(1.75)),
+      paddingLeft(rem(1.75))
+);
+    style(
+      objectos.css.util.All.PaddingX.V8,
+      paddingRight(rem(2)),
+      paddingLeft(rem(2))
+);
+    style(
+      objectos.css.util.All.PaddingX.V9,
+      paddingRight(rem(2.25)),
+      paddingLeft(rem(2.25))
+);
+    style(
+      objectos.css.util.All.PaddingX.V10,
+      paddingRight(rem(2.5)),
+      paddingLeft(rem(2.5))
+);
+    style(
+      objectos.css.util.All.PaddingX.V11,
+      paddingRight(rem(2.75)),
+      paddingLeft(rem(2.75))
+);
+    style(
+      objectos.css.util.All.PaddingX.V12,
+      paddingRight(rem(3)),
+      paddingLeft(rem(3))
+);
+    style(
+      objectos.css.util.All.PaddingX.V14,
+      paddingRight(rem(3.5)),
+      paddingLeft(rem(3.5))
+);
+    style(
+      objectos.css.util.All.PaddingX.V16,
+      paddingRight(rem(4)),
+      paddingLeft(rem(4))
+);
+    style(
+      objectos.css.util.All.PaddingX.V20,
+      paddingRight(rem(5)),
+      paddingLeft(rem(5))
+);
+    style(
+      objectos.css.util.All.PaddingX.V24,
+      paddingRight(rem(6)),
+      paddingLeft(rem(6))
+);
+    style(
+      objectos.css.util.All.PaddingX.V28,
+      paddingRight(rem(7)),
+      paddingLeft(rem(7))
+);
+    style(
+      objectos.css.util.All.PaddingX.V32,
+      paddingRight(rem(8)),
+      paddingLeft(rem(8))
+);
+    style(
+      objectos.css.util.All.PaddingX.V36,
+      paddingRight(rem(9)),
+      paddingLeft(rem(9))
+);
+    style(
+      objectos.css.util.All.PaddingX.V40,
+      paddingRight(rem(10)),
+      paddingLeft(rem(10))
+);
+    style(
+      objectos.css.util.All.PaddingX.V44,
+      paddingRight(rem(11)),
+      paddingLeft(rem(11))
+);
+    style(
+      objectos.css.util.All.PaddingX.V48,
+      paddingRight(rem(12)),
+      paddingLeft(rem(12))
+);
+    style(
+      objectos.css.util.All.PaddingX.V52,
+      paddingRight(rem(13)),
+      paddingLeft(rem(13))
+);
+    style(
+      objectos.css.util.All.PaddingX.V56,
+      paddingRight(rem(14)),
+      paddingLeft(rem(14))
+);
+    style(
+      objectos.css.util.All.PaddingX.V60,
+      paddingRight(rem(15)),
+      paddingLeft(rem(15))
+);
+    style(
+      objectos.css.util.All.PaddingX.V64,
+      paddingRight(rem(16)),
+      paddingLeft(rem(16))
+);
+    style(
+      objectos.css.util.All.PaddingX.V68,
+      paddingRight(rem(17)),
+      paddingLeft(rem(17))
+);
+    style(
+      objectos.css.util.All.PaddingX.V72,
+      paddingRight(rem(18)),
+      paddingLeft(rem(18))
+);
+    style(
+      objectos.css.util.All.PaddingX.V80,
+      paddingRight(rem(20)),
+      paddingLeft(rem(20))
+);
+    style(
+      objectos.css.util.All.PaddingX.V96,
+      paddingRight(rem(24)),
+      paddingLeft(rem(24))
+);
+  }
+
+  private void AllPaddingY() {
+    style(
+      objectos.css.util.All.PaddingY.PX,
+      paddingTop(px(1)),
+      paddingBottom(px(1))
+);
+    style(
+      objectos.css.util.All.PaddingY.V0,
+      paddingTop($0),
+      paddingBottom($0)
+);
+    style(
+      objectos.css.util.All.PaddingY.V0_5,
+      paddingTop(rem(0.125)),
+      paddingBottom(rem(0.125))
+);
+    style(
+      objectos.css.util.All.PaddingY.V1,
+      paddingTop(rem(0.25)),
+      paddingBottom(rem(0.25))
+);
+    style(
+      objectos.css.util.All.PaddingY.V1_5,
+      paddingTop(rem(0.375)),
+      paddingBottom(rem(0.375))
+);
+    style(
+      objectos.css.util.All.PaddingY.V2,
+      paddingTop(rem(0.5)),
+      paddingBottom(rem(0.5))
+);
+    style(
+      objectos.css.util.All.PaddingY.V2_5,
+      paddingTop(rem(0.625)),
+      paddingBottom(rem(0.625))
+);
+    style(
+      objectos.css.util.All.PaddingY.V3,
+      paddingTop(rem(0.75)),
+      paddingBottom(rem(0.75))
+);
+    style(
+      objectos.css.util.All.PaddingY.V3_5,
+      paddingTop(rem(0.875)),
+      paddingBottom(rem(0.875))
+);
+    style(
+      objectos.css.util.All.PaddingY.V4,
+      paddingTop(rem(1)),
+      paddingBottom(rem(1))
+);
+    style(
+      objectos.css.util.All.PaddingY.V5,
+      paddingTop(rem(1.25)),
+      paddingBottom(rem(1.25))
+);
+    style(
+      objectos.css.util.All.PaddingY.V6,
+      paddingTop(rem(1.5)),
+      paddingBottom(rem(1.5))
+);
+    style(
+      objectos.css.util.All.PaddingY.V7,
+      paddingTop(rem(1.75)),
+      paddingBottom(rem(1.75))
+);
+    style(
+      objectos.css.util.All.PaddingY.V8,
+      paddingTop(rem(2)),
+      paddingBottom(rem(2))
+);
+    style(
+      objectos.css.util.All.PaddingY.V9,
+      paddingTop(rem(2.25)),
+      paddingBottom(rem(2.25))
+);
+    style(
+      objectos.css.util.All.PaddingY.V10,
+      paddingTop(rem(2.5)),
+      paddingBottom(rem(2.5))
+);
+    style(
+      objectos.css.util.All.PaddingY.V11,
+      paddingTop(rem(2.75)),
+      paddingBottom(rem(2.75))
+);
+    style(
+      objectos.css.util.All.PaddingY.V12,
+      paddingTop(rem(3)),
+      paddingBottom(rem(3))
+);
+    style(
+      objectos.css.util.All.PaddingY.V14,
+      paddingTop(rem(3.5)),
+      paddingBottom(rem(3.5))
+);
+    style(
+      objectos.css.util.All.PaddingY.V16,
+      paddingTop(rem(4)),
+      paddingBottom(rem(4))
+);
+    style(
+      objectos.css.util.All.PaddingY.V20,
+      paddingTop(rem(5)),
+      paddingBottom(rem(5))
+);
+    style(
+      objectos.css.util.All.PaddingY.V24,
+      paddingTop(rem(6)),
+      paddingBottom(rem(6))
+);
+    style(
+      objectos.css.util.All.PaddingY.V28,
+      paddingTop(rem(7)),
+      paddingBottom(rem(7))
+);
+    style(
+      objectos.css.util.All.PaddingY.V32,
+      paddingTop(rem(8)),
+      paddingBottom(rem(8))
+);
+    style(
+      objectos.css.util.All.PaddingY.V36,
+      paddingTop(rem(9)),
+      paddingBottom(rem(9))
+);
+    style(
+      objectos.css.util.All.PaddingY.V40,
+      paddingTop(rem(10)),
+      paddingBottom(rem(10))
+);
+    style(
+      objectos.css.util.All.PaddingY.V44,
+      paddingTop(rem(11)),
+      paddingBottom(rem(11))
+);
+    style(
+      objectos.css.util.All.PaddingY.V48,
+      paddingTop(rem(12)),
+      paddingBottom(rem(12))
+);
+    style(
+      objectos.css.util.All.PaddingY.V52,
+      paddingTop(rem(13)),
+      paddingBottom(rem(13))
+);
+    style(
+      objectos.css.util.All.PaddingY.V56,
+      paddingTop(rem(14)),
+      paddingBottom(rem(14))
+);
+    style(
+      objectos.css.util.All.PaddingY.V60,
+      paddingTop(rem(15)),
+      paddingBottom(rem(15))
+);
+    style(
+      objectos.css.util.All.PaddingY.V64,
+      paddingTop(rem(16)),
+      paddingBottom(rem(16))
+);
+    style(
+      objectos.css.util.All.PaddingY.V68,
+      paddingTop(rem(17)),
+      paddingBottom(rem(17))
+);
+    style(
+      objectos.css.util.All.PaddingY.V72,
+      paddingTop(rem(18)),
+      paddingBottom(rem(18))
+);
+    style(
+      objectos.css.util.All.PaddingY.V80,
+      paddingTop(rem(20)),
+      paddingBottom(rem(20))
+);
+    style(
+      objectos.css.util.All.PaddingY.V96,
+      paddingTop(rem(24)),
+      paddingBottom(rem(24))
+);
+  }
+
+  private void AllPaddingTop() {
+    style(
+      objectos.css.util.All.PaddingTop.PX,
+      paddingTop(px(1))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V0,
+      paddingTop($0)
+);
+    style(
+      objectos.css.util.All.PaddingTop.V0_5,
+      paddingTop(rem(0.125))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V1,
+      paddingTop(rem(0.25))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V1_5,
+      paddingTop(rem(0.375))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V2,
+      paddingTop(rem(0.5))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V2_5,
+      paddingTop(rem(0.625))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V3,
+      paddingTop(rem(0.75))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V3_5,
+      paddingTop(rem(0.875))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V4,
+      paddingTop(rem(1))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V5,
+      paddingTop(rem(1.25))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V6,
+      paddingTop(rem(1.5))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V7,
+      paddingTop(rem(1.75))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V8,
+      paddingTop(rem(2))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V9,
+      paddingTop(rem(2.25))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V10,
+      paddingTop(rem(2.5))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V11,
+      paddingTop(rem(2.75))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V12,
+      paddingTop(rem(3))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V14,
+      paddingTop(rem(3.5))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V16,
+      paddingTop(rem(4))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V20,
+      paddingTop(rem(5))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V24,
+      paddingTop(rem(6))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V28,
+      paddingTop(rem(7))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V32,
+      paddingTop(rem(8))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V36,
+      paddingTop(rem(9))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V40,
+      paddingTop(rem(10))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V44,
+      paddingTop(rem(11))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V48,
+      paddingTop(rem(12))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V52,
+      paddingTop(rem(13))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V56,
+      paddingTop(rem(14))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V60,
+      paddingTop(rem(15))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V64,
+      paddingTop(rem(16))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V68,
+      paddingTop(rem(17))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V72,
+      paddingTop(rem(18))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V80,
+      paddingTop(rem(20))
+);
+    style(
+      objectos.css.util.All.PaddingTop.V96,
+      paddingTop(rem(24))
+);
+  }
+
+  private void AllPaddingRight() {
+    style(
+      objectos.css.util.All.PaddingRight.PX,
+      paddingRight(px(1))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V0,
+      paddingRight($0)
+);
+    style(
+      objectos.css.util.All.PaddingRight.V0_5,
+      paddingRight(rem(0.125))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V1,
+      paddingRight(rem(0.25))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V1_5,
+      paddingRight(rem(0.375))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V2,
+      paddingRight(rem(0.5))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V2_5,
+      paddingRight(rem(0.625))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V3,
+      paddingRight(rem(0.75))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V3_5,
+      paddingRight(rem(0.875))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V4,
+      paddingRight(rem(1))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V5,
+      paddingRight(rem(1.25))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V6,
+      paddingRight(rem(1.5))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V7,
+      paddingRight(rem(1.75))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V8,
+      paddingRight(rem(2))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V9,
+      paddingRight(rem(2.25))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V10,
+      paddingRight(rem(2.5))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V11,
+      paddingRight(rem(2.75))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V12,
+      paddingRight(rem(3))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V14,
+      paddingRight(rem(3.5))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V16,
+      paddingRight(rem(4))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V20,
+      paddingRight(rem(5))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V24,
+      paddingRight(rem(6))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V28,
+      paddingRight(rem(7))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V32,
+      paddingRight(rem(8))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V36,
+      paddingRight(rem(9))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V40,
+      paddingRight(rem(10))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V44,
+      paddingRight(rem(11))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V48,
+      paddingRight(rem(12))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V52,
+      paddingRight(rem(13))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V56,
+      paddingRight(rem(14))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V60,
+      paddingRight(rem(15))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V64,
+      paddingRight(rem(16))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V68,
+      paddingRight(rem(17))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V72,
+      paddingRight(rem(18))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V80,
+      paddingRight(rem(20))
+);
+    style(
+      objectos.css.util.All.PaddingRight.V96,
+      paddingRight(rem(24))
+);
+  }
+
+  private void AllPaddingBottom() {
+    style(
+      objectos.css.util.All.PaddingBottom.PX,
+      paddingBottom(px(1))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V0,
+      paddingBottom($0)
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V0_5,
+      paddingBottom(rem(0.125))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V1,
+      paddingBottom(rem(0.25))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V1_5,
+      paddingBottom(rem(0.375))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V2,
+      paddingBottom(rem(0.5))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V2_5,
+      paddingBottom(rem(0.625))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V3,
+      paddingBottom(rem(0.75))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V3_5,
+      paddingBottom(rem(0.875))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V4,
+      paddingBottom(rem(1))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V5,
+      paddingBottom(rem(1.25))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V6,
+      paddingBottom(rem(1.5))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V7,
+      paddingBottom(rem(1.75))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V8,
+      paddingBottom(rem(2))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V9,
+      paddingBottom(rem(2.25))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V10,
+      paddingBottom(rem(2.5))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V11,
+      paddingBottom(rem(2.75))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V12,
+      paddingBottom(rem(3))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V14,
+      paddingBottom(rem(3.5))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V16,
+      paddingBottom(rem(4))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V20,
+      paddingBottom(rem(5))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V24,
+      paddingBottom(rem(6))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V28,
+      paddingBottom(rem(7))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V32,
+      paddingBottom(rem(8))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V36,
+      paddingBottom(rem(9))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V40,
+      paddingBottom(rem(10))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V44,
+      paddingBottom(rem(11))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V48,
+      paddingBottom(rem(12))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V52,
+      paddingBottom(rem(13))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V56,
+      paddingBottom(rem(14))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V60,
+      paddingBottom(rem(15))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V64,
+      paddingBottom(rem(16))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V68,
+      paddingBottom(rem(17))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V72,
+      paddingBottom(rem(18))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V80,
+      paddingBottom(rem(20))
+);
+    style(
+      objectos.css.util.All.PaddingBottom.V96,
+      paddingBottom(rem(24))
+);
+  }
+
+  private void AllPaddingLeft() {
+    style(
+      objectos.css.util.All.PaddingLeft.PX,
+      paddingLeft(px(1))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V0,
+      paddingLeft($0)
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V0_5,
+      paddingLeft(rem(0.125))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V1,
+      paddingLeft(rem(0.25))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V1_5,
+      paddingLeft(rem(0.375))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V2,
+      paddingLeft(rem(0.5))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V2_5,
+      paddingLeft(rem(0.625))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V3,
+      paddingLeft(rem(0.75))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V3_5,
+      paddingLeft(rem(0.875))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V4,
+      paddingLeft(rem(1))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V5,
+      paddingLeft(rem(1.25))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V6,
+      paddingLeft(rem(1.5))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V7,
+      paddingLeft(rem(1.75))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V8,
+      paddingLeft(rem(2))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V9,
+      paddingLeft(rem(2.25))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V10,
+      paddingLeft(rem(2.5))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V11,
+      paddingLeft(rem(2.75))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V12,
+      paddingLeft(rem(3))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V14,
+      paddingLeft(rem(3.5))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V16,
+      paddingLeft(rem(4))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V20,
+      paddingLeft(rem(5))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V24,
+      paddingLeft(rem(6))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V28,
+      paddingLeft(rem(7))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V32,
+      paddingLeft(rem(8))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V36,
+      paddingLeft(rem(9))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V40,
+      paddingLeft(rem(10))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V44,
+      paddingLeft(rem(11))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V48,
+      paddingLeft(rem(12))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V52,
+      paddingLeft(rem(13))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V56,
+      paddingLeft(rem(14))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V60,
+      paddingLeft(rem(15))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V64,
+      paddingLeft(rem(16))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V68,
+      paddingLeft(rem(17))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V72,
+      paddingLeft(rem(18))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V80,
+      paddingLeft(rem(20))
+);
+    style(
+      objectos.css.util.All.PaddingLeft.V96,
+      paddingLeft(rem(24))
 );
   }
 
@@ -341,6 +1484,1121 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void SmallPadding() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.Padding.PX,
+        padding(px(1))
+),
+      style(
+        objectos.css.util.Small.Padding.V0,
+        padding($0)
+),
+      style(
+        objectos.css.util.Small.Padding.V0_5,
+        padding(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.Padding.V1,
+        padding(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.Padding.V1_5,
+        padding(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.Padding.V2,
+        padding(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.Padding.V2_5,
+        padding(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.Padding.V3,
+        padding(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.Padding.V3_5,
+        padding(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.Padding.V4,
+        padding(rem(1))
+),
+      style(
+        objectos.css.util.Small.Padding.V5,
+        padding(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.Padding.V6,
+        padding(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.Padding.V7,
+        padding(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.Padding.V8,
+        padding(rem(2))
+),
+      style(
+        objectos.css.util.Small.Padding.V9,
+        padding(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.Padding.V10,
+        padding(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.Padding.V11,
+        padding(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.Padding.V12,
+        padding(rem(3))
+),
+      style(
+        objectos.css.util.Small.Padding.V14,
+        padding(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.Padding.V16,
+        padding(rem(4))
+),
+      style(
+        objectos.css.util.Small.Padding.V20,
+        padding(rem(5))
+),
+      style(
+        objectos.css.util.Small.Padding.V24,
+        padding(rem(6))
+),
+      style(
+        objectos.css.util.Small.Padding.V28,
+        padding(rem(7))
+),
+      style(
+        objectos.css.util.Small.Padding.V32,
+        padding(rem(8))
+),
+      style(
+        objectos.css.util.Small.Padding.V36,
+        padding(rem(9))
+),
+      style(
+        objectos.css.util.Small.Padding.V40,
+        padding(rem(10))
+),
+      style(
+        objectos.css.util.Small.Padding.V44,
+        padding(rem(11))
+),
+      style(
+        objectos.css.util.Small.Padding.V48,
+        padding(rem(12))
+),
+      style(
+        objectos.css.util.Small.Padding.V52,
+        padding(rem(13))
+),
+      style(
+        objectos.css.util.Small.Padding.V56,
+        padding(rem(14))
+),
+      style(
+        objectos.css.util.Small.Padding.V60,
+        padding(rem(15))
+),
+      style(
+        objectos.css.util.Small.Padding.V64,
+        padding(rem(16))
+),
+      style(
+        objectos.css.util.Small.Padding.V68,
+        padding(rem(17))
+),
+      style(
+        objectos.css.util.Small.Padding.V72,
+        padding(rem(18))
+),
+      style(
+        objectos.css.util.Small.Padding.V80,
+        padding(rem(20))
+),
+      style(
+        objectos.css.util.Small.Padding.V96,
+        padding(rem(24))
+));
+  }
+
+  private void SmallPaddingX() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.PaddingX.PX,
+        paddingRight(px(1)),
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V0,
+        paddingRight($0),
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.Small.PaddingX.V0_5,
+        paddingRight(rem(0.125)),
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V1,
+        paddingRight(rem(0.25)),
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V1_5,
+        paddingRight(rem(0.375)),
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V2,
+        paddingRight(rem(0.5)),
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V2_5,
+        paddingRight(rem(0.625)),
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V3,
+        paddingRight(rem(0.75)),
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V3_5,
+        paddingRight(rem(0.875)),
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V4,
+        paddingRight(rem(1)),
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V5,
+        paddingRight(rem(1.25)),
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V6,
+        paddingRight(rem(1.5)),
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V7,
+        paddingRight(rem(1.75)),
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V8,
+        paddingRight(rem(2)),
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V9,
+        paddingRight(rem(2.25)),
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V10,
+        paddingRight(rem(2.5)),
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V11,
+        paddingRight(rem(2.75)),
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V12,
+        paddingRight(rem(3)),
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V14,
+        paddingRight(rem(3.5)),
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V16,
+        paddingRight(rem(4)),
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V20,
+        paddingRight(rem(5)),
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V24,
+        paddingRight(rem(6)),
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V28,
+        paddingRight(rem(7)),
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V32,
+        paddingRight(rem(8)),
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V36,
+        paddingRight(rem(9)),
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V40,
+        paddingRight(rem(10)),
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V44,
+        paddingRight(rem(11)),
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V48,
+        paddingRight(rem(12)),
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V52,
+        paddingRight(rem(13)),
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V56,
+        paddingRight(rem(14)),
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V60,
+        paddingRight(rem(15)),
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V64,
+        paddingRight(rem(16)),
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V68,
+        paddingRight(rem(17)),
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V72,
+        paddingRight(rem(18)),
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V80,
+        paddingRight(rem(20)),
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.Small.PaddingX.V96,
+        paddingRight(rem(24)),
+        paddingLeft(rem(24))
+));
+  }
+
+  private void SmallPaddingY() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.PaddingY.PX,
+        paddingTop(px(1)),
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V0,
+        paddingTop($0),
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.Small.PaddingY.V0_5,
+        paddingTop(rem(0.125)),
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V1,
+        paddingTop(rem(0.25)),
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V1_5,
+        paddingTop(rem(0.375)),
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V2,
+        paddingTop(rem(0.5)),
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V2_5,
+        paddingTop(rem(0.625)),
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V3,
+        paddingTop(rem(0.75)),
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V3_5,
+        paddingTop(rem(0.875)),
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V4,
+        paddingTop(rem(1)),
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V5,
+        paddingTop(rem(1.25)),
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V6,
+        paddingTop(rem(1.5)),
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V7,
+        paddingTop(rem(1.75)),
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V8,
+        paddingTop(rem(2)),
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V9,
+        paddingTop(rem(2.25)),
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V10,
+        paddingTop(rem(2.5)),
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V11,
+        paddingTop(rem(2.75)),
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V12,
+        paddingTop(rem(3)),
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V14,
+        paddingTop(rem(3.5)),
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V16,
+        paddingTop(rem(4)),
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V20,
+        paddingTop(rem(5)),
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V24,
+        paddingTop(rem(6)),
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V28,
+        paddingTop(rem(7)),
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V32,
+        paddingTop(rem(8)),
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V36,
+        paddingTop(rem(9)),
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V40,
+        paddingTop(rem(10)),
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V44,
+        paddingTop(rem(11)),
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V48,
+        paddingTop(rem(12)),
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V52,
+        paddingTop(rem(13)),
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V56,
+        paddingTop(rem(14)),
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V60,
+        paddingTop(rem(15)),
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V64,
+        paddingTop(rem(16)),
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V68,
+        paddingTop(rem(17)),
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V72,
+        paddingTop(rem(18)),
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V80,
+        paddingTop(rem(20)),
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.Small.PaddingY.V96,
+        paddingTop(rem(24)),
+        paddingBottom(rem(24))
+));
+  }
+
+  private void SmallPaddingTop() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.PaddingTop.PX,
+        paddingTop(px(1))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V0,
+        paddingTop($0)
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V0_5,
+        paddingTop(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V1,
+        paddingTop(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V1_5,
+        paddingTop(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V2,
+        paddingTop(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V2_5,
+        paddingTop(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V3,
+        paddingTop(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V3_5,
+        paddingTop(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V4,
+        paddingTop(rem(1))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V5,
+        paddingTop(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V6,
+        paddingTop(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V7,
+        paddingTop(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V8,
+        paddingTop(rem(2))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V9,
+        paddingTop(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V10,
+        paddingTop(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V11,
+        paddingTop(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V12,
+        paddingTop(rem(3))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V14,
+        paddingTop(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V16,
+        paddingTop(rem(4))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V20,
+        paddingTop(rem(5))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V24,
+        paddingTop(rem(6))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V28,
+        paddingTop(rem(7))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V32,
+        paddingTop(rem(8))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V36,
+        paddingTop(rem(9))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V40,
+        paddingTop(rem(10))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V44,
+        paddingTop(rem(11))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V48,
+        paddingTop(rem(12))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V52,
+        paddingTop(rem(13))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V56,
+        paddingTop(rem(14))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V60,
+        paddingTop(rem(15))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V64,
+        paddingTop(rem(16))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V68,
+        paddingTop(rem(17))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V72,
+        paddingTop(rem(18))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V80,
+        paddingTop(rem(20))
+),
+      style(
+        objectos.css.util.Small.PaddingTop.V96,
+        paddingTop(rem(24))
+));
+  }
+
+  private void SmallPaddingRight() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.PaddingRight.PX,
+        paddingRight(px(1))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V0,
+        paddingRight($0)
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V0_5,
+        paddingRight(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V1,
+        paddingRight(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V1_5,
+        paddingRight(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V2,
+        paddingRight(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V2_5,
+        paddingRight(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V3,
+        paddingRight(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V3_5,
+        paddingRight(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V4,
+        paddingRight(rem(1))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V5,
+        paddingRight(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V6,
+        paddingRight(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V7,
+        paddingRight(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V8,
+        paddingRight(rem(2))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V9,
+        paddingRight(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V10,
+        paddingRight(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V11,
+        paddingRight(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V12,
+        paddingRight(rem(3))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V14,
+        paddingRight(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V16,
+        paddingRight(rem(4))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V20,
+        paddingRight(rem(5))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V24,
+        paddingRight(rem(6))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V28,
+        paddingRight(rem(7))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V32,
+        paddingRight(rem(8))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V36,
+        paddingRight(rem(9))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V40,
+        paddingRight(rem(10))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V44,
+        paddingRight(rem(11))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V48,
+        paddingRight(rem(12))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V52,
+        paddingRight(rem(13))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V56,
+        paddingRight(rem(14))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V60,
+        paddingRight(rem(15))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V64,
+        paddingRight(rem(16))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V68,
+        paddingRight(rem(17))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V72,
+        paddingRight(rem(18))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V80,
+        paddingRight(rem(20))
+),
+      style(
+        objectos.css.util.Small.PaddingRight.V96,
+        paddingRight(rem(24))
+));
+  }
+
+  private void SmallPaddingBottom() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.PaddingBottom.PX,
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V0,
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V0_5,
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V1,
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V1_5,
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V2,
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V2_5,
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V3,
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V3_5,
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V4,
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V5,
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V6,
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V7,
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V8,
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V9,
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V10,
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V11,
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V12,
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V14,
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V16,
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V20,
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V24,
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V28,
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V32,
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V36,
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V40,
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V44,
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V48,
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V52,
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V56,
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V60,
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V64,
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V68,
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V72,
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V80,
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.Small.PaddingBottom.V96,
+        paddingBottom(rem(24))
+));
+  }
+
+  private void SmallPaddingLeft() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.PaddingLeft.PX,
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V0,
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V0_5,
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V1,
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V1_5,
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V2,
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V2_5,
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V3,
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V3_5,
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V4,
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V5,
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V6,
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V7,
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V8,
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V9,
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V10,
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V11,
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V12,
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V14,
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V16,
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V20,
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V24,
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V28,
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V32,
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V36,
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V40,
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V44,
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V48,
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V52,
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V56,
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V60,
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V64,
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V68,
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V72,
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V80,
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.Small.PaddingLeft.V96,
+        paddingLeft(rem(24))
+));
+  }
+
   private void MediumDisplay() {
     media(
       minWidth(px(768)),
@@ -478,6 +2736,1121 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Medium.MinHeight.SCREEN,
         minHeight(vh(100))
+));
+  }
+
+  private void MediumPadding() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.Padding.PX,
+        padding(px(1))
+),
+      style(
+        objectos.css.util.Medium.Padding.V0,
+        padding($0)
+),
+      style(
+        objectos.css.util.Medium.Padding.V0_5,
+        padding(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.Padding.V1,
+        padding(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.Padding.V1_5,
+        padding(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.Padding.V2,
+        padding(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.Padding.V2_5,
+        padding(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.Padding.V3,
+        padding(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.Padding.V3_5,
+        padding(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.Padding.V4,
+        padding(rem(1))
+),
+      style(
+        objectos.css.util.Medium.Padding.V5,
+        padding(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.Padding.V6,
+        padding(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.Padding.V7,
+        padding(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.Padding.V8,
+        padding(rem(2))
+),
+      style(
+        objectos.css.util.Medium.Padding.V9,
+        padding(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.Padding.V10,
+        padding(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.Padding.V11,
+        padding(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.Padding.V12,
+        padding(rem(3))
+),
+      style(
+        objectos.css.util.Medium.Padding.V14,
+        padding(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.Padding.V16,
+        padding(rem(4))
+),
+      style(
+        objectos.css.util.Medium.Padding.V20,
+        padding(rem(5))
+),
+      style(
+        objectos.css.util.Medium.Padding.V24,
+        padding(rem(6))
+),
+      style(
+        objectos.css.util.Medium.Padding.V28,
+        padding(rem(7))
+),
+      style(
+        objectos.css.util.Medium.Padding.V32,
+        padding(rem(8))
+),
+      style(
+        objectos.css.util.Medium.Padding.V36,
+        padding(rem(9))
+),
+      style(
+        objectos.css.util.Medium.Padding.V40,
+        padding(rem(10))
+),
+      style(
+        objectos.css.util.Medium.Padding.V44,
+        padding(rem(11))
+),
+      style(
+        objectos.css.util.Medium.Padding.V48,
+        padding(rem(12))
+),
+      style(
+        objectos.css.util.Medium.Padding.V52,
+        padding(rem(13))
+),
+      style(
+        objectos.css.util.Medium.Padding.V56,
+        padding(rem(14))
+),
+      style(
+        objectos.css.util.Medium.Padding.V60,
+        padding(rem(15))
+),
+      style(
+        objectos.css.util.Medium.Padding.V64,
+        padding(rem(16))
+),
+      style(
+        objectos.css.util.Medium.Padding.V68,
+        padding(rem(17))
+),
+      style(
+        objectos.css.util.Medium.Padding.V72,
+        padding(rem(18))
+),
+      style(
+        objectos.css.util.Medium.Padding.V80,
+        padding(rem(20))
+),
+      style(
+        objectos.css.util.Medium.Padding.V96,
+        padding(rem(24))
+));
+  }
+
+  private void MediumPaddingX() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.PaddingX.PX,
+        paddingRight(px(1)),
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V0,
+        paddingRight($0),
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V0_5,
+        paddingRight(rem(0.125)),
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V1,
+        paddingRight(rem(0.25)),
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V1_5,
+        paddingRight(rem(0.375)),
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V2,
+        paddingRight(rem(0.5)),
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V2_5,
+        paddingRight(rem(0.625)),
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V3,
+        paddingRight(rem(0.75)),
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V3_5,
+        paddingRight(rem(0.875)),
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V4,
+        paddingRight(rem(1)),
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V5,
+        paddingRight(rem(1.25)),
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V6,
+        paddingRight(rem(1.5)),
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V7,
+        paddingRight(rem(1.75)),
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V8,
+        paddingRight(rem(2)),
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V9,
+        paddingRight(rem(2.25)),
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V10,
+        paddingRight(rem(2.5)),
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V11,
+        paddingRight(rem(2.75)),
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V12,
+        paddingRight(rem(3)),
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V14,
+        paddingRight(rem(3.5)),
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V16,
+        paddingRight(rem(4)),
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V20,
+        paddingRight(rem(5)),
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V24,
+        paddingRight(rem(6)),
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V28,
+        paddingRight(rem(7)),
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V32,
+        paddingRight(rem(8)),
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V36,
+        paddingRight(rem(9)),
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V40,
+        paddingRight(rem(10)),
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V44,
+        paddingRight(rem(11)),
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V48,
+        paddingRight(rem(12)),
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V52,
+        paddingRight(rem(13)),
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V56,
+        paddingRight(rem(14)),
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V60,
+        paddingRight(rem(15)),
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V64,
+        paddingRight(rem(16)),
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V68,
+        paddingRight(rem(17)),
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V72,
+        paddingRight(rem(18)),
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V80,
+        paddingRight(rem(20)),
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.Medium.PaddingX.V96,
+        paddingRight(rem(24)),
+        paddingLeft(rem(24))
+));
+  }
+
+  private void MediumPaddingY() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.PaddingY.PX,
+        paddingTop(px(1)),
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V0,
+        paddingTop($0),
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V0_5,
+        paddingTop(rem(0.125)),
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V1,
+        paddingTop(rem(0.25)),
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V1_5,
+        paddingTop(rem(0.375)),
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V2,
+        paddingTop(rem(0.5)),
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V2_5,
+        paddingTop(rem(0.625)),
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V3,
+        paddingTop(rem(0.75)),
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V3_5,
+        paddingTop(rem(0.875)),
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V4,
+        paddingTop(rem(1)),
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V5,
+        paddingTop(rem(1.25)),
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V6,
+        paddingTop(rem(1.5)),
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V7,
+        paddingTop(rem(1.75)),
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V8,
+        paddingTop(rem(2)),
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V9,
+        paddingTop(rem(2.25)),
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V10,
+        paddingTop(rem(2.5)),
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V11,
+        paddingTop(rem(2.75)),
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V12,
+        paddingTop(rem(3)),
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V14,
+        paddingTop(rem(3.5)),
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V16,
+        paddingTop(rem(4)),
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V20,
+        paddingTop(rem(5)),
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V24,
+        paddingTop(rem(6)),
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V28,
+        paddingTop(rem(7)),
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V32,
+        paddingTop(rem(8)),
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V36,
+        paddingTop(rem(9)),
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V40,
+        paddingTop(rem(10)),
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V44,
+        paddingTop(rem(11)),
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V48,
+        paddingTop(rem(12)),
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V52,
+        paddingTop(rem(13)),
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V56,
+        paddingTop(rem(14)),
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V60,
+        paddingTop(rem(15)),
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V64,
+        paddingTop(rem(16)),
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V68,
+        paddingTop(rem(17)),
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V72,
+        paddingTop(rem(18)),
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V80,
+        paddingTop(rem(20)),
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.Medium.PaddingY.V96,
+        paddingTop(rem(24)),
+        paddingBottom(rem(24))
+));
+  }
+
+  private void MediumPaddingTop() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.PaddingTop.PX,
+        paddingTop(px(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V0,
+        paddingTop($0)
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V0_5,
+        paddingTop(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V1,
+        paddingTop(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V1_5,
+        paddingTop(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V2,
+        paddingTop(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V2_5,
+        paddingTop(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V3,
+        paddingTop(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V3_5,
+        paddingTop(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V4,
+        paddingTop(rem(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V5,
+        paddingTop(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V6,
+        paddingTop(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V7,
+        paddingTop(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V8,
+        paddingTop(rem(2))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V9,
+        paddingTop(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V10,
+        paddingTop(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V11,
+        paddingTop(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V12,
+        paddingTop(rem(3))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V14,
+        paddingTop(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V16,
+        paddingTop(rem(4))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V20,
+        paddingTop(rem(5))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V24,
+        paddingTop(rem(6))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V28,
+        paddingTop(rem(7))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V32,
+        paddingTop(rem(8))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V36,
+        paddingTop(rem(9))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V40,
+        paddingTop(rem(10))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V44,
+        paddingTop(rem(11))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V48,
+        paddingTop(rem(12))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V52,
+        paddingTop(rem(13))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V56,
+        paddingTop(rem(14))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V60,
+        paddingTop(rem(15))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V64,
+        paddingTop(rem(16))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V68,
+        paddingTop(rem(17))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V72,
+        paddingTop(rem(18))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V80,
+        paddingTop(rem(20))
+),
+      style(
+        objectos.css.util.Medium.PaddingTop.V96,
+        paddingTop(rem(24))
+));
+  }
+
+  private void MediumPaddingRight() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.PaddingRight.PX,
+        paddingRight(px(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V0,
+        paddingRight($0)
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V0_5,
+        paddingRight(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V1,
+        paddingRight(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V1_5,
+        paddingRight(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V2,
+        paddingRight(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V2_5,
+        paddingRight(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V3,
+        paddingRight(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V3_5,
+        paddingRight(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V4,
+        paddingRight(rem(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V5,
+        paddingRight(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V6,
+        paddingRight(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V7,
+        paddingRight(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V8,
+        paddingRight(rem(2))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V9,
+        paddingRight(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V10,
+        paddingRight(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V11,
+        paddingRight(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V12,
+        paddingRight(rem(3))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V14,
+        paddingRight(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V16,
+        paddingRight(rem(4))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V20,
+        paddingRight(rem(5))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V24,
+        paddingRight(rem(6))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V28,
+        paddingRight(rem(7))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V32,
+        paddingRight(rem(8))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V36,
+        paddingRight(rem(9))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V40,
+        paddingRight(rem(10))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V44,
+        paddingRight(rem(11))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V48,
+        paddingRight(rem(12))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V52,
+        paddingRight(rem(13))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V56,
+        paddingRight(rem(14))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V60,
+        paddingRight(rem(15))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V64,
+        paddingRight(rem(16))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V68,
+        paddingRight(rem(17))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V72,
+        paddingRight(rem(18))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V80,
+        paddingRight(rem(20))
+),
+      style(
+        objectos.css.util.Medium.PaddingRight.V96,
+        paddingRight(rem(24))
+));
+  }
+
+  private void MediumPaddingBottom() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.PaddingBottom.PX,
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V0,
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V0_5,
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V1,
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V1_5,
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V2,
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V2_5,
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V3,
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V3_5,
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V4,
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V5,
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V6,
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V7,
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V8,
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V9,
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V10,
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V11,
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V12,
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V14,
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V16,
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V20,
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V24,
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V28,
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V32,
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V36,
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V40,
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V44,
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V48,
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V52,
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V56,
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V60,
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V64,
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V68,
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V72,
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V80,
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.Medium.PaddingBottom.V96,
+        paddingBottom(rem(24))
+));
+  }
+
+  private void MediumPaddingLeft() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.PaddingLeft.PX,
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V0,
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V0_5,
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V1,
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V1_5,
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V2,
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V2_5,
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V3,
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V3_5,
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V4,
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V5,
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V6,
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V7,
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V8,
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V9,
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V10,
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V11,
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V12,
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V14,
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V16,
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V20,
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V24,
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V28,
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V32,
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V36,
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V40,
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V44,
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V48,
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V52,
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V56,
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V60,
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V64,
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V68,
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V72,
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V80,
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.Medium.PaddingLeft.V96,
+        paddingLeft(rem(24))
 ));
   }
 
@@ -621,6 +3994,1121 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void LargePadding() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.Padding.PX,
+        padding(px(1))
+),
+      style(
+        objectos.css.util.Large.Padding.V0,
+        padding($0)
+),
+      style(
+        objectos.css.util.Large.Padding.V0_5,
+        padding(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.Padding.V1,
+        padding(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.Padding.V1_5,
+        padding(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.Padding.V2,
+        padding(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.Padding.V2_5,
+        padding(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.Padding.V3,
+        padding(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.Padding.V3_5,
+        padding(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.Padding.V4,
+        padding(rem(1))
+),
+      style(
+        objectos.css.util.Large.Padding.V5,
+        padding(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.Padding.V6,
+        padding(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.Padding.V7,
+        padding(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.Padding.V8,
+        padding(rem(2))
+),
+      style(
+        objectos.css.util.Large.Padding.V9,
+        padding(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.Padding.V10,
+        padding(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.Padding.V11,
+        padding(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.Padding.V12,
+        padding(rem(3))
+),
+      style(
+        objectos.css.util.Large.Padding.V14,
+        padding(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.Padding.V16,
+        padding(rem(4))
+),
+      style(
+        objectos.css.util.Large.Padding.V20,
+        padding(rem(5))
+),
+      style(
+        objectos.css.util.Large.Padding.V24,
+        padding(rem(6))
+),
+      style(
+        objectos.css.util.Large.Padding.V28,
+        padding(rem(7))
+),
+      style(
+        objectos.css.util.Large.Padding.V32,
+        padding(rem(8))
+),
+      style(
+        objectos.css.util.Large.Padding.V36,
+        padding(rem(9))
+),
+      style(
+        objectos.css.util.Large.Padding.V40,
+        padding(rem(10))
+),
+      style(
+        objectos.css.util.Large.Padding.V44,
+        padding(rem(11))
+),
+      style(
+        objectos.css.util.Large.Padding.V48,
+        padding(rem(12))
+),
+      style(
+        objectos.css.util.Large.Padding.V52,
+        padding(rem(13))
+),
+      style(
+        objectos.css.util.Large.Padding.V56,
+        padding(rem(14))
+),
+      style(
+        objectos.css.util.Large.Padding.V60,
+        padding(rem(15))
+),
+      style(
+        objectos.css.util.Large.Padding.V64,
+        padding(rem(16))
+),
+      style(
+        objectos.css.util.Large.Padding.V68,
+        padding(rem(17))
+),
+      style(
+        objectos.css.util.Large.Padding.V72,
+        padding(rem(18))
+),
+      style(
+        objectos.css.util.Large.Padding.V80,
+        padding(rem(20))
+),
+      style(
+        objectos.css.util.Large.Padding.V96,
+        padding(rem(24))
+));
+  }
+
+  private void LargePaddingX() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.PaddingX.PX,
+        paddingRight(px(1)),
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V0,
+        paddingRight($0),
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.Large.PaddingX.V0_5,
+        paddingRight(rem(0.125)),
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V1,
+        paddingRight(rem(0.25)),
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V1_5,
+        paddingRight(rem(0.375)),
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V2,
+        paddingRight(rem(0.5)),
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V2_5,
+        paddingRight(rem(0.625)),
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V3,
+        paddingRight(rem(0.75)),
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V3_5,
+        paddingRight(rem(0.875)),
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V4,
+        paddingRight(rem(1)),
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V5,
+        paddingRight(rem(1.25)),
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V6,
+        paddingRight(rem(1.5)),
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V7,
+        paddingRight(rem(1.75)),
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V8,
+        paddingRight(rem(2)),
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V9,
+        paddingRight(rem(2.25)),
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V10,
+        paddingRight(rem(2.5)),
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V11,
+        paddingRight(rem(2.75)),
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V12,
+        paddingRight(rem(3)),
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V14,
+        paddingRight(rem(3.5)),
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V16,
+        paddingRight(rem(4)),
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V20,
+        paddingRight(rem(5)),
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V24,
+        paddingRight(rem(6)),
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V28,
+        paddingRight(rem(7)),
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V32,
+        paddingRight(rem(8)),
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V36,
+        paddingRight(rem(9)),
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V40,
+        paddingRight(rem(10)),
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V44,
+        paddingRight(rem(11)),
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V48,
+        paddingRight(rem(12)),
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V52,
+        paddingRight(rem(13)),
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V56,
+        paddingRight(rem(14)),
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V60,
+        paddingRight(rem(15)),
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V64,
+        paddingRight(rem(16)),
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V68,
+        paddingRight(rem(17)),
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V72,
+        paddingRight(rem(18)),
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V80,
+        paddingRight(rem(20)),
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.Large.PaddingX.V96,
+        paddingRight(rem(24)),
+        paddingLeft(rem(24))
+));
+  }
+
+  private void LargePaddingY() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.PaddingY.PX,
+        paddingTop(px(1)),
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V0,
+        paddingTop($0),
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.Large.PaddingY.V0_5,
+        paddingTop(rem(0.125)),
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V1,
+        paddingTop(rem(0.25)),
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V1_5,
+        paddingTop(rem(0.375)),
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V2,
+        paddingTop(rem(0.5)),
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V2_5,
+        paddingTop(rem(0.625)),
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V3,
+        paddingTop(rem(0.75)),
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V3_5,
+        paddingTop(rem(0.875)),
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V4,
+        paddingTop(rem(1)),
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V5,
+        paddingTop(rem(1.25)),
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V6,
+        paddingTop(rem(1.5)),
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V7,
+        paddingTop(rem(1.75)),
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V8,
+        paddingTop(rem(2)),
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V9,
+        paddingTop(rem(2.25)),
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V10,
+        paddingTop(rem(2.5)),
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V11,
+        paddingTop(rem(2.75)),
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V12,
+        paddingTop(rem(3)),
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V14,
+        paddingTop(rem(3.5)),
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V16,
+        paddingTop(rem(4)),
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V20,
+        paddingTop(rem(5)),
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V24,
+        paddingTop(rem(6)),
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V28,
+        paddingTop(rem(7)),
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V32,
+        paddingTop(rem(8)),
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V36,
+        paddingTop(rem(9)),
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V40,
+        paddingTop(rem(10)),
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V44,
+        paddingTop(rem(11)),
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V48,
+        paddingTop(rem(12)),
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V52,
+        paddingTop(rem(13)),
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V56,
+        paddingTop(rem(14)),
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V60,
+        paddingTop(rem(15)),
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V64,
+        paddingTop(rem(16)),
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V68,
+        paddingTop(rem(17)),
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V72,
+        paddingTop(rem(18)),
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V80,
+        paddingTop(rem(20)),
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.Large.PaddingY.V96,
+        paddingTop(rem(24)),
+        paddingBottom(rem(24))
+));
+  }
+
+  private void LargePaddingTop() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.PaddingTop.PX,
+        paddingTop(px(1))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V0,
+        paddingTop($0)
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V0_5,
+        paddingTop(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V1,
+        paddingTop(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V1_5,
+        paddingTop(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V2,
+        paddingTop(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V2_5,
+        paddingTop(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V3,
+        paddingTop(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V3_5,
+        paddingTop(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V4,
+        paddingTop(rem(1))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V5,
+        paddingTop(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V6,
+        paddingTop(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V7,
+        paddingTop(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V8,
+        paddingTop(rem(2))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V9,
+        paddingTop(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V10,
+        paddingTop(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V11,
+        paddingTop(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V12,
+        paddingTop(rem(3))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V14,
+        paddingTop(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V16,
+        paddingTop(rem(4))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V20,
+        paddingTop(rem(5))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V24,
+        paddingTop(rem(6))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V28,
+        paddingTop(rem(7))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V32,
+        paddingTop(rem(8))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V36,
+        paddingTop(rem(9))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V40,
+        paddingTop(rem(10))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V44,
+        paddingTop(rem(11))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V48,
+        paddingTop(rem(12))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V52,
+        paddingTop(rem(13))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V56,
+        paddingTop(rem(14))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V60,
+        paddingTop(rem(15))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V64,
+        paddingTop(rem(16))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V68,
+        paddingTop(rem(17))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V72,
+        paddingTop(rem(18))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V80,
+        paddingTop(rem(20))
+),
+      style(
+        objectos.css.util.Large.PaddingTop.V96,
+        paddingTop(rem(24))
+));
+  }
+
+  private void LargePaddingRight() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.PaddingRight.PX,
+        paddingRight(px(1))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V0,
+        paddingRight($0)
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V0_5,
+        paddingRight(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V1,
+        paddingRight(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V1_5,
+        paddingRight(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V2,
+        paddingRight(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V2_5,
+        paddingRight(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V3,
+        paddingRight(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V3_5,
+        paddingRight(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V4,
+        paddingRight(rem(1))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V5,
+        paddingRight(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V6,
+        paddingRight(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V7,
+        paddingRight(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V8,
+        paddingRight(rem(2))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V9,
+        paddingRight(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V10,
+        paddingRight(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V11,
+        paddingRight(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V12,
+        paddingRight(rem(3))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V14,
+        paddingRight(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V16,
+        paddingRight(rem(4))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V20,
+        paddingRight(rem(5))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V24,
+        paddingRight(rem(6))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V28,
+        paddingRight(rem(7))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V32,
+        paddingRight(rem(8))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V36,
+        paddingRight(rem(9))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V40,
+        paddingRight(rem(10))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V44,
+        paddingRight(rem(11))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V48,
+        paddingRight(rem(12))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V52,
+        paddingRight(rem(13))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V56,
+        paddingRight(rem(14))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V60,
+        paddingRight(rem(15))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V64,
+        paddingRight(rem(16))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V68,
+        paddingRight(rem(17))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V72,
+        paddingRight(rem(18))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V80,
+        paddingRight(rem(20))
+),
+      style(
+        objectos.css.util.Large.PaddingRight.V96,
+        paddingRight(rem(24))
+));
+  }
+
+  private void LargePaddingBottom() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.PaddingBottom.PX,
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V0,
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V0_5,
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V1,
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V1_5,
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V2,
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V2_5,
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V3,
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V3_5,
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V4,
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V5,
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V6,
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V7,
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V8,
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V9,
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V10,
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V11,
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V12,
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V14,
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V16,
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V20,
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V24,
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V28,
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V32,
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V36,
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V40,
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V44,
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V48,
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V52,
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V56,
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V60,
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V64,
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V68,
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V72,
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V80,
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.Large.PaddingBottom.V96,
+        paddingBottom(rem(24))
+));
+  }
+
+  private void LargePaddingLeft() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.PaddingLeft.PX,
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V0,
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V0_5,
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V1,
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V1_5,
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V2,
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V2_5,
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V3,
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V3_5,
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V4,
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V5,
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V6,
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V7,
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V8,
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V9,
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V10,
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V11,
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V12,
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V14,
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V16,
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V20,
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V24,
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V28,
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V32,
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V36,
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V40,
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V44,
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V48,
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V52,
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V56,
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V60,
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V64,
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V68,
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V72,
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V80,
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.Large.PaddingLeft.V96,
+        paddingLeft(rem(24))
+));
+  }
+
   private void XLargeDisplay() {
     media(
       minWidth(px(1280)),
@@ -761,6 +5249,1121 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargePadding() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.Padding.PX,
+        padding(px(1))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V0,
+        padding($0)
+),
+      style(
+        objectos.css.util.XLarge.Padding.V0_5,
+        padding(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V1,
+        padding(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V1_5,
+        padding(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V2,
+        padding(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V2_5,
+        padding(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V3,
+        padding(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V3_5,
+        padding(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V4,
+        padding(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V5,
+        padding(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V6,
+        padding(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V7,
+        padding(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V8,
+        padding(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V9,
+        padding(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V10,
+        padding(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V11,
+        padding(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V12,
+        padding(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V14,
+        padding(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V16,
+        padding(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V20,
+        padding(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V24,
+        padding(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V28,
+        padding(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V32,
+        padding(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V36,
+        padding(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V40,
+        padding(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V44,
+        padding(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V48,
+        padding(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V52,
+        padding(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V56,
+        padding(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V60,
+        padding(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V64,
+        padding(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V68,
+        padding(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V72,
+        padding(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V80,
+        padding(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.Padding.V96,
+        padding(rem(24))
+));
+  }
+
+  private void XLargePaddingX() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.PaddingX.PX,
+        paddingRight(px(1)),
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V0,
+        paddingRight($0),
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V0_5,
+        paddingRight(rem(0.125)),
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V1,
+        paddingRight(rem(0.25)),
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V1_5,
+        paddingRight(rem(0.375)),
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V2,
+        paddingRight(rem(0.5)),
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V2_5,
+        paddingRight(rem(0.625)),
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V3,
+        paddingRight(rem(0.75)),
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V3_5,
+        paddingRight(rem(0.875)),
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V4,
+        paddingRight(rem(1)),
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V5,
+        paddingRight(rem(1.25)),
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V6,
+        paddingRight(rem(1.5)),
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V7,
+        paddingRight(rem(1.75)),
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V8,
+        paddingRight(rem(2)),
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V9,
+        paddingRight(rem(2.25)),
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V10,
+        paddingRight(rem(2.5)),
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V11,
+        paddingRight(rem(2.75)),
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V12,
+        paddingRight(rem(3)),
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V14,
+        paddingRight(rem(3.5)),
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V16,
+        paddingRight(rem(4)),
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V20,
+        paddingRight(rem(5)),
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V24,
+        paddingRight(rem(6)),
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V28,
+        paddingRight(rem(7)),
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V32,
+        paddingRight(rem(8)),
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V36,
+        paddingRight(rem(9)),
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V40,
+        paddingRight(rem(10)),
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V44,
+        paddingRight(rem(11)),
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V48,
+        paddingRight(rem(12)),
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V52,
+        paddingRight(rem(13)),
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V56,
+        paddingRight(rem(14)),
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V60,
+        paddingRight(rem(15)),
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V64,
+        paddingRight(rem(16)),
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V68,
+        paddingRight(rem(17)),
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V72,
+        paddingRight(rem(18)),
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V80,
+        paddingRight(rem(20)),
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.PaddingX.V96,
+        paddingRight(rem(24)),
+        paddingLeft(rem(24))
+));
+  }
+
+  private void XLargePaddingY() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.PaddingY.PX,
+        paddingTop(px(1)),
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V0,
+        paddingTop($0),
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V0_5,
+        paddingTop(rem(0.125)),
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V1,
+        paddingTop(rem(0.25)),
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V1_5,
+        paddingTop(rem(0.375)),
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V2,
+        paddingTop(rem(0.5)),
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V2_5,
+        paddingTop(rem(0.625)),
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V3,
+        paddingTop(rem(0.75)),
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V3_5,
+        paddingTop(rem(0.875)),
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V4,
+        paddingTop(rem(1)),
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V5,
+        paddingTop(rem(1.25)),
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V6,
+        paddingTop(rem(1.5)),
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V7,
+        paddingTop(rem(1.75)),
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V8,
+        paddingTop(rem(2)),
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V9,
+        paddingTop(rem(2.25)),
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V10,
+        paddingTop(rem(2.5)),
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V11,
+        paddingTop(rem(2.75)),
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V12,
+        paddingTop(rem(3)),
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V14,
+        paddingTop(rem(3.5)),
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V16,
+        paddingTop(rem(4)),
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V20,
+        paddingTop(rem(5)),
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V24,
+        paddingTop(rem(6)),
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V28,
+        paddingTop(rem(7)),
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V32,
+        paddingTop(rem(8)),
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V36,
+        paddingTop(rem(9)),
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V40,
+        paddingTop(rem(10)),
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V44,
+        paddingTop(rem(11)),
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V48,
+        paddingTop(rem(12)),
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V52,
+        paddingTop(rem(13)),
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V56,
+        paddingTop(rem(14)),
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V60,
+        paddingTop(rem(15)),
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V64,
+        paddingTop(rem(16)),
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V68,
+        paddingTop(rem(17)),
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V72,
+        paddingTop(rem(18)),
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V80,
+        paddingTop(rem(20)),
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.PaddingY.V96,
+        paddingTop(rem(24)),
+        paddingBottom(rem(24))
+));
+  }
+
+  private void XLargePaddingTop() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.PaddingTop.PX,
+        paddingTop(px(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V0,
+        paddingTop($0)
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V0_5,
+        paddingTop(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V1,
+        paddingTop(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V1_5,
+        paddingTop(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V2,
+        paddingTop(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V2_5,
+        paddingTop(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V3,
+        paddingTop(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V3_5,
+        paddingTop(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V4,
+        paddingTop(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V5,
+        paddingTop(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V6,
+        paddingTop(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V7,
+        paddingTop(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V8,
+        paddingTop(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V9,
+        paddingTop(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V10,
+        paddingTop(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V11,
+        paddingTop(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V12,
+        paddingTop(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V14,
+        paddingTop(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V16,
+        paddingTop(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V20,
+        paddingTop(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V24,
+        paddingTop(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V28,
+        paddingTop(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V32,
+        paddingTop(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V36,
+        paddingTop(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V40,
+        paddingTop(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V44,
+        paddingTop(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V48,
+        paddingTop(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V52,
+        paddingTop(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V56,
+        paddingTop(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V60,
+        paddingTop(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V64,
+        paddingTop(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V68,
+        paddingTop(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V72,
+        paddingTop(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V80,
+        paddingTop(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.PaddingTop.V96,
+        paddingTop(rem(24))
+));
+  }
+
+  private void XLargePaddingRight() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.PaddingRight.PX,
+        paddingRight(px(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V0,
+        paddingRight($0)
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V0_5,
+        paddingRight(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V1,
+        paddingRight(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V1_5,
+        paddingRight(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V2,
+        paddingRight(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V2_5,
+        paddingRight(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V3,
+        paddingRight(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V3_5,
+        paddingRight(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V4,
+        paddingRight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V5,
+        paddingRight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V6,
+        paddingRight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V7,
+        paddingRight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V8,
+        paddingRight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V9,
+        paddingRight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V10,
+        paddingRight(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V11,
+        paddingRight(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V12,
+        paddingRight(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V14,
+        paddingRight(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V16,
+        paddingRight(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V20,
+        paddingRight(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V24,
+        paddingRight(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V28,
+        paddingRight(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V32,
+        paddingRight(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V36,
+        paddingRight(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V40,
+        paddingRight(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V44,
+        paddingRight(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V48,
+        paddingRight(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V52,
+        paddingRight(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V56,
+        paddingRight(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V60,
+        paddingRight(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V64,
+        paddingRight(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V68,
+        paddingRight(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V72,
+        paddingRight(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V80,
+        paddingRight(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.PaddingRight.V96,
+        paddingRight(rem(24))
+));
+  }
+
+  private void XLargePaddingBottom() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.PX,
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V0,
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V0_5,
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V1,
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V1_5,
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V2,
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V2_5,
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V3,
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V3_5,
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V4,
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V5,
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V6,
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V7,
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V8,
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V9,
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V10,
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V11,
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V12,
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V14,
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V16,
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V20,
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V24,
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V28,
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V32,
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V36,
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V40,
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V44,
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V48,
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V52,
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V56,
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V60,
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V64,
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V68,
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V72,
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V80,
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.PaddingBottom.V96,
+        paddingBottom(rem(24))
+));
+  }
+
+  private void XLargePaddingLeft() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.PX,
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V0,
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V0_5,
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V1,
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V1_5,
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V2,
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V2_5,
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V3,
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V3_5,
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V4,
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V5,
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V6,
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V7,
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V8,
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V9,
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V10,
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V11,
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V12,
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V14,
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V16,
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V20,
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V24,
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V28,
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V32,
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V36,
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V40,
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V44,
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V48,
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V52,
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V56,
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V60,
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V64,
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V68,
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V72,
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V80,
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.PaddingLeft.V96,
+        paddingLeft(rem(24))
+));
+  }
+
   private void XLarge2Display() {
     media(
       minWidth(px(1536)),
@@ -898,6 +6501,1121 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.MinHeight.SCREEN,
         minHeight(vh(100))
+));
+  }
+
+  private void XLarge2Padding() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.Padding.PX,
+        padding(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V0,
+        padding($0)
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V0_5,
+        padding(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V1,
+        padding(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V1_5,
+        padding(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V2,
+        padding(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V2_5,
+        padding(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V3,
+        padding(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V3_5,
+        padding(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V4,
+        padding(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V5,
+        padding(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V6,
+        padding(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V7,
+        padding(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V8,
+        padding(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V9,
+        padding(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V10,
+        padding(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V11,
+        padding(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V12,
+        padding(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V14,
+        padding(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V16,
+        padding(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V20,
+        padding(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V24,
+        padding(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V28,
+        padding(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V32,
+        padding(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V36,
+        padding(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V40,
+        padding(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V44,
+        padding(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V48,
+        padding(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V52,
+        padding(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V56,
+        padding(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V60,
+        padding(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V64,
+        padding(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V68,
+        padding(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V72,
+        padding(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V80,
+        padding(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.Padding.V96,
+        padding(rem(24))
+));
+  }
+
+  private void XLarge2PaddingX() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.PaddingX.PX,
+        paddingRight(px(1)),
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V0,
+        paddingRight($0),
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V0_5,
+        paddingRight(rem(0.125)),
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V1,
+        paddingRight(rem(0.25)),
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V1_5,
+        paddingRight(rem(0.375)),
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V2,
+        paddingRight(rem(0.5)),
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V2_5,
+        paddingRight(rem(0.625)),
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V3,
+        paddingRight(rem(0.75)),
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V3_5,
+        paddingRight(rem(0.875)),
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V4,
+        paddingRight(rem(1)),
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V5,
+        paddingRight(rem(1.25)),
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V6,
+        paddingRight(rem(1.5)),
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V7,
+        paddingRight(rem(1.75)),
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V8,
+        paddingRight(rem(2)),
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V9,
+        paddingRight(rem(2.25)),
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V10,
+        paddingRight(rem(2.5)),
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V11,
+        paddingRight(rem(2.75)),
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V12,
+        paddingRight(rem(3)),
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V14,
+        paddingRight(rem(3.5)),
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V16,
+        paddingRight(rem(4)),
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V20,
+        paddingRight(rem(5)),
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V24,
+        paddingRight(rem(6)),
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V28,
+        paddingRight(rem(7)),
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V32,
+        paddingRight(rem(8)),
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V36,
+        paddingRight(rem(9)),
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V40,
+        paddingRight(rem(10)),
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V44,
+        paddingRight(rem(11)),
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V48,
+        paddingRight(rem(12)),
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V52,
+        paddingRight(rem(13)),
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V56,
+        paddingRight(rem(14)),
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V60,
+        paddingRight(rem(15)),
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V64,
+        paddingRight(rem(16)),
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V68,
+        paddingRight(rem(17)),
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V72,
+        paddingRight(rem(18)),
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V80,
+        paddingRight(rem(20)),
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingX.V96,
+        paddingRight(rem(24)),
+        paddingLeft(rem(24))
+));
+  }
+
+  private void XLarge2PaddingY() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.PaddingY.PX,
+        paddingTop(px(1)),
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V0,
+        paddingTop($0),
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V0_5,
+        paddingTop(rem(0.125)),
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V1,
+        paddingTop(rem(0.25)),
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V1_5,
+        paddingTop(rem(0.375)),
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V2,
+        paddingTop(rem(0.5)),
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V2_5,
+        paddingTop(rem(0.625)),
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V3,
+        paddingTop(rem(0.75)),
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V3_5,
+        paddingTop(rem(0.875)),
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V4,
+        paddingTop(rem(1)),
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V5,
+        paddingTop(rem(1.25)),
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V6,
+        paddingTop(rem(1.5)),
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V7,
+        paddingTop(rem(1.75)),
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V8,
+        paddingTop(rem(2)),
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V9,
+        paddingTop(rem(2.25)),
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V10,
+        paddingTop(rem(2.5)),
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V11,
+        paddingTop(rem(2.75)),
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V12,
+        paddingTop(rem(3)),
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V14,
+        paddingTop(rem(3.5)),
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V16,
+        paddingTop(rem(4)),
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V20,
+        paddingTop(rem(5)),
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V24,
+        paddingTop(rem(6)),
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V28,
+        paddingTop(rem(7)),
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V32,
+        paddingTop(rem(8)),
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V36,
+        paddingTop(rem(9)),
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V40,
+        paddingTop(rem(10)),
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V44,
+        paddingTop(rem(11)),
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V48,
+        paddingTop(rem(12)),
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V52,
+        paddingTop(rem(13)),
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V56,
+        paddingTop(rem(14)),
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V60,
+        paddingTop(rem(15)),
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V64,
+        paddingTop(rem(16)),
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V68,
+        paddingTop(rem(17)),
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V72,
+        paddingTop(rem(18)),
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V80,
+        paddingTop(rem(20)),
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingY.V96,
+        paddingTop(rem(24)),
+        paddingBottom(rem(24))
+));
+  }
+
+  private void XLarge2PaddingTop() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.PX,
+        paddingTop(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V0,
+        paddingTop($0)
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V0_5,
+        paddingTop(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V1,
+        paddingTop(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V1_5,
+        paddingTop(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V2,
+        paddingTop(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V2_5,
+        paddingTop(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V3,
+        paddingTop(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V3_5,
+        paddingTop(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V4,
+        paddingTop(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V5,
+        paddingTop(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V6,
+        paddingTop(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V7,
+        paddingTop(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V8,
+        paddingTop(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V9,
+        paddingTop(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V10,
+        paddingTop(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V11,
+        paddingTop(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V12,
+        paddingTop(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V14,
+        paddingTop(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V16,
+        paddingTop(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V20,
+        paddingTop(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V24,
+        paddingTop(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V28,
+        paddingTop(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V32,
+        paddingTop(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V36,
+        paddingTop(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V40,
+        paddingTop(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V44,
+        paddingTop(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V48,
+        paddingTop(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V52,
+        paddingTop(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V56,
+        paddingTop(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V60,
+        paddingTop(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V64,
+        paddingTop(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V68,
+        paddingTop(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V72,
+        paddingTop(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V80,
+        paddingTop(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingTop.V96,
+        paddingTop(rem(24))
+));
+  }
+
+  private void XLarge2PaddingRight() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.PX,
+        paddingRight(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V0,
+        paddingRight($0)
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V0_5,
+        paddingRight(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V1,
+        paddingRight(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V1_5,
+        paddingRight(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V2,
+        paddingRight(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V2_5,
+        paddingRight(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V3,
+        paddingRight(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V3_5,
+        paddingRight(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V4,
+        paddingRight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V5,
+        paddingRight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V6,
+        paddingRight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V7,
+        paddingRight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V8,
+        paddingRight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V9,
+        paddingRight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V10,
+        paddingRight(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V11,
+        paddingRight(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V12,
+        paddingRight(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V14,
+        paddingRight(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V16,
+        paddingRight(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V20,
+        paddingRight(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V24,
+        paddingRight(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V28,
+        paddingRight(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V32,
+        paddingRight(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V36,
+        paddingRight(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V40,
+        paddingRight(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V44,
+        paddingRight(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V48,
+        paddingRight(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V52,
+        paddingRight(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V56,
+        paddingRight(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V60,
+        paddingRight(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V64,
+        paddingRight(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V68,
+        paddingRight(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V72,
+        paddingRight(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V80,
+        paddingRight(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingRight.V96,
+        paddingRight(rem(24))
+));
+  }
+
+  private void XLarge2PaddingBottom() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.PX,
+        paddingBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V0,
+        paddingBottom($0)
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V0_5,
+        paddingBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V1,
+        paddingBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V1_5,
+        paddingBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V2,
+        paddingBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V2_5,
+        paddingBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V3,
+        paddingBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V3_5,
+        paddingBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V4,
+        paddingBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V5,
+        paddingBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V6,
+        paddingBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V7,
+        paddingBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V8,
+        paddingBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V9,
+        paddingBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V10,
+        paddingBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V11,
+        paddingBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V12,
+        paddingBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V14,
+        paddingBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V16,
+        paddingBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V20,
+        paddingBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V24,
+        paddingBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V28,
+        paddingBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V32,
+        paddingBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V36,
+        paddingBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V40,
+        paddingBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V44,
+        paddingBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V48,
+        paddingBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V52,
+        paddingBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V56,
+        paddingBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V60,
+        paddingBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V64,
+        paddingBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V68,
+        paddingBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V72,
+        paddingBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V80,
+        paddingBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingBottom.V96,
+        paddingBottom(rem(24))
+));
+  }
+
+  private void XLarge2PaddingLeft() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.PX,
+        paddingLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V0,
+        paddingLeft($0)
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V0_5,
+        paddingLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V1,
+        paddingLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V1_5,
+        paddingLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V2,
+        paddingLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V2_5,
+        paddingLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V3,
+        paddingLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V3_5,
+        paddingLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V4,
+        paddingLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V5,
+        paddingLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V6,
+        paddingLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V7,
+        paddingLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V8,
+        paddingLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V9,
+        paddingLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V10,
+        paddingLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V11,
+        paddingLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V12,
+        paddingLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V14,
+        paddingLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V16,
+        paddingLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V20,
+        paddingLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V24,
+        paddingLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V28,
+        paddingLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V32,
+        paddingLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V36,
+        paddingLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V40,
+        paddingLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V44,
+        paddingLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V48,
+        paddingLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V52,
+        paddingLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V56,
+        paddingLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V60,
+        paddingLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V64,
+        paddingLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V68,
+        paddingLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V72,
+        paddingLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V80,
+        paddingLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.PaddingLeft.V96,
+        paddingLeft(rem(24))
 ));
   }
 }

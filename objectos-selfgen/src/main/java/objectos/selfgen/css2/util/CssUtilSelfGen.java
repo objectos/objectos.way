@@ -112,6 +112,18 @@ public abstract class CssUtilSelfGen {
     return new Value.MethodInt("pct", value);
   }
 
+  protected final Value px(int value) {
+    return new Value.MethodInt("px", value);
+  }
+
+  protected final Value rem(double value) {
+    return new Value.MethodDouble("rem", value);
+  }
+
+  protected final Value rem(int value) {
+    return new Value.MethodInt("rem", value);
+  }
+
   protected final SimpleName simpleName(String name) {
     Check.notNull(name, "name == null");
 

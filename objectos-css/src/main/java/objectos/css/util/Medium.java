@@ -96,4 +96,536 @@ public final class Medium {
 
     private MinHeight() {}
   }
+
+  public static final class Padding {
+    public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V11 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V12 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V14 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V16 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V20 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V24 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V28 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V32 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V36 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V40 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V44 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V48 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V52 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V56 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V60 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V64 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V68 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V72 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V80 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V96 = ClassSelector.randomClassSelector(5);
+
+    private Padding() {}
+  }
+
+  public static final class PaddingX {
+    public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V11 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V12 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V14 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V16 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V20 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V24 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V28 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V32 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V36 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V40 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V44 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V48 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V52 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V56 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V60 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V64 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V68 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V72 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V80 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V96 = ClassSelector.randomClassSelector(5);
+
+    private PaddingX() {}
+  }
+
+  public static final class PaddingY {
+    public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V11 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V12 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V14 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V16 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V20 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V24 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V28 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V32 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V36 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V40 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V44 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V48 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V52 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V56 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V60 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V64 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V68 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V72 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V80 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V96 = ClassSelector.randomClassSelector(5);
+
+    private PaddingY() {}
+  }
+
+  public static final class PaddingTop {
+    public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V11 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V12 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V14 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V16 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V20 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V24 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V28 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V32 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V36 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V40 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V44 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V48 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V52 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V56 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V60 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V64 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V68 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V72 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V80 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V96 = ClassSelector.randomClassSelector(5);
+
+    private PaddingTop() {}
+  }
+
+  public static final class PaddingRight {
+    public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V11 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V12 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V14 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V16 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V20 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V24 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V28 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V32 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V36 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V40 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V44 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V48 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V52 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V56 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V60 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V64 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V68 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V72 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V80 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V96 = ClassSelector.randomClassSelector(5);
+
+    private PaddingRight() {}
+  }
+
+  public static final class PaddingBottom {
+    public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V11 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V12 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V14 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V16 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V20 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V24 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V28 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V32 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V36 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V40 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V44 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V48 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V52 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V56 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V60 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V64 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V68 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V72 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V80 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V96 = ClassSelector.randomClassSelector(5);
+
+    private PaddingBottom() {}
+  }
+
+  public static final class PaddingLeft {
+    public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V0_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V1_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V2_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3_5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V11 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V12 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V14 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V16 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V20 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V24 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V28 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V32 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V36 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V40 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V44 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V48 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V52 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V56 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V60 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V64 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V68 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V72 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V80 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V96 = ClassSelector.randomClassSelector(5);
+
+    private PaddingLeft() {}
+  }
 }

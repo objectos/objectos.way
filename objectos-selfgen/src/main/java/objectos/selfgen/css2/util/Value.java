@@ -19,6 +19,8 @@ public sealed interface Value {
 
   record ExpressionName(String fieldName) implements Value {}
 
+  record MethodDouble(String methodName, double value) implements Value {}
+
   record MethodInt(String methodName, int value) implements Value {}
 
 }
