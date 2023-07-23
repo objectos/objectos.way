@@ -30,7 +30,13 @@ final class Bytes {
   private Bytes() {}
 
   public static int decodeFixedLength(byte len0, byte len1) {
-    return (len1 << 8) | len0;
+    int length0;
+    length0 = toInt(len0, 0);
+
+    int length1;
+    length1 = toInt(len1, 8);
+
+    return length1 | length0;
   }
 
   public static int decodeIndex2(byte b0, byte b1) {

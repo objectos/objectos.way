@@ -105,6 +105,9 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     // F
     flexDirection();
 
+    // H
+    height();
+
     // J
     justifyContent();
 
@@ -154,6 +157,38 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("FlexDirection"), methods("flexDirection"), names);
+    }
+  }
+
+  private void height() {
+    Names names;
+    names = names(
+      spacing,
+      name("AUTO", k("auto")),
+      name("P1_2", pct(50)),
+      name("P1_3", pct(33.333333)),
+      name("P2_3", pct(66.666667)),
+      name("P1_4", pct(25)),
+      name("P2_4", pct(50)),
+      name("P3_4", pct(75)),
+      name("P1_5", pct(20)),
+      name("P2_5", pct(40)),
+      name("P3_5", pct(60)),
+      name("P4_5", pct(80)),
+      name("P1_6", pct(16.666667)),
+      name("P2_6", pct(33.333333)),
+      name("P3_6", pct(50)),
+      name("P4_6", pct(66.666667)),
+      name("P5_6", pct(83.333333)),
+      name("FULL", pct(100)),
+      name("SCREEN", vh(100)),
+      name("MIN", k("minContent")),
+      name("MAX", k("maxContent")),
+      name("FIT", k("fitContent"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("Height"), methods("height"), names);
     }
   }
 

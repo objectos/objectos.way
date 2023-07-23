@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css2.util;
+package objectos.css.util;
 
-import objectos.util.GrowableList;
-import objectos.util.UnmodifiableList;
+import static org.testng.Assert.assertNotNull;
 
-public final class NamedArguments implements NamesValue {
+import org.testng.annotations.Test;
 
-  public final String constantName;
+public class FrameworkTest {
 
-  public final UnmodifiableList<Value> values;
+  @Test
+  public void limits() {
+    Framework fw;
+    fw = new Framework();
 
-  NamedArguments(String constantName, UnmodifiableList<Value> values) {
-    this.constantName = constantName;
-    this.values = values;
-  }
+    String s;
+    s = fw.toString();
 
-  @Override
-  public void acceptList(GrowableList<NamedArguments> list) {
-    list.add(this);
+    assertNotNull(s);
   }
 
 }

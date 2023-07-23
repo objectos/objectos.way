@@ -97,15 +97,22 @@ public abstract class CssUtilSelfGen {
     return new NamedArguments(constantName, list.toUnmodifiableList());
   }
 
-  protected final Names names(NamedArguments... elements) {
+  protected final Names names(NamesValue... elements) {
     GrowableList<NamedArguments> list;
     list = new GrowableList<NamedArguments>();
 
     for (int i = 0; i < elements.length; i++) {
-      list.addWithNullMessage(elements[i], "elements[", i, "] == null");
+      NamesValue element;
+      element = Check.notNull(elements[i], "elements[", i, "] == null");
+
+      element.acceptList(list);
     }
 
     return new Names(list.toUnmodifiableList());
+  }
+
+  protected final Value pct(double value) {
+    return new Value.MethodDouble("pct", value);
   }
 
   protected final Value pct(int value) {

@@ -16,22 +16,9 @@
 package objectos.selfgen.css2.util;
 
 import objectos.util.GrowableList;
-import objectos.util.UnmodifiableList;
 
-public final class NamedArguments implements NamesValue {
+public interface NamesValue {
 
-  public final String constantName;
-
-  public final UnmodifiableList<Value> values;
-
-  NamedArguments(String constantName, UnmodifiableList<Value> values) {
-    this.constantName = constantName;
-    this.values = values;
-  }
-
-  @Override
-  public void acceptList(GrowableList<NamedArguments> list) {
-    list.add(this);
-  }
+  void acceptList(GrowableList<NamedArguments> list);
 
 }

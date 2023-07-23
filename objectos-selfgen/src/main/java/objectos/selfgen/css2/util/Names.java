@@ -15,6 +15,14 @@
  */
 package objectos.selfgen.css2.util;
 
+import objectos.util.GrowableList;
 import objectos.util.UnmodifiableList;
 
-public record Names(UnmodifiableList<NamedArguments> values) {}
+public record Names(UnmodifiableList<NamedArguments> values) implements NamesValue {
+
+  @Override
+  public final void acceptList(GrowableList<NamedArguments> list) {
+    list.addAll(values);
+  }
+
+}
