@@ -20,15 +20,16 @@ import java.util.List;
 import objectos.selfgen.css2.util.CssUtilSelfGen;
 import objectos.selfgen.css2.util.Names;
 import objectos.selfgen.css2.util.Prefix;
+import objectos.selfgen.css2.util.Prefix.Breakpoint;
 
 public final class CssUtilSpec extends CssUtilSelfGen {
 
-  private Prefix prefixAll;
-  private Prefix prefixSmall;
-  private Prefix prefixMedium;
-  private Prefix prefixLarge;
-  private Prefix prefixXLarge;
-  private Prefix prefixXLarge2;
+  private Breakpoint prefixAll;
+  private Breakpoint prefixSmall;
+  private Breakpoint prefixMedium;
+  private Breakpoint prefixLarge;
+  private Breakpoint prefixXLarge;
+  private Breakpoint prefixXLarge2;
 
   private List<Prefix> responsive;
 
@@ -112,10 +113,15 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     justifyContent();
 
     // M
+    margin();
+    maxWidth();
     minHeight();
 
     // P
     padding();
+
+    // W
+    width();
   }
 
   private void display() {
@@ -207,8 +213,66 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     }
   }
 
+  private void margin() {
+    Names names;
+    names = names(
+      name("AUTO", k("auto")),
+      spacing
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("Margin"), methods("margin"), names);
+
+      generate(prefix, simpleName("MarginX"), methods("marginRight", "marginLeft"), names);
+
+      generate(prefix, simpleName("MarginY"), methods("marginTop", "marginBottom"), names);
+
+      generate(prefix, simpleName("MarginTop"), methods("marginTop"), names);
+
+      generate(prefix, simpleName("MarginRight"), methods("marginRight"), names);
+
+      generate(prefix, simpleName("MarginBottom"), methods("marginBottom"), names);
+
+      generate(prefix, simpleName("MarginLeft"), methods("marginLeft"), names);
+    }
+  }
+
+  private void maxWidth() {
+    Names names;
+    names = names(
+      name("V0", zero()),
+      name("NONE", k("none")),
+      name("X_SMALL", rem(20)),
+      name("SMALL", rem(24)),
+      name("MEDIUM", rem(28)),
+      name("LARGE", rem(32)),
+      name("X_LARGE", rem(36)),
+      name("X_LARGE2", rem(42)),
+      name("X_LARGE3", rem(48)),
+      name("X_LARGE4", rem(56)),
+      name("X_LARGE5", rem(64)),
+      name("X_LARGE6", rem(72)),
+      name("X_LARGE7", rem(80)),
+      name("FULL", pct(100)),
+      name("MIN", k("minContent")),
+      name("MAX", k("maxContent")),
+      name("FIT", k("fitContent")),
+      name("PROSE", ch(65)),
+      name("SCREEN_SMALL", px(prefixSmall.length)),
+      name("SCREEN_MEDIUM", px(prefixMedium.length)),
+      name("SCREEN_LARGE", px(prefixLarge.length)),
+      name("SCREEN_X_LARGE", px(prefixXLarge.length)),
+      name("SCREEN_X_LARGE2", px(prefixXLarge2.length))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("MaxWidth"), methods("maxWidth"), names);
+    }
+  }
+
   private void minHeight() {
-    Names names = names(
+    Names names;
+    names = names(
       name("V0", zero()),
       name("FULL", pct(100)),
       name("SCREEN", vh(100))
@@ -234,6 +298,49 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       generate(prefix, simpleName("PaddingBottom"), methods("paddingBottom"), spacing);
 
       generate(prefix, simpleName("PaddingLeft"), methods("paddingLeft"), spacing);
+    }
+  }
+
+  private void width() {
+    Names names;
+    names = names(
+      spacing,
+      name("AUTO", k("auto")),
+      name("P1_2", pct(50)),
+      name("P1_3", pct(33.333333)),
+      name("P2_3", pct(66.666667)),
+      name("P1_4", pct(25)),
+      name("P2_4", pct(50)),
+      name("P3_4", pct(75)),
+      name("P1_5", pct(20)),
+      name("P2_5", pct(40)),
+      name("P3_5", pct(60)),
+      name("P4_5", pct(80)),
+      name("P1_6", pct(16.666667)),
+      name("P2_6", pct(33.333333)),
+      name("P3_6", pct(50)),
+      name("P4_6", pct(66.666667)),
+      name("P5_6", pct(83.333333)),
+      name("P1_12", pct(8.333333)),
+      name("P2_12", pct(16.666667)),
+      name("P3_12", pct(25)),
+      name("P4_12", pct(33.333333)),
+      name("P5_12", pct(41.666667)),
+      name("P6_12", pct(50)),
+      name("P7_12", pct(58.333333)),
+      name("P8_12", pct(66.666667)),
+      name("P9_12", pct(75)),
+      name("P10_12", pct(83.333333)),
+      name("P11_12", pct(91.666667)),
+      name("FULL", pct(100)),
+      name("SCREEN", vw(100)),
+      name("MIN", k("minContent")),
+      name("MAX", k("maxContent")),
+      name("FIT", k("fitContent"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("Width"), methods("width"), names);
     }
   }
 

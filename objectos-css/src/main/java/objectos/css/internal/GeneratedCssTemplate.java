@@ -1321,6 +1321,46 @@ abstract class GeneratedCssTemplate {
     return declaration(Property.MARGIN, top, right, bottom, left);
   }
 
+  protected final StyleDeclaration marginBottom(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_BOTTOM, value);
+  }
+
+  protected final StyleDeclaration marginBottom(MarginValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_BOTTOM, value);
+  }
+
+  protected final StyleDeclaration marginLeft(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_LEFT, value);
+  }
+
+  protected final StyleDeclaration marginLeft(MarginValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_LEFT, value);
+  }
+
+  protected final StyleDeclaration marginRight(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_RIGHT, value);
+  }
+
+  protected final StyleDeclaration marginRight(MarginValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_RIGHT, value);
+  }
+
+  protected final StyleDeclaration marginTop(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_TOP, value);
+  }
+
+  protected final StyleDeclaration marginTop(MarginValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.MARGIN_TOP, value);
+  }
+
   protected final StyleDeclaration maxHeight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     return declaration(Property.MAX_HEIGHT, value);

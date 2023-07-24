@@ -22,7 +22,7 @@ public sealed abstract class Prefix {
 
   public final ClassTypeName className;
 
-  static final class Breakpoint extends Prefix {
+  public static final class Breakpoint extends Prefix {
     public final int length;
 
     private Breakpoint(ClassTypeName className, int length) {
@@ -35,7 +35,7 @@ public sealed abstract class Prefix {
     this.className = className;
   }
 
-  public static Prefix ofBreakpoint(String simpleName, int length) {
+  public static Breakpoint ofBreakpoint(String simpleName, int length) {
     Check.notNull(simpleName, "simpleName == null");
     Check.argument(length >= 0, "Length must not be negative");
 

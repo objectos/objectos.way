@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import objectos.code.JavaSink;
 import objectos.lang.Check;
+import objectos.selfgen.css2.util.Prefix.Breakpoint;
 import objectos.util.GrowableList;
 
 public abstract class CssUtilSelfGen {
@@ -50,8 +51,12 @@ public abstract class CssUtilSelfGen {
     write(sink, new PrefixClassStep());
   }
 
-  protected final Prefix breakpoint(String name, int length) {
+  protected final Breakpoint breakpoint(String name, int length) {
     return Prefix.ofBreakpoint(name, length);
+  }
+
+  protected final Value ch(int value) {
+    return new Value.MethodInt("ch", value);
   }
 
   protected abstract void definition();
@@ -139,6 +144,10 @@ public abstract class CssUtilSelfGen {
 
   protected final Value vh(int value) {
     return new Value.MethodInt("vh", value);
+  }
+
+  protected final Value vw(int value) {
+    return new Value.MethodInt("vw", value);
   }
 
   protected final Value zero() {

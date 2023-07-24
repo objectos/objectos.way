@@ -32,6 +32,14 @@ public final class Framework extends objectos.css.CssTemplate {
     AllFlexDirection();
     AllHeight();
     AllJustifyContent();
+    AllMargin();
+    AllMarginX();
+    AllMarginY();
+    AllMarginTop();
+    AllMarginRight();
+    AllMarginBottom();
+    AllMarginLeft();
+    AllMaxWidth();
     AllMinHeight();
     AllPadding();
     AllPaddingX();
@@ -40,6 +48,7 @@ public final class Framework extends objectos.css.CssTemplate {
     AllPaddingRight();
     AllPaddingBottom();
     AllPaddingLeft();
+    AllWidth();
   }
 
   private void Small() {
@@ -47,6 +56,14 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallFlexDirection();
     SmallHeight();
     SmallJustifyContent();
+    SmallMargin();
+    SmallMarginX();
+    SmallMarginY();
+    SmallMarginTop();
+    SmallMarginRight();
+    SmallMarginBottom();
+    SmallMarginLeft();
+    SmallMaxWidth();
     SmallMinHeight();
     SmallPadding();
     SmallPaddingX();
@@ -55,6 +72,7 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallPaddingRight();
     SmallPaddingBottom();
     SmallPaddingLeft();
+    SmallWidth();
   }
 
   private void Medium() {
@@ -62,6 +80,14 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumFlexDirection();
     MediumHeight();
     MediumJustifyContent();
+    MediumMargin();
+    MediumMarginX();
+    MediumMarginY();
+    MediumMarginTop();
+    MediumMarginRight();
+    MediumMarginBottom();
+    MediumMarginLeft();
+    MediumMaxWidth();
     MediumMinHeight();
     MediumPadding();
     MediumPaddingX();
@@ -70,6 +96,7 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumPaddingRight();
     MediumPaddingBottom();
     MediumPaddingLeft();
+    MediumWidth();
   }
 
   private void Large() {
@@ -77,6 +104,14 @@ public final class Framework extends objectos.css.CssTemplate {
     LargeFlexDirection();
     LargeHeight();
     LargeJustifyContent();
+    LargeMargin();
+    LargeMarginX();
+    LargeMarginY();
+    LargeMarginTop();
+    LargeMarginRight();
+    LargeMarginBottom();
+    LargeMarginLeft();
+    LargeMaxWidth();
     LargeMinHeight();
     LargePadding();
     LargePaddingX();
@@ -85,6 +120,7 @@ public final class Framework extends objectos.css.CssTemplate {
     LargePaddingRight();
     LargePaddingBottom();
     LargePaddingLeft();
+    LargeWidth();
   }
 
   private void XLarge() {
@@ -92,6 +128,14 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargeFlexDirection();
     XLargeHeight();
     XLargeJustifyContent();
+    XLargeMargin();
+    XLargeMarginX();
+    XLargeMarginY();
+    XLargeMarginTop();
+    XLargeMarginRight();
+    XLargeMarginBottom();
+    XLargeMarginLeft();
+    XLargeMaxWidth();
     XLargeMinHeight();
     XLargePadding();
     XLargePaddingX();
@@ -100,6 +144,7 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargePaddingRight();
     XLargePaddingBottom();
     XLargePaddingLeft();
+    XLargeWidth();
   }
 
   private void XLarge2() {
@@ -107,6 +152,14 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2FlexDirection();
     XLarge2Height();
     XLarge2JustifyContent();
+    XLarge2Margin();
+    XLarge2MarginX();
+    XLarge2MarginY();
+    XLarge2MarginTop();
+    XLarge2MarginRight();
+    XLarge2MarginBottom();
+    XLarge2MarginLeft();
+    XLarge2MaxWidth();
     XLarge2MinHeight();
     XLarge2Padding();
     XLarge2PaddingX();
@@ -115,6 +168,7 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2PaddingRight();
     XLarge2PaddingBottom();
     XLarge2PaddingLeft();
+    XLarge2Width();
   }
 
   private void AllDisplay() {
@@ -462,6 +516,1232 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.JustifyContent.AROUND,
       justifyContent(spaceAround)
+);
+  }
+
+  private void AllMargin() {
+    style(
+      objectos.css.util.All.Margin.AUTO,
+      margin(auto)
+);
+    style(
+      objectos.css.util.All.Margin.PX,
+      margin(px(1))
+);
+    style(
+      objectos.css.util.All.Margin.V0,
+      margin($0)
+);
+    style(
+      objectos.css.util.All.Margin.V0_5,
+      margin(rem(0.125))
+);
+    style(
+      objectos.css.util.All.Margin.V1,
+      margin(rem(0.25))
+);
+    style(
+      objectos.css.util.All.Margin.V1_5,
+      margin(rem(0.375))
+);
+    style(
+      objectos.css.util.All.Margin.V2,
+      margin(rem(0.5))
+);
+    style(
+      objectos.css.util.All.Margin.V2_5,
+      margin(rem(0.625))
+);
+    style(
+      objectos.css.util.All.Margin.V3,
+      margin(rem(0.75))
+);
+    style(
+      objectos.css.util.All.Margin.V3_5,
+      margin(rem(0.875))
+);
+    style(
+      objectos.css.util.All.Margin.V4,
+      margin(rem(1))
+);
+    style(
+      objectos.css.util.All.Margin.V5,
+      margin(rem(1.25))
+);
+    style(
+      objectos.css.util.All.Margin.V6,
+      margin(rem(1.5))
+);
+    style(
+      objectos.css.util.All.Margin.V7,
+      margin(rem(1.75))
+);
+    style(
+      objectos.css.util.All.Margin.V8,
+      margin(rem(2))
+);
+    style(
+      objectos.css.util.All.Margin.V9,
+      margin(rem(2.25))
+);
+    style(
+      objectos.css.util.All.Margin.V10,
+      margin(rem(2.5))
+);
+    style(
+      objectos.css.util.All.Margin.V11,
+      margin(rem(2.75))
+);
+    style(
+      objectos.css.util.All.Margin.V12,
+      margin(rem(3))
+);
+    style(
+      objectos.css.util.All.Margin.V14,
+      margin(rem(3.5))
+);
+    style(
+      objectos.css.util.All.Margin.V16,
+      margin(rem(4))
+);
+    style(
+      objectos.css.util.All.Margin.V20,
+      margin(rem(5))
+);
+    style(
+      objectos.css.util.All.Margin.V24,
+      margin(rem(6))
+);
+    style(
+      objectos.css.util.All.Margin.V28,
+      margin(rem(7))
+);
+    style(
+      objectos.css.util.All.Margin.V32,
+      margin(rem(8))
+);
+    style(
+      objectos.css.util.All.Margin.V36,
+      margin(rem(9))
+);
+    style(
+      objectos.css.util.All.Margin.V40,
+      margin(rem(10))
+);
+    style(
+      objectos.css.util.All.Margin.V44,
+      margin(rem(11))
+);
+    style(
+      objectos.css.util.All.Margin.V48,
+      margin(rem(12))
+);
+    style(
+      objectos.css.util.All.Margin.V52,
+      margin(rem(13))
+);
+    style(
+      objectos.css.util.All.Margin.V56,
+      margin(rem(14))
+);
+    style(
+      objectos.css.util.All.Margin.V60,
+      margin(rem(15))
+);
+    style(
+      objectos.css.util.All.Margin.V64,
+      margin(rem(16))
+);
+    style(
+      objectos.css.util.All.Margin.V68,
+      margin(rem(17))
+);
+    style(
+      objectos.css.util.All.Margin.V72,
+      margin(rem(18))
+);
+    style(
+      objectos.css.util.All.Margin.V80,
+      margin(rem(20))
+);
+    style(
+      objectos.css.util.All.Margin.V96,
+      margin(rem(24))
+);
+  }
+
+  private void AllMarginX() {
+    style(
+      objectos.css.util.All.MarginX.AUTO,
+      marginRight(auto),
+      marginLeft(auto)
+);
+    style(
+      objectos.css.util.All.MarginX.PX,
+      marginRight(px(1)),
+      marginLeft(px(1))
+);
+    style(
+      objectos.css.util.All.MarginX.V0,
+      marginRight($0),
+      marginLeft($0)
+);
+    style(
+      objectos.css.util.All.MarginX.V0_5,
+      marginRight(rem(0.125)),
+      marginLeft(rem(0.125))
+);
+    style(
+      objectos.css.util.All.MarginX.V1,
+      marginRight(rem(0.25)),
+      marginLeft(rem(0.25))
+);
+    style(
+      objectos.css.util.All.MarginX.V1_5,
+      marginRight(rem(0.375)),
+      marginLeft(rem(0.375))
+);
+    style(
+      objectos.css.util.All.MarginX.V2,
+      marginRight(rem(0.5)),
+      marginLeft(rem(0.5))
+);
+    style(
+      objectos.css.util.All.MarginX.V2_5,
+      marginRight(rem(0.625)),
+      marginLeft(rem(0.625))
+);
+    style(
+      objectos.css.util.All.MarginX.V3,
+      marginRight(rem(0.75)),
+      marginLeft(rem(0.75))
+);
+    style(
+      objectos.css.util.All.MarginX.V3_5,
+      marginRight(rem(0.875)),
+      marginLeft(rem(0.875))
+);
+    style(
+      objectos.css.util.All.MarginX.V4,
+      marginRight(rem(1)),
+      marginLeft(rem(1))
+);
+    style(
+      objectos.css.util.All.MarginX.V5,
+      marginRight(rem(1.25)),
+      marginLeft(rem(1.25))
+);
+    style(
+      objectos.css.util.All.MarginX.V6,
+      marginRight(rem(1.5)),
+      marginLeft(rem(1.5))
+);
+    style(
+      objectos.css.util.All.MarginX.V7,
+      marginRight(rem(1.75)),
+      marginLeft(rem(1.75))
+);
+    style(
+      objectos.css.util.All.MarginX.V8,
+      marginRight(rem(2)),
+      marginLeft(rem(2))
+);
+    style(
+      objectos.css.util.All.MarginX.V9,
+      marginRight(rem(2.25)),
+      marginLeft(rem(2.25))
+);
+    style(
+      objectos.css.util.All.MarginX.V10,
+      marginRight(rem(2.5)),
+      marginLeft(rem(2.5))
+);
+    style(
+      objectos.css.util.All.MarginX.V11,
+      marginRight(rem(2.75)),
+      marginLeft(rem(2.75))
+);
+    style(
+      objectos.css.util.All.MarginX.V12,
+      marginRight(rem(3)),
+      marginLeft(rem(3))
+);
+    style(
+      objectos.css.util.All.MarginX.V14,
+      marginRight(rem(3.5)),
+      marginLeft(rem(3.5))
+);
+    style(
+      objectos.css.util.All.MarginX.V16,
+      marginRight(rem(4)),
+      marginLeft(rem(4))
+);
+    style(
+      objectos.css.util.All.MarginX.V20,
+      marginRight(rem(5)),
+      marginLeft(rem(5))
+);
+    style(
+      objectos.css.util.All.MarginX.V24,
+      marginRight(rem(6)),
+      marginLeft(rem(6))
+);
+    style(
+      objectos.css.util.All.MarginX.V28,
+      marginRight(rem(7)),
+      marginLeft(rem(7))
+);
+    style(
+      objectos.css.util.All.MarginX.V32,
+      marginRight(rem(8)),
+      marginLeft(rem(8))
+);
+    style(
+      objectos.css.util.All.MarginX.V36,
+      marginRight(rem(9)),
+      marginLeft(rem(9))
+);
+    style(
+      objectos.css.util.All.MarginX.V40,
+      marginRight(rem(10)),
+      marginLeft(rem(10))
+);
+    style(
+      objectos.css.util.All.MarginX.V44,
+      marginRight(rem(11)),
+      marginLeft(rem(11))
+);
+    style(
+      objectos.css.util.All.MarginX.V48,
+      marginRight(rem(12)),
+      marginLeft(rem(12))
+);
+    style(
+      objectos.css.util.All.MarginX.V52,
+      marginRight(rem(13)),
+      marginLeft(rem(13))
+);
+    style(
+      objectos.css.util.All.MarginX.V56,
+      marginRight(rem(14)),
+      marginLeft(rem(14))
+);
+    style(
+      objectos.css.util.All.MarginX.V60,
+      marginRight(rem(15)),
+      marginLeft(rem(15))
+);
+    style(
+      objectos.css.util.All.MarginX.V64,
+      marginRight(rem(16)),
+      marginLeft(rem(16))
+);
+    style(
+      objectos.css.util.All.MarginX.V68,
+      marginRight(rem(17)),
+      marginLeft(rem(17))
+);
+    style(
+      objectos.css.util.All.MarginX.V72,
+      marginRight(rem(18)),
+      marginLeft(rem(18))
+);
+    style(
+      objectos.css.util.All.MarginX.V80,
+      marginRight(rem(20)),
+      marginLeft(rem(20))
+);
+    style(
+      objectos.css.util.All.MarginX.V96,
+      marginRight(rem(24)),
+      marginLeft(rem(24))
+);
+  }
+
+  private void AllMarginY() {
+    style(
+      objectos.css.util.All.MarginY.AUTO,
+      marginTop(auto),
+      marginBottom(auto)
+);
+    style(
+      objectos.css.util.All.MarginY.PX,
+      marginTop(px(1)),
+      marginBottom(px(1))
+);
+    style(
+      objectos.css.util.All.MarginY.V0,
+      marginTop($0),
+      marginBottom($0)
+);
+    style(
+      objectos.css.util.All.MarginY.V0_5,
+      marginTop(rem(0.125)),
+      marginBottom(rem(0.125))
+);
+    style(
+      objectos.css.util.All.MarginY.V1,
+      marginTop(rem(0.25)),
+      marginBottom(rem(0.25))
+);
+    style(
+      objectos.css.util.All.MarginY.V1_5,
+      marginTop(rem(0.375)),
+      marginBottom(rem(0.375))
+);
+    style(
+      objectos.css.util.All.MarginY.V2,
+      marginTop(rem(0.5)),
+      marginBottom(rem(0.5))
+);
+    style(
+      objectos.css.util.All.MarginY.V2_5,
+      marginTop(rem(0.625)),
+      marginBottom(rem(0.625))
+);
+    style(
+      objectos.css.util.All.MarginY.V3,
+      marginTop(rem(0.75)),
+      marginBottom(rem(0.75))
+);
+    style(
+      objectos.css.util.All.MarginY.V3_5,
+      marginTop(rem(0.875)),
+      marginBottom(rem(0.875))
+);
+    style(
+      objectos.css.util.All.MarginY.V4,
+      marginTop(rem(1)),
+      marginBottom(rem(1))
+);
+    style(
+      objectos.css.util.All.MarginY.V5,
+      marginTop(rem(1.25)),
+      marginBottom(rem(1.25))
+);
+    style(
+      objectos.css.util.All.MarginY.V6,
+      marginTop(rem(1.5)),
+      marginBottom(rem(1.5))
+);
+    style(
+      objectos.css.util.All.MarginY.V7,
+      marginTop(rem(1.75)),
+      marginBottom(rem(1.75))
+);
+    style(
+      objectos.css.util.All.MarginY.V8,
+      marginTop(rem(2)),
+      marginBottom(rem(2))
+);
+    style(
+      objectos.css.util.All.MarginY.V9,
+      marginTop(rem(2.25)),
+      marginBottom(rem(2.25))
+);
+    style(
+      objectos.css.util.All.MarginY.V10,
+      marginTop(rem(2.5)),
+      marginBottom(rem(2.5))
+);
+    style(
+      objectos.css.util.All.MarginY.V11,
+      marginTop(rem(2.75)),
+      marginBottom(rem(2.75))
+);
+    style(
+      objectos.css.util.All.MarginY.V12,
+      marginTop(rem(3)),
+      marginBottom(rem(3))
+);
+    style(
+      objectos.css.util.All.MarginY.V14,
+      marginTop(rem(3.5)),
+      marginBottom(rem(3.5))
+);
+    style(
+      objectos.css.util.All.MarginY.V16,
+      marginTop(rem(4)),
+      marginBottom(rem(4))
+);
+    style(
+      objectos.css.util.All.MarginY.V20,
+      marginTop(rem(5)),
+      marginBottom(rem(5))
+);
+    style(
+      objectos.css.util.All.MarginY.V24,
+      marginTop(rem(6)),
+      marginBottom(rem(6))
+);
+    style(
+      objectos.css.util.All.MarginY.V28,
+      marginTop(rem(7)),
+      marginBottom(rem(7))
+);
+    style(
+      objectos.css.util.All.MarginY.V32,
+      marginTop(rem(8)),
+      marginBottom(rem(8))
+);
+    style(
+      objectos.css.util.All.MarginY.V36,
+      marginTop(rem(9)),
+      marginBottom(rem(9))
+);
+    style(
+      objectos.css.util.All.MarginY.V40,
+      marginTop(rem(10)),
+      marginBottom(rem(10))
+);
+    style(
+      objectos.css.util.All.MarginY.V44,
+      marginTop(rem(11)),
+      marginBottom(rem(11))
+);
+    style(
+      objectos.css.util.All.MarginY.V48,
+      marginTop(rem(12)),
+      marginBottom(rem(12))
+);
+    style(
+      objectos.css.util.All.MarginY.V52,
+      marginTop(rem(13)),
+      marginBottom(rem(13))
+);
+    style(
+      objectos.css.util.All.MarginY.V56,
+      marginTop(rem(14)),
+      marginBottom(rem(14))
+);
+    style(
+      objectos.css.util.All.MarginY.V60,
+      marginTop(rem(15)),
+      marginBottom(rem(15))
+);
+    style(
+      objectos.css.util.All.MarginY.V64,
+      marginTop(rem(16)),
+      marginBottom(rem(16))
+);
+    style(
+      objectos.css.util.All.MarginY.V68,
+      marginTop(rem(17)),
+      marginBottom(rem(17))
+);
+    style(
+      objectos.css.util.All.MarginY.V72,
+      marginTop(rem(18)),
+      marginBottom(rem(18))
+);
+    style(
+      objectos.css.util.All.MarginY.V80,
+      marginTop(rem(20)),
+      marginBottom(rem(20))
+);
+    style(
+      objectos.css.util.All.MarginY.V96,
+      marginTop(rem(24)),
+      marginBottom(rem(24))
+);
+  }
+
+  private void AllMarginTop() {
+    style(
+      objectos.css.util.All.MarginTop.AUTO,
+      marginTop(auto)
+);
+    style(
+      objectos.css.util.All.MarginTop.PX,
+      marginTop(px(1))
+);
+    style(
+      objectos.css.util.All.MarginTop.V0,
+      marginTop($0)
+);
+    style(
+      objectos.css.util.All.MarginTop.V0_5,
+      marginTop(rem(0.125))
+);
+    style(
+      objectos.css.util.All.MarginTop.V1,
+      marginTop(rem(0.25))
+);
+    style(
+      objectos.css.util.All.MarginTop.V1_5,
+      marginTop(rem(0.375))
+);
+    style(
+      objectos.css.util.All.MarginTop.V2,
+      marginTop(rem(0.5))
+);
+    style(
+      objectos.css.util.All.MarginTop.V2_5,
+      marginTop(rem(0.625))
+);
+    style(
+      objectos.css.util.All.MarginTop.V3,
+      marginTop(rem(0.75))
+);
+    style(
+      objectos.css.util.All.MarginTop.V3_5,
+      marginTop(rem(0.875))
+);
+    style(
+      objectos.css.util.All.MarginTop.V4,
+      marginTop(rem(1))
+);
+    style(
+      objectos.css.util.All.MarginTop.V5,
+      marginTop(rem(1.25))
+);
+    style(
+      objectos.css.util.All.MarginTop.V6,
+      marginTop(rem(1.5))
+);
+    style(
+      objectos.css.util.All.MarginTop.V7,
+      marginTop(rem(1.75))
+);
+    style(
+      objectos.css.util.All.MarginTop.V8,
+      marginTop(rem(2))
+);
+    style(
+      objectos.css.util.All.MarginTop.V9,
+      marginTop(rem(2.25))
+);
+    style(
+      objectos.css.util.All.MarginTop.V10,
+      marginTop(rem(2.5))
+);
+    style(
+      objectos.css.util.All.MarginTop.V11,
+      marginTop(rem(2.75))
+);
+    style(
+      objectos.css.util.All.MarginTop.V12,
+      marginTop(rem(3))
+);
+    style(
+      objectos.css.util.All.MarginTop.V14,
+      marginTop(rem(3.5))
+);
+    style(
+      objectos.css.util.All.MarginTop.V16,
+      marginTop(rem(4))
+);
+    style(
+      objectos.css.util.All.MarginTop.V20,
+      marginTop(rem(5))
+);
+    style(
+      objectos.css.util.All.MarginTop.V24,
+      marginTop(rem(6))
+);
+    style(
+      objectos.css.util.All.MarginTop.V28,
+      marginTop(rem(7))
+);
+    style(
+      objectos.css.util.All.MarginTop.V32,
+      marginTop(rem(8))
+);
+    style(
+      objectos.css.util.All.MarginTop.V36,
+      marginTop(rem(9))
+);
+    style(
+      objectos.css.util.All.MarginTop.V40,
+      marginTop(rem(10))
+);
+    style(
+      objectos.css.util.All.MarginTop.V44,
+      marginTop(rem(11))
+);
+    style(
+      objectos.css.util.All.MarginTop.V48,
+      marginTop(rem(12))
+);
+    style(
+      objectos.css.util.All.MarginTop.V52,
+      marginTop(rem(13))
+);
+    style(
+      objectos.css.util.All.MarginTop.V56,
+      marginTop(rem(14))
+);
+    style(
+      objectos.css.util.All.MarginTop.V60,
+      marginTop(rem(15))
+);
+    style(
+      objectos.css.util.All.MarginTop.V64,
+      marginTop(rem(16))
+);
+    style(
+      objectos.css.util.All.MarginTop.V68,
+      marginTop(rem(17))
+);
+    style(
+      objectos.css.util.All.MarginTop.V72,
+      marginTop(rem(18))
+);
+    style(
+      objectos.css.util.All.MarginTop.V80,
+      marginTop(rem(20))
+);
+    style(
+      objectos.css.util.All.MarginTop.V96,
+      marginTop(rem(24))
+);
+  }
+
+  private void AllMarginRight() {
+    style(
+      objectos.css.util.All.MarginRight.AUTO,
+      marginRight(auto)
+);
+    style(
+      objectos.css.util.All.MarginRight.PX,
+      marginRight(px(1))
+);
+    style(
+      objectos.css.util.All.MarginRight.V0,
+      marginRight($0)
+);
+    style(
+      objectos.css.util.All.MarginRight.V0_5,
+      marginRight(rem(0.125))
+);
+    style(
+      objectos.css.util.All.MarginRight.V1,
+      marginRight(rem(0.25))
+);
+    style(
+      objectos.css.util.All.MarginRight.V1_5,
+      marginRight(rem(0.375))
+);
+    style(
+      objectos.css.util.All.MarginRight.V2,
+      marginRight(rem(0.5))
+);
+    style(
+      objectos.css.util.All.MarginRight.V2_5,
+      marginRight(rem(0.625))
+);
+    style(
+      objectos.css.util.All.MarginRight.V3,
+      marginRight(rem(0.75))
+);
+    style(
+      objectos.css.util.All.MarginRight.V3_5,
+      marginRight(rem(0.875))
+);
+    style(
+      objectos.css.util.All.MarginRight.V4,
+      marginRight(rem(1))
+);
+    style(
+      objectos.css.util.All.MarginRight.V5,
+      marginRight(rem(1.25))
+);
+    style(
+      objectos.css.util.All.MarginRight.V6,
+      marginRight(rem(1.5))
+);
+    style(
+      objectos.css.util.All.MarginRight.V7,
+      marginRight(rem(1.75))
+);
+    style(
+      objectos.css.util.All.MarginRight.V8,
+      marginRight(rem(2))
+);
+    style(
+      objectos.css.util.All.MarginRight.V9,
+      marginRight(rem(2.25))
+);
+    style(
+      objectos.css.util.All.MarginRight.V10,
+      marginRight(rem(2.5))
+);
+    style(
+      objectos.css.util.All.MarginRight.V11,
+      marginRight(rem(2.75))
+);
+    style(
+      objectos.css.util.All.MarginRight.V12,
+      marginRight(rem(3))
+);
+    style(
+      objectos.css.util.All.MarginRight.V14,
+      marginRight(rem(3.5))
+);
+    style(
+      objectos.css.util.All.MarginRight.V16,
+      marginRight(rem(4))
+);
+    style(
+      objectos.css.util.All.MarginRight.V20,
+      marginRight(rem(5))
+);
+    style(
+      objectos.css.util.All.MarginRight.V24,
+      marginRight(rem(6))
+);
+    style(
+      objectos.css.util.All.MarginRight.V28,
+      marginRight(rem(7))
+);
+    style(
+      objectos.css.util.All.MarginRight.V32,
+      marginRight(rem(8))
+);
+    style(
+      objectos.css.util.All.MarginRight.V36,
+      marginRight(rem(9))
+);
+    style(
+      objectos.css.util.All.MarginRight.V40,
+      marginRight(rem(10))
+);
+    style(
+      objectos.css.util.All.MarginRight.V44,
+      marginRight(rem(11))
+);
+    style(
+      objectos.css.util.All.MarginRight.V48,
+      marginRight(rem(12))
+);
+    style(
+      objectos.css.util.All.MarginRight.V52,
+      marginRight(rem(13))
+);
+    style(
+      objectos.css.util.All.MarginRight.V56,
+      marginRight(rem(14))
+);
+    style(
+      objectos.css.util.All.MarginRight.V60,
+      marginRight(rem(15))
+);
+    style(
+      objectos.css.util.All.MarginRight.V64,
+      marginRight(rem(16))
+);
+    style(
+      objectos.css.util.All.MarginRight.V68,
+      marginRight(rem(17))
+);
+    style(
+      objectos.css.util.All.MarginRight.V72,
+      marginRight(rem(18))
+);
+    style(
+      objectos.css.util.All.MarginRight.V80,
+      marginRight(rem(20))
+);
+    style(
+      objectos.css.util.All.MarginRight.V96,
+      marginRight(rem(24))
+);
+  }
+
+  private void AllMarginBottom() {
+    style(
+      objectos.css.util.All.MarginBottom.AUTO,
+      marginBottom(auto)
+);
+    style(
+      objectos.css.util.All.MarginBottom.PX,
+      marginBottom(px(1))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V0,
+      marginBottom($0)
+);
+    style(
+      objectos.css.util.All.MarginBottom.V0_5,
+      marginBottom(rem(0.125))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V1,
+      marginBottom(rem(0.25))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V1_5,
+      marginBottom(rem(0.375))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V2,
+      marginBottom(rem(0.5))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V2_5,
+      marginBottom(rem(0.625))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V3,
+      marginBottom(rem(0.75))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V3_5,
+      marginBottom(rem(0.875))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V4,
+      marginBottom(rem(1))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V5,
+      marginBottom(rem(1.25))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V6,
+      marginBottom(rem(1.5))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V7,
+      marginBottom(rem(1.75))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V8,
+      marginBottom(rem(2))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V9,
+      marginBottom(rem(2.25))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V10,
+      marginBottom(rem(2.5))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V11,
+      marginBottom(rem(2.75))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V12,
+      marginBottom(rem(3))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V14,
+      marginBottom(rem(3.5))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V16,
+      marginBottom(rem(4))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V20,
+      marginBottom(rem(5))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V24,
+      marginBottom(rem(6))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V28,
+      marginBottom(rem(7))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V32,
+      marginBottom(rem(8))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V36,
+      marginBottom(rem(9))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V40,
+      marginBottom(rem(10))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V44,
+      marginBottom(rem(11))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V48,
+      marginBottom(rem(12))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V52,
+      marginBottom(rem(13))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V56,
+      marginBottom(rem(14))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V60,
+      marginBottom(rem(15))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V64,
+      marginBottom(rem(16))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V68,
+      marginBottom(rem(17))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V72,
+      marginBottom(rem(18))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V80,
+      marginBottom(rem(20))
+);
+    style(
+      objectos.css.util.All.MarginBottom.V96,
+      marginBottom(rem(24))
+);
+  }
+
+  private void AllMarginLeft() {
+    style(
+      objectos.css.util.All.MarginLeft.AUTO,
+      marginLeft(auto)
+);
+    style(
+      objectos.css.util.All.MarginLeft.PX,
+      marginLeft(px(1))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V0,
+      marginLeft($0)
+);
+    style(
+      objectos.css.util.All.MarginLeft.V0_5,
+      marginLeft(rem(0.125))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V1,
+      marginLeft(rem(0.25))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V1_5,
+      marginLeft(rem(0.375))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V2,
+      marginLeft(rem(0.5))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V2_5,
+      marginLeft(rem(0.625))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V3,
+      marginLeft(rem(0.75))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V3_5,
+      marginLeft(rem(0.875))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V4,
+      marginLeft(rem(1))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V5,
+      marginLeft(rem(1.25))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V6,
+      marginLeft(rem(1.5))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V7,
+      marginLeft(rem(1.75))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V8,
+      marginLeft(rem(2))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V9,
+      marginLeft(rem(2.25))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V10,
+      marginLeft(rem(2.5))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V11,
+      marginLeft(rem(2.75))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V12,
+      marginLeft(rem(3))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V14,
+      marginLeft(rem(3.5))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V16,
+      marginLeft(rem(4))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V20,
+      marginLeft(rem(5))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V24,
+      marginLeft(rem(6))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V28,
+      marginLeft(rem(7))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V32,
+      marginLeft(rem(8))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V36,
+      marginLeft(rem(9))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V40,
+      marginLeft(rem(10))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V44,
+      marginLeft(rem(11))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V48,
+      marginLeft(rem(12))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V52,
+      marginLeft(rem(13))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V56,
+      marginLeft(rem(14))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V60,
+      marginLeft(rem(15))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V64,
+      marginLeft(rem(16))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V68,
+      marginLeft(rem(17))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V72,
+      marginLeft(rem(18))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V80,
+      marginLeft(rem(20))
+);
+    style(
+      objectos.css.util.All.MarginLeft.V96,
+      marginLeft(rem(24))
+);
+  }
+
+  private void AllMaxWidth() {
+    style(
+      objectos.css.util.All.MaxWidth.V0,
+      maxWidth($0)
+);
+    style(
+      objectos.css.util.All.MaxWidth.NONE,
+      maxWidth(none)
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_SMALL,
+      maxWidth(rem(20))
+);
+    style(
+      objectos.css.util.All.MaxWidth.SMALL,
+      maxWidth(rem(24))
+);
+    style(
+      objectos.css.util.All.MaxWidth.MEDIUM,
+      maxWidth(rem(28))
+);
+    style(
+      objectos.css.util.All.MaxWidth.LARGE,
+      maxWidth(rem(32))
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_LARGE,
+      maxWidth(rem(36))
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_LARGE2,
+      maxWidth(rem(42))
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_LARGE3,
+      maxWidth(rem(48))
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_LARGE4,
+      maxWidth(rem(56))
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_LARGE5,
+      maxWidth(rem(64))
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_LARGE6,
+      maxWidth(rem(72))
+);
+    style(
+      objectos.css.util.All.MaxWidth.X_LARGE7,
+      maxWidth(rem(80))
+);
+    style(
+      objectos.css.util.All.MaxWidth.FULL,
+      maxWidth(pct(100))
+);
+    style(
+      objectos.css.util.All.MaxWidth.MIN,
+      maxWidth(minContent)
+);
+    style(
+      objectos.css.util.All.MaxWidth.MAX,
+      maxWidth(maxContent)
+);
+    style(
+      objectos.css.util.All.MaxWidth.FIT,
+      maxWidth(fitContent)
+);
+    style(
+      objectos.css.util.All.MaxWidth.PROSE,
+      maxWidth(ch(65))
+);
+    style(
+      objectos.css.util.All.MaxWidth.SCREEN_SMALL,
+      maxWidth(px(640))
+);
+    style(
+      objectos.css.util.All.MaxWidth.SCREEN_MEDIUM,
+      maxWidth(px(768))
+);
+    style(
+      objectos.css.util.All.MaxWidth.SCREEN_LARGE,
+      maxWidth(px(1024))
+);
+    style(
+      objectos.css.util.All.MaxWidth.SCREEN_X_LARGE,
+      maxWidth(px(1280))
+);
+    style(
+      objectos.css.util.All.MaxWidth.SCREEN_X_LARGE2,
+      maxWidth(px(1536))
 );
   }
 
@@ -1581,6 +2861,281 @@ public final class Framework extends objectos.css.CssTemplate {
 );
   }
 
+  private void AllWidth() {
+    style(
+      objectos.css.util.All.Width.PX,
+      width(px(1))
+);
+    style(
+      objectos.css.util.All.Width.V0,
+      width($0)
+);
+    style(
+      objectos.css.util.All.Width.V0_5,
+      width(rem(0.125))
+);
+    style(
+      objectos.css.util.All.Width.V1,
+      width(rem(0.25))
+);
+    style(
+      objectos.css.util.All.Width.V1_5,
+      width(rem(0.375))
+);
+    style(
+      objectos.css.util.All.Width.V2,
+      width(rem(0.5))
+);
+    style(
+      objectos.css.util.All.Width.V2_5,
+      width(rem(0.625))
+);
+    style(
+      objectos.css.util.All.Width.V3,
+      width(rem(0.75))
+);
+    style(
+      objectos.css.util.All.Width.V3_5,
+      width(rem(0.875))
+);
+    style(
+      objectos.css.util.All.Width.V4,
+      width(rem(1))
+);
+    style(
+      objectos.css.util.All.Width.V5,
+      width(rem(1.25))
+);
+    style(
+      objectos.css.util.All.Width.V6,
+      width(rem(1.5))
+);
+    style(
+      objectos.css.util.All.Width.V7,
+      width(rem(1.75))
+);
+    style(
+      objectos.css.util.All.Width.V8,
+      width(rem(2))
+);
+    style(
+      objectos.css.util.All.Width.V9,
+      width(rem(2.25))
+);
+    style(
+      objectos.css.util.All.Width.V10,
+      width(rem(2.5))
+);
+    style(
+      objectos.css.util.All.Width.V11,
+      width(rem(2.75))
+);
+    style(
+      objectos.css.util.All.Width.V12,
+      width(rem(3))
+);
+    style(
+      objectos.css.util.All.Width.V14,
+      width(rem(3.5))
+);
+    style(
+      objectos.css.util.All.Width.V16,
+      width(rem(4))
+);
+    style(
+      objectos.css.util.All.Width.V20,
+      width(rem(5))
+);
+    style(
+      objectos.css.util.All.Width.V24,
+      width(rem(6))
+);
+    style(
+      objectos.css.util.All.Width.V28,
+      width(rem(7))
+);
+    style(
+      objectos.css.util.All.Width.V32,
+      width(rem(8))
+);
+    style(
+      objectos.css.util.All.Width.V36,
+      width(rem(9))
+);
+    style(
+      objectos.css.util.All.Width.V40,
+      width(rem(10))
+);
+    style(
+      objectos.css.util.All.Width.V44,
+      width(rem(11))
+);
+    style(
+      objectos.css.util.All.Width.V48,
+      width(rem(12))
+);
+    style(
+      objectos.css.util.All.Width.V52,
+      width(rem(13))
+);
+    style(
+      objectos.css.util.All.Width.V56,
+      width(rem(14))
+);
+    style(
+      objectos.css.util.All.Width.V60,
+      width(rem(15))
+);
+    style(
+      objectos.css.util.All.Width.V64,
+      width(rem(16))
+);
+    style(
+      objectos.css.util.All.Width.V68,
+      width(rem(17))
+);
+    style(
+      objectos.css.util.All.Width.V72,
+      width(rem(18))
+);
+    style(
+      objectos.css.util.All.Width.V80,
+      width(rem(20))
+);
+    style(
+      objectos.css.util.All.Width.V96,
+      width(rem(24))
+);
+    style(
+      objectos.css.util.All.Width.AUTO,
+      width(auto)
+);
+    style(
+      objectos.css.util.All.Width.P1_2,
+      width(pct(50))
+);
+    style(
+      objectos.css.util.All.Width.P1_3,
+      width(pct(33.333333))
+);
+    style(
+      objectos.css.util.All.Width.P2_3,
+      width(pct(66.666667))
+);
+    style(
+      objectos.css.util.All.Width.P1_4,
+      width(pct(25))
+);
+    style(
+      objectos.css.util.All.Width.P2_4,
+      width(pct(50))
+);
+    style(
+      objectos.css.util.All.Width.P3_4,
+      width(pct(75))
+);
+    style(
+      objectos.css.util.All.Width.P1_5,
+      width(pct(20))
+);
+    style(
+      objectos.css.util.All.Width.P2_5,
+      width(pct(40))
+);
+    style(
+      objectos.css.util.All.Width.P3_5,
+      width(pct(60))
+);
+    style(
+      objectos.css.util.All.Width.P4_5,
+      width(pct(80))
+);
+    style(
+      objectos.css.util.All.Width.P1_6,
+      width(pct(16.666667))
+);
+    style(
+      objectos.css.util.All.Width.P2_6,
+      width(pct(33.333333))
+);
+    style(
+      objectos.css.util.All.Width.P3_6,
+      width(pct(50))
+);
+    style(
+      objectos.css.util.All.Width.P4_6,
+      width(pct(66.666667))
+);
+    style(
+      objectos.css.util.All.Width.P5_6,
+      width(pct(83.333333))
+);
+    style(
+      objectos.css.util.All.Width.P1_12,
+      width(pct(8.333333))
+);
+    style(
+      objectos.css.util.All.Width.P2_12,
+      width(pct(16.666667))
+);
+    style(
+      objectos.css.util.All.Width.P3_12,
+      width(pct(25))
+);
+    style(
+      objectos.css.util.All.Width.P4_12,
+      width(pct(33.333333))
+);
+    style(
+      objectos.css.util.All.Width.P5_12,
+      width(pct(41.666667))
+);
+    style(
+      objectos.css.util.All.Width.P6_12,
+      width(pct(50))
+);
+    style(
+      objectos.css.util.All.Width.P7_12,
+      width(pct(58.333333))
+);
+    style(
+      objectos.css.util.All.Width.P8_12,
+      width(pct(66.666667))
+);
+    style(
+      objectos.css.util.All.Width.P9_12,
+      width(pct(75))
+);
+    style(
+      objectos.css.util.All.Width.P10_12,
+      width(pct(83.333333))
+);
+    style(
+      objectos.css.util.All.Width.P11_12,
+      width(pct(91.666667))
+);
+    style(
+      objectos.css.util.All.Width.FULL,
+      width(pct(100))
+);
+    style(
+      objectos.css.util.All.Width.SCREEN,
+      width(vw(100))
+);
+    style(
+      objectos.css.util.All.Width.MIN,
+      width(minContent)
+);
+    style(
+      objectos.css.util.All.Width.MAX,
+      width(maxContent)
+);
+    style(
+      objectos.css.util.All.Width.FIT,
+      width(fitContent)
+);
+  }
+
   private void SmallDisplay() {
     media(
       minWidth(px(640)),
@@ -1934,6 +3489,1248 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Small.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void SmallMargin() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.Margin.AUTO,
+        margin(auto)
+),
+      style(
+        objectos.css.util.Small.Margin.PX,
+        margin(px(1))
+),
+      style(
+        objectos.css.util.Small.Margin.V0,
+        margin($0)
+),
+      style(
+        objectos.css.util.Small.Margin.V0_5,
+        margin(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.Margin.V1,
+        margin(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.Margin.V1_5,
+        margin(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.Margin.V2,
+        margin(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.Margin.V2_5,
+        margin(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.Margin.V3,
+        margin(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.Margin.V3_5,
+        margin(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.Margin.V4,
+        margin(rem(1))
+),
+      style(
+        objectos.css.util.Small.Margin.V5,
+        margin(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.Margin.V6,
+        margin(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.Margin.V7,
+        margin(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.Margin.V8,
+        margin(rem(2))
+),
+      style(
+        objectos.css.util.Small.Margin.V9,
+        margin(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.Margin.V10,
+        margin(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.Margin.V11,
+        margin(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.Margin.V12,
+        margin(rem(3))
+),
+      style(
+        objectos.css.util.Small.Margin.V14,
+        margin(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.Margin.V16,
+        margin(rem(4))
+),
+      style(
+        objectos.css.util.Small.Margin.V20,
+        margin(rem(5))
+),
+      style(
+        objectos.css.util.Small.Margin.V24,
+        margin(rem(6))
+),
+      style(
+        objectos.css.util.Small.Margin.V28,
+        margin(rem(7))
+),
+      style(
+        objectos.css.util.Small.Margin.V32,
+        margin(rem(8))
+),
+      style(
+        objectos.css.util.Small.Margin.V36,
+        margin(rem(9))
+),
+      style(
+        objectos.css.util.Small.Margin.V40,
+        margin(rem(10))
+),
+      style(
+        objectos.css.util.Small.Margin.V44,
+        margin(rem(11))
+),
+      style(
+        objectos.css.util.Small.Margin.V48,
+        margin(rem(12))
+),
+      style(
+        objectos.css.util.Small.Margin.V52,
+        margin(rem(13))
+),
+      style(
+        objectos.css.util.Small.Margin.V56,
+        margin(rem(14))
+),
+      style(
+        objectos.css.util.Small.Margin.V60,
+        margin(rem(15))
+),
+      style(
+        objectos.css.util.Small.Margin.V64,
+        margin(rem(16))
+),
+      style(
+        objectos.css.util.Small.Margin.V68,
+        margin(rem(17))
+),
+      style(
+        objectos.css.util.Small.Margin.V72,
+        margin(rem(18))
+),
+      style(
+        objectos.css.util.Small.Margin.V80,
+        margin(rem(20))
+),
+      style(
+        objectos.css.util.Small.Margin.V96,
+        margin(rem(24))
+));
+  }
+
+  private void SmallMarginX() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MarginX.AUTO,
+        marginRight(auto),
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.Small.MarginX.PX,
+        marginRight(px(1)),
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.Small.MarginX.V0,
+        marginRight($0),
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.Small.MarginX.V0_5,
+        marginRight(rem(0.125)),
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.MarginX.V1,
+        marginRight(rem(0.25)),
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.MarginX.V1_5,
+        marginRight(rem(0.375)),
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.MarginX.V2,
+        marginRight(rem(0.5)),
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.MarginX.V2_5,
+        marginRight(rem(0.625)),
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.MarginX.V3,
+        marginRight(rem(0.75)),
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.MarginX.V3_5,
+        marginRight(rem(0.875)),
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.MarginX.V4,
+        marginRight(rem(1)),
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.Small.MarginX.V5,
+        marginRight(rem(1.25)),
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.MarginX.V6,
+        marginRight(rem(1.5)),
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.MarginX.V7,
+        marginRight(rem(1.75)),
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.MarginX.V8,
+        marginRight(rem(2)),
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.Small.MarginX.V9,
+        marginRight(rem(2.25)),
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.MarginX.V10,
+        marginRight(rem(2.5)),
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.MarginX.V11,
+        marginRight(rem(2.75)),
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.MarginX.V12,
+        marginRight(rem(3)),
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.Small.MarginX.V14,
+        marginRight(rem(3.5)),
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.MarginX.V16,
+        marginRight(rem(4)),
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.Small.MarginX.V20,
+        marginRight(rem(5)),
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.Small.MarginX.V24,
+        marginRight(rem(6)),
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.Small.MarginX.V28,
+        marginRight(rem(7)),
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.Small.MarginX.V32,
+        marginRight(rem(8)),
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.Small.MarginX.V36,
+        marginRight(rem(9)),
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.Small.MarginX.V40,
+        marginRight(rem(10)),
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.Small.MarginX.V44,
+        marginRight(rem(11)),
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.Small.MarginX.V48,
+        marginRight(rem(12)),
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.Small.MarginX.V52,
+        marginRight(rem(13)),
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.Small.MarginX.V56,
+        marginRight(rem(14)),
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.Small.MarginX.V60,
+        marginRight(rem(15)),
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.Small.MarginX.V64,
+        marginRight(rem(16)),
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.Small.MarginX.V68,
+        marginRight(rem(17)),
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.Small.MarginX.V72,
+        marginRight(rem(18)),
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.Small.MarginX.V80,
+        marginRight(rem(20)),
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.Small.MarginX.V96,
+        marginRight(rem(24)),
+        marginLeft(rem(24))
+));
+  }
+
+  private void SmallMarginY() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MarginY.AUTO,
+        marginTop(auto),
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.Small.MarginY.PX,
+        marginTop(px(1)),
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.Small.MarginY.V0,
+        marginTop($0),
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.Small.MarginY.V0_5,
+        marginTop(rem(0.125)),
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.MarginY.V1,
+        marginTop(rem(0.25)),
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.MarginY.V1_5,
+        marginTop(rem(0.375)),
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.MarginY.V2,
+        marginTop(rem(0.5)),
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.MarginY.V2_5,
+        marginTop(rem(0.625)),
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.MarginY.V3,
+        marginTop(rem(0.75)),
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.MarginY.V3_5,
+        marginTop(rem(0.875)),
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.MarginY.V4,
+        marginTop(rem(1)),
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.Small.MarginY.V5,
+        marginTop(rem(1.25)),
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.MarginY.V6,
+        marginTop(rem(1.5)),
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.MarginY.V7,
+        marginTop(rem(1.75)),
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.MarginY.V8,
+        marginTop(rem(2)),
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.Small.MarginY.V9,
+        marginTop(rem(2.25)),
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.MarginY.V10,
+        marginTop(rem(2.5)),
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.MarginY.V11,
+        marginTop(rem(2.75)),
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.MarginY.V12,
+        marginTop(rem(3)),
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.Small.MarginY.V14,
+        marginTop(rem(3.5)),
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.MarginY.V16,
+        marginTop(rem(4)),
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.Small.MarginY.V20,
+        marginTop(rem(5)),
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.Small.MarginY.V24,
+        marginTop(rem(6)),
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.Small.MarginY.V28,
+        marginTop(rem(7)),
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.Small.MarginY.V32,
+        marginTop(rem(8)),
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.Small.MarginY.V36,
+        marginTop(rem(9)),
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.Small.MarginY.V40,
+        marginTop(rem(10)),
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.Small.MarginY.V44,
+        marginTop(rem(11)),
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.Small.MarginY.V48,
+        marginTop(rem(12)),
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.Small.MarginY.V52,
+        marginTop(rem(13)),
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.Small.MarginY.V56,
+        marginTop(rem(14)),
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.Small.MarginY.V60,
+        marginTop(rem(15)),
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.Small.MarginY.V64,
+        marginTop(rem(16)),
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.Small.MarginY.V68,
+        marginTop(rem(17)),
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.Small.MarginY.V72,
+        marginTop(rem(18)),
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.Small.MarginY.V80,
+        marginTop(rem(20)),
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.Small.MarginY.V96,
+        marginTop(rem(24)),
+        marginBottom(rem(24))
+));
+  }
+
+  private void SmallMarginTop() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MarginTop.AUTO,
+        marginTop(auto)
+),
+      style(
+        objectos.css.util.Small.MarginTop.PX,
+        marginTop(px(1))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V0,
+        marginTop($0)
+),
+      style(
+        objectos.css.util.Small.MarginTop.V0_5,
+        marginTop(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V1,
+        marginTop(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V1_5,
+        marginTop(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V2,
+        marginTop(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V2_5,
+        marginTop(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V3,
+        marginTop(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V3_5,
+        marginTop(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V4,
+        marginTop(rem(1))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V5,
+        marginTop(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V6,
+        marginTop(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V7,
+        marginTop(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V8,
+        marginTop(rem(2))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V9,
+        marginTop(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V10,
+        marginTop(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V11,
+        marginTop(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V12,
+        marginTop(rem(3))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V14,
+        marginTop(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V16,
+        marginTop(rem(4))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V20,
+        marginTop(rem(5))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V24,
+        marginTop(rem(6))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V28,
+        marginTop(rem(7))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V32,
+        marginTop(rem(8))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V36,
+        marginTop(rem(9))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V40,
+        marginTop(rem(10))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V44,
+        marginTop(rem(11))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V48,
+        marginTop(rem(12))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V52,
+        marginTop(rem(13))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V56,
+        marginTop(rem(14))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V60,
+        marginTop(rem(15))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V64,
+        marginTop(rem(16))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V68,
+        marginTop(rem(17))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V72,
+        marginTop(rem(18))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V80,
+        marginTop(rem(20))
+),
+      style(
+        objectos.css.util.Small.MarginTop.V96,
+        marginTop(rem(24))
+));
+  }
+
+  private void SmallMarginRight() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MarginRight.AUTO,
+        marginRight(auto)
+),
+      style(
+        objectos.css.util.Small.MarginRight.PX,
+        marginRight(px(1))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V0,
+        marginRight($0)
+),
+      style(
+        objectos.css.util.Small.MarginRight.V0_5,
+        marginRight(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V1,
+        marginRight(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V1_5,
+        marginRight(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V2,
+        marginRight(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V2_5,
+        marginRight(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V3,
+        marginRight(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V3_5,
+        marginRight(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V4,
+        marginRight(rem(1))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V5,
+        marginRight(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V6,
+        marginRight(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V7,
+        marginRight(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V8,
+        marginRight(rem(2))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V9,
+        marginRight(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V10,
+        marginRight(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V11,
+        marginRight(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V12,
+        marginRight(rem(3))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V14,
+        marginRight(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V16,
+        marginRight(rem(4))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V20,
+        marginRight(rem(5))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V24,
+        marginRight(rem(6))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V28,
+        marginRight(rem(7))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V32,
+        marginRight(rem(8))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V36,
+        marginRight(rem(9))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V40,
+        marginRight(rem(10))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V44,
+        marginRight(rem(11))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V48,
+        marginRight(rem(12))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V52,
+        marginRight(rem(13))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V56,
+        marginRight(rem(14))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V60,
+        marginRight(rem(15))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V64,
+        marginRight(rem(16))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V68,
+        marginRight(rem(17))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V72,
+        marginRight(rem(18))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V80,
+        marginRight(rem(20))
+),
+      style(
+        objectos.css.util.Small.MarginRight.V96,
+        marginRight(rem(24))
+));
+  }
+
+  private void SmallMarginBottom() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MarginBottom.AUTO,
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.Small.MarginBottom.PX,
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V0,
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V0_5,
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V1,
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V1_5,
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V2,
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V2_5,
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V3,
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V3_5,
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V4,
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V5,
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V6,
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V7,
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V8,
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V9,
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V10,
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V11,
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V12,
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V14,
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V16,
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V20,
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V24,
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V28,
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V32,
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V36,
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V40,
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V44,
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V48,
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V52,
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V56,
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V60,
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V64,
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V68,
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V72,
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V80,
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.Small.MarginBottom.V96,
+        marginBottom(rem(24))
+));
+  }
+
+  private void SmallMarginLeft() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MarginLeft.AUTO,
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.Small.MarginLeft.PX,
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V0,
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V0_5,
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V1,
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V1_5,
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V2,
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V2_5,
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V3,
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V3_5,
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V4,
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V5,
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V6,
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V7,
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V8,
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V9,
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V10,
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V11,
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V12,
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V14,
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V16,
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V20,
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V24,
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V28,
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V32,
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V36,
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V40,
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V44,
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V48,
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V52,
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V56,
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V60,
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V64,
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V68,
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V72,
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V80,
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.Small.MarginLeft.V96,
+        marginLeft(rem(24))
+));
+  }
+
+  private void SmallMaxWidth() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.MaxWidth.V0,
+        maxWidth($0)
+),
+      style(
+        objectos.css.util.Small.MaxWidth.NONE,
+        maxWidth(none)
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_SMALL,
+        maxWidth(rem(20))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.SMALL,
+        maxWidth(rem(24))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.MEDIUM,
+        maxWidth(rem(28))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.LARGE,
+        maxWidth(rem(32))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_LARGE,
+        maxWidth(rem(36))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_LARGE2,
+        maxWidth(rem(42))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_LARGE3,
+        maxWidth(rem(48))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_LARGE4,
+        maxWidth(rem(56))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_LARGE5,
+        maxWidth(rem(64))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_LARGE6,
+        maxWidth(rem(72))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.X_LARGE7,
+        maxWidth(rem(80))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.FULL,
+        maxWidth(pct(100))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.MIN,
+        maxWidth(minContent)
+),
+      style(
+        objectos.css.util.Small.MaxWidth.MAX,
+        maxWidth(maxContent)
+),
+      style(
+        objectos.css.util.Small.MaxWidth.FIT,
+        maxWidth(fitContent)
+),
+      style(
+        objectos.css.util.Small.MaxWidth.PROSE,
+        maxWidth(ch(65))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.SCREEN_SMALL,
+        maxWidth(px(640))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.SCREEN_MEDIUM,
+        maxWidth(px(768))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.SCREEN_LARGE,
+        maxWidth(px(1024))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.SCREEN_X_LARGE,
+        maxWidth(px(1280))
+),
+      style(
+        objectos.css.util.Small.MaxWidth.SCREEN_X_LARGE2,
+        maxWidth(px(1536))
 ));
   }
 
@@ -3069,6 +5866,283 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void SmallWidth() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.Width.PX,
+        width(px(1))
+),
+      style(
+        objectos.css.util.Small.Width.V0,
+        width($0)
+),
+      style(
+        objectos.css.util.Small.Width.V0_5,
+        width(rem(0.125))
+),
+      style(
+        objectos.css.util.Small.Width.V1,
+        width(rem(0.25))
+),
+      style(
+        objectos.css.util.Small.Width.V1_5,
+        width(rem(0.375))
+),
+      style(
+        objectos.css.util.Small.Width.V2,
+        width(rem(0.5))
+),
+      style(
+        objectos.css.util.Small.Width.V2_5,
+        width(rem(0.625))
+),
+      style(
+        objectos.css.util.Small.Width.V3,
+        width(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.Width.V3_5,
+        width(rem(0.875))
+),
+      style(
+        objectos.css.util.Small.Width.V4,
+        width(rem(1))
+),
+      style(
+        objectos.css.util.Small.Width.V5,
+        width(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.Width.V6,
+        width(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.Width.V7,
+        width(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.Width.V8,
+        width(rem(2))
+),
+      style(
+        objectos.css.util.Small.Width.V9,
+        width(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.Width.V10,
+        width(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.Width.V11,
+        width(rem(2.75))
+),
+      style(
+        objectos.css.util.Small.Width.V12,
+        width(rem(3))
+),
+      style(
+        objectos.css.util.Small.Width.V14,
+        width(rem(3.5))
+),
+      style(
+        objectos.css.util.Small.Width.V16,
+        width(rem(4))
+),
+      style(
+        objectos.css.util.Small.Width.V20,
+        width(rem(5))
+),
+      style(
+        objectos.css.util.Small.Width.V24,
+        width(rem(6))
+),
+      style(
+        objectos.css.util.Small.Width.V28,
+        width(rem(7))
+),
+      style(
+        objectos.css.util.Small.Width.V32,
+        width(rem(8))
+),
+      style(
+        objectos.css.util.Small.Width.V36,
+        width(rem(9))
+),
+      style(
+        objectos.css.util.Small.Width.V40,
+        width(rem(10))
+),
+      style(
+        objectos.css.util.Small.Width.V44,
+        width(rem(11))
+),
+      style(
+        objectos.css.util.Small.Width.V48,
+        width(rem(12))
+),
+      style(
+        objectos.css.util.Small.Width.V52,
+        width(rem(13))
+),
+      style(
+        objectos.css.util.Small.Width.V56,
+        width(rem(14))
+),
+      style(
+        objectos.css.util.Small.Width.V60,
+        width(rem(15))
+),
+      style(
+        objectos.css.util.Small.Width.V64,
+        width(rem(16))
+),
+      style(
+        objectos.css.util.Small.Width.V68,
+        width(rem(17))
+),
+      style(
+        objectos.css.util.Small.Width.V72,
+        width(rem(18))
+),
+      style(
+        objectos.css.util.Small.Width.V80,
+        width(rem(20))
+),
+      style(
+        objectos.css.util.Small.Width.V96,
+        width(rem(24))
+),
+      style(
+        objectos.css.util.Small.Width.AUTO,
+        width(auto)
+),
+      style(
+        objectos.css.util.Small.Width.P1_2,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Small.Width.P1_3,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Small.Width.P2_3,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Small.Width.P1_4,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.Small.Width.P2_4,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Small.Width.P3_4,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.Small.Width.P1_5,
+        width(pct(20))
+),
+      style(
+        objectos.css.util.Small.Width.P2_5,
+        width(pct(40))
+),
+      style(
+        objectos.css.util.Small.Width.P3_5,
+        width(pct(60))
+),
+      style(
+        objectos.css.util.Small.Width.P4_5,
+        width(pct(80))
+),
+      style(
+        objectos.css.util.Small.Width.P1_6,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.Small.Width.P2_6,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Small.Width.P3_6,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Small.Width.P4_6,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Small.Width.P5_6,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.Small.Width.P1_12,
+        width(pct(8.333333))
+),
+      style(
+        objectos.css.util.Small.Width.P2_12,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.Small.Width.P3_12,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.Small.Width.P4_12,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Small.Width.P5_12,
+        width(pct(41.666667))
+),
+      style(
+        objectos.css.util.Small.Width.P6_12,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Small.Width.P7_12,
+        width(pct(58.333333))
+),
+      style(
+        objectos.css.util.Small.Width.P8_12,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Small.Width.P9_12,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.Small.Width.P10_12,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.Small.Width.P11_12,
+        width(pct(91.666667))
+),
+      style(
+        objectos.css.util.Small.Width.FULL,
+        width(pct(100))
+),
+      style(
+        objectos.css.util.Small.Width.SCREEN,
+        width(vw(100))
+),
+      style(
+        objectos.css.util.Small.Width.MIN,
+        width(minContent)
+),
+      style(
+        objectos.css.util.Small.Width.MAX,
+        width(maxContent)
+),
+      style(
+        objectos.css.util.Small.Width.FIT,
+        width(fitContent)
+));
+  }
+
   private void MediumDisplay() {
     media(
       minWidth(px(768)),
@@ -3422,6 +6496,1248 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Medium.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void MediumMargin() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.Margin.AUTO,
+        margin(auto)
+),
+      style(
+        objectos.css.util.Medium.Margin.PX,
+        margin(px(1))
+),
+      style(
+        objectos.css.util.Medium.Margin.V0,
+        margin($0)
+),
+      style(
+        objectos.css.util.Medium.Margin.V0_5,
+        margin(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.Margin.V1,
+        margin(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.Margin.V1_5,
+        margin(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.Margin.V2,
+        margin(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.Margin.V2_5,
+        margin(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.Margin.V3,
+        margin(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.Margin.V3_5,
+        margin(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.Margin.V4,
+        margin(rem(1))
+),
+      style(
+        objectos.css.util.Medium.Margin.V5,
+        margin(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.Margin.V6,
+        margin(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.Margin.V7,
+        margin(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.Margin.V8,
+        margin(rem(2))
+),
+      style(
+        objectos.css.util.Medium.Margin.V9,
+        margin(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.Margin.V10,
+        margin(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.Margin.V11,
+        margin(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.Margin.V12,
+        margin(rem(3))
+),
+      style(
+        objectos.css.util.Medium.Margin.V14,
+        margin(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.Margin.V16,
+        margin(rem(4))
+),
+      style(
+        objectos.css.util.Medium.Margin.V20,
+        margin(rem(5))
+),
+      style(
+        objectos.css.util.Medium.Margin.V24,
+        margin(rem(6))
+),
+      style(
+        objectos.css.util.Medium.Margin.V28,
+        margin(rem(7))
+),
+      style(
+        objectos.css.util.Medium.Margin.V32,
+        margin(rem(8))
+),
+      style(
+        objectos.css.util.Medium.Margin.V36,
+        margin(rem(9))
+),
+      style(
+        objectos.css.util.Medium.Margin.V40,
+        margin(rem(10))
+),
+      style(
+        objectos.css.util.Medium.Margin.V44,
+        margin(rem(11))
+),
+      style(
+        objectos.css.util.Medium.Margin.V48,
+        margin(rem(12))
+),
+      style(
+        objectos.css.util.Medium.Margin.V52,
+        margin(rem(13))
+),
+      style(
+        objectos.css.util.Medium.Margin.V56,
+        margin(rem(14))
+),
+      style(
+        objectos.css.util.Medium.Margin.V60,
+        margin(rem(15))
+),
+      style(
+        objectos.css.util.Medium.Margin.V64,
+        margin(rem(16))
+),
+      style(
+        objectos.css.util.Medium.Margin.V68,
+        margin(rem(17))
+),
+      style(
+        objectos.css.util.Medium.Margin.V72,
+        margin(rem(18))
+),
+      style(
+        objectos.css.util.Medium.Margin.V80,
+        margin(rem(20))
+),
+      style(
+        objectos.css.util.Medium.Margin.V96,
+        margin(rem(24))
+));
+  }
+
+  private void MediumMarginX() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MarginX.AUTO,
+        marginRight(auto),
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.Medium.MarginX.PX,
+        marginRight(px(1)),
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V0,
+        marginRight($0),
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.Medium.MarginX.V0_5,
+        marginRight(rem(0.125)),
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V1,
+        marginRight(rem(0.25)),
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V1_5,
+        marginRight(rem(0.375)),
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V2,
+        marginRight(rem(0.5)),
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V2_5,
+        marginRight(rem(0.625)),
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V3,
+        marginRight(rem(0.75)),
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V3_5,
+        marginRight(rem(0.875)),
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V4,
+        marginRight(rem(1)),
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V5,
+        marginRight(rem(1.25)),
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V6,
+        marginRight(rem(1.5)),
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V7,
+        marginRight(rem(1.75)),
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V8,
+        marginRight(rem(2)),
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V9,
+        marginRight(rem(2.25)),
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V10,
+        marginRight(rem(2.5)),
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V11,
+        marginRight(rem(2.75)),
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V12,
+        marginRight(rem(3)),
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V14,
+        marginRight(rem(3.5)),
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V16,
+        marginRight(rem(4)),
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V20,
+        marginRight(rem(5)),
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V24,
+        marginRight(rem(6)),
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V28,
+        marginRight(rem(7)),
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V32,
+        marginRight(rem(8)),
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V36,
+        marginRight(rem(9)),
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V40,
+        marginRight(rem(10)),
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V44,
+        marginRight(rem(11)),
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V48,
+        marginRight(rem(12)),
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V52,
+        marginRight(rem(13)),
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V56,
+        marginRight(rem(14)),
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V60,
+        marginRight(rem(15)),
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V64,
+        marginRight(rem(16)),
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V68,
+        marginRight(rem(17)),
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V72,
+        marginRight(rem(18)),
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V80,
+        marginRight(rem(20)),
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.Medium.MarginX.V96,
+        marginRight(rem(24)),
+        marginLeft(rem(24))
+));
+  }
+
+  private void MediumMarginY() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MarginY.AUTO,
+        marginTop(auto),
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.Medium.MarginY.PX,
+        marginTop(px(1)),
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V0,
+        marginTop($0),
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.Medium.MarginY.V0_5,
+        marginTop(rem(0.125)),
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V1,
+        marginTop(rem(0.25)),
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V1_5,
+        marginTop(rem(0.375)),
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V2,
+        marginTop(rem(0.5)),
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V2_5,
+        marginTop(rem(0.625)),
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V3,
+        marginTop(rem(0.75)),
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V3_5,
+        marginTop(rem(0.875)),
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V4,
+        marginTop(rem(1)),
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V5,
+        marginTop(rem(1.25)),
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V6,
+        marginTop(rem(1.5)),
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V7,
+        marginTop(rem(1.75)),
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V8,
+        marginTop(rem(2)),
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V9,
+        marginTop(rem(2.25)),
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V10,
+        marginTop(rem(2.5)),
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V11,
+        marginTop(rem(2.75)),
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V12,
+        marginTop(rem(3)),
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V14,
+        marginTop(rem(3.5)),
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V16,
+        marginTop(rem(4)),
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V20,
+        marginTop(rem(5)),
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V24,
+        marginTop(rem(6)),
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V28,
+        marginTop(rem(7)),
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V32,
+        marginTop(rem(8)),
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V36,
+        marginTop(rem(9)),
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V40,
+        marginTop(rem(10)),
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V44,
+        marginTop(rem(11)),
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V48,
+        marginTop(rem(12)),
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V52,
+        marginTop(rem(13)),
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V56,
+        marginTop(rem(14)),
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V60,
+        marginTop(rem(15)),
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V64,
+        marginTop(rem(16)),
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V68,
+        marginTop(rem(17)),
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V72,
+        marginTop(rem(18)),
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V80,
+        marginTop(rem(20)),
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.Medium.MarginY.V96,
+        marginTop(rem(24)),
+        marginBottom(rem(24))
+));
+  }
+
+  private void MediumMarginTop() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MarginTop.AUTO,
+        marginTop(auto)
+),
+      style(
+        objectos.css.util.Medium.MarginTop.PX,
+        marginTop(px(1))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V0,
+        marginTop($0)
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V0_5,
+        marginTop(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V1,
+        marginTop(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V1_5,
+        marginTop(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V2,
+        marginTop(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V2_5,
+        marginTop(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V3,
+        marginTop(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V3_5,
+        marginTop(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V4,
+        marginTop(rem(1))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V5,
+        marginTop(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V6,
+        marginTop(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V7,
+        marginTop(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V8,
+        marginTop(rem(2))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V9,
+        marginTop(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V10,
+        marginTop(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V11,
+        marginTop(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V12,
+        marginTop(rem(3))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V14,
+        marginTop(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V16,
+        marginTop(rem(4))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V20,
+        marginTop(rem(5))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V24,
+        marginTop(rem(6))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V28,
+        marginTop(rem(7))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V32,
+        marginTop(rem(8))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V36,
+        marginTop(rem(9))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V40,
+        marginTop(rem(10))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V44,
+        marginTop(rem(11))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V48,
+        marginTop(rem(12))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V52,
+        marginTop(rem(13))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V56,
+        marginTop(rem(14))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V60,
+        marginTop(rem(15))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V64,
+        marginTop(rem(16))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V68,
+        marginTop(rem(17))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V72,
+        marginTop(rem(18))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V80,
+        marginTop(rem(20))
+),
+      style(
+        objectos.css.util.Medium.MarginTop.V96,
+        marginTop(rem(24))
+));
+  }
+
+  private void MediumMarginRight() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MarginRight.AUTO,
+        marginRight(auto)
+),
+      style(
+        objectos.css.util.Medium.MarginRight.PX,
+        marginRight(px(1))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V0,
+        marginRight($0)
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V0_5,
+        marginRight(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V1,
+        marginRight(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V1_5,
+        marginRight(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V2,
+        marginRight(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V2_5,
+        marginRight(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V3,
+        marginRight(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V3_5,
+        marginRight(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V4,
+        marginRight(rem(1))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V5,
+        marginRight(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V6,
+        marginRight(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V7,
+        marginRight(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V8,
+        marginRight(rem(2))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V9,
+        marginRight(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V10,
+        marginRight(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V11,
+        marginRight(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V12,
+        marginRight(rem(3))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V14,
+        marginRight(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V16,
+        marginRight(rem(4))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V20,
+        marginRight(rem(5))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V24,
+        marginRight(rem(6))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V28,
+        marginRight(rem(7))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V32,
+        marginRight(rem(8))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V36,
+        marginRight(rem(9))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V40,
+        marginRight(rem(10))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V44,
+        marginRight(rem(11))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V48,
+        marginRight(rem(12))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V52,
+        marginRight(rem(13))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V56,
+        marginRight(rem(14))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V60,
+        marginRight(rem(15))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V64,
+        marginRight(rem(16))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V68,
+        marginRight(rem(17))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V72,
+        marginRight(rem(18))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V80,
+        marginRight(rem(20))
+),
+      style(
+        objectos.css.util.Medium.MarginRight.V96,
+        marginRight(rem(24))
+));
+  }
+
+  private void MediumMarginBottom() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MarginBottom.AUTO,
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.PX,
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V0,
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V0_5,
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V1,
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V1_5,
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V2,
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V2_5,
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V3,
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V3_5,
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V4,
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V5,
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V6,
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V7,
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V8,
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V9,
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V10,
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V11,
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V12,
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V14,
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V16,
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V20,
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V24,
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V28,
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V32,
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V36,
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V40,
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V44,
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V48,
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V52,
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V56,
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V60,
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V64,
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V68,
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V72,
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V80,
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.Medium.MarginBottom.V96,
+        marginBottom(rem(24))
+));
+  }
+
+  private void MediumMarginLeft() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MarginLeft.AUTO,
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.PX,
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V0,
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V0_5,
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V1,
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V1_5,
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V2,
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V2_5,
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V3,
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V3_5,
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V4,
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V5,
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V6,
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V7,
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V8,
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V9,
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V10,
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V11,
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V12,
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V14,
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V16,
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V20,
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V24,
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V28,
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V32,
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V36,
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V40,
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V44,
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V48,
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V52,
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V56,
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V60,
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V64,
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V68,
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V72,
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V80,
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.Medium.MarginLeft.V96,
+        marginLeft(rem(24))
+));
+  }
+
+  private void MediumMaxWidth() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.MaxWidth.V0,
+        maxWidth($0)
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.NONE,
+        maxWidth(none)
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_SMALL,
+        maxWidth(rem(20))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.SMALL,
+        maxWidth(rem(24))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.MEDIUM,
+        maxWidth(rem(28))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.LARGE,
+        maxWidth(rem(32))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_LARGE,
+        maxWidth(rem(36))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_LARGE2,
+        maxWidth(rem(42))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_LARGE3,
+        maxWidth(rem(48))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_LARGE4,
+        maxWidth(rem(56))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_LARGE5,
+        maxWidth(rem(64))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_LARGE6,
+        maxWidth(rem(72))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.X_LARGE7,
+        maxWidth(rem(80))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.FULL,
+        maxWidth(pct(100))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.MIN,
+        maxWidth(minContent)
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.MAX,
+        maxWidth(maxContent)
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.FIT,
+        maxWidth(fitContent)
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.PROSE,
+        maxWidth(ch(65))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.SCREEN_SMALL,
+        maxWidth(px(640))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.SCREEN_MEDIUM,
+        maxWidth(px(768))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.SCREEN_LARGE,
+        maxWidth(px(1024))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.SCREEN_X_LARGE,
+        maxWidth(px(1280))
+),
+      style(
+        objectos.css.util.Medium.MaxWidth.SCREEN_X_LARGE2,
+        maxWidth(px(1536))
 ));
   }
 
@@ -4557,6 +8873,283 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumWidth() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.Width.PX,
+        width(px(1))
+),
+      style(
+        objectos.css.util.Medium.Width.V0,
+        width($0)
+),
+      style(
+        objectos.css.util.Medium.Width.V0_5,
+        width(rem(0.125))
+),
+      style(
+        objectos.css.util.Medium.Width.V1,
+        width(rem(0.25))
+),
+      style(
+        objectos.css.util.Medium.Width.V1_5,
+        width(rem(0.375))
+),
+      style(
+        objectos.css.util.Medium.Width.V2,
+        width(rem(0.5))
+),
+      style(
+        objectos.css.util.Medium.Width.V2_5,
+        width(rem(0.625))
+),
+      style(
+        objectos.css.util.Medium.Width.V3,
+        width(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.Width.V3_5,
+        width(rem(0.875))
+),
+      style(
+        objectos.css.util.Medium.Width.V4,
+        width(rem(1))
+),
+      style(
+        objectos.css.util.Medium.Width.V5,
+        width(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.Width.V6,
+        width(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.Width.V7,
+        width(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.Width.V8,
+        width(rem(2))
+),
+      style(
+        objectos.css.util.Medium.Width.V9,
+        width(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.Width.V10,
+        width(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.Width.V11,
+        width(rem(2.75))
+),
+      style(
+        objectos.css.util.Medium.Width.V12,
+        width(rem(3))
+),
+      style(
+        objectos.css.util.Medium.Width.V14,
+        width(rem(3.5))
+),
+      style(
+        objectos.css.util.Medium.Width.V16,
+        width(rem(4))
+),
+      style(
+        objectos.css.util.Medium.Width.V20,
+        width(rem(5))
+),
+      style(
+        objectos.css.util.Medium.Width.V24,
+        width(rem(6))
+),
+      style(
+        objectos.css.util.Medium.Width.V28,
+        width(rem(7))
+),
+      style(
+        objectos.css.util.Medium.Width.V32,
+        width(rem(8))
+),
+      style(
+        objectos.css.util.Medium.Width.V36,
+        width(rem(9))
+),
+      style(
+        objectos.css.util.Medium.Width.V40,
+        width(rem(10))
+),
+      style(
+        objectos.css.util.Medium.Width.V44,
+        width(rem(11))
+),
+      style(
+        objectos.css.util.Medium.Width.V48,
+        width(rem(12))
+),
+      style(
+        objectos.css.util.Medium.Width.V52,
+        width(rem(13))
+),
+      style(
+        objectos.css.util.Medium.Width.V56,
+        width(rem(14))
+),
+      style(
+        objectos.css.util.Medium.Width.V60,
+        width(rem(15))
+),
+      style(
+        objectos.css.util.Medium.Width.V64,
+        width(rem(16))
+),
+      style(
+        objectos.css.util.Medium.Width.V68,
+        width(rem(17))
+),
+      style(
+        objectos.css.util.Medium.Width.V72,
+        width(rem(18))
+),
+      style(
+        objectos.css.util.Medium.Width.V80,
+        width(rem(20))
+),
+      style(
+        objectos.css.util.Medium.Width.V96,
+        width(rem(24))
+),
+      style(
+        objectos.css.util.Medium.Width.AUTO,
+        width(auto)
+),
+      style(
+        objectos.css.util.Medium.Width.P1_2,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Medium.Width.P1_3,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Medium.Width.P2_3,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Medium.Width.P1_4,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.Medium.Width.P2_4,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Medium.Width.P3_4,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.Medium.Width.P1_5,
+        width(pct(20))
+),
+      style(
+        objectos.css.util.Medium.Width.P2_5,
+        width(pct(40))
+),
+      style(
+        objectos.css.util.Medium.Width.P3_5,
+        width(pct(60))
+),
+      style(
+        objectos.css.util.Medium.Width.P4_5,
+        width(pct(80))
+),
+      style(
+        objectos.css.util.Medium.Width.P1_6,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.Medium.Width.P2_6,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Medium.Width.P3_6,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Medium.Width.P4_6,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Medium.Width.P5_6,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.Medium.Width.P1_12,
+        width(pct(8.333333))
+),
+      style(
+        objectos.css.util.Medium.Width.P2_12,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.Medium.Width.P3_12,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.Medium.Width.P4_12,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Medium.Width.P5_12,
+        width(pct(41.666667))
+),
+      style(
+        objectos.css.util.Medium.Width.P6_12,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Medium.Width.P7_12,
+        width(pct(58.333333))
+),
+      style(
+        objectos.css.util.Medium.Width.P8_12,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Medium.Width.P9_12,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.Medium.Width.P10_12,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.Medium.Width.P11_12,
+        width(pct(91.666667))
+),
+      style(
+        objectos.css.util.Medium.Width.FULL,
+        width(pct(100))
+),
+      style(
+        objectos.css.util.Medium.Width.SCREEN,
+        width(vw(100))
+),
+      style(
+        objectos.css.util.Medium.Width.MIN,
+        width(minContent)
+),
+      style(
+        objectos.css.util.Medium.Width.MAX,
+        width(maxContent)
+),
+      style(
+        objectos.css.util.Medium.Width.FIT,
+        width(fitContent)
+));
+  }
+
   private void LargeDisplay() {
     media(
       minWidth(px(1024)),
@@ -4910,6 +9503,1248 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Large.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void LargeMargin() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.Margin.AUTO,
+        margin(auto)
+),
+      style(
+        objectos.css.util.Large.Margin.PX,
+        margin(px(1))
+),
+      style(
+        objectos.css.util.Large.Margin.V0,
+        margin($0)
+),
+      style(
+        objectos.css.util.Large.Margin.V0_5,
+        margin(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.Margin.V1,
+        margin(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.Margin.V1_5,
+        margin(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.Margin.V2,
+        margin(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.Margin.V2_5,
+        margin(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.Margin.V3,
+        margin(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.Margin.V3_5,
+        margin(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.Margin.V4,
+        margin(rem(1))
+),
+      style(
+        objectos.css.util.Large.Margin.V5,
+        margin(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.Margin.V6,
+        margin(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.Margin.V7,
+        margin(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.Margin.V8,
+        margin(rem(2))
+),
+      style(
+        objectos.css.util.Large.Margin.V9,
+        margin(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.Margin.V10,
+        margin(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.Margin.V11,
+        margin(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.Margin.V12,
+        margin(rem(3))
+),
+      style(
+        objectos.css.util.Large.Margin.V14,
+        margin(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.Margin.V16,
+        margin(rem(4))
+),
+      style(
+        objectos.css.util.Large.Margin.V20,
+        margin(rem(5))
+),
+      style(
+        objectos.css.util.Large.Margin.V24,
+        margin(rem(6))
+),
+      style(
+        objectos.css.util.Large.Margin.V28,
+        margin(rem(7))
+),
+      style(
+        objectos.css.util.Large.Margin.V32,
+        margin(rem(8))
+),
+      style(
+        objectos.css.util.Large.Margin.V36,
+        margin(rem(9))
+),
+      style(
+        objectos.css.util.Large.Margin.V40,
+        margin(rem(10))
+),
+      style(
+        objectos.css.util.Large.Margin.V44,
+        margin(rem(11))
+),
+      style(
+        objectos.css.util.Large.Margin.V48,
+        margin(rem(12))
+),
+      style(
+        objectos.css.util.Large.Margin.V52,
+        margin(rem(13))
+),
+      style(
+        objectos.css.util.Large.Margin.V56,
+        margin(rem(14))
+),
+      style(
+        objectos.css.util.Large.Margin.V60,
+        margin(rem(15))
+),
+      style(
+        objectos.css.util.Large.Margin.V64,
+        margin(rem(16))
+),
+      style(
+        objectos.css.util.Large.Margin.V68,
+        margin(rem(17))
+),
+      style(
+        objectos.css.util.Large.Margin.V72,
+        margin(rem(18))
+),
+      style(
+        objectos.css.util.Large.Margin.V80,
+        margin(rem(20))
+),
+      style(
+        objectos.css.util.Large.Margin.V96,
+        margin(rem(24))
+));
+  }
+
+  private void LargeMarginX() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MarginX.AUTO,
+        marginRight(auto),
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.Large.MarginX.PX,
+        marginRight(px(1)),
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.Large.MarginX.V0,
+        marginRight($0),
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.Large.MarginX.V0_5,
+        marginRight(rem(0.125)),
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.MarginX.V1,
+        marginRight(rem(0.25)),
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.MarginX.V1_5,
+        marginRight(rem(0.375)),
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.MarginX.V2,
+        marginRight(rem(0.5)),
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.MarginX.V2_5,
+        marginRight(rem(0.625)),
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.MarginX.V3,
+        marginRight(rem(0.75)),
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.MarginX.V3_5,
+        marginRight(rem(0.875)),
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.MarginX.V4,
+        marginRight(rem(1)),
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.Large.MarginX.V5,
+        marginRight(rem(1.25)),
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.MarginX.V6,
+        marginRight(rem(1.5)),
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.MarginX.V7,
+        marginRight(rem(1.75)),
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.MarginX.V8,
+        marginRight(rem(2)),
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.Large.MarginX.V9,
+        marginRight(rem(2.25)),
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.MarginX.V10,
+        marginRight(rem(2.5)),
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.MarginX.V11,
+        marginRight(rem(2.75)),
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.MarginX.V12,
+        marginRight(rem(3)),
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.Large.MarginX.V14,
+        marginRight(rem(3.5)),
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.MarginX.V16,
+        marginRight(rem(4)),
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.Large.MarginX.V20,
+        marginRight(rem(5)),
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.Large.MarginX.V24,
+        marginRight(rem(6)),
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.Large.MarginX.V28,
+        marginRight(rem(7)),
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.Large.MarginX.V32,
+        marginRight(rem(8)),
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.Large.MarginX.V36,
+        marginRight(rem(9)),
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.Large.MarginX.V40,
+        marginRight(rem(10)),
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.Large.MarginX.V44,
+        marginRight(rem(11)),
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.Large.MarginX.V48,
+        marginRight(rem(12)),
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.Large.MarginX.V52,
+        marginRight(rem(13)),
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.Large.MarginX.V56,
+        marginRight(rem(14)),
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.Large.MarginX.V60,
+        marginRight(rem(15)),
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.Large.MarginX.V64,
+        marginRight(rem(16)),
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.Large.MarginX.V68,
+        marginRight(rem(17)),
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.Large.MarginX.V72,
+        marginRight(rem(18)),
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.Large.MarginX.V80,
+        marginRight(rem(20)),
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.Large.MarginX.V96,
+        marginRight(rem(24)),
+        marginLeft(rem(24))
+));
+  }
+
+  private void LargeMarginY() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MarginY.AUTO,
+        marginTop(auto),
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.Large.MarginY.PX,
+        marginTop(px(1)),
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.Large.MarginY.V0,
+        marginTop($0),
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.Large.MarginY.V0_5,
+        marginTop(rem(0.125)),
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.MarginY.V1,
+        marginTop(rem(0.25)),
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.MarginY.V1_5,
+        marginTop(rem(0.375)),
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.MarginY.V2,
+        marginTop(rem(0.5)),
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.MarginY.V2_5,
+        marginTop(rem(0.625)),
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.MarginY.V3,
+        marginTop(rem(0.75)),
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.MarginY.V3_5,
+        marginTop(rem(0.875)),
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.MarginY.V4,
+        marginTop(rem(1)),
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.Large.MarginY.V5,
+        marginTop(rem(1.25)),
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.MarginY.V6,
+        marginTop(rem(1.5)),
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.MarginY.V7,
+        marginTop(rem(1.75)),
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.MarginY.V8,
+        marginTop(rem(2)),
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.Large.MarginY.V9,
+        marginTop(rem(2.25)),
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.MarginY.V10,
+        marginTop(rem(2.5)),
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.MarginY.V11,
+        marginTop(rem(2.75)),
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.MarginY.V12,
+        marginTop(rem(3)),
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.Large.MarginY.V14,
+        marginTop(rem(3.5)),
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.MarginY.V16,
+        marginTop(rem(4)),
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.Large.MarginY.V20,
+        marginTop(rem(5)),
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.Large.MarginY.V24,
+        marginTop(rem(6)),
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.Large.MarginY.V28,
+        marginTop(rem(7)),
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.Large.MarginY.V32,
+        marginTop(rem(8)),
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.Large.MarginY.V36,
+        marginTop(rem(9)),
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.Large.MarginY.V40,
+        marginTop(rem(10)),
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.Large.MarginY.V44,
+        marginTop(rem(11)),
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.Large.MarginY.V48,
+        marginTop(rem(12)),
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.Large.MarginY.V52,
+        marginTop(rem(13)),
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.Large.MarginY.V56,
+        marginTop(rem(14)),
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.Large.MarginY.V60,
+        marginTop(rem(15)),
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.Large.MarginY.V64,
+        marginTop(rem(16)),
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.Large.MarginY.V68,
+        marginTop(rem(17)),
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.Large.MarginY.V72,
+        marginTop(rem(18)),
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.Large.MarginY.V80,
+        marginTop(rem(20)),
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.Large.MarginY.V96,
+        marginTop(rem(24)),
+        marginBottom(rem(24))
+));
+  }
+
+  private void LargeMarginTop() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MarginTop.AUTO,
+        marginTop(auto)
+),
+      style(
+        objectos.css.util.Large.MarginTop.PX,
+        marginTop(px(1))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V0,
+        marginTop($0)
+),
+      style(
+        objectos.css.util.Large.MarginTop.V0_5,
+        marginTop(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V1,
+        marginTop(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V1_5,
+        marginTop(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V2,
+        marginTop(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V2_5,
+        marginTop(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V3,
+        marginTop(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V3_5,
+        marginTop(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V4,
+        marginTop(rem(1))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V5,
+        marginTop(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V6,
+        marginTop(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V7,
+        marginTop(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V8,
+        marginTop(rem(2))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V9,
+        marginTop(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V10,
+        marginTop(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V11,
+        marginTop(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V12,
+        marginTop(rem(3))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V14,
+        marginTop(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V16,
+        marginTop(rem(4))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V20,
+        marginTop(rem(5))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V24,
+        marginTop(rem(6))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V28,
+        marginTop(rem(7))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V32,
+        marginTop(rem(8))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V36,
+        marginTop(rem(9))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V40,
+        marginTop(rem(10))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V44,
+        marginTop(rem(11))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V48,
+        marginTop(rem(12))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V52,
+        marginTop(rem(13))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V56,
+        marginTop(rem(14))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V60,
+        marginTop(rem(15))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V64,
+        marginTop(rem(16))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V68,
+        marginTop(rem(17))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V72,
+        marginTop(rem(18))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V80,
+        marginTop(rem(20))
+),
+      style(
+        objectos.css.util.Large.MarginTop.V96,
+        marginTop(rem(24))
+));
+  }
+
+  private void LargeMarginRight() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MarginRight.AUTO,
+        marginRight(auto)
+),
+      style(
+        objectos.css.util.Large.MarginRight.PX,
+        marginRight(px(1))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V0,
+        marginRight($0)
+),
+      style(
+        objectos.css.util.Large.MarginRight.V0_5,
+        marginRight(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V1,
+        marginRight(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V1_5,
+        marginRight(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V2,
+        marginRight(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V2_5,
+        marginRight(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V3,
+        marginRight(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V3_5,
+        marginRight(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V4,
+        marginRight(rem(1))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V5,
+        marginRight(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V6,
+        marginRight(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V7,
+        marginRight(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V8,
+        marginRight(rem(2))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V9,
+        marginRight(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V10,
+        marginRight(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V11,
+        marginRight(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V12,
+        marginRight(rem(3))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V14,
+        marginRight(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V16,
+        marginRight(rem(4))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V20,
+        marginRight(rem(5))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V24,
+        marginRight(rem(6))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V28,
+        marginRight(rem(7))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V32,
+        marginRight(rem(8))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V36,
+        marginRight(rem(9))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V40,
+        marginRight(rem(10))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V44,
+        marginRight(rem(11))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V48,
+        marginRight(rem(12))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V52,
+        marginRight(rem(13))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V56,
+        marginRight(rem(14))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V60,
+        marginRight(rem(15))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V64,
+        marginRight(rem(16))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V68,
+        marginRight(rem(17))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V72,
+        marginRight(rem(18))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V80,
+        marginRight(rem(20))
+),
+      style(
+        objectos.css.util.Large.MarginRight.V96,
+        marginRight(rem(24))
+));
+  }
+
+  private void LargeMarginBottom() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MarginBottom.AUTO,
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.Large.MarginBottom.PX,
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V0,
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V0_5,
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V1,
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V1_5,
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V2,
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V2_5,
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V3,
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V3_5,
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V4,
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V5,
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V6,
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V7,
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V8,
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V9,
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V10,
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V11,
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V12,
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V14,
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V16,
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V20,
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V24,
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V28,
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V32,
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V36,
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V40,
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V44,
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V48,
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V52,
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V56,
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V60,
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V64,
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V68,
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V72,
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V80,
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.Large.MarginBottom.V96,
+        marginBottom(rem(24))
+));
+  }
+
+  private void LargeMarginLeft() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MarginLeft.AUTO,
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.Large.MarginLeft.PX,
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V0,
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V0_5,
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V1,
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V1_5,
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V2,
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V2_5,
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V3,
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V3_5,
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V4,
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V5,
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V6,
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V7,
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V8,
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V9,
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V10,
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V11,
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V12,
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V14,
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V16,
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V20,
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V24,
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V28,
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V32,
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V36,
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V40,
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V44,
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V48,
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V52,
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V56,
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V60,
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V64,
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V68,
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V72,
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V80,
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.Large.MarginLeft.V96,
+        marginLeft(rem(24))
+));
+  }
+
+  private void LargeMaxWidth() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.MaxWidth.V0,
+        maxWidth($0)
+),
+      style(
+        objectos.css.util.Large.MaxWidth.NONE,
+        maxWidth(none)
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_SMALL,
+        maxWidth(rem(20))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.SMALL,
+        maxWidth(rem(24))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.MEDIUM,
+        maxWidth(rem(28))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.LARGE,
+        maxWidth(rem(32))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_LARGE,
+        maxWidth(rem(36))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_LARGE2,
+        maxWidth(rem(42))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_LARGE3,
+        maxWidth(rem(48))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_LARGE4,
+        maxWidth(rem(56))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_LARGE5,
+        maxWidth(rem(64))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_LARGE6,
+        maxWidth(rem(72))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.X_LARGE7,
+        maxWidth(rem(80))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.FULL,
+        maxWidth(pct(100))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.MIN,
+        maxWidth(minContent)
+),
+      style(
+        objectos.css.util.Large.MaxWidth.MAX,
+        maxWidth(maxContent)
+),
+      style(
+        objectos.css.util.Large.MaxWidth.FIT,
+        maxWidth(fitContent)
+),
+      style(
+        objectos.css.util.Large.MaxWidth.PROSE,
+        maxWidth(ch(65))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.SCREEN_SMALL,
+        maxWidth(px(640))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.SCREEN_MEDIUM,
+        maxWidth(px(768))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.SCREEN_LARGE,
+        maxWidth(px(1024))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.SCREEN_X_LARGE,
+        maxWidth(px(1280))
+),
+      style(
+        objectos.css.util.Large.MaxWidth.SCREEN_X_LARGE2,
+        maxWidth(px(1536))
 ));
   }
 
@@ -6045,6 +11880,283 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void LargeWidth() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.Width.PX,
+        width(px(1))
+),
+      style(
+        objectos.css.util.Large.Width.V0,
+        width($0)
+),
+      style(
+        objectos.css.util.Large.Width.V0_5,
+        width(rem(0.125))
+),
+      style(
+        objectos.css.util.Large.Width.V1,
+        width(rem(0.25))
+),
+      style(
+        objectos.css.util.Large.Width.V1_5,
+        width(rem(0.375))
+),
+      style(
+        objectos.css.util.Large.Width.V2,
+        width(rem(0.5))
+),
+      style(
+        objectos.css.util.Large.Width.V2_5,
+        width(rem(0.625))
+),
+      style(
+        objectos.css.util.Large.Width.V3,
+        width(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.Width.V3_5,
+        width(rem(0.875))
+),
+      style(
+        objectos.css.util.Large.Width.V4,
+        width(rem(1))
+),
+      style(
+        objectos.css.util.Large.Width.V5,
+        width(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.Width.V6,
+        width(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.Width.V7,
+        width(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.Width.V8,
+        width(rem(2))
+),
+      style(
+        objectos.css.util.Large.Width.V9,
+        width(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.Width.V10,
+        width(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.Width.V11,
+        width(rem(2.75))
+),
+      style(
+        objectos.css.util.Large.Width.V12,
+        width(rem(3))
+),
+      style(
+        objectos.css.util.Large.Width.V14,
+        width(rem(3.5))
+),
+      style(
+        objectos.css.util.Large.Width.V16,
+        width(rem(4))
+),
+      style(
+        objectos.css.util.Large.Width.V20,
+        width(rem(5))
+),
+      style(
+        objectos.css.util.Large.Width.V24,
+        width(rem(6))
+),
+      style(
+        objectos.css.util.Large.Width.V28,
+        width(rem(7))
+),
+      style(
+        objectos.css.util.Large.Width.V32,
+        width(rem(8))
+),
+      style(
+        objectos.css.util.Large.Width.V36,
+        width(rem(9))
+),
+      style(
+        objectos.css.util.Large.Width.V40,
+        width(rem(10))
+),
+      style(
+        objectos.css.util.Large.Width.V44,
+        width(rem(11))
+),
+      style(
+        objectos.css.util.Large.Width.V48,
+        width(rem(12))
+),
+      style(
+        objectos.css.util.Large.Width.V52,
+        width(rem(13))
+),
+      style(
+        objectos.css.util.Large.Width.V56,
+        width(rem(14))
+),
+      style(
+        objectos.css.util.Large.Width.V60,
+        width(rem(15))
+),
+      style(
+        objectos.css.util.Large.Width.V64,
+        width(rem(16))
+),
+      style(
+        objectos.css.util.Large.Width.V68,
+        width(rem(17))
+),
+      style(
+        objectos.css.util.Large.Width.V72,
+        width(rem(18))
+),
+      style(
+        objectos.css.util.Large.Width.V80,
+        width(rem(20))
+),
+      style(
+        objectos.css.util.Large.Width.V96,
+        width(rem(24))
+),
+      style(
+        objectos.css.util.Large.Width.AUTO,
+        width(auto)
+),
+      style(
+        objectos.css.util.Large.Width.P1_2,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Large.Width.P1_3,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Large.Width.P2_3,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Large.Width.P1_4,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.Large.Width.P2_4,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Large.Width.P3_4,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.Large.Width.P1_5,
+        width(pct(20))
+),
+      style(
+        objectos.css.util.Large.Width.P2_5,
+        width(pct(40))
+),
+      style(
+        objectos.css.util.Large.Width.P3_5,
+        width(pct(60))
+),
+      style(
+        objectos.css.util.Large.Width.P4_5,
+        width(pct(80))
+),
+      style(
+        objectos.css.util.Large.Width.P1_6,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.Large.Width.P2_6,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Large.Width.P3_6,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Large.Width.P4_6,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Large.Width.P5_6,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.Large.Width.P1_12,
+        width(pct(8.333333))
+),
+      style(
+        objectos.css.util.Large.Width.P2_12,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.Large.Width.P3_12,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.Large.Width.P4_12,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.Large.Width.P5_12,
+        width(pct(41.666667))
+),
+      style(
+        objectos.css.util.Large.Width.P6_12,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.Large.Width.P7_12,
+        width(pct(58.333333))
+),
+      style(
+        objectos.css.util.Large.Width.P8_12,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.Large.Width.P9_12,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.Large.Width.P10_12,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.Large.Width.P11_12,
+        width(pct(91.666667))
+),
+      style(
+        objectos.css.util.Large.Width.FULL,
+        width(pct(100))
+),
+      style(
+        objectos.css.util.Large.Width.SCREEN,
+        width(vw(100))
+),
+      style(
+        objectos.css.util.Large.Width.MIN,
+        width(minContent)
+),
+      style(
+        objectos.css.util.Large.Width.MAX,
+        width(maxContent)
+),
+      style(
+        objectos.css.util.Large.Width.FIT,
+        width(fitContent)
+));
+  }
+
   private void XLargeDisplay() {
     media(
       minWidth(px(1280)),
@@ -6398,6 +12510,1248 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void XLargeMargin() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.Margin.AUTO,
+        margin(auto)
+),
+      style(
+        objectos.css.util.XLarge.Margin.PX,
+        margin(px(1))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V0,
+        margin($0)
+),
+      style(
+        objectos.css.util.XLarge.Margin.V0_5,
+        margin(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V1,
+        margin(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V1_5,
+        margin(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V2,
+        margin(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V2_5,
+        margin(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V3,
+        margin(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V3_5,
+        margin(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V4,
+        margin(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V5,
+        margin(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V6,
+        margin(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V7,
+        margin(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V8,
+        margin(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V9,
+        margin(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V10,
+        margin(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V11,
+        margin(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V12,
+        margin(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V14,
+        margin(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V16,
+        margin(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V20,
+        margin(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V24,
+        margin(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V28,
+        margin(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V32,
+        margin(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V36,
+        margin(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V40,
+        margin(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V44,
+        margin(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V48,
+        margin(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V52,
+        margin(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V56,
+        margin(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V60,
+        margin(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V64,
+        margin(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V68,
+        margin(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V72,
+        margin(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V80,
+        margin(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.Margin.V96,
+        margin(rem(24))
+));
+  }
+
+  private void XLargeMarginX() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MarginX.AUTO,
+        marginRight(auto),
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.XLarge.MarginX.PX,
+        marginRight(px(1)),
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V0,
+        marginRight($0),
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V0_5,
+        marginRight(rem(0.125)),
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V1,
+        marginRight(rem(0.25)),
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V1_5,
+        marginRight(rem(0.375)),
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V2,
+        marginRight(rem(0.5)),
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V2_5,
+        marginRight(rem(0.625)),
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V3,
+        marginRight(rem(0.75)),
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V3_5,
+        marginRight(rem(0.875)),
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V4,
+        marginRight(rem(1)),
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V5,
+        marginRight(rem(1.25)),
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V6,
+        marginRight(rem(1.5)),
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V7,
+        marginRight(rem(1.75)),
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V8,
+        marginRight(rem(2)),
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V9,
+        marginRight(rem(2.25)),
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V10,
+        marginRight(rem(2.5)),
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V11,
+        marginRight(rem(2.75)),
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V12,
+        marginRight(rem(3)),
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V14,
+        marginRight(rem(3.5)),
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V16,
+        marginRight(rem(4)),
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V20,
+        marginRight(rem(5)),
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V24,
+        marginRight(rem(6)),
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V28,
+        marginRight(rem(7)),
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V32,
+        marginRight(rem(8)),
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V36,
+        marginRight(rem(9)),
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V40,
+        marginRight(rem(10)),
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V44,
+        marginRight(rem(11)),
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V48,
+        marginRight(rem(12)),
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V52,
+        marginRight(rem(13)),
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V56,
+        marginRight(rem(14)),
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V60,
+        marginRight(rem(15)),
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V64,
+        marginRight(rem(16)),
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V68,
+        marginRight(rem(17)),
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V72,
+        marginRight(rem(18)),
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V80,
+        marginRight(rem(20)),
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.MarginX.V96,
+        marginRight(rem(24)),
+        marginLeft(rem(24))
+));
+  }
+
+  private void XLargeMarginY() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MarginY.AUTO,
+        marginTop(auto),
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.XLarge.MarginY.PX,
+        marginTop(px(1)),
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V0,
+        marginTop($0),
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V0_5,
+        marginTop(rem(0.125)),
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V1,
+        marginTop(rem(0.25)),
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V1_5,
+        marginTop(rem(0.375)),
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V2,
+        marginTop(rem(0.5)),
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V2_5,
+        marginTop(rem(0.625)),
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V3,
+        marginTop(rem(0.75)),
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V3_5,
+        marginTop(rem(0.875)),
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V4,
+        marginTop(rem(1)),
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V5,
+        marginTop(rem(1.25)),
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V6,
+        marginTop(rem(1.5)),
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V7,
+        marginTop(rem(1.75)),
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V8,
+        marginTop(rem(2)),
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V9,
+        marginTop(rem(2.25)),
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V10,
+        marginTop(rem(2.5)),
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V11,
+        marginTop(rem(2.75)),
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V12,
+        marginTop(rem(3)),
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V14,
+        marginTop(rem(3.5)),
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V16,
+        marginTop(rem(4)),
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V20,
+        marginTop(rem(5)),
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V24,
+        marginTop(rem(6)),
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V28,
+        marginTop(rem(7)),
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V32,
+        marginTop(rem(8)),
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V36,
+        marginTop(rem(9)),
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V40,
+        marginTop(rem(10)),
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V44,
+        marginTop(rem(11)),
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V48,
+        marginTop(rem(12)),
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V52,
+        marginTop(rem(13)),
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V56,
+        marginTop(rem(14)),
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V60,
+        marginTop(rem(15)),
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V64,
+        marginTop(rem(16)),
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V68,
+        marginTop(rem(17)),
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V72,
+        marginTop(rem(18)),
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V80,
+        marginTop(rem(20)),
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.MarginY.V96,
+        marginTop(rem(24)),
+        marginBottom(rem(24))
+));
+  }
+
+  private void XLargeMarginTop() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MarginTop.AUTO,
+        marginTop(auto)
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.PX,
+        marginTop(px(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V0,
+        marginTop($0)
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V0_5,
+        marginTop(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V1,
+        marginTop(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V1_5,
+        marginTop(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V2,
+        marginTop(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V2_5,
+        marginTop(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V3,
+        marginTop(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V3_5,
+        marginTop(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V4,
+        marginTop(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V5,
+        marginTop(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V6,
+        marginTop(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V7,
+        marginTop(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V8,
+        marginTop(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V9,
+        marginTop(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V10,
+        marginTop(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V11,
+        marginTop(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V12,
+        marginTop(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V14,
+        marginTop(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V16,
+        marginTop(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V20,
+        marginTop(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V24,
+        marginTop(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V28,
+        marginTop(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V32,
+        marginTop(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V36,
+        marginTop(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V40,
+        marginTop(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V44,
+        marginTop(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V48,
+        marginTop(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V52,
+        marginTop(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V56,
+        marginTop(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V60,
+        marginTop(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V64,
+        marginTop(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V68,
+        marginTop(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V72,
+        marginTop(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V80,
+        marginTop(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.MarginTop.V96,
+        marginTop(rem(24))
+));
+  }
+
+  private void XLargeMarginRight() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MarginRight.AUTO,
+        marginRight(auto)
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.PX,
+        marginRight(px(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V0,
+        marginRight($0)
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V0_5,
+        marginRight(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V1,
+        marginRight(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V1_5,
+        marginRight(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V2,
+        marginRight(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V2_5,
+        marginRight(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V3,
+        marginRight(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V3_5,
+        marginRight(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V4,
+        marginRight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V5,
+        marginRight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V6,
+        marginRight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V7,
+        marginRight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V8,
+        marginRight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V9,
+        marginRight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V10,
+        marginRight(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V11,
+        marginRight(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V12,
+        marginRight(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V14,
+        marginRight(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V16,
+        marginRight(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V20,
+        marginRight(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V24,
+        marginRight(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V28,
+        marginRight(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V32,
+        marginRight(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V36,
+        marginRight(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V40,
+        marginRight(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V44,
+        marginRight(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V48,
+        marginRight(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V52,
+        marginRight(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V56,
+        marginRight(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V60,
+        marginRight(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V64,
+        marginRight(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V68,
+        marginRight(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V72,
+        marginRight(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V80,
+        marginRight(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.MarginRight.V96,
+        marginRight(rem(24))
+));
+  }
+
+  private void XLargeMarginBottom() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MarginBottom.AUTO,
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.PX,
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V0,
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V0_5,
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V1,
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V1_5,
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V2,
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V2_5,
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V3,
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V3_5,
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V4,
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V5,
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V6,
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V7,
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V8,
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V9,
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V10,
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V11,
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V12,
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V14,
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V16,
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V20,
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V24,
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V28,
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V32,
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V36,
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V40,
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V44,
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V48,
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V52,
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V56,
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V60,
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V64,
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V68,
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V72,
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V80,
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.MarginBottom.V96,
+        marginBottom(rem(24))
+));
+  }
+
+  private void XLargeMarginLeft() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MarginLeft.AUTO,
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.PX,
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V0,
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V0_5,
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V1,
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V1_5,
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V2,
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V2_5,
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V3,
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V3_5,
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V4,
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V5,
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V6,
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V7,
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V8,
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V9,
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V10,
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V11,
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V12,
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V14,
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V16,
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V20,
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V24,
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V28,
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V32,
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V36,
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V40,
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V44,
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V48,
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V52,
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V56,
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V60,
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V64,
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V68,
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V72,
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V80,
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.MarginLeft.V96,
+        marginLeft(rem(24))
+));
+  }
+
+  private void XLargeMaxWidth() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.MaxWidth.V0,
+        maxWidth($0)
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.NONE,
+        maxWidth(none)
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_SMALL,
+        maxWidth(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.SMALL,
+        maxWidth(rem(24))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.MEDIUM,
+        maxWidth(rem(28))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.LARGE,
+        maxWidth(rem(32))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_LARGE,
+        maxWidth(rem(36))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_LARGE2,
+        maxWidth(rem(42))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_LARGE3,
+        maxWidth(rem(48))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_LARGE4,
+        maxWidth(rem(56))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_LARGE5,
+        maxWidth(rem(64))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_LARGE6,
+        maxWidth(rem(72))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.X_LARGE7,
+        maxWidth(rem(80))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.FULL,
+        maxWidth(pct(100))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.MIN,
+        maxWidth(minContent)
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.MAX,
+        maxWidth(maxContent)
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.FIT,
+        maxWidth(fitContent)
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.PROSE,
+        maxWidth(ch(65))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.SCREEN_SMALL,
+        maxWidth(px(640))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.SCREEN_MEDIUM,
+        maxWidth(px(768))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.SCREEN_LARGE,
+        maxWidth(px(1024))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.SCREEN_X_LARGE,
+        maxWidth(px(1280))
+),
+      style(
+        objectos.css.util.XLarge.MaxWidth.SCREEN_X_LARGE2,
+        maxWidth(px(1536))
 ));
   }
 
@@ -7533,6 +14887,283 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeWidth() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.Width.PX,
+        width(px(1))
+),
+      style(
+        objectos.css.util.XLarge.Width.V0,
+        width($0)
+),
+      style(
+        objectos.css.util.XLarge.Width.V0_5,
+        width(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge.Width.V1,
+        width(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge.Width.V1_5,
+        width(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge.Width.V2,
+        width(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge.Width.V2_5,
+        width(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge.Width.V3,
+        width(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.Width.V3_5,
+        width(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge.Width.V4,
+        width(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.Width.V5,
+        width(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.Width.V6,
+        width(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.Width.V7,
+        width(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.Width.V8,
+        width(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.Width.V9,
+        width(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.Width.V10,
+        width(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.Width.V11,
+        width(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge.Width.V12,
+        width(rem(3))
+),
+      style(
+        objectos.css.util.XLarge.Width.V14,
+        width(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge.Width.V16,
+        width(rem(4))
+),
+      style(
+        objectos.css.util.XLarge.Width.V20,
+        width(rem(5))
+),
+      style(
+        objectos.css.util.XLarge.Width.V24,
+        width(rem(6))
+),
+      style(
+        objectos.css.util.XLarge.Width.V28,
+        width(rem(7))
+),
+      style(
+        objectos.css.util.XLarge.Width.V32,
+        width(rem(8))
+),
+      style(
+        objectos.css.util.XLarge.Width.V36,
+        width(rem(9))
+),
+      style(
+        objectos.css.util.XLarge.Width.V40,
+        width(rem(10))
+),
+      style(
+        objectos.css.util.XLarge.Width.V44,
+        width(rem(11))
+),
+      style(
+        objectos.css.util.XLarge.Width.V48,
+        width(rem(12))
+),
+      style(
+        objectos.css.util.XLarge.Width.V52,
+        width(rem(13))
+),
+      style(
+        objectos.css.util.XLarge.Width.V56,
+        width(rem(14))
+),
+      style(
+        objectos.css.util.XLarge.Width.V60,
+        width(rem(15))
+),
+      style(
+        objectos.css.util.XLarge.Width.V64,
+        width(rem(16))
+),
+      style(
+        objectos.css.util.XLarge.Width.V68,
+        width(rem(17))
+),
+      style(
+        objectos.css.util.XLarge.Width.V72,
+        width(rem(18))
+),
+      style(
+        objectos.css.util.XLarge.Width.V80,
+        width(rem(20))
+),
+      style(
+        objectos.css.util.XLarge.Width.V96,
+        width(rem(24))
+),
+      style(
+        objectos.css.util.XLarge.Width.AUTO,
+        width(auto)
+),
+      style(
+        objectos.css.util.XLarge.Width.P1_2,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge.Width.P1_3,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.XLarge.Width.P2_3,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.XLarge.Width.P1_4,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.XLarge.Width.P2_4,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge.Width.P3_4,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.XLarge.Width.P1_5,
+        width(pct(20))
+),
+      style(
+        objectos.css.util.XLarge.Width.P2_5,
+        width(pct(40))
+),
+      style(
+        objectos.css.util.XLarge.Width.P3_5,
+        width(pct(60))
+),
+      style(
+        objectos.css.util.XLarge.Width.P4_5,
+        width(pct(80))
+),
+      style(
+        objectos.css.util.XLarge.Width.P1_6,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.XLarge.Width.P2_6,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.XLarge.Width.P3_6,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge.Width.P4_6,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.XLarge.Width.P5_6,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.XLarge.Width.P1_12,
+        width(pct(8.333333))
+),
+      style(
+        objectos.css.util.XLarge.Width.P2_12,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.XLarge.Width.P3_12,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.XLarge.Width.P4_12,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.XLarge.Width.P5_12,
+        width(pct(41.666667))
+),
+      style(
+        objectos.css.util.XLarge.Width.P6_12,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge.Width.P7_12,
+        width(pct(58.333333))
+),
+      style(
+        objectos.css.util.XLarge.Width.P8_12,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.XLarge.Width.P9_12,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.XLarge.Width.P10_12,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.XLarge.Width.P11_12,
+        width(pct(91.666667))
+),
+      style(
+        objectos.css.util.XLarge.Width.FULL,
+        width(pct(100))
+),
+      style(
+        objectos.css.util.XLarge.Width.SCREEN,
+        width(vw(100))
+),
+      style(
+        objectos.css.util.XLarge.Width.MIN,
+        width(minContent)
+),
+      style(
+        objectos.css.util.XLarge.Width.MAX,
+        width(maxContent)
+),
+      style(
+        objectos.css.util.XLarge.Width.FIT,
+        width(fitContent)
+));
+  }
+
   private void XLarge2Display() {
     media(
       minWidth(px(1536)),
@@ -7886,6 +15517,1248 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void XLarge2Margin() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.Margin.AUTO,
+        margin(auto)
+),
+      style(
+        objectos.css.util.XLarge2.Margin.PX,
+        margin(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V0,
+        margin($0)
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V0_5,
+        margin(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V1,
+        margin(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V1_5,
+        margin(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V2,
+        margin(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V2_5,
+        margin(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V3,
+        margin(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V3_5,
+        margin(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V4,
+        margin(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V5,
+        margin(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V6,
+        margin(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V7,
+        margin(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V8,
+        margin(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V9,
+        margin(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V10,
+        margin(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V11,
+        margin(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V12,
+        margin(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V14,
+        margin(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V16,
+        margin(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V20,
+        margin(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V24,
+        margin(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V28,
+        margin(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V32,
+        margin(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V36,
+        margin(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V40,
+        margin(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V44,
+        margin(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V48,
+        margin(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V52,
+        margin(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V56,
+        margin(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V60,
+        margin(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V64,
+        margin(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V68,
+        margin(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V72,
+        margin(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V80,
+        margin(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.Margin.V96,
+        margin(rem(24))
+));
+  }
+
+  private void XLarge2MarginX() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MarginX.AUTO,
+        marginRight(auto),
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.PX,
+        marginRight(px(1)),
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V0,
+        marginRight($0),
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V0_5,
+        marginRight(rem(0.125)),
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V1,
+        marginRight(rem(0.25)),
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V1_5,
+        marginRight(rem(0.375)),
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V2,
+        marginRight(rem(0.5)),
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V2_5,
+        marginRight(rem(0.625)),
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V3,
+        marginRight(rem(0.75)),
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V3_5,
+        marginRight(rem(0.875)),
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V4,
+        marginRight(rem(1)),
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V5,
+        marginRight(rem(1.25)),
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V6,
+        marginRight(rem(1.5)),
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V7,
+        marginRight(rem(1.75)),
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V8,
+        marginRight(rem(2)),
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V9,
+        marginRight(rem(2.25)),
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V10,
+        marginRight(rem(2.5)),
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V11,
+        marginRight(rem(2.75)),
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V12,
+        marginRight(rem(3)),
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V14,
+        marginRight(rem(3.5)),
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V16,
+        marginRight(rem(4)),
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V20,
+        marginRight(rem(5)),
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V24,
+        marginRight(rem(6)),
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V28,
+        marginRight(rem(7)),
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V32,
+        marginRight(rem(8)),
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V36,
+        marginRight(rem(9)),
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V40,
+        marginRight(rem(10)),
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V44,
+        marginRight(rem(11)),
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V48,
+        marginRight(rem(12)),
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V52,
+        marginRight(rem(13)),
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V56,
+        marginRight(rem(14)),
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V60,
+        marginRight(rem(15)),
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V64,
+        marginRight(rem(16)),
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V68,
+        marginRight(rem(17)),
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V72,
+        marginRight(rem(18)),
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V80,
+        marginRight(rem(20)),
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.MarginX.V96,
+        marginRight(rem(24)),
+        marginLeft(rem(24))
+));
+  }
+
+  private void XLarge2MarginY() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MarginY.AUTO,
+        marginTop(auto),
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.PX,
+        marginTop(px(1)),
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V0,
+        marginTop($0),
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V0_5,
+        marginTop(rem(0.125)),
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V1,
+        marginTop(rem(0.25)),
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V1_5,
+        marginTop(rem(0.375)),
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V2,
+        marginTop(rem(0.5)),
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V2_5,
+        marginTop(rem(0.625)),
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V3,
+        marginTop(rem(0.75)),
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V3_5,
+        marginTop(rem(0.875)),
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V4,
+        marginTop(rem(1)),
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V5,
+        marginTop(rem(1.25)),
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V6,
+        marginTop(rem(1.5)),
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V7,
+        marginTop(rem(1.75)),
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V8,
+        marginTop(rem(2)),
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V9,
+        marginTop(rem(2.25)),
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V10,
+        marginTop(rem(2.5)),
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V11,
+        marginTop(rem(2.75)),
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V12,
+        marginTop(rem(3)),
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V14,
+        marginTop(rem(3.5)),
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V16,
+        marginTop(rem(4)),
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V20,
+        marginTop(rem(5)),
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V24,
+        marginTop(rem(6)),
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V28,
+        marginTop(rem(7)),
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V32,
+        marginTop(rem(8)),
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V36,
+        marginTop(rem(9)),
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V40,
+        marginTop(rem(10)),
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V44,
+        marginTop(rem(11)),
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V48,
+        marginTop(rem(12)),
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V52,
+        marginTop(rem(13)),
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V56,
+        marginTop(rem(14)),
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V60,
+        marginTop(rem(15)),
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V64,
+        marginTop(rem(16)),
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V68,
+        marginTop(rem(17)),
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V72,
+        marginTop(rem(18)),
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V80,
+        marginTop(rem(20)),
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.MarginY.V96,
+        marginTop(rem(24)),
+        marginBottom(rem(24))
+));
+  }
+
+  private void XLarge2MarginTop() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MarginTop.AUTO,
+        marginTop(auto)
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.PX,
+        marginTop(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V0,
+        marginTop($0)
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V0_5,
+        marginTop(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V1,
+        marginTop(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V1_5,
+        marginTop(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V2,
+        marginTop(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V2_5,
+        marginTop(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V3,
+        marginTop(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V3_5,
+        marginTop(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V4,
+        marginTop(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V5,
+        marginTop(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V6,
+        marginTop(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V7,
+        marginTop(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V8,
+        marginTop(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V9,
+        marginTop(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V10,
+        marginTop(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V11,
+        marginTop(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V12,
+        marginTop(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V14,
+        marginTop(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V16,
+        marginTop(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V20,
+        marginTop(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V24,
+        marginTop(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V28,
+        marginTop(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V32,
+        marginTop(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V36,
+        marginTop(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V40,
+        marginTop(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V44,
+        marginTop(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V48,
+        marginTop(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V52,
+        marginTop(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V56,
+        marginTop(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V60,
+        marginTop(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V64,
+        marginTop(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V68,
+        marginTop(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V72,
+        marginTop(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V80,
+        marginTop(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.MarginTop.V96,
+        marginTop(rem(24))
+));
+  }
+
+  private void XLarge2MarginRight() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MarginRight.AUTO,
+        marginRight(auto)
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.PX,
+        marginRight(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V0,
+        marginRight($0)
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V0_5,
+        marginRight(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V1,
+        marginRight(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V1_5,
+        marginRight(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V2,
+        marginRight(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V2_5,
+        marginRight(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V3,
+        marginRight(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V3_5,
+        marginRight(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V4,
+        marginRight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V5,
+        marginRight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V6,
+        marginRight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V7,
+        marginRight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V8,
+        marginRight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V9,
+        marginRight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V10,
+        marginRight(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V11,
+        marginRight(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V12,
+        marginRight(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V14,
+        marginRight(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V16,
+        marginRight(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V20,
+        marginRight(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V24,
+        marginRight(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V28,
+        marginRight(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V32,
+        marginRight(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V36,
+        marginRight(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V40,
+        marginRight(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V44,
+        marginRight(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V48,
+        marginRight(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V52,
+        marginRight(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V56,
+        marginRight(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V60,
+        marginRight(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V64,
+        marginRight(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V68,
+        marginRight(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V72,
+        marginRight(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V80,
+        marginRight(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.MarginRight.V96,
+        marginRight(rem(24))
+));
+  }
+
+  private void XLarge2MarginBottom() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.AUTO,
+        marginBottom(auto)
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.PX,
+        marginBottom(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V0,
+        marginBottom($0)
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V0_5,
+        marginBottom(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V1,
+        marginBottom(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V1_5,
+        marginBottom(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V2,
+        marginBottom(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V2_5,
+        marginBottom(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V3,
+        marginBottom(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V3_5,
+        marginBottom(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V4,
+        marginBottom(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V5,
+        marginBottom(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V6,
+        marginBottom(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V7,
+        marginBottom(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V8,
+        marginBottom(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V9,
+        marginBottom(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V10,
+        marginBottom(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V11,
+        marginBottom(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V12,
+        marginBottom(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V14,
+        marginBottom(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V16,
+        marginBottom(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V20,
+        marginBottom(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V24,
+        marginBottom(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V28,
+        marginBottom(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V32,
+        marginBottom(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V36,
+        marginBottom(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V40,
+        marginBottom(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V44,
+        marginBottom(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V48,
+        marginBottom(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V52,
+        marginBottom(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V56,
+        marginBottom(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V60,
+        marginBottom(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V64,
+        marginBottom(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V68,
+        marginBottom(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V72,
+        marginBottom(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V80,
+        marginBottom(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.MarginBottom.V96,
+        marginBottom(rem(24))
+));
+  }
+
+  private void XLarge2MarginLeft() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.AUTO,
+        marginLeft(auto)
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.PX,
+        marginLeft(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V0,
+        marginLeft($0)
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V0_5,
+        marginLeft(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V1,
+        marginLeft(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V1_5,
+        marginLeft(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V2,
+        marginLeft(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V2_5,
+        marginLeft(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V3,
+        marginLeft(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V3_5,
+        marginLeft(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V4,
+        marginLeft(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V5,
+        marginLeft(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V6,
+        marginLeft(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V7,
+        marginLeft(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V8,
+        marginLeft(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V9,
+        marginLeft(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V10,
+        marginLeft(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V11,
+        marginLeft(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V12,
+        marginLeft(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V14,
+        marginLeft(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V16,
+        marginLeft(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V20,
+        marginLeft(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V24,
+        marginLeft(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V28,
+        marginLeft(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V32,
+        marginLeft(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V36,
+        marginLeft(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V40,
+        marginLeft(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V44,
+        marginLeft(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V48,
+        marginLeft(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V52,
+        marginLeft(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V56,
+        marginLeft(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V60,
+        marginLeft(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V64,
+        marginLeft(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V68,
+        marginLeft(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V72,
+        marginLeft(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V80,
+        marginLeft(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.MarginLeft.V96,
+        marginLeft(rem(24))
+));
+  }
+
+  private void XLarge2MaxWidth() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.V0,
+        maxWidth($0)
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.NONE,
+        maxWidth(none)
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_SMALL,
+        maxWidth(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.SMALL,
+        maxWidth(rem(24))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.MEDIUM,
+        maxWidth(rem(28))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.LARGE,
+        maxWidth(rem(32))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_LARGE,
+        maxWidth(rem(36))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_LARGE2,
+        maxWidth(rem(42))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_LARGE3,
+        maxWidth(rem(48))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_LARGE4,
+        maxWidth(rem(56))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_LARGE5,
+        maxWidth(rem(64))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_LARGE6,
+        maxWidth(rem(72))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.X_LARGE7,
+        maxWidth(rem(80))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.FULL,
+        maxWidth(pct(100))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.MIN,
+        maxWidth(minContent)
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.MAX,
+        maxWidth(maxContent)
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.FIT,
+        maxWidth(fitContent)
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.PROSE,
+        maxWidth(ch(65))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.SCREEN_SMALL,
+        maxWidth(px(640))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.SCREEN_MEDIUM,
+        maxWidth(px(768))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.SCREEN_LARGE,
+        maxWidth(px(1024))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.SCREEN_X_LARGE,
+        maxWidth(px(1280))
+),
+      style(
+        objectos.css.util.XLarge2.MaxWidth.SCREEN_X_LARGE2,
+        maxWidth(px(1536))
 ));
   }
 
@@ -9018,6 +17891,283 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.PaddingLeft.V96,
         paddingLeft(rem(24))
+));
+  }
+
+  private void XLarge2Width() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.Width.PX,
+        width(px(1))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V0,
+        width($0)
+),
+      style(
+        objectos.css.util.XLarge2.Width.V0_5,
+        width(rem(0.125))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V1,
+        width(rem(0.25))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V1_5,
+        width(rem(0.375))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V2,
+        width(rem(0.5))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V2_5,
+        width(rem(0.625))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V3,
+        width(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V3_5,
+        width(rem(0.875))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V4,
+        width(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V5,
+        width(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V6,
+        width(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V7,
+        width(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V8,
+        width(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V9,
+        width(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V10,
+        width(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V11,
+        width(rem(2.75))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V12,
+        width(rem(3))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V14,
+        width(rem(3.5))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V16,
+        width(rem(4))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V20,
+        width(rem(5))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V24,
+        width(rem(6))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V28,
+        width(rem(7))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V32,
+        width(rem(8))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V36,
+        width(rem(9))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V40,
+        width(rem(10))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V44,
+        width(rem(11))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V48,
+        width(rem(12))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V52,
+        width(rem(13))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V56,
+        width(rem(14))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V60,
+        width(rem(15))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V64,
+        width(rem(16))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V68,
+        width(rem(17))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V72,
+        width(rem(18))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V80,
+        width(rem(20))
+),
+      style(
+        objectos.css.util.XLarge2.Width.V96,
+        width(rem(24))
+),
+      style(
+        objectos.css.util.XLarge2.Width.AUTO,
+        width(auto)
+),
+      style(
+        objectos.css.util.XLarge2.Width.P1_2,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P1_3,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P2_3,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P1_4,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P2_4,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P3_4,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P1_5,
+        width(pct(20))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P2_5,
+        width(pct(40))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P3_5,
+        width(pct(60))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P4_5,
+        width(pct(80))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P1_6,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P2_6,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P3_6,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P4_6,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P5_6,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P1_12,
+        width(pct(8.333333))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P2_12,
+        width(pct(16.666667))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P3_12,
+        width(pct(25))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P4_12,
+        width(pct(33.333333))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P5_12,
+        width(pct(41.666667))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P6_12,
+        width(pct(50))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P7_12,
+        width(pct(58.333333))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P8_12,
+        width(pct(66.666667))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P9_12,
+        width(pct(75))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P10_12,
+        width(pct(83.333333))
+),
+      style(
+        objectos.css.util.XLarge2.Width.P11_12,
+        width(pct(91.666667))
+),
+      style(
+        objectos.css.util.XLarge2.Width.FULL,
+        width(pct(100))
+),
+      style(
+        objectos.css.util.XLarge2.Width.SCREEN,
+        width(vw(100))
+),
+      style(
+        objectos.css.util.XLarge2.Width.MIN,
+        width(minContent)
+),
+      style(
+        objectos.css.util.XLarge2.Width.MAX,
+        width(maxContent)
+),
+      style(
+        objectos.css.util.XLarge2.Width.FIT,
+        width(fitContent)
 ));
   }
 }

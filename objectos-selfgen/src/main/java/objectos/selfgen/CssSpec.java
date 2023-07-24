@@ -1037,7 +1037,8 @@ public final class CssSpec extends CssSelfGen {
   }
 
   private void margin() {
-    var marginValue = t(
+    ValueType marginValue;
+    marginValue = t(
       "MarginValue",
 
       k("auto"),
@@ -1053,6 +1054,17 @@ public final class CssSpec extends CssSelfGen {
       sig(marginValue, "top", marginValue, "horizontal", marginValue, "bottom"),
       sig(marginValue, "top", marginValue, "right", marginValue, "bottom", marginValue, "left")
     );
+
+    List<String> names;
+    names = List.of("margin-top", "margin-right", "margin-bottom", "margin-left");
+
+    for (var name : names) {
+      property(
+        name,
+        sig(globalKeyword, "value"),
+        sig(marginValue, "value")
+      );
+    }
   }
 
   private void maxHeight() {

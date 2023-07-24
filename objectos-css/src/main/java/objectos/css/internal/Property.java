@@ -84,6 +84,14 @@ public enum Property implements PropertyName {
 
   MARGIN("margin"),
 
+  MARGIN_BOTTOM("margin-bottom"),
+
+  MARGIN_LEFT("margin-left"),
+
+  MARGIN_RIGHT("margin-right"),
+
+  MARGIN_TOP("margin-top"),
+
   MAX_HEIGHT("max-height"),
 
   MAX_WIDTH("max-width"),
