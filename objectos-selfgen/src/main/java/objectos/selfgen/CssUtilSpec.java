@@ -120,6 +120,9 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     // P
     padding();
 
+    // S
+    space();
+
     // W
     width();
   }
@@ -298,6 +301,14 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       generate(prefix, simpleName("PaddingBottom"), methods("paddingBottom"), spacing);
 
       generate(prefix, simpleName("PaddingLeft"), methods("paddingLeft"), spacing);
+    }
+  }
+
+  private void space() {
+    for (Prefix prefix : responsive) {
+      generateAllButFirst(prefix, simpleName("SpaceX"), methods("marginLeft"), spacing);
+
+      generateAllButFirst(prefix, simpleName("SpaceY"), methods("marginTop"), spacing);
     }
   }
 

@@ -108,52 +108,17 @@ final class FrameworkClassStep extends ThisTemplate {
 
       if (breakpoint.length == 0) {
         for (var name : property.names) {
-          p(
-            v("style"),
-            argument(NL, property.className, n(name.constantName), NL),
-            include(() -> {
-              for (var methodName : property.methodNames) {
-                argument(
-                  v(methodName),
-                  include(() -> {
-                    for (var value : name.values) {
-                      propertyValue(value);
-                    }
-                  }),
-                  NL
-                );
-              }
-            })
-          );
+          p(include(() -> properties2(name, property)));
         }
       }
 
       else {
         p(
           v("media"),
-
           argument(NL, v("minWidth"), argument(v("px"), argument(i(breakpoint.length)))),
-
           include(() -> {
             for (var name : property.names) {
-              argument(
-                NL,
-                v("style"),
-                argument(NL, property.className, n(name.constantName), NL),
-                include(() -> {
-                  for (var methodName : property.methodNames) {
-                    argument(
-                      v(methodName),
-                      include(() -> {
-                        for (var value : name.values) {
-                          propertyValue(value);
-                        }
-                      }),
-                      NL
-                    );
-                  }
-                })
-              );
+              argument(NL, include(() -> properties2(name, property)));
             }
           })
         );
@@ -164,6 +129,41 @@ final class FrameworkClassStep extends ThisTemplate {
     else {
       throw new UnsupportedOperationException(
         "Implement me :: type = " + prefix.getClass()
+      );
+    }
+  }
+
+  private void properties2(NamedArguments name, Property property) {
+    v("style");
+
+    switch (property.kind) {
+      case STANDARD -> {
+        argument(NL, property.className, n(name.constantName), NL);
+      }
+
+      case ALL_BUT_FIRST -> {
+        argument(
+          NL,
+          v("sel"),
+          argument(property.className, n(name.constantName)),
+          argument(n("CHILD")),
+          argument(n("any")),
+          argument(n("SIBLING")),
+          argument(n("any")),
+          NL
+        );
+      }
+    }
+
+    for (var methodName : property.methodNames) {
+      argument(
+        v(methodName),
+        include(() -> {
+          for (var value : name.values) {
+            propertyValue(value);
+          }
+        }),
+        NL
       );
     }
   }

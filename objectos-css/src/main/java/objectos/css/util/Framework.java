@@ -48,6 +48,8 @@ public final class Framework extends objectos.css.CssTemplate {
     AllPaddingRight();
     AllPaddingBottom();
     AllPaddingLeft();
+    AllSpaceX();
+    AllSpaceY();
     AllWidth();
   }
 
@@ -72,6 +74,8 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallPaddingRight();
     SmallPaddingBottom();
     SmallPaddingLeft();
+    SmallSpaceX();
+    SmallSpaceY();
     SmallWidth();
   }
 
@@ -96,6 +100,8 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumPaddingRight();
     MediumPaddingBottom();
     MediumPaddingLeft();
+    MediumSpaceX();
+    MediumSpaceY();
     MediumWidth();
   }
 
@@ -120,6 +126,8 @@ public final class Framework extends objectos.css.CssTemplate {
     LargePaddingRight();
     LargePaddingBottom();
     LargePaddingLeft();
+    LargeSpaceX();
+    LargeSpaceY();
     LargeWidth();
   }
 
@@ -144,6 +152,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargePaddingRight();
     XLargePaddingBottom();
     XLargePaddingLeft();
+    XLargeSpaceX();
+    XLargeSpaceY();
     XLargeWidth();
   }
 
@@ -168,6 +178,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2PaddingRight();
     XLarge2PaddingBottom();
     XLarge2PaddingLeft();
+    XLarge2SpaceX();
+    XLarge2SpaceY();
     XLarge2Width();
   }
 
@@ -2858,6 +2870,300 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.PaddingLeft.V96,
       paddingLeft(rem(24))
+);
+  }
+
+  private void AllSpaceX() {
+    style(
+      sel(objectos.css.util.All.SpaceX.PX, CHILD, any, SIBLING, any),
+      marginLeft(px(1))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V0, CHILD, any, SIBLING, any),
+      marginLeft($0)
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V0_5, CHILD, any, SIBLING, any),
+      marginLeft(rem(0.125))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V1, CHILD, any, SIBLING, any),
+      marginLeft(rem(0.25))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V1_5, CHILD, any, SIBLING, any),
+      marginLeft(rem(0.375))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V2, CHILD, any, SIBLING, any),
+      marginLeft(rem(0.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V2_5, CHILD, any, SIBLING, any),
+      marginLeft(rem(0.625))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V3, CHILD, any, SIBLING, any),
+      marginLeft(rem(0.75))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V3_5, CHILD, any, SIBLING, any),
+      marginLeft(rem(0.875))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V4, CHILD, any, SIBLING, any),
+      marginLeft(rem(1))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V5, CHILD, any, SIBLING, any),
+      marginLeft(rem(1.25))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V6, CHILD, any, SIBLING, any),
+      marginLeft(rem(1.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V7, CHILD, any, SIBLING, any),
+      marginLeft(rem(1.75))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V8, CHILD, any, SIBLING, any),
+      marginLeft(rem(2))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V9, CHILD, any, SIBLING, any),
+      marginLeft(rem(2.25))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V10, CHILD, any, SIBLING, any),
+      marginLeft(rem(2.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V11, CHILD, any, SIBLING, any),
+      marginLeft(rem(2.75))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V12, CHILD, any, SIBLING, any),
+      marginLeft(rem(3))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V14, CHILD, any, SIBLING, any),
+      marginLeft(rem(3.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V16, CHILD, any, SIBLING, any),
+      marginLeft(rem(4))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V20, CHILD, any, SIBLING, any),
+      marginLeft(rem(5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V24, CHILD, any, SIBLING, any),
+      marginLeft(rem(6))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V28, CHILD, any, SIBLING, any),
+      marginLeft(rem(7))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V32, CHILD, any, SIBLING, any),
+      marginLeft(rem(8))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V36, CHILD, any, SIBLING, any),
+      marginLeft(rem(9))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V40, CHILD, any, SIBLING, any),
+      marginLeft(rem(10))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V44, CHILD, any, SIBLING, any),
+      marginLeft(rem(11))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V48, CHILD, any, SIBLING, any),
+      marginLeft(rem(12))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V52, CHILD, any, SIBLING, any),
+      marginLeft(rem(13))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V56, CHILD, any, SIBLING, any),
+      marginLeft(rem(14))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V60, CHILD, any, SIBLING, any),
+      marginLeft(rem(15))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V64, CHILD, any, SIBLING, any),
+      marginLeft(rem(16))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V68, CHILD, any, SIBLING, any),
+      marginLeft(rem(17))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V72, CHILD, any, SIBLING, any),
+      marginLeft(rem(18))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V80, CHILD, any, SIBLING, any),
+      marginLeft(rem(20))
+);
+    style(
+      sel(objectos.css.util.All.SpaceX.V96, CHILD, any, SIBLING, any),
+      marginLeft(rem(24))
+);
+  }
+
+  private void AllSpaceY() {
+    style(
+      sel(objectos.css.util.All.SpaceY.PX, CHILD, any, SIBLING, any),
+      marginTop(px(1))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V0, CHILD, any, SIBLING, any),
+      marginTop($0)
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V0_5, CHILD, any, SIBLING, any),
+      marginTop(rem(0.125))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V1, CHILD, any, SIBLING, any),
+      marginTop(rem(0.25))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V1_5, CHILD, any, SIBLING, any),
+      marginTop(rem(0.375))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V2, CHILD, any, SIBLING, any),
+      marginTop(rem(0.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V2_5, CHILD, any, SIBLING, any),
+      marginTop(rem(0.625))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V3, CHILD, any, SIBLING, any),
+      marginTop(rem(0.75))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V3_5, CHILD, any, SIBLING, any),
+      marginTop(rem(0.875))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V4, CHILD, any, SIBLING, any),
+      marginTop(rem(1))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V5, CHILD, any, SIBLING, any),
+      marginTop(rem(1.25))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V6, CHILD, any, SIBLING, any),
+      marginTop(rem(1.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V7, CHILD, any, SIBLING, any),
+      marginTop(rem(1.75))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V8, CHILD, any, SIBLING, any),
+      marginTop(rem(2))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V9, CHILD, any, SIBLING, any),
+      marginTop(rem(2.25))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V10, CHILD, any, SIBLING, any),
+      marginTop(rem(2.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V11, CHILD, any, SIBLING, any),
+      marginTop(rem(2.75))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V12, CHILD, any, SIBLING, any),
+      marginTop(rem(3))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V14, CHILD, any, SIBLING, any),
+      marginTop(rem(3.5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V16, CHILD, any, SIBLING, any),
+      marginTop(rem(4))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V20, CHILD, any, SIBLING, any),
+      marginTop(rem(5))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V24, CHILD, any, SIBLING, any),
+      marginTop(rem(6))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V28, CHILD, any, SIBLING, any),
+      marginTop(rem(7))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V32, CHILD, any, SIBLING, any),
+      marginTop(rem(8))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V36, CHILD, any, SIBLING, any),
+      marginTop(rem(9))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V40, CHILD, any, SIBLING, any),
+      marginTop(rem(10))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V44, CHILD, any, SIBLING, any),
+      marginTop(rem(11))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V48, CHILD, any, SIBLING, any),
+      marginTop(rem(12))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V52, CHILD, any, SIBLING, any),
+      marginTop(rem(13))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V56, CHILD, any, SIBLING, any),
+      marginTop(rem(14))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V60, CHILD, any, SIBLING, any),
+      marginTop(rem(15))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V64, CHILD, any, SIBLING, any),
+      marginTop(rem(16))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V68, CHILD, any, SIBLING, any),
+      marginTop(rem(17))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V72, CHILD, any, SIBLING, any),
+      marginTop(rem(18))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V80, CHILD, any, SIBLING, any),
+      marginTop(rem(20))
+);
+    style(
+      sel(objectos.css.util.All.SpaceY.V96, CHILD, any, SIBLING, any),
+      marginTop(rem(24))
 );
   }
 
@@ -5863,6 +6169,304 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Small.PaddingLeft.V96,
         paddingLeft(rem(24))
+));
+  }
+
+  private void SmallSpaceX() {
+    media(
+      minWidth(px(640)),
+      style(
+        sel(objectos.css.util.Small.SpaceX.PX, CHILD, any, SIBLING, any),
+        marginLeft(px(1))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V0, CHILD, any, SIBLING, any),
+        marginLeft($0)
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V0_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V1, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V1_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V2, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V2_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V3, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V3_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V4, CHILD, any, SIBLING, any),
+        marginLeft(rem(1))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V5, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V6, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V7, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V8, CHILD, any, SIBLING, any),
+        marginLeft(rem(2))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V9, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V10, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V11, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V12, CHILD, any, SIBLING, any),
+        marginLeft(rem(3))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V14, CHILD, any, SIBLING, any),
+        marginLeft(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V16, CHILD, any, SIBLING, any),
+        marginLeft(rem(4))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V20, CHILD, any, SIBLING, any),
+        marginLeft(rem(5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V24, CHILD, any, SIBLING, any),
+        marginLeft(rem(6))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V28, CHILD, any, SIBLING, any),
+        marginLeft(rem(7))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V32, CHILD, any, SIBLING, any),
+        marginLeft(rem(8))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V36, CHILD, any, SIBLING, any),
+        marginLeft(rem(9))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V40, CHILD, any, SIBLING, any),
+        marginLeft(rem(10))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V44, CHILD, any, SIBLING, any),
+        marginLeft(rem(11))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V48, CHILD, any, SIBLING, any),
+        marginLeft(rem(12))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V52, CHILD, any, SIBLING, any),
+        marginLeft(rem(13))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V56, CHILD, any, SIBLING, any),
+        marginLeft(rem(14))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V60, CHILD, any, SIBLING, any),
+        marginLeft(rem(15))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V64, CHILD, any, SIBLING, any),
+        marginLeft(rem(16))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V68, CHILD, any, SIBLING, any),
+        marginLeft(rem(17))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V72, CHILD, any, SIBLING, any),
+        marginLeft(rem(18))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V80, CHILD, any, SIBLING, any),
+        marginLeft(rem(20))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceX.V96, CHILD, any, SIBLING, any),
+        marginLeft(rem(24))
+));
+  }
+
+  private void SmallSpaceY() {
+    media(
+      minWidth(px(640)),
+      style(
+        sel(objectos.css.util.Small.SpaceY.PX, CHILD, any, SIBLING, any),
+        marginTop(px(1))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V0, CHILD, any, SIBLING, any),
+        marginTop($0)
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V0_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V1, CHILD, any, SIBLING, any),
+        marginTop(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V1_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V2, CHILD, any, SIBLING, any),
+        marginTop(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V2_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V3, CHILD, any, SIBLING, any),
+        marginTop(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V3_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V4, CHILD, any, SIBLING, any),
+        marginTop(rem(1))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V5, CHILD, any, SIBLING, any),
+        marginTop(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V6, CHILD, any, SIBLING, any),
+        marginTop(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V7, CHILD, any, SIBLING, any),
+        marginTop(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V8, CHILD, any, SIBLING, any),
+        marginTop(rem(2))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V9, CHILD, any, SIBLING, any),
+        marginTop(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V10, CHILD, any, SIBLING, any),
+        marginTop(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V11, CHILD, any, SIBLING, any),
+        marginTop(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V12, CHILD, any, SIBLING, any),
+        marginTop(rem(3))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V14, CHILD, any, SIBLING, any),
+        marginTop(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V16, CHILD, any, SIBLING, any),
+        marginTop(rem(4))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V20, CHILD, any, SIBLING, any),
+        marginTop(rem(5))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V24, CHILD, any, SIBLING, any),
+        marginTop(rem(6))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V28, CHILD, any, SIBLING, any),
+        marginTop(rem(7))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V32, CHILD, any, SIBLING, any),
+        marginTop(rem(8))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V36, CHILD, any, SIBLING, any),
+        marginTop(rem(9))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V40, CHILD, any, SIBLING, any),
+        marginTop(rem(10))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V44, CHILD, any, SIBLING, any),
+        marginTop(rem(11))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V48, CHILD, any, SIBLING, any),
+        marginTop(rem(12))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V52, CHILD, any, SIBLING, any),
+        marginTop(rem(13))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V56, CHILD, any, SIBLING, any),
+        marginTop(rem(14))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V60, CHILD, any, SIBLING, any),
+        marginTop(rem(15))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V64, CHILD, any, SIBLING, any),
+        marginTop(rem(16))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V68, CHILD, any, SIBLING, any),
+        marginTop(rem(17))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V72, CHILD, any, SIBLING, any),
+        marginTop(rem(18))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V80, CHILD, any, SIBLING, any),
+        marginTop(rem(20))
+),
+      style(
+        sel(objectos.css.util.Small.SpaceY.V96, CHILD, any, SIBLING, any),
+        marginTop(rem(24))
 ));
   }
 
@@ -8873,6 +9477,304 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumSpaceX() {
+    media(
+      minWidth(px(768)),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.PX, CHILD, any, SIBLING, any),
+        marginLeft(px(1))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V0, CHILD, any, SIBLING, any),
+        marginLeft($0)
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V0_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V1, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V1_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V2, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V2_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V3, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V3_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V4, CHILD, any, SIBLING, any),
+        marginLeft(rem(1))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V5, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V6, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V7, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V8, CHILD, any, SIBLING, any),
+        marginLeft(rem(2))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V9, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V10, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V11, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V12, CHILD, any, SIBLING, any),
+        marginLeft(rem(3))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V14, CHILD, any, SIBLING, any),
+        marginLeft(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V16, CHILD, any, SIBLING, any),
+        marginLeft(rem(4))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V20, CHILD, any, SIBLING, any),
+        marginLeft(rem(5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V24, CHILD, any, SIBLING, any),
+        marginLeft(rem(6))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V28, CHILD, any, SIBLING, any),
+        marginLeft(rem(7))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V32, CHILD, any, SIBLING, any),
+        marginLeft(rem(8))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V36, CHILD, any, SIBLING, any),
+        marginLeft(rem(9))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V40, CHILD, any, SIBLING, any),
+        marginLeft(rem(10))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V44, CHILD, any, SIBLING, any),
+        marginLeft(rem(11))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V48, CHILD, any, SIBLING, any),
+        marginLeft(rem(12))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V52, CHILD, any, SIBLING, any),
+        marginLeft(rem(13))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V56, CHILD, any, SIBLING, any),
+        marginLeft(rem(14))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V60, CHILD, any, SIBLING, any),
+        marginLeft(rem(15))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V64, CHILD, any, SIBLING, any),
+        marginLeft(rem(16))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V68, CHILD, any, SIBLING, any),
+        marginLeft(rem(17))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V72, CHILD, any, SIBLING, any),
+        marginLeft(rem(18))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V80, CHILD, any, SIBLING, any),
+        marginLeft(rem(20))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceX.V96, CHILD, any, SIBLING, any),
+        marginLeft(rem(24))
+));
+  }
+
+  private void MediumSpaceY() {
+    media(
+      minWidth(px(768)),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.PX, CHILD, any, SIBLING, any),
+        marginTop(px(1))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V0, CHILD, any, SIBLING, any),
+        marginTop($0)
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V0_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V1, CHILD, any, SIBLING, any),
+        marginTop(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V1_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V2, CHILD, any, SIBLING, any),
+        marginTop(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V2_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V3, CHILD, any, SIBLING, any),
+        marginTop(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V3_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V4, CHILD, any, SIBLING, any),
+        marginTop(rem(1))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V5, CHILD, any, SIBLING, any),
+        marginTop(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V6, CHILD, any, SIBLING, any),
+        marginTop(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V7, CHILD, any, SIBLING, any),
+        marginTop(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V8, CHILD, any, SIBLING, any),
+        marginTop(rem(2))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V9, CHILD, any, SIBLING, any),
+        marginTop(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V10, CHILD, any, SIBLING, any),
+        marginTop(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V11, CHILD, any, SIBLING, any),
+        marginTop(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V12, CHILD, any, SIBLING, any),
+        marginTop(rem(3))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V14, CHILD, any, SIBLING, any),
+        marginTop(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V16, CHILD, any, SIBLING, any),
+        marginTop(rem(4))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V20, CHILD, any, SIBLING, any),
+        marginTop(rem(5))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V24, CHILD, any, SIBLING, any),
+        marginTop(rem(6))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V28, CHILD, any, SIBLING, any),
+        marginTop(rem(7))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V32, CHILD, any, SIBLING, any),
+        marginTop(rem(8))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V36, CHILD, any, SIBLING, any),
+        marginTop(rem(9))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V40, CHILD, any, SIBLING, any),
+        marginTop(rem(10))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V44, CHILD, any, SIBLING, any),
+        marginTop(rem(11))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V48, CHILD, any, SIBLING, any),
+        marginTop(rem(12))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V52, CHILD, any, SIBLING, any),
+        marginTop(rem(13))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V56, CHILD, any, SIBLING, any),
+        marginTop(rem(14))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V60, CHILD, any, SIBLING, any),
+        marginTop(rem(15))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V64, CHILD, any, SIBLING, any),
+        marginTop(rem(16))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V68, CHILD, any, SIBLING, any),
+        marginTop(rem(17))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V72, CHILD, any, SIBLING, any),
+        marginTop(rem(18))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V80, CHILD, any, SIBLING, any),
+        marginTop(rem(20))
+),
+      style(
+        sel(objectos.css.util.Medium.SpaceY.V96, CHILD, any, SIBLING, any),
+        marginTop(rem(24))
+));
+  }
+
   private void MediumWidth() {
     media(
       minWidth(px(768)),
@@ -11877,6 +12779,304 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Large.PaddingLeft.V96,
         paddingLeft(rem(24))
+));
+  }
+
+  private void LargeSpaceX() {
+    media(
+      minWidth(px(1024)),
+      style(
+        sel(objectos.css.util.Large.SpaceX.PX, CHILD, any, SIBLING, any),
+        marginLeft(px(1))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V0, CHILD, any, SIBLING, any),
+        marginLeft($0)
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V0_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V1, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V1_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V2, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V2_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V3, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V3_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V4, CHILD, any, SIBLING, any),
+        marginLeft(rem(1))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V5, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V6, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V7, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V8, CHILD, any, SIBLING, any),
+        marginLeft(rem(2))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V9, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V10, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V11, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V12, CHILD, any, SIBLING, any),
+        marginLeft(rem(3))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V14, CHILD, any, SIBLING, any),
+        marginLeft(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V16, CHILD, any, SIBLING, any),
+        marginLeft(rem(4))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V20, CHILD, any, SIBLING, any),
+        marginLeft(rem(5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V24, CHILD, any, SIBLING, any),
+        marginLeft(rem(6))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V28, CHILD, any, SIBLING, any),
+        marginLeft(rem(7))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V32, CHILD, any, SIBLING, any),
+        marginLeft(rem(8))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V36, CHILD, any, SIBLING, any),
+        marginLeft(rem(9))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V40, CHILD, any, SIBLING, any),
+        marginLeft(rem(10))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V44, CHILD, any, SIBLING, any),
+        marginLeft(rem(11))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V48, CHILD, any, SIBLING, any),
+        marginLeft(rem(12))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V52, CHILD, any, SIBLING, any),
+        marginLeft(rem(13))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V56, CHILD, any, SIBLING, any),
+        marginLeft(rem(14))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V60, CHILD, any, SIBLING, any),
+        marginLeft(rem(15))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V64, CHILD, any, SIBLING, any),
+        marginLeft(rem(16))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V68, CHILD, any, SIBLING, any),
+        marginLeft(rem(17))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V72, CHILD, any, SIBLING, any),
+        marginLeft(rem(18))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V80, CHILD, any, SIBLING, any),
+        marginLeft(rem(20))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceX.V96, CHILD, any, SIBLING, any),
+        marginLeft(rem(24))
+));
+  }
+
+  private void LargeSpaceY() {
+    media(
+      minWidth(px(1024)),
+      style(
+        sel(objectos.css.util.Large.SpaceY.PX, CHILD, any, SIBLING, any),
+        marginTop(px(1))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V0, CHILD, any, SIBLING, any),
+        marginTop($0)
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V0_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V1, CHILD, any, SIBLING, any),
+        marginTop(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V1_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V2, CHILD, any, SIBLING, any),
+        marginTop(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V2_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V3, CHILD, any, SIBLING, any),
+        marginTop(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V3_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V4, CHILD, any, SIBLING, any),
+        marginTop(rem(1))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V5, CHILD, any, SIBLING, any),
+        marginTop(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V6, CHILD, any, SIBLING, any),
+        marginTop(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V7, CHILD, any, SIBLING, any),
+        marginTop(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V8, CHILD, any, SIBLING, any),
+        marginTop(rem(2))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V9, CHILD, any, SIBLING, any),
+        marginTop(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V10, CHILD, any, SIBLING, any),
+        marginTop(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V11, CHILD, any, SIBLING, any),
+        marginTop(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V12, CHILD, any, SIBLING, any),
+        marginTop(rem(3))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V14, CHILD, any, SIBLING, any),
+        marginTop(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V16, CHILD, any, SIBLING, any),
+        marginTop(rem(4))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V20, CHILD, any, SIBLING, any),
+        marginTop(rem(5))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V24, CHILD, any, SIBLING, any),
+        marginTop(rem(6))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V28, CHILD, any, SIBLING, any),
+        marginTop(rem(7))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V32, CHILD, any, SIBLING, any),
+        marginTop(rem(8))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V36, CHILD, any, SIBLING, any),
+        marginTop(rem(9))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V40, CHILD, any, SIBLING, any),
+        marginTop(rem(10))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V44, CHILD, any, SIBLING, any),
+        marginTop(rem(11))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V48, CHILD, any, SIBLING, any),
+        marginTop(rem(12))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V52, CHILD, any, SIBLING, any),
+        marginTop(rem(13))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V56, CHILD, any, SIBLING, any),
+        marginTop(rem(14))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V60, CHILD, any, SIBLING, any),
+        marginTop(rem(15))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V64, CHILD, any, SIBLING, any),
+        marginTop(rem(16))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V68, CHILD, any, SIBLING, any),
+        marginTop(rem(17))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V72, CHILD, any, SIBLING, any),
+        marginTop(rem(18))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V80, CHILD, any, SIBLING, any),
+        marginTop(rem(20))
+),
+      style(
+        sel(objectos.css.util.Large.SpaceY.V96, CHILD, any, SIBLING, any),
+        marginTop(rem(24))
 ));
   }
 
@@ -14887,6 +16087,304 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeSpaceX() {
+    media(
+      minWidth(px(1280)),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.PX, CHILD, any, SIBLING, any),
+        marginLeft(px(1))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V0, CHILD, any, SIBLING, any),
+        marginLeft($0)
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V0_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V1, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V1_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V2, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V2_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V3, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V3_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V4, CHILD, any, SIBLING, any),
+        marginLeft(rem(1))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V5, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V6, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V7, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V8, CHILD, any, SIBLING, any),
+        marginLeft(rem(2))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V9, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V10, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V11, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V12, CHILD, any, SIBLING, any),
+        marginLeft(rem(3))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V14, CHILD, any, SIBLING, any),
+        marginLeft(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V16, CHILD, any, SIBLING, any),
+        marginLeft(rem(4))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V20, CHILD, any, SIBLING, any),
+        marginLeft(rem(5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V24, CHILD, any, SIBLING, any),
+        marginLeft(rem(6))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V28, CHILD, any, SIBLING, any),
+        marginLeft(rem(7))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V32, CHILD, any, SIBLING, any),
+        marginLeft(rem(8))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V36, CHILD, any, SIBLING, any),
+        marginLeft(rem(9))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V40, CHILD, any, SIBLING, any),
+        marginLeft(rem(10))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V44, CHILD, any, SIBLING, any),
+        marginLeft(rem(11))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V48, CHILD, any, SIBLING, any),
+        marginLeft(rem(12))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V52, CHILD, any, SIBLING, any),
+        marginLeft(rem(13))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V56, CHILD, any, SIBLING, any),
+        marginLeft(rem(14))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V60, CHILD, any, SIBLING, any),
+        marginLeft(rem(15))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V64, CHILD, any, SIBLING, any),
+        marginLeft(rem(16))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V68, CHILD, any, SIBLING, any),
+        marginLeft(rem(17))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V72, CHILD, any, SIBLING, any),
+        marginLeft(rem(18))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V80, CHILD, any, SIBLING, any),
+        marginLeft(rem(20))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceX.V96, CHILD, any, SIBLING, any),
+        marginLeft(rem(24))
+));
+  }
+
+  private void XLargeSpaceY() {
+    media(
+      minWidth(px(1280)),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.PX, CHILD, any, SIBLING, any),
+        marginTop(px(1))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V0, CHILD, any, SIBLING, any),
+        marginTop($0)
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V0_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V1, CHILD, any, SIBLING, any),
+        marginTop(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V1_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V2, CHILD, any, SIBLING, any),
+        marginTop(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V2_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V3, CHILD, any, SIBLING, any),
+        marginTop(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V3_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V4, CHILD, any, SIBLING, any),
+        marginTop(rem(1))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V5, CHILD, any, SIBLING, any),
+        marginTop(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V6, CHILD, any, SIBLING, any),
+        marginTop(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V7, CHILD, any, SIBLING, any),
+        marginTop(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V8, CHILD, any, SIBLING, any),
+        marginTop(rem(2))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V9, CHILD, any, SIBLING, any),
+        marginTop(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V10, CHILD, any, SIBLING, any),
+        marginTop(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V11, CHILD, any, SIBLING, any),
+        marginTop(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V12, CHILD, any, SIBLING, any),
+        marginTop(rem(3))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V14, CHILD, any, SIBLING, any),
+        marginTop(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V16, CHILD, any, SIBLING, any),
+        marginTop(rem(4))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V20, CHILD, any, SIBLING, any),
+        marginTop(rem(5))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V24, CHILD, any, SIBLING, any),
+        marginTop(rem(6))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V28, CHILD, any, SIBLING, any),
+        marginTop(rem(7))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V32, CHILD, any, SIBLING, any),
+        marginTop(rem(8))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V36, CHILD, any, SIBLING, any),
+        marginTop(rem(9))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V40, CHILD, any, SIBLING, any),
+        marginTop(rem(10))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V44, CHILD, any, SIBLING, any),
+        marginTop(rem(11))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V48, CHILD, any, SIBLING, any),
+        marginTop(rem(12))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V52, CHILD, any, SIBLING, any),
+        marginTop(rem(13))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V56, CHILD, any, SIBLING, any),
+        marginTop(rem(14))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V60, CHILD, any, SIBLING, any),
+        marginTop(rem(15))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V64, CHILD, any, SIBLING, any),
+        marginTop(rem(16))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V68, CHILD, any, SIBLING, any),
+        marginTop(rem(17))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V72, CHILD, any, SIBLING, any),
+        marginTop(rem(18))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V80, CHILD, any, SIBLING, any),
+        marginTop(rem(20))
+),
+      style(
+        sel(objectos.css.util.XLarge.SpaceY.V96, CHILD, any, SIBLING, any),
+        marginTop(rem(24))
+));
+  }
+
   private void XLargeWidth() {
     media(
       minWidth(px(1280)),
@@ -17891,6 +19389,304 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.PaddingLeft.V96,
         paddingLeft(rem(24))
+));
+  }
+
+  private void XLarge2SpaceX() {
+    media(
+      minWidth(px(1536)),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.PX, CHILD, any, SIBLING, any),
+        marginLeft(px(1))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V0, CHILD, any, SIBLING, any),
+        marginLeft($0)
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V0_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V1, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V1_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V2, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V2_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V3, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V3_5, CHILD, any, SIBLING, any),
+        marginLeft(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V4, CHILD, any, SIBLING, any),
+        marginLeft(rem(1))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V5, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V6, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V7, CHILD, any, SIBLING, any),
+        marginLeft(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V8, CHILD, any, SIBLING, any),
+        marginLeft(rem(2))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V9, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V10, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V11, CHILD, any, SIBLING, any),
+        marginLeft(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V12, CHILD, any, SIBLING, any),
+        marginLeft(rem(3))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V14, CHILD, any, SIBLING, any),
+        marginLeft(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V16, CHILD, any, SIBLING, any),
+        marginLeft(rem(4))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V20, CHILD, any, SIBLING, any),
+        marginLeft(rem(5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V24, CHILD, any, SIBLING, any),
+        marginLeft(rem(6))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V28, CHILD, any, SIBLING, any),
+        marginLeft(rem(7))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V32, CHILD, any, SIBLING, any),
+        marginLeft(rem(8))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V36, CHILD, any, SIBLING, any),
+        marginLeft(rem(9))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V40, CHILD, any, SIBLING, any),
+        marginLeft(rem(10))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V44, CHILD, any, SIBLING, any),
+        marginLeft(rem(11))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V48, CHILD, any, SIBLING, any),
+        marginLeft(rem(12))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V52, CHILD, any, SIBLING, any),
+        marginLeft(rem(13))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V56, CHILD, any, SIBLING, any),
+        marginLeft(rem(14))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V60, CHILD, any, SIBLING, any),
+        marginLeft(rem(15))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V64, CHILD, any, SIBLING, any),
+        marginLeft(rem(16))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V68, CHILD, any, SIBLING, any),
+        marginLeft(rem(17))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V72, CHILD, any, SIBLING, any),
+        marginLeft(rem(18))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V80, CHILD, any, SIBLING, any),
+        marginLeft(rem(20))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceX.V96, CHILD, any, SIBLING, any),
+        marginLeft(rem(24))
+));
+  }
+
+  private void XLarge2SpaceY() {
+    media(
+      minWidth(px(1536)),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.PX, CHILD, any, SIBLING, any),
+        marginTop(px(1))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V0, CHILD, any, SIBLING, any),
+        marginTop($0)
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V0_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.125))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V1, CHILD, any, SIBLING, any),
+        marginTop(rem(0.25))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V1_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.375))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V2, CHILD, any, SIBLING, any),
+        marginTop(rem(0.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V2_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.625))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V3, CHILD, any, SIBLING, any),
+        marginTop(rem(0.75))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V3_5, CHILD, any, SIBLING, any),
+        marginTop(rem(0.875))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V4, CHILD, any, SIBLING, any),
+        marginTop(rem(1))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V5, CHILD, any, SIBLING, any),
+        marginTop(rem(1.25))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V6, CHILD, any, SIBLING, any),
+        marginTop(rem(1.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V7, CHILD, any, SIBLING, any),
+        marginTop(rem(1.75))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V8, CHILD, any, SIBLING, any),
+        marginTop(rem(2))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V9, CHILD, any, SIBLING, any),
+        marginTop(rem(2.25))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V10, CHILD, any, SIBLING, any),
+        marginTop(rem(2.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V11, CHILD, any, SIBLING, any),
+        marginTop(rem(2.75))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V12, CHILD, any, SIBLING, any),
+        marginTop(rem(3))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V14, CHILD, any, SIBLING, any),
+        marginTop(rem(3.5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V16, CHILD, any, SIBLING, any),
+        marginTop(rem(4))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V20, CHILD, any, SIBLING, any),
+        marginTop(rem(5))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V24, CHILD, any, SIBLING, any),
+        marginTop(rem(6))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V28, CHILD, any, SIBLING, any),
+        marginTop(rem(7))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V32, CHILD, any, SIBLING, any),
+        marginTop(rem(8))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V36, CHILD, any, SIBLING, any),
+        marginTop(rem(9))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V40, CHILD, any, SIBLING, any),
+        marginTop(rem(10))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V44, CHILD, any, SIBLING, any),
+        marginTop(rem(11))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V48, CHILD, any, SIBLING, any),
+        marginTop(rem(12))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V52, CHILD, any, SIBLING, any),
+        marginTop(rem(13))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V56, CHILD, any, SIBLING, any),
+        marginTop(rem(14))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V60, CHILD, any, SIBLING, any),
+        marginTop(rem(15))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V64, CHILD, any, SIBLING, any),
+        marginTop(rem(16))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V68, CHILD, any, SIBLING, any),
+        marginTop(rem(17))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V72, CHILD, any, SIBLING, any),
+        marginTop(rem(18))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V80, CHILD, any, SIBLING, any),
+        marginTop(rem(20))
+),
+      style(
+        sel(objectos.css.util.XLarge2.SpaceY.V96, CHILD, any, SIBLING, any),
+        marginTop(rem(24))
 ));
   }
 

@@ -20,28 +20,33 @@ import objectos.util.UnmodifiableList;
 
 final class Property {
 
+  public final PropertyKind kind;
+
   public final ClassTypeName className;
 
   public final UnmodifiableList<String> methodNames;
 
   public final UnmodifiableList<NamedArguments> names;
 
-  private Property(ClassTypeName className,
+  private Property(PropertyKind kind,
+                   ClassTypeName className,
                    UnmodifiableList<String> methodNames,
                    UnmodifiableList<NamedArguments> names) {
+    this.kind = kind;
     this.className = className;
     this.methodNames = methodNames;
     this.names = names;
   }
 
-  public static Property of(Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
+  public static Property of(
+      PropertyKind kind, Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
     ClassTypeName enclosing;
     enclosing = prefix.className;
 
     ClassTypeName className;
     className = ClassTypeName.of(enclosing, simpleName.name());
 
-    return new Property(className, methods.values(), names.values());
+    return new Property(kind, className, methods.values(), names.values());
   }
 
 }

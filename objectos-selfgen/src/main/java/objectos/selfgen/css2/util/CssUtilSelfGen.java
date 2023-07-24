@@ -63,13 +63,12 @@ public abstract class CssUtilSelfGen {
 
   protected final void generate(
       Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    List<Property> list;
-    list = properties.computeIfAbsent(prefix, k -> new GrowableList<>());
+    generate(PropertyKind.STANDARD, prefix, simpleName, methods, names);
+  }
 
-    Property property;
-    property = Property.of(prefix, simpleName, methods, names);
-
-    list.add(property);
+  protected final void generateAllButFirst(
+      Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
+    generate(PropertyKind.ALL_BUT_FIRST, prefix, simpleName, methods, names);
   }
 
   protected final Value k(String fieldName) {
@@ -156,6 +155,17 @@ public abstract class CssUtilSelfGen {
 
   private void compile() {
     definition();
+  }
+
+  private void generate(
+      PropertyKind kind, Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
+    List<Property> list;
+    list = properties.computeIfAbsent(prefix, k -> new GrowableList<>());
+
+    Property property;
+    property = Property.of(kind, prefix, simpleName, methods, names);
+
+    list.add(property);
   }
 
   private void write(JavaSink sink, ThisTemplate step) throws IOException {
