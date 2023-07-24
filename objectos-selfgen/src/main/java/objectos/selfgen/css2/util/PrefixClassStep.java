@@ -17,17 +17,11 @@ package objectos.selfgen.css2.util;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import objectos.code.JavaSink;
-import objectos.util.UnmodifiableList;
 
 final class PrefixClassStep extends ThisTemplate {
 
   private Prefix prefix;
-
-  private List<Property> properties;
 
   @Override
   protected final void definition() {
@@ -47,28 +41,26 @@ final class PrefixClassStep extends ThisTemplate {
 
   @Override
   final void writeHook(JavaSink sink) throws IOException {
-    Map<Prefix, List<Property>> map;
-    map = spec.properties;
+    List<Prefix> prefixList;
+    prefixList = spec.prefixList;
 
-    Set<Entry<Prefix, List<Property>>> entries;
-    entries = map.entrySet();
-
-    for (var entry : entries) {
-      prefix = entry.getKey();
-
-      properties = entry.getValue();
+    for (var prefix : prefixList) {
+      this.prefix = prefix;
 
       super.writeHook(sink);
     }
   }
 
   private void propertyTypes() {
+    List<PropertyClass> properties;
+    properties = prefix.propertyClassList;
+
     for (var property : properties) {
       propertyTypes0(property);
     }
   }
 
-  private void propertyTypes0(Property property) {
+  private void propertyTypes0(PropertyClass property) {
     classDeclaration(
       PUBLIC, STATIC, FINAL, name(property.className),
 
@@ -78,13 +70,13 @@ final class PrefixClassStep extends ThisTemplate {
     );
   }
 
-  private void propertyTypes1Fields(Property property) {
-    UnmodifiableList<NamedArguments> names;
-    names = property.names;
+  private void propertyTypes1Fields(PropertyClass property) {
+    List<StyleMethod> styles;
+    styles = property.styleMethodList;
 
-    for (var name : names) {
+    for (var style : styles) {
       field(
-        PUBLIC, STATIC, FINAL, CLASS_SELECTOR, name(name.constantName),
+        PUBLIC, STATIC, FINAL, CLASS_SELECTOR, name(style.constantName),
         CLASS_SELECTOR, v("randomClassSelector"), argument(i(5))
       );
     }

@@ -73,6 +73,36 @@ public final class Small {
     private FlexDirection() {}
   }
 
+  public static final class FontSize {
+    public static final ClassSelector X_SMALL = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector SMALL = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector BASE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector LARGE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE2 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector X_LARGE9 = ClassSelector.randomClassSelector(5);
+
+    private FontSize() {}
+  }
+
   public static final class Height {
     public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
 

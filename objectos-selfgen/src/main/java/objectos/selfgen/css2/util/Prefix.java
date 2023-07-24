@@ -15,12 +15,12 @@
  */
 package objectos.selfgen.css2.util;
 
+import java.util.List;
 import objectos.code.ClassTypeName;
 import objectos.lang.Check;
+import objectos.util.GrowableList;
 
 public sealed abstract class Prefix {
-
-  public final ClassTypeName className;
 
   public static final class Breakpoint extends Prefix {
     public final int length;
@@ -30,6 +30,10 @@ public sealed abstract class Prefix {
       this.length = length;
     }
   }
+
+  final ClassTypeName className;
+
+  final List<PropertyClass> propertyClassList = new GrowableList<>();
 
   Prefix(ClassTypeName className) {
     this.className = className;
@@ -43,6 +47,25 @@ public sealed abstract class Prefix {
     className = ClassTypeName.of(ThisTemplate.CSS_UTIL, simpleName);
 
     return new Breakpoint(className, length);
+  }
+
+  public final PropertyClass propertyClass(SimpleName simpleName) {
+    String value;
+    value = simpleName.name();
+
+    return propertyClass(value);
+  }
+
+  public final PropertyClass propertyClass(String simpleName) {
+    ClassTypeName propertyClassName;
+    propertyClassName = ClassTypeName.of(className, simpleName);
+
+    PropertyClass propertyClass;
+    propertyClass = new PropertyClass(propertyClassName);
+
+    propertyClassList.add(propertyClass);
+
+    return propertyClass;
   }
 
 }

@@ -21,6 +21,10 @@ import objectos.selfgen.css2.util.CssUtilSelfGen;
 import objectos.selfgen.css2.util.Names;
 import objectos.selfgen.css2.util.Prefix;
 import objectos.selfgen.css2.util.Prefix.Breakpoint;
+import objectos.selfgen.css2.util.PropertyClass;
+import objectos.selfgen.css2.util.SelectorKind;
+import objectos.selfgen.css2.util.StyleMethod;
+import objectos.selfgen.css2.util.Value;
 
 public final class CssUtilSpec extends CssUtilSelfGen {
 
@@ -105,6 +109,7 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     // F
     flexDirection();
+    fontSize();
 
     // H
     height();
@@ -166,6 +171,43 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("FlexDirection"), methods("flexDirection"), names);
+    }
+  }
+
+  private void fontSize() {
+    record FontSize(String name, Value fontSize, Value lineHeight) {}
+
+    Value one;
+    one = new Value.LiteralInt(1);
+
+    List<FontSize> values = List.of(
+      new FontSize("X_SMALL", rem(0.75), rem(1)),
+      new FontSize("SMALL", rem(0.875), rem(1.25)),
+      new FontSize("BASE", rem(1), rem(1.5)),
+      new FontSize("LARGE", rem(1.125), rem(1.75)),
+      new FontSize("X_LARGE", rem(1.25), rem(1.75)),
+      new FontSize("X_LARGE2", rem(1.5), rem(2)),
+      new FontSize("X_LARGE3", rem(1.875), rem(2.25)),
+      new FontSize("X_LARGE4", rem(2.25), rem(2.5)),
+      new FontSize("X_LARGE5", rem(3), one),
+      new FontSize("X_LARGE6", rem(3.75), one),
+      new FontSize("X_LARGE7", rem(4.5), one),
+      new FontSize("X_LARGE8", rem(6), one),
+      new FontSize("X_LARGE9", rem(8), one)
+    );
+
+    for (Prefix prefix : responsive) {
+      PropertyClass propertyClass;
+      propertyClass = prefix.propertyClass("FontSize");
+
+      for (FontSize value : values) {
+        StyleMethod styleMethod;
+        styleMethod = propertyClass.style(SelectorKind.STANDARD, value.name);
+
+        styleMethod.addDeclaration("fontSize", value.fontSize);
+
+        styleMethod.addDeclaration("lineHeight", value.lineHeight);
+      }
     }
   }
 

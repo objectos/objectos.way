@@ -16,21 +16,15 @@
 package objectos.selfgen.css2.util;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import objectos.selfgen.css2.util.Prefix.Breakpoint;
 
 final class FrameworkClassStep extends ThisTemplate {
 
-  private Set<Entry<Prefix, List<Property>>> entries;
+  private Iterable<Prefix> prefixes;
 
   @Override
   protected final void definition() {
-    Map<Prefix, List<Property>> map;
-    map = spec.properties;
-
-    entries = map.entrySet();
+    prefixes = spec.prefixList;
 
     packageDeclaration(CSS_UTIL);
 
@@ -52,24 +46,18 @@ final class FrameworkClassStep extends ThisTemplate {
   }
 
   private void definitionMethod() {
-    for (var entry : entries) {
-      Prefix prefix;
-      prefix = entry.getKey();
-
+    for (var prefix : prefixes) {
       p(v(prefix.className.simpleName()));
     }
   }
 
   private void prefixes() {
-    for (var entry : entries) {
-      Prefix prefix;
-      prefix = entry.getKey();
-
+    for (var prefix : prefixes) {
       String prefixName;
       prefixName = prefix.className.simpleName();
 
-      List<Property> properties;
-      properties = entry.getValue();
+      List<PropertyClass> properties;
+      properties = prefix.propertyClassList;
 
       method(
         PRIVATE, VOID, name(prefixName),
@@ -83,12 +71,9 @@ final class FrameworkClassStep extends ThisTemplate {
   }
 
   private void properties() {
-    for (var entry : entries) {
-      Prefix prefix;
-      prefix = entry.getKey();
-
-      List<Property> properties;
-      properties = entry.getValue();
+    for (var prefix : prefixes) {
+      List<PropertyClass> properties;
+      properties = prefix.propertyClassList;
 
       for (var property : properties) {
         properties0(prefix, property);
@@ -96,19 +81,19 @@ final class FrameworkClassStep extends ThisTemplate {
     }
   }
 
-  private void properties0(Prefix prefix, Property property) {
+  private void properties0(Prefix prefix, PropertyClass property) {
     method(
       PRIVATE, VOID, name(methodName(prefix, property)),
       include(() -> properties1(prefix, property))
     );
   }
 
-  private void properties1(Prefix prefix, Property property) {
+  private void properties1(Prefix prefix, PropertyClass property) {
     if (prefix instanceof Breakpoint breakpoint) {
 
       if (breakpoint.length == 0) {
-        for (var name : property.names) {
-          p(include(() -> properties2(name, property)));
+        for (var method : property.styleMethodList) {
+          p(include(() -> properties2(method, property)));
         }
       }
 
@@ -117,8 +102,8 @@ final class FrameworkClassStep extends ThisTemplate {
           v("media"),
           argument(NL, v("minWidth"), argument(v("px"), argument(i(breakpoint.length)))),
           include(() -> {
-            for (var name : property.names) {
-              argument(NL, include(() -> properties2(name, property)));
+            for (var method : property.styleMethodList) {
+              argument(NL, include(() -> properties2(method, property)));
             }
           })
         );
@@ -133,19 +118,19 @@ final class FrameworkClassStep extends ThisTemplate {
     }
   }
 
-  private void properties2(NamedArguments name, Property property) {
+  private void properties2(StyleMethod styleMethod, PropertyClass property) {
     v("style");
 
-    switch (property.kind) {
+    switch (styleMethod.selectorKind) {
       case STANDARD -> {
-        argument(NL, property.className, n(name.constantName), NL);
+        argument(NL, property.className, n(styleMethod.constantName), NL);
       }
 
       case ALL_BUT_FIRST -> {
         argument(
           NL,
           v("sel"),
-          argument(property.className, n(name.constantName)),
+          argument(property.className, n(styleMethod.constantName)),
           argument(n("CHILD")),
           argument(n("any")),
           argument(n("SIBLING")),
@@ -155,11 +140,11 @@ final class FrameworkClassStep extends ThisTemplate {
       }
     }
 
-    for (var methodName : property.methodNames) {
+    for (var declaration : styleMethod.declarationList) {
       argument(
-        v(methodName),
+        v(declaration.methodName()),
         include(() -> {
-          for (var value : name.values) {
+          for (var value : declaration.values()) {
             propertyValue(value);
           }
         }),
@@ -171,6 +156,10 @@ final class FrameworkClassStep extends ThisTemplate {
   private void propertyValue(Value value) {
     if (value instanceof Value.ExpressionName expression) {
       argument(n(expression.fieldName()));
+    }
+
+    else if (value instanceof Value.LiteralInt literal) {
+      argument(i(literal.value()));
     }
 
     else if (value instanceof Value.MethodDouble method) {
@@ -188,7 +177,7 @@ final class FrameworkClassStep extends ThisTemplate {
     }
   }
 
-  private String methodName(Prefix prefix, Property property) {
+  private String methodName(Prefix prefix, PropertyClass property) {
     return prefix.className.simpleName() + property.className.simpleName();
   }
 

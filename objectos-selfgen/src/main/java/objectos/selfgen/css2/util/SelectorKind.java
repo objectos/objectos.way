@@ -15,7 +15,7 @@
  */
 package objectos.selfgen.css2.util;
 
-enum PropertyKind {
+public enum SelectorKind {
 
   STANDARD,
 

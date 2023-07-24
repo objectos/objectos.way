@@ -17,9 +17,7 @@ package objectos.selfgen.css2.util;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import objectos.code.JavaSink;
 import objectos.lang.Check;
 import objectos.selfgen.css2.util.Prefix.Breakpoint;
@@ -27,7 +25,7 @@ import objectos.util.GrowableList;
 
 public abstract class CssUtilSelfGen {
 
-  final Map<Prefix, List<Property>> properties = new LinkedHashMap<>();
+  final List<Prefix> prefixList = new GrowableList<>();
 
   protected CssUtilSelfGen() {}
 
@@ -52,7 +50,12 @@ public abstract class CssUtilSelfGen {
   }
 
   protected final Breakpoint breakpoint(String name, int length) {
-    return Prefix.ofBreakpoint(name, length);
+    Breakpoint breakpoint;
+    breakpoint = Prefix.ofBreakpoint(name, length);
+
+    prefixList.add(breakpoint);
+
+    return breakpoint;
   }
 
   protected final Value ch(int value) {
@@ -63,12 +66,12 @@ public abstract class CssUtilSelfGen {
 
   protected final void generate(
       Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    generate(PropertyKind.STANDARD, prefix, simpleName, methods, names);
+    generate(SelectorKind.STANDARD, prefix, simpleName, methods, names);
   }
 
   protected final void generateAllButFirst(
       Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    generate(PropertyKind.ALL_BUT_FIRST, prefix, simpleName, methods, names);
+    generate(SelectorKind.ALL_BUT_FIRST, prefix, simpleName, methods, names);
   }
 
   protected final Value k(String fieldName) {
@@ -158,14 +161,18 @@ public abstract class CssUtilSelfGen {
   }
 
   private void generate(
-      PropertyKind kind, Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
-    List<Property> list;
-    list = properties.computeIfAbsent(prefix, k -> new GrowableList<>());
+      SelectorKind kind, Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
+    PropertyClass propertyClass;
+    propertyClass = prefix.propertyClass(simpleName);
 
-    Property property;
-    property = Property.of(kind, prefix, simpleName, methods, names);
+    for (NamedArguments value : names.values()) {
+      StyleMethod styleMethod;
+      styleMethod = propertyClass.style(kind, value.constantName);
 
-    list.add(property);
+      for (String methodName : methods.values()) {
+        styleMethod.addDeclaration(methodName, value.values);
+      }
+    }
   }
 
   private void write(JavaSink sink, ThisTemplate step) throws IOException {

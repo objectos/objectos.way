@@ -15,14 +15,27 @@
  */
 package objectos.selfgen.css2.util;
 
-public sealed interface Value {
+import java.util.List;
+import objectos.code.ClassTypeName;
+import objectos.util.GrowableList;
 
-  record ExpressionName(String fieldName) implements Value {}
+public final class PropertyClass {
 
-  record LiteralInt(int value) implements Value {}
+  final ClassTypeName className;
 
-  record MethodDouble(String methodName, double value) implements Value {}
+  final List<StyleMethod> styleMethodList = new GrowableList<>();
 
-  record MethodInt(String methodName, int value) implements Value {}
+  PropertyClass(ClassTypeName className) {
+    this.className = className;
+  }
+
+  public final StyleMethod style(SelectorKind kind, String constantName) {
+    StyleMethod method;
+    method = new StyleMethod(kind, constantName);
+
+    styleMethodList.add(method);
+
+    return method;
+  }
 
 }

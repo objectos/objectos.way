@@ -30,6 +30,7 @@ public final class Framework extends objectos.css.CssTemplate {
   private void All() {
     AllDisplay();
     AllFlexDirection();
+    AllFontSize();
     AllHeight();
     AllJustifyContent();
     AllMargin();
@@ -56,6 +57,7 @@ public final class Framework extends objectos.css.CssTemplate {
   private void Small() {
     SmallDisplay();
     SmallFlexDirection();
+    SmallFontSize();
     SmallHeight();
     SmallJustifyContent();
     SmallMargin();
@@ -82,6 +84,7 @@ public final class Framework extends objectos.css.CssTemplate {
   private void Medium() {
     MediumDisplay();
     MediumFlexDirection();
+    MediumFontSize();
     MediumHeight();
     MediumJustifyContent();
     MediumMargin();
@@ -108,6 +111,7 @@ public final class Framework extends objectos.css.CssTemplate {
   private void Large() {
     LargeDisplay();
     LargeFlexDirection();
+    LargeFontSize();
     LargeHeight();
     LargeJustifyContent();
     LargeMargin();
@@ -134,6 +138,7 @@ public final class Framework extends objectos.css.CssTemplate {
   private void XLarge() {
     XLargeDisplay();
     XLargeFlexDirection();
+    XLargeFontSize();
     XLargeHeight();
     XLargeJustifyContent();
     XLargeMargin();
@@ -160,6 +165,7 @@ public final class Framework extends objectos.css.CssTemplate {
   private void XLarge2() {
     XLarge2Display();
     XLarge2FlexDirection();
+    XLarge2FontSize();
     XLarge2Height();
     XLarge2JustifyContent();
     XLarge2Margin();
@@ -274,6 +280,74 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.FlexDirection.COLUMN_REVERSE,
       flexDirection(columnReverse)
+);
+  }
+
+  private void AllFontSize() {
+    style(
+      objectos.css.util.All.FontSize.X_SMALL,
+      fontSize(rem(0.75)),
+      lineHeight(rem(1))
+);
+    style(
+      objectos.css.util.All.FontSize.SMALL,
+      fontSize(rem(0.875)),
+      lineHeight(rem(1.25))
+);
+    style(
+      objectos.css.util.All.FontSize.BASE,
+      fontSize(rem(1)),
+      lineHeight(rem(1.5))
+);
+    style(
+      objectos.css.util.All.FontSize.LARGE,
+      fontSize(rem(1.125)),
+      lineHeight(rem(1.75))
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE,
+      fontSize(rem(1.25)),
+      lineHeight(rem(1.75))
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE2,
+      fontSize(rem(1.5)),
+      lineHeight(rem(2))
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE3,
+      fontSize(rem(1.875)),
+      lineHeight(rem(2.25))
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE4,
+      fontSize(rem(2.25)),
+      lineHeight(rem(2.5))
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE5,
+      fontSize(rem(3)),
+      lineHeight(1)
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE6,
+      fontSize(rem(3.75)),
+      lineHeight(1)
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE7,
+      fontSize(rem(4.5)),
+      lineHeight(1)
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE8,
+      fontSize(rem(6)),
+      lineHeight(1)
+);
+    style(
+      objectos.css.util.All.FontSize.X_LARGE9,
+      fontSize(rem(8)),
+      lineHeight(1)
 );
   }
 
@@ -3537,6 +3611,76 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Small.FlexDirection.COLUMN_REVERSE,
         flexDirection(columnReverse)
+));
+  }
+
+  private void SmallFontSize() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.FontSize.X_SMALL,
+        fontSize(rem(0.75)),
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.Small.FontSize.SMALL,
+        fontSize(rem(0.875)),
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.FontSize.BASE,
+        fontSize(rem(1)),
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.FontSize.LARGE,
+        fontSize(rem(1.125)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE,
+        fontSize(rem(1.25)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE2,
+        fontSize(rem(1.5)),
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE3,
+        fontSize(rem(1.875)),
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE4,
+        fontSize(rem(2.25)),
+        lineHeight(rem(2.5))
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE5,
+        fontSize(rem(3)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE6,
+        fontSize(rem(3.75)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE7,
+        fontSize(rem(4.5)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE8,
+        fontSize(rem(6)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Small.FontSize.X_LARGE9,
+        fontSize(rem(8)),
+        lineHeight(1)
 ));
   }
 
@@ -6845,6 +6989,76 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumFontSize() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.FontSize.X_SMALL,
+        fontSize(rem(0.75)),
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.Medium.FontSize.SMALL,
+        fontSize(rem(0.875)),
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.FontSize.BASE,
+        fontSize(rem(1)),
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.FontSize.LARGE,
+        fontSize(rem(1.125)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE,
+        fontSize(rem(1.25)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE2,
+        fontSize(rem(1.5)),
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE3,
+        fontSize(rem(1.875)),
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE4,
+        fontSize(rem(2.25)),
+        lineHeight(rem(2.5))
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE5,
+        fontSize(rem(3)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE6,
+        fontSize(rem(3.75)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE7,
+        fontSize(rem(4.5)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE8,
+        fontSize(rem(6)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Medium.FontSize.X_LARGE9,
+        fontSize(rem(8)),
+        lineHeight(1)
+));
+  }
+
   private void MediumHeight() {
     media(
       minWidth(px(768)),
@@ -10147,6 +10361,76 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Large.FlexDirection.COLUMN_REVERSE,
         flexDirection(columnReverse)
+));
+  }
+
+  private void LargeFontSize() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.FontSize.X_SMALL,
+        fontSize(rem(0.75)),
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.Large.FontSize.SMALL,
+        fontSize(rem(0.875)),
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.FontSize.BASE,
+        fontSize(rem(1)),
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.FontSize.LARGE,
+        fontSize(rem(1.125)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE,
+        fontSize(rem(1.25)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE2,
+        fontSize(rem(1.5)),
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE3,
+        fontSize(rem(1.875)),
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE4,
+        fontSize(rem(2.25)),
+        lineHeight(rem(2.5))
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE5,
+        fontSize(rem(3)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE6,
+        fontSize(rem(3.75)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE7,
+        fontSize(rem(4.5)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE8,
+        fontSize(rem(6)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Large.FontSize.X_LARGE9,
+        fontSize(rem(8)),
+        lineHeight(1)
 ));
   }
 
@@ -13455,6 +13739,76 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeFontSize() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.FontSize.X_SMALL,
+        fontSize(rem(0.75)),
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.SMALL,
+        fontSize(rem(0.875)),
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.BASE,
+        fontSize(rem(1)),
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.LARGE,
+        fontSize(rem(1.125)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE,
+        fontSize(rem(1.25)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE2,
+        fontSize(rem(1.5)),
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE3,
+        fontSize(rem(1.875)),
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE4,
+        fontSize(rem(2.25)),
+        lineHeight(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE5,
+        fontSize(rem(3)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE6,
+        fontSize(rem(3.75)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE7,
+        fontSize(rem(4.5)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE8,
+        fontSize(rem(6)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge.FontSize.X_LARGE9,
+        fontSize(rem(8)),
+        lineHeight(1)
+));
+  }
+
   private void XLargeHeight() {
     media(
       minWidth(px(1280)),
@@ -16757,6 +17111,76 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.FlexDirection.COLUMN_REVERSE,
         flexDirection(columnReverse)
+));
+  }
+
+  private void XLarge2FontSize() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_SMALL,
+        fontSize(rem(0.75)),
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.SMALL,
+        fontSize(rem(0.875)),
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.BASE,
+        fontSize(rem(1)),
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.LARGE,
+        fontSize(rem(1.125)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE,
+        fontSize(rem(1.25)),
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE2,
+        fontSize(rem(1.5)),
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE3,
+        fontSize(rem(1.875)),
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE4,
+        fontSize(rem(2.25)),
+        lineHeight(rem(2.5))
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE5,
+        fontSize(rem(3)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE6,
+        fontSize(rem(3.75)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE7,
+        fontSize(rem(4.5)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE8,
+        fontSize(rem(6)),
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge2.FontSize.X_LARGE9,
+        fontSize(rem(8)),
+        lineHeight(1)
 ));
   }
 
