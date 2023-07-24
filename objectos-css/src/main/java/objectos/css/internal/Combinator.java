@@ -15,27 +15,33 @@
  */
 package objectos.css.internal;
 
-public enum Combinator {
+import objectos.css.om.SelectorElement;
 
-  ADJACENT_SIBLING('+'),
+public enum Combinator implements SelectorElement {
 
-  CHILD('>'),
+  ADJACENT_SIBLING(" + "),
 
-  DESCENDANT(' '),
+  CHILD(" > "),
 
-  GENERAL_SIBLING('~'),
+  DESCENDANT(" "),
 
-  LIST(',');
+  GENERAL_SIBLING(" ~ ");
 
-  private final String toString;
+  private static final Combinator[] VALUES = values();
 
-  private Combinator(char symbol) {
-    this.toString = Character.toString(symbol);
+  public final String cssName;
+
+  private Combinator(String cssName) {
+    this.cssName = cssName;
+  }
+
+  public static Combinator ofOrdinal(int ordinal) {
+    return VALUES[ordinal];
   }
 
   @Override
   public final String toString() {
-    return toString;
+    return cssName;
   }
 
 }

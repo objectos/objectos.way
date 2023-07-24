@@ -217,6 +217,16 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(name);
         }
 
+        case ByteCode.SELECTOR_COMBINATOR -> {
+          int ordinal;
+          ordinal = bytes[index++];
+
+          Combinator combinator;
+          combinator = Combinator.ofOrdinal(ordinal);
+
+          appendable.append(combinator.cssName);
+        }
+
         case ByteCode.SELECTOR_PSEUDO_CLASS -> {
           int ordinal;
           ordinal = bytes[index++];

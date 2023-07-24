@@ -15,4 +15,6 @@
  */
 package objectos.css.om;
 
-public sealed interface SelectorElement permits Selector {}
+import objectos.css.internal.Combinator;
+
+public sealed interface SelectorElement permits Selector, Combinator {}

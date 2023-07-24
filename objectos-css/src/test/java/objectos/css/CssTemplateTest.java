@@ -2012,6 +2012,8 @@ public class CssTemplateTest {
   public void selectorJoined() {
     test(
       new CssTemplate() {
+        static final ClassSelector FOO = ClassSelector.of("foo");
+
         @Override
         protected void definition() {
           style(
@@ -2022,6 +2024,10 @@ public class CssTemplateTest {
           style(
             sel(small, __after)
           );
+
+          style(
+            sel(FOO, CHILD, any, SIBLING, any)
+          );
         }
       },
 
@@ -2029,6 +2035,8 @@ public class CssTemplateTest {
       input::placeholder {}
 
       small::after {}
+
+      .foo > * + * {}
       """
     );
   }

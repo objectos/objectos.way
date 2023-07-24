@@ -37,11 +37,19 @@ import objectos.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
-  protected static final Zero $0 = InternalZero.INSTANCE;
+  protected static final MediaQuery screen = MediaType.SCREEN;
+
+  protected static final SelectorElement SIBLING = Combinator.ADJACENT_SIBLING;
+
+  protected static final SelectorElement CHILD = Combinator.CHILD;
+
+  protected static final SelectorElement GENERAL_SIBLING = Combinator.GENERAL_SIBLING;
+
+  protected static final SelectorElement DESCENDANT = Combinator.DESCENDANT;
 
   protected static final AttributeOperator EQ = InternalAttributeOperator.EQUALS;
 
-  protected static final MediaQuery screen = MediaType.SCREEN;
+  protected static final Zero $0 = InternalZero.INSTANCE;
 
   private CssTemplateApi api;
 
@@ -163,7 +171,8 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return InternalInstruction.PERCENTAGE_INT;
   }
 
-  protected final Selector sel(SelectorElement e1, SelectorElement e2) {
+  protected final Selector sel(
+      SelectorElement e1, SelectorElement e2) {
     Check.notNull(e1, "e1 == null");
     Check.notNull(e2, "e2 == null");
 
@@ -173,6 +182,29 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.selectorBegin();
     api.selectorElement(e1);
     api.selectorElement(e2);
+    api.selectorEnd();
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final Selector sel(
+      SelectorElement e1, SelectorElement e2, SelectorElement e3, SelectorElement e4,
+      SelectorElement e5) {
+    Check.notNull(e1, "e1 == null");
+    Check.notNull(e2, "e2 == null");
+    Check.notNull(e3, "e3 == null");
+    Check.notNull(e4, "e4 == null");
+    Check.notNull(e5, "e5 == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.selectorBegin();
+    api.selectorElement(e1);
+    api.selectorElement(e2);
+    api.selectorElement(e3);
+    api.selectorElement(e4);
+    api.selectorElement(e5);
     api.selectorEnd();
 
     return InternalInstruction.INSTANCE;

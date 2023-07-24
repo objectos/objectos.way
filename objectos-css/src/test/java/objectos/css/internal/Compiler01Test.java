@@ -782,6 +782,66 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  .foo > * + * {}
+  """)
+  public void testCase16() {
+    ClassSelector foo;
+    foo = ClassSelector.of("foo");
+
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.selectorBegin();
+    compiler.selectorElement(foo);
+    compiler.selectorElement(Combinator.CHILD);
+    compiler.selectorElement(GeneratedCssTemplate.any);
+    compiler.selectorElement(Combinator.ADJACENT_SIBLING);
+    compiler.selectorElement(GeneratedCssTemplate.any);
+    compiler.selectorEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.len0(16),
+      Bytes.len1(16),
+      ByteProto.SELECTOR_CLASS,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteProto.SELECTOR_COMBINATOR,
+      (byte) Combinator.CHILD.ordinal(),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.any),
+      Bytes.name1(StandardName.any),
+      ByteProto.SELECTOR_COMBINATOR,
+      (byte) Combinator.ADJACENT_SIBLING.ordinal(),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.any),
+      Bytes.name1(StandardName.any),
+      ByteProto.SELECTOR_SEL_END,
+      Bytes.int0(16),
+      ByteProto.SELECTOR_SEL,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(5),
+      Bytes.len1(5),
+      ByteProto.SELECTOR_SEL,
+      Bytes.int0(23),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(24),
+      ByteProto.STYLE_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

@@ -509,6 +509,18 @@ final class Compiler02 extends Compiler01 {
     return Arrays.copyOf(objectArray, objectIndex);
   }
 
+  private int selectorClass(int index) {
+    auxAdd(ByteCode.SELECTOR_CLASS, main[index++], main[index++]);
+
+    return index;
+  }
+
+  private int selectorCombinator(int index) {
+    auxAdd(ByteCode.SELECTOR_COMBINATOR, main[index++]);
+
+    return index;
+  }
+
   private int selectorComma(int selectorCount) {
     if (selectorCount == 0) {
       indentationWrite();
@@ -551,6 +563,10 @@ final class Compiler02 extends Compiler01 {
           // skip distance to end
           index += 2;
         }
+
+        case ByteProto.SELECTOR_CLASS -> index = selectorClass(index);
+
+        case ByteProto.SELECTOR_COMBINATOR -> index = selectorCombinator(index);
 
         case ByteProto.SELECTOR_PSEUDO_CLASS -> index = selectorPseudoClass(index);
 
@@ -706,7 +722,7 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.SELECTOR_CLASS -> {
           selectorCount = selectorComma(selectorCount);
 
-          auxAdd(ByteCode.SELECTOR_CLASS, main[index++], main[index++]);
+          index = selectorClass(index);
         }
 
         case ByteProto.SELECTOR_PSEUDO_CLASS -> {

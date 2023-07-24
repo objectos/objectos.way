@@ -636,6 +636,13 @@ class Compiler01 extends CssTemplateApi {
       auxVarInt(selector.ordinal());
     }
 
+    else if (element instanceof Combinator combinator) {
+      auxAdd(
+        ByteProto.SELECTOR_COMBINATOR,
+        (byte) combinator.ordinal()
+      );
+    }
+
     else if (element == InternalInstruction.INSTANCE) {
       // @ ByteProto
       mainContents--;
@@ -833,6 +840,7 @@ class Compiler01 extends CssTemplateApi {
         }
 
         case ByteProto.MEDIA_TYPE,
+             ByteProto.SELECTOR_COMBINATOR,
              ByteProto.SELECTOR_PSEUDO_CLASS,
              ByteProto.SELECTOR_PSEUDO_ELEMENT -> {
           byte ordinal;

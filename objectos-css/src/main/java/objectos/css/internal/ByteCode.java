@@ -43,28 +43,29 @@ final class ByteCode {
   public static final byte SELECTOR_ATTR = -16;
   public static final byte SELECTOR_ATTR_VALUE = -17;
   public static final byte SELECTOR_CLASS = -18;
-  public static final byte SELECTOR_PSEUDO_CLASS = -19;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -20;
-  public static final byte SELECTOR_TYPE = -21;
+  public static final byte SELECTOR_COMBINATOR = -19;
+  public static final byte SELECTOR_PSEUDO_CLASS = -20;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -21;
+  public static final byte SELECTOR_TYPE = -22;
 
   //property
 
-  public static final byte PROPERTY_NAME = -22;
+  public static final byte PROPERTY_NAME = -23;
 
   //property values
 
-  public static final byte COLOR_HEX = -23;
-  public static final byte DOUBLE_LITERAL = -24;
-  public static final byte INT_LITERAL = -25;
-  public static final byte KEYWORD = -26;
-  public static final byte LENGTH_DOUBLE = -27;
-  public static final byte LENGTH_INT = -28;
-  public static final byte PERCENTAGE_DOUBLE = -29;
-  public static final byte PERCENTAGE_INT = -30;
-  public static final byte STRING_LITERAL = -31;
-  public static final byte STRING_QUOTES_OPTIONAL = -32;
-  public static final byte URL = -33;
-  public static final byte ZERO = -34;
+  public static final byte COLOR_HEX = -24;
+  public static final byte DOUBLE_LITERAL = -25;
+  public static final byte INT_LITERAL = -26;
+  public static final byte KEYWORD = -27;
+  public static final byte LENGTH_DOUBLE = -28;
+  public static final byte LENGTH_INT = -29;
+  public static final byte PERCENTAGE_DOUBLE = -30;
+  public static final byte PERCENTAGE_INT = -31;
+  public static final byte STRING_LITERAL = -32;
+  public static final byte STRING_QUOTES_OPTIONAL = -33;
+  public static final byte URL = -34;
+  public static final byte ZERO = -35;
 
   private ByteCode() {}
 

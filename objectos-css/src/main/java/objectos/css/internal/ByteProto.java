@@ -49,32 +49,33 @@ final class ByteProto {
   public static final byte SELECTOR_ATTR = -19;
   public static final byte SELECTOR_ATTR_VALUE = -20;
   public static final byte SELECTOR_CLASS = -21;
-  public static final byte SELECTOR_PSEUDO_CLASS = -22;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -23;
-  public static final byte SELECTOR_SEL = -24;
-  public static final byte SELECTOR_SEL_END = -25;
-  public static final byte SELECTOR_TYPE = -26;
+  public static final byte SELECTOR_COMBINATOR = -22;
+  public static final byte SELECTOR_PSEUDO_CLASS = -23;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -24;
+  public static final byte SELECTOR_SEL = -25;
+  public static final byte SELECTOR_SEL_END = -26;
+  public static final byte SELECTOR_TYPE = -27;
 
   //properties
 
-  public static final byte DECLARATION = -27;
-  public static final byte DECLARATION_END = -28;
+  public static final byte DECLARATION = -28;
+  public static final byte DECLARATION_END = -29;
 
   //property values
 
-  public static final byte COLOR_HEX = -29;
-  public static final byte COMMA = -30;
-  public static final byte JAVA_DOUBLE = -31;
-  public static final byte JAVA_INT = -32;
-  public static final byte JAVA_STRING = -33;
-  public static final byte LENGTH_DOUBLE = -34;
-  public static final byte LENGTH_INT = -35;
-  public static final byte PERCENTAGE_DOUBLE = -36;
-  public static final byte PERCENTAGE_INT = -37;
-  public static final byte STANDARD_NAME = -38;
-  public static final byte STRING_LITERAL = -39;
-  public static final byte URL = -40;
-  public static final byte ZERO = -41;
+  public static final byte COLOR_HEX = -30;
+  public static final byte COMMA = -31;
+  public static final byte JAVA_DOUBLE = -32;
+  public static final byte JAVA_INT = -33;
+  public static final byte JAVA_STRING = -34;
+  public static final byte LENGTH_DOUBLE = -35;
+  public static final byte LENGTH_INT = -36;
+  public static final byte PERCENTAGE_DOUBLE = -37;
+  public static final byte PERCENTAGE_INT = -38;
+  public static final byte STANDARD_NAME = -39;
+  public static final byte STRING_LITERAL = -40;
+  public static final byte URL = -41;
+  public static final byte ZERO = -42;
 
   private ByteProto() {}
 
