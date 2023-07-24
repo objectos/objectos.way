@@ -110,6 +110,8 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     // F
     flexDirection();
     fontSize();
+    fontStyle();
+    fontWeight();
 
     // H
     height();
@@ -208,6 +210,37 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
         styleMethod.addDeclaration("lineHeight", value.lineHeight);
       }
+    }
+  }
+
+  private void fontStyle() {
+    Names names;
+    names = names(
+      name("ITALIC", k("italic")),
+      name("NORMAL", k("normal"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("FontStyle"), methods("fontStyle"), names);
+    }
+  }
+
+  private void fontWeight() {
+    Names names;
+    names = names(
+      name("THIN", l(100)),
+      name("EXTRALIGHT", l(200)),
+      name("LIGHT", l(300)),
+      name("NORMAL", l(400)),
+      name("MEDIUM", l(500)),
+      name("SEMIBOLD", l(600)),
+      name("BOLD", l(700)),
+      name("EXTRABOLD", l(800)),
+      name("BLOCK", l(900))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("FontWeight"), methods("fontWeight"), names);
     }
   }
 

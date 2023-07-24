@@ -270,6 +270,7 @@ public final class CssSpec extends CssSelfGen {
     fontFamily();
     fontFeatureSettings();
     fontSize();
+    fontStyle();
     fontVariationSettings();
     fontWeight();
 
@@ -763,6 +764,23 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(fontSizeValue, "value")
+    );
+  }
+
+  private void fontStyle() {
+    var value = t(
+      "FontStyleValue",
+
+      k("italic"),
+      k("normal"),
+      k("oblique")
+    );
+
+    property(
+      "font-style",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
     );
   }
 

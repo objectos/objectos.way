@@ -31,6 +31,8 @@ public final class Framework extends objectos.css.CssTemplate {
     AllDisplay();
     AllFlexDirection();
     AllFontSize();
+    AllFontStyle();
+    AllFontWeight();
     AllHeight();
     AllJustifyContent();
     AllMargin();
@@ -58,6 +60,8 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallDisplay();
     SmallFlexDirection();
     SmallFontSize();
+    SmallFontStyle();
+    SmallFontWeight();
     SmallHeight();
     SmallJustifyContent();
     SmallMargin();
@@ -85,6 +89,8 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumDisplay();
     MediumFlexDirection();
     MediumFontSize();
+    MediumFontStyle();
+    MediumFontWeight();
     MediumHeight();
     MediumJustifyContent();
     MediumMargin();
@@ -112,6 +118,8 @@ public final class Framework extends objectos.css.CssTemplate {
     LargeDisplay();
     LargeFlexDirection();
     LargeFontSize();
+    LargeFontStyle();
+    LargeFontWeight();
     LargeHeight();
     LargeJustifyContent();
     LargeMargin();
@@ -139,6 +147,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargeDisplay();
     XLargeFlexDirection();
     XLargeFontSize();
+    XLargeFontStyle();
+    XLargeFontWeight();
     XLargeHeight();
     XLargeJustifyContent();
     XLargeMargin();
@@ -166,6 +176,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2Display();
     XLarge2FlexDirection();
     XLarge2FontSize();
+    XLarge2FontStyle();
+    XLarge2FontWeight();
     XLarge2Height();
     XLarge2JustifyContent();
     XLarge2Margin();
@@ -348,6 +360,56 @@ public final class Framework extends objectos.css.CssTemplate {
       objectos.css.util.All.FontSize.X_LARGE9,
       fontSize(rem(8)),
       lineHeight(1)
+);
+  }
+
+  private void AllFontStyle() {
+    style(
+      objectos.css.util.All.FontStyle.ITALIC,
+      fontStyle(italic)
+);
+    style(
+      objectos.css.util.All.FontStyle.NORMAL,
+      fontStyle(normal)
+);
+  }
+
+  private void AllFontWeight() {
+    style(
+      objectos.css.util.All.FontWeight.THIN,
+      fontWeight(100)
+);
+    style(
+      objectos.css.util.All.FontWeight.EXTRALIGHT,
+      fontWeight(200)
+);
+    style(
+      objectos.css.util.All.FontWeight.LIGHT,
+      fontWeight(300)
+);
+    style(
+      objectos.css.util.All.FontWeight.NORMAL,
+      fontWeight(400)
+);
+    style(
+      objectos.css.util.All.FontWeight.MEDIUM,
+      fontWeight(500)
+);
+    style(
+      objectos.css.util.All.FontWeight.SEMIBOLD,
+      fontWeight(600)
+);
+    style(
+      objectos.css.util.All.FontWeight.BOLD,
+      fontWeight(700)
+);
+    style(
+      objectos.css.util.All.FontWeight.EXTRABOLD,
+      fontWeight(800)
+);
+    style(
+      objectos.css.util.All.FontWeight.BLOCK,
+      fontWeight(900)
 );
   }
 
@@ -3681,6 +3743,60 @@ public final class Framework extends objectos.css.CssTemplate {
         objectos.css.util.Small.FontSize.X_LARGE9,
         fontSize(rem(8)),
         lineHeight(1)
+));
+  }
+
+  private void SmallFontStyle() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.FontStyle.ITALIC,
+        fontStyle(italic)
+),
+      style(
+        objectos.css.util.Small.FontStyle.NORMAL,
+        fontStyle(normal)
+));
+  }
+
+  private void SmallFontWeight() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.FontWeight.THIN,
+        fontWeight(100)
+),
+      style(
+        objectos.css.util.Small.FontWeight.EXTRALIGHT,
+        fontWeight(200)
+),
+      style(
+        objectos.css.util.Small.FontWeight.LIGHT,
+        fontWeight(300)
+),
+      style(
+        objectos.css.util.Small.FontWeight.NORMAL,
+        fontWeight(400)
+),
+      style(
+        objectos.css.util.Small.FontWeight.MEDIUM,
+        fontWeight(500)
+),
+      style(
+        objectos.css.util.Small.FontWeight.SEMIBOLD,
+        fontWeight(600)
+),
+      style(
+        objectos.css.util.Small.FontWeight.BOLD,
+        fontWeight(700)
+),
+      style(
+        objectos.css.util.Small.FontWeight.EXTRABOLD,
+        fontWeight(800)
+),
+      style(
+        objectos.css.util.Small.FontWeight.BLOCK,
+        fontWeight(900)
 ));
   }
 
@@ -7059,6 +7175,60 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumFontStyle() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.FontStyle.ITALIC,
+        fontStyle(italic)
+),
+      style(
+        objectos.css.util.Medium.FontStyle.NORMAL,
+        fontStyle(normal)
+));
+  }
+
+  private void MediumFontWeight() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.FontWeight.THIN,
+        fontWeight(100)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.EXTRALIGHT,
+        fontWeight(200)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.LIGHT,
+        fontWeight(300)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.NORMAL,
+        fontWeight(400)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.MEDIUM,
+        fontWeight(500)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.SEMIBOLD,
+        fontWeight(600)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.BOLD,
+        fontWeight(700)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.EXTRABOLD,
+        fontWeight(800)
+),
+      style(
+        objectos.css.util.Medium.FontWeight.BLOCK,
+        fontWeight(900)
+));
+  }
+
   private void MediumHeight() {
     media(
       minWidth(px(768)),
@@ -10431,6 +10601,60 @@ public final class Framework extends objectos.css.CssTemplate {
         objectos.css.util.Large.FontSize.X_LARGE9,
         fontSize(rem(8)),
         lineHeight(1)
+));
+  }
+
+  private void LargeFontStyle() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.FontStyle.ITALIC,
+        fontStyle(italic)
+),
+      style(
+        objectos.css.util.Large.FontStyle.NORMAL,
+        fontStyle(normal)
+));
+  }
+
+  private void LargeFontWeight() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.FontWeight.THIN,
+        fontWeight(100)
+),
+      style(
+        objectos.css.util.Large.FontWeight.EXTRALIGHT,
+        fontWeight(200)
+),
+      style(
+        objectos.css.util.Large.FontWeight.LIGHT,
+        fontWeight(300)
+),
+      style(
+        objectos.css.util.Large.FontWeight.NORMAL,
+        fontWeight(400)
+),
+      style(
+        objectos.css.util.Large.FontWeight.MEDIUM,
+        fontWeight(500)
+),
+      style(
+        objectos.css.util.Large.FontWeight.SEMIBOLD,
+        fontWeight(600)
+),
+      style(
+        objectos.css.util.Large.FontWeight.BOLD,
+        fontWeight(700)
+),
+      style(
+        objectos.css.util.Large.FontWeight.EXTRABOLD,
+        fontWeight(800)
+),
+      style(
+        objectos.css.util.Large.FontWeight.BLOCK,
+        fontWeight(900)
 ));
   }
 
@@ -13809,6 +14033,60 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeFontStyle() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.FontStyle.ITALIC,
+        fontStyle(italic)
+),
+      style(
+        objectos.css.util.XLarge.FontStyle.NORMAL,
+        fontStyle(normal)
+));
+  }
+
+  private void XLargeFontWeight() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.FontWeight.THIN,
+        fontWeight(100)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.EXTRALIGHT,
+        fontWeight(200)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.LIGHT,
+        fontWeight(300)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.NORMAL,
+        fontWeight(400)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.MEDIUM,
+        fontWeight(500)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.SEMIBOLD,
+        fontWeight(600)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.BOLD,
+        fontWeight(700)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.EXTRABOLD,
+        fontWeight(800)
+),
+      style(
+        objectos.css.util.XLarge.FontWeight.BLOCK,
+        fontWeight(900)
+));
+  }
+
   private void XLargeHeight() {
     media(
       minWidth(px(1280)),
@@ -17181,6 +17459,60 @@ public final class Framework extends objectos.css.CssTemplate {
         objectos.css.util.XLarge2.FontSize.X_LARGE9,
         fontSize(rem(8)),
         lineHeight(1)
+));
+  }
+
+  private void XLarge2FontStyle() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.FontStyle.ITALIC,
+        fontStyle(italic)
+),
+      style(
+        objectos.css.util.XLarge2.FontStyle.NORMAL,
+        fontStyle(normal)
+));
+  }
+
+  private void XLarge2FontWeight() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.FontWeight.THIN,
+        fontWeight(100)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.EXTRALIGHT,
+        fontWeight(200)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.LIGHT,
+        fontWeight(300)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.NORMAL,
+        fontWeight(400)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.MEDIUM,
+        fontWeight(500)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.SEMIBOLD,
+        fontWeight(600)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.BOLD,
+        fontWeight(700)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.EXTRABOLD,
+        fontWeight(800)
+),
+      style(
+        objectos.css.util.XLarge2.FontWeight.BLOCK,
+        fontWeight(900)
 ));
   }
 

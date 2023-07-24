@@ -103,6 +103,36 @@ public final class XLarge {
     private FontSize() {}
   }
 
+  public static final class FontStyle {
+    public static final ClassSelector ITALIC = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector NORMAL = ClassSelector.randomClassSelector(5);
+
+    private FontStyle() {}
+  }
+
+  public static final class FontWeight {
+    public static final ClassSelector THIN = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector EXTRALIGHT = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector LIGHT = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector NORMAL = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector MEDIUM = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector SEMIBOLD = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector BOLD = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector EXTRABOLD = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector BLOCK = ClassSelector.randomClassSelector(5);
+
+    private FontWeight() {}
+  }
+
   public static final class Height {
     public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
 

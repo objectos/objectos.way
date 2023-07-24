@@ -64,6 +64,8 @@ public enum Property implements PropertyName {
 
   FONT_SIZE("font-size"),
 
+  FONT_STYLE("font-style"),
+
   FONT_VARIATION_SETTINGS("font-variation-settings"),
 
   FONT_WEIGHT("font-weight"),

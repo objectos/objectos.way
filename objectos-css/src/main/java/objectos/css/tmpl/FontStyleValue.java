@@ -16,13 +16,8 @@
 package objectos.css.tmpl;
 
 import objectos.css.internal.StandardName;
+import objectos.css.om.PropertyValue;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface NormalKeyword extends
-    FontFeatureSettingsValue,
-    FontStyleValue,
-    FontVariationSettingsValue,
-    FontWeightValue,
-    JustifyContentValue,
-    LineHeightValue permits StandardName {}
+public sealed interface FontStyleValue extends PropertyValue permits NormalKeyword, StandardName {}

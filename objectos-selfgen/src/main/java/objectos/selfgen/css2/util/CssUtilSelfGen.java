@@ -80,6 +80,10 @@ public abstract class CssUtilSelfGen {
     return new Value.ExpressionName(fieldName);
   }
 
+  protected final Value l(int value) {
+    return new Value.LiteralInt(value);
+  }
+
   protected final Methods methods(String... names) {
     GrowableList<String> list;
     list = new GrowableList<String>();

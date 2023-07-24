@@ -45,6 +45,7 @@ import objectos.css.tmpl.FlexStartKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
+import objectos.css.tmpl.FontStyleValue;
 import objectos.css.tmpl.FontValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
@@ -115,6 +116,7 @@ public enum StandardName implements Selector, ColorValue,
     FontFamilyValue,
     FontFeatureSettingsValue,
     FontSizeValue,
+    FontStyleValue,
     FontValue,
     FontVariationSettingsValue,
     FontWeightValue,
@@ -395,6 +397,8 @@ public enum StandardName implements Selector, ColorValue,
 
   inside("inside"),
 
+  italic("italic"),
+
   japaneseFormal("japanese-formal"),
 
   japaneseInformal("japanese-informal"),
@@ -524,6 +528,8 @@ public enum StandardName implements Selector, ColorValue,
   nwResize("nw-resize"),
 
   nwseResize("nwse-resize"),
+
+  oblique("oblique"),
 
   oriya("oriya"),
 

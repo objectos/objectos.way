@@ -52,6 +52,7 @@ import objectos.css.tmpl.FlexStartKeyword;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.FontFeatureSettingsValue;
 import objectos.css.tmpl.FontSizeValue;
+import objectos.css.tmpl.FontStyleValue;
 import objectos.css.tmpl.FontValue;
 import objectos.css.tmpl.FontVariationSettingsValue;
 import objectos.css.tmpl.FontWeightValue;
@@ -434,6 +435,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final ListStylePositionValue inside = StandardName.inside;
 
+  protected static final FontStyleValue italic = StandardName.italic;
+
   protected static final CounterStyleValue japaneseFormal = StandardName.japaneseFormal;
 
   protected static final CounterStyleValue japaneseInformal = StandardName.japaneseInformal;
@@ -563,6 +566,8 @@ abstract class GeneratedCssTemplate {
   protected static final CursorValue nwResize = StandardName.nwResize;
 
   protected static final CursorValue nwseResize = StandardName.nwseResize;
+
+  protected static final FontStyleValue oblique = StandardName.oblique;
 
   protected static final CounterStyleValue oriya = StandardName.oriya;
 
@@ -1162,6 +1167,16 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration fontSize(FontSizeValue value) {
     Check.notNull(value, "value == null");
     return declaration(Property.FONT_SIZE, value);
+  }
+
+  protected final StyleDeclaration fontStyle(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.FONT_STYLE, value);
+  }
+
+  protected final StyleDeclaration fontStyle(FontStyleValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.FONT_STYLE, value);
   }
 
   protected final StyleDeclaration fontVariationSettings(GlobalKeyword value) {
