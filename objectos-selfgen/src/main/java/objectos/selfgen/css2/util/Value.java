@@ -27,4 +27,6 @@ public sealed interface Value {
 
   record MethodInt(String methodName, int value) implements Value {}
 
+  record MethodString(String methodName, String value) implements Value {}
+
 }

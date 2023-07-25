@@ -17,6 +17,7 @@ package objectos.selfgen.css2.util;
 
 import java.util.List;
 import objectos.selfgen.css2.util.Prefix.Breakpoint;
+import objectos.selfgen.css2.util.Prefix.Simple;
 
 final class FrameworkClassStep extends ThisTemplate {
 
@@ -111,6 +112,12 @@ final class FrameworkClassStep extends ThisTemplate {
 
     }
 
+    else if (prefix instanceof Simple simple) {
+      for (var method : property.styleMethodList) {
+        p(include(() -> properties2(method, property)));
+      }
+    }
+
     else {
       throw new UnsupportedOperationException(
         "Implement me :: type = " + prefix.getClass()
@@ -135,6 +142,16 @@ final class FrameworkClassStep extends ThisTemplate {
           argument(n("any")),
           argument(n("SIBLING")),
           argument(n("any")),
+          NL
+        );
+      }
+
+      case HOVER -> {
+        argument(
+          NL,
+          v("sel"),
+          argument(property.className, n(styleMethod.constantName)),
+          argument(n("_hover")),
           NL
         );
       }
@@ -172,6 +189,10 @@ final class FrameworkClassStep extends ThisTemplate {
 
     else if (value instanceof Value.MethodInt method) {
       argument(v(method.methodName()), argument(i(method.value())));
+    }
+
+    else if (value instanceof Value.MethodString method) {
+      argument(v(method.methodName()), argument(s(method.value())));
     }
 
     else {

@@ -22,6 +22,8 @@ import objectos.lang.Generated;
 public enum StandardPseudoClassSelector implements PseudoClassSelector {
   _disabled(":disabled"),
 
+  _hover(":hover"),
+
   _mozFocusring(":-moz-focusring"),
 
   _mozUiInvalid(":-moz-ui-invalid");

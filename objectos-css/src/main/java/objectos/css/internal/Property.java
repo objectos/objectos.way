@@ -132,6 +132,8 @@ public enum Property implements PropertyName {
 
   TAB_SIZE("tab-size"),
 
+  TEXT_ALIGN("text-align"),
+
   TEXT_DECORATION("text-decoration"),
 
   TEXT_DECORATION_COLOR("text-decoration-color"),

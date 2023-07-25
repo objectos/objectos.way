@@ -34,8 +34,11 @@ public final class CssUtilSpec extends CssUtilSelfGen {
   private Breakpoint prefixLarge;
   private Breakpoint prefixXLarge;
   private Breakpoint prefixXLarge2;
+  private Prefix hover;
 
   private List<Prefix> responsive;
+
+  private Names colors;
 
   private Names spacing;
 
@@ -65,7 +68,320 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       prefixXLarge2
     );
 
-    spacing = names(
+    hover = prefix("Hover");
+
+    colors = $colors();
+
+    spacing = $spacing();
+
+    // C
+
+    color();
+
+    // D
+
+    display();
+
+    // F
+
+    flexDirection();
+    fontSize();
+    fontStyle();
+    fontWeight();
+
+    // H
+
+    height();
+
+    // J
+
+    justifyContent();
+
+    // L
+
+    letterSpacing();
+    lineHeight();
+    listStylePosition();
+    listStyleType();
+
+    // M
+
+    margin();
+    maxWidth();
+    minHeight();
+
+    // P
+
+    padding();
+
+    // S
+
+    space();
+
+    // T
+
+    textAlign();
+    textDecoration();
+    textTransform();
+
+    // W
+
+    width();
+  }
+
+  private Names $colors() {
+    return names(
+      name("TRANSPARENT", k("transparent")),
+
+      name("BLACK", hex("#000")),
+      name("WHITE", hex("#ffffff")),
+
+      name("SLATE_050", hex("#f8fafc")),
+      name("SLATE_100", hex("#f1f5f9")),
+      name("SLATE_200", hex("#e2e8f0")),
+      name("SLATE_300", hex("#cbd5e1")),
+      name("SLATE_400", hex("#94a3b8")),
+      name("SLATE_500", hex("#64748b")),
+      name("SLATE_600", hex("#475569")),
+      name("SLATE_700", hex("#334155")),
+      name("SLATE_800", hex("#1e293b")),
+      name("SLATE_900", hex("#0f172a")),
+
+      name("GRAY_050", hex("#f9fafb")),
+      name("GRAY_100", hex("#f3f4f6")),
+      name("GRAY_200", hex("#e5e7eb")),
+      name("GRAY_300", hex("#d1d5db")),
+      name("GRAY_400", hex("#9ca3af")),
+      name("GRAY_500", hex("#6b7280")),
+      name("GRAY_600", hex("#4b5563")),
+      name("GRAY_700", hex("#374151")),
+      name("GRAY_800", hex("#1f2937")),
+      name("GRAY_900", hex("#111827")),
+
+      name("ZINC_050", hex("#fafafa")),
+      name("ZINC_100", hex("#f4f4f5")),
+      name("ZINC_200", hex("#e4e4e7")),
+      name("ZINC_300", hex("#d4d4d8")),
+      name("ZINC_400", hex("#a1a1aa")),
+      name("ZINC_500", hex("#71717a")),
+      name("ZINC_600", hex("#52525b")),
+      name("ZINC_700", hex("#3f3f46")),
+      name("ZINC_800", hex("#27272a")),
+      name("ZINC_900", hex("#18181b")),
+
+      name("NEUTRAL_050", hex("#fafafa")),
+      name("NEUTRAL_100", hex("#f5f5f5")),
+      name("NEUTRAL_200", hex("#e5e5e5")),
+      name("NEUTRAL_300", hex("#d4d4d4")),
+      name("NEUTRAL_400", hex("#a3a3a3")),
+      name("NEUTRAL_500", hex("#737373")),
+      name("NEUTRAL_600", hex("#525252")),
+      name("NEUTRAL_700", hex("#404040")),
+      name("NEUTRAL_800", hex("#262626")),
+      name("NEUTRAL_900", hex("#171717")),
+
+      name("STONE_050", hex("#fafaf9")),
+      name("STONE_100", hex("#f5f5f4")),
+      name("STONE_200", hex("#e7e5e4")),
+      name("STONE_300", hex("#d6d3d1")),
+      name("STONE_400", hex("#a8a29e")),
+      name("STONE_500", hex("#78716c")),
+      name("STONE_600", hex("#57534e")),
+      name("STONE_700", hex("#44403c")),
+      name("STONE_800", hex("#292524")),
+      name("STONE_900", hex("#1c1917")),
+
+      name("RED_050", hex("#fef2f2")),
+      name("RED_100", hex("#fee2e2")),
+      name("RED_200", hex("#fecaca")),
+      name("RED_300", hex("#fca5a5")),
+      name("RED_400", hex("#f87171")),
+      name("RED_500", hex("#ef4444")),
+      name("RED_600", hex("#dc2626")),
+      name("RED_700", hex("#b91c1c")),
+      name("RED_800", hex("#991b1b")),
+      name("RED_900", hex("#7f1d1d")),
+
+      name("ORANGE_050", hex("#fff7ed")),
+      name("ORANGE_100", hex("#ffedd5")),
+      name("ORANGE_200", hex("#fed7aa")),
+      name("ORANGE_300", hex("#fdba74")),
+      name("ORANGE_400", hex("#fb923c")),
+      name("ORANGE_500", hex("#f97316")),
+      name("ORANGE_600", hex("#ea580c")),
+      name("ORANGE_700", hex("#c2410c")),
+      name("ORANGE_800", hex("#9a3412")),
+      name("ORANGE_900", hex("#7c2d12")),
+
+      name("AMBER_050", hex("#fffbeb")),
+      name("AMBER_100", hex("#fef3c7")),
+      name("AMBER_200", hex("#fde68a")),
+      name("AMBER_300", hex("#fcd34d")),
+      name("AMBER_400", hex("#fbbf24")),
+      name("AMBER_500", hex("#f59e0b")),
+      name("AMBER_600", hex("#d97706")),
+      name("AMBER_700", hex("#b45309")),
+      name("AMBER_800", hex("#92400e")),
+      name("AMBER_900", hex("#78350f")),
+
+      name("YELLOW_050", hex("#fefce8")),
+      name("YELLOW_100", hex("#fef9c3")),
+      name("YELLOW_200", hex("#fef08a")),
+      name("YELLOW_300", hex("#fde047")),
+      name("YELLOW_400", hex("#facc15")),
+      name("YELLOW_500", hex("#eab308")),
+      name("YELLOW_600", hex("#ca8a04")),
+      name("YELLOW_700", hex("#a16207")),
+      name("YELLOW_800", hex("#854d0e")),
+      name("YELLOW_900", hex("#713f12")),
+
+      name("LIME_050", hex("#f7fee7")),
+      name("LIME_100", hex("#ecfccb")),
+      name("LIME_200", hex("#d9f99d")),
+      name("LIME_300", hex("#bef264")),
+      name("LIME_400", hex("#a3e635")),
+      name("LIME_500", hex("#84cc16")),
+      name("LIME_600", hex("#65a30d")),
+      name("LIME_700", hex("#4d7c0f")),
+      name("LIME_800", hex("#3f6212")),
+      name("LIME_900", hex("#365314")),
+
+      name("GREEN_050", hex("#f0fdf4")),
+      name("GREEN_100", hex("#dcfce7")),
+      name("GREEN_200", hex("#bbf7d0")),
+      name("GREEN_300", hex("#86efac")),
+      name("GREEN_400", hex("#4ade80")),
+      name("GREEN_500", hex("#22c55e")),
+      name("GREEN_600", hex("#16a34a")),
+      name("GREEN_700", hex("#15803d")),
+      name("GREEN_800", hex("#166534")),
+      name("GREEN_900", hex("#14532d")),
+
+      name("EMERALD_050", hex("#ecfdf5")),
+      name("EMERALD_100", hex("#d1fae5")),
+      name("EMERALD_200", hex("#a7f3d0")),
+      name("EMERALD_300", hex("#6ee7b7")),
+      name("EMERALD_400", hex("#34d399")),
+      name("EMERALD_500", hex("#10b981")),
+      name("EMERALD_600", hex("#059669")),
+      name("EMERALD_700", hex("#047857")),
+      name("EMERALD_800", hex("#065f46")),
+      name("EMERALD_900", hex("#064e3b")),
+
+      name("TEAL_050", hex("#f0fdfa")),
+      name("TEAL_100", hex("#ccfbf1")),
+      name("TEAL_200", hex("#99f6e4")),
+      name("TEAL_300", hex("#5eead4")),
+      name("TEAL_400", hex("#2dd4bf")),
+      name("TEAL_500", hex("#14b8a6")),
+      name("TEAL_600", hex("#0d9488")),
+      name("TEAL_700", hex("#0f766e")),
+      name("TEAL_800", hex("#115e59")),
+      name("TEAL_900", hex("#134e4a")),
+
+      name("CYAN_050", hex("#ecfeff")),
+      name("CYAN_100", hex("#cffafe")),
+      name("CYAN_200", hex("#a5f3fc")),
+      name("CYAN_300", hex("#67e8f9")),
+      name("CYAN_400", hex("#22d3ee")),
+      name("CYAN_500", hex("#06b6d4")),
+      name("CYAN_600", hex("#0891b2")),
+      name("CYAN_700", hex("#0e7490")),
+      name("CYAN_800", hex("#155e75")),
+      name("CYAN_900", hex("#164e63")),
+
+      name("SKY_050", hex("#f0f9ff")),
+      name("SKY_100", hex("#e0f2fe")),
+      name("SKY_200", hex("#bae6fd")),
+      name("SKY_300", hex("#7dd3fc")),
+      name("SKY_400", hex("#38bdf8")),
+      name("SKY_500", hex("#0ea5e9")),
+      name("SKY_600", hex("#0284c7")),
+      name("SKY_700", hex("#0369a1")),
+      name("SKY_800", hex("#075985")),
+      name("SKY_900", hex("#0c4a6e")),
+
+      name("BLUE_050", hex("#eff6ff")),
+      name("BLUE_100", hex("#dbeafe")),
+      name("BLUE_200", hex("#bfdbfe")),
+      name("BLUE_300", hex("#93c5fd")),
+      name("BLUE_400", hex("#60a5fa")),
+      name("BLUE_500", hex("#3b82f6")),
+      name("BLUE_600", hex("#2563eb")),
+      name("BLUE_700", hex("#1d4ed8")),
+      name("BLUE_800", hex("#1e40af")),
+      name("BLUE_900", hex("#1e3a8a")),
+
+      name("INDIGO_050", hex("#eef2ff")),
+      name("INDIGO_100", hex("#e0e7ff")),
+      name("INDIGO_200", hex("#c7d2fe")),
+      name("INDIGO_300", hex("#a5b4fc")),
+      name("INDIGO_400", hex("#818cf8")),
+      name("INDIGO_500", hex("#6366f1")),
+      name("INDIGO_600", hex("#4f46e5")),
+      name("INDIGO_700", hex("#4338ca")),
+      name("INDIGO_800", hex("#3730a3")),
+      name("INDIGO_900", hex("#312e81")),
+
+      name("VIOLET_050", hex("#f5f3ff")),
+      name("VIOLET_100", hex("#ede9fe")),
+      name("VIOLET_200", hex("#ddd6fe")),
+      name("VIOLET_300", hex("#c4b5fd")),
+      name("VIOLET_400", hex("#a78bfa")),
+      name("VIOLET_500", hex("#8b5cf6")),
+      name("VIOLET_600", hex("#7c3aed")),
+      name("VIOLET_700", hex("#6d28d9")),
+      name("VIOLET_800", hex("#5b21b6")),
+      name("VIOLET_900", hex("#4c1d95")),
+
+      name("PURPLE_050", hex("#faf5ff")),
+      name("PURPLE_100", hex("#f3e8ff")),
+      name("PURPLE_200", hex("#e9d5ff")),
+      name("PURPLE_300", hex("#d8b4fe")),
+      name("PURPLE_400", hex("#c084fc")),
+      name("PURPLE_500", hex("#a855f7")),
+      name("PURPLE_600", hex("#9333ea")),
+      name("PURPLE_700", hex("#7e22ce")),
+      name("PURPLE_800", hex("#6b21a8")),
+      name("PURPLE_900", hex("#581c87")),
+
+      name("FUCHSIA_050", hex("#fdf4ff")),
+      name("FUCHSIA_100", hex("#fae8ff")),
+      name("FUCHSIA_200", hex("#f5d0fe")),
+      name("FUCHSIA_300", hex("#f0abfc")),
+      name("FUCHSIA_400", hex("#e879f9")),
+      name("FUCHSIA_500", hex("#d946ef")),
+      name("FUCHSIA_600", hex("#c026d3")),
+      name("FUCHSIA_700", hex("#a21caf")),
+      name("FUCHSIA_800", hex("#86198f")),
+      name("FUCHSIA_900", hex("#701a75")),
+
+      name("PINK_050", hex("#fdf2f8")),
+      name("PINK_100", hex("#fce7f3")),
+      name("PINK_200", hex("#fbcfe8")),
+      name("PINK_300", hex("#f9a8d4")),
+      name("PINK_400", hex("#f472b6")),
+      name("PINK_500", hex("#ec4899")),
+      name("PINK_600", hex("#db2777")),
+      name("PINK_700", hex("#be185d")),
+      name("PINK_800", hex("#9d174d")),
+      name("PINK_900", hex("#831843")),
+
+      name("ROSE_050", hex("#fff1f2")),
+      name("ROSE_100", hex("#ffe4e6")),
+      name("ROSE_200", hex("#fecdd3")),
+      name("ROSE_300", hex("#fda4af")),
+      name("ROSE_400", hex("#fb7185")),
+      name("ROSE_500", hex("#f43f5e")),
+      name("ROSE_600", hex("#e11d48")),
+      name("ROSE_700", hex("#be123c")),
+      name("ROSE_800", hex("#9f1239")),
+      name("ROSE_900", hex("#881337"))
+    );
+  }
+
+  private Names $spacing() {
+    return names(
       name("PX", px(1)),
       name("V0", zero()),
       name("V0_5", rem(0.125)),
@@ -103,41 +419,14 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       name("V80", rem(20)),
       name("V96", rem(24))
     );
+  }
 
-    // D
-    display();
+  private void color() {
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("Color"), methods("color"), colors);
+    }
 
-    // F
-    flexDirection();
-    fontSize();
-    fontStyle();
-    fontWeight();
-
-    // H
-    height();
-
-    // J
-    justifyContent();
-
-    // L
-    letterSpacing();
-    lineHeight();
-    listStylePosition();
-    listStyleType();
-
-    // M
-    margin();
-    maxWidth();
-    minHeight();
-
-    // P
-    padding();
-
-    // S
-    space();
-
-    // W
-    width();
+    generateHover(hover, simpleName("Color"), methods("color"), colors);
   }
 
   private void display() {
@@ -454,6 +743,49 @@ public final class CssUtilSpec extends CssUtilSelfGen {
       generateAllButFirst(prefix, simpleName("SpaceX"), methods("marginLeft"), spacing);
 
       generateAllButFirst(prefix, simpleName("SpaceY"), methods("marginTop"), spacing);
+    }
+  }
+
+  private void textAlign() {
+    Names names = names(
+      name("LEFT", k("left")),
+      name("CENTER", k("center")),
+      name("RIGHT", k("right")),
+      name("JUSTIFY", k("justify"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("TextAlign"), methods("textAlign"), names);
+    }
+  }
+
+  private void textDecoration() {
+    Names names;
+    names = names(
+      name("UNDERLINE", k("underline")),
+      name("LINE_THROUGH", k("lineThrough")),
+      name("STRIKE", k("lineThrough")),
+      name("NONE", k("none"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("TextDecoration"), methods("textDecoration"), names);
+    }
+
+    generateHover(hover, simpleName("TextDecoration"), methods("textDecoration"), names);
+  }
+
+  private void textTransform() {
+    Names names;
+    names = names(
+      name("UPPERCASE", k("uppercase")),
+      name("LOWERCASE", k("lowercase")),
+      name("CAPITALIZE", k("capitalize")),
+      name("NONE", k("none"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("TextTransform"), methods("textTransform"), names);
     }
   }
 

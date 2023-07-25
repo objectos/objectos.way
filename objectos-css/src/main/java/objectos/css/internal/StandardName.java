@@ -86,6 +86,7 @@ import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.StartKeyword;
 import objectos.css.tmpl.SubKeyword;
 import objectos.css.tmpl.TableKeyword;
+import objectos.css.tmpl.TextAlignValue;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextDecorationStyleValue;
@@ -139,6 +140,7 @@ public enum StandardName implements Selector, ColorValue,
     OverflowPosition,
     PositionValue,
     ResizeValue,
+    TextAlignValue,
     TextDecorationLineMultiValue,
     TextDecorationLineSingleValue,
     TextDecorationStyleValue,
@@ -405,6 +407,8 @@ public enum StandardName implements Selector, ColorValue,
 
   japaneseInformal("japanese-informal"),
 
+  justify("justify"),
+
   kannada("kannada"),
 
   katakana("katakana"),
@@ -448,6 +452,8 @@ public enum StandardName implements Selector, ColorValue,
   lowercase("lowercase"),
 
   malayalam("malayalam"),
+
+  matchParent("match-parent"),
 
   math("math"),
 

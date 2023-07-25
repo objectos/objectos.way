@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Objectos Software LTDA.
+ * Copyright (C) 2016-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.selfgen.css2.util;
+package objectos.css.tmpl;
 
-public enum SelectorKind {
+import objectos.css.internal.StandardName;
+import objectos.css.om.PropertyValue;
+import objectos.lang.Generated;
 
-  STANDARD,
-
-  ALL_BUT_FIRST,
-
-  HOVER;
-
-}
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface TextAlignValue extends PropertyValue permits CenterKeyword, EndKeyword, LeftKeyword, RightKeyword, StandardName, StartKeyword {}

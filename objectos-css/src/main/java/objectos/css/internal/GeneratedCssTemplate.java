@@ -98,6 +98,7 @@ import objectos.css.tmpl.SolidKeyword;
 import objectos.css.tmpl.StartKeyword;
 import objectos.css.tmpl.SubKeyword;
 import objectos.css.tmpl.TableKeyword;
+import objectos.css.tmpl.TextAlignValue;
 import objectos.css.tmpl.TextDecorationLineMultiValue;
 import objectos.css.tmpl.TextDecorationLineSingleValue;
 import objectos.css.tmpl.TextDecorationStyleValue;
@@ -129,6 +130,8 @@ abstract class GeneratedCssTemplate {
   protected static final PseudoElementSelector __webkitSearchDecoration = StandardPseudoElementSelector.__webkitSearchDecoration;
 
   protected static final PseudoClassSelector _disabled = StandardPseudoClassSelector._disabled;
+
+  protected static final PseudoClassSelector _hover = StandardPseudoClassSelector._hover;
 
   protected static final PseudoClassSelector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
 
@@ -442,6 +445,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue japaneseInformal = StandardName.japaneseInformal;
 
+  protected static final TextAlignValue justify = StandardName.justify;
+
   protected static final CounterStyleValue kannada = StandardName.kannada;
 
   protected static final CounterStyleValue katakana = StandardName.katakana;
@@ -485,6 +490,8 @@ abstract class GeneratedCssTemplate {
   protected static final TextTransformValue lowercase = StandardName.lowercase;
 
   protected static final CounterStyleValue malayalam = StandardName.malayalam;
+
+  protected static final TextAlignValue matchParent = StandardName.matchParent;
 
   protected static final FontFamilyValue math = StandardName.math;
 
@@ -1645,6 +1652,16 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration tabSize(Length value) {
     Check.notNull(value, "value == null");
     return declaration(Property.TAB_SIZE, value);
+  }
+
+  protected final StyleDeclaration textAlign(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.TEXT_ALIGN, value);
+  }
+
+  protected final StyleDeclaration textAlign(TextAlignValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.TEXT_ALIGN, value);
   }
 
   protected final StyleDeclaration textDecoration(GlobalKeyword value) {

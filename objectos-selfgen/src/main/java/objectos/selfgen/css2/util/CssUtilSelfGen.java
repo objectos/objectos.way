@@ -21,6 +21,7 @@ import java.util.List;
 import objectos.code.JavaSink;
 import objectos.lang.Check;
 import objectos.selfgen.css2.util.Prefix.Breakpoint;
+import objectos.selfgen.css2.util.Prefix.Simple;
 import objectos.util.GrowableList;
 
 public abstract class CssUtilSelfGen {
@@ -72,6 +73,15 @@ public abstract class CssUtilSelfGen {
   protected final void generateAllButFirst(
       Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
     generate(SelectorKind.ALL_BUT_FIRST, prefix, simpleName, methods, names);
+  }
+
+  protected final void generateHover(
+      Prefix prefix, SimpleName simpleName, Methods methods, Names names) {
+    generate(SelectorKind.HOVER, prefix, simpleName, methods, names);
+  }
+
+  protected final Value hex(String value) {
+    return new Value.MethodString("hex", value);
   }
 
   protected final Value k(String fieldName) {
@@ -132,6 +142,15 @@ public abstract class CssUtilSelfGen {
 
   protected final Value pct(int value) {
     return new Value.MethodInt("pct", value);
+  }
+
+  protected final Simple prefix(String name) {
+    Simple simple;
+    simple = Prefix.ofSimple(name);
+
+    prefixList.add(simple);
+
+    return simple;
   }
 
   protected final Value px(int value) {

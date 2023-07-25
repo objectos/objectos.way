@@ -31,6 +31,12 @@ public sealed abstract class Prefix {
     }
   }
 
+  public static final class Simple extends Prefix {
+    private Simple(ClassTypeName className) {
+      super(className);
+    }
+  }
+
   final ClassTypeName className;
 
   final List<PropertyClass> propertyClassList = new GrowableList<>();
@@ -47,6 +53,15 @@ public sealed abstract class Prefix {
     className = ClassTypeName.of(ThisTemplate.CSS_UTIL, simpleName);
 
     return new Breakpoint(className, length);
+  }
+
+  public static Simple ofSimple(String simpleName) {
+    Check.notNull(simpleName, "simpleName == null");
+
+    ClassTypeName className;
+    className = ClassTypeName.of(ThisTemplate.CSS_UTIL, simpleName);
+
+    return new Simple(className);
   }
 
   public final PropertyClass propertyClass(SimpleName simpleName) {

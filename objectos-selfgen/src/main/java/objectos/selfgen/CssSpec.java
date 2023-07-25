@@ -120,6 +120,7 @@ public final class CssSpec extends CssSelfGen {
       SelectorKind.PSEUDO_CLASS,
 
       ":disabled",
+      ":hover",
       ":-moz-focusring",
       ":-moz-ui-invalid"
     );
@@ -336,86 +337,17 @@ public final class CssSpec extends CssSelfGen {
 
     // T
 
-    var textSizeAdjustValue = t("TextSizeAdjustValue",
-      keywords("auto", "none"),
-      percentage
-    );
-
-    var textDecorationLineMultiValue = t("TextDecorationLineMultiValue",
-      keywords("blink", "line-through", "overline", "underline")
-    );
-
-    var textDecorationLineSingleValue = t("TextDecorationLineSingleValue",
-      textDecorationLineMultiValue, k("none")
-    );
-
-    var textDecorationStyleValue = t("TextDecorationStyleValue",
-      keywords("dashed", "double", "dotted", "solid", "wavy")
-    );
-
-    var textDecorationThicknessValue = t("TextDecorationThicknessValue",
-      keywords("auto", "from-font"),
-      lengthPercentage
-    );
-
-    var textDecorationValue = t("TextDecorationValue",
-      color, textDecorationLineSingleValue, textDecorationStyleValue, textDecorationThicknessValue
-    );
-
-    var textIndentValue = t("TextIndentValue",
-      keywords("each-line", "hanging")
-    );
-
-    var textTransformValue = t("TextTransformValue",
-      keywords("capitalize", "full-width", "full-size-kana", "lowercase", "none", "uppercase")
-    );
-
-    var topValue = t("TopValue",
-      k("auto"),
-      lengthPercentage
-    );
-
-    pint("-moz-tab-size");
-    pval("-moz-tab-size", globalKeyword);
-    pval("-moz-tab-size", length);
-
-    pint("tab-size");
-    pval("tab-size", globalKeyword);
-    pval("tab-size", length);
-
-    pval("text-decoration", globalKeyword);
-    pval("text-decoration", textDecorationValue);
-    pva2("text-decoration", textDecorationValue);
-    pva3("text-decoration", textDecorationValue);
-    pva4("text-decoration", textDecorationValue);
-
-    pval("text-decoration-color", globalKeyword);
-    pval("text-decoration-color", color);
-
-    pval("text-decoration-line", globalKeyword);
-    pval("text-decoration-line", textDecorationLineSingleValue);
-    pva2("text-decoration-line", textDecorationLineMultiValue);
-    pva3("text-decoration-line", textDecorationLineMultiValue);
-
-    pval("text-decoration-style", globalKeyword);
-    pval("text-decoration-style", textDecorationStyleValue);
-
-    pval("text-decoration-thickness", globalKeyword);
-    pval("text-decoration-thickness", textDecorationThicknessValue);
-
-    pval("text-indent", globalKeyword);
-    pval("text-indent", lengthPercentage);
-    pval("text-indent", lengthPercentage, textIndentValue);
-    pval("text-indent", lengthPercentage, textIndentValue, textIndentValue);
-
-    pval("-webkit-text-size-adjust", globalKeyword);
-    pval("-webkit-text-size-adjust", textSizeAdjustValue);
-
-    pval("text-transform", globalKeyword);
-    pval("text-transform", textTransformValue);
-
-    pval("top", globalKeyword);
-    pval("top", topValue);
+    tabSize();
+    textAlign();
+    textDecorationColor();
+    textDecorationLine();
+    textDecorationStyle();
+    textDecorationThickness();
+    textDecoration();
+    textIndent();
+    textSizeAdjust();
+    textTransform();
+    top();
 
     // V
 
@@ -1269,6 +1201,206 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(resizeValue, "value")
+    );
+  }
+
+  private void tabSize() {
+    List<String> names;
+    names = List.of("-moz-tab-size", "tab-size");
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(INT, "value"),
+        sig(globalKeyword, "value"),
+        sig(length, "value")
+      );
+    }
+  }
+
+  private void textAlign() {
+    ValueType textAlignValue;
+    textAlignValue = t(
+      "TextAlignValue",
+
+      k("center"),
+      k("end"),
+      k("justify"),
+      k("left"),
+      k("match-parent"),
+      k("right"),
+      k("start")
+    );
+
+    property(
+      "text-align",
+
+      sig(globalKeyword, "value"),
+      sig(textAlignValue, "value")
+    );
+  }
+
+  private void textDecoration() {
+    var value = t("TextDecorationValue",
+      color,
+
+      t("TextDecorationLineSingleValue"),
+      t("TextDecorationStyleValue"),
+      t("TextDecorationThicknessValue")
+    );
+
+    property(
+      "text-decoration",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value"),
+      sig(value, "value1", value, "value2"),
+      sig(value, "value1", value, "value2", value, "value3"),
+      sig(value, "value1", value, "value2", value, "value3", value, "value4")
+    );
+  }
+
+  private void textDecorationColor() {
+    property(
+      "text-decoration-color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "value")
+    );
+  }
+
+  private void textDecorationLine() {
+    var multiValue = t(
+      "TextDecorationLineMultiValue",
+
+      k("blink"),
+      k("line-through"),
+      k("overline"),
+      k("underline")
+    );
+
+    var singleValue = t(
+      "TextDecorationLineSingleValue",
+
+      multiValue,
+      k("none")
+    );
+
+    property(
+      "text-decoration-line",
+
+      sig(globalKeyword, "value"),
+      sig(singleValue, "value"),
+      sig(multiValue, "value1", multiValue, "value2"),
+      sig(multiValue, "value1", multiValue, "value2", multiValue, "value3")
+    );
+  }
+
+  private void textDecorationStyle() {
+    var textDecorationStyleValue = t(
+      "TextDecorationStyleValue",
+
+      k("dashed"),
+      k("double"),
+      k("dotted"),
+      k("solid"),
+      k("wavy")
+    );
+
+    property(
+      "text-decoration-style",
+
+      sig(globalKeyword, "value"),
+      sig(textDecorationStyleValue, "value")
+    );
+  }
+
+  private void textDecorationThickness() {
+    var textDecorationThicknessValue = t(
+      "TextDecorationThicknessValue",
+
+      k("auto"),
+      k("from-font"),
+      lengthPercentage
+    );
+
+    property(
+      "text-decoration-thickness",
+
+      sig(globalKeyword, "value"),
+      sig(textDecorationThicknessValue, "value")
+    );
+  }
+
+  private void textIndent() {
+    var textIndentValue = t(
+      "TextIndentValue",
+
+      k("each-line"),
+      k("hanging")
+    );
+
+    property(
+      "text-indent",
+
+      sig(globalKeyword, "value"),
+      sig(lengthPercentage, "value"),
+      sig(lengthPercentage, "value1", textIndentValue, "value2"),
+      sig(lengthPercentage, "value1", textIndentValue, "value2", textIndentValue, "value3")
+    );
+  }
+
+  private void textSizeAdjust() {
+    var textSizeAdjustValue = t(
+      "TextSizeAdjustValue",
+
+      k("auto"),
+      k("none"),
+      percentage
+    );
+
+    property(
+      "-webkit-text-size-adjust",
+
+      sig(globalKeyword, "value"),
+      sig(textSizeAdjustValue, "value")
+    );
+  }
+
+  private void textTransform() {
+    var textTransformValue = t(
+      "TextTransformValue",
+
+      k("capitalize"),
+      k("full-width"),
+      k("full-size-kana"),
+      k("lowercase"),
+      k("none"),
+      k("uppercase")
+    );
+
+    property(
+      "text-transform",
+
+      sig(globalKeyword, "value"),
+      sig(textTransformValue, "value")
+    );
+  }
+
+  private void top() {
+    var topValue = t(
+      "TopValue",
+
+      k("auto"),
+      lengthPercentage
+    );
+
+    property(
+      "top",
+
+      sig(globalKeyword, "value"),
+      sig(topValue, "value")
     );
   }
 

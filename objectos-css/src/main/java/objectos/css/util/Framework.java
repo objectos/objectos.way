@@ -25,9 +25,11 @@ public final class Framework extends objectos.css.CssTemplate {
     Large();
     XLarge();
     XLarge2();
+    Hover();
   }
 
   private void All() {
+    AllColor();
     AllDisplay();
     AllFlexDirection();
     AllFontSize();
@@ -57,10 +59,14 @@ public final class Framework extends objectos.css.CssTemplate {
     AllPaddingLeft();
     AllSpaceX();
     AllSpaceY();
+    AllTextAlign();
+    AllTextDecoration();
+    AllTextTransform();
     AllWidth();
   }
 
   private void Small() {
+    SmallColor();
     SmallDisplay();
     SmallFlexDirection();
     SmallFontSize();
@@ -90,10 +96,14 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallPaddingLeft();
     SmallSpaceX();
     SmallSpaceY();
+    SmallTextAlign();
+    SmallTextDecoration();
+    SmallTextTransform();
     SmallWidth();
   }
 
   private void Medium() {
+    MediumColor();
     MediumDisplay();
     MediumFlexDirection();
     MediumFontSize();
@@ -123,10 +133,14 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumPaddingLeft();
     MediumSpaceX();
     MediumSpaceY();
+    MediumTextAlign();
+    MediumTextDecoration();
+    MediumTextTransform();
     MediumWidth();
   }
 
   private void Large() {
+    LargeColor();
     LargeDisplay();
     LargeFlexDirection();
     LargeFontSize();
@@ -156,10 +170,14 @@ public final class Framework extends objectos.css.CssTemplate {
     LargePaddingLeft();
     LargeSpaceX();
     LargeSpaceY();
+    LargeTextAlign();
+    LargeTextDecoration();
+    LargeTextTransform();
     LargeWidth();
   }
 
   private void XLarge() {
+    XLargeColor();
     XLargeDisplay();
     XLargeFlexDirection();
     XLargeFontSize();
@@ -189,10 +207,14 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargePaddingLeft();
     XLargeSpaceX();
     XLargeSpaceY();
+    XLargeTextAlign();
+    XLargeTextDecoration();
+    XLargeTextTransform();
     XLargeWidth();
   }
 
   private void XLarge2() {
+    XLarge2Color();
     XLarge2Display();
     XLarge2FlexDirection();
     XLarge2FontSize();
@@ -222,7 +244,910 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2PaddingLeft();
     XLarge2SpaceX();
     XLarge2SpaceY();
+    XLarge2TextAlign();
+    XLarge2TextDecoration();
+    XLarge2TextTransform();
     XLarge2Width();
+  }
+
+  private void Hover() {
+    HoverColor();
+    HoverTextDecoration();
+  }
+
+  private void AllColor() {
+    style(
+      objectos.css.util.All.Color.TRANSPARENT,
+      color(transparent)
+);
+    style(
+      objectos.css.util.All.Color.BLACK,
+      color(hex("#000"))
+);
+    style(
+      objectos.css.util.All.Color.WHITE,
+      color(hex("#ffffff"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_050,
+      color(hex("#f8fafc"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_100,
+      color(hex("#f1f5f9"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_200,
+      color(hex("#e2e8f0"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_300,
+      color(hex("#cbd5e1"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_400,
+      color(hex("#94a3b8"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_500,
+      color(hex("#64748b"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_600,
+      color(hex("#475569"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_700,
+      color(hex("#334155"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_800,
+      color(hex("#1e293b"))
+);
+    style(
+      objectos.css.util.All.Color.SLATE_900,
+      color(hex("#0f172a"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_050,
+      color(hex("#f9fafb"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_100,
+      color(hex("#f3f4f6"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_200,
+      color(hex("#e5e7eb"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_300,
+      color(hex("#d1d5db"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_400,
+      color(hex("#9ca3af"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_500,
+      color(hex("#6b7280"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_600,
+      color(hex("#4b5563"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_700,
+      color(hex("#374151"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_800,
+      color(hex("#1f2937"))
+);
+    style(
+      objectos.css.util.All.Color.GRAY_900,
+      color(hex("#111827"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_050,
+      color(hex("#fafafa"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_100,
+      color(hex("#f4f4f5"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_200,
+      color(hex("#e4e4e7"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_300,
+      color(hex("#d4d4d8"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_400,
+      color(hex("#a1a1aa"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_500,
+      color(hex("#71717a"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_600,
+      color(hex("#52525b"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_700,
+      color(hex("#3f3f46"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_800,
+      color(hex("#27272a"))
+);
+    style(
+      objectos.css.util.All.Color.ZINC_900,
+      color(hex("#18181b"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_050,
+      color(hex("#fafafa"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_100,
+      color(hex("#f5f5f5"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_200,
+      color(hex("#e5e5e5"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_300,
+      color(hex("#d4d4d4"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_400,
+      color(hex("#a3a3a3"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_500,
+      color(hex("#737373"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_600,
+      color(hex("#525252"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_700,
+      color(hex("#404040"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_800,
+      color(hex("#262626"))
+);
+    style(
+      objectos.css.util.All.Color.NEUTRAL_900,
+      color(hex("#171717"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_050,
+      color(hex("#fafaf9"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_100,
+      color(hex("#f5f5f4"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_200,
+      color(hex("#e7e5e4"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_300,
+      color(hex("#d6d3d1"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_400,
+      color(hex("#a8a29e"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_500,
+      color(hex("#78716c"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_600,
+      color(hex("#57534e"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_700,
+      color(hex("#44403c"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_800,
+      color(hex("#292524"))
+);
+    style(
+      objectos.css.util.All.Color.STONE_900,
+      color(hex("#1c1917"))
+);
+    style(
+      objectos.css.util.All.Color.RED_050,
+      color(hex("#fef2f2"))
+);
+    style(
+      objectos.css.util.All.Color.RED_100,
+      color(hex("#fee2e2"))
+);
+    style(
+      objectos.css.util.All.Color.RED_200,
+      color(hex("#fecaca"))
+);
+    style(
+      objectos.css.util.All.Color.RED_300,
+      color(hex("#fca5a5"))
+);
+    style(
+      objectos.css.util.All.Color.RED_400,
+      color(hex("#f87171"))
+);
+    style(
+      objectos.css.util.All.Color.RED_500,
+      color(hex("#ef4444"))
+);
+    style(
+      objectos.css.util.All.Color.RED_600,
+      color(hex("#dc2626"))
+);
+    style(
+      objectos.css.util.All.Color.RED_700,
+      color(hex("#b91c1c"))
+);
+    style(
+      objectos.css.util.All.Color.RED_800,
+      color(hex("#991b1b"))
+);
+    style(
+      objectos.css.util.All.Color.RED_900,
+      color(hex("#7f1d1d"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_050,
+      color(hex("#fff7ed"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_100,
+      color(hex("#ffedd5"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_200,
+      color(hex("#fed7aa"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_300,
+      color(hex("#fdba74"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_400,
+      color(hex("#fb923c"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_500,
+      color(hex("#f97316"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_600,
+      color(hex("#ea580c"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_700,
+      color(hex("#c2410c"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_800,
+      color(hex("#9a3412"))
+);
+    style(
+      objectos.css.util.All.Color.ORANGE_900,
+      color(hex("#7c2d12"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_050,
+      color(hex("#fffbeb"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_100,
+      color(hex("#fef3c7"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_200,
+      color(hex("#fde68a"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_300,
+      color(hex("#fcd34d"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_400,
+      color(hex("#fbbf24"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_500,
+      color(hex("#f59e0b"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_600,
+      color(hex("#d97706"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_700,
+      color(hex("#b45309"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_800,
+      color(hex("#92400e"))
+);
+    style(
+      objectos.css.util.All.Color.AMBER_900,
+      color(hex("#78350f"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_050,
+      color(hex("#fefce8"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_100,
+      color(hex("#fef9c3"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_200,
+      color(hex("#fef08a"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_300,
+      color(hex("#fde047"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_400,
+      color(hex("#facc15"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_500,
+      color(hex("#eab308"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_600,
+      color(hex("#ca8a04"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_700,
+      color(hex("#a16207"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_800,
+      color(hex("#854d0e"))
+);
+    style(
+      objectos.css.util.All.Color.YELLOW_900,
+      color(hex("#713f12"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_050,
+      color(hex("#f7fee7"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_100,
+      color(hex("#ecfccb"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_200,
+      color(hex("#d9f99d"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_300,
+      color(hex("#bef264"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_400,
+      color(hex("#a3e635"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_500,
+      color(hex("#84cc16"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_600,
+      color(hex("#65a30d"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_700,
+      color(hex("#4d7c0f"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_800,
+      color(hex("#3f6212"))
+);
+    style(
+      objectos.css.util.All.Color.LIME_900,
+      color(hex("#365314"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_050,
+      color(hex("#f0fdf4"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_100,
+      color(hex("#dcfce7"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_200,
+      color(hex("#bbf7d0"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_300,
+      color(hex("#86efac"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_400,
+      color(hex("#4ade80"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_500,
+      color(hex("#22c55e"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_600,
+      color(hex("#16a34a"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_700,
+      color(hex("#15803d"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_800,
+      color(hex("#166534"))
+);
+    style(
+      objectos.css.util.All.Color.GREEN_900,
+      color(hex("#14532d"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_050,
+      color(hex("#ecfdf5"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_100,
+      color(hex("#d1fae5"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_200,
+      color(hex("#a7f3d0"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_300,
+      color(hex("#6ee7b7"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_400,
+      color(hex("#34d399"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_500,
+      color(hex("#10b981"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_600,
+      color(hex("#059669"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_700,
+      color(hex("#047857"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_800,
+      color(hex("#065f46"))
+);
+    style(
+      objectos.css.util.All.Color.EMERALD_900,
+      color(hex("#064e3b"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_050,
+      color(hex("#f0fdfa"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_100,
+      color(hex("#ccfbf1"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_200,
+      color(hex("#99f6e4"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_300,
+      color(hex("#5eead4"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_400,
+      color(hex("#2dd4bf"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_500,
+      color(hex("#14b8a6"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_600,
+      color(hex("#0d9488"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_700,
+      color(hex("#0f766e"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_800,
+      color(hex("#115e59"))
+);
+    style(
+      objectos.css.util.All.Color.TEAL_900,
+      color(hex("#134e4a"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_050,
+      color(hex("#ecfeff"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_100,
+      color(hex("#cffafe"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_200,
+      color(hex("#a5f3fc"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_300,
+      color(hex("#67e8f9"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_400,
+      color(hex("#22d3ee"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_500,
+      color(hex("#06b6d4"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_600,
+      color(hex("#0891b2"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_700,
+      color(hex("#0e7490"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_800,
+      color(hex("#155e75"))
+);
+    style(
+      objectos.css.util.All.Color.CYAN_900,
+      color(hex("#164e63"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_050,
+      color(hex("#f0f9ff"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_100,
+      color(hex("#e0f2fe"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_200,
+      color(hex("#bae6fd"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_300,
+      color(hex("#7dd3fc"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_400,
+      color(hex("#38bdf8"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_500,
+      color(hex("#0ea5e9"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_600,
+      color(hex("#0284c7"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_700,
+      color(hex("#0369a1"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_800,
+      color(hex("#075985"))
+);
+    style(
+      objectos.css.util.All.Color.SKY_900,
+      color(hex("#0c4a6e"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_050,
+      color(hex("#eff6ff"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_100,
+      color(hex("#dbeafe"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_200,
+      color(hex("#bfdbfe"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_300,
+      color(hex("#93c5fd"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_400,
+      color(hex("#60a5fa"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_500,
+      color(hex("#3b82f6"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_600,
+      color(hex("#2563eb"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_700,
+      color(hex("#1d4ed8"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_800,
+      color(hex("#1e40af"))
+);
+    style(
+      objectos.css.util.All.Color.BLUE_900,
+      color(hex("#1e3a8a"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_050,
+      color(hex("#eef2ff"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_100,
+      color(hex("#e0e7ff"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_200,
+      color(hex("#c7d2fe"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_300,
+      color(hex("#a5b4fc"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_400,
+      color(hex("#818cf8"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_500,
+      color(hex("#6366f1"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_600,
+      color(hex("#4f46e5"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_700,
+      color(hex("#4338ca"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_800,
+      color(hex("#3730a3"))
+);
+    style(
+      objectos.css.util.All.Color.INDIGO_900,
+      color(hex("#312e81"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_050,
+      color(hex("#f5f3ff"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_100,
+      color(hex("#ede9fe"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_200,
+      color(hex("#ddd6fe"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_300,
+      color(hex("#c4b5fd"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_400,
+      color(hex("#a78bfa"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_500,
+      color(hex("#8b5cf6"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_600,
+      color(hex("#7c3aed"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_700,
+      color(hex("#6d28d9"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_800,
+      color(hex("#5b21b6"))
+);
+    style(
+      objectos.css.util.All.Color.VIOLET_900,
+      color(hex("#4c1d95"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_050,
+      color(hex("#faf5ff"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_100,
+      color(hex("#f3e8ff"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_200,
+      color(hex("#e9d5ff"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_300,
+      color(hex("#d8b4fe"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_400,
+      color(hex("#c084fc"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_500,
+      color(hex("#a855f7"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_600,
+      color(hex("#9333ea"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_700,
+      color(hex("#7e22ce"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_800,
+      color(hex("#6b21a8"))
+);
+    style(
+      objectos.css.util.All.Color.PURPLE_900,
+      color(hex("#581c87"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_050,
+      color(hex("#fdf4ff"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_100,
+      color(hex("#fae8ff"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_200,
+      color(hex("#f5d0fe"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_300,
+      color(hex("#f0abfc"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_400,
+      color(hex("#e879f9"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_500,
+      color(hex("#d946ef"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_600,
+      color(hex("#c026d3"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_700,
+      color(hex("#a21caf"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_800,
+      color(hex("#86198f"))
+);
+    style(
+      objectos.css.util.All.Color.FUCHSIA_900,
+      color(hex("#701a75"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_050,
+      color(hex("#fdf2f8"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_100,
+      color(hex("#fce7f3"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_200,
+      color(hex("#fbcfe8"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_300,
+      color(hex("#f9a8d4"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_400,
+      color(hex("#f472b6"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_500,
+      color(hex("#ec4899"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_600,
+      color(hex("#db2777"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_700,
+      color(hex("#be185d"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_800,
+      color(hex("#9d174d"))
+);
+    style(
+      objectos.css.util.All.Color.PINK_900,
+      color(hex("#831843"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_050,
+      color(hex("#fff1f2"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_100,
+      color(hex("#ffe4e6"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_200,
+      color(hex("#fecdd3"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_300,
+      color(hex("#fda4af"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_400,
+      color(hex("#fb7185"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_500,
+      color(hex("#f43f5e"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_600,
+      color(hex("#e11d48"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_700,
+      color(hex("#be123c"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_800,
+      color(hex("#9f1239"))
+);
+    style(
+      objectos.css.util.All.Color.ROSE_900,
+      color(hex("#881337"))
+);
   }
 
   private void AllDisplay() {
@@ -3439,6 +4364,63 @@ public final class Framework extends objectos.css.CssTemplate {
 );
   }
 
+  private void AllTextAlign() {
+    style(
+      objectos.css.util.All.TextAlign.LEFT,
+      textAlign(left)
+);
+    style(
+      objectos.css.util.All.TextAlign.CENTER,
+      textAlign(center)
+);
+    style(
+      objectos.css.util.All.TextAlign.RIGHT,
+      textAlign(right)
+);
+    style(
+      objectos.css.util.All.TextAlign.JUSTIFY,
+      textAlign(justify)
+);
+  }
+
+  private void AllTextDecoration() {
+    style(
+      objectos.css.util.All.TextDecoration.UNDERLINE,
+      textDecoration(underline)
+);
+    style(
+      objectos.css.util.All.TextDecoration.LINE_THROUGH,
+      textDecoration(lineThrough)
+);
+    style(
+      objectos.css.util.All.TextDecoration.STRIKE,
+      textDecoration(lineThrough)
+);
+    style(
+      objectos.css.util.All.TextDecoration.NONE,
+      textDecoration(none)
+);
+  }
+
+  private void AllTextTransform() {
+    style(
+      objectos.css.util.All.TextTransform.UPPERCASE,
+      textTransform(uppercase)
+);
+    style(
+      objectos.css.util.All.TextTransform.LOWERCASE,
+      textTransform(lowercase)
+);
+    style(
+      objectos.css.util.All.TextTransform.CAPITALIZE,
+      textTransform(capitalize)
+);
+    style(
+      objectos.css.util.All.TextTransform.NONE,
+      textTransform(none)
+);
+  }
+
   private void AllWidth() {
     style(
       objectos.css.util.All.Width.PX,
@@ -3712,6 +4694,903 @@ public final class Framework extends objectos.css.CssTemplate {
       objectos.css.util.All.Width.FIT,
       width(fitContent)
 );
+  }
+
+  private void SmallColor() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.Color.TRANSPARENT,
+        color(transparent)
+),
+      style(
+        objectos.css.util.Small.Color.BLACK,
+        color(hex("#000"))
+),
+      style(
+        objectos.css.util.Small.Color.WHITE,
+        color(hex("#ffffff"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_050,
+        color(hex("#f8fafc"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_100,
+        color(hex("#f1f5f9"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_200,
+        color(hex("#e2e8f0"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_300,
+        color(hex("#cbd5e1"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_400,
+        color(hex("#94a3b8"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_500,
+        color(hex("#64748b"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_600,
+        color(hex("#475569"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_700,
+        color(hex("#334155"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_800,
+        color(hex("#1e293b"))
+),
+      style(
+        objectos.css.util.Small.Color.SLATE_900,
+        color(hex("#0f172a"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_050,
+        color(hex("#f9fafb"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_100,
+        color(hex("#f3f4f6"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_200,
+        color(hex("#e5e7eb"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_300,
+        color(hex("#d1d5db"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_400,
+        color(hex("#9ca3af"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_500,
+        color(hex("#6b7280"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_600,
+        color(hex("#4b5563"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_700,
+        color(hex("#374151"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_800,
+        color(hex("#1f2937"))
+),
+      style(
+        objectos.css.util.Small.Color.GRAY_900,
+        color(hex("#111827"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_100,
+        color(hex("#f4f4f5"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_200,
+        color(hex("#e4e4e7"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_300,
+        color(hex("#d4d4d8"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_400,
+        color(hex("#a1a1aa"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_500,
+        color(hex("#71717a"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_600,
+        color(hex("#52525b"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_700,
+        color(hex("#3f3f46"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_800,
+        color(hex("#27272a"))
+),
+      style(
+        objectos.css.util.Small.Color.ZINC_900,
+        color(hex("#18181b"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_100,
+        color(hex("#f5f5f5"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_200,
+        color(hex("#e5e5e5"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_300,
+        color(hex("#d4d4d4"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_400,
+        color(hex("#a3a3a3"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_500,
+        color(hex("#737373"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_600,
+        color(hex("#525252"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_700,
+        color(hex("#404040"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_800,
+        color(hex("#262626"))
+),
+      style(
+        objectos.css.util.Small.Color.NEUTRAL_900,
+        color(hex("#171717"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_050,
+        color(hex("#fafaf9"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_100,
+        color(hex("#f5f5f4"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_200,
+        color(hex("#e7e5e4"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_300,
+        color(hex("#d6d3d1"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_400,
+        color(hex("#a8a29e"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_500,
+        color(hex("#78716c"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_600,
+        color(hex("#57534e"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_700,
+        color(hex("#44403c"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_800,
+        color(hex("#292524"))
+),
+      style(
+        objectos.css.util.Small.Color.STONE_900,
+        color(hex("#1c1917"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_050,
+        color(hex("#fef2f2"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_100,
+        color(hex("#fee2e2"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_200,
+        color(hex("#fecaca"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_300,
+        color(hex("#fca5a5"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_400,
+        color(hex("#f87171"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_500,
+        color(hex("#ef4444"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_600,
+        color(hex("#dc2626"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_700,
+        color(hex("#b91c1c"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_800,
+        color(hex("#991b1b"))
+),
+      style(
+        objectos.css.util.Small.Color.RED_900,
+        color(hex("#7f1d1d"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_050,
+        color(hex("#fff7ed"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_100,
+        color(hex("#ffedd5"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_200,
+        color(hex("#fed7aa"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_300,
+        color(hex("#fdba74"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_400,
+        color(hex("#fb923c"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_500,
+        color(hex("#f97316"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_600,
+        color(hex("#ea580c"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_700,
+        color(hex("#c2410c"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_800,
+        color(hex("#9a3412"))
+),
+      style(
+        objectos.css.util.Small.Color.ORANGE_900,
+        color(hex("#7c2d12"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_050,
+        color(hex("#fffbeb"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_100,
+        color(hex("#fef3c7"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_200,
+        color(hex("#fde68a"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_300,
+        color(hex("#fcd34d"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_400,
+        color(hex("#fbbf24"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_500,
+        color(hex("#f59e0b"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_600,
+        color(hex("#d97706"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_700,
+        color(hex("#b45309"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_800,
+        color(hex("#92400e"))
+),
+      style(
+        objectos.css.util.Small.Color.AMBER_900,
+        color(hex("#78350f"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_050,
+        color(hex("#fefce8"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_100,
+        color(hex("#fef9c3"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_200,
+        color(hex("#fef08a"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_300,
+        color(hex("#fde047"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_400,
+        color(hex("#facc15"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_500,
+        color(hex("#eab308"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_600,
+        color(hex("#ca8a04"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_700,
+        color(hex("#a16207"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_800,
+        color(hex("#854d0e"))
+),
+      style(
+        objectos.css.util.Small.Color.YELLOW_900,
+        color(hex("#713f12"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_050,
+        color(hex("#f7fee7"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_100,
+        color(hex("#ecfccb"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_200,
+        color(hex("#d9f99d"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_300,
+        color(hex("#bef264"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_400,
+        color(hex("#a3e635"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_500,
+        color(hex("#84cc16"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_600,
+        color(hex("#65a30d"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_700,
+        color(hex("#4d7c0f"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_800,
+        color(hex("#3f6212"))
+),
+      style(
+        objectos.css.util.Small.Color.LIME_900,
+        color(hex("#365314"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_050,
+        color(hex("#f0fdf4"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_100,
+        color(hex("#dcfce7"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_200,
+        color(hex("#bbf7d0"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_300,
+        color(hex("#86efac"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_400,
+        color(hex("#4ade80"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_500,
+        color(hex("#22c55e"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_600,
+        color(hex("#16a34a"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_700,
+        color(hex("#15803d"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_800,
+        color(hex("#166534"))
+),
+      style(
+        objectos.css.util.Small.Color.GREEN_900,
+        color(hex("#14532d"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_050,
+        color(hex("#ecfdf5"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_100,
+        color(hex("#d1fae5"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_200,
+        color(hex("#a7f3d0"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_300,
+        color(hex("#6ee7b7"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_400,
+        color(hex("#34d399"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_500,
+        color(hex("#10b981"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_600,
+        color(hex("#059669"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_700,
+        color(hex("#047857"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_800,
+        color(hex("#065f46"))
+),
+      style(
+        objectos.css.util.Small.Color.EMERALD_900,
+        color(hex("#064e3b"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_050,
+        color(hex("#f0fdfa"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_100,
+        color(hex("#ccfbf1"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_200,
+        color(hex("#99f6e4"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_300,
+        color(hex("#5eead4"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_400,
+        color(hex("#2dd4bf"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_500,
+        color(hex("#14b8a6"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_600,
+        color(hex("#0d9488"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_700,
+        color(hex("#0f766e"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_800,
+        color(hex("#115e59"))
+),
+      style(
+        objectos.css.util.Small.Color.TEAL_900,
+        color(hex("#134e4a"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_050,
+        color(hex("#ecfeff"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_100,
+        color(hex("#cffafe"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_200,
+        color(hex("#a5f3fc"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_300,
+        color(hex("#67e8f9"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_400,
+        color(hex("#22d3ee"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_500,
+        color(hex("#06b6d4"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_600,
+        color(hex("#0891b2"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_700,
+        color(hex("#0e7490"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_800,
+        color(hex("#155e75"))
+),
+      style(
+        objectos.css.util.Small.Color.CYAN_900,
+        color(hex("#164e63"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_050,
+        color(hex("#f0f9ff"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_100,
+        color(hex("#e0f2fe"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_200,
+        color(hex("#bae6fd"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_300,
+        color(hex("#7dd3fc"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_400,
+        color(hex("#38bdf8"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_500,
+        color(hex("#0ea5e9"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_600,
+        color(hex("#0284c7"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_700,
+        color(hex("#0369a1"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_800,
+        color(hex("#075985"))
+),
+      style(
+        objectos.css.util.Small.Color.SKY_900,
+        color(hex("#0c4a6e"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_050,
+        color(hex("#eff6ff"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_100,
+        color(hex("#dbeafe"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_200,
+        color(hex("#bfdbfe"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_300,
+        color(hex("#93c5fd"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_400,
+        color(hex("#60a5fa"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_500,
+        color(hex("#3b82f6"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_600,
+        color(hex("#2563eb"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_700,
+        color(hex("#1d4ed8"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_800,
+        color(hex("#1e40af"))
+),
+      style(
+        objectos.css.util.Small.Color.BLUE_900,
+        color(hex("#1e3a8a"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_050,
+        color(hex("#eef2ff"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_100,
+        color(hex("#e0e7ff"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_200,
+        color(hex("#c7d2fe"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_300,
+        color(hex("#a5b4fc"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_400,
+        color(hex("#818cf8"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_500,
+        color(hex("#6366f1"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_600,
+        color(hex("#4f46e5"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_700,
+        color(hex("#4338ca"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_800,
+        color(hex("#3730a3"))
+),
+      style(
+        objectos.css.util.Small.Color.INDIGO_900,
+        color(hex("#312e81"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_050,
+        color(hex("#f5f3ff"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_100,
+        color(hex("#ede9fe"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_200,
+        color(hex("#ddd6fe"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_300,
+        color(hex("#c4b5fd"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_400,
+        color(hex("#a78bfa"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_500,
+        color(hex("#8b5cf6"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_600,
+        color(hex("#7c3aed"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_700,
+        color(hex("#6d28d9"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_800,
+        color(hex("#5b21b6"))
+),
+      style(
+        objectos.css.util.Small.Color.VIOLET_900,
+        color(hex("#4c1d95"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_050,
+        color(hex("#faf5ff"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_100,
+        color(hex("#f3e8ff"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_200,
+        color(hex("#e9d5ff"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_300,
+        color(hex("#d8b4fe"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_400,
+        color(hex("#c084fc"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_500,
+        color(hex("#a855f7"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_600,
+        color(hex("#9333ea"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_700,
+        color(hex("#7e22ce"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_800,
+        color(hex("#6b21a8"))
+),
+      style(
+        objectos.css.util.Small.Color.PURPLE_900,
+        color(hex("#581c87"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_050,
+        color(hex("#fdf4ff"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_100,
+        color(hex("#fae8ff"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_200,
+        color(hex("#f5d0fe"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_300,
+        color(hex("#f0abfc"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_400,
+        color(hex("#e879f9"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_500,
+        color(hex("#d946ef"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_600,
+        color(hex("#c026d3"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_700,
+        color(hex("#a21caf"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_800,
+        color(hex("#86198f"))
+),
+      style(
+        objectos.css.util.Small.Color.FUCHSIA_900,
+        color(hex("#701a75"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_050,
+        color(hex("#fdf2f8"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_100,
+        color(hex("#fce7f3"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_200,
+        color(hex("#fbcfe8"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_300,
+        color(hex("#f9a8d4"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_400,
+        color(hex("#f472b6"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_500,
+        color(hex("#ec4899"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_600,
+        color(hex("#db2777"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_700,
+        color(hex("#be185d"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_800,
+        color(hex("#9d174d"))
+),
+      style(
+        objectos.css.util.Small.Color.PINK_900,
+        color(hex("#831843"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_050,
+        color(hex("#fff1f2"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_100,
+        color(hex("#ffe4e6"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_200,
+        color(hex("#fecdd3"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_300,
+        color(hex("#fda4af"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_400,
+        color(hex("#fb7185"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_500,
+        color(hex("#f43f5e"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_600,
+        color(hex("#e11d48"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_700,
+        color(hex("#be123c"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_800,
+        color(hex("#9f1239"))
+),
+      style(
+        objectos.css.util.Small.Color.ROSE_900,
+        color(hex("#881337"))
+));
   }
 
   private void SmallDisplay() {
@@ -6986,6 +8865,69 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void SmallTextAlign() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.TextAlign.LEFT,
+        textAlign(left)
+),
+      style(
+        objectos.css.util.Small.TextAlign.CENTER,
+        textAlign(center)
+),
+      style(
+        objectos.css.util.Small.TextAlign.RIGHT,
+        textAlign(right)
+),
+      style(
+        objectos.css.util.Small.TextAlign.JUSTIFY,
+        textAlign(justify)
+));
+  }
+
+  private void SmallTextDecoration() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.TextDecoration.UNDERLINE,
+        textDecoration(underline)
+),
+      style(
+        objectos.css.util.Small.TextDecoration.LINE_THROUGH,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.Small.TextDecoration.STRIKE,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.Small.TextDecoration.NONE,
+        textDecoration(none)
+));
+  }
+
+  private void SmallTextTransform() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.TextTransform.UPPERCASE,
+        textTransform(uppercase)
+),
+      style(
+        objectos.css.util.Small.TextTransform.LOWERCASE,
+        textTransform(lowercase)
+),
+      style(
+        objectos.css.util.Small.TextTransform.CAPITALIZE,
+        textTransform(capitalize)
+),
+      style(
+        objectos.css.util.Small.TextTransform.NONE,
+        textTransform(none)
+));
+  }
+
   private void SmallWidth() {
     media(
       minWidth(px(640)),
@@ -7260,6 +9202,903 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Small.Width.FIT,
         width(fitContent)
+));
+  }
+
+  private void MediumColor() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.Color.TRANSPARENT,
+        color(transparent)
+),
+      style(
+        objectos.css.util.Medium.Color.BLACK,
+        color(hex("#000"))
+),
+      style(
+        objectos.css.util.Medium.Color.WHITE,
+        color(hex("#ffffff"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_050,
+        color(hex("#f8fafc"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_100,
+        color(hex("#f1f5f9"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_200,
+        color(hex("#e2e8f0"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_300,
+        color(hex("#cbd5e1"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_400,
+        color(hex("#94a3b8"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_500,
+        color(hex("#64748b"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_600,
+        color(hex("#475569"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_700,
+        color(hex("#334155"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_800,
+        color(hex("#1e293b"))
+),
+      style(
+        objectos.css.util.Medium.Color.SLATE_900,
+        color(hex("#0f172a"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_050,
+        color(hex("#f9fafb"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_100,
+        color(hex("#f3f4f6"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_200,
+        color(hex("#e5e7eb"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_300,
+        color(hex("#d1d5db"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_400,
+        color(hex("#9ca3af"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_500,
+        color(hex("#6b7280"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_600,
+        color(hex("#4b5563"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_700,
+        color(hex("#374151"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_800,
+        color(hex("#1f2937"))
+),
+      style(
+        objectos.css.util.Medium.Color.GRAY_900,
+        color(hex("#111827"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_100,
+        color(hex("#f4f4f5"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_200,
+        color(hex("#e4e4e7"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_300,
+        color(hex("#d4d4d8"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_400,
+        color(hex("#a1a1aa"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_500,
+        color(hex("#71717a"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_600,
+        color(hex("#52525b"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_700,
+        color(hex("#3f3f46"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_800,
+        color(hex("#27272a"))
+),
+      style(
+        objectos.css.util.Medium.Color.ZINC_900,
+        color(hex("#18181b"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_100,
+        color(hex("#f5f5f5"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_200,
+        color(hex("#e5e5e5"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_300,
+        color(hex("#d4d4d4"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_400,
+        color(hex("#a3a3a3"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_500,
+        color(hex("#737373"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_600,
+        color(hex("#525252"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_700,
+        color(hex("#404040"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_800,
+        color(hex("#262626"))
+),
+      style(
+        objectos.css.util.Medium.Color.NEUTRAL_900,
+        color(hex("#171717"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_050,
+        color(hex("#fafaf9"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_100,
+        color(hex("#f5f5f4"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_200,
+        color(hex("#e7e5e4"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_300,
+        color(hex("#d6d3d1"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_400,
+        color(hex("#a8a29e"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_500,
+        color(hex("#78716c"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_600,
+        color(hex("#57534e"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_700,
+        color(hex("#44403c"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_800,
+        color(hex("#292524"))
+),
+      style(
+        objectos.css.util.Medium.Color.STONE_900,
+        color(hex("#1c1917"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_050,
+        color(hex("#fef2f2"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_100,
+        color(hex("#fee2e2"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_200,
+        color(hex("#fecaca"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_300,
+        color(hex("#fca5a5"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_400,
+        color(hex("#f87171"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_500,
+        color(hex("#ef4444"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_600,
+        color(hex("#dc2626"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_700,
+        color(hex("#b91c1c"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_800,
+        color(hex("#991b1b"))
+),
+      style(
+        objectos.css.util.Medium.Color.RED_900,
+        color(hex("#7f1d1d"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_050,
+        color(hex("#fff7ed"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_100,
+        color(hex("#ffedd5"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_200,
+        color(hex("#fed7aa"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_300,
+        color(hex("#fdba74"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_400,
+        color(hex("#fb923c"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_500,
+        color(hex("#f97316"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_600,
+        color(hex("#ea580c"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_700,
+        color(hex("#c2410c"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_800,
+        color(hex("#9a3412"))
+),
+      style(
+        objectos.css.util.Medium.Color.ORANGE_900,
+        color(hex("#7c2d12"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_050,
+        color(hex("#fffbeb"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_100,
+        color(hex("#fef3c7"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_200,
+        color(hex("#fde68a"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_300,
+        color(hex("#fcd34d"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_400,
+        color(hex("#fbbf24"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_500,
+        color(hex("#f59e0b"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_600,
+        color(hex("#d97706"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_700,
+        color(hex("#b45309"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_800,
+        color(hex("#92400e"))
+),
+      style(
+        objectos.css.util.Medium.Color.AMBER_900,
+        color(hex("#78350f"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_050,
+        color(hex("#fefce8"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_100,
+        color(hex("#fef9c3"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_200,
+        color(hex("#fef08a"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_300,
+        color(hex("#fde047"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_400,
+        color(hex("#facc15"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_500,
+        color(hex("#eab308"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_600,
+        color(hex("#ca8a04"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_700,
+        color(hex("#a16207"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_800,
+        color(hex("#854d0e"))
+),
+      style(
+        objectos.css.util.Medium.Color.YELLOW_900,
+        color(hex("#713f12"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_050,
+        color(hex("#f7fee7"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_100,
+        color(hex("#ecfccb"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_200,
+        color(hex("#d9f99d"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_300,
+        color(hex("#bef264"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_400,
+        color(hex("#a3e635"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_500,
+        color(hex("#84cc16"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_600,
+        color(hex("#65a30d"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_700,
+        color(hex("#4d7c0f"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_800,
+        color(hex("#3f6212"))
+),
+      style(
+        objectos.css.util.Medium.Color.LIME_900,
+        color(hex("#365314"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_050,
+        color(hex("#f0fdf4"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_100,
+        color(hex("#dcfce7"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_200,
+        color(hex("#bbf7d0"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_300,
+        color(hex("#86efac"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_400,
+        color(hex("#4ade80"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_500,
+        color(hex("#22c55e"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_600,
+        color(hex("#16a34a"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_700,
+        color(hex("#15803d"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_800,
+        color(hex("#166534"))
+),
+      style(
+        objectos.css.util.Medium.Color.GREEN_900,
+        color(hex("#14532d"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_050,
+        color(hex("#ecfdf5"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_100,
+        color(hex("#d1fae5"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_200,
+        color(hex("#a7f3d0"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_300,
+        color(hex("#6ee7b7"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_400,
+        color(hex("#34d399"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_500,
+        color(hex("#10b981"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_600,
+        color(hex("#059669"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_700,
+        color(hex("#047857"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_800,
+        color(hex("#065f46"))
+),
+      style(
+        objectos.css.util.Medium.Color.EMERALD_900,
+        color(hex("#064e3b"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_050,
+        color(hex("#f0fdfa"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_100,
+        color(hex("#ccfbf1"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_200,
+        color(hex("#99f6e4"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_300,
+        color(hex("#5eead4"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_400,
+        color(hex("#2dd4bf"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_500,
+        color(hex("#14b8a6"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_600,
+        color(hex("#0d9488"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_700,
+        color(hex("#0f766e"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_800,
+        color(hex("#115e59"))
+),
+      style(
+        objectos.css.util.Medium.Color.TEAL_900,
+        color(hex("#134e4a"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_050,
+        color(hex("#ecfeff"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_100,
+        color(hex("#cffafe"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_200,
+        color(hex("#a5f3fc"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_300,
+        color(hex("#67e8f9"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_400,
+        color(hex("#22d3ee"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_500,
+        color(hex("#06b6d4"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_600,
+        color(hex("#0891b2"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_700,
+        color(hex("#0e7490"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_800,
+        color(hex("#155e75"))
+),
+      style(
+        objectos.css.util.Medium.Color.CYAN_900,
+        color(hex("#164e63"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_050,
+        color(hex("#f0f9ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_100,
+        color(hex("#e0f2fe"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_200,
+        color(hex("#bae6fd"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_300,
+        color(hex("#7dd3fc"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_400,
+        color(hex("#38bdf8"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_500,
+        color(hex("#0ea5e9"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_600,
+        color(hex("#0284c7"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_700,
+        color(hex("#0369a1"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_800,
+        color(hex("#075985"))
+),
+      style(
+        objectos.css.util.Medium.Color.SKY_900,
+        color(hex("#0c4a6e"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_050,
+        color(hex("#eff6ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_100,
+        color(hex("#dbeafe"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_200,
+        color(hex("#bfdbfe"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_300,
+        color(hex("#93c5fd"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_400,
+        color(hex("#60a5fa"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_500,
+        color(hex("#3b82f6"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_600,
+        color(hex("#2563eb"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_700,
+        color(hex("#1d4ed8"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_800,
+        color(hex("#1e40af"))
+),
+      style(
+        objectos.css.util.Medium.Color.BLUE_900,
+        color(hex("#1e3a8a"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_050,
+        color(hex("#eef2ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_100,
+        color(hex("#e0e7ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_200,
+        color(hex("#c7d2fe"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_300,
+        color(hex("#a5b4fc"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_400,
+        color(hex("#818cf8"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_500,
+        color(hex("#6366f1"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_600,
+        color(hex("#4f46e5"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_700,
+        color(hex("#4338ca"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_800,
+        color(hex("#3730a3"))
+),
+      style(
+        objectos.css.util.Medium.Color.INDIGO_900,
+        color(hex("#312e81"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_050,
+        color(hex("#f5f3ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_100,
+        color(hex("#ede9fe"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_200,
+        color(hex("#ddd6fe"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_300,
+        color(hex("#c4b5fd"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_400,
+        color(hex("#a78bfa"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_500,
+        color(hex("#8b5cf6"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_600,
+        color(hex("#7c3aed"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_700,
+        color(hex("#6d28d9"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_800,
+        color(hex("#5b21b6"))
+),
+      style(
+        objectos.css.util.Medium.Color.VIOLET_900,
+        color(hex("#4c1d95"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_050,
+        color(hex("#faf5ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_100,
+        color(hex("#f3e8ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_200,
+        color(hex("#e9d5ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_300,
+        color(hex("#d8b4fe"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_400,
+        color(hex("#c084fc"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_500,
+        color(hex("#a855f7"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_600,
+        color(hex("#9333ea"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_700,
+        color(hex("#7e22ce"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_800,
+        color(hex("#6b21a8"))
+),
+      style(
+        objectos.css.util.Medium.Color.PURPLE_900,
+        color(hex("#581c87"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_050,
+        color(hex("#fdf4ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_100,
+        color(hex("#fae8ff"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_200,
+        color(hex("#f5d0fe"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_300,
+        color(hex("#f0abfc"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_400,
+        color(hex("#e879f9"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_500,
+        color(hex("#d946ef"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_600,
+        color(hex("#c026d3"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_700,
+        color(hex("#a21caf"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_800,
+        color(hex("#86198f"))
+),
+      style(
+        objectos.css.util.Medium.Color.FUCHSIA_900,
+        color(hex("#701a75"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_050,
+        color(hex("#fdf2f8"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_100,
+        color(hex("#fce7f3"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_200,
+        color(hex("#fbcfe8"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_300,
+        color(hex("#f9a8d4"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_400,
+        color(hex("#f472b6"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_500,
+        color(hex("#ec4899"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_600,
+        color(hex("#db2777"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_700,
+        color(hex("#be185d"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_800,
+        color(hex("#9d174d"))
+),
+      style(
+        objectos.css.util.Medium.Color.PINK_900,
+        color(hex("#831843"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_050,
+        color(hex("#fff1f2"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_100,
+        color(hex("#ffe4e6"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_200,
+        color(hex("#fecdd3"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_300,
+        color(hex("#fda4af"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_400,
+        color(hex("#fb7185"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_500,
+        color(hex("#f43f5e"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_600,
+        color(hex("#e11d48"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_700,
+        color(hex("#be123c"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_800,
+        color(hex("#9f1239"))
+),
+      style(
+        objectos.css.util.Medium.Color.ROSE_900,
+        color(hex("#881337"))
 ));
   }
 
@@ -10535,6 +13374,69 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumTextAlign() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.TextAlign.LEFT,
+        textAlign(left)
+),
+      style(
+        objectos.css.util.Medium.TextAlign.CENTER,
+        textAlign(center)
+),
+      style(
+        objectos.css.util.Medium.TextAlign.RIGHT,
+        textAlign(right)
+),
+      style(
+        objectos.css.util.Medium.TextAlign.JUSTIFY,
+        textAlign(justify)
+));
+  }
+
+  private void MediumTextDecoration() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.TextDecoration.UNDERLINE,
+        textDecoration(underline)
+),
+      style(
+        objectos.css.util.Medium.TextDecoration.LINE_THROUGH,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.Medium.TextDecoration.STRIKE,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.Medium.TextDecoration.NONE,
+        textDecoration(none)
+));
+  }
+
+  private void MediumTextTransform() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.TextTransform.UPPERCASE,
+        textTransform(uppercase)
+),
+      style(
+        objectos.css.util.Medium.TextTransform.LOWERCASE,
+        textTransform(lowercase)
+),
+      style(
+        objectos.css.util.Medium.TextTransform.CAPITALIZE,
+        textTransform(capitalize)
+),
+      style(
+        objectos.css.util.Medium.TextTransform.NONE,
+        textTransform(none)
+));
+  }
+
   private void MediumWidth() {
     media(
       minWidth(px(768)),
@@ -10809,6 +13711,903 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Medium.Width.FIT,
         width(fitContent)
+));
+  }
+
+  private void LargeColor() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.Color.TRANSPARENT,
+        color(transparent)
+),
+      style(
+        objectos.css.util.Large.Color.BLACK,
+        color(hex("#000"))
+),
+      style(
+        objectos.css.util.Large.Color.WHITE,
+        color(hex("#ffffff"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_050,
+        color(hex("#f8fafc"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_100,
+        color(hex("#f1f5f9"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_200,
+        color(hex("#e2e8f0"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_300,
+        color(hex("#cbd5e1"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_400,
+        color(hex("#94a3b8"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_500,
+        color(hex("#64748b"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_600,
+        color(hex("#475569"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_700,
+        color(hex("#334155"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_800,
+        color(hex("#1e293b"))
+),
+      style(
+        objectos.css.util.Large.Color.SLATE_900,
+        color(hex("#0f172a"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_050,
+        color(hex("#f9fafb"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_100,
+        color(hex("#f3f4f6"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_200,
+        color(hex("#e5e7eb"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_300,
+        color(hex("#d1d5db"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_400,
+        color(hex("#9ca3af"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_500,
+        color(hex("#6b7280"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_600,
+        color(hex("#4b5563"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_700,
+        color(hex("#374151"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_800,
+        color(hex("#1f2937"))
+),
+      style(
+        objectos.css.util.Large.Color.GRAY_900,
+        color(hex("#111827"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_100,
+        color(hex("#f4f4f5"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_200,
+        color(hex("#e4e4e7"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_300,
+        color(hex("#d4d4d8"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_400,
+        color(hex("#a1a1aa"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_500,
+        color(hex("#71717a"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_600,
+        color(hex("#52525b"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_700,
+        color(hex("#3f3f46"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_800,
+        color(hex("#27272a"))
+),
+      style(
+        objectos.css.util.Large.Color.ZINC_900,
+        color(hex("#18181b"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_100,
+        color(hex("#f5f5f5"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_200,
+        color(hex("#e5e5e5"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_300,
+        color(hex("#d4d4d4"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_400,
+        color(hex("#a3a3a3"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_500,
+        color(hex("#737373"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_600,
+        color(hex("#525252"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_700,
+        color(hex("#404040"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_800,
+        color(hex("#262626"))
+),
+      style(
+        objectos.css.util.Large.Color.NEUTRAL_900,
+        color(hex("#171717"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_050,
+        color(hex("#fafaf9"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_100,
+        color(hex("#f5f5f4"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_200,
+        color(hex("#e7e5e4"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_300,
+        color(hex("#d6d3d1"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_400,
+        color(hex("#a8a29e"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_500,
+        color(hex("#78716c"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_600,
+        color(hex("#57534e"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_700,
+        color(hex("#44403c"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_800,
+        color(hex("#292524"))
+),
+      style(
+        objectos.css.util.Large.Color.STONE_900,
+        color(hex("#1c1917"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_050,
+        color(hex("#fef2f2"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_100,
+        color(hex("#fee2e2"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_200,
+        color(hex("#fecaca"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_300,
+        color(hex("#fca5a5"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_400,
+        color(hex("#f87171"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_500,
+        color(hex("#ef4444"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_600,
+        color(hex("#dc2626"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_700,
+        color(hex("#b91c1c"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_800,
+        color(hex("#991b1b"))
+),
+      style(
+        objectos.css.util.Large.Color.RED_900,
+        color(hex("#7f1d1d"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_050,
+        color(hex("#fff7ed"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_100,
+        color(hex("#ffedd5"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_200,
+        color(hex("#fed7aa"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_300,
+        color(hex("#fdba74"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_400,
+        color(hex("#fb923c"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_500,
+        color(hex("#f97316"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_600,
+        color(hex("#ea580c"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_700,
+        color(hex("#c2410c"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_800,
+        color(hex("#9a3412"))
+),
+      style(
+        objectos.css.util.Large.Color.ORANGE_900,
+        color(hex("#7c2d12"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_050,
+        color(hex("#fffbeb"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_100,
+        color(hex("#fef3c7"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_200,
+        color(hex("#fde68a"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_300,
+        color(hex("#fcd34d"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_400,
+        color(hex("#fbbf24"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_500,
+        color(hex("#f59e0b"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_600,
+        color(hex("#d97706"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_700,
+        color(hex("#b45309"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_800,
+        color(hex("#92400e"))
+),
+      style(
+        objectos.css.util.Large.Color.AMBER_900,
+        color(hex("#78350f"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_050,
+        color(hex("#fefce8"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_100,
+        color(hex("#fef9c3"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_200,
+        color(hex("#fef08a"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_300,
+        color(hex("#fde047"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_400,
+        color(hex("#facc15"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_500,
+        color(hex("#eab308"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_600,
+        color(hex("#ca8a04"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_700,
+        color(hex("#a16207"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_800,
+        color(hex("#854d0e"))
+),
+      style(
+        objectos.css.util.Large.Color.YELLOW_900,
+        color(hex("#713f12"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_050,
+        color(hex("#f7fee7"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_100,
+        color(hex("#ecfccb"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_200,
+        color(hex("#d9f99d"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_300,
+        color(hex("#bef264"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_400,
+        color(hex("#a3e635"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_500,
+        color(hex("#84cc16"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_600,
+        color(hex("#65a30d"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_700,
+        color(hex("#4d7c0f"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_800,
+        color(hex("#3f6212"))
+),
+      style(
+        objectos.css.util.Large.Color.LIME_900,
+        color(hex("#365314"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_050,
+        color(hex("#f0fdf4"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_100,
+        color(hex("#dcfce7"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_200,
+        color(hex("#bbf7d0"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_300,
+        color(hex("#86efac"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_400,
+        color(hex("#4ade80"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_500,
+        color(hex("#22c55e"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_600,
+        color(hex("#16a34a"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_700,
+        color(hex("#15803d"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_800,
+        color(hex("#166534"))
+),
+      style(
+        objectos.css.util.Large.Color.GREEN_900,
+        color(hex("#14532d"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_050,
+        color(hex("#ecfdf5"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_100,
+        color(hex("#d1fae5"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_200,
+        color(hex("#a7f3d0"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_300,
+        color(hex("#6ee7b7"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_400,
+        color(hex("#34d399"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_500,
+        color(hex("#10b981"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_600,
+        color(hex("#059669"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_700,
+        color(hex("#047857"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_800,
+        color(hex("#065f46"))
+),
+      style(
+        objectos.css.util.Large.Color.EMERALD_900,
+        color(hex("#064e3b"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_050,
+        color(hex("#f0fdfa"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_100,
+        color(hex("#ccfbf1"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_200,
+        color(hex("#99f6e4"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_300,
+        color(hex("#5eead4"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_400,
+        color(hex("#2dd4bf"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_500,
+        color(hex("#14b8a6"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_600,
+        color(hex("#0d9488"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_700,
+        color(hex("#0f766e"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_800,
+        color(hex("#115e59"))
+),
+      style(
+        objectos.css.util.Large.Color.TEAL_900,
+        color(hex("#134e4a"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_050,
+        color(hex("#ecfeff"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_100,
+        color(hex("#cffafe"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_200,
+        color(hex("#a5f3fc"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_300,
+        color(hex("#67e8f9"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_400,
+        color(hex("#22d3ee"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_500,
+        color(hex("#06b6d4"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_600,
+        color(hex("#0891b2"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_700,
+        color(hex("#0e7490"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_800,
+        color(hex("#155e75"))
+),
+      style(
+        objectos.css.util.Large.Color.CYAN_900,
+        color(hex("#164e63"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_050,
+        color(hex("#f0f9ff"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_100,
+        color(hex("#e0f2fe"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_200,
+        color(hex("#bae6fd"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_300,
+        color(hex("#7dd3fc"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_400,
+        color(hex("#38bdf8"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_500,
+        color(hex("#0ea5e9"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_600,
+        color(hex("#0284c7"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_700,
+        color(hex("#0369a1"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_800,
+        color(hex("#075985"))
+),
+      style(
+        objectos.css.util.Large.Color.SKY_900,
+        color(hex("#0c4a6e"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_050,
+        color(hex("#eff6ff"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_100,
+        color(hex("#dbeafe"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_200,
+        color(hex("#bfdbfe"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_300,
+        color(hex("#93c5fd"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_400,
+        color(hex("#60a5fa"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_500,
+        color(hex("#3b82f6"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_600,
+        color(hex("#2563eb"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_700,
+        color(hex("#1d4ed8"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_800,
+        color(hex("#1e40af"))
+),
+      style(
+        objectos.css.util.Large.Color.BLUE_900,
+        color(hex("#1e3a8a"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_050,
+        color(hex("#eef2ff"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_100,
+        color(hex("#e0e7ff"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_200,
+        color(hex("#c7d2fe"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_300,
+        color(hex("#a5b4fc"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_400,
+        color(hex("#818cf8"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_500,
+        color(hex("#6366f1"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_600,
+        color(hex("#4f46e5"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_700,
+        color(hex("#4338ca"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_800,
+        color(hex("#3730a3"))
+),
+      style(
+        objectos.css.util.Large.Color.INDIGO_900,
+        color(hex("#312e81"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_050,
+        color(hex("#f5f3ff"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_100,
+        color(hex("#ede9fe"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_200,
+        color(hex("#ddd6fe"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_300,
+        color(hex("#c4b5fd"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_400,
+        color(hex("#a78bfa"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_500,
+        color(hex("#8b5cf6"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_600,
+        color(hex("#7c3aed"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_700,
+        color(hex("#6d28d9"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_800,
+        color(hex("#5b21b6"))
+),
+      style(
+        objectos.css.util.Large.Color.VIOLET_900,
+        color(hex("#4c1d95"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_050,
+        color(hex("#faf5ff"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_100,
+        color(hex("#f3e8ff"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_200,
+        color(hex("#e9d5ff"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_300,
+        color(hex("#d8b4fe"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_400,
+        color(hex("#c084fc"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_500,
+        color(hex("#a855f7"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_600,
+        color(hex("#9333ea"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_700,
+        color(hex("#7e22ce"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_800,
+        color(hex("#6b21a8"))
+),
+      style(
+        objectos.css.util.Large.Color.PURPLE_900,
+        color(hex("#581c87"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_050,
+        color(hex("#fdf4ff"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_100,
+        color(hex("#fae8ff"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_200,
+        color(hex("#f5d0fe"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_300,
+        color(hex("#f0abfc"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_400,
+        color(hex("#e879f9"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_500,
+        color(hex("#d946ef"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_600,
+        color(hex("#c026d3"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_700,
+        color(hex("#a21caf"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_800,
+        color(hex("#86198f"))
+),
+      style(
+        objectos.css.util.Large.Color.FUCHSIA_900,
+        color(hex("#701a75"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_050,
+        color(hex("#fdf2f8"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_100,
+        color(hex("#fce7f3"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_200,
+        color(hex("#fbcfe8"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_300,
+        color(hex("#f9a8d4"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_400,
+        color(hex("#f472b6"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_500,
+        color(hex("#ec4899"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_600,
+        color(hex("#db2777"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_700,
+        color(hex("#be185d"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_800,
+        color(hex("#9d174d"))
+),
+      style(
+        objectos.css.util.Large.Color.PINK_900,
+        color(hex("#831843"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_050,
+        color(hex("#fff1f2"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_100,
+        color(hex("#ffe4e6"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_200,
+        color(hex("#fecdd3"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_300,
+        color(hex("#fda4af"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_400,
+        color(hex("#fb7185"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_500,
+        color(hex("#f43f5e"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_600,
+        color(hex("#e11d48"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_700,
+        color(hex("#be123c"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_800,
+        color(hex("#9f1239"))
+),
+      style(
+        objectos.css.util.Large.Color.ROSE_900,
+        color(hex("#881337"))
 ));
   }
 
@@ -14084,6 +17883,69 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void LargeTextAlign() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.TextAlign.LEFT,
+        textAlign(left)
+),
+      style(
+        objectos.css.util.Large.TextAlign.CENTER,
+        textAlign(center)
+),
+      style(
+        objectos.css.util.Large.TextAlign.RIGHT,
+        textAlign(right)
+),
+      style(
+        objectos.css.util.Large.TextAlign.JUSTIFY,
+        textAlign(justify)
+));
+  }
+
+  private void LargeTextDecoration() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.TextDecoration.UNDERLINE,
+        textDecoration(underline)
+),
+      style(
+        objectos.css.util.Large.TextDecoration.LINE_THROUGH,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.Large.TextDecoration.STRIKE,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.Large.TextDecoration.NONE,
+        textDecoration(none)
+));
+  }
+
+  private void LargeTextTransform() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.TextTransform.UPPERCASE,
+        textTransform(uppercase)
+),
+      style(
+        objectos.css.util.Large.TextTransform.LOWERCASE,
+        textTransform(lowercase)
+),
+      style(
+        objectos.css.util.Large.TextTransform.CAPITALIZE,
+        textTransform(capitalize)
+),
+      style(
+        objectos.css.util.Large.TextTransform.NONE,
+        textTransform(none)
+));
+  }
+
   private void LargeWidth() {
     media(
       minWidth(px(1024)),
@@ -14358,6 +18220,903 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Large.Width.FIT,
         width(fitContent)
+));
+  }
+
+  private void XLargeColor() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.Color.TRANSPARENT,
+        color(transparent)
+),
+      style(
+        objectos.css.util.XLarge.Color.BLACK,
+        color(hex("#000"))
+),
+      style(
+        objectos.css.util.XLarge.Color.WHITE,
+        color(hex("#ffffff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_050,
+        color(hex("#f8fafc"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_100,
+        color(hex("#f1f5f9"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_200,
+        color(hex("#e2e8f0"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_300,
+        color(hex("#cbd5e1"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_400,
+        color(hex("#94a3b8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_500,
+        color(hex("#64748b"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_600,
+        color(hex("#475569"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_700,
+        color(hex("#334155"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_800,
+        color(hex("#1e293b"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SLATE_900,
+        color(hex("#0f172a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_050,
+        color(hex("#f9fafb"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_100,
+        color(hex("#f3f4f6"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_200,
+        color(hex("#e5e7eb"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_300,
+        color(hex("#d1d5db"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_400,
+        color(hex("#9ca3af"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_500,
+        color(hex("#6b7280"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_600,
+        color(hex("#4b5563"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_700,
+        color(hex("#374151"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_800,
+        color(hex("#1f2937"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GRAY_900,
+        color(hex("#111827"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_100,
+        color(hex("#f4f4f5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_200,
+        color(hex("#e4e4e7"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_300,
+        color(hex("#d4d4d8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_400,
+        color(hex("#a1a1aa"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_500,
+        color(hex("#71717a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_600,
+        color(hex("#52525b"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_700,
+        color(hex("#3f3f46"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_800,
+        color(hex("#27272a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ZINC_900,
+        color(hex("#18181b"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_100,
+        color(hex("#f5f5f5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_200,
+        color(hex("#e5e5e5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_300,
+        color(hex("#d4d4d4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_400,
+        color(hex("#a3a3a3"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_500,
+        color(hex("#737373"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_600,
+        color(hex("#525252"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_700,
+        color(hex("#404040"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_800,
+        color(hex("#262626"))
+),
+      style(
+        objectos.css.util.XLarge.Color.NEUTRAL_900,
+        color(hex("#171717"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_050,
+        color(hex("#fafaf9"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_100,
+        color(hex("#f5f5f4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_200,
+        color(hex("#e7e5e4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_300,
+        color(hex("#d6d3d1"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_400,
+        color(hex("#a8a29e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_500,
+        color(hex("#78716c"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_600,
+        color(hex("#57534e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_700,
+        color(hex("#44403c"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_800,
+        color(hex("#292524"))
+),
+      style(
+        objectos.css.util.XLarge.Color.STONE_900,
+        color(hex("#1c1917"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_050,
+        color(hex("#fef2f2"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_100,
+        color(hex("#fee2e2"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_200,
+        color(hex("#fecaca"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_300,
+        color(hex("#fca5a5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_400,
+        color(hex("#f87171"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_500,
+        color(hex("#ef4444"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_600,
+        color(hex("#dc2626"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_700,
+        color(hex("#b91c1c"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_800,
+        color(hex("#991b1b"))
+),
+      style(
+        objectos.css.util.XLarge.Color.RED_900,
+        color(hex("#7f1d1d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_050,
+        color(hex("#fff7ed"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_100,
+        color(hex("#ffedd5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_200,
+        color(hex("#fed7aa"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_300,
+        color(hex("#fdba74"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_400,
+        color(hex("#fb923c"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_500,
+        color(hex("#f97316"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_600,
+        color(hex("#ea580c"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_700,
+        color(hex("#c2410c"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_800,
+        color(hex("#9a3412"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ORANGE_900,
+        color(hex("#7c2d12"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_050,
+        color(hex("#fffbeb"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_100,
+        color(hex("#fef3c7"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_200,
+        color(hex("#fde68a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_300,
+        color(hex("#fcd34d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_400,
+        color(hex("#fbbf24"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_500,
+        color(hex("#f59e0b"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_600,
+        color(hex("#d97706"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_700,
+        color(hex("#b45309"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_800,
+        color(hex("#92400e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.AMBER_900,
+        color(hex("#78350f"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_050,
+        color(hex("#fefce8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_100,
+        color(hex("#fef9c3"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_200,
+        color(hex("#fef08a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_300,
+        color(hex("#fde047"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_400,
+        color(hex("#facc15"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_500,
+        color(hex("#eab308"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_600,
+        color(hex("#ca8a04"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_700,
+        color(hex("#a16207"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_800,
+        color(hex("#854d0e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.YELLOW_900,
+        color(hex("#713f12"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_050,
+        color(hex("#f7fee7"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_100,
+        color(hex("#ecfccb"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_200,
+        color(hex("#d9f99d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_300,
+        color(hex("#bef264"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_400,
+        color(hex("#a3e635"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_500,
+        color(hex("#84cc16"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_600,
+        color(hex("#65a30d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_700,
+        color(hex("#4d7c0f"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_800,
+        color(hex("#3f6212"))
+),
+      style(
+        objectos.css.util.XLarge.Color.LIME_900,
+        color(hex("#365314"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_050,
+        color(hex("#f0fdf4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_100,
+        color(hex("#dcfce7"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_200,
+        color(hex("#bbf7d0"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_300,
+        color(hex("#86efac"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_400,
+        color(hex("#4ade80"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_500,
+        color(hex("#22c55e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_600,
+        color(hex("#16a34a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_700,
+        color(hex("#15803d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_800,
+        color(hex("#166534"))
+),
+      style(
+        objectos.css.util.XLarge.Color.GREEN_900,
+        color(hex("#14532d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_050,
+        color(hex("#ecfdf5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_100,
+        color(hex("#d1fae5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_200,
+        color(hex("#a7f3d0"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_300,
+        color(hex("#6ee7b7"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_400,
+        color(hex("#34d399"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_500,
+        color(hex("#10b981"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_600,
+        color(hex("#059669"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_700,
+        color(hex("#047857"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_800,
+        color(hex("#065f46"))
+),
+      style(
+        objectos.css.util.XLarge.Color.EMERALD_900,
+        color(hex("#064e3b"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_050,
+        color(hex("#f0fdfa"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_100,
+        color(hex("#ccfbf1"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_200,
+        color(hex("#99f6e4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_300,
+        color(hex("#5eead4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_400,
+        color(hex("#2dd4bf"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_500,
+        color(hex("#14b8a6"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_600,
+        color(hex("#0d9488"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_700,
+        color(hex("#0f766e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_800,
+        color(hex("#115e59"))
+),
+      style(
+        objectos.css.util.XLarge.Color.TEAL_900,
+        color(hex("#134e4a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_050,
+        color(hex("#ecfeff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_100,
+        color(hex("#cffafe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_200,
+        color(hex("#a5f3fc"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_300,
+        color(hex("#67e8f9"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_400,
+        color(hex("#22d3ee"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_500,
+        color(hex("#06b6d4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_600,
+        color(hex("#0891b2"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_700,
+        color(hex("#0e7490"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_800,
+        color(hex("#155e75"))
+),
+      style(
+        objectos.css.util.XLarge.Color.CYAN_900,
+        color(hex("#164e63"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_050,
+        color(hex("#f0f9ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_100,
+        color(hex("#e0f2fe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_200,
+        color(hex("#bae6fd"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_300,
+        color(hex("#7dd3fc"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_400,
+        color(hex("#38bdf8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_500,
+        color(hex("#0ea5e9"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_600,
+        color(hex("#0284c7"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_700,
+        color(hex("#0369a1"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_800,
+        color(hex("#075985"))
+),
+      style(
+        objectos.css.util.XLarge.Color.SKY_900,
+        color(hex("#0c4a6e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_050,
+        color(hex("#eff6ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_100,
+        color(hex("#dbeafe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_200,
+        color(hex("#bfdbfe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_300,
+        color(hex("#93c5fd"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_400,
+        color(hex("#60a5fa"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_500,
+        color(hex("#3b82f6"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_600,
+        color(hex("#2563eb"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_700,
+        color(hex("#1d4ed8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_800,
+        color(hex("#1e40af"))
+),
+      style(
+        objectos.css.util.XLarge.Color.BLUE_900,
+        color(hex("#1e3a8a"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_050,
+        color(hex("#eef2ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_100,
+        color(hex("#e0e7ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_200,
+        color(hex("#c7d2fe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_300,
+        color(hex("#a5b4fc"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_400,
+        color(hex("#818cf8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_500,
+        color(hex("#6366f1"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_600,
+        color(hex("#4f46e5"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_700,
+        color(hex("#4338ca"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_800,
+        color(hex("#3730a3"))
+),
+      style(
+        objectos.css.util.XLarge.Color.INDIGO_900,
+        color(hex("#312e81"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_050,
+        color(hex("#f5f3ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_100,
+        color(hex("#ede9fe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_200,
+        color(hex("#ddd6fe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_300,
+        color(hex("#c4b5fd"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_400,
+        color(hex("#a78bfa"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_500,
+        color(hex("#8b5cf6"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_600,
+        color(hex("#7c3aed"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_700,
+        color(hex("#6d28d9"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_800,
+        color(hex("#5b21b6"))
+),
+      style(
+        objectos.css.util.XLarge.Color.VIOLET_900,
+        color(hex("#4c1d95"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_050,
+        color(hex("#faf5ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_100,
+        color(hex("#f3e8ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_200,
+        color(hex("#e9d5ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_300,
+        color(hex("#d8b4fe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_400,
+        color(hex("#c084fc"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_500,
+        color(hex("#a855f7"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_600,
+        color(hex("#9333ea"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_700,
+        color(hex("#7e22ce"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_800,
+        color(hex("#6b21a8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PURPLE_900,
+        color(hex("#581c87"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_050,
+        color(hex("#fdf4ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_100,
+        color(hex("#fae8ff"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_200,
+        color(hex("#f5d0fe"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_300,
+        color(hex("#f0abfc"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_400,
+        color(hex("#e879f9"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_500,
+        color(hex("#d946ef"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_600,
+        color(hex("#c026d3"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_700,
+        color(hex("#a21caf"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_800,
+        color(hex("#86198f"))
+),
+      style(
+        objectos.css.util.XLarge.Color.FUCHSIA_900,
+        color(hex("#701a75"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_050,
+        color(hex("#fdf2f8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_100,
+        color(hex("#fce7f3"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_200,
+        color(hex("#fbcfe8"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_300,
+        color(hex("#f9a8d4"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_400,
+        color(hex("#f472b6"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_500,
+        color(hex("#ec4899"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_600,
+        color(hex("#db2777"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_700,
+        color(hex("#be185d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_800,
+        color(hex("#9d174d"))
+),
+      style(
+        objectos.css.util.XLarge.Color.PINK_900,
+        color(hex("#831843"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_050,
+        color(hex("#fff1f2"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_100,
+        color(hex("#ffe4e6"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_200,
+        color(hex("#fecdd3"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_300,
+        color(hex("#fda4af"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_400,
+        color(hex("#fb7185"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_500,
+        color(hex("#f43f5e"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_600,
+        color(hex("#e11d48"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_700,
+        color(hex("#be123c"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_800,
+        color(hex("#9f1239"))
+),
+      style(
+        objectos.css.util.XLarge.Color.ROSE_900,
+        color(hex("#881337"))
 ));
   }
 
@@ -17633,6 +22392,69 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeTextAlign() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.TextAlign.LEFT,
+        textAlign(left)
+),
+      style(
+        objectos.css.util.XLarge.TextAlign.CENTER,
+        textAlign(center)
+),
+      style(
+        objectos.css.util.XLarge.TextAlign.RIGHT,
+        textAlign(right)
+),
+      style(
+        objectos.css.util.XLarge.TextAlign.JUSTIFY,
+        textAlign(justify)
+));
+  }
+
+  private void XLargeTextDecoration() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.TextDecoration.UNDERLINE,
+        textDecoration(underline)
+),
+      style(
+        objectos.css.util.XLarge.TextDecoration.LINE_THROUGH,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.XLarge.TextDecoration.STRIKE,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.XLarge.TextDecoration.NONE,
+        textDecoration(none)
+));
+  }
+
+  private void XLargeTextTransform() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.TextTransform.UPPERCASE,
+        textTransform(uppercase)
+),
+      style(
+        objectos.css.util.XLarge.TextTransform.LOWERCASE,
+        textTransform(lowercase)
+),
+      style(
+        objectos.css.util.XLarge.TextTransform.CAPITALIZE,
+        textTransform(capitalize)
+),
+      style(
+        objectos.css.util.XLarge.TextTransform.NONE,
+        textTransform(none)
+));
+  }
+
   private void XLargeWidth() {
     media(
       minWidth(px(1280)),
@@ -17907,6 +22729,903 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge.Width.FIT,
         width(fitContent)
+));
+  }
+
+  private void XLarge2Color() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.Color.TRANSPARENT,
+        color(transparent)
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLACK,
+        color(hex("#000"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.WHITE,
+        color(hex("#ffffff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_050,
+        color(hex("#f8fafc"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_100,
+        color(hex("#f1f5f9"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_200,
+        color(hex("#e2e8f0"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_300,
+        color(hex("#cbd5e1"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_400,
+        color(hex("#94a3b8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_500,
+        color(hex("#64748b"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_600,
+        color(hex("#475569"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_700,
+        color(hex("#334155"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_800,
+        color(hex("#1e293b"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SLATE_900,
+        color(hex("#0f172a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_050,
+        color(hex("#f9fafb"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_100,
+        color(hex("#f3f4f6"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_200,
+        color(hex("#e5e7eb"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_300,
+        color(hex("#d1d5db"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_400,
+        color(hex("#9ca3af"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_500,
+        color(hex("#6b7280"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_600,
+        color(hex("#4b5563"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_700,
+        color(hex("#374151"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_800,
+        color(hex("#1f2937"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GRAY_900,
+        color(hex("#111827"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_100,
+        color(hex("#f4f4f5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_200,
+        color(hex("#e4e4e7"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_300,
+        color(hex("#d4d4d8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_400,
+        color(hex("#a1a1aa"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_500,
+        color(hex("#71717a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_600,
+        color(hex("#52525b"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_700,
+        color(hex("#3f3f46"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_800,
+        color(hex("#27272a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ZINC_900,
+        color(hex("#18181b"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_050,
+        color(hex("#fafafa"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_100,
+        color(hex("#f5f5f5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_200,
+        color(hex("#e5e5e5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_300,
+        color(hex("#d4d4d4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_400,
+        color(hex("#a3a3a3"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_500,
+        color(hex("#737373"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_600,
+        color(hex("#525252"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_700,
+        color(hex("#404040"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_800,
+        color(hex("#262626"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.NEUTRAL_900,
+        color(hex("#171717"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_050,
+        color(hex("#fafaf9"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_100,
+        color(hex("#f5f5f4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_200,
+        color(hex("#e7e5e4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_300,
+        color(hex("#d6d3d1"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_400,
+        color(hex("#a8a29e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_500,
+        color(hex("#78716c"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_600,
+        color(hex("#57534e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_700,
+        color(hex("#44403c"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_800,
+        color(hex("#292524"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.STONE_900,
+        color(hex("#1c1917"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_050,
+        color(hex("#fef2f2"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_100,
+        color(hex("#fee2e2"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_200,
+        color(hex("#fecaca"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_300,
+        color(hex("#fca5a5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_400,
+        color(hex("#f87171"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_500,
+        color(hex("#ef4444"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_600,
+        color(hex("#dc2626"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_700,
+        color(hex("#b91c1c"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_800,
+        color(hex("#991b1b"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.RED_900,
+        color(hex("#7f1d1d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_050,
+        color(hex("#fff7ed"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_100,
+        color(hex("#ffedd5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_200,
+        color(hex("#fed7aa"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_300,
+        color(hex("#fdba74"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_400,
+        color(hex("#fb923c"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_500,
+        color(hex("#f97316"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_600,
+        color(hex("#ea580c"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_700,
+        color(hex("#c2410c"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_800,
+        color(hex("#9a3412"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ORANGE_900,
+        color(hex("#7c2d12"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_050,
+        color(hex("#fffbeb"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_100,
+        color(hex("#fef3c7"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_200,
+        color(hex("#fde68a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_300,
+        color(hex("#fcd34d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_400,
+        color(hex("#fbbf24"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_500,
+        color(hex("#f59e0b"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_600,
+        color(hex("#d97706"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_700,
+        color(hex("#b45309"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_800,
+        color(hex("#92400e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.AMBER_900,
+        color(hex("#78350f"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_050,
+        color(hex("#fefce8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_100,
+        color(hex("#fef9c3"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_200,
+        color(hex("#fef08a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_300,
+        color(hex("#fde047"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_400,
+        color(hex("#facc15"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_500,
+        color(hex("#eab308"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_600,
+        color(hex("#ca8a04"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_700,
+        color(hex("#a16207"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_800,
+        color(hex("#854d0e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.YELLOW_900,
+        color(hex("#713f12"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_050,
+        color(hex("#f7fee7"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_100,
+        color(hex("#ecfccb"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_200,
+        color(hex("#d9f99d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_300,
+        color(hex("#bef264"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_400,
+        color(hex("#a3e635"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_500,
+        color(hex("#84cc16"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_600,
+        color(hex("#65a30d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_700,
+        color(hex("#4d7c0f"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_800,
+        color(hex("#3f6212"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.LIME_900,
+        color(hex("#365314"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_050,
+        color(hex("#f0fdf4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_100,
+        color(hex("#dcfce7"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_200,
+        color(hex("#bbf7d0"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_300,
+        color(hex("#86efac"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_400,
+        color(hex("#4ade80"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_500,
+        color(hex("#22c55e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_600,
+        color(hex("#16a34a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_700,
+        color(hex("#15803d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_800,
+        color(hex("#166534"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.GREEN_900,
+        color(hex("#14532d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_050,
+        color(hex("#ecfdf5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_100,
+        color(hex("#d1fae5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_200,
+        color(hex("#a7f3d0"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_300,
+        color(hex("#6ee7b7"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_400,
+        color(hex("#34d399"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_500,
+        color(hex("#10b981"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_600,
+        color(hex("#059669"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_700,
+        color(hex("#047857"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_800,
+        color(hex("#065f46"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.EMERALD_900,
+        color(hex("#064e3b"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_050,
+        color(hex("#f0fdfa"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_100,
+        color(hex("#ccfbf1"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_200,
+        color(hex("#99f6e4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_300,
+        color(hex("#5eead4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_400,
+        color(hex("#2dd4bf"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_500,
+        color(hex("#14b8a6"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_600,
+        color(hex("#0d9488"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_700,
+        color(hex("#0f766e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_800,
+        color(hex("#115e59"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.TEAL_900,
+        color(hex("#134e4a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_050,
+        color(hex("#ecfeff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_100,
+        color(hex("#cffafe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_200,
+        color(hex("#a5f3fc"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_300,
+        color(hex("#67e8f9"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_400,
+        color(hex("#22d3ee"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_500,
+        color(hex("#06b6d4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_600,
+        color(hex("#0891b2"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_700,
+        color(hex("#0e7490"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_800,
+        color(hex("#155e75"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.CYAN_900,
+        color(hex("#164e63"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_050,
+        color(hex("#f0f9ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_100,
+        color(hex("#e0f2fe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_200,
+        color(hex("#bae6fd"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_300,
+        color(hex("#7dd3fc"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_400,
+        color(hex("#38bdf8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_500,
+        color(hex("#0ea5e9"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_600,
+        color(hex("#0284c7"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_700,
+        color(hex("#0369a1"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_800,
+        color(hex("#075985"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.SKY_900,
+        color(hex("#0c4a6e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_050,
+        color(hex("#eff6ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_100,
+        color(hex("#dbeafe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_200,
+        color(hex("#bfdbfe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_300,
+        color(hex("#93c5fd"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_400,
+        color(hex("#60a5fa"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_500,
+        color(hex("#3b82f6"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_600,
+        color(hex("#2563eb"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_700,
+        color(hex("#1d4ed8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_800,
+        color(hex("#1e40af"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.BLUE_900,
+        color(hex("#1e3a8a"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_050,
+        color(hex("#eef2ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_100,
+        color(hex("#e0e7ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_200,
+        color(hex("#c7d2fe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_300,
+        color(hex("#a5b4fc"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_400,
+        color(hex("#818cf8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_500,
+        color(hex("#6366f1"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_600,
+        color(hex("#4f46e5"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_700,
+        color(hex("#4338ca"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_800,
+        color(hex("#3730a3"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.INDIGO_900,
+        color(hex("#312e81"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_050,
+        color(hex("#f5f3ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_100,
+        color(hex("#ede9fe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_200,
+        color(hex("#ddd6fe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_300,
+        color(hex("#c4b5fd"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_400,
+        color(hex("#a78bfa"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_500,
+        color(hex("#8b5cf6"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_600,
+        color(hex("#7c3aed"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_700,
+        color(hex("#6d28d9"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_800,
+        color(hex("#5b21b6"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.VIOLET_900,
+        color(hex("#4c1d95"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_050,
+        color(hex("#faf5ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_100,
+        color(hex("#f3e8ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_200,
+        color(hex("#e9d5ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_300,
+        color(hex("#d8b4fe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_400,
+        color(hex("#c084fc"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_500,
+        color(hex("#a855f7"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_600,
+        color(hex("#9333ea"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_700,
+        color(hex("#7e22ce"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_800,
+        color(hex("#6b21a8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PURPLE_900,
+        color(hex("#581c87"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_050,
+        color(hex("#fdf4ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_100,
+        color(hex("#fae8ff"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_200,
+        color(hex("#f5d0fe"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_300,
+        color(hex("#f0abfc"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_400,
+        color(hex("#e879f9"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_500,
+        color(hex("#d946ef"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_600,
+        color(hex("#c026d3"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_700,
+        color(hex("#a21caf"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_800,
+        color(hex("#86198f"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.FUCHSIA_900,
+        color(hex("#701a75"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_050,
+        color(hex("#fdf2f8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_100,
+        color(hex("#fce7f3"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_200,
+        color(hex("#fbcfe8"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_300,
+        color(hex("#f9a8d4"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_400,
+        color(hex("#f472b6"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_500,
+        color(hex("#ec4899"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_600,
+        color(hex("#db2777"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_700,
+        color(hex("#be185d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_800,
+        color(hex("#9d174d"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.PINK_900,
+        color(hex("#831843"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_050,
+        color(hex("#fff1f2"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_100,
+        color(hex("#ffe4e6"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_200,
+        color(hex("#fecdd3"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_300,
+        color(hex("#fda4af"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_400,
+        color(hex("#fb7185"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_500,
+        color(hex("#f43f5e"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_600,
+        color(hex("#e11d48"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_700,
+        color(hex("#be123c"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_800,
+        color(hex("#9f1239"))
+),
+      style(
+        objectos.css.util.XLarge2.Color.ROSE_900,
+        color(hex("#881337"))
 ));
   }
 
@@ -21182,6 +26901,69 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLarge2TextAlign() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.TextAlign.LEFT,
+        textAlign(left)
+),
+      style(
+        objectos.css.util.XLarge2.TextAlign.CENTER,
+        textAlign(center)
+),
+      style(
+        objectos.css.util.XLarge2.TextAlign.RIGHT,
+        textAlign(right)
+),
+      style(
+        objectos.css.util.XLarge2.TextAlign.JUSTIFY,
+        textAlign(justify)
+));
+  }
+
+  private void XLarge2TextDecoration() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.TextDecoration.UNDERLINE,
+        textDecoration(underline)
+),
+      style(
+        objectos.css.util.XLarge2.TextDecoration.LINE_THROUGH,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.XLarge2.TextDecoration.STRIKE,
+        textDecoration(lineThrough)
+),
+      style(
+        objectos.css.util.XLarge2.TextDecoration.NONE,
+        textDecoration(none)
+));
+  }
+
+  private void XLarge2TextTransform() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.TextTransform.UPPERCASE,
+        textTransform(uppercase)
+),
+      style(
+        objectos.css.util.XLarge2.TextTransform.LOWERCASE,
+        textTransform(lowercase)
+),
+      style(
+        objectos.css.util.XLarge2.TextTransform.CAPITALIZE,
+        textTransform(capitalize)
+),
+      style(
+        objectos.css.util.XLarge2.TextTransform.NONE,
+        textTransform(none)
+));
+  }
+
   private void XLarge2Width() {
     media(
       minWidth(px(1536)),
@@ -21457,5 +27239,919 @@ public final class Framework extends objectos.css.CssTemplate {
         objectos.css.util.XLarge2.Width.FIT,
         width(fitContent)
 ));
+  }
+
+  private void HoverColor() {
+    style(
+      sel(objectos.css.util.Hover.Color.TRANSPARENT, _hover),
+      color(transparent)
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLACK, _hover),
+      color(hex("#000"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.WHITE, _hover),
+      color(hex("#ffffff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_050, _hover),
+      color(hex("#f8fafc"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_100, _hover),
+      color(hex("#f1f5f9"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_200, _hover),
+      color(hex("#e2e8f0"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_300, _hover),
+      color(hex("#cbd5e1"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_400, _hover),
+      color(hex("#94a3b8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_500, _hover),
+      color(hex("#64748b"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_600, _hover),
+      color(hex("#475569"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_700, _hover),
+      color(hex("#334155"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_800, _hover),
+      color(hex("#1e293b"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SLATE_900, _hover),
+      color(hex("#0f172a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_050, _hover),
+      color(hex("#f9fafb"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_100, _hover),
+      color(hex("#f3f4f6"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_200, _hover),
+      color(hex("#e5e7eb"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_300, _hover),
+      color(hex("#d1d5db"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_400, _hover),
+      color(hex("#9ca3af"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_500, _hover),
+      color(hex("#6b7280"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_600, _hover),
+      color(hex("#4b5563"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_700, _hover),
+      color(hex("#374151"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_800, _hover),
+      color(hex("#1f2937"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GRAY_900, _hover),
+      color(hex("#111827"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_050, _hover),
+      color(hex("#fafafa"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_100, _hover),
+      color(hex("#f4f4f5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_200, _hover),
+      color(hex("#e4e4e7"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_300, _hover),
+      color(hex("#d4d4d8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_400, _hover),
+      color(hex("#a1a1aa"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_500, _hover),
+      color(hex("#71717a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_600, _hover),
+      color(hex("#52525b"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_700, _hover),
+      color(hex("#3f3f46"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_800, _hover),
+      color(hex("#27272a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ZINC_900, _hover),
+      color(hex("#18181b"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_050, _hover),
+      color(hex("#fafafa"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_100, _hover),
+      color(hex("#f5f5f5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_200, _hover),
+      color(hex("#e5e5e5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_300, _hover),
+      color(hex("#d4d4d4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_400, _hover),
+      color(hex("#a3a3a3"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_500, _hover),
+      color(hex("#737373"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_600, _hover),
+      color(hex("#525252"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_700, _hover),
+      color(hex("#404040"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_800, _hover),
+      color(hex("#262626"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.NEUTRAL_900, _hover),
+      color(hex("#171717"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_050, _hover),
+      color(hex("#fafaf9"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_100, _hover),
+      color(hex("#f5f5f4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_200, _hover),
+      color(hex("#e7e5e4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_300, _hover),
+      color(hex("#d6d3d1"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_400, _hover),
+      color(hex("#a8a29e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_500, _hover),
+      color(hex("#78716c"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_600, _hover),
+      color(hex("#57534e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_700, _hover),
+      color(hex("#44403c"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_800, _hover),
+      color(hex("#292524"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.STONE_900, _hover),
+      color(hex("#1c1917"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_050, _hover),
+      color(hex("#fef2f2"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_100, _hover),
+      color(hex("#fee2e2"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_200, _hover),
+      color(hex("#fecaca"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_300, _hover),
+      color(hex("#fca5a5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_400, _hover),
+      color(hex("#f87171"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_500, _hover),
+      color(hex("#ef4444"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_600, _hover),
+      color(hex("#dc2626"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_700, _hover),
+      color(hex("#b91c1c"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_800, _hover),
+      color(hex("#991b1b"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.RED_900, _hover),
+      color(hex("#7f1d1d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_050, _hover),
+      color(hex("#fff7ed"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_100, _hover),
+      color(hex("#ffedd5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_200, _hover),
+      color(hex("#fed7aa"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_300, _hover),
+      color(hex("#fdba74"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_400, _hover),
+      color(hex("#fb923c"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_500, _hover),
+      color(hex("#f97316"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_600, _hover),
+      color(hex("#ea580c"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_700, _hover),
+      color(hex("#c2410c"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_800, _hover),
+      color(hex("#9a3412"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ORANGE_900, _hover),
+      color(hex("#7c2d12"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_050, _hover),
+      color(hex("#fffbeb"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_100, _hover),
+      color(hex("#fef3c7"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_200, _hover),
+      color(hex("#fde68a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_300, _hover),
+      color(hex("#fcd34d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_400, _hover),
+      color(hex("#fbbf24"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_500, _hover),
+      color(hex("#f59e0b"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_600, _hover),
+      color(hex("#d97706"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_700, _hover),
+      color(hex("#b45309"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_800, _hover),
+      color(hex("#92400e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.AMBER_900, _hover),
+      color(hex("#78350f"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_050, _hover),
+      color(hex("#fefce8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_100, _hover),
+      color(hex("#fef9c3"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_200, _hover),
+      color(hex("#fef08a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_300, _hover),
+      color(hex("#fde047"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_400, _hover),
+      color(hex("#facc15"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_500, _hover),
+      color(hex("#eab308"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_600, _hover),
+      color(hex("#ca8a04"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_700, _hover),
+      color(hex("#a16207"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_800, _hover),
+      color(hex("#854d0e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.YELLOW_900, _hover),
+      color(hex("#713f12"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_050, _hover),
+      color(hex("#f7fee7"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_100, _hover),
+      color(hex("#ecfccb"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_200, _hover),
+      color(hex("#d9f99d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_300, _hover),
+      color(hex("#bef264"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_400, _hover),
+      color(hex("#a3e635"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_500, _hover),
+      color(hex("#84cc16"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_600, _hover),
+      color(hex("#65a30d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_700, _hover),
+      color(hex("#4d7c0f"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_800, _hover),
+      color(hex("#3f6212"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.LIME_900, _hover),
+      color(hex("#365314"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_050, _hover),
+      color(hex("#f0fdf4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_100, _hover),
+      color(hex("#dcfce7"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_200, _hover),
+      color(hex("#bbf7d0"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_300, _hover),
+      color(hex("#86efac"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_400, _hover),
+      color(hex("#4ade80"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_500, _hover),
+      color(hex("#22c55e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_600, _hover),
+      color(hex("#16a34a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_700, _hover),
+      color(hex("#15803d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_800, _hover),
+      color(hex("#166534"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.GREEN_900, _hover),
+      color(hex("#14532d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_050, _hover),
+      color(hex("#ecfdf5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_100, _hover),
+      color(hex("#d1fae5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_200, _hover),
+      color(hex("#a7f3d0"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_300, _hover),
+      color(hex("#6ee7b7"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_400, _hover),
+      color(hex("#34d399"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_500, _hover),
+      color(hex("#10b981"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_600, _hover),
+      color(hex("#059669"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_700, _hover),
+      color(hex("#047857"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_800, _hover),
+      color(hex("#065f46"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.EMERALD_900, _hover),
+      color(hex("#064e3b"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_050, _hover),
+      color(hex("#f0fdfa"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_100, _hover),
+      color(hex("#ccfbf1"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_200, _hover),
+      color(hex("#99f6e4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_300, _hover),
+      color(hex("#5eead4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_400, _hover),
+      color(hex("#2dd4bf"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_500, _hover),
+      color(hex("#14b8a6"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_600, _hover),
+      color(hex("#0d9488"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_700, _hover),
+      color(hex("#0f766e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_800, _hover),
+      color(hex("#115e59"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.TEAL_900, _hover),
+      color(hex("#134e4a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_050, _hover),
+      color(hex("#ecfeff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_100, _hover),
+      color(hex("#cffafe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_200, _hover),
+      color(hex("#a5f3fc"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_300, _hover),
+      color(hex("#67e8f9"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_400, _hover),
+      color(hex("#22d3ee"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_500, _hover),
+      color(hex("#06b6d4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_600, _hover),
+      color(hex("#0891b2"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_700, _hover),
+      color(hex("#0e7490"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_800, _hover),
+      color(hex("#155e75"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.CYAN_900, _hover),
+      color(hex("#164e63"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_050, _hover),
+      color(hex("#f0f9ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_100, _hover),
+      color(hex("#e0f2fe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_200, _hover),
+      color(hex("#bae6fd"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_300, _hover),
+      color(hex("#7dd3fc"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_400, _hover),
+      color(hex("#38bdf8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_500, _hover),
+      color(hex("#0ea5e9"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_600, _hover),
+      color(hex("#0284c7"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_700, _hover),
+      color(hex("#0369a1"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_800, _hover),
+      color(hex("#075985"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.SKY_900, _hover),
+      color(hex("#0c4a6e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_050, _hover),
+      color(hex("#eff6ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_100, _hover),
+      color(hex("#dbeafe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_200, _hover),
+      color(hex("#bfdbfe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_300, _hover),
+      color(hex("#93c5fd"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_400, _hover),
+      color(hex("#60a5fa"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_500, _hover),
+      color(hex("#3b82f6"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_600, _hover),
+      color(hex("#2563eb"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_700, _hover),
+      color(hex("#1d4ed8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_800, _hover),
+      color(hex("#1e40af"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.BLUE_900, _hover),
+      color(hex("#1e3a8a"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_050, _hover),
+      color(hex("#eef2ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_100, _hover),
+      color(hex("#e0e7ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_200, _hover),
+      color(hex("#c7d2fe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_300, _hover),
+      color(hex("#a5b4fc"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_400, _hover),
+      color(hex("#818cf8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_500, _hover),
+      color(hex("#6366f1"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_600, _hover),
+      color(hex("#4f46e5"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_700, _hover),
+      color(hex("#4338ca"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_800, _hover),
+      color(hex("#3730a3"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.INDIGO_900, _hover),
+      color(hex("#312e81"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_050, _hover),
+      color(hex("#f5f3ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_100, _hover),
+      color(hex("#ede9fe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_200, _hover),
+      color(hex("#ddd6fe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_300, _hover),
+      color(hex("#c4b5fd"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_400, _hover),
+      color(hex("#a78bfa"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_500, _hover),
+      color(hex("#8b5cf6"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_600, _hover),
+      color(hex("#7c3aed"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_700, _hover),
+      color(hex("#6d28d9"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_800, _hover),
+      color(hex("#5b21b6"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.VIOLET_900, _hover),
+      color(hex("#4c1d95"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_050, _hover),
+      color(hex("#faf5ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_100, _hover),
+      color(hex("#f3e8ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_200, _hover),
+      color(hex("#e9d5ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_300, _hover),
+      color(hex("#d8b4fe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_400, _hover),
+      color(hex("#c084fc"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_500, _hover),
+      color(hex("#a855f7"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_600, _hover),
+      color(hex("#9333ea"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_700, _hover),
+      color(hex("#7e22ce"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_800, _hover),
+      color(hex("#6b21a8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PURPLE_900, _hover),
+      color(hex("#581c87"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_050, _hover),
+      color(hex("#fdf4ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_100, _hover),
+      color(hex("#fae8ff"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_200, _hover),
+      color(hex("#f5d0fe"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_300, _hover),
+      color(hex("#f0abfc"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_400, _hover),
+      color(hex("#e879f9"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_500, _hover),
+      color(hex("#d946ef"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_600, _hover),
+      color(hex("#c026d3"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_700, _hover),
+      color(hex("#a21caf"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_800, _hover),
+      color(hex("#86198f"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.FUCHSIA_900, _hover),
+      color(hex("#701a75"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_050, _hover),
+      color(hex("#fdf2f8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_100, _hover),
+      color(hex("#fce7f3"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_200, _hover),
+      color(hex("#fbcfe8"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_300, _hover),
+      color(hex("#f9a8d4"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_400, _hover),
+      color(hex("#f472b6"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_500, _hover),
+      color(hex("#ec4899"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_600, _hover),
+      color(hex("#db2777"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_700, _hover),
+      color(hex("#be185d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_800, _hover),
+      color(hex("#9d174d"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.PINK_900, _hover),
+      color(hex("#831843"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_050, _hover),
+      color(hex("#fff1f2"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_100, _hover),
+      color(hex("#ffe4e6"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_200, _hover),
+      color(hex("#fecdd3"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_300, _hover),
+      color(hex("#fda4af"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_400, _hover),
+      color(hex("#fb7185"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_500, _hover),
+      color(hex("#f43f5e"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_600, _hover),
+      color(hex("#e11d48"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_700, _hover),
+      color(hex("#be123c"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_800, _hover),
+      color(hex("#9f1239"))
+);
+    style(
+      sel(objectos.css.util.Hover.Color.ROSE_900, _hover),
+      color(hex("#881337"))
+);
+  }
+
+  private void HoverTextDecoration() {
+    style(
+      sel(objectos.css.util.Hover.TextDecoration.UNDERLINE, _hover),
+      textDecoration(underline)
+);
+    style(
+      sel(objectos.css.util.Hover.TextDecoration.LINE_THROUGH, _hover),
+      textDecoration(lineThrough)
+);
+    style(
+      sel(objectos.css.util.Hover.TextDecoration.STRIKE, _hover),
+      textDecoration(lineThrough)
+);
+    style(
+      sel(objectos.css.util.Hover.TextDecoration.NONE, _hover),
+      textDecoration(none)
+);
   }
 }
