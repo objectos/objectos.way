@@ -94,27 +94,29 @@ public class CssSelfGen08MultiPropertyKeywordTest {
 
         protected final StyleDeclaration borderStyle(LineStyle value) {
           Check.notNull(value, "value == null");
-          return declaration(Property.BORDER_STYLE, value);
+          declaration(Property.BORDER_STYLE, value);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration textSizeAdjust(TextSizeAdjustValue value) {
           Check.notNull(value, "value == null");
-          return declaration(Property.TEXT_SIZE_ADJUST, value);
+          declaration(Property.TEXT_SIZE_ADJUST, value);
+          return InternalInstruction.INSTANCE;
         }
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+        abstract void declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(Property name, int value);
+        abstract void declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(Property name, double value);
+        abstract void declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(Property name, String value);
+        abstract void declaration(Property name, String value);
       }
       """
     );

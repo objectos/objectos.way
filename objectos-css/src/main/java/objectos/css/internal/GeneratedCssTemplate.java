@@ -893,75 +893,89 @@ abstract class GeneratedCssTemplate {
 
   protected final StyleDeclaration appearance(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.APPEARANCE, value);
+    declaration(Property.APPEARANCE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration appearance(AppearanceValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.APPEARANCE, value);
+    declaration(Property.APPEARANCE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration backgroundColor(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BACKGROUND_COLOR, value);
+    declaration(Property.BACKGROUND_COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration backgroundColor(ColorValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BACKGROUND_COLOR, value);
+    declaration(Property.BACKGROUND_COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration backgroundImage(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BACKGROUND_IMAGE, value);
+    declaration(Property.BACKGROUND_IMAGE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration backgroundImage(BackgroundImageValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BACKGROUND_IMAGE, value);
+    declaration(Property.BACKGROUND_IMAGE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderBottomWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_BOTTOM_WIDTH, value);
+    declaration(Property.BORDER_BOTTOM_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderBottomWidth(LineWidth value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_BOTTOM_WIDTH, value);
+    declaration(Property.BORDER_BOTTOM_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderCollapse(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_COLLAPSE, value);
+    declaration(Property.BORDER_COLLAPSE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderCollapse(BorderCollapseValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_COLLAPSE, value);
+    declaration(Property.BORDER_COLLAPSE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderColor(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_COLOR, value);
+    declaration(Property.BORDER_COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderColor(ColorValue all) {
     Check.notNull(all, "all == null");
-    return declaration(Property.BORDER_COLOR, all);
+    declaration(Property.BORDER_COLOR, all);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderColor(ColorValue vertical, ColorValue horizontal) {
     Check.notNull(vertical, "vertical == null");
     Check.notNull(horizontal, "horizontal == null");
-    return declaration(Property.BORDER_COLOR, vertical, horizontal);
+    declaration(Property.BORDER_COLOR, vertical, horizontal);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderColor(ColorValue top, ColorValue horizontal, ColorValue bottom) {
     Check.notNull(top, "top == null");
     Check.notNull(horizontal, "horizontal == null");
     Check.notNull(bottom, "bottom == null");
-    return declaration(Property.BORDER_COLOR, top, horizontal, bottom);
+    declaration(Property.BORDER_COLOR, top, horizontal, bottom);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderColor(ColorValue top, ColorValue right, ColorValue bottom, ColorValue left) {
@@ -969,50 +983,59 @@ abstract class GeneratedCssTemplate {
     Check.notNull(right, "right == null");
     Check.notNull(bottom, "bottom == null");
     Check.notNull(left, "left == null");
-    return declaration(Property.BORDER_COLOR, top, right, bottom, left);
+    declaration(Property.BORDER_COLOR, top, right, bottom, left);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderLeftWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_LEFT_WIDTH, value);
+    declaration(Property.BORDER_LEFT_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderLeftWidth(LineWidth value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_LEFT_WIDTH, value);
+    declaration(Property.BORDER_LEFT_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderRightWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_RIGHT_WIDTH, value);
+    declaration(Property.BORDER_RIGHT_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderRightWidth(LineWidth value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_RIGHT_WIDTH, value);
+    declaration(Property.BORDER_RIGHT_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderStyle(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_STYLE, value);
+    declaration(Property.BORDER_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderStyle(LineStyle all) {
     Check.notNull(all, "all == null");
-    return declaration(Property.BORDER_STYLE, all);
+    declaration(Property.BORDER_STYLE, all);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderStyle(LineStyle vertical, LineStyle horizontal) {
     Check.notNull(vertical, "vertical == null");
     Check.notNull(horizontal, "horizontal == null");
-    return declaration(Property.BORDER_STYLE, vertical, horizontal);
+    declaration(Property.BORDER_STYLE, vertical, horizontal);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderStyle(LineStyle top, LineStyle horizontal, LineStyle bottom) {
     Check.notNull(top, "top == null");
     Check.notNull(horizontal, "horizontal == null");
     Check.notNull(bottom, "bottom == null");
-    return declaration(Property.BORDER_STYLE, top, horizontal, bottom);
+    declaration(Property.BORDER_STYLE, top, horizontal, bottom);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderStyle(LineStyle top, LineStyle right, LineStyle bottom, LineStyle left) {
@@ -1020,40 +1043,47 @@ abstract class GeneratedCssTemplate {
     Check.notNull(right, "right == null");
     Check.notNull(bottom, "bottom == null");
     Check.notNull(left, "left == null");
-    return declaration(Property.BORDER_STYLE, top, right, bottom, left);
+    declaration(Property.BORDER_STYLE, top, right, bottom, left);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderTopWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_TOP_WIDTH, value);
+    declaration(Property.BORDER_TOP_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderTopWidth(LineWidth value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_TOP_WIDTH, value);
+    declaration(Property.BORDER_TOP_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BORDER_WIDTH, value);
+    declaration(Property.BORDER_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderWidth(LineWidth all) {
     Check.notNull(all, "all == null");
-    return declaration(Property.BORDER_WIDTH, all);
+    declaration(Property.BORDER_WIDTH, all);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderWidth(LineWidth vertical, LineWidth horizontal) {
     Check.notNull(vertical, "vertical == null");
     Check.notNull(horizontal, "horizontal == null");
-    return declaration(Property.BORDER_WIDTH, vertical, horizontal);
+    declaration(Property.BORDER_WIDTH, vertical, horizontal);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderWidth(LineWidth top, LineWidth horizontal, LineWidth bottom) {
     Check.notNull(top, "top == null");
     Check.notNull(horizontal, "horizontal == null");
     Check.notNull(bottom, "bottom == null");
-    return declaration(Property.BORDER_WIDTH, top, horizontal, bottom);
+    declaration(Property.BORDER_WIDTH, top, horizontal, bottom);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration borderWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
@@ -1061,289 +1091,345 @@ abstract class GeneratedCssTemplate {
     Check.notNull(right, "right == null");
     Check.notNull(bottom, "bottom == null");
     Check.notNull(left, "left == null");
-    return declaration(Property.BORDER_WIDTH, top, right, bottom, left);
+    declaration(Property.BORDER_WIDTH, top, right, bottom, left);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration bottom(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BOTTOM, value);
+    declaration(Property.BOTTOM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration bottom(BottomValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BOTTOM, value);
+    declaration(Property.BOTTOM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration boxShadow(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BOX_SHADOW, value);
+    declaration(Property.BOX_SHADOW, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration boxShadow(NoneKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BOX_SHADOW, value);
+    declaration(Property.BOX_SHADOW, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration boxSizing(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BOX_SIZING, value);
+    declaration(Property.BOX_SIZING, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration boxSizing(BoxSizingValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.BOX_SIZING, value);
+    declaration(Property.BOX_SIZING, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration color(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.COLOR, value);
+    declaration(Property.COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration color(ColorValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.COLOR, value);
+    declaration(Property.COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration cursor(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.CURSOR, value);
+    declaration(Property.CURSOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration cursor(CursorValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.CURSOR, value);
+    declaration(Property.CURSOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration display(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.DISPLAY, value);
+    declaration(Property.DISPLAY, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration display(DisplayValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.DISPLAY, value);
+    declaration(Property.DISPLAY, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration display(DisplayValue value, DisplayValue2 value2) {
     Check.notNull(value, "value == null");
     Check.notNull(value2, "value2 == null");
-    return declaration(Property.DISPLAY, value, value2);
+    declaration(Property.DISPLAY, value, value2);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration flexDirection(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FLEX_DIRECTION, value);
+    declaration(Property.FLEX_DIRECTION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration flexDirection(FlexDirectionValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FLEX_DIRECTION, value);
+    declaration(Property.FLEX_DIRECTION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration font(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT, value);
+    declaration(Property.FONT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration font(FontValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT, value);
+    declaration(Property.FONT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontFamily(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_FAMILY, value);
+    declaration(Property.FONT_FAMILY, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected abstract StyleDeclaration fontFamily(FontFamilyValue... values);
 
   protected final StyleDeclaration fontFeatureSettings(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_FEATURE_SETTINGS, value);
+    declaration(Property.FONT_FEATURE_SETTINGS, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontFeatureSettings(FontFeatureSettingsValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_FEATURE_SETTINGS, value);
+    declaration(Property.FONT_FEATURE_SETTINGS, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontSize(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_SIZE, value);
+    declaration(Property.FONT_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontSize(FontSizeValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_SIZE, value);
+    declaration(Property.FONT_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontStyle(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_STYLE, value);
+    declaration(Property.FONT_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontStyle(FontStyleValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_STYLE, value);
+    declaration(Property.FONT_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontVariationSettings(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_VARIATION_SETTINGS, value);
+    declaration(Property.FONT_VARIATION_SETTINGS, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontVariationSettings(FontVariationSettingsValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_VARIATION_SETTINGS, value);
+    declaration(Property.FONT_VARIATION_SETTINGS, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontWeight(int value) {
-    return declaration(Property.FONT_WEIGHT, value);
+    declaration(Property.FONT_WEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontWeight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_WEIGHT, value);
+    declaration(Property.FONT_WEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration fontWeight(FontWeightValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.FONT_WEIGHT, value);
+    declaration(Property.FONT_WEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration height(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.HEIGHT, value);
+    declaration(Property.HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration height(HeightOrWidthValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.HEIGHT, value);
+    declaration(Property.HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration justifyContent(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.JUSTIFY_CONTENT, value);
+    declaration(Property.JUSTIFY_CONTENT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration justifyContent(JustifyContentValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.JUSTIFY_CONTENT, value);
+    declaration(Property.JUSTIFY_CONTENT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration justifyContent(OverflowPosition safeOrUnsafe, JustifyContentPosition position) {
     Check.notNull(safeOrUnsafe, "safeOrUnsafe == null");
     Check.notNull(position, "position == null");
-    return declaration(Property.JUSTIFY_CONTENT, safeOrUnsafe, position);
+    declaration(Property.JUSTIFY_CONTENT, safeOrUnsafe, position);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration letterSpacing(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LETTER_SPACING, value);
+    declaration(Property.LETTER_SPACING, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration letterSpacing(LetterSpacingValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LETTER_SPACING, value);
+    declaration(Property.LETTER_SPACING, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration lineHeight(double value) {
-    return declaration(Property.LINE_HEIGHT, value);
+    declaration(Property.LINE_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration lineHeight(int value) {
-    return declaration(Property.LINE_HEIGHT, value);
+    declaration(Property.LINE_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration lineHeight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LINE_HEIGHT, value);
+    declaration(Property.LINE_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration lineHeight(LineHeightValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LINE_HEIGHT, value);
+    declaration(Property.LINE_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyle(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE, value);
+    declaration(Property.LIST_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyle(ListStyleValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE, value);
+    declaration(Property.LIST_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyle(ListStyleValue value1, ListStyleValue value2) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
-    return declaration(Property.LIST_STYLE, value1, value2);
+    declaration(Property.LIST_STYLE, value1, value2);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyle(ListStyleValue value1, ListStyleValue value2, ListStyleValue value3) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
-    return declaration(Property.LIST_STYLE, value1, value2, value3);
+    declaration(Property.LIST_STYLE, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyleImage(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE_IMAGE, value);
+    declaration(Property.LIST_STYLE_IMAGE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyleImage(ListStyleImageValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE_IMAGE, value);
+    declaration(Property.LIST_STYLE_IMAGE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStylePosition(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE_POSITION, value);
+    declaration(Property.LIST_STYLE_POSITION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStylePosition(ListStylePositionValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE_POSITION, value);
+    declaration(Property.LIST_STYLE_POSITION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyleType(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE_TYPE, value);
+    declaration(Property.LIST_STYLE_TYPE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyleType(ListStyleTypeValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE_TYPE, value);
+    declaration(Property.LIST_STYLE_TYPE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration listStyleType(String value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.LIST_STYLE_TYPE, value);
+    declaration(Property.LIST_STYLE_TYPE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration margin(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN, value);
+    declaration(Property.MARGIN, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration margin(MarginValue all) {
     Check.notNull(all, "all == null");
-    return declaration(Property.MARGIN, all);
+    declaration(Property.MARGIN, all);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration margin(MarginValue vertical, MarginValue horizontal) {
     Check.notNull(vertical, "vertical == null");
     Check.notNull(horizontal, "horizontal == null");
-    return declaration(Property.MARGIN, vertical, horizontal);
+    declaration(Property.MARGIN, vertical, horizontal);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration margin(MarginValue top, MarginValue horizontal, MarginValue bottom) {
     Check.notNull(top, "top == null");
     Check.notNull(horizontal, "horizontal == null");
     Check.notNull(bottom, "bottom == null");
-    return declaration(Property.MARGIN, top, horizontal, bottom);
+    declaration(Property.MARGIN, top, horizontal, bottom);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration margin(MarginValue top, MarginValue right, MarginValue bottom, MarginValue left) {
@@ -1351,225 +1437,269 @@ abstract class GeneratedCssTemplate {
     Check.notNull(right, "right == null");
     Check.notNull(bottom, "bottom == null");
     Check.notNull(left, "left == null");
-    return declaration(Property.MARGIN, top, right, bottom, left);
+    declaration(Property.MARGIN, top, right, bottom, left);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginBottom(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_BOTTOM, value);
+    declaration(Property.MARGIN_BOTTOM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginBottom(MarginValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_BOTTOM, value);
+    declaration(Property.MARGIN_BOTTOM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginLeft(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_LEFT, value);
+    declaration(Property.MARGIN_LEFT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginLeft(MarginValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_LEFT, value);
+    declaration(Property.MARGIN_LEFT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginRight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_RIGHT, value);
+    declaration(Property.MARGIN_RIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginRight(MarginValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_RIGHT, value);
+    declaration(Property.MARGIN_RIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginTop(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_TOP, value);
+    declaration(Property.MARGIN_TOP, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration marginTop(MarginValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MARGIN_TOP, value);
+    declaration(Property.MARGIN_TOP, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration maxHeight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MAX_HEIGHT, value);
+    declaration(Property.MAX_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration maxHeight(MaxHeightOrWidthValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MAX_HEIGHT, value);
+    declaration(Property.MAX_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration maxWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MAX_WIDTH, value);
+    declaration(Property.MAX_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration maxWidth(MaxHeightOrWidthValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MAX_WIDTH, value);
+    declaration(Property.MAX_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration minHeight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MIN_HEIGHT, value);
+    declaration(Property.MIN_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration minHeight(MinHeightOrWidthValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MIN_HEIGHT, value);
+    declaration(Property.MIN_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration minHeight(LengthPercentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MIN_HEIGHT, value);
+    declaration(Property.MIN_HEIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration minWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MIN_WIDTH, value);
+    declaration(Property.MIN_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration minWidth(MinHeightOrWidthValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MIN_WIDTH, value);
+    declaration(Property.MIN_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration minWidth(Percentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.MIN_WIDTH, value);
+    declaration(Property.MIN_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration mozAppearance(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._MOZ_APPEARANCE, value);
+    declaration(Property._MOZ_APPEARANCE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration mozAppearance(AppearanceValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._MOZ_APPEARANCE, value);
+    declaration(Property._MOZ_APPEARANCE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration mozTabSize(int value) {
-    return declaration(Property._MOZ_TAB_SIZE, value);
+    declaration(Property._MOZ_TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration mozTabSize(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._MOZ_TAB_SIZE, value);
+    declaration(Property._MOZ_TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration mozTabSize(Length value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._MOZ_TAB_SIZE, value);
+    declaration(Property._MOZ_TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration opacity(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OPACITY, value);
+    declaration(Property.OPACITY, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration opacity(Percentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OPACITY, value);
+    declaration(Property.OPACITY, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration opacity(double value) {
-    return declaration(Property.OPACITY, value);
+    declaration(Property.OPACITY, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration opacity(int value) {
-    return declaration(Property.OPACITY, value);
+    declaration(Property.OPACITY, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outline(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE, value);
+    declaration(Property.OUTLINE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outline(OutlineValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE, value);
+    declaration(Property.OUTLINE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outline(OutlineValue value1, OutlineValue value2) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
-    return declaration(Property.OUTLINE, value1, value2);
+    declaration(Property.OUTLINE, value1, value2);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outline(OutlineValue value1, OutlineValue value2, OutlineValue value3) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
-    return declaration(Property.OUTLINE, value1, value2, value3);
+    declaration(Property.OUTLINE, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineColor(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_COLOR, value);
+    declaration(Property.OUTLINE_COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineColor(ColorValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_COLOR, value);
+    declaration(Property.OUTLINE_COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineOffset(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_OFFSET, value);
+    declaration(Property.OUTLINE_OFFSET, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineOffset(Length value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_OFFSET, value);
+    declaration(Property.OUTLINE_OFFSET, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineStyle(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_STYLE, value);
+    declaration(Property.OUTLINE_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineStyle(OutlineStyleValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_STYLE, value);
+    declaration(Property.OUTLINE_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_WIDTH, value);
+    declaration(Property.OUTLINE_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration outlineWidth(LineWidth value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.OUTLINE_WIDTH, value);
+    declaration(Property.OUTLINE_WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration padding(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING, value);
+    declaration(Property.PADDING, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration padding(LengthPercentage all) {
     Check.notNull(all, "all == null");
-    return declaration(Property.PADDING, all);
+    declaration(Property.PADDING, all);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration padding(LengthPercentage vertical, LengthPercentage horizontal) {
     Check.notNull(vertical, "vertical == null");
     Check.notNull(horizontal, "horizontal == null");
-    return declaration(Property.PADDING, vertical, horizontal);
+    declaration(Property.PADDING, vertical, horizontal);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration padding(LengthPercentage top, LengthPercentage horizontal, LengthPercentage bottom) {
     Check.notNull(top, "top == null");
     Check.notNull(horizontal, "horizontal == null");
     Check.notNull(bottom, "bottom == null");
-    return declaration(Property.PADDING, top, horizontal, bottom);
+    declaration(Property.PADDING, top, horizontal, bottom);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration padding(LengthPercentage top, LengthPercentage right, LengthPercentage bottom, LengthPercentage left) {
@@ -1577,114 +1707,136 @@ abstract class GeneratedCssTemplate {
     Check.notNull(right, "right == null");
     Check.notNull(bottom, "bottom == null");
     Check.notNull(left, "left == null");
-    return declaration(Property.PADDING, top, right, bottom, left);
+    declaration(Property.PADDING, top, right, bottom, left);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingBottom(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_BOTTOM, value);
+    declaration(Property.PADDING_BOTTOM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingBottom(LengthPercentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_BOTTOM, value);
+    declaration(Property.PADDING_BOTTOM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingLeft(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_LEFT, value);
+    declaration(Property.PADDING_LEFT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingLeft(LengthPercentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_LEFT, value);
+    declaration(Property.PADDING_LEFT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingRight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_RIGHT, value);
+    declaration(Property.PADDING_RIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingRight(LengthPercentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_RIGHT, value);
+    declaration(Property.PADDING_RIGHT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingTop(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_TOP, value);
+    declaration(Property.PADDING_TOP, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration paddingTop(LengthPercentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.PADDING_TOP, value);
+    declaration(Property.PADDING_TOP, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration position(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.POSITION, value);
+    declaration(Property.POSITION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration position(PositionValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.POSITION, value);
+    declaration(Property.POSITION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration resize(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.RESIZE, value);
+    declaration(Property.RESIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration resize(ResizeValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.RESIZE, value);
+    declaration(Property.RESIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration tabSize(int value) {
-    return declaration(Property.TAB_SIZE, value);
+    declaration(Property.TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration tabSize(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TAB_SIZE, value);
+    declaration(Property.TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration tabSize(Length value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TAB_SIZE, value);
+    declaration(Property.TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textAlign(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_ALIGN, value);
+    declaration(Property.TEXT_ALIGN, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textAlign(TextAlignValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_ALIGN, value);
+    declaration(Property.TEXT_ALIGN, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecoration(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION, value);
+    declaration(Property.TEXT_DECORATION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecoration(TextDecorationValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION, value);
+    declaration(Property.TEXT_DECORATION, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecoration(TextDecorationValue value1, TextDecorationValue value2) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
-    return declaration(Property.TEXT_DECORATION, value1, value2);
+    declaration(Property.TEXT_DECORATION, value1, value2);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecoration(TextDecorationValue value1, TextDecorationValue value2, TextDecorationValue value3) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
-    return declaration(Property.TEXT_DECORATION, value1, value2, value3);
+    declaration(Property.TEXT_DECORATION, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecoration(TextDecorationValue value1, TextDecorationValue value2, TextDecorationValue value3, TextDecorationValue value4) {
@@ -1692,156 +1844,183 @@ abstract class GeneratedCssTemplate {
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
     Check.notNull(value4, "value4 == null");
-    return declaration(Property.TEXT_DECORATION, value1, value2, value3, value4);
+    declaration(Property.TEXT_DECORATION, value1, value2, value3, value4);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationColor(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_COLOR, value);
+    declaration(Property.TEXT_DECORATION_COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationColor(ColorValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_COLOR, value);
+    declaration(Property.TEXT_DECORATION_COLOR, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationLine(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_LINE, value);
+    declaration(Property.TEXT_DECORATION_LINE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationLine(TextDecorationLineSingleValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_LINE, value);
+    declaration(Property.TEXT_DECORATION_LINE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationLine(TextDecorationLineMultiValue value1, TextDecorationLineMultiValue value2) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
-    return declaration(Property.TEXT_DECORATION_LINE, value1, value2);
+    declaration(Property.TEXT_DECORATION_LINE, value1, value2);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationLine(TextDecorationLineMultiValue value1, TextDecorationLineMultiValue value2, TextDecorationLineMultiValue value3) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
-    return declaration(Property.TEXT_DECORATION_LINE, value1, value2, value3);
+    declaration(Property.TEXT_DECORATION_LINE, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationStyle(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_STYLE, value);
+    declaration(Property.TEXT_DECORATION_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationStyle(TextDecorationStyleValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_STYLE, value);
+    declaration(Property.TEXT_DECORATION_STYLE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationThickness(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_THICKNESS, value);
+    declaration(Property.TEXT_DECORATION_THICKNESS, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textDecorationThickness(TextDecorationThicknessValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_DECORATION_THICKNESS, value);
+    declaration(Property.TEXT_DECORATION_THICKNESS, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textIndent(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_INDENT, value);
+    declaration(Property.TEXT_INDENT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textIndent(LengthPercentage value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_INDENT, value);
+    declaration(Property.TEXT_INDENT, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textIndent(LengthPercentage value1, TextIndentValue value2) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
-    return declaration(Property.TEXT_INDENT, value1, value2);
+    declaration(Property.TEXT_INDENT, value1, value2);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textIndent(LengthPercentage value1, TextIndentValue value2, TextIndentValue value3) {
     Check.notNull(value1, "value1 == null");
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
-    return declaration(Property.TEXT_INDENT, value1, value2, value3);
+    declaration(Property.TEXT_INDENT, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textTransform(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_TRANSFORM, value);
+    declaration(Property.TEXT_TRANSFORM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration textTransform(TextTransformValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TEXT_TRANSFORM, value);
+    declaration(Property.TEXT_TRANSFORM, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration top(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TOP, value);
+    declaration(Property.TOP, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration top(TopValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.TOP, value);
+    declaration(Property.TOP, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration verticalAlign(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.VERTICAL_ALIGN, value);
+    declaration(Property.VERTICAL_ALIGN, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration verticalAlign(VerticalAlignValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.VERTICAL_ALIGN, value);
+    declaration(Property.VERTICAL_ALIGN, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration webkitAppearance(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._WEBKIT_APPEARANCE, value);
+    declaration(Property._WEBKIT_APPEARANCE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration webkitAppearance(AppearanceValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._WEBKIT_APPEARANCE, value);
+    declaration(Property._WEBKIT_APPEARANCE, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration webkitTextSizeAdjust(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._WEBKIT_TEXT_SIZE_ADJUST, value);
+    declaration(Property._WEBKIT_TEXT_SIZE_ADJUST, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration webkitTextSizeAdjust(TextSizeAdjustValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property._WEBKIT_TEXT_SIZE_ADJUST, value);
+    declaration(Property._WEBKIT_TEXT_SIZE_ADJUST, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration width(GlobalKeyword value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.WIDTH, value);
+    declaration(Property.WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration width(HeightOrWidthValue value) {
     Check.notNull(value, "value == null");
-    return declaration(Property.WIDTH, value);
+    declaration(Property.WIDTH, value);
+    return InternalInstruction.INSTANCE;
   }
 
-  abstract StyleDeclaration declaration(Property name, PropertyValue value);
+  abstract void declaration(Property name, PropertyValue value);
 
-  abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+  abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-  abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+  abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-  abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+  abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-  abstract StyleDeclaration declaration(Property name, int value);
+  abstract void declaration(Property name, int value);
 
-  abstract StyleDeclaration declaration(Property name, double value);
+  abstract void declaration(Property name, double value);
 
-  abstract StyleDeclaration declaration(Property name, String value);
+  abstract void declaration(Property name, String value);
 }

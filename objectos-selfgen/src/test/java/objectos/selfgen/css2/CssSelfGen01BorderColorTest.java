@@ -125,25 +125,29 @@ public class CssSelfGen01BorderColorTest {
 
         protected final StyleDeclaration borderColor(GlobalKeyword value) {
           Check.notNull(value, "value == null");
-          return declaration(Property.BORDER_COLOR, value);
+          declaration(Property.BORDER_COLOR, value);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderColor(ColorValue all) {
           Check.notNull(all, "all == null");
-          return declaration(Property.BORDER_COLOR, all);
+          declaration(Property.BORDER_COLOR, all);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderColor(ColorValue vertical, ColorValue horizontal) {
           Check.notNull(vertical, "vertical == null");
           Check.notNull(horizontal, "horizontal == null");
-          return declaration(Property.BORDER_COLOR, vertical, horizontal);
+          declaration(Property.BORDER_COLOR, vertical, horizontal);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderColor(ColorValue top, ColorValue horizontal, ColorValue bottom) {
           Check.notNull(top, "top == null");
           Check.notNull(horizontal, "horizontal == null");
           Check.notNull(bottom, "bottom == null");
-          return declaration(Property.BORDER_COLOR, top, horizontal, bottom);
+          declaration(Property.BORDER_COLOR, top, horizontal, bottom);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderColor(ColorValue top, ColorValue right, ColorValue bottom, ColorValue left) {
@@ -151,22 +155,23 @@ public class CssSelfGen01BorderColorTest {
           Check.notNull(right, "right == null");
           Check.notNull(bottom, "bottom == null");
           Check.notNull(left, "left == null");
-          return declaration(Property.BORDER_COLOR, top, right, bottom, left);
+          declaration(Property.BORDER_COLOR, top, right, bottom, left);
+          return InternalInstruction.INSTANCE;
         }
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+        abstract void declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(Property name, int value);
+        abstract void declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(Property name, double value);
+        abstract void declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(Property name, String value);
+        abstract void declaration(Property name, String value);
       }
       """
     );

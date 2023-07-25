@@ -71,35 +71,38 @@ public class CssSelfGen12CustomSignatureTest {
 
         protected final StyleDeclaration textIndent(Percentage value) {
           Check.notNull(value, "value == null");
-          return declaration(Property.TEXT_INDENT, value);
+          declaration(Property.TEXT_INDENT, value);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration textIndent(Percentage value1, TextIndentValue value2) {
           Check.notNull(value1, "value1 == null");
           Check.notNull(value2, "value2 == null");
-          return declaration(Property.TEXT_INDENT, value1, value2);
+          declaration(Property.TEXT_INDENT, value1, value2);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration textIndent(Percentage value1, TextIndentValue value2, TextIndentValue value3) {
           Check.notNull(value1, "value1 == null");
           Check.notNull(value2, "value2 == null");
           Check.notNull(value3, "value3 == null");
-          return declaration(Property.TEXT_INDENT, value1, value2, value3);
+          declaration(Property.TEXT_INDENT, value1, value2, value3);
+          return InternalInstruction.INSTANCE;
         }
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+        abstract void declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(Property name, int value);
+        abstract void declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(Property name, double value);
+        abstract void declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(Property name, String value);
+        abstract void declaration(Property name, String value);
       }
       """
     );

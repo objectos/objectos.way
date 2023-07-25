@@ -44,20 +44,20 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       include(this::properties),
 
       method(
-        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value"))
       ),
 
       method(
-        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value1")),
         parameter(PROPERTY_VALUE, name("value2"))
       ),
 
       method(
-        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value1")),
         parameter(PROPERTY_VALUE, name("value2")),
@@ -65,7 +65,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       ),
 
       method(
-        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
         parameter(PROPERTY_VALUE, name("value1")),
         parameter(PROPERTY_VALUE, name("value2")),
@@ -74,19 +74,19 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       ),
 
       method(
-        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
         parameter(INT, name("value"))
       ),
 
       method(
-        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
         parameter(DOUBLE, name("value"))
       ),
 
       method(
-        ABSTRACT, STYLE_DECLARATION, name("declaration"),
+        ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
         parameter(STRING, name("value"))
       )
@@ -200,10 +200,11 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           parameter(sig.type(), name(sig.name())),
           propertyCheckNotNull(sig.name()),
           p(
-            RETURN, v("declaration"),
+            v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
-          )
+          ),
+          p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
         );
       } else if (signature instanceof Signature2 sig) {
         method(
@@ -213,11 +214,12 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           propertyCheckNotNull(sig.name1()),
           propertyCheckNotNull(sig.name2()),
           p(
-            RETURN, v("declaration"),
+            v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name1())),
             argument(n(sig.name2()))
-          )
+          ),
+          p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
         );
       } else if (signature instanceof Signature3 sig) {
         method(
@@ -229,12 +231,13 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           propertyCheckNotNull(sig.name2()),
           propertyCheckNotNull(sig.name3()),
           p(
-            RETURN, v("declaration"),
+            v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name1())),
             argument(n(sig.name2())),
             argument(n(sig.name3()))
-          )
+          ),
+          p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
         );
       } else if (signature instanceof Signature4 sig) {
         method(
@@ -248,23 +251,25 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           propertyCheckNotNull(sig.name3()),
           propertyCheckNotNull(sig.name4()),
           p(
-            RETURN, v("declaration"),
+            v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name1())),
             argument(n(sig.name2())),
             argument(n(sig.name3())),
             argument(n(sig.name4()))
-          )
+          ),
+          p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
         );
       } else if (signature instanceof SignaturePrim sig) {
         method(
           PROTECTED, FINAL, STYLE_DECLARATION, name(property.methodName),
           parameter(sig.type(), name(sig.name())),
           p(
-            RETURN, v("declaration"),
+            v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
-          )
+          ),
+          p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
         );
       } else if (signature instanceof SignatureString sig) {
         method(
@@ -272,10 +277,11 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
           parameter(sig.type(), name(sig.name())),
           propertyCheckNotNull(sig.name()),
           p(
-            RETURN, v("declaration"),
+            v("declaration"),
             argument(PROPERTY, n(property.constantName)),
             argument(n(sig.name()))
-          )
+          ),
+          p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
         );
       } else if (signature instanceof SignatureVarArgs sig) {
         method(

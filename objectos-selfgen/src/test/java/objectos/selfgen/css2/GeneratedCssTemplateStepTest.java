@@ -95,20 +95,23 @@ public class GeneratedCssTemplateStepTest {
 
         protected final StyleDeclaration borderWidth(LineWidth all) {
           Check.notNull(all, "all == null");
-          return declaration(Property.BORDER_WIDTH, all);
+          declaration(Property.BORDER_WIDTH, all);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderWidth(LineWidth vertical, LineWidth horizontal) {
           Check.notNull(vertical, "vertical == null");
           Check.notNull(horizontal, "horizontal == null");
-          return declaration(Property.BORDER_WIDTH, vertical, horizontal);
+          declaration(Property.BORDER_WIDTH, vertical, horizontal);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderWidth(LineWidth top, LineWidth vertical, LineWidth bottom) {
           Check.notNull(top, "top == null");
           Check.notNull(vertical, "vertical == null");
           Check.notNull(bottom, "bottom == null");
-          return declaration(Property.BORDER_WIDTH, top, vertical, bottom);
+          declaration(Property.BORDER_WIDTH, top, vertical, bottom);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderWidth(LineWidth top, LineWidth right, LineWidth bottom, LineWidth left) {
@@ -116,22 +119,23 @@ public class GeneratedCssTemplateStepTest {
           Check.notNull(right, "right == null");
           Check.notNull(bottom, "bottom == null");
           Check.notNull(left, "left == null");
-          return declaration(Property.BORDER_WIDTH, top, right, bottom, left);
+          declaration(Property.BORDER_WIDTH, top, right, bottom, left);
+          return InternalInstruction.INSTANCE;
         }
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+        abstract void declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(Property name, int value);
+        abstract void declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(Property name, double value);
+        abstract void declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(Property name, String value);
+        abstract void declaration(Property name, String value);
       }
       """
     );
@@ -165,7 +169,6 @@ public class GeneratedCssTemplateStepTest {
       import objectos.css.om.PropertyValue;
       import objectos.css.om.PseudoElementSelector;
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
       import objectos.css.om.TypeSelector;
       import objectos.lang.Generated;
 
@@ -181,19 +184,19 @@ public class GeneratedCssTemplateStepTest {
 
         protected static final Selector any = StandardName.any;
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+        abstract void declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(Property name, int value);
+        abstract void declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(Property name, double value);
+        abstract void declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(Property name, String value);
+        abstract void declaration(Property name, String value);
       }
       """
     );
@@ -312,27 +315,29 @@ public class GeneratedCssTemplateStepTest {
 
         protected final StyleDeclaration borderColor(GlobalKeyword value) {
           Check.notNull(value, "value == null");
-          return declaration(Property.BORDER_COLOR, value);
+          declaration(Property.BORDER_COLOR, value);
+          return InternalInstruction.INSTANCE;
         }
 
         protected final StyleDeclaration borderColor(ColorValue all) {
           Check.notNull(all, "all == null");
-          return declaration(Property.BORDER_COLOR, all);
+          declaration(Property.BORDER_COLOR, all);
+          return InternalInstruction.INSTANCE;
         }
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+        abstract void declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(Property name, int value);
+        abstract void declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(Property name, double value);
+        abstract void declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(Property name, String value);
+        abstract void declaration(Property name, String value);
       }
       """
     );

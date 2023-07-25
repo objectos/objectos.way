@@ -134,13 +134,17 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   protected final MediaFeatureOrStyleDeclaration minWidth(Length value) {
     Check.notNull(value, "value == null");
 
-    return declaration(Property.MIN_WIDTH, value);
+    declaration(Property.MIN_WIDTH, value);
+
+    return InternalInstruction.INSTANCE;
   }
 
   protected final MediaFeatureOrStyleDeclaration minWidth(Zero value) {
     Check.notNull(value, "value == null");
 
-    return declaration(Property.MIN_WIDTH, value);
+    declaration(Property.MIN_WIDTH, value);
+
+    return InternalInstruction.INSTANCE;
   }
 
   protected final ColorValue hex(String value) {
@@ -251,7 +255,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final StyleDeclaration declaration(
+  final void declaration(
       Property name,
       double value) {
     CssTemplateApi api;
@@ -262,12 +266,10 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.javaDouble(value);
 
     api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   @Override
-  final StyleDeclaration declaration(
+  final void declaration(
       Property name,
       int value) {
     CssTemplateApi api;
@@ -278,12 +280,10 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.javaInt(value);
 
     api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   @Override
-  final InternalInstruction declaration(
+  final void declaration(
       Property name,
       PropertyValue value) {
     CssTemplateApi api;
@@ -294,12 +294,10 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.propertyValue(value);
 
     api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   @Override
-  final InternalInstruction declaration(
+  final void declaration(
       Property name,
       PropertyValue value1, PropertyValue value2) {
     CssTemplateApi api;
@@ -311,12 +309,10 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.propertyValue(value2);
 
     api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   @Override
-  final InternalInstruction declaration(
+  final void declaration(
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3) {
     CssTemplateApi api;
@@ -329,12 +325,10 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.propertyValue(value3);
 
     api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   @Override
-  final InternalInstruction declaration(
+  final void declaration(
       Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4) {
     CssTemplateApi api;
@@ -348,12 +342,10 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.propertyValue(value4);
 
     api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   @Override
-  final InternalInstruction declaration(
+  final void declaration(
       Property name,
       String value) {
     CssTemplateApi api;
@@ -364,8 +356,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.javaString(value);
 
     api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   @Override

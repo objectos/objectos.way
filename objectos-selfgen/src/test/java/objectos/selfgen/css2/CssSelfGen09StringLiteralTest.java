@@ -73,19 +73,19 @@ public class CssSelfGen09StringLiteralTest {
 
         protected abstract StyleDeclaration fontFamily(FontFamilyValue... values);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value);
+        abstract void declaration(Property name, PropertyValue value);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
-        abstract StyleDeclaration declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
 
-        abstract StyleDeclaration declaration(Property name, int value);
+        abstract void declaration(Property name, int value);
 
-        abstract StyleDeclaration declaration(Property name, double value);
+        abstract void declaration(Property name, double value);
 
-        abstract StyleDeclaration declaration(Property name, String value);
+        abstract void declaration(Property name, String value);
       }
       """
     );
