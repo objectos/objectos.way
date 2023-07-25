@@ -2107,6 +2107,26 @@ public final class Small {
     private TextTransform() {}
   }
 
+  public static final class VerticalAlign {
+    public static final ClassSelector BASELINE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector TOP = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector MIDDLE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector BOTTOM = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector TEXT_TOP = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector TEXT_BOTTOM = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector SUB_ALIGN = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector SUPER_ALIGN = ClassSelector.randomClassSelector(5);
+
+    private VerticalAlign() {}
+  }
+
   public static final class Width {
     public static final ClassSelector PX = ClassSelector.randomClassSelector(5);
 

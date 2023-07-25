@@ -219,14 +219,6 @@ public enum StandardName implements Selector, ColorValue,
 
   yellow("yellow"),
 
-  _default("default"),
-
-  _double("double"),
-
-  _static("static"),
-
-  _super("super"),
-
   absolute("absolute"),
 
   alias("alias"),
@@ -307,6 +299,8 @@ public enum StandardName implements Selector, ColorValue,
 
   decimalLeadingZero("decimal-leading-zero"),
 
+  default_("default"),
+
   devanagari("devanagari"),
 
   disc("disc"),
@@ -316,6 +310,8 @@ public enum StandardName implements Selector, ColorValue,
   disclosureOpen("disclosure-open"),
 
   dotted("dotted"),
+
+  double_("double"),
 
   eResize("e-resize"),
 
@@ -623,6 +619,8 @@ public enum StandardName implements Selector, ColorValue,
 
   start("start"),
 
+  static_("static"),
+
   statusBar("status-bar"),
 
   sticky("sticky"),
@@ -630,6 +628,8 @@ public enum StandardName implements Selector, ColorValue,
   stretch("stretch"),
 
   sub("sub"),
+
+  super_("super"),
 
   swResize("sw-resize"),
 

@@ -257,14 +257,6 @@ abstract class GeneratedCssTemplate {
 
   protected static final ColorValue yellow = StandardName.yellow;
 
-  protected static final CursorValue _default = StandardName._default;
-
-  protected static final DoubleKeyword _double = StandardName._double;
-
-  protected static final PositionValue _static = StandardName._static;
-
-  protected static final VerticalAlignValue _super = StandardName._super;
-
   protected static final PositionValue absolute = StandardName.absolute;
 
   protected static final CursorValue alias = StandardName.alias;
@@ -345,6 +337,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue decimalLeadingZero = StandardName.decimalLeadingZero;
 
+  protected static final CursorValue default_ = StandardName.default_;
+
   protected static final CounterStyleValue devanagari = StandardName.devanagari;
 
   protected static final CounterStyleValue disc = StandardName.disc;
@@ -354,6 +348,8 @@ abstract class GeneratedCssTemplate {
   protected static final CounterStyleValue disclosureOpen = StandardName.disclosureOpen;
 
   protected static final DottedKeyword dotted = StandardName.dotted;
+
+  protected static final DoubleKeyword double_ = StandardName.double_;
 
   protected static final CursorValue eResize = StandardName.eResize;
 
@@ -661,6 +657,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final StartKeyword start = StandardName.start;
 
+  protected static final PositionValue static_ = StandardName.static_;
+
   protected static final FontValue statusBar = StandardName.statusBar;
 
   protected static final PositionValue sticky = StandardName.sticky;
@@ -668,6 +666,8 @@ abstract class GeneratedCssTemplate {
   protected static final JustifyContentValue stretch = StandardName.stretch;
 
   protected static final SubKeyword sub = StandardName.sub;
+
+  protected static final VerticalAlignValue super_ = StandardName.super_;
 
   protected static final CursorValue swResize = StandardName.swResize;
 

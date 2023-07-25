@@ -291,7 +291,7 @@ final class Preflight extends CssTemplate {
     style(
       _disabled,
 
-      cursor(_default)
+      cursor(default_)
     );
 
     style(

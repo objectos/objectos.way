@@ -62,6 +62,7 @@ public final class Framework extends objectos.css.CssTemplate {
     AllTextAlign();
     AllTextDecoration();
     AllTextTransform();
+    AllVerticalAlign();
     AllWidth();
   }
 
@@ -99,6 +100,7 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallTextAlign();
     SmallTextDecoration();
     SmallTextTransform();
+    SmallVerticalAlign();
     SmallWidth();
   }
 
@@ -136,6 +138,7 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumTextAlign();
     MediumTextDecoration();
     MediumTextTransform();
+    MediumVerticalAlign();
     MediumWidth();
   }
 
@@ -173,6 +176,7 @@ public final class Framework extends objectos.css.CssTemplate {
     LargeTextAlign();
     LargeTextDecoration();
     LargeTextTransform();
+    LargeVerticalAlign();
     LargeWidth();
   }
 
@@ -210,6 +214,7 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargeTextAlign();
     XLargeTextDecoration();
     XLargeTextTransform();
+    XLargeVerticalAlign();
     XLargeWidth();
   }
 
@@ -247,6 +252,7 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2TextAlign();
     XLarge2TextDecoration();
     XLarge2TextTransform();
+    XLarge2VerticalAlign();
     XLarge2Width();
   }
 
@@ -4418,6 +4424,41 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.TextTransform.NONE,
       textTransform(none)
+);
+  }
+
+  private void AllVerticalAlign() {
+    style(
+      objectos.css.util.All.VerticalAlign.BASELINE,
+      verticalAlign(baseline)
+);
+    style(
+      objectos.css.util.All.VerticalAlign.TOP,
+      verticalAlign(top)
+);
+    style(
+      objectos.css.util.All.VerticalAlign.MIDDLE,
+      verticalAlign(middle)
+);
+    style(
+      objectos.css.util.All.VerticalAlign.BOTTOM,
+      verticalAlign(bottom)
+);
+    style(
+      objectos.css.util.All.VerticalAlign.TEXT_TOP,
+      verticalAlign(textTop)
+);
+    style(
+      objectos.css.util.All.VerticalAlign.TEXT_BOTTOM,
+      verticalAlign(textBottom)
+);
+    style(
+      objectos.css.util.All.VerticalAlign.SUB_ALIGN,
+      verticalAlign(sub)
+);
+    style(
+      objectos.css.util.All.VerticalAlign.SUPER_ALIGN,
+      verticalAlign(super_)
 );
   }
 
@@ -8925,6 +8966,43 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Small.TextTransform.NONE,
         textTransform(none)
+));
+  }
+
+  private void SmallVerticalAlign() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.VerticalAlign.BASELINE,
+        verticalAlign(baseline)
+),
+      style(
+        objectos.css.util.Small.VerticalAlign.TOP,
+        verticalAlign(top)
+),
+      style(
+        objectos.css.util.Small.VerticalAlign.MIDDLE,
+        verticalAlign(middle)
+),
+      style(
+        objectos.css.util.Small.VerticalAlign.BOTTOM,
+        verticalAlign(bottom)
+),
+      style(
+        objectos.css.util.Small.VerticalAlign.TEXT_TOP,
+        verticalAlign(textTop)
+),
+      style(
+        objectos.css.util.Small.VerticalAlign.TEXT_BOTTOM,
+        verticalAlign(textBottom)
+),
+      style(
+        objectos.css.util.Small.VerticalAlign.SUB_ALIGN,
+        verticalAlign(sub)
+),
+      style(
+        objectos.css.util.Small.VerticalAlign.SUPER_ALIGN,
+        verticalAlign(super_)
 ));
   }
 
@@ -13437,6 +13515,43 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumVerticalAlign() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.VerticalAlign.BASELINE,
+        verticalAlign(baseline)
+),
+      style(
+        objectos.css.util.Medium.VerticalAlign.TOP,
+        verticalAlign(top)
+),
+      style(
+        objectos.css.util.Medium.VerticalAlign.MIDDLE,
+        verticalAlign(middle)
+),
+      style(
+        objectos.css.util.Medium.VerticalAlign.BOTTOM,
+        verticalAlign(bottom)
+),
+      style(
+        objectos.css.util.Medium.VerticalAlign.TEXT_TOP,
+        verticalAlign(textTop)
+),
+      style(
+        objectos.css.util.Medium.VerticalAlign.TEXT_BOTTOM,
+        verticalAlign(textBottom)
+),
+      style(
+        objectos.css.util.Medium.VerticalAlign.SUB_ALIGN,
+        verticalAlign(sub)
+),
+      style(
+        objectos.css.util.Medium.VerticalAlign.SUPER_ALIGN,
+        verticalAlign(super_)
+));
+  }
+
   private void MediumWidth() {
     media(
       minWidth(px(768)),
@@ -17943,6 +18058,43 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Large.TextTransform.NONE,
         textTransform(none)
+));
+  }
+
+  private void LargeVerticalAlign() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.VerticalAlign.BASELINE,
+        verticalAlign(baseline)
+),
+      style(
+        objectos.css.util.Large.VerticalAlign.TOP,
+        verticalAlign(top)
+),
+      style(
+        objectos.css.util.Large.VerticalAlign.MIDDLE,
+        verticalAlign(middle)
+),
+      style(
+        objectos.css.util.Large.VerticalAlign.BOTTOM,
+        verticalAlign(bottom)
+),
+      style(
+        objectos.css.util.Large.VerticalAlign.TEXT_TOP,
+        verticalAlign(textTop)
+),
+      style(
+        objectos.css.util.Large.VerticalAlign.TEXT_BOTTOM,
+        verticalAlign(textBottom)
+),
+      style(
+        objectos.css.util.Large.VerticalAlign.SUB_ALIGN,
+        verticalAlign(sub)
+),
+      style(
+        objectos.css.util.Large.VerticalAlign.SUPER_ALIGN,
+        verticalAlign(super_)
 ));
   }
 
@@ -22455,6 +22607,43 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeVerticalAlign() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.BASELINE,
+        verticalAlign(baseline)
+),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.TOP,
+        verticalAlign(top)
+),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.MIDDLE,
+        verticalAlign(middle)
+),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.BOTTOM,
+        verticalAlign(bottom)
+),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.TEXT_TOP,
+        verticalAlign(textTop)
+),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.TEXT_BOTTOM,
+        verticalAlign(textBottom)
+),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.SUB_ALIGN,
+        verticalAlign(sub)
+),
+      style(
+        objectos.css.util.XLarge.VerticalAlign.SUPER_ALIGN,
+        verticalAlign(super_)
+));
+  }
+
   private void XLargeWidth() {
     media(
       minWidth(px(1280)),
@@ -26961,6 +27150,43 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.TextTransform.NONE,
         textTransform(none)
+));
+  }
+
+  private void XLarge2VerticalAlign() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.BASELINE,
+        verticalAlign(baseline)
+),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.TOP,
+        verticalAlign(top)
+),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.MIDDLE,
+        verticalAlign(middle)
+),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.BOTTOM,
+        verticalAlign(bottom)
+),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.TEXT_TOP,
+        verticalAlign(textTop)
+),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.TEXT_BOTTOM,
+        verticalAlign(textBottom)
+),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.SUB_ALIGN,
+        verticalAlign(sub)
+),
+      style(
+        objectos.css.util.XLarge2.VerticalAlign.SUPER_ALIGN,
+        verticalAlign(super_)
 ));
   }
 

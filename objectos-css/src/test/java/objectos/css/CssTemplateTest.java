@@ -305,7 +305,7 @@ public class CssTemplateTest {
 
             borderStyle(none),
             borderStyle(hidden, dotted),
-            borderStyle(dashed, solid, _double),
+            borderStyle(dashed, solid, double_),
             borderStyle(groove, ridge, inset, outset),
             borderStyle(inherit)
           );
@@ -494,7 +494,7 @@ public class CssTemplateTest {
 
             cursor(auto),
             cursor(none),
-            cursor(_default),
+            cursor(default_),
             cursor(pointer),
             cursor(zoomOut),
             cursor(inherit)
@@ -1390,7 +1390,7 @@ public class CssTemplateTest {
             outlineStyle(dotted),
             outlineStyle(dashed),
             outlineStyle(solid),
-            outlineStyle(_double),
+            outlineStyle(double_),
             outlineStyle(groove),
             outlineStyle(ridge),
             outlineStyle(inset),
@@ -1507,7 +1507,7 @@ public class CssTemplateTest {
           style(
             sub, sup,
 
-            position(_static),
+            position(static_),
             position(relative),
             position(absolute),
             position(fixed),
@@ -1717,7 +1717,7 @@ public class CssTemplateTest {
             a,
 
             textDecorationStyle(solid),
-            textDecorationStyle(_double),
+            textDecorationStyle(double_),
             textDecorationStyle(dotted),
             textDecorationStyle(dashed),
             textDecorationStyle(wavy),
@@ -1939,7 +1939,7 @@ public class CssTemplateTest {
 
             verticalAlign(baseline),
             verticalAlign(sub),
-            verticalAlign(_super),
+            verticalAlign(super_),
             verticalAlign(textTop),
             verticalAlign(textBottom),
             verticalAlign(middle),

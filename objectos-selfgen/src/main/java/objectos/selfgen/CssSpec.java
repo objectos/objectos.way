@@ -198,10 +198,10 @@ public final class CssSpec extends CssSelfGen {
 
     // keyword name clashes
 
-    keywordFieldName("default", "_default");
-    keywordFieldName("double", "_double");
-    keywordFieldName("static", "_static");
-    keywordFieldName("super", "_super");
+    keywordFieldName("default", "default_");
+    keywordFieldName("double", "double_");
+    keywordFieldName("static", "static_");
+    keywordFieldName("super", "super_");
 
     // A
 

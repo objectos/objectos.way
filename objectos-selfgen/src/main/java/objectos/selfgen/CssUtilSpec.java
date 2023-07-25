@@ -124,6 +124,10 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     textDecoration();
     textTransform();
 
+    // V
+
+    verticalAlign();
+
     // W
 
     width();
@@ -786,6 +790,24 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("TextTransform"), methods("textTransform"), names);
+    }
+  }
+
+  private void verticalAlign() {
+    Names names;
+    names = names(
+      name("BASELINE", k("baseline")),
+      name("TOP", k("top")),
+      name("MIDDLE", k("middle")),
+      name("BOTTOM", k("bottom")),
+      name("TEXT_TOP", k("textTop")),
+      name("TEXT_BOTTOM", k("textBottom")),
+      name("SUB_ALIGN", k("sub")),
+      name("SUPER_ALIGN", k("super_"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("VerticalAlign"), methods("verticalAlign"), names);
     }
   }
 
