@@ -66,6 +66,7 @@ import objectos.css.tmpl.JustifyContentValue;
 import objectos.css.tmpl.LeftKeyword;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LengthPercentage;
+import objectos.css.tmpl.LetterSpacingValue;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
@@ -1227,6 +1228,16 @@ abstract class GeneratedCssTemplate {
     Check.notNull(safeOrUnsafe, "safeOrUnsafe == null");
     Check.notNull(position, "position == null");
     return declaration(Property.JUSTIFY_CONTENT, safeOrUnsafe, position);
+  }
+
+  protected final StyleDeclaration letterSpacing(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.LETTER_SPACING, value);
+  }
+
+  protected final StyleDeclaration letterSpacing(LetterSpacingValue value) {
+    Check.notNull(value, "value == null");
+    return declaration(Property.LETTER_SPACING, value);
   }
 
   protected final StyleDeclaration lineHeight(double value) {

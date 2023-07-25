@@ -284,6 +284,7 @@ public final class CssSpec extends CssSelfGen {
 
     // L
 
+    letterSpacing();
     lineHeight();
     listStyleImage();
     listStylePosition();
@@ -886,6 +887,23 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(justifyContent, "value"),
       sig(overflow, "safeOrUnsafe", justifyContentPosition, "position")
+    );
+  }
+
+  private void letterSpacing() {
+    var letterSpacingValue = t(
+      "LetterSpacingValue",
+
+      k("normal"),
+
+      lengthPercentage
+    );
+
+    property(
+      "letter-spacing",
+
+      sig(globalKeyword, "value"),
+      sig(letterSpacingValue, "value")
     );
   }
 

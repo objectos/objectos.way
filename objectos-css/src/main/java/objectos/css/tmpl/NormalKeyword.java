@@ -25,4 +25,5 @@ public sealed interface NormalKeyword extends
     FontVariationSettingsValue,
     FontWeightValue,
     JustifyContentValue,
+    LetterSpacingValue,
     LineHeightValue permits StandardName {}

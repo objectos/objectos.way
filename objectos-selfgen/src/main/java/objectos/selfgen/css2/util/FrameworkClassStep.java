@@ -158,6 +158,10 @@ final class FrameworkClassStep extends ThisTemplate {
       argument(n(expression.fieldName()));
     }
 
+    else if (value instanceof Value.LiteralDouble literal) {
+      argument(l(literal.value()));
+    }
+
     else if (value instanceof Value.LiteralInt literal) {
       argument(i(literal.value()));
     }

@@ -35,6 +35,8 @@ public final class Framework extends objectos.css.CssTemplate {
     AllFontWeight();
     AllHeight();
     AllJustifyContent();
+    AllLetterSpacing();
+    AllLineHeight();
     AllMargin();
     AllMarginX();
     AllMarginY();
@@ -64,6 +66,8 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallFontWeight();
     SmallHeight();
     SmallJustifyContent();
+    SmallLetterSpacing();
+    SmallLineHeight();
     SmallMargin();
     SmallMarginX();
     SmallMarginY();
@@ -93,6 +97,8 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumFontWeight();
     MediumHeight();
     MediumJustifyContent();
+    MediumLetterSpacing();
+    MediumLineHeight();
     MediumMargin();
     MediumMarginX();
     MediumMarginY();
@@ -122,6 +128,8 @@ public final class Framework extends objectos.css.CssTemplate {
     LargeFontWeight();
     LargeHeight();
     LargeJustifyContent();
+    LargeLetterSpacing();
+    LargeLineHeight();
     LargeMargin();
     LargeMarginX();
     LargeMarginY();
@@ -151,6 +159,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargeFontWeight();
     XLargeHeight();
     XLargeJustifyContent();
+    XLargeLetterSpacing();
+    XLargeLineHeight();
     XLargeMargin();
     XLargeMarginX();
     XLargeMarginY();
@@ -180,6 +190,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2FontWeight();
     XLarge2Height();
     XLarge2JustifyContent();
+    XLarge2LetterSpacing();
+    XLarge2LineHeight();
     XLarge2Margin();
     XLarge2MarginX();
     XLarge2MarginY();
@@ -664,6 +676,92 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.JustifyContent.AROUND,
       justifyContent(spaceAround)
+);
+  }
+
+  private void AllLetterSpacing() {
+    style(
+      objectos.css.util.All.LetterSpacing.TIGHTER,
+      letterSpacing(rem(-0.05))
+);
+    style(
+      objectos.css.util.All.LetterSpacing.TIGHT,
+      letterSpacing(rem(-0.025))
+);
+    style(
+      objectos.css.util.All.LetterSpacing.NORMAL,
+      letterSpacing(rem(0))
+);
+    style(
+      objectos.css.util.All.LetterSpacing.WIDE,
+      letterSpacing(rem(0.025))
+);
+    style(
+      objectos.css.util.All.LetterSpacing.WIDER,
+      letterSpacing(rem(0.05))
+);
+    style(
+      objectos.css.util.All.LetterSpacing.WIDEST,
+      letterSpacing(rem(0.1))
+);
+  }
+
+  private void AllLineHeight() {
+    style(
+      objectos.css.util.All.LineHeight.NONE,
+      lineHeight(1)
+);
+    style(
+      objectos.css.util.All.LineHeight.TIGHT,
+      lineHeight(1.25)
+);
+    style(
+      objectos.css.util.All.LineHeight.SNUG,
+      lineHeight(1.375)
+);
+    style(
+      objectos.css.util.All.LineHeight.NORMAL,
+      lineHeight(1.5)
+);
+    style(
+      objectos.css.util.All.LineHeight.RELAXED,
+      lineHeight(1.625)
+);
+    style(
+      objectos.css.util.All.LineHeight.LOOSE,
+      lineHeight(2)
+);
+    style(
+      objectos.css.util.All.LineHeight.V3,
+      lineHeight(rem(0.75))
+);
+    style(
+      objectos.css.util.All.LineHeight.V4,
+      lineHeight(rem(1))
+);
+    style(
+      objectos.css.util.All.LineHeight.V5,
+      lineHeight(rem(1.25))
+);
+    style(
+      objectos.css.util.All.LineHeight.V6,
+      lineHeight(rem(1.5))
+);
+    style(
+      objectos.css.util.All.LineHeight.V7,
+      lineHeight(rem(1.75))
+);
+    style(
+      objectos.css.util.All.LineHeight.V8,
+      lineHeight(rem(2))
+);
+    style(
+      objectos.css.util.All.LineHeight.V9,
+      lineHeight(rem(2.25))
+);
+    style(
+      objectos.css.util.All.LineHeight.V10,
+      lineHeight(rem(2.5))
 );
   }
 
@@ -4055,6 +4153,96 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Small.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void SmallLetterSpacing() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.LetterSpacing.TIGHTER,
+        letterSpacing(rem(-0.05))
+),
+      style(
+        objectos.css.util.Small.LetterSpacing.TIGHT,
+        letterSpacing(rem(-0.025))
+),
+      style(
+        objectos.css.util.Small.LetterSpacing.NORMAL,
+        letterSpacing(rem(0))
+),
+      style(
+        objectos.css.util.Small.LetterSpacing.WIDE,
+        letterSpacing(rem(0.025))
+),
+      style(
+        objectos.css.util.Small.LetterSpacing.WIDER,
+        letterSpacing(rem(0.05))
+),
+      style(
+        objectos.css.util.Small.LetterSpacing.WIDEST,
+        letterSpacing(rem(0.1))
+));
+  }
+
+  private void SmallLineHeight() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.LineHeight.NONE,
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Small.LineHeight.TIGHT,
+        lineHeight(1.25)
+),
+      style(
+        objectos.css.util.Small.LineHeight.SNUG,
+        lineHeight(1.375)
+),
+      style(
+        objectos.css.util.Small.LineHeight.NORMAL,
+        lineHeight(1.5)
+),
+      style(
+        objectos.css.util.Small.LineHeight.RELAXED,
+        lineHeight(1.625)
+),
+      style(
+        objectos.css.util.Small.LineHeight.LOOSE,
+        lineHeight(2)
+),
+      style(
+        objectos.css.util.Small.LineHeight.V3,
+        lineHeight(rem(0.75))
+),
+      style(
+        objectos.css.util.Small.LineHeight.V4,
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.Small.LineHeight.V5,
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.Small.LineHeight.V6,
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.Small.LineHeight.V7,
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Small.LineHeight.V8,
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.Small.LineHeight.V9,
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.Small.LineHeight.V10,
+        lineHeight(rem(2.5))
 ));
   }
 
@@ -7487,6 +7675,96 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumLetterSpacing() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.LetterSpacing.TIGHTER,
+        letterSpacing(rem(-0.05))
+),
+      style(
+        objectos.css.util.Medium.LetterSpacing.TIGHT,
+        letterSpacing(rem(-0.025))
+),
+      style(
+        objectos.css.util.Medium.LetterSpacing.NORMAL,
+        letterSpacing(rem(0))
+),
+      style(
+        objectos.css.util.Medium.LetterSpacing.WIDE,
+        letterSpacing(rem(0.025))
+),
+      style(
+        objectos.css.util.Medium.LetterSpacing.WIDER,
+        letterSpacing(rem(0.05))
+),
+      style(
+        objectos.css.util.Medium.LetterSpacing.WIDEST,
+        letterSpacing(rem(0.1))
+));
+  }
+
+  private void MediumLineHeight() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.LineHeight.NONE,
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Medium.LineHeight.TIGHT,
+        lineHeight(1.25)
+),
+      style(
+        objectos.css.util.Medium.LineHeight.SNUG,
+        lineHeight(1.375)
+),
+      style(
+        objectos.css.util.Medium.LineHeight.NORMAL,
+        lineHeight(1.5)
+),
+      style(
+        objectos.css.util.Medium.LineHeight.RELAXED,
+        lineHeight(1.625)
+),
+      style(
+        objectos.css.util.Medium.LineHeight.LOOSE,
+        lineHeight(2)
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V3,
+        lineHeight(rem(0.75))
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V4,
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V5,
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V6,
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V7,
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V8,
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V9,
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.Medium.LineHeight.V10,
+        lineHeight(rem(2.5))
+));
+  }
+
   private void MediumMargin() {
     media(
       minWidth(px(768)),
@@ -10913,6 +11191,96 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Large.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void LargeLetterSpacing() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.LetterSpacing.TIGHTER,
+        letterSpacing(rem(-0.05))
+),
+      style(
+        objectos.css.util.Large.LetterSpacing.TIGHT,
+        letterSpacing(rem(-0.025))
+),
+      style(
+        objectos.css.util.Large.LetterSpacing.NORMAL,
+        letterSpacing(rem(0))
+),
+      style(
+        objectos.css.util.Large.LetterSpacing.WIDE,
+        letterSpacing(rem(0.025))
+),
+      style(
+        objectos.css.util.Large.LetterSpacing.WIDER,
+        letterSpacing(rem(0.05))
+),
+      style(
+        objectos.css.util.Large.LetterSpacing.WIDEST,
+        letterSpacing(rem(0.1))
+));
+  }
+
+  private void LargeLineHeight() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.LineHeight.NONE,
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.Large.LineHeight.TIGHT,
+        lineHeight(1.25)
+),
+      style(
+        objectos.css.util.Large.LineHeight.SNUG,
+        lineHeight(1.375)
+),
+      style(
+        objectos.css.util.Large.LineHeight.NORMAL,
+        lineHeight(1.5)
+),
+      style(
+        objectos.css.util.Large.LineHeight.RELAXED,
+        lineHeight(1.625)
+),
+      style(
+        objectos.css.util.Large.LineHeight.LOOSE,
+        lineHeight(2)
+),
+      style(
+        objectos.css.util.Large.LineHeight.V3,
+        lineHeight(rem(0.75))
+),
+      style(
+        objectos.css.util.Large.LineHeight.V4,
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.Large.LineHeight.V5,
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.Large.LineHeight.V6,
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.Large.LineHeight.V7,
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.Large.LineHeight.V8,
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.Large.LineHeight.V9,
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.Large.LineHeight.V10,
+        lineHeight(rem(2.5))
 ));
   }
 
@@ -14345,6 +14713,96 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeLetterSpacing() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.LetterSpacing.TIGHTER,
+        letterSpacing(rem(-0.05))
+),
+      style(
+        objectos.css.util.XLarge.LetterSpacing.TIGHT,
+        letterSpacing(rem(-0.025))
+),
+      style(
+        objectos.css.util.XLarge.LetterSpacing.NORMAL,
+        letterSpacing(rem(0))
+),
+      style(
+        objectos.css.util.XLarge.LetterSpacing.WIDE,
+        letterSpacing(rem(0.025))
+),
+      style(
+        objectos.css.util.XLarge.LetterSpacing.WIDER,
+        letterSpacing(rem(0.05))
+),
+      style(
+        objectos.css.util.XLarge.LetterSpacing.WIDEST,
+        letterSpacing(rem(0.1))
+));
+  }
+
+  private void XLargeLineHeight() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.LineHeight.NONE,
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.TIGHT,
+        lineHeight(1.25)
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.SNUG,
+        lineHeight(1.375)
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.NORMAL,
+        lineHeight(1.5)
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.RELAXED,
+        lineHeight(1.625)
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.LOOSE,
+        lineHeight(2)
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V3,
+        lineHeight(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V4,
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V5,
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V6,
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V7,
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V8,
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V9,
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge.LineHeight.V10,
+        lineHeight(rem(2.5))
+));
+  }
+
   private void XLargeMargin() {
     media(
       minWidth(px(1280)),
@@ -17771,6 +18229,96 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.JustifyContent.AROUND,
         justifyContent(spaceAround)
+));
+  }
+
+  private void XLarge2LetterSpacing() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.LetterSpacing.TIGHTER,
+        letterSpacing(rem(-0.05))
+),
+      style(
+        objectos.css.util.XLarge2.LetterSpacing.TIGHT,
+        letterSpacing(rem(-0.025))
+),
+      style(
+        objectos.css.util.XLarge2.LetterSpacing.NORMAL,
+        letterSpacing(rem(0))
+),
+      style(
+        objectos.css.util.XLarge2.LetterSpacing.WIDE,
+        letterSpacing(rem(0.025))
+),
+      style(
+        objectos.css.util.XLarge2.LetterSpacing.WIDER,
+        letterSpacing(rem(0.05))
+),
+      style(
+        objectos.css.util.XLarge2.LetterSpacing.WIDEST,
+        letterSpacing(rem(0.1))
+));
+  }
+
+  private void XLarge2LineHeight() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.LineHeight.NONE,
+        lineHeight(1)
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.TIGHT,
+        lineHeight(1.25)
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.SNUG,
+        lineHeight(1.375)
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.NORMAL,
+        lineHeight(1.5)
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.RELAXED,
+        lineHeight(1.625)
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.LOOSE,
+        lineHeight(2)
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V3,
+        lineHeight(rem(0.75))
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V4,
+        lineHeight(rem(1))
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V5,
+        lineHeight(rem(1.25))
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V6,
+        lineHeight(rem(1.5))
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V7,
+        lineHeight(rem(1.75))
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V8,
+        lineHeight(rem(2))
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V9,
+        lineHeight(rem(2.25))
+),
+      style(
+        objectos.css.util.XLarge2.LineHeight.V10,
+        lineHeight(rem(2.5))
 ));
   }
 

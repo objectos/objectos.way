@@ -119,6 +119,10 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     // J
     justifyContent();
 
+    // L
+    letterSpacing();
+    lineHeight();
+
     // M
     margin();
     maxWidth();
@@ -288,6 +292,45 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("JustifyContent"), methods("justifyContent"), names);
+    }
+  }
+
+  private void letterSpacing() {
+    Names names;
+    names = names(
+      name("TIGHTER", rem(-0.05)),
+      name("TIGHT", rem(-0.025)),
+      name("NORMAL", rem(0)),
+      name("WIDE", rem(0.025)),
+      name("WIDER", rem(0.05)),
+      name("WIDEST", rem(0.1))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("LetterSpacing"), methods("letterSpacing"), names);
+    }
+  }
+
+  private void lineHeight() {
+    Names names = names(
+      name("NONE", l(1)),
+      name("TIGHT", l(1.25)),
+      name("SNUG", l(1.375)),
+      name("NORMAL", l(1.5)),
+      name("RELAXED", l(1.625)),
+      name("LOOSE", l(2)),
+      name("V3", rem(0.75)),
+      name("V4", rem(1)),
+      name("V5", rem(1.25)),
+      name("V6", rem(1.5)),
+      name("V7", rem(1.75)),
+      name("V8", rem(2)),
+      name("V9", rem(2.25)),
+      name("V10", rem(2.5))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("LineHeight"), methods("lineHeight"), names);
     }
   }
 

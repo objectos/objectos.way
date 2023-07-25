@@ -74,6 +74,8 @@ public enum Property implements PropertyName {
 
   JUSTIFY_CONTENT("justify-content"),
 
+  LETTER_SPACING("letter-spacing"),
+
   LINE_HEIGHT("line-height"),
 
   LIST_STYLE("list-style"),

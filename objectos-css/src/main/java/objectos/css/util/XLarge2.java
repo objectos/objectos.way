@@ -265,6 +265,54 @@ public final class XLarge2 {
     private JustifyContent() {}
   }
 
+  public static final class LetterSpacing {
+    public static final ClassSelector TIGHTER = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector TIGHT = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector NORMAL = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector WIDE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector WIDER = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector WIDEST = ClassSelector.randomClassSelector(5);
+
+    private LetterSpacing() {}
+  }
+
+  public static final class LineHeight {
+    public static final ClassSelector NONE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector TIGHT = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector SNUG = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector NORMAL = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector RELAXED = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector LOOSE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V3 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V4 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V5 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V6 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V7 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V8 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V9 = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector V10 = ClassSelector.randomClassSelector(5);
+
+    private LineHeight() {}
+  }
+
   public static final class Margin {
     public static final ClassSelector AUTO = ClassSelector.randomClassSelector(5);
 

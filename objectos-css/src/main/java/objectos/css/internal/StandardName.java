@@ -57,6 +57,7 @@ import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.JustifyContentPosition;
 import objectos.css.tmpl.JustifyContentValue;
 import objectos.css.tmpl.LeftKeyword;
+import objectos.css.tmpl.LetterSpacingValue;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
 import objectos.css.tmpl.LineWidth;
@@ -124,6 +125,7 @@ public enum StandardName implements Selector, ColorValue,
     HeightOrWidthValue,
     JustifyContentPosition,
     JustifyContentValue,
+    LetterSpacingValue,
     LineHeightValue,
     LineStyle,
     LineWidth,

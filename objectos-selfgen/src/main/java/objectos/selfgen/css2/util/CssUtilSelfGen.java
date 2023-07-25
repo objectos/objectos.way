@@ -80,6 +80,10 @@ public abstract class CssUtilSelfGen {
     return new Value.ExpressionName(fieldName);
   }
 
+  protected final Value l(double value) {
+    return new Value.LiteralDouble(value);
+  }
+
   protected final Value l(int value) {
     return new Value.LiteralInt(value);
   }
