@@ -37,6 +37,8 @@ public final class Framework extends objectos.css.CssTemplate {
     AllJustifyContent();
     AllLetterSpacing();
     AllLineHeight();
+    AllListStylePosition();
+    AllListStyleType();
     AllMargin();
     AllMarginX();
     AllMarginY();
@@ -68,6 +70,8 @@ public final class Framework extends objectos.css.CssTemplate {
     SmallJustifyContent();
     SmallLetterSpacing();
     SmallLineHeight();
+    SmallListStylePosition();
+    SmallListStyleType();
     SmallMargin();
     SmallMarginX();
     SmallMarginY();
@@ -99,6 +103,8 @@ public final class Framework extends objectos.css.CssTemplate {
     MediumJustifyContent();
     MediumLetterSpacing();
     MediumLineHeight();
+    MediumListStylePosition();
+    MediumListStyleType();
     MediumMargin();
     MediumMarginX();
     MediumMarginY();
@@ -130,6 +136,8 @@ public final class Framework extends objectos.css.CssTemplate {
     LargeJustifyContent();
     LargeLetterSpacing();
     LargeLineHeight();
+    LargeListStylePosition();
+    LargeListStyleType();
     LargeMargin();
     LargeMarginX();
     LargeMarginY();
@@ -161,6 +169,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLargeJustifyContent();
     XLargeLetterSpacing();
     XLargeLineHeight();
+    XLargeListStylePosition();
+    XLargeListStyleType();
     XLargeMargin();
     XLargeMarginX();
     XLargeMarginY();
@@ -192,6 +202,8 @@ public final class Framework extends objectos.css.CssTemplate {
     XLarge2JustifyContent();
     XLarge2LetterSpacing();
     XLarge2LineHeight();
+    XLarge2ListStylePosition();
+    XLarge2ListStyleType();
     XLarge2Margin();
     XLarge2MarginX();
     XLarge2MarginY();
@@ -762,6 +774,32 @@ public final class Framework extends objectos.css.CssTemplate {
     style(
       objectos.css.util.All.LineHeight.V10,
       lineHeight(rem(2.5))
+);
+  }
+
+  private void AllListStylePosition() {
+    style(
+      objectos.css.util.All.ListStylePosition.INSIDE,
+      listStylePosition(inside)
+);
+    style(
+      objectos.css.util.All.ListStylePosition.OUTSIDE,
+      listStylePosition(outside)
+);
+  }
+
+  private void AllListStyleType() {
+    style(
+      objectos.css.util.All.ListStyleType.NONE,
+      listStyleType(none)
+);
+    style(
+      objectos.css.util.All.ListStyleType.DISC,
+      listStyleType(disc)
+);
+    style(
+      objectos.css.util.All.ListStyleType.DECIMAL,
+      listStyleType(decimal)
 );
   }
 
@@ -4243,6 +4281,36 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Small.LineHeight.V10,
         lineHeight(rem(2.5))
+));
+  }
+
+  private void SmallListStylePosition() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.ListStylePosition.INSIDE,
+        listStylePosition(inside)
+),
+      style(
+        objectos.css.util.Small.ListStylePosition.OUTSIDE,
+        listStylePosition(outside)
+));
+  }
+
+  private void SmallListStyleType() {
+    media(
+      minWidth(px(640)),
+      style(
+        objectos.css.util.Small.ListStyleType.NONE,
+        listStyleType(none)
+),
+      style(
+        objectos.css.util.Small.ListStyleType.DISC,
+        listStyleType(disc)
+),
+      style(
+        objectos.css.util.Small.ListStyleType.DECIMAL,
+        listStyleType(decimal)
 ));
   }
 
@@ -7765,6 +7833,36 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void MediumListStylePosition() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.ListStylePosition.INSIDE,
+        listStylePosition(inside)
+),
+      style(
+        objectos.css.util.Medium.ListStylePosition.OUTSIDE,
+        listStylePosition(outside)
+));
+  }
+
+  private void MediumListStyleType() {
+    media(
+      minWidth(px(768)),
+      style(
+        objectos.css.util.Medium.ListStyleType.NONE,
+        listStyleType(none)
+),
+      style(
+        objectos.css.util.Medium.ListStyleType.DISC,
+        listStyleType(disc)
+),
+      style(
+        objectos.css.util.Medium.ListStyleType.DECIMAL,
+        listStyleType(decimal)
+));
+  }
+
   private void MediumMargin() {
     media(
       minWidth(px(768)),
@@ -11281,6 +11379,36 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.Large.LineHeight.V10,
         lineHeight(rem(2.5))
+));
+  }
+
+  private void LargeListStylePosition() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.ListStylePosition.INSIDE,
+        listStylePosition(inside)
+),
+      style(
+        objectos.css.util.Large.ListStylePosition.OUTSIDE,
+        listStylePosition(outside)
+));
+  }
+
+  private void LargeListStyleType() {
+    media(
+      minWidth(px(1024)),
+      style(
+        objectos.css.util.Large.ListStyleType.NONE,
+        listStyleType(none)
+),
+      style(
+        objectos.css.util.Large.ListStyleType.DISC,
+        listStyleType(disc)
+),
+      style(
+        objectos.css.util.Large.ListStyleType.DECIMAL,
+        listStyleType(decimal)
 ));
   }
 
@@ -14803,6 +14931,36 @@ public final class Framework extends objectos.css.CssTemplate {
 ));
   }
 
+  private void XLargeListStylePosition() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.ListStylePosition.INSIDE,
+        listStylePosition(inside)
+),
+      style(
+        objectos.css.util.XLarge.ListStylePosition.OUTSIDE,
+        listStylePosition(outside)
+));
+  }
+
+  private void XLargeListStyleType() {
+    media(
+      minWidth(px(1280)),
+      style(
+        objectos.css.util.XLarge.ListStyleType.NONE,
+        listStyleType(none)
+),
+      style(
+        objectos.css.util.XLarge.ListStyleType.DISC,
+        listStyleType(disc)
+),
+      style(
+        objectos.css.util.XLarge.ListStyleType.DECIMAL,
+        listStyleType(decimal)
+));
+  }
+
   private void XLargeMargin() {
     media(
       minWidth(px(1280)),
@@ -18319,6 +18477,36 @@ public final class Framework extends objectos.css.CssTemplate {
       style(
         objectos.css.util.XLarge2.LineHeight.V10,
         lineHeight(rem(2.5))
+));
+  }
+
+  private void XLarge2ListStylePosition() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.ListStylePosition.INSIDE,
+        listStylePosition(inside)
+),
+      style(
+        objectos.css.util.XLarge2.ListStylePosition.OUTSIDE,
+        listStylePosition(outside)
+));
+  }
+
+  private void XLarge2ListStyleType() {
+    media(
+      minWidth(px(1536)),
+      style(
+        objectos.css.util.XLarge2.ListStyleType.NONE,
+        listStyleType(none)
+),
+      style(
+        objectos.css.util.XLarge2.ListStyleType.DISC,
+        listStyleType(disc)
+),
+      style(
+        objectos.css.util.XLarge2.ListStyleType.DECIMAL,
+        listStyleType(decimal)
 ));
   }
 

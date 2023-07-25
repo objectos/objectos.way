@@ -313,6 +313,24 @@ public final class Large {
     private LineHeight() {}
   }
 
+  public static final class ListStylePosition {
+    public static final ClassSelector INSIDE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector OUTSIDE = ClassSelector.randomClassSelector(5);
+
+    private ListStylePosition() {}
+  }
+
+  public static final class ListStyleType {
+    public static final ClassSelector NONE = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector DISC = ClassSelector.randomClassSelector(5);
+
+    public static final ClassSelector DECIMAL = ClassSelector.randomClassSelector(5);
+
+    private ListStyleType() {}
+  }
+
   public static final class Margin {
     public static final ClassSelector AUTO = ClassSelector.randomClassSelector(5);
 

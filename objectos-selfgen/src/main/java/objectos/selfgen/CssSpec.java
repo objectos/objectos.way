@@ -229,9 +229,7 @@ public final class CssSpec extends CssSelfGen {
     );
 
     backgroundColor();
-
     backgroundImage();
-
     borderWidth();
 
     pval("border-collapse", globalKeyword);

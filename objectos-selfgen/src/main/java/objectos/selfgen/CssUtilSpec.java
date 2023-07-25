@@ -122,6 +122,8 @@ public final class CssUtilSpec extends CssUtilSelfGen {
     // L
     letterSpacing();
     lineHeight();
+    listStylePosition();
+    listStyleType();
 
     // M
     margin();
@@ -331,6 +333,31 @@ public final class CssUtilSpec extends CssUtilSelfGen {
 
     for (Prefix prefix : responsive) {
       generate(prefix, simpleName("LineHeight"), methods("lineHeight"), names);
+    }
+  }
+
+  private void listStylePosition() {
+    Names names;
+    names = names(
+      name("INSIDE", k("inside")),
+      name("OUTSIDE", k("outside"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("ListStylePosition"), methods("listStylePosition"), names);
+    }
+  }
+
+  private void listStyleType() {
+    Names names;
+    names = names(
+      name("NONE", k("none")),
+      name("DISC", k("disc")),
+      name("DECIMAL", k("decimal"))
+    );
+
+    for (Prefix prefix : responsive) {
+      generate(prefix, simpleName("ListStyleType"), methods("listStyleType"), names);
     }
   }
 
