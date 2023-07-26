@@ -842,6 +842,138 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  :-moz-ui-invalid {
+    box-shadow: 60px -16px teal, 10px 5px black;
+  }
+  """)
+  public void testCase17() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.length(60, LengthUnit.PX);
+    compiler.length(-16, LengthUnit.PX);
+
+    compiler.declarationBegin(Property.BOX_SHADOW);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(StandardName.teal);
+    compiler.declarationEnd();
+
+    compiler.length(10, LengthUnit.PX);
+    compiler.length(5, LengthUnit.PX);
+
+    compiler.declarationBegin(Property.BOX_SHADOW);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(StandardName.black);
+    compiler.declarationEnd();
+
+    compiler.declarationBegin(Property.BOX_SHADOW);
+    compiler.propertyHash(InternalInstruction.INSTANCE);
+    compiler.propertyValueComma();
+    compiler.propertyHash(InternalInstruction.INSTANCE);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardPseudoClassSelector._mozUiInvalid);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED6,
+      Bytes.int0(60),
+      Bytes.int1(60),
+      Bytes.int2(60),
+      Bytes.int3(60),
+      Bytes.unit(LengthUnit.PX),
+
+      ByteProto.MARKED6,
+      Bytes.int0(-16),
+      Bytes.int1(-16),
+      Bytes.int2(-16),
+      Bytes.int3(-16),
+      Bytes.unit(LengthUnit.PX),
+
+      ByteProto.MARKED,
+      Bytes.len0(12),
+      Bytes.len1(12),
+      Bytes.prop0(Property.BOX_SHADOW),
+      Bytes.prop1(Property.BOX_SHADOW),
+      ByteProto.LENGTH_INT,
+      Bytes.int0(18),
+      ByteProto.LENGTH_INT,
+      Bytes.int0(14),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.teal),
+      Bytes.name1(StandardName.teal),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(24),
+      ByteProto.DECLARATION,
+
+      ByteProto.MARKED6,
+      Bytes.int0(10),
+      Bytes.int1(10),
+      Bytes.int2(10),
+      Bytes.int3(10),
+      Bytes.unit(LengthUnit.PX),
+
+      ByteProto.MARKED6,
+      Bytes.int0(5),
+      Bytes.int1(5),
+      Bytes.int2(5),
+      Bytes.int3(5),
+      Bytes.unit(LengthUnit.PX),
+
+      ByteProto.MARKED,
+      Bytes.len0(12),
+      Bytes.len1(12),
+      Bytes.prop0(Property.BOX_SHADOW),
+      Bytes.prop1(Property.BOX_SHADOW),
+      ByteProto.LENGTH_INT,
+      Bytes.int0(18),
+      ByteProto.LENGTH_INT,
+      Bytes.int0(14),
+      ByteProto.STANDARD_NAME,
+      Bytes.name0(StandardName.black),
+      Bytes.name1(StandardName.black),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(24),
+      ByteProto.DECLARATION,
+
+      ByteProto.MARKED,
+      Bytes.len0(10),
+      Bytes.len1(10),
+      Bytes.prop0(Property.BOX_SHADOW),
+      Bytes.prop1(Property.BOX_SHADOW),
+      ByteProto.DECLARATION,
+      Bytes.int0(48),
+      ByteProto.COMMA,
+      ByteProto.DECLARATION,
+      Bytes.int0(24),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(64),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_PSEUDO_CLASS,
+      (byte) StandardPseudoClassSelector._mozUiInvalid.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(19),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(74),
+      ByteProto.STYLE_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

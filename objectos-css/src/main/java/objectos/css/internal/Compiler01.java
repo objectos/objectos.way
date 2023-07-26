@@ -19,6 +19,7 @@ import objectos.css.AttributeOperator;
 import objectos.css.om.MediaRuleElement;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.SelectorElement;
+import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRuleElement;
 import objectos.css.util.ClassSelector;
 import objectos.util.ByteArrays;
@@ -103,12 +104,89 @@ class Compiler01 extends CssTemplateApi {
     int contents;
     contents = mainContents;
 
-    while (index < indexMax) {
+    loop: while (index < indexMax) {
       byte mark;
       mark = aux[index++];
 
       switch (mark) {
         case ByteProto.COMMA -> mainAdd(mark);
+
+        case ByteProto.DECLARATION -> {
+          while (true) {
+            byte proto;
+            proto = main[contents];
+
+            switch (proto) {
+              case ByteProto.DECLARATION -> {
+                // keep the start index handy
+                int startIndex;
+                startIndex = contents;
+
+                // mark this declaration
+                main[contents++] = ByteProto.MARKED;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
+
+                // point to next element
+                contents += length;
+
+                // ensure main can hold least 3 elements
+                // 0   - ByteProto
+                // 1-2 - variable length
+                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+                main[mainIndex++] = proto;
+
+                length = mainIndex - startIndex;
+
+                mainIndex = Bytes.varInt(main, mainIndex, length);
+
+                continue loop;
+              }
+
+              case ByteProto.MARKED -> {
+                contents++;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
+
+                // point to next element
+                contents += length;
+              }
+
+              case ByteProto.MARKED3 -> contents += 3;
+
+              case ByteProto.MARKED5 -> contents += 5;
+
+              case ByteProto.MARKED6 -> contents += 6;
+
+              case ByteProto.MARKED9 -> contents += 9;
+
+              case ByteProto.MARKED10 -> contents += 10;
+
+              default -> {
+                throw new UnsupportedOperationException(
+                  "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
+        }
 
         case ByteProto.INTERNAL -> {
           // keep startIndex handy
@@ -316,6 +394,40 @@ class Compiler01 extends CssTemplateApi {
       Bytes.int2(value),
       Bytes.int3(value)
     );
+  }
+
+  @Override
+  public final void propertyHash(StyleDeclaration value) {
+    // @ ByteProto
+    mainContents--;
+
+    byte proto;
+    proto = main[mainContents--];
+
+    switch (proto) {
+      case ByteProto.DECLARATION -> {
+        byte len0;
+        len0 = main[mainContents--];
+
+        int length;
+        length = len0;
+
+        if (length < 0) {
+          byte len1;
+          len1 = main[mainContents--];
+
+          length = Bytes.toVarInt(len0, len1);
+        }
+
+        mainContents -= length;
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    }
+
+    auxAdd(proto);
   }
 
   @Override

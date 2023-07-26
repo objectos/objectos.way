@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.tmpl;
 
-public interface PropertyValue {}
+import objectos.css.internal.InternalInstruction;
+import objectos.css.om.StyleDeclaration;
+import objectos.lang.Generated;
+
+@Generated("objectos.selfgen.CssSpec")
+public sealed interface BoxShadowDeclaration extends StyleDeclaration permits InternalInstruction {}

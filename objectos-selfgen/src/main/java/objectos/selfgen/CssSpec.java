@@ -500,7 +500,7 @@ public final class CssSpec extends CssSelfGen {
       "box-shadow",
 
       sig(globalKeyword, "value"),
-      
+
       sig(k("none"), "value"),
 
       sig(
@@ -547,7 +547,7 @@ public final class CssSpec extends CssSelfGen {
         length, "spreadRadius",
         color, "color"
       )
-    );
+    ).asHashProperty();
   }
 
   private void boxSizing() {

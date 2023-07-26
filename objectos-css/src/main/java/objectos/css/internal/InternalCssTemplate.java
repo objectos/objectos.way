@@ -26,6 +26,8 @@ import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.om.StyleRuleElement;
+import objectos.css.tmpl.BoxShadowDeclaration;
+import objectos.css.tmpl.BoxShadowHashDeclaration;
 import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.FontFamilyValue;
 import objectos.css.tmpl.Length;
@@ -79,8 +81,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return compiled.toString();
   }
 
-  protected abstract void definition();
-
   protected final Selector attr(String name) {
     Check.notNull(name, "name == null");
 
@@ -104,6 +104,33 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     return InternalInstruction.INSTANCE;
   }
+
+  protected final BoxShadowHashDeclaration boxShadow(BoxShadowDeclaration... values) {
+    Check.argument(values.length > 0, "box-shadow hash declaration requires at least one value");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(Property.BOX_SHADOW);
+
+    api.propertyHash(
+      Check.notNull(values[0], "values[0] == null")
+    );
+
+    for (int i = 1; i < values.length; i++) {
+      api.propertyValueComma();
+
+      api.propertyHash(
+        Check.notNull(values[i], "values[", i, "] == null")
+      );
+    }
+
+    api.declarationEnd();
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected abstract void definition();
 
   @Override
   protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
@@ -131,22 +158,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final MediaFeatureOrStyleDeclaration minWidth(Length value) {
-    Check.notNull(value, "value == null");
-
-    declaration(Property.MIN_WIDTH, value);
-
-    return InternalInstruction.INSTANCE;
-  }
-
-  protected final MediaFeatureOrStyleDeclaration minWidth(Zero value) {
-    Check.notNull(value, "value == null");
-
-    declaration(Property.MIN_WIDTH, value);
-
-    return InternalInstruction.INSTANCE;
-  }
-
   protected final ColorValue hex(String value) {
     Check.notNull(value, "value == null");
 
@@ -161,6 +172,37 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api().stringLiteral(value);
 
     return InternalInstruction.STRING_LITERAL;
+  }
+
+  protected final void media(MediaRuleElement... elements) {
+    CssTemplateApi api;
+    api = api();
+
+    api.mediaRuleBegin();
+
+    for (int i = 0; i < elements.length; i++) {
+      api.mediaRuleElement(
+        Check.notNull(elements[i], "elements[", i, "] == null")
+      );
+    }
+
+    api.mediaRuleEnd();
+  }
+
+  protected final MediaFeatureOrStyleDeclaration minWidth(Length value) {
+    Check.notNull(value, "value == null");
+
+    declaration(Property.MIN_WIDTH, value);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final MediaFeatureOrStyleDeclaration minWidth(Zero value) {
+    Check.notNull(value, "value == null");
+
+    declaration(Property.MIN_WIDTH, value);
+
+    return InternalInstruction.INSTANCE;
   }
 
   protected final Percentage pct(double value) {
@@ -212,21 +254,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.selectorEnd();
 
     return InternalInstruction.INSTANCE;
-  }
-
-  protected final void media(MediaRuleElement... elements) {
-    CssTemplateApi api;
-    api = api();
-
-    api.mediaRuleBegin();
-
-    for (int i = 0; i < elements.length; i++) {
-      api.mediaRuleElement(
-        Check.notNull(elements[i], "elements[", i, "] == null")
-      );
-    }
-
-    api.mediaRuleEnd();
   }
 
   protected final StyleRule style(StyleRuleElement... elements) {
@@ -347,20 +374,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   @Override
   final void declaration(
       Property name,
-      String value) {
-    CssTemplateApi api;
-    api = api();
-
-    api.declarationBegin(name);
-
-    api.javaString(value);
-
-    api.declarationEnd();
-  }
-
-  @Override
-  final void declaration(
-      Property name,
       PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4,
       PropertyValue value5) {
     CssTemplateApi api;
@@ -393,6 +406,20 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.propertyValue(value4);
     api.propertyValue(value5);
     api.propertyValue(value6);
+
+    api.declarationEnd();
+  }
+
+  @Override
+  final void declaration(
+      Property name,
+      String value) {
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(name);
+
+    api.javaString(value);
 
     api.declarationEnd();
   }

@@ -20,6 +20,7 @@ import objectos.css.StyleSheet;
 import objectos.css.om.MediaRuleElement;
 import objectos.css.om.PropertyValue;
 import objectos.css.om.SelectorElement;
+import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRuleElement;
 
 public abstract class CssTemplateApi {
@@ -63,6 +64,8 @@ public abstract class CssTemplateApi {
   public abstract void percentage(double value);
 
   public abstract void percentage(int value);
+
+  public abstract void propertyHash(StyleDeclaration value);
 
   public abstract void propertyValue(PropertyValue value);
 

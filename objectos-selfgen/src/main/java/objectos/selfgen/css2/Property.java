@@ -23,7 +23,7 @@ import objectos.code.ClassTypeName;
 import objectos.selfgen.util.JavaNames;
 import objectos.util.GrowableList;
 
-final class Property {
+public final class Property {
 
   static final Comparator<? super Property> ORDER_BY_CONSTANT_NAME
       = (self, that) -> self.constantName.compareTo(that.constantName);

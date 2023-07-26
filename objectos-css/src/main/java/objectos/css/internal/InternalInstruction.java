@@ -19,6 +19,8 @@ import objectos.css.om.MediaFeatureOrStyleDeclaration;
 import objectos.css.om.Selector;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
+import objectos.css.tmpl.BoxShadowDeclaration;
+import objectos.css.tmpl.BoxShadowHashDeclaration;
 import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.Length;
 import objectos.css.tmpl.Percentage;
@@ -27,6 +29,8 @@ import objectos.css.tmpl.Url;
 
 public enum InternalInstruction
     implements
+    BoxShadowDeclaration,
+    BoxShadowHashDeclaration,
     ColorValue,
     Length,
     MediaFeatureOrStyleDeclaration,

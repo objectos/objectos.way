@@ -412,7 +412,11 @@ public class CssTemplateTest {
             boxShadow(px(2), px(2), px(2), px(1), aqua),
             boxShadow(inset, px(60), px(-16), teal),
             boxShadow(inset, px(10), px(5), px(5), black),
-            boxShadow(inset, px(2), px(2), px(2), px(1), aqua)
+            boxShadow(inset, px(2), px(2), px(2), px(1), aqua),
+            boxShadow(
+              boxShadow(px(60), px(-16), teal),
+              boxShadow(px(10), px(5), black)
+            )
           );
         }
       },
@@ -427,6 +431,7 @@ public class CssTemplateTest {
         box-shadow: inset 60px -16px teal;
         box-shadow: inset 10px 5px 5px black;
         box-shadow: inset 2px 2px 2px 1px aqua;
+        box-shadow: 60px -16px teal, 10px 5px black;
       }
       """
     );

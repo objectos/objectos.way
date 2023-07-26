@@ -132,8 +132,38 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.DECLARATION -> {
-          // skip distance to end
-          index += 2;
+          // keep index handy
+          int thisIndex;
+          thisIndex = index;
+
+          // decode length
+          byte len0;
+          len0 = main[index++];
+
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = main[index++];
+
+            length = Bytes.toVarInt(len0, len1);
+          }
+
+          // compute declaration index
+          int elemIndex;
+          elemIndex = thisIndex - length;
+
+          // skip ByteProto
+          elemIndex += 1;
+
+          // skip end length
+          elemIndex += 2;
+
+          // skip property name
+          elemIndex += 2;
+
+          declaration(elemIndex);
         }
 
         case ByteProto.DECLARATION_END -> {

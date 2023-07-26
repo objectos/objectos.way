@@ -678,6 +678,104 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  :-moz-ui-invalid {
+    box-shadow: 60px -16px teal, 10px 5px black;
+  }
+  """)
+  public void testCase17() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.length(60, LengthUnit.PX);
+    compiler.length(-16, LengthUnit.PX);
+
+    compiler.declarationBegin(Property.BOX_SHADOW);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(StandardName.teal);
+    compiler.declarationEnd();
+
+    compiler.length(10, LengthUnit.PX);
+    compiler.length(5, LengthUnit.PX);
+
+    compiler.declarationBegin(Property.BOX_SHADOW);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(StandardName.black);
+    compiler.declarationEnd();
+
+    compiler.declarationBegin(Property.BOX_SHADOW);
+    compiler.propertyHash(InternalInstruction.INSTANCE);
+    compiler.propertyValueComma();
+    compiler.propertyHash(InternalInstruction.INSTANCE);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardPseudoClassSelector._mozUiInvalid);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_PSEUDO_CLASS,
+      (byte) StandardPseudoClassSelector._mozUiInvalid.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_NAME,
+      Bytes.prop0(Property.BOX_SHADOW),
+      Bytes.prop1(Property.BOX_SHADOW),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.LENGTH_INT,
+      Bytes.int0(60),
+      Bytes.int1(60),
+      Bytes.int2(60),
+      Bytes.int3(60),
+      Bytes.unit(LengthUnit.PX),
+      ByteCode.SPACE,
+      ByteCode.LENGTH_INT,
+      Bytes.int0(-16),
+      Bytes.int1(-16),
+      Bytes.int2(-16),
+      Bytes.int3(-16),
+      Bytes.unit(LengthUnit.PX),
+      ByteCode.SPACE,
+      ByteCode.KEYWORD,
+      Bytes.name0(StandardName.teal),
+      Bytes.name1(StandardName.teal),
+      ByteCode.COMMA,
+      ByteCode.LENGTH_INT,
+      Bytes.int0(10),
+      Bytes.int1(10),
+      Bytes.int2(10),
+      Bytes.int3(10),
+      Bytes.unit(LengthUnit.PX),
+      ByteCode.SPACE,
+      ByteCode.LENGTH_INT,
+      Bytes.int0(5),
+      Bytes.int1(5),
+      Bytes.int2(5),
+      Bytes.int3(5),
+      Bytes.unit(LengthUnit.PX),
+      ByteCode.SPACE,
+      ByteCode.KEYWORD,
+      Bytes.name0(StandardName.black),
+      Bytes.name1(StandardName.black),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;
