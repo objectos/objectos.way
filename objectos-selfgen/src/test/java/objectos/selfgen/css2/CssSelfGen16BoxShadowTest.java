@@ -23,7 +23,7 @@ import java.util.Map;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class CssSelfGen02NumberTypeTest {
+public class CssSelfGen16BoxShadowTest {
 
   private Map<String, String> result;
 
@@ -32,12 +32,52 @@ public class CssSelfGen02NumberTypeTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        pdbl("line-height");
-        pint("line-height");
+        property(
+          "box-shadow",
+
+          // the parameter type is not important for this test
+          sig(STRING, "value")
+        ).asHashProperty();
       }
     };
 
     result = generate(spec);
+  }
+
+  @Test
+  public void boxShadowDeclaration() {
+    assertEquals(
+      result.get("objectos/css/tmpl/BoxShadowDeclaration.java"),
+
+      """
+      package objectos.css.tmpl;
+
+      import objectos.css.internal.InternalInstruction;
+      import objectos.css.om.StyleDeclaration;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public sealed interface BoxShadowDeclaration extends StyleDeclaration permits InternalInstruction {}
+      """
+    );
+  }
+
+  @Test
+  public void boxShadowHashDeclaration() {
+    assertEquals(
+      result.get("objectos/css/tmpl/BoxShadowHashDeclaration.java"),
+
+      """
+      package objectos.css.tmpl;
+
+      import objectos.css.internal.InternalInstruction;
+      import objectos.css.om.StyleDeclaration;
+      import objectos.lang.Generated;
+
+      @Generated("objectos.selfgen.CssSpec")
+      public sealed interface BoxShadowHashDeclaration extends StyleDeclaration permits InternalInstruction {}
+      """
+    );
   }
 
   @Test
@@ -49,26 +89,21 @@ public class CssSelfGen02NumberTypeTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
+      import objectos.css.tmpl.BoxShadowDeclaration;
+      import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
         protected static final Selector any = StandardName.any;
 
-        protected final StyleDeclaration lineHeight(double value) {
-          declaration(Property.LINE_HEIGHT, value);
+        protected final BoxShadowDeclaration boxShadow(String value) {
+          Check.notNull(value, "value == null");
+          declaration(Property.BOX_SHADOW, value);
           return InternalInstruction.INSTANCE;
         }
 
-        protected final StyleDeclaration lineHeight(int value) {
-          declaration(Property.LINE_HEIGHT, value);
-          return InternalInstruction.INSTANCE;
-        }
-
-        abstract void declaration(Property name, int value);
-
-        abstract void declaration(Property name, double value);
+        abstract void declaration(Property name, String value);
       }
       """
     );

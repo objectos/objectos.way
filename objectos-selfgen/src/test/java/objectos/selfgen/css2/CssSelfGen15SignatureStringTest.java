@@ -51,7 +51,6 @@ public class CssSelfGen15SignatureStringTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.lang.Check;
@@ -66,18 +65,6 @@ public class CssSelfGen15SignatureStringTest {
           declaration(Property.LIST_STYLE_TYPE, value);
           return InternalInstruction.INSTANCE;
         }
-
-        abstract void declaration(Property name, PropertyValue value);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
-
-        abstract void declaration(Property name, int value);
-
-        abstract void declaration(Property name, double value);
 
         abstract void declaration(Property name, String value);
       }

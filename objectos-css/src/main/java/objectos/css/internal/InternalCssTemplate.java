@@ -359,6 +359,45 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
+  final void declaration(
+      Property name,
+      PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4,
+      PropertyValue value5) {
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(name);
+
+    api.propertyValue(value1);
+    api.propertyValue(value2);
+    api.propertyValue(value3);
+    api.propertyValue(value4);
+    api.propertyValue(value5);
+
+    api.declarationEnd();
+  }
+
+  @Override
+  final void declaration(
+      Property name,
+      PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4,
+      PropertyValue value5, PropertyValue value6) {
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(name);
+
+    api.propertyValue(value1);
+    api.propertyValue(value2);
+    api.propertyValue(value3);
+    api.propertyValue(value4);
+    api.propertyValue(value5);
+    api.propertyValue(value6);
+
+    api.declarationEnd();
+  }
+
+  @Override
   final Length length(double value, LengthUnit unit) {
     api().length(value, unit);
 

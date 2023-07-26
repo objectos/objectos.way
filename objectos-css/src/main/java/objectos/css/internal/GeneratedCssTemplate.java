@@ -1119,6 +1119,63 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration boxShadow(Length offsetX, Length offsetY, ColorValue color) {
+    Check.notNull(offsetX, "offsetX == null");
+    Check.notNull(offsetY, "offsetY == null");
+    Check.notNull(color, "color == null");
+    declaration(Property.BOX_SHADOW, offsetX, offsetY, color);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration boxShadow(Length offsetX, Length offsetY, Length blurRadius, ColorValue color) {
+    Check.notNull(offsetX, "offsetX == null");
+    Check.notNull(offsetY, "offsetY == null");
+    Check.notNull(blurRadius, "blurRadius == null");
+    Check.notNull(color, "color == null");
+    declaration(Property.BOX_SHADOW, offsetX, offsetY, blurRadius, color);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration boxShadow(Length offsetX, Length offsetY, Length blurRadius, Length spreadRadius, ColorValue color) {
+    Check.notNull(offsetX, "offsetX == null");
+    Check.notNull(offsetY, "offsetY == null");
+    Check.notNull(blurRadius, "blurRadius == null");
+    Check.notNull(spreadRadius, "spreadRadius == null");
+    Check.notNull(color, "color == null");
+    declaration(Property.BOX_SHADOW, offsetX, offsetY, blurRadius, spreadRadius, color);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration boxShadow(InsetKeyword inset, Length offsetX, Length offsetY, ColorValue color) {
+    Check.notNull(inset, "inset == null");
+    Check.notNull(offsetX, "offsetX == null");
+    Check.notNull(offsetY, "offsetY == null");
+    Check.notNull(color, "color == null");
+    declaration(Property.BOX_SHADOW, inset, offsetX, offsetY, color);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration boxShadow(InsetKeyword inset, Length offsetX, Length offsetY, Length blurRadius, ColorValue color) {
+    Check.notNull(inset, "inset == null");
+    Check.notNull(offsetX, "offsetX == null");
+    Check.notNull(offsetY, "offsetY == null");
+    Check.notNull(blurRadius, "blurRadius == null");
+    Check.notNull(color, "color == null");
+    declaration(Property.BOX_SHADOW, inset, offsetX, offsetY, blurRadius, color);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration boxShadow(InsetKeyword inset, Length offsetX, Length offsetY, Length blurRadius, Length spreadRadius, ColorValue color) {
+    Check.notNull(inset, "inset == null");
+    Check.notNull(offsetX, "offsetX == null");
+    Check.notNull(offsetY, "offsetY == null");
+    Check.notNull(blurRadius, "blurRadius == null");
+    Check.notNull(spreadRadius, "spreadRadius == null");
+    Check.notNull(color, "color == null");
+    declaration(Property.BOX_SHADOW, inset, offsetX, offsetY, blurRadius, spreadRadius, color);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration boxSizing(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BOX_SIZING, value);
@@ -2017,6 +2074,10 @@ abstract class GeneratedCssTemplate {
   abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
   abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
+
+  abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4, PropertyValue value5);
+
+  abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4, PropertyValue value5, PropertyValue value6);
 
   abstract void declaration(Property name, int value);
 

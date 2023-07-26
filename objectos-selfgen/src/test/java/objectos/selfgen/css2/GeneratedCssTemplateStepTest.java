@@ -130,12 +130,6 @@ public class GeneratedCssTemplateStepTest {
         abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
 
         abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
-
-        abstract void declaration(Property name, int value);
-
-        abstract void declaration(Property name, double value);
-
-        abstract void declaration(Property name, String value);
       }
       """
     );
@@ -166,7 +160,6 @@ public class GeneratedCssTemplateStepTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.PseudoElementSelector;
       import objectos.css.om.Selector;
       import objectos.css.om.TypeSelector;
@@ -183,20 +176,6 @@ public class GeneratedCssTemplateStepTest {
         protected static final TypeSelector pre = StandardTypeSelector.pre;
 
         protected static final Selector any = StandardName.any;
-
-        abstract void declaration(Property name, PropertyValue value);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
-
-        abstract void declaration(Property name, int value);
-
-        abstract void declaration(Property name, double value);
-
-        abstract void declaration(Property name, String value);
       }
       """
     );
@@ -326,18 +305,6 @@ public class GeneratedCssTemplateStepTest {
         }
 
         abstract void declaration(Property name, PropertyValue value);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
-
-        abstract void declaration(Property name, int value);
-
-        abstract void declaration(Property name, double value);
-
-        abstract void declaration(Property name, String value);
       }
       """
     );

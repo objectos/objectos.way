@@ -66,6 +66,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     spec.write(sink, new ColorValueStep());
 
+    spec.write(sink, new DeclarationInterfaceStep());
+
     spec.write(sink, new GeneratedColorStep());
 
     spec.write(sink, new GeneratedCssTemplateStep());
@@ -242,7 +244,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   protected final Property property(
       String propertyName, Signature... signatures) {
-    var property = properties.computeIfAbsent(propertyName, Property::of);
+    Property property;
+    property = properties.computeIfAbsent(propertyName, Property::of);
 
     for (var signature : signatures) {
       property.addSignature(signature);
@@ -388,6 +391,36 @@ public abstract class CssSelfGen extends CompiledSpec {
       type2.typeName(), name2,
       type3.typeName(), name3,
       type4.typeName(), name4);
+  }
+
+  protected final Signature sig(
+      ParameterType type1, String name1,
+      ParameterType type2, String name2,
+      ParameterType type3, String name3,
+      ParameterType type4, String name4,
+      ParameterType type5, String name5) {
+    return new Signature5(
+      type1.typeName(), name1,
+      type2.typeName(), name2,
+      type3.typeName(), name3,
+      type4.typeName(), name4,
+      type5.typeName(), name5);
+  }
+
+  protected final Signature sig(
+      ParameterType type1, String name1,
+      ParameterType type2, String name2,
+      ParameterType type3, String name3,
+      ParameterType type4, String name4,
+      ParameterType type5, String name5,
+      ParameterType type6, String name6) {
+    return new Signature6(
+      type1.typeName(), name1,
+      type2.typeName(), name2,
+      type3.typeName(), name3,
+      type4.typeName(), name4,
+      type5.typeName(), name5,
+      type6.typeName(), name6);
   }
 
   protected final Signature sigVar(

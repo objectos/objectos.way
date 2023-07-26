@@ -57,7 +57,6 @@ public class CssSelfGen09StringLiteralTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
       import objectos.css.tmpl.FontFamilyValue;
@@ -72,20 +71,6 @@ public class CssSelfGen09StringLiteralTest {
         protected static final FontFamilyValue sansSerif = StandardName.sansSerif;
 
         protected abstract StyleDeclaration fontFamily(FontFamilyValue... values);
-
-        abstract void declaration(Property name, PropertyValue value);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3);
-
-        abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
-
-        abstract void declaration(Property name, int value);
-
-        abstract void declaration(Property name, double value);
-
-        abstract void declaration(Property name, String value);
       }
       """
     );

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import objectos.selfgen.css2.ColorValue;
 import objectos.selfgen.css2.CssSelfGen;
+import objectos.selfgen.css2.KeywordName;
 import objectos.selfgen.css2.LengthType;
 import objectos.selfgen.css2.PercentageType;
 import objectos.selfgen.css2.SelectorKind;
@@ -209,49 +210,15 @@ public final class CssSpec extends CssSelfGen {
 
     // B
 
-    var borderCollapseVale = t("BorderCollapseValue",
-      keywords("collapse", "separate")
-    );
-
-    var bottomValue = t("BottomValue",
-      k("auto"),
-      lengthPercentage
-    );
-
-    var lineStyle = t("LineStyle",
-      keywords(
-        "dashed", "dotted", "double",
-        "groove", "hidden",
-        "inset",
-        "none",
-        "outset",
-        "ridge", "solid"
-      )
-    );
-
     backgroundColor();
     backgroundImage();
+    borderCollapse();
+    borderColor();
+    borderStyle();
     borderWidth();
-
-    pval("border-collapse", globalKeyword);
-    pval("border-collapse", borderCollapseVale);
-
-    pval("border-color", globalKeyword);
-    pbox("border-color", color);
-
-    pval("bottom", globalKeyword);
-    pval("bottom", bottomValue);
-
-    pval("box-shadow", globalKeyword);
-    pval("box-shadow", k("none"));
-
-    pval("box-sizing", globalKeyword);
-    pval("box-sizing", t("BoxSizingValue",
-      keywords("border-box", "content-box")
-    ));
-
-    pval("border-style", globalKeyword);
-    pbox("border-style", lineStyle);
+    bottom();
+    boxShadow();
+    boxSizing();
 
     // C
 
@@ -417,6 +384,61 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
+  private void borderCollapse() {
+    var borderCollapseValue = t(
+      "BorderCollapseValue",
+
+      k("collapse"),
+      k("separate")
+    );
+
+    property(
+      "border-collapse",
+
+      sig(globalKeyword, "value"),
+      sig(borderCollapseValue, "value")
+    );
+  }
+
+  private void borderColor() {
+    property(
+      "border-color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "all"),
+      sig(color, "vertical", color, "horizontal"),
+      sig(color, "top", color, "horizontal", color, "bottom"),
+      sig(color, "top", color, "right", color, "bottom", color, "left")
+    );
+  }
+
+  private void borderStyle() {
+    var lineStyle = t(
+      "LineStyle",
+
+      k("dashed"),
+      k("dotted"),
+      k("double"),
+      k("groove"),
+      k("hidden"),
+      k("inset"),
+      k("none"),
+      k("outset"),
+      k("ridge"),
+      k("solid")
+    );
+
+    property(
+      "border-style",
+
+      sig(globalKeyword, "value"),
+      sig(lineStyle, "all"),
+      sig(lineStyle, "vertical", lineStyle, "horizontal"),
+      sig(lineStyle, "top", lineStyle, "horizontal", lineStyle, "bottom"),
+      sig(lineStyle, "top", lineStyle, "right", lineStyle, "bottom", lineStyle, "left")
+    );
+  }
+
   private void borderWidth() {
     var lineWidth = t(
       "LineWidth",
@@ -452,6 +474,95 @@ public final class CssSpec extends CssSelfGen {
       sig(lineWidth, "vertical", lineWidth, "horizontal"),
       sig(lineWidth, "top", lineWidth, "horizontal", lineWidth, "bottom"),
       sig(lineWidth, "top", lineWidth, "right", lineWidth, "bottom", lineWidth, "left")
+    );
+  }
+
+  private void bottom() {
+    var bottomValue = t(
+      "BottomValue",
+      k("auto"),
+      lengthPercentage
+    );
+
+    property(
+      "bottom",
+
+      sig(globalKeyword, "value"),
+      sig(bottomValue, "value")
+    );
+  }
+
+  private void boxShadow() {
+    KeywordName inset;
+    inset = k("inset");
+
+    property(
+      "box-shadow",
+
+      sig(globalKeyword, "value"),
+      
+      sig(k("none"), "value"),
+
+      sig(
+        length, "offsetX",
+        length, "offsetY",
+        color, "color"
+      ),
+
+      sig(
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        color, "color"
+      ),
+
+      sig(
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        length, "spreadRadius",
+        color, "color"
+      ),
+
+      sig(
+        inset, "inset",
+        length, "offsetX",
+        length, "offsetY",
+        color, "color"
+      ),
+
+      sig(
+        inset, "inset",
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        color, "color"
+      ),
+
+      sig(
+        inset, "inset",
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        length, "spreadRadius",
+        color, "color"
+      )
+    );
+  }
+
+  private void boxSizing() {
+    ValueType boxSizingValue = t(
+      "BoxSizingValue",
+
+      k("border-box"),
+      k("content-box")
+    );
+
+    property(
+      "box-sizing",
+
+      sig(globalKeyword, "value"),
+      sig(boxSizingValue, "value")
     );
   }
 

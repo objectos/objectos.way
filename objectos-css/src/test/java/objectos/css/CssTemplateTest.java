@@ -406,7 +406,13 @@ public class CssTemplateTest {
             _mozUiInvalid,
 
             boxShadow(none),
-            boxShadow(inherit)
+            boxShadow(inherit),
+            boxShadow(px(60), px(-16), teal),
+            boxShadow(px(10), px(5), px(5), black),
+            boxShadow(px(2), px(2), px(2), px(1), aqua),
+            boxShadow(inset, px(60), px(-16), teal),
+            boxShadow(inset, px(10), px(5), px(5), black),
+            boxShadow(inset, px(2), px(2), px(2), px(1), aqua)
           );
         }
       },
@@ -415,6 +421,12 @@ public class CssTemplateTest {
       :-moz-ui-invalid {
         box-shadow: none;
         box-shadow: inherit;
+        box-shadow: 60px -16px teal;
+        box-shadow: 10px 5px 5px black;
+        box-shadow: 2px 2px 2px 1px aqua;
+        box-shadow: inset 60px -16px teal;
+        box-shadow: inset 10px 5px 5px black;
+        box-shadow: inset 2px 2px 2px 1px aqua;
       }
       """
     );

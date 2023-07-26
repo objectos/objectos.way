@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import objectos.code.ClassTypeName;
 import objectos.selfgen.util.JavaNames;
 import objectos.util.GrowableList;
 
@@ -30,11 +31,15 @@ final class Property {
   static final Comparator<? super Property> ORDER_BY_METHOD_NAME
       = (self, that) -> self.methodName.compareTo(that.methodName);
 
-  public final String propertyName;
+  final String propertyName;
 
-  public final String methodName;
+  final String methodName;
 
-  public final String constantName;
+  final String constantName;
+
+  ClassTypeName declarationClassName = ThisTemplate.STYLE_DECLARATION;
+
+  ClassTypeName hashClassName;
 
   private final List<Signature> signatures = new GrowableList<>();
 
@@ -45,24 +50,46 @@ final class Property {
   }
 
   public static Property of(String name) {
-    var propertyName = Objects.requireNonNull(name, "name == null");
+    String propertyName;
+    propertyName = Objects.requireNonNull(name, "name == null");
 
-    var methodName = JavaNames.toValidMethodName(propertyName);
+    String methodName;
+    methodName = JavaNames.toValidMethodName(propertyName);
 
-    var constantName = propertyName.replace('-', '_').toUpperCase(Locale.US);
+    String constantName;
+    constantName = propertyName.replace('-', '_').toUpperCase(Locale.US);
 
     return new Property(propertyName, methodName, constantName);
   }
 
-  public final void addSignature(Signature signature) {
+  public final Property asHashProperty() {
+    String simpleName;
+    simpleName = JavaNames.toValidClassName(propertyName);
+
+    declarationClassName = ClassTypeName.of(
+      ThisTemplate.CSS_TMPL, simpleName + "Declaration"
+    );
+
+    hashClassName = ClassTypeName.of(
+      ThisTemplate.CSS_TMPL, simpleName + "HashDeclaration"
+    );
+
+    return this;
+  }
+
+  final void addSignature(Signature signature) {
     signatures.add(signature);
   }
 
-  public final Iterable<Signature> signatures() {
+  final boolean isHash() {
+    return hashClassName != null;
+  }
+
+  final Iterable<Signature> signatures() {
     return signatures;
   }
 
-  public final void value(ParameterType parameterType) {
+  final void value(ParameterType parameterType) {
     signatures.add(
       new Signature1(parameterType.typeName(), "value")
     );
