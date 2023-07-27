@@ -19,4 +19,4 @@ import objectos.css.internal.InternalZero;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface Zero extends Length, Percentage permits InternalZero {}
+public sealed interface Zero extends LengthValue, Percentage permits InternalZero {}

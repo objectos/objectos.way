@@ -28,4 +28,4 @@ public sealed interface LengthPercentage extends
     MaxHeightOrWidthValue,
     TextDecorationThicknessValue,
     TopValue,
-    VerticalAlignValue permits Length, Percentage {}
+    VerticalAlignValue permits LengthValue, Percentage {}

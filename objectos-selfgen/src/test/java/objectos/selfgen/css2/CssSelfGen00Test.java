@@ -87,7 +87,7 @@ public class CssSelfGen00Test {
     );
 
     assertEquals(
-      result.get("objectos/css/tmpl/Length.java"),
+      result.get("objectos/css/tmpl/LengthValue.java"),
       """
       package objectos.css.tmpl;
 
@@ -95,7 +95,7 @@ public class CssSelfGen00Test {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface Length extends
+      public sealed interface LengthValue extends
           LineWidth permits InternalInstruction, Zero {}
       """
     );
@@ -110,7 +110,7 @@ public class CssSelfGen00Test {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LineWidth extends PropertyValue permits Length, StandardName {}
+      public sealed interface LineWidth extends PropertyValue permits LengthValue, StandardName {}
       """
     );
 
@@ -123,7 +123,7 @@ public class CssSelfGen00Test {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface Zero extends Length permits InternalZero {}
+      public sealed interface Zero extends LengthValue permits InternalZero {}
       """
     );
   }

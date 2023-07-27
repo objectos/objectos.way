@@ -58,7 +58,7 @@ public class GeneratedCssTemplateStepTest {
       import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.Length;
+      import objectos.css.tmpl.LengthValue;
       import objectos.css.tmpl.LineWidth;
       import objectos.lang.Check;
       import objectos.lang.Generated;
@@ -73,25 +73,25 @@ public class GeneratedCssTemplateStepTest {
 
         protected static final LineWidth thin = StandardName.thin;
 
-        protected final Length em(double value) {
+        protected final LengthValue em(double value) {
           return length(value, LengthUnit.EM);
         }
 
-        protected final Length em(int value) {
+        protected final LengthValue em(int value) {
           return length(value, LengthUnit.EM);
         }
 
-        protected final Length px(double value) {
+        protected final LengthValue px(double value) {
           return length(value, LengthUnit.PX);
         }
 
-        protected final Length px(int value) {
+        protected final LengthValue px(int value) {
           return length(value, LengthUnit.PX);
         }
 
-        abstract Length length(double value, LengthUnit unit);
+        abstract LengthValue length(double value, LengthUnit unit);
 
-        abstract Length length(int value, LengthUnit unit);
+        abstract LengthValue length(int value, LengthUnit unit);
 
         protected final StyleDeclaration borderWidth(LineWidth all) {
           Check.notNull(all, "all == null");
@@ -242,7 +242,7 @@ public class GeneratedCssTemplateStepTest {
       import objectos.css.om.TypeSelector;
       import objectos.css.tmpl.ColorValue;
       import objectos.css.tmpl.GlobalKeyword;
-      import objectos.css.tmpl.Length;
+      import objectos.css.tmpl.LengthValue;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -272,25 +272,25 @@ public class GeneratedCssTemplateStepTest {
 
         protected static final GlobalKeyword unset = StandardName.unset;
 
-        protected final Length em(double value) {
+        protected final LengthValue em(double value) {
           return length(value, LengthUnit.EM);
         }
 
-        protected final Length em(int value) {
+        protected final LengthValue em(int value) {
           return length(value, LengthUnit.EM);
         }
 
-        protected final Length px(double value) {
+        protected final LengthValue px(double value) {
           return length(value, LengthUnit.PX);
         }
 
-        protected final Length px(int value) {
+        protected final LengthValue px(int value) {
           return length(value, LengthUnit.PX);
         }
 
-        abstract Length length(double value, LengthUnit unit);
+        abstract LengthValue length(double value, LengthUnit unit);
 
-        abstract Length length(int value, LengthUnit unit);
+        abstract LengthValue length(int value, LengthUnit unit);
 
         protected final StyleDeclaration borderColor(GlobalKeyword value) {
           Check.notNull(value, "value == null");

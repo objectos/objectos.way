@@ -30,7 +30,7 @@ import objectos.css.tmpl.BoxShadowDeclaration;
 import objectos.css.tmpl.BoxShadowHashDeclaration;
 import objectos.css.tmpl.ColorValue;
 import objectos.css.tmpl.FontFamilyValue;
-import objectos.css.tmpl.Length;
+import objectos.css.tmpl.LengthValue;
 import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.Url;
@@ -202,7 +202,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.mediaRuleEnd();
   }
 
-  protected final MediaFeatureOrStyleDeclaration minWidth(Length value) {
+  protected final MediaFeatureOrStyleDeclaration minWidth(LengthValue value) {
     Check.notNull(value, "value == null");
 
     declaration(Property.MIN_WIDTH, value);
@@ -453,14 +453,14 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   }
 
   @Override
-  final Length length(double value, LengthUnit unit) {
+  final LengthValue length(double value, LengthUnit unit) {
     api().length(value, unit);
 
     return InternalInstruction.LENGTH_DOUBLE;
   }
 
   @Override
-  final Length length(int value, LengthUnit unit) {
+  final LengthValue length(int value, LengthUnit unit) {
     api().length(value, unit);
 
     return InternalInstruction.LENGTH_INT;

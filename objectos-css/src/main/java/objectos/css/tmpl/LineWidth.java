@@ -20,4 +20,4 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public sealed interface LineWidth extends
-    OutlineValue permits Length, MediumKeyword, StandardName {}
+    OutlineValue permits LengthValue, MediumKeyword, StandardName {}

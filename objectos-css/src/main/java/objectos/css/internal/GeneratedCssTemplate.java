@@ -65,8 +65,8 @@ import objectos.css.tmpl.InsetKeyword;
 import objectos.css.tmpl.JustifyContentPosition;
 import objectos.css.tmpl.JustifyContentValue;
 import objectos.css.tmpl.LeftKeyword;
-import objectos.css.tmpl.Length;
 import objectos.css.tmpl.LengthPercentage;
+import objectos.css.tmpl.LengthValue;
 import objectos.css.tmpl.LetterSpacingValue;
 import objectos.css.tmpl.LineHeightValue;
 import objectos.css.tmpl.LineStyle;
@@ -768,129 +768,129 @@ abstract class GeneratedCssTemplate {
 
   protected static final CursorValue zoomOut = StandardName.zoomOut;
 
-  protected final Length ch(double value) {
+  protected final LengthValue ch(double value) {
     return length(value, LengthUnit.CH);
   }
 
-  protected final Length ch(int value) {
+  protected final LengthValue ch(int value) {
     return length(value, LengthUnit.CH);
   }
 
-  protected final Length cm(double value) {
+  protected final LengthValue cm(double value) {
     return length(value, LengthUnit.CM);
   }
 
-  protected final Length cm(int value) {
+  protected final LengthValue cm(int value) {
     return length(value, LengthUnit.CM);
   }
 
-  protected final Length em(double value) {
+  protected final LengthValue em(double value) {
     return length(value, LengthUnit.EM);
   }
 
-  protected final Length em(int value) {
+  protected final LengthValue em(int value) {
     return length(value, LengthUnit.EM);
   }
 
-  protected final Length ex(double value) {
+  protected final LengthValue ex(double value) {
     return length(value, LengthUnit.EX);
   }
 
-  protected final Length ex(int value) {
+  protected final LengthValue ex(int value) {
     return length(value, LengthUnit.EX);
   }
 
-  protected final Length in(double value) {
+  protected final LengthValue in(double value) {
     return length(value, LengthUnit.IN);
   }
 
-  protected final Length in(int value) {
+  protected final LengthValue in(int value) {
     return length(value, LengthUnit.IN);
   }
 
-  protected final Length mm(double value) {
+  protected final LengthValue mm(double value) {
     return length(value, LengthUnit.MM);
   }
 
-  protected final Length mm(int value) {
+  protected final LengthValue mm(int value) {
     return length(value, LengthUnit.MM);
   }
 
-  protected final Length pc(double value) {
+  protected final LengthValue pc(double value) {
     return length(value, LengthUnit.PC);
   }
 
-  protected final Length pc(int value) {
+  protected final LengthValue pc(int value) {
     return length(value, LengthUnit.PC);
   }
 
-  protected final Length pt(double value) {
+  protected final LengthValue pt(double value) {
     return length(value, LengthUnit.PT);
   }
 
-  protected final Length pt(int value) {
+  protected final LengthValue pt(int value) {
     return length(value, LengthUnit.PT);
   }
 
-  protected final Length px(double value) {
+  protected final LengthValue px(double value) {
     return length(value, LengthUnit.PX);
   }
 
-  protected final Length px(int value) {
+  protected final LengthValue px(int value) {
     return length(value, LengthUnit.PX);
   }
 
-  protected final Length q(double value) {
+  protected final LengthValue q(double value) {
     return length(value, LengthUnit.Q);
   }
 
-  protected final Length q(int value) {
+  protected final LengthValue q(int value) {
     return length(value, LengthUnit.Q);
   }
 
-  protected final Length rem(double value) {
+  protected final LengthValue rem(double value) {
     return length(value, LengthUnit.REM);
   }
 
-  protected final Length rem(int value) {
+  protected final LengthValue rem(int value) {
     return length(value, LengthUnit.REM);
   }
 
-  protected final Length vh(double value) {
+  protected final LengthValue vh(double value) {
     return length(value, LengthUnit.VH);
   }
 
-  protected final Length vh(int value) {
+  protected final LengthValue vh(int value) {
     return length(value, LengthUnit.VH);
   }
 
-  protected final Length vmax(double value) {
+  protected final LengthValue vmax(double value) {
     return length(value, LengthUnit.VMAX);
   }
 
-  protected final Length vmax(int value) {
+  protected final LengthValue vmax(int value) {
     return length(value, LengthUnit.VMAX);
   }
 
-  protected final Length vmin(double value) {
+  protected final LengthValue vmin(double value) {
     return length(value, LengthUnit.VMIN);
   }
 
-  protected final Length vmin(int value) {
+  protected final LengthValue vmin(int value) {
     return length(value, LengthUnit.VMIN);
   }
 
-  protected final Length vw(double value) {
+  protected final LengthValue vw(double value) {
     return length(value, LengthUnit.VW);
   }
 
-  protected final Length vw(int value) {
+  protected final LengthValue vw(int value) {
     return length(value, LengthUnit.VW);
   }
 
-  abstract Length length(double value, LengthUnit unit);
+  abstract LengthValue length(double value, LengthUnit unit);
 
-  abstract Length length(int value, LengthUnit unit);
+  abstract LengthValue length(int value, LengthUnit unit);
 
   protected final StyleDeclaration appearance(GlobalKeyword value) {
     Check.notNull(value, "value == null");
@@ -1120,7 +1120,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final BoxShadowDeclaration boxShadow(Length offsetX, Length offsetY, ColorValue color) {
+  protected final BoxShadowDeclaration boxShadow(LengthValue offsetX, LengthValue offsetY, ColorValue color) {
     Check.notNull(offsetX, "offsetX == null");
     Check.notNull(offsetY, "offsetY == null");
     Check.notNull(color, "color == null");
@@ -1128,7 +1128,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final BoxShadowDeclaration boxShadow(Length offsetX, Length offsetY, Length blurRadius, ColorValue color) {
+  protected final BoxShadowDeclaration boxShadow(LengthValue offsetX, LengthValue offsetY, LengthValue blurRadius, ColorValue color) {
     Check.notNull(offsetX, "offsetX == null");
     Check.notNull(offsetY, "offsetY == null");
     Check.notNull(blurRadius, "blurRadius == null");
@@ -1137,7 +1137,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final BoxShadowDeclaration boxShadow(Length offsetX, Length offsetY, Length blurRadius, Length spreadRadius, ColorValue color) {
+  protected final BoxShadowDeclaration boxShadow(LengthValue offsetX, LengthValue offsetY, LengthValue blurRadius, LengthValue spreadRadius, ColorValue color) {
     Check.notNull(offsetX, "offsetX == null");
     Check.notNull(offsetY, "offsetY == null");
     Check.notNull(blurRadius, "blurRadius == null");
@@ -1147,7 +1147,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final BoxShadowDeclaration boxShadow(InsetKeyword inset, Length offsetX, Length offsetY, ColorValue color) {
+  protected final BoxShadowDeclaration boxShadow(InsetKeyword inset, LengthValue offsetX, LengthValue offsetY, ColorValue color) {
     Check.notNull(inset, "inset == null");
     Check.notNull(offsetX, "offsetX == null");
     Check.notNull(offsetY, "offsetY == null");
@@ -1156,7 +1156,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final BoxShadowDeclaration boxShadow(InsetKeyword inset, Length offsetX, Length offsetY, Length blurRadius, ColorValue color) {
+  protected final BoxShadowDeclaration boxShadow(InsetKeyword inset, LengthValue offsetX, LengthValue offsetY, LengthValue blurRadius, ColorValue color) {
     Check.notNull(inset, "inset == null");
     Check.notNull(offsetX, "offsetX == null");
     Check.notNull(offsetY, "offsetY == null");
@@ -1166,7 +1166,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final BoxShadowDeclaration boxShadow(InsetKeyword inset, Length offsetX, Length offsetY, Length blurRadius, Length spreadRadius, ColorValue color) {
+  protected final BoxShadowDeclaration boxShadow(InsetKeyword inset, LengthValue offsetX, LengthValue offsetY, LengthValue blurRadius, LengthValue spreadRadius, ColorValue color) {
     Check.notNull(inset, "inset == null");
     Check.notNull(offsetX, "offsetX == null");
     Check.notNull(offsetY, "offsetY == null");
@@ -1630,7 +1630,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final StyleDeclaration mozTabSize(Length value) {
+  protected final StyleDeclaration mozTabSize(LengthValue value) {
     Check.notNull(value, "value == null");
     declaration(Property._MOZ_TAB_SIZE, value);
     return InternalInstruction.INSTANCE;
@@ -1703,7 +1703,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final StyleDeclaration outlineOffset(Length value) {
+  protected final StyleDeclaration outlineOffset(LengthValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.OUTLINE_OFFSET, value);
     return InternalInstruction.INSTANCE;
@@ -1852,7 +1852,7 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final StyleDeclaration tabSize(Length value) {
+  protected final StyleDeclaration tabSize(LengthValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.TAB_SIZE, value);
     return InternalInstruction.INSTANCE;

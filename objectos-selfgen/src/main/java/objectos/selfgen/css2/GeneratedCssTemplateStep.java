@@ -188,7 +188,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
           for (var primitive : primitives) {
             method(
-              PROTECTED, FINAL, LENGTH, name(unit),
+              PROTECTED, FINAL, LENGTH_VALUE, name(unit),
               parameter(primitive, name("value")),
               p(RETURN, v("length"), argument(n("value")), argument(LENGTH_UNIT, n(enumName)))
             );
@@ -197,7 +197,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
     for (var primitive : primitives) {
       method(
-        ABSTRACT, LENGTH, name("length"),
+        ABSTRACT, LENGTH_VALUE, name("length"),
         parameter(primitive, name("value")),
         parameter(LENGTH_UNIT, name("unit"))
       );

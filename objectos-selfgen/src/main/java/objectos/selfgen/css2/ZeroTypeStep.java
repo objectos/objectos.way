@@ -47,7 +47,7 @@ final class ZeroTypeStep extends ThisTemplate {
 
   private void interfaces() {
     if (zeroType.lengthType) {
-      extendsClause(LENGTH);
+      extendsClause(LENGTH_VALUE);
     }
 
     if (zeroType.percentageType) {

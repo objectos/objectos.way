@@ -19,6 +19,6 @@ import objectos.css.internal.InternalInstruction;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public sealed interface Length extends
+public sealed interface LengthValue extends
     LengthPercentage,
     LineWidth permits InternalInstruction, Zero {}

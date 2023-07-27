@@ -34,12 +34,12 @@ public final class LengthType implements ParameterType, Value {
   public final void addValueType(ValueType valueType) {
     interfaces.add(valueType.className);
 
-    valueType.addPermitted(ThisTemplate.LENGTH);
+    valueType.addPermitted(ThisTemplate.LENGTH_VALUE);
   }
 
   @Override
   public final TypeName typeName() {
-    return ThisTemplate.LENGTH;
+    return ThisTemplate.LENGTH_VALUE;
   }
 
 }

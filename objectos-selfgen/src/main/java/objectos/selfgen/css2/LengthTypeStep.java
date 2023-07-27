@@ -31,7 +31,7 @@ final class LengthTypeStep extends ThisTemplate {
 
     interfaceDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
-      PUBLIC, SEALED, name(LENGTH),
+      PUBLIC, SEALED, name(LENGTH_VALUE),
       include(this::interfaces),
       permitsClause(INTERNAL_INSTRUCTION, ZERO)
     );
