@@ -38,11 +38,13 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final String GENERATOR = CssSpec.class.getCanonicalName();
 
+  static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_TMPL, "PropertyValue");
+
   static final ClassTypeName CHECK = ClassTypeName.of(Check.class);
 
   static final ClassTypeName COLOR = ClassTypeName.of(CSS_UTIL, "Color");
 
-  static final ClassTypeName COLOR_VALUE = ClassTypeName.of(CSS_TMPL, "ColorValue");
+  static final ClassTypeName COLOR_VALUE = ClassTypeName.of(PROPERTY_VALUE, "ColorValue");
 
   static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);
 
@@ -52,21 +54,22 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName INTERNAL_ZERO
       = ClassTypeName.of(CSS_INTERNAL, "InternalZero");
 
+  static final ClassTypeName KEYWORD_INSTRUCTION
+      = ClassTypeName.of(PROPERTY_VALUE, "KeywordInstruction");
+
   static final ClassTypeName LENGTH_UNIT = ClassTypeName.of(CSS_INTERNAL, "LengthUnit");
 
-  static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(CSS_TMPL, "LengthValue");
+  static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(PROPERTY_VALUE, "LengthValue");
 
   static final ClassTypeName OBJECTS = ClassTypeName.of(Objects.class);
 
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
 
-  static final ClassTypeName PERCENTAGE = ClassTypeName.of(CSS_TMPL, "Percentage");
+  static final ClassTypeName PERCENTAGE_VALUE = ClassTypeName.of(PROPERTY_VALUE, "PercentageValue");
 
   static final ClassTypeName PROPERTY = ClassTypeName.of(CSS_INTERNAL, "Property");
 
   static final ClassTypeName PROPERTY_NAME = ClassTypeName.of(CSS_OM, "PropertyName");
-
-  static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_OM, "PropertyValue");
 
   static final ClassTypeName PSEUDO_CLASS_SELECTOR
       = ClassTypeName.of(CSS_OM, "PseudoClassSelector");
@@ -89,36 +92,18 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
-  static final ClassTypeName STRING_LITERAL = ClassTypeName.of(CSS_TMPL, "StringLiteral");
+  static final ClassTypeName STRING_LITERAL = ClassTypeName.of(PROPERTY_VALUE, "StringLiteral");
 
   static final ClassTypeName STYLE_DECLARATION = ClassTypeName.of(CSS_OM, "StyleDeclaration");
 
-  static final ClassTypeName STYLE_DECLARATION1
-      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration1");
-
-  static final ClassTypeName STYLE_DECLARATION2
-      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration2");
-
-  static final ClassTypeName STYLE_DECLARATION3
-      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration3");
-
-  static final ClassTypeName STYLE_DECLARATION4
-      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclaration4");
-
-  static final ClassTypeName STYLE_DECLARATION_DOUBLE
-      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationDouble");
-
-  static final ClassTypeName STYLE_DECLARATION_INT
-      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationInt");
-
-  static final ClassTypeName STYLE_DECLARATION_STRING
-      = ClassTypeName.of(CSS_INTERNAL, "StyleDeclarationString");
-
   static final ClassTypeName TYPE_SELECTOR = ClassTypeName.of(CSS_OM, "TypeSelector");
 
-  static final ClassTypeName URL = ClassTypeName.of(CSS_TMPL, "Url");
+  static final ClassTypeName URL = ClassTypeName.of(PROPERTY_VALUE, "Url");
 
-  static final ClassTypeName ZERO = ClassTypeName.of(CSS_TMPL, "Zero");
+  static final ClassTypeName VALUE_INSTRUCTION
+      = ClassTypeName.of(PROPERTY_VALUE, "ValueInstruction");
+
+  static final ClassTypeName ZERO = ClassTypeName.of(PROPERTY_VALUE, "Zero");
 
   CompiledSpec spec;
 

@@ -15,6 +15,7 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Optional;
 import objectos.code.ArrayTypeName;
 
 final class StandardNameStep extends ThisTemplate {
@@ -72,15 +73,23 @@ final class StandardNameStep extends ThisTemplate {
 
     implementsClause(COLOR_VALUE);
 
-    spec.valueTypes().stream()
+    Optional<ValueType> maybeValues;
+    maybeValues = spec.valueTypes().stream()
         .filter(ValueType::permitsStandardName)
-        .sorted(ValueType.ORDER_BY_SIMPLE_NAME)
-        .forEach(type -> implementsClause(NL, type.className));
+        .findAny();
 
-    spec.keywords().stream()
+    if (maybeValues.isPresent()) {
+      implementsClause(VALUE_INSTRUCTION);
+    }
+
+    Optional<KeywordName> maybeKeywords;
+    maybeKeywords = spec.keywords().stream()
         .filter(KeywordName::shouldGenerate)
-        .sorted(KeywordName.ORDER_BY_SIMPLE_NAME)
-        .forEach(kw -> implementsClause(NL, kw.className()));
+        .findAny();
+
+    if (maybeKeywords.isPresent()) {
+      implementsClause(KEYWORD_INSTRUCTION);
+    }
   }
 
   private void selectors() {

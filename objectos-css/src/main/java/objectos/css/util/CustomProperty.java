@@ -15,7 +15,7 @@
  */
 package objectos.css.util;
 
-import objectos.css.om.PropertyValue;
+import objectos.css.tmpl.PropertyValue;
 
 public class CustomProperty<T extends PropertyValue> {
 

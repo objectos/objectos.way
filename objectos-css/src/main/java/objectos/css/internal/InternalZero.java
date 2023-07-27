@@ -15,7 +15,7 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.Zero;
+import objectos.css.tmpl.PropertyValue.Zero;
 
 public enum InternalZero implements Zero {
 

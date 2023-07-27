@@ -26,8 +26,6 @@ public final class UrlType implements ParameterType, Value {
   @Override
   public final void addValueType(ValueType valueType) {
     interfaces.add(valueType.className);
-
-    valueType.addPermitted(ThisTemplate.URL);
   }
 
   @Override

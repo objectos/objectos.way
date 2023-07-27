@@ -21,11 +21,11 @@ import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.tmpl.BoxShadowDeclaration;
 import objectos.css.tmpl.BoxShadowHashDeclaration;
-import objectos.css.tmpl.ColorValue;
-import objectos.css.tmpl.LengthValue;
-import objectos.css.tmpl.Percentage;
-import objectos.css.tmpl.StringLiteral;
-import objectos.css.tmpl.Url;
+import objectos.css.tmpl.PropertyValue.ColorValue;
+import objectos.css.tmpl.PropertyValue.LengthValue;
+import objectos.css.tmpl.PropertyValue.PercentageValue;
+import objectos.css.tmpl.PropertyValue.StringLiteral;
+import objectos.css.tmpl.PropertyValue.Url;
 
 public enum InternalInstruction
     implements
@@ -34,7 +34,7 @@ public enum InternalInstruction
     ColorValue,
     LengthValue,
     MediaFeatureOrStyleDeclaration,
-    Percentage,
+    PercentageValue,
     Selector,
     StringLiteral,
     StyleDeclaration,

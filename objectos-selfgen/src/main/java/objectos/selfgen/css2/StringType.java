@@ -25,8 +25,6 @@ public final class StringType implements Value {
   @Override
   public final void addValueType(ValueType valueType) {
     interfaces.add(valueType.className);
-
-    valueType.addPermitted(ThisTemplate.STRING_LITERAL);
   }
 
 }

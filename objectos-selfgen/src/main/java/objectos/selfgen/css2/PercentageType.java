@@ -26,13 +26,11 @@ public final class PercentageType implements ParameterType, Value {
   @Override
   public final void addValueType(ValueType valueType) {
     interfaces.add(valueType.className);
-
-    valueType.addPermitted(ThisTemplate.PERCENTAGE);
   }
 
   @Override
   public final TypeName typeName() {
-    return ThisTemplate.PERCENTAGE;
+    return ThisTemplate.PERCENTAGE_VALUE;
   }
 
 }

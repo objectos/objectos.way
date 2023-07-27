@@ -74,13 +74,12 @@ public class StandardNameTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.tmpl.ColorValue;
-      import objectos.css.tmpl.GlobalKeyword;
+      import objectos.css.tmpl.PropertyValue.ColorValue;
+      import objectos.css.tmpl.PropertyValue.ValueInstruction;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public enum StandardName implements Selector, ColorValue,
-          GlobalKeyword {
+      public enum StandardName implements Selector, ColorValue, ValueInstruction {
         any("*"),
 
         currentcolor("currentcolor"),

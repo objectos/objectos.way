@@ -53,11 +53,11 @@ public class CssSelfGen12CustomSignatureTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.Percentage;
-      import objectos.css.tmpl.TextIndentValue;
+      import objectos.css.tmpl.PropertyValue;
+      import objectos.css.tmpl.PropertyValue.PercentageValue;
+      import objectos.css.tmpl.PropertyValue.TextIndentValue;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -69,20 +69,20 @@ public class CssSelfGen12CustomSignatureTest {
 
         protected static final TextIndentValue hanging = StandardName.hanging;
 
-        protected final StyleDeclaration textIndent(Percentage value) {
+        protected final StyleDeclaration textIndent(PercentageValue value) {
           Check.notNull(value, "value == null");
           declaration(Property.TEXT_INDENT, value);
           return InternalInstruction.INSTANCE;
         }
 
-        protected final StyleDeclaration textIndent(Percentage value1, TextIndentValue value2) {
+        protected final StyleDeclaration textIndent(PercentageValue value1, TextIndentValue value2) {
           Check.notNull(value1, "value1 == null");
           Check.notNull(value2, "value2 == null");
           declaration(Property.TEXT_INDENT, value1, value2);
           return InternalInstruction.INSTANCE;
         }
 
-        protected final StyleDeclaration textIndent(Percentage value1, TextIndentValue value2, TextIndentValue value3) {
+        protected final StyleDeclaration textIndent(PercentageValue value1, TextIndentValue value2, TextIndentValue value3) {
           Check.notNull(value1, "value1 == null");
           Check.notNull(value2, "value2 == null");
           Check.notNull(value3, "value3 == null");

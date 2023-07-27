@@ -68,10 +68,10 @@ public class CssSelfGen01JavaKeywordNameClashTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.LineStyle;
+      import objectos.css.tmpl.PropertyValue;
+      import objectos.css.tmpl.PropertyValue.LineStyle;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 

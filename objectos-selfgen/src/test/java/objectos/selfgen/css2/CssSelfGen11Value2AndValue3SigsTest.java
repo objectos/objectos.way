@@ -57,11 +57,11 @@ public class CssSelfGen11Value2AndValue3SigsTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.TextDecorationLineMultiValue;
-      import objectos.css.tmpl.TextDecorationLineSingleValue;
+      import objectos.css.tmpl.PropertyValue;
+      import objectos.css.tmpl.PropertyValue.TextDecorationLineMultiValue;
+      import objectos.css.tmpl.PropertyValue.TextDecorationLineSingleValue;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 

@@ -47,10 +47,10 @@ public class CssSelfGen13KeywordAsParameterTypeTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.NoneKeyword;
+      import objectos.css.tmpl.PropertyValue;
+      import objectos.css.tmpl.PropertyValue.NoneKeyword;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -73,20 +73,23 @@ public class CssSelfGen13KeywordAsParameterTypeTest {
   }
 
   @Test
-  public void noneKeyword() {
+  public void propertyValue() {
     assertEquals(
-      result.get("objectos/css/tmpl/NoneKeyword.java"),
+      result.get("objectos/css/tmpl/PropertyValue.java"),
 
       """
       package objectos.css.tmpl;
 
       import objectos.css.internal.StandardName;
-      import objectos.css.om.PropertyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface NoneKeyword extends
-          PropertyValue permits StandardName {}
+      public sealed interface PropertyValue {
+        sealed interface NoneKeyword extends PropertyValue {}
+
+        sealed interface KeywordInstruction extends
+            NoneKeyword permits StandardName {}
+      }
       """
     );
   }

@@ -15,7 +15,7 @@
  */
 package objectos.css.util;
 
-import objectos.css.tmpl.ColorValue;
+import objectos.css.tmpl.PropertyValue.ColorValue;
 
 /**
  * @since 0.7

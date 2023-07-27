@@ -53,22 +53,27 @@ public class CssSelfGen01BorderColorTest {
   }
 
   @Test
-  public void colorValue() {
+  public void propertyValue() {
     assertEquals(
-      result.get("objectos/css/tmpl/ColorValue.java"),
+      result.get("objectos/css/tmpl/PropertyValue.java"),
 
       """
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.StandardName;
-      import objectos.css.om.PropertyValue;
       import objectos.css.util.Color;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface ColorValue extends
-          PropertyValue permits Color, InternalInstruction, StandardName {}
+      public sealed interface PropertyValue {
+        sealed interface GlobalKeyword extends PropertyValue {}
+
+        sealed interface ValueInstruction extends
+            GlobalKeyword permits StandardName {}
+
+        sealed interface ColorValue extends PropertyValue permits Color, InternalInstruction, StandardName {}
+      }
       """
     );
   }
@@ -101,11 +106,11 @@ public class CssSelfGen01BorderColorTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.ColorValue;
-      import objectos.css.tmpl.GlobalKeyword;
+      import objectos.css.tmpl.PropertyValue;
+      import objectos.css.tmpl.PropertyValue.ColorValue;
+      import objectos.css.tmpl.PropertyValue.GlobalKeyword;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -167,24 +172,6 @@ public class CssSelfGen01BorderColorTest {
 
         abstract void declaration(Property name, PropertyValue value1, PropertyValue value2, PropertyValue value3, PropertyValue value4);
       }
-      """
-    );
-  }
-
-  @Test
-  public void globalKeyword() {
-    assertEquals(
-      result.get("objectos/css/tmpl/GlobalKeyword.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.StandardName;
-      import objectos.css.om.PropertyValue;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface GlobalKeyword extends PropertyValue permits StandardName {}
       """
     );
   }

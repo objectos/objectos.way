@@ -40,7 +40,8 @@ public final class ValueType implements ParameterType, Value {
   public static ValueType of(String simpleName) {
     Objects.requireNonNull(simpleName, "simpleName == null");
 
-    var className = ClassTypeName.of(ThisTemplate.CSS_TMPL, simpleName);
+    ClassTypeName className;
+    className = ClassTypeName.of(ThisTemplate.PROPERTY_VALUE, simpleName);
 
     return new ValueType(className);
   }
@@ -61,7 +62,7 @@ public final class ValueType implements ParameterType, Value {
 
     superTypes.add(valueType.className);
 
-    valueType.addPermitted(className);
+    // valueType.addPermitted(className);
   }
 
   @Override

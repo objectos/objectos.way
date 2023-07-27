@@ -110,10 +110,6 @@ public final class KeywordName implements ParameterType, Value {
       default -> {
         setClassNameToKeyword();
 
-        for (var type : valueTypes) {
-          type.addPermitted(className);
-        }
-
         shouldGenerate = true;
       }
     }
@@ -127,7 +123,7 @@ public final class KeywordName implements ParameterType, Value {
     if (className == null) {
       var simpleName = JavaNames.toValidClassName(keywordName) + "Keyword";
 
-      className = ClassTypeName.of(ThisTemplate.CSS_TMPL, simpleName);
+      className = ClassTypeName.of(ThisTemplate.PROPERTY_VALUE, simpleName);
     }
   }
 

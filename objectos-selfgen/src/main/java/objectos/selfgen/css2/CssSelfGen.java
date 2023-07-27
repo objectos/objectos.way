@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import objectos.code.JavaSink;
 import objectos.code.PrimitiveTypeName;
 import objectos.lang.Check;
@@ -32,13 +33,13 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   protected static final ParameterType STRING = ParameterType.STRING;
 
-  private final Map<String, KeywordName> keywords = new HashMap<>();
+  private final Map<String, KeywordName> keywords = new TreeMap<>();
 
   private final Map<String, Property> properties = new HashMap<>();
 
   private final Map<String, SelectorName> selectors = new HashMap<>();
 
-  private final Map<String, ValueType> valueTypes = new HashMap<>();
+  private final Map<String, ValueType> valueTypes = new TreeMap<>();
 
   private ColorValue colorValue;
 
@@ -64,21 +65,13 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     var spec = compile();
 
-    spec.write(sink, new ColorValueStep());
-
     spec.write(sink, new DeclarationInterfaceStep());
 
     spec.write(sink, new GeneratedColorStep());
 
     spec.write(sink, new GeneratedCssTemplateStep());
 
-    spec.write(sink, new KeywordNameStep());
-
-    spec.write(sink, new LengthTypeStep());
-
     spec.write(sink, new LengthUnitStep());
-
-    spec.write(sink, new PercentageTypeStep());
 
     spec.write(sink, new PropertyStep());
 
@@ -87,12 +80,6 @@ public abstract class CssSelfGen extends CompiledSpec {
     spec.write(sink, new StandardNameStep());
 
     spec.write(sink, new StandardSelectorStep());
-
-    spec.write(sink, new StringTypeStep());
-
-    spec.write(sink, new UrlTypeStep());
-
-    spec.write(sink, new ZeroTypeStep());
   }
 
   protected final ColorValue color(String... names) {

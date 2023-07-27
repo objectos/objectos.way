@@ -15,13 +15,13 @@
  */
 package objectos.selfgen.css2;
 
-import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import objectos.code.ClassTypeName;
-import objectos.code.JavaSink;
+import objectos.util.GrowableList;
 
 final class PropertyValueStep extends ThisTemplate {
-
-  private ValueType valueType;
 
   @Override
   protected final void definition() {
@@ -31,23 +31,65 @@ final class PropertyValueStep extends ThisTemplate {
 
     interfaceDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
-      PUBLIC, SEALED, name(valueType.className),
-      include(this::superTypes),
-      include(this::permitted)
+      PUBLIC, SEALED, name(PROPERTY_VALUE),
+
+      include(this::valueTypes),
+
+      include(this::keywords),
+
+      include(this::colorValue),
+
+      include(this::lengthType),
+
+      include(this::percentageType),
+
+      include(this::stringType),
+
+      include(this::url),
+
+      include(this::zero)
     );
   }
 
-  @Override
-  final void writeHook(JavaSink sink) throws IOException {
-    for (var valueType : spec.valueTypes()) {
-      this.valueType = valueType;
+  private void valueTypes() {
+    Collection<ValueType> valueTypes;
+    valueTypes = spec.valueTypes();
 
-      super.writeHook(sink);
+    List<ClassTypeName> superTypes;
+    superTypes = new GrowableList<>();
+
+    for (var valueType : valueTypes) {
+      superTypes.add(valueType.className);
+
+      valueType(valueType);
     }
+
+    if (superTypes.isEmpty()) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(VALUE_INSTRUCTION),
+      include(() -> {
+        for (ClassTypeName superType : superTypes) {
+          extendsClause(NL, superType);
+        }
+      }),
+      permitsClause(STANDARD_NAME)
+    );
   }
 
-  private void superTypes() {
-    var types = valueType.superTypes();
+  private void valueType(ValueType valueType) {
+    interfaceDeclaration(
+      SEALED, name(valueType.className),
+
+      include(() -> valueTypeExtends(valueType))
+    );
+  }
+
+  private void valueTypeExtends(ValueType valueType) {
+    Collection<ClassTypeName> types;
+    types = valueType.superTypes();
 
     if (types.isEmpty()) {
       extendsClause(PROPERTY_VALUE);
@@ -57,19 +99,170 @@ final class PropertyValueStep extends ThisTemplate {
           .iterator();
 
       while (iter.hasNext()) {
-        extendsClause(NL, iter.next());
+        extendsClause(iter.next());
       }
     }
   }
 
-  private void permitted() {
-    valueType.permitted().stream()
-        .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
-        .forEach(this::permittedImpl);
+  private void keywords() {
+    Iterator<KeywordName> iterator;
+    iterator = spec.keywords().stream()
+        .filter(KeywordName::shouldGenerate)
+        .iterator();
+
+    List<ClassTypeName> superTypes;
+    superTypes = new GrowableList<>();
+
+    while (iterator.hasNext()) {
+      KeywordName keywordName;
+      keywordName = iterator.next();
+
+      ClassTypeName className;
+      className = keywordName.className();
+
+      superTypes.add(className);
+
+      interfaceDeclaration(
+        SEALED, name(className),
+        include(() -> {
+          keywordName.superTypes().stream()
+              .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+              .forEach(this::extendsClause);
+        })
+      );
+    }
+
+    if (superTypes.isEmpty()) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(KEYWORD_INSTRUCTION),
+      include(() -> {
+        for (ClassTypeName superType : superTypes) {
+          extendsClause(NL, superType);
+        }
+      }),
+      permitsClause(STANDARD_NAME)
+    );
   }
 
-  private void permittedImpl(ClassTypeName className) {
-    permitsClause(className);
+  private void colorValue() {
+    ColorValue colorValue;
+    colorValue = spec.colorValue();
+
+    if (colorValue == null) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(COLOR_VALUE),
+      include(() -> {
+        colorValue.superTypes().stream()
+            .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+            .forEach(this::extendsClause);
+      }),
+      permitsClause(COLOR, INTERNAL_INSTRUCTION, STANDARD_NAME)
+    );
+  }
+
+  private void lengthType() {
+    LengthType lengthType;
+    lengthType = spec.lengthType();
+
+    if (lengthType == null) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(LENGTH_VALUE),
+      include(() -> {
+        lengthType.interfaces.stream()
+            .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+            .forEach(this::extendsClause);
+      }),
+      permitsClause(INTERNAL_INSTRUCTION, ZERO)
+    );
+  }
+
+  private void percentageType() {
+    PercentageType percentageType;
+    percentageType = spec.percentageType();
+
+    if (percentageType == null) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(PERCENTAGE_VALUE),
+      include(() -> {
+        percentageType.interfaces.stream()
+            .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+            .forEach(this::extendsClause);
+      }),
+      permitsClause(INTERNAL_INSTRUCTION, ZERO)
+    );
+  }
+
+  private void stringType() {
+    StringType stringType;
+    stringType = spec.stringType();
+
+    if (stringType == null) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(STRING_LITERAL),
+      include(() -> {
+        stringType.interfaces.stream()
+            .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+            .forEach(this::extendsClause);
+      }),
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+  }
+
+  private void url() {
+    UrlType urlType;
+    urlType = spec.urlType();
+
+    if (urlType == null) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(URL),
+      include(() -> {
+        urlType.interfaces.stream()
+            .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+            .forEach(this::extendsClause);
+      }),
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+  }
+
+  private void zero() {
+    ZeroType zeroType;
+    zeroType = spec.zeroType();
+
+    if (zeroType == null) {
+      return;
+    }
+
+    interfaceDeclaration(
+      SEALED, name(ZERO),
+      include(() -> {
+        if (zeroType.lengthType) {
+          extendsClause(LENGTH_VALUE);
+        }
+
+        if (zeroType.percentageType) {
+          extendsClause(PERCENTAGE_VALUE);
+        }
+      }),
+      permitsClause(INTERNAL_ZERO)
+    );
   }
 
 }

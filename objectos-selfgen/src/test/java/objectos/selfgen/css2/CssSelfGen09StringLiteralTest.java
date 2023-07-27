@@ -59,7 +59,7 @@ public class CssSelfGen09StringLiteralTest {
 
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.FontFamilyValue;
+      import objectos.css.tmpl.PropertyValue.FontFamilyValue;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -77,37 +77,26 @@ public class CssSelfGen09StringLiteralTest {
   }
 
   @Test
-  public void fontFamilyValue() {
+  public void propertyValue() {
     assertEquals(
-      result.get("objectos/css/tmpl/FontFamilyValue.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.StandardName;
-      import objectos.css.om.PropertyValue;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface FontFamilyValue extends PropertyValue permits StandardName, StringLiteral {}
-      """
-    );
-  }
-
-  @Test
-  public void stringLiteral() {
-    assertEquals(
-      result.get("objectos/css/tmpl/StringLiteral.java"),
+      result.get("objectos/css/tmpl/PropertyValue.java"),
 
       """
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
+      import objectos.css.internal.StandardName;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface StringLiteral extends
-          FontFamilyValue permits InternalInstruction {}
+      public sealed interface PropertyValue {
+        sealed interface FontFamilyValue extends PropertyValue {}
+
+        sealed interface ValueInstruction extends
+            FontFamilyValue permits StandardName {}
+
+        sealed interface StringLiteral extends FontFamilyValue permits InternalInstruction {}
+      }
       """
     );
   }

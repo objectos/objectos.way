@@ -71,12 +71,12 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.LineStyle;
-      import objectos.css.tmpl.NoneKeyword;
-      import objectos.css.tmpl.TextSizeAdjustValue;
+      import objectos.css.tmpl.PropertyValue;
+      import objectos.css.tmpl.PropertyValue.LineStyle;
+      import objectos.css.tmpl.PropertyValue.NoneKeyword;
+      import objectos.css.tmpl.PropertyValue.TextSizeAdjustValue;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -111,27 +111,9 @@ public class CssSelfGen08MultiPropertyKeywordTest {
   }
 
   @Test
-  public void lineStyle() {
+  public void propertyValue() {
     assertEquals(
-      result.get("objectos/css/tmpl/LineStyle.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.StandardName;
-      import objectos.css.om.PropertyValue;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LineStyle extends PropertyValue permits NoneKeyword, StandardName {}
-      """
-    );
-  }
-
-  @Test
-  public void noneKeyword() {
-    assertEquals(
-      result.get("objectos/css/tmpl/NoneKeyword.java"),
+      result.get("objectos/css/tmpl/PropertyValue.java"),
 
       """
       package objectos.css.tmpl;
@@ -140,27 +122,20 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface NoneKeyword extends
-          LineStyle,
-          TextSizeAdjustValue permits StandardName {}
-      """
-    );
-  }
+      public sealed interface PropertyValue {
+        sealed interface LineStyle extends PropertyValue {}
 
-  @Test
-  public void textSizeAdjustValue() {
-    assertEquals(
-      result.get("objectos/css/tmpl/TextSizeAdjustValue.java"),
+        sealed interface TextSizeAdjustValue extends PropertyValue {}
 
-      """
-      package objectos.css.tmpl;
+        sealed interface ValueInstruction extends
+            LineStyle,
+            TextSizeAdjustValue permits StandardName {}
 
-      import objectos.css.internal.StandardName;
-      import objectos.css.om.PropertyValue;
-      import objectos.lang.Generated;
+        sealed interface NoneKeyword extends LineStyle, TextSizeAdjustValue {}
 
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface TextSizeAdjustValue extends PropertyValue permits NoneKeyword, StandardName {}
+        sealed interface KeywordInstruction extends
+            NoneKeyword permits StandardName {}
+      }
       """
     );
   }

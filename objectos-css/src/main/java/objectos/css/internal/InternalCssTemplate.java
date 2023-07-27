@@ -20,7 +20,6 @@ import objectos.css.StyleSheet;
 import objectos.css.om.MediaFeatureOrStyleDeclaration;
 import objectos.css.om.MediaQuery;
 import objectos.css.om.MediaRuleElement;
-import objectos.css.om.PropertyValue;
 import objectos.css.om.Selector;
 import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
@@ -28,13 +27,14 @@ import objectos.css.om.StyleRule;
 import objectos.css.om.StyleRuleElement;
 import objectos.css.tmpl.BoxShadowDeclaration;
 import objectos.css.tmpl.BoxShadowHashDeclaration;
-import objectos.css.tmpl.ColorValue;
-import objectos.css.tmpl.FontFamilyValue;
-import objectos.css.tmpl.LengthValue;
-import objectos.css.tmpl.Percentage;
-import objectos.css.tmpl.StringLiteral;
-import objectos.css.tmpl.Url;
-import objectos.css.tmpl.Zero;
+import objectos.css.tmpl.PropertyValue;
+import objectos.css.tmpl.PropertyValue.ColorValue;
+import objectos.css.tmpl.PropertyValue.FontFamilyValue;
+import objectos.css.tmpl.PropertyValue.LengthValue;
+import objectos.css.tmpl.PropertyValue.PercentageValue;
+import objectos.css.tmpl.PropertyValue.StringLiteral;
+import objectos.css.tmpl.PropertyValue.Url;
+import objectos.css.tmpl.PropertyValue.Zero;
 import objectos.css.util.CustomProperty;
 import objectos.lang.Check;
 
@@ -218,13 +218,13 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final Percentage pct(double value) {
+  protected final PercentageValue pct(double value) {
     api().percentage(value);
 
     return InternalInstruction.PERCENTAGE_DOUBLE;
   }
 
-  protected final Percentage pct(int value) {
+  protected final PercentageValue pct(int value) {
     api().percentage(value);
 
     return InternalInstruction.PERCENTAGE_INT;

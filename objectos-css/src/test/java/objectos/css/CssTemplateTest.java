@@ -17,7 +17,7 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.css.tmpl.ColorValue;
+import objectos.css.tmpl.PropertyValue.ColorValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
 import org.testng.annotations.Test;

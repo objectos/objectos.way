@@ -57,10 +57,10 @@ public class CssSelfGen14UrlTypeTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PropertyValue;
       import objectos.css.om.Selector;
       import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.Image;
+      import objectos.css.tmpl.PropertyValue;
+      import objectos.css.tmpl.PropertyValue.Image;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -81,36 +81,26 @@ public class CssSelfGen14UrlTypeTest {
   }
 
   @Test
-  public void image() {
+  public void propertyValue() {
     assertEquals(
-      result.get("objectos/css/tmpl/Image.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.om.PropertyValue;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface Image extends PropertyValue permits Url {}
-      """
-    );
-  }
-
-  @Test
-  public void url() {
-    assertEquals(
-      result.get("objectos/css/tmpl/Url.java"),
+      result.get("objectos/css/tmpl/PropertyValue.java"),
 
       """
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
+      import objectos.css.internal.StandardName;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface Url extends
-          Image permits InternalInstruction {}
+      public sealed interface PropertyValue {
+        sealed interface Image extends PropertyValue {}
+
+        sealed interface ValueInstruction extends
+            Image permits StandardName {}
+
+        sealed interface Url extends Image permits InternalInstruction {}
+      }
       """
     );
   }

@@ -33,8 +33,6 @@ public final class LengthType implements ParameterType, Value {
   @Override
   public final void addValueType(ValueType valueType) {
     interfaces.add(valueType.className);
-
-    valueType.addPermitted(ThisTemplate.LENGTH_VALUE);
   }
 
   @Override

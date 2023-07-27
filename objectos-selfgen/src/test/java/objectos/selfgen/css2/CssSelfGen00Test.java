@@ -52,7 +52,7 @@ public class CssSelfGen00Test {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 10);
+    assertEquals(result.size(), 8);
 
     assertEquals(
       result.get("objectos/css/internal/Property.java"),
@@ -87,43 +87,27 @@ public class CssSelfGen00Test {
     );
 
     assertEquals(
-      result.get("objectos/css/tmpl/LengthValue.java"),
+      result.get("objectos/css/tmpl/PropertyValue.java"),
+
       """
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LengthValue extends
-          LineWidth permits InternalInstruction, Zero {}
-      """
-    );
-
-    assertEquals(
-      result.get("objectos/css/tmpl/LineWidth.java"),
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.StandardName;
-      import objectos.css.om.PropertyValue;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface LineWidth extends PropertyValue permits LengthValue, StandardName {}
-      """
-    );
-
-    assertEquals(
-      result.get("objectos/css/tmpl/Zero.java"),
-      """
-      package objectos.css.tmpl;
-
       import objectos.css.internal.InternalZero;
+      import objectos.css.internal.StandardName;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface Zero extends LengthValue permits InternalZero {}
+      public sealed interface PropertyValue {
+        sealed interface LineWidth extends PropertyValue {}
+
+        sealed interface ValueInstruction extends
+            LineWidth permits StandardName {}
+
+        sealed interface LengthValue extends LineWidth permits InternalInstruction, Zero {}
+
+        sealed interface Zero extends LengthValue permits InternalZero {}
+      }
       """
     );
   }
@@ -146,7 +130,7 @@ public class CssSelfGen00Test {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 6);
+    assertEquals(result.size(), 7);
 
     assertEquals(
       result.get("objectos/css/internal/Property.java"),

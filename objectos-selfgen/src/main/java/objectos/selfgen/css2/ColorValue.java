@@ -36,8 +36,6 @@ public final class ColorValue implements ParameterType, Value {
   @Override
   public final void addValueType(ValueType valueType) {
     interfaces.add(valueType.className);
-
-    valueType.addPermitted(ThisTemplate.COLOR_VALUE);
   }
 
   @Override
