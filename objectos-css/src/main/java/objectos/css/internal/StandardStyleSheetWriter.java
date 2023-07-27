@@ -162,7 +162,18 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append('%');
         }
 
-        case ByteCode.PROPERTY_NAME -> {
+        case ByteCode.PROPERTY_CUSTOM -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          String name;
+          name = (String) objects[objectIndex];
+
+          appendable.append(name);
+          appendable.append(':');
+        }
+
+        case ByteCode.PROPERTY_STANDARD -> {
           String name;
           name = Bytes.propertyName(bytes[index++], bytes[index++]);
 

@@ -160,6 +160,9 @@ final class Compiler02 extends Compiler01 {
           // skip end length
           elemIndex += 2;
 
+          // skip property kind
+          elemIndex += 1;
+
           // skip property name
           elemIndex += 2;
 
@@ -255,15 +258,30 @@ final class Compiler02 extends Compiler01 {
           // skip end length
           index += 2;
 
+          byte propertyKind;
+          propertyKind = main[index++];
+
           byte b0;
           b0 = main[index++];
 
           byte b1;
           b1 = main[index++];
 
-          property = Bytes.property(b0, b1);
+          switch (propertyKind) {
+            case ByteProto.PROPERTY_CUSTOM -> {
+              auxAdd(ByteCode.PROPERTY_CUSTOM, b0, b1);
+            }
 
-          auxAdd(ByteCode.PROPERTY_NAME, b0, b1);
+            case ByteProto.PROPERTY_STANDARD -> {
+              property = Bytes.property(b0, b1);
+
+              auxAdd(ByteCode.PROPERTY_STANDARD, b0, b1);
+            }
+
+            default -> throw new UnsupportedOperationException(
+              "Implement me :: propertyKind=" + propertyKind
+            );
+          }
 
           auxAdd(ByteCode.SPACE_OPTIONAL);
         }

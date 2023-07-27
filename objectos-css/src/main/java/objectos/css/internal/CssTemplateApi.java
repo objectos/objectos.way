@@ -22,6 +22,7 @@ import objectos.css.om.PropertyValue;
 import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRuleElement;
+import objectos.css.util.CustomProperty;
 
 public abstract class CssTemplateApi {
 
@@ -36,6 +37,10 @@ public abstract class CssTemplateApi {
   public StyleSheet compile() {
     throw new UnsupportedOperationException();
   }
+
+  public abstract void customPropertyBegin(CustomProperty<?> property);
+
+  public abstract void customPropertyEnd();
 
   public abstract void declarationBegin(Property name);
 

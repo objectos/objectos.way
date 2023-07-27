@@ -35,6 +35,7 @@ import objectos.css.tmpl.Percentage;
 import objectos.css.tmpl.StringLiteral;
 import objectos.css.tmpl.Url;
 import objectos.css.tmpl.Zero;
+import objectos.css.util.CustomProperty;
 import objectos.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
@@ -79,6 +80,21 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     compiled = compile();
 
     return compiled.toString();
+  }
+
+  protected final <T extends PropertyValue> StyleDeclaration set(
+      CustomProperty<T> property, T value) {
+    Check.notNull(property, "property == null");
+    Check.notNull(value, "value == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.customPropertyBegin(property);
+    api.propertyValue(value);
+    api.customPropertyEnd();
+
+    return InternalInstruction.INSTANCE;
   }
 
   protected final Selector attr(String name) {

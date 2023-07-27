@@ -50,22 +50,23 @@ final class ByteCode {
 
   //property
 
-  public static final byte PROPERTY_NAME = -23;
+  public static final byte PROPERTY_CUSTOM = -23;
+  public static final byte PROPERTY_STANDARD = -24;
 
   //property values
 
-  public static final byte COLOR_HEX = -24;
-  public static final byte DOUBLE_LITERAL = -25;
-  public static final byte INT_LITERAL = -26;
-  public static final byte KEYWORD = -27;
-  public static final byte LENGTH_DOUBLE = -28;
-  public static final byte LENGTH_INT = -29;
-  public static final byte PERCENTAGE_DOUBLE = -30;
-  public static final byte PERCENTAGE_INT = -31;
-  public static final byte STRING_LITERAL = -32;
-  public static final byte STRING_QUOTES_OPTIONAL = -33;
-  public static final byte URL = -34;
-  public static final byte ZERO = -35;
+  public static final byte COLOR_HEX = -25;
+  public static final byte DOUBLE_LITERAL = -26;
+  public static final byte INT_LITERAL = -27;
+  public static final byte KEYWORD = -28;
+  public static final byte LENGTH_DOUBLE = -29;
+  public static final byte LENGTH_INT = -30;
+  public static final byte PERCENTAGE_DOUBLE = -31;
+  public static final byte PERCENTAGE_INT = -32;
+  public static final byte STRING_LITERAL = -33;
+  public static final byte STRING_QUOTES_OPTIONAL = -34;
+  public static final byte URL = -35;
+  public static final byte ZERO = -36;
 
   private ByteCode() {}
 

@@ -16,7 +16,9 @@
 package objectos.css.internal;
 
 import java.util.Arrays;
+import objectos.css.tmpl.ColorValue;
 import objectos.css.util.ClassSelector;
+import objectos.css.util.CustomProperty;
 import org.testng.annotations.Test;
 
 public class Compiler02Test {
@@ -85,7 +87,7 @@ public class Compiler02Test {
       Bytes.name1(StandardName.any),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.BOX_SIZING),
       Bytes.prop1(Property.BOX_SIZING),
       ByteCode.SPACE_OPTIONAL,
@@ -174,7 +176,7 @@ public class Compiler02Test {
       (byte) StandardTypeSelector.ul.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.MARGIN),
       Bytes.prop1(Property.MARGIN),
       ByteCode.SPACE_OPTIONAL,
@@ -345,7 +347,7 @@ public class Compiler02Test {
       (byte) StandardTypeSelector.ul.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.LIST_STYLE_IMAGE),
       Bytes.prop1(Property.LIST_STYLE_IMAGE),
       ByteCode.SPACE_OPTIONAL,
@@ -393,7 +395,7 @@ public class Compiler02Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
       ByteCode.SPACE_OPTIONAL,
@@ -443,7 +445,7 @@ public class Compiler02Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
       ByteCode.SPACE_OPTIONAL,
@@ -495,7 +497,7 @@ public class Compiler02Test {
       (byte) StandardTypeSelector.input.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.COLOR),
       Bytes.prop1(Property.COLOR),
       ByteCode.SPACE_OPTIONAL,
@@ -554,7 +556,7 @@ public class Compiler02Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 2,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.DISPLAY),
       Bytes.prop1(Property.DISPLAY),
       ByteCode.SPACE_OPTIONAL,
@@ -614,7 +616,7 @@ public class Compiler02Test {
       ByteCode.AT_MEDIA,
       ByteCode.SPACE,
       ByteCode.PARENS_OPEN,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.MIN_WIDTH),
       Bytes.prop1(Property.MIN_WIDTH),
       ByteCode.SPACE_OPTIONAL,
@@ -631,7 +633,7 @@ public class Compiler02Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 2,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.DISPLAY),
       Bytes.prop1(Property.DISPLAY),
       ByteCode.SPACE_OPTIONAL,
@@ -732,7 +734,7 @@ public class Compiler02Test {
       (byte) StandardPseudoClassSelector._mozUiInvalid.ordinal(),
       ByteCode.BLOCK_START,
       ByteCode.TAB, (byte) 1,
-      ByteCode.PROPERTY_NAME,
+      ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.BOX_SHADOW),
       Bytes.prop1(Property.BOX_SHADOW),
       ByteCode.SPACE_OPTIONAL,
@@ -768,6 +770,55 @@ public class Compiler02Test {
       Bytes.int3(5),
       Bytes.unit(LengthUnit.PX),
       ByteCode.SPACE,
+      ByteCode.KEYWORD,
+      Bytes.name0(StandardName.black),
+      Bytes.name1(StandardName.black),
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
+  @Test(description = """
+  [#487] p {
+    --text-color: black;
+  }
+  """)
+  public void testCase18() {
+    CustomProperty<ColorValue> textColor;
+    textColor = CustomProperty.named("--text-color");
+
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.customPropertyBegin(textColor);
+    compiler.propertyValue(StandardName.black);
+    compiler.customPropertyEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_CUSTOM,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteCode.SPACE_OPTIONAL,
       ByteCode.KEYWORD,
       Bytes.name0(StandardName.black),
       Bytes.name1(StandardName.black),

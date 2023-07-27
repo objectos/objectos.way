@@ -17,10 +17,41 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.tmpl.ColorValue;
 import objectos.css.util.ClassSelector;
+import objectos.css.util.CustomProperty;
 import org.testng.annotations.Test;
 
 public class CssTemplateTest {
+
+  @Test(description = """
+  [#487] p {
+    --text-color: black;
+  }
+  """)
+  public void customProperty01() {
+    CustomProperty<ColorValue> textColor;
+    textColor = CustomProperty.named("--text-color");
+
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            p,
+
+            set(textColor, black)
+          );
+        }
+      },
+
+      """
+      p {
+        --text-color: black;
+      }
+      """
+    );
+  }
 
   @Test(description = """
   [#460] @media screen {

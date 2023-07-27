@@ -22,6 +22,7 @@ import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRuleElement;
 import objectos.css.util.ClassSelector;
+import objectos.css.util.CustomProperty;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
@@ -70,21 +71,36 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void declarationBegin(Property name) {
-    // we mark the start of our aux list
-    auxStart = auxIndex;
+  public final void customPropertyBegin(CustomProperty<?> property) {
+    declarationBeginCommon();
 
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    // 2) the start of our main list
-    mainContents = mainStart = mainIndex;
+    // we store the property name
+    String name;
+    name = property.cssName;
+
+    int nameIndex;
+    nameIndex = objectAdd(name);
 
     mainAdd(
-      ByteProto.DECLARATION,
+      ByteProto.PROPERTY_CUSTOM,
 
-      // length takes 2 bytes
-      ByteProto.NULL,
-      ByteProto.NULL,
+      // name
+      Bytes.two0(nameIndex),
+      Bytes.two1(nameIndex)
+    );
+  }
+
+  @Override
+  public final void customPropertyEnd() {
+    declarationEnd();
+  }
+
+  @Override
+  public final void declarationBegin(Property name) {
+    declarationBeginCommon();
+
+    mainAdd(
+      ByteProto.PROPERTY_STANDARD,
 
       // name
       Bytes.prop0(name),
@@ -1014,6 +1030,24 @@ class Compiler01 extends CssTemplateApi {
 
     // we clear the aux list
     auxIndex = auxStart;
+  }
+
+  private void declarationBeginCommon() {
+    // we mark the start of our aux list
+    auxStart = auxIndex;
+
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    // 2) the start of our main list
+    mainContents = mainStart = mainIndex;
+
+    mainAdd(
+      ByteProto.DECLARATION,
+
+      // length takes 2 bytes
+      ByteProto.NULL,
+      ByteProto.NULL
+    );
   }
 
   private void mainAdd(byte b0) {

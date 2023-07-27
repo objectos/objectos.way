@@ -57,7 +57,8 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("property");
 
-    value("PROPERTY_NAME");
+    value("PROPERTY_CUSTOM");
+    value("PROPERTY_STANDARD");
 
     comment("property values");
 

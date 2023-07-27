@@ -67,6 +67,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("DECLARATION");
     value("DECLARATION_END");
+    value("PROPERTY_CUSTOM");
+    value("PROPERTY_STANDARD");
 
     comment("property values");
 
