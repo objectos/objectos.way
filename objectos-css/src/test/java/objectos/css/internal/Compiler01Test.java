@@ -1043,6 +1043,65 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  [#487] p {
+    color: var(--text-color);
+  }
+  """)
+  public void testCase19() {
+    CustomProperty<ColorValue> textColor;
+    textColor = CustomProperty.named("--text-color");
+
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.varFunction(textColor);
+
+    compiler.declarationBegin(Property.COLOR);
+    compiler.propertyValue(InternalInstruction.VAR_FUNCTION);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED3,
+      Bytes.two0(0),
+      Bytes.two1(0),
+
+      ByteProto.MARKED,
+      Bytes.len0(8),
+      Bytes.len1(8),
+      ByteProto.PROPERTY_STANDARD,
+      Bytes.prop0(Property.COLOR),
+      Bytes.prop1(Property.COLOR),
+      ByteProto.VAR0,
+      Bytes.int0(10),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(11),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(17),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(21),
+      ByteProto.STYLE_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

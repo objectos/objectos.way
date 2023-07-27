@@ -391,56 +391,6 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
-  protected static final TypeSelector nav = Css.nav;
-
-  protected static final TypeSelector h4 = Css.h4;
-
-  protected static final TypeSelector h3 = Css.h3;
-
-  protected static final TypeSelector h2 = Css.h2;
-
-  protected static final TypeSelector h1 = Css.h1;
-
-  protected static final TypeSelector fieldset = Css.fieldset;
-
-  protected static final TypeSelector html = Css.html;
-
-  protected static final TypeSelector link = Css.link;
-
-  protected static final TypeSelector body = Css.body;
-
-  protected static final TypeSelector select = Css.select;
-
-  protected static final TypeSelector th = Css.th;
-
-  protected static final TypeSelector td = Css.td;
-
-  protected static final TypeSelector meta = Css.meta;
-
-  protected static final TypeSelector div = Css.div;
-
-  protected static final TypeSelector ol = Css.ol;
-
-  protected static final TypeSelector code = Css.code;
-
-  protected static final TypeSelector abbr = Css.abbr;
-
-  protected static final TypeSelector small = Css.small;
-
-  protected static final TypeSelector clipPath = Css.clipPath;
-
-  protected static final TypeSelector blockquote = Css.blockquote;
-
-  protected static final TypeSelector article = Css.article;
-
-  protected static final TypeSelector menu = Css.menu;
-
-  protected static final TypeSelector em = Css.em;
-
-  protected static final TypeSelector path = Css.path;
-
-  protected static final TypeSelector input = Css.input;
-
   protected static final TypeSelector pre = Css.pre;
 
   protected static final TypeSelector section = Css.section;
@@ -536,6 +486,56 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector h6 = Css.h6;
 
   protected static final TypeSelector h5 = Css.h5;
+
+  protected static final TypeSelector nav = Css.nav;
+
+  protected static final TypeSelector h4 = Css.h4;
+
+  protected static final TypeSelector h3 = Css.h3;
+
+  protected static final TypeSelector h2 = Css.h2;
+
+  protected static final TypeSelector h1 = Css.h1;
+
+  protected static final TypeSelector fieldset = Css.fieldset;
+
+  protected static final TypeSelector html = Css.html;
+
+  protected static final TypeSelector link = Css.link;
+
+  protected static final TypeSelector body = Css.body;
+
+  protected static final TypeSelector select = Css.select;
+
+  protected static final TypeSelector th = Css.th;
+
+  protected static final TypeSelector td = Css.td;
+
+  protected static final TypeSelector meta = Css.meta;
+
+  protected static final TypeSelector div = Css.div;
+
+  protected static final TypeSelector ol = Css.ol;
+
+  protected static final TypeSelector code = Css.code;
+
+  protected static final TypeSelector abbr = Css.abbr;
+
+  protected static final TypeSelector small = Css.small;
+
+  protected static final TypeSelector clipPath = Css.clipPath;
+
+  protected static final TypeSelector blockquote = Css.blockquote;
+
+  protected static final TypeSelector article = Css.article;
+
+  protected static final TypeSelector menu = Css.menu;
+
+  protected static final TypeSelector em = Css.em;
+
+  protected static final TypeSelector path = Css.path;
+
+  protected static final TypeSelector input = Css.input;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 

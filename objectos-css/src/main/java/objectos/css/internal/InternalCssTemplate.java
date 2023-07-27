@@ -82,19 +82,16 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return compiled.toString();
   }
 
-  protected final <T extends PropertyValue> StyleDeclaration set(
-      CustomProperty<T> property, T value) {
-    Check.notNull(property, "property == null");
-    Check.notNull(value, "value == null");
+  @SuppressWarnings("unchecked")
+  protected final <T extends PropertyValue> T var(CustomProperty<T> variable) {
+    Check.notNull(variable, "variable == null");
 
     CssTemplateApi api;
     api = api();
 
-    api.customPropertyBegin(property);
-    api.propertyValue(value);
-    api.customPropertyEnd();
+    api.varFunction(variable);
 
-    return InternalInstruction.INSTANCE;
+    return (T) InternalInstruction.VAR_FUNCTION;
   }
 
   protected final Selector attr(String name) {
@@ -268,6 +265,21 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.selectorElement(e4);
     api.selectorElement(e5);
     api.selectorEnd();
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final <T extends PropertyValue> StyleDeclaration set(
+      CustomProperty<T> property, T value) {
+    Check.notNull(property, "property == null");
+    Check.notNull(value, "value == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.customPropertyBegin(property);
+    api.propertyValue(value);
+    api.customPropertyEnd();
 
     return InternalInstruction.INSTANCE;
   }

@@ -331,6 +331,20 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append("\")");
         }
 
+        case ByteCode.VAR -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          Object object;
+          object = objects[objectIndex];
+
+          String s;
+          s = (String) object;
+
+          appendable.append("var(");
+          appendable.append(s);
+        }
+
         case ByteCode.TAB -> {
           int level = bytes[index++];
 

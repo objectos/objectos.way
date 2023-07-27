@@ -55,7 +55,9 @@ public enum InternalInstruction
 
   STRING_LITERAL(3),
 
-  URL(3);
+  URL(3),
+
+  VAR_FUNCTION(3);
 
   public final int length;
 

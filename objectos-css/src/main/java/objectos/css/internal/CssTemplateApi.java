@@ -96,4 +96,6 @@ public abstract class CssTemplateApi {
 
   public abstract void url(String value);
 
+  public abstract void varFunction(CustomProperty<?> variable);
+
 }

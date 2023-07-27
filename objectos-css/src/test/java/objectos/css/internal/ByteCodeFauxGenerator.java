@@ -73,6 +73,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("STRING_LITERAL");
     value("STRING_QUOTES_OPTIONAL");
     value("URL");
+    value("VAR");
     value("ZERO");
   }
 }

@@ -66,7 +66,8 @@ final class ByteCode {
   public static final byte STRING_LITERAL = -33;
   public static final byte STRING_QUOTES_OPTIONAL = -34;
   public static final byte URL = -35;
-  public static final byte ZERO = -36;
+  public static final byte VAR = -36;
+  public static final byte ZERO = -37;
 
   private ByteCode() {}
 

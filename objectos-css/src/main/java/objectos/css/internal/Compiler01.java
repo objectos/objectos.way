@@ -624,6 +624,22 @@ class Compiler01 extends CssTemplateApi {
     );
   }
 
+  @Override
+  public final void varFunction(CustomProperty<?> variable) {
+    String name;
+    name = variable.cssName;
+
+    int nameIndex;
+    nameIndex = objectAdd(name);
+
+    mainAdd(
+      ByteProto.VAR0,
+
+      Bytes.two0(nameIndex),
+      Bytes.two1(nameIndex)
+    );
+  }
+
   final void auxAdd(byte b0) {
     aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
     aux[auxIndex++] = b0;

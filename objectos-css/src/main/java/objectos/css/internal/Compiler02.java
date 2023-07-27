@@ -373,6 +373,14 @@ final class Compiler02 extends Compiler01 {
           auxAdd(ByteCode.URL, main[mainContents++], main[mainContents++]);
         }
 
+        case ByteProto.VAR0 -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          index = jmp(index);
+
+          auxAdd(ByteCode.VAR, main[mainContents++], main[mainContents++], ByteCode.PARENS_CLOSE);
+        }
+
         case ByteProto.ZERO -> {
           valueCount = spaceIfNecessary(valueCount);
 

@@ -827,6 +827,58 @@ public class Compiler02Test {
     );
   }
 
+  @Test(description = """
+  [#487] p {
+    color: var(--text-color);
+  }
+  """)
+  public void testCase19() {
+    CustomProperty<ColorValue> textColor;
+    textColor = CustomProperty.named("--text-color");
+
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.varFunction(textColor);
+
+    compiler.declarationBegin(Property.COLOR);
+    compiler.propertyValue(InternalInstruction.VAR_FUNCTION);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_STANDARD,
+      Bytes.prop0(Property.COLOR),
+      Bytes.prop1(Property.COLOR),
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.VAR,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteCode.PARENS_CLOSE,
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
   private void test(CompiledStyleSheet sheet, byte... expected) {
     byte[] result;
     result = sheet.main;

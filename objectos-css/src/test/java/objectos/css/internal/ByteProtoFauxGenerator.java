@@ -84,6 +84,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("STANDARD_NAME"); // keyword
     value("STRING_LITERAL");
     value("URL");
+    value("VAR0");
     value("ZERO");
   }
 }

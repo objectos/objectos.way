@@ -77,7 +77,8 @@ final class ByteProto {
   public static final byte STANDARD_NAME = -41;
   public static final byte STRING_LITERAL = -42;
   public static final byte URL = -43;
-  public static final byte ZERO = -44;
+  public static final byte VAR0 = -44;
+  public static final byte ZERO = -45;
 
   private ByteProto() {}
 
