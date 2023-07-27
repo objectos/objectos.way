@@ -87,6 +87,7 @@ public class CssSelfGen03PercentageTypeTest {
       import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.InternalZero;
       import objectos.css.internal.StandardName;
+      import objectos.css.util.Percentage;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -96,7 +97,7 @@ public class CssSelfGen03PercentageTypeTest {
         sealed interface ValueInstruction extends
             LineHeightValue permits StandardName {}
 
-        sealed interface PercentageValue extends LineHeightValue permits InternalInstruction, Zero {}
+        sealed interface PercentageValue extends LineHeightValue permits InternalInstruction, Percentage, Zero {}
 
         sealed interface Zero extends PercentageValue permits InternalZero {}
       }

@@ -240,7 +240,8 @@ class Compiler01 extends CssTemplateApi {
           mainIndex = Bytes.varInt(main, mainIndex, length);
         }
 
-        case ByteProto.STANDARD_NAME -> {
+        case ByteProto.RAW,
+             ByteProto.STANDARD_NAME -> {
           mainAdd(mark, aux[index++], aux[index++]);
         }
 
@@ -481,6 +482,20 @@ class Compiler01 extends CssTemplateApi {
 
     else if (value instanceof InternalZero) {
       auxAdd(ByteProto.ZERO);
+    }
+
+    else if (value instanceof InternalLength length) {
+      String raw;
+      raw = length.raw;
+
+      int rawIndex;
+      rawIndex = objectAdd(raw);
+
+      auxAdd(
+        ByteProto.RAW,
+        Bytes.two0(rawIndex),
+        Bytes.two1(rawIndex)
+      );
     }
 
     else {

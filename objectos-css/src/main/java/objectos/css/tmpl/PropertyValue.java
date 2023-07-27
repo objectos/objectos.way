@@ -20,6 +20,8 @@ import objectos.css.internal.InternalZero;
 import objectos.css.internal.StandardName;
 import objectos.css.om.Selector;
 import objectos.css.util.Color;
+import objectos.css.util.Length;
+import objectos.css.util.Percentage;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -291,9 +293,9 @@ public sealed interface PropertyValue {
 
   sealed interface ColorValue extends OutlineValue, TextDecorationValue permits Color, InternalInstruction, StandardName {}
 
-  sealed interface LengthValue extends LengthPercentage, LineWidth permits InternalInstruction, Zero {}
+  sealed interface LengthValue extends LengthPercentage, LineWidth permits InternalInstruction, Length, Zero {}
 
-  sealed interface PercentageValue extends LengthPercentage, TextSizeAdjustValue permits InternalInstruction, Zero {}
+  sealed interface PercentageValue extends LengthPercentage, TextSizeAdjustValue permits InternalInstruction, Percentage, Zero {}
 
   sealed interface StringLiteral extends FontFamilyValue, ListStyleTypeValue permits InternalInstruction {}
 

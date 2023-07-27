@@ -70,6 +70,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("LENGTH_INT");
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
+    value("RAW");
     value("STRING_LITERAL");
     value("STRING_QUOTES_OPTIONAL");
     value("URL");

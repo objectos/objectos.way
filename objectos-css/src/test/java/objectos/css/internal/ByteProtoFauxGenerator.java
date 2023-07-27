@@ -81,6 +81,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("LENGTH_INT");
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
+    value("RAW");
     value("STANDARD_NAME"); // keyword
     value("STRING_LITERAL");
     value("URL");

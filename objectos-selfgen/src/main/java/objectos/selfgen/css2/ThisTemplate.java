@@ -57,6 +57,8 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName KEYWORD_INSTRUCTION
       = ClassTypeName.of(PROPERTY_VALUE, "KeywordInstruction");
 
+  static final ClassTypeName LENGTH = ClassTypeName.of(CSS_UTIL, "Length");
+
   static final ClassTypeName LENGTH_UNIT = ClassTypeName.of(CSS_INTERNAL, "LengthUnit");
 
   static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(PROPERTY_VALUE, "LengthValue");
@@ -64,6 +66,8 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName OBJECTS = ClassTypeName.of(Objects.class);
 
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
+
+  static final ClassTypeName PERCENTAGE = ClassTypeName.of(CSS_UTIL, "Percentage");
 
   static final ClassTypeName PERCENTAGE_VALUE = ClassTypeName.of(PROPERTY_VALUE, "PercentageValue");
 

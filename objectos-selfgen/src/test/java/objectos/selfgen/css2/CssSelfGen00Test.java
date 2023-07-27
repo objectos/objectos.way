@@ -56,6 +56,7 @@ public class CssSelfGen00Test {
 
     assertEquals(
       result.get("objectos/css/internal/Property.java"),
+
       """
       package objectos.css.internal;
 
@@ -95,6 +96,7 @@ public class CssSelfGen00Test {
       import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.InternalZero;
       import objectos.css.internal.StandardName;
+      import objectos.css.util.Length;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -104,7 +106,7 @@ public class CssSelfGen00Test {
         sealed interface ValueInstruction extends
             LineWidth permits StandardName {}
 
-        sealed interface LengthValue extends LineWidth permits InternalInstruction, Zero {}
+        sealed interface LengthValue extends LineWidth permits InternalInstruction, Length, Zero {}
 
         sealed interface Zero extends LengthValue permits InternalZero {}
       }

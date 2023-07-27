@@ -19,6 +19,7 @@ import java.util.Arrays;
 import objectos.css.tmpl.PropertyValue.ColorValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
+import objectos.css.util.Length;
 import org.testng.annotations.Test;
 
 public class Compiler01Test {
@@ -1098,6 +1099,61 @@ public class Compiler01Test {
       Bytes.int0(17),
       ByteProto.STYLE_RULE_END,
       Bytes.int0(21),
+      ByteProto.STYLE_RULE
+    );
+  }
+
+  @Test(description = """
+  ul {
+    margin: 20px 1.5rem;
+  }
+  """)
+  public void testCase20() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.declarationBegin(Property.MARGIN);
+    compiler.propertyValue(Length.px(20));
+    compiler.propertyValue(Length.rem(1.5));
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.ul);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.len0(12),
+      Bytes.len1(12),
+      ByteProto.PROPERTY_STANDARD,
+      Bytes.prop0(Property.MARGIN),
+      Bytes.prop1(Property.MARGIN),
+      ByteProto.RAW,
+      Bytes.two0(0),
+      Bytes.two1(0),
+      ByteProto.RAW,
+      Bytes.two0(1),
+      Bytes.two1(1),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(12),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.ul.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(21),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(22),
       ByteProto.STYLE_RULE
     );
   }

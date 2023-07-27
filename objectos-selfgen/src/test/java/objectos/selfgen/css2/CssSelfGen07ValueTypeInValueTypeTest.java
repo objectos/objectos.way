@@ -113,6 +113,8 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       import objectos.css.internal.InternalInstruction;
       import objectos.css.internal.InternalZero;
       import objectos.css.internal.StandardName;
+      import objectos.css.util.Length;
+      import objectos.css.util.Percentage;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -125,9 +127,9 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
             LengthPercentage,
             LineHeightValue permits StandardName {}
 
-        sealed interface LengthValue extends LengthPercentage permits InternalInstruction, Zero {}
+        sealed interface LengthValue extends LengthPercentage permits InternalInstruction, Length, Zero {}
 
-        sealed interface PercentageValue extends LengthPercentage permits InternalInstruction, Zero {}
+        sealed interface PercentageValue extends LengthPercentage permits InternalInstruction, Percentage, Zero {}
 
         sealed interface Zero extends LengthValue, PercentageValue permits InternalZero {}
       }

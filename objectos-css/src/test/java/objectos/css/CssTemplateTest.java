@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.css.tmpl.PropertyValue.ColorValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
+import objectos.css.util.Length;
 import org.testng.annotations.Test;
 
 public class CssTemplateTest {
@@ -145,6 +146,30 @@ public class CssTemplateTest {
         p {
           display: flex;
         }
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#488] external length values
+  """)
+  public void length() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            p,
+
+            padding(Length.px(8), Length.rem(0.5))
+          );
+        }
+      },
+
+      """
+      p {
+        padding: 8px 0.5rem;
       }
       """
     );

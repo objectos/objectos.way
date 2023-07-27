@@ -74,11 +74,12 @@ final class ByteProto {
   public static final byte LENGTH_INT = -38;
   public static final byte PERCENTAGE_DOUBLE = -39;
   public static final byte PERCENTAGE_INT = -40;
-  public static final byte STANDARD_NAME = -41;
-  public static final byte STRING_LITERAL = -42;
-  public static final byte URL = -43;
-  public static final byte VAR0 = -44;
-  public static final byte ZERO = -45;
+  public static final byte RAW = -41;
+  public static final byte STANDARD_NAME = -42;
+  public static final byte STRING_LITERAL = -43;
+  public static final byte URL = -44;
+  public static final byte VAR0 = -45;
+  public static final byte ZERO = -46;
 
   private ByteProto() {}
 

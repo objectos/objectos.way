@@ -324,6 +324,12 @@ final class Compiler02 extends Compiler01 {
           );
         }
 
+        case ByteProto.RAW -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          auxAdd(ByteCode.RAW, main[index++], main[index++]);
+        }
+
         case ByteProto.STANDARD_NAME -> {
           valueCount = spaceIfNecessary(valueCount);
 

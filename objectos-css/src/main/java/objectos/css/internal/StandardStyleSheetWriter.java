@@ -303,6 +303,7 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
         }
 
         case ByteCode.COLOR_HEX,
+             ByteCode.RAW,
              ByteCode.STRING_QUOTES_OPTIONAL -> {
           int objectIndex;
           objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);

@@ -181,7 +181,7 @@ final class PropertyValueStep extends ThisTemplate {
             .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
             .forEach(this::extendsClause);
       }),
-      permitsClause(INTERNAL_INSTRUCTION, ZERO)
+      permitsClause(INTERNAL_INSTRUCTION, LENGTH, ZERO)
     );
   }
 
@@ -200,7 +200,7 @@ final class PropertyValueStep extends ThisTemplate {
             .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
             .forEach(this::extendsClause);
       }),
-      permitsClause(INTERNAL_INSTRUCTION, ZERO)
+      permitsClause(INTERNAL_INSTRUCTION, PERCENTAGE, ZERO)
     );
   }
 

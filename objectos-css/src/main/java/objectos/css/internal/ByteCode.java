@@ -63,11 +63,12 @@ final class ByteCode {
   public static final byte LENGTH_INT = -30;
   public static final byte PERCENTAGE_DOUBLE = -31;
   public static final byte PERCENTAGE_INT = -32;
-  public static final byte STRING_LITERAL = -33;
-  public static final byte STRING_QUOTES_OPTIONAL = -34;
-  public static final byte URL = -35;
-  public static final byte VAR = -36;
-  public static final byte ZERO = -37;
+  public static final byte RAW = -33;
+  public static final byte STRING_LITERAL = -34;
+  public static final byte STRING_QUOTES_OPTIONAL = -35;
+  public static final byte URL = -36;
+  public static final byte VAR = -37;
+  public static final byte ZERO = -38;
 
   private ByteCode() {}
 
