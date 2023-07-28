@@ -15,14 +15,21 @@
  */
 package objectos.css.util;
 
-import objectos.css.internal.DoublePercentage;
-import objectos.css.internal.IntPercentage;
+import objectos.css.internal.InternalPercentage;
 import objectos.css.tmpl.PropertyValue;
 
 public sealed abstract class Percentage
     implements PropertyValue.PercentageValue
-    permits DoublePercentage, IntPercentage {
+    permits InternalPercentage {
 
   protected Percentage() {}
+
+  public static Percentage of(double value) {
+    return InternalPercentage.of(value);
+  }
+
+  public static Percentage of(int value) {
+    return InternalPercentage.of(value);
+  }
 
 }

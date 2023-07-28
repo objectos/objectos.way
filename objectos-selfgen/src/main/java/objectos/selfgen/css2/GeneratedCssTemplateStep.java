@@ -67,6 +67,13 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     colorValue.names.stream()
         .sorted((self, that) -> (self.fieldName().compareTo(that.fieldName())))
         .forEach(name -> field(COLOR_VALUE, name.fieldName()));
+
+    for (ColorHex colorHex : colorValue.palette) {
+      field(
+        PROTECTED, STATIC, FINAL, COLOR_VALUE, name(colorHex.constantName()),
+        COLOR, v("ofHex"), argument(s(colorHex.hexValue()))
+      );
+    }
   }
 
   private void declarationMethods() {

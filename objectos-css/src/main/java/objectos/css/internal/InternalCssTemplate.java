@@ -36,6 +36,8 @@ import objectos.css.tmpl.PropertyValue.StringLiteral;
 import objectos.css.tmpl.PropertyValue.Url;
 import objectos.css.tmpl.PropertyValue.Zero;
 import objectos.css.util.CustomProperty;
+import objectos.css.util.Length;
+import objectos.css.util.Percentage;
 import objectos.lang.Check;
 
 public abstract class InternalCssTemplate extends GeneratedCssTemplate {
@@ -53,6 +55,74 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   protected static final AttributeOperator EQ = InternalAttributeOperator.EQUALS;
 
   protected static final Zero $0 = InternalZero.INSTANCE;
+
+  protected static final LengthValue U0 = InternalZero.INSTANCE;
+
+  protected static final LengthValue U1 = unit(1);
+
+  protected static final LengthValue U2 = unit(2);
+
+  protected static final LengthValue U3 = unit(3);
+
+  protected static final LengthValue U4 = unit(4);
+
+  protected static final LengthValue U5 = unit(5);
+
+  protected static final LengthValue U6 = unit(6);
+
+  protected static final LengthValue U7 = unit(7);
+
+  protected static final LengthValue U8 = unit(8);
+
+  protected static final LengthValue U9 = unit(9);
+
+  protected static final LengthValue U10 = unit(10);
+
+  protected static final LengthValue U11 = unit(11);
+
+  protected static final LengthValue U12 = unit(12);
+
+  protected static final LengthValue U14 = unit(14);
+
+  protected static final LengthValue U16 = unit(16);
+
+  protected static final LengthValue U20 = unit(20);
+
+  protected static final LengthValue U24 = unit(24);
+
+  protected static final LengthValue U28 = unit(28);
+
+  protected static final LengthValue U32 = unit(32);
+
+  protected static final LengthValue U36 = unit(36);
+
+  protected static final LengthValue U40 = unit(40);
+
+  protected static final LengthValue U44 = unit(44);
+
+  protected static final LengthValue U48 = unit(48);
+
+  protected static final LengthValue U52 = unit(52);
+
+  protected static final LengthValue U56 = unit(56);
+
+  protected static final LengthValue U60 = unit(60);
+
+  protected static final LengthValue U64 = unit(64);
+
+  protected static final LengthValue U68 = unit(68);
+
+  protected static final LengthValue U72 = unit(72);
+
+  protected static final LengthValue U80 = unit(80);
+
+  protected static final LengthValue U96 = unit(96);
+
+  protected static final PercentageValue FULL = Percentage.of(100);
+
+  private static LengthValue unit(int value) {
+    return Length.rem(0.25 * value);
+  }
 
   private CssTemplateApi api;
 
@@ -241,6 +311,24 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.selectorBegin();
     api.selectorElement(e1);
     api.selectorElement(e2);
+    api.selectorEnd();
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final Selector sel(
+      SelectorElement e1, SelectorElement e2, SelectorElement e3) {
+    Check.notNull(e1, "e1 == null");
+    Check.notNull(e2, "e2 == null");
+    Check.notNull(e3, "e3 == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.selectorBegin();
+    api.selectorElement(e1);
+    api.selectorElement(e2);
+    api.selectorElement(e3);
     api.selectorEnd();
 
     return InternalInstruction.INSTANCE;

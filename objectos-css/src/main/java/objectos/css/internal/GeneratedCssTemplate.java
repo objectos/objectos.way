@@ -111,6 +111,7 @@ import objectos.css.tmpl.PropertyValue.TextTransformValue;
 import objectos.css.tmpl.PropertyValue.TextareaKeyword;
 import objectos.css.tmpl.PropertyValue.TopValue;
 import objectos.css.tmpl.PropertyValue.VerticalAlignValue;
+import objectos.css.util.Color;
 import objectos.lang.Check;
 import objectos.lang.Generated;
 
@@ -257,6 +258,446 @@ abstract class GeneratedCssTemplate {
   protected static final ColorValue white = StandardName.white;
 
   protected static final ColorValue yellow = StandardName.yellow;
+
+  protected static final ColorValue SLATE_050 = Color.ofHex("#f8fafc");
+
+  protected static final ColorValue SLATE_100 = Color.ofHex("#f1f5f9");
+
+  protected static final ColorValue SLATE_200 = Color.ofHex("#e2e8f0");
+
+  protected static final ColorValue SLATE_300 = Color.ofHex("#cbd5e1");
+
+  protected static final ColorValue SLATE_400 = Color.ofHex("#94a3b8");
+
+  protected static final ColorValue SLATE_500 = Color.ofHex("#64748b");
+
+  protected static final ColorValue SLATE_600 = Color.ofHex("#475569");
+
+  protected static final ColorValue SLATE_700 = Color.ofHex("#334155");
+
+  protected static final ColorValue SLATE_800 = Color.ofHex("#1e293b");
+
+  protected static final ColorValue SLATE_900 = Color.ofHex("#0f172a");
+
+  protected static final ColorValue GRAY_050 = Color.ofHex("#f9fafb");
+
+  protected static final ColorValue GRAY_100 = Color.ofHex("#f3f4f6");
+
+  protected static final ColorValue GRAY_200 = Color.ofHex("#e5e7eb");
+
+  protected static final ColorValue GRAY_300 = Color.ofHex("#d1d5db");
+
+  protected static final ColorValue GRAY_400 = Color.ofHex("#9ca3af");
+
+  protected static final ColorValue GRAY_500 = Color.ofHex("#6b7280");
+
+  protected static final ColorValue GRAY_600 = Color.ofHex("#4b5563");
+
+  protected static final ColorValue GRAY_700 = Color.ofHex("#374151");
+
+  protected static final ColorValue GRAY_800 = Color.ofHex("#1f2937");
+
+  protected static final ColorValue GRAY_900 = Color.ofHex("#111827");
+
+  protected static final ColorValue ZINC_050 = Color.ofHex("#fafafa");
+
+  protected static final ColorValue ZINC_100 = Color.ofHex("#f4f4f5");
+
+  protected static final ColorValue ZINC_200 = Color.ofHex("#e4e4e7");
+
+  protected static final ColorValue ZINC_300 = Color.ofHex("#d4d4d8");
+
+  protected static final ColorValue ZINC_400 = Color.ofHex("#a1a1aa");
+
+  protected static final ColorValue ZINC_500 = Color.ofHex("#71717a");
+
+  protected static final ColorValue ZINC_600 = Color.ofHex("#52525b");
+
+  protected static final ColorValue ZINC_700 = Color.ofHex("#3f3f46");
+
+  protected static final ColorValue ZINC_800 = Color.ofHex("#27272a");
+
+  protected static final ColorValue ZINC_900 = Color.ofHex("#18181b");
+
+  protected static final ColorValue NEUTRAL_050 = Color.ofHex("#fafafa");
+
+  protected static final ColorValue NEUTRAL_100 = Color.ofHex("#f5f5f5");
+
+  protected static final ColorValue NEUTRAL_200 = Color.ofHex("#e5e5e5");
+
+  protected static final ColorValue NEUTRAL_300 = Color.ofHex("#d4d4d4");
+
+  protected static final ColorValue NEUTRAL_400 = Color.ofHex("#a3a3a3");
+
+  protected static final ColorValue NEUTRAL_500 = Color.ofHex("#737373");
+
+  protected static final ColorValue NEUTRAL_600 = Color.ofHex("#525252");
+
+  protected static final ColorValue NEUTRAL_700 = Color.ofHex("#404040");
+
+  protected static final ColorValue NEUTRAL_800 = Color.ofHex("#262626");
+
+  protected static final ColorValue NEUTRAL_900 = Color.ofHex("#171717");
+
+  protected static final ColorValue STONE_050 = Color.ofHex("#fafaf9");
+
+  protected static final ColorValue STONE_100 = Color.ofHex("#f5f5f4");
+
+  protected static final ColorValue STONE_200 = Color.ofHex("#e7e5e4");
+
+  protected static final ColorValue STONE_300 = Color.ofHex("#d6d3d1");
+
+  protected static final ColorValue STONE_400 = Color.ofHex("#a8a29e");
+
+  protected static final ColorValue STONE_500 = Color.ofHex("#78716c");
+
+  protected static final ColorValue STONE_600 = Color.ofHex("#57534e");
+
+  protected static final ColorValue STONE_700 = Color.ofHex("#44403c");
+
+  protected static final ColorValue STONE_800 = Color.ofHex("#292524");
+
+  protected static final ColorValue STONE_900 = Color.ofHex("#1c1917");
+
+  protected static final ColorValue RED_050 = Color.ofHex("#fef2f2");
+
+  protected static final ColorValue RED_100 = Color.ofHex("#fee2e2");
+
+  protected static final ColorValue RED_200 = Color.ofHex("#fecaca");
+
+  protected static final ColorValue RED_300 = Color.ofHex("#fca5a5");
+
+  protected static final ColorValue RED_400 = Color.ofHex("#f87171");
+
+  protected static final ColorValue RED_500 = Color.ofHex("#ef4444");
+
+  protected static final ColorValue RED_600 = Color.ofHex("#dc2626");
+
+  protected static final ColorValue RED_700 = Color.ofHex("#b91c1c");
+
+  protected static final ColorValue RED_800 = Color.ofHex("#991b1b");
+
+  protected static final ColorValue RED_900 = Color.ofHex("#7f1d1d");
+
+  protected static final ColorValue ORANGE_050 = Color.ofHex("#fff7ed");
+
+  protected static final ColorValue ORANGE_100 = Color.ofHex("#ffedd5");
+
+  protected static final ColorValue ORANGE_200 = Color.ofHex("#fed7aa");
+
+  protected static final ColorValue ORANGE_300 = Color.ofHex("#fdba74");
+
+  protected static final ColorValue ORANGE_400 = Color.ofHex("#fb923c");
+
+  protected static final ColorValue ORANGE_500 = Color.ofHex("#f97316");
+
+  protected static final ColorValue ORANGE_600 = Color.ofHex("#ea580c");
+
+  protected static final ColorValue ORANGE_700 = Color.ofHex("#c2410c");
+
+  protected static final ColorValue ORANGE_800 = Color.ofHex("#9a3412");
+
+  protected static final ColorValue ORANGE_900 = Color.ofHex("#7c2d12");
+
+  protected static final ColorValue AMBER_050 = Color.ofHex("#fffbeb");
+
+  protected static final ColorValue AMBER_100 = Color.ofHex("#fef3c7");
+
+  protected static final ColorValue AMBER_200 = Color.ofHex("#fde68a");
+
+  protected static final ColorValue AMBER_300 = Color.ofHex("#fcd34d");
+
+  protected static final ColorValue AMBER_400 = Color.ofHex("#fbbf24");
+
+  protected static final ColorValue AMBER_500 = Color.ofHex("#f59e0b");
+
+  protected static final ColorValue AMBER_600 = Color.ofHex("#d97706");
+
+  protected static final ColorValue AMBER_700 = Color.ofHex("#b45309");
+
+  protected static final ColorValue AMBER_800 = Color.ofHex("#92400e");
+
+  protected static final ColorValue AMBER_900 = Color.ofHex("#78350f");
+
+  protected static final ColorValue YELLOW_050 = Color.ofHex("#fefce8");
+
+  protected static final ColorValue YELLOW_100 = Color.ofHex("#fef9c3");
+
+  protected static final ColorValue YELLOW_200 = Color.ofHex("#fef08a");
+
+  protected static final ColorValue YELLOW_300 = Color.ofHex("#fde047");
+
+  protected static final ColorValue YELLOW_400 = Color.ofHex("#facc15");
+
+  protected static final ColorValue YELLOW_500 = Color.ofHex("#eab308");
+
+  protected static final ColorValue YELLOW_600 = Color.ofHex("#ca8a04");
+
+  protected static final ColorValue YELLOW_700 = Color.ofHex("#a16207");
+
+  protected static final ColorValue YELLOW_800 = Color.ofHex("#854d0e");
+
+  protected static final ColorValue YELLOW_900 = Color.ofHex("#713f12");
+
+  protected static final ColorValue LIME_050 = Color.ofHex("#f7fee7");
+
+  protected static final ColorValue LIME_100 = Color.ofHex("#ecfccb");
+
+  protected static final ColorValue LIME_200 = Color.ofHex("#d9f99d");
+
+  protected static final ColorValue LIME_300 = Color.ofHex("#bef264");
+
+  protected static final ColorValue LIME_400 = Color.ofHex("#a3e635");
+
+  protected static final ColorValue LIME_500 = Color.ofHex("#84cc16");
+
+  protected static final ColorValue LIME_600 = Color.ofHex("#65a30d");
+
+  protected static final ColorValue LIME_700 = Color.ofHex("#4d7c0f");
+
+  protected static final ColorValue LIME_800 = Color.ofHex("#3f6212");
+
+  protected static final ColorValue LIME_900 = Color.ofHex("#365314");
+
+  protected static final ColorValue GREEN_050 = Color.ofHex("#f0fdf4");
+
+  protected static final ColorValue GREEN_100 = Color.ofHex("#dcfce7");
+
+  protected static final ColorValue GREEN_200 = Color.ofHex("#bbf7d0");
+
+  protected static final ColorValue GREEN_300 = Color.ofHex("#86efac");
+
+  protected static final ColorValue GREEN_400 = Color.ofHex("#4ade80");
+
+  protected static final ColorValue GREEN_500 = Color.ofHex("#22c55e");
+
+  protected static final ColorValue GREEN_600 = Color.ofHex("#16a34a");
+
+  protected static final ColorValue GREEN_700 = Color.ofHex("#15803d");
+
+  protected static final ColorValue GREEN_800 = Color.ofHex("#166534");
+
+  protected static final ColorValue GREEN_900 = Color.ofHex("#14532d");
+
+  protected static final ColorValue EMERALD_050 = Color.ofHex("#ecfdf5");
+
+  protected static final ColorValue EMERALD_100 = Color.ofHex("#d1fae5");
+
+  protected static final ColorValue EMERALD_200 = Color.ofHex("#a7f3d0");
+
+  protected static final ColorValue EMERALD_300 = Color.ofHex("#6ee7b7");
+
+  protected static final ColorValue EMERALD_400 = Color.ofHex("#34d399");
+
+  protected static final ColorValue EMERALD_500 = Color.ofHex("#10b981");
+
+  protected static final ColorValue EMERALD_600 = Color.ofHex("#059669");
+
+  protected static final ColorValue EMERALD_700 = Color.ofHex("#047857");
+
+  protected static final ColorValue EMERALD_800 = Color.ofHex("#065f46");
+
+  protected static final ColorValue EMERALD_900 = Color.ofHex("#064e3b");
+
+  protected static final ColorValue TEAL_050 = Color.ofHex("#f0fdfa");
+
+  protected static final ColorValue TEAL_100 = Color.ofHex("#ccfbf1");
+
+  protected static final ColorValue TEAL_200 = Color.ofHex("#99f6e4");
+
+  protected static final ColorValue TEAL_300 = Color.ofHex("#5eead4");
+
+  protected static final ColorValue TEAL_400 = Color.ofHex("#2dd4bf");
+
+  protected static final ColorValue TEAL_500 = Color.ofHex("#14b8a6");
+
+  protected static final ColorValue TEAL_600 = Color.ofHex("#0d9488");
+
+  protected static final ColorValue TEAL_700 = Color.ofHex("#0f766e");
+
+  protected static final ColorValue TEAL_800 = Color.ofHex("#115e59");
+
+  protected static final ColorValue TEAL_900 = Color.ofHex("#134e4a");
+
+  protected static final ColorValue CYAN_050 = Color.ofHex("#ecfeff");
+
+  protected static final ColorValue CYAN_100 = Color.ofHex("#cffafe");
+
+  protected static final ColorValue CYAN_200 = Color.ofHex("#a5f3fc");
+
+  protected static final ColorValue CYAN_300 = Color.ofHex("#67e8f9");
+
+  protected static final ColorValue CYAN_400 = Color.ofHex("#22d3ee");
+
+  protected static final ColorValue CYAN_500 = Color.ofHex("#06b6d4");
+
+  protected static final ColorValue CYAN_600 = Color.ofHex("#0891b2");
+
+  protected static final ColorValue CYAN_700 = Color.ofHex("#0e7490");
+
+  protected static final ColorValue CYAN_800 = Color.ofHex("#155e75");
+
+  protected static final ColorValue CYAN_900 = Color.ofHex("#164e63");
+
+  protected static final ColorValue SKY_050 = Color.ofHex("#f0f9ff");
+
+  protected static final ColorValue SKY_100 = Color.ofHex("#e0f2fe");
+
+  protected static final ColorValue SKY_200 = Color.ofHex("#bae6fd");
+
+  protected static final ColorValue SKY_300 = Color.ofHex("#7dd3fc");
+
+  protected static final ColorValue SKY_400 = Color.ofHex("#38bdf8");
+
+  protected static final ColorValue SKY_500 = Color.ofHex("#0ea5e9");
+
+  protected static final ColorValue SKY_600 = Color.ofHex("#0284c7");
+
+  protected static final ColorValue SKY_700 = Color.ofHex("#0369a1");
+
+  protected static final ColorValue SKY_800 = Color.ofHex("#075985");
+
+  protected static final ColorValue SKY_900 = Color.ofHex("#0c4a6e");
+
+  protected static final ColorValue BLUE_050 = Color.ofHex("#eff6ff");
+
+  protected static final ColorValue BLUE_100 = Color.ofHex("#dbeafe");
+
+  protected static final ColorValue BLUE_200 = Color.ofHex("#bfdbfe");
+
+  protected static final ColorValue BLUE_300 = Color.ofHex("#93c5fd");
+
+  protected static final ColorValue BLUE_400 = Color.ofHex("#60a5fa");
+
+  protected static final ColorValue BLUE_500 = Color.ofHex("#3b82f6");
+
+  protected static final ColorValue BLUE_600 = Color.ofHex("#2563eb");
+
+  protected static final ColorValue BLUE_700 = Color.ofHex("#1d4ed8");
+
+  protected static final ColorValue BLUE_800 = Color.ofHex("#1e40af");
+
+  protected static final ColorValue BLUE_900 = Color.ofHex("#1e3a8a");
+
+  protected static final ColorValue INDIGO_050 = Color.ofHex("#eef2ff");
+
+  protected static final ColorValue INDIGO_100 = Color.ofHex("#e0e7ff");
+
+  protected static final ColorValue INDIGO_200 = Color.ofHex("#c7d2fe");
+
+  protected static final ColorValue INDIGO_300 = Color.ofHex("#a5b4fc");
+
+  protected static final ColorValue INDIGO_400 = Color.ofHex("#818cf8");
+
+  protected static final ColorValue INDIGO_500 = Color.ofHex("#6366f1");
+
+  protected static final ColorValue INDIGO_600 = Color.ofHex("#4f46e5");
+
+  protected static final ColorValue INDIGO_700 = Color.ofHex("#4338ca");
+
+  protected static final ColorValue INDIGO_800 = Color.ofHex("#3730a3");
+
+  protected static final ColorValue INDIGO_900 = Color.ofHex("#312e81");
+
+  protected static final ColorValue VIOLET_050 = Color.ofHex("#f5f3ff");
+
+  protected static final ColorValue VIOLET_100 = Color.ofHex("#ede9fe");
+
+  protected static final ColorValue VIOLET_200 = Color.ofHex("#ddd6fe");
+
+  protected static final ColorValue VIOLET_300 = Color.ofHex("#c4b5fd");
+
+  protected static final ColorValue VIOLET_400 = Color.ofHex("#a78bfa");
+
+  protected static final ColorValue VIOLET_500 = Color.ofHex("#8b5cf6");
+
+  protected static final ColorValue VIOLET_600 = Color.ofHex("#7c3aed");
+
+  protected static final ColorValue VIOLET_700 = Color.ofHex("#6d28d9");
+
+  protected static final ColorValue VIOLET_800 = Color.ofHex("#5b21b6");
+
+  protected static final ColorValue VIOLET_900 = Color.ofHex("#4c1d95");
+
+  protected static final ColorValue PURPLE_050 = Color.ofHex("#faf5ff");
+
+  protected static final ColorValue PURPLE_100 = Color.ofHex("#f3e8ff");
+
+  protected static final ColorValue PURPLE_200 = Color.ofHex("#e9d5ff");
+
+  protected static final ColorValue PURPLE_300 = Color.ofHex("#d8b4fe");
+
+  protected static final ColorValue PURPLE_400 = Color.ofHex("#c084fc");
+
+  protected static final ColorValue PURPLE_500 = Color.ofHex("#a855f7");
+
+  protected static final ColorValue PURPLE_600 = Color.ofHex("#9333ea");
+
+  protected static final ColorValue PURPLE_700 = Color.ofHex("#7e22ce");
+
+  protected static final ColorValue PURPLE_800 = Color.ofHex("#6b21a8");
+
+  protected static final ColorValue PURPLE_900 = Color.ofHex("#581c87");
+
+  protected static final ColorValue FUCHSIA_050 = Color.ofHex("#fdf4ff");
+
+  protected static final ColorValue FUCHSIA_100 = Color.ofHex("#fae8ff");
+
+  protected static final ColorValue FUCHSIA_200 = Color.ofHex("#f5d0fe");
+
+  protected static final ColorValue FUCHSIA_300 = Color.ofHex("#f0abfc");
+
+  protected static final ColorValue FUCHSIA_400 = Color.ofHex("#e879f9");
+
+  protected static final ColorValue FUCHSIA_500 = Color.ofHex("#d946ef");
+
+  protected static final ColorValue FUCHSIA_600 = Color.ofHex("#c026d3");
+
+  protected static final ColorValue FUCHSIA_700 = Color.ofHex("#a21caf");
+
+  protected static final ColorValue FUCHSIA_800 = Color.ofHex("#86198f");
+
+  protected static final ColorValue FUCHSIA_900 = Color.ofHex("#701a75");
+
+  protected static final ColorValue PINK_050 = Color.ofHex("#fdf2f8");
+
+  protected static final ColorValue PINK_100 = Color.ofHex("#fce7f3");
+
+  protected static final ColorValue PINK_200 = Color.ofHex("#fbcfe8");
+
+  protected static final ColorValue PINK_300 = Color.ofHex("#f9a8d4");
+
+  protected static final ColorValue PINK_400 = Color.ofHex("#f472b6");
+
+  protected static final ColorValue PINK_500 = Color.ofHex("#ec4899");
+
+  protected static final ColorValue PINK_600 = Color.ofHex("#db2777");
+
+  protected static final ColorValue PINK_700 = Color.ofHex("#be185d");
+
+  protected static final ColorValue PINK_800 = Color.ofHex("#9d174d");
+
+  protected static final ColorValue PINK_900 = Color.ofHex("#831843");
+
+  protected static final ColorValue ROSE_050 = Color.ofHex("#fff1f2");
+
+  protected static final ColorValue ROSE_100 = Color.ofHex("#ffe4e6");
+
+  protected static final ColorValue ROSE_200 = Color.ofHex("#fecdd3");
+
+  protected static final ColorValue ROSE_300 = Color.ofHex("#fda4af");
+
+  protected static final ColorValue ROSE_400 = Color.ofHex("#fb7185");
+
+  protected static final ColorValue ROSE_500 = Color.ofHex("#f43f5e");
+
+  protected static final ColorValue ROSE_600 = Color.ofHex("#e11d48");
+
+  protected static final ColorValue ROSE_700 = Color.ofHex("#be123c");
+
+  protected static final ColorValue ROSE_800 = Color.ofHex("#9f1239");
+
+  protected static final ColorValue ROSE_900 = Color.ofHex("#881337");
 
   protected static final PositionValue absolute = StandardName.absolute;
 

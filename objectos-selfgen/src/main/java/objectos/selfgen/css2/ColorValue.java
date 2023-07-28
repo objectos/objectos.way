@@ -16,9 +16,11 @@
 package objectos.selfgen.css2;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import objectos.code.ClassTypeName;
 import objectos.code.tmpl.TypeName;
+import objectos.util.GrowableList;
 import objectos.util.GrowableSet;
 
 public final class ColorValue implements ParameterType, Value {
@@ -26,6 +28,12 @@ public final class ColorValue implements ParameterType, Value {
   public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
   public final GrowableSet<ColorName> names = new GrowableSet<>();
+
+  public final List<ColorHex> palette = new GrowableList<>();
+
+  public final void add(String constantName, String hexValue) {
+    palette.add(new ColorHex(constantName, hexValue));
+  }
 
   public final void addName(String name) {
     var colorName = ColorName.of(name);

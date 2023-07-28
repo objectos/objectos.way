@@ -172,6 +172,8 @@ public final class CssSpec extends CssSelfGen {
       "yellow"
     );
 
+    colorPalette();
+
     // image
 
     image = t(
@@ -323,6 +325,250 @@ public final class CssSpec extends CssSelfGen {
     // W
 
     width();
+  }
+
+  private void colorPalette() {
+    color.add("SLATE_050", "#f8fafc");
+    color.add("SLATE_100", "#f1f5f9");
+    color.add("SLATE_200", "#e2e8f0");
+    color.add("SLATE_300", "#cbd5e1");
+    color.add("SLATE_400", "#94a3b8");
+    color.add("SLATE_500", "#64748b");
+    color.add("SLATE_600", "#475569");
+    color.add("SLATE_700", "#334155");
+    color.add("SLATE_800", "#1e293b");
+    color.add("SLATE_900", "#0f172a");
+
+    color.add("GRAY_050", "#f9fafb");
+    color.add("GRAY_100", "#f3f4f6");
+    color.add("GRAY_200", "#e5e7eb");
+    color.add("GRAY_300", "#d1d5db");
+    color.add("GRAY_400", "#9ca3af");
+    color.add("GRAY_500", "#6b7280");
+    color.add("GRAY_600", "#4b5563");
+    color.add("GRAY_700", "#374151");
+    color.add("GRAY_800", "#1f2937");
+    color.add("GRAY_900", "#111827");
+
+    color.add("ZINC_050", "#fafafa");
+    color.add("ZINC_100", "#f4f4f5");
+    color.add("ZINC_200", "#e4e4e7");
+    color.add("ZINC_300", "#d4d4d8");
+    color.add("ZINC_400", "#a1a1aa");
+    color.add("ZINC_500", "#71717a");
+    color.add("ZINC_600", "#52525b");
+    color.add("ZINC_700", "#3f3f46");
+    color.add("ZINC_800", "#27272a");
+    color.add("ZINC_900", "#18181b");
+
+    color.add("NEUTRAL_050", "#fafafa");
+    color.add("NEUTRAL_100", "#f5f5f5");
+    color.add("NEUTRAL_200", "#e5e5e5");
+    color.add("NEUTRAL_300", "#d4d4d4");
+    color.add("NEUTRAL_400", "#a3a3a3");
+    color.add("NEUTRAL_500", "#737373");
+    color.add("NEUTRAL_600", "#525252");
+    color.add("NEUTRAL_700", "#404040");
+    color.add("NEUTRAL_800", "#262626");
+    color.add("NEUTRAL_900", "#171717");
+
+    color.add("STONE_050", "#fafaf9");
+    color.add("STONE_100", "#f5f5f4");
+    color.add("STONE_200", "#e7e5e4");
+    color.add("STONE_300", "#d6d3d1");
+    color.add("STONE_400", "#a8a29e");
+    color.add("STONE_500", "#78716c");
+    color.add("STONE_600", "#57534e");
+    color.add("STONE_700", "#44403c");
+    color.add("STONE_800", "#292524");
+    color.add("STONE_900", "#1c1917");
+
+    color.add("RED_050", "#fef2f2");
+    color.add("RED_100", "#fee2e2");
+    color.add("RED_200", "#fecaca");
+    color.add("RED_300", "#fca5a5");
+    color.add("RED_400", "#f87171");
+    color.add("RED_500", "#ef4444");
+    color.add("RED_600", "#dc2626");
+    color.add("RED_700", "#b91c1c");
+    color.add("RED_800", "#991b1b");
+    color.add("RED_900", "#7f1d1d");
+
+    color.add("ORANGE_050", "#fff7ed");
+    color.add("ORANGE_100", "#ffedd5");
+    color.add("ORANGE_200", "#fed7aa");
+    color.add("ORANGE_300", "#fdba74");
+    color.add("ORANGE_400", "#fb923c");
+    color.add("ORANGE_500", "#f97316");
+    color.add("ORANGE_600", "#ea580c");
+    color.add("ORANGE_700", "#c2410c");
+    color.add("ORANGE_800", "#9a3412");
+    color.add("ORANGE_900", "#7c2d12");
+
+    color.add("AMBER_050", "#fffbeb");
+    color.add("AMBER_100", "#fef3c7");
+    color.add("AMBER_200", "#fde68a");
+    color.add("AMBER_300", "#fcd34d");
+    color.add("AMBER_400", "#fbbf24");
+    color.add("AMBER_500", "#f59e0b");
+    color.add("AMBER_600", "#d97706");
+    color.add("AMBER_700", "#b45309");
+    color.add("AMBER_800", "#92400e");
+    color.add("AMBER_900", "#78350f");
+
+    color.add("YELLOW_050", "#fefce8");
+    color.add("YELLOW_100", "#fef9c3");
+    color.add("YELLOW_200", "#fef08a");
+    color.add("YELLOW_300", "#fde047");
+    color.add("YELLOW_400", "#facc15");
+    color.add("YELLOW_500", "#eab308");
+    color.add("YELLOW_600", "#ca8a04");
+    color.add("YELLOW_700", "#a16207");
+    color.add("YELLOW_800", "#854d0e");
+    color.add("YELLOW_900", "#713f12");
+
+    color.add("LIME_050", "#f7fee7");
+    color.add("LIME_100", "#ecfccb");
+    color.add("LIME_200", "#d9f99d");
+    color.add("LIME_300", "#bef264");
+    color.add("LIME_400", "#a3e635");
+    color.add("LIME_500", "#84cc16");
+    color.add("LIME_600", "#65a30d");
+    color.add("LIME_700", "#4d7c0f");
+    color.add("LIME_800", "#3f6212");
+    color.add("LIME_900", "#365314");
+
+    color.add("GREEN_050", "#f0fdf4");
+    color.add("GREEN_100", "#dcfce7");
+    color.add("GREEN_200", "#bbf7d0");
+    color.add("GREEN_300", "#86efac");
+    color.add("GREEN_400", "#4ade80");
+    color.add("GREEN_500", "#22c55e");
+    color.add("GREEN_600", "#16a34a");
+    color.add("GREEN_700", "#15803d");
+    color.add("GREEN_800", "#166534");
+    color.add("GREEN_900", "#14532d");
+
+    color.add("EMERALD_050", "#ecfdf5");
+    color.add("EMERALD_100", "#d1fae5");
+    color.add("EMERALD_200", "#a7f3d0");
+    color.add("EMERALD_300", "#6ee7b7");
+    color.add("EMERALD_400", "#34d399");
+    color.add("EMERALD_500", "#10b981");
+    color.add("EMERALD_600", "#059669");
+    color.add("EMERALD_700", "#047857");
+    color.add("EMERALD_800", "#065f46");
+    color.add("EMERALD_900", "#064e3b");
+
+    color.add("TEAL_050", "#f0fdfa");
+    color.add("TEAL_100", "#ccfbf1");
+    color.add("TEAL_200", "#99f6e4");
+    color.add("TEAL_300", "#5eead4");
+    color.add("TEAL_400", "#2dd4bf");
+    color.add("TEAL_500", "#14b8a6");
+    color.add("TEAL_600", "#0d9488");
+    color.add("TEAL_700", "#0f766e");
+    color.add("TEAL_800", "#115e59");
+    color.add("TEAL_900", "#134e4a");
+
+    color.add("CYAN_050", "#ecfeff");
+    color.add("CYAN_100", "#cffafe");
+    color.add("CYAN_200", "#a5f3fc");
+    color.add("CYAN_300", "#67e8f9");
+    color.add("CYAN_400", "#22d3ee");
+    color.add("CYAN_500", "#06b6d4");
+    color.add("CYAN_600", "#0891b2");
+    color.add("CYAN_700", "#0e7490");
+    color.add("CYAN_800", "#155e75");
+    color.add("CYAN_900", "#164e63");
+
+    color.add("SKY_050", "#f0f9ff");
+    color.add("SKY_100", "#e0f2fe");
+    color.add("SKY_200", "#bae6fd");
+    color.add("SKY_300", "#7dd3fc");
+    color.add("SKY_400", "#38bdf8");
+    color.add("SKY_500", "#0ea5e9");
+    color.add("SKY_600", "#0284c7");
+    color.add("SKY_700", "#0369a1");
+    color.add("SKY_800", "#075985");
+    color.add("SKY_900", "#0c4a6e");
+
+    color.add("BLUE_050", "#eff6ff");
+    color.add("BLUE_100", "#dbeafe");
+    color.add("BLUE_200", "#bfdbfe");
+    color.add("BLUE_300", "#93c5fd");
+    color.add("BLUE_400", "#60a5fa");
+    color.add("BLUE_500", "#3b82f6");
+    color.add("BLUE_600", "#2563eb");
+    color.add("BLUE_700", "#1d4ed8");
+    color.add("BLUE_800", "#1e40af");
+    color.add("BLUE_900", "#1e3a8a");
+
+    color.add("INDIGO_050", "#eef2ff");
+    color.add("INDIGO_100", "#e0e7ff");
+    color.add("INDIGO_200", "#c7d2fe");
+    color.add("INDIGO_300", "#a5b4fc");
+    color.add("INDIGO_400", "#818cf8");
+    color.add("INDIGO_500", "#6366f1");
+    color.add("INDIGO_600", "#4f46e5");
+    color.add("INDIGO_700", "#4338ca");
+    color.add("INDIGO_800", "#3730a3");
+    color.add("INDIGO_900", "#312e81");
+
+    color.add("VIOLET_050", "#f5f3ff");
+    color.add("VIOLET_100", "#ede9fe");
+    color.add("VIOLET_200", "#ddd6fe");
+    color.add("VIOLET_300", "#c4b5fd");
+    color.add("VIOLET_400", "#a78bfa");
+    color.add("VIOLET_500", "#8b5cf6");
+    color.add("VIOLET_600", "#7c3aed");
+    color.add("VIOLET_700", "#6d28d9");
+    color.add("VIOLET_800", "#5b21b6");
+    color.add("VIOLET_900", "#4c1d95");
+
+    color.add("PURPLE_050", "#faf5ff");
+    color.add("PURPLE_100", "#f3e8ff");
+    color.add("PURPLE_200", "#e9d5ff");
+    color.add("PURPLE_300", "#d8b4fe");
+    color.add("PURPLE_400", "#c084fc");
+    color.add("PURPLE_500", "#a855f7");
+    color.add("PURPLE_600", "#9333ea");
+    color.add("PURPLE_700", "#7e22ce");
+    color.add("PURPLE_800", "#6b21a8");
+    color.add("PURPLE_900", "#581c87");
+
+    color.add("FUCHSIA_050", "#fdf4ff");
+    color.add("FUCHSIA_100", "#fae8ff");
+    color.add("FUCHSIA_200", "#f5d0fe");
+    color.add("FUCHSIA_300", "#f0abfc");
+    color.add("FUCHSIA_400", "#e879f9");
+    color.add("FUCHSIA_500", "#d946ef");
+    color.add("FUCHSIA_600", "#c026d3");
+    color.add("FUCHSIA_700", "#a21caf");
+    color.add("FUCHSIA_800", "#86198f");
+    color.add("FUCHSIA_900", "#701a75");
+
+    color.add("PINK_050", "#fdf2f8");
+    color.add("PINK_100", "#fce7f3");
+    color.add("PINK_200", "#fbcfe8");
+    color.add("PINK_300", "#f9a8d4");
+    color.add("PINK_400", "#f472b6");
+    color.add("PINK_500", "#ec4899");
+    color.add("PINK_600", "#db2777");
+    color.add("PINK_700", "#be185d");
+    color.add("PINK_800", "#9d174d");
+    color.add("PINK_900", "#831843");
+
+    color.add("ROSE_050", "#fff1f2");
+    color.add("ROSE_100", "#ffe4e6");
+    color.add("ROSE_200", "#fecdd3");
+    color.add("ROSE_300", "#fda4af");
+    color.add("ROSE_400", "#fb7185");
+    color.add("ROSE_500", "#f43f5e");
+    color.add("ROSE_600", "#e11d48");
+    color.add("ROSE_700", "#be123c");
+    color.add("ROSE_800", "#9f1239");
+    color.add("ROSE_900", "#881337");
   }
 
   private void appearance() {

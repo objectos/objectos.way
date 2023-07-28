@@ -21,6 +21,7 @@ import objectos.css.tmpl.PropertyValue.ColorValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
 import objectos.css.util.Length;
+import objectos.css.util.Percentage;
 import org.testng.annotations.Test;
 
 public class CssTemplateTest {
@@ -78,6 +79,54 @@ public class CssTemplateTest {
       """
       p {
         color: var(--text-color);
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#488] external length values
+  """)
+  public void length() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            p,
+
+            padding(Length.px(8), Length.rem(0.5))
+          );
+        }
+      },
+
+      """
+      p {
+        padding: 8px 0.5rem;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  [#488] external percentage values
+  """)
+  public void percentage() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            p,
+
+            width(Percentage.of(100))
+          );
+        }
+      },
+
+      """
+      p {
+        width: 100%;
       }
       """
     );
@@ -146,30 +195,6 @@ public class CssTemplateTest {
         p {
           display: flex;
         }
-      }
-      """
-    );
-  }
-
-  @Test(description = """
-  [#488] external length values
-  """)
-  public void length() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            p,
-
-            padding(Length.px(8), Length.rem(0.5))
-          );
-        }
-      },
-
-      """
-      p {
-        padding: 8px 0.5rem;
       }
       """
     );
@@ -570,7 +595,8 @@ public class CssTemplateTest {
             hr,
 
             color(red),
-            color(inherit)
+            color(inherit),
+            color(GRAY_200)
           );
         }
       },
@@ -579,6 +605,7 @@ public class CssTemplateTest {
       hr {
         color: red;
         color: inherit;
+        color: #e5e7eb;
       }
       """
     );

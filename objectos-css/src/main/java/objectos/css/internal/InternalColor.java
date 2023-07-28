@@ -15,8 +15,19 @@
  */
 package objectos.css.internal;
 
-import objectos.css.util.Percentage;
+import objectos.css.util.Color;
 
-public final class IntPercentage extends Percentage {
+public final class InternalColor extends Color {
+
+  final String raw;
+
+  public InternalColor(String raw) {
+    this.raw = raw;
+  }
+
+  @Override
+  public final String toString() {
+    return raw;
+  }
 
 }
