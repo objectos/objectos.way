@@ -32,6 +32,8 @@ public sealed interface PropertyValue {
 
   sealed interface BorderCollapseValue extends PropertyValue {}
 
+  sealed interface BorderShorthandValue extends PropertyValue {}
+
   sealed interface BottomValue extends PropertyValue {}
 
   sealed interface BoxSizingValue extends PropertyValue {}
@@ -88,9 +90,9 @@ public sealed interface PropertyValue {
 
   sealed interface LineHeightValue extends PropertyValue {}
 
-  sealed interface LineStyle extends PropertyValue {}
+  sealed interface LineStyle extends BorderShorthandValue {}
 
-  sealed interface LineWidth extends OutlineValue {}
+  sealed interface LineWidth extends BorderShorthandValue, OutlineValue {}
 
   sealed interface ListStyleImageValue extends ListStyleValue {}
 
@@ -142,6 +144,7 @@ public sealed interface PropertyValue {
       AppearanceValue,
       BackgroundImageValue,
       BorderCollapseValue,
+      BorderShorthandValue,
       BottomValue,
       BoxSizingValue,
       CounterStyleValue,
@@ -291,7 +294,7 @@ public sealed interface PropertyValue {
       TableKeyword,
       TextareaKeyword permits StandardName {}
 
-  sealed interface ColorValue extends OutlineValue, TextDecorationValue permits Color, InternalInstruction, StandardName {}
+  sealed interface ColorValue extends BorderShorthandValue, OutlineValue, TextDecorationValue permits Color, InternalInstruction, StandardName {}
 
   sealed interface LengthValue extends LengthPercentage, LineWidth permits InternalInstruction, Length, Zero {}
 

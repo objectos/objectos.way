@@ -218,6 +218,7 @@ public final class CssSpec extends CssSelfGen {
     borderColor();
     borderStyle();
     borderWidth();
+    border();
     bottom();
     boxShadow();
     boxSizing();
@@ -325,6 +326,281 @@ public final class CssSpec extends CssSelfGen {
     // W
 
     width();
+  }
+
+  private void appearance() {
+    var appearanceValue = t(
+      "AppearanceValue",
+
+      k("auto"),
+      k("menulist-button"),
+      k("none"),
+      k("textfield"),
+
+      k("button"),
+      k("checkbox"),
+      k("listbox"),
+      k("menulist"),
+      k("meter"),
+      k("progress-bar"),
+      k("push-button"),
+      k("radio"),
+      k("searchfield"),
+      k("slider-horizontal"),
+      k("square-button"),
+      k("textarea")
+    );
+
+    var names = List.of("appearance", "-moz-appearance", "-webkit-appearance");
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(appearanceValue, "value")
+      );
+    }
+  }
+
+  private void backgroundColor() {
+    property(
+      "background-color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "value")
+    );
+  }
+
+  private void backgroundImage() {
+    var backgroundImageValue = t(
+      "BackgroundImageValue",
+
+      k("none")
+    );
+
+    property(
+      "background-image",
+
+      sig(globalKeyword, "value"),
+      sig(backgroundImageValue, "value")
+    );
+  }
+
+  private void border() {
+    ValueType value;
+    value = t(
+      "BorderShorthandValue",
+
+      t("LineWidth"),
+      t("LineStyle"),
+      color
+    );
+
+    List<String> names;
+    names = List.of("border", "border-top", "border-right", "border-bottom", "border-left");
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(value, "value1"),
+        sig(value, "value1", value, "value2"),
+        sig(value, "value1", value, "value2", value, "value3")
+      );
+    }
+  }
+
+  private void borderCollapse() {
+    var borderCollapseValue = t(
+      "BorderCollapseValue",
+
+      k("collapse"),
+      k("separate")
+    );
+
+    property(
+      "border-collapse",
+
+      sig(globalKeyword, "value"),
+      sig(borderCollapseValue, "value")
+    );
+  }
+
+  private void borderColor() {
+    property(
+      "border-color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "all"),
+      sig(color, "vertical", color, "horizontal"),
+      sig(color, "top", color, "horizontal", color, "bottom"),
+      sig(color, "top", color, "right", color, "bottom", color, "left")
+    );
+  }
+
+  private void borderStyle() {
+    var lineStyle = t(
+      "LineStyle",
+
+      k("dashed"),
+      k("dotted"),
+      k("double"),
+      k("groove"),
+      k("hidden"),
+      k("inset"),
+      k("none"),
+      k("outset"),
+      k("ridge"),
+      k("solid")
+    );
+
+    property(
+      "border-style",
+
+      sig(globalKeyword, "value"),
+      sig(lineStyle, "all"),
+      sig(lineStyle, "vertical", lineStyle, "horizontal"),
+      sig(lineStyle, "top", lineStyle, "horizontal", lineStyle, "bottom"),
+      sig(lineStyle, "top", lineStyle, "right", lineStyle, "bottom", lineStyle, "left")
+    );
+  }
+
+  private void borderWidth() {
+    var lineWidth = t(
+      "LineWidth",
+
+      length,
+
+      k("medium"),
+      k("thick"),
+      k("thin")
+    );
+
+    var names = List.of(
+      "border-top-width",
+      "border-right-width",
+      "border-bottom-width",
+      "border-left-width"
+    );
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(lineWidth, "value")
+      );
+    }
+
+    property(
+      "border-width",
+
+      sig(globalKeyword, "value"),
+      sig(lineWidth, "all"),
+      sig(lineWidth, "vertical", lineWidth, "horizontal"),
+      sig(lineWidth, "top", lineWidth, "horizontal", lineWidth, "bottom"),
+      sig(lineWidth, "top", lineWidth, "right", lineWidth, "bottom", lineWidth, "left")
+    );
+  }
+
+  private void bottom() {
+    var bottomValue = t(
+      "BottomValue",
+      k("auto"),
+      lengthPercentage
+    );
+
+    property(
+      "bottom",
+
+      sig(globalKeyword, "value"),
+      sig(bottomValue, "value")
+    );
+  }
+
+  private void boxShadow() {
+    KeywordName inset;
+    inset = k("inset");
+
+    property(
+      "box-shadow",
+
+      sig(globalKeyword, "value"),
+
+      sig(k("none"), "value"),
+
+      sig(
+        length, "offsetX",
+        length, "offsetY",
+        color, "color"
+      ),
+
+      sig(
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        color, "color"
+      ),
+
+      sig(
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        length, "spreadRadius",
+        color, "color"
+      ),
+
+      sig(
+        inset, "inset",
+        length, "offsetX",
+        length, "offsetY",
+        color, "color"
+      ),
+
+      sig(
+        inset, "inset",
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        color, "color"
+      ),
+
+      sig(
+        inset, "inset",
+        length, "offsetX",
+        length, "offsetY",
+        length, "blurRadius",
+        length, "spreadRadius",
+        color, "color"
+      )
+    ).asHashProperty();
+  }
+
+  private void boxSizing() {
+    ValueType boxSizingValue = t(
+      "BoxSizingValue",
+
+      k("border-box"),
+      k("content-box")
+    );
+
+    property(
+      "box-sizing",
+
+      sig(globalKeyword, "value"),
+      sig(boxSizingValue, "value")
+    );
+  }
+
+  private void color() {
+    property(
+      "color",
+
+      sig(globalKeyword, "value"),
+      sig(color, "value")
+    );
   }
 
   private void colorPalette() {
@@ -569,256 +845,6 @@ public final class CssSpec extends CssSelfGen {
     color.add("ROSE_700", "#be123c");
     color.add("ROSE_800", "#9f1239");
     color.add("ROSE_900", "#881337");
-  }
-
-  private void appearance() {
-    var appearanceValue = t(
-      "AppearanceValue",
-
-      k("auto"),
-      k("menulist-button"),
-      k("none"),
-      k("textfield"),
-
-      k("button"),
-      k("checkbox"),
-      k("listbox"),
-      k("menulist"),
-      k("meter"),
-      k("progress-bar"),
-      k("push-button"),
-      k("radio"),
-      k("searchfield"),
-      k("slider-horizontal"),
-      k("square-button"),
-      k("textarea")
-    );
-
-    var names = List.of("appearance", "-moz-appearance", "-webkit-appearance");
-
-    for (var name : names) {
-      property(
-        name,
-
-        sig(globalKeyword, "value"),
-        sig(appearanceValue, "value")
-      );
-    }
-  }
-
-  private void backgroundColor() {
-    property(
-      "background-color",
-
-      sig(globalKeyword, "value"),
-      sig(color, "value")
-    );
-  }
-
-  private void backgroundImage() {
-    var backgroundImageValue = t(
-      "BackgroundImageValue",
-
-      k("none")
-    );
-
-    property(
-      "background-image",
-
-      sig(globalKeyword, "value"),
-      sig(backgroundImageValue, "value")
-    );
-  }
-
-  private void borderCollapse() {
-    var borderCollapseValue = t(
-      "BorderCollapseValue",
-
-      k("collapse"),
-      k("separate")
-    );
-
-    property(
-      "border-collapse",
-
-      sig(globalKeyword, "value"),
-      sig(borderCollapseValue, "value")
-    );
-  }
-
-  private void borderColor() {
-    property(
-      "border-color",
-
-      sig(globalKeyword, "value"),
-      sig(color, "all"),
-      sig(color, "vertical", color, "horizontal"),
-      sig(color, "top", color, "horizontal", color, "bottom"),
-      sig(color, "top", color, "right", color, "bottom", color, "left")
-    );
-  }
-
-  private void borderStyle() {
-    var lineStyle = t(
-      "LineStyle",
-
-      k("dashed"),
-      k("dotted"),
-      k("double"),
-      k("groove"),
-      k("hidden"),
-      k("inset"),
-      k("none"),
-      k("outset"),
-      k("ridge"),
-      k("solid")
-    );
-
-    property(
-      "border-style",
-
-      sig(globalKeyword, "value"),
-      sig(lineStyle, "all"),
-      sig(lineStyle, "vertical", lineStyle, "horizontal"),
-      sig(lineStyle, "top", lineStyle, "horizontal", lineStyle, "bottom"),
-      sig(lineStyle, "top", lineStyle, "right", lineStyle, "bottom", lineStyle, "left")
-    );
-  }
-
-  private void borderWidth() {
-    var lineWidth = t(
-      "LineWidth",
-
-      length,
-
-      k("medium"),
-      k("thick"),
-      k("thin")
-    );
-
-    var names = List.of(
-      "border-top-width",
-      "border-right-width",
-      "border-bottom-width",
-      "border-left-width"
-    );
-
-    for (var name : names) {
-      property(
-        name,
-
-        sig(globalKeyword, "value"),
-        sig(lineWidth, "value")
-      );
-    }
-
-    property(
-      "border-width",
-
-      sig(globalKeyword, "value"),
-      sig(lineWidth, "all"),
-      sig(lineWidth, "vertical", lineWidth, "horizontal"),
-      sig(lineWidth, "top", lineWidth, "horizontal", lineWidth, "bottom"),
-      sig(lineWidth, "top", lineWidth, "right", lineWidth, "bottom", lineWidth, "left")
-    );
-  }
-
-  private void bottom() {
-    var bottomValue = t(
-      "BottomValue",
-      k("auto"),
-      lengthPercentage
-    );
-
-    property(
-      "bottom",
-
-      sig(globalKeyword, "value"),
-      sig(bottomValue, "value")
-    );
-  }
-
-  private void boxShadow() {
-    KeywordName inset;
-    inset = k("inset");
-
-    property(
-      "box-shadow",
-
-      sig(globalKeyword, "value"),
-
-      sig(k("none"), "value"),
-
-      sig(
-        length, "offsetX",
-        length, "offsetY",
-        color, "color"
-      ),
-
-      sig(
-        length, "offsetX",
-        length, "offsetY",
-        length, "blurRadius",
-        color, "color"
-      ),
-
-      sig(
-        length, "offsetX",
-        length, "offsetY",
-        length, "blurRadius",
-        length, "spreadRadius",
-        color, "color"
-      ),
-
-      sig(
-        inset, "inset",
-        length, "offsetX",
-        length, "offsetY",
-        color, "color"
-      ),
-
-      sig(
-        inset, "inset",
-        length, "offsetX",
-        length, "offsetY",
-        length, "blurRadius",
-        color, "color"
-      ),
-
-      sig(
-        inset, "inset",
-        length, "offsetX",
-        length, "offsetY",
-        length, "blurRadius",
-        length, "spreadRadius",
-        color, "color"
-      )
-    ).asHashProperty();
-  }
-
-  private void boxSizing() {
-    ValueType boxSizingValue = t(
-      "BoxSizingValue",
-
-      k("border-box"),
-      k("content-box")
-    );
-
-    property(
-      "box-sizing",
-
-      sig(globalKeyword, "value"),
-      sig(boxSizingValue, "value")
-    );
-  }
-
-  private void color() {
-    property(
-      "color",
-
-      sig(globalKeyword, "value"),
-      sig(color, "value")
-    );
   }
 
   private void cursor() {

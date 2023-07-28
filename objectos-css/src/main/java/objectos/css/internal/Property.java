@@ -26,17 +26,27 @@ public enum Property implements PropertyName {
 
   BACKGROUND_IMAGE("background-image"),
 
+  BORDER("border"),
+
+  BORDER_BOTTOM("border-bottom"),
+
   BORDER_BOTTOM_WIDTH("border-bottom-width"),
 
   BORDER_COLLAPSE("border-collapse"),
 
   BORDER_COLOR("border-color"),
 
+  BORDER_LEFT("border-left"),
+
   BORDER_LEFT_WIDTH("border-left-width"),
+
+  BORDER_RIGHT("border-right"),
 
   BORDER_RIGHT_WIDTH("border-right-width"),
 
   BORDER_STYLE("border-style"),
+
+  BORDER_TOP("border-top"),
 
   BORDER_TOP_WIDTH("border-top-width"),
 

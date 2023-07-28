@@ -27,6 +27,7 @@ import objectos.css.tmpl.PropertyValue.AutoKeyword;
 import objectos.css.tmpl.PropertyValue.BackgroundImageValue;
 import objectos.css.tmpl.PropertyValue.BlockKeyword;
 import objectos.css.tmpl.PropertyValue.BorderCollapseValue;
+import objectos.css.tmpl.PropertyValue.BorderShorthandValue;
 import objectos.css.tmpl.PropertyValue.BottomValue;
 import objectos.css.tmpl.PropertyValue.BoxSizingValue;
 import objectos.css.tmpl.PropertyValue.ButtonKeyword;
@@ -1369,6 +1370,60 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration border(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration border(BorderShorthandValue value1) {
+    Check.notNull(value1, "value1 == null");
+    declaration(Property.BORDER, value1);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration border(BorderShorthandValue value1, BorderShorthandValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BORDER, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration border(BorderShorthandValue value1, BorderShorthandValue value2, BorderShorthandValue value3) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    declaration(Property.BORDER, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottom(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_BOTTOM, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottom(BorderShorthandValue value1) {
+    Check.notNull(value1, "value1 == null");
+    declaration(Property.BORDER_BOTTOM, value1);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottom(BorderShorthandValue value1, BorderShorthandValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BORDER_BOTTOM, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottom(BorderShorthandValue value1, BorderShorthandValue value2, BorderShorthandValue value3) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    declaration(Property.BORDER_BOTTOM, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration borderBottomWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_BOTTOM_WIDTH, value);
@@ -1429,6 +1484,33 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration borderLeft(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_LEFT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderLeft(BorderShorthandValue value1) {
+    Check.notNull(value1, "value1 == null");
+    declaration(Property.BORDER_LEFT, value1);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderLeft(BorderShorthandValue value1, BorderShorthandValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BORDER_LEFT, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderLeft(BorderShorthandValue value1, BorderShorthandValue value2, BorderShorthandValue value3) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    declaration(Property.BORDER_LEFT, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration borderLeftWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_LEFT_WIDTH, value);
@@ -1438,6 +1520,33 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration borderLeftWidth(LineWidth value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_LEFT_WIDTH, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRight(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_RIGHT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRight(BorderShorthandValue value1) {
+    Check.notNull(value1, "value1 == null");
+    declaration(Property.BORDER_RIGHT, value1);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRight(BorderShorthandValue value1, BorderShorthandValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BORDER_RIGHT, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRight(BorderShorthandValue value1, BorderShorthandValue value2, BorderShorthandValue value3) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    declaration(Property.BORDER_RIGHT, value1, value2, value3);
     return InternalInstruction.INSTANCE;
   }
 
@@ -1486,6 +1595,33 @@ abstract class GeneratedCssTemplate {
     Check.notNull(bottom, "bottom == null");
     Check.notNull(left, "left == null");
     declaration(Property.BORDER_STYLE, top, right, bottom, left);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTop(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_TOP, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTop(BorderShorthandValue value1) {
+    Check.notNull(value1, "value1 == null");
+    declaration(Property.BORDER_TOP, value1);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTop(BorderShorthandValue value1, BorderShorthandValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BORDER_TOP, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTop(BorderShorthandValue value1, BorderShorthandValue value2, BorderShorthandValue value3) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    declaration(Property.BORDER_TOP, value1, value2, value3);
     return InternalInstruction.INSTANCE;
   }
 
