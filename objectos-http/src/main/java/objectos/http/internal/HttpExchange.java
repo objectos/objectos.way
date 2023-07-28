@@ -199,6 +199,7 @@ public final class HttpExchange implements Exchange, Runnable {
 
       case _REQUEST_LINE -> requestLine();
       case _REQUEST_LINE_METHOD -> requestLineMethod();
+      case _REQUEST_LINE_METHOD_P -> requestLineMethodP();
       case _REQUEST_LINE_TARGET -> requestLineTarget();
       case _REQUEST_LINE_VERSION -> requestLineVersion();
 
@@ -458,28 +459,6 @@ public final class HttpExchange implements Exchange, Runnable {
     return _OUTPUT_HEADER;
   }
 
-  private byte outputTerminator() {
-    // buffer must be large enough to hold CR + LF
-
-    int requiredLength;
-    requiredLength = bufferLimit + 2;
-
-    if (buffer.length < requiredLength) {
-      // buffer is not large enough
-      // flush buffer and try again
-
-      nextAction = _OUTPUT_TERMINATOR;
-
-      return _OUTPUT_BUFFER;
-    }
-
-    buffer[bufferLimit++] = Bytes.CR;
-
-    buffer[bufferLimit++] = Bytes.LF;
-
-    return _OUTPUT_BODY;
-  }
-
   private byte outputStatus() {
     // Buffer will be large enough for status line.
     // Enforced during server creation (in theory).
@@ -525,6 +504,28 @@ public final class HttpExchange implements Exchange, Runnable {
     bufferLimit += bytes.length;
 
     return _OUTPUT_HEADER;
+  }
+
+  private byte outputTerminator() {
+    // buffer must be large enough to hold CR + LF
+
+    int requiredLength;
+    requiredLength = bufferLimit + 2;
+
+    if (buffer.length < requiredLength) {
+      // buffer is not large enough
+      // flush buffer and try again
+
+      nextAction = _OUTPUT_TERMINATOR;
+
+      return _OUTPUT_BUFFER;
+    }
+
+    buffer[bufferLimit++] = Bytes.CR;
+
+    buffer[bufferLimit++] = Bytes.LF;
+
+    return _OUTPUT_BODY;
   }
 
   private byte parseHeader() {
@@ -847,6 +848,43 @@ public final class HttpExchange implements Exchange, Runnable {
     // continue to request target
 
     return _REQUEST_LINE_TARGET;
+  }
+
+  private byte requestLineMethodP() {
+    // method starts with a P. It might be:
+    // - PATCH
+    // - POST
+    // - PUT
+    //
+    // so we'll peek at the second character
+
+    int secondCharIndex;
+    secondCharIndex = bufferIndex + 1;
+
+    if (!bufferHasIndex(secondCharIndex)) {
+      // we don't have enough bytes in the buffer...
+      // assuming the client is slow on sending data
+
+      return toInputRead(state);
+    }
+
+    byte secondChar;
+    secondChar = bufferGet(secondCharIndex);
+
+    // based on the second char, we select out method candidate
+
+    return switch (secondChar) {
+      case 'A' -> toRequestLineMethod(HttpMethod.PATCH);
+
+      case 'O' -> toRequestLineMethod(HttpMethod.POST);
+
+      case 'U' -> toRequestLineMethod(HttpMethod.PUT);
+
+      // it does not match any candidate
+      // we are sure this is a bad request
+
+      default -> toClientError(HttpStatus.BAD_REQUEST);
+    };
   }
 
   private byte requestLineTarget() {

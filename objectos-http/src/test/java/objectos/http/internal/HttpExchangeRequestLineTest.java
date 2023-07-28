@@ -58,6 +58,39 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.versionMinor, 1);
   }
 
+  @Test
+  public void http006() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    Http006.INPUT.accept(exchange);
+
+    while (exchange.state < HttpExchange._PARSE_HEADER) {
+      exchange.stepOne();
+    }
+
+    // first line consumed
+    assertEquals(exchange.bufferIndex, "POST /login HTTP/1.1\r\n".length());
+    assertEquals(exchange.bufferLimit, Http006.INPUT.requestLength());
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    // expect correct method
+    assertEquals(exchange.method, HttpMethod.POST);
+    assertEquals(exchange.requestHeaders, null);
+    assertEquals(exchange.requestHeaderName, null);
+    // expect correct parsed target
+    assertEquals(exchange.requestTarget.toString(), "/login");
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, null);
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
+    assertEquals(exchange.state, HttpExchange._PARSE_HEADER);
+    assertEquals(exchange.status, null);
+    // expect correct parsed version major.minor
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
+
   @Test(description = """
   [#429] HTTP 001: REQUEST_LINE --> REQUEST_LINE_METHOD
   """)
@@ -119,6 +152,33 @@ public class HttpExchangeRequestLineTest {
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.state, HttpExchange._CLIENT_ERROR);
     assertEquals(exchange.status, HttpStatus.BAD_REQUEST);
+  }
+
+  @Test(description = """
+  [#491] HTTP 006: REQUEST_LINE --> REQUEST_LINE_METHOD_P
+  """)
+  public void requestLineToRequestLineMethodP() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    List<String> requests;
+    requests = List.of("PATCH /a", "POST /b", "PUT /c");
+
+    for (var request : requests) {
+      byte[] bytes;
+      bytes = request.getBytes();
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 0;
+      exchange.bufferLimit = bytes.length;
+      exchange.state = HttpExchange._REQUEST_LINE;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, 0);
+      assertEquals(exchange.bufferLimit, bytes.length);
+      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_METHOD_P);
+    }
   }
 
   @Test(description = """
@@ -190,6 +250,64 @@ public class HttpExchangeRequestLineTest {
 
     assertEquals(exchange.bufferIndex, 0);
     assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_METHOD);
+    assertEquals(exchange.state, HttpExchange._INPUT_READ);
+  }
+
+  @Test(description = """
+  [#491] HTTP 006: REQUEST_LINE_METHOD_P --> REQUEST_LINE_TARGET
+  """)
+  public void requestLineMethodP() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    record Pair(String request, HttpMethod method) {}
+
+    List<Pair> pairs = List.of(
+      new Pair("PATCH /", HttpMethod.PATCH),
+      new Pair("POST /", HttpMethod.POST),
+      new Pair("PUT /", HttpMethod.PUT)
+    );
+
+    for (var pair : pairs) {
+      String request;
+      request = pair.request;
+
+      byte[] bytes;
+      bytes = request.getBytes();
+
+      exchange.buffer = bytes;
+      exchange.bufferIndex = 0;
+      exchange.bufferLimit = bytes.length;
+      exchange.state = HttpExchange._REQUEST_LINE_METHOD_P;
+
+      exchange.stepOne();
+
+      assertEquals(exchange.bufferIndex, 0);
+      assertEquals(exchange.bufferLimit, bytes.length);
+      assertEquals(exchange.method, pair.method);
+      assertEquals(exchange.state, HttpExchange._REQUEST_LINE_METHOD);
+    }
+  }
+
+  @Test(description = """
+  [#491] HTTP 006: REQUEST_LINE_METHOD_P --> INPUT_READ
+  """)
+  public void requestLineMethodPToInputRead() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    byte[] bytes;
+    bytes = "P".getBytes();
+
+    exchange.buffer = bytes;
+    exchange.bufferIndex = 0;
+    exchange.bufferLimit = bytes.length;
+    exchange.state = HttpExchange._REQUEST_LINE_METHOD_P;
+
+    exchange.stepOne();
+
+    assertEquals(exchange.bufferIndex, 0);
+    assertEquals(exchange.nextAction, HttpExchange._REQUEST_LINE_METHOD_P);
     assertEquals(exchange.state, HttpExchange._INPUT_READ);
   }
 
