@@ -121,6 +121,9 @@ public final class CssSpec extends CssSelfGen {
       SelectorKind.PSEUDO_CLASS,
 
       ":disabled",
+      ":first-child",
+      ":first-of-type",
+      ":focus",
       ":hover",
       ":-moz-focusring",
       ":-moz-ui-invalid"

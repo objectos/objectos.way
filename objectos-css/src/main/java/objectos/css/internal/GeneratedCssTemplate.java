@@ -134,6 +134,12 @@ abstract class GeneratedCssTemplate {
 
   protected static final PseudoClassSelector _disabled = StandardPseudoClassSelector._disabled;
 
+  protected static final PseudoClassSelector _firstChild = StandardPseudoClassSelector._firstChild;
+
+  protected static final PseudoClassSelector _firstOfType = StandardPseudoClassSelector._firstOfType;
+
+  protected static final PseudoClassSelector _focus = StandardPseudoClassSelector._focus;
+
   protected static final PseudoClassSelector _hover = StandardPseudoClassSelector._hover;
 
   protected static final PseudoClassSelector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
