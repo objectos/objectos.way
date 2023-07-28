@@ -110,7 +110,9 @@ public class Compiler02Test {
 
     compiler.styleRuleBegin();
     compiler.styleRuleElement(StandardTypeSelector.h1);
+    compiler.styleRuleElement(Combinator.LIST);
     compiler.styleRuleElement(StandardTypeSelector.h2);
+    compiler.styleRuleElement(Combinator.LIST);
     compiler.styleRuleElement(StandardTypeSelector.h3);
     compiler.styleRuleEnd();
 
@@ -126,10 +128,12 @@ public class Compiler02Test {
 
       ByteCode.SELECTOR_TYPE,
       (byte) StandardTypeSelector.h1.ordinal(),
-      ByteCode.COMMA,
+      ByteCode.SELECTOR_COMBINATOR,
+      (byte) Combinator.LIST.ordinal(),
       ByteCode.SELECTOR_TYPE,
       (byte) StandardTypeSelector.h2.ordinal(),
-      ByteCode.COMMA,
+      ByteCode.SELECTOR_COMBINATOR,
+      (byte) Combinator.LIST.ordinal(),
       ByteCode.SELECTOR_TYPE,
       (byte) StandardTypeSelector.h3.ordinal(),
       ByteCode.BLOCK_EMPTY
@@ -284,13 +288,9 @@ public class Compiler02Test {
 
     compiler.compilationBegin();
 
-    compiler.selectorBegin();
-    compiler.selectorElement(StandardTypeSelector.input);
-    compiler.selectorElement(StandardPseudoElementSelector.__placeholder);
-    compiler.selectorEnd();
-
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleElement(StandardTypeSelector.input);
+    compiler.styleRuleElement(StandardPseudoElementSelector.__placeholder);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();

@@ -15,4 +15,6 @@
  */
 package objectos.css.om;
 
-public sealed interface StyleRuleElement permits Selector, StyleDeclaration {}
+import objectos.css.internal.Combinator;
+
+public sealed interface StyleRuleElement permits Combinator, Selector, StyleDeclaration {}

@@ -21,7 +21,6 @@ import objectos.css.om.MediaFeatureOrStyleDeclaration;
 import objectos.css.om.MediaQuery;
 import objectos.css.om.MediaRuleElement;
 import objectos.css.om.Selector;
-import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
 import objectos.css.om.StyleRuleElement;
@@ -44,13 +43,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected static final MediaQuery screen = MediaType.SCREEN;
 
-  protected static final SelectorElement SIBLING = Combinator.ADJACENT_SIBLING;
+  protected static final StyleRuleElement SIBLING = Combinator.ADJACENT_SIBLING;
 
-  protected static final SelectorElement CHILD = Combinator.CHILD;
+  protected static final StyleRuleElement CHILD = Combinator.CHILD;
 
-  protected static final SelectorElement GENERAL_SIBLING = Combinator.GENERAL_SIBLING;
+  protected static final StyleRuleElement GENERAL_SIBLING = Combinator.GENERAL_SIBLING;
 
-  protected static final SelectorElement DESCENDANT = Combinator.DESCENDANT;
+  protected static final StyleRuleElement DESCENDANT = Combinator.DESCENDANT;
+
+  protected static final StyleRuleElement OR = Combinator.LIST;
 
   protected static final AttributeOperator EQ = InternalAttributeOperator.EQUALS;
 
@@ -298,63 +299,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api().percentage(value);
 
     return InternalInstruction.PERCENTAGE_INT;
-  }
-
-  protected final Selector sel(
-      SelectorElement e1, SelectorElement e2) {
-    Check.notNull(e1, "e1 == null");
-    Check.notNull(e2, "e2 == null");
-
-    CssTemplateApi api;
-    api = api();
-
-    api.selectorBegin();
-    api.selectorElement(e1);
-    api.selectorElement(e2);
-    api.selectorEnd();
-
-    return InternalInstruction.INSTANCE;
-  }
-
-  protected final Selector sel(
-      SelectorElement e1, SelectorElement e2, SelectorElement e3) {
-    Check.notNull(e1, "e1 == null");
-    Check.notNull(e2, "e2 == null");
-    Check.notNull(e3, "e3 == null");
-
-    CssTemplateApi api;
-    api = api();
-
-    api.selectorBegin();
-    api.selectorElement(e1);
-    api.selectorElement(e2);
-    api.selectorElement(e3);
-    api.selectorEnd();
-
-    return InternalInstruction.INSTANCE;
-  }
-
-  protected final Selector sel(
-      SelectorElement e1, SelectorElement e2, SelectorElement e3, SelectorElement e4,
-      SelectorElement e5) {
-    Check.notNull(e1, "e1 == null");
-    Check.notNull(e2, "e2 == null");
-    Check.notNull(e3, "e3 == null");
-    Check.notNull(e4, "e4 == null");
-    Check.notNull(e5, "e5 == null");
-
-    CssTemplateApi api;
-    api = api();
-
-    api.selectorBegin();
-    api.selectorElement(e1);
-    api.selectorElement(e2);
-    api.selectorElement(e3);
-    api.selectorElement(e4);
-    api.selectorElement(e5);
-    api.selectorEnd();
-
-    return InternalInstruction.INSTANCE;
   }
 
   protected final <T extends PropertyValue> StyleDeclaration set(

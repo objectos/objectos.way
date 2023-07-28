@@ -93,22 +93,6 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>exec-css-util-spec</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>java</executable>
-							<arguments>
-								<argument>-classpath</argument>
-								<classpath />
-								<argument>objectos.selfgen.CssUtilSpec</argument>
-								<argument>${project.basedir}/src/main/java</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
 						<id>exec-css-boot</id>
 						<phase>generate-sources</phase>
 						<goals>

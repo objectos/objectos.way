@@ -15,7 +15,7 @@
  */
 package objectos.css.om;
 
-public non-sealed interface Selector extends SelectorElement, StyleRuleElement {
+public non-sealed interface Selector extends StyleRuleElement {
 
   @Override
   String toString();

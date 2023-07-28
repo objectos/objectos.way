@@ -18,7 +18,6 @@ package objectos.css.internal;
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
 import objectos.css.om.MediaRuleElement;
-import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRuleElement;
 import objectos.css.tmpl.PropertyValue;
@@ -79,12 +78,6 @@ public abstract class CssTemplateApi {
   public abstract void selectorAttribute(String name);
 
   public abstract void selectorAttribute(String name, AttributeOperator operator, String value);
-
-  public abstract void selectorBegin();
-
-  public abstract void selectorElement(SelectorElement element);
-
-  public abstract void selectorEnd();
 
   public abstract void stringLiteral(String value);
 

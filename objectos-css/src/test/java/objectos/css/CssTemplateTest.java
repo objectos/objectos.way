@@ -211,9 +211,9 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            button,
-            attr("type", EQ, "button"),
-            attr("type", EQ, "reset"),
+            button, OR,
+            attr("type", EQ, "button"), OR,
+            attr("type", EQ, "reset"), OR,
             attr("type", EQ, "submit"),
 
             appearance(none),
@@ -274,9 +274,9 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            button,
-            attr("type", EQ, "button"),
-            attr("type", EQ, "reset"),
+            button, OR,
+            attr("type", EQ, "button"), OR,
+            attr("type", EQ, "reset"), OR,
             attr("type", EQ, "submit"),
 
             backgroundImage(none),
@@ -479,7 +479,7 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            sub, sup,
+            sub, OR, sup,
 
             bottom(auto),
             bottom(px(3)),
@@ -618,7 +618,7 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            button,
+            button, OR,
             attr("role", EQ, "button"),
 
             cursor(auto),
@@ -842,7 +842,12 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            h1, h2, h3, h4, h5, h6,
+            h1, OR,
+            h2, OR,
+            h3, OR,
+            h4, OR,
+            h5, OR,
+            h6,
 
             fontSize(xxSmall),
             fontSize(xSmall),
@@ -925,7 +930,12 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            h1, h2, h3, h4, h5, h6,
+            h1, OR,
+            h2, OR,
+            h3, OR,
+            h4, OR,
+            h5, OR,
+            h6,
 
             fontWeight(normal),
             fontWeight(bold),
@@ -1198,7 +1208,7 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            ol, ul, menu,
+            ol, OR, ul, OR, menu,
 
             listStyleType(disc),
             listStyleType(circle),
@@ -1276,7 +1286,7 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            img, video,
+            img, OR, video,
 
             maxWidth($0),
             maxWidth(em(3.5)),
@@ -1594,10 +1604,10 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            button,
-            input,
-            optgroup,
-            select,
+            button, OR,
+            input, OR,
+            optgroup, OR,
+            select, OR,
             textarea,
 
             padding($0),
@@ -1634,7 +1644,8 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            sub, sup,
+            sub, OR,
+            sup,
 
             position(static_),
             position(relative),
@@ -1991,7 +2002,7 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            button,
+            button, OR,
             select,
 
             textTransform(none),
@@ -2030,7 +2041,8 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            sub, sup,
+            sub, OR,
+            sup,
 
             top(auto),
             top(px(3)),
@@ -2064,7 +2076,8 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            sub, sup,
+            sub, OR,
+            sup,
 
             verticalAlign(baseline),
             verticalAlign(sub),
@@ -2146,16 +2159,16 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            sel(input, __placeholder)
+            input, __placeholder
           );
 
           // small is both selector and keyword
           style(
-            sel(small, __after)
+            small, __after
           );
 
           style(
-            sel(FOO, CHILD, any, SIBLING, any)
+            FOO, CHILD, any, SIBLING, any
           );
         }
       },
@@ -2181,8 +2194,8 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            any,
-            __after,
+            any, OR,
+            __after, OR,
             __before
           );
         }
@@ -2207,11 +2220,11 @@ public class CssTemplateTest {
         @Override
         protected void definition() {
           style(
-            b, strong
+            b, OR, strong
           );
 
           style(
-            code, kbd, samp, pre
+            code, OR, kbd, OR, samp, OR, pre
           );
 
           style(

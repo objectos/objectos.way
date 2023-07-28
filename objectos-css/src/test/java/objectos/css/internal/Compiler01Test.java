@@ -333,13 +333,9 @@ public class Compiler01Test {
 
     compiler.compilationBegin();
 
-    compiler.selectorBegin();
-    compiler.selectorElement(StandardTypeSelector.input);
-    compiler.selectorElement(StandardPseudoElementSelector.__placeholder);
-    compiler.selectorEnd();
-
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleElement(StandardTypeSelector.input);
+    compiler.styleRuleElement(StandardPseudoElementSelector.__placeholder);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -347,24 +343,15 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED,
+      ByteProto.STYLE_RULE,
       Bytes.len0(7),
       Bytes.len1(7),
       ByteProto.SELECTOR_TYPE,
       (byte) StandardTypeSelector.input.ordinal(),
       ByteProto.SELECTOR_PSEUDO_ELEMENT,
       (byte) StandardPseudoElementSelector.__placeholder.ordinal(),
-      ByteProto.SELECTOR_SEL_END,
-      Bytes.int0(7),
-      ByteProto.SELECTOR_SEL,
-
-      ByteProto.STYLE_RULE,
-      Bytes.len0(5),
-      Bytes.len1(5),
-      ByteProto.SELECTOR_SEL,
-      Bytes.int0(14),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(15),
+      Bytes.int0(7),
       ByteProto.STYLE_RULE
     );
   }
@@ -807,16 +794,12 @@ public class Compiler01Test {
 
     compiler.compilationBegin();
 
-    compiler.selectorBegin();
-    compiler.selectorElement(foo);
-    compiler.selectorElement(Combinator.CHILD);
-    compiler.selectorElement(GeneratedCssTemplate.any);
-    compiler.selectorElement(Combinator.ADJACENT_SIBLING);
-    compiler.selectorElement(GeneratedCssTemplate.any);
-    compiler.selectorEnd();
-
     compiler.styleRuleBegin();
-    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleElement(foo);
+    compiler.styleRuleElement(Combinator.CHILD);
+    compiler.styleRuleElement(GeneratedCssTemplate.any);
+    compiler.styleRuleElement(Combinator.ADJACENT_SIBLING);
+    compiler.styleRuleElement(GeneratedCssTemplate.any);
     compiler.styleRuleEnd();
 
     compiler.compilationEnd();
@@ -824,7 +807,7 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED,
+      ByteProto.STYLE_RULE,
       Bytes.len0(16),
       Bytes.len1(16),
       ByteProto.SELECTOR_CLASS,
@@ -840,17 +823,8 @@ public class Compiler01Test {
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.any),
       Bytes.name1(StandardName.any),
-      ByteProto.SELECTOR_SEL_END,
-      Bytes.int0(16),
-      ByteProto.SELECTOR_SEL,
-
-      ByteProto.STYLE_RULE,
-      Bytes.len0(5),
-      Bytes.len1(5),
-      ByteProto.SELECTOR_SEL,
-      Bytes.int0(23),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(24),
+      Bytes.int0(16),
       ByteProto.STYLE_RULE
     );
   }

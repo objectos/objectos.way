@@ -15,9 +15,9 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.SelectorElement;
+import objectos.css.om.StyleRuleElement;
 
-public enum Combinator implements SelectorElement {
+public enum Combinator implements StyleRuleElement {
 
   ADJACENT_SIBLING(" + "),
 
@@ -25,7 +25,9 @@ public enum Combinator implements SelectorElement {
 
   DESCENDANT(" "),
 
-  GENERAL_SIBLING(" ~ ");
+  GENERAL_SIBLING(" ~ "),
+
+  LIST(", ");
 
   private static final Combinator[] VALUES = values();
 

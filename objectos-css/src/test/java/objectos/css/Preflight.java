@@ -19,7 +19,9 @@ final class Preflight extends CssTemplate {
   @Override
   protected final void definition() {
     style(
-      any, __before, __after,
+      any, OR,
+      __before, OR,
+      __after,
 
       boxSizing(borderBox),
       borderWidth($0),
@@ -70,7 +72,12 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      h1, h2, h3, h4, h5, h6,
+      h1, OR,
+      h2, OR,
+      h3, OR,
+      h4, OR,
+      h5, OR,
+      h6,
 
       fontSize(inherit),
       fontWeight(inherit)
@@ -84,13 +91,17 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      b, strong,
+      b, OR,
+      strong,
 
       fontWeight(bolder)
     );
 
     style(
-      code, kbd, samp, pre,
+      code, OR,
+      kbd, OR,
+      samp, OR,
+      pre,
 
       fontFamily(
         uiMonospace,
@@ -112,7 +123,8 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      sub, sup,
+      sub, OR,
+      sup,
 
       fontSize(pct(75)),
       lineHeight(0),
@@ -141,10 +153,10 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      button,
-      input,
-      optgroup,
-      select,
+      button, OR,
+      input, OR,
+      optgroup, OR,
+      select, OR,
       textarea,
 
       fontFamily(inherit),
@@ -159,16 +171,16 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      button,
+      button, OR,
       select,
 
       textTransform(none)
     );
 
     style(
-      button,
-      attr("type", EQ, "button"),
-      attr("type", EQ, "reset"),
+      button, OR,
+      attr("type", EQ, "button"), OR,
+      attr("type", EQ, "reset"), OR,
       attr("type", EQ, "submit"),
 
       webkitAppearance(button),
@@ -195,7 +207,7 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      __webkitInnerSpinButton,
+      __webkitInnerSpinButton, OR,
       __webkitOuterSpinButton,
 
       height(auto)
@@ -227,18 +239,18 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      blockquote,
-      dl,
-      dd,
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      hr,
-      figure,
-      p,
+      blockquote, OR,
+      dl, OR,
+      dd, OR,
+      h1, OR,
+      h2, OR,
+      h3, OR,
+      h4, OR,
+      h5, OR,
+      h6, OR,
+      hr, OR,
+      figure, OR,
+      p, OR,
       pre,
 
       margin($0)
@@ -258,8 +270,8 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      ol,
-      ul,
+      ol, OR,
+      ul, OR,
       menu,
 
       listStyle(none),
@@ -274,15 +286,15 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      sel(input, __placeholder),
-      sel(textarea, __placeholder),
+      input, __placeholder, OR,
+      textarea, __placeholder,
 
       opacity(1),
       color(hex("#9ca3af"))
     );
 
     style(
-      button,
+      button, OR,
       attr("role", EQ, "button"),
 
       cursor(pointer)
@@ -295,13 +307,13 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      img,
-      svg,
-      video,
-      canvas,
-      audio,
-      iframe,
-      embed,
+      img, OR,
+      svg, OR,
+      video, OR,
+      canvas, OR,
+      audio, OR,
+      iframe, OR,
+      embed, OR,
       object,
 
       display(block),
@@ -309,7 +321,7 @@ final class Preflight extends CssTemplate {
     );
 
     style(
-      img,
+      img, OR,
       video,
 
       maxWidth(pct(100)),

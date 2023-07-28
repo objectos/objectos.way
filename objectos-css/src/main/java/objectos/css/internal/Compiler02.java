@@ -571,97 +571,6 @@ final class Compiler02 extends Compiler01 {
     return Arrays.copyOf(objectArray, objectIndex);
   }
 
-  private int selectorClass(int index) {
-    auxAdd(ByteCode.SELECTOR_CLASS, main[index++], main[index++]);
-
-    return index;
-  }
-
-  private int selectorCombinator(int index) {
-    auxAdd(ByteCode.SELECTOR_COMBINATOR, main[index++]);
-
-    return index;
-  }
-
-  private int selectorComma(int selectorCount) {
-    if (selectorCount == 0) {
-      indentationWrite();
-    }
-
-    else {
-      auxAdd(ByteCode.COMMA);
-    }
-
-    selectorCount++;
-
-    return selectorCount;
-  }
-
-  private int selectorKeyword(int index) {
-    auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
-
-    return index;
-  }
-
-  private int selectorPseudoClass(int index) {
-    auxAdd(ByteCode.SELECTOR_PSEUDO_CLASS, main[index++]);
-
-    return index;
-  }
-
-  private int selectorPseudoElement(int index) {
-    auxAdd(ByteCode.SELECTOR_PSEUDO_ELEMENT, main[index++]);
-
-    return index;
-  }
-
-  private void selectorSel(int index) {
-    loop: while (index < mainIndex) {
-      byte proto;
-      proto = main[index++];
-
-      switch (proto) {
-        case ByteProto.MARKED -> {
-          // skip distance to end
-          index += 2;
-        }
-
-        case ByteProto.SELECTOR_CLASS -> index = selectorClass(index);
-
-        case ByteProto.SELECTOR_COMBINATOR -> index = selectorCombinator(index);
-
-        case ByteProto.SELECTOR_PSEUDO_CLASS -> index = selectorPseudoClass(index);
-
-        case ByteProto.SELECTOR_PSEUDO_ELEMENT -> index = selectorPseudoElement(index);
-
-        case ByteProto.SELECTOR_SEL_END -> {
-          break loop;
-        }
-
-        case ByteProto.SELECTOR_TYPE -> index = selectorType(index);
-
-        case ByteProto.STANDARD_NAME -> index = selectorKeyword(index);
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-    }
-  }
-
-  private int selectorType(int index) {
-    byte b0;
-    b0 = main[index++];
-
-    if (b0 >= 0) {
-      auxAdd(ByteCode.SELECTOR_TYPE, b0);
-    } else {
-      auxAdd(ByteCode.SELECTOR_TYPE, b0, main[index++]);
-    }
-
-    return index;
-  }
-
   private void semicolonOptional() {
     if (auxIndex <= 0) {
       return;
@@ -688,6 +597,16 @@ final class Compiler02 extends Compiler01 {
     valueCount++;
 
     return valueCount;
+  }
+
+  private int selectorComma(int selectorCount) {
+    if (selectorCount == 0) {
+      indentationWrite();
+    }
+
+    selectorCount++;
+
+    return selectorCount;
   }
 
   private void styleRule(int index) {
@@ -784,56 +703,44 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.SELECTOR_CLASS -> {
           selectorCount = selectorComma(selectorCount);
 
-          index = selectorClass(index);
+          auxAdd(ByteCode.SELECTOR_CLASS, main[index++], main[index++]);
+        }
+
+        case ByteProto.SELECTOR_COMBINATOR -> {
+          selectorCount = selectorComma(selectorCount);
+
+          auxAdd(ByteCode.SELECTOR_COMBINATOR, main[index++]);
         }
 
         case ByteProto.SELECTOR_PSEUDO_CLASS -> {
           selectorCount = selectorComma(selectorCount);
 
-          index = selectorPseudoClass(index);
+          auxAdd(ByteCode.SELECTOR_PSEUDO_CLASS, main[index++]);
         }
 
         case ByteProto.SELECTOR_PSEUDO_ELEMENT -> {
           selectorCount = selectorComma(selectorCount);
 
-          index = selectorPseudoElement(index);
-        }
-
-        case ByteProto.SELECTOR_SEL -> {
-          selectorCount = selectorComma(selectorCount);
-
-          int thisIndex;
-          thisIndex = index;
-
-          byte len0;
-          len0 = main[index++];
-
-          int length;
-          length = len0;
-
-          if (length < 0) {
-            byte len1;
-            len1 = main[index++];
-
-            length = Bytes.toVarInt(len0, len1);
-          }
-
-          int elemIndex;
-          elemIndex = thisIndex - length;
-
-          selectorSel(elemIndex);
+          auxAdd(ByteCode.SELECTOR_PSEUDO_ELEMENT, main[index++]);
         }
 
         case ByteProto.SELECTOR_TYPE -> {
           selectorCount = selectorComma(selectorCount);
 
-          index = selectorType(index);
+          byte b0;
+          b0 = main[index++];
+
+          if (b0 >= 0) {
+            auxAdd(ByteCode.SELECTOR_TYPE, b0);
+          } else {
+            auxAdd(ByteCode.SELECTOR_TYPE, b0, main[index++]);
+          }
         }
 
         case ByteProto.STANDARD_NAME -> {
           selectorCount = selectorComma(selectorCount);
 
-          index = selectorKeyword(index);
+          auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
         }
 
         case ByteProto.STYLE_RULE_END -> {

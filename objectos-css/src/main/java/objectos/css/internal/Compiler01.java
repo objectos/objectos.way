@@ -17,7 +17,6 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.om.MediaRuleElement;
-import objectos.css.om.SelectorElement;
 import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRuleElement;
 import objectos.css.tmpl.PropertyValue;
@@ -583,41 +582,6 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void selectorBegin() {
-    // we mark the start of our aux list
-    auxStart = auxIndex;
-
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    // 2) the start of our main list
-    mainContents = mainStart = mainIndex;
-
-    mainAdd(
-      ByteProto.SELECTOR_SEL,
-
-      // length takes 2 bytes
-      ByteProto.NULL,
-      ByteProto.NULL
-    );
-  }
-
-  @Override
-  public final void selectorElement(SelectorElement element) {
-    commonElement(element);
-  }
-
-  @Override
-  public final void selectorEnd() {
-    byte trailerProto;
-    trailerProto = ByteProto.SELECTOR_SEL;
-
-    byte endProto;
-    endProto = ByteProto.SELECTOR_SEL_END;
-
-    commonEnd(trailerProto, endProto);
-  }
-
-  @Override
   public final void stringLiteral(String value) {
     int index;
     index = objectAdd(value);
@@ -839,7 +803,6 @@ class Compiler01 extends CssTemplateApi {
 
       switch (proto) {
         case ByteProto.DECLARATION,
-             ByteProto.SELECTOR_SEL,
              ByteProto.STYLE_RULE -> {
           byte len0;
           len0 = main[mainContents--];
@@ -909,7 +872,6 @@ class Compiler01 extends CssTemplateApi {
 
             switch (proto) {
               case ByteProto.DECLARATION,
-                   ByteProto.SELECTOR_SEL,
                    ByteProto.STYLE_RULE -> {
                 // keep the start index handy
                 int startIndex;
