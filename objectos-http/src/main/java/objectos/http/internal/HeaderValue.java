@@ -61,4 +61,40 @@ record HeaderValue(byte[] buffer, int start, int end) {
     return new String(buffer, start, end - start, StandardCharsets.UTF_8);
   }
 
+  public final long unsignedLongValue() {
+    int thisLength;
+    thisLength = end - start;
+
+    if (thisLength > 19) {
+      // larger than max long positive value
+
+      return Long.MIN_VALUE;
+    }
+
+    long result;
+    result = 0;
+
+    for (int i = start; i < end; i++) {
+      byte d;
+      d = buffer[i];
+
+      if (!Bytes.isDigit(d)) {
+        return Long.MIN_VALUE;
+      }
+
+      result *= 10;
+
+      long l;
+      l = (long) d & 0xF;
+
+      result += l;
+    }
+
+    if (result < 0) {
+      return Long.MIN_VALUE;
+    }
+
+    return result;
+  }
+
 }

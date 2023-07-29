@@ -61,27 +61,30 @@ public final class HttpExchange implements Exchange, Runnable {
   static final byte _PARSE_HEADER_NAME_CASE_INSENSITIVE = 11;
   static final byte _PARSE_HEADER_VALUE = 12;
 
+  // Input / Request Body
+
+  static final byte _REQUEST_BODY = 13;
+
   // Handle phase
 
-  static final byte _HANDLE = 13;
-  static final byte _HANDLE_INVOKE = 14;
+  static final byte _HANDLE = 14;
+  static final byte _HANDLE_INVOKE = 15;
 
   // Output phase
 
-  static final byte _OUTPUT = 15;
-  static final byte _OUTPUT_BODY = 16;
-  static final byte _OUTPUT_BUFFER = 17;
-  static final byte _OUTPUT_HEADER = 18;
-  static final byte _OUTPUT_TERMINATOR = 19;
-  static final byte _OUTPUT_STATUS = 20;
-  static final byte _CLIENT_ERROR = 21;
+  static final byte _OUTPUT = 16;
+  static final byte _OUTPUT_BODY = 17;
+  static final byte _OUTPUT_BUFFER = 18;
+  static final byte _OUTPUT_HEADER = 19;
+  static final byte _OUTPUT_TERMINATOR = 20;
+  static final byte _OUTPUT_STATUS = 21;
+  static final byte _CLIENT_ERROR = 22;
 
   // Result phase
 
-  static final byte _RESULT = 22;
-  static final byte _RESULT_CLOSE = 23;
-  static final byte _RESULT_ERROR_WRITE = 24;
-  static final byte _FINALLY = 3;
+  static final byte _RESULT = 23;
+  static final byte _RESULT_CLOSE = 24;
+  static final byte _RESULT_ERROR_WRITE = 25;
 
   static final byte _STOP = 0;
 
@@ -208,6 +211,10 @@ public final class HttpExchange implements Exchange, Runnable {
       case _PARSE_HEADER -> parseHeader();
       case _PARSE_HEADER_NAME -> parseHeaderName();
       case _PARSE_HEADER_VALUE -> parseHeaderValue();
+
+      // Input / Request Body
+
+      case _REQUEST_BODY -> requestBody();
 
       // Handle phase
 
@@ -561,7 +568,7 @@ public final class HttpExchange implements Exchange, Runnable {
       if (second == Bytes.LF) {
         bufferIndex = index;
 
-        return _HANDLE;
+        return toHandleOrRequestBody();
       }
 
       // not sure the best way to handle this case
@@ -572,7 +579,7 @@ public final class HttpExchange implements Exchange, Runnable {
     if (first == Bytes.LF) {
       bufferIndex = index;
 
-      return _HANDLE;
+      return toHandleOrRequestBody();
     }
 
     return _PARSE_HEADER_NAME;
@@ -767,6 +774,21 @@ public final class HttpExchange implements Exchange, Runnable {
     bufferIndex = lfIndex + 1;
 
     return _PARSE_HEADER;
+  }
+
+  private byte requestBody() {
+    HeaderValue contentLength;
+    contentLength = requestHeaders.get(HeaderName.CONTENT_LENGTH);
+
+    if (contentLength == null) {
+      // TODO chunked transfer encoding?
+
+      throw new UnsupportedOperationException(
+        "Implement me :: probably chunked transfer encoding"
+      );
+    }
+
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private byte requestLine() {
@@ -1038,6 +1060,14 @@ public final class HttpExchange implements Exchange, Runnable {
     status = error;
 
     return _CLIENT_ERROR;
+  }
+
+  private byte toHandleOrRequestBody() {
+    if (method == HttpMethod.POST) {
+      return _REQUEST_BODY;
+    }
+
+    return _HANDLE;
   }
 
   private byte toInputRead(byte onRead) {

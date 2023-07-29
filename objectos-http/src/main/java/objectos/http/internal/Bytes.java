@@ -37,6 +37,8 @@ final class Bytes {
 
   public static final byte[] CLOSE = utf8("close");
 
+  public static final byte[] FORM_URLENCODED = utf8("application/x-www-form-urlencoded");
+
   public static final byte[] KEEP_ALIVE = utf8("keep-alive");
 
   private Bytes() {}

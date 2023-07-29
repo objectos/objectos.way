@@ -23,6 +23,7 @@ public interface TestingInput {
     @Override
     public final void accept(HttpExchange exchange) {
       TestingInput.regularAccept(exchange);
+
       exchange.socket = TestableSocket.of(request);
     }
 
@@ -38,7 +39,10 @@ public interface TestingInput {
     @Override
     public final void accept(HttpExchange exchange) {
       TestingInput.regularAccept(exchange);
-      Object[] data = requests.clone();
+
+      Object[] data;
+      data = requests.clone();
+
       exchange.socket = TestableSocket.of(data);
     }
   }

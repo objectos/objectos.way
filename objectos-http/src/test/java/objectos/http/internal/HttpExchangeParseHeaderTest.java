@@ -31,7 +31,7 @@ public class HttpExchangeParseHeaderTest {
 
     Http001.INPUT.accept(exchange);
 
-    while (exchange.state < HttpExchange._HANDLE) {
+    while (exchange.state < HttpExchange._REQUEST_BODY) {
       exchange.stepOne();
     }
 
@@ -53,6 +53,41 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.responseHeadersIndex, -1);
     assertEquals(exchange.socket.isClosed(), false);
     assertEquals(exchange.state, HttpExchange._HANDLE);
+    assertEquals(exchange.status, null);
+    assertEquals(exchange.versionMajor, 1);
+    assertEquals(exchange.versionMinor, 1);
+  }
+
+  @Test
+  public void http006() {
+    HttpExchange exchange;
+    exchange = new HttpExchange();
+
+    Http006.INPUT.accept(exchange);
+
+    while (exchange.state < HttpExchange._REQUEST_BODY) {
+      exchange.stepOne();
+    }
+
+    // buffer should have been consumed up to the payload
+    assertEquals(exchange.bufferIndex, Http006.INPUT.requestLength() - 22);
+    assertEquals(exchange.bufferLimit, Http006.INPUT.requestLength());
+    assertEquals(exchange.error, null);
+    assertEquals(exchange.keepAlive, false);
+    assertEquals(exchange.method, HttpMethod.POST);
+    // request headers parsed
+    assertEquals(exchange.requestHeaders, Map.of(
+      HeaderName.HOST, TestingInput.hv("www.example.com"),
+      HeaderName.CONTENT_LENGTH, TestingInput.hv("22"),
+      HeaderName.CONTENT_TYPE, TestingInput.hv("application/x-www-form-urlencoded")
+    ));
+    assertEquals(exchange.requestHeaderName, null);
+    assertEquals(exchange.requestTarget.toString(), "/login");
+    assertEquals(exchange.responseBody, null);
+    assertEquals(exchange.responseHeaders, null);
+    assertEquals(exchange.responseHeadersIndex, -1);
+    assertEquals(exchange.socket.isClosed(), false);
+    assertEquals(exchange.state, HttpExchange._REQUEST_BODY);
     assertEquals(exchange.status, null);
     assertEquals(exchange.versionMajor, 1);
     assertEquals(exchange.versionMinor, 1);
