@@ -49,8 +49,8 @@ public final class Http006 implements Handler {
   public static final String OUTPUT = """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
-      Content-Length: 13<CRLF>
-      Date: Mon, 31 Jul 2023 07:54:43 GMT<CRLF>
+      Content-Length: 52<CRLF>
+      Date: Mon, 31 Jul 2023 10:54:43 GMT<CRLF>
       <CRLF>
       Hello user@example.com. Please enter your password.
       """.replace("<CRLF>\n", "\r\n");

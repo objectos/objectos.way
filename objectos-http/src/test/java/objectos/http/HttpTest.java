@@ -30,6 +30,7 @@ import objectos.http.internal.Http002;
 import objectos.http.internal.Http003;
 import objectos.http.internal.Http004;
 import objectos.http.internal.Http005;
+import objectos.http.internal.Http006;
 import objectos.http.internal.TestingHandler;
 import objectos.http.internal.TestingInput.RegularInput;
 import org.testng.annotations.AfterClass;
@@ -125,6 +126,15 @@ public class HttpTest {
       req(socket, Http005.INPUT02);
 
       resp(socket, Http005.OUTPUT02);
+    }
+  }
+
+  @Test(timeOut = 1000)
+  public void http006() throws IOException {
+    try (Socket socket = new Socket(address, port)) {
+      req(socket, Http006.INPUT);
+
+      resp(socket, Http006.OUTPUT);
     }
   }
 

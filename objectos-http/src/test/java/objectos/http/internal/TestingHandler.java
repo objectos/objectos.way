@@ -16,6 +16,7 @@
 package objectos.http.internal;
 
 import java.util.function.Supplier;
+import objectos.http.Http.Method;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
 import objectos.http.server.Request;
@@ -39,7 +40,25 @@ public final class TestingHandler implements Handler, Supplier<Handler> {
 
       case "/chunked.txt" -> Http002.INSTANCE.handle(exchange);
 
-      case "/login", "/login.css" -> Http004.INSTANCE.handle(exchange);
+      case "/login" -> login(exchange);
+
+      case "/login.css" -> Http004.INSTANCE.handle(exchange);
+    }
+  }
+
+  private void login(Exchange exchange) {
+    Request request;
+    request = exchange.request();
+
+    Method method;
+    method = request.method();
+
+    if (method == Method.GET) {
+      Http004.INSTANCE.handle(exchange);
+    }
+
+    else if (method == Method.POST) {
+      Http006.INSTANCE.handle(exchange);
     }
   }
 
