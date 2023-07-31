@@ -27,8 +27,11 @@ public enum HttpStatus implements Http.Status {
 
   // 4.x.x
   BAD_REQUEST(400),
-  NOT_ALLOWED(405),
+  NOT_FOUND(404),
+  METHOD_NOT_ALLOWED(405),
   URI_TOO_LONG(414),
+  UNSUPPORTED_MEDIA_TYPE(415),
+  UNPROCESSABLE_CONTENT(422),
 
   // 5.x.x
   INTERNAL_SERVER_ERROR(500),

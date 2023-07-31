@@ -13,23 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectos.http.internal;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectos.http.Http.Method;
-import objectos.http.internal.HttpRequestBody;
+import java.nio.charset.StandardCharsets;
 
-public interface Request {
+public final class InBufferRequestBody extends HttpRequestBody {
 
-  sealed interface Body permits HttpRequestBody {}
+  private final byte[] buffer;
 
-  Body body();
+  public final int start;
 
-  Value header(Name name);
+  public final int end;
 
-  Method method();
+  public InBufferRequestBody(byte[] buffer, int start, int end) {
+    this.buffer = buffer;
+    this.start = start;
+    this.end = end;
+  }
 
-  String path();
+  public final byte get(int index) {
+    return buffer[index];
+  }
+
+  @Override
+  public final String toString() {
+    return new String(buffer, start, end - start, StandardCharsets.UTF_8);
+  }
 
 }

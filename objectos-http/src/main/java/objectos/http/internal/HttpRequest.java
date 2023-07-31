@@ -15,6 +15,10 @@
  */
 package objectos.http.internal;
 
+import java.util.Map;
+import objectos.http.Http.Header.Name;
+import objectos.http.Http.Header.Value;
+import objectos.http.Http.Method;
 import objectos.http.server.Request;
 
 final class HttpRequest implements Request {
@@ -26,8 +30,33 @@ final class HttpRequest implements Request {
   }
 
   @Override
+  public final Value header(Name name) {
+    Map<HeaderName, HeaderValue> map;
+    map = outer.requestHeaders;
+
+    Value value;
+    value = map.get(name);
+
+    if (value == null) {
+      value = Value.NULL;
+    }
+
+    return value;
+  }
+
+  @Override
+  public final Method method() {
+    return outer.method;
+  }
+
+  @Override
   public final String path() {
     return outer.requestTarget.toString();
+  }
+
+  @Override
+  public final Body body() {
+    return outer.requestBody;
   }
 
 }

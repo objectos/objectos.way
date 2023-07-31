@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import objectos.http.internal.HeaderName;
+import objectos.http.internal.HttpMethod;
 import objectos.http.internal.HttpStatus;
 
 public final class Http {
@@ -32,6 +33,17 @@ public final class Http {
 
     public interface Name {
       String capitalized();
+    }
+
+    public interface Value {
+
+      Value NULL = new Value() {
+        @Override
+        public final boolean contentEquals(CharSequence cs) { return false; }
+      };
+
+      boolean contentEquals(CharSequence cs);
+
     }
 
     public static final Name ACCEPT_ENCODING = HeaderName.ACCEPT_ENCODING;
@@ -54,13 +66,23 @@ public final class Http {
 
   public sealed interface Method permits objectos.http.internal.HttpMethod {
 
+    Method GET = HttpMethod.GET;
+
+    Method POST = HttpMethod.POST;
+
   }
 
-  public interface Status {
+  public sealed interface Status permits objectos.http.internal.HttpStatus {
 
     Status OK_200 = HttpStatus.OK;
 
-    Status NOT_ALLOWED_405 = HttpStatus.NOT_ALLOWED;
+    Status NOT_FOUND_404 = HttpStatus.NOT_FOUND;
+
+    Status METHOD_NOT_ALLOWED_405 = HttpStatus.METHOD_NOT_ALLOWED;
+
+    Status UNSUPPORTED_MEDIA_TYPE_415 = HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+
+    Status UNPROCESSABLE_CONTENT_422 = HttpStatus.UNPROCESSABLE_CONTENT;
 
     int code();
 

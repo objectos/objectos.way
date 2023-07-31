@@ -17,7 +17,7 @@ package objectos.http.internal;
 
 import java.nio.charset.StandardCharsets;
 
-final class Bytes {
+public final class Bytes {
 
   public static final byte HTAB = '\t';
 
@@ -47,12 +47,22 @@ final class Bytes {
     return DIGIT_0 <= value && value <= DIGIT_9;
   }
 
+  public static boolean isHexDigit(byte value) {
+    return isDigit(value)
+        || 'a' <= value && value <= 'f'
+        || 'A' <= value && value <= 'F';
+  }
+
   public static boolean isOptionalWhitespace(byte value) {
     return switch (value) {
       case SP, HTAB -> true;
 
       default -> false;
     };
+  }
+
+  public static int toInt(byte b) {
+    return b & 0xFF;
   }
 
   public static byte toLowerCase(byte ch) {
@@ -65,6 +75,31 @@ final class Bytes {
 
   public static byte[] utf8(String value) {
     return value.getBytes(StandardCharsets.UTF_8);
+  }
+
+  public static int parseHexDigit(byte value) {
+    return switch (value) {
+      case '0' -> 0;
+      case '1' -> 1;
+      case '2' -> 2;
+      case '3' -> 3;
+      case '4' -> 4;
+      case '5' -> 5;
+      case '6' -> 6;
+      case '7' -> 7;
+      case '8' -> 8;
+      case '9' -> 9;
+      case 'a', 'A' -> 10;
+      case 'b', 'B' -> 11;
+      case 'c', 'C' -> 12;
+      case 'd', 'D' -> 13;
+      case 'e', 'E' -> 14;
+      case 'f', 'F' -> 15;
+
+      default -> throw new IllegalArgumentException(
+        "Illegal hex char= " + (char) toInt(value)
+      );
+    };
   }
 
 }

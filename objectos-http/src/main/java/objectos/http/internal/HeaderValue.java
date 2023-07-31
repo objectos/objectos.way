@@ -17,9 +17,10 @@ package objectos.http.internal;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import objectos.http.Http;
 import objectos.util.ByteArrays;
 
-record HeaderValue(byte[] buffer, int start, int end) {
+record HeaderValue(byte[] buffer, int start, int end) implements Http.Header.Value {
 
   public static final HeaderValue EMPTY = new HeaderValue(ByteArrays.empty(), 0, 0);
 
@@ -47,6 +48,14 @@ record HeaderValue(byte[] buffer, int start, int end) {
     }
 
     return true;
+  }
+
+  @Override
+  public final boolean contentEquals(CharSequence cs) {
+    String s;
+    s = toString();
+
+    return s.contentEquals(cs);
   }
 
   @Override

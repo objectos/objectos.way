@@ -310,17 +310,36 @@ public class NginxTest {
   
   HTTP/1.1 400 Bad Request
   
+  ---
+  
+  POST /post HTTP/1.1
+  Host: localhost
+  Connection: close
+  Content-Length: -22
+  Content-Type: application/x-www-form-urlencoded
+  
+  email=user@example.com
+
+  HTTP/1.1 400 Bad Request
+  Server: nginx/1.24.0
+  Date: Sat, 29 Jul 2023 14:23:03 GMT
+  Content-Type: text/html
+  Content-Length: 157
+  Connection: close
+  
   */
 
   @Test(enabled = false)
   public void getOk() throws IOException {
     try (Socket socket = new Socket(address, port)) {
       req(socket, """
-      GET /index.html HTTP/0.9
+      POST /post HTTP/1.1
       Host: localhost
       Connection: close
+      Content-Length: -22
+      Content-Type: application/x-www-form-urlencoded
 
-      """.replace("\n", "\r\n"));
+      email=user@example.com""".replace("\n", "\r\n"));
 
       String resp;
       resp = resp(socket);

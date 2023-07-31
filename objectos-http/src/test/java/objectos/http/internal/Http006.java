@@ -20,13 +20,19 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import objectos.http.Http;
+import objectos.http.Http.Status;
 import objectos.http.internal.TestingInput.RegularInput;
 import objectos.http.server.Exchange;
 import objectos.http.server.Handler;
+import objectos.http.server.Request;
+import objectos.http.server.Request.Body;
 import objectos.http.server.Response;
+import objectos.http.util.UrlEncodedForm;
 
 /**
  * Minimal POST request
+ *
+ * - application/x-www-form-urlencoded
  */
 public final class Http006 implements Handler {
 
@@ -34,24 +40,24 @@ public final class Http006 implements Handler {
     """
     POST /login HTTP/1.1
     Host: www.example.com
-    Content-Length: 22
+    Content-Length: 24
     Content-Type: application/x-www-form-urlencoded
 
-    email=user@example.com""".replace("\n", "\r\n")
+    email=user%40example.com""".replace("\n", "\r\n")
   );
 
   public static final String OUTPUT = """
       HTTP/1.1 200 OK<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
       Content-Length: 13<CRLF>
-      Date: Wed, 28 Jun 2023 12:08:43 GMT<CRLF>
+      Date: Mon, 31 Jul 2023 07:54:43 GMT<CRLF>
       <CRLF>
-      Hello World!
+      Hello user@example.com. Please enter your password.
       """.replace("<CRLF>\n", "\r\n");
 
   static final ZonedDateTime DATE = ZonedDateTime.of(
-    LocalDate.of(2023, 6, 28),
-    LocalTime.of(9, 8, 43),
+    LocalDate.of(2023, 7, 31),
+    LocalTime.of(7, 54, 43),
     ZoneId.of("GMT-3")
   );
 
@@ -59,13 +65,69 @@ public final class Http006 implements Handler {
 
   @Override
   public final void handle(Exchange exchange) {
+    Request request;
+    request = exchange.request();
+
+    Http.Method method;
+    method = request.method();
+
+    if (method != Http.Method.POST) {
+      sendText(
+        exchange,
+        Http.Status.NOT_FOUND_404,
+        "Not found on this server\n"
+      );
+
+      return;
+    }
+
+    Http.Header.Value contentType;
+    contentType = request.header(Http.Header.CONTENT_TYPE);
+
+    if (!contentType.contentEquals("application/x-www-form-urlencoded")) {
+      sendText(
+        exchange,
+        Http.Status.UNSUPPORTED_MEDIA_TYPE_415,
+        "Requested content-type is not supported\n"
+      );
+
+      return;
+    }
+
+    Body body;
+    body = request.body();
+
+    UrlEncodedForm form;
+    form = UrlEncodedForm.parse(body);
+
+    String email;
+    email = form.get("email");
+
+    if (email == null) {
+      sendText(
+        exchange,
+        Http.Status.UNPROCESSABLE_CONTENT_422,
+        "Email is required\n"
+      );
+
+      return;
+    }
+
+    sendText(
+      exchange,
+      Http.Status.OK_200,
+      "Hello %s. Please enter your password.\n".formatted(email)
+    );
+  }
+
+  private void sendText(Exchange exchange, Status status, String message) {
     Response response;
     response = exchange.response();
 
-    final byte[] bytes;
-    bytes = Bytes.utf8("Enter the password\n");
+    response.status(status);
 
-    response.status(Http.Status.OK_200);
+    final byte[] bytes;
+    bytes = Bytes.utf8(message);
 
     response.header(Http.Header.CONTENT_TYPE, "text/plain; charset=utf-8");
 

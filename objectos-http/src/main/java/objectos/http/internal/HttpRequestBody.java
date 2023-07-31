@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.http.server;
+package objectos.http.internal;
 
-import objectos.http.Http.Header.Name;
-import objectos.http.Http.Header.Value;
-import objectos.http.Http.Method;
-import objectos.http.internal.HttpRequestBody;
+import objectos.http.server.Request;
 
-public interface Request {
+public sealed abstract class HttpRequestBody implements Request.Body permits InBufferRequestBody {
 
-  sealed interface Body permits HttpRequestBody {}
+  HttpRequestBody() {}
 
-  Body body();
+  public static HttpRequestBody inBuffer(byte[] buffer, int start, int end) {
+    return new InBufferRequestBody(buffer, start, end);
+  }
 
-  Value header(Name name);
-
-  Method method();
-
-  String path();
+  @Override
+  public abstract String toString();
 
 }

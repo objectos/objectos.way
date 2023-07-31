@@ -108,6 +108,8 @@ public final class HttpExchange implements Exchange, Runnable {
 
   Request request;
 
+  HttpRequestBody requestBody;
+
   HeaderName requestHeaderName;
 
   Map<HeaderName, HeaderValue> requestHeaders;
@@ -777,18 +779,50 @@ public final class HttpExchange implements Exchange, Runnable {
   }
 
   private byte requestBody() {
+    // reset our state
+
+    requestBody = null;
+
+    // Let's check if this is a fixed length or a chunked transfer
+
     HeaderValue contentLength;
     contentLength = requestHeaders.get(HeaderName.CONTENT_LENGTH);
 
     if (contentLength == null) {
-      // TODO chunked transfer encoding?
+      // TODO multipart/form-data?
 
       throw new UnsupportedOperationException(
         "Implement me :: probably chunked transfer encoding"
       );
     }
 
-    throw new UnsupportedOperationException("Implement me");
+    // this is a fixed length body, let's see if the length is valid
+
+    long length;
+    length = contentLength.unsignedLongValue();
+
+    if (length < 0) {
+      return toClientError(HttpStatus.BAD_REQUEST);
+    }
+
+    // maybe we already have the body in our buffer...
+
+    int bufferRemaining;
+    bufferRemaining = bufferLimit - bufferIndex;
+
+    if (bufferRemaining == length) {
+      // the body has already been read into our buffer
+
+      requestBody = HttpRequestBody.inBuffer(buffer, bufferIndex, bufferLimit);
+
+      bufferIndex = bufferLimit;
+
+      return _HANDLE;
+    }
+
+    throw new UnsupportedOperationException(
+      "Implement me :: read more body"
+    );
   }
 
   private byte requestLine() {
@@ -1063,8 +1097,18 @@ public final class HttpExchange implements Exchange, Runnable {
   }
 
   private byte toHandleOrRequestBody() {
-    if (method == HttpMethod.POST) {
+    if (requestHeaders == null) {
+      return _HANDLE;
+    }
+
+    if (requestHeaders.containsKey(HeaderName.CONTENT_LENGTH)) {
       return _REQUEST_BODY;
+    }
+
+    if (requestHeaders.containsKey(HeaderName.TRANSFER_ENCODING)) {
+      throw new UnsupportedOperationException(
+        "Implement me :: maybe chunked?"
+      );
     }
 
     return _HANDLE;

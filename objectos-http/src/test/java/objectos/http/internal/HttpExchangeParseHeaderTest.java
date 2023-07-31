@@ -41,6 +41,7 @@ public class HttpExchangeParseHeaderTest {
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, false);
     assertEquals(exchange.method, HttpMethod.GET);
+    assertEquals(exchange.requestBody, null);
     // request headers parsed
     assertEquals(exchange.requestHeaders, Map.of(
       HeaderName.HOST, TestingInput.hv("www.example.com"),
@@ -70,15 +71,16 @@ public class HttpExchangeParseHeaderTest {
     }
 
     // buffer should have been consumed up to the payload
-    assertEquals(exchange.bufferIndex, Http006.INPUT.requestLength() - 22);
+    assertEquals(exchange.bufferIndex, Http006.INPUT.requestLength() - 24);
     assertEquals(exchange.bufferLimit, Http006.INPUT.requestLength());
     assertEquals(exchange.error, null);
     assertEquals(exchange.keepAlive, false);
     assertEquals(exchange.method, HttpMethod.POST);
+    assertEquals(exchange.requestBody, null);
     // request headers parsed
     assertEquals(exchange.requestHeaders, Map.of(
       HeaderName.HOST, TestingInput.hv("www.example.com"),
-      HeaderName.CONTENT_LENGTH, TestingInput.hv("22"),
+      HeaderName.CONTENT_LENGTH, TestingInput.hv("24"),
       HeaderName.CONTENT_TYPE, TestingInput.hv("application/x-www-form-urlencoded")
     ));
     assertEquals(exchange.requestHeaderName, null);
