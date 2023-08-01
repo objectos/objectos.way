@@ -148,6 +148,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TypeSelector a = StandardTypeSelector.a;
 
+  protected static final TypeSelector article = StandardTypeSelector.article;
+
   protected static final TypeSelector audio = StandardTypeSelector.audio;
 
   protected static final TypeSelector b = StandardTypeSelector.b;
@@ -161,6 +163,8 @@ abstract class GeneratedCssTemplate {
   protected static final TypeSelector code = StandardTypeSelector.code;
 
   protected static final TypeSelector dd = StandardTypeSelector.dd;
+
+  protected static final TypeSelector div = StandardTypeSelector.div;
 
   protected static final TypeSelector dl = StandardTypeSelector.dl;
 
@@ -184,6 +188,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TypeSelector h6 = StandardTypeSelector.h6;
 
+  protected static final TypeSelector header = StandardTypeSelector.header;
+
   protected static final TypeSelector hr = StandardTypeSelector.hr;
 
   protected static final TypeSelector html = StandardTypeSelector.html;
@@ -202,6 +208,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TypeSelector li = StandardTypeSelector.li;
 
+  protected static final TypeSelector nav = StandardTypeSelector.nav;
+
   protected static final TypeSelector object = StandardTypeSelector.object;
 
   protected static final TypeSelector ol = StandardTypeSelector.ol;
@@ -214,6 +222,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TypeSelector samp = StandardTypeSelector.samp;
 
+  protected static final TypeSelector section = StandardTypeSelector.section;
+
   protected static final TypeSelector select = StandardTypeSelector.select;
 
   protected static final TypeSelector strong = StandardTypeSelector.strong;
@@ -223,6 +233,16 @@ abstract class GeneratedCssTemplate {
   protected static final TypeSelector sup = StandardTypeSelector.sup;
 
   protected static final TypeSelector svg = StandardTypeSelector.svg;
+
+  protected static final TypeSelector tbody = StandardTypeSelector.tbody;
+
+  protected static final TypeSelector td = StandardTypeSelector.td;
+
+  protected static final TypeSelector th = StandardTypeSelector.th;
+
+  protected static final TypeSelector thead = StandardTypeSelector.thead;
+
+  protected static final TypeSelector tr = StandardTypeSelector.tr;
 
   protected static final TypeSelector ul = StandardTypeSelector.ul;
 

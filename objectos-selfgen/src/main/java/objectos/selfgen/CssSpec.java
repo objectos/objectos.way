@@ -52,6 +52,7 @@ public final class CssSpec extends CssSelfGen {
       SelectorKind.TYPE,
 
       "a",
+      "article",
       "audio",
 
       "b",
@@ -63,6 +64,7 @@ public final class CssSpec extends CssSelfGen {
       "code",
 
       "dd",
+      "div",
       "dl",
 
       "embed",
@@ -77,6 +79,7 @@ public final class CssSpec extends CssSelfGen {
       "h4",
       "h5",
       "h6",
+      "header",
       "hr",
       "html",
 
@@ -92,6 +95,8 @@ public final class CssSpec extends CssSelfGen {
 
       "menu",
 
+      "nav",
+
       "object",
       "ol",
       "optgroup",
@@ -101,6 +106,7 @@ public final class CssSpec extends CssSelfGen {
       "progress",
 
       "samp",
+      "section",
       "select",
       "small",
       "strong",
@@ -110,7 +116,12 @@ public final class CssSpec extends CssSelfGen {
       "svg",
 
       "table",
+      "tbody",
+      "td",
       "textarea",
+      "th",
+      "thead",
+      "tr",
 
       "ul",
 

@@ -22,6 +22,8 @@ import objectos.lang.Generated;
 public enum StandardTypeSelector implements TypeSelector {
   a("a"),
 
+  article("article"),
+
   audio("audio"),
 
   b("b"),
@@ -35,6 +37,8 @@ public enum StandardTypeSelector implements TypeSelector {
   code("code"),
 
   dd("dd"),
+
+  div("div"),
 
   dl("dl"),
 
@@ -58,6 +62,8 @@ public enum StandardTypeSelector implements TypeSelector {
 
   h6("h6"),
 
+  header("header"),
+
   hr("hr"),
 
   html("html"),
@@ -76,6 +82,8 @@ public enum StandardTypeSelector implements TypeSelector {
 
   li("li"),
 
+  nav("nav"),
+
   object("object"),
 
   ol("ol"),
@@ -88,6 +96,8 @@ public enum StandardTypeSelector implements TypeSelector {
 
   samp("samp"),
 
+  section("section"),
+
   select("select"),
 
   strong("strong"),
@@ -97,6 +107,16 @@ public enum StandardTypeSelector implements TypeSelector {
   sup("sup"),
 
   svg("svg"),
+
+  tbody("tbody"),
+
+  td("td"),
+
+  th("th"),
+
+  thead("thead"),
+
+  tr("tr"),
 
   ul("ul"),
 

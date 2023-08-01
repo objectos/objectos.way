@@ -391,6 +391,42 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
+  protected static final TypeSelector dt = Css.dt;
+
+  protected static final TypeSelector strong = Css.strong;
+
+  protected static final TypeSelector img = Css.img;
+
+  protected static final TypeSelector dl = Css.dl;
+
+  protected static final TypeSelector dd = Css.dd;
+
+  protected static final TypeSelector samp = Css.samp;
+
+  protected static final TypeSelector optgroup = Css.optgroup;
+
+  protected static final TypeSelector hr = Css.hr;
+
+  protected static final TypeSelector header = Css.header;
+
+  protected static final TypeSelector progress = Css.progress;
+
+  protected static final TypeSelector legend = Css.legend;
+
+  protected static final TypeSelector tbody = Css.tbody;
+
+  protected static final TypeSelector kbd = Css.kbd;
+
+  protected static final TypeSelector p = Css.p;
+
+  protected static final TypeSelector script = Css.script;
+
+  protected static final TypeSelector template = Css.template;
+
+  protected static final TypeSelector main = Css.main;
+
+  protected static final TypeSelector table = Css.table;
+
   protected static final TypeSelector svg = Css.svg;
 
   protected static final TypeSelector g = Css.g;
@@ -500,42 +536,6 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector head = Css.head;
 
   protected static final TypeSelector defs = Css.defs;
-
-  protected static final TypeSelector dt = Css.dt;
-
-  protected static final TypeSelector strong = Css.strong;
-
-  protected static final TypeSelector img = Css.img;
-
-  protected static final TypeSelector dl = Css.dl;
-
-  protected static final TypeSelector dd = Css.dd;
-
-  protected static final TypeSelector samp = Css.samp;
-
-  protected static final TypeSelector optgroup = Css.optgroup;
-
-  protected static final TypeSelector hr = Css.hr;
-
-  protected static final TypeSelector header = Css.header;
-
-  protected static final TypeSelector progress = Css.progress;
-
-  protected static final TypeSelector legend = Css.legend;
-
-  protected static final TypeSelector tbody = Css.tbody;
-
-  protected static final TypeSelector kbd = Css.kbd;
-
-  protected static final TypeSelector p = Css.p;
-
-  protected static final TypeSelector script = Css.script;
-
-  protected static final TypeSelector template = Css.template;
-
-  protected static final TypeSelector main = Css.main;
-
-  protected static final TypeSelector table = Css.table;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 

@@ -176,14 +176,18 @@ final class Compiler02 extends Compiler01 {
         case ByteProto.JAVA_DOUBLE -> {
           valueCount = spaceIfNecessary(valueCount);
 
-          auxAdd(ByteCode.DOUBLE_LITERAL);
+          auxAdd(
+            ByteCode.DOUBLE_LITERAL,
 
-          int length = 8;
-
-          System.arraycopy(main, index, aux, auxIndex, length);
-
-          auxIndex += length;
-          index += length;
+            main[index++],
+            main[index++],
+            main[index++],
+            main[index++],
+            main[index++],
+            main[index++],
+            main[index++],
+            main[index++]
+          );
         }
 
         case ByteProto.JAVA_INT -> {
