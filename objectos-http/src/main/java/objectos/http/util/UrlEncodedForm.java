@@ -74,7 +74,23 @@ public final class UrlEncodedForm {
         }
 
         case '&' -> {
-          throw new UnsupportedOperationException("Implement me");
+          if (key == null) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          String value;
+          value = sb.toString();
+
+          sb.setLength(0);
+
+          String oldValue;
+          oldValue = map.put(key, value);
+
+          if (oldValue != EMPTY) {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          key = null;
         }
 
         case '%' -> {
@@ -126,6 +142,10 @@ public final class UrlEncodedForm {
 
   public final String get(String key) {
     return map.get(key);
+  }
+
+  public final int size() {
+    return map.size();
   }
 
 }

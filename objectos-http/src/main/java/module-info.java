@@ -22,6 +22,7 @@ module objectos.http {
   exports objectos.http;
   exports objectos.http.media;
   exports objectos.http.server;
+  exports objectos.http.util;
 
   requires transitive objectos.lang;
   requires objectos.util;

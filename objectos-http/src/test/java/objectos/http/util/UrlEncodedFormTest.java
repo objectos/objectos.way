@@ -24,14 +24,28 @@ import org.testng.annotations.Test;
 public class UrlEncodedFormTest {
 
   @Test
-  public void singlePair() {
+  public void testCase01() {
     InBufferRequestBody body;
     body = body("email=user%40example.com");
 
     UrlEncodedForm form;
     form = UrlEncodedForm.parse(body);
 
+    assertEquals(form.size(), 1);
     assertEquals(form.get("email"), "user@example.com");
+  }
+
+  @Test
+  public void testCase02() {
+    InBufferRequestBody body;
+    body = body("login=foo&password=bar");
+
+    UrlEncodedForm form;
+    form = UrlEncodedForm.parse(body);
+
+    assertEquals(form.size(), 2);
+    assertEquals(form.get("login"), "foo");
+    assertEquals(form.get("password"), "bar");
   }
 
   private InBufferRequestBody body(String s) {
