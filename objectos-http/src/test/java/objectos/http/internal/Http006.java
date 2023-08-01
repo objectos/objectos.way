@@ -47,7 +47,8 @@ public final class Http006 implements Handler {
   );
 
   public static final String OUTPUT = """
-      HTTP/1.1 200 OK<CRLF>
+      HTTP/1.1 303 SEE OTHER<CRLF>
+      Location: /app<CRLF>
       Content-Type: text/plain; charset=utf-8<CRLF>
       Content-Length: 52<CRLF>
       Date: Mon, 31 Jul 2023 10:54:43 GMT<CRLF>
@@ -113,9 +114,14 @@ public final class Http006 implements Handler {
       return;
     }
 
+    Response response;
+    response = exchange.response();
+
+    response.header(Http.Header.LOCATION, "/app");
+
     sendText(
       exchange,
-      Http.Status.OK_200,
+      Http.Status.SEE_OTHER_303,
       "Hello %s. Please enter your password.\n".formatted(email)
     );
   }

@@ -170,13 +170,17 @@ public class HttpTest {
   }
 
   private void resp(Socket socket, String expected) throws IOException {
+    byte[] expectedBytes;
+    expectedBytes = expected.getBytes(StandardCharsets.UTF_8);
+
     InputStream in;
     in = socket.getInputStream();
 
     byte[] bytes;
-    bytes = in.readNBytes(expected.length());
+    bytes = in.readNBytes(expectedBytes.length);
 
-    var res = new String(bytes, StandardCharsets.UTF_8);
+    String res;
+    res = new String(bytes, StandardCharsets.UTF_8);
 
     assertEquals(res, expected);
   }

@@ -58,6 +58,8 @@ public final class Http {
 
     public static final Name HOST = HeaderName.HOST;
 
+    public static final Name LOCATION = HeaderName.LOCATION;
+
     public static final Name TRANSFER_ENCODING = HeaderName.TRANSFER_ENCODING;
 
     public static final Name USER_AGENT = HeaderName.USER_AGENT;
@@ -75,6 +77,8 @@ public final class Http {
   public sealed interface Status permits objectos.http.internal.HttpStatus {
 
     Status OK_200 = HttpStatus.OK;
+
+    Status SEE_OTHER_303 = HttpStatus.SEE_OTHER;
 
     Status NOT_FOUND_404 = HttpStatus.NOT_FOUND;
 

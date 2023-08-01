@@ -24,6 +24,7 @@ public enum HttpStatus implements Http.Status {
 
   // 3.x.x
   FOUND(302),
+  SEE_OTHER(303),
 
   // 4.x.x
   BAD_REQUEST(400),
