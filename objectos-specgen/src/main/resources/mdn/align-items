@@ -1,3 +1,0 @@
-<baseline-position>:[ first | last ]? baseline
-<overflow-position>:unsafe | safe
-<self-position>:center | start | end | self-start | self-end | flex-start | flex-end

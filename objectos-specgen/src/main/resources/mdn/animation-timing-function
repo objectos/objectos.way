@@ -1,4 +1,0 @@
-<timing-function>:linear | <cubic-bezier-timing-function> | <step-timing-function>
-<cubic-bezier-timing-function>:ease | ease-in | ease-out | ease-in-out | cubic-bezier(<number>, <number>, <number>, <number>)
-<step-timing-function>:step-start | step-end | steps(<integer>[, <step-position>]?)
-<step-position>:jump-start | jump-end | jump-none | jump-both | start | end

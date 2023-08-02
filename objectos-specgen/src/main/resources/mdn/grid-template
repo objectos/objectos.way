@@ -1,6 +1,0 @@
-<line-names>:'[' <custom-ident>* ']'
-<track-size>:<track-breadth> | minmax( <inflexible-breadth> , <track-breadth> ) | fit-content( [ <length> | <percentage> ] )
-<explicit-track-list>:[ <line-names>? <track-size> ]+ <line-names>?
-<track-breadth>:<length-percentage> | <flex> | min-content | max-content | auto
-<inflexible-breadth>:<length> | <percentage> | min-content | max-content | auto
-<length-percentage>:<length> | <percentage>

@@ -1,4 +1,0 @@
-<baseline-position>:[ first | last ]? baseline
-<content-distribution>:space-between | space-around | space-evenly | stretch
-<overflow-position>:unsafe | safe
-<content-position>:center | start | end | flex-start | flex-end

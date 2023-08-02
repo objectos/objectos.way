@@ -1,3 +1,0 @@
-<numeric-figure-values>:[ lining-nums | oldstyle-nums ]
-<numeric-spacing-values>:[ proportional-nums | tabular-nums ]
-<numeric-fraction-values>:[ diagonal-fractions | stacked-fractions ]

@@ -1,4 +1,0 @@
-<track-size>:<track-breadth> | minmax( <inflexible-breadth> , <track-breadth> ) | fit-content( [ <length> | <percentage> ] )
-<track-breadth>:<length-percentage> | <flex> | min-content | max-content | auto
-<inflexible-breadth>:<length> | <percentage> | min-content | max-content | auto
-<length-percentage>:<length> | <percentage>
