@@ -49,6 +49,8 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName COLOR_VALUE = ClassTypeName.of(API, "ColorValue");
 
+  static final ClassTypeName FILTER_FUNCTION = ClassTypeName.of(API, "FilterFunction");
+
   static final ClassTypeName KEYWORD_INSTRUCTION = ClassTypeName.of(API, "KeywordInstruction");
 
   static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(API, "LengthValue");

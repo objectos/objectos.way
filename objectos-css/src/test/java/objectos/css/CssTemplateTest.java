@@ -200,6 +200,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void propertyFilter() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            div,
+
+            filter(none),
+            filter(opacity(0.4)),
+            filter(inherit)
+          );
+        }
+      },
+
+      """
+      div {
+        filter: none;
+        filter: opacity(0.4);
+        filter: inherit;
+      }
+      """
+    );
+  }
+
   @Test(description = """
   [#419] Preflight 13
 

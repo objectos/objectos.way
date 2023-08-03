@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.tmpl.Api;
+import objectos.css.tmpl.Api.FilterFunction;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
 import objectos.util.ByteArrays;
@@ -278,6 +279,40 @@ class Compiler01 extends CssTemplateApi {
 
     // we clear the aux list
     auxIndex = auxStart;
+  }
+
+  @Override
+  public final void filterFunction(FilterFunction func) {
+    // @ ByteProto
+    mainContents--;
+
+    byte proto;
+    proto = main[mainContents--];
+
+    switch (proto) {
+      case ByteProto.DECLARATION -> {
+        byte len0;
+        len0 = main[mainContents--];
+
+        int length;
+        length = len0;
+
+        if (length < 0) {
+          byte len1;
+          len1 = main[mainContents--];
+
+          length = Bytes.toVarInt(len0, len1);
+        }
+
+        mainContents -= length;
+      }
+
+      default -> throw new UnsupportedOperationException(
+        "Implement me :: proto=" + proto
+      );
+    }
+
+    auxAdd(proto);
   }
 
   @Override

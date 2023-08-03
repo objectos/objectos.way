@@ -94,6 +94,15 @@ final class ApiStep extends ThisTemplate {
       extendsClause(STYLE_RULE_ELEM)
     );
 
+    FilterFunction filterFunction;
+    filterFunction = spec.filterFunction();
+
+    if (filterFunction != null) {
+      interfaceDeclaration(
+        PUBLIC, SEALED, name(FILTER_FUNCTION)
+      );
+    }
+
     List<ClassTypeName> superTypes;
     superTypes = new GrowableList<>();
 
@@ -114,6 +123,17 @@ final class ApiStep extends ThisTemplate {
 
         interfaceDeclaration(
           PUBLIC, SEALED, name(className), extendsClause(STYLE_DECLARATION)
+        );
+      }
+
+      else if (property.filterFunction) {
+        ClassTypeName className;
+        className = property.declarationClassName;
+
+        superTypes.add(className);
+
+        interfaceDeclaration(
+          PUBLIC, SEALED, name(className), extendsClause(FILTER_FUNCTION, STYLE_DECLARATION)
         );
       }
     }

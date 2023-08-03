@@ -90,6 +90,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.BOX_SIZING),
       Bytes.prop1(Property.BOX_SIZING),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.KEYWORD,
       Bytes.name0(StandardName.borderBox),
@@ -183,6 +184,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.MARGIN),
       Bytes.prop1(Property.MARGIN),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.LENGTH_INT,
       Bytes.int0(20),
@@ -350,6 +352,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.LIST_STYLE_IMAGE),
       Bytes.prop1(Property.LIST_STYLE_IMAGE),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.URL,
       Bytes.two0(0),
@@ -398,6 +401,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.STRING_LITERAL,
       Bytes.two0(0),
@@ -448,6 +452,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.STRING_LITERAL,
       Bytes.two0(0),
@@ -500,6 +505,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.COLOR),
       Bytes.prop1(Property.COLOR),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.COLOR_HEX,
       Bytes.two0(0),
@@ -559,6 +565,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.DISPLAY),
       Bytes.prop1(Property.DISPLAY),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.KEYWORD,
       Bytes.name0(StandardName.flex),
@@ -619,6 +626,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.MIN_WIDTH),
       Bytes.prop1(Property.MIN_WIDTH),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.LENGTH_INT,
       Bytes.int0(640),
@@ -636,6 +644,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.DISPLAY),
       Bytes.prop1(Property.DISPLAY),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.KEYWORD,
       Bytes.name0(StandardName.flex),
@@ -737,6 +746,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.BOX_SHADOW),
       Bytes.prop1(Property.BOX_SHADOW),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.LENGTH_INT,
       Bytes.int0(60),
@@ -818,6 +828,7 @@ public class Compiler02Test {
       ByteCode.PROPERTY_CUSTOM,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.KEYWORD,
       Bytes.name0(StandardName.black),
@@ -869,10 +880,76 @@ public class Compiler02Test {
       ByteCode.PROPERTY_STANDARD,
       Bytes.prop0(Property.COLOR),
       Bytes.prop1(Property.COLOR),
+      ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.VAR,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteCode.PARENS_CLOSE,
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
+  @Test(description = """
+  div {
+    filter: opacity(0.4);
+  }
+  """)
+  public void testCase21() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.declarationBegin(Property.OPACITY);
+    compiler.javaDouble(0.4);
+    compiler.declarationEnd();
+
+    compiler.declarationBegin(Property.FILTER);
+    compiler.filterFunction(InternalInstruction.INSTANCE);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.div);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    long dbl;
+    dbl = Double.doubleToLongBits(0.4);
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.div.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_STANDARD,
+      Bytes.prop0(Property.FILTER),
+      Bytes.prop1(Property.FILTER),
+      ByteCode.COLON,
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.PROPERTY_STANDARD,
+      Bytes.prop0(Property.OPACITY),
+      Bytes.prop1(Property.OPACITY),
+      ByteCode.PARENS_OPEN,
+      ByteCode.DOUBLE_LITERAL,
+      Bytes.long0(dbl),
+      Bytes.long1(dbl),
+      Bytes.long2(dbl),
+      Bytes.long3(dbl),
+      Bytes.long4(dbl),
+      Bytes.long5(dbl),
+      Bytes.long6(dbl),
+      Bytes.long7(dbl),
       ByteCode.PARENS_CLOSE,
       ByteCode.SEMICOLON_OPTIONAL,
       ByteCode.BLOCK_END

@@ -18,6 +18,7 @@ package objectos.css.internal;
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
 import objectos.css.tmpl.Api;
+import objectos.css.tmpl.Api.FilterFunction;
 import objectos.css.util.CustomProperty;
 
 public abstract class CssTemplateApi {
@@ -41,6 +42,8 @@ public abstract class CssTemplateApi {
   public abstract void declarationBegin(Property name);
 
   public abstract void declarationEnd();
+
+  public abstract void filterFunction(FilterFunction func);
 
   public abstract void javaDouble(double value);
 

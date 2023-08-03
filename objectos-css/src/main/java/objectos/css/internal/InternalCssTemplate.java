@@ -17,6 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
+import objectos.css.tmpl.Api;
 import objectos.css.tmpl.Api.BoxShadowDeclaration;
 import objectos.css.tmpl.Api.BoxShadowHashDeclaration;
 import objectos.css.tmpl.Api.ColorValue;
@@ -237,6 +238,19 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       );
     }
 
+    api.declarationEnd();
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration filter(Api.FilterFunction func) {
+    Check.notNull(func, "func == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(Property.FILTER);
+    api.filterFunction(func);
     api.declarationEnd();
 
     return InternalInstruction.INSTANCE;

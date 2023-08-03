@@ -43,6 +43,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   private ColorValue colorValue;
 
+  private FilterFunction filterFunction;
+
   private LengthType lengthType;
 
   private PercentageType percentageType;
@@ -125,6 +127,14 @@ public abstract class CssSelfGen extends CompiledSpec {
   }
 
   protected abstract void definition();
+
+  protected final FilterFunction filterFunction() {
+    if (filterFunction == null) {
+      filterFunction = new FilterFunction();
+    }
+
+    return filterFunction;
+  }
 
   protected final KeywordName k(String name) {
     return keywords.computeIfAbsent(name, KeywordName::of);
@@ -319,12 +329,6 @@ public abstract class CssSelfGen extends CompiledSpec {
     );
   }
 
-  protected final void selectors(String... names) {
-    for (var name : names) {
-      selector(name);
-    }
-  }
-
   protected final void selectors(SelectorKind kind, String... names) {
     for (var name : names) {
       if (selectors.containsKey(name)) {
@@ -340,6 +344,12 @@ public abstract class CssSelfGen extends CompiledSpec {
       selectorName = new SelectorName(kind, fieldName, name);
 
       selectors.put(name, selectorName);
+    }
+  }
+
+  protected final void selectors(String... names) {
+    for (var name : names) {
+      selector(name);
     }
   }
 

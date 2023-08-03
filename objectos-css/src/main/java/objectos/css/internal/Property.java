@@ -66,6 +66,8 @@ public enum Property implements PropertyName {
 
   DISPLAY("display"),
 
+  FILTER("filter"),
+
   FLEX_DIRECTION("flex-direction"),
 
   FLEX_WRAP("flex-wrap"),
@@ -177,6 +179,8 @@ public enum Property implements PropertyName {
   _MOZ_TAB_SIZE("-moz-tab-size"),
 
   _WEBKIT_APPEARANCE("-webkit-appearance"),
+
+  _WEBKIT_FILTER("-webkit-filter"),
 
   _WEBKIT_TEXT_SIZE_ADJUST("-webkit-text-size-adjust");
 

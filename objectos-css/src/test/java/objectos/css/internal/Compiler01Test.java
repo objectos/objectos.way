@@ -1132,6 +1132,82 @@ public class Compiler01Test {
     );
   }
 
+  @Test(description = """
+  div {
+    filter: opacity(0.4);
+  }
+  """)
+  public void testCase21() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.declarationBegin(Property.OPACITY);
+    compiler.javaDouble(0.4);
+    compiler.declarationEnd();
+
+    compiler.declarationBegin(Property.FILTER);
+    compiler.filterFunction(InternalInstruction.INSTANCE);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.div);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    long dbl;
+    dbl = Double.doubleToLongBits(0.4);
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.len0(15),
+      Bytes.len1(15),
+      ByteProto.PROPERTY_STANDARD,
+      Bytes.prop0(Property.OPACITY),
+      Bytes.prop1(Property.OPACITY),
+      ByteProto.JAVA_DOUBLE,
+      Bytes.long0(dbl),
+      Bytes.long1(dbl),
+      Bytes.long2(dbl),
+      Bytes.long3(dbl),
+      Bytes.long4(dbl),
+      Bytes.long5(dbl),
+      Bytes.long6(dbl),
+      Bytes.long7(dbl),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(15),
+      ByteProto.DECLARATION,
+
+      ByteProto.MARKED,
+      Bytes.len0(8),
+      Bytes.len1(8),
+      ByteProto.PROPERTY_STANDARD,
+      Bytes.prop0(Property.FILTER),
+      Bytes.prop1(Property.FILTER),
+      ByteProto.DECLARATION,
+      Bytes.int0(25),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(26),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.div.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(17),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(36),
+      ByteProto.STYLE_RULE
+    );
+  }
+
   private void test(Compiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

@@ -23,6 +23,8 @@ abstract class CompiledSpec {
 
   abstract ColorValue colorValue();
 
+  abstract FilterFunction filterFunction();
+
   abstract Collection<KeywordName> keywords();
 
   abstract LengthType lengthType();

@@ -160,13 +160,37 @@ final class Compiler02 extends Compiler01 {
           // skip end length
           elemIndex += 2;
 
-          // skip property kind
-          elemIndex += 1;
+          byte propertyKind;
+          propertyKind = main[elemIndex++];
 
-          // skip property name
-          elemIndex += 2;
+          byte b0;
+          b0 = main[elemIndex++];
 
-          declaration(elemIndex);
+          byte b1;
+          b1 = main[elemIndex++];
+
+          if (property == Property.FILTER ||
+              property == Property._WEBKIT_FILTER) {
+
+            byte propertyByteCode;
+            propertyByteCode = switch (propertyKind) {
+              case ByteProto.PROPERTY_STANDARD -> ByteCode.PROPERTY_STANDARD;
+
+              default -> throw new UnsupportedOperationException(
+                "Implement me :: propertyKind=" + propertyKind
+              );
+            };
+
+            auxAdd(propertyByteCode, b0, b1, ByteCode.PARENS_OPEN);
+
+            declaration(elemIndex);
+
+            auxAdd(ByteCode.PARENS_CLOSE);
+          }
+
+          else {
+            declaration(elemIndex);
+          }
         }
 
         case ByteProto.DECLARATION_END -> {
@@ -287,7 +311,7 @@ final class Compiler02 extends Compiler01 {
             );
           }
 
-          auxAdd(ByteCode.SPACE_OPTIONAL);
+          auxAdd(ByteCode.COLON, ByteCode.SPACE_OPTIONAL);
         }
 
         case ByteProto.PERCENTAGE_DOUBLE -> {

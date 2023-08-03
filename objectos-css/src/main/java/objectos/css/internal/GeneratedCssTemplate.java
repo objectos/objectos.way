@@ -42,6 +42,7 @@ import objectos.css.tmpl.Api.DisplayValue2;
 import objectos.css.tmpl.Api.DottedKeyword;
 import objectos.css.tmpl.Api.DoubleKeyword;
 import objectos.css.tmpl.Api.EndKeyword;
+import objectos.css.tmpl.Api.FilterValue;
 import objectos.css.tmpl.Api.FitContentKeyword;
 import objectos.css.tmpl.Api.FlexDirectionValue;
 import objectos.css.tmpl.Api.FlexEndKeyword;
@@ -82,6 +83,7 @@ import objectos.css.tmpl.Api.MinContentKeyword;
 import objectos.css.tmpl.Api.MinHeightOrWidthValue;
 import objectos.css.tmpl.Api.NoneKeyword;
 import objectos.css.tmpl.Api.NormalKeyword;
+import objectos.css.tmpl.Api.OpacityDeclaration;
 import objectos.css.tmpl.Api.OutlineStyleValue;
 import objectos.css.tmpl.Api.OutlineValue;
 import objectos.css.tmpl.Api.OutsetKeyword;
@@ -1862,6 +1864,18 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration filter(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FILTER, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration filter(FilterValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FILTER, value);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration flexDirection(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.FLEX_DIRECTION, value);
@@ -2290,24 +2304,24 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
-  protected final StyleDeclaration opacity(GlobalKeyword value) {
+  protected final OpacityDeclaration opacity(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.OPACITY, value);
     return InternalInstruction.INSTANCE;
   }
 
-  protected final StyleDeclaration opacity(PercentageValue value) {
+  protected final OpacityDeclaration opacity(PercentageValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.OPACITY, value);
     return InternalInstruction.INSTANCE;
   }
 
-  protected final StyleDeclaration opacity(double value) {
+  protected final OpacityDeclaration opacity(double value) {
     declaration(Property.OPACITY, value);
     return InternalInstruction.INSTANCE;
   }
 
-  protected final StyleDeclaration opacity(int value) {
+  protected final OpacityDeclaration opacity(int value) {
     declaration(Property.OPACITY, value);
     return InternalInstruction.INSTANCE;
   }
@@ -2707,6 +2721,18 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration webkitAppearance(AppearanceValue value) {
     Check.notNull(value, "value == null");
     declaration(Property._WEBKIT_APPEARANCE, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration webkitFilter(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property._WEBKIT_FILTER, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration webkitFilter(FilterValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property._WEBKIT_FILTER, value);
     return InternalInstruction.INSTANCE;
   }
 

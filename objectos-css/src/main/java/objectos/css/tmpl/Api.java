@@ -48,11 +48,15 @@ public final class Api {
 
   public sealed interface StyleDeclaration extends StyleRuleElement {}
 
+  public sealed interface FilterFunction {}
+
   public sealed interface BoxShadowDeclaration extends StyleDeclaration {}
 
   public sealed interface BoxShadowHashDeclaration extends StyleDeclaration {}
 
-  public sealed interface StyleDeclarationInstruction extends BoxShadowDeclaration, BoxShadowHashDeclaration permits InternalInstruction {}
+  public sealed interface OpacityDeclaration extends FilterFunction, StyleDeclaration {}
+
+  public sealed interface StyleDeclarationInstruction extends BoxShadowDeclaration, BoxShadowHashDeclaration, OpacityDeclaration permits InternalInstruction {}
 
   public sealed interface Selector extends StyleRuleElement {}
 
@@ -93,6 +97,8 @@ public final class Api {
   public sealed interface DisplayValue extends PropertyValue {}
 
   public sealed interface DisplayValue2 extends PropertyValue {}
+
+  public sealed interface FilterValue extends PropertyValue {}
 
   public sealed interface FlexDirectionValue extends PropertyValue {}
 
@@ -200,6 +206,7 @@ public final class Api {
       DisplayOutsideValue,
       DisplayValue,
       DisplayValue2,
+      FilterValue,
       FlexDirectionValue,
       FlexWrapValue,
       FontFamilyValue,
@@ -283,7 +290,7 @@ public final class Api {
 
   public sealed interface MinContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue {}
 
-  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
+  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
 
   public sealed interface NormalKeyword extends ContentValue, FontFeatureSettingsValue, FontStyleValue, FontVariationSettingsValue, FontWeightValue, JustifyContentValue, LetterSpacingValue, LineHeightValue {}
 
@@ -348,7 +355,7 @@ public final class Api {
 
   public sealed interface StringLiteral extends FontFamilyValue, ListStyleTypeValue permits InternalInstruction {}
 
-  public sealed interface Url extends Image permits InternalInstruction {}
+  public sealed interface Url extends FilterValue, Image permits InternalInstruction {}
 
   public sealed interface Zero extends LengthValue, PercentageValue permits InternalZero {}
 }

@@ -69,6 +69,10 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(NL);
         }
 
+        case ByteCode.COLON -> {
+          appendable.append(':');
+        }
+
         case ByteCode.COMMA -> {
           appendable.append(", ");
         }
@@ -170,7 +174,6 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           name = (String) objects[objectIndex];
 
           appendable.append(name);
-          appendable.append(':');
         }
 
         case ByteCode.PROPERTY_STANDARD -> {
@@ -178,7 +181,6 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           name = Bytes.propertyName(bytes[index++], bytes[index++]);
 
           appendable.append(name);
-          appendable.append(':');
         }
 
         case ByteCode.SELECTOR_ATTR -> {

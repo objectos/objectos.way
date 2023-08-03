@@ -250,6 +250,7 @@ public final class CssSpec extends CssSelfGen {
 
     // F
 
+    filter();
     flexDirection();
     flexWrap();
     font();
@@ -991,6 +992,29 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
+  private void filter() {
+    filterFunction();
+
+    var filterValue = t(
+      "FilterValue",
+
+      k("none"),
+      url()
+    );
+
+    List<String> names;
+    names = List.of("filter", "-webkit-filter");
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(filterValue, "value")
+      );
+    }
+  }
+
   private void flexDirection() {
     var flexDirectionValue = t(
       "FlexDirectionValue",
@@ -1542,7 +1566,7 @@ public final class CssSpec extends CssSelfGen {
       sig(percentage(), "value"),
       sig(DOUBLE, "value"),
       sig(INT, "value")
-    );
+    ).asFilterFunction();
   }
 
   private void outline() {

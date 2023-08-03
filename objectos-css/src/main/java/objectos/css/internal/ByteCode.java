@@ -22,53 +22,54 @@ final class ByteCode {
   public static final byte BLOCK_START = -1;
   public static final byte BLOCK_END = -2;
   public static final byte BLOCK_EMPTY = -3;
-  public static final byte COMMA = -4;
-  public static final byte NEXT_RULE = -5;
-  public static final byte PARENS_OPEN = -6;
-  public static final byte PARENS_CLOSE = -7;
-  public static final byte SEMICOLON = -8;
-  public static final byte SEMICOLON_OPTIONAL = -9;
-  public static final byte SPACE = -10;
-  public static final byte SPACE_OPTIONAL = -11;
-  public static final byte TAB = -12;
+  public static final byte COLON = -4;
+  public static final byte COMMA = -5;
+  public static final byte NEXT_RULE = -6;
+  public static final byte PARENS_OPEN = -7;
+  public static final byte PARENS_CLOSE = -8;
+  public static final byte SEMICOLON = -9;
+  public static final byte SEMICOLON_OPTIONAL = -10;
+  public static final byte SPACE = -11;
+  public static final byte SPACE_OPTIONAL = -12;
+  public static final byte TAB = -13;
 
   //media query
 
-  public static final byte AT_MEDIA = -13;
-  public static final byte MEDIA_QUERY = -14;
+  public static final byte AT_MEDIA = -14;
+  public static final byte MEDIA_QUERY = -15;
 
   //selectors
 
-  public static final byte SELECTOR = -15;
-  public static final byte SELECTOR_ATTR = -16;
-  public static final byte SELECTOR_ATTR_VALUE = -17;
-  public static final byte SELECTOR_CLASS = -18;
-  public static final byte SELECTOR_COMBINATOR = -19;
-  public static final byte SELECTOR_PSEUDO_CLASS = -20;
-  public static final byte SELECTOR_PSEUDO_ELEMENT = -21;
-  public static final byte SELECTOR_TYPE = -22;
+  public static final byte SELECTOR = -16;
+  public static final byte SELECTOR_ATTR = -17;
+  public static final byte SELECTOR_ATTR_VALUE = -18;
+  public static final byte SELECTOR_CLASS = -19;
+  public static final byte SELECTOR_COMBINATOR = -20;
+  public static final byte SELECTOR_PSEUDO_CLASS = -21;
+  public static final byte SELECTOR_PSEUDO_ELEMENT = -22;
+  public static final byte SELECTOR_TYPE = -23;
 
   //property
 
-  public static final byte PROPERTY_CUSTOM = -23;
-  public static final byte PROPERTY_STANDARD = -24;
+  public static final byte PROPERTY_CUSTOM = -24;
+  public static final byte PROPERTY_STANDARD = -25;
 
   //property values
 
-  public static final byte COLOR_HEX = -25;
-  public static final byte DOUBLE_LITERAL = -26;
-  public static final byte INT_LITERAL = -27;
-  public static final byte KEYWORD = -28;
-  public static final byte LENGTH_DOUBLE = -29;
-  public static final byte LENGTH_INT = -30;
-  public static final byte PERCENTAGE_DOUBLE = -31;
-  public static final byte PERCENTAGE_INT = -32;
-  public static final byte RAW = -33;
-  public static final byte STRING_LITERAL = -34;
-  public static final byte STRING_QUOTES_OPTIONAL = -35;
-  public static final byte URL = -36;
-  public static final byte VAR = -37;
-  public static final byte ZERO = -38;
+  public static final byte COLOR_HEX = -26;
+  public static final byte DOUBLE_LITERAL = -27;
+  public static final byte INT_LITERAL = -28;
+  public static final byte KEYWORD = -29;
+  public static final byte LENGTH_DOUBLE = -30;
+  public static final byte LENGTH_INT = -31;
+  public static final byte PERCENTAGE_DOUBLE = -32;
+  public static final byte PERCENTAGE_INT = -33;
+  public static final byte RAW = -34;
+  public static final byte STRING_LITERAL = -35;
+  public static final byte STRING_QUOTES_OPTIONAL = -36;
+  public static final byte URL = -37;
+  public static final byte VAR = -38;
+  public static final byte ZERO = -39;
 
   private ByteCode() {}
 

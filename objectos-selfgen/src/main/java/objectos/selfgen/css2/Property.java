@@ -41,6 +41,8 @@ public final class Property {
 
   ClassTypeName hashClassName;
 
+  boolean filterFunction;
+
   private final List<Signature> signatures = new GrowableList<>();
 
   private Property(String propertyName, String methodName, String constantName) {
@@ -63,7 +65,14 @@ public final class Property {
   }
 
   public final void asFilterFunction() {
-    throw new UnsupportedOperationException("Implement me");
+    String simpleName;
+    simpleName = JavaNames.toValidClassName(propertyName);
+
+    declarationClassName = ClassTypeName.of(
+      ThisTemplate.API, simpleName + "Declaration"
+    );
+
+    filterFunction = true;
   }
 
   public final void asHashProperty() {

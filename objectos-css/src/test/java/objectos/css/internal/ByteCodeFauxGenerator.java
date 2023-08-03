@@ -29,6 +29,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("BLOCK_START");
     value("BLOCK_END");
     value("BLOCK_EMPTY");
+    value("COLON");
     value("COMMA");
     value("NEXT_RULE");
     value("PARENS_OPEN");
