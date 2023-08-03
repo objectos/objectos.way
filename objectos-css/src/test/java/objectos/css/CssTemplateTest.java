@@ -109,30 +109,6 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
-  [#488] external percentage values
-  """)
-  public void percentage() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            p,
-
-            width(Percentage.of(100))
-          );
-        }
-      },
-
-      """
-      p {
-        width: 100%;
-      }
-      """
-    );
-  }
-
-  @Test(description = """
   [#460] @media screen {
     p {
       display: flex;
@@ -200,27 +176,25 @@ public class CssTemplateTest {
     );
   }
 
-  @Test
-  public void propertyFilter() {
+  @Test(description = """
+  [#488] external percentage values
+  """)
+  public void percentage() {
     test(
       new CssTemplate() {
         @Override
         protected void definition() {
           style(
-            div,
+            p,
 
-            filter(none),
-            filter(opacity(0.4)),
-            filter(inherit)
+            width(Percentage.of(100))
           );
         }
       },
 
       """
-      div {
-        filter: none;
-        filter: opacity(0.4);
-        filter: inherit;
+      p {
+        width: 100%;
       }
       """
     );
@@ -730,6 +704,34 @@ public class CssTemplateTest {
         display: inline grid;
         display: block flow-root;
         display: inherit;
+      }
+      """
+    );
+  }
+
+  @Test
+  public void propertyFilter() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            div,
+
+            filter(none),
+            filter(opacity(0.4)),
+            filter(inherit),
+            webkitFilter(opacity(pct(40)))
+          );
+        }
+      },
+
+      """
+      div {
+        filter: none;
+        filter: opacity(0.4);
+        filter: inherit;
+        -webkit-filter: opacity(40%);
       }
       """
     );

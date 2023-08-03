@@ -122,11 +122,11 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected static final PercentageValue FULL = Percentage.of(100);
 
+  private CssTemplateApi api;
+
   private static LengthValue unit(int value) {
     return Length.rem(0.25 * value);
   }
-
-  private CssTemplateApi api;
 
   public final StyleSheet compile() {
     try {
@@ -152,18 +152,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     compiled = compile();
 
     return compiled.toString();
-  }
-
-  @SuppressWarnings("unchecked")
-  protected final <T extends PropertyValue> T var(CustomProperty<T> variable) {
-    Check.notNull(variable, "variable == null");
-
-    CssTemplateApi api;
-    api = api();
-
-    api.varFunction(variable);
-
-    return (T) InternalInstruction.VAR_FUNCTION;
   }
 
   protected final Selector attr(String name) {
@@ -217,6 +205,19 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected abstract void definition();
 
+  protected final StyleDeclaration filter(Api.FilterFunction func) {
+    Check.notNull(func, "func == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(Property.FILTER);
+    api.filterFunction(func);
+    api.declarationEnd();
+
+    return InternalInstruction.INSTANCE;
+  }
+
   @Override
   protected final StyleDeclaration fontFamily(FontFamilyValue... values) {
     Check.argument(values.length > 0, "font-family requires at least one value");
@@ -238,19 +239,6 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
       );
     }
 
-    api.declarationEnd();
-
-    return InternalInstruction.INSTANCE;
-  }
-
-  protected final StyleDeclaration filter(Api.FilterFunction func) {
-    Check.notNull(func, "func == null");
-
-    CssTemplateApi api;
-    api = api();
-
-    api.declarationBegin(Property.FILTER);
-    api.filterFunction(func);
     api.declarationEnd();
 
     return InternalInstruction.INSTANCE;
@@ -353,6 +341,31 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api().url(value);
 
     return InternalInstruction.URL;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected final <T extends PropertyValue> T var(CustomProperty<T> variable) {
+    Check.notNull(variable, "variable == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.varFunction(variable);
+
+    return (T) InternalInstruction.VAR_FUNCTION;
+  }
+
+  protected final StyleDeclaration webkitFilter(Api.FilterFunction func) {
+    Check.notNull(func, "func == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.declarationBegin(Property._WEBKIT_FILTER);
+    api.filterFunction(func);
+    api.declarationEnd();
+
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
