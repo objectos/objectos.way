@@ -15,14 +15,14 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.Selector;
 import objectos.css.tmpl.Api.ColorValue;
 import objectos.css.tmpl.Api.KeywordInstruction;
+import objectos.css.tmpl.Api.SelectorInstruction;
 import objectos.css.tmpl.Api.ValueInstruction;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public enum StandardName implements Selector, ColorValue, ValueInstruction, KeywordInstruction {
+public enum StandardName implements SelectorInstruction, ColorValue, ValueInstruction, KeywordInstruction {
   any("*"),
 
   aqua("aqua"),

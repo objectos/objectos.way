@@ -16,10 +16,7 @@
 package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
-import objectos.css.om.MediaRuleElement;
-import objectos.css.tmpl.Api.PropertyValue;
-import objectos.css.tmpl.StyleDeclaration;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.tmpl.Api;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
 import objectos.util.ByteArrays;
@@ -372,7 +369,7 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void mediaRuleElement(MediaRuleElement element) {
+  public final void mediaRuleElement(Api.MediaRuleElement element) {
     commonElement(element);
   }
 
@@ -413,7 +410,7 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void propertyHash(StyleDeclaration value) {
+  public final void propertyHash(Api.StyleDeclaration value) {
     // @ ByteProto
     mainContents--;
 
@@ -447,7 +444,7 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void propertyValue(PropertyValue value) {
+  public final void propertyValue(Api.PropertyValue value) {
     if (value instanceof StandardName name) {
       // value is a keyword like color: currentcolor; or display: block;
       // store the enum ordinal
@@ -603,7 +600,7 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void styleRuleElement(StyleRuleElement element) {
+  public final void styleRuleElement(Api.StyleRuleElement element) {
     commonElement(element);
   }
 

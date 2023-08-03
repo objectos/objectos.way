@@ -16,9 +16,9 @@
 package objectos.css.internal;
 
 import java.util.Locale;
-import objectos.css.om.MediaQuery;
+import objectos.css.tmpl.Api;
 
-public enum MediaType implements MediaQuery {
+public enum MediaType implements Api.MediaQuery {
 
   ALL,
 

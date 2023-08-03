@@ -420,17 +420,17 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   private void selectorField(SelectorName selector) {
     switch (selector.kind) {
       case TYPE -> field(
-        PROTECTED, STATIC, FINAL, TYPE_SELECTOR, name(selector.fieldName),
+        PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
         STANDARD_TYPE_SELECTOR, n(selector.fieldName)
       );
 
       case PSEUDO_CLASS -> field(
-        PROTECTED, STATIC, FINAL, PSEUDO_CLASS_SELECTOR, name(selector.fieldName),
+        PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
         STANDARD_PSEUDO_CLASS_SELECTOR, n(selector.fieldName)
       );
 
       case PSEUDO_ELEMENT -> field(
-        PROTECTED, STATIC, FINAL, PSEUDO_ELEMENT_SELECTOR, name(selector.fieldName),
+        PROTECTED, STATIC, FINAL, SELECTOR, name(selector.fieldName),
         STANDARD_PSEUDO_ELEMENT_SELECTOR, n(selector.fieldName)
       );
 

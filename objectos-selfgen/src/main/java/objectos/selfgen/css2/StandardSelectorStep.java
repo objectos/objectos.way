@@ -74,17 +74,17 @@ final class StandardSelectorStep extends ThisTemplate {
   final void writeHook(JavaSink sink) throws IOException {
     execute(
       sink,
-      SelectorKind.TYPE, STANDARD_TYPE_SELECTOR, TYPE_SELECTOR
+      SelectorKind.TYPE, STANDARD_TYPE_SELECTOR, SELECTOR_INSTRUCTION
     );
 
     execute(
       sink,
-      SelectorKind.PSEUDO_CLASS, STANDARD_PSEUDO_CLASS_SELECTOR, PSEUDO_CLASS_SELECTOR
+      SelectorKind.PSEUDO_CLASS, STANDARD_PSEUDO_CLASS_SELECTOR, SELECTOR_INSTRUCTION
     );
 
     execute(
       sink,
-      SelectorKind.PSEUDO_ELEMENT, STANDARD_PSEUDO_ELEMENT_SELECTOR, PSEUDO_ELEMENT_SELECTOR
+      SelectorKind.PSEUDO_ELEMENT, STANDARD_PSEUDO_ELEMENT_SELECTOR, SELECTOR_INSTRUCTION
     );
   }
 

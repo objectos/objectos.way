@@ -35,6 +35,10 @@ final class ApiStep extends ThisTemplate {
 
       constructor(PRIVATE),
 
+      include(this::style),
+
+      include(this::selectors),
+
       include(this::valueTypes),
 
       include(this::keywords),
@@ -50,6 +54,98 @@ final class ApiStep extends ThisTemplate {
       include(this::url),
 
       include(this::zero)
+    );
+  }
+
+  private void style() {
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(MEDIA_RULE_ELEM)
+    );
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(MEDIA_FEATURE),
+      extendsClause(MEDIA_RULE_ELEM)
+    );
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name("MediaFeatureOrStyleDeclaration"),
+      extendsClause(MEDIA_FEATURE, STYLE_DECLARATION),
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name("MediaQuery"),
+      extendsClause(MEDIA_RULE_ELEM),
+      permitsClause(ClassTypeName.of(CSS_INTERNAL, "MediaType"))
+    );
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(STYLE_RULE),
+      extendsClause(MEDIA_RULE_ELEM),
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(STYLE_RULE_ELEM)
+    );
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(STYLE_DECLARATION),
+      extendsClause(STYLE_RULE_ELEM)
+    );
+
+    List<ClassTypeName> superTypes;
+    superTypes = new GrowableList<>();
+
+    for (var property : spec.properties()) {
+      if (property.isHash()) {
+        ClassTypeName className;
+        className = property.declarationClassName;
+
+        superTypes.add(className);
+
+        interfaceDeclaration(
+          PUBLIC, SEALED, name(className), extendsClause(STYLE_DECLARATION)
+        );
+
+        className = property.hashClassName;
+
+        superTypes.add(className);
+
+        interfaceDeclaration(
+          PUBLIC, SEALED, name(className), extendsClause(STYLE_DECLARATION)
+        );
+      }
+    }
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(STYLE_DECL_INST),
+      include(() -> {
+        for (var superType : superTypes) {
+          extendsClause(superType);
+        }
+      }),
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+  }
+
+  private void selectors() {
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(SELECTOR),
+      extendsClause(STYLE_RULE_ELEM)
+    );
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(SELECTOR_INSTRUCTION),
+      extendsClause(SELECTOR),
+      permitsClause(ClassTypeName.of(CSS_INTERNAL, "Combinator")),
+      permitsClause(INTERNAL_INSTRUCTION),
+      permitsClause(STANDARD_NAME),
+      permitsClause(ClassTypeName.of(CSS_UTIL, "ClassSelector")),
+      permitsClause(ClassTypeName.of(CSS_UTIL, "IdSelector")),
+      permitsClause(STANDARD_PSEUDO_CLASS_SELECTOR),
+      permitsClause(STANDARD_PSEUDO_ELEMENT_SELECTOR),
+      permitsClause(STANDARD_TYPE_SELECTOR)
     );
   }
 

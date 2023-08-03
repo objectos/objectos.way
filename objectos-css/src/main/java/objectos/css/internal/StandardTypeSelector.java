@@ -15,11 +15,11 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.TypeSelector;
+import objectos.css.tmpl.Api.SelectorInstruction;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public enum StandardTypeSelector implements TypeSelector {
+public enum StandardTypeSelector implements SelectorInstruction {
   a("a"),
 
   article("article"),

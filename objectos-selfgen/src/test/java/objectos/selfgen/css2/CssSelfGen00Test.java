@@ -86,36 +86,6 @@ public class CssSelfGen00Test {
       }
       """
     );
-
-    assertEquals(
-      result.get("objectos/css/tmpl/Api.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.InternalInstruction;
-      import objectos.css.internal.InternalZero;
-      import objectos.css.internal.StandardName;
-      import objectos.css.util.Length;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public final class Api {
-        private Api() {}
-
-        public sealed interface PropertyValue {}
-
-        public sealed interface LineWidth extends PropertyValue {}
-
-        public sealed interface ValueInstruction extends
-            LineWidth permits StandardName {}
-
-        public sealed interface LengthValue extends LineWidth permits InternalInstruction, Length, Zero {}
-
-        public sealed interface Zero extends LengthValue permits InternalZero {}
-      }
-      """
-    );
   }
 
   @Test

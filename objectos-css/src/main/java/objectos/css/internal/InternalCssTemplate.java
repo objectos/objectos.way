@@ -17,23 +17,23 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
-import objectos.css.om.MediaFeatureOrStyleDeclaration;
-import objectos.css.om.MediaQuery;
-import objectos.css.om.MediaRuleElement;
-import objectos.css.om.Selector;
-import objectos.css.om.StyleRule;
+import objectos.css.tmpl.Api.BoxShadowDeclaration;
+import objectos.css.tmpl.Api.BoxShadowHashDeclaration;
 import objectos.css.tmpl.Api.ColorValue;
 import objectos.css.tmpl.Api.FontFamilyValue;
 import objectos.css.tmpl.Api.LengthValue;
+import objectos.css.tmpl.Api.MediaFeatureOrStyleDeclaration;
+import objectos.css.tmpl.Api.MediaQuery;
+import objectos.css.tmpl.Api.MediaRuleElement;
 import objectos.css.tmpl.Api.PercentageValue;
 import objectos.css.tmpl.Api.PropertyValue;
+import objectos.css.tmpl.Api.Selector;
 import objectos.css.tmpl.Api.StringLiteral;
+import objectos.css.tmpl.Api.StyleDeclaration;
+import objectos.css.tmpl.Api.StyleRule;
+import objectos.css.tmpl.Api.StyleRuleElement;
 import objectos.css.tmpl.Api.Url;
 import objectos.css.tmpl.Api.Zero;
-import objectos.css.tmpl.BoxShadowDeclaration;
-import objectos.css.tmpl.BoxShadowHashDeclaration;
-import objectos.css.tmpl.StyleDeclaration;
-import objectos.css.tmpl.StyleRuleElement;
 import objectos.css.util.CustomProperty;
 import objectos.css.util.Length;
 import objectos.css.util.Percentage;
@@ -43,15 +43,15 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected static final MediaQuery screen = MediaType.SCREEN;
 
-  protected static final StyleRuleElement SIBLING = Combinator.ADJACENT_SIBLING;
+  protected static final Selector SIBLING = Combinator.ADJACENT_SIBLING;
 
-  protected static final StyleRuleElement CHILD = Combinator.CHILD;
+  protected static final Selector CHILD = Combinator.CHILD;
 
-  protected static final StyleRuleElement GENERAL_SIBLING = Combinator.GENERAL_SIBLING;
+  protected static final Selector GENERAL_SIBLING = Combinator.GENERAL_SIBLING;
 
-  protected static final StyleRuleElement DESCENDANT = Combinator.DESCENDANT;
+  protected static final Selector DESCENDANT = Combinator.DESCENDANT;
 
-  protected static final StyleRuleElement OR = Combinator.LIST;
+  protected static final Selector OR = Combinator.LIST;
 
   protected static final AttributeOperator EQ = InternalAttributeOperator.EQUALS;
 

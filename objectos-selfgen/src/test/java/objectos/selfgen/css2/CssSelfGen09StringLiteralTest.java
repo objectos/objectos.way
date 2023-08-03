@@ -57,9 +57,9 @@ public class CssSelfGen09StringLiteralTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.Selector;
       import objectos.css.tmpl.Api.FontFamilyValue;
-      import objectos.css.tmpl.StyleDeclaration;
+      import objectos.css.tmpl.Api.Selector;
+      import objectos.css.tmpl.Api.StyleDeclaration;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -84,13 +84,40 @@ public class CssSelfGen09StringLiteralTest {
       """
       package objectos.css.tmpl;
 
+      import objectos.css.internal.Combinator;
       import objectos.css.internal.InternalInstruction;
+      import objectos.css.internal.MediaType;
       import objectos.css.internal.StandardName;
+      import objectos.css.internal.StandardPseudoClassSelector;
+      import objectos.css.internal.StandardPseudoElementSelector;
+      import objectos.css.internal.StandardTypeSelector;
+      import objectos.css.util.ClassSelector;
+      import objectos.css.util.IdSelector;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       public final class Api {
         private Api() {}
+
+        public sealed interface MediaRuleElement {}
+
+        public sealed interface MediaFeature extends MediaRuleElement {}
+
+        public sealed interface MediaFeatureOrStyleDeclaration extends MediaFeature, StyleDeclaration permits InternalInstruction {}
+
+        public sealed interface MediaQuery extends MediaRuleElement permits MediaType {}
+
+        public sealed interface StyleRule extends MediaRuleElement permits InternalInstruction {}
+
+        public sealed interface StyleRuleElement {}
+
+        public sealed interface StyleDeclaration extends StyleRuleElement {}
+
+        public sealed interface StyleDeclarationInstruction permits InternalInstruction {}
+
+        public sealed interface Selector extends StyleRuleElement {}
+
+        public sealed interface SelectorInstruction extends Selector permits Combinator, InternalInstruction, StandardName, ClassSelector, IdSelector, StandardPseudoClassSelector, StandardPseudoElementSelector, StandardTypeSelector {}
 
         public sealed interface PropertyValue {}
 

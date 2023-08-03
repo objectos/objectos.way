@@ -45,40 +45,6 @@ public class CssSelfGen16BoxShadowTest {
   }
 
   @Test
-  public void boxShadowDeclaration() {
-    assertEquals(
-      result.get("objectos/css/tmpl/BoxShadowDeclaration.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.InternalInstruction;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface BoxShadowDeclaration extends StyleDeclaration permits InternalInstruction {}
-      """
-    );
-  }
-
-  @Test
-  public void boxShadowHashDeclaration() {
-    assertEquals(
-      result.get("objectos/css/tmpl/BoxShadowHashDeclaration.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.InternalInstruction;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public sealed interface BoxShadowHashDeclaration extends StyleDeclaration permits InternalInstruction {}
-      """
-    );
-  }
-
-  @Test
   public void generatedCssTemplate() {
     assertEquals(
       result.get("objectos/css/internal/GeneratedCssTemplate.java"),
@@ -86,8 +52,8 @@ public class CssSelfGen16BoxShadowTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.Selector;
-      import objectos.css.tmpl.BoxShadowDeclaration;
+      import objectos.css.tmpl.Api.BoxShadowDeclaration;
+      import objectos.css.tmpl.Api.Selector;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 

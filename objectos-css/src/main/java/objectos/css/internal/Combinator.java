@@ -15,9 +15,9 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.tmpl.Api;
 
-public enum Combinator implements StyleRuleElement {
+public enum Combinator implements Api.SelectorInstruction {
 
   ADJACENT_SIBLING(" + "),
 

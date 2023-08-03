@@ -53,11 +53,11 @@ public class CssSelfGen12CustomSignatureTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.Selector;
       import objectos.css.tmpl.Api.PercentageValue;
       import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.Api.Selector;
+      import objectos.css.tmpl.Api.StyleDeclaration;
       import objectos.css.tmpl.Api.TextIndentValue;
-      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 

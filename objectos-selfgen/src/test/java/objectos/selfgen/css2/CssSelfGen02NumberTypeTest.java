@@ -48,8 +48,8 @@ public class CssSelfGen02NumberTypeTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.Selector;
-      import objectos.css.tmpl.StyleDeclaration;
+      import objectos.css.tmpl.Api.Selector;
+      import objectos.css.tmpl.Api.StyleDeclaration;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")

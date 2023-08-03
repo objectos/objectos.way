@@ -53,10 +53,10 @@ public class CssSelfGen03PercentageTypeTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.Selector;
       import objectos.css.tmpl.Api.LineHeightValue;
       import objectos.css.tmpl.Api.PropertyValue;
-      import objectos.css.tmpl.StyleDeclaration;
+      import objectos.css.tmpl.Api.Selector;
+      import objectos.css.tmpl.Api.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -71,39 +71,6 @@ public class CssSelfGen03PercentageTypeTest {
         }
 
         abstract void declaration(Property name, PropertyValue value);
-      }
-      """
-    );
-  }
-
-  @Test
-  public void api() {
-    assertEquals(
-      result.get("objectos/css/tmpl/Api.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.InternalInstruction;
-      import objectos.css.internal.InternalZero;
-      import objectos.css.internal.StandardName;
-      import objectos.css.util.Percentage;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public final class Api {
-        private Api() {}
-
-        public sealed interface PropertyValue {}
-
-        public sealed interface LineHeightValue extends PropertyValue {}
-
-        public sealed interface ValueInstruction extends
-            LineHeightValue permits StandardName {}
-
-        public sealed interface PercentageValue extends LineHeightValue permits InternalInstruction, Percentage, Zero {}
-
-        public sealed interface Zero extends PercentageValue permits InternalZero {}
       }
       """
     );

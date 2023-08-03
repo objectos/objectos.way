@@ -17,10 +17,7 @@ package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
-import objectos.css.om.MediaRuleElement;
-import objectos.css.tmpl.Api.PropertyValue;
-import objectos.css.tmpl.StyleDeclaration;
-import objectos.css.tmpl.StyleRuleElement;
+import objectos.css.tmpl.Api;
 import objectos.css.util.CustomProperty;
 
 public abstract class CssTemplateApi {
@@ -57,7 +54,7 @@ public abstract class CssTemplateApi {
 
   public abstract void mediaRuleBegin();
 
-  public abstract void mediaRuleElement(MediaRuleElement element);
+  public abstract void mediaRuleElement(Api.MediaRuleElement element);
 
   public abstract void mediaRuleEnd();
 
@@ -69,9 +66,9 @@ public abstract class CssTemplateApi {
 
   public abstract void percentage(int value);
 
-  public abstract void propertyHash(StyleDeclaration value);
+  public abstract void propertyHash(Api.StyleDeclaration value);
 
-  public abstract void propertyValue(PropertyValue value);
+  public abstract void propertyValue(Api.PropertyValue value);
 
   public abstract void propertyValueComma();
 
@@ -83,7 +80,7 @@ public abstract class CssTemplateApi {
 
   public abstract void styleRuleBegin();
 
-  public abstract void styleRuleElement(StyleRuleElement element);
+  public abstract void styleRuleElement(Api.StyleRuleElement element);
 
   public abstract void styleRuleEnd();
 

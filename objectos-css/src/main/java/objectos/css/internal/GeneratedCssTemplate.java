@@ -15,10 +15,6 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.PseudoClassSelector;
-import objectos.css.om.PseudoElementSelector;
-import objectos.css.om.Selector;
-import objectos.css.om.TypeSelector;
 import objectos.css.tmpl.Api.AppearanceValue;
 import objectos.css.tmpl.Api.AutoKeyword;
 import objectos.css.tmpl.Api.BackgroundImageValue;
@@ -26,6 +22,7 @@ import objectos.css.tmpl.Api.BlockKeyword;
 import objectos.css.tmpl.Api.BorderCollapseValue;
 import objectos.css.tmpl.Api.BorderShorthandValue;
 import objectos.css.tmpl.Api.BottomValue;
+import objectos.css.tmpl.Api.BoxShadowDeclaration;
 import objectos.css.tmpl.Api.BoxSizingValue;
 import objectos.css.tmpl.Api.ButtonKeyword;
 import objectos.css.tmpl.Api.CenterKeyword;
@@ -97,9 +94,11 @@ import objectos.css.tmpl.Api.PropertyValue;
 import objectos.css.tmpl.Api.ResizeValue;
 import objectos.css.tmpl.Api.RidgeKeyword;
 import objectos.css.tmpl.Api.RightKeyword;
+import objectos.css.tmpl.Api.Selector;
 import objectos.css.tmpl.Api.SmallKeyword;
 import objectos.css.tmpl.Api.SolidKeyword;
 import objectos.css.tmpl.Api.StartKeyword;
+import objectos.css.tmpl.Api.StyleDeclaration;
 import objectos.css.tmpl.Api.SubKeyword;
 import objectos.css.tmpl.Api.TableKeyword;
 import objectos.css.tmpl.Api.TextAlignValue;
@@ -114,145 +113,143 @@ import objectos.css.tmpl.Api.TextTransformValue;
 import objectos.css.tmpl.Api.TextareaKeyword;
 import objectos.css.tmpl.Api.TopValue;
 import objectos.css.tmpl.Api.VerticalAlignValue;
-import objectos.css.tmpl.BoxShadowDeclaration;
-import objectos.css.tmpl.StyleDeclaration;
 import objectos.css.util.Color;
 import objectos.lang.Check;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 abstract class GeneratedCssTemplate {
-  protected static final PseudoElementSelector __after = StandardPseudoElementSelector.__after;
+  protected static final Selector __after = StandardPseudoElementSelector.__after;
 
-  protected static final PseudoElementSelector __before = StandardPseudoElementSelector.__before;
+  protected static final Selector __before = StandardPseudoElementSelector.__before;
 
-  protected static final PseudoElementSelector __placeholder = StandardPseudoElementSelector.__placeholder;
+  protected static final Selector __placeholder = StandardPseudoElementSelector.__placeholder;
 
-  protected static final PseudoElementSelector __webkitFileUploadButton = StandardPseudoElementSelector.__webkitFileUploadButton;
+  protected static final Selector __webkitFileUploadButton = StandardPseudoElementSelector.__webkitFileUploadButton;
 
-  protected static final PseudoElementSelector __webkitInnerSpinButton = StandardPseudoElementSelector.__webkitInnerSpinButton;
+  protected static final Selector __webkitInnerSpinButton = StandardPseudoElementSelector.__webkitInnerSpinButton;
 
-  protected static final PseudoElementSelector __webkitOuterSpinButton = StandardPseudoElementSelector.__webkitOuterSpinButton;
+  protected static final Selector __webkitOuterSpinButton = StandardPseudoElementSelector.__webkitOuterSpinButton;
 
-  protected static final PseudoElementSelector __webkitSearchDecoration = StandardPseudoElementSelector.__webkitSearchDecoration;
+  protected static final Selector __webkitSearchDecoration = StandardPseudoElementSelector.__webkitSearchDecoration;
 
-  protected static final PseudoClassSelector _disabled = StandardPseudoClassSelector._disabled;
+  protected static final Selector _disabled = StandardPseudoClassSelector._disabled;
 
-  protected static final PseudoClassSelector _firstChild = StandardPseudoClassSelector._firstChild;
+  protected static final Selector _firstChild = StandardPseudoClassSelector._firstChild;
 
-  protected static final PseudoClassSelector _firstOfType = StandardPseudoClassSelector._firstOfType;
+  protected static final Selector _firstOfType = StandardPseudoClassSelector._firstOfType;
 
-  protected static final PseudoClassSelector _focus = StandardPseudoClassSelector._focus;
+  protected static final Selector _focus = StandardPseudoClassSelector._focus;
 
-  protected static final PseudoClassSelector _hover = StandardPseudoClassSelector._hover;
+  protected static final Selector _hover = StandardPseudoClassSelector._hover;
 
-  protected static final PseudoClassSelector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
+  protected static final Selector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
 
-  protected static final PseudoClassSelector _mozUiInvalid = StandardPseudoClassSelector._mozUiInvalid;
+  protected static final Selector _mozUiInvalid = StandardPseudoClassSelector._mozUiInvalid;
 
-  protected static final PseudoClassSelector _root = StandardPseudoClassSelector._root;
+  protected static final Selector _root = StandardPseudoClassSelector._root;
 
-  protected static final TypeSelector a = StandardTypeSelector.a;
+  protected static final Selector a = StandardTypeSelector.a;
 
-  protected static final TypeSelector article = StandardTypeSelector.article;
+  protected static final Selector article = StandardTypeSelector.article;
 
-  protected static final TypeSelector audio = StandardTypeSelector.audio;
+  protected static final Selector audio = StandardTypeSelector.audio;
 
-  protected static final TypeSelector b = StandardTypeSelector.b;
+  protected static final Selector b = StandardTypeSelector.b;
 
-  protected static final TypeSelector blockquote = StandardTypeSelector.blockquote;
+  protected static final Selector blockquote = StandardTypeSelector.blockquote;
 
-  protected static final TypeSelector body = StandardTypeSelector.body;
+  protected static final Selector body = StandardTypeSelector.body;
 
-  protected static final TypeSelector canvas = StandardTypeSelector.canvas;
+  protected static final Selector canvas = StandardTypeSelector.canvas;
 
-  protected static final TypeSelector code = StandardTypeSelector.code;
+  protected static final Selector code = StandardTypeSelector.code;
 
-  protected static final TypeSelector dd = StandardTypeSelector.dd;
+  protected static final Selector dd = StandardTypeSelector.dd;
 
-  protected static final TypeSelector div = StandardTypeSelector.div;
+  protected static final Selector div = StandardTypeSelector.div;
 
-  protected static final TypeSelector dl = StandardTypeSelector.dl;
+  protected static final Selector dl = StandardTypeSelector.dl;
 
-  protected static final TypeSelector embed = StandardTypeSelector.embed;
+  protected static final Selector embed = StandardTypeSelector.embed;
 
-  protected static final TypeSelector fieldset = StandardTypeSelector.fieldset;
+  protected static final Selector fieldset = StandardTypeSelector.fieldset;
 
-  protected static final TypeSelector figure = StandardTypeSelector.figure;
+  protected static final Selector figure = StandardTypeSelector.figure;
 
-  protected static final TypeSelector form = StandardTypeSelector.form;
+  protected static final Selector form = StandardTypeSelector.form;
 
-  protected static final TypeSelector h1 = StandardTypeSelector.h1;
+  protected static final Selector h1 = StandardTypeSelector.h1;
 
-  protected static final TypeSelector h2 = StandardTypeSelector.h2;
+  protected static final Selector h2 = StandardTypeSelector.h2;
 
-  protected static final TypeSelector h3 = StandardTypeSelector.h3;
+  protected static final Selector h3 = StandardTypeSelector.h3;
 
-  protected static final TypeSelector h4 = StandardTypeSelector.h4;
+  protected static final Selector h4 = StandardTypeSelector.h4;
 
-  protected static final TypeSelector h5 = StandardTypeSelector.h5;
+  protected static final Selector h5 = StandardTypeSelector.h5;
 
-  protected static final TypeSelector h6 = StandardTypeSelector.h6;
+  protected static final Selector h6 = StandardTypeSelector.h6;
 
-  protected static final TypeSelector header = StandardTypeSelector.header;
+  protected static final Selector header = StandardTypeSelector.header;
 
-  protected static final TypeSelector hr = StandardTypeSelector.hr;
+  protected static final Selector hr = StandardTypeSelector.hr;
 
-  protected static final TypeSelector html = StandardTypeSelector.html;
+  protected static final Selector html = StandardTypeSelector.html;
 
-  protected static final TypeSelector iframe = StandardTypeSelector.iframe;
+  protected static final Selector iframe = StandardTypeSelector.iframe;
 
-  protected static final TypeSelector img = StandardTypeSelector.img;
+  protected static final Selector img = StandardTypeSelector.img;
 
-  protected static final TypeSelector input = StandardTypeSelector.input;
+  protected static final Selector input = StandardTypeSelector.input;
 
-  protected static final TypeSelector kbd = StandardTypeSelector.kbd;
+  protected static final Selector kbd = StandardTypeSelector.kbd;
 
-  protected static final TypeSelector label = StandardTypeSelector.label;
+  protected static final Selector label = StandardTypeSelector.label;
 
-  protected static final TypeSelector legend = StandardTypeSelector.legend;
+  protected static final Selector legend = StandardTypeSelector.legend;
 
-  protected static final TypeSelector li = StandardTypeSelector.li;
+  protected static final Selector li = StandardTypeSelector.li;
 
-  protected static final TypeSelector nav = StandardTypeSelector.nav;
+  protected static final Selector nav = StandardTypeSelector.nav;
 
-  protected static final TypeSelector object = StandardTypeSelector.object;
+  protected static final Selector object = StandardTypeSelector.object;
 
-  protected static final TypeSelector ol = StandardTypeSelector.ol;
+  protected static final Selector ol = StandardTypeSelector.ol;
 
-  protected static final TypeSelector optgroup = StandardTypeSelector.optgroup;
+  protected static final Selector optgroup = StandardTypeSelector.optgroup;
 
-  protected static final TypeSelector p = StandardTypeSelector.p;
+  protected static final Selector p = StandardTypeSelector.p;
 
-  protected static final TypeSelector pre = StandardTypeSelector.pre;
+  protected static final Selector pre = StandardTypeSelector.pre;
 
-  protected static final TypeSelector samp = StandardTypeSelector.samp;
+  protected static final Selector samp = StandardTypeSelector.samp;
 
-  protected static final TypeSelector section = StandardTypeSelector.section;
+  protected static final Selector section = StandardTypeSelector.section;
 
-  protected static final TypeSelector select = StandardTypeSelector.select;
+  protected static final Selector select = StandardTypeSelector.select;
 
-  protected static final TypeSelector strong = StandardTypeSelector.strong;
+  protected static final Selector strong = StandardTypeSelector.strong;
 
-  protected static final TypeSelector summary = StandardTypeSelector.summary;
+  protected static final Selector summary = StandardTypeSelector.summary;
 
-  protected static final TypeSelector sup = StandardTypeSelector.sup;
+  protected static final Selector sup = StandardTypeSelector.sup;
 
-  protected static final TypeSelector svg = StandardTypeSelector.svg;
+  protected static final Selector svg = StandardTypeSelector.svg;
 
-  protected static final TypeSelector tbody = StandardTypeSelector.tbody;
+  protected static final Selector tbody = StandardTypeSelector.tbody;
 
-  protected static final TypeSelector td = StandardTypeSelector.td;
+  protected static final Selector td = StandardTypeSelector.td;
 
-  protected static final TypeSelector th = StandardTypeSelector.th;
+  protected static final Selector th = StandardTypeSelector.th;
 
-  protected static final TypeSelector thead = StandardTypeSelector.thead;
+  protected static final Selector thead = StandardTypeSelector.thead;
 
-  protected static final TypeSelector tr = StandardTypeSelector.tr;
+  protected static final Selector tr = StandardTypeSelector.tr;
 
-  protected static final TypeSelector ul = StandardTypeSelector.ul;
+  protected static final Selector ul = StandardTypeSelector.ul;
 
-  protected static final TypeSelector video = StandardTypeSelector.video;
+  protected static final Selector video = StandardTypeSelector.video;
 
   protected static final Selector any = StandardName.any;
 

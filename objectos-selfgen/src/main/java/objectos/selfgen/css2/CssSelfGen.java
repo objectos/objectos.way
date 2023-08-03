@@ -67,8 +67,6 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     spec.write(sink, new ApiStep());
 
-    spec.write(sink, new DeclarationInterfaceStep());
-
     spec.write(sink, new GeneratedColorStep());
 
     spec.write(sink, new GeneratedCssTemplateStep());

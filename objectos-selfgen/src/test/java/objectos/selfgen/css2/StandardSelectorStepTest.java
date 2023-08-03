@@ -66,11 +66,11 @@ public class StandardSelectorStepTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.TypeSelector;
+      import objectos.css.tmpl.Api.SelectorInstruction;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public enum StandardTypeSelector implements TypeSelector {
+      public enum StandardTypeSelector implements SelectorInstruction {
         a("a"),
 
         pre("pre");
@@ -104,11 +104,11 @@ public class StandardSelectorStepTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PseudoClassSelector;
+      import objectos.css.tmpl.Api.SelectorInstruction;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public enum StandardPseudoClassSelector implements PseudoClassSelector {
+      public enum StandardPseudoClassSelector implements SelectorInstruction {
         _checked(":checked"),
 
         _mozFocusring(":-moz-focusring");
@@ -142,11 +142,11 @@ public class StandardSelectorStepTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PseudoElementSelector;
+      import objectos.css.tmpl.Api.SelectorInstruction;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public enum StandardPseudoElementSelector implements PseudoElementSelector {
+      public enum StandardPseudoElementSelector implements SelectorInstruction {
         __after("::after"),
 
         __mozFocusInner("::-moz-focus-inner");

@@ -69,7 +69,7 @@ final class StandardNameStep extends ThisTemplate {
   }
 
   private void superInterfaces() {
-    implementsClause(SELECTOR);
+    implementsClause(SELECTOR_INSTRUCTION);
 
     implementsClause(COLOR_VALUE);
 

@@ -55,11 +55,11 @@ public class GeneratedCssTemplateStepTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.Selector;
       import objectos.css.tmpl.Api.LengthValue;
       import objectos.css.tmpl.Api.LineWidth;
       import objectos.css.tmpl.Api.PropertyValue;
-      import objectos.css.tmpl.StyleDeclaration;
+      import objectos.css.tmpl.Api.Selector;
+      import objectos.css.tmpl.Api.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -160,20 +160,18 @@ public class GeneratedCssTemplateStepTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PseudoElementSelector;
-      import objectos.css.om.Selector;
-      import objectos.css.om.TypeSelector;
+      import objectos.css.tmpl.Api.Selector;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final PseudoElementSelector __after = StandardPseudoElementSelector.__after;
+        protected static final Selector __after = StandardPseudoElementSelector.__after;
 
-        protected static final PseudoElementSelector __before = StandardPseudoElementSelector.__before;
+        protected static final Selector __before = StandardPseudoElementSelector.__before;
 
-        protected static final TypeSelector a = StandardTypeSelector.a;
+        protected static final Selector a = StandardTypeSelector.a;
 
-        protected static final TypeSelector pre = StandardTypeSelector.pre;
+        protected static final Selector pre = StandardTypeSelector.pre;
 
         protected static final Selector any = StandardName.any;
       }
@@ -234,31 +232,28 @@ public class GeneratedCssTemplateStepTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.PseudoClassSelector;
-      import objectos.css.om.PseudoElementSelector;
-      import objectos.css.om.Selector;
-      import objectos.css.om.TypeSelector;
       import objectos.css.tmpl.Api.ColorValue;
       import objectos.css.tmpl.Api.GlobalKeyword;
       import objectos.css.tmpl.Api.LengthValue;
       import objectos.css.tmpl.Api.PropertyValue;
-      import objectos.css.tmpl.StyleDeclaration;
+      import objectos.css.tmpl.Api.Selector;
+      import objectos.css.tmpl.Api.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
       abstract class GeneratedCssTemplate {
-        protected static final PseudoElementSelector __after = StandardPseudoElementSelector.__after;
+        protected static final Selector __after = StandardPseudoElementSelector.__after;
 
-        protected static final PseudoElementSelector __mozFocusInner = StandardPseudoElementSelector.__mozFocusInner;
+        protected static final Selector __mozFocusInner = StandardPseudoElementSelector.__mozFocusInner;
 
-        protected static final PseudoClassSelector _checked = StandardPseudoClassSelector._checked;
+        protected static final Selector _checked = StandardPseudoClassSelector._checked;
 
-        protected static final PseudoClassSelector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
+        protected static final Selector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
 
-        protected static final TypeSelector a = StandardTypeSelector.a;
+        protected static final Selector a = StandardTypeSelector.a;
 
-        protected static final TypeSelector pre = StandardTypeSelector.pre;
+        protected static final Selector pre = StandardTypeSelector.pre;
 
         protected static final Selector any = StandardName.any;
 

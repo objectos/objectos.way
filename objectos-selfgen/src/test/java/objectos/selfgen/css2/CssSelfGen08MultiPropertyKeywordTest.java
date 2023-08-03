@@ -71,12 +71,12 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       """
       package objectos.css.internal;
 
-      import objectos.css.om.Selector;
       import objectos.css.tmpl.Api.LineStyle;
       import objectos.css.tmpl.Api.NoneKeyword;
       import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.Api.Selector;
+      import objectos.css.tmpl.Api.StyleDeclaration;
       import objectos.css.tmpl.Api.TextSizeAdjustValue;
-      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -105,40 +105,6 @@ public class CssSelfGen08MultiPropertyKeywordTest {
         }
 
         abstract void declaration(Property name, PropertyValue value);
-      }
-      """
-    );
-  }
-
-  @Test
-  public void api() {
-    assertEquals(
-      result.get("objectos/css/tmpl/Api.java"),
-
-      """
-      package objectos.css.tmpl;
-
-      import objectos.css.internal.StandardName;
-      import objectos.lang.Generated;
-
-      @Generated("objectos.selfgen.CssSpec")
-      public final class Api {
-        private Api() {}
-
-        public sealed interface PropertyValue {}
-
-        public sealed interface LineStyle extends PropertyValue {}
-
-        public sealed interface TextSizeAdjustValue extends PropertyValue {}
-
-        public sealed interface ValueInstruction extends
-            LineStyle,
-            TextSizeAdjustValue permits StandardName {}
-
-        public sealed interface NoneKeyword extends LineStyle, TextSizeAdjustValue {}
-
-        public sealed interface KeywordInstruction extends
-            NoneKeyword permits StandardName {}
       }
       """
     );

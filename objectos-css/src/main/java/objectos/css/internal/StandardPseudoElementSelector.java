@@ -15,11 +15,11 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.PseudoElementSelector;
+import objectos.css.tmpl.Api.SelectorInstruction;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public enum StandardPseudoElementSelector implements PseudoElementSelector {
+public enum StandardPseudoElementSelector implements SelectorInstruction {
   __after("::after"),
 
   __before("::before"),

@@ -71,11 +71,11 @@ public final class Property {
     simpleName = JavaNames.toValidClassName(propertyName);
 
     declarationClassName = ClassTypeName.of(
-      ThisTemplate.CSS_TMPL, simpleName + "Declaration"
+      ThisTemplate.API, simpleName + "Declaration"
     );
 
     hashClassName = ClassTypeName.of(
-      ThisTemplate.CSS_TMPL, simpleName + "HashDeclaration"
+      ThisTemplate.API, simpleName + "HashDeclaration"
     );
   }
 

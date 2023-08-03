@@ -37,15 +37,53 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final String GENERATOR = CssSpec.class.getCanonicalName();
 
+  static final ClassTypeName CHECK = ClassTypeName.of(Check.class);
+
+  static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
+
+  static final ClassTypeName STRING = ClassTypeName.of(String.class);
+
+  //
+
   static final ClassTypeName API = ClassTypeName.of(CSS_TMPL, "Api");
+
+  static final ClassTypeName COLOR_VALUE = ClassTypeName.of(API, "ColorValue");
+
+  static final ClassTypeName KEYWORD_INSTRUCTION = ClassTypeName.of(API, "KeywordInstruction");
+
+  static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(API, "LengthValue");
+
+  static final ClassTypeName MEDIA_FEATURE = ClassTypeName.of(API, "MediaFeature");
+
+  static final ClassTypeName MEDIA_RULE_ELEM = ClassTypeName.of(API, "MediaRuleElement");
+
+  static final ClassTypeName PERCENTAGE_VALUE = ClassTypeName.of(API, "PercentageValue");
 
   static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(API, "PropertyValue");
 
-  static final ClassTypeName CHECK = ClassTypeName.of(Check.class);
+  static final ClassTypeName SELECTOR = ClassTypeName.of(API, "Selector");
+
+  static final ClassTypeName SELECTOR_INSTRUCTION = ClassTypeName.of(API, "SelectorInstruction");
+
+  static final ClassTypeName STRING_LITERAL = ClassTypeName.of(API, "StringLiteral");
+
+  static final ClassTypeName STYLE_DECLARATION = ClassTypeName.of(API, "StyleDeclaration");
+
+  static final ClassTypeName STYLE_DECL_INST = ClassTypeName.of(API, "StyleDeclarationInstruction");
+
+  static final ClassTypeName STYLE_RULE = ClassTypeName.of(API, "StyleRule");
+
+  static final ClassTypeName STYLE_RULE_ELEM = ClassTypeName.of(API, "StyleRuleElement");
+
+  static final ClassTypeName URL = ClassTypeName.of(API, "Url");
+
+  static final ClassTypeName VALUE_INSTRUCTION = ClassTypeName.of(API, "ValueInstruction");
+
+  static final ClassTypeName ZERO = ClassTypeName.of(API, "Zero");
+
+  //
 
   static final ClassTypeName COLOR = ClassTypeName.of(CSS_UTIL, "Color");
-
-  static final ClassTypeName COLOR_VALUE = ClassTypeName.of(API, "ColorValue");
 
   static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);
 
@@ -55,32 +93,15 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName INTERNAL_ZERO
       = ClassTypeName.of(CSS_INTERNAL, "InternalZero");
 
-  static final ClassTypeName KEYWORD_INSTRUCTION
-      = ClassTypeName.of(API, "KeywordInstruction");
-
   static final ClassTypeName LENGTH = ClassTypeName.of(CSS_UTIL, "Length");
 
   static final ClassTypeName LENGTH_UNIT = ClassTypeName.of(CSS_INTERNAL, "LengthUnit");
 
-  static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(API, "LengthValue");
-
-  static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
-
   static final ClassTypeName PERCENTAGE = ClassTypeName.of(CSS_UTIL, "Percentage");
-
-  static final ClassTypeName PERCENTAGE_VALUE = ClassTypeName.of(API, "PercentageValue");
 
   static final ClassTypeName PROPERTY = ClassTypeName.of(CSS_INTERNAL, "Property");
 
   static final ClassTypeName PROPERTY_NAME = ClassTypeName.of(CSS_OM, "PropertyName");
-
-  static final ClassTypeName PSEUDO_CLASS_SELECTOR
-      = ClassTypeName.of(CSS_OM, "PseudoClassSelector");
-
-  static final ClassTypeName PSEUDO_ELEMENT_SELECTOR
-      = ClassTypeName.of(CSS_OM, "PseudoElementSelector");
-
-  static final ClassTypeName SELECTOR = ClassTypeName.of(CSS_OM, "Selector");
 
   static final ClassTypeName STANDARD_NAME = ClassTypeName.of(CSS_INTERNAL, "StandardName");
 
@@ -92,20 +113,6 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STANDARD_TYPE_SELECTOR
       = ClassTypeName.of(CSS_INTERNAL, "StandardTypeSelector");
-
-  static final ClassTypeName STRING = ClassTypeName.of(String.class);
-
-  static final ClassTypeName STRING_LITERAL = ClassTypeName.of(API, "StringLiteral");
-
-  static final ClassTypeName STYLE_DECLARATION = ClassTypeName.of(CSS_TMPL, "StyleDeclaration");
-
-  static final ClassTypeName TYPE_SELECTOR = ClassTypeName.of(CSS_OM, "TypeSelector");
-
-  static final ClassTypeName URL = ClassTypeName.of(API, "Url");
-
-  static final ClassTypeName VALUE_INSTRUCTION = ClassTypeName.of(API, "ValueInstruction");
-
-  static final ClassTypeName ZERO = ClassTypeName.of(API, "Zero");
 
   CompiledSpec spec;
 

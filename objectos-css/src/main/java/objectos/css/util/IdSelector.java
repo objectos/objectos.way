@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css;
+package objectos.css.util;
 
 import java.util.Objects;
-import objectos.css.om.Selector;
+import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 import objectos.lang.Check;
 
 /**
  * @since 0.7
  */
-public record IdSelector(String id) implements ExternalAttribute.Id, Selector {
+public record IdSelector(String id) implements ExternalAttribute.Id, Api.SelectorInstruction {
 
   public IdSelector {
     Objects.requireNonNull(id, "id == null");

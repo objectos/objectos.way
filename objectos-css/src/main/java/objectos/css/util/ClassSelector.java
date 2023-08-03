@@ -17,14 +17,15 @@ package objectos.css.util;
 
 import java.util.Objects;
 import objectos.css.internal.RandomStringGenerator;
-import objectos.css.om.Selector;
+import objectos.css.tmpl.Api;
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 import objectos.lang.Check;
 
 /**
  * @since 0.7
  */
-public record ClassSelector(String className) implements ExternalAttribute.StyleClass, Selector {
+public record ClassSelector(String className)
+    implements ExternalAttribute.StyleClass, Api.SelectorInstruction {
 
   public ClassSelector {
     Objects.requireNonNull(className, "className == null");

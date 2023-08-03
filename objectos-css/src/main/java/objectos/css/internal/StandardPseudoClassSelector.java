@@ -15,11 +15,11 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.PseudoClassSelector;
+import objectos.css.tmpl.Api.SelectorInstruction;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
-public enum StandardPseudoClassSelector implements PseudoClassSelector {
+public enum StandardPseudoClassSelector implements SelectorInstruction {
   _disabled(":disabled"),
 
   _firstChild(":first-child"),
