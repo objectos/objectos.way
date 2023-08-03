@@ -17,10 +17,10 @@ package objectos.css.util;
 
 import objectos.css.internal.InternalLength;
 import objectos.css.internal.LengthUnit;
-import objectos.css.tmpl.PropertyValue;
+import objectos.css.tmpl.Api;
 
 public sealed abstract class Length
-    implements PropertyValue.LengthValue
+    implements Api.LengthValue
     permits InternalLength {
 
   protected Length() {}

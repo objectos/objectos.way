@@ -58,9 +58,9 @@ public class CssSelfGen14UrlTypeTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.Image;
+      import objectos.css.tmpl.Api.Image;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -81,9 +81,9 @@ public class CssSelfGen14UrlTypeTest {
   }
 
   @Test
-  public void propertyValue() {
+  public void api() {
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -93,13 +93,17 @@ public class CssSelfGen14UrlTypeTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface Image extends PropertyValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface PropertyValue {}
+
+        public sealed interface Image extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             Image permits StandardName {}
 
-        sealed interface Url extends Image permits InternalInstruction {}
+        public sealed interface Url extends Image permits InternalInstruction {}
       }
       """
     );

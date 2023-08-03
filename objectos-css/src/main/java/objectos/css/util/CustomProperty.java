@@ -15,9 +15,9 @@
  */
 package objectos.css.util;
 
-import objectos.css.tmpl.PropertyValue;
+import objectos.css.tmpl.Api;
 
-public class CustomProperty<T extends PropertyValue> {
+public class CustomProperty<T extends Api.PropertyValue> {
 
   public final String cssName;
 
@@ -25,7 +25,7 @@ public class CustomProperty<T extends PropertyValue> {
     this.cssName = cssName;
   }
 
-  public static <T extends PropertyValue> CustomProperty<T> named(String name) {
+  public static <T extends Api.PropertyValue> CustomProperty<T> named(String name) {
     int length;
     length = name.length();
 

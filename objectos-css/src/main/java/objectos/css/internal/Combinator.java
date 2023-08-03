@@ -15,7 +15,7 @@
  */
 package objectos.css.internal;
 
-import objectos.css.om.StyleRuleElement;
+import objectos.css.tmpl.StyleRuleElement;
 
 public enum Combinator implements StyleRuleElement {
 

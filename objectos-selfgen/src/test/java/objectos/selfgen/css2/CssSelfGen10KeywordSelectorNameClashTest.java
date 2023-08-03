@@ -53,10 +53,10 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.FontSizeValue;
-      import objectos.css.tmpl.PropertyValue.SmallKeyword;
+      import objectos.css.tmpl.Api.FontSizeValue;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.Api.SmallKeyword;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -83,9 +83,9 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
   }
 
   @Test
-  public void propertyValue() {
+  public void api() {
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -95,15 +95,19 @@ public class CssSelfGen10KeywordSelectorNameClashTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface FontSizeValue extends PropertyValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface PropertyValue {}
+
+        public sealed interface FontSizeValue extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             FontSizeValue permits StandardName {}
 
-        sealed interface SmallKeyword extends FontSizeValue, Selector {}
+        public sealed interface SmallKeyword extends FontSizeValue, Selector {}
 
-        sealed interface KeywordInstruction extends
+        public sealed interface KeywordInstruction extends
             SmallKeyword permits StandardName {}
       }
       """

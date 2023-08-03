@@ -16,14 +16,14 @@
 package objectos.css.util;
 
 import objectos.css.internal.InternalColor;
-import objectos.css.tmpl.PropertyValue.ColorValue;
+import objectos.css.tmpl.Api;
 
 /**
  * @since 0.7
  */
 public sealed abstract class Color
     extends GeneratedColor
-    implements ColorValue
+    implements Api.ColorValue
     permits InternalColor {
 
   protected Color() {}

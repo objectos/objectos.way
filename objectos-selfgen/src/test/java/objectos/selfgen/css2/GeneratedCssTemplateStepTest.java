@@ -56,10 +56,10 @@ public class GeneratedCssTemplateStepTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.LengthValue;
-      import objectos.css.tmpl.PropertyValue.LineWidth;
+      import objectos.css.tmpl.Api.LengthValue;
+      import objectos.css.tmpl.Api.LineWidth;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -237,12 +237,12 @@ public class GeneratedCssTemplateStepTest {
       import objectos.css.om.PseudoClassSelector;
       import objectos.css.om.PseudoElementSelector;
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
       import objectos.css.om.TypeSelector;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.ColorValue;
-      import objectos.css.tmpl.PropertyValue.GlobalKeyword;
-      import objectos.css.tmpl.PropertyValue.LengthValue;
+      import objectos.css.tmpl.Api.ColorValue;
+      import objectos.css.tmpl.Api.GlobalKeyword;
+      import objectos.css.tmpl.Api.LengthValue;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 

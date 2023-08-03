@@ -62,7 +62,11 @@ public final class Property {
     return new Property(propertyName, methodName, constantName);
   }
 
-  public final Property asHashProperty() {
+  public final void asFilterFunction() {
+    throw new UnsupportedOperationException("Implement me");
+  }
+
+  public final void asHashProperty() {
     String simpleName;
     simpleName = JavaNames.toValidClassName(propertyName);
 
@@ -73,8 +77,6 @@ public final class Property {
     hashClassName = ClassTypeName.of(
       ThisTemplate.CSS_TMPL, simpleName + "HashDeclaration"
     );
-
-    return this;
   }
 
   final void addSignature(Signature signature) {

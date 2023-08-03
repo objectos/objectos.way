@@ -18,100 +18,104 @@ package objectos.css.internal;
 import objectos.css.om.PseudoClassSelector;
 import objectos.css.om.PseudoElementSelector;
 import objectos.css.om.Selector;
-import objectos.css.om.StyleDeclaration;
 import objectos.css.om.TypeSelector;
+import objectos.css.tmpl.Api.AppearanceValue;
+import objectos.css.tmpl.Api.AutoKeyword;
+import objectos.css.tmpl.Api.BackgroundImageValue;
+import objectos.css.tmpl.Api.BlockKeyword;
+import objectos.css.tmpl.Api.BorderCollapseValue;
+import objectos.css.tmpl.Api.BorderShorthandValue;
+import objectos.css.tmpl.Api.BottomValue;
+import objectos.css.tmpl.Api.BoxSizingValue;
+import objectos.css.tmpl.Api.ButtonKeyword;
+import objectos.css.tmpl.Api.CenterKeyword;
+import objectos.css.tmpl.Api.ColorValue;
+import objectos.css.tmpl.Api.ContentValue;
+import objectos.css.tmpl.Api.CounterStyleValue;
+import objectos.css.tmpl.Api.CursorValue;
+import objectos.css.tmpl.Api.DashedKeyword;
+import objectos.css.tmpl.Api.DisplayBoxValue;
+import objectos.css.tmpl.Api.DisplayInsideValue;
+import objectos.css.tmpl.Api.DisplayInternalValue;
+import objectos.css.tmpl.Api.DisplayLegacyValue;
+import objectos.css.tmpl.Api.DisplayListItemValue;
+import objectos.css.tmpl.Api.DisplayOutsideValue;
+import objectos.css.tmpl.Api.DisplayValue;
+import objectos.css.tmpl.Api.DisplayValue2;
+import objectos.css.tmpl.Api.DottedKeyword;
+import objectos.css.tmpl.Api.DoubleKeyword;
+import objectos.css.tmpl.Api.EndKeyword;
+import objectos.css.tmpl.Api.FitContentKeyword;
+import objectos.css.tmpl.Api.FlexDirectionValue;
+import objectos.css.tmpl.Api.FlexEndKeyword;
+import objectos.css.tmpl.Api.FlexStartKeyword;
+import objectos.css.tmpl.Api.FlexWrapValue;
+import objectos.css.tmpl.Api.FontFamilyValue;
+import objectos.css.tmpl.Api.FontFeatureSettingsValue;
+import objectos.css.tmpl.Api.FontSizeValue;
+import objectos.css.tmpl.Api.FontStyleValue;
+import objectos.css.tmpl.Api.FontValue;
+import objectos.css.tmpl.Api.FontVariationSettingsValue;
+import objectos.css.tmpl.Api.FontWeightValue;
+import objectos.css.tmpl.Api.GlobalKeyword;
+import objectos.css.tmpl.Api.GrooveKeyword;
+import objectos.css.tmpl.Api.HeightOrWidthValue;
+import objectos.css.tmpl.Api.InlineKeyword;
+import objectos.css.tmpl.Api.InsetKeyword;
+import objectos.css.tmpl.Api.JustifyContentPosition;
+import objectos.css.tmpl.Api.JustifyContentValue;
+import objectos.css.tmpl.Api.LeftKeyword;
+import objectos.css.tmpl.Api.LeftValue;
+import objectos.css.tmpl.Api.LengthPercentage;
+import objectos.css.tmpl.Api.LengthValue;
+import objectos.css.tmpl.Api.LetterSpacingValue;
+import objectos.css.tmpl.Api.LineHeightValue;
+import objectos.css.tmpl.Api.LineStyle;
+import objectos.css.tmpl.Api.LineWidth;
+import objectos.css.tmpl.Api.ListStyleImageValue;
+import objectos.css.tmpl.Api.ListStylePositionValue;
+import objectos.css.tmpl.Api.ListStyleTypeValue;
+import objectos.css.tmpl.Api.ListStyleValue;
+import objectos.css.tmpl.Api.MarginValue;
+import objectos.css.tmpl.Api.MaxContentKeyword;
+import objectos.css.tmpl.Api.MaxHeightOrWidthValue;
+import objectos.css.tmpl.Api.MediumKeyword;
+import objectos.css.tmpl.Api.MenuKeyword;
+import objectos.css.tmpl.Api.MinContentKeyword;
+import objectos.css.tmpl.Api.MinHeightOrWidthValue;
+import objectos.css.tmpl.Api.NoneKeyword;
+import objectos.css.tmpl.Api.NormalKeyword;
+import objectos.css.tmpl.Api.OutlineStyleValue;
+import objectos.css.tmpl.Api.OutlineValue;
+import objectos.css.tmpl.Api.OutsetKeyword;
+import objectos.css.tmpl.Api.OverflowPosition;
+import objectos.css.tmpl.Api.PercentageValue;
+import objectos.css.tmpl.Api.PointerEventsValue;
+import objectos.css.tmpl.Api.PositionValue;
+import objectos.css.tmpl.Api.ProgressKeyword;
+import objectos.css.tmpl.Api.PropertyValue;
+import objectos.css.tmpl.Api.ResizeValue;
+import objectos.css.tmpl.Api.RidgeKeyword;
+import objectos.css.tmpl.Api.RightKeyword;
+import objectos.css.tmpl.Api.SmallKeyword;
+import objectos.css.tmpl.Api.SolidKeyword;
+import objectos.css.tmpl.Api.StartKeyword;
+import objectos.css.tmpl.Api.SubKeyword;
+import objectos.css.tmpl.Api.TableKeyword;
+import objectos.css.tmpl.Api.TextAlignValue;
+import objectos.css.tmpl.Api.TextDecorationLineMultiValue;
+import objectos.css.tmpl.Api.TextDecorationLineSingleValue;
+import objectos.css.tmpl.Api.TextDecorationStyleValue;
+import objectos.css.tmpl.Api.TextDecorationThicknessValue;
+import objectos.css.tmpl.Api.TextDecorationValue;
+import objectos.css.tmpl.Api.TextIndentValue;
+import objectos.css.tmpl.Api.TextSizeAdjustValue;
+import objectos.css.tmpl.Api.TextTransformValue;
+import objectos.css.tmpl.Api.TextareaKeyword;
+import objectos.css.tmpl.Api.TopValue;
+import objectos.css.tmpl.Api.VerticalAlignValue;
 import objectos.css.tmpl.BoxShadowDeclaration;
-import objectos.css.tmpl.PropertyValue;
-import objectos.css.tmpl.PropertyValue.AppearanceValue;
-import objectos.css.tmpl.PropertyValue.AutoKeyword;
-import objectos.css.tmpl.PropertyValue.BackgroundImageValue;
-import objectos.css.tmpl.PropertyValue.BlockKeyword;
-import objectos.css.tmpl.PropertyValue.BorderCollapseValue;
-import objectos.css.tmpl.PropertyValue.BorderShorthandValue;
-import objectos.css.tmpl.PropertyValue.BottomValue;
-import objectos.css.tmpl.PropertyValue.BoxSizingValue;
-import objectos.css.tmpl.PropertyValue.ButtonKeyword;
-import objectos.css.tmpl.PropertyValue.CenterKeyword;
-import objectos.css.tmpl.PropertyValue.ColorValue;
-import objectos.css.tmpl.PropertyValue.CounterStyleValue;
-import objectos.css.tmpl.PropertyValue.CursorValue;
-import objectos.css.tmpl.PropertyValue.DashedKeyword;
-import objectos.css.tmpl.PropertyValue.DisplayBoxValue;
-import objectos.css.tmpl.PropertyValue.DisplayInsideValue;
-import objectos.css.tmpl.PropertyValue.DisplayInternalValue;
-import objectos.css.tmpl.PropertyValue.DisplayLegacyValue;
-import objectos.css.tmpl.PropertyValue.DisplayListItemValue;
-import objectos.css.tmpl.PropertyValue.DisplayOutsideValue;
-import objectos.css.tmpl.PropertyValue.DisplayValue;
-import objectos.css.tmpl.PropertyValue.DisplayValue2;
-import objectos.css.tmpl.PropertyValue.DottedKeyword;
-import objectos.css.tmpl.PropertyValue.DoubleKeyword;
-import objectos.css.tmpl.PropertyValue.EndKeyword;
-import objectos.css.tmpl.PropertyValue.FitContentKeyword;
-import objectos.css.tmpl.PropertyValue.FlexDirectionValue;
-import objectos.css.tmpl.PropertyValue.FlexEndKeyword;
-import objectos.css.tmpl.PropertyValue.FlexStartKeyword;
-import objectos.css.tmpl.PropertyValue.FontFamilyValue;
-import objectos.css.tmpl.PropertyValue.FontFeatureSettingsValue;
-import objectos.css.tmpl.PropertyValue.FontSizeValue;
-import objectos.css.tmpl.PropertyValue.FontStyleValue;
-import objectos.css.tmpl.PropertyValue.FontValue;
-import objectos.css.tmpl.PropertyValue.FontVariationSettingsValue;
-import objectos.css.tmpl.PropertyValue.FontWeightValue;
-import objectos.css.tmpl.PropertyValue.GlobalKeyword;
-import objectos.css.tmpl.PropertyValue.GrooveKeyword;
-import objectos.css.tmpl.PropertyValue.HeightOrWidthValue;
-import objectos.css.tmpl.PropertyValue.InlineKeyword;
-import objectos.css.tmpl.PropertyValue.InsetKeyword;
-import objectos.css.tmpl.PropertyValue.JustifyContentPosition;
-import objectos.css.tmpl.PropertyValue.JustifyContentValue;
-import objectos.css.tmpl.PropertyValue.LeftKeyword;
-import objectos.css.tmpl.PropertyValue.LengthPercentage;
-import objectos.css.tmpl.PropertyValue.LengthValue;
-import objectos.css.tmpl.PropertyValue.LetterSpacingValue;
-import objectos.css.tmpl.PropertyValue.LineHeightValue;
-import objectos.css.tmpl.PropertyValue.LineStyle;
-import objectos.css.tmpl.PropertyValue.LineWidth;
-import objectos.css.tmpl.PropertyValue.ListStyleImageValue;
-import objectos.css.tmpl.PropertyValue.ListStylePositionValue;
-import objectos.css.tmpl.PropertyValue.ListStyleTypeValue;
-import objectos.css.tmpl.PropertyValue.ListStyleValue;
-import objectos.css.tmpl.PropertyValue.MarginValue;
-import objectos.css.tmpl.PropertyValue.MaxContentKeyword;
-import objectos.css.tmpl.PropertyValue.MaxHeightOrWidthValue;
-import objectos.css.tmpl.PropertyValue.MediumKeyword;
-import objectos.css.tmpl.PropertyValue.MenuKeyword;
-import objectos.css.tmpl.PropertyValue.MinContentKeyword;
-import objectos.css.tmpl.PropertyValue.MinHeightOrWidthValue;
-import objectos.css.tmpl.PropertyValue.NoneKeyword;
-import objectos.css.tmpl.PropertyValue.NormalKeyword;
-import objectos.css.tmpl.PropertyValue.OutlineStyleValue;
-import objectos.css.tmpl.PropertyValue.OutlineValue;
-import objectos.css.tmpl.PropertyValue.OutsetKeyword;
-import objectos.css.tmpl.PropertyValue.OverflowPosition;
-import objectos.css.tmpl.PropertyValue.PercentageValue;
-import objectos.css.tmpl.PropertyValue.PositionValue;
-import objectos.css.tmpl.PropertyValue.ProgressKeyword;
-import objectos.css.tmpl.PropertyValue.ResizeValue;
-import objectos.css.tmpl.PropertyValue.RidgeKeyword;
-import objectos.css.tmpl.PropertyValue.RightKeyword;
-import objectos.css.tmpl.PropertyValue.SmallKeyword;
-import objectos.css.tmpl.PropertyValue.SolidKeyword;
-import objectos.css.tmpl.PropertyValue.StartKeyword;
-import objectos.css.tmpl.PropertyValue.SubKeyword;
-import objectos.css.tmpl.PropertyValue.TableKeyword;
-import objectos.css.tmpl.PropertyValue.TextAlignValue;
-import objectos.css.tmpl.PropertyValue.TextDecorationLineMultiValue;
-import objectos.css.tmpl.PropertyValue.TextDecorationLineSingleValue;
-import objectos.css.tmpl.PropertyValue.TextDecorationStyleValue;
-import objectos.css.tmpl.PropertyValue.TextDecorationThicknessValue;
-import objectos.css.tmpl.PropertyValue.TextDecorationValue;
-import objectos.css.tmpl.PropertyValue.TextIndentValue;
-import objectos.css.tmpl.PropertyValue.TextSizeAdjustValue;
-import objectos.css.tmpl.PropertyValue.TextTransformValue;
-import objectos.css.tmpl.PropertyValue.TextareaKeyword;
-import objectos.css.tmpl.PropertyValue.TopValue;
-import objectos.css.tmpl.PropertyValue.VerticalAlignValue;
+import objectos.css.tmpl.StyleDeclaration;
 import objectos.css.util.Color;
 import objectos.lang.Check;
 import objectos.lang.Generated;
@@ -145,6 +149,8 @@ abstract class GeneratedCssTemplate {
   protected static final PseudoClassSelector _mozFocusring = StandardPseudoClassSelector._mozFocusring;
 
   protected static final PseudoClassSelector _mozUiInvalid = StandardPseudoClassSelector._mozUiInvalid;
+
+  protected static final PseudoClassSelector _root = StandardPseudoClassSelector._root;
 
   protected static final TypeSelector a = StandardTypeSelector.a;
 
@@ -1034,6 +1040,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final CursorValue notAllowed = StandardName.notAllowed;
 
+  protected static final FlexWrapValue nowrap = StandardName.nowrap;
+
   protected static final CursorValue nsResize = StandardName.nsResize;
 
   protected static final CursorValue nwResize = StandardName.nwResize;
@@ -1221,6 +1229,10 @@ abstract class GeneratedCssTemplate {
   protected static final CursorValue wait = StandardName.wait;
 
   protected static final TextDecorationStyleValue wavy = StandardName.wavy;
+
+  protected static final FlexWrapValue wrap = StandardName.wrap;
+
+  protected static final FlexWrapValue wrapReverse = StandardName.wrapReverse;
 
   protected static final FontSizeValue xLarge = StandardName.xLarge;
 
@@ -1804,6 +1816,24 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration content(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.CONTENT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration content(ContentValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.CONTENT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration content(String value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.CONTENT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration cursor(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.CURSOR, value);
@@ -1844,6 +1874,18 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration flexDirection(FlexDirectionValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.FLEX_DIRECTION, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexWrap(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FLEX_WRAP, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexWrap(FlexWrapValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FLEX_WRAP, value);
     return InternalInstruction.INSTANCE;
   }
 
@@ -1960,6 +2002,18 @@ abstract class GeneratedCssTemplate {
     Check.notNull(safeOrUnsafe, "safeOrUnsafe == null");
     Check.notNull(position, "position == null");
     declaration(Property.JUSTIFY_CONTENT, safeOrUnsafe, position);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration left(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.LEFT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration left(LeftValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.LEFT, value);
     return InternalInstruction.INSTANCE;
   }
 
@@ -2417,6 +2471,18 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration paddingTop(LengthPercentage value) {
     Check.notNull(value, "value == null");
     declaration(Property.PADDING_TOP, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration pointerEvents(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.POINTER_EVENTS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration pointerEvents(PointerEventsValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.POINTER_EVENTS, value);
     return InternalInstruction.INSTANCE;
   }
 

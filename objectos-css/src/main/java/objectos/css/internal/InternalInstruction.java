@@ -17,29 +17,25 @@ package objectos.css.internal;
 
 import objectos.css.om.MediaFeatureOrStyleDeclaration;
 import objectos.css.om.Selector;
-import objectos.css.om.StyleDeclaration;
 import objectos.css.om.StyleRule;
+import objectos.css.tmpl.Api;
 import objectos.css.tmpl.BoxShadowDeclaration;
 import objectos.css.tmpl.BoxShadowHashDeclaration;
-import objectos.css.tmpl.PropertyValue.ColorValue;
-import objectos.css.tmpl.PropertyValue.LengthValue;
-import objectos.css.tmpl.PropertyValue.PercentageValue;
-import objectos.css.tmpl.PropertyValue.StringLiteral;
-import objectos.css.tmpl.PropertyValue.Url;
+import objectos.css.tmpl.StyleDeclaration;
 
 public enum InternalInstruction
     implements
     BoxShadowDeclaration,
     BoxShadowHashDeclaration,
-    ColorValue,
-    LengthValue,
+    Api.ColorValue,
+    Api.LengthValue,
     MediaFeatureOrStyleDeclaration,
-    PercentageValue,
+    Api.PercentageValue,
     Selector,
-    StringLiteral,
+    Api.StringLiteral,
     StyleDeclaration,
     StyleRule,
-    Url {
+    Api.Url {
 
   INSTANCE(-1),
 

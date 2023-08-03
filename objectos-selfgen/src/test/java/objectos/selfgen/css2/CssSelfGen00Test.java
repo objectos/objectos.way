@@ -88,7 +88,7 @@ public class CssSelfGen00Test {
     );
 
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -100,15 +100,19 @@ public class CssSelfGen00Test {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface LineWidth extends PropertyValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface PropertyValue {}
+
+        public sealed interface LineWidth extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             LineWidth permits StandardName {}
 
-        sealed interface LengthValue extends LineWidth permits InternalInstruction, Length, Zero {}
+        public sealed interface LengthValue extends LineWidth permits InternalInstruction, Length, Zero {}
 
-        sealed interface Zero extends LengthValue permits InternalZero {}
+        public sealed interface Zero extends LengthValue permits InternalZero {}
       }
       """
     );

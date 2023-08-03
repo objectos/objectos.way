@@ -15,4 +15,8 @@
  */
 package objectos.css.om;
 
-public interface MediaFeatureOrStyleDeclaration extends MediaFeature, StyleDeclaration {}
+import objectos.css.internal.InternalInstruction;
+import objectos.css.tmpl.StyleDeclaration;
+
+public sealed interface MediaFeatureOrStyleDeclaration extends MediaFeature, StyleDeclaration
+    permits InternalInstruction {}

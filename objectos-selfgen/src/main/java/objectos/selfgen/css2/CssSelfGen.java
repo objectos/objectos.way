@@ -65,6 +65,8 @@ public abstract class CssSelfGen extends CompiledSpec {
 
     var spec = compile();
 
+    spec.write(sink, new ApiStep());
+
     spec.write(sink, new DeclarationInterfaceStep());
 
     spec.write(sink, new GeneratedColorStep());
@@ -74,8 +76,6 @@ public abstract class CssSelfGen extends CompiledSpec {
     spec.write(sink, new LengthUnitStep());
 
     spec.write(sink, new PropertyStep());
-
-    spec.write(sink, new PropertyValueStep());
 
     spec.write(sink, new StandardNameStep());
 

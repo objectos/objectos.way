@@ -52,7 +52,7 @@ public class CssSelfGen15SignatureStringTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 

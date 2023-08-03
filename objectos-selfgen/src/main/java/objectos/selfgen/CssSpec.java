@@ -136,6 +136,7 @@ public final class CssSpec extends CssSelfGen {
       ":first-of-type",
       ":focus",
       ":hover",
+      ":root",
       ":-moz-focusring",
       ":-moz-ui-invalid"
     );
@@ -240,6 +241,7 @@ public final class CssSpec extends CssSelfGen {
     // C
 
     color();
+    content();
     cursor();
 
     // D
@@ -249,6 +251,7 @@ public final class CssSpec extends CssSelfGen {
     // F
 
     flexDirection();
+    flexWrap();
     font();
     fontFamily();
     fontFeatureSettings();
@@ -267,6 +270,7 @@ public final class CssSpec extends CssSelfGen {
 
     // L
 
+    left();
     letterSpacing();
     lineHeight();
     listStyleImage();
@@ -293,27 +297,9 @@ public final class CssSpec extends CssSelfGen {
 
     // P
 
-    var positionValue = t("PositionValue",
-      keywords("absolute", "fixed", "static", "sticky", "relative")
-    );
-
-    pval("padding", globalKeyword);
-    pbox("padding", lengthPercentage);
-
-    pval("padding-bottom", globalKeyword);
-    pval("padding-bottom", lengthPercentage);
-
-    pval("padding-left", globalKeyword);
-    pval("padding-left", lengthPercentage);
-
-    pval("padding-right", globalKeyword);
-    pval("padding-right", lengthPercentage);
-
-    pval("padding-top", globalKeyword);
-    pval("padding-top", lengthPercentage);
-
-    pval("position", globalKeyword);
-    pval("position", positionValue);
+    padding();
+    pointerEvents();
+    position();
 
     // R
 
@@ -861,6 +847,23 @@ public final class CssSpec extends CssSelfGen {
     color.add("ROSE_900", "#881337");
   }
 
+  private void content() {
+    var contentValue = t(
+      "ContentValue",
+
+      k("none"),
+      k("normal")
+    );
+
+    property(
+      "content",
+
+      sig(globalKeyword, "value"),
+      sig(contentValue, "value"),
+      sig(STRING, "value")
+    );
+  }
+
   private void cursor() {
     var cursor = t(
       "CursorValue",
@@ -1003,6 +1006,24 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(flexDirectionValue, "value")
+    );
+  }
+
+  private void flexWrap() {
+    ValueType flexWrapValue;
+    flexWrapValue = t(
+      "FlexWrapValue",
+
+      k("nowrap"),
+      k("wrap"),
+      k("wrapReverse")
+    );
+
+    property(
+      "flex-wrap",
+
+      sig(globalKeyword, "value"),
+      sig(flexWrapValue, "value")
     );
   }
 
@@ -1214,6 +1235,22 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(justifyContent, "value"),
       sig(overflow, "safeOrUnsafe", justifyContentPosition, "position")
+    );
+  }
+
+  private void left() {
+    var leftValue = t(
+      "LeftValue",
+
+      k("auto"),
+      lengthPercentage
+    );
+
+    property(
+      "left",
+
+      sig(globalKeyword, "value"),
+      sig(leftValue, "value")
     );
   }
 
@@ -1578,6 +1615,67 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(lineWidth, "value")
+    );
+  }
+
+  private void padding() {
+    ValueType padValue;
+    padValue = lengthPercentage;
+
+    property(
+      "padding",
+
+      sig(globalKeyword, "value"),
+      sig(padValue, "all"),
+      sig(padValue, "vertical", padValue, "horizontal"),
+      sig(padValue, "top", padValue, "horizontal", padValue, "bottom"),
+      sig(padValue, "top", padValue, "right", padValue, "bottom", padValue, "left")
+    );
+
+    List<String> names;
+    names = List.of("padding-top", "padding-right", "padding-bottom", "padding-left");
+
+    for (var name : names) {
+      property(
+        name,
+        sig(globalKeyword, "value"),
+        sig(padValue, "value")
+      );
+    }
+  }
+
+  private void pointerEvents() {
+    var pointerEventsValue = t(
+      "PointerEventsValue",
+
+      k("auto"),
+      k("none")
+    );
+
+    property(
+      "pointer-events",
+
+      sig(globalKeyword, "value"),
+      sig(pointerEventsValue, "value")
+    );
+  }
+
+  private void position() {
+    var positionValue = t(
+      "PositionValue",
+
+      k("absolute"),
+      k("fixed"),
+      k("static"),
+      k("sticky"),
+      k("relative")
+    );
+
+    property(
+      "position",
+
+      sig(globalKeyword, "value"),
+      sig(positionValue, "value")
     );
   }
 

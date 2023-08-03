@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.tmpl;
 
-public non-sealed interface StyleDeclaration extends StyleRuleElement {
+import objectos.css.internal.InternalInstruction;
+import objectos.css.om.MediaFeatureOrStyleDeclaration;
 
-  @Override
-  String toString();
-
-}
+public sealed interface StyleDeclaration extends StyleRuleElement
+    permits BoxShadowDeclaration, BoxShadowHashDeclaration, InternalInstruction,
+    MediaFeatureOrStyleDeclaration {}

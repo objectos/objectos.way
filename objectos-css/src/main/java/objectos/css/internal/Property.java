@@ -60,11 +60,15 @@ public enum Property implements PropertyName {
 
   COLOR("color"),
 
+  CONTENT("content"),
+
   CURSOR("cursor"),
 
   DISPLAY("display"),
 
   FLEX_DIRECTION("flex-direction"),
+
+  FLEX_WRAP("flex-wrap"),
 
   FONT("font"),
 
@@ -83,6 +87,8 @@ public enum Property implements PropertyName {
   HEIGHT("height"),
 
   JUSTIFY_CONTENT("justify-content"),
+
+  LEFT("left"),
 
   LETTER_SPACING("letter-spacing"),
 
@@ -135,6 +141,8 @@ public enum Property implements PropertyName {
   PADDING_RIGHT("padding-right"),
 
   PADDING_TOP("padding-top"),
+
+  POINTER_EVENTS("pointer-events"),
 
   POSITION("position"),
 

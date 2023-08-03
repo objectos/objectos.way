@@ -16,7 +16,7 @@
 package objectos.css.internal;
 
 import java.util.Arrays;
-import objectos.css.tmpl.PropertyValue.ColorValue;
+import objectos.css.tmpl.Api.ColorValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
 import objectos.css.util.Length;

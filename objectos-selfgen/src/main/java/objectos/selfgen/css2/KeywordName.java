@@ -123,7 +123,7 @@ public final class KeywordName implements ParameterType, Value {
     if (className == null) {
       var simpleName = JavaNames.toValidClassName(keywordName) + "Keyword";
 
-      className = ClassTypeName.of(ThisTemplate.PROPERTY_VALUE, simpleName);
+      className = ClassTypeName.of(ThisTemplate.API, simpleName);
     }
   }
 

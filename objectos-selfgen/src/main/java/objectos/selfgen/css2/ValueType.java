@@ -41,7 +41,7 @@ public final class ValueType implements ParameterType, Value {
     Objects.requireNonNull(simpleName, "simpleName == null");
 
     ClassTypeName className;
-    className = ClassTypeName.of(ThisTemplate.PROPERTY_VALUE, simpleName);
+    className = ClassTypeName.of(ThisTemplate.API, simpleName);
 
     return new ValueType(className);
   }

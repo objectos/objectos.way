@@ -15,6 +15,8 @@
  */
 package objectos.css.om;
 
+import objectos.css.tmpl.StyleRuleElement;
+
 public non-sealed interface Selector extends StyleRuleElement {
 
   @Override

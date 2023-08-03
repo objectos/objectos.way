@@ -18,9 +18,9 @@ package objectos.css.internal;
 import objectos.css.AttributeOperator;
 import objectos.css.StyleSheet;
 import objectos.css.om.MediaRuleElement;
-import objectos.css.om.StyleDeclaration;
-import objectos.css.om.StyleRuleElement;
-import objectos.css.tmpl.PropertyValue;
+import objectos.css.tmpl.Api.PropertyValue;
+import objectos.css.tmpl.StyleDeclaration;
+import objectos.css.tmpl.StyleRuleElement;
 import objectos.css.util.CustomProperty;
 
 public abstract class CssTemplateApi {

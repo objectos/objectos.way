@@ -58,8 +58,8 @@ public class CssSelfGen09StringLiteralTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue.FontFamilyValue;
+      import objectos.css.tmpl.Api.FontFamilyValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -77,9 +77,9 @@ public class CssSelfGen09StringLiteralTest {
   }
 
   @Test
-  public void propertyValue() {
+  public void api() {
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -89,13 +89,17 @@ public class CssSelfGen09StringLiteralTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface FontFamilyValue extends PropertyValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface PropertyValue {}
+
+        public sealed interface FontFamilyValue extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             FontFamilyValue permits StandardName {}
 
-        sealed interface StringLiteral extends FontFamilyValue permits InternalInstruction {}
+        public sealed interface StringLiteral extends FontFamilyValue permits InternalInstruction {}
       }
       """
     );

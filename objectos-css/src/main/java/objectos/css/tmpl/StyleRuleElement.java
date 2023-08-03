@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.om;
+package objectos.css.tmpl;
 
 import objectos.css.internal.Combinator;
+import objectos.css.om.Selector;
 
 public sealed interface StyleRuleElement permits Combinator, Selector, StyleDeclaration {}

@@ -16,10 +16,10 @@
 package objectos.css.util;
 
 import objectos.css.internal.InternalPercentage;
-import objectos.css.tmpl.PropertyValue;
+import objectos.css.tmpl.Api;
 
 public sealed abstract class Percentage
-    implements PropertyValue.PercentageValue
+    implements Api.PercentageValue
     permits InternalPercentage {
 
   protected Percentage() {}

@@ -58,10 +58,10 @@ public class CssSelfGen11Value2AndValue3SigsTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.TextDecorationLineMultiValue;
-      import objectos.css.tmpl.PropertyValue.TextDecorationLineSingleValue;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.Api.TextDecorationLineMultiValue;
+      import objectos.css.tmpl.Api.TextDecorationLineSingleValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 

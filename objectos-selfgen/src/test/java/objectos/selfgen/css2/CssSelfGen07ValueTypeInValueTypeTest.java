@@ -57,10 +57,10 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.LengthValue;
-      import objectos.css.tmpl.PropertyValue.LineHeightValue;
+      import objectos.css.tmpl.Api.LengthValue;
+      import objectos.css.tmpl.Api.LineHeightValue;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -103,9 +103,9 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
   }
 
   @Test
-  public void propertyValue() {
+  public void api() {
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -118,20 +118,24 @@ public class CssSelfGen07ValueTypeInValueTypeTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface LengthPercentage extends LineHeightValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface LineHeightValue extends PropertyValue {}
+        public sealed interface PropertyValue {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface LengthPercentage extends LineHeightValue {}
+
+        public sealed interface LineHeightValue extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             LengthPercentage,
             LineHeightValue permits StandardName {}
 
-        sealed interface LengthValue extends LengthPercentage permits InternalInstruction, Length, Zero {}
+        public sealed interface LengthValue extends LengthPercentage permits InternalInstruction, Length, Zero {}
 
-        sealed interface PercentageValue extends LengthPercentage permits InternalInstruction, Percentage, Zero {}
+        public sealed interface PercentageValue extends LengthPercentage permits InternalInstruction, Percentage, Zero {}
 
-        sealed interface Zero extends LengthValue, PercentageValue permits InternalZero {}
+        public sealed interface Zero extends LengthValue, PercentageValue permits InternalZero {}
       }
       """
     );

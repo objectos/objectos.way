@@ -21,7 +21,7 @@ import java.util.List;
 import objectos.code.ClassTypeName;
 import objectos.util.GrowableList;
 
-final class PropertyValueStep extends ThisTemplate {
+final class ApiStep extends ThisTemplate {
 
   @Override
   protected final void definition() {
@@ -29,9 +29,11 @@ final class PropertyValueStep extends ThisTemplate {
 
     autoImports();
 
-    interfaceDeclaration(
+    classDeclaration(
       annotation(GENERATED, annotationValue(s(GENERATOR))),
-      PUBLIC, SEALED, name(PROPERTY_VALUE),
+      PUBLIC, FINAL, name(API),
+
+      constructor(PRIVATE),
 
       include(this::valueTypes),
 
@@ -52,6 +54,10 @@ final class PropertyValueStep extends ThisTemplate {
   }
 
   private void valueTypes() {
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(PROPERTY_VALUE)
+    );
+
     Collection<ValueType> valueTypes;
     valueTypes = spec.valueTypes();
 
@@ -69,7 +75,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(VALUE_INSTRUCTION),
+      PUBLIC, SEALED, name(VALUE_INSTRUCTION),
       include(() -> {
         for (ClassTypeName superType : superTypes) {
           extendsClause(NL, superType);
@@ -81,7 +87,7 @@ final class PropertyValueStep extends ThisTemplate {
 
   private void valueType(ValueType valueType) {
     interfaceDeclaration(
-      SEALED, name(valueType.className),
+      PUBLIC, SEALED, name(valueType.className),
 
       include(() -> valueTypeExtends(valueType))
     );
@@ -123,7 +129,7 @@ final class PropertyValueStep extends ThisTemplate {
       superTypes.add(className);
 
       interfaceDeclaration(
-        SEALED, name(className),
+        PUBLIC, SEALED, name(className),
         include(() -> {
           keywordName.superTypes().stream()
               .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
@@ -137,7 +143,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(KEYWORD_INSTRUCTION),
+      PUBLIC, SEALED, name(KEYWORD_INSTRUCTION),
       include(() -> {
         for (ClassTypeName superType : superTypes) {
           extendsClause(NL, superType);
@@ -156,7 +162,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(COLOR_VALUE),
+      PUBLIC, SEALED, name(COLOR_VALUE),
       include(() -> {
         colorValue.superTypes().stream()
             .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
@@ -175,7 +181,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(LENGTH_VALUE),
+      PUBLIC, SEALED, name(LENGTH_VALUE),
       include(() -> {
         lengthType.interfaces.stream()
             .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
@@ -194,7 +200,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(PERCENTAGE_VALUE),
+      PUBLIC, SEALED, name(PERCENTAGE_VALUE),
       include(() -> {
         percentageType.interfaces.stream()
             .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
@@ -213,7 +219,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(STRING_LITERAL),
+      PUBLIC, SEALED, name(STRING_LITERAL),
       include(() -> {
         stringType.interfaces.stream()
             .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
@@ -232,7 +238,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(URL),
+      PUBLIC, SEALED, name(URL),
       include(() -> {
         urlType.interfaces.stream()
             .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
@@ -251,7 +257,7 @@ final class PropertyValueStep extends ThisTemplate {
     }
 
     interfaceDeclaration(
-      SEALED, name(ZERO),
+      PUBLIC, SEALED, name(ZERO),
       include(() -> {
         if (zeroType.lengthType) {
           extendsClause(LENGTH_VALUE);

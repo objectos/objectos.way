@@ -54,9 +54,9 @@ public class CssSelfGen03PercentageTypeTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.LineHeightValue;
+      import objectos.css.tmpl.Api.LineHeightValue;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -77,9 +77,9 @@ public class CssSelfGen03PercentageTypeTest {
   }
 
   @Test
-  public void propertyValue() {
+  public void api() {
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -91,15 +91,19 @@ public class CssSelfGen03PercentageTypeTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface LineHeightValue extends PropertyValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface PropertyValue {}
+
+        public sealed interface LineHeightValue extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             LineHeightValue permits StandardName {}
 
-        sealed interface PercentageValue extends LineHeightValue permits InternalInstruction, Percentage, Zero {}
+        public sealed interface PercentageValue extends LineHeightValue permits InternalInstruction, Percentage, Zero {}
 
-        sealed interface Zero extends PercentageValue permits InternalZero {}
+        public sealed interface Zero extends PercentageValue permits InternalZero {}
       }
       """
     );

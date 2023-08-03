@@ -72,11 +72,11 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.LineStyle;
-      import objectos.css.tmpl.PropertyValue.NoneKeyword;
-      import objectos.css.tmpl.PropertyValue.TextSizeAdjustValue;
+      import objectos.css.tmpl.Api.LineStyle;
+      import objectos.css.tmpl.Api.NoneKeyword;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.Api.TextSizeAdjustValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
@@ -111,9 +111,9 @@ public class CssSelfGen08MultiPropertyKeywordTest {
   }
 
   @Test
-  public void propertyValue() {
+  public void api() {
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -122,18 +122,22 @@ public class CssSelfGen08MultiPropertyKeywordTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface LineStyle extends PropertyValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface TextSizeAdjustValue extends PropertyValue {}
+        public sealed interface PropertyValue {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface LineStyle extends PropertyValue {}
+
+        public sealed interface TextSizeAdjustValue extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             LineStyle,
             TextSizeAdjustValue permits StandardName {}
 
-        sealed interface NoneKeyword extends LineStyle, TextSizeAdjustValue {}
+        public sealed interface NoneKeyword extends LineStyle, TextSizeAdjustValue {}
 
-        sealed interface KeywordInstruction extends
+        public sealed interface KeywordInstruction extends
             NoneKeyword permits StandardName {}
       }
       """

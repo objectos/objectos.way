@@ -32,7 +32,9 @@ public enum StandardPseudoClassSelector implements PseudoClassSelector {
 
   _mozFocusring(":-moz-focusring"),
 
-  _mozUiInvalid(":-moz-ui-invalid");
+  _mozUiInvalid(":-moz-ui-invalid"),
+
+  _root(":root");
 
   private static final StandardPseudoClassSelector[] VALUES = values();
 

@@ -16,9 +16,9 @@
 package objectos.css.internal;
 
 import objectos.css.om.Selector;
-import objectos.css.tmpl.PropertyValue.ColorValue;
-import objectos.css.tmpl.PropertyValue.KeywordInstruction;
-import objectos.css.tmpl.PropertyValue.ValueInstruction;
+import objectos.css.tmpl.Api.ColorValue;
+import objectos.css.tmpl.Api.KeywordInstruction;
+import objectos.css.tmpl.Api.ValueInstruction;
 import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
@@ -369,6 +369,8 @@ public enum StandardName implements Selector, ColorValue, ValueInstruction, Keyw
 
   notAllowed("not-allowed"),
 
+  nowrap("nowrap"),
+
   nsResize("ns-resize"),
 
   nwResize("nw-resize"),
@@ -556,6 +558,10 @@ public enum StandardName implements Selector, ColorValue, ValueInstruction, Keyw
   wait("wait"),
 
   wavy("wavy"),
+
+  wrap("wrap"),
+
+  wrapReverse("wrapReverse"),
 
   xLarge("x-large"),
 

@@ -16,7 +16,6 @@
 package objectos.selfgen.css2;
 
 import java.io.IOException;
-import java.util.Objects;
 import objectos.code.ClassTypeName;
 import objectos.code.JavaSink;
 import objectos.code.JavaTemplate;
@@ -38,13 +37,15 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final String GENERATOR = CssSpec.class.getCanonicalName();
 
-  static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(CSS_TMPL, "PropertyValue");
+  static final ClassTypeName API = ClassTypeName.of(CSS_TMPL, "Api");
+
+  static final ClassTypeName PROPERTY_VALUE = ClassTypeName.of(API, "PropertyValue");
 
   static final ClassTypeName CHECK = ClassTypeName.of(Check.class);
 
   static final ClassTypeName COLOR = ClassTypeName.of(CSS_UTIL, "Color");
 
-  static final ClassTypeName COLOR_VALUE = ClassTypeName.of(PROPERTY_VALUE, "ColorValue");
+  static final ClassTypeName COLOR_VALUE = ClassTypeName.of(API, "ColorValue");
 
   static final ClassTypeName GENERATED = ClassTypeName.of(Generated.class);
 
@@ -55,21 +56,19 @@ abstract class ThisTemplate extends JavaTemplate {
       = ClassTypeName.of(CSS_INTERNAL, "InternalZero");
 
   static final ClassTypeName KEYWORD_INSTRUCTION
-      = ClassTypeName.of(PROPERTY_VALUE, "KeywordInstruction");
+      = ClassTypeName.of(API, "KeywordInstruction");
 
   static final ClassTypeName LENGTH = ClassTypeName.of(CSS_UTIL, "Length");
 
   static final ClassTypeName LENGTH_UNIT = ClassTypeName.of(CSS_INTERNAL, "LengthUnit");
 
-  static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(PROPERTY_VALUE, "LengthValue");
-
-  static final ClassTypeName OBJECTS = ClassTypeName.of(Objects.class);
+  static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(API, "LengthValue");
 
   static final ClassTypeName OVERRIDE = ClassTypeName.of(Override.class);
 
   static final ClassTypeName PERCENTAGE = ClassTypeName.of(CSS_UTIL, "Percentage");
 
-  static final ClassTypeName PERCENTAGE_VALUE = ClassTypeName.of(PROPERTY_VALUE, "PercentageValue");
+  static final ClassTypeName PERCENTAGE_VALUE = ClassTypeName.of(API, "PercentageValue");
 
   static final ClassTypeName PROPERTY = ClassTypeName.of(CSS_INTERNAL, "Property");
 
@@ -96,18 +95,17 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName STRING = ClassTypeName.of(String.class);
 
-  static final ClassTypeName STRING_LITERAL = ClassTypeName.of(PROPERTY_VALUE, "StringLiteral");
+  static final ClassTypeName STRING_LITERAL = ClassTypeName.of(API, "StringLiteral");
 
-  static final ClassTypeName STYLE_DECLARATION = ClassTypeName.of(CSS_OM, "StyleDeclaration");
+  static final ClassTypeName STYLE_DECLARATION = ClassTypeName.of(CSS_TMPL, "StyleDeclaration");
 
   static final ClassTypeName TYPE_SELECTOR = ClassTypeName.of(CSS_OM, "TypeSelector");
 
-  static final ClassTypeName URL = ClassTypeName.of(PROPERTY_VALUE, "Url");
+  static final ClassTypeName URL = ClassTypeName.of(API, "Url");
 
-  static final ClassTypeName VALUE_INSTRUCTION
-      = ClassTypeName.of(PROPERTY_VALUE, "ValueInstruction");
+  static final ClassTypeName VALUE_INSTRUCTION = ClassTypeName.of(API, "ValueInstruction");
 
-  static final ClassTypeName ZERO = ClassTypeName.of(PROPERTY_VALUE, "Zero");
+  static final ClassTypeName ZERO = ClassTypeName.of(API, "Zero");
 
   CompiledSpec spec;
 

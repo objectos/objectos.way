@@ -53,7 +53,6 @@ public class CssSelfGen16BoxShadowTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.css.om.StyleDeclaration;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
@@ -71,7 +70,6 @@ public class CssSelfGen16BoxShadowTest {
       package objectos.css.tmpl;
 
       import objectos.css.internal.InternalInstruction;
-      import objectos.css.om.StyleDeclaration;
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")

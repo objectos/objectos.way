@@ -53,9 +53,9 @@ public class CssSelfGen01BorderColorTest {
   }
 
   @Test
-  public void propertyValue() {
+  public void api() {
     assertEquals(
-      result.get("objectos/css/tmpl/PropertyValue.java"),
+      result.get("objectos/css/tmpl/Api.java"),
 
       """
       package objectos.css.tmpl;
@@ -66,13 +66,17 @@ public class CssSelfGen01BorderColorTest {
       import objectos.lang.Generated;
 
       @Generated("objectos.selfgen.CssSpec")
-      public sealed interface PropertyValue {
-        sealed interface GlobalKeyword extends PropertyValue {}
+      public final class Api {
+        private Api() {}
 
-        sealed interface ValueInstruction extends
+        public sealed interface PropertyValue {}
+
+        public sealed interface GlobalKeyword extends PropertyValue {}
+
+        public sealed interface ValueInstruction extends
             GlobalKeyword permits StandardName {}
 
-        sealed interface ColorValue extends PropertyValue permits Color, InternalInstruction, StandardName {}
+        public sealed interface ColorValue extends PropertyValue permits Color, InternalInstruction, StandardName {}
       }
       """
     );
@@ -107,10 +111,10 @@ public class CssSelfGen01BorderColorTest {
       package objectos.css.internal;
 
       import objectos.css.om.Selector;
-      import objectos.css.om.StyleDeclaration;
-      import objectos.css.tmpl.PropertyValue;
-      import objectos.css.tmpl.PropertyValue.ColorValue;
-      import objectos.css.tmpl.PropertyValue.GlobalKeyword;
+      import objectos.css.tmpl.Api.ColorValue;
+      import objectos.css.tmpl.Api.GlobalKeyword;
+      import objectos.css.tmpl.Api.PropertyValue;
+      import objectos.css.tmpl.StyleDeclaration;
       import objectos.lang.Check;
       import objectos.lang.Generated;
 
