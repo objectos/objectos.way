@@ -17,16 +17,25 @@ package objectos.css.internal;
 
 import objectos.css.tmpl.Api.AppearanceValue;
 import objectos.css.tmpl.Api.AutoKeyword;
+import objectos.css.tmpl.Api.BackgroundAttachmentValue;
+import objectos.css.tmpl.Api.BackgroundClipValue;
 import objectos.css.tmpl.Api.BackgroundImageValue;
+import objectos.css.tmpl.Api.BackgroundPositionValue;
+import objectos.css.tmpl.Api.BackgroundRepeatValue;
+import objectos.css.tmpl.Api.BackgroundRepeatValue2;
+import objectos.css.tmpl.Api.BackgroundValue;
 import objectos.css.tmpl.Api.BlockKeyword;
+import objectos.css.tmpl.Api.BorderBoxKeyword;
 import objectos.css.tmpl.Api.BorderCollapseValue;
 import objectos.css.tmpl.Api.BorderShorthandValue;
+import objectos.css.tmpl.Api.BottomKeyword;
 import objectos.css.tmpl.Api.BottomValue;
 import objectos.css.tmpl.Api.BoxShadowDeclaration;
 import objectos.css.tmpl.Api.BoxSizingValue;
 import objectos.css.tmpl.Api.ButtonKeyword;
 import objectos.css.tmpl.Api.CenterKeyword;
 import objectos.css.tmpl.Api.ColorValue;
+import objectos.css.tmpl.Api.ContentBoxKeyword;
 import objectos.css.tmpl.Api.ContentValue;
 import objectos.css.tmpl.Api.CounterStyleValue;
 import objectos.css.tmpl.Api.CursorValue;
@@ -44,6 +53,7 @@ import objectos.css.tmpl.Api.DoubleKeyword;
 import objectos.css.tmpl.Api.EndKeyword;
 import objectos.css.tmpl.Api.FilterValue;
 import objectos.css.tmpl.Api.FitContentKeyword;
+import objectos.css.tmpl.Api.FixedKeyword;
 import objectos.css.tmpl.Api.FlexDirectionValue;
 import objectos.css.tmpl.Api.FlexEndKeyword;
 import objectos.css.tmpl.Api.FlexStartKeyword;
@@ -60,6 +70,7 @@ import objectos.css.tmpl.Api.GrooveKeyword;
 import objectos.css.tmpl.Api.HeightOrWidthValue;
 import objectos.css.tmpl.Api.InlineKeyword;
 import objectos.css.tmpl.Api.InsetKeyword;
+import objectos.css.tmpl.Api.IntLiteral;
 import objectos.css.tmpl.Api.JustifyContentPosition;
 import objectos.css.tmpl.Api.JustifyContentValue;
 import objectos.css.tmpl.Api.LeftKeyword;
@@ -83,6 +94,7 @@ import objectos.css.tmpl.Api.MinContentKeyword;
 import objectos.css.tmpl.Api.MinHeightOrWidthValue;
 import objectos.css.tmpl.Api.NoneKeyword;
 import objectos.css.tmpl.Api.NormalKeyword;
+import objectos.css.tmpl.Api.NumberValue;
 import objectos.css.tmpl.Api.OpacityDeclaration;
 import objectos.css.tmpl.Api.OutlineStyleValue;
 import objectos.css.tmpl.Api.OutlineValue;
@@ -113,8 +125,10 @@ import objectos.css.tmpl.Api.TextIndentValue;
 import objectos.css.tmpl.Api.TextSizeAdjustValue;
 import objectos.css.tmpl.Api.TextTransformValue;
 import objectos.css.tmpl.Api.TextareaKeyword;
+import objectos.css.tmpl.Api.TopKeyword;
 import objectos.css.tmpl.Api.TopValue;
 import objectos.css.tmpl.Api.VerticalAlignValue;
+import objectos.css.tmpl.Api.WordBreakValue;
 import objectos.css.util.Color;
 import objectos.lang.Check;
 import objectos.lang.Generated;
@@ -755,11 +769,15 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontWeightValue bolder = StandardName.bolder;
 
-  protected static final BoxSizingValue borderBox = StandardName.borderBox;
+  protected static final BorderBoxKeyword borderBox = StandardName.borderBox;
 
   protected static final ResizeValue both = StandardName.both;
 
-  protected static final VerticalAlignValue bottom = StandardName.bottom;
+  protected static final BottomKeyword bottom = StandardName.bottom;
+
+  protected static final WordBreakValue breakAll = StandardName.breakAll;
+
+  protected static final WordBreakValue breakWord = StandardName.breakWord;
 
   protected static final ButtonKeyword button = StandardName.button;
 
@@ -793,7 +811,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FlexDirectionValue columnReverse = StandardName.columnReverse;
 
-  protected static final BoxSizingValue contentBox = StandardName.contentBox;
+  protected static final ContentBoxKeyword contentBox = StandardName.contentBox;
 
   protected static final DisplayBoxValue contents = StandardName.contents;
 
@@ -843,7 +861,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FitContentKeyword fitContent = StandardName.fitContent;
 
-  protected static final PositionValue fixed = StandardName.fixed;
+  protected static final FixedKeyword fixed = StandardName.fixed;
 
   protected static final DisplayInsideValue flex = StandardName.flex;
 
@@ -923,6 +941,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue katakanaIroha = StandardName.katakanaIroha;
 
+  protected static final WordBreakValue keepAll = StandardName.keepAll;
+
   protected static final CounterStyleValue khmer = StandardName.khmer;
 
   protected static final CounterStyleValue koreanHangulFormal = StandardName.koreanHangulFormal;
@@ -946,6 +966,8 @@ abstract class GeneratedCssTemplate {
   protected static final DisplayListItemValue listItem = StandardName.listItem;
 
   protected static final AppearanceValue listbox = StandardName.listbox;
+
+  protected static final BackgroundAttachmentValue local = StandardName.local;
 
   protected static final CounterStyleValue lowerAlpha = StandardName.lowerAlpha;
 
@@ -1033,6 +1055,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final CursorValue noDrop = StandardName.noDrop;
 
+  protected static final BackgroundRepeatValue2 noRepeat = StandardName.noRepeat;
+
   protected static final NoneKeyword none = StandardName.none;
 
   protected static final NormalKeyword normal = StandardName.normal;
@@ -1057,6 +1081,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextDecorationLineMultiValue overline = StandardName.overline;
 
+  protected static final BackgroundClipValue paddingBox = StandardName.paddingBox;
+
   protected static final CounterStyleValue persian = StandardName.persian;
 
   protected static final CursorValue pointer = StandardName.pointer;
@@ -1071,9 +1097,17 @@ abstract class GeneratedCssTemplate {
 
   protected static final PositionValue relative = StandardName.relative;
 
+  protected static final BackgroundRepeatValue2 repeat = StandardName.repeat;
+
+  protected static final BackgroundRepeatValue repeatX = StandardName.repeatX;
+
+  protected static final BackgroundRepeatValue repeatY = StandardName.repeatY;
+
   protected static final RidgeKeyword ridge = StandardName.ridge;
 
   protected static final RightKeyword right = StandardName.right;
+
+  protected static final BackgroundRepeatValue2 round = StandardName.round;
 
   protected static final FlexDirectionValue row = StandardName.row;
 
@@ -1099,6 +1133,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final FontFamilyValue sansSerif = StandardName.sansSerif;
 
+  protected static final BackgroundAttachmentValue scroll = StandardName.scroll;
+
   protected static final CursorValue seResize = StandardName.seResize;
 
   protected static final AppearanceValue searchfield = StandardName.searchfield;
@@ -1120,6 +1156,8 @@ abstract class GeneratedCssTemplate {
   protected static final FontSizeValue smaller = StandardName.smaller;
 
   protected static final SolidKeyword solid = StandardName.solid;
+
+  protected static final BackgroundRepeatValue2 space = StandardName.space;
 
   protected static final JustifyContentValue spaceAround = StandardName.spaceAround;
 
@@ -1189,7 +1227,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final CounterStyleValue tibetan = StandardName.tibetan;
 
-  protected static final VerticalAlignValue top = StandardName.top;
+  protected static final TopKeyword top = StandardName.top;
 
   protected static final CounterStyleValue tradChineseFormal = StandardName.tradChineseFormal;
 
@@ -1383,6 +1421,76 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration background(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration background(BackgroundValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration background(BackgroundValue value1, BackgroundValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BACKGROUND, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration background(BackgroundValue value1, BackgroundValue value2, BackgroundValue value3) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    declaration(Property.BACKGROUND, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration background(BackgroundValue value1, BackgroundValue value2, BackgroundValue value3, BackgroundValue value4) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    Check.notNull(value4, "value4 == null");
+    declaration(Property.BACKGROUND, value1, value2, value3, value4);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration background(BackgroundValue value1, BackgroundValue value2, BackgroundValue value3, BackgroundValue value4, BackgroundValue value5) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    Check.notNull(value4, "value4 == null");
+    Check.notNull(value5, "value5 == null");
+    declaration(Property.BACKGROUND, value1, value2, value3, value4, value5);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundAttachment(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_ATTACHMENT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundAttachment(BackgroundAttachmentValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_ATTACHMENT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundClip(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_CLIP, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundClip(BackgroundClipValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_CLIP, value);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration backgroundColor(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BACKGROUND_COLOR, value);
@@ -1404,6 +1512,61 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration backgroundImage(BackgroundImageValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.BACKGROUND_IMAGE, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundPosition(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_POSITION, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundPosition(BackgroundPositionValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_POSITION, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundPosition(BackgroundPositionValue value1, BackgroundPositionValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BACKGROUND_POSITION, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundPosition(BackgroundPositionValue value1, BackgroundPositionValue value2, BackgroundPositionValue value3) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    declaration(Property.BACKGROUND_POSITION, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundPosition(BackgroundPositionValue value1, BackgroundPositionValue value2, BackgroundPositionValue value3, BackgroundPositionValue value4) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    Check.notNull(value3, "value3 == null");
+    Check.notNull(value4, "value4 == null");
+    declaration(Property.BACKGROUND_POSITION, value1, value2, value3, value4);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundRepeat(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_REPEAT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundRepeat(BackgroundRepeatValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BACKGROUND_REPEAT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration backgroundRepeat(BackgroundRepeatValue2 value1, BackgroundRepeatValue2 value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    declaration(Property.BACKGROUND_REPEAT, value1, value2);
     return InternalInstruction.INSTANCE;
   }
 
@@ -1864,6 +2027,12 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration fill(ColorValue color) {
+    Check.notNull(color, "color == null");
+    declaration(Property.FILL, color);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration filter(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.FILTER, value);
@@ -1885,6 +2054,50 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration flexDirection(FlexDirectionValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.FLEX_DIRECTION, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexGrow(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FLEX_GROW, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexGrow(double value) {
+    declaration(Property.FLEX_GROW, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexGrow(int value) {
+    declaration(Property.FLEX_GROW, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexGrow(NumberValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FLEX_GROW, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexShrink(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FLEX_SHRINK, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexShrink(double value) {
+    declaration(Property.FLEX_SHRINK, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexShrink(int value) {
+    declaration(Property.FLEX_SHRINK, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration flexShrink(NumberValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.FLEX_SHRINK, value);
     return InternalInstruction.INSTANCE;
   }
 
@@ -2292,6 +2505,12 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration mozTabSize(IntLiteral value) {
+    Check.notNull(value, "value == null");
+    declaration(Property._MOZ_TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration mozTabSize(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property._MOZ_TAB_SIZE, value);
@@ -2322,6 +2541,12 @@ abstract class GeneratedCssTemplate {
   }
 
   protected final OpacityDeclaration opacity(int value) {
+    declaration(Property.OPACITY, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final OpacityDeclaration opacity(NumberValue value) {
+    Check.notNull(value, "value == null");
     declaration(Property.OPACITY, value);
     return InternalInstruction.INSTANCE;
   }
@@ -2522,6 +2747,12 @@ abstract class GeneratedCssTemplate {
   }
 
   protected final StyleDeclaration tabSize(int value) {
+    declaration(Property.TAB_SIZE, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration tabSize(IntLiteral value) {
+    Check.notNull(value, "value == null");
     declaration(Property.TAB_SIZE, value);
     return InternalInstruction.INSTANCE;
   }
@@ -2757,6 +2988,18 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration width(HeightOrWidthValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.WIDTH, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration wordBreak(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.WORD_BREAK, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration wordBreak(WordBreakValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.WORD_BREAK, value);
     return InternalInstruction.INSTANCE;
   }
 

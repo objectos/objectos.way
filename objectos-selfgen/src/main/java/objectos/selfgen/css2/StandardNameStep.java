@@ -74,7 +74,7 @@ final class StandardNameStep extends ThisTemplate {
     implementsClause(COLOR_VALUE);
 
     Optional<ValueType> maybeValues;
-    maybeValues = spec.valueTypes().stream()
+    maybeValues = spec.valueTypes.values().stream()
         .filter(ValueType::permitsStandardName)
         .findAny();
 
@@ -83,7 +83,7 @@ final class StandardNameStep extends ThisTemplate {
     }
 
     Optional<KeywordName> maybeKeywords;
-    maybeKeywords = spec.keywords().stream()
+    maybeKeywords = spec.keywords.values().stream()
         .filter(KeywordName::shouldGenerate)
         .findAny();
 
@@ -102,7 +102,7 @@ final class StandardNameStep extends ThisTemplate {
 
   private void colors() {
     ColorValue colorValue;
-    colorValue = spec.colorValue();
+    colorValue = spec.colorValue;
 
     if (colorValue == null) {
       return;
@@ -116,7 +116,7 @@ final class StandardNameStep extends ThisTemplate {
   }
 
   private void keywords() {
-    spec.keywords().stream()
+    spec.keywords.values().stream()
         .sorted(KeywordName.ORDER_BY_FIELD_NAME)
         .forEach(kw -> {
           enumConstant(name(kw.fieldName), argument(s(kw.keywordName)));

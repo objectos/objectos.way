@@ -15,6 +15,7 @@
  */
 package objectos.css.util;
 
+import objectos.css.internal.RandomStringGenerator;
 import objectos.css.tmpl.Api;
 
 public class CustomProperty<T extends Api.PropertyValue> {
@@ -81,6 +82,13 @@ public class CustomProperty<T extends Api.PropertyValue> {
     }
 
     return new CustomProperty<>(name);
+  }
+
+  public static <T extends Api.PropertyValue> CustomProperty<T> randomName(int length) {
+    String name;
+    name = RandomStringGenerator.nextName(length);
+
+    return named("--" + name);
   }
 
   private static IllegalArgumentException invalidName(String name) {

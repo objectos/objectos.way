@@ -55,6 +55,12 @@ public abstract class CssTemplateApi {
 
   public abstract void length(int value, LengthUnit unit);
 
+  public abstract void literalDouble(double value);
+
+  public abstract void literalInt(int value);
+
+  public abstract void literalString(String value);
+
   public abstract void mediaRuleBegin();
 
   public abstract void mediaRuleElement(Api.MediaRuleElement element);
@@ -78,8 +84,6 @@ public abstract class CssTemplateApi {
   public abstract void selectorAttribute(String name);
 
   public abstract void selectorAttribute(String name, AttributeOperator operator, String value);
-
-  public abstract void stringLiteral(String value);
 
   public abstract void styleRuleBegin();
 

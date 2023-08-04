@@ -49,9 +49,13 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName COLOR_VALUE = ClassTypeName.of(API, "ColorValue");
 
+  static final ClassTypeName DOUBLE_LITERAL = ClassTypeName.of(API, "DoubleLiteral");
+
   static final ClassTypeName FILTER_FUNCTION = ClassTypeName.of(API, "FilterFunction");
 
   static final ClassTypeName KEYWORD_INSTRUCTION = ClassTypeName.of(API, "KeywordInstruction");
+
+  static final ClassTypeName INT_LITERAL = ClassTypeName.of(API, "IntLiteral");
 
   static final ClassTypeName LENGTH_VALUE = ClassTypeName.of(API, "LengthValue");
 
@@ -116,9 +120,9 @@ abstract class ThisTemplate extends JavaTemplate {
   static final ClassTypeName STANDARD_TYPE_SELECTOR
       = ClassTypeName.of(CSS_INTERNAL, "StandardTypeSelector");
 
-  CompiledSpec spec;
+  CssSelfGen spec;
 
-  public final void write(JavaSink sink, CompiledSpec spec) throws IOException {
+  public final void write(JavaSink sink, CssSelfGen spec) throws IOException {
     this.spec = spec;
 
     writeHook(sink);

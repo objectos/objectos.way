@@ -49,7 +49,7 @@ final class ApiStep extends ThisTemplate {
 
       include(this::percentageType),
 
-      include(this::stringType),
+      include(this::literalTypes),
 
       include(this::url),
 
@@ -95,7 +95,7 @@ final class ApiStep extends ThisTemplate {
     );
 
     FilterFunction filterFunction;
-    filterFunction = spec.filterFunction();
+    filterFunction = spec.filterFunction;
 
     if (filterFunction != null) {
       interfaceDeclaration(
@@ -106,7 +106,7 @@ final class ApiStep extends ThisTemplate {
     List<ClassTypeName> superTypes;
     superTypes = new GrowableList<>();
 
-    for (var property : spec.properties()) {
+    for (var property : spec.properties.values()) {
       if (property.isHash()) {
         ClassTypeName className;
         className = property.declarationClassName;
@@ -175,7 +175,7 @@ final class ApiStep extends ThisTemplate {
     );
 
     Collection<ValueType> valueTypes;
-    valueTypes = spec.valueTypes();
+    valueTypes = spec.valueTypes.values();
 
     List<ClassTypeName> superTypes;
     superTypes = new GrowableList<>();
@@ -228,7 +228,7 @@ final class ApiStep extends ThisTemplate {
 
   private void keywords() {
     Iterator<KeywordName> iterator;
-    iterator = spec.keywords().stream()
+    iterator = spec.keywords.values().stream()
         .filter(KeywordName::shouldGenerate)
         .iterator();
 
@@ -271,7 +271,7 @@ final class ApiStep extends ThisTemplate {
 
   private void colorValue() {
     ColorValue colorValue;
-    colorValue = spec.colorValue();
+    colorValue = spec.colorValue;
 
     if (colorValue == null) {
       return;
@@ -290,7 +290,7 @@ final class ApiStep extends ThisTemplate {
 
   private void lengthType() {
     LengthType lengthType;
-    lengthType = spec.lengthType();
+    lengthType = spec.lengthType;
 
     if (lengthType == null) {
       return;
@@ -309,7 +309,7 @@ final class ApiStep extends ThisTemplate {
 
   private void percentageType() {
     PercentageType percentageType;
-    percentageType = spec.percentageType();
+    percentageType = spec.percentageType;
 
     if (percentageType == null) {
       return;
@@ -326,28 +326,56 @@ final class ApiStep extends ThisTemplate {
     );
   }
 
-  private void stringType() {
+  private void literalTypes() {
     StringType stringType;
-    stringType = spec.stringType();
+    stringType = spec.stringType;
 
-    if (stringType == null) {
-      return;
+    if (stringType != null) {
+      interfaceDeclaration(
+        PUBLIC, SEALED, name(STRING_LITERAL),
+        include(() -> {
+          stringType.interfaces.stream()
+              .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+              .forEach(this::extendsClause);
+        }),
+        permitsClause(INTERNAL_INSTRUCTION)
+      );
     }
 
-    interfaceDeclaration(
-      PUBLIC, SEALED, name(STRING_LITERAL),
-      include(() -> {
-        stringType.interfaces.stream()
-            .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
-            .forEach(this::extendsClause);
-      }),
-      permitsClause(INTERNAL_INSTRUCTION)
-    );
+    DoubleType doubleType;
+    doubleType = spec.doubleType;
+
+    if (doubleType != null) {
+      interfaceDeclaration(
+        PUBLIC, SEALED, name(DOUBLE_LITERAL),
+        include(() -> {
+          doubleType.interfaces.stream()
+              .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+              .forEach(this::extendsClause);
+        }),
+        permitsClause(INTERNAL_INSTRUCTION)
+      );
+    }
+
+    IntType intType;
+    intType = spec.intType;
+
+    if (intType != null) {
+      interfaceDeclaration(
+        PUBLIC, SEALED, name(INT_LITERAL),
+        include(() -> {
+          intType.interfaces.stream()
+              .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+              .forEach(this::extendsClause);
+        }),
+        permitsClause(INTERNAL_INSTRUCTION)
+      );
+    }
   }
 
   private void url() {
     UrlType urlType;
-    urlType = spec.urlType();
+    urlType = spec.urlType;
 
     if (urlType == null) {
       return;
@@ -366,7 +394,7 @@ final class ApiStep extends ThisTemplate {
 
   private void zero() {
     ZeroType zeroType;
-    zeroType = spec.zeroType();
+    zeroType = spec.zeroType;
 
     if (zeroType == null) {
       return;

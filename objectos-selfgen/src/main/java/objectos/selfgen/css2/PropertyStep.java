@@ -60,7 +60,7 @@ final class PropertyStep extends ThisTemplate {
   }
 
   private void constants() {
-    spec.properties().stream()
+    spec.properties.values().stream()
         .sorted(Property.ORDER_BY_CONSTANT_NAME)
         .forEach(this::constantsImpl);
   }

@@ -38,7 +38,7 @@ final class GeneratedColorStep extends ThisTemplate {
 
   @Override
   final void writeHook(JavaSink sink) throws IOException {
-    colorValue = spec.colorValue();
+    colorValue = spec.colorValue;
 
     if (colorValue != null) {
       super.writeHook(sink);

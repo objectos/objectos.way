@@ -17,7 +17,6 @@ package objectos.selfgen.css2;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -25,7 +24,7 @@ import objectos.code.JavaSink;
 import objectos.code.PrimitiveTypeName;
 import objectos.lang.Check;
 
-public abstract class CssSelfGen extends CompiledSpec {
+public abstract class CssSelfGen {
 
   protected static final ParameterType DOUBLE = ParameterType.DOUBLE;
 
@@ -33,27 +32,31 @@ public abstract class CssSelfGen extends CompiledSpec {
 
   protected static final ParameterType STRING = ParameterType.STRING;
 
-  private final Map<String, KeywordName> keywords = new TreeMap<>();
+  final Map<String, KeywordName> keywords = new TreeMap<>();
 
-  private final Map<String, Property> properties = new HashMap<>();
+  final Map<String, Property> properties = new HashMap<>();
 
-  private final Map<String, SelectorName> selectors = new HashMap<>();
+  final Map<String, SelectorName> selectors = new HashMap<>();
 
-  private final Map<String, ValueType> valueTypes = new TreeMap<>();
+  final Map<String, ValueType> valueTypes = new TreeMap<>();
 
-  private ColorValue colorValue;
+  ColorValue colorValue;
 
-  private FilterFunction filterFunction;
+  protected DoubleType doubleType;
 
-  private LengthType lengthType;
+  protected FilterFunction filterFunction;
 
-  private PercentageType percentageType;
+  protected IntType intType;
 
-  private StringType stringType;
+  LengthType lengthType;
 
-  private UrlType urlType;
+  PercentageType percentageType;
 
-  private ZeroType zeroType;
+  StringType stringType;
+
+  UrlType urlType;
+
+  ZeroType zeroType;
 
   public final void execute(String[] args) throws IOException {
     var srcDir = args[0];
@@ -65,21 +68,25 @@ public abstract class CssSelfGen extends CompiledSpec {
       JavaSink.overwriteExisting()
     );
 
-    var spec = compile();
+    compile();
 
-    spec.write(sink, new ApiStep());
+    write(sink, new ApiStep());
 
-    spec.write(sink, new GeneratedColorStep());
+    write(sink, new GeneratedColorStep());
 
-    spec.write(sink, new GeneratedCssTemplateStep());
+    write(sink, new GeneratedCssTemplateStep());
 
-    spec.write(sink, new LengthUnitStep());
+    write(sink, new LengthUnitStep());
 
-    spec.write(sink, new PropertyStep());
+    write(sink, new PropertyStep());
 
-    spec.write(sink, new StandardNameStep());
+    write(sink, new StandardNameStep());
 
-    spec.write(sink, new StandardSelectorStep());
+    write(sink, new StandardSelectorStep());
+  }
+
+  final void write(JavaSink sink, ThisTemplate template) throws IOException {
+    template.write(sink, this);
   }
 
   protected final ColorValue color(String... names) {
@@ -94,7 +101,7 @@ public abstract class CssSelfGen extends CompiledSpec {
     return colorValue;
   }
 
-  protected final CompiledSpec compile() {
+  protected final void compile() {
     keywords.clear();
 
     selectors.clear();
@@ -122,19 +129,27 @@ public abstract class CssSelfGen extends CompiledSpec {
     for (KeywordName keyword : keywords.values()) {
       keyword.compile();
     }
-
-    return this;
   }
 
-  protected abstract void definition();
+  protected final void defineDoubleType() {
+    if (doubleType == null) {
+      doubleType = new DoubleType();
+    }
+  }
 
-  protected final FilterFunction filterFunction() {
+  protected final void defineFilterFunction() {
     if (filterFunction == null) {
       filterFunction = new FilterFunction();
     }
-
-    return filterFunction;
   }
+
+  protected final void defineIntType() {
+    if (intType == null) {
+      intType = new IntType();
+    }
+  }
+
+  protected abstract void definition();
 
   protected final KeywordName k(String name) {
     return keywords.computeIfAbsent(name, KeywordName::of);
@@ -461,56 +476,6 @@ public abstract class CssSelfGen extends CompiledSpec {
     }
 
     return urlType;
-  }
-
-  @Override
-  final ColorValue colorValue() {
-    return colorValue;
-  }
-
-  @Override
-  final Collection<KeywordName> keywords() {
-    return keywords.values();
-  }
-
-  @Override
-  final LengthType lengthType() {
-    return lengthType;
-  }
-
-  @Override
-  final PercentageType percentageType() {
-    return percentageType;
-  }
-
-  @Override
-  final Collection<Property> properties() {
-    return properties.values();
-  }
-
-  @Override
-  final Collection<SelectorName> selectors() {
-    return selectors.values();
-  }
-
-  @Override
-  final StringType stringType() {
-    return stringType;
-  }
-
-  @Override
-  final UrlType urlType() {
-    return urlType;
-  }
-
-  @Override
-  final Collection<ValueType> valueTypes() {
-    return valueTypes.values();
-  }
-
-  @Override
-  final ZeroType zeroType() {
-    return zeroType;
   }
 
   private void selector(String name) {

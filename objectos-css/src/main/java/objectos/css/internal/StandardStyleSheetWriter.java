@@ -85,23 +85,6 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(name);
         }
 
-        case ByteCode.DOUBLE_LITERAL -> {
-          double value;
-          value = Bytes.doubleValue(
-            bytes[index++], bytes[index++], bytes[index++], bytes[index++],
-            bytes[index++], bytes[index++], bytes[index++], bytes[index++]
-          );
-
-          appendable.append(Double.toString(value));
-        }
-
-        case ByteCode.INT_LITERAL -> {
-          int value;
-          value = Bytes.intValue(bytes[index++], bytes[index++], bytes[index++], bytes[index++]);
-
-          appendable.append(Integer.toString(value));
-        }
-
         case ByteCode.LENGTH_DOUBLE -> {
           double value;
           value = Bytes.doubleValue(
@@ -127,6 +110,38 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           unit = LengthUnit.byOrdinal(bytes[index++]);
 
           appendable.append(unit.cssName);
+        }
+
+        case ByteCode.LITERAL_DOUBLE -> {
+          double value;
+          value = Bytes.doubleValue(
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++],
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++]
+          );
+
+          appendable.append(Double.toString(value));
+        }
+
+        case ByteCode.LITERAL_INT -> {
+          int value;
+          value = Bytes.intValue(bytes[index++], bytes[index++], bytes[index++], bytes[index++]);
+
+          appendable.append(Integer.toString(value));
+        }
+
+        case ByteCode.LITERAL_STRING -> {
+          int objectIndex;
+          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
+
+          Object object;
+          object = objects[objectIndex];
+
+          String s;
+          s = (String) object;
+
+          appendable.append('"');
+          appendable.append(s);
+          appendable.append('"');
         }
 
         case ByteCode.MEDIA_QUERY -> {
@@ -287,21 +302,6 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
 
         case ByteCode.SPACE, ByteCode.SPACE_OPTIONAL -> {
           appendable.append(' ');
-        }
-
-        case ByteCode.STRING_LITERAL -> {
-          int objectIndex;
-          objectIndex = Bytes.decodeIndex2(bytes[index++], bytes[index++]);
-
-          Object object;
-          object = objects[objectIndex];
-
-          String s;
-          s = (String) object;
-
-          appendable.append('"');
-          appendable.append(s);
-          appendable.append('"');
         }
 
         case ByteCode.COLOR_HEX,

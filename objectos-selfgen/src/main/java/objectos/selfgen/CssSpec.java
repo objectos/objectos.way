@@ -39,6 +39,8 @@ public final class CssSpec extends CssSelfGen {
 
   private PercentageType percentage;
 
+  private ValueType numberValue;
+
   public static void main(String[] args) throws IOException {
     CssSpec spec;
     spec = new CssSpec();
@@ -48,6 +50,212 @@ public final class CssSpec extends CssSelfGen {
 
   @Override
   protected final void definition() {
+    $defineSelectors();
+    $defineGlobalKeyword();
+    $defineColor();
+    $defineImage();
+    $defineLength();
+    percentage = percentage();
+    defineDoubleType();
+    defineIntType();
+    defineFilterFunction();
+
+    lengthPercentage = t(
+      "LengthPercentage",
+
+      length,
+      percentage
+    );
+
+    numberValue = t(
+      "NumberValue",
+
+      doubleType,
+      intType
+    );
+
+    // keyword name clashes
+
+    keywordFieldName("default", "default_");
+    keywordFieldName("double", "double_");
+    keywordFieldName("static", "static_");
+    keywordFieldName("super", "super_");
+
+    // A
+
+    appearance();
+
+    // B
+
+    backgroundAttachment();
+    backgroundClip();
+    backgroundColor();
+    backgroundImage();
+    backgroundPosition();
+    backgroundRepeat();
+    background();
+    borderCollapse();
+    borderColor();
+    borderStyle();
+    borderWidth();
+    border();
+    bottom();
+    boxShadow();
+    boxSizing();
+
+    // C
+
+    color();
+    content();
+    cursor();
+
+    // D
+
+    display();
+
+    // F
+
+    fill();
+    filter();
+    flexDirection();
+    flexGrow();
+    flexShrink();
+    flexWrap();
+    font();
+    fontFamily();
+    fontFeatureSettings();
+    fontSize();
+    fontStyle();
+    fontVariationSettings();
+    fontWeight();
+
+    // H
+
+    height();
+
+    // J
+
+    justifyContent();
+
+    // L
+
+    left();
+    letterSpacing();
+    lineHeight();
+    listStyleImage();
+    listStylePosition();
+    listStyleType();
+    listStyle();
+
+    // M
+
+    margin();
+    maxHeight();
+    maxWidth();
+    minHeight();
+    minWidth();
+
+    // O
+
+    opacity();
+    outlineColor();
+    outlineOffset();
+    outlineStyle();
+    outlineWidth();
+    outline();
+
+    // P
+
+    padding();
+    pointerEvents();
+    position();
+
+    // R
+
+    resize();
+
+    // T
+
+    tabSize();
+    textAlign();
+    textDecorationColor();
+    textDecorationLine();
+    textDecorationStyle();
+    textDecorationThickness();
+    textDecoration();
+    textIndent();
+    textSizeAdjust();
+    textTransform();
+    top();
+
+    // V
+
+    verticalAlign();
+
+    // W
+
+    width();
+    wordBreak();
+  }
+
+  private void $defineColor() {
+    color = color(
+      "currentcolor",
+      "transparent",
+
+      "aqua",
+      "black",
+      "blue",
+      "fuchsia",
+      "gray",
+      "green",
+      "maroon",
+      "lime",
+      "navy",
+      "olive",
+      "purple",
+      "red",
+      "silver",
+      "teal",
+      "white",
+      "yellow"
+    );
+
+    colorPalette();
+  }
+
+  private void $defineGlobalKeyword() {
+    globalKeyword = t(
+      "GlobalKeyword",
+
+      k("inherit"),
+      k("initial"),
+      k("unset")
+    );
+  }
+
+  private void $defineImage() {
+    image = t(
+      "Image",
+
+      url()
+    );
+  }
+
+  private void $defineLength() {
+    length = length(
+      "ch", "cm",
+      "em", "ex",
+      "in",
+      "mm",
+      "pc", "pt", "px",
+      "q",
+      "rem",
+      "vh", "vmax", "vmin", "vw"
+    );
+  }
+
+  private void $defineSelectors() {
     selectors(
       SelectorKind.TYPE,
 
@@ -152,181 +360,6 @@ public final class CssSpec extends CssSelfGen {
       "::-webkit-outer-spin-button",
       "::-webkit-search-decoration"
     );
-
-    // global keywords
-
-    globalKeyword = t(
-      "GlobalKeyword",
-
-      k("inherit"),
-      k("initial"),
-      k("unset")
-    );
-
-    // color
-
-    color = color(
-      "currentcolor",
-      "transparent",
-
-      "aqua",
-      "black",
-      "blue",
-      "fuchsia",
-      "gray",
-      "green",
-      "maroon",
-      "lime",
-      "navy",
-      "olive",
-      "purple",
-      "red",
-      "silver",
-      "teal",
-      "white",
-      "yellow"
-    );
-
-    colorPalette();
-
-    // image
-
-    image = t(
-      "Image",
-
-      url()
-    );
-
-    // length/percentage
-
-    length = length(
-      "ch", "cm",
-      "em", "ex",
-      "in",
-      "mm",
-      "pc", "pt", "px",
-      "q",
-      "rem",
-      "vh", "vmax", "vmin", "vw"
-    );
-
-    percentage = percentage();
-
-    lengthPercentage = t("LengthPercentage", length, percentage);
-
-    // keyword name clashes
-
-    keywordFieldName("default", "default_");
-    keywordFieldName("double", "double_");
-    keywordFieldName("static", "static_");
-    keywordFieldName("super", "super_");
-
-    // A
-
-    appearance();
-
-    // B
-
-    backgroundColor();
-    backgroundImage();
-    borderCollapse();
-    borderColor();
-    borderStyle();
-    borderWidth();
-    border();
-    bottom();
-    boxShadow();
-    boxSizing();
-
-    // C
-
-    color();
-    content();
-    cursor();
-
-    // D
-
-    display();
-
-    // F
-
-    filter();
-    flexDirection();
-    flexWrap();
-    font();
-    fontFamily();
-    fontFeatureSettings();
-    fontSize();
-    fontStyle();
-    fontVariationSettings();
-    fontWeight();
-
-    // H
-
-    height();
-
-    // J
-
-    justifyContent();
-
-    // L
-
-    left();
-    letterSpacing();
-    lineHeight();
-    listStyleImage();
-    listStylePosition();
-    listStyleType();
-    listStyle();
-
-    // M
-
-    margin();
-    maxHeight();
-    maxWidth();
-    minHeight();
-    minWidth();
-
-    // O
-
-    opacity();
-    outlineColor();
-    outlineOffset();
-    outlineStyle();
-    outlineWidth();
-    outline();
-
-    // P
-
-    padding();
-    pointerEvents();
-    position();
-
-    // R
-
-    resize();
-
-    // T
-
-    tabSize();
-    textAlign();
-    textDecorationColor();
-    textDecorationLine();
-    textDecorationStyle();
-    textDecorationThickness();
-    textDecoration();
-    textIndent();
-    textSizeAdjust();
-    textTransform();
-    top();
-
-    // V
-
-    verticalAlign();
-
-    // W
-
-    width();
   }
 
   private void appearance() {
@@ -364,6 +397,70 @@ public final class CssSpec extends CssSelfGen {
     }
   }
 
+  private void background() {
+    var shorthand = t(
+      "BackgroundValue",
+
+      color,
+      t("BackgroundAttachmentValue"),
+      t("BackgroundClipValue"),
+      t("BackgroundImageValue"),
+      t("BackgroundPositionValue"),
+      t("BackgroundRepeatValue")
+    );
+
+    property(
+      "background",
+
+      sig(globalKeyword, "value"),
+      sig(shorthand, "value"),
+      sig(shorthand, "value1", shorthand, "value2"),
+      sig(shorthand, "value1", shorthand, "value2", shorthand, "value3"),
+      sig(shorthand, "value1", shorthand, "value2", shorthand, "value3", shorthand, "value4"),
+      sig(
+        shorthand, "value1",
+        shorthand, "value2",
+        shorthand, "value3",
+        shorthand, "value4",
+        shorthand, "value5"
+      )
+    );
+  }
+
+  private void backgroundAttachment() {
+    var value = t(
+      "BackgroundAttachmentValue",
+
+      k("fixed"),
+      k("local"),
+      k("scroll")
+    );
+
+    property(
+      "background-attachment",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
+  private void backgroundClip() {
+    var value = t(
+      "BackgroundClipValue",
+
+      k("border-box"),
+      k("content-box"),
+      k("padding-box")
+    );
+
+    property(
+      "background-clip",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
   private void backgroundColor() {
     property(
       "background-color",
@@ -385,6 +482,58 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(backgroundImageValue, "value")
+    );
+  }
+
+  private void backgroundPosition() {
+    ValueType bgPosition = t(
+      "BackgroundPositionValue",
+      k("center"),
+      k("top"),
+      k("left"),
+      k("bottom"),
+      k("right"),
+      length,
+      percentage
+    );
+
+    property(
+      "background-position",
+
+      sig(globalKeyword, "value"),
+      sig(bgPosition, "value"),
+      sig(bgPosition, "value1", bgPosition, "value2"),
+      sig(bgPosition, "value1", bgPosition, "value2", bgPosition, "value3"),
+      sig(bgPosition, "value1", bgPosition, "value2", bgPosition, "value3", bgPosition, "value4")
+    );
+  }
+
+  private void backgroundRepeat() {
+    ValueType arity2;
+    arity2 = t(
+      "BackgroundRepeatValue2",
+
+      k("repeat"),
+      k("space"),
+      k("round"),
+      k("no-repeat")
+    );
+
+    ValueType arity1;
+    arity1 = t(
+      "BackgroundRepeatValue",
+
+      k("repeat-x"),
+      k("repeat-y"),
+      arity2
+    );
+
+    property(
+      "background-repeat",
+
+      sig(globalKeyword, "value"),
+      sig(arity1, "value"),
+      sig(arity2, "value1", arity2, "value2")
     );
   }
 
@@ -992,9 +1141,15 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
-  private void filter() {
-    filterFunction();
+  private void fill() {
+    property(
+      "fill",
 
+      sig(color, "color")
+    );
+  }
+
+  private void filter() {
     var filterValue = t(
       "FilterValue",
 
@@ -1030,6 +1185,28 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(flexDirectionValue, "value")
+    );
+  }
+
+  private void flexGrow() {
+    property(
+      "flex-grow",
+
+      sig(globalKeyword, "value"),
+      sig(DOUBLE, "value"),
+      sig(INT, "value"),
+      sig(numberValue, "value")
+    );
+  }
+
+  private void flexShrink() {
+    property(
+      "flex-shrink",
+
+      sig(globalKeyword, "value"),
+      sig(DOUBLE, "value"),
+      sig(INT, "value"),
+      sig(numberValue, "value")
     );
   }
 
@@ -1176,11 +1353,12 @@ public final class CssSpec extends CssSelfGen {
     var fontWeightValue = t(
       "FontWeightValue",
 
-      keywords(
-        "bold", "bolder",
-        "lighter",
-        "normal"
-      )
+      k("bold"),
+      k("bolder"),
+      k("lighter"),
+      k("normal"),
+
+      intType
     );
 
     property(
@@ -1301,7 +1479,9 @@ public final class CssSpec extends CssSelfGen {
 
       k("normal"),
 
-      lengthPercentage
+      lengthPercentage,
+      doubleType,
+      intType
     );
 
     property(
@@ -1565,7 +1745,8 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(percentage(), "value"),
       sig(DOUBLE, "value"),
-      sig(INT, "value")
+      sig(INT, "value"),
+      sig(numberValue, "value")
     ).asFilterFunction();
   }
 
@@ -1732,6 +1913,7 @@ public final class CssSpec extends CssSelfGen {
         name,
 
         sig(INT, "value"),
+        sig(intType, "value"),
         sig(globalKeyword, "value"),
         sig(length, "value")
       );
@@ -1955,6 +2137,24 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(value, "value")
+    );
+  }
+
+  private void wordBreak() {
+    var wordBreakValue = t(
+      "WordBreakValue",
+
+      k("normal"),
+      k("keep-all"),
+      k("break-all"),
+      k("break-word")
+    );
+
+    property(
+      "word-break",
+
+      sig(globalKeyword, "value"),
+      sig(wordBreakValue, "value")
     );
   }
 

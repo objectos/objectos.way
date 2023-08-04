@@ -423,10 +423,10 @@ public class Compiler01Test {
 
     compiler.compilationBegin();
 
-    compiler.stringLiteral("Foo Bar");
+    compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -449,7 +449,7 @@ public class Compiler01Test {
       ByteProto.PROPERTY_STANDARD,
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
-      ByteProto.STRING_LITERAL,
+      ByteProto.LITERAL_STRING,
       Bytes.int0(10),
       ByteProto.DECLARATION_END,
       Bytes.int0(11),
@@ -479,10 +479,10 @@ public class Compiler01Test {
 
     compiler.compilationBegin();
 
-    compiler.stringLiteral("Foo Bar");
+    compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
     compiler.propertyValueComma();
     compiler.propertyValue(StandardName.sansSerif);
     compiler.declarationEnd();
@@ -507,7 +507,7 @@ public class Compiler01Test {
       ByteProto.PROPERTY_STANDARD,
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
-      ByteProto.STRING_LITERAL,
+      ByteProto.LITERAL_STRING,
       Bytes.int0(10),
       ByteProto.COMMA,
       ByteProto.STANDARD_NAME,
@@ -1204,6 +1204,64 @@ public class Compiler01Test {
       Bytes.int0(17),
       ByteProto.STYLE_RULE_END,
       Bytes.int0(36),
+      ByteProto.STYLE_RULE
+    );
+  }
+
+  @Test(description = """
+  p {
+    font-weight: 600;
+  }
+  """)
+  public void testCase22() {
+    Compiler01 compiler;
+    compiler = new Compiler01();
+
+    compiler.compilationBegin();
+
+    compiler.literalInt(600);
+
+    compiler.declarationBegin(Property.FONT_WEIGHT);
+    compiler.propertyValue(InternalInstruction.LITERAL_INT);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED5,
+      Bytes.int0(600),
+      Bytes.int1(600),
+      Bytes.int2(600),
+      Bytes.int3(600),
+
+      ByteProto.MARKED,
+      Bytes.len0(8),
+      Bytes.len1(8),
+      ByteProto.PROPERTY_STANDARD,
+      Bytes.prop0(Property.FONT_WEIGHT),
+      Bytes.prop1(Property.FONT_WEIGHT),
+      ByteProto.LITERAL_INT,
+      Bytes.int0(12),
+      ByteProto.DECLARATION_END,
+      Bytes.int0(13),
+      ByteProto.DECLARATION,
+
+      ByteProto.STYLE_RULE,
+      Bytes.len0(7),
+      Bytes.len1(7),
+      ByteProto.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteProto.DECLARATION,
+      Bytes.int0(17),
+      ByteProto.STYLE_RULE_END,
+      Bytes.int0(23),
       ByteProto.STYLE_RULE
     );
   }

@@ -67,7 +67,7 @@ final class LengthUnitStep extends ThisTemplate {
 
   @Override
   final void writeHook(JavaSink sink) throws IOException {
-    lengthType = spec.lengthType();
+    lengthType = spec.lengthType;
 
     if (lengthType != null) {
       super.writeHook(sink);

@@ -102,7 +102,7 @@ final class StandardSelectorStep extends ThisTemplate {
   }
 
   private void names() {
-    spec.selectors().stream()
+    spec.selectors.values().stream()
         .filter(s -> !s.disabled)
         .filter(s -> s.kind == kind)
         .sorted(SelectorName.ORDER_BY_FIELD_NAME)

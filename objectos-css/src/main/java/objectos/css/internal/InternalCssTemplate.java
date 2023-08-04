@@ -44,13 +44,13 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
   protected static final MediaQuery screen = MediaType.SCREEN;
 
-  protected static final Selector SIBLING = Combinator.ADJACENT_SIBLING;
+  protected static final Selector PLUS = Combinator.ADJACENT_SIBLING;
 
-  protected static final Selector CHILD = Combinator.CHILD;
+  protected static final Selector GT = Combinator.CHILD;
 
-  protected static final Selector GENERAL_SIBLING = Combinator.GENERAL_SIBLING;
+  protected static final Selector TILDE = Combinator.GENERAL_SIBLING;
 
-  protected static final Selector DESCENDANT = Combinator.DESCENDANT;
+  protected static final Selector SP = Combinator.DESCENDANT;
 
   protected static final Selector OR = Combinator.LIST;
 
@@ -252,12 +252,24 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return InternalInstruction.COLOR_HEX;
   }
 
+  protected final Api.DoubleLiteral l(double value) {
+    api().literalDouble(value);
+
+    return InternalInstruction.LITERAL_DOUBLE;
+  }
+
+  protected final Api.IntLiteral l(int value) {
+    api().literalInt(value);
+
+    return InternalInstruction.LITERAL_INT;
+  }
+
   protected final StringLiteral l(String value) {
     Check.notNull(value, "value == null");
 
-    api().stringLiteral(value);
+    api().literalString(value);
 
-    return InternalInstruction.STRING_LITERAL;
+    return InternalInstruction.LITERAL_STRING;
   }
 
   protected final void media(MediaRuleElement... elements) {

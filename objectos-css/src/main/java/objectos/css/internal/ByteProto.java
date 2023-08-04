@@ -70,14 +70,16 @@ final class ByteProto {
   public static final byte JAVA_STRING = -34;
   public static final byte LENGTH_DOUBLE = -35;
   public static final byte LENGTH_INT = -36;
-  public static final byte PERCENTAGE_DOUBLE = -37;
-  public static final byte PERCENTAGE_INT = -38;
-  public static final byte RAW = -39;
-  public static final byte STANDARD_NAME = -40;
-  public static final byte STRING_LITERAL = -41;
-  public static final byte URL = -42;
-  public static final byte VAR0 = -43;
-  public static final byte ZERO = -44;
+  public static final byte LITERAL_DOUBLE = -37;
+  public static final byte LITERAL_INT = -38;
+  public static final byte LITERAL_STRING = -39;
+  public static final byte PERCENTAGE_DOUBLE = -40;
+  public static final byte PERCENTAGE_INT = -41;
+  public static final byte RAW = -42;
+  public static final byte STANDARD_NAME = -43;
+  public static final byte URL = -44;
+  public static final byte VAR0 = -45;
+  public static final byte ZERO = -46;
 
   private ByteProto() {}
 

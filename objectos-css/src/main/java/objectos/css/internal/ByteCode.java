@@ -57,15 +57,15 @@ final class ByteCode {
   //property values
 
   public static final byte COLOR_HEX = -26;
-  public static final byte DOUBLE_LITERAL = -27;
-  public static final byte INT_LITERAL = -28;
-  public static final byte KEYWORD = -29;
-  public static final byte LENGTH_DOUBLE = -30;
-  public static final byte LENGTH_INT = -31;
-  public static final byte PERCENTAGE_DOUBLE = -32;
-  public static final byte PERCENTAGE_INT = -33;
-  public static final byte RAW = -34;
-  public static final byte STRING_LITERAL = -35;
+  public static final byte KEYWORD = -27;
+  public static final byte LENGTH_DOUBLE = -28;
+  public static final byte LENGTH_INT = -29;
+  public static final byte LITERAL_DOUBLE = -30;
+  public static final byte LITERAL_INT = -31;
+  public static final byte LITERAL_STRING = -32;
+  public static final byte PERCENTAGE_DOUBLE = -33;
+  public static final byte PERCENTAGE_INT = -34;
+  public static final byte RAW = -35;
   public static final byte STRING_QUOTES_OPTIONAL = -36;
   public static final byte URL = -37;
   public static final byte VAR = -38;

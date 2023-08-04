@@ -64,15 +64,15 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     comment("property values");
 
     value("COLOR_HEX");
-    value("DOUBLE_LITERAL");
-    value("INT_LITERAL");
     value("KEYWORD");
     value("LENGTH_DOUBLE");
     value("LENGTH_INT");
+    value("LITERAL_DOUBLE");
+    value("LITERAL_INT");
+    value("LITERAL_STRING");
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
     value("RAW");
-    value("STRING_LITERAL");
     value("STRING_QUOTES_OPTIONAL");
     value("URL");
     value("VAR");

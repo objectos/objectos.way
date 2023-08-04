@@ -201,7 +201,7 @@ final class Compiler02 extends Compiler01 {
           valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(
-            ByteCode.DOUBLE_LITERAL,
+            ByteCode.LITERAL_DOUBLE,
 
             main[index++],
             main[index++],
@@ -218,7 +218,7 @@ final class Compiler02 extends Compiler01 {
           valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(
-            ByteCode.INT_LITERAL,
+            ByteCode.LITERAL_INT,
 
             main[index++],
             main[index++],
@@ -231,7 +231,7 @@ final class Compiler02 extends Compiler01 {
           valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(
-            ByteCode.STRING_LITERAL,
+            ByteCode.LITERAL_STRING,
 
             main[index++],
             main[index++]
@@ -280,6 +280,79 @@ final class Compiler02 extends Compiler01 {
             // unit
             main[mainContents++]
           );
+        }
+
+        case ByteProto.LITERAL_DOUBLE -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          index = jmp(index);
+
+          auxAdd(
+            ByteCode.LITERAL_DOUBLE,
+
+            // long pt1
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+
+            // long pt2
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++]
+          );
+        }
+
+        case ByteProto.LITERAL_INT -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          index = jmp(index);
+
+          auxAdd(
+            ByteCode.LITERAL_INT,
+
+            // int
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++]
+          );
+        }
+
+        case ByteProto.LITERAL_STRING -> {
+          valueCount = spaceIfNecessary(valueCount);
+
+          index = jmp(index);
+
+          byte byteCode;
+          byteCode = ByteCode.LITERAL_STRING;
+
+          byte b0;
+          b0 = main[mainContents++];
+
+          byte b1;
+          b1 = main[mainContents++];
+
+          if (property == Property.FONT_FAMILY) {
+            int objectIndex;
+            objectIndex = Bytes.decodeIndex2(b0, b1);
+
+            Object object;
+            object = objectArray[objectIndex];
+
+            String s;
+            s = (String) object;
+
+            Matcher matcher;
+            matcher = FONT_FAMILY.matcher(s);
+
+            if (matcher.matches()) {
+              byteCode = ByteCode.STRING_QUOTES_OPTIONAL;
+            }
+          }
+
+          auxAdd(byteCode, b0, b1);
         }
 
         case ByteProto.MARKED -> {
@@ -362,41 +435,6 @@ final class Compiler02 extends Compiler01 {
           valueCount = spaceIfNecessary(valueCount);
 
           auxAdd(ByteCode.KEYWORD, main[index++], main[index++]);
-        }
-
-        case ByteProto.STRING_LITERAL -> {
-          valueCount = spaceIfNecessary(valueCount);
-
-          index = jmp(index);
-
-          byte byteCode;
-          byteCode = ByteCode.STRING_LITERAL;
-
-          byte b0;
-          b0 = main[mainContents++];
-
-          byte b1;
-          b1 = main[mainContents++];
-
-          if (property == Property.FONT_FAMILY) {
-            int objectIndex;
-            objectIndex = Bytes.decodeIndex2(b0, b1);
-
-            Object object;
-            object = objectArray[objectIndex];
-
-            String s;
-            s = (String) object;
-
-            Matcher matcher;
-            matcher = FONT_FAMILY.matcher(s);
-
-            if (matcher.matches()) {
-              byteCode = ByteCode.STRING_QUOTES_OPTIONAL;
-            }
-          }
-
-          auxAdd(byteCode, b0, b1);
         }
 
         case ByteProto.URL -> {

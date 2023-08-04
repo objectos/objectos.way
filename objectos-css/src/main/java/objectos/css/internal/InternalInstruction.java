@@ -20,6 +20,8 @@ import objectos.css.tmpl.Api;
 public enum InternalInstruction
     implements
     Api.ColorValue,
+    Api.DoubleLiteral,
+    Api.IntLiteral,
     Api.LengthValue,
     Api.MediaFeatureOrStyleDeclaration,
     Api.PercentageValue,
@@ -37,11 +39,15 @@ public enum InternalInstruction
 
   LENGTH_INT(6),
 
+  LITERAL_DOUBLE(9),
+
+  LITERAL_INT(5),
+
+  LITERAL_STRING(3),
+
   PERCENTAGE_DOUBLE(9),
 
   PERCENTAGE_INT(5),
-
-  STRING_LITERAL(3),
 
   URL(3),
 

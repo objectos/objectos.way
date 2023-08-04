@@ -399,6 +399,50 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void literalDouble(double value) {
+    long bits;
+    bits = Double.doubleToLongBits(value);
+
+    mainAdd(
+      ByteProto.LITERAL_DOUBLE,
+
+      Bytes.long0(bits),
+      Bytes.long1(bits),
+      Bytes.long2(bits),
+      Bytes.long3(bits),
+      Bytes.long4(bits),
+      Bytes.long5(bits),
+      Bytes.long6(bits),
+      Bytes.long7(bits)
+    );
+  }
+
+  @Override
+  public final void literalInt(int value) {
+    mainAdd(
+      ByteProto.LITERAL_INT,
+
+      Bytes.int0(value),
+      Bytes.int1(value),
+      Bytes.int2(value),
+      Bytes.int3(value)
+    );
+  }
+
+  @Override
+  public final void literalString(String value) {
+    int index;
+    index = objectAdd(value);
+
+    mainAdd(
+      ByteProto.LITERAL_STRING,
+
+      Bytes.two0(index),
+      Bytes.two1(index)
+    );
+  }
+
+  @Override
   public final void mediaRuleBegin() {
     commonBegin(ByteProto.MEDIA_RULE);
   }
@@ -610,19 +654,6 @@ class Compiler01 extends CssTemplateApi {
       Bytes.two1(valueIndex),
 
       ByteProto.INTERNAL7
-    );
-  }
-
-  @Override
-  public final void stringLiteral(String value) {
-    int index;
-    index = objectAdd(value);
-
-    mainAdd(
-      ByteProto.STRING_LITERAL,
-
-      Bytes.two0(index),
-      Bytes.two1(index)
     );
   }
 

@@ -66,7 +66,19 @@ public final class Api {
 
   public sealed interface AppearanceValue extends PropertyValue {}
 
-  public sealed interface BackgroundImageValue extends PropertyValue {}
+  public sealed interface BackgroundAttachmentValue extends BackgroundValue {}
+
+  public sealed interface BackgroundClipValue extends BackgroundValue {}
+
+  public sealed interface BackgroundImageValue extends BackgroundValue {}
+
+  public sealed interface BackgroundPositionValue extends BackgroundValue {}
+
+  public sealed interface BackgroundRepeatValue extends BackgroundValue {}
+
+  public sealed interface BackgroundRepeatValue2 extends BackgroundRepeatValue {}
+
+  public sealed interface BackgroundValue extends PropertyValue {}
 
   public sealed interface BorderCollapseValue extends PropertyValue {}
 
@@ -154,6 +166,8 @@ public final class Api {
 
   public sealed interface MinHeightOrWidthValue extends PropertyValue {}
 
+  public sealed interface NumberValue extends PropertyValue {}
+
   public sealed interface OutlineStyleValue extends OutlineValue {}
 
   public sealed interface OutlineValue extends PropertyValue {}
@@ -188,9 +202,17 @@ public final class Api {
 
   public sealed interface VerticalAlignValue extends PropertyValue {}
 
+  public sealed interface WordBreakValue extends PropertyValue {}
+
   public sealed interface ValueInstruction extends
       AppearanceValue,
+      BackgroundAttachmentValue,
+      BackgroundClipValue,
       BackgroundImageValue,
+      BackgroundPositionValue,
+      BackgroundRepeatValue,
+      BackgroundRepeatValue2,
+      BackgroundValue,
       BorderCollapseValue,
       BorderShorthandValue,
       BottomValue,
@@ -234,6 +256,7 @@ public final class Api {
       MarginValue,
       MaxHeightOrWidthValue,
       MinHeightOrWidthValue,
+      NumberValue,
       OutlineStyleValue,
       OutlineValue,
       OverflowPosition,
@@ -250,15 +273,22 @@ public final class Api {
       TextSizeAdjustValue,
       TextTransformValue,
       TopValue,
-      VerticalAlignValue permits StandardName {}
+      VerticalAlignValue,
+      WordBreakValue permits StandardName {}
 
   public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue {}
 
   public sealed interface BlockKeyword extends DisplayOutsideValue, ResizeValue {}
 
+  public sealed interface BorderBoxKeyword extends BackgroundClipValue, BoxSizingValue {}
+
+  public sealed interface BottomKeyword extends BackgroundPositionValue, VerticalAlignValue {}
+
   public sealed interface ButtonKeyword extends AppearanceValue, Selector {}
 
-  public sealed interface CenterKeyword extends JustifyContentPosition, JustifyContentValue, TextAlignValue {}
+  public sealed interface CenterKeyword extends BackgroundPositionValue, JustifyContentPosition, JustifyContentValue, TextAlignValue {}
+
+  public sealed interface ContentBoxKeyword extends BackgroundClipValue, BoxSizingValue {}
 
   public sealed interface DashedKeyword extends LineStyle, OutlineStyleValue, TextDecorationStyleValue {}
 
@@ -270,6 +300,8 @@ public final class Api {
 
   public sealed interface FitContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue {}
 
+  public sealed interface FixedKeyword extends BackgroundAttachmentValue, PositionValue {}
+
   public sealed interface FlexEndKeyword extends JustifyContentPosition, JustifyContentValue {}
 
   public sealed interface FlexStartKeyword extends JustifyContentPosition, JustifyContentValue {}
@@ -280,7 +312,7 @@ public final class Api {
 
   public sealed interface InsetKeyword extends LineStyle, OutlineStyleValue {}
 
-  public sealed interface LeftKeyword extends JustifyContentPosition, JustifyContentValue, TextAlignValue {}
+  public sealed interface LeftKeyword extends BackgroundPositionValue, JustifyContentPosition, JustifyContentValue, TextAlignValue {}
 
   public sealed interface MaxContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue {}
 
@@ -292,7 +324,7 @@ public final class Api {
 
   public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
 
-  public sealed interface NormalKeyword extends ContentValue, FontFeatureSettingsValue, FontStyleValue, FontVariationSettingsValue, FontWeightValue, JustifyContentValue, LetterSpacingValue, LineHeightValue {}
+  public sealed interface NormalKeyword extends ContentValue, FontFeatureSettingsValue, FontStyleValue, FontVariationSettingsValue, FontWeightValue, JustifyContentValue, LetterSpacingValue, LineHeightValue, WordBreakValue {}
 
   public sealed interface OutsetKeyword extends LineStyle, OutlineStyleValue {}
 
@@ -300,7 +332,7 @@ public final class Api {
 
   public sealed interface RidgeKeyword extends LineStyle, OutlineStyleValue {}
 
-  public sealed interface RightKeyword extends JustifyContentPosition, JustifyContentValue, TextAlignValue {}
+  public sealed interface RightKeyword extends BackgroundPositionValue, JustifyContentPosition, JustifyContentValue, TextAlignValue {}
 
   public sealed interface SmallKeyword extends FontSizeValue, Selector {}
 
@@ -314,16 +346,22 @@ public final class Api {
 
   public sealed interface TextareaKeyword extends AppearanceValue, Selector {}
 
+  public sealed interface TopKeyword extends BackgroundPositionValue, VerticalAlignValue {}
+
   public sealed interface KeywordInstruction extends
       AutoKeyword,
       BlockKeyword,
+      BorderBoxKeyword,
+      BottomKeyword,
       ButtonKeyword,
       CenterKeyword,
+      ContentBoxKeyword,
       DashedKeyword,
       DottedKeyword,
       DoubleKeyword,
       EndKeyword,
       FitContentKeyword,
+      FixedKeyword,
       FlexEndKeyword,
       FlexStartKeyword,
       GrooveKeyword,
@@ -345,15 +383,20 @@ public final class Api {
       StartKeyword,
       SubKeyword,
       TableKeyword,
-      TextareaKeyword permits StandardName {}
+      TextareaKeyword,
+      TopKeyword permits StandardName {}
 
-  public sealed interface ColorValue extends BorderShorthandValue, OutlineValue, TextDecorationValue permits Color, InternalInstruction, StandardName {}
+  public sealed interface ColorValue extends BackgroundValue, BorderShorthandValue, OutlineValue, TextDecorationValue permits Color, InternalInstruction, StandardName {}
 
-  public sealed interface LengthValue extends LengthPercentage, LineWidth permits InternalInstruction, Length, Zero {}
+  public sealed interface LengthValue extends BackgroundPositionValue, LengthPercentage, LineWidth permits InternalInstruction, Length, Zero {}
 
-  public sealed interface PercentageValue extends LengthPercentage, TextSizeAdjustValue permits InternalInstruction, Percentage, Zero {}
+  public sealed interface PercentageValue extends BackgroundPositionValue, LengthPercentage, TextSizeAdjustValue permits InternalInstruction, Percentage, Zero {}
 
   public sealed interface StringLiteral extends FontFamilyValue, ListStyleTypeValue permits InternalInstruction {}
+
+  public sealed interface DoubleLiteral extends LineHeightValue, NumberValue permits InternalInstruction {}
+
+  public sealed interface IntLiteral extends FontWeightValue, LineHeightValue, NumberValue permits InternalInstruction {}
 
   public sealed interface Url extends FilterValue, Image permits InternalInstruction {}
 

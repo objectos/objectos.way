@@ -972,6 +972,7 @@ public class CssTemplateTest {
 
             fontWeight(100),
             fontWeight(400),
+            fontWeight(l(600)),
 
             fontWeight(inherit)
           );
@@ -986,6 +987,7 @@ public class CssTemplateTest {
         font-weight: bolder;
         font-weight: 100;
         font-weight: 400;
+        font-weight: 600;
         font-weight: inherit;
       }
       """
@@ -1103,6 +1105,7 @@ public class CssTemplateTest {
             lineHeight(normal),
             lineHeight(1.5),
             lineHeight(2),
+            lineHeight(l(3.5)),
             lineHeight(px(14)),
             lineHeight(em(3)),
             lineHeight(pct(40.5)),
@@ -1117,6 +1120,7 @@ public class CssTemplateTest {
         line-height: normal;
         line-height: 1.5;
         line-height: 2;
+        line-height: 3.5;
         line-height: 14px;
         line-height: 3em;
         line-height: 40.5%;
@@ -2196,7 +2200,7 @@ public class CssTemplateTest {
           );
 
           style(
-            FOO, CHILD, any, SIBLING, any
+            FOO, GT, any, PLUS, any
           );
         }
       },

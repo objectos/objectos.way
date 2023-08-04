@@ -373,10 +373,10 @@ public class Compiler02Test {
 
     compiler.compilationBegin();
 
-    compiler.stringLiteral("Foo Bar");
+    compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -403,7 +403,7 @@ public class Compiler02Test {
       Bytes.prop1(Property.FONT_FAMILY),
       ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
-      ByteCode.STRING_LITERAL,
+      ByteCode.LITERAL_STRING,
       Bytes.two0(0),
       Bytes.two1(0),
       ByteCode.SEMICOLON_OPTIONAL,
@@ -422,10 +422,10 @@ public class Compiler02Test {
 
     compiler.compilationBegin();
 
-    compiler.stringLiteral("Foo Bar");
+    compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.STRING_LITERAL);
+    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
     compiler.propertyValueComma();
     compiler.propertyValue(StandardName.sansSerif);
     compiler.declarationEnd();
@@ -454,7 +454,7 @@ public class Compiler02Test {
       Bytes.prop1(Property.FONT_FAMILY),
       ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
-      ByteCode.STRING_LITERAL,
+      ByteCode.LITERAL_STRING,
       Bytes.two0(0),
       Bytes.two1(0),
       ByteCode.COMMA,
@@ -941,7 +941,7 @@ public class Compiler02Test {
       Bytes.prop0(Property.OPACITY),
       Bytes.prop1(Property.OPACITY),
       ByteCode.PARENS_OPEN,
-      ByteCode.DOUBLE_LITERAL,
+      ByteCode.LITERAL_DOUBLE,
       Bytes.long0(dbl),
       Bytes.long1(dbl),
       Bytes.long2(dbl),
@@ -951,6 +951,57 @@ public class Compiler02Test {
       Bytes.long6(dbl),
       Bytes.long7(dbl),
       ByteCode.PARENS_CLOSE,
+      ByteCode.SEMICOLON_OPTIONAL,
+      ByteCode.BLOCK_END
+    );
+  }
+
+  @Test(description = """
+  p {
+    font-weight: 600;
+  }
+  """)
+  public void testCase22() {
+    Compiler02 compiler;
+    compiler = new Compiler02();
+
+    compiler.compilationBegin();
+
+    compiler.literalInt(600);
+
+    compiler.declarationBegin(Property.FONT_WEIGHT);
+    compiler.propertyValue(InternalInstruction.LITERAL_INT);
+    compiler.declarationEnd();
+
+    compiler.styleRuleBegin();
+    compiler.styleRuleElement(StandardTypeSelector.p);
+    compiler.styleRuleElement(InternalInstruction.INSTANCE);
+    compiler.styleRuleEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledStyleSheet result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.SELECTOR_TYPE,
+      (byte) StandardTypeSelector.p.ordinal(),
+      ByteCode.BLOCK_START,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.PROPERTY_STANDARD,
+      Bytes.prop0(Property.FONT_WEIGHT),
+      Bytes.prop1(Property.FONT_WEIGHT),
+      ByteCode.COLON,
+      ByteCode.SPACE_OPTIONAL,
+      ByteCode.LITERAL_INT,
+      Bytes.int0(600),
+      Bytes.int1(600),
+      Bytes.int2(600),
+      Bytes.int3(600),
       ByteCode.SEMICOLON_OPTIONAL,
       ByteCode.BLOCK_END
     );

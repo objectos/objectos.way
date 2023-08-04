@@ -77,11 +77,13 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("JAVA_STRING");
     value("LENGTH_DOUBLE");
     value("LENGTH_INT");
+    value("LITERAL_DOUBLE");
+    value("LITERAL_INT");
+    value("LITERAL_STRING");
     value("PERCENTAGE_DOUBLE");
     value("PERCENTAGE_INT");
     value("RAW");
     value("STANDARD_NAME"); // keyword
-    value("STRING_LITERAL");
     value("URL");
     value("VAR0");
     value("ZERO");

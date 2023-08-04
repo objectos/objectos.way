@@ -58,7 +58,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
   private void colors() {
     ColorValue colorValue;
-    colorValue = spec.colorValue();
+    colorValue = spec.colorValue;
 
     if (colorValue == null) {
       return;
@@ -171,14 +171,14 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   }
 
   private void keywords() {
-    spec.keywords().stream()
+    spec.keywords.values().stream()
         .sorted(KeywordName.ORDER_BY_FIELD_NAME)
         .forEach(kw -> field(kw.className(), kw.fieldName));
   }
 
   private void lengthUnits() {
     LengthType lengthType;
-    lengthType = spec.lengthType();
+    lengthType = spec.lengthType;
 
     if (lengthType == null) {
       return;
@@ -212,7 +212,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   }
 
   private void properties() {
-    spec.properties().stream()
+    spec.properties.values().stream()
         .sorted(Property.ORDER_BY_METHOD_NAME)
         .forEach(this::propertyMethods);
   }
@@ -442,7 +442,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   }
 
   private void selectors() {
-    spec.selectors().stream()
+    spec.selectors.values().stream()
         .filter(s -> !s.disabled)
         .sorted(SelectorName.ORDER_BY_FIELD_NAME)
         .forEach(this::selectorField);

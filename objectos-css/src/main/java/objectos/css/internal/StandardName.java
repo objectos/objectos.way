@@ -91,6 +91,10 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   bottom("bottom"),
 
+  breakAll("break-all"),
+
+  breakWord("break-word"),
+
   button("button"),
 
   cambodian("cambodian"),
@@ -253,6 +257,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   katakanaIroha("katakana-iroha"),
 
+  keepAll("keep-all"),
+
   khmer("khmer"),
 
   koreanHangulFormal("korean-hangul-formal"),
@@ -276,6 +282,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
   listItem("list-item"),
 
   listbox("listbox"),
+
+  local("local"),
 
   lowerAlpha("lower-alpha"),
 
@@ -363,6 +371,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   noDrop("no-drop"),
 
+  noRepeat("no-repeat"),
+
   none("none"),
 
   normal("normal"),
@@ -387,6 +397,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   overline("overline"),
 
+  paddingBox("padding-box"),
+
   persian("persian"),
 
   pointer("pointer"),
@@ -401,9 +413,17 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   relative("relative"),
 
+  repeat("repeat"),
+
+  repeatX("repeat-x"),
+
+  repeatY("repeat-y"),
+
   ridge("ridge"),
 
   right("right"),
+
+  round("round"),
 
   row("row"),
 
@@ -429,6 +449,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   sansSerif("sans-serif"),
 
+  scroll("scroll"),
+
   seResize("se-resize"),
 
   searchfield("searchfield"),
@@ -450,6 +472,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
   smaller("smaller"),
 
   solid("solid"),
+
+  space("space"),
 
   spaceAround("space-around"),
 

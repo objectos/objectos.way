@@ -22,9 +22,19 @@ import objectos.lang.Generated;
 public enum Property implements PropertyName {
   APPEARANCE("appearance"),
 
+  BACKGROUND("background"),
+
+  BACKGROUND_ATTACHMENT("background-attachment"),
+
+  BACKGROUND_CLIP("background-clip"),
+
   BACKGROUND_COLOR("background-color"),
 
   BACKGROUND_IMAGE("background-image"),
+
+  BACKGROUND_POSITION("background-position"),
+
+  BACKGROUND_REPEAT("background-repeat"),
 
   BORDER("border"),
 
@@ -66,9 +76,15 @@ public enum Property implements PropertyName {
 
   DISPLAY("display"),
 
+  FILL("fill"),
+
   FILTER("filter"),
 
   FLEX_DIRECTION("flex-direction"),
+
+  FLEX_GROW("flex-grow"),
+
+  FLEX_SHRINK("flex-shrink"),
 
   FLEX_WRAP("flex-wrap"),
 
@@ -173,6 +189,8 @@ public enum Property implements PropertyName {
   VERTICAL_ALIGN("vertical-align"),
 
   WIDTH("width"),
+
+  WORD_BREAK("word-break"),
 
   _MOZ_APPEARANCE("-moz-appearance"),
 
