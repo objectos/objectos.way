@@ -34,6 +34,10 @@ public final class Notification extends CssTemplate {
 
   public static final ClassSelector INFO_SQUARE = ClassSelector.randomClassSelector(5);
 
+  public static final ClassSelector WARNING = ClassSelector.randomClassSelector(5);
+
+  public static final ClassSelector WARNING_ALT = ClassSelector.randomClassSelector(5);
+
   public static final ClassSelector DETAILS = ClassSelector.randomClassSelector(5);
 
   public static final ClassSelector TEXT_WRAPPER = ClassSelector.randomClassSelector(5);
@@ -152,7 +156,7 @@ public final class Notification extends CssTemplate {
     );
 
     style(
-      ERROR, SP, ICON, OR,
+      ERROR, SP, ICON,
 
       fill(var(Theme.SUPPORT_ERROR_INVERSE))
     );
@@ -201,7 +205,7 @@ public final class Notification extends CssTemplate {
     style(
       LOW_CONTRAST, SUCCESS, __before,
 
-      borderColor(var(Theme.SUPPORT_ERROR))
+      borderColor(var(Theme.SUPPORT_SUCCESS))
     );
 
     style(
@@ -221,75 +225,66 @@ public final class Notification extends CssTemplate {
     );
 
     style(
-      SUCCESS, SP, ICON,
+      INFO, SP, ICON,
 
-      fill(var(Theme.SUPPORT_SUCCESS_INVERSE))
+      fill(var(Theme.SUPPORT_INFO_INVERSE))
     );
 
     style(
-      LOW_CONTRAST, SUCCESS,
+      LOW_CONTRAST, INFO,
 
-      background(var(Theme.NOTIFICATION_BACKGROUND_SUCCESS)),
-      borderLeft(px(3), solid, var(Theme.SUPPORT_SUCCESS))
+      background(var(Theme.NOTIFICATION_BACKGROUND_INFO)),
+      borderLeft(px(3), solid, var(Theme.SUPPORT_INFO))
     );
 
     style(
-      LOW_CONTRAST, SUCCESS, __before,
+      LOW_CONTRAST, INFO, __before,
 
-      borderColor(var(Theme.SUPPORT_ERROR))
+      borderColor(var(Theme.SUPPORT_INFO))
     );
 
     style(
-      LOW_CONTRAST, SUCCESS, SP, ICON,
+      LOW_CONTRAST, INFO, SP, ICON,
 
-      fill(var(Theme.SUPPORT_SUCCESS))
+      fill(var(Theme.SUPPORT_INFO))
+    );
+
+    //
+
+    style(
+      WARNING, OR,
+      WARNING_ALT,
+
+      background(var(Theme.BACKGROUND_INVERSE)),
+      borderLeft(px(3), solid, var(Theme.SUPPORT_WARNING_INVERSE))
+    );
+
+    style(
+      WARNING, SP, ICON,
+
+      fill(var(Theme.SUPPORT_WARNING_INVERSE))
+    );
+
+    style(
+      LOW_CONTRAST, WARNING,
+
+      background(var(Theme.NOTIFICATION_BACKGROUND_WARNING)),
+      borderLeft(px(3), solid, var(Theme.SUPPORT_WARNING))
+    );
+
+    style(
+      LOW_CONTRAST, WARNING, __before,
+
+      borderColor(var(Theme.SUPPORT_WARNING))
+    );
+
+    style(
+      LOW_CONTRAST, WARNING, SP, ICON,
+
+      fill(var(Theme.SUPPORT_WARNING))
     );
 
     /*
-
-    .cds--inline-notification--info,.cds--inline-notification--info-square {
-    border-left: 3px solid var(--cds-support-info-inverse,#4589ff);
-    background: var(--cds-background-inverse,#393939)
-    }
-
-    .cds--inline-notification--info .cds--inline-notification__icon,.cds--inline-notification--info .cds--toast-notification__icon,.cds--inline-notification--info .cds--actionable-notification__icon,.cds--inline-notification--info-square .cds--inline-notification__icon,.cds--inline-notification--info-square .cds--toast-notification__icon,.cds--inline-notification--info-square .cds--actionable-notification__icon {
-    fill: var(--cds-support-info-inverse,#4589ff)
-    }
-
-    .cds--inline-notification--low-contrast.cds--inline-notification--info,.cds--inline-notification--low-contrast.cds--inline-notification--info-square {
-    border-left: 3px solid var(--cds-support-info,#0043ce);
-    background: var(--cds-notification-background-info,#edf5ff)
-    }
-
-    .cds--inline-notification--low-contrast.cds--inline-notification--info .cds--inline-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--info .cds--toast-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--info .cds--actionable-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--info-square .cds--inline-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--info-square .cds--toast-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--info-square .cds--actionable-notification__icon {
-    fill: var(--cds-support-info,#0043ce)
-    }
-
-    .cds--inline-notification--low-contrast.cds--inline-notification--info::before,.cds--inline-notification--low-contrast.cds--inline-notification--info-square::before {
-    border-color: var(--cds-support-info,#0043ce)
-    }
-
-    .cds--inline-notification--warning,.cds--inline-notification--warning-alt {
-    border-left: 3px solid var(--cds-support-warning-inverse,#f1c21b);
-    background: var(--cds-background-inverse,#393939)
-    }
-
-    .cds--inline-notification--warning .cds--inline-notification__icon,.cds--inline-notification--warning .cds--toast-notification__icon,.cds--inline-notification--warning .cds--actionable-notification__icon,.cds--inline-notification--warning-alt .cds--inline-notification__icon,.cds--inline-notification--warning-alt .cds--toast-notification__icon,.cds--inline-notification--warning-alt .cds--actionable-notification__icon {
-    fill: var(--cds-support-warning-inverse,#f1c21b)
-    }
-
-    .cds--inline-notification--low-contrast.cds--inline-notification--warning,.cds--inline-notification--low-contrast.cds--inline-notification--warning-alt {
-    border-left: 3px solid var(--cds-support-warning,#f1c21b);
-    background: var(--cds-notification-background-warning,#fdf6dd)
-    }
-
-    .cds--inline-notification--low-contrast.cds--inline-notification--warning .cds--inline-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--warning .cds--toast-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--warning .cds--actionable-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--warning-alt .cds--inline-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--warning-alt .cds--toast-notification__icon,.cds--inline-notification--low-contrast.cds--inline-notification--warning-alt .cds--actionable-notification__icon {
-    fill: var(--cds-support-warning,#f1c21b)
-    }
-
-    .cds--inline-notification--low-contrast.cds--inline-notification--warning::before,.cds--inline-notification--low-contrast.cds--inline-notification--warning-alt::before {
-    border-color: var(--cds-support-warning,#f1c21b)
-    }
 
     .cds--inline-notification--warning .cds--inline-notification__icon path[opacity="0"],.cds--inline-notification--warning-alt .cds--inline-notification__icon path:first-of-type {
     fill: #000;
