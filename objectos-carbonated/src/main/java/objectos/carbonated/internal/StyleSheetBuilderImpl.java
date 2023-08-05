@@ -9,6 +9,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import objectos.carbonated.Carbon;
 import objectos.carbonated.Carbon.StyleSheetBuilder;
+import objectos.carbonated.Theme;
 import objectos.css.CssTemplate;
 import objectos.css.StyleSheet;
 
@@ -16,7 +17,9 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
 
   private enum Feature {
 
-    RESET;
+    RESET,
+
+    TYPOGRAPHY;
 
   }
 
@@ -35,9 +38,20 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
   }
 
   @Override
+  public final StyleSheetBuilder typography() {
+    features.add(Feature.TYPOGRAPHY);
+
+    return this;
+  }
+
+  @Override
   protected final void definition() {
     if (features.contains(Feature.RESET)) {
       $reset();
+    }
+
+    if (features.contains(Feature.TYPOGRAPHY)) {
+      $typography();
     }
   }
 
@@ -220,6 +234,111 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
       any, __after,
 
       boxSizing(inherit)
+    );
+  }
+
+  private void $typography() {
+    style(
+      html,
+
+      fontSize(pct(100))
+    );
+
+    style(
+      body,
+
+      fontWeight(var(Theme.FONT_WEIGHT_REGULAR)),
+      fontFamily(sansSerif)
+    //-moz-osx-font-smoothing: grayscale;
+    //-webkit-font-smoothing: antialiased;
+    //text-rendering: optimizeLegibility;
+    );
+
+    style(
+      code,
+
+      fontFamily(monospace)
+    );
+
+    style(
+      strong,
+
+      fontWeight(var(Theme.FONT_WEIGHT_SEMIBOLD))
+    );
+
+    style(
+      h1,
+
+      fontSize(var(Theme.HEADING_06_FONT_SIZE)),
+      fontWeight(var(Theme.HEADING_06_FONT_WEIGHT)),
+      letterSpacing(var(Theme.HEADING_06_LETTER_SPACING)),
+      lineHeight(var(Theme.HEADING_06_LINE_HEIGHT))
+    );
+
+    style(
+      h2,
+
+      fontSize(var(Theme.HEADING_05_FONT_SIZE)),
+      fontWeight(var(Theme.HEADING_05_FONT_WEIGHT)),
+      letterSpacing(var(Theme.HEADING_05_LETTER_SPACING)),
+      lineHeight(var(Theme.HEADING_05_LINE_HEIGHT))
+    );
+
+    style(
+      h3,
+
+      fontSize(var(Theme.HEADING_04_FONT_SIZE)),
+      fontWeight(var(Theme.HEADING_04_FONT_WEIGHT)),
+      letterSpacing(var(Theme.HEADING_04_LETTER_SPACING)),
+      lineHeight(var(Theme.HEADING_04_LINE_HEIGHT))
+    );
+
+    style(
+      h4,
+
+      fontSize(var(Theme.HEADING_03_FONT_SIZE)),
+      fontWeight(var(Theme.HEADING_03_FONT_WEIGHT)),
+      letterSpacing(var(Theme.HEADING_03_LETTER_SPACING)),
+      lineHeight(var(Theme.HEADING_03_LINE_HEIGHT))
+    );
+
+    style(
+      h5,
+
+      fontSize(var(Theme.HEADING_02_FONT_SIZE)),
+      fontWeight(var(Theme.HEADING_02_FONT_WEIGHT)),
+      letterSpacing(var(Theme.HEADING_02_LETTER_SPACING)),
+      lineHeight(var(Theme.HEADING_02_LINE_HEIGHT))
+    );
+
+    style(
+      h6,
+
+      fontSize(var(Theme.HEADING_01_FONT_SIZE)),
+      fontWeight(var(Theme.HEADING_01_FONT_WEIGHT)),
+      letterSpacing(var(Theme.HEADING_01_LETTER_SPACING)),
+      lineHeight(var(Theme.HEADING_01_LINE_HEIGHT))
+    );
+
+    style(
+      p,
+
+      fontSize(var(Theme.BODY_02_FONT_SIZE)),
+      fontWeight(var(Theme.BODY_02_FONT_WEIGHT)),
+      letterSpacing(var(Theme.BODY_02_LETTER_SPACING)),
+      lineHeight(var(Theme.BODY_02_LINE_HEIGHT))
+    );
+
+    style(
+      a,
+
+      color(var(Theme.LINK_PRIMARY))
+    );
+
+    style(
+      em,
+
+      fontStyle(italic)
     );
   }
 

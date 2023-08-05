@@ -19,6 +19,8 @@ public final class Carbon {
 
     StyleSheetBuilder reset();
 
+    StyleSheetBuilder typography();
+
   }
 
   private Carbon() {}
