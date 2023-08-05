@@ -16,15 +16,21 @@
 package objectos.selfgen.css2;
 
 import objectos.code.ClassTypeName;
+import objectos.code.tmpl.TypeName;
 import objectos.util.GrowableSet;
 
-public final class StringType implements Value {
+public final class StringType implements ParameterType, Value {
 
   public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
 
   @Override
   public final void addValueType(ValueType valueType) {
     interfaces.add(valueType.className);
+  }
+
+  @Override
+  public final TypeName typeName() {
+    return ThisTemplate.STRING_LITERAL;
   }
 
 }

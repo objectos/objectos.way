@@ -33,6 +33,7 @@ import objectos.css.tmpl.Api.BottomValue;
 import objectos.css.tmpl.Api.BoxShadowDeclaration;
 import objectos.css.tmpl.Api.BoxSizingValue;
 import objectos.css.tmpl.Api.ButtonKeyword;
+import objectos.css.tmpl.Api.CaptionKeyword;
 import objectos.css.tmpl.Api.CenterKeyword;
 import objectos.css.tmpl.Api.ColorValue;
 import objectos.css.tmpl.Api.ContentBoxKeyword;
@@ -105,13 +106,16 @@ import objectos.css.tmpl.Api.PointerEventsValue;
 import objectos.css.tmpl.Api.PositionValue;
 import objectos.css.tmpl.Api.ProgressKeyword;
 import objectos.css.tmpl.Api.PropertyValue;
+import objectos.css.tmpl.Api.QuotesValue;
 import objectos.css.tmpl.Api.ResizeValue;
 import objectos.css.tmpl.Api.RidgeKeyword;
 import objectos.css.tmpl.Api.RightKeyword;
+import objectos.css.tmpl.Api.RubyKeyword;
 import objectos.css.tmpl.Api.Selector;
 import objectos.css.tmpl.Api.SmallKeyword;
 import objectos.css.tmpl.Api.SolidKeyword;
 import objectos.css.tmpl.Api.StartKeyword;
+import objectos.css.tmpl.Api.StringLiteral;
 import objectos.css.tmpl.Api.StyleDeclaration;
 import objectos.css.tmpl.Api.SubKeyword;
 import objectos.css.tmpl.Api.TableKeyword;
@@ -167,11 +171,21 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector a = StandardTypeSelector.a;
 
+  protected static final Selector abbr = StandardTypeSelector.abbr;
+
+  protected static final Selector acronym = StandardTypeSelector.acronym;
+
+  protected static final Selector address = StandardTypeSelector.address;
+
   protected static final Selector article = StandardTypeSelector.article;
+
+  protected static final Selector aside = StandardTypeSelector.aside;
 
   protected static final Selector audio = StandardTypeSelector.audio;
 
   protected static final Selector b = StandardTypeSelector.b;
+
+  protected static final Selector big = StandardTypeSelector.big;
 
   protected static final Selector blockquote = StandardTypeSelector.blockquote;
 
@@ -179,19 +193,35 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector canvas = StandardTypeSelector.canvas;
 
+  protected static final Selector cite = StandardTypeSelector.cite;
+
   protected static final Selector code = StandardTypeSelector.code;
 
   protected static final Selector dd = StandardTypeSelector.dd;
+
+  protected static final Selector del = StandardTypeSelector.del;
+
+  protected static final Selector details = StandardTypeSelector.details;
+
+  protected static final Selector dfn = StandardTypeSelector.dfn;
 
   protected static final Selector div = StandardTypeSelector.div;
 
   protected static final Selector dl = StandardTypeSelector.dl;
 
+  protected static final Selector dt = StandardTypeSelector.dt;
+
+  protected static final Selector em = StandardTypeSelector.em;
+
   protected static final Selector embed = StandardTypeSelector.embed;
 
   protected static final Selector fieldset = StandardTypeSelector.fieldset;
 
+  protected static final Selector figcaption = StandardTypeSelector.figcaption;
+
   protected static final Selector figure = StandardTypeSelector.figure;
+
+  protected static final Selector footer = StandardTypeSelector.footer;
 
   protected static final Selector form = StandardTypeSelector.form;
 
@@ -209,6 +239,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector header = StandardTypeSelector.header;
 
+  protected static final Selector hgroup = StandardTypeSelector.hgroup;
+
   protected static final Selector hr = StandardTypeSelector.hr;
 
   protected static final Selector html = StandardTypeSelector.html;
@@ -219,6 +251,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector input = StandardTypeSelector.input;
 
+  protected static final Selector ins = StandardTypeSelector.ins;
+
   protected static final Selector kbd = StandardTypeSelector.kbd;
 
   protected static final Selector label = StandardTypeSelector.label;
@@ -226,6 +260,8 @@ abstract class GeneratedCssTemplate {
   protected static final Selector legend = StandardTypeSelector.legend;
 
   protected static final Selector li = StandardTypeSelector.li;
+
+  protected static final Selector mark = StandardTypeSelector.mark;
 
   protected static final Selector nav = StandardTypeSelector.nav;
 
@@ -235,15 +271,23 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector optgroup = StandardTypeSelector.optgroup;
 
+  protected static final Selector output = StandardTypeSelector.output;
+
   protected static final Selector p = StandardTypeSelector.p;
 
   protected static final Selector pre = StandardTypeSelector.pre;
+
+  protected static final Selector q = StandardTypeSelector.q;
 
   protected static final Selector samp = StandardTypeSelector.samp;
 
   protected static final Selector section = StandardTypeSelector.section;
 
   protected static final Selector select = StandardTypeSelector.select;
+
+  protected static final Selector span = StandardTypeSelector.span;
+
+  protected static final Selector strike = StandardTypeSelector.strike;
 
   protected static final Selector strong = StandardTypeSelector.strong;
 
@@ -257,13 +301,19 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector td = StandardTypeSelector.td;
 
+  protected static final Selector tfoot = StandardTypeSelector.tfoot;
+
   protected static final Selector th = StandardTypeSelector.th;
 
   protected static final Selector thead = StandardTypeSelector.thead;
 
+  protected static final Selector time = StandardTypeSelector.time;
+
   protected static final Selector tr = StandardTypeSelector.tr;
 
   protected static final Selector ul = StandardTypeSelector.ul;
+
+  protected static final Selector var = StandardTypeSelector.var;
 
   protected static final Selector video = StandardTypeSelector.video;
 
@@ -785,7 +835,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final TextTransformValue capitalize = StandardName.capitalize;
 
-  protected static final FontValue caption = StandardName.caption;
+  protected static final CaptionKeyword caption = StandardName.caption;
 
   protected static final CursorValue cell = StandardName.cell;
 
@@ -1115,7 +1165,7 @@ abstract class GeneratedCssTemplate {
 
   protected static final FlexDirectionValue rowReverse = StandardName.rowReverse;
 
-  protected static final DisplayInsideValue ruby = StandardName.ruby;
+  protected static final RubyKeyword ruby = StandardName.ruby;
 
   protected static final DisplayInternalValue rubyBase = StandardName.rubyBase;
 
@@ -1624,6 +1674,44 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration borderBottomLeftRadius(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_BOTTOM_LEFT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottomLeftRadius(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_BOTTOM_LEFT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottomLeftRadius(LengthPercentage horizontal, LengthPercentage vertical) {
+    Check.notNull(horizontal, "horizontal == null");
+    Check.notNull(vertical, "vertical == null");
+    declaration(Property.BORDER_BOTTOM_LEFT_RADIUS, horizontal, vertical);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottomRightRadius(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_BOTTOM_RIGHT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottomRightRadius(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_BOTTOM_RIGHT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderBottomRightRadius(LengthPercentage horizontal, LengthPercentage vertical) {
+    Check.notNull(horizontal, "horizontal == null");
+    Check.notNull(vertical, "vertical == null");
+    declaration(Property.BORDER_BOTTOM_RIGHT_RADIUS, horizontal, vertical);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration borderBottomWidth(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_BOTTOM_WIDTH, value);
@@ -1723,6 +1811,42 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration borderRadius(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRadius(LengthPercentage all) {
+    Check.notNull(all, "all == null");
+    declaration(Property.BORDER_RADIUS, all);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRadius(LengthPercentage topLeftBottomRight, LengthPercentage topRightBottomLeft) {
+    Check.notNull(topLeftBottomRight, "topLeftBottomRight == null");
+    Check.notNull(topRightBottomLeft, "topRightBottomLeft == null");
+    declaration(Property.BORDER_RADIUS, topLeftBottomRight, topRightBottomLeft);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRadius(LengthPercentage topLeft, LengthPercentage topRightBottomLeft, LengthPercentage bottomRight) {
+    Check.notNull(topLeft, "topLeft == null");
+    Check.notNull(topRightBottomLeft, "topRightBottomLeft == null");
+    Check.notNull(bottomRight, "bottomRight == null");
+    declaration(Property.BORDER_RADIUS, topLeft, topRightBottomLeft, bottomRight);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderRadius(LengthPercentage topLeft, LengthPercentage topRight, LengthPercentage bottomRight, LengthPercentage bottomLeft) {
+    Check.notNull(topLeft, "topLeft == null");
+    Check.notNull(topRight, "topRight == null");
+    Check.notNull(bottomRight, "bottomRight == null");
+    Check.notNull(bottomLeft, "bottomLeft == null");
+    declaration(Property.BORDER_RADIUS, topLeft, topRight, bottomRight, bottomLeft);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration borderRight(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_RIGHT, value);
@@ -1759,6 +1883,25 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration borderRightWidth(LineWidth value) {
     Check.notNull(value, "value == null");
     declaration(Property.BORDER_RIGHT_WIDTH, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderSpacing(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_SPACING, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderSpacing(LengthValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_SPACING, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderSpacing(LengthValue horizontal, LengthValue vertical) {
+    Check.notNull(horizontal, "horizontal == null");
+    Check.notNull(vertical, "vertical == null");
+    declaration(Property.BORDER_SPACING, horizontal, vertical);
     return InternalInstruction.INSTANCE;
   }
 
@@ -1822,6 +1965,44 @@ abstract class GeneratedCssTemplate {
     Check.notNull(value2, "value2 == null");
     Check.notNull(value3, "value3 == null");
     declaration(Property.BORDER_TOP, value1, value2, value3);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopLeftRadius(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_TOP_LEFT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopLeftRadius(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_TOP_LEFT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopLeftRadius(LengthPercentage horizontal, LengthPercentage vertical) {
+    Check.notNull(horizontal, "horizontal == null");
+    Check.notNull(vertical, "vertical == null");
+    declaration(Property.BORDER_TOP_LEFT_RADIUS, horizontal, vertical);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopRightRadius(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_TOP_RIGHT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopRightRadius(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.BORDER_TOP_RIGHT_RADIUS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration borderTopRightRadius(LengthPercentage horizontal, LengthPercentage vertical) {
+    Check.notNull(horizontal, "horizontal == null");
+    Check.notNull(vertical, "vertical == null");
+    declaration(Property.BORDER_TOP_RIGHT_RADIUS, horizontal, vertical);
     return InternalInstruction.INSTANCE;
   }
 
@@ -2731,6 +2912,25 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration position(PositionValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.POSITION, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration quotes(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.QUOTES, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration quotes(QuotesValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.QUOTES, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration quotes(StringLiteral open, StringLiteral close) {
+    Check.notNull(open, "open == null");
+    Check.notNull(close, "close == null");
+    declaration(Property.QUOTES, open, close);
     return InternalInstruction.INSTANCE;
   }
 

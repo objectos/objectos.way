@@ -40,6 +40,10 @@ public enum Property implements PropertyName {
 
   BORDER_BOTTOM("border-bottom"),
 
+  BORDER_BOTTOM_LEFT_RADIUS("border-bottom-left-radius"),
+
+  BORDER_BOTTOM_RIGHT_RADIUS("border-bottom-right-radius"),
+
   BORDER_BOTTOM_WIDTH("border-bottom-width"),
 
   BORDER_COLLAPSE("border-collapse"),
@@ -50,13 +54,21 @@ public enum Property implements PropertyName {
 
   BORDER_LEFT_WIDTH("border-left-width"),
 
+  BORDER_RADIUS("border-radius"),
+
   BORDER_RIGHT("border-right"),
 
   BORDER_RIGHT_WIDTH("border-right-width"),
 
+  BORDER_SPACING("border-spacing"),
+
   BORDER_STYLE("border-style"),
 
   BORDER_TOP("border-top"),
+
+  BORDER_TOP_LEFT_RADIUS("border-top-left-radius"),
+
+  BORDER_TOP_RIGHT_RADIUS("border-top-right-radius"),
 
   BORDER_TOP_WIDTH("border-top-width"),
 
@@ -163,6 +175,8 @@ public enum Property implements PropertyName {
   POINTER_EVENTS("pointer-events"),
 
   POSITION("position"),
+
+  QUOTES("quotes"),
 
   RESIZE("resize"),
 

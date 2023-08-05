@@ -1276,6 +1276,42 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test
+  public void testCase42() {
+    HtmlTemplate component;
+    component = new HtmlTemplate() {
+      @Override
+      protected final void definition() {
+        div(
+          className("component"),
+
+          div(
+            className("wrapper"),
+
+            t("foobar")
+          )
+        );
+      }
+    };
+
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          body(component);
+        }
+      },
+
+      """
+      <body>
+      <div class="component">
+      <div class="wrapper">foobar</div>
+      </div>
+      </body>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     stringBuilder.setLength(0);
 

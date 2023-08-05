@@ -50,13 +50,13 @@ public final class Api {
 
   public sealed interface FilterFunction {}
 
+  public sealed interface OpacityDeclaration extends FilterFunction, StyleDeclaration {}
+
   public sealed interface BoxShadowDeclaration extends StyleDeclaration {}
 
   public sealed interface BoxShadowHashDeclaration extends StyleDeclaration {}
 
-  public sealed interface OpacityDeclaration extends FilterFunction, StyleDeclaration {}
-
-  public sealed interface StyleDeclarationInstruction extends BoxShadowDeclaration, BoxShadowHashDeclaration, OpacityDeclaration permits InternalInstruction {}
+  public sealed interface StyleDeclarationInstruction extends OpacityDeclaration, BoxShadowDeclaration, BoxShadowHashDeclaration permits InternalInstruction {}
 
   public sealed interface Selector extends StyleRuleElement {}
 
@@ -178,6 +178,8 @@ public final class Api {
 
   public sealed interface PositionValue extends PropertyValue {}
 
+  public sealed interface QuotesValue extends PropertyValue {}
+
   public sealed interface ResizeValue extends PropertyValue {}
 
   public sealed interface TextAlignValue extends PropertyValue {}
@@ -262,6 +264,7 @@ public final class Api {
       OverflowPosition,
       PointerEventsValue,
       PositionValue,
+      QuotesValue,
       ResizeValue,
       TextAlignValue,
       TextDecorationLineMultiValue,
@@ -276,7 +279,7 @@ public final class Api {
       VerticalAlignValue,
       WordBreakValue permits StandardName {}
 
-  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue {}
+  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue {}
 
   public sealed interface BlockKeyword extends DisplayOutsideValue, ResizeValue {}
 
@@ -285,6 +288,8 @@ public final class Api {
   public sealed interface BottomKeyword extends BackgroundPositionValue, VerticalAlignValue {}
 
   public sealed interface ButtonKeyword extends AppearanceValue, Selector {}
+
+  public sealed interface CaptionKeyword extends FontValue, Selector {}
 
   public sealed interface CenterKeyword extends BackgroundPositionValue, JustifyContentPosition, JustifyContentValue, TextAlignValue {}
 
@@ -322,7 +327,7 @@ public final class Api {
 
   public sealed interface MinContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue {}
 
-  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
+  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
 
   public sealed interface NormalKeyword extends ContentValue, FontFeatureSettingsValue, FontStyleValue, FontVariationSettingsValue, FontWeightValue, JustifyContentValue, LetterSpacingValue, LineHeightValue, WordBreakValue {}
 
@@ -333,6 +338,8 @@ public final class Api {
   public sealed interface RidgeKeyword extends LineStyle, OutlineStyleValue {}
 
   public sealed interface RightKeyword extends BackgroundPositionValue, JustifyContentPosition, JustifyContentValue, TextAlignValue {}
+
+  public sealed interface RubyKeyword extends DisplayInsideValue, Selector {}
 
   public sealed interface SmallKeyword extends FontSizeValue, Selector {}
 
@@ -354,6 +361,7 @@ public final class Api {
       BorderBoxKeyword,
       BottomKeyword,
       ButtonKeyword,
+      CaptionKeyword,
       CenterKeyword,
       ContentBoxKeyword,
       DashedKeyword,
@@ -378,6 +386,7 @@ public final class Api {
       ProgressKeyword,
       RidgeKeyword,
       RightKeyword,
+      RubyKeyword,
       SmallKeyword,
       SolidKeyword,
       StartKeyword,

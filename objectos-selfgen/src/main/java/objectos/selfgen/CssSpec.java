@@ -96,6 +96,8 @@ public final class CssSpec extends CssSelfGen {
     background();
     borderCollapse();
     borderColor();
+    borderRadius();
+    borderSpacing();
     borderStyle();
     borderWidth();
     border();
@@ -169,6 +171,10 @@ public final class CssSpec extends CssSelfGen {
     padding();
     pointerEvents();
     position();
+
+    // Q
+
+    quotes();
 
     // R
 
@@ -260,26 +266,40 @@ public final class CssSpec extends CssSelfGen {
       SelectorKind.TYPE,
 
       "a",
+      "abbr",
+      "acronym",
+      "address",
       "article",
+      "aside",
       "audio",
 
       "b",
+      "big",
       "body",
       "blockquote",
       "button",
 
       "canvas",
+      "caption",
+      "cite",
       "code",
 
       "dd",
+      "del",
+      "details",
+      "dfn",
       "div",
       "dl",
+      "dt",
 
+      "em",
       "embed",
 
       "fieldset",
+      "figcaption",
       "figure",
       "form",
+      "footer",
 
       "h1",
       "h2",
@@ -288,12 +308,14 @@ public final class CssSpec extends CssSelfGen {
       "h5",
       "h6",
       "header",
+      "hgroup",
       "hr",
       "html",
 
       "iframe",
       "img",
       "input",
+      "ins",
 
       "kbd",
 
@@ -301,6 +323,7 @@ public final class CssSpec extends CssSelfGen {
       "legend",
       "li",
 
+      "mark",
       "menu",
 
       "nav",
@@ -308,15 +331,22 @@ public final class CssSpec extends CssSelfGen {
       "object",
       "ol",
       "optgroup",
+      "output",
 
       "p",
       "pre",
       "progress",
 
+      "q",
+
+      "ruby",
+
       "samp",
       "section",
       "select",
       "small",
+      "span",
+      "strike",
       "strong",
       "sub",
       "summary",
@@ -327,12 +357,15 @@ public final class CssSpec extends CssSelfGen {
       "tbody",
       "td",
       "textarea",
+      "tfoot",
       "th",
       "thead",
+      "time",
       "tr",
 
       "ul",
 
+      "var",
       "video"
     );
 
@@ -587,6 +620,62 @@ public final class CssSpec extends CssSelfGen {
       sig(color, "vertical", color, "horizontal"),
       sig(color, "top", color, "horizontal", color, "bottom"),
       sig(color, "top", color, "right", color, "bottom", color, "left")
+    );
+  }
+
+  private void borderRadius() {
+    ValueType value;
+    value = lengthPercentage;
+
+    property(
+      "border-radius",
+
+      sig(globalKeyword, "value"),
+      sig(
+        value, "all"
+      ),
+      sig(
+        value, "topLeftBottomRight",
+        value, "topRightBottomLeft"
+      ),
+      sig(
+        value, "topLeft",
+        value, "topRightBottomLeft",
+        value, "bottomRight"
+      ),
+      sig(
+        value, "topLeft",
+        value, "topRight",
+        value, "bottomRight",
+        value, "bottomLeft"
+      )
+    );
+
+    var names = List.of(
+      "border-top-left-radius",
+      "border-top-right-radius",
+      "border-bottom-right-radius",
+      "border-bottom-left-radius"
+    );
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(value, "value"),
+        sig(value, "horizontal", value, "vertical")
+      );
+    }
+  }
+
+  private void borderSpacing() {
+    property(
+      "border-spacing",
+
+      sig(globalKeyword, "value"),
+      sig(length, "value"),
+      sig(length, "horizontal", length, "vertical")
     );
   }
 
@@ -1881,6 +1970,23 @@ public final class CssSpec extends CssSelfGen {
 
       sig(globalKeyword, "value"),
       sig(positionValue, "value")
+    );
+  }
+
+  private void quotes() {
+    ValueType value = t(
+      "QuotesValue",
+
+      k("none"),
+      k("auto")
+    );
+
+    property(
+      "quotes",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value"),
+      sig(string(), "open", string(), "close")
     );
   }
 

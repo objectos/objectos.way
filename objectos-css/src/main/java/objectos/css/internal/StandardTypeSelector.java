@@ -22,11 +22,21 @@ import objectos.lang.Generated;
 public enum StandardTypeSelector implements SelectorInstruction {
   a("a"),
 
+  abbr("abbr"),
+
+  acronym("acronym"),
+
+  address("address"),
+
   article("article"),
+
+  aside("aside"),
 
   audio("audio"),
 
   b("b"),
+
+  big("big"),
 
   blockquote("blockquote"),
 
@@ -34,19 +44,35 @@ public enum StandardTypeSelector implements SelectorInstruction {
 
   canvas("canvas"),
 
+  cite("cite"),
+
   code("code"),
 
   dd("dd"),
+
+  del("del"),
+
+  details("details"),
+
+  dfn("dfn"),
 
   div("div"),
 
   dl("dl"),
 
+  dt("dt"),
+
+  em("em"),
+
   embed("embed"),
 
   fieldset("fieldset"),
 
+  figcaption("figcaption"),
+
   figure("figure"),
+
+  footer("footer"),
 
   form("form"),
 
@@ -64,6 +90,8 @@ public enum StandardTypeSelector implements SelectorInstruction {
 
   header("header"),
 
+  hgroup("hgroup"),
+
   hr("hr"),
 
   html("html"),
@@ -74,6 +102,8 @@ public enum StandardTypeSelector implements SelectorInstruction {
 
   input("input"),
 
+  ins("ins"),
+
   kbd("kbd"),
 
   label("label"),
@@ -81,6 +111,8 @@ public enum StandardTypeSelector implements SelectorInstruction {
   legend("legend"),
 
   li("li"),
+
+  mark("mark"),
 
   nav("nav"),
 
@@ -90,15 +122,23 @@ public enum StandardTypeSelector implements SelectorInstruction {
 
   optgroup("optgroup"),
 
+  output("output"),
+
   p("p"),
 
   pre("pre"),
+
+  q("q"),
 
   samp("samp"),
 
   section("section"),
 
   select("select"),
+
+  span("span"),
+
+  strike("strike"),
 
   strong("strong"),
 
@@ -112,13 +152,19 @@ public enum StandardTypeSelector implements SelectorInstruction {
 
   td("td"),
 
+  tfoot("tfoot"),
+
   th("th"),
 
   thead("thead"),
 
+  time("time"),
+
   tr("tr"),
 
   ul("ul"),
+
+  var("var"),
 
   video("video");
 
