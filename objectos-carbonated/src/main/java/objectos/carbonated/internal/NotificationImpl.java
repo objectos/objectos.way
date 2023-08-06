@@ -16,12 +16,18 @@
 package objectos.carbonated.internal;
 
 import objectos.carbonated.Breakpoint;
+import objectos.carbonated.Carbon.Contrast;
+import objectos.carbonated.Carbon.Notification;
+import objectos.carbonated.Carbon.Status;
 import objectos.carbonated.Theme;
 import objectos.carbonated.Typography;
 import objectos.css.CssTemplate;
 import objectos.css.util.ClassSelector;
+import objectos.html.HtmlTemplate;
+import objectos.html.tmpl.Instruction.ElementContents;
+import objectos.lang.Check;
 
-public final class NotificationImpl {
+public final class NotificationImpl implements Notification {
 
   public static final ClassSelector NOTIFICATION = ClassSelector.randomClassSelector(5);
 
@@ -73,8 +79,7 @@ public final class NotificationImpl {
           NOTIFICATION,
 
           flexWrap(nowrap),
-          maxWidth(rem(608 / 16))
-        )
+          maxWidth(rem(608 / 16)))
       );
 
       media(
@@ -83,8 +88,7 @@ public final class NotificationImpl {
         style(
           NOTIFICATION,
 
-          maxWidth(rem(736 / 16))
-        )
+          maxWidth(rem(736 / 16)))
       );
 
       media(
@@ -93,8 +97,7 @@ public final class NotificationImpl {
         style(
           NOTIFICATION,
 
-          maxWidth(rem(832 / 16))
-        )
+          maxWidth(rem(832 / 16)))
       );
 
       /*
@@ -156,8 +159,7 @@ public final class NotificationImpl {
         ERROR,
 
         background(var(Theme.BACKGROUND_INVERSE)),
-        borderLeft(px(3), solid, var(Theme.SUPPORT_ERROR_INVERSE))
-      );
+        borderLeft(px(3), solid, var(Theme.SUPPORT_ERROR_INVERSE)));
 
       style(
         ERROR, SP, ICON,
@@ -221,8 +223,7 @@ public final class NotificationImpl {
       //
 
       style(
-        INFO, OR,
-        INFO_SQUARE,
+        INFO, OR, INFO_SQUARE,
 
         background(var(Theme.BACKGROUND_INVERSE)),
         borderLeft(px(3), solid, var(Theme.SUPPORT_INFO_INVERSE))
@@ -256,8 +257,7 @@ public final class NotificationImpl {
       //
 
       style(
-        WARNING, OR,
-        WARNING_ALT,
+        WARNING, OR, WARNING_ALT,
 
         background(var(Theme.BACKGROUND_INVERSE)),
         borderLeft(px(3), solid, var(Theme.SUPPORT_WARNING_INVERSE))
@@ -306,7 +306,8 @@ public final class NotificationImpl {
       );
 
       media(
-        minWidth(Breakpoint.MEDIUM),
+        minWidth(
+          Breakpoint.MEDIUM),
 
         style(
           DETAILS,
@@ -360,7 +361,7 @@ public final class NotificationImpl {
       
       @media(min-width: 42rem) {
       .cds--inline-notification__action-button.cds--btn--ghost {
-          margin:.5rem 0
+      margin:.5rem 0
       }
       }
       
@@ -423,7 +424,7 @@ public final class NotificationImpl {
       
       @media(min-width: 42rem) {
       .cds--inline-notification__close-button {
-          position:static
+      position:static
       }
       }
       
@@ -434,7 +435,7 @@ public final class NotificationImpl {
       
       @media screen and (prefers-contrast) {
       .cds--inline-notification--low-contrast .cds--inline-notification__close-button:focus {
-          outline-style: dotted
+      outline-style: dotted
       }
       }
       
@@ -444,31 +445,171 @@ public final class NotificationImpl {
       
       @media screen and (-ms-high-contrast:active),(forced-colors:active) {
       .cds--inline-notification {
-          outline: 1px solid transparent
+      outline: 1px solid transparent
       }
       }
       
       @media screen and (-ms-high-contrast:active),(forced-colors:active) {
       .cds--inline-notification__close-button:focus,.cds--btn.cds--btn--ghost.cds--inline-notification__action-button:focus {
-          color: Highlight;
-          outline: 1px solid Highlight
+      color: Highlight;
+      outline: 1px solid Highlight
       }
       }
       
       @media screen and (-ms-high-contrast:active),(forced-colors:active) {
       .cds--inline-notification .cds--inline-notification__icon {
-          fill: ButtonText
+      fill: ButtonText
       }
       }
       
       @media screen and (-ms-high-contrast:active),(forced-colors:active) {
       .cds--inline-notification .cds--inline-notification__close-icon {
-          fill: ButtonText
+      fill: ButtonText
       }
       }
       
        */
     }
   };
+
+  private Contrast contrast = Contrast.HIGH;
+
+  private Status status = Status.ERROR;
+
+  private String title = "";
+
+  private String subtitle = "";
+
+  private final HtmlTemplate html = new HtmlTemplate() {
+    @Override
+    protected void definition() {
+      div(
+        NOTIFICATION,
+
+        switch (status) {
+          case ERROR -> NotificationImpl.ERROR;
+          case SUCCESS -> NotificationImpl.SUCCESS;
+          case WARNING -> NotificationImpl.WARNING;
+          case INFO -> NotificationImpl.INFO;
+        },
+
+        switch (contrast) {
+          case LOW -> NotificationImpl.LOW_CONTRAST;
+          case HIGH -> noop();
+        },
+
+        div(
+          DETAILS,
+
+          switch (status) {
+            case ERROR -> svg(
+              ICON,
+
+              xmlns("http://www.w3.org/2000/svg"),
+              width("20"),
+              height("20"),
+              viewBox("0 0 32 32"),
+              path(
+                fill("none"),
+                d("M9,10.56l1.56,-1.56l12.44,12.44l-1.56,1.56Z")
+              ),
+              path(
+                d("M16,2A13.914,13.914,0,0,0,2,16,13.914,13.914,0,0,0,16,30,13.914,13.914,0,0,0,30,16,13.914,13.914,0,0,0,16,2Zm5.4449,21L9,10.5557,10.5557,9,23,21.4448Z")
+              )
+            );
+
+            case SUCCESS -> svg(
+              ICON,
+
+              xmlns("http://www.w3.org/2000/svg"),
+              width("20"),
+              height("20"),
+              viewBox("0 0 32 32"),
+              path(
+                d("M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2ZM14,21.5908l-5-5L10.5906,15,14,18.4092,21.41,11l1.5957,1.5859Z")
+              ),
+              path(
+                fill("none"),
+                d("M14 21.591 9 16.591 10.591 15 14 18.409 21.41 11 23.005 12.585 14 21.591z")
+              )
+            );
+
+            case WARNING -> svg(
+              ICON,
+
+              xmlns("http://www.w3.org/2000/svg"),
+              width("20"),
+              height("20"),
+              viewBox("0 0 32 32"),
+              path(
+                d("M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14C30,8.3,23.7,2,16,2z M14.9,8h2.2v11h-2.2V8z M16,25 c-0.8,0-1.5-0.7-1.5-1.5S15.2,22,16,22c0.8,0,1.5,0.7,1.5,1.5S16.8,25,16,25z")
+              ),
+              path(
+                fill("#000"),
+                d("M17.5,23.5c0,0.8-0.7,1.5-1.5,1.5c-0.8,0-1.5-0.7-1.5-1.5S15.2,22,16,22 C16.8,22,17.5,22.7,17.5,23.5z M17.1,8h-2.2v11h2.2V8z")
+              )
+            );
+
+            case INFO -> svg(
+              ICON,
+
+              xmlns("http://www.w3.org/2000/svg"),
+              width("20"),
+              height("20"),
+              viewBox("0 0 32 32"),
+              path(
+                fill("none"),
+                d("M16,8a1.5,1.5,0,1,1-1.5,1.5A1.5,1.5,0,0,1,16,8Zm4,13.875H17.125v-8H13v2.25h1.875v5.75H12v2.25h8Z")
+              ),
+              path(
+                d("M16,2A14,14,0,1,0,30,16,14,14,0,0,0,16,2Zm0,6a1.5,1.5,0,1,1-1.5,1.5A1.5,1.5,0,0,1,16,8Zm4,16.125H12v-2.25h2.875v-5.75H13v-2.25h4.125v8H20Z")
+              )
+            );
+          },
+
+          div(
+            TEXT_WRAPPER,
+
+            div(TITLE, t(title)),
+
+            div(SUBTITLE, t(subtitle))
+          )
+        )
+      );
+    }
+  };
+
+  @Override
+  public final Notification contrast(Contrast value) {
+    contrast = Check.notNull(value, "value == null");
+
+    return this;
+  }
+
+  @Override
+  public final Notification status(Status value) {
+    status = Check.notNull(value, "value == null");
+
+    return this;
+  }
+
+  @Override
+  public final Notification subtitle(String value) {
+    subtitle = Check.notNull(value, "value == null");
+
+    return this;
+  }
+
+  @Override
+  public final Notification title(String value) {
+    title = Check.notNull(value, "value == null");
+
+    return null;
+  }
+
+  @Override
+  public final ElementContents render() {
+    return html;
+  }
 
 }

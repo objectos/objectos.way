@@ -20,6 +20,7 @@ module objectos.carbonated {
   exports objectos.carbonated;
 
   requires transitive objectos.css;
+  requires transitive objectos.html;
   requires objectos.lang;
   requires objectos.util;
 }
