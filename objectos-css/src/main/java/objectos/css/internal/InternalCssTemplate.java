@@ -16,6 +16,7 @@
 package objectos.css.internal;
 
 import objectos.css.AttributeOperator;
+import objectos.css.CssTemplate;
 import objectos.css.StyleSheet;
 import objectos.css.tmpl.Api;
 import objectos.css.tmpl.Api.BoxShadowDeclaration;
@@ -250,6 +251,17 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api().colorHex(value);
 
     return InternalInstruction.COLOR_HEX;
+  }
+
+  protected final void install(CssTemplate template) {
+    Check.notNull(template, "template == null");
+
+    InternalCssTemplate internal;
+    internal = template;
+
+    internal.api = api();
+
+    internal.definition();
   }
 
   protected final Api.DoubleLiteral l(double value) {

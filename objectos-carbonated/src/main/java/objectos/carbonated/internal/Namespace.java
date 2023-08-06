@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * @since 0.7.1
- */
-module objectos.carbonated {
-  exports objectos.carbonated;
+package objectos.carbonated.internal;
 
-  requires transitive objectos.css;
-  requires objectos.lang;
-  requires objectos.util;
+import objectos.carbonated.Palette;
+import objectos.carbonated.Typography;
+
+public final class Namespace implements Palette, Typography {
+
+  private Namespace() {}
+
 }

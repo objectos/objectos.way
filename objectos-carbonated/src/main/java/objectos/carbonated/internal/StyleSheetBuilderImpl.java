@@ -1,7 +1,17 @@
 /*
- * Copyright 2023 Objectos Software LTDA.
+ * Copyright (C) 2023 Objectos Software LTDA.
  *
- * Reprodução parcial ou total proibida.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package objectos.carbonated.internal;
 
@@ -10,12 +20,16 @@ import java.util.Set;
 import objectos.carbonated.Carbon;
 import objectos.carbonated.Carbon.StyleSheetBuilder;
 import objectos.carbonated.Theme;
+import objectos.carbonated.Typography;
 import objectos.css.CssTemplate;
 import objectos.css.StyleSheet;
+import objectos.util.GrowableList;
 
 public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.StyleSheetBuilder {
 
   private enum Feature {
+
+    NOTIFICATION,
 
     RESET,
 
@@ -25,14 +39,40 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
 
   private final Set<Feature> features = EnumSet.noneOf(Feature.class);
 
+  private GrowableList<Theme> themes;
+
   @Override
   public final StyleSheet build() {
     return compile();
   }
 
   @Override
+  public final StyleSheetBuilder notification() {
+    features.add(Feature.NOTIFICATION);
+
+    return this;
+  }
+
+  @Override
   public final StyleSheetBuilder reset() {
     features.add(Feature.RESET);
+
+    return this;
+  }
+
+  @Override
+  public final StyleSheetBuilder themes(Theme... values) {
+    if (themes == null) {
+      themes = new GrowableList<>();
+    }
+
+    // values implicit null-check
+    for (int i = 0; i < values.length; i++) {
+      Theme value;
+      value = values[i];
+
+      themes.addWithNullMessage(value, "values[", i, "] == null");
+    }
 
     return this;
   }
@@ -52,6 +92,16 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
 
     if (features.contains(Feature.TYPOGRAPHY)) {
       $typography();
+    }
+
+    if (themes != null) {
+      for (var theme : themes) {
+        install(theme);
+      }
+    }
+
+    if (features.contains(Feature.NOTIFICATION)) {
+      install(NotificationImpl.STYLES);
     }
   }
 
@@ -239,6 +289,55 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
 
   private void $typography() {
     style(
+      _root,
+
+      set(Typography.FONT_WEIGHT_LIGHT, l(300)),
+      set(Typography.FONT_WEIGHT_REGULAR, l(400)),
+      set(Typography.FONT_WEIGHT_SEMIBOLD, l(600)),
+
+      set(Typography.BODY_COMPACT_01_FONT_SIZE, rem(0.875)),
+      set(Typography.BODY_COMPACT_01_FONT_WEIGHT, l(400)),
+      set(Typography.BODY_COMPACT_01_LINE_HEIGHT, l(1.28572)),
+      set(Typography.BODY_COMPACT_01_LETTER_SPACING, px(0.16)),
+      set(Typography.BODY_01_FONT_SIZE, rem(0.875)),
+      set(Typography.BODY_01_FONT_WEIGHT, l(400)),
+      set(Typography.BODY_01_LINE_HEIGHT, l(1.42857)),
+      set(Typography.BODY_01_LETTER_SPACING, px(0.16)),
+      set(Typography.BODY_02_FONT_SIZE, rem(1)),
+      set(Typography.BODY_02_FONT_WEIGHT, l(400)),
+      set(Typography.BODY_02_LINE_HEIGHT, l(1.5)),
+      set(Typography.BODY_02_LETTER_SPACING, px(0)),
+      set(Typography.HEADING_COMPACT_01_FONT_SIZE, rem(0.875)),
+      set(Typography.HEADING_COMPACT_01_FONT_WEIGHT, l(600)),
+      set(Typography.HEADING_COMPACT_01_LINE_HEIGHT, l(1.28572)),
+      set(Typography.HEADING_COMPACT_01_LETTER_SPACING, px(0.16)),
+      set(Typography.HEADING_01_FONT_SIZE, rem(0.875)),
+      set(Typography.HEADING_01_FONT_WEIGHT, l(600)),
+      set(Typography.HEADING_01_LINE_HEIGHT, l(1.42857)),
+      set(Typography.HEADING_01_LETTER_SPACING, px(0.16)),
+      set(Typography.HEADING_02_FONT_SIZE, rem(1)),
+      set(Typography.HEADING_02_FONT_WEIGHT, l(600)),
+      set(Typography.HEADING_02_LINE_HEIGHT, l(1.5)),
+      set(Typography.HEADING_02_LETTER_SPACING, px(0)),
+      set(Typography.HEADING_03_FONT_SIZE, rem(1.25)),
+      set(Typography.HEADING_03_FONT_WEIGHT, l(400)),
+      set(Typography.HEADING_03_LINE_HEIGHT, l(1.4)),
+      set(Typography.HEADING_03_LETTER_SPACING, px(0)),
+      set(Typography.HEADING_04_FONT_SIZE, rem(1.75)),
+      set(Typography.HEADING_04_FONT_WEIGHT, l(400)),
+      set(Typography.HEADING_04_LINE_HEIGHT, l(1.28572)),
+      set(Typography.HEADING_04_LETTER_SPACING, px(0)),
+      set(Typography.HEADING_05_FONT_SIZE, rem(2)),
+      set(Typography.HEADING_05_FONT_WEIGHT, l(400)),
+      set(Typography.HEADING_05_LINE_HEIGHT, l(1.25)),
+      set(Typography.HEADING_05_LETTER_SPACING, px(0)),
+      set(Typography.HEADING_06_FONT_SIZE, rem(2.625)),
+      set(Typography.HEADING_06_FONT_WEIGHT, l(300)),
+      set(Typography.HEADING_06_LINE_HEIGHT, l(1.199)),
+      set(Typography.HEADING_06_LETTER_SPACING, px(0))
+    );
+
+    style(
       html,
 
       fontSize(pct(100))
@@ -247,7 +346,7 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
     style(
       body,
 
-      fontWeight(var(Theme.FONT_WEIGHT_REGULAR)),
+      fontWeight(var(Typography.FONT_WEIGHT_REGULAR)),
       fontFamily(sansSerif)
     //-moz-osx-font-smoothing: grayscale;
     //-webkit-font-smoothing: antialiased;
@@ -263,70 +362,70 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
     style(
       strong,
 
-      fontWeight(var(Theme.FONT_WEIGHT_SEMIBOLD))
+      fontWeight(var(Typography.FONT_WEIGHT_SEMIBOLD))
     );
 
     style(
       h1,
 
-      fontSize(var(Theme.HEADING_06_FONT_SIZE)),
-      fontWeight(var(Theme.HEADING_06_FONT_WEIGHT)),
-      letterSpacing(var(Theme.HEADING_06_LETTER_SPACING)),
-      lineHeight(var(Theme.HEADING_06_LINE_HEIGHT))
+      fontSize(var(Typography.HEADING_06_FONT_SIZE)),
+      fontWeight(var(Typography.HEADING_06_FONT_WEIGHT)),
+      letterSpacing(var(Typography.HEADING_06_LETTER_SPACING)),
+      lineHeight(var(Typography.HEADING_06_LINE_HEIGHT))
     );
 
     style(
       h2,
 
-      fontSize(var(Theme.HEADING_05_FONT_SIZE)),
-      fontWeight(var(Theme.HEADING_05_FONT_WEIGHT)),
-      letterSpacing(var(Theme.HEADING_05_LETTER_SPACING)),
-      lineHeight(var(Theme.HEADING_05_LINE_HEIGHT))
+      fontSize(var(Typography.HEADING_05_FONT_SIZE)),
+      fontWeight(var(Typography.HEADING_05_FONT_WEIGHT)),
+      letterSpacing(var(Typography.HEADING_05_LETTER_SPACING)),
+      lineHeight(var(Typography.HEADING_05_LINE_HEIGHT))
     );
 
     style(
       h3,
 
-      fontSize(var(Theme.HEADING_04_FONT_SIZE)),
-      fontWeight(var(Theme.HEADING_04_FONT_WEIGHT)),
-      letterSpacing(var(Theme.HEADING_04_LETTER_SPACING)),
-      lineHeight(var(Theme.HEADING_04_LINE_HEIGHT))
+      fontSize(var(Typography.HEADING_04_FONT_SIZE)),
+      fontWeight(var(Typography.HEADING_04_FONT_WEIGHT)),
+      letterSpacing(var(Typography.HEADING_04_LETTER_SPACING)),
+      lineHeight(var(Typography.HEADING_04_LINE_HEIGHT))
     );
 
     style(
       h4,
 
-      fontSize(var(Theme.HEADING_03_FONT_SIZE)),
-      fontWeight(var(Theme.HEADING_03_FONT_WEIGHT)),
-      letterSpacing(var(Theme.HEADING_03_LETTER_SPACING)),
-      lineHeight(var(Theme.HEADING_03_LINE_HEIGHT))
+      fontSize(var(Typography.HEADING_03_FONT_SIZE)),
+      fontWeight(var(Typography.HEADING_03_FONT_WEIGHT)),
+      letterSpacing(var(Typography.HEADING_03_LETTER_SPACING)),
+      lineHeight(var(Typography.HEADING_03_LINE_HEIGHT))
     );
 
     style(
       h5,
 
-      fontSize(var(Theme.HEADING_02_FONT_SIZE)),
-      fontWeight(var(Theme.HEADING_02_FONT_WEIGHT)),
-      letterSpacing(var(Theme.HEADING_02_LETTER_SPACING)),
-      lineHeight(var(Theme.HEADING_02_LINE_HEIGHT))
+      fontSize(var(Typography.HEADING_02_FONT_SIZE)),
+      fontWeight(var(Typography.HEADING_02_FONT_WEIGHT)),
+      letterSpacing(var(Typography.HEADING_02_LETTER_SPACING)),
+      lineHeight(var(Typography.HEADING_02_LINE_HEIGHT))
     );
 
     style(
       h6,
 
-      fontSize(var(Theme.HEADING_01_FONT_SIZE)),
-      fontWeight(var(Theme.HEADING_01_FONT_WEIGHT)),
-      letterSpacing(var(Theme.HEADING_01_LETTER_SPACING)),
-      lineHeight(var(Theme.HEADING_01_LINE_HEIGHT))
+      fontSize(var(Typography.HEADING_01_FONT_SIZE)),
+      fontWeight(var(Typography.HEADING_01_FONT_WEIGHT)),
+      letterSpacing(var(Typography.HEADING_01_LETTER_SPACING)),
+      lineHeight(var(Typography.HEADING_01_LINE_HEIGHT))
     );
 
     style(
       p,
 
-      fontSize(var(Theme.BODY_02_FONT_SIZE)),
-      fontWeight(var(Theme.BODY_02_FONT_WEIGHT)),
-      letterSpacing(var(Theme.BODY_02_LETTER_SPACING)),
-      lineHeight(var(Theme.BODY_02_LINE_HEIGHT))
+      fontSize(var(Typography.BODY_02_FONT_SIZE)),
+      fontWeight(var(Typography.BODY_02_FONT_WEIGHT)),
+      letterSpacing(var(Typography.BODY_02_LETTER_SPACING)),
+      lineHeight(var(Typography.BODY_02_LINE_HEIGHT))
     );
 
     style(
