@@ -69,7 +69,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void customPropertyBegin(CustomProperty<?> property) {
-    declarationBeginCommon();
+    declarationBeginCommon(ByteProto.DECLARATION);
 
     // we store the property name
     String name;
@@ -94,7 +94,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void declarationBegin(Property name) {
-    declarationBeginCommon();
+    declarationBeginCommon(ByteProto.DECLARATION);
 
     mainAdd(
       ByteProto.PROPERTY_STANDARD,
@@ -107,178 +107,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void declarationEnd() {
-    // we iterate over each value added via declarationValue(PropertyValue)
-    int index;
-    index = auxStart;
-
-    int indexMax;
-    indexMax = auxIndex;
-
-    int contents;
-    contents = mainContents;
-
-    loop: while (index < indexMax) {
-      byte mark;
-      mark = aux[index++];
-
-      switch (mark) {
-        case ByteProto.COMMA -> mainAdd(mark);
-
-        case ByteProto.DECLARATION -> {
-          while (true) {
-            byte proto;
-            proto = main[contents];
-
-            switch (proto) {
-              case ByteProto.DECLARATION -> {
-                // keep the start index handy
-                int startIndex;
-                startIndex = contents;
-
-                // mark this declaration
-                main[contents++] = ByteProto.MARKED;
-
-                // decode the length
-                byte len0;
-                len0 = main[contents++];
-
-                byte len1;
-                len1 = main[contents++];
-
-                int length;
-                length = Bytes.decodeFixedLength(len0, len1);
-
-                // point to next element
-                contents += length;
-
-                // ensure main can hold least 3 elements
-                // 0   - ByteProto
-                // 1-2 - variable length
-                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
-                main[mainIndex++] = proto;
-
-                length = mainIndex - startIndex;
-
-                mainIndex = Bytes.varInt(main, mainIndex, length);
-
-                continue loop;
-              }
-
-              case ByteProto.MARKED -> {
-                contents++;
-
-                // decode the length
-                byte len0;
-                len0 = main[contents++];
-
-                byte len1;
-                len1 = main[contents++];
-
-                int length;
-                length = Bytes.decodeFixedLength(len0, len1);
-
-                // point to next element
-                contents += length;
-              }
-
-              case ByteProto.MARKED3 -> contents += 3;
-
-              case ByteProto.MARKED5 -> contents += 5;
-
-              case ByteProto.MARKED6 -> contents += 6;
-
-              case ByteProto.MARKED9 -> contents += 9;
-
-              case ByteProto.MARKED10 -> contents += 10;
-
-              default -> {
-                throw new UnsupportedOperationException(
-                  "Implement me :: proto=" + proto
-                );
-              }
-            }
-          }
-        }
-
-        case ByteProto.INTERNAL -> {
-          // keep startIndex handy
-          int startIndex;
-          startIndex = contents;
-
-          // decode the element's length
-          byte lengthByte;
-          lengthByte = aux[index++];
-
-          int length;
-          length = Bytes.toInt(lengthByte, 0);
-
-          // point to next element
-          contents += length;
-
-          // keep the old proto handy
-          byte proto;
-          proto = main[startIndex];
-
-          // mark this element
-          main[startIndex] = ByteProto.markedOf(length);
-
-          // ensure main can hold at least 3 elements
-          // 0   - ByteProto
-          // 1-2 - variable length
-          main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
-          // byte proto
-          main[mainIndex++] = proto;
-
-          // variable length
-          length = mainIndex - startIndex;
-
-          mainIndex = Bytes.varInt(main, mainIndex, length);
-        }
-
-        case ByteProto.RAW,
-             ByteProto.STANDARD_NAME -> {
-          mainAdd(mark, aux[index++], aux[index++]);
-        }
-
-        case ByteProto.ZERO -> {
-          mainAdd(mark);
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: mark=" + mark
-        );
-      }
-    }
-
-    // ensure main can hold 4 more elements
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
-
-    // mark the end
-    main[mainIndex++] = ByteProto.DECLARATION_END;
-
-    // store the distance to the contents (yes, reversed)
-    int length;
-    length = mainIndex - mainContents - 1;
-
-    mainIndex = Bytes.varIntR(main, mainIndex, length);
-
-    // trailer proto
-    main[mainIndex++] = ByteProto.DECLARATION;
-
-    // set the end index of the declaration
-    length = mainIndex - mainStart;
-
-    // skip ByteProto.FOO + len0 + len1
-    length -= 3;
-
-    // we skip the first byte proto
-    main[mainStart + 1] = Bytes.len0(length);
-    main[mainStart + 2] = Bytes.len1(length);
-
-    // we clear the aux list
-    auxIndex = auxStart;
+    declarationEndCommon(ByteProto.DECLARATION, ByteProto.DECLARATION_END);
   }
 
   @Override
@@ -534,6 +363,39 @@ class Compiler01 extends CssTemplateApi {
       );
     }
 
+    else if (value == InternalInstruction.VAR_FUNCTION) {
+      // @ ByteProto
+      mainContents--;
+
+      byte proto;
+      proto = main[mainContents--];
+
+      switch (proto) {
+        case ByteProto.VAR_FUNCTION -> {
+          byte len0;
+          len0 = main[mainContents--];
+
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = main[mainContents--];
+
+            length = Bytes.toVarInt(len0, len1);
+          }
+
+          mainContents -= length;
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+
+      auxAdd(proto);
+    }
+
     else if (value instanceof InternalInstruction internal) {
       int length;
       length = internal.length;
@@ -695,7 +557,10 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
-  public final void varFunction(CustomProperty<?> variable) {
+  public final void varFunctionBegin(CustomProperty<?> variable) {
+    declarationBeginCommon(ByteProto.VAR_FUNCTION);
+
+    // we store the variable name
     String name;
     name = variable.cssName;
 
@@ -703,11 +568,17 @@ class Compiler01 extends CssTemplateApi {
     nameIndex = objectAdd(name);
 
     mainAdd(
-      ByteProto.VAR0,
+      ByteProto.PROPERTY_CUSTOM,
 
+      // name
       Bytes.two0(nameIndex),
       Bytes.two1(nameIndex)
     );
+  }
+
+  @Override
+  public final void varFunctionEnd() {
+    declarationEndCommon(ByteProto.VAR_FUNCTION, ByteProto.VAR_FUNCTION_END);
   }
 
   final void auxAdd(byte b0) {
@@ -1116,7 +987,7 @@ class Compiler01 extends CssTemplateApi {
     auxIndex = auxStart;
   }
 
-  private void declarationBeginCommon() {
+  private void declarationBeginCommon(byte proto) {
     // we mark the start of our aux list
     auxStart = auxIndex;
 
@@ -1126,12 +997,189 @@ class Compiler01 extends CssTemplateApi {
     mainContents = mainStart = mainIndex;
 
     mainAdd(
-      ByteProto.DECLARATION,
+      proto,
 
       // length takes 2 bytes
       ByteProto.NULL,
       ByteProto.NULL
     );
+  }
+
+  private void declarationEndCommon(byte trailerProto, byte endProto) {
+    // we iterate over each value added via declarationValue(PropertyValue)
+    int index;
+    index = auxStart;
+
+    int indexMax;
+    indexMax = auxIndex;
+
+    int contents;
+    contents = mainContents;
+
+    loop: while (index < indexMax) {
+      byte mark;
+      mark = aux[index++];
+
+      switch (mark) {
+        case ByteProto.COMMA -> mainAdd(mark);
+
+        case ByteProto.DECLARATION,
+             ByteProto.VAR_FUNCTION -> {
+          while (true) {
+            byte proto;
+            proto = main[contents];
+
+            switch (proto) {
+              case ByteProto.DECLARATION,
+                   ByteProto.VAR_FUNCTION -> {
+                // keep the start index handy
+                int startIndex;
+                startIndex = contents;
+
+                // mark this declaration
+                main[contents++] = ByteProto.MARKED;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
+
+                // point to next element
+                contents += length;
+
+                // ensure main can hold least 3 elements
+                // 0   - ByteProto
+                // 1-2 - variable length
+                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+                main[mainIndex++] = proto;
+
+                length = mainIndex - startIndex;
+
+                mainIndex = Bytes.varInt(main, mainIndex, length);
+
+                continue loop;
+              }
+
+              case ByteProto.MARKED -> {
+                contents++;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
+
+                // point to next element
+                contents += length;
+              }
+
+              case ByteProto.MARKED3 -> contents += 3;
+
+              case ByteProto.MARKED5 -> contents += 5;
+
+              case ByteProto.MARKED6 -> contents += 6;
+
+              case ByteProto.MARKED9 -> contents += 9;
+
+              case ByteProto.MARKED10 -> contents += 10;
+
+              default -> {
+                throw new UnsupportedOperationException(
+                  "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
+        }
+
+        case ByteProto.INTERNAL -> {
+          // keep startIndex handy
+          int startIndex;
+          startIndex = contents;
+
+          // decode the element's length
+          byte lengthByte;
+          lengthByte = aux[index++];
+
+          int length;
+          length = Bytes.toInt(lengthByte, 0);
+
+          // point to next element
+          contents += length;
+
+          // keep the old proto handy
+          byte proto;
+          proto = main[startIndex];
+
+          // mark this element
+          main[startIndex] = ByteProto.markedOf(length);
+
+          // ensure main can hold at least 3 elements
+          // 0   - ByteProto
+          // 1-2 - variable length
+          main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+          // byte proto
+          main[mainIndex++] = proto;
+
+          // variable length
+          length = mainIndex - startIndex;
+
+          mainIndex = Bytes.varInt(main, mainIndex, length);
+        }
+
+        case ByteProto.RAW,
+             ByteProto.STANDARD_NAME -> {
+          mainAdd(mark, aux[index++], aux[index++]);
+        }
+
+        case ByteProto.ZERO -> {
+          mainAdd(mark);
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: mark=" + mark
+        );
+      }
+    }
+
+    // ensure main can hold 4 more elements
+    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+
+    // mark the end
+    main[mainIndex++] = endProto;
+
+    // store the distance to the contents (yes, reversed)
+    int length;
+    length = mainIndex - mainContents - 1;
+
+    mainIndex = Bytes.varIntR(main, mainIndex, length);
+
+    // trailer proto
+    main[mainIndex++] = trailerProto;
+
+    // set the end index of the declaration
+    length = mainIndex - mainStart;
+
+    // skip ByteProto.FOO + len0 + len1
+    length -= 3;
+
+    // we skip the first byte proto
+    main[mainStart + 1] = Bytes.len0(length);
+    main[mainStart + 2] = Bytes.len1(length);
+
+    // we clear the aux list
+    auxIndex = auxStart;
   }
 
   private void mainAdd(byte b0) {

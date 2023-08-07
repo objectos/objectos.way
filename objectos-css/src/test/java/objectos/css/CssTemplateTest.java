@@ -85,6 +85,35 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  [#487] p {
+    color: var(--text-color, green);
+  }
+  """)
+  public void customProperty03() {
+    CustomProperty<ColorValue> textColor;
+    textColor = CustomProperty.named("--text-color");
+
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            p,
+
+            color(var(textColor, green))
+          );
+        }
+      },
+
+      """
+      p {
+        color: var(--text-color, green);
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#488] external length values
   """)
   public void length() {

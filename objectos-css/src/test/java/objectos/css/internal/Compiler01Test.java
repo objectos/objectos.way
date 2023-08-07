@@ -1032,7 +1032,8 @@ public class Compiler01Test {
 
     compiler.compilationBegin();
 
-    compiler.varFunction(textColor);
+    compiler.varFunctionBegin(textColor);
+    compiler.varFunctionEnd();
 
     compiler.declarationBegin(Property.COLOR);
     compiler.propertyValue(InternalInstruction.VAR_FUNCTION);
@@ -1048,9 +1049,15 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED3,
+      ByteProto.MARKED,
+      Bytes.len0(6),
+      Bytes.len1(6),
+      ByteProto.PROPERTY_CUSTOM,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteProto.VAR_FUNCTION_END,
+      Bytes.int0(6),
+      ByteProto.VAR_FUNCTION,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -1058,10 +1065,10 @@ public class Compiler01Test {
       ByteProto.PROPERTY_STANDARD,
       Bytes.prop0(Property.COLOR),
       Bytes.prop1(Property.COLOR),
-      ByteProto.VAR0,
-      Bytes.int0(10),
+      ByteProto.VAR_FUNCTION,
+      Bytes.int0(16),
       ByteProto.DECLARATION_END,
-      Bytes.int0(11),
+      Bytes.int0(17),
       ByteProto.DECLARATION,
 
       ByteProto.STYLE_RULE,
@@ -1072,7 +1079,7 @@ public class Compiler01Test {
       ByteProto.DECLARATION,
       Bytes.int0(17),
       ByteProto.STYLE_RULE_END,
-      Bytes.int0(21),
+      Bytes.int0(27),
       ByteProto.STYLE_RULE
     );
   }

@@ -193,7 +193,8 @@ final class Compiler02 extends Compiler01 {
           }
         }
 
-        case ByteProto.DECLARATION_END -> {
+        case ByteProto.DECLARATION_END,
+             ByteProto.VAR_FUNCTION_END -> {
           break loop;
         }
 
@@ -445,12 +446,60 @@ final class Compiler02 extends Compiler01 {
           auxAdd(ByteCode.URL, main[mainContents++], main[mainContents++]);
         }
 
-        case ByteProto.VAR0 -> {
-          valueCount = spaceIfNecessary(valueCount);
+        case ByteProto.VAR_FUNCTION -> {
+          // keep index handy
+          int thisIndex;
+          thisIndex = index;
 
-          index = jmp(index);
+          // decode length
+          byte len0;
+          len0 = main[index++];
 
-          auxAdd(ByteCode.VAR, main[mainContents++], main[mainContents++], ByteCode.PARENS_CLOSE);
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = main[index++];
+
+            length = Bytes.toVarInt(len0, len1);
+          }
+
+          // compute function index
+          int elemIndex;
+          elemIndex = thisIndex - length;
+
+          // skip ByteProto
+          elemIndex += 1;
+
+          // skip end length
+          elemIndex += 2;
+
+          auxAdd(ByteCode.VAR, ByteCode.PARENS_OPEN);
+
+          byte propertyKind;
+          propertyKind = main[elemIndex++];
+
+          byte b0;
+          b0 = main[elemIndex++];
+
+          byte b1;
+          b1 = main[elemIndex++];
+
+          byte propertyByteCode;
+          propertyByteCode = switch (propertyKind) {
+            case ByteProto.PROPERTY_CUSTOM -> ByteCode.PROPERTY_CUSTOM;
+
+            default -> throw new UnsupportedOperationException(
+              "Implement me :: propertyKind=" + propertyKind
+            );
+          };
+
+          auxAdd(propertyByteCode, b0, b1);
+
+          declaration(elemIndex);
+
+          auxAdd(ByteCode.PARENS_CLOSE);
         }
 
         case ByteProto.ZERO -> {

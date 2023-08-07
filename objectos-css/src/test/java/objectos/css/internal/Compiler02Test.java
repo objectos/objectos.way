@@ -852,7 +852,8 @@ public class Compiler02Test {
 
     compiler.compilationBegin();
 
-    compiler.varFunction(textColor);
+    compiler.varFunctionBegin(textColor);
+    compiler.varFunctionEnd();
 
     compiler.declarationBegin(Property.COLOR);
     compiler.propertyValue(InternalInstruction.VAR_FUNCTION);
@@ -883,6 +884,8 @@ public class Compiler02Test {
       ByteCode.COLON,
       ByteCode.SPACE_OPTIONAL,
       ByteCode.VAR,
+      ByteCode.PARENS_OPEN,
+      ByteCode.PROPERTY_CUSTOM,
       Bytes.two0(0),
       Bytes.two1(0),
       ByteCode.PARENS_CLOSE,

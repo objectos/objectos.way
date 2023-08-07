@@ -67,6 +67,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("DECLARATION_END");
     value("PROPERTY_CUSTOM");
     value("PROPERTY_STANDARD");
+    value("VAR_FUNCTION");
+    value("VAR_FUNCTION_END");
 
     comment("property values");
 
@@ -85,7 +87,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("RAW");
     value("STANDARD_NAME"); // keyword
     value("URL");
-    value("VAR0");
     value("ZERO");
   }
 }

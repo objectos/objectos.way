@@ -374,7 +374,28 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     CssTemplateApi api;
     api = api();
 
-    api.varFunction(variable);
+    api.varFunctionBegin(variable);
+
+    api.varFunctionEnd();
+
+    return (T) InternalInstruction.VAR_FUNCTION;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected final <T extends PropertyValue> T var(CustomProperty<T> variable, T defaultValue) {
+    Check.notNull(variable, "variable == null");
+    Check.notNull(defaultValue, "defaultValue == null");
+
+    CssTemplateApi api;
+    api = api();
+
+    api.varFunctionBegin(variable);
+
+    api.propertyValueComma();
+
+    api.propertyValue(defaultValue);
+
+    api.varFunctionEnd();
 
     return (T) InternalInstruction.VAR_FUNCTION;
   }
