@@ -2843,6 +2843,49 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration paddingBlock(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_BLOCK, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingBlock(LengthPercentage both) {
+    Check.notNull(both, "both == null");
+    declaration(Property.PADDING_BLOCK, both);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingBlock(LengthPercentage start, LengthPercentage end) {
+    Check.notNull(start, "start == null");
+    Check.notNull(end, "end == null");
+    declaration(Property.PADDING_BLOCK, start, end);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingBlockEnd(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_BLOCK_END, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingBlockEnd(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_BLOCK_END, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingBlockStart(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_BLOCK_START, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingBlockStart(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_BLOCK_START, value);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration paddingBottom(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.PADDING_BOTTOM, value);
@@ -2852,6 +2895,49 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration paddingBottom(LengthPercentage value) {
     Check.notNull(value, "value == null");
     declaration(Property.PADDING_BOTTOM, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingInline(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_INLINE, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingInline(LengthPercentage both) {
+    Check.notNull(both, "both == null");
+    declaration(Property.PADDING_INLINE, both);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingInline(LengthPercentage start, LengthPercentage end) {
+    Check.notNull(start, "start == null");
+    Check.notNull(end, "end == null");
+    declaration(Property.PADDING_INLINE, start, end);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingInlineEnd(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_INLINE_END, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingInlineEnd(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_INLINE_END, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingInlineStart(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_INLINE_START, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration paddingInlineStart(LengthPercentage value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.PADDING_INLINE_START, value);
     return InternalInstruction.INSTANCE;
   }
 

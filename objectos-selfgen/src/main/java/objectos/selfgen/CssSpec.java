@@ -169,6 +169,8 @@ public final class CssSpec extends CssSelfGen {
     // P
 
     padding();
+    paddingBlock();
+    paddingInline();
     pointerEvents();
     position();
 
@@ -1936,6 +1938,54 @@ public final class CssSpec extends CssSelfGen {
         sig(padValue, "value")
       );
     }
+  }
+
+  private void paddingBlock() {
+    property(
+      "padding-block",
+
+      sig(globalKeyword, "value"),
+      sig(lengthPercentage, "both"),
+      sig(lengthPercentage, "start", lengthPercentage, "end")
+    );
+
+    property(
+      "padding-block-end",
+
+      sig(globalKeyword, "value"),
+      sig(lengthPercentage, "value")
+    );
+
+    property(
+      "padding-block-start",
+
+      sig(globalKeyword, "value"),
+      sig(lengthPercentage, "value")
+    );
+  }
+
+  private void paddingInline() {
+    property(
+      "padding-inline",
+
+      sig(globalKeyword, "value"),
+      sig(lengthPercentage, "both"),
+      sig(lengthPercentage, "start", lengthPercentage, "end")
+    );
+
+    property(
+      "padding-inline-end",
+
+      sig(globalKeyword, "value"),
+      sig(lengthPercentage, "value")
+    );
+
+    property(
+      "padding-inline-start",
+
+      sig(globalKeyword, "value"),
+      sig(lengthPercentage, "value")
+    );
   }
 
   private void pointerEvents() {

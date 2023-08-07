@@ -164,7 +164,19 @@ public enum Property implements PropertyName {
 
   PADDING("padding"),
 
+  PADDING_BLOCK("padding-block"),
+
+  PADDING_BLOCK_END("padding-block-end"),
+
+  PADDING_BLOCK_START("padding-block-start"),
+
   PADDING_BOTTOM("padding-bottom"),
+
+  PADDING_INLINE("padding-inline"),
+
+  PADDING_INLINE_END("padding-inline-end"),
+
+  PADDING_INLINE_START("padding-inline-start"),
 
   PADDING_LEFT("padding-left"),
 

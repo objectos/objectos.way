@@ -1700,6 +1700,80 @@ public class CssTemplateTest {
   }
 
   @Test(description = """
+  - padding-block
+  """)
+  public void propertyPaddingBlock() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            p,
+
+            paddingBlock(px(10), px(20)),
+            paddingBlock(em(1), $0),
+            paddingBlock(px(10)),
+            paddingBlock(inherit),
+
+            paddingBlockStart(px(10)),
+            paddingBlockStart($0),
+            paddingBlockStart(inherit),
+
+            paddingBlockEnd(rem(1)),
+            paddingBlockEnd($0),
+            paddingBlockEnd(inherit)
+          );
+        }
+      },
+
+      """
+      p {
+        padding-block: 10px 20px;
+        padding-block: 1em 0;
+        padding-block: 10px;
+        padding-block: inherit;
+        padding-block-start: 10px;
+        padding-block-start: 0;
+        padding-block-start: inherit;
+        padding-block-end: 1rem;
+        padding-block-end: 0;
+        padding-block-end: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
+  - padding-inline
+  """)
+  public void propertyPaddingInline() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            p,
+
+            paddingInline(px(10), px(20)),
+            paddingInline(em(1), $0),
+            paddingInline(px(10)),
+            paddingInline(inherit)
+          );
+        }
+      },
+
+      """
+      p {
+        padding-inline: 10px 20px;
+        padding-inline: 1em 0;
+        padding-inline: 10px;
+        padding-inline: inherit;
+      }
+      """
+    );
+  }
+
+  @Test(description = """
   [#404] Preflight 10
 
   - position
