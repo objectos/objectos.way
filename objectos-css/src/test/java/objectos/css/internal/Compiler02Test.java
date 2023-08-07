@@ -156,8 +156,8 @@ public class Compiler02Test {
     compiler.length(1.5, LengthUnit.REM);
 
     compiler.declarationBegin(Property.MARGIN);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
-    compiler.propertyValue(InternalInstruction.LENGTH_DOUBLE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -327,7 +327,7 @@ public class Compiler02Test {
     compiler.url("foo");
 
     compiler.declarationBegin(Property.LIST_STYLE_IMAGE);
-    compiler.propertyValue(InternalInstruction.URL);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -376,7 +376,7 @@ public class Compiler02Test {
     compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -425,7 +425,7 @@ public class Compiler02Test {
     compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.propertyValueComma();
     compiler.propertyValue(StandardName.sansSerif);
     compiler.declarationEnd();
@@ -480,7 +480,7 @@ public class Compiler02Test {
     compiler.colorHex("#9ca3af");
 
     compiler.declarationBegin(Property.COLOR);
-    compiler.propertyValue(InternalInstruction.COLOR_HEX);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -593,7 +593,7 @@ public class Compiler02Test {
     compiler.length(640, LengthUnit.PX);
 
     compiler.declarationBegin(Property.MIN_WIDTH);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.declarationBegin(Property.DISPLAY);
@@ -704,8 +704,8 @@ public class Compiler02Test {
     compiler.length(-16, LengthUnit.PX);
 
     compiler.declarationBegin(Property.BOX_SHADOW);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.propertyValue(StandardName.teal);
     compiler.declarationEnd();
 
@@ -713,8 +713,8 @@ public class Compiler02Test {
     compiler.length(5, LengthUnit.PX);
 
     compiler.declarationBegin(Property.BOX_SHADOW);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.propertyValue(StandardName.black);
     compiler.declarationEnd();
 
@@ -856,7 +856,7 @@ public class Compiler02Test {
     compiler.varFunctionEnd();
 
     compiler.declarationBegin(Property.COLOR);
-    compiler.propertyValue(InternalInstruction.VAR_FUNCTION);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -973,7 +973,7 @@ public class Compiler02Test {
     compiler.literalInt(600);
 
     compiler.declarationBegin(Property.FONT_WEIGHT);
-    compiler.propertyValue(InternalInstruction.LITERAL_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();

@@ -391,6 +391,18 @@ import objectos.css.type.ZIndexValue;
 import objectos.css.type.Zero;
 
 abstract class GeneratedStyleSheet {
+  protected static final TypeSelector input = Css.input;
+
+  protected static final TypeSelector path = Css.path;
+
+  protected static final TypeSelector em = Css.em;
+
+  protected static final TypeSelector menu = Css.menu;
+
+  protected static final TypeSelector article = Css.article;
+
+  protected static final TypeSelector blockquote = Css.blockquote;
+
   protected static final TypeSelector clipPath = Css.clipPath;
 
   protected static final TypeSelector small = Css.small;
@@ -524,18 +536,6 @@ abstract class GeneratedStyleSheet {
   protected static final TypeSelector section = Css.section;
 
   protected static final TypeSelector pre = Css.pre;
-
-  protected static final TypeSelector input = Css.input;
-
-  protected static final TypeSelector path = Css.path;
-
-  protected static final TypeSelector em = Css.em;
-
-  protected static final TypeSelector menu = Css.menu;
-
-  protected static final TypeSelector article = Css.article;
-
-  protected static final TypeSelector blockquote = Css.blockquote;
 
   protected static final PseudoClassSelector ACTIVE = Css.ACTIVE;
 

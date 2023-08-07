@@ -52,7 +52,9 @@ class Compiler01 extends CssTemplateApi {
       ByteProto.COLOR_HEX,
 
       Bytes.two0(index),
-      Bytes.two1(index)
+      Bytes.two1(index),
+
+      ByteProto.INTERNAL4
     );
   }
 
@@ -69,7 +71,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void customPropertyBegin(CustomProperty<?> property) {
-    declarationBeginCommon(ByteProto.DECLARATION);
+    commonBegin(ByteProto.DECLARATION);
 
     // we store the property name
     String name;
@@ -94,7 +96,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void declarationBegin(Property name) {
-    declarationBeginCommon(ByteProto.DECLARATION);
+    commonBegin(ByteProto.DECLARATION);
 
     mainAdd(
       ByteProto.PROPERTY_STANDARD,
@@ -107,7 +109,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void declarationEnd() {
-    declarationEndCommon(ByteProto.DECLARATION, ByteProto.DECLARATION_END);
+    declarationEndCommon();
   }
 
   @Override
@@ -119,7 +121,7 @@ class Compiler01 extends CssTemplateApi {
     proto = main[mainContents--];
 
     switch (proto) {
-      case ByteProto.DECLARATION -> {
+      case ByteProto.INTERNAL -> {
         byte len0;
         len0 = main[mainContents--];
 
@@ -207,7 +209,9 @@ class Compiler01 extends CssTemplateApi {
       Bytes.long5(bits),
       Bytes.long6(bits),
       Bytes.long7(bits),
-      (byte) unitOrdinal
+      (byte) unitOrdinal,
+
+      ByteProto.INTERNAL11
     );
   }
 
@@ -223,7 +227,9 @@ class Compiler01 extends CssTemplateApi {
       Bytes.int1(value),
       Bytes.int2(value),
       Bytes.int3(value),
-      (byte) unitOrdinal
+      (byte) unitOrdinal,
+
+      ByteProto.INTERNAL7
     );
   }
 
@@ -242,7 +248,9 @@ class Compiler01 extends CssTemplateApi {
       Bytes.long4(bits),
       Bytes.long5(bits),
       Bytes.long6(bits),
-      Bytes.long7(bits)
+      Bytes.long7(bits),
+
+      ByteProto.INTERNAL10
     );
   }
 
@@ -254,7 +262,9 @@ class Compiler01 extends CssTemplateApi {
       Bytes.int0(value),
       Bytes.int1(value),
       Bytes.int2(value),
-      Bytes.int3(value)
+      Bytes.int3(value),
+
+      ByteProto.INTERNAL6
     );
   }
 
@@ -267,7 +277,9 @@ class Compiler01 extends CssTemplateApi {
       ByteProto.LITERAL_STRING,
 
       Bytes.two0(index),
-      Bytes.two1(index)
+      Bytes.two1(index),
+
+      ByteProto.INTERNAL4
     );
   }
 
@@ -283,7 +295,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void mediaRuleEnd() {
-    commonEnd(ByteProto.MEDIA_RULE, ByteProto.MEDIA_RULE_END);
+    commonEnd();
   }
 
   @Override
@@ -301,7 +313,9 @@ class Compiler01 extends CssTemplateApi {
       Bytes.long4(bits),
       Bytes.long5(bits),
       Bytes.long6(bits),
-      Bytes.long7(bits)
+      Bytes.long7(bits),
+
+      ByteProto.INTERNAL10
     );
   }
 
@@ -313,7 +327,9 @@ class Compiler01 extends CssTemplateApi {
       Bytes.int0(value),
       Bytes.int1(value),
       Bytes.int2(value),
-      Bytes.int3(value)
+      Bytes.int3(value),
+
+      ByteProto.INTERNAL6
     );
   }
 
@@ -326,7 +342,7 @@ class Compiler01 extends CssTemplateApi {
     proto = main[mainContents--];
 
     switch (proto) {
-      case ByteProto.DECLARATION -> {
+      case ByteProto.INTERNAL -> {
         byte len0;
         len0 = main[mainContents--];
 
@@ -353,121 +369,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void propertyValue(Api.PropertyValue value) {
-    if (value instanceof StandardName name) {
-      // value is a keyword like color: currentcolor; or display: block;
-      // store the enum ordinal
-      auxAdd(
-        ByteProto.STANDARD_NAME,
-        Bytes.name0(name),
-        Bytes.name1(name)
-      );
-    }
-
-    else if (value == InternalInstruction.VAR_FUNCTION) {
-      // @ ByteProto
-      mainContents--;
-
-      byte proto;
-      proto = main[mainContents--];
-
-      switch (proto) {
-        case ByteProto.VAR_FUNCTION -> {
-          byte len0;
-          len0 = main[mainContents--];
-
-          int length;
-          length = len0;
-
-          if (length < 0) {
-            byte len1;
-            len1 = main[mainContents--];
-
-            length = Bytes.toVarInt(len0, len1);
-          }
-
-          mainContents -= length;
-        }
-
-        default -> throw new UnsupportedOperationException(
-          "Implement me :: proto=" + proto
-        );
-      }
-
-      auxAdd(proto);
-    }
-
-    else if (value instanceof InternalInstruction internal) {
-      int length;
-      length = internal.length;
-
-      if (length < 0) {
-        throw new UnsupportedOperationException(
-          "Implement me :: internal=" + internal.name()
-        );
-      }
-
-      mainContents -= length;
-
-      if (length > 255) {
-        throw new AssertionError(
-          "Length is too large. Cannot store it in 1 byte."
-        );
-      }
-
-      auxAdd(ByteProto.INTERNAL, (byte) length);
-    }
-
-    else if (value instanceof InternalZero) {
-      auxAdd(ByteProto.ZERO);
-    }
-
-    else if (value instanceof InternalColor color) {
-      String raw;
-      raw = color.raw;
-
-      int rawIndex;
-      rawIndex = objectAdd(raw);
-
-      auxAdd(
-        ByteProto.RAW,
-        Bytes.two0(rawIndex),
-        Bytes.two1(rawIndex)
-      );
-    }
-
-    else if (value instanceof InternalLength length) {
-      String raw;
-      raw = length.raw;
-
-      int rawIndex;
-      rawIndex = objectAdd(raw);
-
-      auxAdd(
-        ByteProto.RAW,
-        Bytes.two0(rawIndex),
-        Bytes.two1(rawIndex)
-      );
-    }
-
-    else if (value instanceof InternalPercentage percentage) {
-      String raw;
-      raw = percentage.raw;
-
-      int rawIndex;
-      rawIndex = objectAdd(raw);
-
-      auxAdd(
-        ByteProto.RAW,
-        Bytes.two0(rawIndex),
-        Bytes.two1(rawIndex)
-      );
-    }
-
-    else {
-      throw new UnsupportedOperationException(
-        "Implement me :: type=" + value.getClass()
-      );
-    }
+    commonElement(value);
   }
 
   @Override
@@ -534,13 +436,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void styleRuleEnd() {
-    byte trailerProto;
-    trailerProto = ByteProto.STYLE_RULE;
-
-    byte endProto;
-    endProto = ByteProto.STYLE_RULE_END;
-
-    commonEnd(trailerProto, endProto);
+    commonEnd();
   }
 
   @Override
@@ -552,13 +448,15 @@ class Compiler01 extends CssTemplateApi {
       ByteProto.URL,
 
       Bytes.two0(index),
-      Bytes.two1(index)
+      Bytes.two1(index),
+
+      ByteProto.INTERNAL4
     );
   }
 
   @Override
   public final void varFunctionBegin(CustomProperty<?> variable) {
-    declarationBeginCommon(ByteProto.VAR_FUNCTION);
+    commonBegin(ByteProto.VAR_FUNCTION);
 
     // we store the variable name
     String name;
@@ -578,7 +476,7 @@ class Compiler01 extends CssTemplateApi {
 
   @Override
   public final void varFunctionEnd() {
-    declarationEndCommon(ByteProto.VAR_FUNCTION, ByteProto.VAR_FUNCTION_END);
+    declarationEndCommon();
   }
 
   final void auxAdd(byte b0) {
@@ -677,8 +575,8 @@ class Compiler01 extends CssTemplateApi {
     );
   }
 
-  private void commonElement(Object element) {
-    if (element instanceof StandardName name) {
+  private void commonElement(Object value) {
+    if (value instanceof StandardName name) {
       // element is a selector name
       // store the enum ordinal
       auxAdd(
@@ -688,47 +586,7 @@ class Compiler01 extends CssTemplateApi {
       );
     }
 
-    else if (element instanceof ClassSelector selector) {
-      String string;
-      string = selector.toString();
-
-      int index;
-      index = objectAdd(string);
-
-      auxAdd(
-        ByteProto.SELECTOR_CLASS,
-        Bytes.two0(index),
-        Bytes.two1(index)
-      );
-    }
-
-    else if (element instanceof StandardPseudoClassSelector selector) {
-      auxAdd(
-        ByteProto.SELECTOR_PSEUDO_CLASS,
-        (byte) selector.ordinal()
-      );
-    }
-
-    else if (element instanceof StandardPseudoElementSelector selector) {
-      auxAdd(
-        ByteProto.SELECTOR_PSEUDO_ELEMENT,
-        (byte) selector.ordinal()
-      );
-    }
-
-    else if (element instanceof StandardTypeSelector selector) {
-      auxAdd(ByteProto.SELECTOR_TYPE);
-      auxVarInt(selector.ordinal());
-    }
-
-    else if (element instanceof Combinator combinator) {
-      auxAdd(
-        ByteProto.SELECTOR_COMBINATOR,
-        (byte) combinator.ordinal()
-      );
-    }
-
-    else if (element == InternalInstruction.INSTANCE) {
+    else if (value == InternalInstruction.INSTANCE) {
       // @ ByteProto
       mainContents--;
 
@@ -736,8 +594,7 @@ class Compiler01 extends CssTemplateApi {
       proto = main[mainContents--];
 
       switch (proto) {
-        case ByteProto.DECLARATION,
-             ByteProto.STYLE_RULE -> {
+        case ByteProto.INTERNAL -> {
           byte len0;
           len0 = main[mainContents--];
 
@@ -756,7 +613,15 @@ class Compiler01 extends CssTemplateApi {
 
         case ByteProto.INTERNAL4 -> mainContents -= 4 - 2;
 
+        case ByteProto.INTERNAL6 -> mainContents -= 6 - 2;
+
         case ByteProto.INTERNAL7 -> mainContents -= 7 - 2;
+
+        case ByteProto.INTERNAL9 -> mainContents -= 9 - 2;
+
+        case ByteProto.INTERNAL10 -> mainContents -= 10 - 2;
+
+        case ByteProto.INTERNAL11 -> mainContents -= 11 - 2;
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
@@ -766,7 +631,93 @@ class Compiler01 extends CssTemplateApi {
       auxAdd(ByteProto.INTERNAL);
     }
 
-    else if (element instanceof MediaType type) {
+    else if (value instanceof InternalColor color) {
+      String raw;
+      raw = color.raw;
+
+      int rawIndex;
+      rawIndex = objectAdd(raw);
+
+      auxAdd(
+        ByteProto.RAW,
+        Bytes.two0(rawIndex),
+        Bytes.two1(rawIndex)
+      );
+    }
+
+    else if (value instanceof InternalLength length) {
+      String raw;
+      raw = length.raw;
+
+      int rawIndex;
+      rawIndex = objectAdd(raw);
+
+      auxAdd(
+        ByteProto.RAW,
+        Bytes.two0(rawIndex),
+        Bytes.two1(rawIndex)
+      );
+    }
+
+    else if (value instanceof InternalPercentage percentage) {
+      String raw;
+      raw = percentage.raw;
+
+      int rawIndex;
+      rawIndex = objectAdd(raw);
+
+      auxAdd(
+        ByteProto.RAW,
+        Bytes.two0(rawIndex),
+        Bytes.two1(rawIndex)
+      );
+    }
+
+    else if (value instanceof InternalZero) {
+      auxAdd(ByteProto.ZERO);
+    }
+
+    else if (value instanceof ClassSelector selector) {
+      String string;
+      string = selector.toString();
+
+      int index;
+      index = objectAdd(string);
+
+      auxAdd(
+        ByteProto.SELECTOR_CLASS,
+        Bytes.two0(index),
+        Bytes.two1(index)
+      );
+    }
+
+    else if (value instanceof StandardPseudoClassSelector selector) {
+      auxAdd(
+        ByteProto.SELECTOR_PSEUDO_CLASS,
+        (byte) selector.ordinal()
+      );
+    }
+
+    else if (value instanceof StandardPseudoElementSelector selector) {
+      auxAdd(
+        ByteProto.SELECTOR_PSEUDO_ELEMENT,
+        (byte) selector.ordinal()
+      );
+    }
+
+    else if (value instanceof StandardTypeSelector selector) {
+      auxAdd(ByteProto.SELECTOR_TYPE);
+      auxVarInt(selector.ordinal());
+    }
+
+    else if (value instanceof Combinator combinator) {
+      auxAdd(
+        ByteProto.SELECTOR_COMBINATOR,
+        (byte) combinator.ordinal()
+      );
+    }
+
+    else if (value instanceof MediaType type) {
       int ordinal;
       ordinal = type.ordinal();
 
@@ -778,12 +729,12 @@ class Compiler01 extends CssTemplateApi {
 
     else {
       throw new UnsupportedOperationException(
-        "Implement me :: type=" + element.getClass()
+        "Implement me :: type=" + value.getClass()
       );
     }
   }
 
-  private void commonEnd(byte trailerProto, byte endProto) {
+  private void commonEnd() {
     // we will iterate over the marked elements
     int index;
     index = auxStart;
@@ -860,13 +811,19 @@ class Compiler01 extends CssTemplateApi {
 
               case ByteProto.MARKED3 -> contents += 3;
 
+              case ByteProto.MARKED4 -> contents += 4;
+
               case ByteProto.MARKED5 -> contents += 5;
 
               case ByteProto.MARKED6 -> contents += 6;
 
+              case ByteProto.MARKED7 -> contents += 7;
+
               case ByteProto.MARKED9 -> contents += 9;
 
               case ByteProto.MARKED10 -> contents += 10;
+
+              case ByteProto.MARKED11 -> contents += 11;
 
               case ByteProto.SELECTOR_ATTR -> {
                 main[contents++] = ByteProto.MARKED4;
@@ -961,7 +918,7 @@ class Compiler01 extends CssTemplateApi {
     main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
     // mark the end
-    main[mainIndex++] = endProto;
+    main[mainIndex++] = ByteProto.END;
 
     // store the distance to the contents (yes, reversed)
     int length;
@@ -970,7 +927,7 @@ class Compiler01 extends CssTemplateApi {
     mainIndex = Bytes.varIntR(main, mainIndex, length);
 
     // trailer proto
-    main[mainIndex++] = trailerProto;
+    main[mainIndex++] = ByteProto.INTERNAL;
 
     // set the end index of the declaration
     length = mainIndex - mainStart;
@@ -987,25 +944,7 @@ class Compiler01 extends CssTemplateApi {
     auxIndex = auxStart;
   }
 
-  private void declarationBeginCommon(byte proto) {
-    // we mark the start of our aux list
-    auxStart = auxIndex;
-
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    // 2) the start of our main list
-    mainContents = mainStart = mainIndex;
-
-    mainAdd(
-      proto,
-
-      // length takes 2 bytes
-      ByteProto.NULL,
-      ByteProto.NULL
-    );
-  }
-
-  private void declarationEndCommon(byte trailerProto, byte endProto) {
+  private void declarationEndCommon() {
     // we iterate over each value added via declarationValue(PropertyValue)
     int index;
     index = auxStart;
@@ -1103,40 +1042,166 @@ class Compiler01 extends CssTemplateApi {
         }
 
         case ByteProto.INTERNAL -> {
-          // keep startIndex handy
-          int startIndex;
-          startIndex = contents;
+          while (true) {
+            byte proto;
+            proto = main[contents];
 
-          // decode the element's length
-          byte lengthByte;
-          lengthByte = aux[index++];
+            switch (proto) {
+              case ByteProto.DECLARATION,
+                   ByteProto.VAR_FUNCTION -> {
+                // keep the start index handy
+                int startIndex;
+                startIndex = contents;
 
-          int length;
-          length = Bytes.toInt(lengthByte, 0);
+                // mark this declaration
+                main[contents++] = ByteProto.MARKED;
 
-          // point to next element
-          contents += length;
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
 
-          // keep the old proto handy
-          byte proto;
-          proto = main[startIndex];
+                byte len1;
+                len1 = main[contents++];
 
-          // mark this element
-          main[startIndex] = ByteProto.markedOf(length);
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
 
-          // ensure main can hold at least 3 elements
-          // 0   - ByteProto
-          // 1-2 - variable length
-          main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+                // point to next element
+                contents += length;
 
-          // byte proto
-          main[mainIndex++] = proto;
+                // ensure main can hold least 3 elements
+                // 0   - ByteProto
+                // 1-2 - variable length
+                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
 
-          // variable length
-          length = mainIndex - startIndex;
+                main[mainIndex++] = proto;
 
-          mainIndex = Bytes.varInt(main, mainIndex, length);
+                length = mainIndex - startIndex;
+
+                mainIndex = Bytes.varInt(main, mainIndex, length);
+
+                continue loop;
+              }
+
+              // length=4
+
+              case ByteProto.COLOR_HEX,
+                   ByteProto.LITERAL_STRING,
+                   ByteProto.URL -> {
+                contents = propertyValue(contents, proto, 4);
+
+                continue loop;
+              }
+
+              // length=6
+
+              case ByteProto.LITERAL_INT,
+                   ByteProto.PERCENTAGE_INT -> {
+                contents = propertyValue(contents, proto, 6);
+
+                continue loop;
+              }
+
+              // length=7
+
+              case ByteProto.LENGTH_INT -> {
+                contents = propertyValue(contents, proto, 7);
+
+                continue loop;
+              }
+
+              // length=10
+
+              case ByteProto.LITERAL_DOUBLE,
+                   ByteProto.PERCENTAGE_DOUBLE -> {
+                contents = propertyValue(contents, proto, 10);
+
+                continue loop;
+              }
+
+              // length=11
+
+              case ByteProto.LENGTH_DOUBLE -> {
+                contents = propertyValue(contents, proto, 11);
+
+                continue loop;
+              }
+
+              case ByteProto.MARKED -> {
+                contents++;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeFixedLength(len0, len1);
+
+                // point to next element
+                contents += length;
+              }
+
+              case ByteProto.MARKED3 -> contents += 3;
+
+              case ByteProto.MARKED5 -> contents += 5;
+
+              case ByteProto.MARKED6 -> contents += 6;
+
+              case ByteProto.MARKED7 -> contents += 7;
+
+              case ByteProto.MARKED9 -> contents += 9;
+
+              case ByteProto.MARKED10 -> contents += 10;
+
+              default -> {
+                throw new UnsupportedOperationException(
+                  "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
         }
+
+        /*
+        case ByteProto.INTERNAL -> {
+        // keep startIndex handy
+        int startIndex;
+        startIndex = contents;
+        
+        // decode the element's length
+        byte lengthByte;
+        lengthByte = aux[index++];
+        
+        int length;
+        length = Bytes.toInt(lengthByte, 0);
+        
+        // point to next element
+        contents += length;
+        
+        // keep the old proto handy
+        byte proto;
+        proto = main[startIndex];
+        
+        // mark this element
+        main[startIndex] = ByteProto.markedOf(length);
+        
+        // ensure main can hold at least 3 elements
+        // 0   - ByteProto
+        // 1-2 - variable length
+        main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+        
+        // byte proto
+        main[mainIndex++] = proto;
+        
+        // variable length
+        length = mainIndex - startIndex;
+        
+        mainIndex = Bytes.varInt(main, mainIndex, length);
+        }
+        */
 
         case ByteProto.RAW,
              ByteProto.STANDARD_NAME -> {
@@ -1157,7 +1222,7 @@ class Compiler01 extends CssTemplateApi {
     main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
     // mark the end
-    main[mainIndex++] = endProto;
+    main[mainIndex++] = ByteProto.END;
 
     // store the distance to the contents (yes, reversed)
     int length;
@@ -1166,7 +1231,7 @@ class Compiler01 extends CssTemplateApi {
     mainIndex = Bytes.varIntR(main, mainIndex, length);
 
     // trailer proto
-    main[mainIndex++] = trailerProto;
+    main[mainIndex++] = ByteProto.INTERNAL;
 
     // set the end index of the declaration
     length = mainIndex - mainStart;
@@ -1180,6 +1245,26 @@ class Compiler01 extends CssTemplateApi {
 
     // we clear the aux list
     auxIndex = auxStart;
+  }
+
+  private int propertyValue(int contents, byte proto, int length) {
+    // mark this element
+    main[contents] = ByteProto.markedOf(length);
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = proto;
+
+    int offset;
+    offset = mainIndex - contents;
+
+    mainIndex = Bytes.varInt(main, mainIndex, offset);
+
+    // point to the next element
+    return contents + length;
   }
 
   private void mainAdd(byte b0) {
@@ -1265,6 +1350,22 @@ class Compiler01 extends CssTemplateApi {
     main[mainIndex++] = b7;
     main[mainIndex++] = b8;
     main[mainIndex++] = b9;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7,
+      byte b8, byte b9, byte b10) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 10);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
+    main[mainIndex++] = b4;
+    main[mainIndex++] = b5;
+    main[mainIndex++] = b6;
+    main[mainIndex++] = b7;
+    main[mainIndex++] = b8;
+    main[mainIndex++] = b9;
+    main[mainIndex++] = b10;
   }
 
   private int objectAdd(Object value) {

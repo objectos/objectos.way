@@ -250,7 +250,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     api().colorHex(value);
 
-    return InternalInstruction.COLOR_HEX;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final void install(CssTemplate template) {
@@ -267,13 +267,13 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   protected final Api.DoubleLiteral l(double value) {
     api().literalDouble(value);
 
-    return InternalInstruction.LITERAL_DOUBLE;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final Api.IntLiteral l(int value) {
     api().literalInt(value);
 
-    return InternalInstruction.LITERAL_INT;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final StringLiteral l(String value) {
@@ -281,7 +281,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     api().literalString(value);
 
-    return InternalInstruction.LITERAL_STRING;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final void media(MediaRuleElement... elements) {
@@ -318,13 +318,13 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   protected final PercentageValue pct(double value) {
     api().percentage(value);
 
-    return InternalInstruction.PERCENTAGE_DOUBLE;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final PercentageValue pct(int value) {
     api().percentage(value);
 
-    return InternalInstruction.PERCENTAGE_INT;
+    return InternalInstruction.INSTANCE;
   }
 
   protected final <T extends PropertyValue> StyleDeclaration set(
@@ -364,7 +364,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     api().url(value);
 
-    return InternalInstruction.URL;
+    return InternalInstruction.INSTANCE;
   }
 
   @SuppressWarnings("unchecked")
@@ -378,7 +378,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     api.varFunctionEnd();
 
-    return (T) InternalInstruction.VAR_FUNCTION;
+    return (T) InternalInstruction.INSTANCE;
   }
 
   @SuppressWarnings("unchecked")
@@ -397,7 +397,7 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
 
     api.varFunctionEnd();
 
-    return (T) InternalInstruction.VAR_FUNCTION;
+    return (T) InternalInstruction.INSTANCE;
   }
 
   protected final StyleDeclaration webkitFilter(Api.FilterFunction func) {
@@ -560,14 +560,14 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
   final LengthValue length(double value, LengthUnit unit) {
     api().length(value, unit);
 
-    return InternalInstruction.LENGTH_DOUBLE;
+    return InternalInstruction.INSTANCE;
   }
 
   @Override
   final LengthValue length(int value, LengthUnit unit) {
     api().length(value, unit);
 
-    return InternalInstruction.LENGTH_INT;
+    return InternalInstruction.INSTANCE;
   }
 
   private CssTemplateApi api() {

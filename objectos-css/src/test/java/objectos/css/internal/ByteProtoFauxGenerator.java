@@ -27,6 +27,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("internal instructions");
 
     value("NULL");
+    value("END");
     value("MARKED");
     value("MARKED3");
     value("MARKED4");
@@ -35,17 +36,19 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("MARKED7");
     value("MARKED9");
     value("MARKED10");
+    value("MARKED11");
     value("INTERNAL");
     value("INTERNAL4");
+    value("INTERNAL6");
     value("INTERNAL7");
     value("INTERNAL9");
+    value("INTERNAL10");
+    value("INTERNAL11");
 
     comment("rules");
 
     value("MEDIA_RULE");
-    value("MEDIA_RULE_END");
     value("STYLE_RULE");
-    value("STYLE_RULE_END");
 
     comment("media query");
 
@@ -64,11 +67,9 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("properties");
 
     value("DECLARATION");
-    value("DECLARATION_END");
     value("PROPERTY_CUSTOM");
     value("PROPERTY_STANDARD");
     value("VAR_FUNCTION");
-    value("VAR_FUNCTION_END");
 
     comment("property values");
 

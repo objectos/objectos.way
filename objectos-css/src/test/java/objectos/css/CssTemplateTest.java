@@ -17,6 +17,7 @@ package objectos.css;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.css.tmpl.Api;
 import objectos.css.tmpl.Api.ColorValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.CustomProperty;
@@ -1490,6 +1491,8 @@ public class CssTemplateTest {
   public void propertyOutline() {
     test(
       new CssTemplate() {
+        static final CustomProperty<Api.ColorValue> FOO = CustomProperty.named("--foo");
+
         @Override
         protected void definition() {
           style(
@@ -1500,7 +1503,8 @@ public class CssTemplateTest {
             outline(red, dashed),
             outline(inset, thick),
             outline(green, solid, px(3)),
-            outline(inherit)
+            outline(inherit),
+            outline(px(2), solid, var(FOO))
           );
         }
       },
@@ -1513,6 +1517,7 @@ public class CssTemplateTest {
         outline: inset thick;
         outline: green solid 3px;
         outline: inherit;
+        outline: 2px solid var(--foo);
       }
       """
     );

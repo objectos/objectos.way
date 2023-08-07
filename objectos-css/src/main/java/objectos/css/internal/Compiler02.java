@@ -74,6 +74,8 @@ final class Compiler02 extends Compiler01 {
 
         case ByteProto.MARKED10 -> 10 - 1;
 
+        case ByteProto.MARKED11 -> 11 - 1;
+
         case ByteProto.MEDIA_RULE -> {
           ruleCount = nextRuleIf(ruleCount);
 
@@ -193,8 +195,7 @@ final class Compiler02 extends Compiler01 {
           }
         }
 
-        case ByteProto.DECLARATION_END,
-             ByteProto.VAR_FUNCTION_END -> {
+        case ByteProto.END -> {
           break loop;
         }
 
@@ -447,6 +448,8 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.VAR_FUNCTION -> {
+          valueCount = spaceIfNecessary(valueCount);
+
           // keep index handy
           int thisIndex;
           thisIndex = index;
@@ -605,7 +608,7 @@ final class Compiler02 extends Compiler01 {
           auxAdd(ByteCode.PARENS_CLOSE);
         }
 
-        case ByteProto.MEDIA_RULE_END -> {
+        case ByteProto.END -> {
           break loop;
         }
 
@@ -771,6 +774,10 @@ final class Compiler02 extends Compiler01 {
           auxAdd(ByteCode.SEMICOLON);
         }
 
+        case ByteProto.END -> {
+          break loop;
+        }
+
         case ByteProto.SELECTOR_ATTR -> {
           selectorCount = selectorComma(selectorCount);
 
@@ -856,10 +863,6 @@ final class Compiler02 extends Compiler01 {
           selectorCount = selectorComma(selectorCount);
 
           auxAdd(ByteCode.SELECTOR, main[index++], main[index++]);
-        }
-
-        case ByteProto.STYLE_RULE_END -> {
-          break loop;
         }
 
         default -> throw new UnsupportedOperationException(

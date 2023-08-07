@@ -31,32 +31,6 @@ public enum InternalInstruction
     Api.StyleRule,
     Api.Url {
 
-  INSTANCE(-1),
-
-  COLOR_HEX(3),
-
-  LENGTH_DOUBLE(10),
-
-  LENGTH_INT(6),
-
-  LITERAL_DOUBLE(9),
-
-  LITERAL_INT(5),
-
-  LITERAL_STRING(3),
-
-  PERCENTAGE_DOUBLE(9),
-
-  PERCENTAGE_INT(5),
-
-  URL(3),
-
-  VAR_FUNCTION(-1);
-
-  public final int length;
-
-  private InternalInstruction(int length) {
-    this.length = length;
-  }
+  INSTANCE;
 
 }

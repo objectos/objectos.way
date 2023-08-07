@@ -47,9 +47,9 @@ public class Compiler01Test {
       Bytes.len1(5),
       ByteProto.SELECTOR_TYPE,
       (byte) StandardTypeSelector.html.ordinal(),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(5),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -87,9 +87,9 @@ public class Compiler01Test {
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.borderBox),
       Bytes.name1(StandardName.borderBox),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(9),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(8),
@@ -99,9 +99,9 @@ public class Compiler01Test {
       Bytes.name1(StandardName.any),
       ByteProto.DECLARATION,
       Bytes.int0(19),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(20),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -120,8 +120,8 @@ public class Compiler01Test {
     compiler.length(1.5, LengthUnit.REM);
 
     compiler.declarationBegin(Property.MARGIN);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
-    compiler.propertyValue(InternalInstruction.LENGTH_DOUBLE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -136,14 +136,15 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED6,
+      ByteProto.MARKED7,
       Bytes.int0(20),
       Bytes.int1(20),
       Bytes.int2(20),
       Bytes.int3(20),
       Bytes.unit(LengthUnit.PX),
+      ByteProto.INTERNAL7,
 
-      ByteProto.MARKED10,
+      ByteProto.MARKED11,
       Bytes.long0(dbl),
       Bytes.long1(dbl),
       Bytes.long2(dbl),
@@ -153,6 +154,7 @@ public class Compiler01Test {
       Bytes.long6(dbl),
       Bytes.long7(dbl),
       Bytes.unit(LengthUnit.REM),
+      ByteProto.INTERNAL11,
 
       ByteProto.MARKED,
       Bytes.len0(10),
@@ -161,12 +163,12 @@ public class Compiler01Test {
       Bytes.prop0(Property.MARGIN),
       Bytes.prop1(Property.MARGIN),
       ByteProto.LENGTH_INT,
-      Bytes.int0(23),
+      Bytes.int0(25),
       ByteProto.LENGTH_DOUBLE,
-      Bytes.int0(19),
-      ByteProto.DECLARATION_END,
-      Bytes.int0(26),
-      ByteProto.DECLARATION,
+      Bytes.int0(20),
+      ByteProto.END,
+      Bytes.int0(28),
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -175,9 +177,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.ul.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(19),
-      ByteProto.STYLE_RULE_END,
-      Bytes.int0(36),
-      ByteProto.STYLE_RULE
+      ByteProto.END,
+      Bytes.int0(38),
+      ByteProto.INTERNAL
     );
   }
 
@@ -226,9 +228,9 @@ public class Compiler01Test {
       Bytes.long5(dbl),
       Bytes.long6(dbl),
       Bytes.long7(dbl),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(15),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -237,9 +239,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(24),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(25),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -276,9 +278,9 @@ public class Compiler01Test {
       ByteProto.SELECTOR_ATTR,
       Bytes.two0(0),
       Bytes.two1(0),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(10),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -309,18 +311,18 @@ public class Compiler01Test {
       Bytes.len1(5),
       ByteProto.SELECTOR_PSEUDO_CLASS,
       (byte) StandardPseudoClassSelector._disabled.ordinal(),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(5),
-      ByteProto.STYLE_RULE,
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(5),
       Bytes.len1(5),
       ByteProto.SELECTOR_PSEUDO_ELEMENT,
       (byte) StandardPseudoElementSelector.__after.ordinal(),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(5),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -350,9 +352,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.input.ordinal(),
       ByteProto.SELECTOR_PSEUDO_ELEMENT,
       (byte) StandardPseudoElementSelector.__placeholder.ordinal(),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(7),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -370,7 +372,7 @@ public class Compiler01Test {
     compiler.url("foo");
 
     compiler.declarationBegin(Property.LIST_STYLE_IMAGE);
-    compiler.propertyValue(InternalInstruction.URL);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -383,9 +385,10 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED3,
+      ByteProto.MARKED4,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteProto.INTERNAL4,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -394,10 +397,10 @@ public class Compiler01Test {
       Bytes.prop0(Property.LIST_STYLE_IMAGE),
       Bytes.prop1(Property.LIST_STYLE_IMAGE),
       ByteProto.URL,
-      Bytes.int0(10),
-      ByteProto.DECLARATION_END,
       Bytes.int0(11),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(12),
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -406,9 +409,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.ul.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(17),
-      ByteProto.STYLE_RULE_END,
-      Bytes.int0(21),
-      ByteProto.STYLE_RULE
+      ByteProto.END,
+      Bytes.int0(22),
+      ByteProto.INTERNAL
     );
   }
 
@@ -426,7 +429,7 @@ public class Compiler01Test {
     compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -439,9 +442,10 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED3,
+      ByteProto.MARKED4,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteProto.INTERNAL4,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -450,10 +454,10 @@ public class Compiler01Test {
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
       ByteProto.LITERAL_STRING,
-      Bytes.int0(10),
-      ByteProto.DECLARATION_END,
       Bytes.int0(11),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(12),
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -462,9 +466,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(17),
-      ByteProto.STYLE_RULE_END,
-      Bytes.int0(21),
-      ByteProto.STYLE_RULE
+      ByteProto.END,
+      Bytes.int0(22),
+      ByteProto.INTERNAL
     );
   }
 
@@ -482,7 +486,7 @@ public class Compiler01Test {
     compiler.literalString("Foo Bar");
 
     compiler.declarationBegin(Property.FONT_FAMILY);
-    compiler.propertyValue(InternalInstruction.LITERAL_STRING);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.propertyValueComma();
     compiler.propertyValue(StandardName.sansSerif);
     compiler.declarationEnd();
@@ -497,9 +501,10 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED3,
+      ByteProto.MARKED4,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteProto.INTERNAL4,
 
       ByteProto.MARKED,
       Bytes.len0(12),
@@ -508,14 +513,14 @@ public class Compiler01Test {
       Bytes.prop0(Property.FONT_FAMILY),
       Bytes.prop1(Property.FONT_FAMILY),
       ByteProto.LITERAL_STRING,
-      Bytes.int0(10),
+      Bytes.int0(11),
       ByteProto.COMMA,
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.sansSerif),
       Bytes.name1(StandardName.sansSerif),
-      ByteProto.DECLARATION_END,
-      Bytes.int0(15),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(16),
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -524,9 +529,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(21),
-      ByteProto.STYLE_RULE_END,
-      Bytes.int0(25),
-      ByteProto.STYLE_RULE
+      ByteProto.END,
+      Bytes.int0(26),
+      ByteProto.INTERNAL
     );
   }
 
@@ -544,7 +549,7 @@ public class Compiler01Test {
     compiler.colorHex("#9ca3af");
 
     compiler.declarationBegin(Property.COLOR);
-    compiler.propertyValue(InternalInstruction.COLOR_HEX);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -557,9 +562,10 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED3,
+      ByteProto.MARKED4,
       Bytes.two0(0),
       Bytes.two1(0),
+      ByteProto.INTERNAL4,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -568,10 +574,10 @@ public class Compiler01Test {
       Bytes.prop0(Property.COLOR),
       Bytes.prop1(Property.COLOR),
       ByteProto.COLOR_HEX,
-      Bytes.int0(10),
-      ByteProto.DECLARATION_END,
       Bytes.int0(11),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(12),
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -580,9 +586,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.input.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(17),
-      ByteProto.STYLE_RULE_END,
-      Bytes.int0(21),
-      ByteProto.STYLE_RULE
+      ByteProto.END,
+      Bytes.int0(22),
+      ByteProto.INTERNAL
     );
   }
 
@@ -627,9 +633,9 @@ public class Compiler01Test {
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.flex),
       Bytes.name1(StandardName.flex),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(9),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.MARKED,
       Bytes.len0(7),
@@ -638,9 +644,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(18),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(19),
-      ByteProto.STYLE_RULE,
+      ByteProto.INTERNAL,
 
       ByteProto.MEDIA_RULE,
       Bytes.len0(7),
@@ -649,9 +655,9 @@ public class Compiler01Test {
       (byte) MediaType.SCREEN.ordinal(),
       ByteProto.STYLE_RULE,
       Bytes.int0(16),
-      ByteProto.MEDIA_RULE_END,
+      ByteProto.END,
       Bytes.int0(29),
-      ByteProto.MEDIA_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -671,7 +677,7 @@ public class Compiler01Test {
     compiler.length(640, LengthUnit.PX);
 
     compiler.declarationBegin(Property.MIN_WIDTH);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.declarationBegin(Property.DISPLAY);
@@ -693,12 +699,13 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED6,
+      ByteProto.MARKED7,
       Bytes.int0(640),
       Bytes.int1(640),
       Bytes.int2(640),
       Bytes.int3(640),
       Bytes.unit(LengthUnit.PX),
+      ByteProto.INTERNAL7,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -707,10 +714,10 @@ public class Compiler01Test {
       Bytes.prop0(Property.MIN_WIDTH),
       Bytes.prop1(Property.MIN_WIDTH),
       ByteProto.LENGTH_INT,
-      Bytes.int0(13),
-      ByteProto.DECLARATION_END,
       Bytes.int0(14),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(15),
+      ByteProto.INTERNAL,
 
       ByteProto.MARKED,
       Bytes.len0(9),
@@ -721,9 +728,9 @@ public class Compiler01Test {
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.flex),
       Bytes.name1(StandardName.flex),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(9),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.MARKED,
       Bytes.len0(7),
@@ -732,9 +739,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(18),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(19),
-      ByteProto.STYLE_RULE,
+      ByteProto.INTERNAL,
 
       ByteProto.MEDIA_RULE,
       Bytes.len0(7),
@@ -743,9 +750,9 @@ public class Compiler01Test {
       Bytes.int0(37),
       ByteProto.STYLE_RULE,
       Bytes.int0(16),
-      ByteProto.MEDIA_RULE_END,
-      Bytes.int0(46),
-      ByteProto.MEDIA_RULE
+      ByteProto.END,
+      Bytes.int0(47),
+      ByteProto.INTERNAL
     );
   }
 
@@ -776,9 +783,9 @@ public class Compiler01Test {
       ByteProto.SELECTOR_CLASS,
       Bytes.two0(0),
       Bytes.two1(0),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(6),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -823,9 +830,9 @@ public class Compiler01Test {
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.any),
       Bytes.name1(StandardName.any),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(16),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -844,8 +851,8 @@ public class Compiler01Test {
     compiler.length(-16, LengthUnit.PX);
 
     compiler.declarationBegin(Property.BOX_SHADOW);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.propertyValue(StandardName.teal);
     compiler.declarationEnd();
 
@@ -853,8 +860,8 @@ public class Compiler01Test {
     compiler.length(5, LengthUnit.PX);
 
     compiler.declarationBegin(Property.BOX_SHADOW);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
-    compiler.propertyValue(InternalInstruction.LENGTH_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.propertyValue(StandardName.black);
     compiler.declarationEnd();
 
@@ -874,19 +881,21 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED6,
+      ByteProto.MARKED7,
       Bytes.int0(60),
       Bytes.int1(60),
       Bytes.int2(60),
       Bytes.int3(60),
       Bytes.unit(LengthUnit.PX),
+      ByteProto.INTERNAL7,
 
-      ByteProto.MARKED6,
+      ByteProto.MARKED7,
       Bytes.int0(-16),
       Bytes.int1(-16),
       Bytes.int2(-16),
       Bytes.int3(-16),
       Bytes.unit(LengthUnit.PX),
+      ByteProto.INTERNAL7,
 
       ByteProto.MARKED,
       Bytes.len0(13),
@@ -895,29 +904,31 @@ public class Compiler01Test {
       Bytes.prop0(Property.BOX_SHADOW),
       Bytes.prop1(Property.BOX_SHADOW),
       ByteProto.LENGTH_INT,
-      Bytes.int0(19),
+      Bytes.int0(21),
       ByteProto.LENGTH_INT,
-      Bytes.int0(15),
+      Bytes.int0(16),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.teal),
       Bytes.name1(StandardName.teal),
-      ByteProto.DECLARATION_END,
-      Bytes.int0(25),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(27),
+      ByteProto.INTERNAL,
 
-      ByteProto.MARKED6,
+      ByteProto.MARKED7,
       Bytes.int0(10),
       Bytes.int1(10),
       Bytes.int2(10),
       Bytes.int3(10),
       Bytes.unit(LengthUnit.PX),
+      ByteProto.INTERNAL7,
 
-      ByteProto.MARKED6,
+      ByteProto.MARKED7,
       Bytes.int0(5),
       Bytes.int1(5),
       Bytes.int2(5),
       Bytes.int3(5),
       Bytes.unit(LengthUnit.PX),
+      ByteProto.INTERNAL7,
 
       ByteProto.MARKED,
       Bytes.len0(13),
@@ -926,15 +937,15 @@ public class Compiler01Test {
       Bytes.prop0(Property.BOX_SHADOW),
       Bytes.prop1(Property.BOX_SHADOW),
       ByteProto.LENGTH_INT,
-      Bytes.int0(19),
+      Bytes.int0(21),
       ByteProto.LENGTH_INT,
-      Bytes.int0(15),
+      Bytes.int0(16),
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.black),
       Bytes.name1(StandardName.black),
-      ByteProto.DECLARATION_END,
-      Bytes.int0(25),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(27),
+      ByteProto.INTERNAL,
 
       ByteProto.MARKED,
       Bytes.len0(11),
@@ -943,13 +954,13 @@ public class Compiler01Test {
       Bytes.prop0(Property.BOX_SHADOW),
       Bytes.prop1(Property.BOX_SHADOW),
       ByteProto.DECLARATION,
-      Bytes.int0(51),
+      Bytes.int0(53),
       ByteProto.COMMA,
       ByteProto.DECLARATION,
       Bytes.int0(26),
-      ByteProto.DECLARATION_END,
-      Bytes.int0(67),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(71),
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -958,9 +969,9 @@ public class Compiler01Test {
       (byte) StandardPseudoClassSelector._mozUiInvalid.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(20),
-      ByteProto.STYLE_RULE_END,
-      Bytes.int0(77),
-      ByteProto.STYLE_RULE
+      ByteProto.END,
+      Bytes.int0(81),
+      ByteProto.INTERNAL
     );
   }
 
@@ -1001,9 +1012,9 @@ public class Compiler01Test {
       ByteProto.STANDARD_NAME,
       Bytes.name0(StandardName.black),
       Bytes.name1(StandardName.black),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(9),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -1012,9 +1023,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(18),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(19),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -1036,7 +1047,7 @@ public class Compiler01Test {
     compiler.varFunctionEnd();
 
     compiler.declarationBegin(Property.COLOR);
-    compiler.propertyValue(InternalInstruction.VAR_FUNCTION);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -1055,9 +1066,9 @@ public class Compiler01Test {
       ByteProto.PROPERTY_CUSTOM,
       Bytes.two0(0),
       Bytes.two1(0),
-      ByteProto.VAR_FUNCTION_END,
+      ByteProto.END,
       Bytes.int0(6),
-      ByteProto.VAR_FUNCTION,
+      ByteProto.INTERNAL,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -1067,9 +1078,9 @@ public class Compiler01Test {
       Bytes.prop1(Property.COLOR),
       ByteProto.VAR_FUNCTION,
       Bytes.int0(16),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(17),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -1078,9 +1089,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(17),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(27),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -1122,9 +1133,9 @@ public class Compiler01Test {
       ByteProto.RAW,
       Bytes.two0(1),
       Bytes.two1(1),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(12),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -1133,9 +1144,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.ul.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(21),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(22),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -1186,9 +1197,9 @@ public class Compiler01Test {
       Bytes.long5(dbl),
       Bytes.long6(dbl),
       Bytes.long7(dbl),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(15),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -1198,9 +1209,9 @@ public class Compiler01Test {
       Bytes.prop1(Property.FILTER),
       ByteProto.DECLARATION,
       Bytes.int0(25),
-      ByteProto.DECLARATION_END,
+      ByteProto.END,
       Bytes.int0(26),
-      ByteProto.DECLARATION,
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -1209,9 +1220,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.div.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(17),
-      ByteProto.STYLE_RULE_END,
+      ByteProto.END,
       Bytes.int0(36),
-      ByteProto.STYLE_RULE
+      ByteProto.INTERNAL
     );
   }
 
@@ -1229,7 +1240,7 @@ public class Compiler01Test {
     compiler.literalInt(600);
 
     compiler.declarationBegin(Property.FONT_WEIGHT);
-    compiler.propertyValue(InternalInstruction.LITERAL_INT);
+    compiler.propertyValue(InternalInstruction.INSTANCE);
     compiler.declarationEnd();
 
     compiler.styleRuleBegin();
@@ -1242,11 +1253,12 @@ public class Compiler01Test {
     test(
       compiler,
 
-      ByteProto.MARKED5,
+      ByteProto.MARKED6,
       Bytes.int0(600),
       Bytes.int1(600),
       Bytes.int2(600),
       Bytes.int3(600),
+      ByteProto.INTERNAL6,
 
       ByteProto.MARKED,
       Bytes.len0(8),
@@ -1255,10 +1267,10 @@ public class Compiler01Test {
       Bytes.prop0(Property.FONT_WEIGHT),
       Bytes.prop1(Property.FONT_WEIGHT),
       ByteProto.LITERAL_INT,
-      Bytes.int0(12),
-      ByteProto.DECLARATION_END,
       Bytes.int0(13),
-      ByteProto.DECLARATION,
+      ByteProto.END,
+      Bytes.int0(14),
+      ByteProto.INTERNAL,
 
       ByteProto.STYLE_RULE,
       Bytes.len0(7),
@@ -1267,9 +1279,9 @@ public class Compiler01Test {
       (byte) StandardTypeSelector.p.ordinal(),
       ByteProto.DECLARATION,
       Bytes.int0(17),
-      ByteProto.STYLE_RULE_END,
-      Bytes.int0(23),
-      ByteProto.STYLE_RULE
+      ByteProto.END,
+      Bytes.int0(24),
+      ByteProto.INTERNAL
     );
   }
 
