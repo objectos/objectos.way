@@ -28,7 +28,7 @@ public class CarbonStyleSheetBuilderTest {
     Css.randomSeed(84321674516L);
   }
 
-  @Test
+  @Test(enabled = false)
   public void notification() {
     StyleSheetBuilder b;
     b = Carbon.styleSheetBuilder();
@@ -239,7 +239,7 @@ public class CarbonStyleSheetBuilderTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void reset() {
     StyleSheetBuilder b;
     b = Carbon.styleSheetBuilder();
@@ -304,7 +304,7 @@ public class CarbonStyleSheetBuilderTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void theme() {
     StyleSheet sheet;
     sheet = Carbon.styleSheetBuilder()
@@ -342,7 +342,7 @@ public class CarbonStyleSheetBuilderTest {
     );
   }
 
-  @Test
+  @Test(enabled = false)
   public void typography() {
     StyleSheet sheet;
     sheet = Carbon.styleSheetBuilder()

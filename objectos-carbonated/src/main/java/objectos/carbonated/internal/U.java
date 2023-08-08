@@ -15,15 +15,23 @@
  */
 package objectos.carbonated.internal;
 
-import objectos.carbonated.Palette;
-import objectos.carbonated.Typography;
+import objectos.css.tmpl.Api;
+import objectos.css.util.ClassSelector;
+import objectos.css.util.CustomProperty;
 
 /**
- * Implementation for public sealed interfaces serving as a namespace (i.e., not
- * to be implemented by clients).
+ * Utils...
  */
-public final class Namespace implements Palette, Typography {
+public final class U {
 
-  private Namespace() {}
+  private U() {}
+
+  public static ClassSelector nextClass() {
+    return ClassSelector.randomClassSelector(5);
+  }
+
+  public static <T extends Api.PropertyValue> CustomProperty<T> nextProp() {
+    return CustomProperty.randomName(5);
+  }
 
 }

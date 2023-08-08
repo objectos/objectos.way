@@ -29,6 +29,8 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
 
   private enum Feature {
 
+    BUTTON,
+
     NOTIFICATION,
 
     RESET,
@@ -44,6 +46,13 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
   @Override
   public final StyleSheet build() {
     return compile();
+  }
+
+  @Override
+  public final StyleSheetBuilder button() {
+    features.add(Feature.BUTTON);
+
+    return this;
   }
 
   @Override
@@ -88,6 +97,8 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
   protected final void definition() {
     if (features.contains(Feature.RESET)) {
       $reset();
+
+      install(BaseLayout.STYLES);
     }
 
     if (features.contains(Feature.TYPOGRAPHY)) {
@@ -98,6 +109,10 @@ public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.S
       for (var theme : themes) {
         install(theme);
       }
+    }
+
+    if (features.contains(Feature.BUTTON)) {
+      install(CompButton.STYLES);
     }
 
     if (features.contains(Feature.NOTIFICATION)) {

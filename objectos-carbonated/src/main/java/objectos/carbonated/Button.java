@@ -13,17 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
-import objectos.carbonated.Palette;
-import objectos.carbonated.Typography;
+import objectos.carbonated.internal.CompButton;
+import objectos.html.tmpl.Instruction.ElementContents;
 
-/**
- * Implementation for public sealed interfaces serving as a namespace (i.e., not
- * to be implemented by clients).
- */
-public final class Namespace implements Palette, Typography {
+public sealed interface Button permits CompButton {
 
-  private Namespace() {}
+  enum Kind {
+
+    PRIMARY;
+
+  }
+
+  enum Size {
+
+    SMALL,
+
+    MEDIUM,
+
+    LARGE,
+
+    X_LARGE,
+
+    X_LARGE_2;
+
+  }
+
+  static Button of() {
+    return new CompButton();
+  }
+
+  Button kind(Kind value);
+
+  ElementContents render();
+
+  Button size(Size value);
+
+  Button text(String value);
 
 }

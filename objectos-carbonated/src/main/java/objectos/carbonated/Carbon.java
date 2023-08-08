@@ -60,6 +60,8 @@ public final class Carbon {
 
     StyleSheet build();
 
+    StyleSheetBuilder button();
+
     /**
      * Enables the notification CSS generation.
      *
