@@ -26,13 +26,19 @@ public abstract class Theme extends CssTemplate {
   public static final CustomProperty<ColorValue> BACKGROUND = U.nextProp();
   public static final CustomProperty<ColorValue> BACKGROUND_INVERSE = U.nextProp();
 
-  public static final CustomProperty<ColorValue> TEXT_PRIMARY = U.nextProp();
-  public static final CustomProperty<ColorValue> TEXT_INVERSE = U.nextProp();
-  public static final CustomProperty<ColorValue> TEXT_ON_COLOR = U.nextProp();
-  public static final CustomProperty<ColorValue> TEXT_ON_COLOR_DISABLED = U.nextProp();
+  public static final CustomProperty<ColorValue> BUTTON_PRIMARY = U.nextProp();
+  public static final CustomProperty<ColorValue> BUTTON_PRIMARY_ACTIVE = U.nextProp();
+  public static final CustomProperty<ColorValue> BUTTON_PRIMARY_HOVER = U.nextProp();
+
+  public static final CustomProperty<ColorValue> FOCUS = U.nextProp();
 
   public static final CustomProperty<ColorValue> LINK_PRIMARY = U.nextProp();
   public static final CustomProperty<ColorValue> LINK_INVERSE = U.nextProp();
+
+  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_ERROR = U.nextProp();
+  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_SUCCESS = U.nextProp();
+  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_INFO = U.nextProp();
+  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_WARNING = U.nextProp();
 
   public static final CustomProperty<ColorValue> SUPPORT_ERROR = U.nextProp();
   public static final CustomProperty<ColorValue> SUPPORT_SUCCESS = U.nextProp();
@@ -43,15 +49,10 @@ public abstract class Theme extends CssTemplate {
   public static final CustomProperty<ColorValue> SUPPORT_WARNING_INVERSE = U.nextProp();
   public static final CustomProperty<ColorValue> SUPPORT_INFO_INVERSE = U.nextProp();
 
-  public static final CustomProperty<ColorValue> FOCUS = U.nextProp();
-
-  public static final CustomProperty<ColorValue> BUTTON_PRIMARY = U.nextProp();
-  public static final CustomProperty<ColorValue> BUTTON_PRIMARY_HOVER = U.nextProp();
-
-  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_ERROR = U.nextProp();
-  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_SUCCESS = U.nextProp();
-  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_INFO = U.nextProp();
-  public static final CustomProperty<ColorValue> NOTIFICATION_BACKGROUND_WARNING = U.nextProp();
+  public static final CustomProperty<ColorValue> TEXT_PRIMARY = U.nextProp();
+  public static final CustomProperty<ColorValue> TEXT_INVERSE = U.nextProp();
+  public static final CustomProperty<ColorValue> TEXT_ON_COLOR = U.nextProp();
+  public static final CustomProperty<ColorValue> TEXT_ON_COLOR_DISABLED = U.nextProp();
 
   protected Theme() {}
 

@@ -374,6 +374,7 @@ public final class CssSpec extends CssSelfGen {
     selectors(
       SelectorKind.PSEUDO_CLASS,
 
+      ":active",
       ":disabled",
       ":first-child",
       ":first-of-type",

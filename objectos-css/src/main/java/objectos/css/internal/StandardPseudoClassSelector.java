@@ -20,6 +20,8 @@ import objectos.lang.Generated;
 
 @Generated("objectos.selfgen.CssSpec")
 public enum StandardPseudoClassSelector implements SelectorInstruction {
+  _active(":active"),
+
   _disabled(":disabled"),
 
   _firstChild(":first-child"),

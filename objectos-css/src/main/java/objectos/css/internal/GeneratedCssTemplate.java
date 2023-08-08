@@ -153,6 +153,8 @@ abstract class GeneratedCssTemplate {
 
   protected static final Selector __webkitSearchDecoration = StandardPseudoElementSelector.__webkitSearchDecoration;
 
+  protected static final Selector _active = StandardPseudoClassSelector._active;
+
   protected static final Selector _disabled = StandardPseudoClassSelector._disabled;
 
   protected static final Selector _firstChild = StandardPseudoClassSelector._firstChild;
