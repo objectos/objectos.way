@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import objectos.code.JavaSink;
-import objectos.code.PrimitiveTypeName;
 import objectos.lang.Check;
 
 public abstract class CssSelfGen {
@@ -31,6 +30,8 @@ public abstract class CssSelfGen {
   protected static final ParameterType INT = ParameterType.INT;
 
   protected static final ParameterType STRING = ParameterType.STRING;
+
+  final Map<String, Function> functions = new TreeMap<>();
 
   final Map<String, KeywordName> keywords = new TreeMap<>();
 
@@ -45,6 +46,8 @@ public abstract class CssSelfGen {
   protected DoubleType doubleType;
 
   protected FilterFunction filterFunction;
+
+  FlexValue flexValue;
 
   protected IntType intType;
 
@@ -72,6 +75,8 @@ public abstract class CssSelfGen {
 
     write(sink, new ApiStep());
 
+    write(sink, new FunctionStep());
+
     write(sink, new GeneratedColorStep());
 
     write(sink, new GeneratedCssTemplateStep());
@@ -83,10 +88,6 @@ public abstract class CssSelfGen {
     write(sink, new StandardNameStep());
 
     write(sink, new StandardSelectorStep());
-  }
-
-  final void write(JavaSink sink, ThisTemplate template) throws IOException {
-    template.write(sink, this);
   }
 
   protected final ColorValue color(String... names) {
@@ -151,6 +152,38 @@ public abstract class CssSelfGen {
 
   protected abstract void definition();
 
+  protected final Function f(String functionName) {
+    var function = functions.get(functionName);
+
+    if (function == null) {
+      throw new IllegalArgumentException(
+        "The %s function was not found".formatted(functionName)
+      );
+    }
+
+    return function;
+  }
+
+  protected final FlexValue flex() {
+    if (flexValue == null) {
+      flexValue = new FlexValue();
+    }
+
+    return flexValue;
+  }
+
+  protected final Function function(
+      String functionName, Signature... signatures) {
+    Function function;
+    function = functions.computeIfAbsent(functionName, Function::of);
+
+    for (var signature : signatures) {
+      function.addSignature(signature);
+    }
+
+    return function;
+  }
+
   protected final KeywordName k(String name) {
     return keywords.computeIfAbsent(name, KeywordName::of);
   }
@@ -195,43 +228,6 @@ public abstract class CssSelfGen {
     return lengthType;
   }
 
-  protected final void pbox(String propertyName, ParameterType value) {
-    var prop = prop(propertyName);
-
-    var typeName = value.typeName();
-
-    prop.addSignature(
-      new Signature1(typeName, "all")
-    );
-    prop.addSignature(
-      new Signature2(
-        typeName, "vertical",
-        typeName, "horizontal"
-      )
-    );
-    prop.addSignature(
-      new Signature3(
-        typeName, "top",
-        typeName, "horizontal",
-        typeName, "bottom"
-      )
-    );
-    prop.addSignature(
-      new Signature4(
-        typeName, "top",
-        typeName, "right",
-        typeName, "bottom",
-        typeName, "left"
-      )
-    );
-  }
-
-  protected final void pdbl(String propertyName) {
-    prop(propertyName).addSignature(
-      new SignaturePrim(PrimitiveTypeName.DOUBLE, "value")
-    );
-  }
-
   protected final PercentageType percentage() {
     if (percentageType == null) {
       percentageType = new PercentageType();
@@ -240,16 +236,6 @@ public abstract class CssSelfGen {
     }
 
     return percentageType;
-  }
-
-  protected final void pint(String propertyName) {
-    prop(propertyName).addSignature(
-      new SignaturePrim(PrimitiveTypeName.INT, "value")
-    );
-  }
-
-  protected final Property prop(String propertyName) {
-    return properties.computeIfAbsent(propertyName, Property::of);
   }
 
   protected final Property property(
@@ -262,86 +248,6 @@ public abstract class CssSelfGen {
     }
 
     return property;
-  }
-
-  protected final void pva2(String propertyName, ParameterType value) {
-    var prop = prop(propertyName);
-
-    var typeName = value.typeName();
-
-    prop.addSignature(
-      new Signature2(typeName, "value1", typeName, "value2")
-    );
-  }
-
-  protected final void pva3(String propertyName, ParameterType value) {
-    var prop = prop(propertyName);
-
-    var typeName = value.typeName();
-
-    prop.addSignature(
-      new Signature3(typeName, "value1", typeName, "value2", typeName, "value3")
-    );
-  }
-
-  protected final void pva4(String propertyName, ParameterType value) {
-    var prop = prop(propertyName);
-
-    var typeName = value.typeName();
-
-    prop.addSignature(
-      new Signature4(
-        typeName, "value1",
-        typeName, "value2",
-        typeName, "value3",
-        typeName, "value4"
-      )
-    );
-  }
-
-  protected final void pval(String propertyName, ParameterType value) {
-    var prop = prop(propertyName);
-
-    var typeName = value.typeName();
-
-    prop.addSignature(
-      new Signature1(typeName, "value")
-    );
-  }
-
-  protected final void pval(
-      String propertyName,
-      ParameterType value1, ParameterType value2) {
-    var prop = prop(propertyName);
-
-    prop.addSignature(
-      new Signature2(
-        value1.typeName(), "value1",
-        value2.typeName(), "value2"
-      )
-    );
-  }
-
-  protected final void pval(
-      String propertyName,
-      ParameterType value1, ParameterType value2, ParameterType value3) {
-    var prop = prop(propertyName);
-
-    prop.addSignature(
-      new Signature3(
-        value1.typeName(), "value1",
-        value2.typeName(), "value2",
-        value3.typeName(), "value3"
-      )
-    );
-  }
-
-  protected final void pvar(String propertyName, ParameterType value) {
-    var prop = prop(propertyName);
-
-    prop.addSignature(
-      new SignatureVarArgs(value.typeName(), "values")
-    );
   }
 
   protected final void selectors(SelectorKind kind, String... names) {
@@ -476,6 +382,10 @@ public abstract class CssSelfGen {
     }
 
     return urlType;
+  }
+
+  final void write(JavaSink sink, ThisTemplate template) throws IOException {
+    template.write(sink, this);
   }
 
   private void selector(String name) {

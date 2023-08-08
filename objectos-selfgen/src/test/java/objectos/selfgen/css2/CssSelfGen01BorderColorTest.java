@@ -44,8 +44,15 @@ public class CssSelfGen01BorderColorTest {
         );
 
         // B
-        pval("border-color", globalKeyword);
-        pbox("border-color", color);
+        property(
+          "border-color",
+
+          sig(globalKeyword, "value"),
+          sig(color, "all"),
+          sig(color, "vertical", color, "horizontal"),
+          sig(color, "top", color, "horizontal", color, "bottom"),
+          sig(color, "top", color, "right", color, "bottom", color, "left")
+        );
       }
     };
 

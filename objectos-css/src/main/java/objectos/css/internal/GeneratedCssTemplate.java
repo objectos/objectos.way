@@ -67,6 +67,7 @@ import objectos.css.tmpl.Api.FontValue;
 import objectos.css.tmpl.Api.FontVariationSettingsValue;
 import objectos.css.tmpl.Api.FontWeightValue;
 import objectos.css.tmpl.Api.GlobalKeyword;
+import objectos.css.tmpl.Api.GridTemplateColumnsValue;
 import objectos.css.tmpl.Api.GrooveKeyword;
 import objectos.css.tmpl.Api.HeightOrWidthValue;
 import objectos.css.tmpl.Api.InlineKeyword;
@@ -93,6 +94,8 @@ import objectos.css.tmpl.Api.MediumKeyword;
 import objectos.css.tmpl.Api.MenuKeyword;
 import objectos.css.tmpl.Api.MinContentKeyword;
 import objectos.css.tmpl.Api.MinHeightOrWidthValue;
+import objectos.css.tmpl.Api.MinmaxFunction;
+import objectos.css.tmpl.Api.MinmaxValue;
 import objectos.css.tmpl.Api.NoneKeyword;
 import objectos.css.tmpl.Api.NormalKeyword;
 import objectos.css.tmpl.Api.NumberValue;
@@ -107,6 +110,7 @@ import objectos.css.tmpl.Api.PositionValue;
 import objectos.css.tmpl.Api.ProgressKeyword;
 import objectos.css.tmpl.Api.PropertyValue;
 import objectos.css.tmpl.Api.QuotesValue;
+import objectos.css.tmpl.Api.RepeatFunction;
 import objectos.css.tmpl.Api.ResizeValue;
 import objectos.css.tmpl.Api.RidgeKeyword;
 import objectos.css.tmpl.Api.RightKeyword;
@@ -131,6 +135,7 @@ import objectos.css.tmpl.Api.TextTransformValue;
 import objectos.css.tmpl.Api.TextareaKeyword;
 import objectos.css.tmpl.Api.TopKeyword;
 import objectos.css.tmpl.Api.TopValue;
+import objectos.css.tmpl.Api.TrackSize;
 import objectos.css.tmpl.Api.VerticalAlignValue;
 import objectos.css.tmpl.Api.WordBreakValue;
 import objectos.css.util.Color;
@@ -2381,6 +2386,18 @@ abstract class GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final StyleDeclaration gridTemplateColumns(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_TEMPLATE_COLUMNS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridTemplateColumns(GridTemplateColumnsValue value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_TEMPLATE_COLUMNS, value);
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final StyleDeclaration height(GlobalKeyword value) {
     Check.notNull(value, "value == null");
     declaration(Property.HEIGHT, value);
@@ -3308,4 +3325,20 @@ abstract class GeneratedCssTemplate {
   abstract void declaration(Property name, double value);
 
   abstract void declaration(Property name, String value);
+
+  protected final MinmaxFunction minmax(MinmaxValue value1, MinmaxValue value2) {
+    Check.notNull(value1, "value1 == null");
+    Check.notNull(value2, "value2 == null");
+    function(Function.MINMAX, value1, value2);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final RepeatFunction repeat(IntLiteral count, TrackSize track) {
+    Check.notNull(count, "count == null");
+    Check.notNull(track, "track == null");
+    function(Function.REPEAT, count, track);
+    return InternalInstruction.INSTANCE;
+  }
+
+  abstract void function(Function name, PropertyValue value1, PropertyValue value2);
 }

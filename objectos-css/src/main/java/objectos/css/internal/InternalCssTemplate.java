@@ -245,6 +245,18 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final Api.FlexValue fr(double value) {
+    api().flexValue(value);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final Api.FlexValue fr(int value) {
+    api().flexValue(value);
+
+    return InternalInstruction.INSTANCE;
+  }
+
   protected final ColorValue hex(String value) {
     Check.notNull(value, "value == null");
 
@@ -554,6 +566,19 @@ public abstract class InternalCssTemplate extends GeneratedCssTemplate {
     api.javaString(value);
 
     api.declarationEnd();
+  }
+
+  @Override
+  final void function(Function name, PropertyValue value1, PropertyValue value2) {
+    CssTemplateApi api;
+    api = api();
+
+    api.functionBegin(name);
+
+    api.propertyValue(value1);
+    api.propertyValue(value2);
+
+    api.functionEnd();
   }
 
   @Override

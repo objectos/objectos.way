@@ -41,6 +41,8 @@ final class ApiStep extends ThisTemplate {
 
       include(this::valueTypes),
 
+      include(this::functions),
+
       include(this::keywords),
 
       include(this::colorValue),
@@ -48,6 +50,8 @@ final class ApiStep extends ThisTemplate {
       include(this::lengthType),
 
       include(this::percentageType),
+
+      include(this::flexValue),
 
       include(this::literalTypes),
 
@@ -226,6 +230,44 @@ final class ApiStep extends ThisTemplate {
     }
   }
 
+  private void functions() {
+    List<ClassTypeName> superTypes;
+    superTypes = new GrowableList<>();
+
+    Collection<Function> functions;
+    functions = spec.functions.values();
+
+    for (var function : functions) {
+      ClassTypeName className;
+      className = function.className;
+
+      superTypes.add(className);
+
+      interfaceDeclaration(
+        PUBLIC, SEALED, name(className),
+        include(() -> {
+          function.interfaces.stream()
+              .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+              .forEach(this::extendsClause);
+        })
+      );
+    }
+
+    if (superTypes.isEmpty()) {
+      return;
+    }
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(FUNCTION_INSTRUCTION),
+      include(() -> {
+        for (ClassTypeName superType : superTypes) {
+          extendsClause(NL, superType);
+        }
+      }),
+      permitsClause(INTERNAL_INSTRUCTION)
+    );
+  }
+
   private void keywords() {
     Iterator<KeywordName> iterator;
     iterator = spec.keywords.values().stream()
@@ -323,6 +365,25 @@ final class ApiStep extends ThisTemplate {
             .forEach(this::extendsClause);
       }),
       permitsClause(INTERNAL_INSTRUCTION, PERCENTAGE, ZERO)
+    );
+  }
+
+  private void flexValue() {
+    FlexValue flexValue;
+    flexValue = spec.flexValue;
+
+    if (flexValue == null) {
+      return;
+    }
+
+    interfaceDeclaration(
+      PUBLIC, SEALED, name(FLEX_VALUE),
+      include(() -> {
+        flexValue.interfaces.stream()
+            .sorted((self, that) -> self.simpleName().compareTo(that.simpleName()))
+            .forEach(this::extendsClause);
+      }),
+      permitsClause(INTERNAL_INSTRUCTION)
     );
   }
 

@@ -58,12 +58,15 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("property");
 
+    value("FUNCTION_STANDARD");
     value("PROPERTY_CUSTOM");
     value("PROPERTY_STANDARD");
 
     comment("property values");
 
     value("COLOR_HEX");
+    value("FR_DOUBLE");
+    value("FR_INT");
     value("KEYWORD");
     value("LENGTH_DOUBLE");
     value("LENGTH_INT");

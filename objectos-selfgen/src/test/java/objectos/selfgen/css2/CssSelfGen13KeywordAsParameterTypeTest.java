@@ -32,7 +32,11 @@ public class CssSelfGen13KeywordAsParameterTypeTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        pval("box-shadow", k("none"));
+        property(
+          "box-shadow",
+
+          sig(k("none"), "value")
+        );
       }
     };
 

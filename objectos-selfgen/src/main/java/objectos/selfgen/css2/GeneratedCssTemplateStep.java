@@ -15,6 +15,7 @@
  */
 package objectos.selfgen.css2;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import objectos.code.ClassTypeName;
@@ -23,14 +24,16 @@ import objectos.code.tmpl.BlockInstruction;
 
 final class GeneratedCssTemplateStep extends ThisTemplate {
 
-  private boolean sig1;
-  private boolean sig2;
-  private boolean sig3;
-  private boolean sig4;
-  private boolean sig5;
-  private boolean sig6;
-  private boolean sigPrim;
-  private boolean sigString;
+  private boolean declSig1;
+  private boolean declSig2;
+  private boolean declSig3;
+  private boolean declSig4;
+  private boolean declSig5;
+  private boolean declSig6;
+  private boolean declSigPrim;
+  private boolean declSigString;
+
+  private boolean funcSig2;
 
   @Override
   protected final void definition() {
@@ -52,7 +55,9 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
 
       include(this::properties),
 
-      include(this::declarationMethods)
+      include(this::declarationMethods),
+
+      include(this::functions)
     );
   }
 
@@ -77,7 +82,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
   }
 
   private void declarationMethods() {
-    if (sig1) {
+    if (declSig1) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -85,7 +90,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       );
     }
 
-    if (sig2) {
+    if (declSig2) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -94,7 +99,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       );
     }
 
-    if (sig3) {
+    if (declSig3) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -104,7 +109,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       );
     }
 
-    if (sig4) {
+    if (declSig4) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -115,7 +120,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       );
     }
 
-    if (sig5) {
+    if (declSig5) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -127,7 +132,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       );
     }
 
-    if (sig6) {
+    if (declSig6) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -140,7 +145,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       );
     }
 
-    if (sigPrim) {
+    if (declSigPrim) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -154,7 +159,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
       );
     }
 
-    if (sigString) {
+    if (declSigString) {
       method(
         ABSTRACT, VOID, name("declaration"),
         parameter(PROPERTY, name("name")),
@@ -232,7 +237,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     declarationClassName = property.declarationClassName;
 
     if (signature instanceof Signature1 sig) {
-      sig1 = true;
+      declSig1 = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -248,7 +253,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     }
 
     else if (signature instanceof Signature2 sig) {
-      sig2 = true;
+      declSig2 = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -267,7 +272,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     }
 
     else if (signature instanceof Signature3 sig) {
-      sig3 = true;
+      declSig3 = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -289,7 +294,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     }
 
     else if (signature instanceof Signature4 sig) {
-      sig4 = true;
+      declSig4 = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -314,7 +319,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     }
 
     else if (signature instanceof Signature5 sig) {
-      sig5 = true;
+      declSig5 = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -342,7 +347,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     }
 
     else if (signature instanceof Signature6 sig) {
-      sig6 = true;
+      declSig6 = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -373,7 +378,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     }
 
     else if (signature instanceof SignaturePrim sig) {
-      sigPrim = true;
+      declSigPrim = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -388,7 +393,7 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
     }
 
     else if (signature instanceof SignatureString sig) {
-      sigString = true;
+      declSigString = true;
 
       method(
         PROTECTED, FINAL, declarationClassName, name(property.methodName),
@@ -448,6 +453,56 @@ final class GeneratedCssTemplateStep extends ThisTemplate {
         .forEach(this::selectorField);
 
     field(SELECTOR, "any");
+  }
+
+  private void functions() {
+    Collection<Function> functions;
+    functions = spec.functions.values();
+
+    for (var function : functions) {
+      for (var signature : function.signatures()) {
+        functions0(function, signature);
+      }
+    }
+
+    if (funcSig2) {
+      method(
+        ABSTRACT, VOID, name("function"),
+        parameter(FUNCTION, name("name")),
+        parameter(PROPERTY_VALUE, name("value1")),
+        parameter(PROPERTY_VALUE, name("value2"))
+      );
+    }
+  }
+
+  private void functions0(Function function, Signature signature) {
+    ClassTypeName functionClassName;
+    functionClassName = function.className;
+
+    if (signature instanceof Signature2 sig) {
+      funcSig2 = true;
+
+      method(
+        PROTECTED, FINAL, functionClassName, name(function.methodName),
+        parameter(sig.type1(), name(sig.name1())),
+        parameter(sig.type2(), name(sig.name2())),
+        propertyCheckNotNull(sig.name1()),
+        propertyCheckNotNull(sig.name2()),
+        p(
+          v("function"),
+          argument(FUNCTION, n(function.constantName)),
+          argument(n(sig.name1())),
+          argument(n(sig.name2()))
+        ),
+        p(RETURN, INTERNAL_INSTRUCTION, n("INSTANCE"))
+      );
+    }
+
+    else {
+      throw new UnsupportedOperationException(
+        "Implement me :: sig.type=" + signature.getClass().getSimpleName()
+      );
+    }
   }
 
 }

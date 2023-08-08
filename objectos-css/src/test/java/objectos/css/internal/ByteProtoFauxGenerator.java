@@ -67,6 +67,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     comment("properties");
 
     value("DECLARATION");
+    value("FUNCTION");
+    value("FUNCTION_STANDARD");
     value("PROPERTY_CUSTOM");
     value("PROPERTY_STANDARD");
     value("VAR_FUNCTION");
@@ -75,6 +77,8 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     value("COLOR_HEX");
     value("COMMA");
+    value("FR_DOUBLE");
+    value("FR_INT");
     value("JAVA_DOUBLE");
     value("JAVA_INT");
     value("JAVA_STRING");

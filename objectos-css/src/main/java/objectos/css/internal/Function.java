@@ -15,24 +15,28 @@
  */
 package objectos.css.internal;
 
-import objectos.css.tmpl.Api;
+import objectos.lang.Generated;
 
-public enum InternalInstruction
-    implements
-    Api.ColorValue,
-    Api.DoubleLiteral,
-    Api.FlexValue,
-    Api.FunctionInstruction,
-    Api.IntLiteral,
-    Api.LengthValue,
-    Api.MediaFeatureOrStyleDeclaration,
-    Api.PercentageValue,
-    Api.SelectorInstruction,
-    Api.StringLiteral,
-    Api.StyleDeclarationInstruction,
-    Api.StyleRule,
-    Api.Url {
+@Generated("objectos.selfgen.CssSpec")
+public enum Function {
+  MINMAX("minmax"),
 
-  INSTANCE;
+  REPEAT("repeat");
 
+  private static final Function[] VALUES = values();
+
+  public final String cssName;
+
+  private Function(String cssName) {
+    this.cssName = cssName;
+  }
+
+  public static Function byOrdinal(int ordinal) {
+    return VALUES[ordinal];
+  }
+
+  @Override
+  public final String toString() {
+    return cssName;
+  }
 }

@@ -77,6 +77,35 @@ public final class StandardStyleSheetWriter implements StyleSheetWriter {
           appendable.append(", ");
         }
 
+        case ByteCode.FR_DOUBLE -> {
+          double value;
+          value = Bytes.doubleValue(
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++],
+            bytes[index++], bytes[index++], bytes[index++], bytes[index++]
+          );
+
+          appendable.append(Double.toString(value));
+          appendable.append("fr");
+        }
+
+        case ByteCode.FR_INT -> {
+          int value;
+          value = Bytes.intValue(bytes[index++], bytes[index++], bytes[index++], bytes[index++]);
+
+          appendable.append(Integer.toString(value));
+          appendable.append("fr");
+        }
+
+        case ByteCode.FUNCTION_STANDARD -> {
+          int ordinal;
+          ordinal = Bytes.intValue(bytes[index++], bytes[index++]);
+
+          Function name;
+          name = Function.byOrdinal(ordinal);
+
+          appendable.append(name.cssName);
+        }
+
         case ByteCode.KEYWORD,
              ByteCode.SELECTOR -> {
           String name;

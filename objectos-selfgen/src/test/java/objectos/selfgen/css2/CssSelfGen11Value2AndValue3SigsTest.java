@@ -40,9 +40,17 @@ public class CssSelfGen11Value2AndValue3SigsTest {
           textDecorationLineMultiValue, k("none")
         );
 
-        pval("text-decoration-line", textDecorationLineSingleValue);
-        pva2("text-decoration-line", textDecorationLineMultiValue);
-        pva3("text-decoration-line", textDecorationLineMultiValue);
+        property(
+          "text-decoration-line",
+
+          sig(textDecorationLineSingleValue, "value"),
+          sig(textDecorationLineMultiValue, "value1", textDecorationLineMultiValue, "value2"),
+          sig(
+            textDecorationLineMultiValue, "value1",
+            textDecorationLineMultiValue, "value2",
+            textDecorationLineMultiValue, "value3"
+          )
+        );
       }
     };
 

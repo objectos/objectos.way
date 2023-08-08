@@ -32,8 +32,12 @@ public class CssSelfGen02NumberTypeTest {
     var spec = new CssSelfGen() {
       @Override
       protected void definition() {
-        pdbl("line-height");
-        pint("line-height");
+        property(
+          "line-height",
+
+          sig(DOUBLE, "value"),
+          sig(INT, "value")
+        );
       }
     };
 

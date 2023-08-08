@@ -81,6 +81,10 @@ public final class CssSpec extends CssSelfGen {
     keywordFieldName("static", "static_");
     keywordFieldName("super", "super_");
 
+    // functions
+    minmax();
+    repeat();
+
     // A
 
     appearance();
@@ -130,6 +134,10 @@ public final class CssSpec extends CssSelfGen {
     fontStyle();
     fontVariationSettings();
     fontWeight();
+
+    // G
+
+    gridTemplateColumns();
 
     // H
 
@@ -1462,6 +1470,24 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
+  private void gridTemplateColumns() {
+    ValueType value;
+    value = t(
+      "GridTemplateColumnsValue",
+
+      t("TrackBreadthValue"),
+      f("repeat"),
+      k("none")
+    );
+
+    property(
+      "grid-template-columns",
+
+      sig(globalKeyword, "value"),
+      sig(value, "value")
+    );
+  }
+
   private void height() {
     var heightOrWidthValue = t(
       "HeightOrWidthValue",
@@ -1814,6 +1840,32 @@ public final class CssSpec extends CssSelfGen {
     );
   }
 
+  private void minmax() {
+    ValueType track;
+    track = t(
+      "TrackBreadthValue",
+
+      lengthPercentage,
+      k("min-content"),
+      k("max-content"),
+      k("auto"),
+      flex()
+    );
+
+    ValueType value;
+    value = t(
+      "MinmaxValue",
+
+      track
+    );
+
+    function(
+      "minmax",
+
+      sig(value, "value1", value, "value2")
+    );
+  }
+
   private void minWidth() {
     ValueType value;
     value = t("MinHeightOrWidthValue");
@@ -2038,6 +2090,21 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(value, "value"),
       sig(string(), "open", string(), "close")
+    );
+  }
+
+  private void repeat() {
+    ValueType track = t(
+      "TrackSize",
+
+      t("TrackBreadthValue"),
+      f("minmax")
+    );
+
+    function(
+      "repeat",
+
+      sig(intType, "count", track, "track")
     );
   }
 

@@ -51,25 +51,28 @@ final class ByteCode {
 
   //property
 
-  public static final byte PROPERTY_CUSTOM = -24;
-  public static final byte PROPERTY_STANDARD = -25;
+  public static final byte FUNCTION_STANDARD = -24;
+  public static final byte PROPERTY_CUSTOM = -25;
+  public static final byte PROPERTY_STANDARD = -26;
 
   //property values
 
-  public static final byte COLOR_HEX = -26;
-  public static final byte KEYWORD = -27;
-  public static final byte LENGTH_DOUBLE = -28;
-  public static final byte LENGTH_INT = -29;
-  public static final byte LITERAL_DOUBLE = -30;
-  public static final byte LITERAL_INT = -31;
-  public static final byte LITERAL_STRING = -32;
-  public static final byte PERCENTAGE_DOUBLE = -33;
-  public static final byte PERCENTAGE_INT = -34;
-  public static final byte RAW = -35;
-  public static final byte STRING_QUOTES_OPTIONAL = -36;
-  public static final byte URL = -37;
-  public static final byte VAR = -38;
-  public static final byte ZERO = -39;
+  public static final byte COLOR_HEX = -27;
+  public static final byte FR_DOUBLE = -28;
+  public static final byte FR_INT = -29;
+  public static final byte KEYWORD = -30;
+  public static final byte LENGTH_DOUBLE = -31;
+  public static final byte LENGTH_INT = -32;
+  public static final byte LITERAL_DOUBLE = -33;
+  public static final byte LITERAL_INT = -34;
+  public static final byte LITERAL_STRING = -35;
+  public static final byte PERCENTAGE_DOUBLE = -36;
+  public static final byte PERCENTAGE_INT = -37;
+  public static final byte RAW = -38;
+  public static final byte STRING_QUOTES_OPTIONAL = -39;
+  public static final byte URL = -40;
+  public static final byte VAR = -41;
+  public static final byte ZERO = -42;
 
   private ByteCode() {}
 

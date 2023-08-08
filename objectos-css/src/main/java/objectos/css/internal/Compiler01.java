@@ -147,6 +147,59 @@ class Compiler01 extends CssTemplateApi {
   }
 
   @Override
+  public final void flexValue(double value) {
+    long bits;
+    bits = Double.doubleToLongBits(value);
+
+    mainAdd(
+      ByteProto.FR_DOUBLE,
+
+      Bytes.long0(bits),
+      Bytes.long1(bits),
+      Bytes.long2(bits),
+      Bytes.long3(bits),
+      Bytes.long4(bits),
+      Bytes.long5(bits),
+      Bytes.long6(bits),
+      Bytes.long7(bits),
+
+      ByteProto.INTERNAL10
+    );
+  }
+
+  @Override
+  public final void flexValue(int value) {
+    mainAdd(
+      ByteProto.FR_INT,
+
+      Bytes.int0(value),
+      Bytes.int1(value),
+      Bytes.int2(value),
+      Bytes.int3(value),
+
+      ByteProto.INTERNAL6
+    );
+  }
+
+  @Override
+  public final void functionBegin(Function name) {
+    commonBegin(ByteProto.FUNCTION);
+
+    mainAdd(
+      ByteProto.FUNCTION_STANDARD,
+
+      // name
+      Bytes.prop0(name),
+      Bytes.prop1(name)
+    );
+  }
+
+  @Override
+  public final void functionEnd() {
+    declarationEndCommon();
+  }
+
+  @Override
   public final void javaDouble(double value) {
     long bits;
     bits = Double.doubleToLongBits(value);
@@ -1048,6 +1101,7 @@ class Compiler01 extends CssTemplateApi {
 
             switch (proto) {
               case ByteProto.DECLARATION,
+                   ByteProto.FUNCTION,
                    ByteProto.VAR_FUNCTION -> {
                 // keep the start index handy
                 int startIndex;
@@ -1095,7 +1149,8 @@ class Compiler01 extends CssTemplateApi {
 
               // length=6
 
-              case ByteProto.LITERAL_INT,
+              case ByteProto.FR_INT,
+                   ByteProto.LITERAL_INT,
                    ByteProto.PERCENTAGE_INT -> {
                 contents = propertyValue(contents, proto, 6);
 
@@ -1112,7 +1167,8 @@ class Compiler01 extends CssTemplateApi {
 
               // length=10
 
-              case ByteProto.LITERAL_DOUBLE,
+              case ByteProto.FR_DOUBLE,
+                   ByteProto.LITERAL_DOUBLE,
                    ByteProto.PERCENTAGE_DOUBLE -> {
                 contents = propertyValue(contents, proto, 10);
 
@@ -1172,35 +1228,35 @@ class Compiler01 extends CssTemplateApi {
         // keep startIndex handy
         int startIndex;
         startIndex = contents;
-
+        
         // decode the element's length
         byte lengthByte;
         lengthByte = aux[index++];
-
+        
         int length;
         length = Bytes.toInt(lengthByte, 0);
-
+        
         // point to next element
         contents += length;
-
+        
         // keep the old proto handy
         byte proto;
         proto = main[startIndex];
-
+        
         // mark this element
         main[startIndex] = ByteProto.markedOf(length);
-
+        
         // ensure main can hold at least 3 elements
         // 0   - ByteProto
         // 1-2 - variable length
         main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
+        
         // byte proto
         main[mainIndex++] = proto;
-
+        
         // variable length
         length = mainIndex - startIndex;
-
+        
         mainIndex = Bytes.varInt(main, mainIndex, length);
         }
         */
@@ -1247,26 +1303,6 @@ class Compiler01 extends CssTemplateApi {
 
     // we clear the aux list
     auxIndex = auxStart;
-  }
-
-  private int propertyValue(int contents, byte proto, int length) {
-    // mark this element
-    main[contents] = ByteProto.markedOf(length);
-
-    // ensure main can hold least 3 elements
-    // 0   - ByteProto
-    // 1-2 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
-    main[mainIndex++] = proto;
-
-    int offset;
-    offset = mainIndex - contents;
-
-    mainIndex = Bytes.varInt(main, mainIndex, offset);
-
-    // point to the next element
-    return contents + length;
   }
 
   private void mainAdd(byte b0) {
@@ -1383,6 +1419,26 @@ class Compiler01 extends CssTemplateApi {
     objectArray[index] = value;
 
     return index;
+  }
+
+  private int propertyValue(int contents, byte proto, int length) {
+    // mark this element
+    main[contents] = ByteProto.markedOf(length);
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = proto;
+
+    int offset;
+    offset = mainIndex - contents;
+
+    mainIndex = Bytes.varInt(main, mainIndex, offset);
+
+    // point to the next element
+    return contents + length;
   }
 
 }

@@ -230,6 +230,32 @@ public class CssTemplateTest {
     );
   }
 
+  @Test
+  public void propertyGridTemplateColumns() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            body,
+
+            gridTemplateColumns(fr(1)),
+            gridTemplateColumns(repeat(l(16), minmax($0, fr(1)))),
+            gridTemplateColumns(inherit)
+          );
+        }
+      },
+
+      """
+      body {
+        grid-template-columns: 1fr;
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        grid-template-columns: inherit;
+      }
+      """
+    );
+  }
+
   @Test(description = """
   [#419] Preflight 13
 

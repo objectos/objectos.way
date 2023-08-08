@@ -36,9 +36,13 @@ public class CssSelfGen12CustomSignatureTest {
           keywords("each-line", "hanging")
         );
 
-        pval("text-indent", percentage());
-        pval("text-indent", percentage(), textIndentValue);
-        pval("text-indent", percentage(), textIndentValue, textIndentValue);
+        property(
+          "text-indent",
+
+          sig(percentage(), "value"),
+          sig(percentage(), "value1", textIndentValue, "value2"),
+          sig(percentage(), "value1", textIndentValue, "value2", textIndentValue, "value3")
+        );
       }
     };
 

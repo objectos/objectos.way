@@ -53,6 +53,12 @@ abstract class ThisTemplate extends JavaTemplate {
 
   static final ClassTypeName FILTER_FUNCTION = ClassTypeName.of(API, "FilterFunction");
 
+  static final ClassTypeName FLEX_VALUE = ClassTypeName.of(API, "FlexValue");
+
+  static final ClassTypeName FUNCTION = ClassTypeName.of(CSS_INTERNAL, "Function");
+
+  static final ClassTypeName FUNCTION_INSTRUCTION = ClassTypeName.of(API, "FunctionInstruction");
+
   static final ClassTypeName KEYWORD_INSTRUCTION = ClassTypeName.of(API, "KeywordInstruction");
 
   static final ClassTypeName INT_LITERAL = ClassTypeName.of(API, "IntLiteral");

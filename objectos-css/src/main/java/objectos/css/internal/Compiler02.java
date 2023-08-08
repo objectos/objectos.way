@@ -108,6 +108,10 @@ final class Compiler02 extends Compiler01 {
   }
 
   private void declaration(int index) {
+    declaration(index, ByteCode.SPACE);
+  }
+
+  private void declaration(int index, byte separator) {
     Property property;
     property = null;
 
@@ -120,7 +124,7 @@ final class Compiler02 extends Compiler01 {
 
       switch (proto) {
         case ByteProto.COLOR_HEX -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -199,8 +203,104 @@ final class Compiler02 extends Compiler01 {
           break loop;
         }
 
+        case ByteProto.FR_DOUBLE -> {
+          valueCount = separatorIfNecessary(valueCount, separator);
+
+          index = jmp(index);
+
+          auxAdd(
+            ByteCode.FR_DOUBLE,
+
+            // long pt1
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+
+            // long pt2
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++]
+          );
+        }
+
+        case ByteProto.FR_INT -> {
+          valueCount = separatorIfNecessary(valueCount, separator);
+
+          index = jmp(index);
+
+          auxAdd(
+            ByteCode.FR_INT,
+
+            // int
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++],
+            main[mainContents++]
+          );
+        }
+
+        case ByteProto.FUNCTION -> {
+          valueCount = separatorIfNecessary(valueCount, separator);
+
+          // keep index handy
+          int thisIndex;
+          thisIndex = index;
+
+          // decode length
+          byte len0;
+          len0 = main[index++];
+
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = main[index++];
+
+            length = Bytes.toVarInt(len0, len1);
+          }
+
+          // compute function index
+          int elemIndex;
+          elemIndex = thisIndex - length;
+
+          // skip ByteProto
+          elemIndex += 1;
+
+          // skip end length
+          elemIndex += 2;
+
+          byte functionKind;
+          functionKind = main[elemIndex++];
+
+          byte b0;
+          b0 = main[elemIndex++];
+
+          byte b1;
+          b1 = main[elemIndex++];
+
+          byte functionByteCode;
+          functionByteCode = switch (functionKind) {
+            case ByteProto.FUNCTION_STANDARD -> ByteCode.FUNCTION_STANDARD;
+
+            default -> throw new UnsupportedOperationException(
+              "Implement me :: functionKind=" + functionKind
+            );
+          };
+
+          auxAdd(functionByteCode, b0, b1);
+
+          auxAdd(ByteCode.PARENS_OPEN);
+
+          declaration(elemIndex, ByteCode.COMMA);
+
+          auxAdd(ByteCode.PARENS_CLOSE);
+        }
+
         case ByteProto.JAVA_DOUBLE -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           auxAdd(
             ByteCode.LITERAL_DOUBLE,
@@ -217,7 +317,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.JAVA_INT -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           auxAdd(
             ByteCode.LITERAL_INT,
@@ -230,7 +330,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.JAVA_STRING -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           auxAdd(
             ByteCode.LITERAL_STRING,
@@ -241,7 +341,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.LENGTH_DOUBLE -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -266,7 +366,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.LENGTH_INT -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -285,7 +385,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.LITERAL_DOUBLE -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -307,7 +407,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.LITERAL_INT -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -323,7 +423,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.LITERAL_STRING -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -390,7 +490,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.PERCENTAGE_DOUBLE -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -412,7 +512,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.PERCENTAGE_INT -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -428,19 +528,19 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.RAW -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           auxAdd(ByteCode.RAW, main[index++], main[index++]);
         }
 
         case ByteProto.STANDARD_NAME -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           auxAdd(ByteCode.KEYWORD, main[index++], main[index++]);
         }
 
         case ByteProto.URL -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           index = jmp(index);
 
@@ -448,7 +548,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.VAR_FUNCTION -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           // keep index handy
           int thisIndex;
@@ -506,7 +606,7 @@ final class Compiler02 extends Compiler01 {
         }
 
         case ByteProto.ZERO -> {
-          valueCount = spaceIfNecessary(valueCount);
+          valueCount = separatorIfNecessary(valueCount, separator);
 
           auxAdd(ByteCode.ZERO);
         }
@@ -689,6 +789,16 @@ final class Compiler02 extends Compiler01 {
     return Arrays.copyOf(objectArray, objectIndex);
   }
 
+  private int selectorComma(int selectorCount) {
+    if (selectorCount == 0) {
+      indentationWrite();
+    }
+
+    selectorCount++;
+
+    return selectorCount;
+  }
+
   private void semicolonOptional() {
     if (auxIndex <= 0) {
       return;
@@ -707,24 +817,14 @@ final class Compiler02 extends Compiler01 {
     aux[lastIndex] = ByteCode.SEMICOLON_OPTIONAL;
   }
 
-  private int spaceIfNecessary(int valueCount) {
+  private int separatorIfNecessary(int valueCount, byte separator) {
     if (valueCount > 0) {
-      auxAdd(ByteCode.SPACE);
+      auxAdd(separator);
     }
 
     valueCount++;
 
     return valueCount;
-  }
-
-  private int selectorComma(int selectorCount) {
-    if (selectorCount == 0) {
-      indentationWrite();
-    }
-
-    selectorCount++;
-
-    return selectorCount;
   }
 
   private void styleRule(int index) {

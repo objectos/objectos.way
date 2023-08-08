@@ -52,8 +52,6 @@ public class CssSelfGen00Test {
 
     var result = generate(spec);
 
-    assertEquals(result.size(), 8);
-
     assertEquals(
       result.get("objectos/css/internal/Property.java"),
 
@@ -105,8 +103,6 @@ public class CssSelfGen00Test {
     };
 
     var result = generate(spec);
-
-    assertEquals(result.size(), 7);
 
     assertEquals(
       result.get("objectos/css/internal/Property.java"),

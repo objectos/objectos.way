@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.css.internal;
+package objectos.selfgen.css2;
 
-import objectos.css.tmpl.Api;
+import objectos.code.ClassTypeName;
+import objectos.code.tmpl.TypeName;
+import objectos.util.GrowableSet;
 
-public enum InternalInstruction
-    implements
-    Api.ColorValue,
-    Api.DoubleLiteral,
-    Api.FlexValue,
-    Api.FunctionInstruction,
-    Api.IntLiteral,
-    Api.LengthValue,
-    Api.MediaFeatureOrStyleDeclaration,
-    Api.PercentageValue,
-    Api.SelectorInstruction,
-    Api.StringLiteral,
-    Api.StyleDeclarationInstruction,
-    Api.StyleRule,
-    Api.Url {
+public final class FlexValue implements ParameterType, Value {
 
-  INSTANCE;
+  public final GrowableSet<ClassTypeName> interfaces = new GrowableSet<>();
+
+  @Override
+  public final void addValueType(ValueType valueType) {
+    interfaces.add(valueType.className);
+  }
+
+  @Override
+  public final TypeName typeName() {
+    return ThisTemplate.FLEX_VALUE;
+  }
 
 }

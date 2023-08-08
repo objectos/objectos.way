@@ -42,7 +42,11 @@ public class CssSelfGen09StringLiteralTest {
           string()
         );
 
-        pvar("font-family", fontFamilyValue);
+        property(
+          "font-family",
+
+          sigVar(fontFamilyValue, "values")
+        );
       }
     };
 

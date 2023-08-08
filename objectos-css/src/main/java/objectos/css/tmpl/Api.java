@@ -132,6 +132,8 @@ public final class Api {
 
   public sealed interface GlobalKeyword extends PropertyValue {}
 
+  public sealed interface GridTemplateColumnsValue extends PropertyValue {}
+
   public sealed interface HeightOrWidthValue extends PropertyValue {}
 
   public sealed interface Image extends ListStyleImageValue {}
@@ -142,7 +144,7 @@ public final class Api {
 
   public sealed interface LeftValue extends PropertyValue {}
 
-  public sealed interface LengthPercentage extends BottomValue, FontSizeValue, HeightOrWidthValue, LeftValue, LetterSpacingValue, LineHeightValue, MarginValue, MaxHeightOrWidthValue, TextDecorationThicknessValue, TopValue, VerticalAlignValue {}
+  public sealed interface LengthPercentage extends BottomValue, FontSizeValue, HeightOrWidthValue, LeftValue, LetterSpacingValue, LineHeightValue, MarginValue, MaxHeightOrWidthValue, TextDecorationThicknessValue, TopValue, TrackBreadthValue, VerticalAlignValue {}
 
   public sealed interface LetterSpacingValue extends PropertyValue {}
 
@@ -165,6 +167,8 @@ public final class Api {
   public sealed interface MaxHeightOrWidthValue extends PropertyValue {}
 
   public sealed interface MinHeightOrWidthValue extends PropertyValue {}
+
+  public sealed interface MinmaxValue extends PropertyValue {}
 
   public sealed interface NumberValue extends PropertyValue {}
 
@@ -201,6 +205,10 @@ public final class Api {
   public sealed interface TextTransformValue extends PropertyValue {}
 
   public sealed interface TopValue extends PropertyValue {}
+
+  public sealed interface TrackBreadthValue extends GridTemplateColumnsValue, MinmaxValue, TrackSize {}
+
+  public sealed interface TrackSize extends PropertyValue {}
 
   public sealed interface VerticalAlignValue extends PropertyValue {}
 
@@ -241,6 +249,7 @@ public final class Api {
       FontVariationSettingsValue,
       FontWeightValue,
       GlobalKeyword,
+      GridTemplateColumnsValue,
       HeightOrWidthValue,
       Image,
       JustifyContentPosition,
@@ -258,6 +267,7 @@ public final class Api {
       MarginValue,
       MaxHeightOrWidthValue,
       MinHeightOrWidthValue,
+      MinmaxValue,
       NumberValue,
       OutlineStyleValue,
       OutlineValue,
@@ -276,10 +286,20 @@ public final class Api {
       TextSizeAdjustValue,
       TextTransformValue,
       TopValue,
+      TrackBreadthValue,
+      TrackSize,
       VerticalAlignValue,
       WordBreakValue permits StandardName {}
 
-  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue {}
+  public sealed interface MinmaxFunction extends TrackSize {}
+
+  public sealed interface RepeatFunction extends GridTemplateColumnsValue {}
+
+  public sealed interface FunctionInstruction extends
+      MinmaxFunction,
+      RepeatFunction permits InternalInstruction {}
+
+  public sealed interface AutoKeyword extends AppearanceValue, BottomValue, CursorValue, HeightOrWidthValue, LeftValue, MarginValue, MinHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, TextDecorationThicknessValue, TextSizeAdjustValue, TopValue, TrackBreadthValue {}
 
   public sealed interface BlockKeyword extends DisplayOutsideValue, ResizeValue {}
 
@@ -319,15 +339,15 @@ public final class Api {
 
   public sealed interface LeftKeyword extends BackgroundPositionValue, JustifyContentPosition, JustifyContentValue, TextAlignValue {}
 
-  public sealed interface MaxContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue {}
+  public sealed interface MaxContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue, TrackBreadthValue {}
 
   public sealed interface MediumKeyword extends FontSizeValue, LineWidth {}
 
   public sealed interface MenuKeyword extends FontValue, Selector {}
 
-  public sealed interface MinContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue {}
+  public sealed interface MinContentKeyword extends HeightOrWidthValue, MaxHeightOrWidthValue, MinHeightOrWidthValue, TrackBreadthValue {}
 
-  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
+  public sealed interface NoneKeyword extends AppearanceValue, BackgroundImageValue, ContentValue, CursorValue, DisplayBoxValue, FilterValue, GridTemplateColumnsValue, LineStyle, ListStyleImageValue, ListStyleTypeValue, MaxHeightOrWidthValue, OutlineStyleValue, PointerEventsValue, QuotesValue, ResizeValue, TextDecorationLineSingleValue, TextSizeAdjustValue, TextTransformValue {}
 
   public sealed interface NormalKeyword extends ContentValue, FontFeatureSettingsValue, FontStyleValue, FontVariationSettingsValue, FontWeightValue, JustifyContentValue, LetterSpacingValue, LineHeightValue, WordBreakValue {}
 
@@ -400,6 +420,8 @@ public final class Api {
   public sealed interface LengthValue extends BackgroundPositionValue, LengthPercentage, LineWidth permits InternalInstruction, Length, Zero {}
 
   public sealed interface PercentageValue extends BackgroundPositionValue, LengthPercentage, TextSizeAdjustValue permits InternalInstruction, Percentage, Zero {}
+
+  public sealed interface FlexValue extends TrackBreadthValue permits InternalInstruction {}
 
   public sealed interface StringLiteral extends FontFamilyValue, ListStyleTypeValue permits InternalInstruction {}
 

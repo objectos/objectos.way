@@ -82,6 +82,16 @@ final class Bytes {
     return (byte) (value >>> 24);
   }
 
+  public static int intValue(byte b0, byte b1) {
+    int v0;
+    v0 = toInt(b0, 0);
+
+    int v1;
+    v1 = toInt(b1, 8);
+
+    return v1 | v0;
+  }
+
   public static int intValue(byte b0, byte b1, byte b2, byte b3) {
     int v0 = toInt(b0, 0);
     int v1 = toInt(b1, 8);
@@ -150,7 +160,7 @@ final class Bytes {
   }
 
   // we use 2 bytes for the Property enum
-  public static byte prop0(Property name) {
+  public static byte prop0(Enum<?> name) {
     int ordinal;
     ordinal = name.ordinal();
 
@@ -158,7 +168,7 @@ final class Bytes {
   }
 
   // we use 2 bytes for the Property enum
-  public static byte prop1(Property name) {
+  public static byte prop1(Enum<?> name) {
     int ordinal;
     ordinal = name.ordinal();
 

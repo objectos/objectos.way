@@ -45,6 +45,14 @@ public abstract class CssTemplateApi {
 
   public abstract void filterFunction(FilterFunction func);
 
+  public abstract void flexValue(double value);
+
+  public abstract void flexValue(int value);
+
+  public abstract void functionBegin(Function name);
+
+  public abstract void functionEnd();
+
   public abstract void javaDouble(double value);
 
   public abstract void javaInt(int value);
