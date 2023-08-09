@@ -13,32 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
-import objectos.carbonated.Carbon;
-import objectos.css.CssTemplate;
-import objectos.css.StyleSheet;
+import objectos.css.Css;
 
-public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.StyleSheetBuilder {
+public class CarbonTest {
 
-  @Override
-  public final StyleSheet build() {
-    return compile();
-  }
-
-  @Override
-  protected final void definition() {
-    install(new BaseReset());
-
-    install(new BaseLayout());
-
-    install(new BaseTypography());
-
-    install(new ThemeWhite());
-
-    install(new CompButtonStyles());
-
-    install(new CompNotificationStyles());
+  static {
+    Css.randomSeed(84321674516L);
   }
 
 }

@@ -13,32 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
-import objectos.carbonated.Carbon;
-import objectos.css.CssTemplate;
-import objectos.css.StyleSheet;
+import objectos.carbonated.internal.CompNotification;
+import objectos.html.tmpl.Instruction.ElementContents;
 
-public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.StyleSheetBuilder {
+public sealed interface Notification permits CompNotification {
 
-  @Override
-  public final StyleSheet build() {
-    return compile();
+  enum Contrast {
+    HIGH,
+
+    LOW;
   }
 
-  @Override
-  protected final void definition() {
-    install(new BaseReset());
+  enum Status {
+    ERROR,
 
-    install(new BaseLayout());
+    SUCCESS,
 
-    install(new BaseTypography());
+    WARNING,
 
-    install(new ThemeWhite());
-
-    install(new CompButtonStyles());
-
-    install(new CompNotificationStyles());
+    INFO;
   }
+
+  static Notification of() {
+    return new CompNotification();
+  }
+
+  Notification contrast(Notification.Contrast value);
+
+  Notification status(Notification.Status value);
+
+  Notification title(String value);
+
+  Notification subtitle(String value);
+
+  ElementContents render();
 
 }

@@ -15,86 +15,24 @@
  */
 package objectos.carbonated;
 
-import objectos.carbonated.internal.NotificationImpl;
 import objectos.carbonated.internal.StyleSheetBuilderImpl;
 import objectos.css.StyleSheet;
 import objectos.css.util.ClassSelector;
-import objectos.html.tmpl.Instruction.ElementContents;
 
 /**
  * @since 0.7.1
  */
 public final class Carbon {
 
-  public enum Contrast {
-    HIGH,
-
-    LOW;
-  }
-
-  public enum Status {
-    ERROR,
-
-    SUCCESS,
-
-    WARNING,
-
-    INFO;
-  }
-
-  public sealed interface Notification permits NotificationImpl {
-
-    Notification contrast(Contrast value);
-
-    Notification status(Status value);
-
-    Notification title(String value);
-
-    Notification subtitle(String value);
-
-    ElementContents render();
-
-  }
-
   public sealed interface StyleSheetBuilder permits StyleSheetBuilderImpl {
 
     StyleSheet build();
-
-    StyleSheetBuilder button();
-
-    /**
-     * Enables the notification CSS generation.
-     *
-     * <p>
-     * Enables:
-     *
-     * <ul>
-     * <li>Reset;
-     * <li>Typography.
-     * </ul>
-     *
-     * <p>
-     * Requires at least one theme.
-     *
-     * @return this builder
-     */
-    StyleSheetBuilder notification();
-
-    StyleSheetBuilder reset();
-
-    StyleSheetBuilder themes(Theme... values);
-
-    StyleSheetBuilder typography();
 
   }
 
   public static final ClassSelector WHITE_THEME = ClassSelector.randomClassSelector(5);
 
   private Carbon() {}
-
-  public static Notification notification() {
-    return new NotificationImpl();
-  }
 
   public static StyleSheetBuilder styleSheetBuilder() {
     return new StyleSheetBuilderImpl();

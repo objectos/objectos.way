@@ -15,7 +15,6 @@
  */
 package objectos.carbonated;
 
-import objectos.carbonated.internal.ThemeWhite;
 import objectos.carbonated.internal.U;
 import objectos.css.CssTemplate;
 import objectos.css.tmpl.Api.ColorValue;
@@ -55,9 +54,5 @@ public abstract class Theme extends CssTemplate {
   public static final CustomProperty<ColorValue> TEXT_ON_COLOR_DISABLED = U.nextProp();
 
   protected Theme() {}
-
-  public static Theme white() {
-    return ThemeWhite.INSTANCE;
-  }
 
 }

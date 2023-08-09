@@ -19,7 +19,7 @@ import objectos.css.CssTemplate;
 import objectos.css.tmpl.Api;
 import objectos.css.util.CustomProperty;
 
-public final class BaseLayout {
+public final class BaseLayout extends CssTemplate {
 
   static final CustomProperty<Api.LengthValue> SIZE_HEIGHT_XS = U.nextProp();
   static final CustomProperty<Api.LengthValue> SIZE_HEIGHT_SM = U.nextProp();
@@ -28,20 +28,18 @@ public final class BaseLayout {
   static final CustomProperty<Api.LengthValue> SIZE_HEIGHT_XL = U.nextProp();
   static final CustomProperty<Api.LengthValue> SIZE_HEIGHT_2XL = U.nextProp();
 
-  static final CssTemplate STYLES = new CssTemplate() {
-    @Override
-    protected final void definition() {
-      style(
-        _root,
+  @Override
+  protected final void definition() {
+    style(
+      _root,
 
-        set(SIZE_HEIGHT_XS, rem(1.5)),
-        set(SIZE_HEIGHT_SM, rem(2)),
-        set(SIZE_HEIGHT_MD, rem(2.5)),
-        set(SIZE_HEIGHT_LG, rem(3)),
-        set(SIZE_HEIGHT_XL, rem(4)),
-        set(SIZE_HEIGHT_2XL, rem(5))
-      );
-    }
-  };
+      set(SIZE_HEIGHT_XS, rem(1.5)),
+      set(SIZE_HEIGHT_SM, rem(2)),
+      set(SIZE_HEIGHT_MD, rem(2.5)),
+      set(SIZE_HEIGHT_LG, rem(3)),
+      set(SIZE_HEIGHT_XL, rem(4)),
+      set(SIZE_HEIGHT_2XL, rem(5))
+    );
+  }
 
 }
