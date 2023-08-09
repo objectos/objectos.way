@@ -17,6 +17,8 @@ package objectos.css.util;
 
 import objectos.css.internal.RandomStringGenerator;
 import objectos.css.tmpl.Api;
+import objectos.lang.Equals;
+import objectos.lang.HashCode;
 
 public class CustomProperty<T extends Api.PropertyValue> {
 
@@ -93,6 +95,17 @@ public class CustomProperty<T extends Api.PropertyValue> {
 
   private static IllegalArgumentException invalidName(String name) {
     return new IllegalArgumentException(name + " is not a valid CSS custom property name");
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof CustomProperty that
+        && Equals.of(cssName, that.cssName);
+  }
+
+  @Override
+  public final int hashCode() {
+    return HashCode.of(cssName);
   }
 
   @Override
