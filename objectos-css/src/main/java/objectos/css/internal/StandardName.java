@@ -481,6 +481,8 @@ public enum StandardName implements SelectorInstruction, ColorValue, ValueInstru
 
   spaceEvenly("space-evenly"),
 
+  span("span"),
+
   square("square"),
 
   squareButton("square-button"),

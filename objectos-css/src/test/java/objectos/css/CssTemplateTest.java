@@ -230,32 +230,6 @@ public class CssTemplateTest {
     );
   }
 
-  @Test
-  public void propertyGridTemplateColumns() {
-    test(
-      new CssTemplate() {
-        @Override
-        protected void definition() {
-          style(
-            body,
-
-            gridTemplateColumns(fr(1)),
-            gridTemplateColumns(repeat(l(16), minmax($0, fr(1)))),
-            gridTemplateColumns(inherit)
-          );
-        }
-      },
-
-      """
-      body {
-        grid-template-columns: 1fr;
-        grid-template-columns: repeat(16, minmax(0, 1fr));
-        grid-template-columns: inherit;
-      }
-      """
-    );
-  }
-
   @Test(description = """
   [#419] Preflight 13
 
@@ -1045,6 +1019,56 @@ public class CssTemplateTest {
         font-weight: 400;
         font-weight: 600;
         font-weight: inherit;
+      }
+      """
+    );
+  }
+
+  @Test
+  public void propertyGridColumn() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            div,
+
+            gridColumnStart(auto),
+            gridColumnEnd(span, l(1))
+          );
+        }
+      },
+
+      """
+      div {
+        grid-column-start: auto;
+        grid-column-end: span 1;
+      }
+      """
+    );
+  }
+
+  @Test
+  public void propertyGridTemplateColumns() {
+    test(
+      new CssTemplate() {
+        @Override
+        protected void definition() {
+          style(
+            body,
+
+            gridTemplateColumns(fr(1)),
+            gridTemplateColumns(repeat(l(16), minmax($0, fr(1)))),
+            gridTemplateColumns(inherit)
+          );
+        }
+      },
+
+      """
+      body {
+        grid-template-columns: 1fr;
+        grid-template-columns: repeat(16, minmax(0, 1fr));
+        grid-template-columns: inherit;
       }
       """
     );

@@ -136,8 +136,6 @@ public enum StandardTypeSelector implements SelectorInstruction {
 
   select("select"),
 
-  span("span"),
-
   strike("strike"),
 
   strong("strong"),

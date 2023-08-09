@@ -114,6 +114,10 @@ public enum Property implements PropertyName {
 
   FONT_WEIGHT("font-weight"),
 
+  GRID_COLUMN_END("grid-column-end"),
+
+  GRID_COLUMN_START("grid-column-start"),
+
   GRID_TEMPLATE_COLUMNS("grid-template-columns"),
 
   HEIGHT("height"),

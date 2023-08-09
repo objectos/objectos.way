@@ -137,6 +137,7 @@ public final class CssSpec extends CssSelfGen {
 
     // G
 
+    gridColumn();
     gridTemplateColumns();
 
     // H
@@ -1468,6 +1469,29 @@ public final class CssSpec extends CssSelfGen {
       sig(globalKeyword, "value"),
       sig(fontWeightValue, "value")
     );
+  }
+
+  private void gridColumn() {
+    List<String> names;
+    names = List.of("grid-column-end", "grid-column-start");
+
+    ValueType span;
+    span = t(
+      "SpanValue",
+
+      k("span")
+    );
+
+    for (var name : names) {
+      property(
+        name,
+
+        sig(globalKeyword, "value"),
+        sig(k("auto"), "value"),
+        sig(INT, "value"),
+        sig(span, "span", intType, "value")
+      );
+    }
   }
 
   private void gridTemplateColumns() {

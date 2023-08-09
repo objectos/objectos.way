@@ -118,6 +118,8 @@ import objectos.css.tmpl.Api.RubyKeyword;
 import objectos.css.tmpl.Api.Selector;
 import objectos.css.tmpl.Api.SmallKeyword;
 import objectos.css.tmpl.Api.SolidKeyword;
+import objectos.css.tmpl.Api.SpanKeyword;
+import objectos.css.tmpl.Api.SpanValue;
 import objectos.css.tmpl.Api.StartKeyword;
 import objectos.css.tmpl.Api.StringLiteral;
 import objectos.css.tmpl.Api.StyleDeclaration;
@@ -291,8 +293,6 @@ abstract class GeneratedCssTemplate {
   protected static final Selector section = StandardTypeSelector.section;
 
   protected static final Selector select = StandardTypeSelector.select;
-
-  protected static final Selector span = StandardTypeSelector.span;
 
   protected static final Selector strike = StandardTypeSelector.strike;
 
@@ -1221,6 +1221,8 @@ abstract class GeneratedCssTemplate {
   protected static final JustifyContentValue spaceBetween = StandardName.spaceBetween;
 
   protected static final JustifyContentValue spaceEvenly = StandardName.spaceEvenly;
+
+  protected static final SpanKeyword span = StandardName.span;
 
   protected static final CounterStyleValue square = StandardName.square;
 
@@ -2383,6 +2385,54 @@ abstract class GeneratedCssTemplate {
   protected final StyleDeclaration fontWeight(FontWeightValue value) {
     Check.notNull(value, "value == null");
     declaration(Property.FONT_WEIGHT, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnEnd(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_COLUMN_END, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnEnd(AutoKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_COLUMN_END, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnEnd(int value) {
+    declaration(Property.GRID_COLUMN_END, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnEnd(SpanValue span, IntLiteral value) {
+    Check.notNull(span, "span == null");
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_COLUMN_END, span, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnStart(GlobalKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_COLUMN_START, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnStart(AutoKeyword value) {
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_COLUMN_START, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnStart(int value) {
+    declaration(Property.GRID_COLUMN_START, value);
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final StyleDeclaration gridColumnStart(SpanValue span, IntLiteral value) {
+    Check.notNull(span, "span == null");
+    Check.notNull(value, "value == null");
+    declaration(Property.GRID_COLUMN_START, span, value);
     return InternalInstruction.INSTANCE;
   }
 

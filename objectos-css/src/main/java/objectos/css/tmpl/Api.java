@@ -186,6 +186,8 @@ public final class Api {
 
   public sealed interface ResizeValue extends PropertyValue {}
 
+  public sealed interface SpanValue extends PropertyValue {}
+
   public sealed interface TextAlignValue extends PropertyValue {}
 
   public sealed interface TextDecorationLineMultiValue extends TextDecorationLineSingleValue {}
@@ -276,6 +278,7 @@ public final class Api {
       PositionValue,
       QuotesValue,
       ResizeValue,
+      SpanValue,
       TextAlignValue,
       TextDecorationLineMultiValue,
       TextDecorationLineSingleValue,
@@ -365,6 +368,8 @@ public final class Api {
 
   public sealed interface SolidKeyword extends LineStyle, OutlineStyleValue, TextDecorationStyleValue {}
 
+  public sealed interface SpanKeyword extends Selector, SpanValue {}
+
   public sealed interface StartKeyword extends JustifyContentPosition, JustifyContentValue, TextAlignValue {}
 
   public sealed interface SubKeyword extends Selector, VerticalAlignValue {}
@@ -409,6 +414,7 @@ public final class Api {
       RubyKeyword,
       SmallKeyword,
       SolidKeyword,
+      SpanKeyword,
       StartKeyword,
       SubKeyword,
       TableKeyword,
