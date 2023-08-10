@@ -7,7 +7,7 @@ props="release.props"
 if [ ! -f "$props" ]; then
 	echo
 	echo "Cannot proceed"
-	echo "$file was not found."
+	echo "$props was not found."
 	echo
 	
 	exit 1

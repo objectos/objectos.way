@@ -7,7 +7,7 @@ props="release.props"
 if [ ! -f "$props" ]; then
 	echo
 	echo "Cannot proceed"
-	echo "$file was not found."
+	echo "${props} was not found."
 	echo
 	
 	exit 1
@@ -17,20 +17,13 @@ while IFS='=' read -r key value; do
 	eval ${key}=\${value}
 done < "$props"
 
-objectos_ci="/home/mendo/objectos/ci/objectos"
-objectos_git="/home/mendo/objectos/git/objectos.git"
-monorepo_git="/home/mendo/objectos/git/monorepo.git"
-
 echo
 echo "----------------------"
 echo "Hello! The release script will run with the following options:"
 echo 
 echo "      release=${release}"
 echo "     www slug=${slug}"
-echo
-echo "  objectos ci=${objectos_ci}"
-echo " objectos git=${objectos_git}"
-echo " monorepo git=${monorepo_git}"
+echo "      javadoc=${javadoc}"
 echo
 echo "----------------------"
 echo
@@ -44,24 +37,13 @@ if [[ ! $REPLY =~ ^[yY]$ ]]; then
 fi
 
 echo
-echo "Pulling git changes: ${objectos_ci}"
-echo
-
-git -C "${objectos_ci}" checkout -f
-
-git -C "${objectos_ci}" pull
-
-echo
-echo "Running mvn clean install ${objectos_ci}"
-echo 
-
-mvn --file "${objectos_ci}" clean install
-
-echo
 echo "Running mvn javadoc:aggregate"
 echo 
 
-mvn --quiet --file "${objectos_ci}" -PskipTests -DdestDir="api" -DreportOutputDirectory="/home/mendo/objectos/www/www.objectos.com.br/docs/${slug}" javadoc:aggregate
+mvn --quiet -PskipTests -DdestDir="api" -DreportOutputDirectory="${javadoc}/${slug}" javadoc:aggregate
+
+rm -r ${javadoc}/latest/api
+rsync -a ${javadoc}/${slug}/api ${javadoc}/latest
 
 echo
 echo "Running mvn deploy"
@@ -75,20 +57,14 @@ MAVEN_OPTS="$MAVEN_OPTS --add-opens java.desktop/java.awt.font=ALL-UNNAMED"
 
 export MAVEN_OPTS
 
-mvn --quiet --file "${objectos_ci}" -Prelease,skipTests deploy
+mvn --quiet -Prelease,skipTests deploy
 
 echo
-echo "Tagging ${objectos_git}"
+echo "Tagging ${release}"
 echo 
 
-git -C "${objectos_git}" tag -a "objectos-${release}" -m "Objectos ${release}"
-git -C "${objectos_git}" push github master
-git -C "${objectos_git}" push github --tags
-
-echo
-echo "Tagging ${monorepo_git}"
-echo 
-
-git -C "${monorepo_git}" tag -a "objectos-${release}" -m "Objectos ${release}"
-git -C "${monorepo_git}" push github master
-git -C "${monorepo_git}" push github --tags
+git tag -a "objectos-${release}" -m "Objectos ${release}"
+git push origin master
+git push origin --tags
+git push github master
+git push github --tags

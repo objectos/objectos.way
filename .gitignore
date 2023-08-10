@@ -5,3 +5,4 @@ target-java6/
 target-java7/
 target-java8/
 test-output/
+/release.props
