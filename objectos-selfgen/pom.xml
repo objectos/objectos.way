@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>br.com.objectos</groupId>
 		<artifactId>objectos</artifactId>
-		<version>0.7.1-SNAPSHOT</version>
+		<version>0.7.1</version>
 	</parent>
 	
 	<artifactId>objectos-selfgen</artifactId>
@@ -61,12 +61,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>objectos-code</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>objectos-specgen</artifactId>
-			<version>${project.version}</version>
-			<scope>runtime</scope>
 		</dependency>
 		
 		<dependency>
