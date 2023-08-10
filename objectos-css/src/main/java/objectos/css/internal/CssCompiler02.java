@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import objectos.util.ObjectArrays;
 
-final class Compiler02 extends Compiler01 {
+final class CssCompiler02 extends CssCompiler01 {
 
   private static final Pattern FONT_FAMILY = Pattern.compile("-?[a-zA-Z_][a-zA-Z0-9_-]*");
 

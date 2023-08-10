@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+
+props="release.props"
+
+if [ ! -f "$props" ]; then
+	echo
+	echo "Cannot proceed"
+	echo "${props} was not found."
+	echo
+	
+	exit 1
+fi
+
+while IFS='=' read -r key value; do
+	eval ${key}=\${value}
+done < "$props"
+
+echo
+echo "----------------------"
+echo "Hello! The release script will run with the following options:"
+echo 
+echo "         next=${next}"
+echo
+echo "----------------------"
+echo
+
+# https://stackoverflow.com/a/1885534
+read -p "Enter y/Y to proceed. Any other key to cancel." -n 1 -r
+echo
+
+if [[ ! $REPLY =~ ^[yY]$ ]]; then
+	[[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
+fi
+
+echo
+echo "Running mvn versions:set -DnewVersion=${next}"
+echo
+
+mvn --quiet versions:set -DnewVersion=${next} -DgenerateBackupPoms=false
+
+echo
+echo "Running mvn clean install"
+echo
+
+mvn --quiet clean install
+
+echo
+echo "Commiting and pushing changes"
+echo
+
+git commit -am "next version is Objectos ${next}"
+git push

@@ -22,14 +22,14 @@ import objectos.css.util.CustomProperty;
 import objectos.css.util.Length;
 import org.testng.annotations.Test;
 
-public class Compiler01Test {
+public class CssCompiler01Test {
 
   @Test(description = """
   html {}
   """)
   public void testCase01() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -59,8 +59,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase02() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -111,8 +111,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase04() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -191,8 +191,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase05() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -251,8 +251,8 @@ public class Compiler01Test {
   [hidden] {}
   """)
   public void testCase06() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -288,8 +288,8 @@ public class Compiler01Test {
   TC 07: selector pseudo class/element
   """)
   public void testCase07() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -330,8 +330,8 @@ public class Compiler01Test {
   TC 08: selector joined
   """)
   public void testCase08() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -364,8 +364,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase09() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -421,8 +421,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase10() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -478,8 +478,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase11() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -541,8 +541,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase12() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -600,8 +600,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase13() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -669,8 +669,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase14() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -763,8 +763,8 @@ public class Compiler01Test {
     ClassSelector foo;
     foo = ClassSelector.of("foo");
 
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -796,8 +796,8 @@ public class Compiler01Test {
     ClassSelector foo;
     foo = ClassSelector.of("foo");
 
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -842,8 +842,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase17() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -984,8 +984,8 @@ public class Compiler01Test {
     CustomProperty<ColorValue> textColor;
     textColor = CustomProperty.named("--text-color");
 
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -1038,8 +1038,8 @@ public class Compiler01Test {
     CustomProperty<ColorValue> textColor;
     textColor = CustomProperty.named("--text-color");
 
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -1101,8 +1101,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase20() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -1156,8 +1156,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase21() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -1232,8 +1232,8 @@ public class Compiler01Test {
   }
   """)
   public void testCase22() {
-    Compiler01 compiler;
-    compiler = new Compiler01();
+    CssCompiler01 compiler;
+    compiler = new CssCompiler01();
 
     compiler.compilationBegin();
 
@@ -1285,7 +1285,7 @@ public class Compiler01Test {
     );
   }
 
-  private void test(Compiler01 compiler, byte... expected) {
+  private void test(CssCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);
 

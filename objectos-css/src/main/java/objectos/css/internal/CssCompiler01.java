@@ -23,7 +23,7 @@ import objectos.css.util.CustomProperty;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
-class Compiler01 extends CssTemplateApi {
+class CssCompiler01 extends CssTemplateApi {
 
   byte[] aux;
 
