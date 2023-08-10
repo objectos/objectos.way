@@ -607,6 +607,8 @@ class Compiler01 extends CssTemplateApi {
   }
 
   private void auxVarInt(int value) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 1);
+
     auxIndex = Bytes.varInt(aux, auxIndex, value);
   }
 
@@ -1228,35 +1230,35 @@ class Compiler01 extends CssTemplateApi {
         // keep startIndex handy
         int startIndex;
         startIndex = contents;
-        
+
         // decode the element's length
         byte lengthByte;
         lengthByte = aux[index++];
-        
+
         int length;
         length = Bytes.toInt(lengthByte, 0);
-        
+
         // point to next element
         contents += length;
-        
+
         // keep the old proto handy
         byte proto;
         proto = main[startIndex];
-        
+
         // mark this element
         main[startIndex] = ByteProto.markedOf(length);
-        
+
         // ensure main can hold at least 3 elements
         // 0   - ByteProto
         // 1-2 - variable length
         main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-        
+
         // byte proto
         main[mainIndex++] = proto;
-        
+
         // variable length
         length = mainIndex - startIndex;
-        
+
         mainIndex = Bytes.varInt(main, mainIndex, length);
         }
         */

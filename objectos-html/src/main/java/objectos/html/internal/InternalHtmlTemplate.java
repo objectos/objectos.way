@@ -38,6 +38,12 @@ public abstract class InternalHtmlTemplate extends GeneratedHtmlTemplate {
     api().addDoctype();
   }
 
+  protected final void add(HtmlTemplate template) {
+    Check.notNull(template, "template == null");
+
+    api().addTemplate(template);
+  }
+
   protected final void addTemplate(HtmlTemplate template) {
     api().addTemplate(template);
   }

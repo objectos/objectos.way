@@ -15,18 +15,21 @@
  */
 package objectos.carbonated.internal;
 
-import objectos.carbonated.Carbon;
 import objectos.carbonated.Palette;
 import objectos.carbonated.Theme;
 
-public final class ThemeWhite extends Theme {
+final class ThemeWhite extends Theme {
 
-  ThemeWhite() {}
+  private final Impl impl;
+
+  ThemeWhite(Impl impl) {
+    this.impl = impl;
+  }
 
   @Override
   protected final void definition() {
     style(
-      Carbon.WHITE_THEME,
+      impl.THEME_WHITE,
 
       background(var(BACKGROUND)),
       color(var(TEXT_PRIMARY)),
@@ -65,9 +68,9 @@ public final class ThemeWhite extends Theme {
   }
 
   /*
-
+  
   packages/themes/src/white.js
-
+  
   import  {
   // Blue
   blue20,
@@ -75,7 +78,7 @@ public final class ThemeWhite extends Theme {
   blue40,
   blue60,
   blue70,
-
+  
   // Gray
   gray10,
   gray20,
@@ -87,7 +90,7 @@ public final class ThemeWhite extends Theme {
   gray70,
   gray80,
   gray100,
-
+  
   // Support
   blue50,
   green40,
@@ -97,7 +100,7 @@ public final class ThemeWhite extends Theme {
   red50,
   red60,
   purple60,
-
+  
   // Constants
   white,
   whiteHover,
@@ -105,16 +108,16 @@ public final class ThemeWhite extends Theme {
   gray10Hover,
   }from'@carbon/colors';import
   { adjustAlpha }from'./tools';
-
+  
   // Background
   export const background=white;export const backgroundInverse=gray80;export const backgroundBrand=blue60;export const backgroundActive=
-
+  
   adjustAlpha(gray50, 0.5);
   export const backgroundHover = adjustAlpha(gray50, 0.12);
   export const backgroundInverseHover = gray80Hover;
   export const backgroundSelected = adjustAlpha(gray50, 0.2);
   export const backgroundSelectedHover = adjustAlpha(gray50, 0.32);
-
+  
   // Layer
   // layer-01
   export const layer01 = gray10;
@@ -122,88 +125,88 @@ public final class ThemeWhite extends Theme {
   export const layerHover01 = gray10Hover;
   export const layerSelected01 = gray20;
   export const layerSelectedHover01 = gray20Hover;
-
+  
   // layer-02
   export const layer02 = white;
   export const layerActive02 = gray30;
   export const layerHover02 = whiteHover;
   export const layerSelected02 = gray20;
   export const layerSelectedHover02 = gray20Hover;
-
+  
   // layer-03
   export const layer03 = gray10;
   export const layerActive03 = gray30;
   export const layerHover03 = gray10Hover;
   export const layerSelected03 = gray20;
   export const layerSelectedHover03 = gray20Hover;
-
+  
   // layer
   export const layerSelectedInverse = gray100;
   export const layerSelectedDisabled = gray50;
-
+  
   // layer-accent-01
   export const layerAccent01 = gray20;
   export const layerAccentActive01 = gray40;
   export const layerAccentHover01 = gray20Hover;
-
+  
   // layer-accent-02
   export const layerAccent02 = gray20;
   export const layerAccentActive02 = gray40;
   export const layerAccentHover02 = gray20Hover;
-
+  
   // layer-accent-03
   export const layerAccent03 = gray20;
   export const layerAccentActive03 = gray40;
   export const layerAccentHover03 = gray20Hover;
-
+  
   // Field
   // field-01
   export const field01 = gray10;
   export const fieldHover01 = gray10Hover;
-
+  
   // field-02
   export const field02 = white;
   export const fieldHover02 = whiteHover;
-
+  
   // field-03
   export const field03 = gray10;
   export const fieldHover03 = gray10Hover;
-
+  
   // Border
   // border-subtle-00
   export const borderSubtle00 = gray20;
-
+  
   // border-subtle-01
   export const borderSubtle01 = gray30;
   export const borderSubtleSelected01 = gray30;
-
+  
   // border-subtle-02
   export const borderSubtle02 = gray20;
   export const borderSubtleSelected02 = gray30;
-
+  
   // border-subtle-03
   export const borderSubtle03 = gray30;
   export const borderSubtleSelected03 = gray30;
-
+  
   // border-strong
   export const borderStrong01 = gray50;
   export const borderStrong02 = gray50;
   export const borderStrong03 = gray50;
-
+  
   // border-tile
   export const borderTile01 = gray30;
   export const borderTile02 = gray40;
   export const borderTile03 = gray30;
-
+  
   // border-inverse
   export const borderInverse = gray100;
-
+  
   // border-interactive
   export const borderInteractive = blue60;
-
+  
   // border
   export const borderDisabled = gray30;
-
+  
   // Text
   export const textPrimary = gray100;
   export const textSecondary = gray70;
@@ -214,7 +217,7 @@ public final class ThemeWhite extends Theme {
   export const textOnColor = white;
   export const textOnColorDisabled = gray50;
   export const textDisabled = adjustAlpha(textPrimary, 0.25);
-
+  
   // Link
   export const linkPrimary = blue60;
   export const linkPrimaryHover = blue70;
@@ -223,7 +226,7 @@ public final class ThemeWhite extends Theme {
   export const linkVisited = purple60;
   export const linkInverseActive = gray10;
   export const linkInverseHover = blue30;
-
+  
   // Icon
   export const iconPrimary = gray100;
   export const iconSecondary = gray70;
@@ -232,7 +235,7 @@ public final class ThemeWhite extends Theme {
   export const iconOnColorDisabled = gray50;
   export const iconDisabled = adjustAlpha(iconPrimary, 0.25);
   export const iconInteractive = blue60;
-
+  
   // Support
   export const supportError = red60;
   export const supportSuccess = green50;
@@ -245,23 +248,23 @@ public final class ThemeWhite extends Theme {
   export const supportCautionMinor = yellow30;
   export const supportCautionMajor = orange40;
   export const supportCautionUndefined = purple60;
-
+  
   // Focus
   export const focus = blue60;
   export const focusInset = white;
   export const focusInverse = white;
-
+  
   // Skeleton
   export const skeletonBackground = whiteHover;
   export const skeletonElement = gray30;
-
+  
   // Misc
   export const interactive = blue60;
   export const highlight = blue20;
   export const overlay = 'rgba(22, 22, 22, 0.5)';
   export const toggleOff = gray50;
   export const shadow = 'rgba(0, 0, 0, 0.3)';
-
+  
   // Type
   export {
   caption01,
@@ -299,7 +302,7 @@ public final class ThemeWhite extends Theme {
   display03,
   display04,
   } from '@carbon/type';
-
+  
   // Layout
   // Spacing
   export {
@@ -346,9 +349,9 @@ public final class ThemeWhite extends Theme {
   layout06,
   layout07,
   } from '@carbon/layout';
-
+  
   packages/themes/src/component-tokens/button/tokens.js
-
+  
   const buttonSeparator = {
   fallback: '#e0e0e0',
   whiteTheme: '#e0e0e0',
@@ -356,105 +359,105 @@ public final class ThemeWhite extends Theme {
   g90: '#161616',
   g100: '#161616',
   };
-
+  
   const buttonPrimary = {
   whiteTheme: '#0f62fe',
   g10: '#0f62fe',
   g90: '#0f62fe',
   g100: '#0f62fe',
   };
-
+  
   const buttonSecondary = {
   whiteTheme: '#393939',
   g10: '#393939',
   g90: '#6f6f6f',
   g100: '#6f6f6f',
   };
-
+  
   const buttonTertiary = {
   whiteTheme: '#0f62fe',
   g10: '#0f62fe',
   g90: '#ffffff',
   g100: '#ffffff',
   };
-
+  
   const buttonDangerPrimary = {
   whiteTheme: '#da1e28',
   g10: '#da1e28',
   g90: '#da1e28',
   g100: '#da1e28',
   };
-
+  
   const buttonDangerSecondary = {
   whiteTheme: '#da1e28',
   g10: '#da1e28',
   g90: '#ff8389',
   g100: '#fa4d56',
   };
-
+  
   const buttonDangerActive = {
   whiteTheme: '#750e13',
   g10: '#750e13',
   g90: '#750e13',
   g100: '#750e13',
   };
-
+  
   const buttonPrimaryActive = {
   whiteTheme: '#002d9c',
   g10: '#002d9c',
   g90: '#002d9c',
   g100: '#002d9c',
   };
-
+  
   const buttonSecondaryActive = {
   whiteTheme: '#6f6f6f',
   g10: '#6f6f6f',
   g90: '#393939',
   g100: '#393939',
   };
-
+  
   const buttonTertiaryActive = {
   whiteTheme: '#002d9c',
   g10: '#002d9c',
   g90: '#c6c6c6',
   g100: '#c6c6c6',
   };
-
+  
   const buttonDangerHover = {
   whiteTheme: '#b81921',
   g10: '#b81921',
   g90: '#b81921',
   g100: '#b81921',
   };
-
+  
   const buttonPrimaryHover = {
   whiteTheme: '#0050e6',
   g10: '#0050e6',
   g90: '#0050e6',
   g100: '#0050e6',
   };
-
+  
   const buttonSecondaryHover = {
   whiteTheme: '#474747',
   g10: '#474747',
   g90: '#5e5e5e',
   g100: '#5e5e5e',
   };
-
+  
   const buttonTertiaryHover = {
   whiteTheme: '#0050e6',
   g10: '#0050e6',
   g90: '#f4f4f4',
   g100: '#f4f4f4',
   };
-
+  
   const buttonDisabled = {
   whiteTheme: '#c6c6c6',
   g10: '#c6c6c6',
   g90: 'rgb(141 141 141 / 30%)',
   g100: 'rgb(141 141 141 / 30%)',
   };
-
+  
   export {
   buttonSeparator,
   buttonPrimary,
@@ -472,7 +475,7 @@ public final class ThemeWhite extends Theme {
   buttonTertiaryHover,
   buttonDisabled,
   };
-
+  
    */
 
 }

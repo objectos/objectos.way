@@ -13,14 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated;
+package objectos.carbonated.internal;
 
-import objectos.css.Css;
+import objectos.css.CssTemplate;
 
-public class CarbonTest {
+final class ImplStyles extends CssTemplate {
 
-  static {
-    Css.randomSeed(84321674516L);
+  private final Impl impl;
+
+  ImplStyles(Impl impl) {
+    this.impl = impl;
+  }
+
+  @Override
+  protected final void definition() {
+    install(new BaseReset());
+
+    install(new BaseLayout());
+
+    install(new BaseTypography());
+
+    install(new ThemeWhite(impl));
+
+    install(new CompButtonStyles());
+
+    install(new CompGridStyles(impl));
+
+    install(new CompNotificationStyles());
   }
 
 }

@@ -20,25 +20,25 @@ import static org.testng.Assert.assertEquals;
 import java.util.Random;
 import org.testng.annotations.Test;
 
-public class RandomGeneratorTest {
+public class NextTest {
 
   @Test
   public void test() {
-    RandomGenerator.Builder b;
-    b = RandomGenerator.builder();
+    Next.Builder b;
+    b = Next.builder();
 
     b.random(new Random(123456789L));
 
     b.nameLength(5);
 
-    RandomGenerator g;
-    g = b.build();
+    Next next;
+    next = b.build();
 
-    assertEquals(g.classSelector(), ClassSelector.of("ieilf"));
-    assertEquals(g.classSelector(), ClassSelector.of("mgmdu"));
+    assertEquals(next.classSelector(), ClassSelector.of("ieilf"));
+    assertEquals(next.classSelector(), ClassSelector.of("mgmdu"));
 
-    assertEquals(g.customProperty(), CustomProperty.named("--w1puk"));
-    assertEquals(g.customProperty(), CustomProperty.named("--c8e9b"));
+    assertEquals(next.customProperty(), CustomProperty.named("--w1puk"));
+    assertEquals(next.customProperty(), CustomProperty.named("--c8e9b"));
   }
 
 }

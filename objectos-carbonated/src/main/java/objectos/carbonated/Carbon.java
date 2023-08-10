@@ -15,27 +15,66 @@
  */
 package objectos.carbonated;
 
-import objectos.carbonated.internal.StyleSheetBuilderImpl;
+import objectos.carbonated.internal.CompGrid;
+import objectos.carbonated.internal.CompGridColumn;
+import objectos.carbonated.internal.Impl;
+import objectos.carbonated.internal.ImplBuilder;
 import objectos.css.StyleSheet;
 import objectos.css.util.ClassSelector;
+import objectos.css.util.Next;
+import objectos.html.HtmlTemplate;
+import objectos.html.tmpl.Instruction.ElementContents;
 
 /**
  * @since 0.7.1
  */
-public final class Carbon {
+public sealed interface Carbon permits Impl {
 
-  public sealed interface StyleSheetBuilder permits StyleSheetBuilderImpl {
+  sealed interface Builder permits ImplBuilder {
 
-    StyleSheet build();
+    Carbon build();
+
+    Builder next(Next value);
 
   }
 
-  public static final ClassSelector WHITE_THEME = ClassSelector.randomClassSelector(5);
+  /**
+   * The grid component.
+   */
+  sealed interface Grid permits CompGrid {
 
-  private Carbon() {}
+    HtmlTemplate render(ElementContents... contents);
 
-  public static StyleSheetBuilder styleSheetBuilder() {
-    return new StyleSheetBuilderImpl();
   }
+
+  /**
+   * A column of the grid.
+   */
+  sealed interface GridColumn permits CompGridColumn {
+
+    HtmlTemplate render(ElementContents... contents);
+
+  }
+
+  static Builder builder() {
+    return new ImplBuilder();
+  }
+
+  /**
+   * Creates a new grid component instance.
+   */
+  Grid grid();
+
+  /**
+   * Creates a new column instance.
+   */
+  GridColumn gridColumn();
+
+  /**
+   * The white theme selector.
+   */
+  ClassSelector whiteTheme();
+
+  StyleSheet styleSheet();
 
 }

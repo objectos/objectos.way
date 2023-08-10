@@ -23,7 +23,7 @@ import objectos.lang.Check;
 import objectos.lang.RandomString;
 import objectos.util.GrowableSet;
 
-public class RandomGenerator {
+public class Next {
 
   public static class Builder {
 
@@ -33,7 +33,7 @@ public class RandomGenerator {
 
     private Builder() {}
 
-    public final RandomGenerator build() {
+    public final Next build() {
       if (random == null) {
         random = new Random();
       }
@@ -41,7 +41,7 @@ public class RandomGenerator {
       RandomString randomString;
       randomString = new RandomString(random);
 
-      return new RandomGenerator(randomString, length);
+      return new Next(randomString, length);
     }
 
     public final Builder nameLength(int value) {
@@ -68,7 +68,7 @@ public class RandomGenerator {
 
   private final Set<String> names = new GrowableSet<>();
 
-  private RandomGenerator(RandomString random, int length) {
+  private Next(RandomString random, int length) {
     this.randomString = random;
     this.length = length;
   }

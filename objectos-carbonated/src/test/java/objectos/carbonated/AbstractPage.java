@@ -13,32 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
-import objectos.carbonated.Carbon;
-import objectos.css.CssTemplate;
 import objectos.css.StyleSheet;
+import objectos.html.HtmlTemplate;
 
-public final class StyleSheetBuilderImpl extends CssTemplate implements Carbon.StyleSheetBuilder {
+abstract class AbstractPage extends HtmlTemplate {
 
-  @Override
-  public final StyleSheet build() {
-    return compile();
+  final Carbon carbon;
+
+  AbstractPage(Carbon carbon) {
+    this.carbon = carbon;
   }
 
   @Override
   protected final void definition() {
-    install(new BaseReset());
+    doctype();
+    html(
+      carbon.whiteTheme(),
 
-    install(new BaseLayout());
+      head(
+        f(this::head0)
+      ),
+      body(
+        f(this::body0)
+      )
+    );
+  }
 
-    install(new BaseTypography());
+  abstract void body0();
 
-    install(new ThemeWhite());
+  void head0() {
+    meta(charset("utf-8"));
+    meta(httpEquiv("x-ua-compatible"), content("ie=edge"));
+    meta(name("viewport"), content("width=device-width, initial-scale=1, shrink-to-fit=no"));
 
-    install(new CompButtonStyles());
+    StyleSheet styleSheet;
+    styleSheet = carbon.styleSheet();
 
-    install(new CompNotificationStyles());
+    style(styleSheet.toString());
   }
 
 }
