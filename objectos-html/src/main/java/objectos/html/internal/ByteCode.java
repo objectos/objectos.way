@@ -20,15 +20,16 @@ final class ByteCode {
   //Symbols
 
   public static final byte GT = -1;
+  public static final byte NL = -2;
 
   //Tag
 
-  public static final byte START_TAG = -2;
-  public static final byte END_TAG = -3;
+  public static final byte START_TAG = -3;
+  public static final byte END_TAG = -4;
 
   //Stuff
 
-  public static final byte EMPTY_ELEMENT = -4;
+  public static final byte EMPTY_ELEMENT = -5;
 
   private ByteCode() {}
 

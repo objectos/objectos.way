@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-public class ByteCodeFauxGenerator extends FauxGenerator {
-  public static void main(String[] args) {
-    var gen = new ByteCodeFauxGenerator();
+import java.io.IOException;
+import objectos.html.internal.StandardHtmlWriter;
+import objectos.lang.Check;
 
-    gen.execute();
+public sealed interface HtmlWriter permits StandardHtmlWriter {
+
+  static HtmlWriter of(Appendable appendable) {
+    Check.notNull(appendable, "appendable == null");
+
+    return new StandardHtmlWriter(appendable);
   }
 
-  @Override
-  public final void execute() {
-    comment("Symbols");
+  void write(CompiledHtml html) throws IOException;
 
-    value("GT");
-    value("NL");
-
-    comment("Tag");
-
-    value("START_TAG");
-    value("END_TAG");
-
-    comment("Stuff");
-
-    value("EMPTY_ELEMENT");
-  }
 }

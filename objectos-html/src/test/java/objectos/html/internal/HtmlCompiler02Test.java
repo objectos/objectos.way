@@ -49,7 +49,8 @@ public class HtmlCompiler02Test {
       Bytes.encodeInt0(0),
 
       ByteCode.END_TAG,
-      (byte) StandardElementName.HTML.ordinal()
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
     );
   }
 

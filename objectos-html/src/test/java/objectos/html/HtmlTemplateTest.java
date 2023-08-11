@@ -32,7 +32,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase00() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html();
@@ -1318,6 +1318,13 @@ public class HtmlTemplateTest {
     sink.toStringBuilder(template, stringBuilder);
 
     assertEquals(stringBuilder.toString(), expected);
+  }
+
+  private void test(HtmlTemplate2 template, String expected) {
+    String result;
+    result = template.toString();
+
+    assertEquals(result, expected);
   }
 
 }

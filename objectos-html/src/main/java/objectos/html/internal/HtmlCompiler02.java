@@ -19,12 +19,14 @@ import java.util.Arrays;
 
 final class HtmlCompiler02 extends HtmlCompiler01 {
 
+  @Override
   public final CompiledMarkup compile() {
     return new CompiledMarkup(
       Arrays.copyOf(aux, auxIndex)
     );
   }
 
+  @Override
   public final void optimize() {
     // we will use the aux list to store our byte code
     auxIndex = 0;
@@ -63,6 +65,10 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       };
 
       index += length;
+    }
+
+    if (index > 0) {
+      auxAdd(ByteCode.NL);
     }
   }
 

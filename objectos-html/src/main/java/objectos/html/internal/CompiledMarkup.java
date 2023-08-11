@@ -15,14 +15,33 @@
  */
 package objectos.html.internal;
 
-import objectos.html.HyperTextMarkup;
+import java.io.IOException;
+import objectos.html.CompiledHtml;
+import objectos.html.HtmlWriter;
 
-public final class CompiledMarkup implements HyperTextMarkup {
+public final class CompiledMarkup implements CompiledHtml {
 
   final byte[] main;
 
   CompiledMarkup(byte[] main) {
     this.main = main;
+  }
+
+  @Override
+  public final String toString() {
+    try {
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      HtmlWriter writer;
+      writer = HtmlWriter.of(sb);
+
+      writer.write(this);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
 }

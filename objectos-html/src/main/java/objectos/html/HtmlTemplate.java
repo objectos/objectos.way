@@ -27,17 +27,6 @@ public non-sealed abstract class HtmlTemplate
     extends InternalHtmlTemplate implements ElementContents {
 
   @Override
-  public final String toString() {
-    var sink = new HtmlSink();
-
-    var out = new StringBuilder();
-
-    sink.toStringBuilder(this, out);
-
-    return out.toString();
-  }
-
-  @Override
   protected abstract void definition();
 
 }

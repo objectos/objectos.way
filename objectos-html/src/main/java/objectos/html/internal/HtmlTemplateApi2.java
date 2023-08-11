@@ -15,6 +15,7 @@
  */
 package objectos.html.internal;
 
+import objectos.html.CompiledHtml;
 import objectos.html.tmpl.StandardElementName;
 
 /**
@@ -30,8 +31,16 @@ public abstract class HtmlTemplateApi2 {
 
   public abstract void compilationEnd();
 
+  public CompiledHtml compile() {
+    throw new UnsupportedOperationException();
+  }
+
   public abstract void elementBegin(StandardElementName name);
 
   public abstract void elementEnd();
+
+  public void optimize() {
+    throw new UnsupportedOperationException();
+  }
 
 }

@@ -13,29 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html;
 
-public class ByteCodeFauxGenerator extends FauxGenerator {
-  public static void main(String[] args) {
-    var gen = new ByteCodeFauxGenerator();
-
-    gen.execute();
-  }
-
-  @Override
-  public final void execute() {
-    comment("Symbols");
-
-    value("GT");
-    value("NL");
-
-    comment("Tag");
-
-    value("START_TAG");
-    value("END_TAG");
-
-    comment("Stuff");
-
-    value("EMPTY_ELEMENT");
-  }
-}
+public interface CompiledHtml {}

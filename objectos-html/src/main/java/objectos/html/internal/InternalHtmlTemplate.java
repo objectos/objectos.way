@@ -15,6 +15,7 @@
  */
 package objectos.html.internal;
 
+import objectos.html.HtmlSink;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.FragmentAction;
@@ -36,6 +37,17 @@ public abstract class InternalHtmlTemplate extends GeneratedHtmlTemplate {
 
   public final void doctype() {
     api().addDoctype();
+  }
+
+  @Override
+  public final String toString() {
+    var sink = new HtmlSink();
+
+    var out = new StringBuilder();
+
+    sink.toStringBuilder((HtmlTemplate) this, out);
+
+    return out.toString();
   }
 
   protected final void add(HtmlTemplate template) {

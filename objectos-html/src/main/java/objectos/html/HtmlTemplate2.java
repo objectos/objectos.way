@@ -15,4 +15,16 @@
  */
 package objectos.html;
 
-public interface HyperTextMarkup {}
+import objectos.html.internal.InternalHtmlTemplate2;
+
+/**
+ * TODO
+ *
+ * @since 0.5.0
+ */
+public abstract class HtmlTemplate2 extends InternalHtmlTemplate2 {
+
+  @Override
+  protected abstract void definition();
+
+}
