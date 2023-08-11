@@ -41,6 +41,15 @@ public final class Bytes {
     return int1 | int0;
   }
 
+  public static int decodeVarInt(byte int0, byte int1) {
+    int value;
+    value = int0 & VARINT_MAX1;
+
+    value |= int1 << 7;
+
+    return value;
+  }
+
   public static byte encodeInt0(int value) {
     return (byte) value;
   }
@@ -56,21 +65,21 @@ public final class Bytes {
     return encodeInt0(ordinal);
   }
 
-  public static int encodeVarInt(byte[] buf, int off, int length) {
-    if (length < 0) {
-      throw new IllegalArgumentException("Length has to be >= 0");
+  public static int encodeVarInt(byte[] buf, int off, int value) {
+    if (value < 0) {
+      throw new IllegalArgumentException("value has to be >= 0");
     }
 
-    if (length <= VARINT_MAX1) {
-      buf[off++] = (byte) length;
+    if (value <= VARINT_MAX1) {
+      buf[off++] = (byte) value;
 
       return off;
     }
 
-    if (length <= VARINT_MAX2) {
-      buf[off++] = encodeVarInt0(length);
+    if (value <= VARINT_MAX2) {
+      buf[off++] = encodeVarInt0(value);
 
-      buf[off++] = encodeVarInt1(length);
+      buf[off++] = encodeVarInt1(value);
 
       return off;
     }

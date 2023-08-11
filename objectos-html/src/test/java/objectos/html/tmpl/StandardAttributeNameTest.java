@@ -13,34 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html.internal;
+package objectos.html.tmpl;
 
-public class ByteCodeFauxGenerator extends FauxGenerator {
-  public static void main(String[] args) {
-    var gen = new ByteCodeFauxGenerator();
+import static org.testng.Assert.assertTrue;
 
-    gen.execute();
+import org.testng.annotations.Test;
+
+public class StandardAttributeNameTest {
+
+  @Test
+  public void canBeEncoded_WithSingleByte() {
+    int size;
+    size = StandardAttributeName.size();
+
+    int max;
+    max = 1 << 8;
+
+    assertTrue(size < max);
   }
 
-  @Override
-  public final void execute() {
-    comment("Symbols");
-
-    value("GT");
-    value("NL");
-    value("SPACE");
-
-    comment("Tag");
-
-    value("START_TAG");
-    value("ATTR_NAME");
-    value("ATTR_VALUE");
-    value("ATTR_VALUE_START");
-    value("ATTR_VALUE_END");
-    value("END_TAG");
-
-    comment("Stuff");
-
-    value("EMPTY_ELEMENT");
-  }
 }

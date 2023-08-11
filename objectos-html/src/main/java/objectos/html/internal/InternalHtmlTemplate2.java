@@ -65,7 +65,10 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   @Override
   final void attribute(StandardAttributeName name, String value) {
-    throw new UnsupportedOperationException("Implement me");
+    HtmlTemplateApi2 api;
+    api = api();
+
+    api.attribute(name, value);
   }
 
   @Override
@@ -73,7 +76,6 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     throw new UnsupportedOperationException("Implement me");
   }
 
-  @SuppressWarnings("unused")
   @Override
   final void element(StandardElementName name, Instruction[] contents) {
     HtmlTemplateApi2 api;
@@ -83,11 +85,9 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
     for (int i = 0; i < contents.length; i++) {
       Instruction inst;
-      inst = contents[i];
+      inst = Check.notNull(contents[i], "contents[", i, "] == null");
 
-      Check.notNull(inst, "contents[", i, "] == null");
-
-      throw new UnsupportedOperationException("Implement me");
+      api.elementValue(inst);
     }
 
     api.elementEnd();

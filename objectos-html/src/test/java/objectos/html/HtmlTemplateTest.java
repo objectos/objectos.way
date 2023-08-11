@@ -52,7 +52,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase01() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html(lang("pt-BR"));

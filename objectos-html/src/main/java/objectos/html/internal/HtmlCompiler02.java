@@ -16,13 +16,14 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.util.ObjectArrays;
 
 final class HtmlCompiler02 extends HtmlCompiler01 {
 
   @Override
   public final CompiledMarkup compile() {
     return new CompiledMarkup(
-      Arrays.copyOf(aux, auxIndex)
+      Arrays.copyOf(aux, auxIndex), objects()
     );
   }
 
@@ -59,6 +60,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           yield thisLength;
         }
 
+        case ByteProto2.MARKED5 -> 5 - 1;
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );
@@ -72,34 +75,90 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     }
   }
 
+  private int decodeLength(int index) {
+    byte len0;
+    len0 = main[index++];
+
+    auxStart = len0;
+
+    if (auxStart < 0) {
+      byte len1;
+      len1 = main[index++];
+
+      auxStart = Bytes.decodeVarInt(len0, len1);
+    }
+
+    return index;
+  }
+
   private void element(int index) {
-    int children;
-    children = 0;
+    // first proto should point to the element name
+    byte proto;
+    proto = main[index++];
 
+    // we'll keep the name value for the end tag (if necessary)
     byte name;
-    name = Byte.MIN_VALUE;
 
-    loop: while (index < main.length) {
-      byte proto;
+    switch (proto) {
+      case ByteProto2.STANDARD_NAME -> {
+        name = main[index++];
+
+        auxAdd(ByteCode.START_TAG, name);
+      }
+
+      default -> throw new IllegalArgumentException(
+        "Malformed element. Expected name but found=" + proto
+      );
+    }
+
+    // we'll iterate over the attributes (if any)
+
+    // we keep the index handy
+    int contents;
+    contents = index;
+
+    int attr;
+    attr = Integer.MIN_VALUE;
+
+    loop: while (index < mainIndex) {
       proto = main[index++];
 
       switch (proto) {
-        case ByteProto2.ELEMENT_STANDARD -> {
-          name = main[index++];
+        case ByteProto2.ATTRIBUTE1 -> {
+          index = jmp(index);
 
-          auxAdd(ByteCode.START_TAG, name);
+          // handle attr name
+
+          byte ordinalByte;
+          ordinalByte = main[mainContents++];
+
+          int ordinal;
+          ordinal = Bytes.decodeInt(ordinalByte);
+
+          if (ordinal != attr) {
+            // this is a new attribute
+            auxAdd(ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
+
+            attr = ordinal;
+          } else {
+            throw new UnsupportedOperationException("Implement me");
+          }
+
+          // handle attr value
+
+          byte int0;
+          int0 = main[mainContents++];
+
+          byte int1;
+          int1 = main[mainContents++];
+
+          auxAdd(ByteCode.ATTR_VALUE, int0, int1);
         }
 
         case ByteProto2.END -> {
-          if (children == 0) {
-            auxAdd(
-              ByteCode.GT,
-              ByteCode.EMPTY_ELEMENT,
-              (byte) mainStart
-            );
+          if (attr != Integer.MIN_VALUE) {
+            auxAdd(ByteCode.ATTR_VALUE_END);
           }
-
-          auxAdd(ByteCode.END_TAG, name);
 
           break loop;
         }
@@ -109,6 +168,78 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         );
       }
     }
+
+    // let's close the start tag
+
+    auxAdd(ByteCode.GT);
+
+    // we'll iterate over the children (if any)
+
+    // we count the children so we'll know if this element was empty or not
+    int children;
+    children = 0;
+
+    // start from the beginning
+    index = contents;
+
+    loop: while (index < mainIndex) {
+      proto = main[index++];
+
+      switch (proto) {
+        case ByteProto2.ATTRIBUTE1 -> index = skipVarInt(index);
+
+        case ByteProto2.END -> {
+          break loop;
+        }
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+    }
+
+    if (children == 0) {
+      // empty element
+
+      auxAdd(ByteCode.EMPTY_ELEMENT, (byte) mainStart);
+    }
+
+    // write end tag
+
+    auxAdd(ByteCode.END_TAG, name);
+  }
+
+  private int jmp(int index) {
+    int baseIndex;
+    baseIndex = index;
+
+    index = decodeLength(index);
+
+    mainContents = baseIndex - auxStart;
+
+    // skip ByteProto
+    mainContents++;
+
+    return index;
+  }
+
+  private Object[] objects() {
+    if (objectArray == null) {
+      return ObjectArrays.empty();
+    }
+
+    return Arrays.copyOf(objectArray, objectIndex);
+  }
+
+  private int skipVarInt(int index) {
+    byte len0;
+    len0 = main[index++];
+
+    if (len0 < 0) {
+      index++;
+    }
+
+    return index;
   }
 
 }

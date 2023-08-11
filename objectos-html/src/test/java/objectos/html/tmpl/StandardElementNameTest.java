@@ -22,14 +22,12 @@ import org.testng.annotations.Test;
 public class StandardElementNameTest {
 
   @Test
-  public void canBeEncoded() {
+  public void canBeEncoded_WithSingleByte() {
     int size;
     size = StandardElementName.size();
 
     int max;
     max = 1 << 8;
-
-    System.out.println(max);
 
     assertTrue(size < max);
   }

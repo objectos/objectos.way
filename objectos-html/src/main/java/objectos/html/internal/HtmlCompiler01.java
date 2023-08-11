@@ -15,8 +15,11 @@
  */
 package objectos.html.internal;
 
+import objectos.html.tmpl.Instruction;
+import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.ByteArrays;
+import objectos.util.ObjectArrays;
 
 class HtmlCompiler01 extends HtmlTemplateApi2 {
 
@@ -33,6 +36,32 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
   int mainIndex;
 
   int mainStart;
+
+  Object[] objectArray;
+
+  int objectIndex;
+
+  @Override
+  public final void attribute(StandardAttributeName name, String value) {
+    int ordinal;
+    ordinal = name.getCode();
+
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+      ByteProto2.ATTRIBUTE1,
+
+      // name
+      Bytes.encodeInt0(ordinal),
+
+      // value
+      Bytes.encodeInt0(object),
+      Bytes.encodeInt1(object),
+
+      ByteProto2.INTERNAL5
+    );
+  }
 
   @Override
   public final void compilationBegin() {
@@ -67,13 +96,12 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       ByteProto2.NULL,
       ByteProto2.NULL,
 
-      ByteProto2.ELEMENT_STANDARD,
+      ByteProto2.STANDARD_NAME,
 
       Bytes.encodeName(name)
     );
   }
 
-  @SuppressWarnings("unused")
   @Override
   public final void elementEnd() {
     // we iterate over each value added via elementValue(Instruction)
@@ -91,6 +119,47 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       mark = aux[index++];
 
       switch (mark) {
+        case ByteProto2.INTERNAL -> {
+          while (true) {
+            byte proto;
+            proto = main[contents];
+
+            switch (proto) {
+              case ByteProto2.ATTRIBUTE1 -> {
+                // keep the start index handy
+                int startIndex;
+                startIndex = contents;
+
+                // mark this element
+                main[contents] = ByteProto2.MARKED5;
+
+                // point to next
+                contents += 5;
+
+                // ensure main can hold least 3 elements
+                // 0   - ByteProto
+                // 1-2 - variable length
+                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+                main[mainIndex++] = proto;
+
+                int length;
+                length = mainIndex - startIndex;
+
+                mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+                continue loop;
+              }
+
+              default -> {
+                throw new UnsupportedOperationException(
+                  "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
+        }
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: mark=" + mark
         );
@@ -126,6 +195,33 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     auxIndex = auxStart;
   }
 
+  @Override
+  public final void elementValue(Instruction value) {
+    if (value == InternalInstruction.INSTANCE) {
+      // @ ByteProto
+      mainContents--;
+
+      byte proto;
+      proto = main[mainContents--];
+
+      switch (proto) {
+        case ByteProto2.INTERNAL5 -> mainContents -= 5 - 2;
+
+        default -> throw new UnsupportedOperationException(
+          "Implement me :: proto=" + proto
+        );
+      }
+
+      auxAdd(ByteProto2.INTERNAL);
+    }
+
+    else {
+      throw new UnsupportedOperationException(
+        "Implement me :: type=" + value.getClass()
+      );
+    }
+  }
+
   final void auxAdd(byte b0) {
     aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
     aux[auxIndex++] = b0;
@@ -144,6 +240,14 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     aux[auxIndex++] = b2;
   }
 
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 3);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+  }
+
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 4);
     main[mainIndex++] = b0;
@@ -151,6 +255,21 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     main[mainIndex++] = b2;
     main[mainIndex++] = b3;
     main[mainIndex++] = b4;
+  }
+
+  private int objectAdd(Object value) {
+    if (objectArray == null) {
+      objectArray = new Object[10];
+    }
+
+    objectArray = ObjectArrays.growIfNecessary(objectArray, objectIndex);
+
+    int index;
+    index = objectIndex++;
+
+    objectArray[index] = value;
+
+    return index;
   }
 
 }

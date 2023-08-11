@@ -16,12 +16,15 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler02Test {
 
-  @Test
+  @Test(description = """
+  <html></html>
+  """)
   public void testCase00() {
     HtmlCompiler02 compiler;
     compiler = new HtmlCompiler02();
@@ -43,6 +46,52 @@ public class HtmlCompiler02Test {
 
       ByteCode.START_TAG,
       (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.EMPTY_ELEMENT,
+      Bytes.encodeInt0(0),
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
+  public void testCase01() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.LANG.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteCode.ATTR_VALUE_END,
       ByteCode.GT,
 
       ByteCode.EMPTY_ELEMENT,

@@ -15,4 +15,6 @@
  */
 package objectos.html;
 
-public interface CompiledHtml {}
+import objectos.html.internal.CompiledMarkup;
+
+public sealed interface CompiledHtml permits CompiledMarkup {}

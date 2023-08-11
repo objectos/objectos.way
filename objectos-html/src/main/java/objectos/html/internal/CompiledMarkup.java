@@ -23,8 +23,12 @@ public final class CompiledMarkup implements CompiledHtml {
 
   final byte[] main;
 
-  CompiledMarkup(byte[] main) {
+  final Object[] objects;
+
+  CompiledMarkup(byte[] main, Object[] objects) {
     this.main = main;
+
+    this.objects = objects;
   }
 
   @Override

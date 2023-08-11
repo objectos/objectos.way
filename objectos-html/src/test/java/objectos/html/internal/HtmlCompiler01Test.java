@@ -16,12 +16,15 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler01Test {
 
-  @Test
+  @Test(description = """
+  <html></html>
+  """)
   public void testCase00() {
     HtmlCompiler01 compiler;
     compiler = new HtmlCompiler01();
@@ -39,10 +42,49 @@ public class HtmlCompiler01Test {
       ByteProto2.ELEMENT,
       Bytes.encodeInt0(5),
       Bytes.encodeInt1(5),
-      ByteProto2.ELEMENT_STANDARD,
+      ByteProto2.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
       ByteProto2.END,
       Bytes.encodeInt0(5),
+      ByteProto2.INTERNAL
+    );
+  }
+
+  @Test(description = """
+  <html lang="pt-BR"></html>
+  """)
+  public void testCase01() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED5,
+      (byte) StandardAttributeName.LANG.ordinal(),
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto2.INTERNAL5,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteProto2.ATTRIBUTE1,
+      Bytes.encodeInt0(11),
+      ByteProto2.END,
+      Bytes.encodeInt0(12),
       ByteProto2.INTERNAL
     );
   }
