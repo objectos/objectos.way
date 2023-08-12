@@ -248,6 +248,15 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     aux[auxIndex++] = b3;
   }
 
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 4);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+  }
+
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 4);
     main[mainIndex++] = b0;

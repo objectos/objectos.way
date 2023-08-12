@@ -89,6 +89,55 @@ public class HtmlCompiler01Test {
     );
   }
 
+  @Test(description = """
+  <html class="no-js" lang="pt-BR"></html>
+  """)
+  public void testCase02() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.CLASS, "no-js");
+    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED5,
+      (byte) StandardAttributeName.CLASS.ordinal(),
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto2.INTERNAL5,
+
+      ByteProto2.MARKED5,
+      (byte) StandardAttributeName.LANG.ordinal(),
+      Bytes.encodeInt0(1),
+      Bytes.encodeInt1(1),
+      ByteProto2.INTERNAL5,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(9),
+      Bytes.encodeInt1(9),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteProto2.ATTRIBUTE1,
+      Bytes.encodeInt0(16),
+      ByteProto2.ATTRIBUTE1,
+      Bytes.encodeInt0(13),
+      ByteProto2.END,
+      Bytes.encodeInt0(19),
+      ByteProto2.INTERNAL
+    );
+  }
+
   private void test(HtmlCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

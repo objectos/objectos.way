@@ -72,7 +72,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase02() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html(className("no-js"), lang("pt-BR"));

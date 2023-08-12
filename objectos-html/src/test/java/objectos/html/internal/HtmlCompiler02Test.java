@@ -103,6 +103,62 @@ public class HtmlCompiler02Test {
     );
   }
 
+  @Test(description = """
+  <html class="no-js" lang="pt-BR"></html>
+  """)
+  public void testCase02() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.CLASS, "no-js");
+    compiler.attribute(StandardAttributeName.LANG, "pt-BR");
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.CLASS.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteCode.ATTR_VALUE_END,
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.LANG.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(1),
+      Bytes.encodeInt1(1),
+      ByteCode.ATTR_VALUE_END,
+      ByteCode.GT,
+
+      ByteCode.EMPTY_ELEMENT,
+      Bytes.encodeInt0(0),
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
   private void test(CompiledMarkup markup, byte... expected) {
     byte[] result;
     result = markup.main;

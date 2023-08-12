@@ -135,14 +135,18 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           int ordinal;
           ordinal = Bytes.decodeInt(ordinalByte);
 
-          if (ordinal != attr) {
-            // this is a new attribute
+          if (attr == Integer.MIN_VALUE) {
+            // this is the first attribute
             auxAdd(ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
-
-            attr = ordinal;
-          } else {
-            throw new UnsupportedOperationException("Implement me");
           }
+
+          else if (attr != ordinal) {
+            // this is a new attribute
+            auxAdd(ByteCode.ATTR_VALUE_END,
+              ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
+          }
+
+          attr = ordinal;
 
           // handle attr value
 
