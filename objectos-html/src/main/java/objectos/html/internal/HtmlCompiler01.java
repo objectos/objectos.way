@@ -125,6 +125,10 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       mark = aux[index++];
 
       switch (mark) {
+        case ByteProto2.ATTRIBUTE_ID -> {
+          mainAdd(mark, aux[index++], aux[index++]);
+        }
+
         case ByteProto2.INTERNAL -> {
           while (true) {
             byte proto;
@@ -234,11 +238,34 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       auxAdd(ByteProto2.INTERNAL);
     }
 
+    else if (value instanceof Instruction.ExternalAttribute.Id id) {
+      int index;
+      index = externalValue(id.value());
+
+      auxAdd(
+        ByteProto2.ATTRIBUTE_ID,
+
+        Bytes.encodeInt0(index),
+        Bytes.encodeInt1(index)
+      );
+    }
+
     else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + value.getClass()
       );
     }
+  }
+
+  private int externalValue(String value) {
+    String result;
+    result = value;
+
+    if (value == null) {
+      result = "null";
+    }
+
+    return objectAdd(result);
   }
 
   @Override

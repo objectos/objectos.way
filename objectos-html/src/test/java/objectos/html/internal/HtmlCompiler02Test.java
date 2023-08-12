@@ -19,6 +19,7 @@ import java.util.Arrays;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.html.tmpl.TestIdSelector;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler02Test {
@@ -314,6 +315,80 @@ public class HtmlCompiler02Test {
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HEAD.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
+  @Test(description = """
+  External id attributes
+  """)
+  public void testCase13() {
+    TestIdSelector foo;
+    foo = new TestIdSelector("foo");
+
+    TestIdSelector bar;
+    bar = new TestIdSelector("bar");
+
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(bar);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(foo);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.ID.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(1),
+      Bytes.encodeInt1(1),
+      ByteCode.ATTR_VALUE_END,
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.ID.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteCode.ATTR_VALUE_END,
+      ByteCode.GT,
+
+      ByteCode.EMPTY_ELEMENT, (byte) 1,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
 
       ByteCode.NL_OPTIONAL,
 

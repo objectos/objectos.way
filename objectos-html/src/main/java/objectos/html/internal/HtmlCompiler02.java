@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.ObjectArrays;
 
@@ -167,18 +168,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           int ordinal;
           ordinal = Bytes.decodeInt(ordinalByte);
 
-          if (attr == Integer.MIN_VALUE) {
-            // this is the first attribute
-            auxAdd(ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
-          }
-
-          else if (attr != ordinal) {
-            // this is a new attribute
-            auxAdd(ByteCode.ATTR_VALUE_END,
-              ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
-          }
-
-          attr = ordinal;
+          attr = handleAttrName(attr, ordinalByte, ordinal);
 
           // handle attr value
 
@@ -187,6 +177,28 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
           byte int1;
           int1 = main[mainContents++];
+
+          auxAdd(ByteCode.ATTR_VALUE, int0, int1);
+        }
+
+        case ByteProto2.ATTRIBUTE_ID -> {
+          // handle attr name
+
+          int ordinal;
+          ordinal = StandardAttributeName.ID.ordinal();
+
+          byte ordinalByte;
+          ordinalByte = Bytes.encodeInt0(ordinal);
+
+          attr = handleAttrName(attr, ordinalByte, ordinal);
+
+          // handle attr value
+
+          byte int0;
+          int0 = main[index++];
+
+          byte int1;
+          int1 = main[index++];
 
           auxAdd(ByteCode.ATTR_VALUE, int0, int1);
         }
@@ -237,6 +249,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       switch (proto) {
         case ByteProto2.ATTRIBUTE1 -> index = skipVarInt(index);
 
+        case ByteProto2.ATTRIBUTE_ID -> index += 2;
+
         case ByteProto2.ELEMENT -> {
           children++;
 
@@ -278,6 +292,21 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       indentationWrite();
       auxAdd(ByteCode.END_TAG, name);
     }
+  }
+
+  private int handleAttrName(int attr, byte ordinalByte, int ordinal) {
+    if (attr == Integer.MIN_VALUE) {
+      // this is the first attribute
+      auxAdd(ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
+    }
+
+    else if (attr != ordinal) {
+      // this is a new attribute
+      auxAdd(ByteCode.ATTR_VALUE_END,
+        ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
+    }
+
+    return ordinal;
   }
 
   private int jmp(int index) {

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.tmpl;
 
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 
-class TestClassSelector implements ExternalAttribute.StyleClass {
+public final class TestClassSelector implements ExternalAttribute.StyleClass {
 
   private final String value;
 
-  TestClassSelector(String value) {
+  public TestClassSelector(String value) {
     this.value = value;
   }
 

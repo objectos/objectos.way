@@ -19,6 +19,7 @@ import java.util.Arrays;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.html.tmpl.TestIdSelector;
 import org.testng.annotations.Test;
 
 public class HtmlCompiler01Test {
@@ -294,6 +295,63 @@ public class HtmlCompiler01Test {
       Bytes.encodeInt0(16),
       ByteProto2.END,
       Bytes.encodeInt0(38),
+      ByteProto2.INTERNAL
+    );
+  }
+
+  @Test(description = """
+  External id attributes
+  """)
+  public void testCase13() {
+    TestIdSelector foo;
+    foo = new TestIdSelector("foo");
+
+    TestIdSelector bar;
+    bar = new TestIdSelector("bar");
+
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(bar);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(foo);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(8),
+      Bytes.encodeInt1(8),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.BODY.ordinal(),
+      ByteProto2.ATTRIBUTE_ID,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto2.END,
+      Bytes.encodeInt0(8),
+      ByteProto2.INTERNAL,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(10),
+      Bytes.encodeInt1(10),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteProto2.ATTRIBUTE_ID,
+      Bytes.encodeInt0(1),
+      Bytes.encodeInt1(1),
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(20),
+      ByteProto2.END,
+      Bytes.encodeInt0(21),
       ByteProto2.INTERNAL
     );
   }

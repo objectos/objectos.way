@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.html;
+package objectos.html.tmpl;
 
 import objectos.html.tmpl.Instruction.ExternalAttribute;
 
-final class TestIdSelector implements ExternalAttribute.Id {
+public final class TestIdSelector implements ExternalAttribute.Id {
 
   private final String id;
 

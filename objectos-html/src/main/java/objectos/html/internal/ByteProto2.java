@@ -29,11 +29,16 @@ final class ByteProto2 {
 
   //elements
 
-  public static final byte ATTRIBUTE0 = -8;
-  public static final byte ATTRIBUTE1 = -9;
-  public static final byte DOCTYPE = -10;
-  public static final byte ELEMENT = -11;
-  public static final byte FRAGMENT = -12;
+  public static final byte DOCTYPE = -8;
+  public static final byte ELEMENT = -9;
+  public static final byte FRAGMENT = -10;
+
+  //attributes
+
+  public static final byte ATTRIBUTE0 = -11;
+  public static final byte ATTRIBUTE1 = -12;
+  public static final byte ATTRIBUTE_CLASS = -13;
+  public static final byte ATTRIBUTE_ID = -14;
 
   private ByteProto2() {}
 
