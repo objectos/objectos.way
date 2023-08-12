@@ -86,6 +86,8 @@ public final class StandardHtmlWriter implements HtmlWriter {
 
         case ByteCode.ATTR_VALUE_START -> appendable.append("=\"");
 
+        case ByteCode.DOCTYPE -> appendable.append("<!DOCTYPE html>");
+
         case ByteCode.EMPTY_ELEMENT -> index++;
 
         case ByteCode.END_TAG -> {

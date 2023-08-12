@@ -34,11 +34,12 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("Tag");
 
-    value("START_TAG");
+    value("DOCTYPE");
     value("ATTR_NAME");
     value("ATTR_VALUE");
     value("ATTR_VALUE_START");
     value("ATTR_VALUE_END");
+    value("START_TAG");
     value("END_TAG");
 
     comment("Stuff");

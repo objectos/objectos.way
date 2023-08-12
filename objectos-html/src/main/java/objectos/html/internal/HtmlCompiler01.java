@@ -80,6 +80,11 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
   }
 
   @Override
+  public final void doctype() {
+    mainAdd(ByteProto2.DOCTYPE);
+  }
+
+  @Override
   public final void elementBegin(StandardElementName name) {
     // we mark the start of our aux list
     auxStart = auxIndex;
@@ -185,6 +190,25 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
                 continue loop;
               }
+
+              case ByteProto2.MARKED -> {
+                contents++;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeInt(len0, len1);
+
+                // point to next element
+                contents += length;
+              }
+
+              case ByteProto2.MARKED5 -> contents += 5;
 
               default -> {
                 throw new UnsupportedOperationException(
@@ -307,6 +331,11 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     aux[auxIndex++] = b2;
     aux[auxIndex++] = b3;
     aux[auxIndex++] = b4;
+  }
+
+  private void mainAdd(byte b0) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 0);
+    main[mainIndex++] = b0;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {

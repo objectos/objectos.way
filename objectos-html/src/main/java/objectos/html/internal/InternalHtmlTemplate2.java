@@ -25,8 +25,6 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   private HtmlTemplateApi2 api;
 
-  protected abstract void definition();
-
   public final CompiledHtml compile() {
     try {
       api = new HtmlCompiler02();
@@ -53,6 +51,12 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     return compiled.toString();
   }
 
+  protected abstract void definition();
+
+  protected final void doctype() {
+    api().doctype();
+  }
+
   @Override
   final void ambiguous(Ambiguous name, String text) {
     throw new UnsupportedOperationException("Implement me");
@@ -72,11 +76,6 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
   }
 
   @Override
-  final void element(StandardElementName name, String text) {
-    throw new UnsupportedOperationException("Implement me");
-  }
-
-  @Override
   final void element(StandardElementName name, Instruction[] contents) {
     HtmlTemplateApi2 api;
     api = api();
@@ -91,6 +90,11 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     }
 
     api.elementEnd();
+  }
+
+  @Override
+  final void element(StandardElementName name, String text) {
+    throw new UnsupportedOperationException("Implement me");
   }
 
   private HtmlTemplateApi2 api() {

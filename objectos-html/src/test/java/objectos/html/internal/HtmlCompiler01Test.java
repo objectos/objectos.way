@@ -181,6 +181,39 @@ public class HtmlCompiler01Test {
     );
   }
 
+  @Test(description = """
+  <!DOCTYPE html>
+  <html></html>
+  """)
+  public void testCase09() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.doctype();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.DOCTYPE,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(5),
+      Bytes.encodeInt1(5),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteProto2.END,
+      Bytes.encodeInt0(5),
+      ByteProto2.INTERNAL
+    );
+  }
+
   private void test(HtmlCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

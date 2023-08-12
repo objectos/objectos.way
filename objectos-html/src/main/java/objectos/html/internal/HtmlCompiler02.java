@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.StandardElementName;
 import objectos.util.ObjectArrays;
 
 final class HtmlCompiler02 extends HtmlCompiler01 {
@@ -45,17 +46,30 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     int index;
     index = 0;
 
+    int elemCount;
+    elemCount = 0;
+
     while (index < mainIndex) {
       byte proto;
       proto = main[index++];
 
       int length;
       length = switch (proto) {
+        case ByteProto2.DOCTYPE -> {
+          elemCount = newLineIfNecessary(elemCount);
+
+          auxAdd(ByteCode.DOCTYPE);
+
+          yield 0;
+        }
+
         case ByteProto2.ELEMENT -> {
+          elemCount = newLineIfNecessary(elemCount);
+
           int thisLength;
           thisLength = Bytes.decodeInt(main[index++], main[index++]);
 
-          element(index);
+          element(index, false);
 
           yield thisLength;
         }
@@ -77,6 +91,14 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     }
   }
 
+  private int newLineIfNecessary(int count) {
+    if (count != 0) {
+      auxAdd(ByteCode.NL_OPTIONAL);
+    }
+
+    return count + 1;
+  }
+
   private int decodeLength(int index) {
     byte len0;
     len0 = main[index++];
@@ -93,13 +115,16 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     return index;
   }
 
-  private void element(int index) {
+  private void element(int index, boolean metadata) {
     // write the indentation before the start tag (if necessary)
     indentationWrite();
 
     // first proto should point to the element name
     byte proto;
     proto = main[index++];
+
+    // is this element the <head>?
+    boolean head;
 
     // we'll keep the name value for the end tag (if necessary)
     byte name;
@@ -109,6 +134,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         name = main[index++];
 
         auxAdd(ByteCode.START_TAG, name);
+
+        head = name == StandardElementName.HEAD.ordinal();
       }
 
       default -> throw new IllegalArgumentException(
@@ -184,6 +211,14 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
     auxAdd(ByteCode.GT);
 
+    if (metadata) {
+      // this element is a direct child of <head>
+      // -> no children
+      // -> no end tag
+
+      return;
+    }
+
     // we'll iterate over the children (if any)
 
     // we increase the indentation level writing out the children
@@ -203,9 +238,6 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         case ByteProto2.ATTRIBUTE1 -> index = skipVarInt(index);
 
         case ByteProto2.ELEMENT -> {
-          if (children == 0) {
-          }
-
           children++;
 
           auxAdd(ByteCode.NL_OPTIONAL);
@@ -215,7 +247,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           // skip fixed length
           mainContents += 2;
 
-          element(mainContents);
+          element(mainContents, head);
         }
 
         case ByteProto2.END -> {

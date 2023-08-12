@@ -204,6 +204,46 @@ public class HtmlCompiler02Test {
     );
   }
 
+  @Test(description = """
+  <!DOCTYPE html>
+  <html></html>
+  """)
+  public void testCase09() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.doctype();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.DOCTYPE,
+      ByteCode.NL_OPTIONAL,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.EMPTY_ELEMENT, (byte) 0,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
   private void test(CompiledMarkup markup, byte... expected) {
     byte[] result;
     result = markup.main;

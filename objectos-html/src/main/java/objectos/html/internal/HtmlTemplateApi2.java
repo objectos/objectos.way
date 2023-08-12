@@ -39,6 +39,8 @@ abstract class HtmlTemplateApi2 {
     throw new UnsupportedOperationException();
   }
 
+  public abstract void doctype();
+
   public abstract void elementBegin(StandardElementName name);
 
   public abstract void elementEnd();

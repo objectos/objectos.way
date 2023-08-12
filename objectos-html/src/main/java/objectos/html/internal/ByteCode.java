@@ -27,16 +27,17 @@ final class ByteCode {
 
   //Tag
 
-  public static final byte START_TAG = -6;
+  public static final byte DOCTYPE = -6;
   public static final byte ATTR_NAME = -7;
   public static final byte ATTR_VALUE = -8;
   public static final byte ATTR_VALUE_START = -9;
   public static final byte ATTR_VALUE_END = -10;
-  public static final byte END_TAG = -11;
+  public static final byte START_TAG = -11;
+  public static final byte END_TAG = -12;
 
   //Stuff
 
-  public static final byte EMPTY_ELEMENT = -12;
+  public static final byte EMPTY_ELEMENT = -13;
 
   private ByteCode() {}
 
