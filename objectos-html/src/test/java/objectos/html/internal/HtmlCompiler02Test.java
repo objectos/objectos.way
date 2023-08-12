@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import org.testng.annotations.Test;
@@ -237,6 +238,84 @@ public class HtmlCompiler02Test {
       ByteCode.GT,
 
       ByteCode.EMPTY_ELEMENT, (byte) 0,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
+  @Test(description = """
+  fragment inclusion
+  """)
+  public void testCase10() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    FragmentAction action;
+    action = () -> {
+      compiler.attribute(StandardAttributeName.CHARSET, "utf-8");
+
+      compiler.elementBegin(StandardElementName.META);
+      compiler.elementValue(InternalInstruction.INSTANCE);
+      compiler.elementEnd();
+    };
+
+    compiler.fragment(action);
+
+    compiler.elementBegin(StandardElementName.HEAD);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HEAD.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 2,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.META.ordinal(),
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.CHARSET.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteCode.ATTR_VALUE_END,
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HEAD.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),

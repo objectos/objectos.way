@@ -15,6 +15,7 @@
  */
 package objectos.html.internal;
 
+import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -131,82 +132,24 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
             switch (proto) {
               case ByteProto2.ATTRIBUTE1 -> {
-                // keep the start index handy
-                int startIndex;
-                startIndex = contents;
-
-                // mark this element
-                main[contents] = ByteProto2.MARKED5;
-
-                // point to next
-                contents += 5;
-
-                // ensure main can hold least 3 elements
-                // 0   - ByteProto
-                // 1-2 - variable length
-                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
-                main[mainIndex++] = proto;
-
-                int length;
-                length = mainIndex - startIndex;
-
-                mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+                contents = encodeAttribute1(contents, proto);
 
                 continue loop;
               }
 
               case ByteProto2.ELEMENT -> {
-                // keep the start index handy
-                int startIndex;
-                startIndex = contents;
-
-                // mark this element
-                main[contents++] = ByteProto2.MARKED;
-
-                // decode the length
-                byte len0;
-                len0 = main[contents++];
-
-                byte len1;
-                len1 = main[contents++];
-
-                int length;
-                length = Bytes.decodeInt(len0, len1);
-
-                // point to next element
-                contents += length;
-
-                // ensure main can hold least 3 elements
-                // 0   - ByteProto
-                // 1-2 - variable length
-                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
-                main[mainIndex++] = proto;
-
-                length = mainIndex - startIndex;
-
-                mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+                contents = encodeElement(contents, proto);
 
                 continue loop;
               }
 
-              case ByteProto2.MARKED -> {
-                contents++;
+              case ByteProto2.FRAGMENT -> {
+                contents = encodeFragment(contents);
 
-                // decode the length
-                byte len0;
-                len0 = main[contents++];
-
-                byte len1;
-                len1 = main[contents++];
-
-                int length;
-                length = Bytes.decodeInt(len0, len1);
-
-                // point to next element
-                contents += length;
+                continue loop;
               }
+
+              case ByteProto2.MARKED -> contents = encodeMarked(contents);
 
               case ByteProto2.MARKED5 -> contents += 5;
 
@@ -256,7 +199,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
   @Override
   public final void elementValue(Instruction value) {
-    if (value == InternalInstruction.INSTANCE) {
+    if (value == InternalInstruction.INSTANCE || value == InternalFragment.INSTANCE) {
       // @ ByteProto
       mainContents--;
 
@@ -298,6 +241,49 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     }
   }
 
+  @Override
+  public final void fragment(FragmentAction action) {
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    int startIndex;
+    startIndex = mainIndex;
+
+    mainAdd(
+      ByteProto2.FRAGMENT,
+
+      // length takes 2 bytes
+      ByteProto2.NULL,
+      ByteProto2.NULL
+    );
+
+    action.execute();
+
+    // ensure main can hold 4 more elements
+    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+
+    // mark the end
+    main[mainIndex++] = ByteProto2.END;
+
+    // store the distance to the contents (yes, reversed)
+    int length;
+    length = mainIndex - startIndex - 1;
+
+    mainIndex = Bytes.encodeVarIntR(main, mainIndex, length);
+
+    // trailer proto
+    main[mainIndex++] = ByteProto2.INTERNAL;
+
+    // set the end index of the declaration
+    length = mainIndex - startIndex;
+
+    // skip ByteProto.FOO + len0 + len1
+    length -= 3;
+
+    // we skip the first byte proto
+    main[startIndex + 1] = Bytes.encodeInt0(length);
+    main[startIndex + 2] = Bytes.encodeInt1(length);
+  }
+
   final void auxAdd(byte b0) {
     aux = ByteArrays.growIfNecessary(aux, auxIndex + 0);
     aux[auxIndex++] = b0;
@@ -333,9 +319,141 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     aux[auxIndex++] = b4;
   }
 
+  private int encodeAttribute1(int contents, byte proto) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = ByteProto2.MARKED5;
+
+    // point to next
+    int offset;
+    offset = 5;
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
+  private int encodeElement(int contents, byte proto) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents++] = ByteProto2.MARKED;
+
+    // decode the length
+    byte len0;
+    len0 = main[contents++];
+
+    byte len1;
+    len1 = main[contents++];
+
+    // point to next element
+    int offset;
+    offset = Bytes.decodeInt(len0, len1);
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
+  private int encodeFragment(int contents) {
+    int index;
+    index = contents;
+
+    // mark this fragment
+    main[index++] = ByteProto2.MARKED;
+
+    // decode the length
+    byte len0;
+    len0 = main[index++];
+
+    byte len1;
+    len1 = main[index++];
+
+    // point to next element
+    int offset;
+    offset = Bytes.decodeInt(len0, len1);
+
+    int maxIndex;
+    maxIndex = index + offset;
+
+    loop: while (index < maxIndex) {
+      byte proto;
+      proto = main[index];
+
+      switch (proto) {
+        case ByteProto2.ELEMENT -> index = encodeElement(index, proto);
+
+        case ByteProto2.END -> {
+          break loop;
+        }
+
+        case ByteProto2.MARKED -> index = encodeMarked(index);
+
+        case ByteProto2.MARKED5 -> index += 5;
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+          );
+        }
+      }
+    }
+
+    return maxIndex;
+  }
+
+  private int encodeMarked(int contents) {
+    contents++;
+
+    // decode the length
+    byte len0;
+    len0 = main[contents++];
+
+    byte len1;
+    len1 = main[contents++];
+
+    int length;
+    length = Bytes.decodeInt(len0, len1);
+
+    // point to next element
+    return contents + length;
+  }
+
   private void mainAdd(byte b0) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 0);
     main[mainIndex++] = b0;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {

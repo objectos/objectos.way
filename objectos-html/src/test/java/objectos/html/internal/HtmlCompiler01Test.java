@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import org.testng.annotations.Test;
@@ -210,6 +211,89 @@ public class HtmlCompiler01Test {
       (byte) StandardElementName.HTML.ordinal(),
       ByteProto2.END,
       Bytes.encodeInt0(5),
+      ByteProto2.INTERNAL
+    );
+  }
+
+  @Test(description = """
+  fragment inclusion
+  """)
+  public void testCase10() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    FragmentAction action;
+    action = () -> {
+      compiler.attribute(StandardAttributeName.CHARSET, "utf-8");
+
+      compiler.elementBegin(StandardElementName.META);
+      compiler.elementValue(InternalInstruction.INSTANCE);
+      compiler.elementEnd();
+    };
+
+    compiler.fragment(action);
+
+    compiler.elementBegin(StandardElementName.HEAD);
+    compiler.elementValue(InternalFragment.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(18),
+      Bytes.encodeInt1(18),
+
+      ByteProto2.MARKED5,
+      (byte) StandardAttributeName.CHARSET.ordinal(),
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto2.INTERNAL5,
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.META.ordinal(),
+      ByteProto2.ATTRIBUTE1,
+      Bytes.encodeInt0(11),
+      ByteProto2.END,
+      Bytes.encodeInt0(12),
+      ByteProto2.INTERNAL,
+
+      // fragment end
+      ByteProto2.END,
+      Bytes.encodeInt0(18),
+      ByteProto2.INTERNAL,
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HEAD.ordinal(),
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(19),
+      ByteProto2.END,
+      Bytes.encodeInt0(28),
+      ByteProto2.INTERNAL,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(16),
+      ByteProto2.END,
+      Bytes.encodeInt0(38),
       ByteProto2.INTERNAL
     );
   }

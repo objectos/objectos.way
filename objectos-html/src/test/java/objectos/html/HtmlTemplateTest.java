@@ -278,7 +278,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase10() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html(
@@ -310,7 +310,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase11() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html(
@@ -350,7 +350,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase12() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html(

@@ -33,6 +33,7 @@ final class ByteProto2 {
   public static final byte ATTRIBUTE1 = -9;
   public static final byte DOCTYPE = -10;
   public static final byte ELEMENT = -11;
+  public static final byte FRAGMENT = -12;
 
   private ByteProto2() {}
 

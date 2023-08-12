@@ -16,7 +16,9 @@
 package objectos.html.internal;
 
 import objectos.html.CompiledHtml;
+import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
+import objectos.html.tmpl.Instruction.Fragment;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.lang.Check;
@@ -55,6 +57,12 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   protected final void doctype() {
     api().doctype();
+  }
+
+  protected final Fragment f(FragmentAction action) {
+    api().fragment(action);
+
+    return InternalFragment.INSTANCE;
   }
 
   @Override

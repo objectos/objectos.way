@@ -40,5 +40,6 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("ATTRIBUTE1");
     value("DOCTYPE");
     value("ELEMENT");
+    value("FRAGMENT");
   }
 }
