@@ -138,6 +138,49 @@ public class HtmlCompiler01Test {
     );
   }
 
+  @Test(description = """
+  <html><head></head></html>
+  """)
+  public void testCase03() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.HEAD);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(5),
+      Bytes.encodeInt1(5),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HEAD.ordinal(),
+      ByteProto2.END,
+      Bytes.encodeInt0(5),
+      ByteProto2.INTERNAL,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(14),
+      ByteProto2.END,
+      Bytes.encodeInt0(15),
+      ByteProto2.INTERNAL
+    );
+  }
+
   private void test(HtmlCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

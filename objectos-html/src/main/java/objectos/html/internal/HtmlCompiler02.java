@@ -60,6 +60,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           yield thisLength;
         }
 
+        case ByteProto2.MARKED -> Bytes.decodeInt(main[index++], main[index++]);
+
         case ByteProto2.MARKED5 -> 5 - 1;
 
         default -> throw new UnsupportedOperationException(
@@ -92,6 +94,9 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
   }
 
   private void element(int index) {
+    // write the indentation before the start tag (if necessary)
+    indentationWrite();
+
     // first proto should point to the element name
     byte proto;
     proto = main[index++];
@@ -159,6 +164,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           auxAdd(ByteCode.ATTR_VALUE, int0, int1);
         }
 
+        case ByteProto2.ELEMENT -> index = skipVarInt(index);
+
         case ByteProto2.END -> {
           if (attr != Integer.MIN_VALUE) {
             auxAdd(ByteCode.ATTR_VALUE_END);
@@ -179,6 +186,9 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
     // we'll iterate over the children (if any)
 
+    // we increase the indentation level writing out the children
+    indentationInc();
+
     // we count the children so we'll know if this element was empty or not
     int children;
     children = 0;
@@ -192,6 +202,22 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       switch (proto) {
         case ByteProto2.ATTRIBUTE1 -> index = skipVarInt(index);
 
+        case ByteProto2.ELEMENT -> {
+          if (children == 0) {
+          }
+
+          children++;
+
+          auxAdd(ByteCode.NL_OPTIONAL);
+
+          index = jmp(index);
+
+          // skip fixed length
+          mainContents += 2;
+
+          element(mainContents);
+        }
+
         case ByteProto2.END -> {
           break loop;
         }
@@ -202,15 +228,24 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       }
     }
 
+    // we've written all of the children, decrease indentation
+
+    indentationDec();
+
     if (children == 0) {
-      // empty element
+      // this element is empty, write end tag in the same line.
 
-      auxAdd(ByteCode.EMPTY_ELEMENT, (byte) mainStart);
+      auxAdd(
+        ByteCode.EMPTY_ELEMENT, (byte) mainStart,
+        ByteCode.END_TAG, name
+      );
+    } else {
+      // element w/ children, write end tag in the next line
+
+      auxAdd(ByteCode.NL_OPTIONAL);
+      indentationWrite();
+      auxAdd(ByteCode.END_TAG, name);
     }
-
-    // write end tag
-
-    auxAdd(ByteCode.END_TAG, name);
   }
 
   private int jmp(int index) {
@@ -244,6 +279,22 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     }
 
     return index;
+  }
+
+  private void indentationDec() {
+    mainStart--;
+  }
+
+  private void indentationInc() {
+    mainStart++;
+  }
+
+  private void indentationWrite() {
+    if (mainStart == 0) {
+      return;
+    }
+
+    auxAdd(ByteCode.TAB, (byte) mainStart);
   }
 
 }

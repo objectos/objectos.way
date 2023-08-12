@@ -28,7 +28,9 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     value("GT");
     value("NL");
+    value("NL_OPTIONAL");
     value("SPACE");
+    value("TAB");
 
     comment("Tag");
 

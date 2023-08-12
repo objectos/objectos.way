@@ -21,20 +21,22 @@ final class ByteCode {
 
   public static final byte GT = -1;
   public static final byte NL = -2;
-  public static final byte SPACE = -3;
+  public static final byte NL_OPTIONAL = -3;
+  public static final byte SPACE = -4;
+  public static final byte TAB = -5;
 
   //Tag
 
-  public static final byte START_TAG = -4;
-  public static final byte ATTR_NAME = -5;
-  public static final byte ATTR_VALUE = -6;
-  public static final byte ATTR_VALUE_START = -7;
-  public static final byte ATTR_VALUE_END = -8;
-  public static final byte END_TAG = -9;
+  public static final byte START_TAG = -6;
+  public static final byte ATTR_NAME = -7;
+  public static final byte ATTR_VALUE = -8;
+  public static final byte ATTR_VALUE_START = -9;
+  public static final byte ATTR_VALUE_END = -10;
+  public static final byte END_TAG = -11;
 
   //Stuff
 
-  public static final byte EMPTY_ELEMENT = -10;
+  public static final byte EMPTY_ELEMENT = -12;
 
   private ByteCode() {}
 

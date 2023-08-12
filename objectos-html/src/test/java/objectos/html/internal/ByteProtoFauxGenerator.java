@@ -29,6 +29,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
     value("END");
     value("INTERNAL");
     value("INTERNAL5");
+    value("MARKED");
     value("MARKED5");
     value("NULL");
     value("STANDARD_NAME");

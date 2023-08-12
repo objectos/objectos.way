@@ -22,15 +22,16 @@ final class ByteProto2 {
   public static final byte END = -1;
   public static final byte INTERNAL = -2;
   public static final byte INTERNAL5 = -3;
-  public static final byte MARKED5 = -4;
-  public static final byte NULL = -5;
-  public static final byte STANDARD_NAME = -6;
+  public static final byte MARKED = -4;
+  public static final byte MARKED5 = -5;
+  public static final byte NULL = -6;
+  public static final byte STANDARD_NAME = -7;
 
   //elements
 
-  public static final byte ATTRIBUTE0 = -7;
-  public static final byte ATTRIBUTE1 = -8;
-  public static final byte ELEMENT = -9;
+  public static final byte ATTRIBUTE0 = -8;
+  public static final byte ATTRIBUTE1 = -9;
+  public static final byte ELEMENT = -10;
 
   private ByteProto2() {}
 

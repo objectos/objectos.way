@@ -48,8 +48,7 @@ public class HtmlCompiler02Test {
       (byte) StandardElementName.HTML.ordinal(),
       ByteCode.GT,
 
-      ByteCode.EMPTY_ELEMENT,
-      Bytes.encodeInt0(0),
+      ByteCode.EMPTY_ELEMENT, (byte) 0,
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),
@@ -94,8 +93,7 @@ public class HtmlCompiler02Test {
       ByteCode.ATTR_VALUE_END,
       ByteCode.GT,
 
-      ByteCode.EMPTY_ELEMENT,
-      Bytes.encodeInt0(0),
+      ByteCode.EMPTY_ELEMENT, (byte) 0,
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),
@@ -150,8 +148,55 @@ public class HtmlCompiler02Test {
       ByteCode.ATTR_VALUE_END,
       ByteCode.GT,
 
-      ByteCode.EMPTY_ELEMENT,
-      Bytes.encodeInt0(0),
+      ByteCode.EMPTY_ELEMENT, (byte) 0,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
+  @Test(description = """
+  <html><head></head></html>
+  """)
+  public void testCase03() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.HEAD);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HEAD.ordinal(),
+      ByteCode.GT,
+      ByteCode.EMPTY_ELEMENT, (byte) 1,
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HEAD.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),

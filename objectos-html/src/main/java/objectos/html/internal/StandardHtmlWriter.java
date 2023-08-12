@@ -106,7 +106,8 @@ public final class StandardHtmlWriter implements HtmlWriter {
 
         case ByteCode.GT -> appendable.append('>');
 
-        case ByteCode.NL -> appendable.append(NL);
+        case ByteCode.NL,
+             ByteCode.NL_OPTIONAL -> appendable.append(NL);
 
         case ByteCode.SPACE -> appendable.append(' ');
 
@@ -123,6 +124,8 @@ public final class StandardHtmlWriter implements HtmlWriter {
           appendable.append('<');
           appendable.append(name.getName());
         }
+
+        case ByteCode.TAB -> index++;
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: code=" + code

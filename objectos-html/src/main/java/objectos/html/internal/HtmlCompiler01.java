@@ -151,6 +151,41 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
                 continue loop;
               }
 
+              case ByteProto2.ELEMENT -> {
+                // keep the start index handy
+                int startIndex;
+                startIndex = contents;
+
+                // mark this element
+                main[contents++] = ByteProto2.MARKED;
+
+                // decode the length
+                byte len0;
+                len0 = main[contents++];
+
+                byte len1;
+                len1 = main[contents++];
+
+                int length;
+                length = Bytes.decodeInt(len0, len1);
+
+                // point to next element
+                contents += length;
+
+                // ensure main can hold least 3 elements
+                // 0   - ByteProto
+                // 1-2 - variable length
+                main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+                main[mainIndex++] = proto;
+
+                length = mainIndex - startIndex;
+
+                mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+                continue loop;
+              }
+
               default -> {
                 throw new UnsupportedOperationException(
                   "Implement me :: proto=" + proto
@@ -205,6 +240,23 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       proto = main[mainContents--];
 
       switch (proto) {
+        case ByteProto2.INTERNAL -> {
+          byte len0;
+          len0 = main[mainContents--];
+
+          int length;
+          length = len0;
+
+          if (length < 0) {
+            byte len1;
+            len1 = main[mainContents--];
+
+            length = Bytes.decodeVarInt(len0, len1);
+          }
+
+          mainContents -= length;
+        }
+
         case ByteProto2.INTERNAL5 -> mainContents -= 5 - 2;
 
         default -> throw new UnsupportedOperationException(
