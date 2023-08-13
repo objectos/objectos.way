@@ -129,6 +129,25 @@ public final class StandardHtmlWriter implements HtmlWriter {
 
         case ByteCode.TAB -> index++;
 
+        case ByteCode.TEXT -> {
+          byte int0;
+          int0 = bytes[index++];
+
+          byte int1;
+          int1 = bytes[index++];
+
+          int objectIndex;
+          objectIndex = Bytes.decodeInt(int0, int1);
+
+          Object o;
+          o = objects[objectIndex];
+
+          String value;
+          value = o.toString();
+
+          writeText(value);
+        }
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: code=" + code
         );
@@ -153,6 +172,10 @@ public final class StandardHtmlWriter implements HtmlWriter {
     return isAsciiDigit(c)
         || 'a' <= c && c <= 'f'
         || 'A' <= c && c <= 'F';
+  }
+
+  private void writeAmpersand() throws IOException {
+    appendable.append("&amp;");
   }
 
   private int writeAmpersandAttribute(String value, int idx, int len) throws IOException {
@@ -299,6 +322,22 @@ public final class StandardHtmlWriter implements HtmlWriter {
 
   private void writeLesserThan() throws IOException {
     appendable.append("&lt;");
+  }
+
+  private void writeText(String value) throws IOException {
+    for (int idx = 0, len = value.length(); idx < len;) {
+      var c = value.charAt(idx++);
+
+      switch (c) {
+        case '&' -> writeAmpersand();
+
+        case '<' -> writeLesserThan();
+
+        case '>' -> writeGreaterThan();
+
+        default -> appendable.append(c);
+      }
+    }
   }
 
 }

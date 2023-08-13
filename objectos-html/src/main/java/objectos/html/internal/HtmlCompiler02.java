@@ -124,19 +124,20 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     byte proto;
     proto = main[index++];
 
-    // is this element the <head>?
-    boolean head;
-
     // we'll keep the name value for the end tag (if necessary)
-    byte name;
+    StandardElementName name;
 
     switch (proto) {
       case ByteProto2.STANDARD_NAME -> {
-        name = main[index++];
+        byte ordinalByte;
+        ordinalByte = main[index++];
 
-        auxAdd(ByteCode.START_TAG, name);
+        auxAdd(ByteCode.START_TAG, ordinalByte);
 
-        head = name == StandardElementName.HEAD.ordinal();
+        int ordinal;
+        ordinal = Bytes.decodeInt(ordinalByte);
+
+        name = StandardElementName.getByCode(ordinal);
       }
 
       default -> throw new IllegalArgumentException(
@@ -213,6 +214,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           break loop;
         }
 
+        case ByteProto2.TEXT -> index += 2;
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );
@@ -240,6 +243,10 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     int children;
     children = 0;
 
+    // we also count the text nodes
+    int text;
+    text = 0;
+
     // start from the beginning
     index = contents;
 
@@ -261,11 +268,20 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           // skip fixed length
           mainContents += 2;
 
+          boolean head;
+          head = name == StandardElementName.HEAD;
+
           element(mainContents, head);
         }
 
         case ByteProto2.END -> {
           break loop;
+        }
+
+        case ByteProto2.TEXT -> {
+          text++;
+
+          auxAdd(ByteCode.TEXT, main[index++], main[index++]);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -279,19 +295,25 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     indentationDec();
 
     if (children == 0) {
-      // this element is empty, write end tag in the same line.
+      if (text == 0) {
+        // this element is empty, write end tag in the same line.
 
-      auxAdd(
-        ByteCode.EMPTY_ELEMENT, (byte) mainStart,
-        ByteCode.END_TAG, name
-      );
+        auxAdd(ByteCode.EMPTY_ELEMENT, (byte) mainStart);
+      }
     } else {
-      // element w/ children, write end tag in the next line
+      // element w/ children -> write end tag in the next line
 
       auxAdd(ByteCode.NL_OPTIONAL);
       indentationWrite();
-      auxAdd(ByteCode.END_TAG, name);
     }
+
+    int nameOrdinal;
+    nameOrdinal = name.ordinal();
+
+    byte nameByte;
+    nameByte = Bytes.encodeInt0(nameOrdinal);
+
+    auxAdd(ByteCode.END_TAG, nameByte);
   }
 
   private int handleAttrName(int attr, byte ordinalByte, int ordinal) {

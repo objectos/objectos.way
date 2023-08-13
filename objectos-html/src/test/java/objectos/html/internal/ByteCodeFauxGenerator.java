@@ -42,8 +42,9 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("START_TAG");
     value("END_TAG");
 
-    comment("Stuff");
+    comment("Nodes");
 
     value("EMPTY_ELEMENT");
+    value("TEXT");
   }
 }

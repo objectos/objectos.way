@@ -102,7 +102,14 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   @Override
   final void element(StandardElementName name, String text) {
-    throw new UnsupportedOperationException("Implement me");
+    HtmlTemplateApi2 api;
+    api = api();
+
+    api.elementBegin(name);
+
+    api.text(text);
+
+    api.elementEnd();
   }
 
   private HtmlTemplateApi2 api() {

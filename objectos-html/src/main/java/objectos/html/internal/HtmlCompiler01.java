@@ -65,6 +65,20 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
   }
 
   @Override
+  public final void text(String value) {
+    int object;
+    object = objectAdd(value);
+
+    auxAdd(
+      ByteProto2.TEXT,
+
+      // value
+      Bytes.encodeInt0(object),
+      Bytes.encodeInt1(object)
+    );
+  }
+
+  @Override
   public final void compilationBegin() {
     aux = new byte[128];
 
@@ -125,7 +139,9 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       mark = aux[index++];
 
       switch (mark) {
-        case ByteProto2.ATTRIBUTE_ID -> {
+        case ByteProto2.ATTRIBUTE_CLASS,
+             ByteProto2.ATTRIBUTE_ID,
+             ByteProto2.TEXT -> {
           mainAdd(mark, aux[index++], aux[index++]);
         }
 

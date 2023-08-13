@@ -398,6 +398,74 @@ public class HtmlCompiler02Test {
     );
   }
 
+  @Test(description = """
+  Text child element
+  """)
+  public void testCase14() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.P);
+    compiler.text("o7html");
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 2,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.P.ordinal(),
+      ByteCode.GT,
+      ByteCode.TEXT,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteCode.END_TAG,
+      (byte) StandardElementName.P.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
   private void test(CompiledMarkup markup, byte... expected) {
     byte[] result;
     result = markup.main;

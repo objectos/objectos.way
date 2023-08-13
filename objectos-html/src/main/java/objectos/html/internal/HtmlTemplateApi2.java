@@ -54,4 +54,6 @@ abstract class HtmlTemplateApi2 {
     throw new UnsupportedOperationException();
   }
 
+  public abstract void text(String value);
+
 }

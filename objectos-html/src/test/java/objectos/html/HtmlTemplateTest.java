@@ -422,7 +422,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase14() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html(

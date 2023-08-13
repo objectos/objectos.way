@@ -356,6 +356,68 @@ public class HtmlCompiler01Test {
     );
   }
 
+  @Test(description = """
+  Text child element
+  """)
+  public void testCase14() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.P);
+    compiler.text("o7html");
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(8),
+      Bytes.encodeInt1(8),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.P.ordinal(),
+      ByteProto2.TEXT,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto2.END,
+      Bytes.encodeInt0(8),
+      ByteProto2.INTERNAL,
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.BODY.ordinal(),
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(17),
+      ByteProto2.END,
+      Bytes.encodeInt0(18),
+      ByteProto2.INTERNAL,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(16),
+      ByteProto2.END,
+      Bytes.encodeInt0(28),
+      ByteProto2.INTERNAL
+    );
+  }
+
   private void test(HtmlCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);
