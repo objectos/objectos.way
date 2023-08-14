@@ -457,6 +457,96 @@ public class HtmlCompiler02Test {
     );
   }
 
+  @Test(description = """
+  Ambiguous
+  """)
+  public void testCase16() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.ambiguous(Ambiguous.TITLE, "element");
+
+    compiler.elementBegin(StandardElementName.HEAD);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.ambiguous(Ambiguous.TITLE, "attribute");
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.HTML);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.HEAD.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 2,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.TITLE.ordinal(),
+      ByteCode.GT,
+      ByteCode.TEXT,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteCode.END_TAG,
+      (byte) StandardElementName.TITLE.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HEAD.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.TITLE.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(1),
+      Bytes.encodeInt1(1),
+      ByteCode.ATTR_VALUE_END,
+      ByteCode.GT,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
   private void test(CompiledMarkup markup, byte... expected) {
     byte[] result;
     result = markup.main;

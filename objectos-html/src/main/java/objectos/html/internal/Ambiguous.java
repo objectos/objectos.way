@@ -52,10 +52,15 @@ enum Ambiguous {
 
   private final int attributeByteCode;
 
+  public final StandardElementName element;
+
   private final int elementByteCode;
 
   private Ambiguous(StandardAttributeName attribute, StandardElementName element) {
     this.attributeByteCode = attribute.getCode();
+
+    this.element = element;
+
     this.elementByteCode = element.getCode();
   }
 

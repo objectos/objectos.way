@@ -43,6 +43,28 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
   int objectIndex;
 
   @Override
+  public final void ambiguous(Ambiguous name, String value) {
+    int ordinal;
+    ordinal = name.ordinal();
+
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+      ByteProto2.AMBIGUOUS1,
+
+      // name
+      Bytes.encodeInt0(ordinal),
+
+      // value
+      Bytes.encodeInt0(object),
+      Bytes.encodeInt1(object),
+
+      ByteProto2.INTERNAL5
+    );
+  }
+
+  @Override
   public final void attribute(StandardAttributeName name, String value) {
     int ordinal;
     ordinal = name.getCode();
@@ -137,8 +159,9 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
             proto = main[contents];
 
             switch (proto) {
-              case ByteProto2.ATTRIBUTE1 -> {
-                contents = encodeAttribute1(contents, proto);
+              case ByteProto2.AMBIGUOUS1,
+                   ByteProto2.ATTRIBUTE1 -> {
+                contents = encodeInternal5(contents, proto);
 
                 continue loop;
               }
@@ -363,33 +386,6 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     aux[auxIndex++] = b4;
   }
 
-  private int encodeAttribute1(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents] = ByteProto2.MARKED5;
-
-    // point to next
-    int offset;
-    offset = 5;
-
-    // ensure main can hold least 3 elements
-    // 0   - ByteProto
-    // 1-2 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
-
-    return contents + offset;
-  }
-
   private int encodeElement(int contents, byte proto) {
     // keep the start index handy
     int startIndex;
@@ -469,6 +465,33 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     }
 
     return maxIndex;
+  }
+
+  private int encodeInternal5(int contents, byte proto) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = ByteProto2.MARKED5;
+
+    // point to next
+    int offset;
+    offset = 5;
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+    return contents + offset;
   }
 
   private int encodeMarked(int contents) {

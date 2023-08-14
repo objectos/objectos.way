@@ -38,6 +38,7 @@ public class ByteProtoFauxGenerator extends FauxGenerator {
 
     comment("elements");
 
+    value("AMBIGUOUS1");
     value("DOCTYPE");
     value("ELEMENT");
     value("FRAGMENT");

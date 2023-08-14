@@ -74,7 +74,7 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   @Override
   final void ambiguous(Ambiguous name, String text) {
-    throw new UnsupportedOperationException("Implement me");
+    api().ambiguous(name, text);
   }
 
   @Override

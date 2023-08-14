@@ -220,22 +220,9 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       );
     }
 
-    if (isHead(parent) || !PHRASING.contains(name)) {
-      // 1) head children
-      // 2) non-phrasing elements
-      //    => should be written in their own lines
-
-      if (!wasNewLine()) {
-        // write NL only if one was not written before
-        auxAdd(ByteCode.NL_OPTIONAL);
-      }
-
-      indentationWrite();
-    } else {
-      throw new UnsupportedOperationException("Implement me");
-    }
-
     // 'open' the start tag
+
+    element0StartTag0Open(parent, name);
 
     auxAdd(ByteCode.START_TAG, nameByte);
 
@@ -248,6 +235,39 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       proto = main[index++];
 
       switch (proto) {
+        case ByteProto2.AMBIGUOUS1 -> {
+          index = jmp(index);
+
+          // handle attr name
+
+          byte ordinalByte;
+          ordinalByte = main[mainContents++];
+
+          int ordinal;
+          ordinal = Bytes.decodeInt(ordinalByte);
+
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
+
+          if (ambiguous.isAttributeOf(name)) {
+            ordinal = ambiguous.attributeByteCode();
+
+            ordinalByte = Bytes.encodeInt0(ordinal);
+
+            attr = handleAttrName(attr, ordinalByte, ordinal);
+
+            // handle attr value
+
+            byte int0;
+            int0 = main[mainContents++];
+
+            byte int1;
+            int1 = main[mainContents++];
+
+            auxAdd(ByteCode.ATTR_VALUE, int0, int1);
+          }
+        }
+
         case ByteProto2.ATTRIBUTE1 -> {
           index = jmp(index);
 
@@ -318,7 +338,24 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     return name;
   }
 
-  private void element1Children(int index, StandardElementName name) {
+  private void element0StartTag0Open(StandardElementName parent, StandardElementName name) {
+    if (isHead(parent) || !PHRASING.contains(name)) {
+      // 1) head children
+      // 2) non-phrasing elements
+      //    => should be written in their own lines
+
+      if (!wasNewLine()) {
+        // write NL only if one was not written before
+        auxAdd(ByteCode.NL_OPTIONAL);
+      }
+
+      indentationWrite();
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+  }
+
+  private void element1Children(int index, StandardElementName parent) {
     // we increase the indentation level before writing out the children
     indentationInc();
 
@@ -330,6 +367,47 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       proto = main[index++];
 
       switch (proto) {
+        case ByteProto2.AMBIGUOUS1 -> {
+          index = jmp(index);
+
+          // load ambiguous name
+
+          byte ordinalByte;
+          ordinalByte = main[mainContents++];
+
+          int ordinal;
+          ordinal = Bytes.decodeInt(ordinalByte);
+
+          Ambiguous ambiguous;
+          ambiguous = Ambiguous.get(ordinal);
+
+          if (ambiguous.isAttributeOf(parent)) {
+            // ambiguous was treated as an attribute, continue
+            continue loop;
+          }
+
+          StandardElementName element;
+          element = ambiguous.element;
+
+          // 'open' the start tag
+
+          element0StartTag0Open(parent, element);
+
+          int nameOrdinal;
+          nameOrdinal = element.ordinal();
+
+          byte nameByte;
+          nameByte = Bytes.encodeInt0(nameOrdinal);
+
+          auxAdd(ByteCode.START_TAG, nameByte, ByteCode.GT);
+
+          auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
+
+          auxAdd(ByteCode.END_TAG, nameByte);
+
+          element2EndTag0NewLine(parent, element);
+        }
+
         case ByteProto2.ATTRIBUTE1 -> index = skipVarInt(index);
 
         case ByteProto2.ATTRIBUTE_ID -> index += 2;
@@ -340,7 +418,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           // skip fixed length
           mainContents += 2;
 
-          element(mainContents, name);
+          element(mainContents, parent);
         }
 
         case ByteProto2.END -> {
@@ -378,6 +456,10 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
     auxAdd(ByteCode.END_TAG, nameByte);
 
+    element2EndTag0NewLine(parent, name);
+  }
+
+  private void element2EndTag0NewLine(StandardElementName parent, StandardElementName name) {
     byte newLine;
     newLine = _FALSE;
 
