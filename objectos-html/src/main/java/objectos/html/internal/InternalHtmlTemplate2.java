@@ -18,6 +18,7 @@ package objectos.html.internal;
 import objectos.html.CompiledHtml;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
+import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.Instruction.Fragment;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -57,6 +58,12 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   protected final void doctype() {
     api().doctype();
+  }
+
+  protected final ElementContents t(String text) {
+    api().text(text);
+
+    return InternalInstruction.INSTANCE;
   }
 
   protected final Fragment f(FragmentAction action) {
@@ -105,10 +112,10 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     HtmlTemplateApi2 api;
     api = api();
 
-    api.elementBegin(name);
-
     api.text(text);
 
+    api.elementBegin(name);
+    api.elementValue(InternalInstruction.INSTANCE);
     api.elementEnd();
   }
 

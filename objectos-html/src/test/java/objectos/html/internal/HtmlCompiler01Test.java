@@ -365,8 +365,10 @@ public class HtmlCompiler01Test {
 
     compiler.compilationBegin();
 
-    compiler.elementBegin(StandardElementName.P);
     compiler.text("o7html");
+
+    compiler.elementBegin(StandardElementName.P);
+    compiler.elementValue(InternalInstruction.INSTANCE);
     compiler.elementEnd();
 
     compiler.elementBegin(StandardElementName.BODY);
@@ -382,16 +384,20 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
+      ByteProto2.MARKED4,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto2.INTERNAL4,
+
       ByteProto2.MARKED,
-      Bytes.encodeInt0(8),
-      Bytes.encodeInt1(8),
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
       ByteProto2.STANDARD_NAME,
       (byte) StandardElementName.P.ordinal(),
       ByteProto2.TEXT,
-      Bytes.encodeInt0(0),
-      Bytes.encodeInt1(0),
+      Bytes.encodeInt0(10),
       ByteProto2.END,
-      Bytes.encodeInt0(8),
+      Bytes.encodeInt0(11),
       ByteProto2.INTERNAL,
 
       ByteProto2.MARKED,
@@ -400,9 +406,9 @@ public class HtmlCompiler01Test {
       ByteProto2.STANDARD_NAME,
       (byte) StandardElementName.BODY.ordinal(),
       ByteProto2.ELEMENT,
-      Bytes.encodeInt0(17),
+      Bytes.encodeInt0(16),
       ByteProto2.END,
-      Bytes.encodeInt0(18),
+      Bytes.encodeInt0(21),
       ByteProto2.INTERNAL,
 
       ByteProto2.ELEMENT,
@@ -413,7 +419,7 @@ public class HtmlCompiler01Test {
       ByteProto2.ELEMENT,
       Bytes.encodeInt0(16),
       ByteProto2.END,
-      Bytes.encodeInt0(28),
+      Bytes.encodeInt0(31),
       ByteProto2.INTERNAL
     );
   }

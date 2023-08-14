@@ -37,8 +37,7 @@ final class ByteCode {
 
   //Nodes
 
-  public static final byte EMPTY_ELEMENT = -13;
-  public static final byte TEXT = -14;
+  public static final byte TEXT = -13;
 
   private ByteCode() {}
 

@@ -50,8 +50,6 @@ public class HtmlCompiler02Test {
       (byte) StandardElementName.HTML.ordinal(),
       ByteCode.GT,
 
-      ByteCode.EMPTY_ELEMENT, (byte) 0,
-
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),
       ByteCode.NL
@@ -94,8 +92,6 @@ public class HtmlCompiler02Test {
       Bytes.encodeInt1(0),
       ByteCode.ATTR_VALUE_END,
       ByteCode.GT,
-
-      ByteCode.EMPTY_ELEMENT, (byte) 0,
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),
@@ -150,8 +146,6 @@ public class HtmlCompiler02Test {
       ByteCode.ATTR_VALUE_END,
       ByteCode.GT,
 
-      ByteCode.EMPTY_ELEMENT, (byte) 0,
-
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),
       ByteCode.NL
@@ -194,7 +188,6 @@ public class HtmlCompiler02Test {
       ByteCode.START_TAG,
       (byte) StandardElementName.HEAD.ordinal(),
       ByteCode.GT,
-      ByteCode.EMPTY_ELEMENT, (byte) 1,
       ByteCode.END_TAG,
       (byte) StandardElementName.HEAD.ordinal(),
 
@@ -237,8 +230,6 @@ public class HtmlCompiler02Test {
       ByteCode.START_TAG,
       (byte) StandardElementName.HTML.ordinal(),
       ByteCode.GT,
-
-      ByteCode.EMPTY_ELEMENT, (byte) 0,
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),
@@ -385,8 +376,6 @@ public class HtmlCompiler02Test {
       ByteCode.ATTR_VALUE_END,
       ByteCode.GT,
 
-      ByteCode.EMPTY_ELEMENT, (byte) 1,
-
       ByteCode.END_TAG,
       (byte) StandardElementName.BODY.ordinal(),
 
@@ -407,8 +396,10 @@ public class HtmlCompiler02Test {
 
     compiler.compilationBegin();
 
-    compiler.elementBegin(StandardElementName.P);
     compiler.text("o7html");
+
+    compiler.elementBegin(StandardElementName.P);
+    compiler.elementValue(InternalInstruction.INSTANCE);
     compiler.elementEnd();
 
     compiler.elementBegin(StandardElementName.BODY);

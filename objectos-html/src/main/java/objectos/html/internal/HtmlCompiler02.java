@@ -16,23 +16,61 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Set;
+import objectos.html.tmpl.ElementKind;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.util.ObjectArrays;
 
 final class HtmlCompiler02 extends HtmlCompiler01 {
 
+  private static final Set<StandardElementName> PHRASING = EnumSet.of(
+    StandardElementName.A,
+    StandardElementName.ABBR,
+    StandardElementName.B,
+    StandardElementName.BR,
+    StandardElementName.BUTTON,
+    StandardElementName.CODE,
+    StandardElementName.EM,
+    StandardElementName.IMG,
+    StandardElementName.INPUT,
+    StandardElementName.KBD,
+    StandardElementName.LABEL,
+    StandardElementName.LINK,
+    StandardElementName.META,
+    StandardElementName.PROGRESS,
+    StandardElementName.SAMP,
+    StandardElementName.SCRIPT,
+    StandardElementName.SELECT,
+    StandardElementName.SMALL,
+    StandardElementName.SPAN,
+    StandardElementName.STRONG,
+    StandardElementName.SUB,
+    StandardElementName.SUP,
+    StandardElementName.SVG,
+    StandardElementName.TEMPLATE,
+    StandardElementName.TEXTAREA
+  );
+
+  private static final byte _FALSE = 0;
+
+  private static final byte _TRUE = -1;
+
   @Override
   public final CompiledMarkup compile() {
     return new CompiledMarkup(
-      Arrays.copyOf(aux, auxIndex), objects()
+      Arrays.copyOfRange(aux, 1, auxIndex), objects()
     );
   }
 
   @Override
   public final void optimize() {
+    // holds new line status
+    aux[0] = _TRUE;
+
     // we will use the aux list to store our byte code
-    auxIndex = 0;
+    auxIndex = 1;
 
     // holds decoded length
     auxStart = 0;
@@ -70,12 +108,14 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           int thisLength;
           thisLength = Bytes.decodeInt(main[index++], main[index++]);
 
-          element(index, false);
+          element(index, null);
 
           yield thisLength;
         }
 
         case ByteProto2.MARKED -> Bytes.decodeInt(main[index++], main[index++]);
+
+        case ByteProto2.MARKED4 -> 4 - 1;
 
         case ByteProto2.MARKED5 -> 5 - 1;
 
@@ -87,17 +127,25 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       index += length;
     }
 
-    if (index > 0) {
-      auxAdd(ByteCode.NL);
-    }
-  }
+    if (auxIndex > 1) {
+      int lastIndex;
+      lastIndex = auxIndex - 1;
 
-  private int newLineIfNecessary(int count) {
-    if (count != 0) {
-      auxAdd(ByteCode.NL_OPTIONAL);
-    }
+      byte last;
+      last = aux[lastIndex];
 
-    return count + 1;
+      switch (last) {
+        case ByteCode.NL -> {}
+
+        case ByteCode.NL_OPTIONAL -> {
+          aux[lastIndex] = ByteCode.NL;
+        }
+
+        default -> {
+          auxAdd(ByteCode.NL);
+        }
+      }
+    }
   }
 
   private int decodeLength(int index) {
@@ -116,26 +164,53 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     return index;
   }
 
-  private void element(int index, boolean metadata) {
-    // write the indentation before the start tag (if necessary)
-    indentationWrite();
+  private void element(int index, StandardElementName parent) {
+    // 1) let's write the start tag fully
+    // -> i.e. with the attributes (if any)
+    StandardElementName name;
+    name = element0StartTag(index, parent);
 
-    // first proto should point to the element name
+    ElementKind elementKind;
+    elementKind = name.getKind();
+
+    if (elementKind.isVoid()) {
+      // this element is a void element
+      // -> no children
+      // -> no end tag
+
+      if (isHead(parent) && !wasNewLine()) {
+        auxAdd(ByteCode.NL_OPTIONAL);
+
+        newLine(_TRUE);
+      }
+
+      return;
+    }
+
+    // we'll iterate over the children (if any)
+    element1Children(index, name);
+
+    // finally, write out the end tag
+    element2EndTag(parent, name);
+  }
+
+  private StandardElementName element0StartTag(int index, StandardElementName parent) {
+    // we'll keep the name values handy
+    byte nameByte;
+
+    // in particular this one will be required by the end tag (if one should be rendered)
+    StandardElementName name;
+
+    // first proto should be the element's name
     byte proto;
     proto = main[index++];
 
-    // we'll keep the name value for the end tag (if necessary)
-    StandardElementName name;
-
     switch (proto) {
       case ByteProto2.STANDARD_NAME -> {
-        byte ordinalByte;
-        ordinalByte = main[index++];
-
-        auxAdd(ByteCode.START_TAG, ordinalByte);
+        nameByte = main[index++];
 
         int ordinal;
-        ordinal = Bytes.decodeInt(ordinalByte);
+        ordinal = Bytes.decodeInt(nameByte);
 
         name = StandardElementName.getByCode(ordinal);
       }
@@ -145,11 +220,26 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       );
     }
 
-    // we'll iterate over the attributes (if any)
+    if (isHead(parent) || !PHRASING.contains(name)) {
+      // 1) head children
+      // 2) non-phrasing elements
+      //    => should be written in their own lines
 
-    // we keep the index handy
-    int contents;
-    contents = index;
+      if (!wasNewLine()) {
+        // write NL only if one was not written before
+        auxAdd(ByteCode.NL_OPTIONAL);
+      }
+
+      indentationWrite();
+    } else {
+      throw new UnsupportedOperationException("Implement me");
+    }
+
+    // 'open' the start tag
+
+    auxAdd(ByteCode.START_TAG, nameByte);
+
+    // we'll iterate over the attributes (if any)
 
     int attr;
     attr = Integer.MIN_VALUE;
@@ -204,7 +294,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           auxAdd(ByteCode.ATTR_VALUE, int0, int1);
         }
 
-        case ByteProto2.ELEMENT -> index = skipVarInt(index);
+        case ByteProto2.ELEMENT,
+             ByteProto2.TEXT -> index = skipVarInt(index);
 
         case ByteProto2.END -> {
           if (attr != Integer.MIN_VALUE) {
@@ -213,8 +304,6 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
           break loop;
         }
-
-        case ByteProto2.TEXT -> index += 2;
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
@@ -226,31 +315,18 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
     auxAdd(ByteCode.GT);
 
-    if (metadata) {
-      // this element is a direct child of <head>
-      // -> no children
-      // -> no end tag
+    return name;
+  }
 
-      return;
-    }
-
-    // we'll iterate over the children (if any)
-
-    // we increase the indentation level writing out the children
+  private void element1Children(int index, StandardElementName name) {
+    // we increase the indentation level before writing out the children
     indentationInc();
 
-    // we count the children so we'll know if this element was empty or not
-    int children;
-    children = 0;
-
-    // we also count the text nodes
-    int text;
-    text = 0;
-
-    // start from the beginning
-    index = contents;
+    // for the first child (if any)
+    newLine(_FALSE);
 
     loop: while (index < mainIndex) {
+      byte proto;
       proto = main[index++];
 
       switch (proto) {
@@ -259,29 +335,24 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         case ByteProto2.ATTRIBUTE_ID -> index += 2;
 
         case ByteProto2.ELEMENT -> {
-          children++;
-
-          auxAdd(ByteCode.NL_OPTIONAL);
-
           index = jmp(index);
 
           // skip fixed length
           mainContents += 2;
 
-          boolean head;
-          head = name == StandardElementName.HEAD;
-
-          element(mainContents, head);
+          element(mainContents, name);
         }
 
         case ByteProto2.END -> {
           break loop;
         }
 
-        case ByteProto2.TEXT -> {
-          text++;
+        case ByteProto2.STANDARD_NAME -> index += 1;
 
-          auxAdd(ByteCode.TEXT, main[index++], main[index++]);
+        case ByteProto2.TEXT -> {
+          index = jmp(index);
+
+          auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
         }
 
         default -> throw new UnsupportedOperationException(
@@ -291,29 +362,32 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     }
 
     // we've written all of the children, decrease indentation
-
     indentationDec();
+  }
 
-    if (children == 0) {
-      if (text == 0) {
-        // this element is empty, write end tag in the same line.
-
-        auxAdd(ByteCode.EMPTY_ELEMENT, (byte) mainStart);
-      }
-    } else {
-      // element w/ children -> write end tag in the next line
-
-      auxAdd(ByteCode.NL_OPTIONAL);
-      indentationWrite();
-    }
-
+  private void element2EndTag(StandardElementName parent, StandardElementName name) {
     int nameOrdinal;
     nameOrdinal = name.ordinal();
 
     byte nameByte;
     nameByte = Bytes.encodeInt0(nameOrdinal);
 
+    if (wasNewLine()) {
+      indentationWrite();
+    }
+
     auxAdd(ByteCode.END_TAG, nameByte);
+
+    byte newLine;
+    newLine = _FALSE;
+
+    if (isHead(parent) || !PHRASING.contains(name)) {
+      auxAdd(ByteCode.NL_OPTIONAL);
+
+      newLine = _TRUE;
+    }
+
+    newLine(newLine);
   }
 
   private int handleAttrName(int attr, byte ordinalByte, int ordinal) {
@@ -331,6 +405,27 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     return ordinal;
   }
 
+  private void indentationDec() {
+    mainStart--;
+  }
+
+  private void indentationInc() {
+    mainStart++;
+  }
+
+  private void indentationWrite() {
+    if (mainStart == 0) {
+      return;
+    }
+
+    auxAdd(ByteCode.TAB, (byte) mainStart);
+  }
+
+  private boolean isHead(StandardElementName parent) {
+    // test is null safe
+    return parent == StandardElementName.HEAD;
+  }
+
   private int jmp(int index) {
     int baseIndex;
     baseIndex = index;
@@ -343,6 +438,18 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     mainContents++;
 
     return index;
+  }
+
+  private void newLine(byte value) {
+    aux[0] = value;
+  }
+
+  private int newLineIfNecessary(int count) {
+    if (count != 0) {
+      auxAdd(ByteCode.NL_OPTIONAL);
+    }
+
+    return count + 1;
   }
 
   private Object[] objects() {
@@ -364,20 +471,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     return index;
   }
 
-  private void indentationDec() {
-    mainStart--;
-  }
-
-  private void indentationInc() {
-    mainStart++;
-  }
-
-  private void indentationWrite() {
-    if (mainStart == 0) {
-      return;
-    }
-
-    auxAdd(ByteCode.TAB, (byte) mainStart);
+  private boolean wasNewLine() {
+    return aux[0] == _TRUE;
   }
 
 }

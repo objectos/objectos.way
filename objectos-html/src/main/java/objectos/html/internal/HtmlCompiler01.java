@@ -65,20 +65,6 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
   }
 
   @Override
-  public final void text(String value) {
-    int object;
-    object = objectAdd(value);
-
-    auxAdd(
-      ByteProto2.TEXT,
-
-      // value
-      Bytes.encodeInt0(object),
-      Bytes.encodeInt1(object)
-    );
-  }
-
-  @Override
   public final void compilationBegin() {
     aux = new byte[128];
 
@@ -171,7 +157,15 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
               case ByteProto2.MARKED -> contents = encodeMarked(contents);
 
+              case ByteProto2.MARKED4 -> contents += 4;
+
               case ByteProto2.MARKED5 -> contents += 5;
+
+              case ByteProto2.TEXT -> {
+                contents = encodeText(contents);
+
+                continue loop;
+              }
 
               default -> {
                 throw new UnsupportedOperationException(
@@ -244,6 +238,8 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
           mainContents -= length;
         }
 
+        case ByteProto2.INTERNAL4 -> mainContents -= 4 - 2;
+
         case ByteProto2.INTERNAL5 -> mainContents -= 5 - 2;
 
         default -> throw new UnsupportedOperationException(
@@ -271,17 +267,6 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
         "Implement me :: type=" + value.getClass()
       );
     }
-  }
-
-  private int externalValue(String value) {
-    String result;
-    result = value;
-
-    if (value == null) {
-      result = "null";
-    }
-
-    return objectAdd(result);
   }
 
   @Override
@@ -325,6 +310,22 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     // we skip the first byte proto
     main[startIndex + 1] = Bytes.encodeInt0(length);
     main[startIndex + 2] = Bytes.encodeInt1(length);
+  }
+
+  @Override
+  public final void text(String value) {
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+      ByteProto2.TEXT,
+
+      // value
+      Bytes.encodeInt0(object),
+      Bytes.encodeInt1(object),
+
+      ByteProto2.INTERNAL4
+    );
   }
 
   final void auxAdd(byte b0) {
@@ -487,6 +488,44 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     return contents + length;
   }
 
+  private int encodeText(int contents) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = ByteProto2.MARKED4;
+
+    // point to next
+    int offset;
+    offset = 4;
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = ByteProto2.TEXT;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
+  private int externalValue(String value) {
+    String result;
+    result = value;
+
+    if (value == null) {
+      result = "null";
+    }
+
+    return objectAdd(result);
+  }
+
   private void mainAdd(byte b0) {
     main = ByteArrays.growIfNecessary(main, mainIndex + 0);
     main[mainIndex++] = b0;
@@ -497,6 +536,14 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     main[mainIndex++] = b0;
     main[mainIndex++] = b1;
     main[mainIndex++] = b2;
+  }
+
+  private void mainAdd(byte b0, byte b1, byte b2, byte b3) {
+    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+    main[mainIndex++] = b0;
+    main[mainIndex++] = b1;
+    main[mainIndex++] = b2;
+    main[mainIndex++] = b3;
   }
 
   private void mainAdd(byte b0, byte b1, byte b2, byte b3, byte b4) {

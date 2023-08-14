@@ -88,8 +88,6 @@ public final class StandardHtmlWriter implements HtmlWriter {
 
         case ByteCode.DOCTYPE -> appendable.append("<!DOCTYPE html>");
 
-        case ByteCode.EMPTY_ELEMENT -> index++;
-
         case ByteCode.END_TAG -> {
           byte ordinalByte;
           ordinalByte = bytes[index++];
