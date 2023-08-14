@@ -57,6 +57,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
   private static final byte _TRUE = -1;
 
+  private static final int _NULL = Integer.MIN_VALUE;
+
   @Override
   public final CompiledMarkup compile() {
     return new CompiledMarkup(
@@ -229,7 +231,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     // we'll iterate over the attributes (if any)
 
     int attr;
-    attr = Integer.MIN_VALUE;
+    attr = _NULL;
 
     loop: while (index < mainIndex) {
       proto = main[index++];
@@ -350,8 +352,6 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       }
 
       indentationWrite();
-    } else {
-      throw new UnsupportedOperationException("Implement me");
     }
   }
 
@@ -482,6 +482,11 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       // this is a new attribute
       auxAdd(ByteCode.ATTR_VALUE_END,
         ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
+    }
+
+    else {
+      // this is a new value of the same attribute
+      auxAdd(ByteCode.SPACE);
     }
 
     return ordinal;

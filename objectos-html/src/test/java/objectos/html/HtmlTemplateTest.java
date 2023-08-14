@@ -508,7 +508,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase17() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html(
@@ -547,7 +547,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase18() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           body(
@@ -574,7 +574,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase19() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           body(
