@@ -15,6 +15,7 @@
  */
 package objectos.html.internal;
 
+import objectos.html.HtmlTemplate2;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.StandardAttributeName;
@@ -142,6 +143,9 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     int contents;
     contents = mainContents;
 
+    int templateIndex;
+    templateIndex = ByteProto2.NULL;
+
     loop: while (index < indexMax) {
       byte mark;
       mark = aux[index++];
@@ -186,6 +190,41 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
               case ByteProto2.TEXT -> {
                 contents = encodeText(contents);
+
+                continue loop;
+              }
+
+              default -> {
+                throw new UnsupportedOperationException(
+                  "Implement me :: proto=" + proto
+                );
+              }
+            }
+          }
+        }
+
+        case ByteProto2.TEMPLATE -> {
+          if (templateIndex == ByteProto2.NULL) {
+            // initialize template index
+            templateIndex = mainStart;
+
+            // skip ByteProto.ELEMENT
+            templateIndex += 1;
+
+            // skip length to the end
+            templateIndex += 2;
+
+            // skip NAME + name index
+            templateIndex += 2;
+          }
+
+          while (true) {
+            byte proto;
+            proto = main[templateIndex];
+
+            switch (proto) {
+              case ByteProto2.TEMPLATE_DATA -> {
+                templateIndex = encodeFragment(templateIndex);
 
                 continue loop;
               }
@@ -285,6 +324,63 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       );
     }
 
+    else if (value instanceof HtmlTemplate2 tmpl) {
+      // keep start index handy
+      int startIndex;
+      startIndex = mainIndex;
+
+      mainAdd(
+        ByteProto2.TEMPLATE_DATA,
+
+        // length to the end
+        ByteProto2.NULL,
+        ByteProto2.NULL
+      );
+
+      InternalHtmlTemplate2 internal;
+      internal = tmpl;
+
+      // keep rollback values in the stack
+      int auxStart;
+      auxStart = this.auxStart;
+
+      int mainContents;
+      mainContents = this.mainContents;
+
+      int mainStart;
+      mainStart = this.mainStart;
+
+      try {
+        internal.api = this;
+
+        internal.definition();
+      } finally {
+        internal.api = null;
+
+        // rollback values
+        this.auxStart = auxStart;
+
+        this.mainContents = mainContents;
+
+        this.mainStart = mainStart;
+      }
+
+      mainAdd(ByteProto2.END);
+
+      // set the end index of the declaration
+      int length;
+      length = mainIndex - startIndex;
+
+      // skip ByteProto.FOO + len0 + len1
+      length -= 3;
+
+      // we skip the first byte proto
+      main[startIndex + 1] = Bytes.encodeInt0(length);
+      main[startIndex + 2] = Bytes.encodeInt1(length);
+
+      auxAdd(ByteProto2.TEMPLATE);
+    }
+
     else {
       throw new UnsupportedOperationException(
         "Implement me :: type=" + value.getClass()
@@ -294,45 +390,12 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
   @Override
   public final void fragment(FragmentAction action) {
-    // we mark:
-    // 1) the start of the contents of the current declaration
     int startIndex;
-    startIndex = mainIndex;
-
-    mainAdd(
-      ByteProto2.FRAGMENT,
-
-      // length takes 2 bytes
-      ByteProto2.NULL,
-      ByteProto2.NULL
-    );
+    startIndex = fragmentBegin();
 
     action.execute();
 
-    // ensure main can hold 4 more elements
-    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
-
-    // mark the end
-    main[mainIndex++] = ByteProto2.END;
-
-    // store the distance to the contents (yes, reversed)
-    int length;
-    length = mainIndex - startIndex - 1;
-
-    mainIndex = Bytes.encodeVarIntR(main, mainIndex, length);
-
-    // trailer proto
-    main[mainIndex++] = ByteProto2.INTERNAL;
-
-    // set the end index of the declaration
-    length = mainIndex - startIndex;
-
-    // skip ByteProto.FOO + len0 + len1
-    length -= 3;
-
-    // we skip the first byte proto
-    main[startIndex + 1] = Bytes.encodeInt0(length);
-    main[startIndex + 2] = Bytes.encodeInt1(length);
+    fragmentEnd(startIndex);
   }
 
   @Override
@@ -454,6 +517,8 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
         case ByteProto2.MARKED -> index = encodeMarked(index);
 
+        case ByteProto2.MARKED4 -> index += 4;
+
         case ByteProto2.MARKED5 -> index += 5;
 
         default -> {
@@ -547,6 +612,50 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     }
 
     return objectAdd(result);
+  }
+
+  private int fragmentBegin() {
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    int startIndex;
+    startIndex = mainIndex;
+
+    mainAdd(
+      ByteProto2.FRAGMENT,
+
+      // length takes 2 bytes
+      ByteProto2.NULL,
+      ByteProto2.NULL
+    );
+
+    return startIndex;
+  }
+
+  private void fragmentEnd(int startIndex) {
+    // ensure main can hold 4 more elements
+    main = ByteArrays.growIfNecessary(main, mainIndex + 3);
+
+    // mark the end
+    main[mainIndex++] = ByteProto2.END;
+
+    // store the distance to the contents (yes, reversed)
+    int length;
+    length = mainIndex - startIndex - 1;
+
+    mainIndex = Bytes.encodeVarIntR(main, mainIndex, length);
+
+    // trailer proto
+    main[mainIndex++] = ByteProto2.INTERNAL;
+
+    // set the end index of the declaration
+    length = mainIndex - startIndex;
+
+    // skip ByteProto.FOO + len0 + len1
+    length -= 3;
+
+    // we skip the first byte proto
+    main[startIndex + 1] = Bytes.encodeInt0(length);
+    main[startIndex + 2] = Bytes.encodeInt1(length);
   }
 
   private void mainAdd(byte b0) {

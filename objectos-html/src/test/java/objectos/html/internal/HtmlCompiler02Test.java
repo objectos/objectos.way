@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.HtmlTemplate2;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -543,6 +544,56 @@ public class HtmlCompiler02Test {
 
       ByteCode.END_TAG,
       (byte) StandardElementName.HTML.ordinal(),
+      ByteCode.NL
+    );
+  }
+
+  @Test(description = """
+  include template
+  """)
+  public void testCase20() {
+    HtmlTemplate2 nav = new HtmlTemplate2() {
+      @Override
+      protected final void definition() {
+        nav();
+      }
+    };
+
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(nav);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB, (byte) 1,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.NAV.ordinal(),
+      ByteCode.GT,
+      ByteCode.END_TAG,
+      (byte) StandardElementName.NAV.ordinal(),
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.END_TAG,
+      (byte) StandardElementName.BODY.ordinal(),
       ByteCode.NL
     );
   }

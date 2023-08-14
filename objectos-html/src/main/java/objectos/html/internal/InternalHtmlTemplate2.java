@@ -26,7 +26,7 @@ import objectos.lang.Check;
 
 public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
-  private HtmlTemplateApi2 api;
+  HtmlTemplateApi2 api;
 
   public final CompiledHtml compile() {
     try {

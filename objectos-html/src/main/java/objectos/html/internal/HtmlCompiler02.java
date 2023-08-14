@@ -327,6 +327,19 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           break loop;
         }
 
+        case ByteProto2.MARKED -> {
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          int length;
+          length = Bytes.decodeInt(len0, len1);
+
+          index += length;
+        }
+
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );
@@ -423,6 +436,19 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
         case ByteProto2.END -> {
           break loop;
+        }
+
+        case ByteProto2.MARKED -> {
+          byte len0;
+          len0 = main[index++];
+
+          byte len1;
+          len1 = main[index++];
+
+          int length;
+          length = Bytes.decodeInt(len0, len1);
+
+          index += length;
         }
 
         case ByteProto2.STANDARD_NAME -> index += 1;

@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
+import objectos.html.HtmlTemplate2;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -500,6 +501,61 @@ public class HtmlCompiler01Test {
       Bytes.encodeInt0(18),
       ByteProto2.END,
       Bytes.encodeInt0(39),
+      ByteProto2.INTERNAL
+    );
+  }
+
+  @Test(description = """
+  include template
+  """)
+  public void testCase20() {
+    HtmlTemplate2 nav = new HtmlTemplate2() {
+      @Override
+      protected final void definition() {
+        nav();
+      }
+    };
+
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.BODY);
+    compiler.elementValue(nav);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(19),
+      Bytes.encodeInt1(19),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.BODY.ordinal(),
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(9),
+      Bytes.encodeInt1(9),
+
+      ByteProto2.MARKED,
+      Bytes.encodeInt0(5),
+      Bytes.encodeInt1(5),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.NAV.ordinal(),
+      ByteProto2.END,
+      Bytes.encodeInt0(5),
+      ByteProto2.INTERNAL,
+
+      ByteProto2.END,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(10),
+
+      ByteProto2.END,
+      Bytes.encodeInt0(19),
       ByteProto2.INTERNAL
     );
   }

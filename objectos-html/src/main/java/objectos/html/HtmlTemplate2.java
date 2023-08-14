@@ -16,13 +16,15 @@
 package objectos.html;
 
 import objectos.html.internal.InternalHtmlTemplate2;
+import objectos.html.tmpl.Instruction.ElementContents;
 
 /**
  * TODO
  *
  * @since 0.5.0
  */
-public abstract class HtmlTemplate2 extends InternalHtmlTemplate2 {
+public non-sealed abstract class HtmlTemplate2
+    extends InternalHtmlTemplate2 implements ElementContents {
 
   @Override
   protected abstract void definition();
