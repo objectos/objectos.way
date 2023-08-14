@@ -294,6 +294,28 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           auxAdd(ByteCode.ATTR_VALUE, int0, int1);
         }
 
+        case ByteProto2.ATTRIBUTE_CLASS -> {
+          // handle attr name
+
+          int ordinal;
+          ordinal = StandardAttributeName.CLASS.ordinal();
+
+          byte ordinalByte;
+          ordinalByte = Bytes.encodeInt0(ordinal);
+
+          attr = handleAttrName(attr, ordinalByte, ordinal);
+
+          // handle attr value
+
+          byte int0;
+          int0 = main[index++];
+
+          byte int1;
+          int1 = main[index++];
+
+          auxAdd(ByteCode.ATTR_VALUE, int0, int1);
+        }
+
         case ByteProto2.ATTRIBUTE_ID -> {
           // handle attr name
 
@@ -423,7 +445,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
         case ByteProto2.ATTRIBUTE1 -> index = skipVarInt(index);
 
-        case ByteProto2.ATTRIBUTE_ID -> index += 2;
+        case ByteProto2.ATTRIBUTE_CLASS,
+             ByteProto2.ATTRIBUTE_ID -> index += 2;
 
         case ByteProto2.ELEMENT -> {
           index = jmp(index);

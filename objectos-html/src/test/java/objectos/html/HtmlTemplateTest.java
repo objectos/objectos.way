@@ -646,7 +646,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase21() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         private final TestClassSelector first = new TestClassSelector("first");
 
         private final TestClassSelector second = new TestClassSelector("second");
@@ -670,7 +670,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase22() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(
@@ -736,7 +736,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase24() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           pre(
@@ -786,7 +786,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase26() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(
@@ -1182,7 +1182,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase38() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(
@@ -1215,7 +1215,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase39() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(

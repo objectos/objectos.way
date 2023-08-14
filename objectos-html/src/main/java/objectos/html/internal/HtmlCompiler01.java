@@ -312,12 +312,24 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       auxAdd(ByteProto2.INTERNAL);
     }
 
-    else if (value instanceof Instruction.ExternalAttribute.Id id) {
+    else if (value instanceof Instruction.ExternalAttribute.Id ext) {
       int index;
-      index = externalValue(id.value());
+      index = externalValue(ext.value());
 
       auxAdd(
         ByteProto2.ATTRIBUTE_ID,
+
+        Bytes.encodeInt0(index),
+        Bytes.encodeInt1(index)
+      );
+    }
+
+    else if (value instanceof Instruction.ExternalAttribute.StyleClass ext) {
+      int index;
+      index = externalValue(ext.value());
+
+      auxAdd(
+        ByteProto2.ATTRIBUTE_CLASS,
 
         Bytes.encodeInt0(index),
         Bytes.encodeInt1(index)
