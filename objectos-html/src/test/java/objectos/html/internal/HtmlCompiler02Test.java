@@ -630,7 +630,7 @@ public class HtmlCompiler02Test {
       ByteCode.NL_OPTIONAL,
       ByteCode.TAB_BLOCK, (byte) 1,
 
-      ByteCode.TEXT_CSS,
+      ByteCode.TEXT_STYLE,
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
 

@@ -144,7 +144,8 @@ public final class StandardHtmlWriter implements HtmlWriter {
           writeText(value);
         }
 
-        case ByteCode.TEXT_CSS -> {
+        case ByteCode.TEXT_SCRIPT,
+             ByteCode.TEXT_STYLE -> {
           byte int0;
           int0 = bytes[index++];
 

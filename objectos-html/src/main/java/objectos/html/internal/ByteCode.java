@@ -39,7 +39,8 @@ final class ByteCode {
   //Nodes
 
   public static final byte TEXT = -14;
-  public static final byte TEXT_CSS = -15;
+  public static final byte TEXT_SCRIPT = -15;
+  public static final byte TEXT_STYLE = -16;
 
   private ByteCode() {}
 

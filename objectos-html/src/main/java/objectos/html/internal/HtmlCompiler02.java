@@ -486,14 +486,14 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         case ByteProto2.TEXT -> {
           index = jmp(index);
 
+          byte b0;
+          b0 = main[mainContents++];
+
+          byte b1;
+          b1 = main[mainContents++];
+
           switch (parent) {
-            case STYLE -> {
-              byte b0;
-              b0 = main[mainContents++];
-
-              byte b1;
-              b1 = main[mainContents++];
-
+            case SCRIPT -> {
               int valueIndex;
               valueIndex = Bytes.decodeInt(b0, b1);
 
@@ -506,7 +506,29 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
               indentationWriteBlock();
 
-              auxAdd(ByteCode.TEXT_CSS, b0, b1);
+              auxAdd(ByteCode.TEXT_SCRIPT, b0, b1);
+
+              if (!endsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
+
+                newLine(_TRUE);
+              }
+            }
+
+            case STYLE -> {
+              int valueIndex;
+              valueIndex = Bytes.decodeInt(b0, b1);
+
+              String value;
+              value = (String) objectArray[valueIndex];
+
+              if (!startsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
+              }
+
+              indentationWriteBlock();
+
+              auxAdd(ByteCode.TEXT_STYLE, b0, b1);
 
               if (!endsWithNewLine(value)) {
                 auxAdd(ByteCode.NL_OPTIONAL);
@@ -516,7 +538,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
             }
 
             default -> {
-              auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
+              auxAdd(ByteCode.TEXT, b0, b1);
             }
           }
         }
