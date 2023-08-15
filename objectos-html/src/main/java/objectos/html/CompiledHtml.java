@@ -15,6 +15,14 @@
  */
 package objectos.html;
 
-import objectos.html.internal.CompiledMarkup;
+import java.io.IOException;
+import objectos.html.internal.InternalCompiledHtml;
 
-public sealed interface CompiledHtml permits CompiledMarkup {}
+public sealed interface CompiledHtml permits InternalCompiledHtml {
+
+  void writeTo(Appendable out) throws IOException;
+
+  @Override
+  String toString();
+
+}

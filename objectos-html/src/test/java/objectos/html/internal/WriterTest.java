@@ -25,8 +25,6 @@ public class WriterTest {
 
   private final StringBuilder out = new StringBuilder();
 
-  private final StandardHtmlWriter writer = new StandardHtmlWriter(out);
-
   @Test
   public void writeAttributeValue() {
     // normal text
@@ -98,12 +96,12 @@ public class WriterTest {
       out.setLength(0);
 
       CompiledHtml html;
-      html = new CompiledMarkup(
+      html = new InternalCompiledHtml(
         new byte[] {ByteCode.ATTR_VALUE, Bytes.encodeInt0(0), Bytes.encodeInt1(0)},
         new Object[] {source}
       );
 
-      writer.write(html);
+      html.writeTo(out);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {
@@ -116,12 +114,12 @@ public class WriterTest {
       out.setLength(0);
 
       CompiledHtml html;
-      html = new CompiledMarkup(
+      html = new InternalCompiledHtml(
         new byte[] {ByteCode.TEXT, Bytes.encodeInt0(0), Bytes.encodeInt1(0)},
         new Object[] {source}
       );
 
-      writer.write(html);
+      html.writeTo(out);
 
       assertEquals(out.toString(), expected);
     } catch (IOException e) {

@@ -17,42 +17,45 @@ package objectos.html.internal;
 
 import java.io.IOException;
 import objectos.html.CompiledHtml;
-import objectos.html.HtmlWriter;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.lang.Check;
 
-public final class StandardHtmlWriter implements HtmlWriter {
+public final class InternalCompiledHtml implements CompiledHtml {
 
   private static final String NL = System.lineSeparator();
 
-  private final Appendable appendable;
+  private static final String AMP = "&amp;";
 
-  public StandardHtmlWriter(Appendable appendable) {
-    this.appendable = appendable;
+  private static final String GT = "&gt;";
+
+  private static final String LT = "&lt;";
+
+  final byte[] main;
+
+  final Object[] objects;
+
+  InternalCompiledHtml(byte[] main, Object[] objects) {
+    this.main = main;
+
+    this.objects = objects;
   }
 
   @Override
-  public final void write(CompiledHtml html) throws IOException {
-    CompiledMarkup compiled;
-    compiled = (CompiledMarkup) html;
+  public final void writeTo(Appendable out) throws IOException {
+    Check.notNull(out, "out == null");
 
     int index;
     index = 0;
 
-    byte[] bytes;
-    bytes = compiled.main;
-
-    Object[] objects;
-    objects = compiled.objects;
-
-    while (index < bytes.length) {
+    while (index < main.length) {
       byte code;
-      code = bytes[index++];
+      code = main[index++];
 
       switch (code) {
         case ByteCode.ATTR_NAME -> {
           byte ordinalByte;
-          ordinalByte = bytes[index++];
+          ordinalByte = main[index++];
 
           int ordinal;
           ordinal = Bytes.decodeInt(ordinalByte);
@@ -60,15 +63,15 @@ public final class StandardHtmlWriter implements HtmlWriter {
           StandardAttributeName name;
           name = StandardAttributeName.getByCode(ordinal);
 
-          appendable.append(name.getName());
+          out.append(name.getName());
         }
 
         case ByteCode.ATTR_VALUE -> {
           byte int0;
-          int0 = bytes[index++];
+          int0 = main[index++];
 
           byte int1;
-          int1 = bytes[index++];
+          int1 = main[index++];
 
           int objectIndex;
           objectIndex = Bytes.decodeInt(int0, int1);
@@ -79,18 +82,18 @@ public final class StandardHtmlWriter implements HtmlWriter {
           String value;
           value = o.toString();
 
-          writeAttributeValue(value);
+          writeAttributeValue(out, value);
         }
 
-        case ByteCode.ATTR_VALUE_END -> appendable.append('\"');
+        case ByteCode.ATTR_VALUE_END -> out.append('\"');
 
-        case ByteCode.ATTR_VALUE_START -> appendable.append("=\"");
+        case ByteCode.ATTR_VALUE_START -> out.append("=\"");
 
-        case ByteCode.DOCTYPE -> appendable.append("<!DOCTYPE html>");
+        case ByteCode.DOCTYPE -> out.append("<!DOCTYPE html>");
 
         case ByteCode.END_TAG -> {
           byte ordinalByte;
-          ordinalByte = bytes[index++];
+          ordinalByte = main[index++];
 
           int ordinal;
           ordinal = Bytes.decodeInt(ordinalByte);
@@ -98,25 +101,25 @@ public final class StandardHtmlWriter implements HtmlWriter {
           StandardElementName name;
           name = StandardElementName.getByCode(ordinal);
 
-          appendable.append('<');
-          appendable.append('/');
-          appendable.append(name.getName());
-          appendable.append('>');
+          out.append('<');
+          out.append('/');
+          out.append(name.getName());
+          out.append('>');
         }
 
-        case ByteCode.GT -> appendable.append('>');
+        case ByteCode.GT -> out.append('>');
 
         case ByteCode.NL,
-             ByteCode.NL_OPTIONAL -> appendable.append(NL);
+             ByteCode.NL_OPTIONAL -> out.append(NL);
 
         case ByteCode.RAW,
              ByteCode.TEXT_SCRIPT,
              ByteCode.TEXT_STYLE -> {
           byte int0;
-          int0 = bytes[index++];
+          int0 = main[index++];
 
           byte int1;
-          int1 = bytes[index++];
+          int1 = main[index++];
 
           int objectIndex;
           objectIndex = Bytes.decodeInt(int0, int1);
@@ -124,14 +127,14 @@ public final class StandardHtmlWriter implements HtmlWriter {
           String value;
           value = (String) objects[objectIndex];
 
-          appendable.append(value);
+          out.append(value);
         }
 
-        case ByteCode.SPACE -> appendable.append(' ');
+        case ByteCode.SPACE -> out.append(' ');
 
         case ByteCode.START_TAG -> {
           byte ordinalByte;
-          ordinalByte = bytes[index++];
+          ordinalByte = main[index++];
 
           int ordinal;
           ordinal = Bytes.decodeInt(ordinalByte);
@@ -139,8 +142,8 @@ public final class StandardHtmlWriter implements HtmlWriter {
           StandardElementName name;
           name = StandardElementName.getByCode(ordinal);
 
-          appendable.append('<');
-          appendable.append(name.getName());
+          out.append('<');
+          out.append(name.getName());
         }
 
         case ByteCode.TAB,
@@ -148,10 +151,10 @@ public final class StandardHtmlWriter implements HtmlWriter {
 
         case ByteCode.TEXT -> {
           byte int0;
-          int0 = bytes[index++];
+          int0 = main[index++];
 
           byte int1;
-          int1 = bytes[index++];
+          int1 = main[index++];
 
           int objectIndex;
           objectIndex = Bytes.decodeInt(int0, int1);
@@ -159,13 +162,27 @@ public final class StandardHtmlWriter implements HtmlWriter {
           String value;
           value = (String) objects[objectIndex];
 
-          writeText(value);
+          writeText(out, value);
         }
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: code=" + code
         );
       }
+    }
+  }
+
+  @Override
+  public final String toString() {
+    try {
+      StringBuilder sb;
+      sb = new StringBuilder();
+
+      writeTo(sb);
+
+      return sb.toString();
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
     }
   }
 
@@ -188,11 +205,9 @@ public final class StandardHtmlWriter implements HtmlWriter {
         || 'A' <= c && c <= 'F';
   }
 
-  private void writeAmpersand() throws IOException {
-    appendable.append("&amp;");
-  }
-
-  private int writeAmpersandAttribute(String value, int idx, int len) throws IOException {
+  private int writeAmpersandAttribute(
+      Appendable out, String value, int idx, int len)
+      throws IOException {
     enum State {
       START,
       MAYBE_NAMED,
@@ -203,12 +218,15 @@ public final class StandardHtmlWriter implements HtmlWriter {
       TEXT;
     }
 
-    int start = idx;
+    int start;
+    start = idx;
 
-    var state = State.START;
+    State state;
+    state = State.START;
 
     loop: while (idx < len) {
-      char c = value.charAt(idx++);
+      char c;
+      c = value.charAt(idx++);
 
       switch (state) {
         case START -> {
@@ -285,17 +303,17 @@ public final class StandardHtmlWriter implements HtmlWriter {
 
     switch (state) {
       case START -> {
-        appendable.append("&amp;");
+        out.append("&amp;");
       }
 
       case ENTITY -> {
-        appendable.append('&');
+        out.append('&');
 
-        appendable.append(value, start, idx);
+        out.append(value, start, idx);
       }
 
       case TEXT -> {
-        appendable.append("&amp;");
+        out.append("&amp;");
 
         idx = start;
       }
@@ -310,46 +328,40 @@ public final class StandardHtmlWriter implements HtmlWriter {
     return idx;
   }
 
-  private void writeAttributeValue(String value) throws IOException {
+  private void writeAttributeValue(Appendable out, String value) throws IOException {
     for (int idx = 0, len = value.length(); idx < len;) {
-      var c = value.charAt(idx++);
+      char c;
+      c = value.charAt(idx++);
 
       switch (c) {
-        case '&' -> idx = writeAmpersandAttribute(value, idx, len);
+        case '&' -> idx = writeAmpersandAttribute(out, value, idx, len);
 
-        case '<' -> writeLesserThan();
+        case '<' -> out.append(LT);
 
-        case '>' -> writeGreaterThan();
+        case '>' -> out.append(GT);
 
-        case '"' -> appendable.append("&quot;");
+        case '"' -> out.append("&quot;");
 
-        case '\'' -> appendable.append("&#39;");
+        case '\'' -> out.append("&#39;");
 
-        default -> appendable.append(c);
+        default -> out.append(c);
       }
     }
   }
 
-  private void writeGreaterThan() throws IOException {
-    appendable.append("&gt;");
-  }
-
-  private void writeLesserThan() throws IOException {
-    appendable.append("&lt;");
-  }
-
-  private void writeText(String value) throws IOException {
+  private void writeText(Appendable out, String value) throws IOException {
     for (int idx = 0, len = value.length(); idx < len;) {
-      var c = value.charAt(idx++);
+      char c;
+      c = value.charAt(idx++);
 
       switch (c) {
-        case '&' -> writeAmpersand();
+        case '&' -> out.append(AMP);
 
-        case '<' -> writeLesserThan();
+        case '<' -> out.append(LT);
 
-        case '>' -> writeGreaterThan();
+        case '>' -> out.append(GT);
 
-        default -> appendable.append(c);
+        default -> out.append(c);
       }
     }
   }

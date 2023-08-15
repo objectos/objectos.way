@@ -20,7 +20,7 @@ import static org.testng.Assert.assertEquals;
 import objectos.html.HtmlTemplate;
 import org.testng.annotations.Test;
 
-public class StandardHtmlWriterTest {
+public class InternalCompiledHtmlTest {
 
   @Test(description = """
   PrettyPrintWriter TC01

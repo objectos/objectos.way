@@ -41,7 +41,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -76,7 +76,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -121,7 +121,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -173,7 +173,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -219,7 +219,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -270,7 +270,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -344,7 +344,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -415,7 +415,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -488,7 +488,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -572,7 +572,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -617,7 +617,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -664,7 +664,7 @@ public class HtmlCompiler02Test {
 
     compiler.optimize();
 
-    CompiledMarkup result;
+    InternalCompiledHtml result;
     result = compiler.compile();
 
     test(
@@ -692,7 +692,7 @@ public class HtmlCompiler02Test {
     );
   }
 
-  private void test(CompiledMarkup markup, byte... expected) {
+  private void test(InternalCompiledHtml markup, byte... expected) {
     byte[] result;
     result = markup.main;
 

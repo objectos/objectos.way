@@ -68,7 +68,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
   private static final byte _TRUE = -1;
 
   @Override
-  public final CompiledMarkup compile() {
+  public final InternalCompiledHtml compile() {
     Object[] objects;
     objects = ObjectArrays.empty();
 
@@ -76,7 +76,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       objects = Arrays.copyOf(objectArray, objectIndex);
     }
 
-    return new CompiledMarkup(
+    return new InternalCompiledHtml(
       Arrays.copyOfRange(aux, IDX_AUX, auxIndex), objects
     );
   }
