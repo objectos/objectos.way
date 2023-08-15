@@ -641,6 +641,57 @@ public class HtmlCompiler02Test {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC31
+
+  - email input
+  """)
+  public void testCase31() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.TYPE, "email");
+    compiler.attribute(StandardAttributeName.REQUIRED);
+
+    compiler.elementBegin(StandardElementName.INPUT);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.INPUT.ordinal(),
+
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.TYPE.ordinal(),
+      ByteCode.ATTR_VALUE_START,
+      ByteCode.ATTR_VALUE,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteCode.ATTR_VALUE_END,
+
+      ByteCode.SPACE,
+      ByteCode.ATTR_NAME,
+      (byte) StandardAttributeName.REQUIRED.ordinal(),
+
+      ByteCode.GT,
+
+      ByteCode.NL
+    );
+  }
+
   private void test(CompiledMarkup markup, byte... expected) {
     byte[] result;
     result = markup.main;

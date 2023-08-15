@@ -53,11 +53,19 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     StandardElementName.TEXTAREA
   );
 
+  private static final int IDX_NEW_LINE = 0;
+
+  private static final int IDX_ATTR_FIRST = 1;
+
+  private static final int IDX_ATTR_PROTO = 2;
+
+  private static final int IDX_ATTR_VALUE = 3;
+
+  private static final int IDX_AUX = 4;
+
   private static final byte _FALSE = 0;
 
   private static final byte _TRUE = -1;
-
-  private static final int _NULL = Integer.MIN_VALUE;
 
   @Override
   public final CompiledMarkup compile() {
@@ -69,17 +77,17 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     }
 
     return new CompiledMarkup(
-      Arrays.copyOfRange(aux, 1, auxIndex), objects
+      Arrays.copyOfRange(aux, IDX_AUX, auxIndex), objects
     );
   }
 
   @Override
   public final void optimize() {
     // holds new line status
-    aux[0] = _TRUE;
+    aux[IDX_NEW_LINE] = _TRUE;
 
     // we will use the aux list to store our byte code
-    auxIndex = 1;
+    auxIndex = IDX_AUX;
 
     // holds decoded length
     auxStart = 0;
@@ -123,6 +131,8 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         }
 
         case ByteProto2.MARKED -> Bytes.decodeInt(main[index++], main[index++]);
+
+        case ByteProto2.MARKED3 -> 3 - 1;
 
         case ByteProto2.MARKED4 -> 4 - 1;
 
@@ -237,8 +247,11 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
     // we'll iterate over the attributes (if any)
 
-    int attr;
-    attr = _NULL;
+    aux[IDX_ATTR_FIRST] = _TRUE;
+
+    aux[IDX_ATTR_PROTO] = 0;
+
+    aux[IDX_ATTR_VALUE] = _FALSE;
 
     loop: while (index < mainIndex) {
       proto = main[index++];
@@ -247,109 +260,87 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         case ByteProto2.AMBIGUOUS1 -> {
           index = jmp(index);
 
-          // handle attr name
-
           byte ordinalByte;
           ordinalByte = main[mainContents++];
 
-          int ordinal;
-          ordinal = Bytes.decodeInt(ordinalByte);
-
           Ambiguous ambiguous;
-          ambiguous = Ambiguous.get(ordinal);
+          ambiguous = Ambiguous.decode(ordinalByte);
 
           if (ambiguous.isAttributeOf(name)) {
-            ordinal = ambiguous.attributeByteCode();
+            byte attr;
+            attr = ambiguous.encodeAttribute();
 
-            ordinalByte = Bytes.encodeInt0(ordinal);
+            byte v0;
+            v0 = main[mainContents++];
 
-            attr = handleAttrName(attr, ordinalByte, ordinal);
+            byte v1;
+            v1 = main[mainContents++];
 
-            // handle attr value
-
-            byte int0;
-            int0 = main[mainContents++];
-
-            byte int1;
-            int1 = main[mainContents++];
-
-            auxAdd(ByteCode.ATTR_VALUE, int0, int1);
+            handleAttr(attr, v0, v1);
           }
+        }
+
+        case ByteProto2.ATTRIBUTE0 -> {
+          index = jmp(index);
+
+          byte attr;
+          attr = main[mainContents++];
+
+          handleAttr(attr);
         }
 
         case ByteProto2.ATTRIBUTE1 -> {
           index = jmp(index);
 
-          // handle attr name
+          byte attr;
+          attr = main[mainContents++];
 
-          byte ordinalByte;
-          ordinalByte = main[mainContents++];
+          byte v0;
+          v0 = main[mainContents++];
 
-          int ordinal;
-          ordinal = Bytes.decodeInt(ordinalByte);
+          byte v1;
+          v1 = main[mainContents++];
 
-          attr = handleAttrName(attr, ordinalByte, ordinal);
-
-          // handle attr value
-
-          byte int0;
-          int0 = main[mainContents++];
-
-          byte int1;
-          int1 = main[mainContents++];
-
-          auxAdd(ByteCode.ATTR_VALUE, int0, int1);
+          handleAttr(attr, v0, v1);
         }
 
         case ByteProto2.ATTRIBUTE_CLASS -> {
-          // handle attr name
-
           int ordinal;
           ordinal = StandardAttributeName.CLASS.ordinal();
 
-          byte ordinalByte;
-          ordinalByte = Bytes.encodeInt0(ordinal);
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
 
-          attr = handleAttrName(attr, ordinalByte, ordinal);
+          byte v0;
+          v0 = main[index++];
 
-          // handle attr value
+          byte v1;
+          v1 = main[index++];
 
-          byte int0;
-          int0 = main[index++];
-
-          byte int1;
-          int1 = main[index++];
-
-          auxAdd(ByteCode.ATTR_VALUE, int0, int1);
+          handleAttr(attr, v0, v1);
         }
 
         case ByteProto2.ATTRIBUTE_ID -> {
-          // handle attr name
-
           int ordinal;
           ordinal = StandardAttributeName.ID.ordinal();
 
-          byte ordinalByte;
-          ordinalByte = Bytes.encodeInt0(ordinal);
+          byte attr;
+          attr = Bytes.encodeInt0(ordinal);
 
-          attr = handleAttrName(attr, ordinalByte, ordinal);
+          byte v0;
+          v0 = main[index++];
 
-          // handle attr value
+          byte v1;
+          v1 = main[index++];
 
-          byte int0;
-          int0 = main[index++];
-
-          byte int1;
-          int1 = main[index++];
-
-          auxAdd(ByteCode.ATTR_VALUE, int0, int1);
+          handleAttr(attr, v0, v1);
         }
 
         case ByteProto2.ELEMENT,
              ByteProto2.TEXT -> index = skipVarInt(index);
 
         case ByteProto2.END -> {
-          if (attr != Integer.MIN_VALUE) {
+          if (aux[IDX_ATTR_FIRST] == _FALSE && aux[IDX_ATTR_VALUE] == _TRUE) {
             auxAdd(ByteCode.ATTR_VALUE_END);
           }
 
@@ -596,24 +587,66 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     }
   }
 
-  private int handleAttrName(int attr, byte ordinalByte, int ordinal) {
-    if (attr == Integer.MIN_VALUE) {
+  private void handleAttr(byte attr) {
+    if (aux[IDX_ATTR_FIRST] == _TRUE || aux[IDX_ATTR_VALUE] == _FALSE) {
       // this is the first attribute
-      auxAdd(ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
+      auxAdd(
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME, attr
+      );
     }
 
-    else if (attr != ordinal) {
+    else {
       // this is a new attribute
-      auxAdd(ByteCode.ATTR_VALUE_END,
-        ByteCode.SPACE, ByteCode.ATTR_NAME, ordinalByte, ByteCode.ATTR_VALUE_START);
+      auxAdd(
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME, attr
+      );
+    }
+
+    aux[IDX_ATTR_FIRST] = _FALSE;
+
+    aux[IDX_ATTR_PROTO] = attr;
+
+    aux[IDX_ATTR_VALUE] = _FALSE;
+  }
+
+  private void handleAttr(byte attr, byte value0, byte value1) {
+    if (aux[IDX_ATTR_FIRST] == _TRUE) {
+      // this is the first attribute
+      auxAdd(
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME, attr,
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE, value0, value1
+      );
+    }
+
+    else if (aux[IDX_ATTR_PROTO] != attr) {
+      // this is a new attribute
+      auxAdd(
+        ByteCode.ATTR_VALUE_END,
+        ByteCode.SPACE,
+        ByteCode.ATTR_NAME, attr,
+        ByteCode.ATTR_VALUE_START,
+        ByteCode.ATTR_VALUE, value0, value1
+      );
     }
 
     else {
       // this is a new value of the same attribute
-      auxAdd(ByteCode.SPACE);
+      auxAdd(
+        ByteCode.SPACE,
+        ByteCode.ATTR_VALUE, value0, value1
+      );
     }
 
-    return ordinal;
+    aux[IDX_ATTR_FIRST] = _FALSE;
+
+    aux[IDX_ATTR_PROTO] = attr;
+
+    aux[IDX_ATTR_VALUE] = _TRUE;
   }
 
   private void indentationDec() {

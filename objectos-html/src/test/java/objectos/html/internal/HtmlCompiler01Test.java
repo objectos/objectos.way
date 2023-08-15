@@ -598,6 +598,55 @@ public class HtmlCompiler01Test {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC31
+
+  - email input
+  """)
+  public void testCase31() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.attribute(StandardAttributeName.TYPE, "email");
+    compiler.attribute(StandardAttributeName.REQUIRED);
+
+    compiler.elementBegin(StandardElementName.INPUT);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED5,
+      (byte) StandardAttributeName.TYPE.ordinal(),
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt0(0),
+      ByteProto2.INTERNAL5,
+
+      ByteProto2.MARKED3,
+      (byte) StandardAttributeName.REQUIRED.ordinal(),
+      ByteProto2.INTERNAL3,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(9),
+      Bytes.encodeInt1(9),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.INPUT.ordinal(),
+      ByteProto2.ATTRIBUTE1,
+      Bytes.encodeInt0(14),
+      ByteProto2.ATTRIBUTE0,
+      Bytes.encodeInt0(11),
+      ByteProto2.END,
+      Bytes.encodeInt0(17),
+      ByteProto2.INTERNAL
+    );
+  }
+
   private void test(HtmlCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

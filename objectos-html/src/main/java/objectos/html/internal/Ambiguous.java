@@ -64,6 +64,13 @@ enum Ambiguous {
     this.elementByteCode = element.getCode();
   }
 
+  public static Ambiguous decode(byte b0) {
+    int ordinal;
+    ordinal = Bytes.decodeInt(b0);
+
+    return ALL[ordinal];
+  }
+
   public static Ambiguous get(int code) {
     return ALL[code];
   }
@@ -78,6 +85,10 @@ enum Ambiguous {
 
   public final int elementByteCode() {
     return elementByteCode;
+  }
+
+  public final byte encodeAttribute() {
+    return Bytes.encodeInt0(attributeByteCode);
   }
 
   public abstract boolean isAttributeOf(ElementName element);

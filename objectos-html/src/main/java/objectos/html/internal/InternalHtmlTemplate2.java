@@ -86,7 +86,7 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
 
   @Override
   final void attribute(StandardAttributeName name) {
-    throw new UnsupportedOperationException("Implement me");
+    api().attribute(name);
   }
 
   @Override

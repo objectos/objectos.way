@@ -32,6 +32,8 @@ abstract class HtmlTemplateApi2 {
 
   public abstract void ambiguous(Ambiguous name, String value);
 
+  public abstract void attribute(StandardAttributeName name);
+
   public abstract void attribute(StandardAttributeName name, String value);
 
   public abstract void compilationBegin();

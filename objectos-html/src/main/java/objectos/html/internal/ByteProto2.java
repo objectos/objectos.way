@@ -21,30 +21,32 @@ final class ByteProto2 {
 
   public static final byte END = -1;
   public static final byte INTERNAL = -2;
-  public static final byte INTERNAL4 = -3;
-  public static final byte INTERNAL5 = -4;
-  public static final byte MARKED = -5;
-  public static final byte MARKED4 = -6;
-  public static final byte MARKED5 = -7;
-  public static final byte NULL = -8;
-  public static final byte STANDARD_NAME = -9;
+  public static final byte INTERNAL3 = -3;
+  public static final byte INTERNAL4 = -4;
+  public static final byte INTERNAL5 = -5;
+  public static final byte MARKED = -6;
+  public static final byte MARKED3 = -7;
+  public static final byte MARKED4 = -8;
+  public static final byte MARKED5 = -9;
+  public static final byte NULL = -10;
+  public static final byte STANDARD_NAME = -11;
 
   //elements
 
-  public static final byte AMBIGUOUS1 = -10;
-  public static final byte DOCTYPE = -11;
-  public static final byte ELEMENT = -12;
-  public static final byte FRAGMENT = -13;
-  public static final byte TEMPLATE = -14;
-  public static final byte TEMPLATE_DATA = -15;
-  public static final byte TEXT = -16;
+  public static final byte AMBIGUOUS1 = -12;
+  public static final byte DOCTYPE = -13;
+  public static final byte ELEMENT = -14;
+  public static final byte FRAGMENT = -15;
+  public static final byte TEMPLATE = -16;
+  public static final byte TEMPLATE_DATA = -17;
+  public static final byte TEXT = -18;
 
   //attributes
 
-  public static final byte ATTRIBUTE0 = -17;
-  public static final byte ATTRIBUTE1 = -18;
-  public static final byte ATTRIBUTE_CLASS = -19;
-  public static final byte ATTRIBUTE_ID = -20;
+  public static final byte ATTRIBUTE0 = -19;
+  public static final byte ATTRIBUTE1 = -20;
+  public static final byte ATTRIBUTE_CLASS = -21;
+  public static final byte ATTRIBUTE_ID = -22;
 
   private ByteProto2() {}
 

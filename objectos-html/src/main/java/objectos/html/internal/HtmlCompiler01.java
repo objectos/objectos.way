@@ -66,6 +66,21 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
   }
 
   @Override
+  public final void attribute(StandardAttributeName name) {
+    int ordinal;
+    ordinal = name.getCode();
+
+    mainAdd(
+      ByteProto2.ATTRIBUTE0,
+
+      // name
+      Bytes.encodeInt0(ordinal),
+
+      ByteProto2.INTERNAL3
+    );
+  }
+
+  @Override
   public final void attribute(StandardAttributeName name, String value) {
     int ordinal;
     ordinal = name.getCode();
@@ -163,6 +178,12 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
             proto = main[contents];
 
             switch (proto) {
+              case ByteProto2.ATTRIBUTE0 -> {
+                contents = encodeInternal3(contents, proto);
+
+                continue loop;
+              }
+
               case ByteProto2.AMBIGUOUS1,
                    ByteProto2.ATTRIBUTE1 -> {
                 contents = encodeInternal5(contents, proto);
@@ -183,6 +204,8 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
               }
 
               case ByteProto2.MARKED -> contents = encodeMarked(contents);
+
+              case ByteProto2.MARKED3 -> contents += 3;
 
               case ByteProto2.MARKED4 -> contents += 4;
 
@@ -299,6 +322,8 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
           mainContents -= length;
         }
+
+        case ByteProto2.INTERNAL3 -> mainContents -= 3 - 2;
 
         case ByteProto2.INTERNAL4 -> mainContents -= 4 - 2;
 
@@ -461,6 +486,29 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     aux[auxIndex++] = b4;
   }
 
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 6);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+    aux[auxIndex++] = b6;
+  }
+
+  final void auxAdd(byte b0, byte b1, byte b2, byte b3, byte b4, byte b5, byte b6, byte b7) {
+    aux = ByteArrays.growIfNecessary(aux, auxIndex + 7);
+    aux[auxIndex++] = b0;
+    aux[auxIndex++] = b1;
+    aux[auxIndex++] = b2;
+    aux[auxIndex++] = b3;
+    aux[auxIndex++] = b4;
+    aux[auxIndex++] = b5;
+    aux[auxIndex++] = b6;
+    aux[auxIndex++] = b7;
+  }
+
   private int encodeElement(int contents, byte proto) {
     // keep the start index handy
     int startIndex;
@@ -542,6 +590,33 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     }
 
     return maxIndex;
+  }
+
+  private int encodeInternal3(int contents, byte proto) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = ByteProto2.MARKED3;
+
+    // point to next
+    int offset;
+    offset = 3;
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+    return contents + offset;
   }
 
   private int encodeInternal5(int contents, byte proto) {
