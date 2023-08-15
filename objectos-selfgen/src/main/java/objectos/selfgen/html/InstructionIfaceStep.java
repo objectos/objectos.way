@@ -23,9 +23,6 @@ final class InstructionIfaceStep extends ThisTemplate {
   private static final ClassTypeName HTML_TEMPLATE
       = ClassTypeName.of("objectos.html", "HtmlTemplate");
 
-  private static final ClassTypeName HTML_TEMPLATE2
-      = ClassTypeName.of("objectos.html", "HtmlTemplate2");
-
   private static final ClassTypeName ITERATOR
       = ClassTypeName.of(Iterator.class);
 
@@ -93,7 +90,7 @@ final class InstructionIfaceStep extends ThisTemplate {
 
       include(this::interfaceBody3Contents),
 
-      permitsClause(HTML_TEMPLATE, HTML_TEMPLATE2, INTERNAL_INSTRUCTION)
+      permitsClause(HTML_TEMPLATE, INTERNAL_INSTRUCTION)
     );
 
     interfaceDeclaration(

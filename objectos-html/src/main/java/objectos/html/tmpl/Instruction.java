@@ -17,7 +17,6 @@ package objectos.html.tmpl;
 
 import java.util.Iterator;
 import objectos.html.HtmlTemplate;
-import objectos.html.HtmlTemplate2;
 import objectos.html.internal.InternalFragment;
 import objectos.html.internal.InternalInstruction;
 import objectos.html.internal.InternalNoOp;
@@ -556,7 +555,7 @@ public sealed interface Instruction {
       TableHeadInstruction,
       TitleInstruction,
       TableRowInstruction,
-      UnorderedListInstruction permits HtmlTemplate, HtmlTemplate2, InternalInstruction {}
+      UnorderedListInstruction permits HtmlTemplate, InternalInstruction {}
 
   sealed interface Fragment extends
       AnchorInstruction,

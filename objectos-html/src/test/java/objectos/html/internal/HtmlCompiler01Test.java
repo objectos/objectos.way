@@ -16,7 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
-import objectos.html.HtmlTemplate2;
+import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -42,14 +42,14 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(5),
       Bytes.encodeInt1(5),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(5),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -73,22 +73,22 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED5,
+      ByteProto.MARKED5,
       (byte) StandardAttributeName.LANG.ordinal(),
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
-      ByteProto2.INTERNAL5,
+      ByteProto.INTERNAL5,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.ATTRIBUTE1,
+      ByteProto.ATTRIBUTE1,
       Bytes.encodeInt0(11),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(12),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -114,30 +114,30 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED5,
+      ByteProto.MARKED5,
       (byte) StandardAttributeName.CLASS.ordinal(),
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
-      ByteProto2.INTERNAL5,
+      ByteProto.INTERNAL5,
 
-      ByteProto2.MARKED5,
+      ByteProto.MARKED5,
       (byte) StandardAttributeName.LANG.ordinal(),
       Bytes.encodeInt0(1),
       Bytes.encodeInt1(1),
-      ByteProto2.INTERNAL5,
+      ByteProto.INTERNAL5,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(9),
       Bytes.encodeInt1(9),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.ATTRIBUTE1,
+      ByteProto.ATTRIBUTE1,
       Bytes.encodeInt0(16),
-      ByteProto2.ATTRIBUTE1,
+      ByteProto.ATTRIBUTE1,
       Bytes.encodeInt0(13),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(19),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -162,25 +162,25 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(5),
       Bytes.encodeInt1(5),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HEAD.ordinal(),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(5),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(14),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(15),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -204,16 +204,16 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.DOCTYPE,
+      ByteProto.DOCTYPE,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(5),
       Bytes.encodeInt1(5),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(5),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -250,53 +250,53 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(18),
       Bytes.encodeInt1(18),
 
-      ByteProto2.MARKED5,
+      ByteProto.MARKED5,
       (byte) StandardAttributeName.CHARSET.ordinal(),
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
-      ByteProto2.INTERNAL5,
+      ByteProto.INTERNAL5,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.META.ordinal(),
-      ByteProto2.ATTRIBUTE1,
+      ByteProto.ATTRIBUTE1,
       Bytes.encodeInt0(11),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(12),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
       // fragment end
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(18),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HEAD.ordinal(),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(19),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(28),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(16),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(38),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -329,31 +329,31 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(8),
       Bytes.encodeInt1(8),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.BODY.ordinal(),
-      ByteProto2.ATTRIBUTE_ID,
+      ByteProto.ATTRIBUTE_ID,
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(8),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(10),
       Bytes.encodeInt1(10),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.ATTRIBUTE_ID,
+      ByteProto.ATTRIBUTE_ID,
       Bytes.encodeInt0(1),
       Bytes.encodeInt1(1),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(20),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(21),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -385,43 +385,43 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED4,
+      ByteProto.MARKED4,
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
-      ByteProto2.INTERNAL4,
+      ByteProto.INTERNAL4,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.P.ordinal(),
-      ByteProto2.TEXT,
+      ByteProto.TEXT,
       Bytes.encodeInt0(10),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(11),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.BODY.ordinal(),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(16),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(21),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(16),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(31),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -456,52 +456,52 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED5,
+      ByteProto.MARKED5,
       (byte) Ambiguous.TITLE.ordinal(),
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
-      ByteProto2.INTERNAL5,
+      ByteProto.INTERNAL5,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HEAD.ordinal(),
-      ByteProto2.AMBIGUOUS1,
+      ByteProto.AMBIGUOUS1,
       Bytes.encodeInt0(11),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(12),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.MARKED5,
+      ByteProto.MARKED5,
       (byte) Ambiguous.TITLE.ordinal(),
       Bytes.encodeInt0(1),
       Bytes.encodeInt1(1),
-      ByteProto2.INTERNAL5,
+      ByteProto.INTERNAL5,
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.BODY.ordinal(),
-      ByteProto2.AMBIGUOUS1,
+      ByteProto.AMBIGUOUS1,
       Bytes.encodeInt0(11),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(12),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(9),
       Bytes.encodeInt1(9),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.HTML.ordinal(),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(31),
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(18),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(39),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -509,7 +509,7 @@ public class HtmlCompiler01Test {
   include template
   """)
   public void testCase20() {
-    HtmlTemplate2 nav = new HtmlTemplate2() {
+    HtmlTemplate nav = new HtmlTemplate() {
       @Override
       protected final void definition() {
         nav();
@@ -530,33 +530,33 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(19),
       Bytes.encodeInt1(19),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.BODY.ordinal(),
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(9),
       Bytes.encodeInt1(9),
 
-      ByteProto2.MARKED,
+      ByteProto.MARKED,
       Bytes.encodeInt0(5),
       Bytes.encodeInt1(5),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.NAV.ordinal(),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(5),
-      ByteProto2.INTERNAL,
+      ByteProto.INTERNAL,
 
-      ByteProto2.END,
+      ByteProto.END,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(10),
 
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(19),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -580,21 +580,21 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED4,
+      ByteProto.MARKED4,
       Bytes.encodeInt0(0),
       Bytes.encodeInt1(0),
-      ByteProto2.INTERNAL4,
+      ByteProto.INTERNAL4,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(7),
       Bytes.encodeInt1(7),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.STYLE.ordinal(),
-      ByteProto2.TEXT,
+      ByteProto.TEXT,
       Bytes.encodeInt0(10),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(11),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 
@@ -622,28 +622,28 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto2.MARKED5,
+      ByteProto.MARKED5,
       (byte) StandardAttributeName.TYPE.ordinal(),
       Bytes.encodeInt0(0),
       Bytes.encodeInt0(0),
-      ByteProto2.INTERNAL5,
+      ByteProto.INTERNAL5,
 
-      ByteProto2.MARKED3,
+      ByteProto.MARKED3,
       (byte) StandardAttributeName.REQUIRED.ordinal(),
-      ByteProto2.INTERNAL3,
+      ByteProto.INTERNAL3,
 
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
       Bytes.encodeInt0(9),
       Bytes.encodeInt1(9),
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
       (byte) StandardElementName.INPUT.ordinal(),
-      ByteProto2.ATTRIBUTE1,
+      ByteProto.ATTRIBUTE1,
       Bytes.encodeInt0(14),
-      ByteProto2.ATTRIBUTE0,
+      ByteProto.ATTRIBUTE0,
       Bytes.encodeInt0(11),
-      ByteProto2.END,
+      ByteProto.END,
       Bytes.encodeInt0(17),
-      ByteProto2.INTERNAL
+      ByteProto.INTERNAL
     );
   }
 

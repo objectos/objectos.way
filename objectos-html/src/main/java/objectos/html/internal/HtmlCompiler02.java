@@ -111,7 +111,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
       int length;
       length = switch (proto) {
-        case ByteProto2.DOCTYPE -> {
+        case ByteProto.DOCTYPE -> {
           elemCount = newLineIfNecessary(elemCount);
 
           auxAdd(ByteCode.DOCTYPE);
@@ -119,7 +119,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           yield 0;
         }
 
-        case ByteProto2.ELEMENT -> {
+        case ByteProto.ELEMENT -> {
           elemCount = newLineIfNecessary(elemCount);
 
           int thisLength;
@@ -130,13 +130,13 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           yield thisLength;
         }
 
-        case ByteProto2.MARKED -> Bytes.decodeInt(main[index++], main[index++]);
+        case ByteProto.MARKED -> Bytes.decodeInt(main[index++], main[index++]);
 
-        case ByteProto2.MARKED3 -> 3 - 1;
+        case ByteProto.MARKED3 -> 3 - 1;
 
-        case ByteProto2.MARKED4 -> 4 - 1;
+        case ByteProto.MARKED4 -> 4 - 1;
 
-        case ByteProto2.MARKED5 -> 5 - 1;
+        case ByteProto.MARKED5 -> 5 - 1;
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
@@ -225,7 +225,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     proto = main[index++];
 
     switch (proto) {
-      case ByteProto2.STANDARD_NAME -> {
+      case ByteProto.STANDARD_NAME -> {
         nameByte = main[index++];
 
         int ordinal;
@@ -257,7 +257,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       proto = main[index++];
 
       switch (proto) {
-        case ByteProto2.AMBIGUOUS1 -> {
+        case ByteProto.AMBIGUOUS1 -> {
           index = jmp(index);
 
           byte ordinalByte;
@@ -280,7 +280,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           }
         }
 
-        case ByteProto2.ATTRIBUTE0 -> {
+        case ByteProto.ATTRIBUTE0 -> {
           index = jmp(index);
 
           byte attr;
@@ -289,7 +289,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           handleAttr(attr);
         }
 
-        case ByteProto2.ATTRIBUTE1 -> {
+        case ByteProto.ATTRIBUTE1 -> {
           index = jmp(index);
 
           byte attr;
@@ -304,7 +304,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           handleAttr(attr, v0, v1);
         }
 
-        case ByteProto2.ATTRIBUTE_CLASS -> {
+        case ByteProto.ATTRIBUTE_CLASS -> {
           int ordinal;
           ordinal = StandardAttributeName.CLASS.ordinal();
 
@@ -320,7 +320,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           handleAttr(attr, v0, v1);
         }
 
-        case ByteProto2.ATTRIBUTE_ID -> {
+        case ByteProto.ATTRIBUTE_ID -> {
           int ordinal;
           ordinal = StandardAttributeName.ID.ordinal();
 
@@ -336,11 +336,11 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           handleAttr(attr, v0, v1);
         }
 
-        case ByteProto2.ELEMENT,
-             ByteProto2.RAW,
-             ByteProto2.TEXT -> index = skipVarInt(index);
+        case ByteProto.ELEMENT,
+             ByteProto.RAW,
+             ByteProto.TEXT -> index = skipVarInt(index);
 
-        case ByteProto2.END -> {
+        case ByteProto.END -> {
           if (aux[IDX_ATTR_FIRST] == _FALSE && aux[IDX_ATTR_VALUE] == _TRUE) {
             auxAdd(ByteCode.ATTR_VALUE_END);
           }
@@ -348,7 +348,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           break loop;
         }
 
-        case ByteProto2.MARKED -> {
+        case ByteProto.MARKED -> {
           byte len0;
           len0 = main[index++];
 
@@ -401,7 +401,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
       proto = main[index++];
 
       switch (proto) {
-        case ByteProto2.AMBIGUOUS1 -> {
+        case ByteProto.AMBIGUOUS1 -> {
           index = jmp(index);
 
           // load ambiguous name
@@ -442,12 +442,12 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           element2EndTag0NewLine(parent, element);
         }
 
-        case ByteProto2.ATTRIBUTE1 -> index = skipVarInt(index);
+        case ByteProto.ATTRIBUTE1 -> index = skipVarInt(index);
 
-        case ByteProto2.ATTRIBUTE_CLASS,
-             ByteProto2.ATTRIBUTE_ID -> index += 2;
+        case ByteProto.ATTRIBUTE_CLASS,
+             ByteProto.ATTRIBUTE_ID -> index += 2;
 
-        case ByteProto2.ELEMENT -> {
+        case ByteProto.ELEMENT -> {
           index = jmp(index);
 
           // skip fixed length
@@ -456,11 +456,11 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           element(mainContents, parent);
         }
 
-        case ByteProto2.END -> {
+        case ByteProto.END -> {
           break loop;
         }
 
-        case ByteProto2.MARKED -> {
+        case ByteProto.MARKED -> {
           byte len0;
           len0 = main[index++];
 
@@ -473,9 +473,9 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           index += length;
         }
 
-        case ByteProto2.STANDARD_NAME -> index += 1;
+        case ByteProto.STANDARD_NAME -> index += 1;
 
-        case ByteProto2.RAW -> {
+        case ByteProto.RAW -> {
           index = jmp(index);
 
           byte b0;
@@ -487,7 +487,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
           auxAdd(ByteCode.RAW, b0, b1);
         }
 
-        case ByteProto2.TEXT -> {
+        case ByteProto.TEXT -> {
           index = jmp(index);
 
           byte b0;

@@ -17,39 +17,37 @@ package objectos.html.internal;
 
 final class ByteProto {
 
-  static final int ATTRIBUTE = -1;
+  //internal instructions
 
-  static final int ELEMENT = -2;
+  public static final byte END = -1;
+  public static final byte INTERNAL = -2;
+  public static final byte INTERNAL3 = -3;
+  public static final byte INTERNAL4 = -4;
+  public static final byte INTERNAL5 = -5;
+  public static final byte MARKED = -6;
+  public static final byte MARKED3 = -7;
+  public static final byte MARKED4 = -8;
+  public static final byte MARKED5 = -9;
+  public static final byte NULL = -10;
+  public static final byte STANDARD_NAME = -11;
 
-  static final int ELEMENT_END = -3;
+  //elements
 
-  static final int ROOT = -4;
+  public static final byte AMBIGUOUS1 = -12;
+  public static final byte DOCTYPE = -13;
+  public static final byte ELEMENT = -14;
+  public static final byte FRAGMENT = -15;
+  public static final byte RAW = -16;
+  public static final byte TEMPLATE = -17;
+  public static final byte TEMPLATE_DATA = -18;
+  public static final byte TEXT = -19;
 
-  static final int ROOT_END = -5;
+  //attributes
 
-  static final int DOCTYPE = -6;
-
-  static final int FRAGMENT = -7;
-
-  static final int SINGLE = -8;
-
-  static final int LIST = -9;
-
-  static final int ATTRS_END = -10;
-
-  static final int ATTRIBUTE_EXT = -11;
-
-  static final int MARKED = -12;
-
-  static final int TEXT = -13;
-
-  static final int AMBIGUOUS = -14;
-
-  static final int TEMPLATE = -15;
-
-  static final int RAW = -16;
-
-  static final int NOOP = -17;
+  public static final byte ATTRIBUTE0 = -20;
+  public static final byte ATTRIBUTE1 = -21;
+  public static final byte ATTRIBUTE_CLASS = -22;
+  public static final byte ATTRIBUTE_ID = -23;
 
   private ByteProto() {}
 

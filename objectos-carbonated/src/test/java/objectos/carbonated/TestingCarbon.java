@@ -16,10 +16,10 @@
 package objectos.carbonated;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
 import objectos.css.util.Next;
-import objectos.html.HtmlSink;
 import objectos.html.HtmlTemplate;
 
 final class TestingCarbon {
@@ -59,13 +59,10 @@ final class TestingCarbon {
     String tmpdir;
     tmpdir = System.getProperty("java.io.tmpdir");
 
-    Path carbonated;
-    carbonated = Path.of(tmpdir, "carbonated");
+    Path file;
+    file = Path.of(tmpdir, "carbonated", fileName);
 
-    HtmlSink sink;
-    sink = new HtmlSink();
-
-    sink.toDirectory(page, carbonated);
+    Files.writeString(file, page.toString());
   }
 
 }

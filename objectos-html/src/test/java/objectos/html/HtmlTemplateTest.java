@@ -30,7 +30,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase00() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html();
@@ -50,7 +50,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase01() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(lang("pt-BR"));
@@ -70,7 +70,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase02() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(className("no-js"), lang("pt-BR"));
@@ -90,7 +90,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase03() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -115,7 +115,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase04() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -141,7 +141,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase05() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -171,7 +171,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase06() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -200,7 +200,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase07() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -226,7 +226,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase08() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -254,7 +254,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase09() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -276,7 +276,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase10() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -308,7 +308,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase11() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -348,7 +348,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase12() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -390,7 +390,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase13() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         final TestIdSelector FOO = new TestIdSelector("foo");
         final TestIdSelector BAR = new TestIdSelector("bar");
 
@@ -418,7 +418,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase14() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -446,7 +446,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase15() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -472,7 +472,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase16() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -504,7 +504,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase17() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html(
@@ -543,7 +543,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase18() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           body(
@@ -570,7 +570,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase19() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           body(
@@ -596,8 +596,8 @@ public class HtmlTemplateTest {
   """)
   public void testCase20() {
     test(
-      new HtmlTemplate2() {
-        private final HtmlTemplate2 nav = new HtmlTemplate2() {
+      new HtmlTemplate() {
+        private final HtmlTemplate nav = new HtmlTemplate() {
           @Override
           protected final void definition() {
             nav(
@@ -606,7 +606,7 @@ public class HtmlTemplateTest {
           }
         };
 
-        private final HtmlTemplate2 hero = new HtmlTemplate2() {
+        private final HtmlTemplate hero = new HtmlTemplate() {
           @Override
           protected final void definition() {
             section(
@@ -642,7 +642,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase21() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         private final TestClassSelector first = new TestClassSelector("first");
 
         private final TestClassSelector second = new TestClassSelector("second");
@@ -666,7 +666,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase22() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -710,7 +710,7 @@ public class HtmlTemplateTest {
     ul.append("</ul>\n");
 
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           ElementContents[] children = new ElementContents[count];
@@ -732,7 +732,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase24() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           pre(
@@ -754,7 +754,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase25() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           head(
@@ -782,7 +782,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase26() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -832,7 +832,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase27() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           head(
@@ -860,7 +860,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase28() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -901,7 +901,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase29() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -971,7 +971,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase30() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           head(
@@ -999,7 +999,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase31() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           input(
@@ -1040,7 +1040,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase34() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           head(
@@ -1070,7 +1070,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase35() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         private final TestClassSelector A = new TestClassSelector("ca");
         private final TestClassSelector B = new TestClassSelector("cb");
 
@@ -1113,7 +1113,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase36() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -1139,7 +1139,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase37() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -1162,7 +1162,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase38() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -1195,7 +1195,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase39() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           div(
@@ -1217,7 +1217,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase40() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           h1(f(this::heading1));
@@ -1241,7 +1241,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase41() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           h1(f(this::heading1));
@@ -1260,8 +1260,8 @@ public class HtmlTemplateTest {
 
   @Test
   public void testCase42() {
-    HtmlTemplate2 component;
-    component = new HtmlTemplate2() {
+    HtmlTemplate component;
+    component = new HtmlTemplate() {
       @Override
       protected final void definition() {
         div(
@@ -1277,7 +1277,7 @@ public class HtmlTemplateTest {
     };
 
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           body(component);
@@ -1294,7 +1294,7 @@ public class HtmlTemplateTest {
     );
   }
 
-  private void test(HtmlTemplate2 template, String expected) {
+  private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();
 

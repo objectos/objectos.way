@@ -15,12 +15,10 @@
  */
 package objectos.html.internal;
 
-import objectos.html.HtmlSink;
+import objectos.html.CompiledHtml;
 import objectos.html.HtmlTemplate;
-import objectos.html.tmpl.CustomAttributeName;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
-import objectos.html.tmpl.Instruction.AnchorInstruction;
 import objectos.html.tmpl.Instruction.ClipPathAttribute;
 import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.Instruction.Fragment;
@@ -28,62 +26,56 @@ import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
 import objectos.lang.Check;
 
-/**
- * @since 0.5.3
- */
 public abstract class InternalHtmlTemplate extends GeneratedHtmlTemplate {
 
-  private HtmlTemplateApi api;
+  HtmlTemplateApi api;
 
-  public final void doctype() {
-    api().addDoctype();
+  public final CompiledHtml compile() {
+    try {
+      api = new HtmlCompiler02();
+
+      api.compilationBegin();
+
+      definition();
+
+      api.compilationEnd();
+
+      api.optimize();
+
+      return api.compile();
+    } finally {
+      api = null;
+    }
   }
 
   @Override
   public final String toString() {
-    var sink = new HtmlSink();
+    CompiledHtml compiled;
+    compiled = compile();
 
-    var out = new StringBuilder();
-
-    sink.toStringBuilder((HtmlTemplate) this, out);
-
-    return out.toString();
+    return compiled.toString();
   }
 
   protected final void add(HtmlTemplate template) {
     Check.notNull(template, "template == null");
 
-    api().addTemplate(template);
-  }
-
-  protected final void addTemplate(HtmlTemplate template) {
-    api().addTemplate(template);
-  }
-
-  protected final void addText(String text) {
-    api().addText(text);
+    throw new UnsupportedOperationException("Implement me");
   }
 
   protected final ClipPathAttribute clipPath(String value) {
-    api().addAttribute(StandardAttributeName.CLIPPATH, value);
+    api().attribute(StandardAttributeName.CLIPPATH, value);
 
     return InternalInstruction.INSTANCE;
   }
 
   protected abstract void definition();
 
-  @Override
-  protected final void element(StandardElementName name, Instruction[] contents) {
-    api().addElement(name, contents);
-  }
-
-  @Deprecated
-  protected final ElementContents elementContents() {
-    return InternalInstruction.INSTANCE;
+  protected final void doctype() {
+    api().doctype();
   }
 
   protected final Fragment f(FragmentAction action) {
-    api().addFragment(action);
+    api().fragment(action);
 
     return InternalFragment.INSTANCE;
   }
@@ -92,62 +84,63 @@ public abstract class InternalHtmlTemplate extends GeneratedHtmlTemplate {
     return InternalNoOp.INSTANCE;
   }
 
-  protected final void pathName(String path) {
-    Validate.pathName(path.toString()); // path implicit null-check
-
-    api().pathName(path);
-  }
-
-  protected AnchorInstruction pathTo(String path) {
-    Validate.pathName(path.toString()); // path implicit null-check
-
-    var name = CustomAttributeName.PATH_TO;
-
-    api().addAttribute(name, path);
-
-    return InternalInstruction.INSTANCE;
-  }
-
   protected final ElementContents raw(String text) {
-    api().addRaw(text);
+    api().raw(text);
 
     return InternalInstruction.INSTANCE;
   }
 
   protected final ElementContents t(String text) {
-    api().addText(text);
+    api().text(text);
 
     return InternalInstruction.INSTANCE;
   }
 
-  final void acceptTemplateDsl(HtmlTemplateApi api) {
-    this.api = Check.notNull(api, "api == null");
-
-    try {
-      definition();
-    } finally {
-      this.api = null;
-    }
-  }
-
   @Override
   final void ambiguous(Ambiguous name, String text) {
-    api().addAmbiguous(name, text);
+    api().ambiguous(name, text);
   }
 
   @Override
   final void attribute(StandardAttributeName name) {
-    api().addAttribute(name);
+    api().attribute(name);
   }
 
   @Override
   final void attribute(StandardAttributeName name, String value) {
-    api().addAttribute(name, value);
+    HtmlTemplateApi api;
+    api = api();
+
+    api.attribute(name, value);
+  }
+
+  @Override
+  final void element(StandardElementName name, Instruction[] contents) {
+    HtmlTemplateApi api;
+    api = api();
+
+    api.elementBegin(name);
+
+    for (int i = 0; i < contents.length; i++) {
+      Instruction inst;
+      inst = Check.notNull(contents[i], "contents[", i, "] == null");
+
+      api.elementValue(inst);
+    }
+
+    api.elementEnd();
   }
 
   @Override
   final void element(StandardElementName name, String text) {
-    api().addElement(name, text);
+    HtmlTemplateApi api;
+    api = api();
+
+    api.text(text);
+
+    api.elementBegin(name);
+    api.elementValue(InternalInstruction.INSTANCE);
+    api.elementEnd();
   }
 
   private HtmlTemplateApi api() {

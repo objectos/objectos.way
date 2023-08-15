@@ -17,7 +17,7 @@ package objectos.html.internal;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.HtmlTemplate2;
+import objectos.html.HtmlTemplate;
 import org.testng.annotations.Test;
 
 public class StandardHtmlWriterTest {
@@ -29,7 +29,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase01() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           html();
@@ -49,7 +49,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase02() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -71,7 +71,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase03() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -99,7 +99,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase04() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -132,7 +132,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase05() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -168,7 +168,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase06() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -199,7 +199,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase07() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -229,7 +229,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase08() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -269,7 +269,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase09() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -321,7 +321,7 @@ public class StandardHtmlWriterTest {
   """)
   public void testCase10() {
     test(
-      new HtmlTemplate2() {
+      new HtmlTemplate() {
         @Override
         protected final void definition() {
           doctype();
@@ -336,7 +336,7 @@ public class StandardHtmlWriterTest {
     );
   }
 
-  private void test(HtmlTemplate2 template, String expected) {
+  private void test(HtmlTemplate template, String expected) {
     assertEquals(template.toString(), expected);
   }
 

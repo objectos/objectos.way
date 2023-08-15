@@ -16,7 +16,7 @@
 package objectos.html.internal;
 
 import java.util.Arrays;
-import objectos.html.HtmlTemplate2;
+import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
@@ -552,7 +552,7 @@ public class HtmlCompiler02Test {
   include template
   """)
   public void testCase20() {
-    HtmlTemplate2 nav = new HtmlTemplate2() {
+    HtmlTemplate nav = new HtmlTemplate() {
       @Override
       protected final void definition() {
         nav();

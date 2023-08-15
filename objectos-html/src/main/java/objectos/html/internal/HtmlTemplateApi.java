@@ -15,40 +15,51 @@
  */
 package objectos.html.internal;
 
-import objectos.html.spi.Marker;
-import objectos.html.spi.Renderer;
-import objectos.html.tmpl.AttributeName;
-import objectos.html.tmpl.ElementName;
+import objectos.html.CompiledHtml;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
+import objectos.html.tmpl.StandardAttributeName;
+import objectos.html.tmpl.StandardElementName;
 
 /**
  * TODO
  *
  * @since 0.5.3
  */
-public abstract class HtmlTemplateApi implements Marker, Renderer {
+abstract class HtmlTemplateApi {
 
-  abstract void addAmbiguous(Ambiguous name, String text);
+  HtmlTemplateApi() {}
 
-  abstract void addAttribute(AttributeName name);
+  public abstract void ambiguous(Ambiguous name, String value);
 
-  abstract void addAttribute(AttributeName name, String value);
+  public abstract void attribute(StandardAttributeName name);
 
-  abstract void addDoctype();
+  public abstract void attribute(StandardAttributeName name, String value);
 
-  abstract void addElement(ElementName name, Instruction... contents);
+  public abstract void compilationBegin();
 
-  abstract void addElement(ElementName name, String text);
+  public abstract void compilationEnd();
 
-  abstract void addFragment(FragmentAction action);
+  public CompiledHtml compile() {
+    throw new UnsupportedOperationException();
+  }
 
-  abstract void addRaw(String text);
+  public abstract void doctype();
 
-  abstract void addTemplate(InternalHtmlTemplate template);
+  public abstract void elementBegin(StandardElementName name);
 
-  abstract void addText(String text);
+  public abstract void elementEnd();
 
-  abstract void pathName(String path);
+  public abstract void elementValue(Instruction instruction);
+
+  public abstract void fragment(FragmentAction action);
+
+  public void optimize() {
+    throw new UnsupportedOperationException();
+  }
+
+  public abstract void raw(String value);
+
+  public abstract void text(String value);
 
 }

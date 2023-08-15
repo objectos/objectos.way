@@ -15,7 +15,7 @@
  */
 package objectos.html.internal;
 
-import objectos.html.HtmlTemplate2;
+import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.StandardAttributeName;
@@ -23,7 +23,7 @@ import objectos.html.tmpl.StandardElementName;
 import objectos.util.ByteArrays;
 import objectos.util.ObjectArrays;
 
-class HtmlCompiler01 extends HtmlTemplateApi2 {
+class HtmlCompiler01 extends HtmlTemplateApi {
 
   byte[] aux;
 
@@ -52,7 +52,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto2.AMBIGUOUS1,
+      ByteProto.AMBIGUOUS1,
 
       // name
       Bytes.encodeInt0(ordinal),
@@ -61,7 +61,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       Bytes.encodeInt0(object),
       Bytes.encodeInt1(object),
 
-      ByteProto2.INTERNAL5
+      ByteProto.INTERNAL5
     );
   }
 
@@ -71,12 +71,12 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     ordinal = name.getCode();
 
     mainAdd(
-      ByteProto2.ATTRIBUTE0,
+      ByteProto.ATTRIBUTE0,
 
       // name
       Bytes.encodeInt0(ordinal),
 
-      ByteProto2.INTERNAL3
+      ByteProto.INTERNAL3
     );
   }
 
@@ -89,7 +89,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto2.ATTRIBUTE1,
+      ByteProto.ATTRIBUTE1,
 
       // name
       Bytes.encodeInt0(ordinal),
@@ -98,7 +98,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       Bytes.encodeInt0(object),
       Bytes.encodeInt1(object),
 
-      ByteProto2.INTERNAL5
+      ByteProto.INTERNAL5
     );
   }
 
@@ -120,7 +120,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
   @Override
   public final void doctype() {
-    mainAdd(ByteProto2.DOCTYPE);
+    mainAdd(ByteProto.DOCTYPE);
   }
 
   @Override
@@ -134,13 +134,13 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     mainContents = mainStart = mainIndex;
 
     mainAdd(
-      ByteProto2.ELEMENT,
+      ByteProto.ELEMENT,
 
       // length takes 2 bytes
-      ByteProto2.NULL,
-      ByteProto2.NULL,
+      ByteProto.NULL,
+      ByteProto.NULL,
 
-      ByteProto2.STANDARD_NAME,
+      ByteProto.STANDARD_NAME,
 
       Bytes.encodeName(name)
     );
@@ -159,60 +159,60 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     contents = mainContents;
 
     int templateIndex;
-    templateIndex = ByteProto2.NULL;
+    templateIndex = ByteProto.NULL;
 
     loop: while (index < indexMax) {
       byte mark;
       mark = aux[index++];
 
       switch (mark) {
-        case ByteProto2.ATTRIBUTE_CLASS,
-             ByteProto2.ATTRIBUTE_ID,
-             ByteProto2.TEXT -> {
+        case ByteProto.ATTRIBUTE_CLASS,
+             ByteProto.ATTRIBUTE_ID,
+             ByteProto.TEXT -> {
           mainAdd(mark, aux[index++], aux[index++]);
         }
 
-        case ByteProto2.INTERNAL -> {
+        case ByteProto.INTERNAL -> {
           while (true) {
             byte proto;
             proto = main[contents];
 
             switch (proto) {
-              case ByteProto2.ATTRIBUTE0 -> {
+              case ByteProto.ATTRIBUTE0 -> {
                 contents = encodeInternal3(contents, proto);
 
                 continue loop;
               }
 
-              case ByteProto2.AMBIGUOUS1,
-                   ByteProto2.ATTRIBUTE1 -> {
+              case ByteProto.AMBIGUOUS1,
+                   ByteProto.ATTRIBUTE1 -> {
                 contents = encodeInternal5(contents, proto);
 
                 continue loop;
               }
 
-              case ByteProto2.ELEMENT -> {
+              case ByteProto.ELEMENT -> {
                 contents = encodeElement(contents, proto);
 
                 continue loop;
               }
 
-              case ByteProto2.FRAGMENT -> {
+              case ByteProto.FRAGMENT -> {
                 contents = encodeFragment(contents);
 
                 continue loop;
               }
 
-              case ByteProto2.MARKED -> contents = encodeMarked(contents);
+              case ByteProto.MARKED -> contents = encodeMarked(contents);
 
-              case ByteProto2.MARKED3 -> contents += 3;
+              case ByteProto.MARKED3 -> contents += 3;
 
-              case ByteProto2.MARKED4 -> contents += 4;
+              case ByteProto.MARKED4 -> contents += 4;
 
-              case ByteProto2.MARKED5 -> contents += 5;
+              case ByteProto.MARKED5 -> contents += 5;
 
-              case ByteProto2.RAW,
-                   ByteProto2.TEXT -> {
+              case ByteProto.RAW,
+                   ByteProto.TEXT -> {
                 contents = encodeInternal4(contents, proto);
 
                 continue loop;
@@ -227,8 +227,8 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
           }
         }
 
-        case ByteProto2.TEMPLATE -> {
-          if (templateIndex == ByteProto2.NULL) {
+        case ByteProto.TEMPLATE -> {
+          if (templateIndex == ByteProto.NULL) {
             // initialize template index
             templateIndex = mainStart;
 
@@ -247,7 +247,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
             proto = main[templateIndex];
 
             switch (proto) {
-              case ByteProto2.TEMPLATE_DATA -> {
+              case ByteProto.TEMPLATE_DATA -> {
                 templateIndex = encodeFragment(templateIndex);
 
                 continue loop;
@@ -272,7 +272,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
     // mark the end
-    main[mainIndex++] = ByteProto2.END;
+    main[mainIndex++] = ByteProto.END;
 
     // store the distance to the contents (yes, reversed)
     int length;
@@ -281,7 +281,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     mainIndex = Bytes.encodeVarIntR(main, mainIndex, length);
 
     // trailer proto
-    main[mainIndex++] = ByteProto2.INTERNAL;
+    main[mainIndex++] = ByteProto.INTERNAL;
 
     // set the end index of the declaration
     length = mainIndex - mainStart;
@@ -307,7 +307,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       proto = main[mainContents--];
 
       switch (proto) {
-        case ByteProto2.INTERNAL -> {
+        case ByteProto.INTERNAL -> {
           byte len0;
           len0 = main[mainContents--];
 
@@ -324,18 +324,18 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
           mainContents -= length;
         }
 
-        case ByteProto2.INTERNAL3 -> mainContents -= 3 - 2;
+        case ByteProto.INTERNAL3 -> mainContents -= 3 - 2;
 
-        case ByteProto2.INTERNAL4 -> mainContents -= 4 - 2;
+        case ByteProto.INTERNAL4 -> mainContents -= 4 - 2;
 
-        case ByteProto2.INTERNAL5 -> mainContents -= 5 - 2;
+        case ByteProto.INTERNAL5 -> mainContents -= 5 - 2;
 
         default -> throw new UnsupportedOperationException(
           "Implement me :: proto=" + proto
         );
       }
 
-      auxAdd(ByteProto2.INTERNAL);
+      auxAdd(ByteProto.INTERNAL);
     }
 
     else if (value instanceof Instruction.ExternalAttribute.Id ext) {
@@ -343,7 +343,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       index = externalValue(ext.value());
 
       auxAdd(
-        ByteProto2.ATTRIBUTE_ID,
+        ByteProto.ATTRIBUTE_ID,
 
         Bytes.encodeInt0(index),
         Bytes.encodeInt1(index)
@@ -355,27 +355,27 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       index = externalValue(ext.value());
 
       auxAdd(
-        ByteProto2.ATTRIBUTE_CLASS,
+        ByteProto.ATTRIBUTE_CLASS,
 
         Bytes.encodeInt0(index),
         Bytes.encodeInt1(index)
       );
     }
 
-    else if (value instanceof HtmlTemplate2 tmpl) {
+    else if (value instanceof HtmlTemplate tmpl) {
       // keep start index handy
       int startIndex;
       startIndex = mainIndex;
 
       mainAdd(
-        ByteProto2.TEMPLATE_DATA,
+        ByteProto.TEMPLATE_DATA,
 
         // length to the end
-        ByteProto2.NULL,
-        ByteProto2.NULL
+        ByteProto.NULL,
+        ByteProto.NULL
       );
 
-      InternalHtmlTemplate2 internal;
+      InternalHtmlTemplate internal;
       internal = tmpl;
 
       // keep rollback values in the stack
@@ -403,7 +403,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
         this.mainStart = mainStart;
       }
 
-      mainAdd(ByteProto2.END);
+      mainAdd(ByteProto.END);
 
       // set the end index of the declaration
       int length;
@@ -416,7 +416,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       main[startIndex + 1] = Bytes.encodeInt0(length);
       main[startIndex + 2] = Bytes.encodeInt1(length);
 
-      auxAdd(ByteProto2.TEMPLATE);
+      auxAdd(ByteProto.TEMPLATE);
     }
 
     else if (value == InternalNoOp.INSTANCE) {
@@ -446,13 +446,13 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto2.RAW,
+      ByteProto.RAW,
 
       // value
       Bytes.encodeInt0(object),
       Bytes.encodeInt1(object),
 
-      ByteProto2.INTERNAL4
+      ByteProto.INTERNAL4
     );
   }
 
@@ -462,13 +462,13 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     object = objectAdd(value);
 
     mainAdd(
-      ByteProto2.TEXT,
+      ByteProto.TEXT,
 
       // value
       Bytes.encodeInt0(object),
       Bytes.encodeInt1(object),
 
-      ByteProto2.INTERNAL4
+      ByteProto.INTERNAL4
     );
   }
 
@@ -536,7 +536,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     startIndex = contents;
 
     // mark this element
-    main[contents++] = ByteProto2.MARKED;
+    main[contents++] = ByteProto.MARKED;
 
     // decode the length
     byte len0;
@@ -569,7 +569,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     index = contents;
 
     // mark this fragment
-    main[index++] = ByteProto2.MARKED;
+    main[index++] = ByteProto.MARKED;
 
     // decode the length
     byte len0;
@@ -590,22 +590,22 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       proto = main[index];
 
       switch (proto) {
-        case ByteProto2.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
+        case ByteProto.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
 
-        case ByteProto2.ELEMENT -> index = encodeElement(index, proto);
+        case ByteProto.ELEMENT -> index = encodeElement(index, proto);
 
-        case ByteProto2.END -> {
+        case ByteProto.END -> {
           break loop;
         }
 
-        case ByteProto2.MARKED -> index = encodeMarked(index);
+        case ByteProto.MARKED -> index = encodeMarked(index);
 
-        case ByteProto2.MARKED4 -> index += 4;
+        case ByteProto.MARKED4 -> index += 4;
 
-        case ByteProto2.MARKED5 -> index += 5;
+        case ByteProto.MARKED5 -> index += 5;
 
-        case ByteProto2.RAW,
-             ByteProto2.TEXT -> index = encodeInternal4(index, proto);
+        case ByteProto.RAW,
+             ByteProto.TEXT -> index = encodeInternal4(index, proto);
 
         default -> {
           throw new UnsupportedOperationException(
@@ -624,7 +624,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     startIndex = contents;
 
     // mark this element
-    main[contents] = ByteProto2.MARKED3;
+    main[contents] = ByteProto.MARKED3;
 
     // point to next
     int offset;
@@ -651,7 +651,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     startIndex = contents;
 
     // mark this element
-    main[contents] = ByteProto2.MARKED5;
+    main[contents] = ByteProto.MARKED5;
 
     // point to next
     int offset;
@@ -695,7 +695,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     startIndex = contents;
 
     // mark this element
-    main[contents] = ByteProto2.MARKED4;
+    main[contents] = ByteProto.MARKED4;
 
     // point to next
     int offset;
@@ -734,11 +734,11 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     startIndex = mainIndex;
 
     mainAdd(
-      ByteProto2.FRAGMENT,
+      ByteProto.FRAGMENT,
 
       // length takes 2 bytes
-      ByteProto2.NULL,
-      ByteProto2.NULL
+      ByteProto.NULL,
+      ByteProto.NULL
     );
 
     return startIndex;
@@ -749,7 +749,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     main = ByteArrays.growIfNecessary(main, mainIndex + 3);
 
     // mark the end
-    main[mainIndex++] = ByteProto2.END;
+    main[mainIndex++] = ByteProto.END;
 
     // store the distance to the contents (yes, reversed)
     int length;
@@ -758,7 +758,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     mainIndex = Bytes.encodeVarIntR(main, mainIndex, length);
 
     // trailer proto
-    main[mainIndex++] = ByteProto2.INTERNAL;
+    main[mainIndex++] = ByteProto.INTERNAL;
 
     // set the end index of the declaration
     length = mainIndex - startIndex;
