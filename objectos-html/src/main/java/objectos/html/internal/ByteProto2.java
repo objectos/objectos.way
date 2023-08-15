@@ -37,16 +37,17 @@ final class ByteProto2 {
   public static final byte DOCTYPE = -13;
   public static final byte ELEMENT = -14;
   public static final byte FRAGMENT = -15;
-  public static final byte TEMPLATE = -16;
-  public static final byte TEMPLATE_DATA = -17;
-  public static final byte TEXT = -18;
+  public static final byte RAW = -16;
+  public static final byte TEMPLATE = -17;
+  public static final byte TEMPLATE_DATA = -18;
+  public static final byte TEXT = -19;
 
   //attributes
 
-  public static final byte ATTRIBUTE0 = -19;
-  public static final byte ATTRIBUTE1 = -20;
-  public static final byte ATTRIBUTE_CLASS = -21;
-  public static final byte ATTRIBUTE_ID = -22;
+  public static final byte ATTRIBUTE0 = -20;
+  public static final byte ATTRIBUTE1 = -21;
+  public static final byte ATTRIBUTE_CLASS = -22;
+  public static final byte ATTRIBUTE_ID = -23;
 
   private ByteProto2() {}
 

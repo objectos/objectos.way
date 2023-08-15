@@ -58,6 +58,8 @@ abstract class HtmlTemplateApi2 {
     throw new UnsupportedOperationException();
   }
 
+  public abstract void raw(String value);
+
   public abstract void text(String value);
 
 }

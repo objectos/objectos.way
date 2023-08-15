@@ -45,6 +45,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
 
     comment("Nodes");
 
+    value("RAW");
     value("TEXT");
     value("TEXT_SCRIPT");
     value("TEXT_STYLE");

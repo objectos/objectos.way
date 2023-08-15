@@ -109,6 +109,24 @@ public final class StandardHtmlWriter implements HtmlWriter {
         case ByteCode.NL,
              ByteCode.NL_OPTIONAL -> appendable.append(NL);
 
+        case ByteCode.RAW,
+             ByteCode.TEXT_SCRIPT,
+             ByteCode.TEXT_STYLE -> {
+          byte int0;
+          int0 = bytes[index++];
+
+          byte int1;
+          int1 = bytes[index++];
+
+          int objectIndex;
+          objectIndex = Bytes.decodeInt(int0, int1);
+
+          String value;
+          value = (String) objects[objectIndex];
+
+          appendable.append(value);
+        }
+
         case ByteCode.SPACE -> appendable.append(' ');
 
         case ByteCode.START_TAG -> {
@@ -142,23 +160,6 @@ public final class StandardHtmlWriter implements HtmlWriter {
           value = (String) objects[objectIndex];
 
           writeText(value);
-        }
-
-        case ByteCode.TEXT_SCRIPT,
-             ByteCode.TEXT_STYLE -> {
-          byte int0;
-          int0 = bytes[index++];
-
-          byte int1;
-          int1 = bytes[index++];
-
-          int objectIndex;
-          objectIndex = Bytes.decodeInt(int0, int1);
-
-          String value;
-          value = (String) objects[objectIndex];
-
-          appendable.append(value);
         }
 
         default -> throw new UnsupportedOperationException(

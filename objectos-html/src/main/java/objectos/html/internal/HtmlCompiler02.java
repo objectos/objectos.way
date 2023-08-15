@@ -337,6 +337,7 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         }
 
         case ByteProto2.ELEMENT,
+             ByteProto2.RAW,
              ByteProto2.TEXT -> index = skipVarInt(index);
 
         case ByteProto2.END -> {
@@ -473,6 +474,18 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         }
 
         case ByteProto2.STANDARD_NAME -> index += 1;
+
+        case ByteProto2.RAW -> {
+          index = jmp(index);
+
+          byte b0;
+          b0 = main[mainContents++];
+
+          byte b1;
+          b1 = main[mainContents++];
+
+          auxAdd(ByteCode.RAW, b0, b1);
+        }
 
         case ByteProto2.TEXT -> {
           index = jmp(index);

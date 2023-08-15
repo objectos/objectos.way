@@ -1060,7 +1060,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase34() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           head(
@@ -1133,7 +1133,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase36() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(
@@ -1159,7 +1159,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase37() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(
@@ -1237,7 +1237,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase40() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           h1(f(this::heading1));
@@ -1261,7 +1261,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase41() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           h1(f(this::heading1));
@@ -1280,8 +1280,8 @@ public class HtmlTemplateTest {
 
   @Test
   public void testCase42() {
-    HtmlTemplate component;
-    component = new HtmlTemplate() {
+    HtmlTemplate2 component;
+    component = new HtmlTemplate2() {
       @Override
       protected final void definition() {
         div(
@@ -1297,7 +1297,7 @@ public class HtmlTemplateTest {
     };
 
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           body(component);

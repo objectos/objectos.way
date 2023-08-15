@@ -212,7 +212,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
               case ByteProto2.MARKED5 -> contents += 5;
 
               case ByteProto2.TEXT -> {
-                contents = encodeText(contents);
+                contents = encodeInternal4(contents, proto);
 
                 continue loop;
               }
@@ -436,6 +436,22 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
   }
 
   @Override
+  public final void raw(String value) {
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+      ByteProto2.RAW,
+
+      // value
+      Bytes.encodeInt0(object),
+      Bytes.encodeInt1(object),
+
+      ByteProto2.INTERNAL4
+    );
+  }
+
+  @Override
   public final void text(String value) {
     int object;
     object = objectAdd(value);
@@ -569,6 +585,8 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       proto = main[index];
 
       switch (proto) {
+        case ByteProto2.AMBIGUOUS1 -> index = encodeInternal5(index, proto);
+
         case ByteProto2.ELEMENT -> index = encodeElement(index, proto);
 
         case ByteProto2.END -> {
@@ -580,6 +598,9 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
         case ByteProto2.MARKED4 -> index += 4;
 
         case ByteProto2.MARKED5 -> index += 5;
+
+        case ByteProto2.RAW,
+             ByteProto2.TEXT -> index = encodeInternal4(index, proto);
 
         default -> {
           throw new UnsupportedOperationException(
@@ -663,7 +684,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     return contents + length;
   }
 
-  private int encodeText(int contents) {
+  private int encodeInternal4(int contents, byte proto) {
     // keep the start index handy
     int startIndex;
     startIndex = contents;
@@ -680,7 +701,7 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
     // 1-2 - variable length
     main = ByteArrays.growIfNecessary(main, mainIndex + 2);
 
-    main[mainIndex++] = ByteProto2.TEXT;
+    main[mainIndex++] = proto;
 
     int length;
     length = mainIndex - startIndex;

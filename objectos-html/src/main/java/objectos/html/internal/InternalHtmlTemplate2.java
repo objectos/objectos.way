@@ -79,6 +79,12 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     return InternalInstruction.INSTANCE;
   }
 
+  protected final ElementContents raw(String text) {
+    api().raw(text);
+
+    return InternalInstruction.INSTANCE;
+  }
+
   @Override
   final void ambiguous(Ambiguous name, String text) {
     api().ambiguous(name, text);
