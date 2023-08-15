@@ -17,15 +17,10 @@ package objectos.html.internal;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.HtmlSink;
-import objectos.html.HtmlTemplate;
+import objectos.html.HtmlTemplate2;
 import org.testng.annotations.Test;
 
-public class PrettyPrintWriterTest {
-
-  private final HtmlSink sink = new HtmlSink();
-
-  private final StringBuilder stringBuilder = new StringBuilder();
+public class StandardHtmlWriterTest {
 
   @Test(description = """
   PrettyPrintWriter TC01
@@ -34,7 +29,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase01() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           html();
@@ -54,7 +49,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase02() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -76,7 +71,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase03() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -104,7 +99,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase04() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -137,7 +132,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase05() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -173,7 +168,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase06() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -204,7 +199,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase07() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -234,7 +229,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase08() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -274,7 +269,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase09() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -326,7 +321,7 @@ public class PrettyPrintWriterTest {
   """)
   public void testCase10() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           doctype();
@@ -341,12 +336,8 @@ public class PrettyPrintWriterTest {
     );
   }
 
-  private void test(HtmlTemplate template, String expected) {
-    stringBuilder.setLength(0);
-
-    sink.toStringBuilder(template, stringBuilder);
-
-    assertEquals(stringBuilder.toString(), expected);
+  private void test(HtmlTemplate2 template, String expected) {
+    assertEquals(template.toString(), expected);
   }
 
 }

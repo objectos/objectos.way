@@ -211,7 +211,8 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
 
               case ByteProto2.MARKED5 -> contents += 5;
 
-              case ByteProto2.TEXT -> {
+              case ByteProto2.RAW,
+                   ByteProto2.TEXT -> {
                 contents = encodeInternal4(contents, proto);
 
                 continue loop;
@@ -416,6 +417,10 @@ class HtmlCompiler01 extends HtmlTemplateApi2 {
       main[startIndex + 2] = Bytes.encodeInt1(length);
 
       auxAdd(ByteProto2.TEMPLATE);
+    }
+
+    else if (value == InternalNoOp.INSTANCE) {
+      // no-op
     }
 
     else {

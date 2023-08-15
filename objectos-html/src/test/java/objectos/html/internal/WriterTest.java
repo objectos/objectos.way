@@ -17,27 +17,15 @@ package objectos.html.internal;
 
 import static org.testng.Assert.assertEquals;
 
-import objectos.html.pseudom.HtmlDocument;
-import org.testng.annotations.BeforeClass;
+import java.io.IOException;
+import objectos.html.CompiledHtml;
 import org.testng.annotations.Test;
 
 public class WriterTest {
 
-  private static class ThisWriter extends Writer {
-    @Override
-    public final void process(HtmlDocument document) {
-      // noop
-    }
-  }
-
   private final StringBuilder out = new StringBuilder();
 
-  private final Writer writer = new ThisWriter();
-
-  @BeforeClass
-  public void _beforeClass() {
-    writer.out = out;
-  }
+  private final StandardHtmlWriter writer = new StandardHtmlWriter(out);
 
   @Test
   public void writeAttributeValue() {
@@ -106,19 +94,39 @@ public class WriterTest {
   }
 
   private void writeAttributeValue(String source, String expected) {
-    out.setLength(0);
+    try {
+      out.setLength(0);
 
-    writer.writeAttributeValue(source);
+      CompiledHtml html;
+      html = new CompiledMarkup(
+        new byte[] {ByteCode.ATTR_VALUE, Bytes.encodeInt0(0), Bytes.encodeInt1(0)},
+        new Object[] {source}
+      );
 
-    assertEquals(out.toString(), expected);
+      writer.write(html);
+
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
   private void writeText(String source, String expected) {
-    out.setLength(0);
+    try {
+      out.setLength(0);
 
-    writer.writeText(source);
+      CompiledHtml html;
+      html = new CompiledMarkup(
+        new byte[] {ByteCode.TEXT, Bytes.encodeInt0(0), Bytes.encodeInt1(0)},
+        new Object[] {source}
+      );
 
-    assertEquals(out.toString(), expected);
+      writer.write(html);
+
+      assertEquals(out.toString(), expected);
+    } catch (IOException e) {
+      throw new AssertionError("StringBuilder does not throw IOException", e);
+    }
   }
 
 }

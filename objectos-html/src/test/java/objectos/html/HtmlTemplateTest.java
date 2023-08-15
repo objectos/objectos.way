@@ -23,10 +23,6 @@ import org.testng.annotations.Test;
 
 public class HtmlTemplateTest {
 
-  private final HtmlSink sink = new HtmlSink();
-
-  private final StringBuilder stringBuilder = new StringBuilder();
-
   @Test(description = """
   HtmlTemplate TC00
 
@@ -394,7 +390,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase13() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         final TestIdSelector FOO = new TestIdSelector("foo");
         final TestIdSelector BAR = new TestIdSelector("bar");
 
@@ -1025,23 +1021,7 @@ public class HtmlTemplateTest {
   - pathName + href interaction
   """)
   public void testCase32() {
-    test(
-      new HtmlTemplate() {
-        @Override
-        protected final void definition() {
-          pathName("/index.html");
-
-          html(
-            a(href("a.html"), t("a")),
-            a(href("foo/b.html"), t("b"))
-          );
-        }
-      },
-
-      """
-      <html><a href="a.html">a</a><a href="foo/b.html">b</a></html>
-      """
-    );
+    // pathName removed in 0.8.0
   }
 
   @Test(enabled = false, description = """
@@ -1090,7 +1070,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase35() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         private final TestClassSelector A = new TestClassSelector("ca");
         private final TestClassSelector B = new TestClassSelector("cb");
 
@@ -1113,7 +1093,7 @@ public class HtmlTemplateTest {
 
       """
       <ul>
-      <li><a href="a" class="ca cb">a</a></li>
+      <li><a class="ca cb" href="a">a</a></li>
       <li>
       <h2 class="ca cb">h2</h2>
       <ul>
@@ -1312,14 +1292,6 @@ public class HtmlTemplateTest {
       </body>
       """
     );
-  }
-
-  private void test(HtmlTemplate template, String expected) {
-    stringBuilder.setLength(0);
-
-    sink.toStringBuilder(template, stringBuilder);
-
-    assertEquals(stringBuilder.toString(), expected);
   }
 
   private void test(HtmlTemplate2 template, String expected) {

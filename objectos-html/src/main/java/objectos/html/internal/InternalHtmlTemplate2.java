@@ -73,14 +73,18 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     return InternalFragment.INSTANCE;
   }
 
-  protected final ElementContents t(String text) {
-    api().text(text);
-
-    return InternalInstruction.INSTANCE;
+  protected final Instruction.NoOp noop() {
+    return InternalNoOp.INSTANCE;
   }
 
   protected final ElementContents raw(String text) {
     api().raw(text);
+
+    return InternalInstruction.INSTANCE;
+  }
+
+  protected final ElementContents t(String text) {
+    api().text(text);
 
     return InternalInstruction.INSTANCE;
   }
