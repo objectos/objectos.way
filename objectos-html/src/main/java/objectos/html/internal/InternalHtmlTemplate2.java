@@ -18,6 +18,7 @@ package objectos.html.internal;
 import objectos.html.CompiledHtml;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
+import objectos.html.tmpl.Instruction.ClipPathAttribute;
 import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.Instruction.Fragment;
 import objectos.html.tmpl.StandardAttributeName;
@@ -54,22 +55,28 @@ public abstract class InternalHtmlTemplate2 extends GeneratedHtmlTemplate {
     return compiled.toString();
   }
 
+  protected final ClipPathAttribute clipPath(String value) {
+    api().attribute(StandardAttributeName.CLIPPATH, value);
+
+    return InternalInstruction.INSTANCE;
+  }
+
   protected abstract void definition();
 
   protected final void doctype() {
     api().doctype();
   }
 
-  protected final ElementContents t(String text) {
-    api().text(text);
-
-    return InternalInstruction.INSTANCE;
-  }
-
   protected final Fragment f(FragmentAction action) {
     api().fragment(action);
 
     return InternalFragment.INSTANCE;
+  }
+
+  protected final ElementContents t(String text) {
+    api().text(text);
+
+    return InternalInstruction.INSTANCE;
   }
 
   @Override

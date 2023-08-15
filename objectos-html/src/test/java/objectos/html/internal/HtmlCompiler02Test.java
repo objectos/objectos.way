@@ -598,6 +598,49 @@ public class HtmlCompiler02Test {
     );
   }
 
+  @Test(description = """
+  style/script => raw
+  """)
+  public void testCase25() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.text("ul > li {}");
+
+    compiler.elementBegin(StandardElementName.STYLE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    CompiledMarkup result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.STYLE.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.TAB_BLOCK, (byte) 1,
+
+      ByteCode.TEXT_CSS,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+
+      ByteCode.NL_OPTIONAL,
+      ByteCode.END_TAG,
+      (byte) StandardElementName.STYLE.ordinal(),
+      ByteCode.NL
+    );
+  }
+
   private void test(CompiledMarkup markup, byte... expected) {
     byte[] result;
     result = markup.main;

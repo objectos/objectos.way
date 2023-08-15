@@ -24,20 +24,22 @@ final class ByteCode {
   public static final byte NL_OPTIONAL = -3;
   public static final byte SPACE = -4;
   public static final byte TAB = -5;
+  public static final byte TAB_BLOCK = -6;
 
   //Tag
 
-  public static final byte DOCTYPE = -6;
-  public static final byte ATTR_NAME = -7;
-  public static final byte ATTR_VALUE = -8;
-  public static final byte ATTR_VALUE_START = -9;
-  public static final byte ATTR_VALUE_END = -10;
-  public static final byte START_TAG = -11;
-  public static final byte END_TAG = -12;
+  public static final byte DOCTYPE = -7;
+  public static final byte ATTR_NAME = -8;
+  public static final byte ATTR_VALUE = -9;
+  public static final byte ATTR_VALUE_START = -10;
+  public static final byte ATTR_VALUE_END = -11;
+  public static final byte START_TAG = -12;
+  public static final byte END_TAG = -13;
 
   //Nodes
 
-  public static final byte TEXT = -13;
+  public static final byte TEXT = -14;
+  public static final byte TEXT_CSS = -15;
 
   private ByteCode() {}
 

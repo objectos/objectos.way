@@ -560,6 +560,44 @@ public class HtmlCompiler01Test {
     );
   }
 
+  @Test(description = """
+  style/script => raw
+  """)
+  public void testCase25() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.text("ul > li {}");
+
+    compiler.elementBegin(StandardElementName.STYLE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto2.MARKED4,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto2.INTERNAL4,
+
+      ByteProto2.ELEMENT,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto2.STANDARD_NAME,
+      (byte) StandardElementName.STYLE.ordinal(),
+      ByteProto2.TEXT,
+      Bytes.encodeInt0(10),
+      ByteProto2.END,
+      Bytes.encodeInt0(11),
+      ByteProto2.INTERNAL
+    );
+  }
+
   private void test(HtmlCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);

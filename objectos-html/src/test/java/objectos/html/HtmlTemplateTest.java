@@ -714,7 +714,7 @@ public class HtmlTemplateTest {
     ul.append("</ul>\n");
 
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           ElementContents[] children = new ElementContents[count];
@@ -758,7 +758,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase25() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           head(
@@ -836,7 +836,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase27() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           head(
@@ -864,7 +864,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase28() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(
@@ -905,7 +905,7 @@ public class HtmlTemplateTest {
   """)
   public void testCase29() {
     test(
-      new HtmlTemplate() {
+      new HtmlTemplate2() {
         @Override
         protected final void definition() {
           div(

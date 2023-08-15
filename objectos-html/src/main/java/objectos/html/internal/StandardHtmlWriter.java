@@ -125,7 +125,8 @@ public final class StandardHtmlWriter implements HtmlWriter {
           appendable.append(name.getName());
         }
 
-        case ByteCode.TAB -> index++;
+        case ByteCode.TAB,
+             ByteCode.TAB_BLOCK -> index++;
 
         case ByteCode.TEXT -> {
           byte int0;
@@ -137,13 +138,26 @@ public final class StandardHtmlWriter implements HtmlWriter {
           int objectIndex;
           objectIndex = Bytes.decodeInt(int0, int1);
 
-          Object o;
-          o = objects[objectIndex];
-
           String value;
-          value = o.toString();
+          value = (String) objects[objectIndex];
 
           writeText(value);
+        }
+
+        case ByteCode.TEXT_CSS -> {
+          byte int0;
+          int0 = bytes[index++];
+
+          byte int1;
+          int1 = bytes[index++];
+
+          int objectIndex;
+          objectIndex = Bytes.decodeInt(int0, int1);
+
+          String value;
+          value = (String) objects[objectIndex];
+
+          appendable.append(value);
         }
 
         default -> throw new UnsupportedOperationException(

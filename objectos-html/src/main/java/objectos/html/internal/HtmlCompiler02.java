@@ -61,8 +61,15 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
 
   @Override
   public final CompiledMarkup compile() {
+    Object[] objects;
+    objects = ObjectArrays.empty();
+
+    if (objectArray != null) {
+      objects = Arrays.copyOf(objectArray, objectIndex);
+    }
+
     return new CompiledMarkup(
-      Arrays.copyOfRange(aux, 1, auxIndex), objects()
+      Arrays.copyOfRange(aux, 1, auxIndex), objects
     );
   }
 
@@ -479,7 +486,39 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
         case ByteProto2.TEXT -> {
           index = jmp(index);
 
-          auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
+          switch (parent) {
+            case STYLE -> {
+              byte b0;
+              b0 = main[mainContents++];
+
+              byte b1;
+              b1 = main[mainContents++];
+
+              int valueIndex;
+              valueIndex = Bytes.decodeInt(b0, b1);
+
+              String value;
+              value = (String) objectArray[valueIndex];
+
+              if (!startsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
+              }
+
+              indentationWriteBlock();
+
+              auxAdd(ByteCode.TEXT_CSS, b0, b1);
+
+              if (!endsWithNewLine(value)) {
+                auxAdd(ByteCode.NL_OPTIONAL);
+
+                newLine(_TRUE);
+              }
+            }
+
+            default -> {
+              auxAdd(ByteCode.TEXT, main[mainContents++], main[mainContents++]);
+            }
+          }
         }
 
         default -> throw new UnsupportedOperationException(
@@ -521,6 +560,20 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     newLine(newLine);
   }
 
+  private boolean endsWithNewLine(String value) {
+    int length;
+    length = value.length();
+
+    if (length > 0) {
+      char last;
+      last = value.charAt(length - 1);
+
+      return isNewLine(last);
+    } else {
+      return false;
+    }
+  }
+
   private int handleAttrName(int attr, byte ordinalByte, int ordinal) {
     if (attr == Integer.MIN_VALUE) {
       // this is the first attribute
@@ -557,9 +610,21 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     auxAdd(ByteCode.TAB, (byte) mainStart);
   }
 
+  private void indentationWriteBlock() {
+    if (mainStart == 0) {
+      return;
+    }
+
+    auxAdd(ByteCode.TAB_BLOCK, (byte) mainStart);
+  }
+
   private boolean isHead(StandardElementName parent) {
     // test is null safe
     return parent == StandardElementName.HEAD;
+  }
+
+  private boolean isNewLine(char c) {
+    return c == '\n' || c == '\r';
   }
 
   private int jmp(int index) {
@@ -588,14 +653,6 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     return count + 1;
   }
 
-  private Object[] objects() {
-    if (objectArray == null) {
-      return ObjectArrays.empty();
-    }
-
-    return Arrays.copyOf(objectArray, objectIndex);
-  }
-
   private int skipVarInt(int index) {
     byte len0;
     len0 = main[index++];
@@ -605,6 +662,20 @@ final class HtmlCompiler02 extends HtmlCompiler01 {
     }
 
     return index;
+  }
+
+  private boolean startsWithNewLine(String value) {
+    int length;
+    length = value.length();
+
+    if (length > 0) {
+      char first;
+      first = value.charAt(0);
+
+      return isNewLine(first);
+    } else {
+      return false;
+    }
   }
 
   private boolean wasNewLine() {

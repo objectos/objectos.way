@@ -31,6 +31,7 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     value("NL_OPTIONAL");
     value("SPACE");
     value("TAB");
+    value("TAB_BLOCK");
 
     comment("Tag");
 
@@ -45,5 +46,6 @@ public class ByteCodeFauxGenerator extends FauxGenerator {
     comment("Nodes");
 
     value("TEXT");
+    value("TEXT_CSS");
   }
 }
