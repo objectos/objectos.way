@@ -694,6 +694,63 @@ public class HtmlCompiler02Test {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC46
+
+  - flatten instruction
+  """)
+  public void testCase46() {
+    HtmlCompiler02 compiler;
+    compiler = new HtmlCompiler02();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.LABEL);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.INPUT);
+    compiler.elementEnd();
+
+    compiler.flattenBegin();
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.FORM);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    compiler.optimize();
+
+    InternalCompiledHtml result;
+    result = compiler.compile();
+
+    test(
+      result,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.FORM.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.LABEL.ordinal(),
+      ByteCode.GT,
+      ByteCode.END_TAG,
+      (byte) StandardElementName.LABEL.ordinal(),
+
+      ByteCode.START_TAG,
+      (byte) StandardElementName.INPUT.ordinal(),
+      ByteCode.GT,
+
+      ByteCode.END_TAG,
+      (byte) StandardElementName.FORM.ordinal(),
+
+      ByteCode.NL
+    );
+  }
+
   private void test(InternalCompiledHtml markup, byte... expected) {
     byte[] result;
     result = markup.main;

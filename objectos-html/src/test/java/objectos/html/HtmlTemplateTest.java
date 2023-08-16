@@ -1437,6 +1437,31 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC46
+
+  - flatten instruction
+  """)
+  public void testCase46() {
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          form(
+            flatten(
+              label(),
+              input()
+            )
+          );
+        }
+      },
+
+      """
+      <form><label></label><input></form>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();

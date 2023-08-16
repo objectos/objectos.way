@@ -125,13 +125,7 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
   @Override
   public final void elementBegin(StandardElementName name) {
-    // we mark the start of our aux list
-    auxStart = auxIndex;
-
-    // we mark:
-    // 1) the start of the contents of the current declaration
-    // 2) the start of our main list
-    mainContents = mainStart = mainIndex;
+    commonBegin();
 
     mainAdd(
       ByteProto.ELEMENT,
@@ -190,6 +184,12 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
               case ByteProto.ELEMENT -> {
                 contents = encodeElement(contents, proto);
+
+                continue loop;
+              }
+
+              case ByteProto.FLATTEN -> {
+                contents = encodeFlatten(contents);
 
                 continue loop;
               }
@@ -336,6 +336,19 @@ class HtmlCompiler01 extends HtmlTemplateApi {
   }
 
   @Override
+  public final void flattenBegin() {
+    commonBegin();
+
+    mainAdd(
+      ByteProto.FLATTEN,
+
+      // length takes 2 bytes
+      ByteProto.NULL,
+      ByteProto.NULL
+    );
+  }
+
+  @Override
   public final void fragment(FragmentAction action) {
     int startIndex;
     startIndex = fragmentBegin();
@@ -343,6 +356,22 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     action.execute();
 
     fragmentEnd(startIndex);
+  }
+
+  @Override
+  public final void raw(String value) {
+    int object;
+    object = objectAdd(value);
+
+    mainAdd(
+      ByteProto.RAW,
+
+      // value
+      Bytes.encodeInt0(object),
+      Bytes.encodeInt1(object),
+
+      ByteProto.INTERNAL4
+    );
   }
 
   @Override
@@ -362,22 +391,6 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     }
 
     fragmentEnd(startIndex);
-  }
-
-  @Override
-  public final void raw(String value) {
-    int object;
-    object = objectAdd(value);
-
-    mainAdd(
-      ByteProto.RAW,
-
-      // value
-      Bytes.encodeInt0(object),
-      Bytes.encodeInt1(object),
-
-      ByteProto.INTERNAL4
-    );
   }
 
   @Override
@@ -454,6 +467,16 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     aux[auxIndex++] = b7;
   }
 
+  private void commonBegin() {
+    // we mark the start of our aux list
+    auxStart = auxIndex;
+
+    // we mark:
+    // 1) the start of the contents of the current declaration
+    // 2) the start of our main list
+    mainContents = mainStart = mainIndex;
+  }
+
   private int encodeElement(int contents, byte proto) {
     // keep the start index handy
     int startIndex;
@@ -486,6 +509,77 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
 
     return contents + offset;
+  }
+
+  private int encodeFlatten(int contents) {
+    int index;
+    index = contents;
+
+    // mark this fragment
+    main[index++] = ByteProto.MARKED;
+
+    // decode the length
+    byte len0;
+    len0 = main[index++];
+
+    byte len1;
+    len1 = main[index++];
+
+    // point to next element
+    int offset;
+    offset = Bytes.decodeInt(len0, len1);
+
+    int maxIndex;
+    maxIndex = index + offset;
+
+    loop: while (index < maxIndex) {
+      byte proto;
+      proto = main[index++];
+
+      switch (proto) {
+        case ByteProto.ELEMENT -> {
+          int elementIndex;
+          elementIndex = index;
+
+          len0 = main[index++];
+
+          int len;
+          len = len0;
+
+          if (len < 0) {
+            len1 = main[index++];
+
+            len = Bytes.decodeVarInt(len0, len1);
+          }
+
+          elementIndex -= len;
+
+          // ensure main can hold least 3 elements
+          // 0   - ByteProto
+          // 1-2 - variable length
+          main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+          main[mainIndex++] = proto;
+
+          int length;
+          length = mainIndex - elementIndex;
+
+          mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+        }
+
+        case ByteProto.END -> {
+          break loop;
+        }
+
+        default -> {
+          throw new UnsupportedOperationException(
+            "Implement me :: proto=" + proto
+          );
+        }
+      }
+    }
+
+    return maxIndex;
   }
 
   private int encodeFragment(int contents) {
@@ -569,6 +663,33 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     return contents + offset;
   }
 
+  private int encodeInternal4(int contents, byte proto) {
+    // keep the start index handy
+    int startIndex;
+    startIndex = contents;
+
+    // mark this element
+    main[contents] = ByteProto.MARKED4;
+
+    // point to next
+    int offset;
+    offset = 4;
+
+    // ensure main can hold least 3 elements
+    // 0   - ByteProto
+    // 1-2 - variable length
+    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
+
+    main[mainIndex++] = proto;
+
+    int length;
+    length = mainIndex - startIndex;
+
+    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
+
+    return contents + offset;
+  }
+
   private int encodeInternal5(int contents, byte proto) {
     // keep the start index handy
     int startIndex;
@@ -611,33 +732,6 @@ class HtmlCompiler01 extends HtmlTemplateApi {
 
     // point to next element
     return contents + length;
-  }
-
-  private int encodeInternal4(int contents, byte proto) {
-    // keep the start index handy
-    int startIndex;
-    startIndex = contents;
-
-    // mark this element
-    main[contents] = ByteProto.MARKED4;
-
-    // point to next
-    int offset;
-    offset = 4;
-
-    // ensure main can hold least 3 elements
-    // 0   - ByteProto
-    // 1-2 - variable length
-    main = ByteArrays.growIfNecessary(main, mainIndex + 2);
-
-    main[mainIndex++] = proto;
-
-    int length;
-    length = mainIndex - startIndex;
-
-    mainIndex = Bytes.encodeVarInt(main, mainIndex, length);
-
-    return contents + offset;
   }
 
   private int externalValue(String value) {

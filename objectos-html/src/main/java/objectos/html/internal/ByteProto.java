@@ -36,16 +36,17 @@ final class ByteProto {
   public static final byte AMBIGUOUS1 = -12;
   public static final byte DOCTYPE = -13;
   public static final byte ELEMENT = -14;
-  public static final byte FRAGMENT = -15;
-  public static final byte RAW = -16;
-  public static final byte TEXT = -17;
+  public static final byte FLATTEN = -15;
+  public static final byte FRAGMENT = -16;
+  public static final byte RAW = -17;
+  public static final byte TEXT = -18;
 
   //attributes
 
-  public static final byte ATTRIBUTE0 = -18;
-  public static final byte ATTRIBUTE1 = -19;
-  public static final byte ATTRIBUTE_CLASS = -20;
-  public static final byte ATTRIBUTE_ID = -21;
+  public static final byte ATTRIBUTE0 = -19;
+  public static final byte ATTRIBUTE1 = -20;
+  public static final byte ATTRIBUTE_CLASS = -21;
+  public static final byte ATTRIBUTE_ID = -22;
 
   private ByteProto() {}
 

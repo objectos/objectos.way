@@ -53,6 +53,8 @@ abstract class HtmlTemplateApi {
 
   public abstract void elementValue(Instruction instruction);
 
+  public abstract void flattenBegin();
+
   public abstract void fragment(FragmentAction action);
 
   public abstract void template(HtmlTemplate template);

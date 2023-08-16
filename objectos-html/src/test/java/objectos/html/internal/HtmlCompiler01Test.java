@@ -651,6 +651,81 @@ public class HtmlCompiler01Test {
     );
   }
 
+  @Test(description = """
+  HtmlTemplate TC46
+
+  - flatten instruction
+  """)
+  public void testCase46() {
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.elementBegin(StandardElementName.LABEL);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.INPUT);
+    compiler.elementEnd();
+
+    compiler.flattenBegin();
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.FORM);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(5),
+      Bytes.encodeInt1(5),
+      ByteProto.STANDARD_NAME,
+      (byte) StandardElementName.LABEL.ordinal(),
+      ByteProto.END,
+      Bytes.encodeInt0(5),
+      ByteProto.INTERNAL,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(5),
+      Bytes.encodeInt1(5),
+      ByteProto.STANDARD_NAME,
+      (byte) StandardElementName.INPUT.ordinal(),
+      ByteProto.END,
+      Bytes.encodeInt0(5),
+      ByteProto.INTERNAL,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(20),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(14),
+      ByteProto.END,
+      Bytes.encodeInt0(23),
+      ByteProto.INTERNAL,
+
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(9),
+      Bytes.encodeInt1(9),
+      ByteProto.STANDARD_NAME,
+      (byte) StandardElementName.FORM.ordinal(),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(32),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(26),
+      ByteProto.END,
+      Bytes.encodeInt0(35),
+      ByteProto.INTERNAL
+    );
+  }
+
   private void test(HtmlCompiler01 compiler, byte... expected) {
     byte[] result;
     result = Arrays.copyOf(compiler.main, compiler.mainIndex);
