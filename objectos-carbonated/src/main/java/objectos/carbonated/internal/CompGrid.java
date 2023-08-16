@@ -16,37 +16,28 @@
 package objectos.carbonated.internal;
 
 import objectos.carbonated.Carbon.Grid;
+import objectos.html.HtmlComponent;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.Instruction.ElementContents;
 
-public final class CompGrid implements Grid {
+public final class CompGrid extends HtmlComponent implements Grid {
 
   private final Impl impl;
 
-  private final Html html = new Html();
+  CompGrid(HtmlTemplate parent, Impl impl) {
+    super(parent);
 
-  CompGrid(Impl impl) {
     this.impl = impl;
   }
 
   @Override
-  public final HtmlTemplate render(ElementContents... elements) {
-    html.elements = elements;
+  public final ElementContents render(ElementContents... columns) {
+    return div(
+      impl.GRID,
+      impl.GRID_STD,
 
-    return html;
-  }
-
-  private class Html extends HtmlTemplate {
-    ElementContents[] elements;
-
-    @Override
-    protected final void definition() {
-      div(
-        impl.GRID,
-
-        div(elements)
-      );
-    }
+      div(columns)
+    );
   }
 
 }

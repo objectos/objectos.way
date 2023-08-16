@@ -16,6 +16,7 @@
 package objectos.carbonated;
 
 import java.io.IOException;
+import objectos.carbonated.Carbon.GridColumn;
 
 final class GridPage extends AbstractPage {
 
@@ -23,22 +24,24 @@ final class GridPage extends AbstractPage {
     super(carbon);
   }
 
-  @SuppressWarnings("unused")
-  private void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException {
     TestingCarbon.write("grid.html", GridPage::new);
   }
 
   @Override
   final void body0() {
     Carbon.Grid grid;
-    grid = carbon.grid();
+    grid = carbon.grid(this);
+
+    GridColumn col;
+    col = carbon.gridColumn(this);
 
     h1("Grid");
 
-    add(
-      grid.render(
-        div("A")
-      )
+    grid.render(
+      col.render(t("A")),
+      col.render(t("B")),
+      col.render(t("C"))
     );
   }
 

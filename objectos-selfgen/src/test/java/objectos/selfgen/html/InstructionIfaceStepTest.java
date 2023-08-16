@@ -51,7 +51,6 @@ public class InstructionIfaceStepTest {
       package objectos.html.tmpl;
 
       import java.util.Iterator;
-      import objectos.html.HtmlTemplate;
       import objectos.html.internal.InternalFragment;
       import objectos.html.internal.InternalInstruction;
       import objectos.html.internal.InternalNoOp;
@@ -101,7 +100,7 @@ public class InstructionIfaceStepTest {
             AnchorInstruction,
             DivInstruction,
             OptionInstruction,
-            SelectInstruction permits HtmlTemplate, InternalInstruction {}
+            SelectInstruction permits InternalInstruction {}
 
         sealed interface Fragment extends
             AnchorInstruction,

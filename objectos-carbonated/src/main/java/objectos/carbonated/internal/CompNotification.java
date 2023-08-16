@@ -57,6 +57,7 @@ public final class CompNotification implements Notification {
 
   private String subtitle = "";
 
+  @SuppressWarnings("unused")
   private final HtmlTemplate html = new HtmlTemplate() {
     @Override
     protected void definition() {
@@ -186,7 +187,7 @@ public final class CompNotification implements Notification {
 
   @Override
   public final ElementContents render() {
-    return html;
+    throw new UnsupportedOperationException("Implement me");
   }
 
 }

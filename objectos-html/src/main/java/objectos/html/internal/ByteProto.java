@@ -38,16 +38,14 @@ final class ByteProto {
   public static final byte ELEMENT = -14;
   public static final byte FRAGMENT = -15;
   public static final byte RAW = -16;
-  public static final byte TEMPLATE = -17;
-  public static final byte TEMPLATE_DATA = -18;
-  public static final byte TEXT = -19;
+  public static final byte TEXT = -17;
 
   //attributes
 
-  public static final byte ATTRIBUTE0 = -20;
-  public static final byte ATTRIBUTE1 = -21;
-  public static final byte ATTRIBUTE_CLASS = -22;
-  public static final byte ATTRIBUTE_ID = -23;
+  public static final byte ATTRIBUTE0 = -18;
+  public static final byte ATTRIBUTE1 = -19;
+  public static final byte ATTRIBUTE_CLASS = -20;
+  public static final byte ATTRIBUTE_ID = -21;
 
   private ByteProto() {}
 

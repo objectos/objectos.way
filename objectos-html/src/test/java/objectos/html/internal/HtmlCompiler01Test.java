@@ -521,8 +521,10 @@ public class HtmlCompiler01Test {
 
     compiler.compilationBegin();
 
+    compiler.template(nav);
+
     compiler.elementBegin(StandardElementName.BODY);
-    compiler.elementValue(nav);
+    compiler.elementValue(InternalFragment.INSTANCE);
     compiler.elementEnd();
 
     compiler.compilationEnd();
@@ -530,15 +532,9 @@ public class HtmlCompiler01Test {
     test(
       compiler,
 
-      ByteProto.ELEMENT,
-      Bytes.encodeInt0(19),
-      Bytes.encodeInt1(19),
-      ByteProto.STANDARD_NAME,
-      (byte) StandardElementName.BODY.ordinal(),
-
       ByteProto.MARKED,
-      Bytes.encodeInt0(9),
-      Bytes.encodeInt1(9),
+      Bytes.encodeInt0(11),
+      Bytes.encodeInt1(11),
 
       ByteProto.MARKED,
       Bytes.encodeInt0(5),
@@ -549,13 +545,21 @@ public class HtmlCompiler01Test {
       Bytes.encodeInt0(5),
       ByteProto.INTERNAL,
 
+      // fragment end
       ByteProto.END,
+      Bytes.encodeInt0(11),
+      ByteProto.INTERNAL,
 
       ByteProto.ELEMENT,
-      Bytes.encodeInt0(10),
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto.STANDARD_NAME,
+      (byte) StandardElementName.BODY.ordinal(),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(17),
 
       ByteProto.END,
-      Bytes.encodeInt0(19),
+      Bytes.encodeInt0(21),
       ByteProto.INTERNAL
     );
   }

@@ -16,6 +16,7 @@
 package objectos.html.internal;
 
 import objectos.html.CompiledHtml;
+import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.StandardAttributeName;
@@ -53,6 +54,8 @@ abstract class HtmlTemplateApi {
   public abstract void elementValue(Instruction instruction);
 
   public abstract void fragment(FragmentAction action);
+
+  public abstract void template(HtmlTemplate template);
 
   public void optimize() {
     throw new UnsupportedOperationException();

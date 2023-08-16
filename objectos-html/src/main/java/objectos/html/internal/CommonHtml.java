@@ -27,7 +27,7 @@ import objectos.lang.Check;
 
 abstract class CommonHtml extends GeneratedHtmlTemplate {
 
-  protected final void add(HtmlTemplate template) {
+  protected final Fragment add(HtmlTemplate template) {
     Check.notNull(template, "template == null");
 
     InternalHtmlTemplate internal;
@@ -40,6 +40,8 @@ abstract class CommonHtml extends GeneratedHtmlTemplate {
     } finally {
       internal.api = null;
     }
+
+    return InternalFragment.INSTANCE;
   }
 
   protected final ClipPathAttribute clipPath(String value) {
@@ -53,6 +55,8 @@ abstract class CommonHtml extends GeneratedHtmlTemplate {
   }
 
   protected final Fragment f(FragmentAction action) {
+    Check.notNull(action, "action == null");
+
     api().fragment(action);
 
     return InternalFragment.INSTANCE;
@@ -63,12 +67,16 @@ abstract class CommonHtml extends GeneratedHtmlTemplate {
   }
 
   protected final ElementContents raw(String text) {
+    Check.notNull(text, "text == null");
+
     api().raw(text);
 
     return InternalInstruction.INSTANCE;
   }
 
   protected final ElementContents t(String text) {
+    Check.notNull(text, "text == null");
+
     api().text(text);
 
     return InternalInstruction.INSTANCE;

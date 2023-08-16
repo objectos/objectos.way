@@ -43,7 +43,7 @@ public sealed interface Carbon permits Impl {
    */
   sealed interface Grid permits CompGrid {
 
-    HtmlTemplate render(ElementContents... contents);
+    ElementContents render(ElementContents... columns);
 
   }
 
@@ -52,7 +52,7 @@ public sealed interface Carbon permits Impl {
    */
   sealed interface GridColumn permits CompGridColumn {
 
-    HtmlTemplate render(ElementContents... contents);
+    ElementContents render(ElementContents... contents);
 
   }
 
@@ -63,12 +63,12 @@ public sealed interface Carbon permits Impl {
   /**
    * Creates a new grid component instance.
    */
-  Grid grid();
+  Grid grid(HtmlTemplate parent);
 
   /**
    * Creates a new column instance.
    */
-  GridColumn gridColumn();
+  GridColumn gridColumn(HtmlTemplate parent);
 
   /**
    * The white theme selector.

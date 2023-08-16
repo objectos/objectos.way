@@ -16,14 +16,27 @@
 package objectos.carbonated.internal;
 
 import objectos.carbonated.Carbon;
+import objectos.html.HtmlComponent;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.Instruction.ElementContents;
 
-public final class CompGridColumn implements Carbon.GridColumn {
+public final class CompGridColumn extends HtmlComponent implements Carbon.GridColumn {
+
+  private final Impl impl;
+
+  CompGridColumn(HtmlTemplate parent, Impl impl) {
+    super(parent);
+
+    this.impl = impl;
+  }
 
   @Override
-  public final HtmlTemplate render(ElementContents... contents) {
-    return null;
+  public final ElementContents render(ElementContents... contents) {
+    return div(
+      impl.COLUMN,
+
+      div(contents)
+    );
   }
 
 }

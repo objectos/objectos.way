@@ -564,8 +564,10 @@ public class HtmlCompiler02Test {
 
     compiler.compilationBegin();
 
+    compiler.template(nav);
+
     compiler.elementBegin(StandardElementName.BODY);
-    compiler.elementValue(nav);
+    compiler.elementValue(InternalFragment.INSTANCE);
     compiler.elementEnd();
 
     compiler.compilationEnd();

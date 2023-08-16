@@ -158,9 +158,6 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     int contents;
     contents = mainContents;
 
-    int templateIndex;
-    templateIndex = ByteProto.NULL;
-
     loop: while (index < indexMax) {
       byte mark;
       mark = aux[index++];
@@ -214,41 +211,6 @@ class HtmlCompiler01 extends HtmlTemplateApi {
               case ByteProto.RAW,
                    ByteProto.TEXT -> {
                 contents = encodeInternal4(contents, proto);
-
-                continue loop;
-              }
-
-              default -> {
-                throw new UnsupportedOperationException(
-                  "Implement me :: proto=" + proto
-                );
-              }
-            }
-          }
-        }
-
-        case ByteProto.TEMPLATE -> {
-          if (templateIndex == ByteProto.NULL) {
-            // initialize template index
-            templateIndex = mainStart;
-
-            // skip ByteProto.ELEMENT
-            templateIndex += 1;
-
-            // skip length to the end
-            templateIndex += 2;
-
-            // skip NAME + name index
-            templateIndex += 2;
-          }
-
-          while (true) {
-            byte proto;
-            proto = main[templateIndex];
-
-            switch (proto) {
-              case ByteProto.TEMPLATE_DATA -> {
-                templateIndex = encodeFragment(templateIndex);
 
                 continue loop;
               }
@@ -362,63 +324,6 @@ class HtmlCompiler01 extends HtmlTemplateApi {
       );
     }
 
-    else if (value instanceof HtmlTemplate tmpl) {
-      // keep start index handy
-      int startIndex;
-      startIndex = mainIndex;
-
-      mainAdd(
-        ByteProto.TEMPLATE_DATA,
-
-        // length to the end
-        ByteProto.NULL,
-        ByteProto.NULL
-      );
-
-      InternalHtmlTemplate internal;
-      internal = tmpl;
-
-      // keep rollback values in the stack
-      int auxStart;
-      auxStart = this.auxStart;
-
-      int mainContents;
-      mainContents = this.mainContents;
-
-      int mainStart;
-      mainStart = this.mainStart;
-
-      try {
-        internal.api = this;
-
-        internal.definition();
-      } finally {
-        internal.api = null;
-
-        // rollback values
-        this.auxStart = auxStart;
-
-        this.mainContents = mainContents;
-
-        this.mainStart = mainStart;
-      }
-
-      mainAdd(ByteProto.END);
-
-      // set the end index of the declaration
-      int length;
-      length = mainIndex - startIndex;
-
-      // skip ByteProto.FOO + len0 + len1
-      length -= 3;
-
-      // we skip the first byte proto
-      main[startIndex + 1] = Bytes.encodeInt0(length);
-      main[startIndex + 2] = Bytes.encodeInt1(length);
-
-      auxAdd(ByteProto.TEMPLATE);
-    }
-
     else if (value == InternalNoOp.INSTANCE) {
       // no-op
     }
@@ -436,6 +341,25 @@ class HtmlCompiler01 extends HtmlTemplateApi {
     startIndex = fragmentBegin();
 
     action.execute();
+
+    fragmentEnd(startIndex);
+  }
+
+  @Override
+  public final void template(HtmlTemplate template) {
+    int startIndex;
+    startIndex = fragmentBegin();
+
+    InternalHtmlTemplate internal;
+    internal = template;
+
+    try {
+      internal.api = this;
+
+      internal.definition();
+    } finally {
+      internal.api = null;
+    }
 
     fragmentEnd(startIndex);
   }

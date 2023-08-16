@@ -43,6 +43,7 @@ public final class CompButton implements Button {
 
   private Button.Kind kind = Button.Kind.PRIMARY;
 
+  @SuppressWarnings("unused")
   private final HtmlTemplate html = new HtmlTemplate() {
     @Override
     protected final void definition() {
@@ -80,7 +81,7 @@ public final class CompButton implements Button {
 
   @Override
   public final ElementContents render() {
-    return html;
+    throw new UnsupportedOperationException("Implement me");
   }
 
   @Override

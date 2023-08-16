@@ -619,8 +619,8 @@ public class HtmlTemplateTest {
         @Override
         protected final void definition() {
           body(
-            nav,
-            hero
+            add(nav),
+            add(hero)
           );
         }
       },
@@ -1281,7 +1281,9 @@ public class HtmlTemplateTest {
       new HtmlTemplate() {
         @Override
         protected final void definition() {
-          body(component);
+          body(
+            add(component)
+          );
         }
       },
 

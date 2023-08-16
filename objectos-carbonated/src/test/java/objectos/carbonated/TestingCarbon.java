@@ -18,6 +18,7 @@ package objectos.carbonated;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Random;
 import objectos.css.util.Next;
 import objectos.html.HtmlTemplate;
@@ -59,10 +60,15 @@ final class TestingCarbon {
     String tmpdir;
     tmpdir = System.getProperty("java.io.tmpdir");
 
-    Path file;
-    file = Path.of(tmpdir, "carbonated", fileName);
+    Path carbonated;
+    carbonated = Path.of(tmpdir, "carbonated");
 
-    Files.writeString(file, page.toString());
+    Files.createDirectories(carbonated);
+
+    Path file;
+    file = carbonated.resolve(fileName);
+
+    Files.writeString(file, page.toString(), StandardOpenOption.CREATE);
   }
 
 }
