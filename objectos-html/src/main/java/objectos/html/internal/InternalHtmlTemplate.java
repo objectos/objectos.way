@@ -59,7 +59,16 @@ public abstract class InternalHtmlTemplate extends GeneratedHtmlTemplate {
   protected final void add(HtmlTemplate template) {
     Check.notNull(template, "template == null");
 
-    throw new UnsupportedOperationException("Implement me");
+    InternalHtmlTemplate internal;
+    internal = template;
+
+    try {
+      internal.api = api();
+
+      internal.definition();
+    } finally {
+      internal.api = null;
+    }
   }
 
   protected final ClipPathAttribute clipPath(String value) {

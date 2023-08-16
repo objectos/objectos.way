@@ -1294,6 +1294,41 @@ public class HtmlTemplateTest {
     );
   }
 
+  @Test
+  public void testCase43() {
+    HtmlTemplate component;
+    component = new HtmlTemplate() {
+      @Override
+      protected final void definition() {
+        div(
+          className("component")
+        );
+      }
+    };
+
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          body(f(this::body));
+        }
+
+        private void body() {
+          h1("Test");
+
+          add(component);
+        }
+      },
+
+      """
+      <body>
+      <h1>Test</h1>
+      <div class="component"></div>
+      </body>
+      """
+    );
+  }
+
   private void test(HtmlTemplate template, String expected) {
     String result;
     result = template.toString();
