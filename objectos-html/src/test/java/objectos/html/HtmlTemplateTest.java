@@ -17,6 +17,7 @@ package objectos.html;
 
 import static org.testng.Assert.assertEquals;
 
+import objectos.html.tmpl.Instruction.ElementContents;
 import objectos.html.tmpl.TestClassSelector;
 import objectos.html.tmpl.TestIdSelector;
 import org.testng.annotations.Test;
@@ -1324,6 +1325,111 @@ public class HtmlTemplateTest {
       <body>
       <h1>Test</h1>
       <div class="component"></div>
+      </body>
+      """
+    );
+  }
+
+  @Test
+  public void testCase44() {
+    class Component extends HtmlComponent {
+      public Component(HtmlTemplate parent) {
+        super(parent);
+      }
+
+      public final void render(ElementContents child) {
+        div(
+          className("component"),
+
+          child
+        );
+      }
+    }
+
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          body(f(this::body));
+        }
+
+        private void body() {
+          h1("Test");
+
+          Component component;
+          component = new Component(this);
+
+          component.render(p("Text"));
+        }
+      },
+
+      """
+      <body>
+      <h1>Test</h1>
+      <div class="component">
+      <p>Text</p>
+      </div>
+      </body>
+      """
+    );
+  }
+
+  @Test
+  public void testCase45() {
+    class Component1 extends HtmlComponent {
+      public Component1(HtmlTemplate parent) {
+        super(parent);
+      }
+
+      public final ElementContents render(ElementContents e) {
+        return div(
+          className("c1"),
+          e
+        );
+      }
+    }
+
+    class Component2 extends HtmlComponent {
+      public Component2(HtmlTemplate parent) {
+        super(parent);
+      }
+
+      public final ElementContents render(ElementContents e) {
+        return div(
+          className("c2"),
+          e
+        );
+      }
+    }
+
+    test(
+      new HtmlTemplate() {
+        @Override
+        protected final void definition() {
+          body(f(this::body));
+        }
+
+        private void body() {
+          Component1 c1;
+          c1 = new Component1(this);
+
+          Component2 c2;
+          c2 = new Component2(this);
+
+          h1("Test");
+
+          c1.render(
+            c2.render(t("A"))
+          );
+        }
+      },
+
+      """
+      <body>
+      <h1>Test</h1>
+      <div class="c1">
+      <div class="c2">A</div>
+      </div>
       </body>
       """
     );

@@ -15,39 +15,18 @@
  */
 package objectos.html.internal;
 
-import objectos.html.CompiledHtml;
+import objectos.html.HtmlTemplate;
 import objectos.lang.Check;
 
-public abstract class InternalHtmlTemplate extends CommonHtml {
+public abstract class InternalHtmlComponent extends CommonHtml {
 
-  HtmlTemplateApi api;
+  private final HtmlTemplateApi api;
 
-  public final CompiledHtml compile() {
-    try {
-      api = new HtmlCompiler02();
+  protected InternalHtmlComponent(HtmlTemplate parent) {
+    InternalHtmlTemplate internal;
+    internal = Check.notNull(parent, "parent == null");
 
-      api.compilationBegin();
-
-      definition();
-
-      api.compilationEnd();
-
-      api.optimize();
-
-      return api.compile();
-    } finally {
-      api = null;
-    }
-  }
-
-  protected abstract void definition();
-
-  @Override
-  public final String toString() {
-    CompiledHtml compiled;
-    compiled = compile();
-
-    return compiled.toString();
+    this.api = internal.api();
   }
 
   @Override
