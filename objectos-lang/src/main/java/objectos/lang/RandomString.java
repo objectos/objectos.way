@@ -125,11 +125,11 @@ public final class RandomString {
       int value;
       value = random.nextInt();
 
-      result[index++] = dictionary[((value >> 12) & 0xFF) % dictionary.length];
+      result[index++] = dictionary[((value >> 24) & 0xFF) % dictionary.length];
+
+      result[index++] = dictionary[((value >> 16) & 0xFF) % dictionary.length];
 
       result[index++] = dictionary[((value >> 8) & 0xFF) % dictionary.length];
-
-      result[index++] = dictionary[((value >> 4) & 0xFF) % dictionary.length];
 
       result[index++] = dictionary[(value & 0xFF) % dictionary.length];
     }
@@ -143,13 +143,13 @@ public final class RandomString {
 
       switch (lastIntCount) {
         case 3:
-          result[index + 2] = dictionary[((value >> 4) & 0xFF) % dictionary.length];
+          result[index + 2] = dictionary[((value >> 8) & 0xFF) % dictionary.length];
           // fall through
         case 2:
-          result[index + 1] = dictionary[((value >> 8) & 0xFF) % dictionary.length];
+          result[index + 1] = dictionary[((value >> 16) & 0xFF) % dictionary.length];
           // fall through
         case 1:
-          result[index + 0] = dictionary[((value >> 12) & 0xFF) % dictionary.length];
+          result[index + 0] = dictionary[((value >> 24) & 0xFF) % dictionary.length];
           break;
         default:
           throw new AssertionError("Should not happen");
