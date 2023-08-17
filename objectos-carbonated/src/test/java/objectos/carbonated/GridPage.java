@@ -16,12 +16,36 @@
 package objectos.carbonated;
 
 import java.io.IOException;
+import objectos.carbonated.Carbon.Grid;
 import objectos.carbonated.Carbon.GridColumn;
+import objectos.css.CssTemplate;
+import objectos.css.util.ClassSelector;
+import objectos.css.util.Next;
 
 final class GridPage extends AbstractPage {
 
+  private final Grid grid;
+
+  private final GridColumn col;
+
+  private final ClassSelector gridStyle;
+
+  private final ClassSelector colStyle;
+
   GridPage(Carbon carbon) {
     super(carbon);
+
+    grid = carbon.grid(this);
+
+    col = carbon.gridColumn(this);
+
+    Next next = Next.builder()
+        .nameLength(10)
+        .build();
+
+    gridStyle = next.classSelector();
+
+    colStyle = next.classSelector();
   }
 
   public static void main(String[] args) throws IOException {
@@ -30,24 +54,53 @@ final class GridPage extends AbstractPage {
 
   @Override
   final void body0() {
-    Carbon.Grid grid;
-    grid = carbon.grid(this);
-
-    GridColumn col;
-    col = carbon.gridColumn(this);
-
     h1("Grid");
 
     grid.render(
-      col.render(t("A")),
-      col.render(t("B")),
-      col.render(t("C"))
+      gridStyle,
+
+      col.sm(2).render(
+        colStyle,
+
+        t("A")
+      ),
+
+      col.sm(4).md(2).render(
+        colStyle,
+
+        t("B")
+      )
     );
   }
 
   @Override
   final void head0() {
     super.head0();
+
+    Styles styles;
+    styles = new Styles();
+
+    style(styles.toString());
+  }
+
+  private class Styles extends CssTemplate {
+    @Override
+    protected void definition() {
+      style(
+        gridStyle,
+
+        backgroundColor(Palette.BLUE_20),
+        outline(px(1), dashed, Palette.BLUE_20_HOVER)
+      );
+
+      style(
+        colStyle,
+
+        backgroundColor(Palette.WHITE),
+        boxShadow($0, $0, $0, px(1), Palette.BLUE_20_HOVER),
+        minHeight(rem(4))
+      );
+    }
   }
 
 }

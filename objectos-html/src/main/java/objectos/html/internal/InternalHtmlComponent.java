@@ -20,20 +20,15 @@ import objectos.lang.Check;
 
 public abstract class InternalHtmlComponent extends CommonHtml {
 
-  private final HtmlTemplateApi api;
+  private final InternalHtmlTemplate parent;
 
   protected InternalHtmlComponent(HtmlTemplate parent) {
-    InternalHtmlTemplate internal;
-    internal = Check.notNull(parent, "parent == null");
-
-    this.api = internal.api();
+    this.parent = Check.notNull(parent, "parent == null");
   }
 
   @Override
   final HtmlTemplateApi api() {
-    Check.state(api != null, "api not set");
-
-    return api;
+    return parent.api();
   }
 
 }

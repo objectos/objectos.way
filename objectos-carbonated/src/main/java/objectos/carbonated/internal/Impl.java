@@ -16,44 +16,22 @@
 package objectos.carbonated.internal;
 
 import objectos.carbonated.Carbon;
+import objectos.css.CssTemplate;
 import objectos.css.StyleSheet;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.Next;
 import objectos.html.HtmlTemplate;
+import objectos.lang.Check;
 
 public final class Impl implements Carbon {
 
   final ClassSelector THEME_WHITE;
 
-  // Grid
+  private final Breakpoints breakpoints;
 
-  final ClassSelector GRID;
-  final ClassSelector GRID_STD;
-  final ClassSelector GRID_FULL;
-  final ClassSelector GRID_NARROW;
-  final ClassSelector GRID_CONDENSED;
+  private final CompGrid grid;
 
-  // GridColumn
-
-  final ClassSelector COLUMN;
-
-  final ClassSelector SPAN_0;
-  final ClassSelector SPAN_1;
-  final ClassSelector SPAN_2;
-  final ClassSelector SPAN_3;
-  final ClassSelector SPAN_4;
-  final ClassSelector SPAN_5;
-  final ClassSelector SPAN_6;
-  final ClassSelector SPAN_7;
-  final ClassSelector SPAN_8;
-  final ClassSelector SPAN_9;
-  final ClassSelector SPAN_10;
-  final ClassSelector SPAN_11;
-  final ClassSelector SPAN_12;
-  final ClassSelector SPAN_13;
-  final ClassSelector SPAN_14;
-  final ClassSelector SPAN_15;
-  final ClassSelector SPAN_16;
+  private final CompGridColumn gridColumn;
 
   Impl(ImplBuilder b) {
     Next next;
@@ -61,51 +39,36 @@ public final class Impl implements Carbon {
 
     THEME_WHITE = next.classSelector();
 
-    // Grid
+    breakpoints = b.breakpoints;
 
-    GRID = next.classSelector();
-    GRID_STD = next.classSelector();
-    GRID_FULL = next.classSelector();
-    GRID_NARROW = next.classSelector();
-    GRID_CONDENSED = next.classSelector();
+    grid = b.grid();
 
-    // GridColumn
+    gridColumn = b.gridColumn();
+  }
 
-    COLUMN = next.classSelector();
-
-    SPAN_0 = next.classSelector();
-    SPAN_1 = next.classSelector();
-    SPAN_2 = next.classSelector();
-    SPAN_3 = next.classSelector();
-    SPAN_4 = next.classSelector();
-    SPAN_5 = next.classSelector();
-    SPAN_6 = next.classSelector();
-    SPAN_7 = next.classSelector();
-    SPAN_8 = next.classSelector();
-    SPAN_9 = next.classSelector();
-    SPAN_10 = next.classSelector();
-    SPAN_11 = next.classSelector();
-    SPAN_12 = next.classSelector();
-    SPAN_13 = next.classSelector();
-    SPAN_14 = next.classSelector();
-    SPAN_15 = next.classSelector();
-    SPAN_16 = next.classSelector();
+  @Override
+  public final Breakpoints breakpoints() {
+    return breakpoints;
   }
 
   @Override
   public final Grid grid(HtmlTemplate parent) {
-    return new CompGrid(parent, this);
+    Check.state(grid != null, "The grid component is not enabled");
+
+    return grid.new Component(parent);
   }
 
   @Override
   public final GridColumn gridColumn(HtmlTemplate parent) {
-    return new CompGridColumn(parent, this);
+    Check.state(gridColumn != null, "The grid column component is not enabled");
+
+    return gridColumn.new Component(parent);
   }
 
   @Override
   public final StyleSheet styleSheet() {
-    ImplStyles styles;
-    styles = new ImplStyles(this);
+    Styles styles;
+    styles = new Styles();
 
     return styles.compile();
   }
@@ -113,6 +76,37 @@ public final class Impl implements Carbon {
   @Override
   public final ClassSelector whiteTheme() {
     return THEME_WHITE;
+  }
+
+  private class Styles extends CssTemplate {
+    @Override
+    protected final void definition() {
+      Impl outer;
+      outer = Impl.this;
+
+      install(new BaseReset());
+
+      install(new BaseLayout());
+
+      install(new BaseTypography());
+
+      install(new ThemeWhite(outer));
+
+      install(new CompButtonStyles());
+
+      CompGrid g;
+      g = outer.grid;
+
+      if (g != null) {
+        install(g.new Styles());
+      }
+
+      if (gridColumn != null) {
+        install(gridColumn.new Styles());
+      }
+
+      install(new CompNotificationStyles(breakpoints));
+    }
   }
 
 }

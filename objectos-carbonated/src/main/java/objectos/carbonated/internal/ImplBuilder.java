@@ -16,16 +16,34 @@
 package objectos.carbonated.internal;
 
 import objectos.carbonated.Carbon;
+import objectos.carbonated.Carbon.Breakpoints;
 import objectos.carbonated.Carbon.Builder;
+import objectos.css.util.Length;
 import objectos.css.util.Next;
 import objectos.lang.Check;
 
 public final class ImplBuilder implements Carbon.Builder {
 
+  Carbon.Breakpoints breakpoints;
+
   Next next;
 
   @Override
   public final Carbon build() {
+    if (breakpoints == null) {
+      breakpoints = new Breakpoints(
+        Length.px(320),
+
+        Length.px(672),
+
+        Length.px(1056),
+
+        Length.px(1312),
+
+        Length.px(1584)
+      );
+    }
+
     if (next == null) {
       next = Next.builder().build();
     }
@@ -38,6 +56,14 @@ public final class ImplBuilder implements Carbon.Builder {
     next = Check.notNull(value, "value == null");
 
     return this;
+  }
+
+  final CompGrid grid() {
+    return new CompGrid(breakpoints, next);
+  }
+
+  final CompGridColumn gridColumn() {
+    return new CompGridColumn(breakpoints, next);
   }
 
 }

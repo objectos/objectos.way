@@ -537,7 +537,18 @@ class HtmlCompiler01 extends HtmlTemplateApi {
       proto = main[index++];
 
       switch (proto) {
-        case ByteProto.ELEMENT -> {
+        case ByteProto.ATTRIBUTE_CLASS -> {
+          byte idx0;
+          idx0 = main[index++];
+
+          byte idx1;
+          idx1 = main[index++];
+
+          mainAdd(proto, idx0, idx1);
+        }
+
+        case ByteProto.ELEMENT,
+             ByteProto.TEXT -> {
           int elementIndex;
           elementIndex = index;
 

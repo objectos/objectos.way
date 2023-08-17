@@ -62,7 +62,7 @@ abstract class CommonHtml extends GeneratedHtmlTemplate {
     return InternalFragment.INSTANCE;
   }
 
-  protected final ElementContents flatten(ElementContents... contents) {
+  protected final ElementContents flatten(Instruction... contents) {
     Check.notNull(contents, "contents == null");
 
     HtmlTemplateApi api;

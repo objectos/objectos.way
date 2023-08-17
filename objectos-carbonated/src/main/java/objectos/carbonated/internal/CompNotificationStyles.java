@@ -15,12 +15,18 @@
  */
 package objectos.carbonated.internal;
 
-import objectos.carbonated.Breakpoint;
+import objectos.carbonated.Carbon.Breakpoints;
 import objectos.carbonated.Theme;
 import objectos.carbonated.Typography;
 import objectos.css.CssTemplate;
 
 final class CompNotificationStyles extends CssTemplate {
+
+  private final Breakpoints breakpoints;
+
+  CompNotificationStyles(Breakpoints breakpoints) {
+    this.breakpoints = breakpoints;
+  }
 
   @Override
   protected final void definition() {
@@ -39,7 +45,7 @@ final class CompNotificationStyles extends CssTemplate {
     );
 
     media(
-      minWidth(Breakpoint.MEDIUM),
+      minWidth(breakpoints.medium()),
 
       style(
         CompNotification.NOTIFICATION,
@@ -49,7 +55,7 @@ final class CompNotificationStyles extends CssTemplate {
     );
 
     media(
-      minWidth(Breakpoint.LARGE),
+      minWidth(breakpoints.large()),
 
       style(
         CompNotification.NOTIFICATION,
@@ -58,7 +64,7 @@ final class CompNotificationStyles extends CssTemplate {
     );
 
     media(
-      minWidth(Breakpoint.MAX),
+      minWidth(breakpoints.max()),
 
       style(
         CompNotification.NOTIFICATION,
@@ -255,12 +261,12 @@ final class CompNotificationStyles extends CssTemplate {
     );
 
     /*
-    
+
     .cds--inline-notification--warning .cds--inline-notification__icon path[opacity="0"],.cds--inline-notification--warning-alt .cds--inline-notification__icon path:first-of-type {
     fill: #000;
     opacity: 1
     }
-    
+
     */
 
     style(
@@ -272,8 +278,7 @@ final class CompNotificationStyles extends CssTemplate {
     );
 
     media(
-      minWidth(
-        Breakpoint.MEDIUM),
+      minWidth(breakpoints.medium()),
 
       style(
         CompNotification.DETAILS,
@@ -318,46 +323,46 @@ final class CompNotificationStyles extends CssTemplate {
     );
 
     /*
-    
+
     .cds--inline-notification__action-button.cds--btn--ghost {
     height: 2rem;
     margin-bottom: .5rem;
     margin-left: 2.5rem
     }
-    
+
     @media(min-width: 42rem) {
     .cds--inline-notification__action-button.cds--btn--ghost {
     margin:.5rem 0
     }
     }
-    
+
     .cds--inline-notification:not(.cds--inline-notification--low-contrast) .cds--inline-notification__action-button.cds--btn--ghost {
     color: var(--cds-link-inverse,#78a9ff)
     }
-    
+
     .cds--inline-notification__action-button.cds--btn--ghost:active,.cds--inline-notification__action-button.cds--btn--ghost:hover {
     background-color: var(--cds-background-inverse-hover,#474747)
     }
-    
+
     .cds--inline-notification--low-contrast .cds--inline-notification__action-button.cds--btn--ghost:active,.cds--inline-notification--low-contrast .cds--inline-notification__action-button.cds--btn--ghost:hover {
     background-color: var(--cds-notification-action-hover,#edf5ff)
     }
-    
+
     .cds--inline-notification__action-button.cds--btn--ghost:focus {
     border-color: transparent;
     box-shadow: none;
     outline: 2px solid var(--cds-focus-inverse,#ffffff);
     outline-offset: -2px
     }
-    
+
     .cds--inline-notification--low-contrast .cds--inline-notification__action-button.cds--btn--ghost:focus {
     outline-color: var(--cds-focus,#0f62fe)
     }
-    
+
     .cds--inline-notification--hide-close-button .cds--inline-notification__action-button.cds--btn--ghost {
     margin-right: .5rem
     }
-    
+
     .cds--inline-notification__close-button {
     outline: 2px solid transparent;
     outline-offset: -2px;
@@ -378,62 +383,62 @@ final class CompNotificationStyles extends CssTemplate {
     cursor: pointer;
     transition: outline 110ms cubic-bezier(.2,0,.38,.9),background-color 110ms cubic-bezier(.2,0,.38,.9)
     }
-    
+
     .cds--inline-notification__close-button:focus {
     outline: 2px solid var(--cds-focus-inverse,#ffffff);
     outline-offset: -2px
     }
-    
+
     .cds--inline-notification__close-button .cds--inline-notification__close-icon {
     fill: var(--cds-icon-inverse,#ffffff)
     }
-    
+
     @media(min-width: 42rem) {
     .cds--inline-notification__close-button {
     position:static
     }
     }
-    
+
     .cds--inline-notification--low-contrast .cds--inline-notification__close-button:focus {
     outline: 2px solid var(--cds-focus,#0f62fe);
     outline-offset: -2px
     }
-    
+
     @media screen and (prefers-contrast) {
     .cds--inline-notification--low-contrast .cds--inline-notification__close-button:focus {
     outline-style: dotted
     }
     }
-    
+
     .cds--inline-notification--low-contrast .cds--inline-notification__close-button .cds--inline-notification__close-icon {
     fill: var(--cds-icon-primary,#161616)
     }
-    
+
     @media screen and (-ms-high-contrast:active),(forced-colors:active) {
     .cds--inline-notification {
     outline: 1px solid transparent
     }
     }
-    
+
     @media screen and (-ms-high-contrast:active),(forced-colors:active) {
     .cds--inline-notification__close-button:focus,.cds--btn.cds--btn--ghost.cds--inline-notification__action-button:focus {
     color: Highlight;
     outline: 1px solid Highlight
     }
     }
-    
+
     @media screen and (-ms-high-contrast:active),(forced-colors:active) {
     .cds--inline-notification .cds--inline-notification__icon {
     fill: ButtonText
     }
     }
-    
+
     @media screen and (-ms-high-contrast:active),(forced-colors:active) {
     .cds--inline-notification .cds--inline-notification__close-icon {
     fill: ButtonText
     }
     }
-    
+
      */
   }
 

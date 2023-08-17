@@ -106,7 +106,7 @@ public final class BaseReset extends CssTemplate {
       time, OR,
       mark, OR,
       audio, OR,
-      video, OR,
+      video,
 
       padding($0),
       border($0),

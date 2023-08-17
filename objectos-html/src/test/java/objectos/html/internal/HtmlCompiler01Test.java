@@ -20,6 +20,7 @@ import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.FragmentAction;
 import objectos.html.tmpl.StandardAttributeName;
 import objectos.html.tmpl.StandardElementName;
+import objectos.html.tmpl.TestClassSelector;
 import objectos.html.tmpl.TestIdSelector;
 import org.testng.annotations.Test;
 
@@ -722,6 +723,145 @@ public class HtmlCompiler01Test {
       Bytes.encodeInt0(26),
       ByteProto.END,
       Bytes.encodeInt0(35),
+      ByteProto.INTERNAL
+    );
+  }
+
+  @Test(description = """
+  HtmlTemplate TC47
+
+  - grid component
+  """)
+  public void testCase47() {
+    TestClassSelector grd;
+    grd = new TestClassSelector("grd");
+
+    TestClassSelector col;
+    col = new TestClassSelector("col");
+
+    HtmlCompiler01 compiler;
+    compiler = new HtmlCompiler01();
+
+    compiler.compilationBegin();
+
+    compiler.text("A");
+
+    compiler.flattenBegin();
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.DIV);
+    compiler.elementValue(col);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.text("B");
+
+    compiler.flattenBegin();
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.DIV);
+    compiler.elementValue(col);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.flattenBegin();
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.elementBegin(StandardElementName.DIV);
+    compiler.elementValue(grd);
+    compiler.elementValue(InternalInstruction.INSTANCE);
+    compiler.elementEnd();
+
+    compiler.compilationEnd();
+
+    test(
+      compiler,
+
+      ByteProto.MARKED4,
+      Bytes.encodeInt0(0),
+      Bytes.encodeInt1(0),
+      ByteProto.INTERNAL4,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(5),
+      Bytes.encodeInt1(5),
+      ByteProto.TEXT,
+      Bytes.encodeInt0(8),
+      ByteProto.END,
+      Bytes.encodeInt0(9),
+      ByteProto.INTERNAL,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(10),
+      Bytes.encodeInt1(10),
+      ByteProto.STANDARD_NAME,
+      (byte) StandardElementName.DIV.ordinal(),
+      ByteProto.ATTRIBUTE_CLASS,
+      Bytes.encodeInt0(1),
+      Bytes.encodeInt1(1),
+      ByteProto.TEXT,
+      Bytes.encodeInt0(21),
+      ByteProto.END,
+      Bytes.encodeInt0(22),
+      ByteProto.INTERNAL,
+
+      ByteProto.MARKED4,
+      Bytes.encodeInt0(2),
+      Bytes.encodeInt1(2),
+      ByteProto.INTERNAL4,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(5),
+      Bytes.encodeInt1(5),
+      ByteProto.TEXT,
+      Bytes.encodeInt0(8),
+      ByteProto.END,
+      Bytes.encodeInt0(9),
+      ByteProto.INTERNAL,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(10),
+      Bytes.encodeInt1(10),
+      ByteProto.STANDARD_NAME,
+      (byte) StandardElementName.DIV.ordinal(),
+      ByteProto.ATTRIBUTE_CLASS,
+      Bytes.encodeInt0(3),
+      Bytes.encodeInt1(3),
+      ByteProto.TEXT,
+      Bytes.encodeInt0(21),
+      ByteProto.END,
+      Bytes.encodeInt0(22),
+      ByteProto.INTERNAL,
+
+      ByteProto.MARKED,
+      Bytes.encodeInt0(7),
+      Bytes.encodeInt1(7),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(42),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(19),
+      ByteProto.END,
+      Bytes.encodeInt0(57),
+      ByteProto.INTERNAL,
+
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(12),
+      Bytes.encodeInt1(12),
+      ByteProto.STANDARD_NAME,
+      (byte) StandardElementName.DIV.ordinal(),
+      ByteProto.ATTRIBUTE_CLASS,
+      Bytes.encodeInt0(4),
+      Bytes.encodeInt1(4),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(57),
+      ByteProto.ELEMENT,
+      Bytes.encodeInt0(34),
+      ByteProto.END,
+      Bytes.encodeInt0(72),
       ByteProto.INTERNAL
     );
   }

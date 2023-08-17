@@ -20,15 +20,23 @@ import objectos.carbonated.internal.CompGridColumn;
 import objectos.carbonated.internal.Impl;
 import objectos.carbonated.internal.ImplBuilder;
 import objectos.css.StyleSheet;
+import objectos.css.tmpl.Api.LengthValue;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.Next;
 import objectos.html.HtmlTemplate;
+import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Instruction.ElementContents;
 
 /**
  * @since 0.7.1
  */
 public sealed interface Carbon permits Impl {
+
+  record Breakpoints(LengthValue small,
+                     LengthValue medium,
+                     LengthValue large,
+                     LengthValue xLarge,
+                     LengthValue max) {}
 
   sealed interface Builder permits ImplBuilder {
 
@@ -41,24 +49,36 @@ public sealed interface Carbon permits Impl {
   /**
    * The grid component.
    */
-  sealed interface Grid permits CompGrid {
+  sealed interface Grid permits CompGrid.Component {
 
-    ElementContents render(ElementContents... columns);
+    ElementContents render(Instruction... columns);
 
   }
 
   /**
    * A column of the grid.
    */
-  sealed interface GridColumn permits CompGridColumn {
+  sealed interface GridColumn permits CompGridColumn.Component {
 
-    ElementContents render(ElementContents... contents);
+    GridColumn sm(int span);
+
+    GridColumn md(int span);
+
+    GridColumn lg(int span);
+
+    GridColumn xl(int span);
+
+    GridColumn max(int span);
+
+    ElementContents render(Instruction... contents);
 
   }
 
   static Builder builder() {
     return new ImplBuilder();
   }
+
+  Breakpoints breakpoints();
 
   /**
    * Creates a new grid component instance.

@@ -68,7 +68,8 @@ final class TestingCarbon {
     Path file;
     file = carbonated.resolve(fileName);
 
-    Files.writeString(file, page.toString(), StandardOpenOption.CREATE);
+    Files.writeString(file, page.toString(),
+      StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
   }
 
 }
