@@ -13,25 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
-import objectos.css.tmpl.Api;
-import objectos.css.util.ClassSelector;
-import objectos.css.util.CustomProperty;
+import objectos.css.CssTemplate;
 
-/**
- * Utils...
- */
-public final class U {
+final class CarbonStyleSheet extends CssTemplate {
 
-  private U() {}
+  private final Breakpoints breakpoints;
 
-  public static ClassSelector nextClass() {
-    return ClassSelector.randomClassSelector(5);
+  CarbonStyleSheet(Breakpoints breakpoints) {
+    this.breakpoints = breakpoints;
   }
 
-  public static <T extends Api.PropertyValue> CustomProperty<T> nextProp() {
-    return CustomProperty.randomName(5);
+  @Override
+  protected final void definition() {
+    install(new Reset());
+
+    install(new Layout());
+
+    install(new Typography.Styles());
+
+    install(new Theme.White());
+
+    install(new Button.Styles());
+
+    install(new Grid.Styles(breakpoints));
+
+    install(new Column.Styles(breakpoints));
+
+    install(new Notification.Styles(breakpoints));
   }
 
 }

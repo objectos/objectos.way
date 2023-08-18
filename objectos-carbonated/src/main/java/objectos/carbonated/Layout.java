@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
 import objectos.css.CssTemplate;
 import objectos.css.tmpl.Api;
 import objectos.css.util.CustomProperty;
 
-public final class BaseLayout extends CssTemplate {
+final class Layout extends CssTemplate {
 
   static final CustomProperty<Api.LengthValue> SIZE_HEIGHT_XS = U.nextProp();
   static final CustomProperty<Api.LengthValue> SIZE_HEIGHT_SM = U.nextProp();

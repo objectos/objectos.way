@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
 import objectos.css.CssTemplate;
 
-public final class BaseReset extends CssTemplate {
+final class Reset extends CssTemplate {
 
   @Override
   protected final void definition() {

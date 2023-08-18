@@ -15,36 +15,31 @@
  */
 package objectos.carbonated;
 
-import objectos.css.StyleSheet;
-import objectos.html.HtmlTemplate;
+import objectos.css.tmpl.Api;
+import objectos.css.util.ClassSelector;
+import objectos.css.util.CustomProperty;
 
-abstract class AbstractPage extends HtmlTemplate {
+/**
+ * Utils...
+ */
+final class U {
 
-  @Override
-  protected final void definition() {
-    doctype();
-    html(
-      Theme.WHITE,
+  private U() {}
 
-      head(
-        f(this::head0)
-      ),
-      body(
-        f(this::body0)
-      )
-    );
+  public static ClassSelector nextClass() {
+    return ClassSelector.randomClassSelector(5);
   }
 
-  abstract void body0();
+  public static <T extends Api.PropertyValue> CustomProperty<T> nextProp() {
+    return CustomProperty.randomName(5);
+  }
 
-  void head0() {
-    meta(charset("utf-8"));
-    meta(httpEquiv("x-ua-compatible"), content("ie=edge"));
-    meta(name("viewport"), content("width=device-width, initial-scale=1, shrink-to-fit=no"));
+  public static ClassSelector cs(String name) {
+    return ClassSelector.of(name);
+  }
 
-    StyleSheet styleSheet = new CarbonStyleSheetBuilder().build();
-
-    style(styleSheet.toString());
+  public static <T extends Api.PropertyValue> CustomProperty<T> prop(String name) {
+    return CustomProperty.named(name);
   }
 
 }

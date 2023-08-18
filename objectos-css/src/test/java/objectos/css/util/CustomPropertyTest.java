@@ -25,18 +25,18 @@ public class CustomPropertyTest {
 
   @Test
   public void names_valid() {
-    assertEquals(CustomProperty.named("--foo").toString(), "--foo");
-    assertEquals(CustomProperty.named("--Foo").toString(), "--Foo");
-    assertEquals(CustomProperty.named("--foo-bar").toString(), "--foo-bar");
-    assertEquals(CustomProperty.named("--foo_bar").toString(), "--foo_bar");
-    assertEquals(CustomProperty.named("--foo123").toString(), "--foo123");
-    assertEquals(CustomProperty.named("--123_abc").toString(), "--123_abc");
+    assertEquals(CustomProperty.named("foo").toString(), "--foo");
+    assertEquals(CustomProperty.named("Foo").toString(), "--Foo");
+    assertEquals(CustomProperty.named("foo-bar").toString(), "--foo-bar");
+    assertEquals(CustomProperty.named("foo_bar").toString(), "--foo_bar");
+    assertEquals(CustomProperty.named("foo123").toString(), "--foo123");
+    assertEquals(CustomProperty.named("123_abc").toString(), "--123_abc");
   }
 
   @DataProvider
   public String[][] namesInvalidProvider() {
     return new String[][] {
-        {"foo"}, {"-foo"}, {"-foo"}, {"--foo?"}, {"--fo.o"}
+        {""}, {"foo?"}, {"fo.o"}
     };
   }
 

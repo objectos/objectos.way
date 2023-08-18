@@ -29,16 +29,16 @@ public class NextTest {
 
     b.random(new Random(123456789L));
 
-    b.nameLength(5);
+    b.nameLength(6);
 
     Next next;
     next = b.build();
 
-    assertEquals(next.classSelector(), ClassSelector.of("ieilf"));
-    assertEquals(next.classSelector(), ClassSelector.of("mgmdu"));
+    assertEquals(next.classSelector(), ClassSelector.of("ufczvl"));
+    assertEquals(next.classSelector(), ClassSelector.of("bwrnib"));
 
-    assertEquals(next.customProperty(), CustomProperty.named("--w1puk"));
-    assertEquals(next.customProperty(), CustomProperty.named("--c8e9b"));
+    assertEquals(next.customProperty(), CustomProperty.named("--apvswh"));
+    assertEquals(next.customProperty(), CustomProperty.named("--ateivq"));
   }
 
 }

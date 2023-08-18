@@ -13,57 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
-import objectos.carbonated.Carbon;
-import objectos.carbonated.Carbon.Breakpoints;
 import objectos.css.CssTemplate;
 import objectos.css.util.ClassSelector;
-import objectos.css.util.Next;
 import objectos.html.HtmlComponent;
 import objectos.html.HtmlTemplate;
 import objectos.html.tmpl.Instruction;
 import objectos.html.tmpl.Instruction.ElementContents;
 
-public final class CompGrid {
+public final class Grid extends HtmlComponent {
 
-  private final Breakpoints breakpoints;
-
-  private final ClassSelector GRID;
-  private final ClassSelector GRID_STD;
-  private final ClassSelector GRID_FULL;
+  private static final ClassSelector GRID = U.cs("grid");
+  private static final ClassSelector GRID_STD = U.cs("grid-std");
+  private static final ClassSelector GRID_FULL = U.cs("grid-full");
   @SuppressWarnings("unused")
-  private final ClassSelector GRID_NARROW;
+  private static final ClassSelector GRID_NARROW = U.cs("grid-narrow");
   @SuppressWarnings("unused")
-  private final ClassSelector GRID_CONDENSED;
+  private static final ClassSelector GRID_CONDENSED = U.cs("grid-condensed");
 
-  CompGrid(Breakpoints breakpoints, Next next) {
-    this.breakpoints = breakpoints;
-
-    GRID = next.classSelector();
-    GRID_STD = next.classSelector();
-    GRID_FULL = next.classSelector();
-    GRID_NARROW = next.classSelector();
-    GRID_CONDENSED = next.classSelector();
+  public Grid(HtmlTemplate parent) {
+    super(parent);
   }
 
-  public final class Component extends HtmlComponent implements Carbon.Grid {
+  public final ElementContents render(Instruction... columns) {
+    ElementContents div;
+    div = div(
+      GRID,
+      GRID_STD,
 
-    public Component(HtmlTemplate parent) { super(parent); }
+      flatten(columns)
+    );
 
-    @Override
-    public final ElementContents render(Instruction... columns) {
-      return div(
-        GRID,
-        GRID_STD,
+    reset();
 
-        flatten(columns)
-      );
+    return div;
+  }
+
+  private void reset() {}
+
+  static final class Styles extends CssTemplate {
+    private final Breakpoints breakpoints;
+
+    Styles(Breakpoints breakpoints) {
+      this.breakpoints = breakpoints;
     }
 
-  }
-
-  final class Styles extends CssTemplate {
     @Override
     protected final void definition() {
       style(

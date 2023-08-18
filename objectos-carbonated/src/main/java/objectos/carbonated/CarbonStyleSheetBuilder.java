@@ -13,7 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- *
- */
-package objectos.carbonated.internal;
+package objectos.carbonated;
+
+import objectos.css.StyleSheet;
+import objectos.css.util.Length;
+
+public final class CarbonStyleSheetBuilder {
+
+  private Breakpoints breakpoints;
+
+  public final StyleSheet build() {
+    if (breakpoints == null) {
+      // standard breakpoints
+
+      breakpoints = new Breakpoints(
+        Length.px(320),
+
+        Length.px(672),
+
+        Length.px(1056),
+
+        Length.px(1312),
+
+        Length.px(1584)
+      );
+    }
+
+    CarbonStyleSheet sheet;
+    sheet = new CarbonStyleSheet(breakpoints);
+
+    return sheet.compile();
+  }
+
+}

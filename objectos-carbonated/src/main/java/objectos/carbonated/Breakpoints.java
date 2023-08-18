@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.carbonated.internal;
+package objectos.carbonated;
 
-import objectos.carbonated.Palette;
-import objectos.carbonated.Typography;
+import objectos.css.tmpl.Api.LengthValue;
 
-/**
- * Implementation for public sealed interfaces serving as a namespace (i.e., not
- * to be implemented by clients).
- */
-public final class Namespace implements Palette, Typography {
-
-  private Namespace() {}
-
-}
+record Breakpoints(LengthValue small,
+                   LengthValue medium,
+                   LengthValue large,
+                   LengthValue xLarge,
+                   LengthValue max) {}

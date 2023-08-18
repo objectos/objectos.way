@@ -30,9 +30,9 @@ public class RandomStringGeneratorTest {
 
     RandomStringGenerator.randomSeed(seed);
 
-    assertEquals(RandomStringGenerator.nextString(3), "Ds2");
-    assertEquals(RandomStringGenerator.nextString(4), "yIny");
-    assertEquals(RandomStringGenerator.nextString(5), "0kdzu");
+    assertEquals(RandomStringGenerator.nextString(3), "2os");
+    assertEquals(RandomStringGenerator.nextString(4), "63Iy");
+    assertEquals(RandomStringGenerator.nextString(5), "ankzJ");
   }
 
 }

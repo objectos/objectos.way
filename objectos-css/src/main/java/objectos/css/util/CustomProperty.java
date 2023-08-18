@@ -32,19 +32,11 @@ public class CustomProperty<T extends Api.PropertyValue> {
     int length;
     length = name.length();
 
-    if (length < 3) {
+    if (length < 1) {
       throw invalidName(name);
     }
 
-    if (name.charAt(0) != '-') {
-      throw invalidName(name);
-    }
-
-    if (name.charAt(1) != '-') {
-      throw invalidName(name);
-    }
-
-    for (int index = 2; index < length; index++) {
+    for (int index = 0; index < length; index++) {
       char c;
       c = name.charAt(index);
 
@@ -83,7 +75,7 @@ public class CustomProperty<T extends Api.PropertyValue> {
       throw invalidName(name);
     }
 
-    return new CustomProperty<>(name);
+    return new CustomProperty<>("--" + name);
   }
 
   public static <T extends Api.PropertyValue> CustomProperty<T> randomName(int length) {

@@ -34,7 +34,7 @@ public class CssTemplateTest {
   """)
   public void customProperty01() {
     CustomProperty<ColorValue> textColor;
-    textColor = CustomProperty.named("--text-color");
+    textColor = CustomProperty.named("text-color");
 
     test(
       new CssTemplate() {
@@ -63,7 +63,7 @@ public class CssTemplateTest {
   """)
   public void customProperty02() {
     CustomProperty<ColorValue> textColor;
-    textColor = CustomProperty.named("--text-color");
+    textColor = CustomProperty.named("text-color");
 
     test(
       new CssTemplate() {
@@ -92,7 +92,7 @@ public class CssTemplateTest {
   """)
   public void customProperty03() {
     CustomProperty<ColorValue> textColor;
-    textColor = CustomProperty.named("--text-color");
+    textColor = CustomProperty.named("text-color");
 
     test(
       new CssTemplate() {
@@ -1541,7 +1541,7 @@ public class CssTemplateTest {
   public void propertyOutline() {
     test(
       new CssTemplate() {
-        static final CustomProperty<Api.ColorValue> FOO = CustomProperty.named("--foo");
+        static final CustomProperty<Api.ColorValue> FOO = CustomProperty.named("foo");
 
         @Override
         protected void definition() {

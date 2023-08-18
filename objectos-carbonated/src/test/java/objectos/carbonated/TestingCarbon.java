@@ -19,43 +19,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Random;
-import objectos.css.util.Next;
 import objectos.html.HtmlTemplate;
 
 final class TestingCarbon {
 
   interface PageFactory {
-    HtmlTemplate create(Carbon carbon);
-  }
-
-  public static final Carbon carbon;
-
-  static {
-    Next.Builder nb;
-    nb = Next.builder();
-
-    Random r;
-    r = new Random(123456789L);
-
-    nb.random(r);
-
-    nb.nameLength(3);
-
-    Next next;
-    next = nb.build();
-
-    Carbon.Builder cb;
-    cb = Carbon.builder();
-
-    cb.next(next);
-
-    carbon = cb.build();
+    HtmlTemplate create();
   }
 
   public static void write(String fileName, PageFactory factory) throws IOException {
     HtmlTemplate page;
-    page = factory.create(carbon);
+    page = factory.create();
 
     String tmpdir;
     tmpdir = System.getProperty("java.io.tmpdir");

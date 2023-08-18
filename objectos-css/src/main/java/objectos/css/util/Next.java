@@ -15,13 +15,9 @@
  */
 package objectos.css.util;
 
-import java.util.Locale;
 import java.util.Random;
-import java.util.Set;
 import objectos.css.tmpl.Api;
 import objectos.lang.Check;
-import objectos.lang.RandomString;
-import objectos.util.GrowableSet;
 
 public class Next {
 
@@ -29,7 +25,7 @@ public class Next {
 
     private Random random;
 
-    private int length = 5;
+    private int length = 6;
 
     private Builder() {}
 
@@ -38,10 +34,7 @@ public class Next {
         random = new Random();
       }
 
-      RandomString randomString;
-      randomString = new RandomString(random);
-
-      return new Next(randomString, length);
+      return new Next(random, length);
     }
 
     public final Builder nameLength(int value) {
@@ -60,16 +53,17 @@ public class Next {
 
   }
 
-  private final RandomString randomString;
+  private static final char[] DICTIONARY = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+
+  private static final int MASK = 0x1F;
+
+  private final Random random;
 
   private final int length;
 
-  private final int maxTries = 20;
+  private Next(Random random, int length) {
+    this.random = random;
 
-  private final Set<String> names = new GrowableSet<>();
-
-  private Next(RandomString random, int length) {
-    this.randomString = random;
     this.length = length;
   }
 
@@ -92,26 +86,61 @@ public class Next {
   }
 
   private String cssIdentifier() {
-    for (int i = 0; i < maxTries; i++) {
-      String name;
-      name = randomString.nextString(length);
+    char[] result;
+    result = new char[length];
 
-      char first;
-      first = name.charAt(0);
+    int index;
+    index = 0;
 
-      if (Character.isDigit(first)) {
-        continue;
-      }
+    int fullIntCount;
+    fullIntCount = length / 6;
 
-      name = name.toLowerCase(Locale.US);
+    for (int i = 0; i < fullIntCount; i++) {
+      int value;
+      value = random.nextInt();
 
-      if (names.add(name)) {
-        return name;
+      result[index++] = DICTIONARY[((value >>> 25) & MASK) % DICTIONARY.length];
+
+      result[index++] = DICTIONARY[((value >>> 20) & MASK) % DICTIONARY.length];
+
+      result[index++] = DICTIONARY[((value >>> 15) & MASK) % DICTIONARY.length];
+
+      result[index++] = DICTIONARY[((value >>> 10) & MASK) % DICTIONARY.length];
+
+      result[index++] = DICTIONARY[((value >>> 5) & MASK) % DICTIONARY.length];
+
+      result[index++] = DICTIONARY[(value & MASK) % DICTIONARY.length];
+    }
+
+    int lastIntCount;
+    lastIntCount = length % 6;
+
+    if (lastIntCount > 0) {
+      int value;
+      value = random.nextInt();
+
+      switch (lastIntCount) {
+        case 5:
+          result[index + 4] = DICTIONARY[((value >>> 5) & MASK) % DICTIONARY.length];
+          // fall through
+        case 4:
+          result[index + 3] = DICTIONARY[((value >>> 10) & MASK) % DICTIONARY.length];
+          // fall through
+        case 3:
+          result[index + 2] = DICTIONARY[((value >>> 15) & MASK) % DICTIONARY.length];
+          // fall through
+        case 2:
+          result[index + 1] = DICTIONARY[((value >>> 20) & MASK) % DICTIONARY.length];
+          // fall through
+        case 1:
+          result[index + 0] = DICTIONARY[((value >>> 25) & MASK) % DICTIONARY.length];
+          break;
+        default:
+          throw new AssertionError("Should not happen");
       }
     }
 
-    throw new IllegalArgumentException(
-      "Could not generate distinct name after " + maxTries + " tries");
+    return new String(result);
   }
 
 }

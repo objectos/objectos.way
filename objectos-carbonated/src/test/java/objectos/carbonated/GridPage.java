@@ -16,29 +16,21 @@
 package objectos.carbonated;
 
 import java.io.IOException;
-import objectos.carbonated.Carbon.Grid;
-import objectos.carbonated.Carbon.GridColumn;
 import objectos.css.CssTemplate;
 import objectos.css.util.ClassSelector;
 import objectos.css.util.Next;
 
 final class GridPage extends AbstractPage {
 
-  private final Grid grid;
+  private final Grid grid = new Grid(this);
 
-  private final GridColumn col;
+  private final Column col = new Column(this);
 
   private final ClassSelector gridStyle;
 
   private final ClassSelector colStyle;
 
-  GridPage(Carbon carbon) {
-    super(carbon);
-
-    grid = carbon.grid(this);
-
-    col = carbon.gridColumn(this);
-
+  GridPage() {
     Next next = Next.builder()
         .nameLength(10)
         .build();
