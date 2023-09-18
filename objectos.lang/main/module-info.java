@@ -15,8 +15,6 @@
  */
 /**
  * Defines the Objectos Lang API.
- *
- * @since 0.2
  */
 module objectos.lang {
   exports objectos.lang;

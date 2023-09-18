@@ -40,6 +40,8 @@ public abstract class JavaSink extends InternalInterpreter {
    */
   public abstract static sealed class Option permits JavaSinkOption {
 
+    protected Option() {}
+
     /**
      * Configures the provided {@code JavaSink} instance.
      *

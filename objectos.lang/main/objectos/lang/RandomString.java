@@ -111,6 +111,7 @@ public final class RandomString {
     return randomString0(length);
   }
 
+  @SuppressWarnings("fallthrough")
   private String randomString0(int length) {
     char[] result;
     result = new char[length];

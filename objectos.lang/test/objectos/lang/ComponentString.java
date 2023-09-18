@@ -15,21 +15,28 @@
  */
 package objectos.lang;
 
-final class ComponentInt {
+final class ComponentString {
 
-  private final int value;
+  private final String value;
 
-  ComponentInt(int value) {
+  ComponentString(String value) {
     this.value = value;
   }
 
   @Override
   public final boolean equals(Object obj) {
-    return obj == this || obj instanceof ComponentInt && equals0((ComponentInt) obj);
+    return obj == this || obj instanceof ComponentString && equals0((ComponentString) obj);
   }
 
-  private boolean equals0(ComponentInt that) {
-    return value == that.value;
+  @Override
+  public final int hashCode() {
+    return value.hashCode();
+  }
+
+  private boolean equals0(ComponentString that) {
+    return Equals.of(
+      value, that.value
+    );
   }
 
 }

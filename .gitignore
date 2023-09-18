@@ -1,8 +1,3 @@
 target/
-target-java17/
-target-java11/
-target-java6/
-target-java7/
-target-java8/
 test-output/
 /release.props

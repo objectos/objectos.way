@@ -15,23 +15,22 @@
  */
 package objectos.lang;
 
-final class ComponentString {
+import java.io.IOException;
 
-  private final String value;
+/**
+ * An object that can write out its string representation.
+ */
+public interface CharWritable {
 
-  ComponentString(String value) {
-    this.value = value;
-  }
-
-  @Override
-  public final boolean equals(Object obj) {
-    return obj == this || obj instanceof ComponentString && equals0((ComponentString) obj);
-  }
-
-  private boolean equals0(ComponentString that) {
-    return Equals.of(
-        value, that.value
-    );
+  /**
+   * Writes this object's textual representation to the appendable.
+   *
+   * @param dest the appendable where to write characters into.
+   *
+   * @throws IOException if an I/O error occurs
+   */
+  default void writeTo(Appendable dest) throws IOException {
+    dest.append(toString());
   }
 
 }

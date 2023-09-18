@@ -15,27 +15,26 @@
  */
 package objectos.lang;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+final class ComponentInt {
 
-/**
- * Indicates that the source code of the annotated element has been generated.
- *
- * @since 0.7
- */
-@Documented
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.TYPE)
-public @interface Generated {
+  private final int value;
 
-  /**
-   * The fully qualified name of the code generator.
-   *
-   * @return The name of the code generator
-   */
-  String value();
+  ComponentInt(int value) {
+    this.value = value;
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof ComponentInt && equals0((ComponentInt) obj);
+  }
+
+  @Override
+  public final int hashCode() {
+    return value;
+  }
+
+  private boolean equals0(ComponentInt that) {
+    return value == that.value;
+  }
 
 }

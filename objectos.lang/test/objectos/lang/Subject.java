@@ -15,24 +15,32 @@
  */
 package objectos.lang;
 
-import java.io.IOException;
+class Subject {
 
-/**
- * An object that can write out its string representation.
- *
- * @since 0.7.1
- */
-public interface CharWritable {
+  private final ComponentInt a;
 
-  /**
-   * Writes this object's textual representation to the appendable.
-   *
-   * @param dest the appendable where to write characters into.
-   *
-   * @throws IOException if an I/O error occurs
-   */
-  default void writeTo(Appendable dest) throws IOException {
-    dest.append(toString());
+  private final ComponentString b;
+
+  Subject(ComponentInt a, ComponentString b) {
+    this.a = a;
+    this.b = b;
+  }
+
+  @Override
+  public final boolean equals(Object obj) {
+    return obj == this || obj instanceof Subject && equals0((Subject) obj);
+  }
+
+  private boolean equals0(Subject obj) {
+    return Equals.of(
+      a, obj.a,
+      b, obj.b
+    );
+  }
+
+  @Override
+  public final int hashCode() {
+    return HashCode.of(a, b);
   }
 
 }

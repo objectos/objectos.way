@@ -49,7 +49,5 @@
  * <p>
  * Unless otherwise specified, methods in this package will throw a
  * {@link NullPointerException} if given a {@code null} argument.
- *
- * @since 0.2
  */
 package objectos.lang;
