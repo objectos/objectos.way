@@ -19,7 +19,7 @@
 #
 
 ## test base dir
-TEST = $(MODULE)/test
+TEST = test
 
 ## test source path
 TEST_SOURCE_PATH = $(TEST)

@@ -34,18 +34,16 @@ ENABLE_PREVIEW = yes
 # Makefile for libraries options
 #
 
-LIBRARY_HEAD := library-head.mk
-
 MAKEFILE_LIBRARY_PARTS := common-tools.mk
 MAKEFILE_LIBRARY_PARTS += common-deps.mk
 MAKEFILE_LIBRARY_PARTS += common-jar.mk
-#LIBRARY_BODY += common-test.mk
-#LIBRARY_BODY += common-install.mk
-#LIBRARY_BODY += common-source-jar.mk
-#LIBRARY_BODY += common-javadoc.mk
-#LIBRARY_BODY += common-pom.mk
-#LIBRARY_BODY += common-ossrh.mk
-#LIBRARY_BODY += common-release.mk
+MAKEFILE_LIBRARY_PARTS += common-test.mk
+#MAKEFILE_LIBRARY_PARTS += common-install.mk
+#MAKEFILE_LIBRARY_PARTS += common-source-jar.mk
+#MAKEFILE_LIBRARY_PARTS += common-javadoc.mk
+#MAKEFILE_LIBRARY_PARTS += common-pom.mk
+#MAKEFILE_LIBRARY_PARTS += common-ossrh.mk
+#MAKEFILE_LIBRARY_PARTS += common-release.mk
 
 MAKEFILE_LIBRARY = $(foreach part, $(MAKEFILE_LIBRARY_PARTS), make/$(part))
 
@@ -61,6 +59,7 @@ OBJECTOS_LANG_MAKEFILE = $(OBJECTOS_LANG)/Makefile
 
 ## Objectos Lang Makefile header : start
 ## -------------------------------------
+
 define OBJECTOS_LANG_MAKEFILE_HEADER :=
 #
 # Copyright (C) 2023 Objectos Software LTDA.
@@ -101,14 +100,36 @@ TEST_RUNTIME_DEPS += $$(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 ## POM generation options
 
 POM_VARIABLES = DESCRIPTION
+
+.PHONY: all
+all: jar
+
+.PHONY: clean
+clean:
+	rm -rf $$(WORK)/*
 endef
+
 ## -------------------------------------
 ## Objectos Lang Makefile header : end
 
-objectos.lang@jar: $(OBJECTOS_LANG_MAKEFILE)
-	$(MAKE) -C $(OBJECTOS_LANG) jar
+.PHONY: all
+all: objectos.lang@jar
+
+.PHONY: clean
+clean: objectos.lang@clean
+
+.PHONY: jar
+jar: objectos.lang@jar
+
+.PHONY: test
+test: objectos.lang@test
+
+.PHONY: objectos.lang@%
+objectos.lang@%: $(OBJECTOS_LANG_MAKEFILE)
+	$(MAKE) -C $(OBJECTOS_LANG) $*
 
 $(OBJECTOS_LANG_MAKEFILE): export HEADER := $(OBJECTOS_LANG_MAKEFILE_HEADER)
 $(OBJECTOS_LANG_MAKEFILE): $(MAKEFILE_LIBRARY) Makefile
+	@echo $@
 	@echo "$$HEADER" > $@
 	@echo $(MAKEFILE_LIBRARY) | xargs tail -n +16 --quiet | cat - >> $@
