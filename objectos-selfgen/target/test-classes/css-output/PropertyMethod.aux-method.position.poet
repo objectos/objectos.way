@@ -1,3 +1,0 @@
-public br.com.objectos.way.css.GeneratedRuleSetBuilderPositionBuilder<SELF> position() {
-  return new br.com.objectos.way.css.GeneratedRuleSetBuilderPositionBuilder<>(self());
-}

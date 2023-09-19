@@ -1,4 +1,0 @@
-@java.lang.Override
-public SELF margin(br.com.objectos.way.css.common.lang.Unit unit) {
-  return addDeclaration("margin", unit);
-}

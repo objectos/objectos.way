@@ -1,4 +1,0 @@
-@java.lang.Override
-public SELF borderColor(br.com.objectos.way.css.common.lang.Color color) {
-  return addDeclaration("border-color", color.css());
-}

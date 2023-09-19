@@ -19,7 +19,7 @@
 #
 
 MODULE := objectos.way
-VERSION := 0.9.0-SNAPSHOT
+VERSION := 0.1.0-SNAPSHOT
 
 ## Deps versions
 
@@ -30,6 +30,8 @@ SLF4J_VERSION := 1.7.36
 ## Compile options
 
 WAY_JAVA_RELEASE = 21
+SGEN_JAVA_RELEASE = 21
+SGEN_ENABLE_PREVIEW = 1
 
 ## Test options
 TEST_JAVAX_EXPORTS := objectos.lang
@@ -337,6 +339,64 @@ CODE_TEST_JAVAX += --module $(CODE)/$(CODE).RunTests
 CODE_TEST_JAVAX += $(CODE_TEST_RUNTIME_OUTPUT)
 
 #
+# objectos.selfgen options
+#
+
+## selfgen module
+SGEN = objectos.selfgen
+
+## selfgen source dir
+SGEN_MAIN = $(SGEN)/main
+
+## code source files
+SGEN_SOURCES = $(shell find ${SGEN_MAIN} -type f -name '*.java' -print)
+
+## main source files modified since last compilation
+SGEN_DIRTY :=
+
+## main work dir
+SGEN_WORK = $(SGEN)/work
+
+## main class output path
+SGEN_CLASS_OUTPUT = $(SGEN_WORK)/main
+
+## selfgen compiled classes
+SGEN_CLASSES = $(SGEN_SOURCES:$(SGEN_MAIN)/%.java=$(SGEN_CLASS_OUTPUT)/%.class)
+
+## selfgen compile deps
+SGEN_COMPILE_DEPS = $(CODE_JAR)
+
+## selfgen javac command
+SGEN_JAVACX = $(JAVAC)
+SGEN_JAVACX += -d $(SGEN_CLASS_OUTPUT)
+SGEN_JAVACX += -g
+SGEN_JAVACX += -Xlint:all
+SGEN_JAVACX += -Xpkginfo:always
+ifeq ($(SGEN_ENABLE_PREVIEW), 1)
+SGEN_JAVACX += --enable-preview
+endif
+SGEN_JAVACX += --module-path $(call module-path,$(SGEN_COMPILE_DEPS))
+SGEN_JAVACX += --module-version $(VERSION)
+SGEN_JAVACX += --release $(SGEN_JAVA_RELEASE)
+SGEN_JAVACX += $(SGEN_DIRTY)
+
+## marker to indicate when selfgen was last run
+SGEN_MARKER = $(WAY_WORK)/selfgen-marker
+
+## selfgen runtime deps
+SGEN_RUNTIME_DEPS = $(SGEN_COMPILE_DEPS)
+SGEN_RUNTIME_DEPS += $(SGEN_CLASS_OUTPUT)
+
+## selfgen java command
+SGEN_JAVAX = $(JAVA)
+SGEN_JAVAX += --module-path $(call module-path,$(SGEN_RUNTIME_DEPS))
+ifeq ($(SGEN_ENABLE_PREVIEW), 1)
+SGEN_JAVAX += --enable-preview
+endif
+SGEN_JAVAX += --module $(SGEN)/$(SGEN).Main
+SGEN_JAVAX += $(WAY_MAIN)
+
+#
 # Targets
 #
 
@@ -347,6 +407,7 @@ all: jar
 clean:
 	rm -rf $(WAY_WORK)/*
 	rm -rf $(CODE_WORK)/*
+	rm -rf $(SGEN_WORK)/*
 
 .PHONY: jar
 jar: way@jar
@@ -382,6 +443,19 @@ $(CODE_CLASSES): $(CODE_CLASS_OUTPUT)/%.class: $(CODE_MAIN)/%.java
 $(CODE_LICENSE): LICENSE
 	mkdir -p $(CODE_METAINF)
 	cp LICENSE $(CODE_METAINF)
+
+.PHONY: selfgen
+selfgen: $(SGEN_MARKER)
+
+$(SGEN_MARKER): $(SGEN_COMPILE_DEPS) $(SGEN_CLASSES)
+	if [ -n "$(SGEN_DIRTY)" ]; then \
+		$(SGEN_JAVACX); \
+	fi
+	$(SGEN_JAVAX)
+	touch $(SGEN_MARKER)
+
+$(SGEN_CLASSES): $(SGEN_CLASS_OUTPUT)/%.class: $(SGEN_MAIN)/%.java
+	$(eval SGEN_DIRTY += $$<)
 
 ## Gets the dependency from the remote repository
 $(LOCAL_REPO_PATH)/%.jar:

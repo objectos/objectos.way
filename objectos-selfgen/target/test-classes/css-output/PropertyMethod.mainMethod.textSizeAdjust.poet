@@ -1,7 +1,0 @@
-@java.lang.Override
-public SELF textSizeAdjust(br.com.objectos.way.css.common.lang.PercentageUnit unit) {
-  return addDeclaration("text-size-adjust", unit)
-      .webkitTextSizeAdjust(unit)
-      .mozTextSizeAdjust(unit)
-      .msTextSizeAdjust(unit);
-}
