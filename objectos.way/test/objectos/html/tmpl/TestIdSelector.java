@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Way API.
- */
-module objectos.way {
-  exports objectos.html;
-  exports objectos.html.tmpl;
+package objectos.html.tmpl;
+
+public final class TestIdSelector implements Api.ExternalAttribute.Id {
+
+  private final String id;
+
+  public TestIdSelector(String id) {
+    this.id = id;
+  }
+
+  @Override
+  public final String value() {
+    return id;
+  }
+
 }

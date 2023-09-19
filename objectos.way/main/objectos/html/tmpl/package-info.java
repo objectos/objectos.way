@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 /**
- * Defines the Objectos Way API.
+ * Contains the interfaces that model the domain-specific language provided by
+ * {@link objectos.html.HtmlTemplate}.
  */
-module objectos.way {
-  exports objectos.html;
-  exports objectos.html.tmpl;
-}
+package objectos.html.tmpl;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Defines the Objectos Way API.
- */
-module objectos.way {
-  exports objectos.html;
-  exports objectos.html.tmpl;
+package objectos.html.internal;
+
+import objectos.util.UnmodifiableMap;
+import objectos.util.GrowableMap;
+
+class NamesBuilder {
+
+  private final GrowableMap<String, StandardAttributeName> map = new GrowableMap<>();
+
+  public final UnmodifiableMap<String, StandardAttributeName> build() {
+    return map.toUnmodifiableMap();
+  }
+
+  public final NamesBuilder put(String name, StandardAttributeName value) {
+    map.put(name, value);
+    return this;
+  }
+
 }

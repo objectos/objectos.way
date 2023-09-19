@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2023 Objectos Software LTDA.
+ * Copyright (C) 2015-2023 Objectos Software LTDA.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package objectos.html.tmpl;
+
+import objectos.html.BaseTemplateDsl;
+
 /**
- * Defines the Objectos Way API.
+ * A delayed set of instructions of a template.
+ *
+ * <p>
+ * The set of instructions MUST be of the same template instance where this
+ * fragment will be included.
+ *
+ * @see BaseTemplateDsl#include(FragmentAction)
  */
-module objectos.way {
-  exports objectos.html;
-  exports objectos.html.tmpl;
+@FunctionalInterface
+public interface FragmentLambda {
+
+  /**
+   * Executes this set of instructions.
+   */
+  void execute();
+
 }
