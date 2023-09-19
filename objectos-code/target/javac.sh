@@ -1,1 +1,0 @@
-/bin/sh -c cd /home/mendo/kdo/projetos/objectos/objectos-code && /opt/jdk-20/bin/javac @/home/mendo/kdo/projetos/objectos/objectos-code/target/org.codehaus.plexus.compiler.javac.JavacCompiler5069603676671718668arguments

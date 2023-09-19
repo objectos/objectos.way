@@ -29,8 +29,7 @@ SLF4J_VERSION := 1.7.36
 
 ## Compile options
 
-JAVA_RELEASE = 21
-ENABLE_PREVIEW = 1
+WAY_JAVA_RELEASE = 21
 
 ## Test options
 TEST_JAVAX_EXPORTS := objectos.lang
@@ -55,8 +54,6 @@ JAVA := $(JAVA_HOME_BIN)/java
 
 ## javac common options
 JAVAC := $(JAVA_HOME_BIN)/javac
-JAVAC += -g
-JAVAC += -Xpkginfo:always
 
 ## jar common options
 JAR := $(JAVA_HOME_BIN)/jar
@@ -76,57 +73,6 @@ JQ := jq
 
 ## sed common options
 SED := sed
-
-#
-# main artifact options
-#
-
-## main base dir
-MAIN = $(MODULE)/main
-
-## main source files
-SOURCES = $(shell find ${MAIN} -type f -name '*.java' -print)
-
-## main source files modified since last compilation
-MODIFIED_SOURCES :=
-
-## main work dir
-WORK = $(MODULE)/work
-
-## main class output path
-CLASS_OUTPUT = $(WORK)/main
-
-## META-INF
-META_INF_DIR = $(CLASS_OUTPUT)/META-INF
-
-## license 'artifact'
-LICENSE_ARTIFACT = $(META_INF_DIR)/LICENSE
-
-## main compiled classes
-CLASSES = $(SOURCES:$(MAIN)/%.java=$(CLASS_OUTPUT)/%.class)
-
-## main javac command
-## - do no set the module-path for artifacts that have no compile-time deps
-JAVACX = $(JAVAC)
-JAVACX += -d $(CLASS_OUTPUT)
-JAVACX += -Xlint:all
-ifdef ENABLE_PREVIEW
-JAVACX += --enable-preview
-endif
-JAVACX += --module-version $(VERSION)
-JAVACX += --release $(JAVA_RELEASE)
-JAVACX += $(MODIFIED_SOURCES)
-
-## main generated artifact
-ARTIFACT := $(WORK)/$(MODULE)-$(VERSION).jar
-
-## main jar command
-JARX = $(JAR)
-JARX += --create
-JARX += --file $(ARTIFACT)
-JARX += --module-version $(VERSION)
-JARX += -C $(CLASS_OUTPUT)
-JARX += .
 
 #
 # Dependencies related options & functions
@@ -174,77 +120,220 @@ MODULE_PATH_SEPARATOR := :
 module-path = $(subst $(space),$(MODULE_PATH_SEPARATOR),$(1))
 
 #
-# Gets the dependency from the remote repository
+# objectos.way jar options
 #
-$(LOCAL_REPO_PATH)/%.jar:	
-	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
+
+## module
+WAY = objectos.way
+
+## where to find .java files
+WAY_MAIN = $(WAY)/main
+
+## the .java files
+WAY_SOURCES = $(shell find ${WAY_MAIN} -type f -name '*.java' -print)
+
+## .java files modified since last compilation
+WAY_DIRTY :=
+
+## main work dir
+WAY_WORK = $(WAY)/work
+
+## main class output path
+WAY_CLASS_OUTPUT = $(WAY_WORK)/main
+
+## main compiled classes
+WAY_CLASSES = $(WAY_SOURCES:$(WAY_MAIN)/%.java=$(WAY_CLASS_OUTPUT)/%.class)
+
+## META-INF
+WAY_METAINF = $(WAY_CLASS_OUTPUT)/META-INF
+
+## license 'artifact'
+WAY_LICENSE = $(WAY_METAINF)/LICENSE
+
+## way javac command
+WAY_JAVACX = $(JAVAC)
+WAY_JAVACX += -d $(WAY_CLASS_OUTPUT)
+WAY_JAVACX += -g
+WAY_JAVACX += -Xlint:all
+WAY_JAVACX += -Xpkginfo:always
+WAY_JAVACX += --module-version $(VERSION)
+WAY_JAVACX += --release $(WAY_JAVA_RELEASE)
+WAY_JAVACX += $(WAY_DIRTY)
+
+## way jar path
+WAY_JAR = $(WAY_WORK)/$(WAY)-$(VERSION).jar
+
+## way jar command
+WAY_JARX = $(JAR)
+WAY_JARX += --create
+WAY_JARX += --file $(WAY_JAR)
+WAY_JARX += --module-version $(VERSION)
+WAY_JARX += -C $(WAY_CLASS_OUTPUT)
+WAY_JARX += .
 
 #
-# Main artifact test options
+# objectos.way test options
 #
 
 ## test base dir
-TEST = $(MODULE)/test
+WAY_TEST = $(WAY)/test
 
 ## test source files 
-TEST_SOURCES = $(shell find ${TEST} -type f -name '*.java' -print)
+WAY_TEST_SOURCES = $(shell find ${WAY_TEST} -type f -name '*.java' -print)
 
 ## test source files modified since last compilation
-TEST_MODIFIED_SOURCES :=
+WAY_TEST_DIRTY :=
 
 ## test class output path
-TEST_CLASS_OUTPUT = $(WORK)/test
+WAY_TEST_CLASS_OUTPUT = $(WAY_WORK)/test
 
 ## test compiled classes
-TEST_CLASSES = $(TEST_SOURCES:$(TEST)/%.java=$(TEST_CLASS_OUTPUT)/%.class)
+WAY_TEST_CLASSES = $(WAY_TEST_SOURCES:$(WAY_TEST)/%.java=$(WAY_TEST_CLASS_OUTPUT)/%.class)
 
 ## test compile-time dependencies
-TEST_COMPILE_DEPS = $(CLASS_OUTPUT)
-TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
-
-## test compile-time class path
-TEST_COMPILE_CLASS_PATH = $(call class-path,$(TEST_COMPILE_DEPS)) 
+WAY_TEST_COMPILE_DEPS = $(WAY_JAR)
+WAY_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
 
 ## test javac command
-TEST_JAVACX = $(JAVAC)
-TEST_JAVACX += -d $(TEST_CLASS_OUTPUT)
-TEST_JAVACX += -Xlint:all
-TEST_JAVACX += --class-path $(TEST_COMPILE_CLASS_PATH)
-ifdef ENABLE_PREVIEW
-TEST_JAVACX += --enable-preview
-endif
-TEST_JAVACX += --release $(JAVA_RELEASE)
-TEST_JAVACX += $(TEST_MODIFIED_SOURCES)
+WAY_TEST_JAVACX = $(JAVAC)
+WAY_TEST_JAVACX += -d $(WAY_TEST_CLASS_OUTPUT)
+WAY_TEST_JAVACX += -g
+WAY_TEST_JAVACX += -Xlint:all
+WAY_TEST_JAVACX += --class-path $(call class-path,$(WAY_TEST_COMPILE_DEPS))
+WAY_TEST_JAVACX += --release $(WAY_JAVA_RELEASE)
+WAY_TEST_JAVACX += $(WAY_TEST_DIRTY)
 
 ## test runtime dependencies
-TEST_RUNTIME_DEPS = $(TEST_COMPILE_DEPS)
-TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
-TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
-TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+WAY_TEST_RUNTIME_DEPS = $(WAY_TEST_COMPILE_DEPS)
+WAY_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+WAY_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
 
-## test runtime module-path
-TEST_RUNTIME_MODULE_PATH = $(call module-path,$(TEST_RUNTIME_DEPS))
+## test runtime exports
+WAY_TEST_JAVAX_EXPORTS := objectos.lang
+WAY_TEST_JAVAX_EXPORTS += objectos.util
 
 ## test runtime output path
-TEST_RUNTIME_OUTPUT = $(WORK)/test-output
-
-## test main class
-TEST_MAIN = $(MODULE).RunTests
+WAY_TEST_RUNTIME_OUTPUT = $(WAY_WORK)/test-output
 
 ## test java command
-TEST_JAVAX = $(JAVA)
-TEST_JAVAX += --module-path $(TEST_RUNTIME_MODULE_PATH)
-TEST_JAVAX += --add-modules org.testng
-TEST_JAVAX += --add-reads $(MODULE)=org.testng
-ifdef TEST_JAVAX_EXPORTS
-TEST_JAVAX += $(foreach pkg,$(TEST_JAVAX_EXPORTS),--add-exports $(MODULE)/$(pkg)=org.testng)
-endif
-ifdef ENABLE_PREVIEW
-TEST_JAVAX += --enable-preview
-endif
-TEST_JAVAX += --patch-module $(MODULE)=$(TEST_CLASS_OUTPUT)
-TEST_JAVAX += --module $(MODULE)/$(TEST_MAIN)
-TEST_JAVAX += $(TEST_RUNTIME_OUTPUT)
+WAY_TEST_JAVAX = $(JAVA)
+WAY_TEST_JAVAX += --module-path $(call module-path,$(WAY_TEST_RUNTIME_DEPS))
+WAY_TEST_JAVAX += --add-modules org.testng
+WAY_TEST_JAVAX += --add-reads $(WAY)=org.testng
+WAY_TEST_JAVAX += $(foreach pkg,$(WAY_TEST_JAVAX_EXPORTS),--add-exports $(WAY)/$(pkg)=org.testng)
+WAY_TEST_JAVAX += --patch-module $(WAY)=$(WAY_TEST_CLASS_OUTPUT)
+WAY_TEST_JAVAX += --module $(WAY)/$(WAY).RunTests
+WAY_TEST_JAVAX += $(WAY_TEST_RUNTIME_OUTPUT)
+
+#
+# objectos.code jar options
+#
+
+## code module
+CODE = objectos.code
+
+## code base dir
+CODE_MAIN = $(CODE)/main
+
+## code source files
+CODE_SOURCES = $(shell find ${CODE_MAIN} -type f -name '*.java' -print)
+
+## main source files modified since last compilation
+CODE_DIRTY :=
+
+## main work dir
+CODE_WORK = $(CODE)/work
+
+## main class output path
+CODE_CLASS_OUTPUT = $(CODE_WORK)/main
+
+## META-INF
+CODE_METAINF = $(CODE_CLASS_OUTPUT)/META-INF
+
+## license 'artifact'
+CODE_LICENSE = $(CODE_METAINF)/LICENSE
+
+## code compiled classes
+CODE_CLASSES = $(CODE_SOURCES:$(CODE_MAIN)/%.java=$(CODE_CLASS_OUTPUT)/%.class)
+
+## code javac command
+CODE_JAVACX = $(JAVAC)
+CODE_JAVACX += -d $(CODE_CLASS_OUTPUT)
+CODE_JAVACX += -g
+CODE_JAVACX += -Xlint:all
+CODE_JAVACX += -Xpkginfo:always
+CODE_JAVACX += --enable-preview
+CODE_JAVACX += --module-version $(VERSION)
+CODE_JAVACX += --release $(WAY_JAVA_RELEASE)
+CODE_JAVACX += $(CODE_DIRTY)
+
+## code jar path
+CODE_JAR := $(CODE_WORK)/$(CODE)-$(VERSION).jar
+
+## code jar command
+CODE_JARX = $(JAR)
+CODE_JARX += --create
+CODE_JARX += --file $(CODE_JAR)
+CODE_JARX += --module-version $(VERSION)
+CODE_JARX += -C $(CODE_CLASS_OUTPUT)
+CODE_JARX += .
+
+#
+# objectos.code test options
+#
+
+## test base dir
+CODE_TEST = $(CODE)/test
+
+## test source files 
+CODE_TEST_SOURCES = $(shell find ${CODE_TEST} -type f -name '*.java' -print)
+
+## test source files modified since last compilation
+CODE_TEST_DIRTY :=
+
+## test class output path
+CODE_TEST_CLASS_OUTPUT = $(CODE_WORK)/test
+
+## test compiled classes
+CODE_TEST_CLASSES = $(CODE_TEST_SOURCES:$(CODE_TEST)/%.java=$(CODE_TEST_CLASS_OUTPUT)/%.class)
+
+## test compile-time dependencies
+CODE_TEST_COMPILE_DEPS = $(CODE_JAR)
+CODE_TEST_COMPILE_DEPS += $(call dependency,org.testng,testng,$(TESTNG_VERSION))
+
+## test javac command
+CODE_TEST_JAVACX = $(JAVAC)
+CODE_TEST_JAVACX += -d $(CODE_TEST_CLASS_OUTPUT)
+CODE_TEST_JAVACX += -g
+CODE_TEST_JAVACX += -Xlint:all
+CODE_TEST_JAVACX += --class-path $(call class-path,$(CODE_TEST_COMPILE_DEPS))
+CODE_TEST_JAVACX += --release $(WAY_JAVA_RELEASE)
+CODE_TEST_JAVACX += --enable-preview
+CODE_TEST_JAVACX += $(CODE_TEST_DIRTY)
+
+## test runtime dependencies
+CODE_TEST_RUNTIME_DEPS = $(CODE_TEST_COMPILE_DEPS)
+CODE_TEST_RUNTIME_DEPS += $(call dependency,com.beust,jcommander,$(JCOMMANDER_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-api,$(SLF4J_VERSION))
+CODE_TEST_RUNTIME_DEPS += $(call dependency,org.slf4j,slf4j-nop,$(SLF4J_VERSION))
+
+## test runtime exports
+CODE_TEST_JAVAX_EXPORTS := objectos.code.internal
+
+## test runtime output path
+CODE_TEST_RUNTIME_OUTPUT = $(CODE_WORK)/test-output
+
+## test java command
+CODE_TEST_JAVAX = $(JAVA)
+CODE_TEST_JAVAX += --module-path $(call module-path,$(CODE_TEST_RUNTIME_DEPS))
+CODE_TEST_JAVAX += --add-modules org.testng
+CODE_TEST_JAVAX += --add-reads $(CODE)=org.testng
+CODE_TEST_JAVAX += $(foreach pkg,$(CODE_TEST_JAVAX_EXPORTS),--add-exports $(CODE)/$(pkg)=org.testng)
+CODE_TEST_JAVAX += --patch-module $(CODE)=$(CODE_TEST_CLASS_OUTPUT)
+CODE_TEST_JAVAX += --enable-preview
+CODE_TEST_JAVAX += --module $(CODE)/$(CODE).RunTests
+CODE_TEST_JAVAX += $(CODE_TEST_RUNTIME_OUTPUT)
 
 #
 # Targets
@@ -255,30 +344,67 @@ all: jar
 
 .PHONY: clean
 clean:
-	rm -rf $(WORK)/*
+	rm -rf $(WAY_WORK)/*
+	rm -rf $(CODE_WORK)/*
 
 .PHONY: jar
-jar: $(ARTIFACT)
+jar: way@jar
 
-$(ARTIFACT): $(COMPILE_DEPS) $(CLASSES) $(LICENSE_ARTIFACT)
-	if [ -n "$(MODIFIED_SOURCES)" ]; then \
-		$(JAVACX); \
+.PHONY: way@jar
+way@jar: $(WAY_JAR)
+
+$(WAY_JAR): $(WAY_CLASSES) $(WAY_LICENSE)
+	if [ -n "$(WAY_DIRTY)" ]; then \
+		$(WAY_JAVACX); \
 	fi
-	$(JARX)
+	$(WAY_JARX)
 
-$(CLASSES): $(CLASS_OUTPUT)/%.class: $(MAIN)/%.java
-	$(eval MODIFIED_SOURCES += $$<)
+$(WAY_CLASSES): $(WAY_CLASS_OUTPUT)/%.class: $(WAY_MAIN)/%.java
+	$(eval WAY_DIRTY += $$<)
 
-$(LICENSE_ARTIFACT): LICENSE
-	mkdir -p $(META_INF_DIR)
-	cp LICENSE $(META_INF_DIR)
+$(WAY_LICENSE): LICENSE
+	mkdir -p $(WAY_METAINF)
+	cp LICENSE $(WAY_METAINF)
+
+.PHONY: code@jar
+code@jar: $(CODE_JAR)
+	
+$(CODE_JAR): $(CODE_CLASSES) $(CODE_LICENSE)
+	if [ -n "$(CODE_DIRTY)" ]; then \
+		$(CODE_JAVACX); \
+	fi
+	$(CODE_JARX)
+
+$(CODE_CLASSES): $(CODE_CLASS_OUTPUT)/%.class: $(CODE_MAIN)/%.java
+	$(eval CODE_DIRTY += $$<)
+
+$(CODE_LICENSE): LICENSE
+	mkdir -p $(CODE_METAINF)
+	cp LICENSE $(CODE_METAINF)
+
+## Gets the dependency from the remote repository
+$(LOCAL_REPO_PATH)/%.jar:
+	$(REMOTE_REPO_CURLX) --output $@ $(@:$(LOCAL_REPO_PATH)/%.jar=$(REMOTE_REPO_URL)/%.jar)
 
 .PHONY: test
-test: $(ARTIFACT) $(TEST_COMPILE_DEPS) $(TEST_CLASSES) $(TEST_RUNTIME_DEPS) 
-	if [ -n "$(TEST_MODIFIED_SOURCES)" ]; then \
-		$(TEST_JAVACX); \
-	fi
-	$(TEST_JAVAX)
+test: code@test way@test
 
-$(TEST_CLASSES): $(TEST_CLASS_OUTPUT)/%.class: $(TEST)/%.java
-	$(eval TEST_MODIFIED_SOURCES += $$<)
+.PHONY: way@test
+way@test: $(WAY_TEST_CLASSES) $(WAY_TEST_RUNTIME_DEPS)  
+	if [ -n "$(WAY_TEST_DIRTY)" ]; then \
+		$(WAY_TEST_JAVACX); \
+	fi
+	$(WAY_TEST_JAVAX)
+	
+$(WAY_TEST_CLASSES): $(WAY_TEST_CLASS_OUTPUT)/%.class: $(WAY_TEST)/%.java
+	$(eval WAY_TEST_DIRTY += $$<)
+
+.PHONY: code@test
+code@test: $(CODE_TEST_CLASSES) $(CODE_TEST_RUNTIME_DEPS)  
+	if [ -n "$(CODE_TEST_DIRTY)" ]; then \
+		$(CODE_TEST_JAVACX); \
+	fi
+	$(CODE_TEST_JAVAX)
+	
+$(CODE_TEST_CLASSES): $(CODE_TEST_CLASS_OUTPUT)/%.class: $(CODE_TEST)/%.java
+	$(eval CODE_TEST_DIRTY += $$<)

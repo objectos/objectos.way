@@ -1,1 +1,0 @@
-/opt/jdk-20/bin/javadoc -J-Xmx2048m -J-Xms1024m @options @packages @argfile
