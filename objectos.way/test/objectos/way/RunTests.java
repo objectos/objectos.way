@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.lang;
+package objectos.way;
 
 import java.util.List;
 import org.testng.TestNG;
@@ -26,7 +26,7 @@ public class RunTests {
     XmlSuite suite;
     suite = new XmlSuite();
 
-    suite.setName("Objectos Lang");
+    suite.setName("Objectos Way");
 
     XmlTest test;
     test = new XmlTest(suite);
